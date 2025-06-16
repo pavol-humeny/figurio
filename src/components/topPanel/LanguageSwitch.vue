@@ -2,6 +2,8 @@
 import { ref } from 'vue'
 import { useLanguageSwitch } from '@/composables/topPanel/useLanguageSwitch'
 
+import ItemTip from '../common/ItemTip.vue'
+
 const { locale, switchLanguage } = useLanguageSwitch()
 
 const hoveredLang = ref(null)
@@ -19,33 +21,38 @@ const getButtonClass = (lang) => {
 </script>
 
 <template>
-  <div class="language-switch">
-    <div class="slider" :class="hoveredLang || locale"></div>
-    <button
-      :class="getButtonClass('sk')"
-      @click="switchLanguage('sk')"
-      @mouseenter="hoveredLang = 'sk'"
-      @mouseleave="hoveredLang = null"
-    >
-      SK
-    </button>
-    <button
-      :class="getButtonClass('en')"
-      @click="switchLanguage('en')"
-      @mouseenter="hoveredLang = 'en'"
-      @mouseleave="hoveredLang = null"
-    >
-      EN
-    </button>
-    <button
-      :class="getButtonClass('cz')"
-      @click="switchLanguage('cz')"
-      @mouseenter="hoveredLang = 'cz'"
-      @mouseleave="hoveredLang = null"
-    >
-      CZ
-    </button>
-  </div>
+  <ItemTip
+    :text="$t('topPanel.settingsPanel.language.tip')"
+    position="bottom"
+  >
+    <div class="language-switch">
+      <div class="slider" :class="hoveredLang || locale"></div>
+      <button
+        :class="getButtonClass('sk')"
+        @click="switchLanguage('sk')"
+        @mouseenter="hoveredLang = 'sk'"
+        @mouseleave="hoveredLang = null"
+      >
+        SK
+      </button>
+      <button
+        :class="getButtonClass('en')"
+        @click="switchLanguage('en')"
+        @mouseenter="hoveredLang = 'en'"
+        @mouseleave="hoveredLang = null"
+      >
+        EN
+      </button>
+      <button
+        :class="getButtonClass('cz')"
+        @click="switchLanguage('cz')"
+        @mouseenter="hoveredLang = 'cz'"
+        @mouseleave="hoveredLang = null"
+      >
+        CZ
+      </button>
+    </div>
+  </ItemTip>
 </template>
 
 <style scoped>

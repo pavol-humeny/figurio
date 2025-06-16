@@ -4,6 +4,8 @@ import { useZoomControl } from '@/composables/topPanel/useZoomControl';
 import { useI18n } from 'vue-i18n'
 import { useViewportStore } from '@/stores/viewportStore';
 
+import ItemTip from '../common/ItemTip.vue'
+
 const { t } = useI18n()
 
 
@@ -13,31 +15,46 @@ const { zoomLevel, zoomIn, zoomOut, wheelZoom, setZoomLevel, resetZoom, canZoomI
 
 <template>
   <div class="zoom-control">
-    <div
-      class="zoom-out-button button button-control button-circle"
-      @click="zoomOut"
-      :class="{ 'button--disabled': !canZoomOut }">
-      <BaseIcon name="IconMinus" size="24" />
-    </div>
+    <ItemTip
+      :text="$t('topPanel.zoomControl.tip.zoomOut')"
+      position="bottom"
+    >
+      <div
+        class="zoom-out-button button button-control button-circle"
+        @click="zoomOut"
+        :class="{ 'button--disabled': !canZoomOut }">
+        <BaseIcon name="IconMinus" size="24" />
+      </div>
+    </ItemTip>
 
-    <div class="zoom-level-wrapper">
-      <input
-        class="zoom-level-input"
-        type="text"
-        v-model="zoomLevel"
-        @wheel.prevent="wheelZoom"
-        @blur="setZoomLevel(zoomLevel)"
-        @dblclick="resetZoom"
-        @keydown.enter="setZoomLevel(zoomLevel)"
-      />
-    </div>
+    <ItemTip
+      :text="$t('topPanel.zoomControl.tip.setZoom')"
+      position="bottom"
+    >
+      <div class="zoom-level-wrapper">
+        <input
+          class="zoom-level-input"
+          type="text"
+          v-model="zoomLevel"
+          @wheel.prevent="wheelZoom"
+          @blur="setZoomLevel(zoomLevel)"
+          @dblclick="resetZoom"
+          @keydown.enter="setZoomLevel(zoomLevel)"
+        />
+      </div>
+    </ItemTip>
 
-    <div
-      class="zoom-in-button button button-control button-circle"
-      @click="zoomIn"
-      :class="{ 'button--disabled': !canZoomIn }">
-      <BaseIcon name="IconPlus" size="24" />
-    </div>
+    <ItemTip
+      :text="$t('topPanel.zoomControl.tip.zoomIn')"
+      position="bottom"
+    >
+      <div
+        class="zoom-in-button button button-control button-circle"
+        @click="zoomIn"
+        :class="{ 'button--disabled': !canZoomIn }">
+        <BaseIcon name="IconPlus" size="24" />
+      </div>
+    </ItemTip>
   </div>
 </template>
 

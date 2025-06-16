@@ -33,7 +33,7 @@
     "tip": {
       "zoomIn": "Zoom in",
       "zoomOut": "Zoom out",
-      "setZoom": "Set zoom level"
+      "setZoom": "Set zoom level or double-click to reset"
     },
     "toast":{
       "errorNaN": {
@@ -47,19 +47,34 @@
     }
   },
 
+  "helpButton": {
+    "tip": "Show or hide help overlay"
+  },
+
+  "settingsButton": {
+    "tip": "Open settings panel"
+  },
+
   "settingsPanel": {
     "title": "Settings",
     "language": {
       "label": "Language",
       "en": "EN",
       "sk": "SK",
-      "cz": "CZ"
+      "cz": "CZ",
+      "tip": "Select the language for the application"
     },
     "theme": {
-      "label": "Theme"
+      "label": "Theme",
+      "button": {
+        "tip": "Toggle between light and dark themes"
+      }
     },
     "shortcuts": {
-      "label": "Key shortcuts"
+      "label": "Key shortcuts",
+      "button": {
+        "tip": "Toggle key shortcuts"
+      }
     },
     "resetWidth": {
       "label": "Reset side panel width",

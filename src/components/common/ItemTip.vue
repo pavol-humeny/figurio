@@ -46,6 +46,8 @@ const {
 <style scoped>
 .item-tip {
   width: fit-content;
+  /* width: 100%; */
+  height: 100%;
 
 }
 

@@ -4,6 +4,8 @@ import { useImageStore } from '@/stores/imageStore';
 import { useFileNameDisplay } from '@/composables/topPanel/useFileNameDisplay';
 import { useI18n } from 'vue-i18n'
 
+import ItemTip from '../common/ItemTip.vue';
+
 const { t } = useI18n()
 
 const {
@@ -17,24 +19,29 @@ const {
 </script>
 
 <template>
-  <div class="file-name-display-wrapper">
-    <input
-      ref="inputRef"
-      name="fileName"
-      v-model="fileNameInput"
-      @blur="saveNewFileName"
-      @keydown.enter="saveNewFileName"
-      @click="startEditing"
-      class="file-name-display-input"
-      type="text"
-    />
-    <BaseIcon
-      :name="editEnabled ? 'IconTick' : 'IconEditPencil'"
-      :size="30"
-      :color="'var(--primary-c)'"
-      @click="editEnabled ? saveNewFileName() : startEditing()"
-    />
-  </div>
+  <ItemTip
+    :text="$t('topPanel.fileNameDisplay.tip')"
+    position="right"
+  >
+    <div class="file-name-display-wrapper">
+      <input
+        ref="inputRef"
+        name="fileName"
+        v-model="fileNameInput"
+        @blur="saveNewFileName"
+        @keydown.enter="saveNewFileName"
+        @click="startEditing"
+        class="file-name-display-input"
+        type="text"
+      />
+      <BaseIcon
+        :name="editEnabled ? 'IconTick' : 'IconEditPencil'"
+        :size="30"
+        :color="'var(--primary-c)'"
+        @click="editEnabled ? saveNewFileName() : startEditing()"
+      />
+    </div>
+  </ItemTip>
 </template>
 
 <style scoped>

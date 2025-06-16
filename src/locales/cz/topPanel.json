@@ -33,7 +33,7 @@
     "tip": {
       "zoomIn": "Přiblížit",
       "zoomOut": "Oddálit",
-      "setZoom": "Nastavit úroveň přiblížení"
+      "setZoom": "Nastavit úroveň přiblížení nebo dvakrát kliknout pro reset"
     },
     "toast": {
       "errorNaN": {
@@ -47,19 +47,34 @@
     }
   },
 
+  "helpButton": {
+    "tip": "Zobrazit nebo skrýt nápovědu"
+  },
+
+  "settingsButton": {
+    "tip": "Otevřít panel nastavení"
+  },
+
   "settingsPanel": {
     "title": "Nastavení",
     "language": {
       "label": "Jazyk",
       "en": "EN",
       "sk": "SK",
-      "cz": "CZ"
+      "cz": "CZ",
+      "tip": "Změnit jazyk aplikace"
     },
     "theme": {
-      "label": "Téma"
+      "label": "Téma",
+      "button": {
+        "tip": "Přepnout mezi světlým a tmavým režimem"
+      }
     },
     "shortcuts": {
-      "label": "Klávesové zkratky"
+      "label": "Klávesové zkratky",
+      "button": {
+        "tip": "Zapnout nebo vypnout klávesové zkratky"
+      }
     },
     "resetWidth": {
       "label": "Resetovat šířku postranního panelu",
