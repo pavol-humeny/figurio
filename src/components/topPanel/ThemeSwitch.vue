@@ -8,7 +8,7 @@ const { theme, toggleTheme } = useThemeSwitch()
 
 <template>
   <div
-    class="theme-switch button circle-button control-button"
+    class="theme-switch button button-circle button-control"
     @click="toggleTheme"
   >
     <BaseIcon

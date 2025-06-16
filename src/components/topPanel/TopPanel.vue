@@ -4,6 +4,7 @@ import HelpButton from './HelpButton.vue';
 import FileNameDisplay from './FileNameDisplay.vue';
 import LanguageSwitch from './LanguageSwitch.vue';
 import ThemeSwitch from './ThemeSwitch.vue';
+import UndoRedo from './UndoRedo.vue';
 </script>
 
 <template>
@@ -12,7 +13,7 @@ import ThemeSwitch from './ThemeSwitch.vue';
       <FileNameDisplay />
     </div>
     <div class="top-panel__center">
-      <!-- <UndoRedo /> -->
+      <UndoRedo />
       <!-- <ZoomControl /> -->
     </div>
     <div class="top-panel__right">

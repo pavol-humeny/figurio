@@ -15,25 +15,35 @@
   height: 40px;
 }
 
-.control-button{
+.button-control{
   background: var(--secondary-c);
   border: none;
   color: var(--primary-c);
   transition: var(--default-transition);
 }
 
-.control-button:hover{
+.button-control:hover{
   background: var(--primary-c);
   color: var(--secondary-c);
   transition: var(--default-transition);
 }
 
-.action-button{
+.button-action{
   /* background: none; */
   /* color: var(--primary-c); */
 }
 
-.circle-button{
+.button-circle{
   width: 40px;
   border-radius: 50%;
+}
+
+.button--disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.button--disabled:hover {
+  background: var(--secondary-c);
+  color: var(--primary-c);
 }
