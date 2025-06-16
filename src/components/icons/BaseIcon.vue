@@ -1,14 +1,13 @@
 <script setup>
-import { computed, defineAsyncComponent } from 'vue'
+import { defineAsyncComponent, computed } from 'vue'
 
 const props = defineProps({
   name: {
     type: String,
     required: true,
-    validator: (val) => val.startsWith('Icon'),
   },
   size: {
-    type: Number,
+    type: [Number, String],
     default: 20,
   },
   color: {
@@ -17,9 +16,21 @@ const props = defineProps({
   },
 })
 
-const iconComponent = computed(() =>
-  defineAsyncComponent(() => import(`@/components/icons/${props.name}.vue`))
-)
+// Get all icons
+const icons = import.meta.glob('@/components/icons/Icon*.vue')
+
+// Select the icon component based on the name
+const iconComponent = computed(() => {
+  const path = `/src/components/icons/${props.name}.vue`
+  const loader = icons[path]
+
+  if (!loader) {
+    console.warn(`Icon ${props.name} does not exist: ${path}`)
+    return null
+  }
+
+  return defineAsyncComponent(loader)
+})
 
 </script>
 

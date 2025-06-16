@@ -1,0 +1,8 @@
+<template>
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="#000000" stroke-linecap="round" stroke-linejoin="round" id="Frame--Streamline-Lucide" height="24" width="24">
+  <path d="M22 6 2 6" stroke-width="2"></path>
+  <path d="M22 18 2 18" stroke-width="2"></path>
+  <path d="m6 2 0 20" stroke-width="2"></path>
+  <path d="m18 2 0 20" stroke-width="2"></path>
+</svg>
+</template>
