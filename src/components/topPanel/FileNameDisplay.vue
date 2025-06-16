@@ -2,6 +2,9 @@
 import BaseIcon from '@/components/icons/BaseIcon.vue'
 import { useImageStore } from '@/stores/imageStore';
 import { useFileNameDisplay } from '@/composables/topPanel/useFileNameDisplay';
+import { useI18n } from 'vue-i18n'
+
+const { t } = useI18n()
 
 const {
   editEnabled,
@@ -9,7 +12,7 @@ const {
   inputRef,
   startEditing,
   saveNewFileName
-} = useFileNameDisplay(useImageStore())
+} = useFileNameDisplay(useImageStore(), t)
 
 </script>
 
