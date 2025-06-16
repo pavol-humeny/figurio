@@ -3,6 +3,7 @@ import SettingsButton from './SettingsButton.vue';
 import HelpButton from './HelpButton.vue';
 import FileNameDisplay from './FileNameDisplay.vue';
 import LanguageSwitch from './LanguageSwitch.vue';
+import ThemeSwitch from './ThemeSwitch.vue';
 </script>
 
 <template>
@@ -18,6 +19,7 @@ import LanguageSwitch from './LanguageSwitch.vue';
       <HelpButton />
       <SettingsButton />
       <LanguageSwitch />
+      <ThemeSwitch />
     </div>
   </div>
 </template>
