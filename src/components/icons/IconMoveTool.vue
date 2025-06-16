@@ -1,5 +1,5 @@
 <template>
-  <svg xmlns="http://www.w3.org/2000/svg" viewBox="-0.835 -0.835 20 20" fill="none" stroke="#000000" stroke-linecap="round" stroke-linejoin="round" id="Arrows-Move--Streamline-Tabler" height="20" width="20">
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="-0.835 -0.835 20 20" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" id="Arrows-Move--Streamline-Tabler" height="20" width="20">
   <path d="m13.7475 6.87375 2.2912500000000002 2.2912500000000002 -2.2912500000000002 2.2912500000000002" stroke-width="1.67"></path>
   <path d="M11.45625 9.165000000000001h4.5825000000000005" stroke-width="1.67"></path>
   <path d="m4.5825000000000005 6.87375 -2.2912500000000002 2.2912500000000002 2.2912500000000002 2.2912500000000002" stroke-width="1.67"></path>
