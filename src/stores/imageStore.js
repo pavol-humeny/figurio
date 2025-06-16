@@ -1,12 +1,12 @@
 import { defineStore } from 'pinia'
-import { ref } from 'vue'
 
-export const useImageStore = defineStore('imageStore', () => {
-  const fileName = ref('untitled')
-
-  function setFileName(newName) {
-    fileName.value = newName.trim()
-  }
-
-  return { fileName, setFileName }
+export const useImageStore = defineStore('imageStore', {
+  state: () => ({
+    fileName: 'untitled',
+  }),
+  actions: {
+    setFileName(newName) {
+      this.fileName = newName.trim()
+    },
+  },
 })

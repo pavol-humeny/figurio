@@ -5,6 +5,7 @@ import FileNameDisplay from './FileNameDisplay.vue';
 import LanguageSwitch from './LanguageSwitch.vue';
 import ThemeSwitch from './ThemeSwitch.vue';
 import UndoRedo from './UndoRedo.vue';
+import ZoomControl from './ZoomControl.vue';
 </script>
 
 <template>
@@ -14,7 +15,7 @@ import UndoRedo from './UndoRedo.vue';
     </div>
     <div class="top-panel__center">
       <UndoRedo />
-      <!-- <ZoomControl /> -->
+      <ZoomControl />
     </div>
     <div class="top-panel__right">
       <HelpButton />
@@ -50,6 +51,7 @@ import UndoRedo from './UndoRedo.vue';
 }
 .top-panel__center {
   justify-content: center;
+  gap: 10px;
 }
 .top-panel__right {
   justify-content: flex-end;

@@ -29,11 +29,21 @@
     }
   },
 
-  "zoomControls": {
+  "zoomControl": {
     "tip": {
       "zoomIn": "Priblížiť",
       "zoomOut": "Oddialiť",
       "setZoom": "Nastaviť úroveň priblíženia"
+    },
+    "toast": {
+      "errorNaN": {
+        "title": "Neplatná úroveň priblíženia",
+        "message": "Úroveň priblíženia musí byť číslo."
+      },
+      "errorOutOfRange": {
+        "title": "Úroveň priblíženia mimo rozsahu",
+        "message": "Úroveň priblíženia musí byť medzi {min}% a {max}%."
+      }
     }
   },
 

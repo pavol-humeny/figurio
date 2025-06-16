@@ -48,9 +48,9 @@ const { toasts, removeToastModal } = useToastModal()
   left: 50%;
   transform: translateX(-50%);
   border-radius: 10px;
-  padding: 10px 15px;
+  padding: 15px 20px;
   color: var(--text-c);
-  width: 300px;
+  min-width: 400px;
   border: 1px solid transparent;
   box-shadow: var(--box-shadow-ui);
   animation: fade-in 0.3s ease-out;

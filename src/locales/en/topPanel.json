@@ -28,12 +28,22 @@
       "redo": "Redo last action"
     }
   },
-  
-  "zoomControls": {
+
+  "zoomControl": {
     "tip": {
       "zoomIn": "Zoom in",
       "zoomOut": "Zoom out",
       "setZoom": "Set zoom level"
+    },
+    "toast":{
+      "errorNaN": {
+        "title": "Invalid zoom level",
+        "message": "The zoom level must be a number."
+      },
+      "errorOutOfRange": {
+        "title": "Zoom level out of range",
+        "message": "Zoom level must be between {min}% and {max}%."
+      }
     }
   },
 
@@ -53,7 +63,7 @@
     },
     "resetWidth": {
       "label": "Reset side panel width",
-      "button": 
+      "button":
         {
           "text": "Reset",
           "tip": "Restore default sidebar width"
