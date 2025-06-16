@@ -20,6 +20,7 @@ const {
   <div class="file-name-display-wrapper">
     <input
       ref="inputRef"
+      name="fileName"
       v-model="fileNameInput"
       @blur="saveNewFileName"
       @keydown.enter="saveNewFileName"
