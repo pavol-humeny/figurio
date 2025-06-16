@@ -5,7 +5,6 @@ const toasts = ref([])
 
 export function useToastModal() {
   function showToastModal(type, title, message) {
-    console.log('Showing toast modal:', type, title, message)
     const id = nextId++
     toasts.value.push({ id, type, title, message })
 

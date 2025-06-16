@@ -1,0 +1,55 @@
+{
+  "fileNameDisplay": {
+    "defaultName": "bez názvu",
+    "tip": "Uprav názov aktuálne otvoreného súboru"
+  },
+
+  "undoRedo": {
+    "tip": {
+      "undo": "Späť poslednú akciu",
+      "redo": "Znova poslednú akciu"
+    }
+  },
+
+  "zoomControls": {
+    "tip": {
+      "zoomIn": "Priblížiť",
+      "zoomOut": "Oddialiť",
+      "setZoom": "Nastaviť úroveň priblíženia"
+    }
+  },
+
+  "settingsPanel": {
+    "title": "Nastavenia",
+    "language": {
+      "label": "Jazyk",
+      "en": "EN",
+      "sk": "SK",
+      "cz": "CZ"
+    },
+    "theme": {
+      "label": "Téma"
+    },
+    "shortcuts": {
+      "label": "Klávesové skratky"
+    },
+    "resetWidth": {
+      "label": "Resetovať šírku bočného panelu",
+      "button": {
+        "text": "Reset",
+        "tip": "Obnoviť predvolenú šírku bočného panelu"
+      }
+    },
+    "openPrivacyAndData": {
+      "label": "Ochrana súkromia a údaje",
+      "button": {
+        "text": "Otvoriť",
+        "tip": "Zobraziť a spravovať nastavenia ochrany súkromia a údajov"
+      }
+    },
+    "closeButton": {
+      "text": "Zavrieť",
+      "tip": "Zavrieť panel nastavení"
+    }
+  }
+}

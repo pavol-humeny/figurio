@@ -1,0 +1,56 @@
+{
+  "fileNameDisplay":{
+    "defaultName": "untitled",
+    "tip": "Edit the name of the currently opened file"
+  },
+
+  "undoRedo":{
+    "tip":{
+      "undo": "Undo last action",
+      "redo": "Redo last action"
+    }
+  },
+  
+  "zoomControls": {
+    "tip": {
+      "zoomIn": "Zoom in",
+      "zoomOut": "Zoom out",
+      "setZoom": "Set zoom level"
+    }
+  },
+
+  "settingsPanel": {
+    "title": "Settings",
+    "language": {
+      "label": "Language",
+      "en": "EN",
+      "sk": "SK",
+      "cz": "CZ"
+    },
+    "theme": {
+      "label": "Theme"
+    },
+    "shortcuts": {
+      "label": "Key shortcuts"
+    },
+    "resetWidth": {
+      "label": "Reset side panel width",
+      "button": 
+        {
+          "text": "Reset",
+          "tip": "Restore default sidebar width"
+        }
+    },
+    "openPrivacyAndData": {
+      "label": "Privacy & Data",
+      "button": {
+        "text": "Open",
+        "tip": "View and manage privacy and data settings"
+      }
+    },
+    "closeButton":{
+      "text": "Close",
+      "tip": "Close the settings panel"
+    }
+  }
+}
