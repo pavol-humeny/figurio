@@ -79,4 +79,15 @@
 body {
   color: var(--text-c);
   font-family: Inter;
+  --border-ui: 1px solid var(--border-c);
+  --border-modal: 2px solid var(--primary-c);
+  --default-transition: all 0.2s ease-in-out;
+  --z-index-tip: 9999;
+  --z-index-toast: 9998;
+  --z-index-modal: 9997;
+  --z-index-settings: 1000;
+  --z-index-top-panel: 900;
+  --z-index-privacy: 900;
+  --z-index-tool-settings-panel: 800;
+  --z-index-tool-panel: 800;
 }
