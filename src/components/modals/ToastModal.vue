@@ -1,6 +1,6 @@
 <script setup>
-import { useToast } from '@/composables/useToast'
-const { toasts, removeToast } = useToast()
+import { useToastModal } from '@/composables/modals/useToastModal'
+const { toasts, removeToastModal } = useToastModal()
 </script>
 
 <template>
@@ -11,9 +11,9 @@ const { toasts, removeToast } = useToast()
         :key="toast.id"
         class="toast"
         :class="toast.type"
-        :style="{ bottom: `${index * 10 + 20}px` }"
+        :style="{ bottom: `${index * 10 + 40}px` }"
       >
-        <button class="close-button" @click="removeToast(toast.id)">×</button>
+        <button class="close-button" @click="removeToastModal(toast.id)">×</button>
 
         <p class="title">{{ toast.title }}</p>
         <p class="message">{{ toast.message }}</p>
@@ -51,8 +51,8 @@ const { toasts, removeToast } = useToast()
   padding: 10px 15px;
   color: var(--text-c);
   width: 300px;
-  /* border: 1px solid transparent; */
-  /* box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4); */
+  border: 1px solid transparent;
+  box-shadow: var(--box-shadow-ui);
   animation: fade-in 0.3s ease-out;
   pointer-events: auto;
 }
@@ -93,7 +93,7 @@ const { toasts, removeToast } = useToast()
   border-color: var(--success-c);
   color: var(--success-c);
 }
-.notification {
+.info {
   background: var(--notification-background-c);
   border-color: var(--notification-c);
   color: var(--notification-c);

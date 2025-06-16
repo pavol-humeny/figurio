@@ -20,6 +20,7 @@ const {
       v-model="fileNameInput"
       @blur="saveNewFileName"
       @keydown.enter="saveNewFileName"
+      @click="startEditing"
       class="file-name-display-input"
       type="text"
       autofocus

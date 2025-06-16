@@ -3,8 +3,9 @@ import { ref } from 'vue'
 let nextId = 0
 const toasts = ref([])
 
-export function useToast() {
-  function showToast(type, title, message) {
+export function useToastModal() {
+  function showToastModal(type, title, message) {
+    console.log('Showing toast modal:', type, title, message)
     const id = nextId++
     toasts.value.push({ id, type, title, message })
 
@@ -14,13 +15,13 @@ export function useToast() {
     }, 4000)
   }
 
-  function removeToast(id) {
+  function removeToastModal(id) {
     toasts.value = toasts.value.filter(t => t.id !== id)
   }
 
   return {
     toasts,
-    showToast,
-    removeToast
+    showToastModal,
+    removeToastModal
   }
 }

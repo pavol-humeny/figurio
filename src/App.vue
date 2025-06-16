@@ -1,13 +1,16 @@
 <script setup>
 import { RouterLink, RouterView } from 'vue-router'
 import TopPanel from './components/topPanel/TopPanel.vue';
+import ToastModal from './components/modals/ToastModal.vue';
 </script>
 
 <template>
   <div class="main">
+    <ToastModal />
     <TopPanel />
     <!-- <RouterView /> -->
   </div>
+
 </template>
 
 <style scoped>
