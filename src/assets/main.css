@@ -5,3 +5,35 @@
   margin: 0 auto;
   user-select: none;
 }
+
+.button{
+  /* padding: 8px 16px; */
+  border-radius: 20px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+  height: 40px;
+}
+
+.control-button{
+  background: var(--secondary-c);
+  border: none;
+  color: var(--primary-c);
+  transition: var(--default-transition);
+}
+
+.control-button:hover{
+  background: var(--primary-c);
+  color: var(--secondary-c);
+  transition: var(--default-transition);
+}
+
+.action-button{
+  /* background: none; */
+  /* color: var(--primary-c); */
+}
+
+.circle-button{
+  width: 40px;
+  border-radius: 50%;
+}
