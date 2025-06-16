@@ -2,15 +2,7 @@
 import SettingsButton from './SettingsButton.vue';
 import HelpButton from './HelpButton.vue';
 import FileNameDisplay from './FileNameDisplay.vue';
-
-import { useToastModal } from '@/composables/modals/useToastModal';
-
-const { showToastModal } = useToastModal();
-
-function ahoj() {
-  showToastModal("error", "Ahoj", "This is a toast message from the top panel!");
-}
-
+import LanguageSwitch from './LanguageSwitch.vue';
 </script>
 
 <template>
@@ -23,9 +15,9 @@ function ahoj() {
       <!-- <ZoomControl /> -->
     </div>
     <div class="top-panel__right">
-      <button @click="ahoj">click</button>
       <HelpButton />
       <SettingsButton />
+      <LanguageSwitch />
     </div>
   </div>
 </template>
