@@ -23,7 +23,6 @@ const {
       @click="startEditing"
       class="file-name-display-input"
       type="text"
-      autofocus
     />
     <BaseIcon
       :name="editEnabled ? 'IconTick' : 'IconEditPencil'"
