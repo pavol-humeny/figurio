@@ -5,8 +5,10 @@ import ItemTip from '../common/ItemTip.vue'
 import { useDragAndDropArea } from '@/composables/editor/useDragAndDropArea'
 import { useI18n } from 'vue-i18n'
 import { useImageStore } from '@/stores/imageStore'
+import { useRouter } from 'vue-router'
 
 const { t } = useI18n()
+const router = useRouter()
 
 const {
   isDragging,
@@ -14,7 +16,7 @@ const {
   handleDragLeave,
   handleDrop,
   selectFile
-} = useDragAndDropArea(useImageStore(), t)
+} = useDragAndDropArea(useImageStore(), t, router)
 </script>
 
 <template>

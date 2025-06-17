@@ -4,13 +4,15 @@ import ItemTip from '../common/ItemTip.vue';
 import { useImageStore } from '@/stores/imageStore';
 import { useUploadFileButton } from '@/composables/topPanel/useUploadFileButton';
 import { useI18n } from 'vue-i18n';
+import { useRouter } from 'vue-router';
 
 const { t } = useI18n()
+const router = useRouter()
 
 const {
   disabled,
   uploadFile
-} = useUploadFileButton(useImageStore(), t);
+} = useUploadFileButton(useImageStore(), t, router);
 </script>
 
 <template>

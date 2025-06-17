@@ -6,16 +6,22 @@ import UndoRedo from './UndoRedo.vue';
 import ZoomControl from './ZoomControl.vue';
 import UploadFileButton from './UploadFileButton.vue';
 import CloseFileButton from './CloseFileButton.vue';
+
+import { useRoute } from 'vue-router'
+import { computed } from 'vue'
+
+const route = useRoute()
+const isHomeView = computed(() => route.name === 'home')
 </script>
 
 <template>
   <div class="top-panel">
-    <div class="top-panel__left">
+    <div class="top-panel__left" v-if="!isHomeView">
       <FileNameDisplay />
       <UploadFileButton />
       <CloseFileButton />
     </div>
-    <div class="top-panel__center">
+    <div class="top-panel__center" v-if="!isHomeView">
       <UndoRedo />
       <ZoomControl />
     </div>

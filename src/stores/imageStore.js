@@ -70,7 +70,7 @@ export const useImageStore = defineStore('imageStore', {
       }
     },
 
-    saveToImageStore(files, t) {
+    saveToImageStore(files, t, router) {
       if (!files) return
 
       if (files.length > 1){
@@ -83,9 +83,13 @@ export const useImageStore = defineStore('imageStore', {
       }
 
       this.checkFile(files[0], t)
+
+      if (router.currentRoute.value.name !== 'editor') {
+        router.push({ name: 'editor' })
+      }
     },
 
-    loadFile(t) {
+    loadFile(t, router) {
       const input = document.createElement('input')
       input.type = 'file'
       input.accept = '.png, .jpg, .jpeg, .pdf'
@@ -93,7 +97,7 @@ export const useImageStore = defineStore('imageStore', {
 
       input.addEventListener('change', () => {
         if (input.files && input.files.length > 0) {
-          this.saveToImageStore(input.files, t)
+          this.saveToImageStore(input.files, t, router)
         }
       })
 

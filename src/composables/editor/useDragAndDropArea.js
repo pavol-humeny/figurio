@@ -1,6 +1,7 @@
 import { ref } from 'vue'
 
-export function useDragAndDropArea(imageStore, t) {
+
+export function useDragAndDropArea(imageStore, t, router) {
   const isDragging = ref(false)
 
   const handleDragOver = (event) => {
@@ -17,12 +18,12 @@ export function useDragAndDropArea(imageStore, t) {
 
     const files = event.dataTransfer?.files
     if (files && files.length > 0) {
-      imageStore.saveToImageStore(files, t)
+      imageStore.saveToImageStore(files, t, router)
     }
   }
 
   const selectFile = () => {
-    imageStore.loadFile(t)
+    imageStore.loadFile(t, router)
   }
 
   return {

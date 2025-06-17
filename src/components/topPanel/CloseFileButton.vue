@@ -16,7 +16,7 @@ const {
 <template>
   <ItemTip
     v-if="!disabled"
-    :text="$t('topPanel.closeCurrentFileButton.tip')"
+    :text="$t('topPanel.closeFileButton.tip')"
     position="bottom"
   >
     <button
