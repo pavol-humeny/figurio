@@ -37,6 +37,18 @@ export function useItemTip(options = {}){
           left: rect.left + rect.width / 2,
         };
         break;
+      case 'bottom-right':
+        coords.value = {
+          top: rect.bottom + offset,
+          left: rect.left,
+        };
+        break;
+      case 'bottom-left':
+        coords.value = {
+          top: rect.bottom + offset,
+          left: rect.right,
+        };
+        break;
       case 'left':
         coords.value = {
           top: rect.top + rect.height / 2,

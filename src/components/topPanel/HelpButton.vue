@@ -6,7 +6,7 @@ import ItemHint from '../common/ItemTip.vue'
 <template>
   <ItemHint
     :text="$t('topPanel.helpButton.tip')"
-    position="bottom"
+    position="bottom-left"
   >
     <button class="button button-circle button-control">
       <BaseIcon name="IconQuestionMark" :size="23" />

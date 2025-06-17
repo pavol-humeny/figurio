@@ -8,7 +8,8 @@ const props = defineProps({
   },
   position: {
     type: String,
-    default: 'top'
+    default: 'top',
+
   }
 });
 
@@ -46,9 +47,7 @@ const {
 <style scoped>
 .item-tip {
   width: fit-content;
-  /* width: 100%; */
   height: 100%;
-
 }
 
 .item-tip-bubble {
@@ -70,6 +69,8 @@ const {
 .item-tip-bubble.bottom { transform: translate(-50%, 0); }
 .item-tip-bubble.left   { transform: translate(-100%, -50%); }
 .item-tip-bubble.right  { transform: translate(0, -50%); }
+.item-tip-bubble.bottom-right {transform: translate(0, 0);}
+.item-tip-bubble.bottom-left {transform: translate(-100%, 0);}
 
 .item-tip-arrow {
   position: absolute;
@@ -111,5 +112,23 @@ const {
   border-top: 6px solid transparent;
   border-bottom: 6px solid transparent;
   border-right: 6px solid var(--secondary-c);
+}
+
+.item-tip-arrow.bottom-right {
+  left: 20px;
+  top: -6px;
+  transform: translateX(-50%);
+  border-left: 6px solid transparent;
+  border-right: 6px solid transparent;
+  border-bottom: 6px solid var(--secondary-c);
+}
+
+.item-tip-arrow.bottom-left {
+  right: 20px;
+  top: -6px;
+  transform: translateX(50%);
+  border-left: 6px solid transparent;
+  border-right: 6px solid transparent;
+  border-bottom: 6px solid var(--secondary-c);
 }
 </style>
