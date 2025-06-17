@@ -44,7 +44,7 @@ const {
           class="zoom-level-input"
           type="text"
           v-model="zoomLevel"
-          @wheel.prevent="wheelZoom"
+          v-on:wheel.passive="wheelZoom"
           @blur="setZoomLevel(zoomLevel)"
           @dblclick="resetZoom"
           @keydown.enter="setZoomLevel(zoomLevel)"
