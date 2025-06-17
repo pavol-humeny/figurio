@@ -11,10 +11,10 @@ export function useUploadFileButton(imageStore, t) {
   const uploadFile = async () => {
     // TODO - show confirmation modal before uploading
     const confirmed = await showConfirmModal(
-      'Upload image?',
-      'Are you sure you want to upload this image?',
-      'No!!!',
-      'Yes, upload it!'
+      t("topPanel.uploadFileButton.confirm.title"),
+      t("topPanel.uploadFileButton.confirm.message"),
+      t("topPanel.uploadFileButton.confirm.cancel"),
+      t("topPanel.uploadFileButton.confirm.confirm")
     )
     if (confirmed) {
       imageStore.uploadFile()

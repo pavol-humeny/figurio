@@ -3,11 +3,14 @@ import BaseIcon from '@/components/icons/BaseIcon.vue';
 import ItemTip from '../common/ItemTip.vue';
 import { useImageStore } from '@/stores/imageStore';
 import { useUploadFileButton } from '@/composables/topPanel/useUploadFileButton';
+import { useI18n } from 'vue-i18n';
+
+const { t } = useI18n()
 
 const {
   disabled,
   uploadFile
-} = useUploadFileButton(useImageStore());
+} = useUploadFileButton(useImageStore(), t);
 </script>
 
 <template>

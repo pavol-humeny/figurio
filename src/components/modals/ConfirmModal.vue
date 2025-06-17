@@ -59,8 +59,7 @@ const {
   border: var(--border-modal);
   padding: 20px 25px;
   border-radius: 20px;
-  max-width: 400px;
-  width: 90%;
+  max-width: 500px;
   box-shadow: var(--box-shadow-ui);
   display: flex;
   flex-direction: column;
@@ -84,8 +83,11 @@ const {
   width: 100%;
   display: flex;
   justify-content: left;
-  font-size: 25px;
-  font-weight: 600;
+}
+
+.title-wrapper p {
+  font-size: 23px;
+  font-weight: 700;
 }
 
 .message-wrapper {
