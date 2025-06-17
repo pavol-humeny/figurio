@@ -1,7 +1,6 @@
 {
   "move": {
     "label": "Move",
-    "iconName": "IconMoveTool",
     "tip": "Move the canvas using mouse.",
     "settings":{
       "general": {
@@ -13,7 +12,6 @@
   },
   "transform": {
     "label": "Transform",
-    "iconName": "IconTransformTool",
     "tip": "Rotate, scale, flip or crop the image.",
     "settings": {
       "rotation": {
@@ -42,7 +40,6 @@
   },
   "smartCrop": {
     "label": "Smart Crop",
-    "iconName": "IconSmartCropTool",
     "tip": "Automatically crop the object.",
     "settings":{
       "auto": {
@@ -60,7 +57,6 @@
   },
   "adjust": {
     "label": "Adjust",
-    "iconName": "IconAdjustTool",
     "tip": "Adjust image brightness, contrast, color and more.",
     "settings":{
       "brightness": {
@@ -79,7 +75,6 @@
   },
   "annotate": {
     "label": "Annotate",
-    "iconName": "IconAnnotateTool",
     "tip": "Draw, add text or shapes to the image.",
     "settings":{
       "draw": {
@@ -106,7 +101,6 @@
   },
   "frame": {
     "label": "Frame",
-    "iconName": "IconFrameTool",
     "tip": "Add a frame around the image.",
     "settings":{
       "general":{
@@ -118,7 +112,6 @@
   },
   "export": {
     "label": "Export",
-    "iconName": "IconExportTool",
     "tip": "Export the image.",
     "settings": {
       "general":{

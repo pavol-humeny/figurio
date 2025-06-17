@@ -26,7 +26,11 @@ export function useToolsPanel(toolStore) {
     nextTick(() => checkScroll())
   })
 
-  const selectTool = (toolKey) => {
+  const toggleTool = (toolKey) => {
+    if (toolStore.selectedToolKey === toolKey) {
+      toolStore.selectTool('') 
+      return
+    }
     toolStore.selectTool(toolKey)
   }
 
@@ -38,6 +42,6 @@ export function useToolsPanel(toolStore) {
     scrollUp,
     scrollDown,
     checkScroll,
-    selectTool,
+    toggleTool,
   }
 }

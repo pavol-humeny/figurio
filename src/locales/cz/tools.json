@@ -1,7 +1,6 @@
 {
   "move": {
     "label": "Posun",
-    "iconName": "IconMoveTool",
     "tip": "Posuň plátno pomocí myši.",
     "settings": {
       "general": {
@@ -13,7 +12,6 @@
   },
   "transform": {
     "label": "Transformovat",
-    "iconName": "IconTransformTool",
     "tip": "Otoč, změň měřítko, překlop nebo ořízni obrázek.",
     "settings": {
       "rotation": {
@@ -42,7 +40,6 @@
   },
   "smartCrop": {
     "label": "Chytré oříznutí",
-    "iconName": "IconSmartCropTool",
     "tip": "Automaticky ořízni objekt.",
     "settings": {
       "auto": {
@@ -60,7 +57,6 @@
   },
   "adjust": {
     "label": "Úpravy",
-    "iconName": "IconAdjustTool",
     "tip": "Uprav jas, kontrast, barvy a další.",
     "settings": {
       "brightness": {
@@ -79,7 +75,6 @@
   },
   "annotate": {
     "label": "Anotace",
-    "iconName": "IconAnnotateTool",
     "tip": "Kresli, přidej text nebo tvary do obrázku.",
     "settings": {
       "draw": {
@@ -106,7 +101,6 @@
   },
   "frame": {
     "label": "Rám",
-    "iconName": "IconFrameTool",
     "tip": "Přidej rám kolem obrázku.",
     "settings": {
       "general": {
@@ -118,7 +112,6 @@
   },
   "export": {
     "label": "Export",
-    "iconName": "IconExportTool",
     "tip": "Exportuj obrázek.",
     "settings": {
       "general": {

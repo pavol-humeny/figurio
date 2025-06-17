@@ -3,7 +3,7 @@ import BaseIcon from '../icons/BaseIcon.vue';
 import OneTool from './OneTool.vue';
 import { useI18n } from 'vue-i18n'
 import { computed } from 'vue'
-import { useToolsPanel } from '@/composables/editor/useToolsPanel';
+import { useToolsPanel } from '@/composables/tools/useToolsPanel';
 import { toolsDefinitions } from '@/config/toolsDefinitions'
 import { useToolStore } from '@/stores/toolStore';
 
@@ -17,7 +17,7 @@ const {
   checkScroll,
   scrollUp,
   scrollDown,
-  selectTool
+  toggleTool
 } = useToolsPanel(useToolStore())
 
 const tools = computed(() =>
@@ -49,7 +49,7 @@ const tools = computed(() =>
         :label="tool.label"
         :tip="tool.tip"
         :active="activeTool === tool.key"
-        @click="selectTool(tool.key)"
+        @click="toggleTool(tool.key)"
       />
     </div>
 
