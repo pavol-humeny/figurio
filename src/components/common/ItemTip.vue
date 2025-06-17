@@ -55,7 +55,7 @@ const {
   color: var(--text-c);
   padding: 6px 10px;
   border-radius: 6px;
-  font-size: 13px;
+  font-size: var(--tip-font-size);
   white-space: nowrap;
   box-shadow: var(--box-shadow-ui);
 }

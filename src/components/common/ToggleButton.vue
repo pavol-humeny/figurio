@@ -1,0 +1,112 @@
+<script setup>
+import ItemTip from './ItemTip.vue';
+import { defineProps, computed, watch, ref } from 'vue';
+
+const props = defineProps({
+  disabled: {
+    type: Boolean,
+    default: false
+  },
+  tip: {
+    type: String,
+    default: ''
+  },
+  position: {
+    type: String,
+    default: 'bottom'
+  },
+  modelValue: {
+    type: Boolean,
+    default: false
+  }
+});
+
+const emit = defineEmits(['update:modelValue'])
+
+const isActive = ref(props.modelValue)
+
+const toggleSwitch = () => {
+  if (props.disabled) return
+  isActive.value = !isActive.value
+  emit('update:modelValue', isActive.value)
+}
+
+watch(() => props.modelValue, (value) => {
+  isActive.value = value
+})
+
+const showTip = computed(() => props.tip !== '')
+
+</script>
+
+<template>
+    <ItemTip
+    v-if="showTip"
+    :text="props.tip"
+    :position="props.position"
+  >
+    <div class="toggle-switch">
+      <div
+        class="toggle-switch-wrapper"
+        :class="{ 'toggle-disabled': props.disabled }"
+        @click="toggleSwitch"
+      >
+        <div class="toggle-switch-slider" :class="{ active: isActive }"></div>
+      </div>
+    </div>
+  </ItemTip>
+
+  <div v-else class="toggle-switch">
+    <div
+      class="toggle-switch-wrapper"
+      :class="{ 'toggle-disabled': props.disabled }"
+      @click="toggleSwitch"
+    >
+      <div class="toggle-switch-slider" :class="{ active: isActive }"></div>
+    </div>
+  </div>
+</template>
+
+<style scoped>
+.toggle-switch {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.toggle-switch-wrapper {
+  position: relative;
+  display: flex;
+  background: var(--secondary-c);
+  border-radius: 20px;
+  padding: 5px;
+  width: 80px;
+  height: 40px;
+  overflow: hidden;
+  cursor: pointer;
+  transition: var(--default-transition);
+}
+
+.toggle-switch-wrapper.toggle-disabled {
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+.toggle-switch-slider {
+  position: absolute;
+  top: 5px;
+  opacity: 0.5;
+  left: 5px;
+  width: calc(100% / 2 - 5px);
+  height: 30px;
+  background: var(--primary-c);
+  border-radius: 15px;
+  transition: var(--default-transition);
+}
+
+.toggle-switch-slider.active {
+  left: calc(100% / 2);
+  opacity: 1;
+  transition: var(--default-transition);
+}
+</style>

@@ -23,7 +23,7 @@ const getButtonClass = (lang) => {
 <template>
   <ItemTip
     :text="$t('topPanel.settingsPanel.language.tip')"
-    position="bottom"
+    position="bottom-left"
   >
     <div class="language-switch">
       <div class="slider" :class="hoveredLang || locale"></div>

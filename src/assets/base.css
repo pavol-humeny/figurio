@@ -102,4 +102,11 @@ body {
   --z-index-tool-panel: 800;
 
   --box-shadow-ui: 1px 3px 6px rgba(0, 0, 0, 0.3);
+
+  --title-font-size: 23px;
+  --title-font-weight: 700;
+  
+  --subtitle-font-size: 18px;
+  --text-font-size: 15px;
+  --tip-font-size: 13px;
 }

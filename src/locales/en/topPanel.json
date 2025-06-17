@@ -96,13 +96,13 @@
         "tip": "Toggle between light and dark themes"
       }
     },
-    "shortcuts": {
+    "enableShortcuts": {
       "label": "Key shortcuts",
       "button": {
         "tip": "Toggle key shortcuts"
       }
     },
-    "resetWidth": {
+    "resetSidebarWidth": {
       "label": "Reset side panel width",
       "button":
         {

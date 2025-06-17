@@ -27,7 +27,7 @@
   transition: var(--default-transition);
 }
 
-.button-action{
+.button-default{
   padding: 8px 16px;
   border: var(--border-button);
   background: none;
@@ -35,7 +35,7 @@
   transition: var(--default-transition);
 }
 
-.button-action:hover{
+.button-default:hover{
   background: var(--primary-c);
   color: var(--secondary-c);
   transition: var(--default-transition);

@@ -3,12 +3,14 @@ import { RouterLink, RouterView } from 'vue-router'
 import TopPanel from './components/topPanel/TopPanel.vue';
 import ToastModal from './components/modals/ToastModal.vue';
 import ConfirmModal from './components/modals/ConfirmModal.vue';
+import SettingsPanel from './components/topPanel/SettingsPanel.vue';
 </script>
 
 <template>
   <div class="main">
     <ToastModal />
     <ConfirmModal />
+    <SettingsPanel />
     <TopPanel />
     <!-- <RouterView /> -->
   </div>

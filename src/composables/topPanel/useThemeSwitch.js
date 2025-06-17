@@ -1,9 +1,5 @@
-import { useUiStore } from "@/stores/uiStore";
-import { storeToRefs } from "pinia";
-
-export function useThemeSwitch() {
-  const uiStore = useUiStore();
-  const { theme } = storeToRefs(uiStore);
+export function useThemeSwitch(uiStore) {
+  const theme = uiStore.theme;
 
   const toggleTheme = () => {
     uiStore.toggleTheme()

@@ -1,16 +1,20 @@
 <script setup>
 import { useThemeSwitch } from '@/composables/topPanel/useThemeSwitch'
+import { useUiStore } from '@/stores/uiStore'
 
 import BaseIcon from '@/components/icons/BaseIcon.vue'
 import ItemTip from '../common/ItemTip.vue'
 
-const { theme, toggleTheme } = useThemeSwitch()
+const {
+  theme,
+  toggleTheme
+} = useThemeSwitch(useUiStore())
 </script>
 
 <template>
   <ItemTip
     :text="$t('topPanel.settingsPanel.theme.button.tip')"
-    position="bottom"
+    position="bottom-left"
   >
     <div
       class="theme-switch button button-circle button-control"

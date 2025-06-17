@@ -94,7 +94,7 @@ const { zoomLevel, zoomIn, zoomOut, wheelZoom, setZoomLevel, resetZoom, canZoomI
   border: none;
   color: var(--text-c);
   text-align: center;
-  font-size: 15px;
+  font-size: var(--text-font-size);
   outline: none;
 }
 

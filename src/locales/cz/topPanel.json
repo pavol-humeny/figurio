@@ -96,13 +96,13 @@
         "tip": "Přepnout mezi světlým a tmavým režimem"
       }
     },
-    "shortcuts": {
+    "enableShortcuts": {
       "label": "Klávesové zkratky",
       "button": {
         "tip": "Zapnout nebo vypnout klávesové zkratky"
       }
     },
-    "resetWidth": {
+    "resetSidebarWidth": {
       "label": "Resetovat šířku postranního panelu",
       "button": {
         "text": "Reset",

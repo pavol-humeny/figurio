@@ -1,5 +1,6 @@
 <script setup>
 import { useConfirmModal } from '@/composables/modals/useConfirmModal';
+import DefaultButton from '../common/DefaultButton.vue';
 
 const {
   isVisible,
@@ -28,12 +29,15 @@ const {
           <p>{{ message }}</p>
         </div>
         <div class="button-wrapper">
-          <button class="button button-text" @click="cancel">
-            {{ cancelText }}
-          </button>
-          <button class="button button-action" @click="confirm">
-            {{ confirmText }}
-          </button>
+          <DefaultButton
+            :text="cancelText"
+            :onClick="cancel"
+            onlyText
+          />
+          <DefaultButton
+            :text="confirmText"
+            :onClick="confirm"
+          />
         </div>
       </div>
     </div>
@@ -86,13 +90,13 @@ const {
 }
 
 .title-wrapper p {
-  font-size: 23px;
-  font-weight: 700;
+  font-size: var(--title-font-size);
+  font-weight: var(--title-font-weight);
 }
 
 .message-wrapper {
   width: 100%;
-  font-size: 15px;
+  font-size: var(--text-font-size);
   display: flex;
   justify-content: left;
 }

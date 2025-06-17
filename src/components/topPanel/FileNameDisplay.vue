@@ -71,7 +71,7 @@ const {
   background: transparent;
   border: none;
   color: var(--text-placeholder-c);
-  font-size: 15px;
+  font-size: var(--text-font-size);
   outline: none;
 }
 
