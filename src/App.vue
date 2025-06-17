@@ -33,6 +33,7 @@ import PrivacyAndDataModal from './components/modals/PrivacyAndDataModal.vue';
 }
 
 .content {
+  height: 100%;
   overflow: hidden;
 }
 </style>
