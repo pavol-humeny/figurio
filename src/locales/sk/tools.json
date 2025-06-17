@@ -1,0 +1,150 @@
+{
+  "move": {
+    "label": "Posun",
+    "iconName": "IconMoveTool",
+    "tip": "Posuň plátno pomocou myši.",
+    "settings": {
+      "general": {
+        "resetPosition": "Resetovať pozíciu",
+        "zoomSpeed": "Rýchlosť priblíženia",
+        "movementSpeed": "Rýchlosť pohybu"
+      }
+    }
+  },
+  "transform": {
+    "label": "Transformovať",
+    "iconName": "IconTransformTool",
+    "tip": "Otoč, zmeň mierku, prevráť alebo orež obrázok.",
+    "settings": {
+      "rotation": {
+        "label": "Rotácia",
+        "rotateLeft": "Otočiť doľava",
+        "rotateRight": "Otočiť doprava",
+        "reset": "Resetovať rotáciu"
+      },
+      "scale": {
+        "label": "Mierka"
+      },
+      "flip": {
+        "label": "Zrkadliť",
+        "horizontal": "Zrkadliť horizontálne",
+        "vertical": "Zrkadliť vertikálne"
+      },
+      "crop": {
+        "label": "Orezanie",
+        "custom": "Vlastné",
+        "circle": "Kruh",
+        "square": "1:1",
+        "landscape": "16:9",
+        "portrait": "9:16"
+      }
+    }
+  },
+  "smartCrop": {
+    "label": "Inteligentné orezanie",
+    "iconName": "IconSmartCropTool",
+    "tip": "Automaticky orež objekt.",
+    "settings": {
+      "auto": {
+        "label": "Automaticky",
+        "apply": "Použiť"
+      },
+      "manual": {
+        "label": "Manuálne",
+        "top": "Hore",
+        "bottom": "Dole",
+        "left": "Vľavo",
+        "right": "Vpravo"
+      }
+    }
+  },
+  "adjust": {
+    "label": "Úpravy",
+    "iconName": "IconAdjustTool",
+    "tip": "Uprav jas, kontrast, farby a ďalšie.",
+    "settings": {
+      "brightness": {
+        "label": "Jas"
+      },
+      "contrast": {
+        "label": "Kontrast"
+      },
+      "saturation": {
+        "label": "Sýtosť"
+      },
+      "exposure": {
+        "label": "Expozícia"
+      }
+    }
+  },
+  "annotate": {
+    "label": "Anotovať",
+    "iconName": "IconAnnotateTool",
+    "tip": "Kresli, pridaj text alebo tvary do obrázku.",
+    "settings": {
+      "draw": {
+        "label": "Kresliť",
+        "rasterize": "Rasterizovať",
+        "width": "Hrúbka",
+        "color": "Farba"
+      },
+      "erase": {
+        "label": "Guma",
+        "rasterize": "Rasterizovať",
+        "width": "Hrúbka"
+      },
+      "text": {
+        "label": "Text",
+        "rasterize": "Rasterizovať",
+        "font": "Písmo",
+        "fontStyle": "Štýl písma",
+        "fontSize": "Veľkosť písma",
+        "color": "Farba",
+        "textAlign": "Zarovnanie textu"
+      }
+    }
+  },
+  "frame": {
+    "label": "Rám",
+    "iconName": "IconFrameTool",
+    "tip": "Pridaj rám okolo obrázku.",
+    "settings": {
+      "general": {
+        "none": "Žiadny",
+        "mat": "Pasparta",
+        "line": "Čiara"
+      }
+    }
+  },
+  "export": {
+    "label": "Export",
+    "iconName": "IconExportTool",
+    "tip": "Exportuj obrázok.",
+    "settings": {
+      "general": {
+        "title": "Exportovať súbor",
+        "fileFormat": "Formát súboru",
+        "fileName": {
+          "label": "Názov súboru",
+          "placeholder": "Text"
+        },
+        "dimensions": {
+          "label": "Rozmery",
+          "width": "Šírka",
+          "height": "Výška"
+        },
+        "previewTitle": "Náhľad",
+        "cancelButton": {
+          "text": "Zavrieť",
+          "tip": "Zavrieť okno exportu",
+          "icon": "none"
+        },
+        "exportButton": {
+          "text": "Exportovať",
+          "tip": "Exportuj obrázok vo zvolenom formáte",
+          "icon": "none"
+        }
+      }
+    }
+  }
+}

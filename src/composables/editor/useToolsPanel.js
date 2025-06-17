@@ -1,0 +1,43 @@
+import { ref, onMounted, nextTick, computed } from 'vue'
+
+export function useToolsPanel(toolStore) {
+  const toolsRef = ref(null)
+  const atTop = ref(true)
+  const atBottom = ref(false)
+
+  const activeTool = computed(() => toolStore.selectedToolKey)
+
+  const scrollUp = () => {
+    toolsRef.value?.scrollBy({ top: -100, behavior: 'smooth' })
+  }
+
+  const scrollDown = () => {
+    toolsRef.value?.scrollBy({ top: 100, behavior: 'smooth' })
+  }
+
+  const checkScroll = () => {
+    const element = toolsRef.value
+    if (!element) return
+    atTop.value = element.scrollTop === 0
+    atBottom.value = element.scrollTop + element.clientHeight >= element.scrollHeight - 1
+  }
+
+  onMounted(() => {
+    nextTick(() => checkScroll())
+  })
+
+  const selectTool = (toolKey) => {
+    toolStore.selectTool(toolKey)
+  }
+
+  return {
+    activeTool,
+    toolsRef,
+    atTop,
+    atBottom,
+    scrollUp,
+    scrollDown,
+    checkScroll,
+    selectTool,
+  }
+}

@@ -1,0 +1,150 @@
+{
+  "move": {
+    "label": "Move",
+    "iconName": "IconMoveTool",
+    "tip": "Move the canvas using mouse.",
+    "settings":{
+      "general": {
+        "resetPosition": "Reset position",
+        "zoomSpeed": "Zoom speed",
+        "movementSpeed": "Movement speed"
+      }
+    }
+  },
+  "transform": {
+    "label": "Transform",
+    "iconName": "IconTransformTool",
+    "tip": "Rotate, scale, flip or crop the image.",
+    "settings": {
+      "rotation": {
+        "label": "Rotation",
+        "rotateLeft": "Rotate left",
+        "rotateRight": "Rotate right",
+        "reset": "Reset rotation"
+      },
+      "scale": {
+        "label": "Scale"
+      },
+      "flip": {
+        "label": "Flip",
+        "horizontal": "Flip horizontally",
+        "vertical": "Flip vertically"
+      },
+      "crop": {
+        "label": "Crop",
+        "custom": "Custom",
+        "circle": "Circle",
+        "square": "1:1",
+        "landscape": "16:9",
+        "portrait": "9:16"
+      }
+    }
+  },
+  "smartCrop": {
+    "label": "Smart Crop",
+    "iconName": "IconSmartCropTool",
+    "tip": "Automatically crop the object.",
+    "settings":{
+      "auto": {
+        "label": "Auto",
+        "apply": "Apply"
+      },
+      "manual":{
+        "label": "Manual",
+        "top": "Top",
+        "bottom": "Bottom",
+        "left": "Left",
+        "right": "Right"
+      }
+    }
+  },
+  "adjust": {
+    "label": "Adjust",
+    "iconName": "IconAdjustTool",
+    "tip": "Adjust image brightness, contrast, color and more.",
+    "settings":{
+      "brightness": {
+        "label": "Brightness"
+      },
+      "contrast": {
+        "label": "Contrast"
+      },
+      "saturation": {
+        "label": "Saturation"
+      },
+      "exposure": {
+        "label": "Exposure"
+      }
+    }
+  },
+  "annotate": {
+    "label": "Annotate",
+    "iconName": "IconAnnotateTool",
+    "tip": "Draw, add text or shapes to the image.",
+    "settings":{
+      "draw": {
+        "label": "Draw",
+        "rasterize": "Rasterize",
+        "width": "Width",
+        "color": "Color"
+      },
+      "erase": {
+        "label": "Erase",
+        "rasterize": "Rasterize",
+        "width": "Width"
+      },
+      "text": {
+        "label": "Text",
+        "rasterize": "Rasterize",
+        "font": "Font",
+        "fontStyle": "Font-style",
+        "fontSize": "Font-size",
+        "color": "Color",
+        "textAlign": "Text Align"
+      }
+    }
+  },
+  "frame": {
+    "label": "Frame",
+    "iconName": "IconFrameTool",
+    "tip": "Add a frame around the image.",
+    "settings":{
+      "general":{
+        "none": "None",
+        "mat": "Mat",
+        "line": "Line"
+      }
+    }
+  },
+  "export": {
+    "label": "Export",
+    "iconName": "IconExportTool",
+    "tip": "Export the image.",
+    "settings": {
+      "general":{
+        "title": "Export file",
+        "fileFormat": "File format",
+        "fileName": {
+          "label": "File name",
+          "placeholder": "Text"
+        },
+        "dimensions":{
+          "label": "Dimensions",
+          "width": "Width",
+          "height": "Height"
+        },
+        "previewTitle": "Preview",
+        "cancelButton":{
+          "text": "Close",
+          "tip": "Close the export window",
+          "icon": "none"
+        },
+        "exportButton": {
+          "text": "Export",
+          "tip": "Export the image in the selected format",
+          "icon": "none"
+        }
+      }
+    }
+  }
+}
