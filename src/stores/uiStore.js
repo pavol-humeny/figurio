@@ -5,10 +5,10 @@ function getBoolean(key, fallback = true) {
   return value === 'false' ? false : fallback
 }
 
-// function getNumber(key, fallback) {
-//   const value = parseInt(localStorage.getItem(key), 10)
-//   return isNaN(value) ? fallback : value
-// }
+function getNumber(key, fallback) {
+  const value = parseInt(localStorage.getItem(key), 10)
+  return isNaN(value) ? fallback : value
+}
 
 export const useUiStore = defineStore('ui', {
   state: () => ({
@@ -16,6 +16,9 @@ export const useUiStore = defineStore('ui', {
 
     keyShortcutsEnabled: getBoolean('keyShortcutsEnabled', true),
 
+    rightPanelOpen: getBoolean('leftPanelOpen', true),
+    rightPanelDefaultWidth: 130,
+    rightPanelWidth: getNumber('leftPanelWidth', 130),
   }),
   actions: {
     toggleTheme() {
@@ -33,5 +36,20 @@ export const useUiStore = defineStore('ui', {
       this.keyShortcutsEnabled = value
       localStorage.setItem('keyShortcutsEnabled', this.keyShortcutsEnabled.toString())
     },
+
+    toggleRightPanel() {
+      this.rightPanelOpen = !this.rightPanelOpen
+      localStorage.setItem('rightPanelOpen', this.rightPanelOpen.toString())
+    },
+
+    setRightPanelWidth(width) {
+      this.rightPanelWidth = width
+      localStorage.setItem('rightPanelWidth', this.rightPanelWidth.toString())
+    },
+
+    resetRightPanelWidth() {
+      this.rightPanelWidth = this.rightPanelDefaultWidth
+      localStorage.setItem('rightPanelWidth', this.rightPanelWidth.toString())
+    }
   }
 })

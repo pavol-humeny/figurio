@@ -2,16 +2,17 @@ import { computed, ref } from 'vue'
 
 const isVisible = ref(false)
 // const enableShortcuts = ref(true)
-const resetPanelWidthDisabled = computed(() => {
-  // TODO : Implement logic to determine if the reset panel width button should be disabled
-  return false
-})
+
 
 export function useSettingsPanel(uiStore) {
 
   const enableShortcuts = computed({
     get: () => uiStore.keyShortcutsEnabled,
     set: (val) => uiStore.setKeyShortcuts(val)
+  })
+
+  const resetPanelWidthDisabled = computed(() => {
+    return uiStore.rightPanelWidth === uiStore.rightPanelDefaultWidth
   })
 
   const openSettingsPanel = () => {
@@ -26,8 +27,12 @@ export function useSettingsPanel(uiStore) {
   }
 
   const resetPanelWidth = () => {
-    console.warn('resetPanelWidth is not implemented yet')
-    // TODO
+    if (resetPanelWidthDisabled.value) {
+      return
+    }
+    if (uiStore.rightPanelWidth !== uiStore.rightPanelDefaultWidth) {
+      uiStore.resetRightPanelWidth()
+    }
   }
 
   const openPrivacyModal = () => {
