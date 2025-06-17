@@ -24,8 +24,6 @@ import CloseFileButton from './CloseFileButton.vue';
     <div class="top-panel__right">
       <HelpButton />
       <SettingsButton />
-      <LanguageSwitch />
-      <ThemeSwitch />
     </div>
   </div>
 </template>

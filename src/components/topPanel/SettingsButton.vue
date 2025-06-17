@@ -3,7 +3,7 @@ import BaseIcon from '@/components/icons/BaseIcon.vue';
 import ItemTip from '../common/ItemTip.vue';
 import { useSettingsPanel } from '@/composables/topPanel/useSettingsPanel';
 
-const { openSettingsPanel } = useSettingsPanel();
+const { isVisible, openSettingsPanel, closeSettingsPanel } = useSettingsPanel();
 
 </script>
 
@@ -12,7 +12,7 @@ const { openSettingsPanel } = useSettingsPanel();
     :text="$t('topPanel.settingsButton.tip')"
     position="bottom-left"
   >
-    <button class="button button-circle button-control" @click="openSettingsPanel">
+    <button class="button button-circle button-control" @click.stop="isVisible ? closeSettingsPanel() : openSettingsPanel()">
       <BaseIcon name="IconSettings" :size="26"/>
     </button>
   </ItemTip>

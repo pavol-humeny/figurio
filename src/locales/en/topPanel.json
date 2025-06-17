@@ -78,7 +78,7 @@
   },
 
   "settingsButton": {
-    "tip": "Open settings panel"
+    "tip": "Open or close settings panel"
   },
 
   "settingsPanel": {

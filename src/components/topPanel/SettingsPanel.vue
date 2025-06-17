@@ -6,6 +6,7 @@ import DefaultButton from '../common/DefaultButton.vue';
 import ToggleButton from '../common/ToggleButton.vue';
 import { useSettingsPanel } from '@/composables/topPanel/useSettingsPanel';
 import { useUiStore } from '@/stores/uiStore';
+import { useClickOutside } from '@/composables/common/useClickOutside';
 
 const {
     isVisible,
@@ -16,10 +17,18 @@ const {
     openPrivacyModal,
 } = useSettingsPanel(useUiStore());
 
+const { wrapperRef } = useClickOutside({
+  condition: () => !openPrivacyModal.value,
+  onOutsideClick: () => closeSettingsPanel()
+})
+
 </script>
 
 <template>
-  <div class="settings-panel" v-if="isVisible">
+  <div
+    class="settings-panel"
+    v-if="isVisible"
+    ref="wrapperRef">
     <div class="settings-panel-label">
       <BaseIcon name="IconSettings" :size="28" :color="'var(--text-c)'" />
       <p>
