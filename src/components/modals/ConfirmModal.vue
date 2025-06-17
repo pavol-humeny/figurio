@@ -71,18 +71,6 @@ const {
   gap: 15px;
 }
 
-@keyframes shake {
-  0% { transform: translateX(0); }
-  20% { transform: translateX(-6px); }
-  40% { transform: translateX(6px); }
-  60% { transform: translateX(-3px); }
-  80% { transform: translateX(3px); }
-  100% { transform: translateX(0); }
-}
-.shake {
-  animation: shake 0.3s ease;
-}
-
 .title-wrapper {
   width: 100%;
   display: flex;

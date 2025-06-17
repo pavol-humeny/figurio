@@ -1,5 +1,14 @@
 <script setup>
 import { usePrivacyAndDataModal } from '@/composables/modals/usePrivacyAndDataModal';
+import BaseIcon from '../icons/BaseIcon.vue';
+import DefaultButton from '../common/DefaultButton.vue';
+
+import { useI18n } from 'vue-i18n'
+import { computed } from 'vue'
+
+const { locale, messages } = useI18n()
+
+const sections = computed(() => messages.value[locale.value]?.privacy?.sections || [])
 
 const {
   isVisible,
@@ -11,7 +20,28 @@ const {
   <Teleport to="body">
     <div v-if="isVisible" class="privacy-modal-overlay">
       <div class="modal-box">
-        <button @click="closePrivacyAndDataModal">Close</button>
+        <div class="title-wrapper">
+          <BaseIcon name="IconPrivacy" size="28" color="var(--text-c)" />
+          <p>{{ $t('privacy.title') }}</p>
+        </div>
+
+        <div class="messages-wrapper">
+          <div
+            v-for="(section, index) in sections"
+            :key="index"
+            class="message-wrapper"
+          >
+            <p v-if="section.title">{{ section.title }}</p>
+            <p>{{ section.text }}</p>
+          </div>
+        </div>
+
+        <div class="button-wrapper">
+          <DefaultButton
+            :text="$t('privacy.button.text')"
+            :onClick="closePrivacyAndDataModal"
+          />
+        </div>
       </div>
     </div>
   </Teleport>
@@ -24,31 +54,71 @@ const {
   left: 0;
   width: 100vw;
   height: 100vh;
-  background: rgba(0, 0, 0, 0.5);
+  background: var(--overlay-c);
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 9999;
+  z-index: var(--z-index-privacy);
 }
 
 .modal-box {
-  background: var(--background-c);
-  color: var(--text-c);
-  border: 1px solid var(--primary-c);
+  background: var(--secondary-c);
+  border: var(--border-modal);
+  padding: 20px 25px;
   border-radius: 20px;
-  padding: 24px;
-  width: 90%;
-  max-width: 500px;
-  box-shadow: 0 0 15px rgba(0, 0, 0, 0.4);
+  width: 600px;
+  box-shadow: var(--box-shadow-ui);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px;
 }
 
-.section {
-  margin-top: 1rem;
+.title-wrapper {
+  width: 100%;
+  display: flex;
+  justify-content: left;
+  flex-direction: row;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.title-wrapper p {
+  font-size: var(--title-font-size);
+  font-weight: var(--title-font-weight);
+}
+
+.messages-wrapper {
+  width: 100%;
+  display: flex;
+  justify-content: left;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.message-wrapper{
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.message-wrapper p:first-child {
+  font-weight: var(--subtitle-font-weight);
+  font-size: var(--subtitle-font-size);
+  color: var(--text-c);
+}
+.message-wrapper p:last-child {
+  font-size: var(--text-font-size);
+  color: var(--text-secondary-c);
 }
 
 .button-wrapper {
+  width: 100%;
   display: flex;
-  justify-content: flex-end;
-  margin-top: 1.5rem;
+  justify-content: space-between;
+  gap: 10px;
+  margin-top: 10px;
 }
+
 </style>

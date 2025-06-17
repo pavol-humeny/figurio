@@ -111,7 +111,7 @@
         }
     },
     "openPrivacyAndData": {
-      "label": "Privacy & Data",
+      "label": "Privacy & Data Policy",
       "button": {
         "text": "Open",
         "tip": "View and manage privacy and data settings"

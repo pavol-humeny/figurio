@@ -1,0 +1,24 @@
+{
+  "title": "Ochrana soukromí a data",
+  "sections": [
+    {
+      "title": "Lokální zpracování",
+      "text": "Vaše obrázky a data nikdy neopustí vaše zařízení. Respektujeme vaše soukromí. Žádné nahrávání. Žádné sledování. Žádné cloudové závislosti."
+    },
+    {
+      "title": "Vaše nastavení",
+      "text": "Nastavení jako téma nebo jazyk se ukládají pouze ve vašem prohlížeči (pomocí místního úložiště), aby se zlepšil váš zážitek. Máte vše pod kontrolou."
+    },
+    {
+      "title": "Bez účtu",
+      "text": "Žádná registrace, žádná hesla. Stačí otevřít a tvořit."
+    },
+    {
+      "title": "",
+      "text": "Používáním této aplikace souhlasíte s těmito zásadami."
+    }
+  ],
+  "button": {
+    "text": "Zavřít"
+  }
+}

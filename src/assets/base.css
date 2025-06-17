@@ -95,9 +95,9 @@ body {
   --z-index-tip: 9999;
   --z-index-toast: 9998;
   --z-index-modal: 9997;
-  --z-index-settings: 1000;
+  --z-index-privacy: 1000;
+  --z-index-settings: 950;
   --z-index-top-panel: 900;
-  --z-index-privacy: 900;
   --z-index-tool-settings-panel: 800;
   --z-index-tool-panel: 800;
 
@@ -105,8 +105,10 @@ body {
 
   --title-font-size: 23px;
   --title-font-weight: 700;
-  
+
   --subtitle-font-size: 18px;
+  --subtitle-font-weight: 700;
+
   --text-font-size: 15px;
   --tip-font-size: 13px;
 }
