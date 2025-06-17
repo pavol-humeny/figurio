@@ -30,6 +30,9 @@
   --success-background-c-light: #e6f4e6;
   --warning-background-c-light: #fff3cd;
   --error-background-c-light: #f8d7da;
+
+  --overlay-c-light: rgba(0, 0, 0, 0.5);
+  --overlay-c-dark: rgba(0, 0, 0, 0.3);
 }
 
 :root {
@@ -48,6 +51,8 @@
   --success-background-c: var(--success-background-c-light);
   --warning-background-c: var(--warning-background-c-light);
   --error-background-c: var(--error-background-c-light);
+
+  --overlay-c: var(--overlay-c-light);
 }
 
 .dark{
@@ -66,6 +71,8 @@
   --success-background-c: var(--success-background-c-dark);
   --warning-background-c: var(--warning-background-c-dark);
   --error-background-c: var(--error-background-c-dark);
+
+  --overlay-c: var(--overlay-c-dark);
 }
 
 *,
@@ -81,6 +88,7 @@ body {
   font-family: Inter;
   --border-ui: 1px solid var(--border-c);
   --border-modal: 2px solid var(--primary-c);
+  --border-button: 2px solid var(--primary-c);
 
   --default-transition: all 0.2s ease-in-out;
 

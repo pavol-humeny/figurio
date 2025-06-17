@@ -1,0 +1,106 @@
+<script setup>
+import { useConfirmModal } from '@/composables/modals/useConfirmModal';
+
+const {
+  isVisible,
+  title,
+  message,
+  confirm,
+  confirmText,
+  cancel,
+  cancelText,
+  isShaking,
+  triggerShake,
+} = useConfirmModal();
+</script>
+
+<template>
+  <Teleport to="body">
+    <div v-if="isVisible" class="confirm-modal-overlay" @click.self="triggerShake">
+      <div
+        class="modal-box"
+        :class="{ shake: isShaking }"
+      >
+        <div class="title-wrapper">
+          <p>{{ title }}</p>
+        </div>
+        <div class="message-wrapper">
+          <p>{{ message }}</p>
+        </div>
+        <div class="button-wrapper">
+          <button class="button button-text" @click="cancel">
+            {{ cancelText }}
+          </button>
+          <button class="button button-action" @click="confirm">
+            {{ confirmText }}
+          </button>
+        </div>
+      </div>
+    </div>
+  </Teleport>
+</template>
+
+<style scoped>
+.confirm-modal-overlay{
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: var(--overlay-c);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: var(--z-index-modal);
+}
+
+.modal-box {
+  background: var(--secondary-c);
+  border: var(--border-modal);
+  padding: 20px 25px;
+  border-radius: 20px;
+  max-width: 400px;
+  width: 90%;
+  box-shadow: var(--box-shadow-ui);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px;
+}
+
+@keyframes shake {
+  0% { transform: translateX(0); }
+  20% { transform: translateX(-6px); }
+  40% { transform: translateX(6px); }
+  60% { transform: translateX(-3px); }
+  80% { transform: translateX(3px); }
+  100% { transform: translateX(0); }
+}
+.shake {
+  animation: shake 0.3s ease;
+}
+
+.title-wrapper {
+  width: 100%;
+  display: flex;
+  justify-content: left;
+  font-size: 25px;
+  font-weight: 600;
+}
+
+.message-wrapper {
+  width: 100%;
+  font-size: 15px;
+  display: flex;
+  justify-content: left;
+}
+
+.button-wrapper {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+</style>

@@ -7,7 +7,6 @@
 }
 
 .button{
-  /* padding: 8px 16px; */
   border-radius: 20px;
   cursor: pointer;
   font-size: 14px;
@@ -29,8 +28,30 @@
 }
 
 .button-action{
-  /* background: none; */
-  /* color: var(--primary-c); */
+  padding: 8px 16px;
+  border: var(--border-button);
+  background: none;
+  color: var(--primary-c);
+  transition: var(--default-transition);
+}
+
+.button-action:hover{
+  background: var(--primary-c);
+  color: var(--secondary-c);
+  transition: var(--default-transition);
+}
+
+.button-text{
+  padding: 8px 0px;
+  border: none;
+  background: none;
+  color: var(--primary-c);
+  transition: var(--default-transition);
+}
+
+.button-text:hover{
+  text-decoration: underline;
+  transition: var(--default-transition);
 }
 
 .button-circle{
