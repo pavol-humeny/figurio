@@ -89,6 +89,7 @@ body {
   --border-ui: 1px solid var(--border-c);
   --border-modal: 2px solid var(--primary-c);
   --border-button: 2px solid var(--primary-c);
+  --border-drag-and-drop: 2px dashed var(--primary-c);
 
   --default-transition: all 0.2s ease-in-out;
 
@@ -101,7 +102,8 @@ body {
   --z-index-tool-settings-panel: 800;
   --z-index-tool-panel: 800;
 
-  --box-shadow-ui: 1px 3px 6px rgba(0, 0, 0, 0.3);
+  --box-shadow-ui: 1px 3px 6px rgba(0, 0, 0, 0.4);
+  --box-shadow-hover: 2px 2px 6px rgba(0, 0, 0, 0.2);
 
   --title-font-size: 23px;
   --title-font-weight: 700;

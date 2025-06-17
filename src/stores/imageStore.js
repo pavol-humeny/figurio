@@ -1,8 +1,14 @@
 import { defineStore } from 'pinia'
+import { useToastModal } from '@/composables/modals/useToastModal'
+
+const { showToastModal } = useToastModal()
 
 export const useImageStore = defineStore('imageStore', {
   state: () => ({
-    fileName: 'asd',
+    fileName: '',
+    file: null,
+    previewUrl: '',
+    fileType: '', // 'image' or 'pdf'
   }),
   actions: {
     isImageLoaded() {
@@ -15,13 +21,85 @@ export const useImageStore = defineStore('imageStore', {
 
     closeFile(){
       this.setFileName('')
-      // TODO - Additional logic to handle closing the file can be added here
+      this.file = null
+      this.previewUrl = ''
+      this.fileType = ''
     },
 
-    uploadFile() {
-      // TODO - Logic to handle file upload can be added here
-      this.setFileName('name-of-uploaded-file')
-      console.warn('File upload logic not implemented yet.')
+    setFile(file, t) {
+      this.file = file
+      this.setFileName(file.name)
+
+      if (file.type.startsWith('image/')) {
+        this.fileType = 'image'
+        const reader = new FileReader()
+        reader.onload = (e) => {
+          this.previewUrl = e.target.result
+        }
+        reader.readAsDataURL(file)
+      }
+      else if (file.type === 'application/pdf') {
+        // TODO - implement PDF storing logic
+        this.fileType = 'pdf'
+        const reader = new FileReader()
+        reader.onload = (e) => {
+          this.previewUrl = e.target.result
+        }
+        reader.readAsDataURL(file)
+      }
+
+      showToastModal(
+        "success",
+        t("imageStore.toast.successFileUploaded.title"),
+        t("imageStore.toast.successFileUploaded.message", { fileName: file.name })
+      )
+    },
+
+    checkFile(file, t) {
+      const supportedTypes = ['image/jpeg', 'image/png', 'image/jpg', 'application/pdf']
+
+      if (!supportedTypes.includes(file.type)) {
+        showToastModal(
+          "error",
+          t("imageStore.toast.errorUnsupportedFileType.title"),
+          t("imageStore.toast.errorUnsupportedFileType.message", { fileType: file.type })
+        )
+        return
+      }else{
+        this.setFile(file, t)
+      }
+    },
+
+    saveToImageStore(files, t) {
+      if (!files) return
+
+      if (files.length > 1){
+        showToastModal(
+          "error",
+          t("imageStore.toast.errorMultipleFiles.title"),
+          t("imageStore.toast.errorMultipleFiles.message")
+        )
+        return
+      }
+
+      this.checkFile(files[0], t)
+    },
+
+    loadFile(t) {
+      const input = document.createElement('input')
+      input.type = 'file'
+      input.accept = '.png, .jpg, .jpeg, .pdf'
+      input.style.display = 'none'
+
+      input.addEventListener('change', () => {
+        if (input.files && input.files.length > 0) {
+          this.saveToImageStore(input.files, t)
+        }
+      })
+
+      document.body.appendChild(input)
+      input.click()
+      document.body.removeChild(input)
     },
   },
 })

@@ -3,11 +3,14 @@ import BaseIcon from '@/components/icons/BaseIcon.vue';
 import ItemTip from '../common/ItemTip.vue';
 import { useImageStore } from '@/stores/imageStore';
 import { useCloseFileButton } from '@/composables/topPanel/useCloseFileButton';
+import { useI18n } from 'vue-i18n';
+
+const { t } = useI18n();
 
 const {
   disabled,
   closeFile
-} = useCloseFileButton(useImageStore());
+} = useCloseFileButton(useImageStore(), t);
 
 </script>
 <template>

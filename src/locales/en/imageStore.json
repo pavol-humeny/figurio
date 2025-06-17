@@ -1,0 +1,20 @@
+{
+  "toast":{
+    "errorUnsupportedFileType":{
+      "title": "Unsupported file type",
+      "message": "The file type {fileType} is not supported. Please upload a valid image file."
+    },
+    "errorFileTooLarge":{
+      "title": "File too large",
+      "message": "The file {fileName} exceeds the maximum allowed size of {maxSize} MB. Please upload a smaller file."
+    },
+    "errorMultipleFiles":{
+      "title": "Multiple files selected",
+      "message": "Please select only one file at a time."
+    },
+    "successFileUploaded": {
+      "title": "File uploaded successfully",
+      "message": "The file {fileName} has been uploaded successfully."
+    }
+  }
+}

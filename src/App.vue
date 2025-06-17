@@ -12,10 +12,10 @@ import PrivacyAndDataModal from './components/modals/PrivacyAndDataModal.vue';
     <ToastModal />
     <ConfirmModal />
     <PrivacyAndDataModal />
-
     <SettingsPanel />
+    
     <TopPanel />
-    <!-- <RouterView /> -->
+    <RouterView />
   </div>
 
 </template>

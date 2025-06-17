@@ -1,0 +1,8 @@
+{
+  "title": "Drag and drop your file here",
+  "subtitle": "or click to select a file",
+  "button": {
+    "text": "Select file"
+  },
+  "tip": "Select a file"
+}

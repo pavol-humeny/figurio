@@ -32,7 +32,7 @@
     }
   },
 
-  "closeCurrentFileButton":{
+  "closeFileButton":{
     "tip": "Close the currently opened file",
     "toast": {
       "success": {

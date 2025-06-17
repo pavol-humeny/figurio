@@ -8,8 +8,16 @@ import ItemTip from '../common/ItemTip.vue'
 
 const { t } = useI18n()
 
-
-const { zoomLevel, zoomIn, zoomOut, wheelZoom, setZoomLevel, resetZoom, canZoomIn, canZoomOut } = useZoomControl(useViewportStore(), t);
+const {
+  zoomLevel,
+  zoomIn,
+  zoomOut,
+  wheelZoom,
+  setZoomLevel,
+  resetZoom,
+  canZoomIn,
+  canZoomOut
+} = useZoomControl(useViewportStore(), t);
 
 </script>
 
@@ -89,7 +97,7 @@ const { zoomLevel, zoomIn, zoomOut, wheelZoom, setZoomLevel, resetZoom, canZoomI
 .zoom-level-input {
   padding-right: 20px;
   width: 60px;
-  height: 100%;
+  height: 40px;
   background: var(--secondary-c);
   border: none;
   color: var(--text-c);
@@ -102,7 +110,7 @@ const { zoomLevel, zoomIn, zoomOut, wheelZoom, setZoomLevel, resetZoom, canZoomI
   content: '%';
   position: absolute;
   right: 10px;
-  top: 50%;
+  top: 49%;
   transform: translateY(-50%);
   color: var(--text-c);
   pointer-events: none;

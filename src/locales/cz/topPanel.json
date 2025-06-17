@@ -32,7 +32,7 @@
     }
   },
 
-  "closeCurrentFileButton": {
+  "closeFileButton": {
     "tip": "Zavřít aktuálně otevřený soubor",
     "toast": {
       "success": {

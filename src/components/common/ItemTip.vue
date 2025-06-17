@@ -47,7 +47,7 @@ const {
 <style scoped>
 .item-tip {
   width: fit-content;
-  height: 100%;
+  /* height: 100%; */
 }
 
 .item-tip-bubble {

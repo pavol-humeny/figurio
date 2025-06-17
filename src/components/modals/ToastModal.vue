@@ -50,7 +50,8 @@ const { toasts, removeToastModal } = useToastModal()
   border-radius: 10px;
   padding: 15px 20px;
   color: var(--text-c);
-  min-width: 400px;
+  max-width: 400px;
+  min-width: 250px;
   border: 1px solid transparent;
   box-shadow: var(--box-shadow-ui);
   animation: fade-in 0.3s ease-out;
