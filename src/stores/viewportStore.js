@@ -1,11 +1,13 @@
 import { defineStore } from 'pinia'
+import { viewportConfig } from '@/config/viewportConfig'
+
 
 export const useViewportStore = defineStore('viewportStore', {
   state: () => ({
-    zoomLevel: 1.0, // Current zoom level
-    defaultZoomLevel: 1.0, // Default zoom level for reset
-    maxZoomLevel: 5.0, // Maximum zoom level
-    minZoomLevel: 0.1, // Minimum zoom level
+    zoomLevel: viewportConfig.defaultZoomLevel,
+    defaultZoomLevel: viewportConfig.defaultZoomLevel,
+    maxZoomLevel: viewportConfig.maxZoomLevel,
+    minZoomLevel: viewportConfig.minZoomLevel,
   }),
   actions: {
     setZoomLevel(level) {

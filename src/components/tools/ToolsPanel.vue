@@ -75,7 +75,7 @@ const tools = computed(() =>
   position: relative;
   display: flex;
   flex-direction: column;
-  gap: 50px;
+  gap: 20px;
   overflow-y: auto;
   scrollbar-width: none;
   padding: 30px 20px;
