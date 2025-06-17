@@ -1,4 +1,4 @@
-import { ref, watch, nextTick } from 'vue'
+import { ref, watch, nextTick, computed } from 'vue'
 import { useToastModal } from '@/composables/modals/useToastModal'
 
 export function useFileNameDisplay(imageStore, t) {
@@ -7,6 +7,10 @@ export function useFileNameDisplay(imageStore, t) {
   const inputRef = ref(null)
 
   const { showToastModal } = useToastModal()
+
+  const disabled = computed(() => {
+    return !imageStore.isImageLoaded()
+  })
 
   // Aktualizácia pri zmene v store
   watch(() => imageStore.fileName, (newFileName) => {
@@ -36,11 +40,11 @@ export function useFileNameDisplay(imageStore, t) {
     }
 
     if (trimmedName === imageStore.fileName) {
-      showToastModal(
-        "info",
-        t("topPanel.fileNameDisplay.toast.infoSameName.title"),
-        t("topPanel.fileNameDisplay.toast.infoSameName.message")
-      )
+      // showToastModal(
+      //   "info",
+      //   t("topPanel.fileNameDisplay.toast.infoSameName.title"),
+      //   t("topPanel.fileNameDisplay.toast.infoSameName.message")
+      // )
       fileNameInput.value = imageStore.fileName // Reset to original name
       return
     }
@@ -61,6 +65,9 @@ export function useFileNameDisplay(imageStore, t) {
       t("topPanel.fileNameDisplay.toast.success.message")
     )
     imageStore.setFileName(trimmedName)
+    nextTick(() => {
+      inputRef.value?.blur()
+    })
 
   }
 
@@ -73,6 +80,7 @@ export function useFileNameDisplay(imageStore, t) {
 
   return {
     editEnabled,
+    disabled,
     fileNameInput,
     inputRef,
     startEditing,

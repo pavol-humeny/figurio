@@ -6,12 +6,16 @@ import LanguageSwitch from './LanguageSwitch.vue';
 import ThemeSwitch from './ThemeSwitch.vue';
 import UndoRedo from './UndoRedo.vue';
 import ZoomControl from './ZoomControl.vue';
+import UploadFileButton from './UploadFileButton.vue';
+import CloseFileButton from './CloseFileButton.vue';
 </script>
 
 <template>
   <div class="top-panel">
     <div class="top-panel__left">
       <FileNameDisplay />
+      <UploadFileButton />
+      <CloseFileButton />
     </div>
     <div class="top-panel__center">
       <UndoRedo />
@@ -48,6 +52,7 @@ import ZoomControl from './ZoomControl.vue';
 
 .top-panel__left {
   justify-content: flex-start;
+  gap: 10px;
 }
 .top-panel__center {
   justify-content: center;

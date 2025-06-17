@@ -1,7 +1,7 @@
 {
   "fileNameDisplay":{
-    "defaultName": "untitled",
     "tip": "Edit the name of the currently opened file",
+    "tipDisabled": "No file is currently opened",
     "toast": {
       "success":{
         "title": "File name updated",
@@ -19,6 +19,32 @@
         "title": "No change",
         "message": "The file name is the same as before. No changes were made."
       }
+    }
+  },
+
+  "uploadFileButton":{
+    "tip": "Upload a new file",
+    "confirm": {
+      "title": "Confirm file upload",
+      "message": "Are you sure you want to upload a new file? This will replace the current file.",
+      "cancel": "Cancel",
+      "confirm": "Upload"
+    }
+  },
+
+  "closeCurrentFileButton":{
+    "tip": "Close the currently opened file",
+    "toast": {
+      "success": {
+        "title": "File closed",
+        "message": "The file has been successfully closed."
+      }
+    },
+    "confirm": {
+      "title": "Confirm file closure",
+      "message": "Are you sure you want to close the current file? Any unsaved changes will be lost.",
+      "cancel": "Cancel",
+      "confirm": "Close"
     }
   },
 

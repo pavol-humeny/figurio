@@ -1,7 +1,7 @@
 {
   "fileNameDisplay": {
-    "defaultName": "bez názvu",
     "tip": "Uprav názov aktuálne otvoreného súboru",
+    "tipDisabled": "Aktuálne nie je otvorený žiadny súbor",
     "toast": {
       "success": {
         "title": "Názov súboru aktualizovaný",
@@ -19,6 +19,32 @@
         "title": "Bez zmeny",
         "message": "Názov súboru je rovnaký ako predtým. Žiadna zmena nebola vykonaná."
       }
+    }
+  },
+
+  "uploadFileButton": {
+    "tip": "Nahrať nový súbor",
+    "confirm": {
+      "title": "Potvrdiť nahranie súboru",
+      "message": "Naozaj chcete nahrať nový súbor? Týmto nahradíte aktuálny súbor.",
+      "cancel": "Zrušiť",
+      "confirm": "Nahrať"
+    }
+  },
+
+  "closeCurrentFileButton": {
+    "tip": "Zavrieť aktuálne otvorený súbor",
+    "toast": {
+      "success": {
+        "title": "Súbor bol zavretý",
+        "message": "Súbor bol úspešne zavretý."
+      }
+    },
+    "confirm": {
+      "title": "Potvrdiť zatvorenie súboru",
+      "message": "Naozaj chcete zatvoriť aktuálny súbor? Všetky neuložené zmeny budú stratené.",
+      "cancel": "Zrušiť",
+      "confirm": "Zavrieť"
     }
   },
 

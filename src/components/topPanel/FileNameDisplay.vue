@@ -10,6 +10,7 @@ const { t } = useI18n()
 
 const {
   editEnabled,
+  disabled,
   fileNameInput,
   inputRef,
   startEditing,
@@ -20,10 +21,13 @@ const {
 
 <template>
   <ItemTip
-    :text="$t('topPanel.fileNameDisplay.tip')"
-    position="right"
+    :text="disabled ? $t('topPanel.fileNameDisplay.tipDisabled') : $t('topPanel.fileNameDisplay.tip')"
+    position="bottom-right"
   >
-    <div class="file-name-display-wrapper">
+    <div
+      class="file-name-display-wrapper"
+      :class="{'file-name-display-wrapper--disabled': disabled}"
+      >
       <input
         ref="inputRef"
         name="fileName"
@@ -56,6 +60,11 @@ const {
   padding: 8px 16px;
   gap: 8px;
 }
+.file-name-display-wrapper--disabled {
+  opacity: 0.5;
+  pointer-events: none;
+}
+
 .file-name-display-input {
   height: 100%;
   width: 100%;
