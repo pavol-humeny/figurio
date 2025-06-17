@@ -1,10 +1,15 @@
 import { computed, ref } from 'vue'
+import { usePrivacyAndDataModal } from '@/composables/modals/usePrivacyAndDataModal';
+
 
 const isVisible = ref(false)
-// const enableShortcuts = ref(true)
 
 
 export function useSettingsPanel(uiStore) {
+  const {
+    isVisible: privacyModalVisible,
+    showPrivacyAndDataModal
+  } = usePrivacyAndDataModal()
 
   const enableShortcuts = computed({
     get: () => uiStore.keyShortcutsEnabled,
@@ -36,8 +41,7 @@ export function useSettingsPanel(uiStore) {
   }
 
   const openPrivacyModal = () => {
-    console.warn('openPrivacyModal is not implemented yet')
-    // TODO
+    showPrivacyAndDataModal()
   }
 
   return {
@@ -48,6 +52,7 @@ export function useSettingsPanel(uiStore) {
     resetPanelWidthDisabled,
     resetPanelWidth,
     openPrivacyModal,
+    privacyModalVisible
   }
 }
 

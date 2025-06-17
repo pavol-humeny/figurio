@@ -15,10 +15,11 @@ const {
     resetPanelWidthDisabled,
     resetPanelWidth,
     openPrivacyModal,
+    privacyModalVisible
 } = useSettingsPanel(useUiStore());
 
 const { wrapperRef } = useClickOutside({
-  condition: () => !openPrivacyModal.value,
+  condition: () => !privacyModalVisible.value,
   onOutsideClick: () => closeSettingsPanel()
 })
 
