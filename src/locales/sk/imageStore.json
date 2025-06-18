@@ -31,6 +31,10 @@
     "infoSameName": {
       "title": "Bez zmeny",
       "message": "Názov súboru je rovnaký ako predtým. Žiadna zmena nebola vykonaná."
+    },
+    "successFileExported":{
+      "title": "Súbor bol úspešne exportovaný",
+      "message": "Súbor {fileName} bol exportovaný."
     }
   }
 }

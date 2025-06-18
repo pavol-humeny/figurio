@@ -1,5 +1,6 @@
 import { defineStore } from 'pinia'
 import { useToastModal } from '@/composables/modals/useToastModal'
+import { nextTick } from 'vue'
 
 const { showToastModal } = useToastModal()
 
@@ -11,6 +12,7 @@ const isValidFileName = (name) => {
 export const useImageStore = defineStore('imageStore', {
   state: () => ({
     fileName: '',
+    newFileName: '',
     file: null,
     previewUrl: '',
     fileType: '', // 'image' or 'pdf'
@@ -33,7 +35,7 @@ export const useImageStore = defineStore('imageStore', {
       return this.fileName && this.fileName.trim() !== ''
     },
 
-    setFileName(newName, t) {
+    setFileName(newName, t, isNewFileName = false) {
       // this.fileName = newName.trim()
       let trimmedName = newName.trim()
 
@@ -46,12 +48,26 @@ export const useImageStore = defineStore('imageStore', {
             t("imageStore.toast.errorEmptyName.message")
           )
         }
-        return
+        const tmp = this.fileName
+        this.fileName = ''
+        this.newFileName = ''
+        nextTick(() => {
+          this.fileName = tmp // Reset to previous name
+          this.newFileName = tmp
+        })
+        return false
       }
 
       // Same name
       if (trimmedName === this.fileName) {
-        return
+        const tmp = this.fileName
+        this.fileName = ''
+        this.newFileName = ''
+        nextTick(() => {
+          this.fileName = tmp // Reset to previous name
+          this.newFileName = tmp
+        })
+        return true
       }
 
       // Invalid characters
@@ -63,10 +79,17 @@ export const useImageStore = defineStore('imageStore', {
             t("imageStore.toast.errorInvalidCharacters.message")
           )
         }
-        return
+        const tmp = this.fileName
+        this.fileName = ''
+        this.newFileName = ''
+        nextTick(() => {
+          this.fileName = tmp // Reset to previous name
+          this.newFileName = tmp
+        })
+        return false
       }
 
-      if (trimmedName !== this.fileName && this.fileName !== '') {
+      if (trimmedName !== this.fileName && this.fileName !== '' && !isNewFileName) {
         showToastModal(
           "success",
           t("imageStore.toast.successFileNameUpdated.title"),
@@ -74,18 +97,26 @@ export const useImageStore = defineStore('imageStore', {
         )
       }
 
-      // Remove file extension if present
+      // Remove file extension
       const lastDotIndex = trimmedName.lastIndexOf('.')
       if (lastDotIndex !== -1) {
         trimmedName = trimmedName.slice(0, lastDotIndex)
       }
 
       // Update file name
-      this.fileName = trimmedName
+      if (isNewFileName){
+        this.newFileName = trimmedName
+      }else{
+        this.fileName = trimmedName
+        this.newFileName = trimmedName
+      }
+
+      return true
     },
 
     closeFile(){
       this.fileName = ''
+      this.newFileName = ''
       this.file = null
       this.previewUrl = ''
       this.fileType = ''
@@ -216,6 +247,19 @@ export const useImageStore = defineStore('imageStore', {
       document.body.appendChild(input)
       input.click()
       document.body.removeChild(input)
+    },
+
+    exportFile(t) {
+      const link = document.createElement('a')
+      link.download = `${this.fileName}.${this.newFileFormat}`
+      link.href = this.previewUrl
+      link.click()
+
+      showToastModal(
+        "success",
+        t("imageStore.toast.successFileExported.title"),
+        t("imageStore.toast.successFileExported.message", { fileName: this.fileName})
+      )
     },
   },
 })

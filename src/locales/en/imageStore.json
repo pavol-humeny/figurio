@@ -31,6 +31,10 @@
     "infoSameName": {
       "title": "No change",
       "message": "The file name is the same as before. No changes were made."
+    },
+    "successFileExported":{
+      "title": "File exported successfully",
+      "message": "The file {fileName} has been exported."
     }
   }
 }

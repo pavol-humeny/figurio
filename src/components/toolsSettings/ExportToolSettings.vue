@@ -23,6 +23,7 @@ const {
   saveNewFileName,
   resetFileDimensions,
   closeExportToolSettings,
+  exportFile,
   isDimensionsLinked
 } = useExportToolSettings(useImageStore(), t);
 
@@ -118,7 +119,7 @@ const {
             />
             <DefaultButton
               :text="$t('tools.export.settings.general.exportButton.text')"
-              :onClick="closeExportToolSettings"
+              :onClick="exportFile"
             />
           </div>
         </div>

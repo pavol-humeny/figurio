@@ -18,10 +18,12 @@ export function useFileNameDisplay(imageStore, t) {
   const saveNewFileName = () => {
     editEnabled.value = false
 
-    imageStore.setFileName(fileNameInput.value, t)
-    nextTick(() => {
-      inputRef.value?.blur()
-    })
+    const success = imageStore.setFileName(fileNameInput.value, t)
+    if (success){
+      nextTick(() => {
+        inputRef.value?.blur()
+      })
+    }
   }
 
   const startEditing = () => {

@@ -7,10 +7,11 @@ export function useExportToolSettings(imageStore, t) {
   const isDimensionsLinked = ref(true);
 
   const fileName = ref('')
-  if (imageStore && imageStore.fileName) {
-    fileName.value = imageStore.fileName
+
+  if (imageStore && imageStore.newFileName) {
+    fileName.value = imageStore.newFileName
   }
-  watch(() => imageStore?.fileName, (newVal) => {
+  watch(() => imageStore?.newFileName, (newVal) => {
     fileName.value = newVal
   })
 
@@ -50,10 +51,13 @@ export function useExportToolSettings(imageStore, t) {
   }
 
   const saveNewFileName = () => {
-    imageStore.setFileName(fileName.value, t)
-    nextTick(() => {
-      inputFileNameRef.value?.blur()
-    })
+    const success = imageStore.setFileName(fileName.value, t, true)
+
+    if (success){
+      nextTick(() => {
+        inputFileNameRef.value?.blur()
+      })
+    }
   }
 
   const openExportToolSettings = () => {
@@ -61,6 +65,11 @@ export function useExportToolSettings(imageStore, t) {
   }
 
   const closeExportToolSettings = () => {
+    isVisible.value = false
+  }
+
+  const exportFile = () => {
+    imageStore.exportFile(t)
     isVisible.value = false
   }
 
@@ -84,6 +93,7 @@ export function useExportToolSettings(imageStore, t) {
     resetFileDimensions,
     openExportToolSettings,
     closeExportToolSettings,
+    exportFile,
     isDimensionsLinked
   }
 }
