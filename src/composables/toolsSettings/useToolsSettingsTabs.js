@@ -1,7 +1,7 @@
 import { ref, onMounted, computed } from 'vue'
 
 export function useToolsSettingsTabs(editorStore, defaultTab) {
-  const activeTab = computed(() => editorStore.selectedTabKey || defaultTab)
+  const activeTab = computed(() => editorStore.selectedTabPerTool[editorStore.selectedToolKey] || defaultTab)
   const wrapperRef = ref(null)
 
   const setActiveTab = (tab) => {

@@ -3,7 +3,7 @@ import { defineStore } from "pinia";
 export const useEditorStore = defineStore ("editorStore", {
   state: () =>({
     selectedToolKey: '',
-    selectedTabKey: '',
+    selectedTabPerTool: {},
   }),
   actions: {
     selectTool(toolKey) {
@@ -12,7 +12,9 @@ export const useEditorStore = defineStore ("editorStore", {
     },
     selectTab(tabKey) {
       console.log('selectTab called with:', tabKey);
-      this.selectedTabKey = tabKey;
+      if (this.selectedToolKey) {
+        this.selectedTabPerTool[this.selectedToolKey] = tabKey;
+      }
     },
   },
 })
