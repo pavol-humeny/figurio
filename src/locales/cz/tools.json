@@ -2,6 +2,7 @@
   "move": {
     "label": "Posun",
     "tip": "Posuň plátno pomocí myši.",
+    "tipDisabled": "",
     "settings": {
       "general": {
         "resetPosition": "Resetovat pozici",
@@ -13,6 +14,7 @@
   "transform": {
     "label": "Úpravy",
     "tip": "Otoč, změň měřítko, překlop nebo ořízni obrázek.",
+    "tipDisabled": "",
     "settings": {
       "rotation": {
         "label": "Rotace",
@@ -41,6 +43,7 @@
   "smartCrop": {
     "label": "Smart oříznutí",
     "tip": "Automaticky ořízni objekt.",
+    "tipDisabled": "",
     "settings": {
       "auto": {
         "label": "Automaticky",
@@ -58,6 +61,7 @@
   "adjust": {
     "label": "Úpravy",
     "tip": "Uprav jas, kontrast, barvy a další.",
+    "tipDisabled": "",
     "settings": {
       "brightness": {
         "label": "Jas"
@@ -76,6 +80,7 @@
   "annotate": {
     "label": "Anotace",
     "tip": "Kresli, přidej text nebo tvary do obrázku.",
+    "tipDisabled": "",
     "settings": {
       "draw": {
         "label": "Kreslit",
@@ -110,6 +115,7 @@
   "frame": {
     "label": "Rám",
     "tip": "Přidej rám kolem obrázku.",
+    "tipDisabled": "",
     "settings": {
       "general": {
         "none": "Žádný",
@@ -121,6 +127,7 @@
   "export": {
     "label": "Export",
     "tip": "Exportuj obrázek.",
+    "tipDisabled": "Není k dispozici žádný obrázek k exportu.",
     "settings": {
       "general": {
         "title": "Exportovat soubor",
@@ -132,7 +139,11 @@
         "fileDimensions": {
           "label": "Rozměry",
           "width": "Šířka",
-          "height": "Výška"
+          "height": "Výška",
+          "tip": {
+            "link": "Propojit/odpojit šířku a výšku",
+            "reset": "Resetovat původní rozměry"
+          }
         },
         "previewTitle": "Náhled",
         "cancelButton": {

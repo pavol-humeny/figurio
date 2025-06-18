@@ -27,6 +27,7 @@ const tools = computed(() =>
     ...tool,
     label: t(`tools.${tool.key}.label`),
     tip: t(`tools.${tool.key}.tip`),
+    tipDisabled: t(`tools.${tool.key}.tipDisabled`),
   })),
 )
 </script>
@@ -43,7 +44,7 @@ const tools = computed(() =>
         :key="tool.key"
         :iconName="tool.iconName"
         :label="tool.label"
-        :tip="tool.tip"
+        :tip="tool.key === 'export' && isExportDisabled ? tool.tipDisabled : tool.tip"
         :active="activeTool === tool.key"
         @click="clickFunction(tool.key)"
         :disabled="tool.key === 'export' ? isExportDisabled : false"

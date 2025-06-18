@@ -1,5 +1,6 @@
 <script setup>
 import { defineAsyncComponent, computed } from 'vue'
+import ItemTip from '@/components/common/ItemTip.vue'
 
 const props = defineProps({
   name: {
@@ -14,7 +15,17 @@ const props = defineProps({
     type: String,
     default: 'currentColor',
   },
+  tip: {
+    type: String,
+    default: ''
+  },
+  position: {
+    type: String,
+    default: 'bottom'
+  },
 })
+
+const showTip = props.tip !== '';
 
 // Get all icons
 const icons = import.meta.glob('@/components/icons/Icon*.vue')
@@ -35,11 +46,24 @@ const iconComponent = computed(() => {
 </script>
 
 <template>
-  <component
+  <ItemTip
+    v-if="showTip"
+    :text="props.tip"
+    :position="props.position"
+  >
+    <component
     :is="iconComponent"
     class="icon"
     :style="{ width: size + 'px', height: size + 'px', color: color }"
-  />
+    />
+  </ItemTip>
+
+  <component
+    v-else
+    :is="iconComponent"
+    class="icon"
+    :style="{ width: size + 'px', height: size + 'px', color: color }"
+    />
 
 </template>
 

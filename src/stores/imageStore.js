@@ -17,10 +17,12 @@ export const useImageStore = defineStore('imageStore', {
     fileFormat: '', // 'png', 'jpg', 'jpeg', 'pdf'
     newFileFormat: '', // 'png', 'jpg', 'jpeg', 'pdf'
     fileDimensions: {
+      fileAspectRatio: 1,
       width: 0,
       height: 0,
     },
     newFileDimensions: {
+      fileAspectRatio: 1,
       width: 0,
       height: 0,
     },
@@ -84,10 +86,12 @@ export const useImageStore = defineStore('imageStore', {
       this.fileFormat = ''
       this.newFileFormat = ''
       this.fileDimensions = {
+        fileAspectRatio: 1,
         width: 0,
         height: 0,
       }
       this.newFileDimensions = {
+        fileAspectRatio: 1,
         width: 0,
         height: 0,
       }
@@ -115,8 +119,10 @@ export const useImageStore = defineStore('imageStore', {
           img.onload = () => {
             this.fileDimensions.width = img.width
             this.fileDimensions.height = img.height
+            this.fileDimensions.fileAspectRatio = img.width / img.height || 1
             this.newFileDimensions.width = this.fileDimensions.width
             this.newFileDimensions.height = this.fileDimensions.height
+            this.newFileDimensions.fileAspectRatio = this.fileDimensions.width / this.fileDimensions.height || 1
           }
           img.src = e.target.result
         }

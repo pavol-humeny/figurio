@@ -1,5 +1,4 @@
 <script setup>
-import { ref } from 'vue';
 import { useExportToolSettings } from '@/composables/toolsSettings/useExportToolSettings';
 import DefaultButton from '../common/DefaultButton.vue';
 import BaseIcon from '../icons/BaseIcon.vue';
@@ -8,8 +7,6 @@ import { useImageStore } from '@/stores/imageStore';
 import { useI18n } from 'vue-i18n';
 
 const { t } = useI18n();
-
-const isDimensionsLinked = ref(true);
 
 const {
   isShaking,
@@ -22,8 +19,11 @@ const {
   fileName,
   fileFormat,
   fileDimensions,
+  updateDimension,
   saveNewFileName,
-  closeExportToolSettings
+  resetFileDimensions,
+  closeExportToolSettings,
+  isDimensionsLinked
 } = useExportToolSettings(useImageStore(), t);
 
 </script>
@@ -66,31 +66,45 @@ const {
               <div class="width">
                 <label for="file-dimensions-width">{{ $t('tools.export.settings.general.fileDimensions.width') }}</label>
                 <input
-                  v-model="fileDimensions.width"
+                  v-model.number="fileDimensions.width"
                   type="number"
-                  id="file-dimensions-width"
-                  max="10000"
                   min="1"
+                  max="10000"
+                  @blur="updateDimension('width', fileDimensions.width)"
+                  @keydown.enter="updateDimension('width', fileDimensions.width)"
                 />
               </div>
 
-              <div class="link-icon-wrapper">
+              <div class="icon-wrapper">
                 <BaseIcon
-                :name="isDimensionsLinked ? 'IconLinkValues' : 'IconUnLinkValues'"
-                size="30"
-                color="var(--primary-c)"
-                @click="isDimensionsLinked = !isDimensionsLinked"
+                  :name="isDimensionsLinked ? 'IconLinkValues' : 'IconUnLinkValues'"
+                  size="30"
+                  color="var(--primary-c)"
+                  @click="isDimensionsLinked = !isDimensionsLinked"
+                  :tip="$t('tools.export.settings.general.fileDimensions.tip.link')"
                 />
               </div>
 
               <div class="height">
                 <label for="file-dimensions-height">{{ $t('tools.export.settings.general.fileDimensions.height') }}</label>
                 <input
-                  v-model="fileDimensions.height"
+                  v-model.number="fileDimensions.height"
                   type="number"
                   id="file-dimensions-height"
-                  max="10000"
                   min="1"
+                  max="10000"
+                  @blur="updateDimension('height', fileDimensions.height)"
+                  @keydown.enter="updateDimension('height', fileDimensions.height)"
+                />
+              </div>
+
+              <div class="icon-wrapper">
+                <BaseIcon
+                  name="IconReset"
+                  size="25"
+                  color="var(--primary-c)"
+                  @click="resetFileDimensions"
+                  :tip="$t('tools.export.settings.general.fileDimensions.tip.reset')"
                 />
               </div>
             </div>
@@ -110,7 +124,7 @@ const {
         </div>
         <div class="export-preview">
           <div class="tmp">
-a
+            a
           </div>
         </div>
 
@@ -198,6 +212,7 @@ a
   display: flex;
   align-items: center;
   flex-direction: row;
+
   gap: 10px;
 }
 .file-dimensions-inputs .width,
@@ -210,12 +225,13 @@ a
 .file-dimensions-inputs .height label {
   font-size: var(--text-font-size);
 }
-.link-icon-wrapper{
+.icon-wrapper{
   padding-top: 20px;
   width: 40px;
   display: flex;
   justify-content: center;
   align-items: center;
+  cursor: pointer;
 }
 
 .buttons-wrapper{

@@ -2,6 +2,7 @@
   "move": {
     "label": "Move",
     "tip": "Move the canvas using mouse.",
+    "tipDisabled": "",
     "settings":{
       "general": {
         "resetPosition": "Reset position",
@@ -13,6 +14,7 @@
   "transform": {
     "label": "Transform",
     "tip": "Rotate, scale, flip or crop the image.",
+    "tipDisabled": "",
     "settings": {
       "rotation": {
         "label": "Rotation",
@@ -41,6 +43,7 @@
   "smartCrop": {
     "label": "Smart Crop",
     "tip": "Automatically crop the object.",
+    "tipDisabled": "",
     "settings":{
       "auto": {
         "label": "Auto",
@@ -58,6 +61,7 @@
   "adjust": {
     "label": "Adjust",
     "tip": "Adjust image brightness, contrast, color and more.",
+    "tipDisabled": "",
     "settings":{
       "brightness": {
         "label": "Brightness"
@@ -76,6 +80,7 @@
   "annotate": {
     "label": "Annotate",
     "tip": "Draw, add text or shapes to the image.",
+    "tipDisabled": "",
     "settings":{
       "draw": {
         "label": "Draw",
@@ -110,6 +115,7 @@
   "frame": {
     "label": "Frame",
     "tip": "Add a frame around the image.",
+    "tipDisabled": "",
     "settings":{
       "general":{
         "none": "None",
@@ -121,6 +127,7 @@
   "export": {
     "label": "Export",
     "tip": "Export the image.",
+    "tipDisabled": "There is no image to export.",
     "settings": {
       "general":{
         "title": "Export file",
@@ -132,7 +139,11 @@
         "fileDimensions":{
           "label": "Dimensions",
           "width": "Width",
-          "height": "Height"
+          "height": "Height",
+          "tip": {
+            "link": "Link/unlink width and height",
+            "reset": "Reset original dimensions"
+          }
         },
         "previewTitle": "Preview",
         "cancelButton":{
