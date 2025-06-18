@@ -3,7 +3,7 @@ import { defineStore } from "pinia";
 export const useEditorStore = defineStore ("editorStore", {
   state: () =>({
     selectedToolKey: '',
-    selectedTabKey: 'auto',
+    selectedTabKey: '',
   }),
   actions: {
     selectTool(toolKey) {

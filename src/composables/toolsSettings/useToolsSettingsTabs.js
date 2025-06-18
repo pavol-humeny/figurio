@@ -1,19 +1,14 @@
-import { ref, onMounted, computed, nextTick } from 'vue'
+import { ref, onMounted, computed } from 'vue'
 
-export function useToolsSettingsPanel(editorStore, tabsRef) {
+export function useToolsSettingsTabs(editorStore, defaultTab) {
+  const activeTab = computed(() => editorStore.selectedTabKey || defaultTab)
   const wrapperRef = ref(null)
-
-  const activeTab = computed(() => {
-    return editorStore.selectedTabKey || tabsRef.value[0]
-  })
 
   const setActiveTab = (tab) => {
     editorStore.selectTab(tab)
   }
 
-
-  onMounted(async () => {
-    await nextTick()
+  onMounted(() => {
     const el = wrapperRef.value
     if (!el) return
 
@@ -30,8 +25,8 @@ export function useToolsSettingsPanel(editorStore, tabsRef) {
   })
 
   return {
-    wrapperRef,
     activeTab,
+    wrapperRef,
     setActiveTab
   }
 }

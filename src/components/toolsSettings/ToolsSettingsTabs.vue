@@ -1,6 +1,7 @@
 <script setup>
-import { defineProps, ref, onMounted } from 'vue'
+import { defineProps } from 'vue'
 import { useEditorStore } from '@/stores/editorStore'
+import { useToolsSettingsTabs } from '@/composables/toolsSettings/useToolsSettingsTabs'
 
 const editorStore = useEditorStore()
 
@@ -11,27 +12,11 @@ const props = defineProps({
   }
 })
 
-const wrapperRef = ref(null)
-
-const setActiveTab = (tab) => {
-  editorStore.selectTab(tab)
-}
-
-onMounted(() => {
-  const el = wrapperRef.value
-  if (!el) return
-
-  el.addEventListener(
-    'wheel',
-    (e) => {
-      if (Math.abs(e.deltaY) > Math.abs(e.deltaX)) {
-        e.preventDefault()
-        el.scrollBy({ left: e.deltaY/4, behavior: 'auto' })
-      }
-    },
-    { passive: false }
-  )
-})
+const {
+  activeTab,
+  wrapperRef,
+  setActiveTab
+} = useToolsSettingsTabs(editorStore, props.tabs[0])
 
 </script>
 
@@ -45,7 +30,7 @@ onMounted(() => {
         class="tab"
         v-for="tab in props.tabs"
         :key="tab"
-        :class="{ active: tab === editorStore.selectedTabKey }"
+        :class="{ active: tab === activeTab }"
         @click="setActiveTab(tab)"
       >
         {{ tab }}
