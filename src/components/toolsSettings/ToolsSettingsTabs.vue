@@ -16,7 +16,7 @@ const {
   activeTab,
   wrapperRef,
   setActiveTab
-} = useToolsSettingsTabs(editorStore, props.tabs[0])
+} = useToolsSettingsTabs(useEditorStore(), props.tabs[0])
 
 </script>
 
@@ -33,7 +33,7 @@ const {
         :class="{ active: tab === activeTab }"
         @click="setActiveTab(tab)"
       >
-        {{ tab }}
+        {{ $t(`tools.${editorStore.selectedToolKey}.settings.${tab}.label`) }}
       </div>
     </div>
   </div>

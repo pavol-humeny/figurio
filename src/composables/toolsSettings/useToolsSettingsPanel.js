@@ -8,7 +8,6 @@ export function useToolsSettingsPanel(editorStore) {
 
   // Lazy load the settings component
   const settingsComponent = computed(() => {
-    console.log('Loading settings component for:', toolDefinition.value?.key)
     if (!toolDefinition.value) return null
     return toolDefinition.value.settingsComponent
       ? defineAsyncComponent(toolDefinition.value.settingsComponent)

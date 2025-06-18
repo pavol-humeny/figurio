@@ -96,6 +96,14 @@
         "fontSize": "Font-size",
         "color": "Color",
         "textAlign": "Text Align"
+      },
+      "shape":{
+        "label": "Shape",
+        "rasterize": "Rasterize",
+        "shapeType": "Shape type",
+        "lineWidth": "Line width",
+        "fillColor": "Fill color",
+        "lineColor": "Line color"
       }
     }
   },
@@ -139,5 +147,8 @@
         }
       }
     }
+  },
+  "noToolSelected": {
+    "label": "No tool selected"
   }
 }

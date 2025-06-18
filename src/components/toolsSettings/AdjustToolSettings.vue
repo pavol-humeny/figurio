@@ -1,7 +1,7 @@
 <script setup>
 import ToolsSettingsTabs from './ToolsSettingsTabs.vue';
 
-const tabs = ['auto', 'manual'];
+const tabs = ['brightness', 'contrast', 'saturation', 'exposure'];
 
 </script>
 

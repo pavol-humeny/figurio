@@ -34,6 +34,10 @@ export function useToolsPanel(editorStore) {
     editorStore.selectTool(toolKey)
   }
 
+  const exportTool = () =>{
+    console.log("Export tool clicked")
+  }
+
   return {
     activeTool,
     toolsRef,
@@ -43,5 +47,6 @@ export function useToolsPanel(editorStore) {
     scrollDown,
     checkScroll,
     toggleTool,
+    exportTool
   }
 }

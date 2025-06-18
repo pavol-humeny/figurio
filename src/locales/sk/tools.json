@@ -11,7 +11,7 @@
     }
   },
   "transform": {
-    "label": "Transformovať",
+    "label": "Úpravy",
     "tip": "Otoč, zmeň mierku, prevráť alebo orež obrázok.",
     "settings": {
       "rotation": {
@@ -39,7 +39,7 @@
     }
   },
   "smartCrop": {
-    "label": "Inteligentné orezanie",
+    "label": "Smart orezanie",
     "tip": "Automaticky orež objekt.",
     "settings": {
       "auto": {
@@ -96,6 +96,14 @@
         "fontSize": "Veľkosť písma",
         "color": "Farba",
         "textAlign": "Zarovnanie textu"
+      },
+      "shape":{
+        "label": "Tvar",
+        "rasterize": "Rasterizovať",
+        "shapeType": "Typ tvaru",
+        "lineWidth": "Hrúbka čiary",
+        "fillColor": "Farba výplne",
+        "lineColor": "Farba čiary"
       }
     }
   },
@@ -139,5 +147,8 @@
         }
       }
     }
+  },
+  "noToolSelected": {
+    "label": "Žiadny vybraný nástroj"
   }
 }

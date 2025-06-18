@@ -1,13 +1,10 @@
 <script setup>
-import ToolsSettingsTabs from './ToolsSettingsTabs.vue';
 
-const tabs = ['auto', 'manual'];
 
 </script>
 
 <template>
   <div class="tool-settings">
-    <ToolsSettingsTabs :tabs="tabs"/>
 
     <div class="settings-content">
     </div>
