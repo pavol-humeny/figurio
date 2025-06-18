@@ -25,8 +25,8 @@
     "confirm": {
       "title": "Potvrdit zavření souboru",
       "message": "Opravdu chcete zavřít aktuální soubor? Veškeré neuložené změny budou ztraceny.",
-      "cancel": "Zrušit",
-      "confirm": "Zavřít"
+      "cancel": "Ne",
+      "confirm": "Ano, zavřít"
     }
   },
 

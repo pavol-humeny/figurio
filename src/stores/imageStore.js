@@ -15,7 +15,12 @@ export const useImageStore = defineStore('imageStore', {
     previewUrl: '',
     fileType: '', // 'image' or 'pdf'
     fileFormat: '', // 'png', 'jpg', 'jpeg', 'pdf'
+    newFileFormat: '', // 'png', 'jpg', 'jpeg', 'pdf'
     fileDimensions: {
+      width: 0,
+      height: 0,
+    },
+    newFileDimensions: {
       width: 0,
       height: 0,
     },
@@ -32,11 +37,13 @@ export const useImageStore = defineStore('imageStore', {
 
       // Empty name
       if (trimmedName === '') {
-        showToastModal(
-          "error",
-          t("imageStore.toast.errorEmptyName.title"),
-          t("imageStore.toast.errorEmptyName.message")
-        )
+        if (this.file !== null) {
+          showToastModal(
+            "error",
+            t("imageStore.toast.errorEmptyName.title"),
+            t("imageStore.toast.errorEmptyName.message")
+          )
+        }
         return
       }
 
@@ -47,11 +54,13 @@ export const useImageStore = defineStore('imageStore', {
 
       // Invalid characters
       if (!isValidFileName(trimmedName)) {
-        showToastModal(
-          "error",
-          t("imageStore.toast.errorInvalidCharacters.title"),
-          t("imageStore.toast.errorInvalidCharacters.message")
-        )
+        if (this.file !== null) {
+          showToastModal(
+            "error",
+            t("imageStore.toast.errorInvalidCharacters.title"),
+            t("imageStore.toast.errorInvalidCharacters.message")
+          )
+        }
         return
       }
 
@@ -65,8 +74,6 @@ export const useImageStore = defineStore('imageStore', {
 
       // Update file name
       this.fileName = trimmedName
-
-
     },
 
     closeFile(){
@@ -74,6 +81,17 @@ export const useImageStore = defineStore('imageStore', {
       this.file = null
       this.previewUrl = ''
       this.fileType = ''
+      this.fileFormat = ''
+      this.newFileFormat = ''
+      this.fileDimensions = {
+        width: 0,
+        height: 0,
+      }
+      this.newFileDimensions = {
+        width: 0,
+        height: 0,
+      }
+      this.fileSize = 0
     },
 
     setFile(file, t) {
@@ -82,7 +100,7 @@ export const useImageStore = defineStore('imageStore', {
 
       // this.fileName = file.name.trim()
       this.fileFormat = file.name.split('.').pop().toLowerCase()
-      this.fileSize = file.size
+      this.newFileFormat = this.fileFormat
       this.fileType = file.type.startsWith('image/') ? 'image'
                   : file.type === 'application/pdf' ? 'pdf'
                   : ''
@@ -97,10 +115,14 @@ export const useImageStore = defineStore('imageStore', {
           img.onload = () => {
             this.fileDimensions.width = img.width
             this.fileDimensions.height = img.height
+            this.newFileDimensions.width = this.fileDimensions.width
+            this.newFileDimensions.height = this.fileDimensions.height
           }
           img.src = e.target.result
         }
         reader.readAsDataURL(file)
+      }else{
+        console.error('Unsupported file type:', this.fileType)
       }
       // else if (this.fileType === 'pdf') {
       //   reader.onload = async (e) => {

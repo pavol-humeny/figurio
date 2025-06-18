@@ -1,10 +1,12 @@
 import { ref, onMounted, nextTick, computed } from 'vue'
 import { useExportToolSettings } from '../toolsSettings/useExportToolSettings'
 
-export function useToolsPanel(editorStore) {
+export function useToolsPanel(editorStore, imageStore) {
   const toolsRef = ref(null)
   const atTop = ref(true)
   const atBottom = ref(false)
+
+  const isExportDisabled = computed(() => !imageStore.isImageLoaded())
 
   const activeTool = computed(() => editorStore.selectedToolKey)
 
@@ -44,6 +46,17 @@ export function useToolsPanel(editorStore) {
     openExportToolSettings()
   }
 
+  const clickFunction = (toolKey) => {
+    if (toolKey === 'export') {
+      if (!isExportDisabled.value) {
+        exportTool()
+      }
+    } else {
+      toggleTool(toolKey)
+    }
+  }
+
+
   return {
     activeTool,
     toolsRef,
@@ -53,6 +66,8 @@ export function useToolsPanel(editorStore) {
     scrollDown,
     checkScroll,
     toggleTool,
-    exportTool
+    exportTool,
+    clickFunction,
+    isExportDisabled
   }
 }

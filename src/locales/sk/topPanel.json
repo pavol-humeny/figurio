@@ -25,8 +25,8 @@
     "confirm": {
       "title": "Potvrdiť zatvorenie súboru",
       "message": "Naozaj chcete zatvoriť aktuálny súbor? Všetky neuložené zmeny budú stratené.",
-      "cancel": "Zrušiť",
-      "confirm": "Zavrieť"
+      "cancel": "Nie",
+      "confirm": "Áno, zatvoriť"
     }
   },
 

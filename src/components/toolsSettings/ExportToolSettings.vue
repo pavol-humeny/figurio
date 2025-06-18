@@ -5,6 +5,9 @@ import DefaultButton from '../common/DefaultButton.vue';
 import BaseIcon from '../icons/BaseIcon.vue';
 import { useShaking } from '@/composables/common/useShaking';
 import { useImageStore } from '@/stores/imageStore';
+import { useI18n } from 'vue-i18n';
+
+const { t } = useI18n();
 
 const isDimensionsLinked = ref(true);
 
@@ -15,8 +18,13 @@ const {
 
 const {
   isVisible,
-  closeExportToolSettings,
-} = useExportToolSettings(useImageStore());
+  inputFileNameRef,
+  fileName,
+  fileFormat,
+  fileDimensions,
+  saveNewFileName,
+  closeExportToolSettings
+} = useExportToolSettings(useImageStore(), t);
 
 </script>
 
@@ -32,16 +40,24 @@ const {
 
           <div class="export-settings-item">
             <label for="file-format">{{ $t('tools.export.settings.general.fileFormat') }}</label>
-            <select id="file-format">
-              <option value="json">JSON</option>
-              <option value="csv">CSV</option>
-              <option value="xml">XML</option>
+            <select id="file-format" v-model="fileFormat">
+              <option value="png">png</option>
+              <option value="jpg">jpg</option>
+              <option value="pdf">pdf</option>
             </select>
           </div>
 
           <div class="export-settings-item">
             <label for="file-name">{{ $t('tools.export.settings.general.fileName.label') }}</label>
-            <input type="text" id="file-name" :placeholder="$t('tools.export.settings.general.fileName.placeholder')" />
+            <input
+              ref="inputFileNameRef"
+              type="text"
+              v-model="fileName"
+              id="file-name"
+              :placeholder="$t('tools.export.settings.general.fileName.placeholder')"
+              @blur="saveNewFileName"
+              @keydown.enter="saveNewFileName"
+            />
           </div>
 
           <div class="export-settings-item">
@@ -49,7 +65,13 @@ const {
             <div class="file-dimensions-inputs">
               <div class="width">
                 <label for="file-dimensions-width">{{ $t('tools.export.settings.general.fileDimensions.width') }}</label>
-                <input type="number" id="file-dimensions-width"/>
+                <input
+                  v-model="fileDimensions.width"
+                  type="number"
+                  id="file-dimensions-width"
+                  max="10000"
+                  min="1"
+                />
               </div>
 
               <div class="link-icon-wrapper">
@@ -63,7 +85,13 @@ const {
 
               <div class="height">
                 <label for="file-dimensions-height">{{ $t('tools.export.settings.general.fileDimensions.height') }}</label>
-                <input type="number" id="file-dimensions-height"/>
+                <input
+                  v-model="fileDimensions.height"
+                  type="number"
+                  id="file-dimensions-height"
+                  max="10000"
+                  min="1"
+                />
               </div>
             </div>
           </div>

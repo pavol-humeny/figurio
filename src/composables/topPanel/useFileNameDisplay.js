@@ -22,7 +22,6 @@ export function useFileNameDisplay(imageStore, t) {
     nextTick(() => {
       inputRef.value?.blur()
     })
-
   }
 
   const startEditing = () => {

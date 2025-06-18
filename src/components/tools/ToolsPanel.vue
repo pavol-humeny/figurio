@@ -6,6 +6,7 @@ import { computed } from 'vue'
 import { useToolsPanel } from '@/composables/tools/useToolsPanel'
 import { toolsDefinitions } from '@/config/toolsDefinitions'
 import { useEditorStore } from '@/stores/editorStore'
+import { useImageStore } from '@/stores/imageStore'
 
 const { t } = useI18n()
 
@@ -17,9 +18,9 @@ const {
   checkScroll,
   scrollUp,
   scrollDown,
-  toggleTool,
-  exportTool,
-} = useToolsPanel(useEditorStore())
+  clickFunction,
+  isExportDisabled,
+} = useToolsPanel(useEditorStore(), useImageStore())
 
 const tools = computed(() =>
   toolsDefinitions.map((tool) => ({
@@ -44,7 +45,9 @@ const tools = computed(() =>
         :label="tool.label"
         :tip="tool.tip"
         :active="activeTool === tool.key"
-        @click="tool.key === 'export' ? exportTool() : toggleTool(tool.key)"
+        @click="clickFunction(tool.key)"
+        :disabled="tool.key === 'export' ? isExportDisabled : false"
+
       />
     </div>
 

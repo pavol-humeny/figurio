@@ -18,6 +18,10 @@ const props = defineProps({
   active: {
     type: Boolean,
     default: false
+  },
+  disabled: {
+    type: Boolean,
+    default: false
   }
 });
 
@@ -27,7 +31,7 @@ const props = defineProps({
   <ItemTip :text="props.tip" position="right">
     <div
       class="tool"
-      :class="{ active: props.active }">
+      :class="{ active: props.active, disabled: props.disabled }">
       <BaseIcon :name="props.iconName" :size="27" :color="'var(--primary-c)'"/>
       <p>{{ props.label }}</p>
     </div>
@@ -58,6 +62,11 @@ const props = defineProps({
 
 .tool.active{
   border: var(--border-modal);
+}
+
+.tool.disabled {
+  opacity: 0.5;
+  pointer-events: none;
 }
 
 .tool p {
