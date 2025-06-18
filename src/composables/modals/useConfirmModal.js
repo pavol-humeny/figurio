@@ -3,12 +3,9 @@ import { ref } from 'vue'
 const isVisible = ref(false)
 const title = ref('')
 const message = ref('')
-const isShaking = ref(false)
 const cancelText = ref('Cancel')
 const confirmText = ref('Confirm')
 let resolver = null
-
-
 
 export function useConfirmModal() {
   const showConfirmModal = (modalTitle, modalMessage, modalCancelText, modalConfirmText) => {
@@ -37,14 +34,6 @@ export function useConfirmModal() {
     resolver?.(false)
   }
 
-  const triggerShake = () => {
-    if (isShaking.value) return
-    isShaking.value = true
-    setTimeout(() => {
-      isShaking.value = false
-    }, 500)
-  }
-
   return{
     isVisible,
     title,
@@ -54,7 +43,5 @@ export function useConfirmModal() {
     confirmText,
     cancel,
     cancelText,
-    isShaking,
-    triggerShake,
   }
 }

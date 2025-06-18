@@ -1,6 +1,12 @@
 <script setup>
 import { useConfirmModal } from '@/composables/modals/useConfirmModal';
 import DefaultButton from '../common/DefaultButton.vue';
+import { useShaking } from '@/composables/common/useShaking';
+
+const {
+  isShaking,
+  triggerShake
+} = useShaking();
 
 const {
   isVisible,
@@ -10,8 +16,6 @@ const {
   confirmText,
   cancel,
   cancelText,
-  isShaking,
-  triggerShake,
 } = useConfirmModal();
 </script>
 

@@ -129,7 +129,7 @@
           "label": "File name",
           "placeholder": "Text"
         },
-        "dimensions":{
+        "fileDimensions":{
           "label": "Dimensions",
           "width": "Width",
           "height": "Height"

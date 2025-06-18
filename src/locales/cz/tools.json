@@ -129,7 +129,7 @@
           "label": "Název souboru",
           "placeholder": "Text"
         },
-        "dimensions": {
+        "fileDimensions": {
           "label": "Rozměry",
           "width": "Šířka",
           "height": "Výška"

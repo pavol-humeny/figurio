@@ -5,10 +5,16 @@ import DefaultButton from '../common/DefaultButton.vue';
 
 import { useI18n } from 'vue-i18n'
 import { computed } from 'vue'
+import { useShaking } from '@/composables/common/useShaking';
 
 const { locale, messages } = useI18n()
 
 const sections = computed(() => messages.value[locale.value]?.privacy?.sections || [])
+
+const {
+  isShaking,
+  triggerShake
+} = useShaking();
 
 const {
   isVisible,
@@ -18,8 +24,8 @@ const {
 
 <template>
   <Teleport to="body">
-    <div v-if="isVisible" class="privacy-modal-overlay">
-      <div class="modal-box">
+    <div v-if="isVisible" class="privacy-modal-overlay" @click.self="triggerShake">
+      <div class="modal-box" :class="{ shake: isShaking }">
         <div class="title-wrapper">
           <BaseIcon name="IconPrivacy" size="28" color="var(--text-c)" />
           <p>{{ $t('privacy.title') }}</p>
