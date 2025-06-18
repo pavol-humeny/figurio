@@ -12,7 +12,6 @@ let resolver = null
 
 export function useConfirmModal() {
   const showConfirmModal = (modalTitle, modalMessage, modalCancelText, modalConfirmText) => {
-    console.log('showConfirmModal called with:', modalTitle, modalMessage)
     if (isVisible.value) {
       return Promise.resolve(false)
     }

@@ -5,6 +5,7 @@ import ToastModal from './components/modals/ToastModal.vue';
 import ConfirmModal from './components/modals/ConfirmModal.vue';
 import SettingsPanel from './components/topPanel/SettingsPanel.vue';
 import PrivacyAndDataModal from './components/modals/PrivacyAndDataModal.vue';
+import ExportToolSettings from './components/toolsSettings/ExportToolSettings.vue';
 </script>
 
 <template>
@@ -13,6 +14,8 @@ import PrivacyAndDataModal from './components/modals/PrivacyAndDataModal.vue';
     <ConfirmModal />
     <PrivacyAndDataModal />
     <SettingsPanel />
+    <ExportToolSettings />
+
     <div class="top-panel">
       <TopPanel />
     </div>

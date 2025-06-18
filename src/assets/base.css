@@ -97,10 +97,11 @@ body {
   --z-index-toast: 9998;
   --z-index-modal: 9997;
   --z-index-privacy: 1000;
-  --z-index-settings: 950;
-  --z-index-top-panel: 900;
-  --z-index-tool-settings-panel: 800;
-  --z-index-tool-panel: 800;
+  --z-index-export: 900;
+  --z-index-settings: 800;
+  --z-index-top-panel: 700;
+  --z-index-tool-settings-panel: 600;
+  --z-index-tool-panel: 600;
 
   --box-shadow-ui: 1px 3px 6px rgba(0, 0, 0, 0.4);
   --box-shadow-hover: 2px 2px 6px rgba(0, 0, 0, 0.2);

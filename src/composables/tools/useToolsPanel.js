@@ -1,4 +1,5 @@
 import { ref, onMounted, nextTick, computed } from 'vue'
+import { useExportToolSettings } from '../toolsSettings/useExportToolSettings'
 
 export function useToolsPanel(editorStore) {
   const toolsRef = ref(null)
@@ -6,6 +7,10 @@ export function useToolsPanel(editorStore) {
   const atBottom = ref(false)
 
   const activeTool = computed(() => editorStore.selectedToolKey)
+
+  const {
+    openExportToolSettings
+  } = useExportToolSettings()
 
   const scrollUp = () => {
     toolsRef.value?.scrollBy({ top: -100, behavior: 'smooth' })
@@ -35,7 +40,8 @@ export function useToolsPanel(editorStore) {
   }
 
   const exportTool = () =>{
-    console.log("Export tool clicked")
+    console.log('Export tool clicked')
+    openExportToolSettings()
   }
 
   return {
