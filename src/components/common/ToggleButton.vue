@@ -1,6 +1,7 @@
 <script setup>
 import ItemTip from './ItemTip.vue';
-import { defineProps, computed, watch, ref } from 'vue';
+import { defineProps, defineEmits } from 'vue'
+import { useToggleButton } from '@/composables/common/useToggleButton';
 
 const props = defineProps({
   disabled: {
@@ -23,19 +24,11 @@ const props = defineProps({
 
 const emit = defineEmits(['update:modelValue'])
 
-const isActive = ref(props.modelValue)
-
-const toggleSwitch = () => {
-  if (props.disabled) return
-  isActive.value = !isActive.value
-  emit('update:modelValue', isActive.value)
-}
-
-watch(() => props.modelValue, (value) => {
-  isActive.value = value
-})
-
-const showTip = computed(() => props.tip !== '')
+const {
+  isActive,
+  toggleSwitch,
+  showTip
+} = useToggleButton(props, emit);
 
 </script>
 
