@@ -15,6 +15,22 @@
     "successFileUploaded": {
       "title": "Soubor úspěšně nahrán",
       "message": "Soubor {fileName} byl úspěšně nahrán."
+    },
+    "successFileNameUpdated": {
+      "title": "Názov súboru aktualizovaný",
+      "message": "Názov súboru bol úspešne zmenený."
+    },
+    "errorInvalidCharacters": {
+      "title": "Neplatné znaky",
+      "message": "Názov súboru obsahuje neplatné znaky. Použite iba alfanumerické znaky, podčiarkovníky a pomlčky."
+    },
+    "errorEmptyName": {
+      "title": "Prázdny názov",
+      "message": "Názov súboru nemôže byť prázdny. Zadajte platný názov."
+    },
+    "infoSameName": {
+      "title": "Bez zmeny",
+      "message": "Názov súboru je rovnaký ako predtým. Žiadna zmena nebola vykonaná."
     }
   }
 }

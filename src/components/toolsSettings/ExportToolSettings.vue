@@ -4,6 +4,7 @@ import { useExportToolSettings } from '@/composables/toolsSettings/useExportTool
 import DefaultButton from '../common/DefaultButton.vue';
 import BaseIcon from '../icons/BaseIcon.vue';
 import { useShaking } from '@/composables/common/useShaking';
+import { useImageStore } from '@/stores/imageStore';
 
 const isDimensionsLinked = ref(true);
 
@@ -15,7 +16,7 @@ const {
 const {
   isVisible,
   closeExportToolSettings,
-} = useExportToolSettings();
+} = useExportToolSettings(useImageStore());
 
 </script>
 

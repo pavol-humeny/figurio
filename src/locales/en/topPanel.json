@@ -1,25 +1,7 @@
 {
   "fileNameDisplay":{
     "tip": "Edit the name of the currently opened file",
-    "tipDisabled": "No file is currently opened",
-    "toast": {
-      "success":{
-        "title": "File name updated",
-        "message": "The file name has been successfully changed."
-      },
-      "errorInvalidCharacters": {
-        "title": "Invalid characters",
-        "message": "The file name contains invalid characters. Please use only alphanumeric characters, underscores, and hyphens."
-      },
-      "errorEmptyName": {
-        "title": "Empty name",
-        "message": "The file name cannot be empty. Please enter a valid name."
-      },
-      "infoSameName": {
-        "title": "No change",
-        "message": "The file name is the same as before. No changes were made."
-      }
-    }
+    "tipDisabled": "No file is currently opened"
   },
 
   "uploadFileButton":{

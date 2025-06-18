@@ -2,7 +2,7 @@ import { ref } from 'vue'
 
 const isVisible = ref(false)
 
-export function useExportToolSettings() {
+export function useExportToolSettings(imageStore) {
   const openExportToolSettings = () => {
     isVisible.value = true
   }

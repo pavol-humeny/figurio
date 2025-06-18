@@ -3,24 +3,74 @@ import { useToastModal } from '@/composables/modals/useToastModal'
 
 const { showToastModal } = useToastModal()
 
+const isValidFileName = (name) => {
+  // Invalid characters: \ / : * ? " < > |
+  return !/[\\/:*?"<>|]/.test(name)
+}
+
 export const useImageStore = defineStore('imageStore', {
   state: () => ({
     fileName: '',
     file: null,
     previewUrl: '',
     fileType: '', // 'image' or 'pdf'
+    fileFormat: '', // 'png', 'jpg', 'jpeg', 'pdf'
+    fileDimensions: {
+      width: 0,
+      height: 0,
+    },
+    fileSize: 0, // in bytes
   }),
   actions: {
     isImageLoaded() {
       return this.fileName && this.fileName.trim() !== ''
     },
 
-    setFileName(newName) {
-      this.fileName = newName.trim()
+    setFileName(newName, t) {
+      // this.fileName = newName.trim()
+      const trimmedName = newName.trim()
+
+      // Empty name
+      if (trimmedName === '') {
+        showToastModal(
+          "error",
+          t("imageStore.toast.errorEmptyName.title"),
+          t("imageStore.toast.errorEmptyName.message")
+        )
+        return
+      }
+
+      // Same name
+      if (trimmedName === this.fileName) {
+        return
+      }
+
+      // Invalid characters
+      if (!isValidFileName(trimmedName)) {
+        showToastModal(
+          "error",
+          t("imageStore.toast.errorInvalidCharacters.title"),
+          t("imageStore.toast.errorInvalidCharacters.message")
+        )
+        return
+      }
+
+      if (trimmedName !== this.fileName && this.fileName !== '') {
+        showToastModal(
+          "success",
+          t("imageStore.toast.successFileNameUpdated.title"),
+          t("imageStore.toast.successFileNameUpdated.message")
+        )
+      }
+
+      // Update file name
+      this.fileName = trimmedName
+
+
     },
 
     closeFile(){
-      this.setFileName('')
+      this.fileName = ''
       this.file = null
       this.previewUrl = ''
       this.fileType = ''
@@ -28,25 +78,53 @@ export const useImageStore = defineStore('imageStore', {
 
     setFile(file, t) {
       this.file = file
-      this.setFileName(file.name)
+      this.setFileName(file.name, t)
 
-      if (file.type.startsWith('image/')) {
-        this.fileType = 'image'
-        const reader = new FileReader()
+      // this.fileName = file.name.trim()
+      this.fileFormat = file.name.split('.').pop().toLowerCase()
+      this.fileSize = file.size
+      this.fileType = file.type.startsWith('image/') ? 'image'
+                  : file.type === 'application/pdf' ? 'pdf'
+                  : ''
+
+      const reader = new FileReader()
+
+      if (this.fileType === 'image') {
         reader.onload = (e) => {
           this.previewUrl = e.target.result
+
+          const img = new Image()
+          img.onload = () => {
+            this.fileDimensions.width = img.width
+            this.fileDimensions.height = img.height
+          }
+          img.src = e.target.result
         }
         reader.readAsDataURL(file)
       }
-      else if (file.type === 'application/pdf') {
-        // TODO - implement PDF storing logic
-        this.fileType = 'pdf'
-        const reader = new FileReader()
-        reader.onload = (e) => {
-          this.previewUrl = e.target.result
-        }
-        reader.readAsDataURL(file)
-      }
+      // else if (this.fileType === 'pdf') {
+      //   reader.onload = async (e) => {
+      //     this.previewUrl = e.target.result
+
+      //     try {
+      //       const pdfjsLib = await import('pdfjs-dist/build/pdf')
+      //       const pdfWorker = await import('pdfjs-dist/build/pdf.worker.entry')
+
+      //       pdfjsLib.GlobalWorkerOptions.workerSrc = pdfWorker.default
+
+      //       const loadingTask = pdfjsLib.getDocument({ data: e.target.result })
+      //       const pdf = await loadingTask.promise
+      //       const page = await pdf.getPage(1)
+      //       const viewport = page.getViewport({ scale: 1 })
+
+      //       this.fileDimensions.width = viewport.width
+      //       this.fileDimensions.height = viewport.height
+      //     } catch (err) {
+      //       console.error('Failed to extract PDF dimensions', err)
+      //     }
+      //   }
+      //   reader.readAsArrayBuffer(file)
+      // }
 
       showToastModal(
         "success",
