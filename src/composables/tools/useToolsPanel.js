@@ -1,11 +1,11 @@
 import { ref, onMounted, nextTick, computed } from 'vue'
 
-export function useToolsPanel(toolStore) {
+export function useToolsPanel(editorStore) {
   const toolsRef = ref(null)
   const atTop = ref(true)
   const atBottom = ref(false)
 
-  const activeTool = computed(() => toolStore.selectedToolKey)
+  const activeTool = computed(() => editorStore.selectedToolKey)
 
   const scrollUp = () => {
     toolsRef.value?.scrollBy({ top: -100, behavior: 'smooth' })
@@ -27,11 +27,11 @@ export function useToolsPanel(toolStore) {
   })
 
   const toggleTool = (toolKey) => {
-    if (toolStore.selectedToolKey === toolKey) {
-      toolStore.selectTool('') 
+    if (editorStore.selectedToolKey === toolKey) {
+      editorStore.selectTool('')
       return
     }
-    toolStore.selectTool(toolKey)
+    editorStore.selectTool(toolKey)
   }
 
   return {

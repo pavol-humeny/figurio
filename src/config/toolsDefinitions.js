@@ -2,36 +2,36 @@ export const toolsDefinitions = [
   {
     key: 'move',
     iconName: 'IconMoveTool',
-    // settingsComponent: () => import('@/toolSettings/MoveToolSettings.vue')
+    // settingsComponent: () => import('@/components/toolsSettings/MoveToolSettings.vue')
   },
   {
     key: 'transform',
     iconName: 'IconTransformTool',
-    // settingsComponent: () => import('@/toolSettings/TransformToolSettings.vue')
+    // settingsComponent: () => import('@/components/toolsSettings/TransformToolSettings.vue')
   },
   {
     key: 'smartCrop',
     iconName: 'IconSmartCropTool',
-    // settingsComponent: () => import('@/toolSettings/SmartCropToolSettings.vue')
+    settingsComponent: () => import('@/components/toolsSettings/SmartCropToolSettings.vue')
   },
   {
     key: 'adjust',
     iconName: 'IconAdjustTool',
-    // settingsComponent: () => import('@/toolSettings/AdjustToolSettings.vue')
+    // settingsComponent: () => import('@/components/toolsSettings/AdjustToolSettings.vue')
   },
   {
     key: 'annotate',
     iconName: 'IconAnnotateTool',
-    // settingsComponent: () => import('@/toolSettings/AnnotateToolSettings.vue')
+    // settingsComponent: () => import('@/components/toolsSettings/AnnotateToolSettings.vue')
   },
   {
     key: 'frame',
     iconName: 'IconFrameTool',
-    // settingsComponent: () => import('@/toolSettings/FrameToolSettings.vue')
+    // settingsComponent: () => import('@/components/toolsSettings/FrameToolSettings.vue')
   },
   {
     key: 'export',
     iconName: 'IconExportTool',
-    // settingsComponent: () => import('@/toolSettings/ExportToolSettings.vue')
+    // settingsComponent: () => import('@/components/toolsSettings/ExportToolSettings.vue')
   }
 ]

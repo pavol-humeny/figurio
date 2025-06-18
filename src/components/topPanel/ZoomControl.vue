@@ -1,44 +1,30 @@
 <script setup>
 import BaseIcon from '@/components/icons/BaseIcon.vue'
-import { useZoomControl } from '@/composables/topPanel/useZoomControl';
+import { useZoomControl } from '@/composables/topPanel/useZoomControl'
 import { useI18n } from 'vue-i18n'
-import { useViewportStore } from '@/stores/viewportStore';
+import { useViewportStore } from '@/stores/viewportStore'
 
 import ItemTip from '../common/ItemTip.vue'
 
 const { t } = useI18n()
 
-const {
-  zoomLevel,
-  zoomIn,
-  zoomOut,
-  wheelZoom,
-  setZoomLevel,
-  resetZoom,
-  canZoomIn,
-  canZoomOut
-} = useZoomControl(useViewportStore(), t);
-
+const { zoomLevel, zoomIn, zoomOut, wheelZoom, setZoomLevel, resetZoom, canZoomIn, canZoomOut } =
+  useZoomControl(useViewportStore(), t)
 </script>
 
 <template>
   <div class="zoom-control">
-    <ItemTip
-      :text="$t('topPanel.zoomControl.tip.zoomOut')"
-      position="bottom"
-    >
+    <ItemTip :text="$t('topPanel.zoomControl.tip.zoomOut')" position="bottom">
       <div
         class="zoom-out-button button button-control button-circle"
         @click="zoomOut"
-        :class="{ 'button--disabled': !canZoomOut }">
+        :class="{ 'button--disabled': !canZoomOut }"
+      >
         <BaseIcon name="IconMinus" size="24" />
       </div>
     </ItemTip>
 
-    <ItemTip
-      :text="$t('topPanel.zoomControl.tip.setZoom')"
-      position="bottom"
-    >
+    <ItemTip :text="$t('topPanel.zoomControl.tip.setZoom')" position="bottom">
       <div class="zoom-level-wrapper">
         <input
           class="zoom-level-input"
@@ -52,14 +38,12 @@ const {
       </div>
     </ItemTip>
 
-    <ItemTip
-      :text="$t('topPanel.zoomControl.tip.zoomIn')"
-      position="bottom"
-    >
+    <ItemTip :text="$t('topPanel.zoomControl.tip.zoomIn')" position="bottom">
       <div
         class="zoom-in-button button button-control button-circle"
         @click="zoomIn"
-        :class="{ 'button--disabled': !canZoomIn }">
+        :class="{ 'button--disabled': !canZoomIn }"
+      >
         <BaseIcon name="IconPlus" size="24" />
       </div>
     </ItemTip>
@@ -115,5 +99,4 @@ const {
   color: var(--text-c);
   pointer-events: none;
 }
-
 </style>

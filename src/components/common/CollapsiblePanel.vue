@@ -23,7 +23,7 @@ const {
       @click="toggleVisibility"
       :style="{ width: collapseButtonWidth + 'px' }"
     >
-      <BaseIcon  :name="isVisible ? 'IconArrowRight' : 'IconArrowLeft'" size="24" color="var(--border-c)" />
+      <BaseIcon :name="isVisible ? 'IconArrowRight' : 'IconArrowLeft'" size="24" color="var(--border-c)" />
     </div>
 
     <div class="panel-content" :class="{ hidden: !isVisible }">

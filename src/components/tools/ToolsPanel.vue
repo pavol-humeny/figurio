@@ -5,7 +5,7 @@ import { useI18n } from 'vue-i18n'
 import { computed } from 'vue'
 import { useToolsPanel } from '@/composables/tools/useToolsPanel';
 import { toolsDefinitions } from '@/config/toolsDefinitions'
-import { useToolStore } from '@/stores/toolStore';
+import { useEditorStore } from '@/stores/editorStore';
 
 const { t } = useI18n()
 
@@ -18,7 +18,7 @@ const {
   scrollUp,
   scrollDown,
   toggleTool
-} = useToolsPanel(useToolStore())
+} = useToolsPanel(useEditorStore())
 
 const tools = computed(() =>
   toolsDefinitions.map(tool => ({
@@ -91,7 +91,6 @@ const tools = computed(() =>
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 10;
   cursor: pointer;
 }
 .arrow-up {
