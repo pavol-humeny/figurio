@@ -35,7 +35,7 @@ export const useImageStore = defineStore('imageStore', {
 
     setFileName(newName, t) {
       // this.fileName = newName.trim()
-      const trimmedName = newName.trim()
+      let trimmedName = newName.trim()
 
       // Empty name
       if (trimmedName === '') {
@@ -72,6 +72,12 @@ export const useImageStore = defineStore('imageStore', {
           t("imageStore.toast.successFileNameUpdated.title"),
           t("imageStore.toast.successFileNameUpdated.message")
         )
+      }
+
+      // Remove file extension if present
+      const lastDotIndex = trimmedName.lastIndexOf('.')
+      if (lastDotIndex !== -1) {
+        trimmedName = trimmedName.slice(0, lastDotIndex)
       }
 
       // Update file name
