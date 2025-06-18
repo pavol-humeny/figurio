@@ -1,5 +1,6 @@
 <script setup>
 import ToolsPanel from '@/components/tools/ToolsPanel.vue';
+import CollapsiblePanel from '@/components/common/CollapsiblePanel.vue';
 </script>
 
 <template>
@@ -9,7 +10,7 @@ import ToolsPanel from '@/components/tools/ToolsPanel.vue';
 a
     </div>
     <div class="right-panel">
-      a
+      <CollapsiblePanel/>
     </div>
 
   </div>
@@ -29,7 +30,6 @@ a
 }
 
 .right-panel {
-  background: rgb(93, 168, 63);
-  width: 300px;
+  /* width: 300px; */
 }
 </style>

@@ -12,7 +12,7 @@ export function useFileNameDisplay(imageStore, t) {
     return !imageStore.isImageLoaded()
   })
 
-  // Aktualizácia pri zmene v store
+  // Update the input value when the image file name changes in the store
   watch(() => imageStore.fileName, (newFileName) => {
     if (!editEnabled.value) {
       fileNameInput.value = newFileName

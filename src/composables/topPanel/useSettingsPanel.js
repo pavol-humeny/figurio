@@ -1,9 +1,7 @@
 import { computed, ref } from 'vue'
 import { usePrivacyAndDataModal } from '@/composables/modals/usePrivacyAndDataModal';
 
-
 const isVisible = ref(false)
-
 
 export function useSettingsPanel(uiStore) {
   const {

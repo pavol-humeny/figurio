@@ -16,9 +16,12 @@ export const useUiStore = defineStore('ui', {
 
     keyShortcutsEnabled: getBoolean('keyShortcutsEnabled', true),
 
-    rightPanelOpen: getBoolean('leftPanelOpen', true),
-    rightPanelDefaultWidth: 130,
-    rightPanelWidth: getNumber('leftPanelWidth', 130),
+    rightPanelOpen: getBoolean('rightPanelOpen', true),
+    rightPanelDefaultWidth: 300,
+    rightPanelWidth: getNumber('rightPanelWidth', 300),
+    rightPanelMinWidth: 200,
+    rightPanelMaxWidth: 600,
+    collapseButtonWidth: 30,
   }),
   actions: {
     toggleTheme() {
@@ -50,6 +53,6 @@ export const useUiStore = defineStore('ui', {
     resetRightPanelWidth() {
       this.rightPanelWidth = this.rightPanelDefaultWidth
       localStorage.setItem('rightPanelWidth', this.rightPanelWidth.toString())
-    }
-  }
+    },
+  },
 })
