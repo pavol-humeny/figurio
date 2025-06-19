@@ -160,7 +160,7 @@ const {
 .slider {
   position: absolute;
   background: var(--secondary-c);
-  cursor: pointer;
+  /* cursor: pointer; */
 }
 
 .vertical-slider-wrapper .slider{
