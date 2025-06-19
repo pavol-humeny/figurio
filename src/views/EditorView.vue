@@ -2,13 +2,14 @@
 import ToolsPanel from '@/components/tools/ToolsPanel.vue';
 import CollapsiblePanel from '@/components/common/CollapsiblePanel.vue';
 import ToolsSettingsPanel from '@/components/toolsSettings/ToolsSettingsPanel.vue';
+import ViewportWrapper from '@/components/editor/ViewportWrapper.vue';
 </script>
 
 <template>
   <div class="editor-view">
     <ToolsPanel />
     <div class="editor-content">
-      a
+      <ViewportWrapper />
     </div>
     <div class="right-panel">
       <CollapsiblePanel>
@@ -22,12 +23,12 @@ import ToolsSettingsPanel from '@/components/toolsSettings/ToolsSettingsPanel.vu
 .editor-view {
   display: flex;
   flex-direction: row;
+  justify-content: space-between;
   width: 100%;
   height: 100%;
 }
 
 .editor-content {
-  background: rgb(51, 146, 146);
   flex: 1;
 }
 

@@ -11,20 +11,18 @@ export function useZoomControl(viewportStore) {
   const canZoomIn = computed(() => viewportStore.zoomLevel < viewportStore.maxZoomLevel)
   const canZoomOut = computed(() => viewportStore.zoomLevel > viewportStore.minZoomLevel)
 
-  const zoomIn = (step) => {
-    step = Number(step) || 0.1
+  const zoomIn = () => {
     if (!canZoomIn.value) return
-    viewportStore.zoomIn(step)
+    viewportStore.setZoomLevel(viewportStore.zoomLevel + 0.1)
   }
 
-  const zoomOut = (step) => {
-    step = Number(step) || 0.1
+  const zoomOut = () => {
     if (!canZoomOut.value) return
-    viewportStore.zoomOut(step)
+    viewportStore.setZoomLevel(viewportStore.zoomLevel - 0.1)
   }
 
   const resetZoom = () => {
-    viewportStore.setZoomLevel(viewportStore.defaultZoomLevel)
+    viewportStore.resetZoom()
   }
 
   const wheelZoom = (e) => {

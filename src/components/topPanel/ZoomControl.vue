@@ -35,7 +35,6 @@ const {
         class="zoom-level"
         :textContent="zoomLevel"
         @wheel.passive="wheelZoom"
-        @blur="setZoomLevel(tempZoom)"
         @dblclick="resetZoom"
         @mousedown="startDragging"
         ref="editableZoom"
