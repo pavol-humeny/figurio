@@ -1,4 +1,5 @@
 import { defineStore } from 'pinia'
+import { viewportConfig } from '@/config/viewportConfig'
 
 function getBoolean(key, fallback = true) {
   const value = localStorage.getItem(key)
@@ -10,18 +11,23 @@ function getNumber(key, fallback) {
   return isNaN(value) ? fallback : value
 }
 
+function getString(key, fallback) {
+  const value = localStorage.getItem(key)
+  return value !== null ? value : fallback
+}
+
 export const useUiStore = defineStore('ui', {
   state: () => ({
-    theme: localStorage.getItem('theme') || 'dark',
+    theme: getString('theme', viewportConfig.theme),
 
-    keyShortcutsEnabled: getBoolean('keyShortcutsEnabled', true),
+    keyShortcutsEnabled: getBoolean('keyShortcutsEnabled', viewportConfig.keyShortcutsEnabled),
 
-    rightPanelOpen: getBoolean('rightPanelOpen', true),
-    rightPanelDefaultWidth: 300,
-    rightPanelWidth: getNumber('rightPanelWidth', 300),
-    rightPanelMinWidth: 200,
-    rightPanelMaxWidth: 600,
-    collapseButtonWidth: 30,
+    rightPanelOpen: getBoolean('rightPanelOpen', viewportConfig.rightPanelOpen),
+    rightPanelDefaultWidth: viewportConfig.rightPanelDefaultWidth,
+    rightPanelWidth: getNumber('rightPanelWidth', viewportConfig.rightPanelWidth),
+    rightPanelMinWidth: viewportConfig.rightPanelMinWidth,
+    rightPanelMaxWidth: viewportConfig.rightPanelMaxWidth,
+    collapseButtonWidth: viewportConfig.collapseButtonWidth,
   }),
   actions: {
     toggleTheme() {
