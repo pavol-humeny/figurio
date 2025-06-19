@@ -14,8 +14,10 @@ const props = defineProps({
 
 const {
   activeTab,
+  isDragging,
   wrapperRef,
-  setActiveTab
+  setActiveTab,
+  startDragging
 } = useToolsSettingsTabs(useEditorStore(), props.tabs[0])
 
 </script>
@@ -30,8 +32,9 @@ const {
         class="tab"
         v-for="tab in props.tabs"
         :key="tab"
-        :class="{ active: tab === activeTab }"
+        :class="{ active: tab === activeTab, grabbing: isDragging }"
         @click="setActiveTab(tab)"
+        @mousedown="startDragging"
       >
         {{ $t(`tools.${editorStore.selectedToolKey}.settings.${tab}.label`) }}
       </div>
@@ -60,6 +63,7 @@ const {
   display: none;
 }
 
+
 .tab {
   padding: 0 20px;
   height: 100%;
@@ -73,6 +77,10 @@ const {
 .tab:hover {
   background: var(--secondary-c);
 }
+.tab.grabbing{
+  cursor: grabbing;
+}
+
 .tab.active {
   background: var(--secondary-c);
   color: var(--primary-c);
