@@ -7,7 +7,10 @@
       },
       {
         "title": "Your preferences",
-        "text": "Settings like theme or language are stored only in your browser (via local storage) to improve your experience. You’re in control, always."
+        "text": "Settings like theme or language are stored only in your browser (via local storage) to improve your experience. You’re in control, always.",
+        "action": {
+          "text": "Clear preferences"
+        }
       },
       {
         "title": "No account needed",
@@ -20,5 +23,11 @@
     ],
     "button":{
       "text": "Close"
-    } 
+    },
+    "confirmResetLocalPreferences": {
+      "title": "Clear Preferences",
+      "text": "Are you sure you want to clear your preferences? This will reset your settings.",
+      "cancel": "Cancel",
+      "confirm": "Clear"
+    }
   }

@@ -1,8 +1,11 @@
 import { ref } from 'vue'
+import { useConfirmModal } from './useConfirmModal'
 
 const isVisible = ref(false)
 
-export function usePrivacyAndDataModal() {
+export function usePrivacyAndDataModal(t) {
+  const { showConfirmModal } = useConfirmModal()
+
   const showPrivacyAndDataModal = () => {
     if (isVisible.value) {
       return
@@ -14,9 +17,27 @@ export function usePrivacyAndDataModal() {
     isVisible.value = false
   }
 
+  const clearLocalStorage = async () => {
+    localStorage.clear()
+
+    const confirmed = await showConfirmModal(
+      t('privacy.confirmResetLocalPreferences.title'),
+      t('privacy.confirmResetLocalPreferences.text'),
+      t('privacy.confirmResetLocalPreferences.cancel'),
+      t('privacy.confirmResetLocalPreferences.confirm'),
+    )
+    if (confirmed) {
+      closePrivacyAndDataModal()
+      location.reload()
+    }
+
+
+  }
+
   return {
     isVisible,
     showPrivacyAndDataModal,
+    clearLocalStorage,
     closePrivacyAndDataModal,
   }
 }

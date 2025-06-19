@@ -4,7 +4,12 @@ import { useUndoRedo } from '@/composables/topPanel/useUndoRedo'
 
 import ItemTip from '../common/ItemTip.vue'
 
-const { undo, redo, canUndo, canRedo } = useUndoRedo()
+const {
+  undo,
+  redo,
+  canUndo,
+  canRedo
+} = useUndoRedo()
 </script>
 
 <template>

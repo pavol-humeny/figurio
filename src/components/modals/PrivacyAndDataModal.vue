@@ -7,7 +7,7 @@ import { useI18n } from 'vue-i18n'
 import { computed } from 'vue'
 import { useShaking } from '@/composables/common/useShaking';
 
-const { locale, messages } = useI18n()
+const { locale, messages, t } = useI18n()
 
 const sections = computed(() => messages.value[locale.value]?.privacy?.sections || [])
 
@@ -18,8 +18,9 @@ const {
 
 const {
   isVisible,
+  clearLocalStorage,
   closePrivacyAndDataModal
-} = usePrivacyAndDataModal();
+} = usePrivacyAndDataModal(t);
 </script>
 
 <template>
@@ -39,6 +40,8 @@ const {
           >
             <p v-if="section.title">{{ section.title }}</p>
             <p>{{ section.text }}</p>
+            <p v-if="section.action" class="action-text" @click="clearLocalStorage">{{ section.action.text }}</p>
+
           </div>
         </div>
 
@@ -117,6 +120,15 @@ const {
 .message-wrapper p:last-child {
   font-size: var(--text-font-size);
   color: var(--text-secondary-c);
+}
+
+.message-wrapper p.action-text {
+  color: var(--primary-c);
+  cursor: pointer;
+}
+
+.action-text:hover {
+  text-decoration: underline;
 }
 
 .button-wrapper {

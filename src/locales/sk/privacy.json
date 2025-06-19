@@ -7,7 +7,10 @@
     },
     {
       "title": "Vaše preferencie",
-      "text": "Nastavenia ako téma alebo jazyk sa ukladajú len vo vašom prehliadači (pomocou lokálneho úložiska), aby zlepšili váš zážitok. Máte všetko pod kontrolou."
+      "text": "Nastavenia ako téma alebo jazyk sa ukladajú len vo vašom prehliadači (pomocou lokálneho úložiska), aby zlepšili váš zážitok. Máte všetko pod kontrolou.",
+      "action": {
+        "text": "Vymazať preferencie"
+      }
     },
     {
       "title": "Žiadny účet",
@@ -20,5 +23,11 @@
   ],
   "button": {
     "text": "Zavrieť"
+  },
+  "confirmResetLocalPreferences": {
+    "title": "Vymazať preferencie",
+    "text": "Ste si istí, že chcete vymazať svoje preferencie? Toto resetuje vaše nastavenia.",
+    "cancel": "Zrušiť",
+    "confirm": "Vymazať"
   }
 }
