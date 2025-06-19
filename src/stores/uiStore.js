@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia'
-import { viewportConfig } from '@/config/viewportConfig'
+import { uiConfig } from '@/config/uiConfig'
 
 function getBoolean(key, fallback = true) {
   const value = localStorage.getItem(key)
@@ -18,16 +18,16 @@ function getString(key, fallback) {
 
 export const useUiStore = defineStore('ui', {
   state: () => ({
-    theme: getString('theme', viewportConfig.theme),
+    theme: getString('theme', uiConfig.theme),
 
-    keyShortcutsEnabled: getBoolean('keyShortcutsEnabled', viewportConfig.keyShortcutsEnabled),
+    keyShortcutsEnabled: getBoolean('keyShortcutsEnabled', uiConfig.keyShortcutsEnabled),
 
-    rightPanelOpen: getBoolean('rightPanelOpen', viewportConfig.rightPanelOpen),
-    rightPanelDefaultWidth: viewportConfig.rightPanelDefaultWidth,
-    rightPanelWidth: getNumber('rightPanelWidth', viewportConfig.rightPanelWidth),
-    rightPanelMinWidth: viewportConfig.rightPanelMinWidth,
-    rightPanelMaxWidth: viewportConfig.rightPanelMaxWidth,
-    collapseButtonWidth: viewportConfig.collapseButtonWidth,
+    rightPanelOpen: getBoolean('rightPanelOpen', uiConfig.rightPanelOpen),
+    rightPanelDefaultWidth: uiConfig.rightPanelDefaultWidth,
+    rightPanelWidth: getNumber('rightPanelWidth', uiConfig.rightPanelWidth),
+    rightPanelMinWidth: uiConfig.rightPanelMinWidth,
+    rightPanelMaxWidth: uiConfig.rightPanelMaxWidth,
+    collapseButtonWidth: uiConfig.collapseButtonWidth,
   }),
   actions: {
     toggleTheme() {
