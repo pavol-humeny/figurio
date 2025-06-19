@@ -5,6 +5,7 @@ import BaseIcon from '../icons/BaseIcon.vue';
 import { useShaking } from '@/composables/common/useShaking';
 import { useImageStore } from '@/stores/imageStore';
 import { useI18n } from 'vue-i18n';
+import LinkValuesIcon from '../common/LinkValuesIcon.vue';
 
 const { t } = useI18n();
 
@@ -77,12 +78,11 @@ const {
               </div>
 
               <div class="icon-wrapper">
-                <BaseIcon
-                  :name="isDimensionsLinked ? 'IconLinkValues' : 'IconUnLinkValues'"
+                <LinkValuesIcon
+                  v-model="isDimensionsLinked"
+                  :tipLinked="$t('tools.export.settings.general.fileDimensions.tip.linked')"
+                  :tipUnlinked="$t('tools.export.settings.general.fileDimensions.tip.unlinked')"
                   size="30"
-                  color="var(--primary-c)"
-                  @click="isDimensionsLinked = !isDimensionsLinked"
-                  :tip="$t('tools.export.settings.general.fileDimensions.tip.link')"
                 />
               </div>
 

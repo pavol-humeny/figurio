@@ -141,7 +141,8 @@
           "width": "Width",
           "height": "Height",
           "tip": {
-            "link": "Link/unlink width and height",
+            "linked": "Link width and height",
+            "unlinked": "Unlink width and height",
             "reset": "Reset original dimensions"
           }
         },
