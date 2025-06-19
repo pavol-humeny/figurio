@@ -1,8 +1,6 @@
 import { ref, computed, watch } from 'vue'
-import { useToastModal } from '@/composables/modals/useToastModal'
 
-export function useZoomControl(viewportStore, t) {
-  const { showToastModal } = useToastModal()
+export function useZoomControl(viewportStore) {
 
   const zoomLevelInput = ref(Math.round(viewportStore.zoomLevel * 100))
 
@@ -12,35 +10,6 @@ export function useZoomControl(viewportStore, t) {
 
   const canZoomIn = computed(() => viewportStore.zoomLevel < viewportStore.maxZoomLevel)
   const canZoomOut = computed(() => viewportStore.zoomLevel > viewportStore.minZoomLevel)
-
-  const setZoomLevel = (value) => {
-    const level = Number(value)
-    if (isNaN(level) || level <= 0) {
-      showToastModal(
-        "error",
-        t("topPanel.zoomControl.toast.errorNaN.title"),
-        t("topPanel.zoomControl.toast.errorNaN.message")
-      )
-      zoomLevelInput.value = Math.round(viewportStore.zoomLevel * 100)
-      return
-    }
-
-    const newLevel = level / 100
-    if (newLevel < viewportStore.minZoomLevel || newLevel > viewportStore.maxZoomLevel) {
-      showToastModal(
-        "error",
-        t("topPanel.zoomControl.toast.errorOutOfRange.title"),
-        t("topPanel.zoomControl.toast.errorOutOfRange.message", {
-          min: viewportStore.minZoomLevel * 100,
-          max: viewportStore.maxZoomLevel * 100
-        })
-      )
-      zoomLevelInput.value = Math.round(viewportStore.zoomLevel * 100)
-      return
-    }
-
-    viewportStore.setZoomLevel(newLevel)
-  };
 
   const zoomIn = (step) => {
     step = Number(step) || 0.1
@@ -66,14 +35,40 @@ export function useZoomControl(viewportStore, t) {
     }
   }
 
+  const isDragging = ref(false)
+  const startX = ref(0)
+
+  const onMouseMove = (e) => {
+    const deltaX = e.clientX - startX.value
+    const step = Math.round(deltaX / 3) // 3px = 1%
+    const newLevel = Math.max(viewportStore.minZoomLevel * 100, Math.min(zoomLevelInput.value + step, viewportStore.maxZoomLevel * 100))
+    zoomLevelInput.value = newLevel
+    viewportStore.setZoomLevel(newLevel / 100)
+    startX.value = e.clientX
+  }
+
+  const onMouseUp = () => {
+    document.removeEventListener('mousemove', onMouseMove)
+    document.removeEventListener('mouseup', onMouseUp)
+    isDragging.value = false
+  }
+
+  const startDragging = (e) => {
+    e.preventDefault()
+    isDragging.value = true
+    startX.value = e.clientX
+    document.addEventListener('mousemove', onMouseMove)
+    document.addEventListener('mouseup', onMouseUp)
+  }
+
   return {
     zoomLevel: zoomLevelInput,
-    setZoomLevel,
     zoomIn,
     zoomOut,
     wheelZoom,
     resetZoom,
     canZoomIn,
-    canZoomOut
+    canZoomOut,
+    startDragging
   }
 }

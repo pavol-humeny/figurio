@@ -1,15 +1,20 @@
 <script setup>
 import BaseIcon from '@/components/icons/BaseIcon.vue'
 import { useZoomControl } from '@/composables/topPanel/useZoomControl'
-import { useI18n } from 'vue-i18n'
 import { useViewportStore } from '@/stores/viewportStore'
 
 import ItemTip from '../common/ItemTip.vue'
 
-const { t } = useI18n()
-
-const { zoomLevel, zoomIn, zoomOut, wheelZoom, setZoomLevel, resetZoom, canZoomIn, canZoomOut } =
-  useZoomControl(useViewportStore(), t)
+const {
+  zoomLevel,
+  zoomIn,
+  zoomOut,
+  wheelZoom,
+  resetZoom,
+  canZoomIn,
+  canZoomOut,
+  startDragging,
+} = useZoomControl(useViewportStore())
 </script>
 
 <template>
@@ -26,15 +31,16 @@ const { zoomLevel, zoomIn, zoomOut, wheelZoom, setZoomLevel, resetZoom, canZoomI
 
     <ItemTip :text="$t('topPanel.zoomControl.tip.setZoom')" position="bottom">
       <div class="zoom-level-wrapper">
-        <input
-          class="zoom-level-input"
-          type="text"
-          v-model="zoomLevel"
-          v-on:wheel.passive="wheelZoom"
-          @blur="setZoomLevel(zoomLevel)"
-          @dblclick="resetZoom"
-          @keydown.enter="setZoomLevel(zoomLevel)"
-        />
+        <p
+        class="zoom-level"
+        :textContent="zoomLevel"
+        @wheel.passive="wheelZoom"
+        @blur="setZoomLevel(tempZoom)"
+        @dblclick="resetZoom"
+        @mousedown="startDragging"
+        ref="editableZoom"
+        >
+        </p>
       </div>
     </ItemTip>
 
@@ -78,23 +84,25 @@ const { zoomLevel, zoomIn, zoomOut, wheelZoom, setZoomLevel, resetZoom, canZoomI
   height: 100%;
 }
 
-.zoom-level-input {
+p.zoom-level{
   padding-right: 20px;
   width: 60px;
   height: 40px;
   background: var(--secondary-c);
-  border: none;
   color: var(--text-c);
-  text-align: center;
   font-size: var(--text-font-size);
-  outline: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: ew-resize;
+  user-select: none;
 }
 
 .zoom-level-wrapper::after {
   content: '%';
   position: absolute;
   right: 10px;
-  top: 49%;
+  top: 50%;
   transform: translateY(-50%);
   color: var(--text-c);
   pointer-events: none;

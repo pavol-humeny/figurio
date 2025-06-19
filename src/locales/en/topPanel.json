@@ -41,17 +41,7 @@
     "tip": {
       "zoomIn": "Zoom in",
       "zoomOut": "Zoom out",
-      "setZoom": "Set zoom level or double-click to reset"
-    },
-    "toast":{
-      "errorNaN": {
-        "title": "Invalid zoom level",
-        "message": "The zoom level must be a number."
-      },
-      "errorOutOfRange": {
-        "title": "Zoom level out of range",
-        "message": "Zoom level must be between {min}% and {max}%."
-      }
+      "setZoom": "Double-click to reset"
     }
   },
 

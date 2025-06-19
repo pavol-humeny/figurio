@@ -41,17 +41,7 @@
     "tip": {
       "zoomIn": "Priblížiť",
       "zoomOut": "Oddialiť",
-      "setZoom": "Nastaviť úroveň priblíženia alebo dvakrát kliknúť pre reset"
-    },
-    "toast": {
-      "errorNaN": {
-        "title": "Neplatná úroveň priblíženia",
-        "message": "Úroveň priblíženia musí byť číslo."
-      },
-      "errorOutOfRange": {
-        "title": "Úroveň priblíženia mimo rozsahu",
-        "message": "Úroveň priblíženia musí byť medzi {min}% a {max}%."
-      }
+      "setZoom": "Dvakrát kliknúť pre reset"
     }
   },
   
