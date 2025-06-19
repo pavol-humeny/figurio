@@ -3,7 +3,11 @@ import BaseIcon from '@/components/icons/BaseIcon.vue';
 import ItemTip from '../common/ItemTip.vue';
 import { useSettingsPanel } from '@/composables/topPanel/useSettingsPanel';
 
-const { isVisible, openSettingsPanel, closeSettingsPanel } = useSettingsPanel();
+const {
+  isVisible,
+  openSettingsPanel,
+  closeSettingsPanel
+} = useSettingsPanel();
 
 </script>
 

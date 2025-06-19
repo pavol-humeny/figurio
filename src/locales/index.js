@@ -13,6 +13,9 @@ import czImageStore from './cz/imageStore.json';
 import enTools from './en/tools.json';
 import skTools from './sk/tools.json';
 import czTools from './cz/tools.json';
+import enHelp from './en/help.json';
+import skHelp from './sk/help.json';
+import czHelp from './cz/help.json';
 
 
 export default {
@@ -22,6 +25,7 @@ export default {
     dragAndDropArea: enDragAndDropArea,
     imageStore: enImageStore,
     tools: enTools,
+    help: enHelp,
   },
   sk: {
     topPanel: skTopPanel,
@@ -29,6 +33,7 @@ export default {
     dragAndDropArea: skDragAndDropArea,
     imageStore: skImageStore,
     tools: skTools,
+    help: skHelp,
   },
   cz:{
     topPanel: czTopPanel,
@@ -36,5 +41,6 @@ export default {
     dragAndDropArea: czDragAndDropArea,
     imageStore: czImageStore,
     tools: czTools,
+    help: czHelp,
   }
 };

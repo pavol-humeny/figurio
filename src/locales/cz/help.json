@@ -1,0 +1,40 @@
+{
+  "title": "Nápověda",
+  "sections": [
+    {
+      "title": "Začínáme",
+      "text": "Na začátku přetáhněte obrázek do okna nebo klikněte na centrální tlačítko a vyberte soubor ze zařízení."
+    },
+    {
+      "title": "Ovládání plátna",
+      "text": "Použijte tlačítka pro zoom nebo kolečko myši k přiblížení a oddálení. Obrázek lze přesouvat pomocí pravého tlačítka myši."
+    },
+    {
+      "title": "Přehled nástrojů",
+      "text": "Vyberte nástroj z levého panelu. Můžete ořezávat, otáčet, zrcadlit, měnit velikost a upravovat barvy."
+    },
+    {
+      "title": "Klávesové zkratky",
+      "text": "• Ctrl + Z: Zpět\n• Ctrl + E: Exportovat obrázek\n• + / -: Zoom in/out\n• Esc: Zavřít modální okno nebo zrušit výběr nástroje"
+    },
+    {
+      "title": "Export obrázků",
+      "text": "Klikněte na tlačítko Export v levém panelu a uložte upravený obrázek. Můžete zvolit formát a název souboru."
+    },
+    {
+      "title": "Přizpůsobení rozhraní",
+      "text": "V nastavení můžete přepnout mezi světlým a tmavým režimem. Také lze změnit jazyk nebo resetovat velikost panelů."
+    },
+    {
+      "title": "Řešení problémů",
+      "text": "Pokud něco nefunguje správně, zkuste obnovit stránku. Můžete kontaktovat podporu nebo si prohlédnout sekci FAQ."
+    },
+    {
+      "title": "Potřebujete další pomoc?",
+      "text": "Podrobnější dokumentaci naleznete na stránce podpory nebo nás kontaktujte na support@example.com."
+    }
+  ],
+  "button": {
+    "text": "Zavřít nápovědu"
+  }
+}

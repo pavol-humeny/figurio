@@ -1,0 +1,70 @@
+{
+  "title": "Help Guide",
+  "sections": [
+    {
+      "title": "Getting Started",
+      "text": "To begin, drag and drop an image or click the central button to select a file from your device."
+    },
+    {
+      "title": "Canvas Controls",
+      "text": "Use the zoom buttons or mouse scroll to zoom in and out. You can also move the image by dragging with the right mouse button."
+    },
+    {
+      "title": "Tools Overview",
+      "text": "Choose a tool from the left panel. You can crop, rotate, flip, resize, and apply basic color adjustments."
+    },
+    {
+      "title": "Keyboard Shortcuts",
+      "text": "• Ctrl + Z: Undo\n• Ctrl + E: Export image\n• + / -: Zoom in/out\n• Esc: Close modals or deselect tools"
+    },
+    {
+      "title": "Exporting Images",
+      "text": "Click the Export button in the left panel to save your edited image. You can choose the format and file name."
+    },
+    {
+      "title": "Interface Customization",
+      "text": "Switch between light and dark mode via the settings panel. You can also change language and reset panel sizes there."
+    },
+    {
+      "title": "Troubleshooting",
+      "text": "If something doesn’t work as expected, try refreshing the page. You can also contact support or check the FAQ section."
+    },
+    {
+      "title": "Need More Help?",
+      "text": "For more detailed documentation, visit our support page or reach out via support@example.com."
+    },{
+      "title": "Exporting Images",
+      "text": "Click the Export button in the left panel to save your edited image. You can choose the format and file name."
+    },
+    {
+      "title": "Interface Customization",
+      "text": "Switch between light and dark mode via the settings panel. You can also change language and reset panel sizes there."
+    },
+    {
+      "title": "Troubleshooting",
+      "text": "If something doesn’t work as expected, try refreshing the page. You can also contact support or check the FAQ section."
+    },
+    {
+      "title": "Need More Help?",
+      "text": "For more detailed documentation, visit our support page or reach out via support@example.com."
+    },{
+      "title": "Exporting Images",
+      "text": "Click the Export button in the left panel to save your edited image. You can choose the format and file name."
+    },
+    {
+      "title": "Interface Customization",
+      "text": "Switch between light and dark mode via the settings panel. You can also change language and reset panel sizes there."
+    },
+    {
+      "title": "Troubleshooting",
+      "text": "If something doesn’t work as expected, try refreshing the page. You can also contact support or check the FAQ section."
+    },
+    {
+      "title": "Need More Help?",
+      "text": "For more detailed documentation, visit our support page or reach out via support@example.com."
+    }
+  ],
+  "button": {
+    "text": "Close Help"
+  }
+}
