@@ -10,7 +10,7 @@ import HelpModal from './components/modals/HelpModal.vue';
 </script>
 
 <template>
-  <div class="main">
+  <div class="main" @wheel.prevent>
     <ToastModal />
     <ConfirmModal />
     <PrivacyAndDataModal />

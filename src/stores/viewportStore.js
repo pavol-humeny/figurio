@@ -18,13 +18,13 @@ export const useViewportStore = defineStore('viewportStore', {
       this.zoomLevel = Math.round(level * 100) / 100 // Round to two decimal places
       console.log(`Zoom level set to ${this.zoomLevel}`);
     },
-    zoomIn(factor) {
-      const newZoomLevel = this.zoomLevel * (1 + factor)
+    zoomIn() {
+      const newZoomLevel = this.zoomLevel * (1 + this.zoomSpeed)
       this.zoomLevel = Math.round((Math.min(newZoomLevel, this.maxZoomLevel))*100) / 100 // Round to two decimal places
       console.log(`Zoomed in to ${this.zoomLevel}`);
     },
-    zoomOut(factor) {
-      const newZoomLevel = this.zoomLevel / (1 + factor)
+    zoomOut() {
+      const newZoomLevel = this.zoomLevel / (1 + this.zoomSpeed)
       this.zoomLevel = Math.round((Math.max(newZoomLevel, this.minZoomLevel))*100) / 100 // Round to two decimal places
       console.log(`Zoomed out to ${this.zoomLevel}`);
     },
