@@ -102,7 +102,7 @@
         "color": "Farba",
         "textAlign": "Zarovnanie textu"
       },
-      "shape":{
+      "shape": {
         "label": "Tvar",
         "rasterize": "Rasterizovať",
         "shapeType": "Typ tvaru",
@@ -135,6 +135,10 @@
         "fileName": {
           "label": "Názov súboru",
           "placeholder": "Text"
+        },
+        "fileQuality": {
+          "label": "Kvalita súboru",
+          "tip": "Uprav kvalitu súboru exportovaného obrázku"
         },
         "fileDimensions": {
           "label": "Rozmery",

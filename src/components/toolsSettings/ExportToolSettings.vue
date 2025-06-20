@@ -1,18 +1,15 @@
 <script setup>
-import { useExportToolSettings } from '@/composables/toolsSettings/useExportToolSettings';
-import DefaultButton from '../common/DefaultButton.vue';
-import BaseIcon from '../icons/BaseIcon.vue';
-import { useShaking } from '@/composables/common/useShaking';
-import { useImageStore } from '@/stores/imageStore';
-import { useI18n } from 'vue-i18n';
-import LinkValuesIcon from '../common/LinkValuesIcon.vue';
+import { useExportToolSettings } from '@/composables/toolsSettings/useExportToolSettings'
+import DefaultButton from '../common/DefaultButton.vue'
+import BaseIcon from '../icons/BaseIcon.vue'
+import { useShaking } from '@/composables/common/useShaking'
+import { useImageStore } from '@/stores/imageStore'
+import { useI18n } from 'vue-i18n'
+import LinkValuesIcon from '../common/LinkValuesIcon.vue'
 
-const { t } = useI18n();
+const { t } = useI18n()
 
-const {
-  isShaking,
-  triggerShake
-} = useShaking();
+const { isShaking, triggerShake } = useShaking()
 
 const {
   isVisible,
@@ -25,9 +22,8 @@ const {
   resetFileDimensions,
   closeExportToolSettings,
   exportFile,
-  isDimensionsLinked
-} = useExportToolSettings(useImageStore(), t);
-
+  isDimensionsLinked,
+} = useExportToolSettings(useImageStore(), t)
 </script>
 
 <template>
@@ -43,10 +39,28 @@ const {
           <div class="export-settings-item">
             <label for="file-format">{{ $t('tools.export.settings.general.fileFormat') }}</label>
             <select id="file-format" v-model="fileFormat">
-              <option value="png">png</option>
-              <option value="jpg">jpg</option>
-              <option value="pdf">pdf</option>
+              <option value="png">PNG</option>
+              <option value="jpg">JPG</option>
+              <option value="pdf">PDF</option>
+              <option value="webp">WebP</option>
             </select>
+          </div>
+
+          <div class="export-settings-item" v-if="fileFormat === 'jpg' || fileFormat === 'webp'">
+            <!-- slider for quality setting -->
+            <label for="file-quality">{{
+              $t('tools.export.settings.general.fileQuality.label')
+            }}</label>
+            <p>{{ fileDimensions.quality }} %</p>
+            <input
+              class="file-quality-slider"
+              type="range"
+              id="file-quality"
+              min="0"
+              max="100"
+              v-model.number="fileDimensions.quality"
+              @input="updateDimension('quality', fileDimensions.quality)"
+            />
           </div>
 
           <div class="export-settings-item">
@@ -63,10 +77,14 @@ const {
           </div>
 
           <div class="export-settings-item">
-            <label for="file-dimensions">{{ $t('tools.export.settings.general.fileDimensions.label') }}</label>
+            <label for="file-dimensions">{{
+              $t('tools.export.settings.general.fileDimensions.label')
+            }}</label>
             <div class="file-dimensions-inputs">
               <div class="width">
-                <label for="file-dimensions-width">{{ $t('tools.export.settings.general.fileDimensions.width') }}</label>
+                <label for="file-dimensions-width">{{
+                  $t('tools.export.settings.general.fileDimensions.width')
+                }}</label>
                 <input
                   v-model.number="fileDimensions.width"
                   type="number"
@@ -87,7 +105,9 @@ const {
               </div>
 
               <div class="height">
-                <label for="file-dimensions-height">{{ $t('tools.export.settings.general.fileDimensions.height') }}</label>
+                <label for="file-dimensions-height">{{
+                  $t('tools.export.settings.general.fileDimensions.height')
+                }}</label>
                 <input
                   v-model.number="fileDimensions.height"
                   type="number"
@@ -124,18 +144,15 @@ const {
           </div>
         </div>
         <div class="export-preview">
-          <div class="tmp">
-            a
-          </div>
+          <div class="tmp">a</div>
         </div>
-
       </div>
     </div>
   </Teleport>
 </template>
 
 <style scoped>
-.export-overlay{
+.export-overlay {
   position: fixed;
   top: 0;
   left: 0;
@@ -154,7 +171,7 @@ const {
   padding: 40px 50px;
   border-radius: 20px;
   min-width: 900px;
-  height: 500px;
+  min-height: 500px;
   box-shadow: var(--box-shadow-ui);
   display: flex;
   flex-direction: row;
@@ -162,7 +179,7 @@ const {
   gap: 50px;
 }
 
-.export-settings{
+.export-settings {
   flex: 1;
   display: flex;
   flex-direction: column;
@@ -186,7 +203,7 @@ const {
   font-weight: var(--title-font-weight);
 }
 
-.export-settings-item{
+.export-settings-item {
   width: 100%;
   display: flex;
   flex-direction: column;
@@ -209,7 +226,7 @@ const {
   color: var(--text-c);
 }
 
-.file-dimensions-inputs{
+.file-dimensions-inputs {
   display: flex;
   align-items: center;
   flex-direction: row;
@@ -226,7 +243,7 @@ const {
 .file-dimensions-inputs .height label {
   font-size: var(--text-font-size);
 }
-.icon-wrapper{
+.icon-wrapper {
   padding-top: 20px;
   width: 40px;
   display: flex;
@@ -235,7 +252,7 @@ const {
   cursor: pointer;
 }
 
-.buttons-wrapper{
+.buttons-wrapper {
   width: 100%;
   margin-top: 20px;
   display: flex;
@@ -244,14 +261,59 @@ const {
   align-items: center;
 }
 
-.export-preview{
+.export-preview {
   flex: 1;
   height: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
   background: rgb(255, 255, 255);
-
 }
 
+/*********** Baseline, reset styles ***********/
+input[type='range'] {
+  -webkit-appearance: none;
+  appearance: none;
+  background: transparent;
+  cursor: pointer;
+  width: 100%;
+  padding: 0;
+}
+
+
+/******** Chrome, Safari, Opera and Edge Chromium styles ********/
+/* slider track */
+input[type='range']::-webkit-slider-runnable-track {
+  background-color: var(--background-c);
+  border-radius: 10px;
+  height: 10px;
+}
+
+/* slider thumb */
+input[type='range']::-webkit-slider-thumb {
+  -webkit-appearance: none; /* Override default look */
+  appearance: none;
+  margin-top: -5px; /* Centers thumb on the track */
+  background-color: var(--primary-c);
+  border-radius: 10px;
+  height: 20px;
+  width: 20px;
+}
+
+/*********** Firefox styles ***********/
+/* slider track */
+input[type='range']::-moz-range-track {
+  background-color: var(--background-c);
+  border-radius: 10px;
+  height: 10px;
+}
+
+/* slider thumb */
+input[type='range']::-moz-range-thumb {
+  background-color: var(--primary-c);
+  border: none; /*Removes extra border that FF applies*/
+  border-radius: 10px;
+  height: 20px;
+  width: 20px;
+}
 </style>

@@ -4,20 +4,23 @@ const isVisible = ref(false)
 
 export function useExportToolSettings(imageStore, t) {
   const inputFileNameRef = ref(null)
-  const isDimensionsLinked = ref(true);
+  const isDimensionsLinked = ref(true)
 
   const fileName = ref('')
 
   if (imageStore && imageStore.newFileName) {
     fileName.value = imageStore.newFileName
   }
-  watch(() => imageStore?.newFileName, (newVal) => {
-    fileName.value = newVal
-  })
+  watch(
+    () => imageStore?.newFileName,
+    (newVal) => {
+      fileName.value = newVal
+    },
+  )
 
   const fileFormat = computed({
     get: () => imageStore.newFileFormat,
-    set: (value) => imageStore.newFileFormat = value
+    set: (value) => (imageStore.newFileFormat = value),
   })
 
   const fileDimensions = computed(() => imageStore.newFileDimensions)
@@ -43,6 +46,10 @@ export function useExportToolSettings(imageStore, t) {
       }
     }
 
+    if (type === 'quality'){
+      imageStore.newFileDimensions.quality = value
+    }
+
     const width = imageStore.newFileDimensions.width
     const height = imageStore.newFileDimensions.height
     if (width > 0 && height > 0) {
@@ -53,7 +60,7 @@ export function useExportToolSettings(imageStore, t) {
   const saveNewFileName = () => {
     const success = imageStore.setFileName(fileName.value, t, true)
 
-    if (success){
+    if (success) {
       nextTick(() => {
         inputFileNameRef.value?.blur()
       })
@@ -77,7 +84,7 @@ export function useExportToolSettings(imageStore, t) {
     imageStore.newFileDimensions = {
       width: imageStore.fileDimensions.width,
       height: imageStore.fileDimensions.height,
-      fileAspectRatio: imageStore.fileDimensions.fileAspectRatio
+      fileAspectRatio: imageStore.fileDimensions.fileAspectRatio,
     }
     isDimensionsLinked.value = true
   }
@@ -94,6 +101,6 @@ export function useExportToolSettings(imageStore, t) {
     openExportToolSettings,
     closeExportToolSettings,
     exportFile,
-    isDimensionsLinked
+    isDimensionsLinked,
   }
 }

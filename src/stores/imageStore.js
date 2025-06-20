@@ -25,11 +25,13 @@ export const useImageStore = defineStore('imageStore', {
       fileAspectRatio: 1,
       width: 0,
       height: 0,
+      quality: 100,
     },
     newFileDimensions: {
       fileAspectRatio: 1,
       width: 0,
       height: 0,
+      quality: 100,
     },
 
     fileSize: 0, // In bytes
@@ -303,17 +305,127 @@ export const useImageStore = defineStore('imageStore', {
       document.body.removeChild(input)
     },
 
-    exportFile(t) {
-      const link = document.createElement('a')
-      link.download = `${this.fileName}.${this.newFileFormat}`
-      link.href = this.previewUrl
-      link.click()
+    // exportFile(t) {
+    //   const link = document.createElement('a')
+    //   link.download = `${this.fileName}.${this.newFileFormat}`
+    //   link.href = this.previewUrl
+    //   link.click()
 
-      showToastModal(
-        'success',
-        t('imageStore.toast.successFileExported.title'),
-        t('imageStore.toast.successFileExported.message', { fileName: this.fileName }),
-      )
+    //   showToastModal(
+    //     'success',
+    //     t('imageStore.toast.successFileExported.title'),
+    //     t('imageStore.toast.successFileExported.message', { fileName: this.fileName }),
+    //   )
+
+    // },
+
+    exportFile(t) {
+      this.rasterize()
+
+      const mimeType =
+        this.newFileFormat === 'jpeg' || this.newFileFormat === 'jpg'
+          ? 'image/jpeg'
+          : this.newFileFormat === 'webp'
+            ? 'image/webp'
+            : 'image/png'
+
+      // Create canvas and draw the image from previewUrl
+      const image = new Image()
+      image.onload = () => {
+        const canvas = document.createElement('canvas')
+        canvas.width = this.fileDimensions.width
+        canvas.height = this.fileDimensions.height
+        const ctx = canvas.getContext('2d')
+        ctx.drawImage(image, 0, 0)
+
+        // Export as Blob
+        canvas.toBlob(
+          (blob) => {
+            if (!blob) return
+            const blobUrl = URL.createObjectURL(blob)
+
+            const link = document.createElement('a')
+            link.href = blobUrl
+            link.download = `${this.fileName}.${this.newFileFormat}`
+            link.click()
+
+            URL.revokeObjectURL(blobUrl)
+
+            showToastModal(
+              'success',
+              t('imageStore.toast.successFileExported.title'),
+              t('imageStore.toast.successFileExported.message', {
+                fileName: this.fileName,
+              }),
+            )
+          },
+          mimeType,
+          this.newFileDimensions.quality / 100,
+        )
+      }
+
+      image.src = this.previewUrl
+    },
+
+    async rasterize() {
+      if (!this.renderedImage || !this.svgObjects) return null
+
+      console.log('Rasterizing image with SVG objects...')
+
+      const width = this.fileDimensions.width
+      const height = this.fileDimensions.height
+
+      // Create SVG string from svgObjects
+      const svgString = `
+    <svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}">
+      ${this.svgObjects
+        .map((obj) => {
+          const attrs = Object.entries(obj.attrs || {})
+            .map(([key, val]) => `${key}="${val}"`)
+            .join(' ')
+          return `<${obj.tag} ${attrs} />`
+        })
+        .join('\n')}
+    </svg>
+    `.trim()
+
+      // Create a Blob from the SVG string
+      const svgBlob = new Blob([svgString], { type: 'image/svg+xml' })
+      const svgUrl = URL.createObjectURL(svgBlob)
+
+      // Create a canvas
+      const canvas = document.createElement('canvas')
+      canvas.width = width
+      canvas.height = height
+      const ctx = canvas.getContext('2d')
+
+      // Draw the rendered image on the canvas
+      ctx.drawImage(this.renderedImage, 0, 0)
+
+      // Convert SVG to Image and draw it on the canvas
+      await new Promise((resolve, reject) => {
+        const img = new Image()
+        img.onload = () => {
+          ctx.drawImage(img, 0, 0)
+          URL.revokeObjectURL(svgUrl)
+          resolve()
+        }
+        img.onerror = (e) => {
+          console.error('Error during image loading', e)
+          reject(e)
+        }
+        img.src = svgUrl
+      })
+
+      // Result - base64
+      const resultDataUrl = canvas.toDataURL()
+      this.previewUrl = resultDataUrl
+
+      // Reset svg elements
+      this.svgElements = []
+      this.selectedSvgElementId = null
+
+      return resultDataUrl
     },
   },
 })

@@ -136,6 +136,10 @@
           "label": "Název souboru",
           "placeholder": "Text"
         },
+        "fileQuality": {
+          "label": "Kvalita souboru",
+          "tip": "Uprav kvalitu souboru exportovaného obrázku."
+        },
         "fileDimensions": {
           "label": "Rozměry",
           "width": "Šířka",

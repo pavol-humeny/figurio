@@ -40,40 +40,39 @@ export function useImageRenderer(imageStore, contentRef) {
     svg.innerHTML = ''
 
     imageStore.svgObjects.forEach((obj) => {
-      let el = null
+      if (!obj.tag) return
 
-      if (obj.tag === 'rect') {
-        el = document.createElementNS('http://www.w3.org/2000/svg', 'rect')
-      } else if (obj.tag === 'circle') {
-        el = document.createElementNS('http://www.w3.org/2000/svg', 'circle')
-      } else if (obj.tag === 'line') {
-        el = document.createElementNS('http://www.w3.org/2000/svg', 'line')
-      } else if (obj.tag === 'path') {
-        el = document.createElementNS('http://www.w3.org/2000/svg', 'path')
-      }
+      const el = document.createElementNS('http://www.w3.org/2000/svg', obj.tag)
 
-      if (el && obj.attrs) {
-        Object.entries(obj.attrs).forEach(([key, value]) => {
+      if (obj.attrs && typeof obj.attrs === 'object') {
+        for (const [key, value] of Object.entries(obj.attrs)) {
           el.setAttribute(key, value)
-        })
-        svg.appendChild(el)
+        }
       }
+
+      svg.appendChild(el)
     })
+  }
+
+  const renderAll = async () => {
+    renderCanvas()
+    renderSvg()
   }
 
   onMounted(() => {
     nextTick(() => {
-      renderCanvas()
-      renderSvg()
+      if (imageStore.renderedImage) {
+        renderAll()
+      }
     })
   })
+
   watch(
     () => imageStore.renderedImage,
     (newImage) => {
       if (newImage) {
         nextTick(() => {
-          renderCanvas()
-          renderSvg()
+          renderAll()
         })
       }
     },

@@ -136,6 +136,10 @@
           "label": "File name",
           "placeholder": "Text"
         },
+        "fileQuality": {
+          "label": "File quality",
+          "tip": "Adjust the quality of the exported file"
+        },
         "fileDimensions":{
           "label": "Dimensions",
           "width": "Width",

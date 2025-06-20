@@ -16,8 +16,8 @@ const imageStore = useImageStore()
       <ViewportWrapper v-if="imageStore.file !== null" />
       <DragAndDropArea v-else />
     </div>
-    <div class="right-panel">
-      <CollapsiblePanel>
+    <div class="right-panel" >
+      <CollapsiblePanel v-if="imageStore.file !== null">
         <ToolsSettingsPanel />
       </CollapsiblePanel>
     </div>
