@@ -86,6 +86,7 @@ const {
   width: 100%;
   height: 100%;
   display: flex;
+  z-index: var(--z-index-viewport);
 }
 
 .viewport-content-wrapper {
@@ -98,32 +99,13 @@ const {
 }
 
 .viewport-content {
-  /* transform-origin: top left;
-  position: relative; */
-  /* height: fit-content;
-  width: fit-content; */
-  border: solid 5px red;
   position: relative;
   transform-origin: top left;
   display: inline-block;
 }
 
-/* .tmp {
-  width: 800px;
-  height: 600px;
-  background: rgb(57, 78, 148);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-} */
-
 .image-canvas,
 .image-svg {
-  /* position: relative;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%; */
   position: absolute;
   top: 0;
   left: 0;

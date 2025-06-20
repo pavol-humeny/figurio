@@ -8,6 +8,7 @@ export function useImageRenderer(imageStore, contentRef) {
     if (!canvasRef.value || !imageStore.renderedImage || !contentRef.value) return
 
     const canvas = canvasRef.value
+    const svg = svgRef.value
     const content = contentRef.value
     const ctx = canvas.getContext('2d')
     const width = imageStore.fileDimensions.width
@@ -18,6 +19,8 @@ export function useImageRenderer(imageStore, contentRef) {
     canvas.height = height
     canvas.style.width = `${width}px`
     canvas.style.height = `${height}px`
+    svg.style.width = `${width}px`
+    svg.style.height = `${height}px`
 
     // 2. Manually set content size to match canvas
     content.style.width = `${width}px`
