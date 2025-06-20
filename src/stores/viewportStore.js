@@ -12,36 +12,33 @@ export const useViewportStore = defineStore('viewportStore', {
 
     panX: 0,
     panY: 0,
+
+    defaultPanX: 0,
+    defaultPanY: 0,
   }),
   actions: {
     setZoomLevel(level) {
       this.zoomLevel = Math.round(level * 100) / 100 // Round to two decimal places
-      console.log(`Zoom level set to ${this.zoomLevel}`);
     },
     zoomIn() {
       const newZoomLevel = this.zoomLevel * (1 + this.zoomSpeed)
       this.zoomLevel = Math.round((Math.min(newZoomLevel, this.maxZoomLevel))*100) / 100 // Round to two decimal places
-      console.log(`Zoomed in to ${this.zoomLevel}`);
     },
     zoomOut() {
       const newZoomLevel = this.zoomLevel / (1 + this.zoomSpeed)
       this.zoomLevel = Math.round((Math.max(newZoomLevel, this.minZoomLevel))*100) / 100 // Round to two decimal places
-      console.log(`Zoomed out to ${this.zoomLevel}`);
     },
     resetZoom() {
       this.zoomLevel = this.defaultZoomLevel
-      console.log(`Zoom level reset to ${this.zoomLevel}`);
     },
 
     setPan(x, y) {
       this.panX = x
       this.panY = y
-      console.log(`Pan set to (${this.panX}, ${this.panY})`);
     },
     resetPan() {
-      this.panX = 0
-      this.panY = 0
-      console.log(`Pan reset to (${this.panX}, ${this.panY})`);
+      this.panX = this.defaultPanX
+      this.panY = this.defaultPanY
     }
 
   },

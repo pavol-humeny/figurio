@@ -7,10 +7,17 @@ import SettingsPanel from './components/topPanel/SettingsPanel.vue';
 import PrivacyAndDataModal from './components/modals/PrivacyAndDataModal.vue';
 import ExportToolSettings from './components/toolsSettings/ExportToolSettings.vue';
 import HelpModal from './components/modals/HelpModal.vue';
+
+const check = (event) => {
+  if (event.ctrlKey){
+    event.preventDefault();
+  }
+};
+
 </script>
 
 <template>
-  <div class="main" @wheel.prevent>
+  <div class="main" @wheel="check">
     <ToastModal />
     <ConfirmModal />
     <PrivacyAndDataModal />

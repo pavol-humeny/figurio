@@ -4,9 +4,12 @@ import { useViewportStore } from '@/stores/viewportStore';
 
 const {
   zoomLevel,
-  changeZoomLevel,
+  setZoomAndScroll,
+  startPan,
   panX,
   startDrag,
+  isDraggingHorizontal,
+  isDraggingVertical,
   panY,
   wrapperRef,
   contentRef,
@@ -16,8 +19,6 @@ const {
   horizontalSliderWidth,
 } = useViewportWrapper(useViewportStore());
 
-
-
 </script>
 
 <template>
@@ -25,7 +26,8 @@ const {
     <div
       class="viewport-content-wrapper"
       ref="wrapperRef"
-      @wheel.passive="changeZoomLevel"
+      @wheel.passive="setZoomAndScroll"
+      @mousedown="startPan"
     >
       <div
         class="viewport-content"
@@ -42,15 +44,6 @@ const {
       </div>
     </div>
 
-    <!-- <input
-      type="range"
-      class="vertical-slider"
-      min="-1000"
-      max="1000"
-      step="1"
-      :value="panY * zoomLevel"
-      @input="changePanY($event.target.value)"
-    /> -->
     <div class="vertical-slider-wrapper">
       <div
         class="slider"
@@ -59,6 +52,7 @@ const {
           top: verticalSliderTop + 'px',
           height: verticalSliderHeight + 'px'
         }"
+        :class="{ 'active': isDraggingVertical }"
       >
 
       </div>
@@ -73,21 +67,10 @@ const {
           left: horizontalSliderLeft + 'px',
           width: horizontalSliderWidth + 'px'
         }"
+        :class="{ 'active': isDraggingHorizontal }"
       >
-
       </div>
-
     </div>
-
-    <!-- <input
-      type="range"
-      class="horizontal-slider"
-      min="-1000"
-      max="1000"
-      step="1"
-      :value="panX * zoomLevel"
-      @input="changePanX($event.target.value)"
-    /> -->
   </div>
 </template>
 
@@ -103,10 +86,9 @@ const {
   position: absolute;
   top: 0;
   left: 0;
-  right: 16px;
-  bottom: 16px;
+  right: 0px;
+  bottom: 0px;
   overflow: hidden;
-  border: solid 1px red;
 }
 
 .viewport-content {
@@ -114,18 +96,15 @@ const {
   position: relative;
   height: fit-content;
   width: fit-content;
-  border:  solid 1px green;
 }
 
 .tmp {
   width: 800px;
   height: 600px;
   background: rgb(57, 78, 148);
-  /* position: absolute; */
   display: flex;
   justify-content: center;
   align-items: center;
-
 }
 
 .image-canvas,
@@ -139,11 +118,11 @@ const {
   position: absolute;
   top: 0;
   right: 0;
-  width: 16px;
+  width: 10px;
   height: calc(100% - 16px);
   display: flex;
   flex-direction: column;
-  background: rgb(49, 122, 134);
+  align-items: center;
   overflow: hidden;
 }
 
@@ -152,29 +131,35 @@ const {
   left: 0;
   bottom: 0;
   width: calc(100% - 16px);
-  height: 16px;
-  background: rgb(26, 47, 116);
+  height: 10px;
   overflow: hidden;
+  display: flex;
+  align-items: center;
 }
 
 .slider {
   position: absolute;
   background: var(--secondary-c);
-  /* cursor: pointer; */
+  border: solid 1px var(--border-c);
+  border-radius: 10px;
+}
+
+.slider.active,
+.slider:hover {
+  border: solid 1px var(--primary-c);
+  cursor: pointer;
 }
 
 .vertical-slider-wrapper .slider{
   height: 200px;
-  width: 100%;
+  width: 70%;
   top: 50%;
-  /* transform: translateY(-50%); */
 }
 
 .horizontal-slider-wrapper .slider{
   width: 200px;
-  height: 100%;
+  height: 70%;
   left: 50%;
-  /* transform: translateX(-50%); */
 }
 
 </style>
