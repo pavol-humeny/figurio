@@ -15,7 +15,7 @@ export function useSettingsPanel(uiStore) {
   })
 
   const resetPanelWidthDisabled = computed(() => {
-    return uiStore.rightPanelWidth === uiStore.rightPanelDefaultWidth
+    return uiStore.rightPanelWidth === uiStore.rightPanelDefaultWidth || uiStore.rightPanelOpen === false
   })
 
   const openSettingsPanel = () => {

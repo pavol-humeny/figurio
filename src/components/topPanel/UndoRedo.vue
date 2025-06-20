@@ -1,8 +1,10 @@
 <script setup>
 import BaseIcon from '@/components/icons/BaseIcon.vue'
 import { useUndoRedo } from '@/composables/topPanel/useUndoRedo'
-
+import { useImageStore } from '@/stores/imageStore'
 import ItemTip from '../common/ItemTip.vue'
+
+const imageStore = useImageStore()
 
 const {
   undo,
@@ -13,7 +15,7 @@ const {
 </script>
 
 <template>
-  <div class="undo-redo">
+  <div class="undo-redo" :class="{ disabled: imageStore.file === null }">
     <ItemTip
       :text="$t('topPanel.undoRedo.tip.undo')"
       position="bottom"
@@ -48,6 +50,11 @@ const {
   align-items: center;
 }
 
+.undo-redo.disabled{
+  opacity: 0.5;
+  pointer-events: none;
+}
+
 .undo-button,
 .redo-button {
   display: flex;
@@ -63,4 +70,6 @@ const {
 .redo-button {
   border-radius: 0 20px 20px 0;
 }
+
+
 </style>

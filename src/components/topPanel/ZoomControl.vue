@@ -2,8 +2,10 @@
 import BaseIcon from '@/components/icons/BaseIcon.vue'
 import { useZoomControl } from '@/composables/topPanel/useZoomControl'
 import { useViewportStore } from '@/stores/viewportStore'
-
+import { useImageStore } from '@/stores/imageStore'
 import ItemTip from '../common/ItemTip.vue'
+
+const imageStore = useImageStore()
 
 const {
   zoomLevel,
@@ -18,7 +20,7 @@ const {
 </script>
 
 <template>
-  <div class="zoom-control">
+  <div class="zoom-control" :class="{ disabled: imageStore.file === null }">
     <ItemTip :text="$t('topPanel.zoomControl.tip.zoomOut')" position="bottom">
       <div
         class="zoom-out-button button button-control button-circle"
@@ -60,6 +62,11 @@ const {
   display: flex;
   align-items: center;
   height: 40px;
+}
+
+.zoom-control.disabled{
+  opacity: 0.5;
+  pointer-events: none;
 }
 
 .zoom-in-button,

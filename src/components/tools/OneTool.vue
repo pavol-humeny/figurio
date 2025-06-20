@@ -1,41 +1,51 @@
 <script setup>
-import BaseIcon from '@/components/icons/BaseIcon.vue';
-import ItemTip from '@/components/common/ItemTip.vue';
+import BaseIcon from '@/components/icons/BaseIcon.vue'
+import ItemTip from '@/components/common/ItemTip.vue'
+import { computed } from 'vue'
 
 const props = defineProps({
   iconName: {
     type: String,
-    required: true
+    required: true,
   },
   label: {
     type: String,
-    required: true
+    required: true,
   },
   tip: {
     type: String,
-    default: ''
+    default: '',
   },
   active: {
     type: Boolean,
-    default: false
+    default: false,
   },
   disabled: {
     type: Boolean,
-    default: false
-  }
-});
+    default: false,
+  },
+})
 
+const showTip = computed(() => props.tip !== '')
 </script>
 
 <template>
-  <ItemTip :text="props.tip" position="right">
-    <div
-      class="tool"
-      :class="{ active: props.active, disabled: props.disabled }">
-      <BaseIcon :name="props.iconName" :size="27" :color="'var(--primary-c)'"/>
+  <ItemTip v-if="showTip" :text="props.tip" position="right">
+    <div class="tool" :class="{ active: props.active, disabled: props.disabled }">
+      <BaseIcon :name="props.iconName" :size="27" :color="'var(--primary-c)'" />
       <p>{{ props.label }}</p>
     </div>
   </ItemTip>
+
+  <div
+    v-else
+    class="tool"
+    :class="{ active: props.active, disabled: props.disabled }"
+    @click="$emit('click')"
+  >
+    <BaseIcon :name="props.iconName" :size="27" :color="'var(--primary-c)'" />
+    <p>{{ props.label }}</p>
+  </div>
 </template>
 
 <style setup>
@@ -60,7 +70,7 @@ const props = defineProps({
   transition: var(--default-transition);
 }
 
-.tool.active{
+.tool.active {
   border: var(--border-modal);
 }
 
