@@ -333,10 +333,10 @@ export const useImageStore = defineStore('imageStore', {
       const image = new Image()
       image.onload = () => {
         const canvas = document.createElement('canvas')
-        canvas.width = this.fileDimensions.width
-        canvas.height = this.fileDimensions.height
+        canvas.width = this.newFileDimensions.width
+        canvas.height = this.newFileDimensions.height
         const ctx = canvas.getContext('2d')
-        ctx.drawImage(image, 0, 0)
+        ctx.drawImage(image, 0, 0, canvas.width, canvas.height)
 
         // Export as Blob
         canvas.toBlob(
@@ -346,7 +346,7 @@ export const useImageStore = defineStore('imageStore', {
 
             const link = document.createElement('a')
             link.href = blobUrl
-            link.download = `${this.fileName}.${this.newFileFormat}`
+            link.download = `${this.newFileName}.${this.newFileFormat}`
             link.click()
 
             URL.revokeObjectURL(blobUrl)

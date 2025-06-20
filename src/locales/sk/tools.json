@@ -150,7 +150,10 @@
             "reset": "Resetovať pôvodné rozmery"
           }
         },
-        "previewTitle": "Náhľad",
+        "preview": {
+          "label": "Náhľad",
+          "previewUnavailable": "Náhľad nie je k dispozícii"
+        },
         "cancelButton": {
           "text": "Zavrieť",
           "tip": "Zavrieť okno exportu",

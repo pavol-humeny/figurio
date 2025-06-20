@@ -102,7 +102,7 @@
         "color": "Barva",
         "textAlign": "Zarovnání textu"
       },
-      "shape":{
+      "shape": {
         "label": "Tvar",
         "rasterize": "Rasterizovat",
         "shapeType": "Typ tvaru",
@@ -150,7 +150,10 @@
             "reset": "Resetovat původní rozměry"
           }
         },
-        "previewTitle": "Náhled",
+        "preview": {
+          "label": "Náhled",
+          "previewUnavailable": "Náhled není k dispozici"
+        },
         "cancelButton": {
           "text": "Zavřít",
           "tip": "Zavřít okno exportu",

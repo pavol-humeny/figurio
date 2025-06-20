@@ -23,6 +23,7 @@ const {
   closeExportToolSettings,
   exportFile,
   isDimensionsLinked,
+  previewUrl,
 } = useExportToolSettings(useImageStore(), t)
 </script>
 
@@ -144,7 +145,18 @@ const {
           </div>
         </div>
         <div class="export-preview">
-          <div class="tmp">a</div>
+          <img
+            v-if="previewUrl"
+            :src="previewUrl"
+            alt="Export Preview"
+            class="export-preview-img"
+            :style="{
+              aspectRatio: fileDimensions.width + ' / ' + fileDimensions.height,
+            }"
+          />
+          <div v-else class="export-preview-placeholder">
+            {{ $t('tools.export.settings.general.preview.previewUnavailable') }}
+          </div>
         </div>
       </div>
     </div>
@@ -171,7 +183,9 @@ const {
   padding: 40px 50px;
   border-radius: 20px;
   min-width: 900px;
+  max-width: 80vh;
   min-height: 500px;
+  max-height: 80vh;
   box-shadow: var(--box-shadow-ui);
   display: flex;
   flex-direction: row;
@@ -280,7 +294,6 @@ input[type='range'] {
   padding: 0;
 }
 
-
 /******** Chrome, Safari, Opera and Edge Chromium styles ********/
 /* slider track */
 input[type='range']::-webkit-slider-runnable-track {
@@ -311,9 +324,38 @@ input[type='range']::-moz-range-track {
 /* slider thumb */
 input[type='range']::-moz-range-thumb {
   background-color: var(--primary-c);
-  border: none; /*Removes extra border that FF applies*/
+  border: none;
   border-radius: 10px;
   height: 20px;
   width: 20px;
+}
+
+.export-preview {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  overflow: hidden;
+  width: 300px;
+  height: 300px;
+  position: relative;
+}
+
+.export-preview-img {
+  max-width: 100%;
+  max-height: 100%;
+  display: block;
+}
+
+.export-preview-placeholder {
+  color: var(--text-c);
+  font-size: var(--text-font-size);
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  border: var(--border-ui);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 10px;
 }
 </style>

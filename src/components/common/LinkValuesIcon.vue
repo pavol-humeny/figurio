@@ -46,7 +46,7 @@ const {
     :size="size"
     :color="color"
     @click="toggleLinkedValue"
-    :tip="showTip ? isLinked ? tipLinked : tipUnlinked : ''"
+    :tip="showTip ? isLinked ? tipUnlinked : tipLinked : ''"
   />
 </template>
 

@@ -6,6 +6,8 @@ export function useExportToolSettings(imageStore, t) {
   const inputFileNameRef = ref(null)
   const isDimensionsLinked = ref(true)
 
+  const previewUrl = computed(() => imageStore?.previewUrl || '')
+
   const fileName = ref('')
 
   if (imageStore && imageStore.newFileName) {
@@ -46,7 +48,7 @@ export function useExportToolSettings(imageStore, t) {
       }
     }
 
-    if (type === 'quality'){
+    if (type === 'quality') {
       imageStore.newFileDimensions.quality = value
     }
 
@@ -68,7 +70,13 @@ export function useExportToolSettings(imageStore, t) {
   }
 
   const openExportToolSettings = () => {
+    if (!imageStore?.rasterize) {
+      console.warn('imageStore or rasterize not available')
+      return
+    }
+    imageStore.rasterize()
     isVisible.value = true
+
   }
 
   const closeExportToolSettings = () => {
@@ -102,5 +110,6 @@ export function useExportToolSettings(imageStore, t) {
     closeExportToolSettings,
     exportFile,
     isDimensionsLinked,
+    previewUrl,
   }
 }

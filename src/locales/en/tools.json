@@ -150,7 +150,10 @@
             "reset": "Reset original dimensions"
           }
         },
-        "previewTitle": "Preview",
+        "preview":{
+          "label": "Preview",
+          "previewUnavailable": "Preview unavailable"
+        },
         "cancelButton":{
           "text": "Close",
           "tip": "Close the export window",

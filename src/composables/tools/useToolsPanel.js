@@ -1,5 +1,7 @@
 import { ref, onMounted, nextTick, computed } from 'vue'
 import { useExportToolSettings } from '../toolsSettings/useExportToolSettings'
+import { useImageStore } from '@/stores/imageStore'
+import { useI18n } from 'vue-i18n'
 
 export function useToolsPanel(editorStore, imageStore) {
   const toolsRef = ref(null)
@@ -10,9 +12,9 @@ export function useToolsPanel(editorStore, imageStore) {
 
   const activeTool = computed(() => editorStore.selectedToolKey)
 
-  const {
-    openExportToolSettings
-  } = useExportToolSettings()
+  const { t } = useI18n()
+
+  const { openExportToolSettings } = useExportToolSettings(useImageStore(), t)
 
   const scrollUp = () => {
     toolsRef.value?.scrollBy({ top: -100, behavior: 'smooth' })
@@ -41,7 +43,7 @@ export function useToolsPanel(editorStore, imageStore) {
     editorStore.selectTool(toolKey)
   }
 
-  const exportTool = () =>{
+  const exportTool = () => {
     console.log('Export tool clicked')
     openExportToolSettings()
   }
@@ -56,7 +58,6 @@ export function useToolsPanel(editorStore, imageStore) {
     }
   }
 
-
   return {
     activeTool,
     toolsRef,
@@ -68,6 +69,6 @@ export function useToolsPanel(editorStore, imageStore) {
     toggleTool,
     exportTool,
     clickFunction,
-    isExportDisabled
+    isExportDisabled,
   }
 }
