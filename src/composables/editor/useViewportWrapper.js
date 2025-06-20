@@ -247,9 +247,9 @@ export function useViewportWrapper(viewportStore, contentRef) {
   })
 
   const startPan = (event) => {
-    isMiddleDragging.value = true
     // Middle mouse button panning
     if (event.button === 1) {
+      isMiddleDragging.value = true
       event.preventDefault()
       const startX = event.clientX
       const startY = event.clientY

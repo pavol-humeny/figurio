@@ -46,9 +46,6 @@ const {
           transform: `translate(${panX}px, ${panY}px) scale(${zoomLevel})`
         }"
       >
-        <!-- <div class="tmp">
-          a
-        </div> -->
         <canvas ref="canvasRef" class="image-canvas"></canvas>
         <svg ref="svgRef" class="image-svg"></svg>
       </div>
@@ -111,6 +108,7 @@ const {
   left: 0;
   display: block;
 }
+
 
 .vertical-slider-wrapper {
   position: absolute;
