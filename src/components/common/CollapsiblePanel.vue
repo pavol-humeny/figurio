@@ -1,39 +1,31 @@
 <script setup>
-import BaseIcon from '../icons/BaseIcon.vue';
-import { useCollapsiblePanel } from '@/composables/common/useCollapsiblePanel';
-import { useUiStore } from '@/stores/uiStore';
+import BaseIcon from '../icons/BaseIcon.vue'
+import { useCollapsiblePanel } from '@/composables/common/useCollapsiblePanel'
+import { useUiStore } from '@/stores/uiStore'
 
-const {
-  isVisible,
-  toggleVisibility,
-  rightSidePanelWidth,
-  collapseButtonWidth,
-  startResize
-} = useCollapsiblePanel(useUiStore());
-
+const { isVisible, toggleVisibility, rightSidePanelWidth, collapseButtonWidth, startResize } =
+  useCollapsiblePanel(useUiStore())
 </script>
 
 <template>
-  <div
-    class="collapsible-panel"
-    :style="{ width: rightSidePanelWidth + 'px' }"
-  >
+  <div class="collapsible-panel" :style="{ width: rightSidePanelWidth + 'px' }">
     <div
       class="toggle-button"
       @click="toggleVisibility"
       :style="{ width: collapseButtonWidth + 'px' }"
     >
-      <BaseIcon :name="isVisible ? 'IconArrowRight' : 'IconArrowLeft'" size="24" color="var(--border-c)" />
+      <BaseIcon
+        :name="isVisible ? 'IconArrowRight' : 'IconArrowLeft'"
+        size="24"
+        color="var(--border-c)"
+      />
     </div>
 
     <div class="panel-content" :class="{ hidden: !isVisible }">
       <slot></slot>
     </div>
 
-    <div
-      class="resize-handle"
-      @mousedown="startResize">
-    </div>
+    <div class="resize-handle" @mousedown="startResize" :class="{ hidden: !isVisible }"></div>
   </div>
 </template>
 
@@ -65,6 +57,10 @@ const {
 }
 
 .panel-content.hidden {
+  display: none;
+}
+
+.resize-handle.hidden {
   display: none;
 }
 
