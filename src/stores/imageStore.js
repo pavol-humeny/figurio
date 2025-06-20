@@ -11,13 +11,16 @@ const isValidFileName = (name) => {
 
 export const useImageStore = defineStore('imageStore', {
   state: () => ({
+    file: null,
+
     fileName: '',
     newFileName: '',
-    file: null,
     previewUrl: '',
+
     fileType: '', // 'image' or 'pdf'
     fileFormat: '', // 'png', 'jpg', 'jpeg', 'pdf'
     newFileFormat: '', // 'png', 'jpg', 'jpeg', 'pdf'
+
     fileDimensions: {
       fileAspectRatio: 1,
       width: 0,
@@ -28,7 +31,20 @@ export const useImageStore = defineStore('imageStore', {
       width: 0,
       height: 0,
     },
-    fileSize: 0, // in bytes
+
+    fileSize: 0, // In bytes
+
+    // Value for original image
+    originalImage: null,
+    // Value for raster image rendering
+    renderedImage: null,
+    // Value for SVG rendering
+    // svgElements: [],
+    svgElements: [
+      { type: 'rect', x: 50, y: 40, width: 200, height: 100, fill: 'transparent', stroke: 'red' },
+      { type: 'circle', cx: 300, cy: 200, r: 50, fill: 'blue', stroke: 'black' },
+    ],
+    selectedSvgElementId: null,
   }),
   actions: {
     isImageLoaded() {
@@ -43,9 +59,9 @@ export const useImageStore = defineStore('imageStore', {
       if (trimmedName === '') {
         if (this.file !== null) {
           showToastModal(
-            "error",
-            t("imageStore.toast.errorEmptyName.title"),
-            t("imageStore.toast.errorEmptyName.message")
+            'error',
+            t('imageStore.toast.errorEmptyName.title'),
+            t('imageStore.toast.errorEmptyName.message'),
           )
         }
         const tmp = this.fileName
@@ -74,9 +90,9 @@ export const useImageStore = defineStore('imageStore', {
       if (!isValidFileName(trimmedName)) {
         if (this.file !== null) {
           showToastModal(
-            "error",
-            t("imageStore.toast.errorInvalidCharacters.title"),
-            t("imageStore.toast.errorInvalidCharacters.message")
+            'error',
+            t('imageStore.toast.errorInvalidCharacters.title'),
+            t('imageStore.toast.errorInvalidCharacters.message'),
           )
         }
         const tmp = this.fileName
@@ -91,9 +107,9 @@ export const useImageStore = defineStore('imageStore', {
 
       if (trimmedName !== this.fileName && this.fileName !== '' && !isNewFileName) {
         showToastModal(
-          "success",
-          t("imageStore.toast.successFileNameUpdated.title"),
-          t("imageStore.toast.successFileNameUpdated.message")
+          'success',
+          t('imageStore.toast.successFileNameUpdated.title'),
+          t('imageStore.toast.successFileNameUpdated.message'),
         )
       }
 
@@ -104,9 +120,9 @@ export const useImageStore = defineStore('imageStore', {
       }
 
       // Update file name
-      if (isNewFileName){
+      if (isNewFileName) {
         this.newFileName = trimmedName
-      }else{
+      } else {
         this.fileName = trimmedName
         this.newFileName = trimmedName
       }
@@ -114,7 +130,7 @@ export const useImageStore = defineStore('imageStore', {
       return true
     },
 
-    closeFile(){
+    closeFile() {
       this.fileName = ''
       this.newFileName = ''
       this.file = null
@@ -133,38 +149,57 @@ export const useImageStore = defineStore('imageStore', {
         height: 0,
       }
       this.fileSize = 0
+
+      this.originalImage = null
+      this.renderedImage = null
+
+      this.svgElements = []
+      this.selectedSvgElementId = null
     },
 
     setFile(file, t) {
       this.file = file
-      this.setFileName(file.name, t)
 
-      // this.fileName = file.name.trim()
+      this.setFileName(file.name, t)
+      this.fileSize = file.size
       this.fileFormat = file.name.split('.').pop().toLowerCase()
       this.newFileFormat = this.fileFormat
-      this.fileType = file.type.startsWith('image/') ? 'image'
-                  : file.type === 'application/pdf' ? 'pdf'
-                  : ''
+      this.fileType = file.type.startsWith('image/')
+        ? 'image'
+        : file.type === 'application/pdf'
+          ? 'pdf'
+          : ''
 
       const reader = new FileReader()
 
-      if (this.fileType === 'image') {
+      if (this.fileType.startsWith('image')) {
         reader.onload = (e) => {
-          this.previewUrl = e.target.result
-
           const img = new Image()
           img.onload = () => {
             this.fileDimensions.width = img.width
             this.fileDimensions.height = img.height
             this.fileDimensions.fileAspectRatio = img.width / img.height || 1
-            this.newFileDimensions.width = this.fileDimensions.width
-            this.newFileDimensions.height = this.fileDimensions.height
-            this.newFileDimensions.fileAspectRatio = this.fileDimensions.width / this.fileDimensions.height || 1
+            this.newFileDimensions = { ...this.fileDimensions }
+
+            this.originalImage = img
+
+            // Create a canvas to render the image
+            const canvas = document.createElement('canvas')
+            canvas.width = img.width
+            canvas.height = img.height
+
+            const ctx = canvas.getContext('2d')
+            ctx.drawImage(img, 0, 0)
+
+            this.renderedImage = canvas
+            this.previewUrl = canvas.toDataURL() // Fallback for export
           }
+
           img.src = e.target.result
         }
+
         reader.readAsDataURL(file)
-      }else{
+      } else {
         console.error('Unsupported file type:', this.fileType)
       }
       // else if (this.fileType === 'pdf') {
@@ -192,9 +227,9 @@ export const useImageStore = defineStore('imageStore', {
       // }
 
       showToastModal(
-        "success",
-        t("imageStore.toast.successFileUploaded.title"),
-        t("imageStore.toast.successFileUploaded.message", { fileName: file.name })
+        'success',
+        t('imageStore.toast.successFileUploaded.title'),
+        t('imageStore.toast.successFileUploaded.message', { fileName: file.name }),
       )
     },
 
@@ -203,12 +238,12 @@ export const useImageStore = defineStore('imageStore', {
 
       if (!supportedTypes.includes(file.type)) {
         showToastModal(
-          "error",
-          t("imageStore.toast.errorUnsupportedFileType.title"),
-          t("imageStore.toast.errorUnsupportedFileType.message", { fileType: file.type })
+          'error',
+          t('imageStore.toast.errorUnsupportedFileType.title'),
+          t('imageStore.toast.errorUnsupportedFileType.message', { fileType: file.type }),
         )
         return
-      }else{
+      } else {
         this.setFile(file, t)
       }
     },
@@ -216,11 +251,11 @@ export const useImageStore = defineStore('imageStore', {
     saveToImageStore(files, t, router) {
       if (!files) return
 
-      if (files.length > 1){
+      if (files.length > 1) {
         showToastModal(
-          "error",
-          t("imageStore.toast.errorMultipleFiles.title"),
-          t("imageStore.toast.errorMultipleFiles.message")
+          'error',
+          t('imageStore.toast.errorMultipleFiles.title'),
+          t('imageStore.toast.errorMultipleFiles.message'),
         )
         return
       }
@@ -256,9 +291,9 @@ export const useImageStore = defineStore('imageStore', {
       link.click()
 
       showToastModal(
-        "success",
-        t("imageStore.toast.successFileExported.title"),
-        t("imageStore.toast.successFileExported.message", { fileName: this.fileName})
+        'success',
+        t('imageStore.toast.successFileExported.title'),
+        t('imageStore.toast.successFileExported.message', { fileName: this.fileName }),
       )
     },
   },

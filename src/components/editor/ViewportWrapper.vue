@@ -1,6 +1,16 @@
 <script setup>
-import { useViewportWrapper } from '@/composables/editor/useViewportWrapper';
-import { useViewportStore } from '@/stores/viewportStore';
+import { useViewportWrapper } from '@/composables/editor/useViewportWrapper'
+import { useViewportStore } from '@/stores/viewportStore'
+import { useImageRenderer } from '@/composables/editor/useImageRenderer'
+import { useImageStore } from '@/stores/imageStore'
+import { ref } from 'vue'
+
+const contentRef = ref(null)
+
+const {
+  canvasRef,
+  svgRef,
+} = useImageRenderer(useImageStore(), contentRef)
 
 const {
   zoomLevel,
@@ -10,15 +20,14 @@ const {
   startDrag,
   isDraggingHorizontal,
   isDraggingVertical,
+  isMiddleDragging,
   panY,
   wrapperRef,
-  contentRef,
   verticalSliderTop,
   horizontalSliderLeft,
   verticalSliderHeight,
   horizontalSliderWidth,
-} = useViewportWrapper(useViewportStore());
-
+} = useViewportWrapper(useViewportStore(), contentRef)
 </script>
 
 <template>
@@ -28,6 +37,7 @@ const {
       ref="wrapperRef"
       @wheel.passive="setZoomAndScroll"
       @mousedown="startPan"
+      :class="{ 'middle-dragging': isMiddleDragging }"
     >
       <div
         class="viewport-content"
@@ -36,11 +46,11 @@ const {
           transform: `translate(${panX}px, ${panY}px) scale(${zoomLevel})`
         }"
       >
-        <div class="tmp">
+        <!-- <div class="tmp">
           a
-        </div>
-        <!-- <canvas class="image-canvas"></canvas> -->
-        <!-- <svg class="image-svg"></svg> -->
+        </div> -->
+        <canvas ref="canvasRef" class="image-canvas"></canvas>
+        <svg ref="svgRef" class="image-svg"></svg>
       </div>
     </div>
 
@@ -50,13 +60,10 @@ const {
         @mousedown="(e) => startDrag('y', e)"
         :style="{
           top: verticalSliderTop + 'px',
-          height: verticalSliderHeight + 'px'
+          height: verticalSliderHeight + 'px',
         }"
-        :class="{ 'active': isDraggingVertical }"
-      >
-
-      </div>
-
+        :class="{ active: isDraggingVertical }"
+      ></div>
     </div>
 
     <div class="horizontal-slider-wrapper">
@@ -65,11 +72,10 @@ const {
         @mousedown="(e) => startDrag('x', e)"
         :style="{
           left: horizontalSliderLeft + 'px',
-          width: horizontalSliderWidth + 'px'
+          width: horizontalSliderWidth + 'px',
         }"
-        :class="{ 'active': isDraggingHorizontal }"
-      >
-      </div>
+        :class="{ active: isDraggingHorizontal }"
+      ></div>
     </div>
   </div>
 </template>
@@ -92,29 +98,39 @@ const {
 }
 
 .viewport-content {
-  transform-origin: top left;
+  /* transform-origin: top left;
+  position: relative; */
+  /* height: fit-content;
+  width: fit-content; */
+  border: solid 5px red;
   position: relative;
-  height: fit-content;
-  width: fit-content;
+  transform-origin: top left;
+  display: inline-block;
 }
 
-.tmp {
+/* .tmp {
   width: 800px;
   height: 600px;
   background: rgb(57, 78, 148);
   display: flex;
   justify-content: center;
   align-items: center;
-}
+} */
 
 .image-canvas,
 .image-svg {
+  /* position: relative;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%; */
   position: absolute;
   top: 0;
   left: 0;
+  display: block;
 }
 
-.vertical-slider-wrapper{
+.vertical-slider-wrapper {
   position: absolute;
   top: 0;
   right: 0;
@@ -126,7 +142,7 @@ const {
   overflow: hidden;
 }
 
-.horizontal-slider-wrapper{
+.horizontal-slider-wrapper {
   position: absolute;
   left: 0;
   bottom: 0;
@@ -150,16 +166,19 @@ const {
   cursor: pointer;
 }
 
-.vertical-slider-wrapper .slider{
+.vertical-slider-wrapper .slider {
   height: 200px;
   width: 70%;
   top: 50%;
 }
 
-.horizontal-slider-wrapper .slider{
+.horizontal-slider-wrapper .slider {
   width: 200px;
   height: 70%;
   left: 50%;
 }
 
+.middle-dragging {
+  cursor: grabbing;
+}
 </style>

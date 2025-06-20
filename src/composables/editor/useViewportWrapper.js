@@ -1,6 +1,7 @@
 import { computed, ref, nextTick, onMounted, watch, onBeforeUnmount } from 'vue'
+import { useImageStore } from '@/stores/imageStore'
 
-export function useViewportWrapper(viewportStore) {
+export function useViewportWrapper(viewportStore, contentRef) {
   const zoomLevel = computed(() => viewportStore.zoomLevel)
   const panX = computed({
     get: () => viewportStore.panX,
@@ -12,7 +13,7 @@ export function useViewportWrapper(viewportStore) {
   })
 
   const wrapperRef = ref(null)
-  const contentRef = ref(null)
+  // const contentRef = ref(null)
 
   // Constants for scrolling and dragging speeds
   const horizontalSpeed = 3
@@ -41,6 +42,7 @@ export function useViewportWrapper(viewportStore) {
 
   const isDraggingHorizontal = ref(false)
   const isDraggingVertical = ref(false)
+  const isMiddleDragging = ref(false)
 
   const clamp = (value, min, max) => Math.min(Math.max(value, min), max)
 
@@ -71,8 +73,10 @@ export function useViewportWrapper(viewportStore) {
     panX.value = wrapperWidth.value / 2 - (contentWidth.value * zoomLevel.value) / 2
     panY.value = wrapperHeight.value / 2 - (contentHeight.value * zoomLevel.value) / 2
 
-    viewportStore.defaultPanX = wrapperWidth.value / 2 - (contentWidth.value) / 2
-    viewportStore.defaultPanY = wrapperHeight.value / 2 - (contentHeight.value) / 2
+    viewportStore.defaultPanX = wrapperWidth.value / 2 - contentWidth.value / 2
+    viewportStore.defaultPanY = wrapperHeight.value / 2 - contentHeight.value / 2
+
+    console.log('Content dimensions:', contentWidth.value, contentHeight.value)
   }
 
   const setZoomAndScroll = (event) => {
@@ -245,6 +249,7 @@ export function useViewportWrapper(viewportStore) {
   })
 
   const startPan = (event) => {
+    isMiddleDragging.value = true
     // Middle mouse button panning
     if (event.button === 1) {
       event.preventDefault()
@@ -271,12 +276,23 @@ export function useViewportWrapper(viewportStore) {
       const onMouseUp = () => {
         document.removeEventListener('mousemove', onMouseMove)
         document.removeEventListener('mouseup', onMouseUp)
+        isMiddleDragging.value = false
       }
 
       document.addEventListener('mousemove', onMouseMove)
       document.addEventListener('mouseup', onMouseUp)
     }
   }
+
+  const imageStore = useImageStore()
+  watch(
+    () => imageStore.renderedImage,
+    () => {
+      nextTick(() => {
+        centerImage()
+      })
+    },
+  )
 
   return {
     zoomLevel,
@@ -287,11 +303,13 @@ export function useViewportWrapper(viewportStore) {
     startDrag,
     isDraggingHorizontal,
     isDraggingVertical,
+    isMiddleDragging,
     wrapperRef,
     contentRef,
     verticalSliderTop,
     horizontalSliderLeft,
     verticalSliderHeight,
     horizontalSliderWidth,
+    centerImage,
   }
 }
