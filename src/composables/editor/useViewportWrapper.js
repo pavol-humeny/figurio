@@ -2,7 +2,7 @@ import { computed, ref, nextTick, onMounted, watch, onBeforeUnmount } from 'vue'
 import { useImageStore } from '@/stores/imageStore'
 
 export function useViewportWrapper(viewportStore, contentRef) {
-  const zoomLevel = computed(() => viewportStore.zoomLevel)
+  const zoomLevel = computed(() => viewportStore.realZoomLevel)
   const panX = computed({
     get: () => viewportStore.panX,
     set: (val) => (viewportStore.panX = val),
@@ -73,10 +73,8 @@ export function useViewportWrapper(viewportStore, contentRef) {
     panX.value = wrapperWidth.value / 2 - (contentWidth.value * zoomLevel.value) / 2
     panY.value = wrapperHeight.value / 2 - (contentHeight.value * zoomLevel.value) / 2
 
-    viewportStore.defaultPanX = wrapperWidth.value / 2 - contentWidth.value / 2
-    viewportStore.defaultPanY = wrapperHeight.value / 2 - contentHeight.value / 2
-
-    console.log('Content dimensions:', contentWidth.value, contentHeight.value)
+    viewportStore.defaultPanX = wrapperWidth.value / 2 - (contentWidth.value * zoomLevel.value) / 2
+    viewportStore.defaultPanY = wrapperHeight.value / 2 - (contentHeight.value * zoomLevel.value) / 2
   }
 
   const setZoomAndScroll = (event) => {
@@ -88,8 +86,8 @@ export function useViewportWrapper(viewportStore, contentRef) {
       const cursorX = event.clientX - boundingBox.left
       const cursorY = event.clientY - boundingBox.top
 
-      const offsetX = (cursorX - viewportStore.panX) / viewportStore.zoomLevel
-      const offsetY = (cursorY - viewportStore.panY) / viewportStore.zoomLevel
+      const offsetX = (cursorX - viewportStore.panX) / zoomLevel.value
+      const offsetY = (cursorY - viewportStore.panY) / zoomLevel.value
 
       if (direction > 0) {
         viewportStore.zoomIn()
@@ -100,8 +98,8 @@ export function useViewportWrapper(viewportStore, contentRef) {
       updateZoomDependentDimensions()
 
       // Move the viewport to keep the cursor position stable
-      viewportStore.panX = cursorX - offsetX * viewportStore.zoomLevel
-      viewportStore.panY = cursorY - offsetY * viewportStore.zoomLevel
+      viewportStore.panX = cursorX - offsetX * zoomLevel.value
+      viewportStore.panY = cursorY - offsetY * zoomLevel.value
     } else if (event.shiftKey) {
       // Horizontal scrolling with shift key
       if (
@@ -289,10 +287,24 @@ export function useViewportWrapper(viewportStore, contentRef) {
     () => imageStore.renderedImage,
     () => {
       nextTick(() => {
+        fitToScreenZoomLevel()
         centerImage()
       })
     },
   )
+
+  const fitToScreenZoomLevel = () => {
+    updateInitialDimensions()
+
+    const scaleX = wrapperWidth.value / contentWidth.value
+    const scaleY = wrapperHeight.value / contentHeight.value
+
+    const optimalZoom = Math.min(scaleX, scaleY)
+
+    viewportStore.fitZoomLevel = viewportStore.zoomLevel / optimalZoom * 1.05
+
+    updateZoomDependentDimensions()
+  }
 
   return {
     zoomLevel,
