@@ -7,9 +7,8 @@ import { ref } from 'vue'
 
 const contentRef = ref(null)
 
-const imageStore = useImageStore()
 
-const { canvasRef, svgRef, pdfWrapperRef } = useImageRenderer(useImageStore(), contentRef)
+const { canvasRef, svgRef } = useImageRenderer(useImageStore(), contentRef)
 
 const {
   zoomLevel,
@@ -45,15 +44,7 @@ const {
           transform: `translate(${panX}px, ${panY}px) scale(${zoomLevel})`,
         }"
       >
-        <!-- <canvas ref="canvasRef" class="image-canvas"></canvas>
-        <svg ref="svgRef" class="image-svg"></svg> -->
-        <!-- PDF preview layer (vektorové SVG z renderedPdf) -->
-        <div v-if="imageStore.fileType === 'pdf'" ref="pdfWrapperRef" class="pdf-svg-render"></div>
-
-        <!-- Canvas pre obrázok -->
-        <canvas v-if="imageStore.fileType !== 'pdf'" ref="canvasRef" class="image-canvas"></canvas>
-
-        <!-- Interaktívna SVG vrstva (vždy) -->
+        <canvas ref="canvasRef" class="image-canvas"></canvas>
         <svg ref="svgRef" class="image-svg"></svg>
       </div>
     </div>

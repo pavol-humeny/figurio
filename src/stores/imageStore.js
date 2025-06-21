@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia'
 import { useToastModal } from '@/composables/modals/useToastModal'
 import { nextTick } from 'vue'
+import jsPDF from 'jspdf'
 
 const { showToastModal } = useToastModal()
 
@@ -224,29 +225,6 @@ export const useImageStore = defineStore('imageStore', {
       } else {
         console.error('Unsupported file type:', this.fileType)
       }
-      // else if (this.fileType === 'pdf') {
-      //   reader.onload = async (e) => {
-      //     this.previewUrl = e.target.result
-
-      //     try {
-      //       const pdfjsLib = await import('pdfjs-dist/build/pdf')
-      //       const pdfWorker = await import('pdfjs-dist/build/pdf.worker.entry')
-
-      //       pdfjsLib.GlobalWorkerOptions.workerSrc = pdfWorker.default
-
-      //       const loadingTask = pdfjsLib.getDocument({ data: e.target.result })
-      //       const pdf = await loadingTask.promise
-      //       const page = await pdf.getPage(1)
-      //       const viewport = page.getViewport({ scale: 1 })
-
-      //       this.fileDimensions.width = viewport.width
-      //       this.fileDimensions.height = viewport.height
-      //     } catch (err) {
-      //       console.error('Failed to extract PDF dimensions', err)
-      //     }
-      //   }
-      //   reader.readAsArrayBuffer(file)
-      // }
 
       showToastModal(
         'success',
@@ -318,49 +296,68 @@ export const useImageStore = defineStore('imageStore', {
         this.previewUrl = this.renderedImage.toDataURL()
       }
 
-      const mimeType =
-        this.newFileFormat === 'jpeg' || this.newFileFormat === 'jpg'
-          ? 'image/jpeg'
-          : this.newFileFormat === 'webp'
-            ? 'image/webp'
-            : 'image/png'
+      const isPdf = this.newFileFormat === 'pdf'
 
-      // Create canvas and draw the image from previewUrl
       const image = new Image()
       image.onload = () => {
-        const canvas = document.createElement('canvas')
-        canvas.width = this.newFileDimensions.width
-        canvas.height = this.newFileDimensions.height
-        const ctx = canvas.getContext('2d')
-        ctx.drawImage(image, 0, 0, canvas.width, canvas.height)
+        const { width, height, quality } = this.newFileDimensions
 
-        // Export as Blob
-        canvas.toBlob(
-          (blob) => {
-            if (!blob) return
-            const blobUrl = URL.createObjectURL(blob)
+        if (isPdf) {
+          // Conversion of px to mm (1 px = 0.264583 mm)
+          const mmWidth = width * 0.264583
+          const mmHeight = height * 0.264583
 
-            const link = document.createElement('a')
-            link.href = blobUrl
-            link.download = `${this.newFileName}.${this.newFileFormat}`
-            link.click()
+          const pdf = new jsPDF({
+            orientation: mmWidth > mmHeight ? 'landscape' : 'portrait',
+            unit: 'mm',
+            format: [mmWidth, mmHeight],
+          })
 
-            URL.revokeObjectURL(blobUrl)
+          pdf.addImage(image, 'PNG', 0, 0, mmWidth, mmHeight)
+          pdf.save(`${this.newFileName}.pdf`)
+        } else {
+          const mimeType =
+            this.newFileFormat === 'jpeg' || this.newFileFormat === 'jpg'
+              ? 'image/jpeg'
+              : this.newFileFormat === 'webp'
+                ? 'image/webp'
+                : 'image/png'
 
-            showToastModal(
-              'success',
-              t('imageStore.toast.successFileExported.title'),
-              t('imageStore.toast.successFileExported.message', {
-                fileName: this.fileName,
-              }),
-            )
-          },
-          mimeType,
-          this.newFileDimensions.quality / 100,
+          const canvas = document.createElement('canvas')
+          canvas.width = width
+          canvas.height = height
+          const ctx = canvas.getContext('2d')
+          ctx.drawImage(image, 0, 0, width, height)
+
+          canvas.toBlob(
+            (blob) => {
+              if (!blob) return
+              const blobUrl = URL.createObjectURL(blob)
+
+              const link = document.createElement('a')
+              link.href = blobUrl
+              link.download = `${this.newFileName}.${this.newFileFormat}`
+              link.click()
+
+              URL.revokeObjectURL(blobUrl)
+            },
+            mimeType,
+            quality / 100,
+          )
+        }
+
+        showToastModal(
+          'success',
+          t('imageStore.toast.successFileExported.title'),
+          t('imageStore.toast.successFileExported.message', {
+            fileName: this.newFileName,
+          }),
         )
       }
 
       image.src = this.previewUrl
+
+      return true
     },
 
     async rasterize() {

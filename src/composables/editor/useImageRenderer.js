@@ -3,7 +3,6 @@ import { onMounted, watch, ref, nextTick } from 'vue'
 export function useImageRenderer(imageStore, contentRef) {
   const canvasRef = ref(null)
   const svgRef = ref(null)
-  const pdfWrapperRef = ref(null) // pre zobrazenie renderedPdf
 
   const updateSizes = () => {
     const width = imageStore.fileDimensions.width
@@ -23,14 +22,16 @@ export function useImageRenderer(imageStore, contentRef) {
       canvasRef.value.width = width
       canvasRef.value.height = height
     }
-    if (pdfWrapperRef.value) {
-      pdfWrapperRef.value.style.width = `${width}px`
-      pdfWrapperRef.value.style.height = `${height}px`
-    }
+    // if (pdfWrapperRef.value) {
+    //   pdfWrapperRef.value.style.width = `${width}px`
+    //   pdfWrapperRef.value.style.height = `${height}px`
+    // }
   }
 
   const renderCanvas = () => {
     if (!canvasRef.value || !imageStore.renderedImage || imageStore.fileType === 'pdf') return
+
+    console.log('Rendering canvas...')
 
     const ctx = canvasRef.value.getContext('2d')
     const width = imageStore.fileDimensions.width
@@ -45,6 +46,8 @@ export function useImageRenderer(imageStore, contentRef) {
 
   const renderSvg = () => {
     if (!svgRef.value || !imageStore.svgObjects) return
+
+    console.log('Rendering SVG...')
 
     const svg = svgRef.value
     svg.innerHTML = ''
@@ -64,19 +67,10 @@ export function useImageRenderer(imageStore, contentRef) {
     })
   }
 
-  const renderPdf = () => {
-    if (!pdfWrapperRef.value || imageStore.fileType !== 'pdf' || !imageStore.renderedPdf) return
-
-    pdfWrapperRef.value.innerHTML = ''
-    const decoded = decodeURIComponent(imageStore.renderedPdf.slice(imageStore.renderedPdf.indexOf(',') + 1))
-    pdfWrapperRef.value.innerHTML = decoded
-  }
-
   const renderAll = async () => {
     updateSizes()
     renderCanvas()
     renderSvg()
-    renderPdf()
   }
 
   onMounted(() => {
@@ -94,12 +88,11 @@ export function useImageRenderer(imageStore, contentRef) {
         renderAll()
       })
     },
-    { deep: false }
+    { deep: false },
   )
 
   return {
     canvasRef,
     svgRef,
-    pdfWrapperRef,
   }
 }
