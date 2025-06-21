@@ -3,10 +3,12 @@ import { useViewportWrapper } from '@/composables/editor/useViewportWrapper'
 import { useViewportStore } from '@/stores/viewportStore'
 import { useImageRenderer } from '@/composables/editor/useImageRenderer'
 import { useImageStore } from '@/stores/imageStore'
+import { useEditorStore } from '@/stores/editorStore'
 import { ref } from 'vue'
 
 const contentRef = ref(null)
 
+const editorStore = useEditorStore()
 
 const { canvasRef, svgRef } = useImageRenderer(useImageStore(), contentRef)
 
@@ -25,7 +27,7 @@ const {
   horizontalSliderLeft,
   verticalSliderHeight,
   horizontalSliderWidth,
-} = useViewportWrapper(useViewportStore(), useImageStore(), contentRef)
+} = useViewportWrapper(useViewportStore(), useImageStore(), useEditorStore(), contentRef)
 </script>
 
 <template>
@@ -35,7 +37,7 @@ const {
       ref="wrapperRef"
       @wheel.passive="setZoomAndScroll"
       @mousedown="startPan"
-      :class="{ 'middle-dragging': isMiddleDragging }"
+      :class="{ 'middle-dragging': isMiddleDragging, 'move-tool-selected': editorStore.selectedToolKey === 'move' }"
     >
       <div
         class="viewport-content"
@@ -157,6 +159,10 @@ const {
 }
 
 .middle-dragging {
-  cursor: grabbing;
+  cursor: move;
+}
+
+.move-tool-selected{
+  cursor: move;
 }
 </style>

@@ -42,9 +42,13 @@ const props = defineProps({
     type: String,
     default: '',
   },
+  backgroundColor: {
+    type: String,
+    default: 'var(--secondary-c)',
+  },
 })
 
-const emit = defineEmits(['update:modelValue'])
+const emit = defineEmits(['update:modelValue', 'dblclick'])
 
 const onInput = (event) => {
   const value = Number(event.target.value)
@@ -57,35 +61,45 @@ const showTip = props.tip !== ''
 <template>
   <ItemTip v-if="showTip" :text="props.tip" :position="props.position">
     <div class="slider-wrapper">
+      <div v-if="props.showValue" class="slider-value-wrapper">
+        <p v-if="props.valueDescription !== ''" class="slider-value-description">
+          {{ props.valueDescription + ':' }}
+        </p>
+        <p class="slider-value">{{ modelValue }}</p>
+        <p v-if="props.valueUnit !== ''" class="slider-value-unit">{{ props.valueUnit }}</p>
+      </div>
       <input
         type="range"
-        class="slider"
         :min="props.min"
         :max="props.max"
         :step="props.step"
         :value="modelValue"
         :disabled="props.disabled"
         @input="onInput"
+        @dblclick="$emit('dblclick')"
+        :style="{ '--slider-bg': props.backgroundColor }"
       />
-      <span v-if="props.showValue" class="slider-value">{{ modelValue }}</span>
     </div>
   </ItemTip>
 
   <div v-else class="slider-wrapper">
     <div v-if="props.showValue" class="slider-value-wrapper">
-      <p class="slider-value-description">{{ props.valueDescription + ":" }}</p>
+      <p v-if="props.valueDescription !== ''" class="slider-value-description">
+        {{ props.valueDescription + ':' }}
+      </p>
       <p class="slider-value">{{ modelValue }}</p>
-      <p class="slider-value-unit">{{ props.valueUnit }}</p>
+      <p v-if="props.valueUnit !== ''" class="slider-value-unit">{{ props.valueUnit }}</p>
     </div>
     <input
       type="range"
-      class="slider"
       :min="props.min"
       :max="props.max"
       :step="props.step"
       :value="modelValue"
       :disabled="props.disabled"
       @input="onInput"
+      @dblclick="$emit('dblclick')"
+      :style="{ '--slider-bg': props.backgroundColor }"
     />
   </div>
 </template>
@@ -96,10 +110,6 @@ const showTip = props.tip !== ''
   align-items: center;
   flex-direction: column;
   gap: 8px;
-}
-
-.slider {
-  width: 100%;
 }
 
 .slider-value-wrapper {
@@ -132,7 +142,7 @@ input[type='range'] {
 /******** Chrome, Safari, Opera and Edge Chromium styles ********/
 /* slider track */
 input[type='range']::-webkit-slider-runnable-track {
-  background-color: var(--background-c);
+  background-color: var(--slider-bg);
   border-radius: 10px;
   height: 10px;
 }
@@ -151,7 +161,7 @@ input[type='range']::-webkit-slider-thumb {
 /*********** Firefox styles ***********/
 /* slider track */
 input[type='range']::-moz-range-track {
-  background-color: var(--background-c);
+  background-color: var(--slider-bg);
   border-radius: 10px;
   height: 10px;
 }

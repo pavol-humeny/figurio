@@ -1,8 +1,7 @@
 import { computed, ref, nextTick, onMounted, watch, onBeforeUnmount } from 'vue'
 import { viewportConfig } from '@/config/viewportConfig'
 
-
-export function useViewportWrapper(viewportStore, imageStore, contentRef) {
+export function useViewportWrapper(viewportStore, imageStore, editorStore, contentRef) {
   // Zoom and pan properties
   const zoomLevel = computed(() => viewportStore.realZoomLevel)
   const panX = computed({
@@ -79,6 +78,15 @@ export function useViewportWrapper(viewportStore, imageStore, contentRef) {
     updateZoomDependentDimensions()
     panX.value = wrapperWidth.value / 2 - (contentWidth.value * zoomLevel.value) / 2
     panY.value = wrapperHeight.value / 2 - (contentHeight.value * zoomLevel.value) / 2
+
+    viewportStore.defaultPanX = wrapperWidth.value / 2 - (contentWidth.value * zoomLevel.value) / 2
+    viewportStore.defaultPanY =
+      wrapperHeight.value / 2 - (contentHeight.value * zoomLevel.value) / 2
+  }
+  const setValuesForCenterImage = () => {
+    if (!wrapperRef.value || !contentRef.value) return
+    updateInitialDimensions()
+    updateZoomDependentDimensions()
 
     viewportStore.defaultPanX = wrapperWidth.value / 2 - (contentWidth.value * zoomLevel.value) / 2
     viewportStore.defaultPanY =
@@ -245,7 +253,7 @@ export function useViewportWrapper(viewportStore, imageStore, contentRef) {
   // Pan
   const startPan = (event) => {
     // Middle mouse button panning
-    if (event.button === 1) {
+    if (event.button === 1 || editorStore.selectedToolKey === 'move') {
       isMiddleDragging.value = true
       event.preventDefault()
       const startX = event.clientX
@@ -257,12 +265,12 @@ export function useViewportWrapper(viewportStore, imageStore, contentRef) {
         const deltaX = e.clientX - startX
         const deltaY = e.clientY - startY
         viewportStore.panX = clamp(
-          startPanX + deltaX,
+          startPanX + deltaX * viewportStore.movementSpeed,
           scrollHorizontalMin.value,
           scrollHorizontalMax.value,
         )
         viewportStore.panY = clamp(
-          startPanY + deltaY,
+          startPanY + deltaY * viewportStore.movementSpeed,
           scrollVerticalMin.value,
           scrollVerticalMax.value,
         )
@@ -291,7 +299,7 @@ export function useViewportWrapper(viewportStore, imageStore, contentRef) {
       // Center the image after resizing the wrapper
       if (wrapperRef.value) {
         resizeObserver = new ResizeObserver(() => {
-          // centerImage()
+          setValuesForCenterImage()
         })
         resizeObserver.observe(wrapperRef.value)
       }

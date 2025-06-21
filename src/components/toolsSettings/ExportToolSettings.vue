@@ -60,6 +60,7 @@ const {
               :max="100"
               :step="1"
               @update:modelValue="(value) => updateDimension('quality', value)"
+              :backgroundColor="'var(--background-c)'"
             />
           </div>
 

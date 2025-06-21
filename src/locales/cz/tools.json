@@ -6,8 +6,14 @@
     "settings": {
       "general": {
         "resetPosition": "Resetovat pozici",
-        "zoomSpeed": "Rychlost přiblížení",
-        "movementSpeed": "Rychlost pohybu"
+        "zoomSpeed": {
+          "label": "Rychlost přiblížení",
+          "tip": "Uprav rychlost přiblížení nebo dvakrát klikni pro resetování rychlosti přiblížení"
+        },
+        "movementSpeed": {
+          "label": "Rychlost pohybu",
+          "tip": "Uprav rychlost pohybu plátna nebo dvakrát klikni pro resetování rychlosti pohybu"
+        }
       }
     }
   },

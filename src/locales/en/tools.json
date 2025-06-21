@@ -6,8 +6,14 @@
     "settings":{
       "general": {
         "resetPosition": "Reset position",
-        "zoomSpeed": "Zoom speed",
-        "movementSpeed": "Movement speed"
+        "zoomSpeed":{
+          "label": "Zoom speed",
+          "tip": "Adjust the speed of zooming or double click to reset zoom speed"
+        },
+        "movementSpeed": {
+          "label": "Movement speed",
+          "tip": "Adjust the speed of moving the canvas or double click to reset movement speed"
+        }
       }
     }
   },

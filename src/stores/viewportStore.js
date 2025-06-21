@@ -9,9 +9,12 @@ export const useViewportStore = defineStore('viewportStore', {
     maxZoomLevel: viewportConfig.maxZoomLevel,
     minZoomLevel: viewportConfig.minZoomLevel,
     zoomSpeed: viewportConfig.zoomSpeed,
+    defaultZoomSpeed: viewportConfig.zoomSpeed,
 
     panX: 0,
     panY: 0,
+    movementSpeed: viewportConfig.movementSpeed,
+    defaultMovementSpeed: viewportConfig.movementSpeed,
 
     defaultPanX: 0,
     defaultPanY: 0,
@@ -35,6 +38,14 @@ export const useViewportStore = defineStore('viewportStore', {
     },
     resetZoom() {
       this.zoomLevel = this.defaultZoomLevel
+    },
+
+    resetZoomSpeed() {
+      this.zoomSpeed = this.defaultZoomSpeed
+    },
+
+    resetMovementSpeed() {
+      this.movementSpeed = this.defaultMovementSpeed
     },
 
     setPan(x, y) {
