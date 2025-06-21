@@ -62,6 +62,7 @@ export function useImageRenderer(imageStore, contentRef) {
   onMounted(() => {
     nextTick(() => {
       if (imageStore.renderedImage) {
+        console.log("Rendering image on mount")
         renderAll()
       }
     })
@@ -72,6 +73,7 @@ export function useImageRenderer(imageStore, contentRef) {
     (newImage) => {
       if (newImage) {
         nextTick(() => {
+          console.log("Rendering image on change")
           renderAll()
         })
       }

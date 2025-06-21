@@ -27,7 +27,7 @@ const {
   horizontalSliderLeft,
   verticalSliderHeight,
   horizontalSliderWidth,
-} = useViewportWrapper(useViewportStore(), contentRef)
+} = useViewportWrapper(useViewportStore(), useImageStore(), contentRef)
 </script>
 
 <template>
