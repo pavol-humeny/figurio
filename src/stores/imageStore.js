@@ -15,7 +15,6 @@ export const useImageStore = defineStore('imageStore', {
 
     fileName: '',
     newFileName: '',
-    previewUrl: '',
 
     fileType: '', // 'image' or 'pdf'
     fileFormat: '', // 'png', 'jpg', 'jpeg', 'pdf'
@@ -36,36 +35,38 @@ export const useImageStore = defineStore('imageStore', {
 
     fileSize: 0, // In bytes
 
+    // Value for preview image in export tool
+    previewUrl: '',
     // Value for original image
     originalImage: null,
     // Value for raster image rendering
     renderedImage: null,
     // Value for SVG rendering
-    // svgElements: [],
-    svgObjects: [
-      {
-        tag: 'rect',
-        attrs: {
-          x: 50,
-          y: 40,
-          width: 200,
-          height: 100,
-          fill: 'red',
-          stroke: 'red',
-        },
-      },
-      {
-        tag: 'circle',
-        attrs: {
-          cx: 300,
-          cy: 200,
-          r: 50,
-          fill: 'blue',
-          stroke: 'black',
-        },
-      },
-    ],
-    selectedSvgElementId: null,
+    svgObjects: [],
+    // svgObjects: [
+    //   {
+    //     tag: 'rect',
+    //     attrs: {
+    //       x: 50,
+    //       y: 40,
+    //       width: 200,
+    //       height: 100,
+    //       fill: 'red',
+    //       stroke: 'red',
+    //     },
+    //   },
+    //   {
+    //     tag: 'circle',
+    //     attrs: {
+    //       cx: 300,
+    //       cy: 200,
+    //       r: 50,
+    //       fill: 'blue',
+    //       stroke: 'black',
+    //     },
+    //   },
+    // ],
+    selectedSvgObjectId: null,
   }),
   actions: {
     isImageLoaded() {
@@ -174,8 +175,8 @@ export const useImageStore = defineStore('imageStore', {
       this.originalImage = null
       this.renderedImage = null
 
-      this.svgElements = []
-      this.selectedSvgElementId = null
+      this.svgObjects = []
+      this.selectedSvgObjectId = null
     },
 
     setFile(file, t) {
@@ -305,22 +306,14 @@ export const useImageStore = defineStore('imageStore', {
       document.body.removeChild(input)
     },
 
-    // exportFile(t) {
-    //   const link = document.createElement('a')
-    //   link.download = `${this.fileName}.${this.newFileFormat}`
-    //   link.href = this.previewUrl
-    //   link.click()
-
-    //   showToastModal(
-    //     'success',
-    //     t('imageStore.toast.successFileExported.title'),
-    //     t('imageStore.toast.successFileExported.message', { fileName: this.fileName }),
-    //   )
-
-    // },
-
     exportFile(t) {
-      this.rasterize()
+      if (!this.renderedImage) return false
+
+      if (this.svgObjects) {
+        this.rasterize()
+      } else {
+        this.previewUrl = this.renderedImage.toDataURL()
+      }
 
       const mimeType =
         this.newFileFormat === 'jpeg' || this.newFileFormat === 'jpg'
@@ -368,7 +361,7 @@ export const useImageStore = defineStore('imageStore', {
     },
 
     async rasterize() {
-      if (!this.renderedImage || !this.svgObjects) return null
+      if (!this.renderedImage || !this.svgObjects) return
 
       console.log('Rasterizing image with SVG objects...')
 
@@ -419,11 +412,11 @@ export const useImageStore = defineStore('imageStore', {
 
       // Result - base64
       const resultDataUrl = canvas.toDataURL()
-      this.previewUrl = resultDataUrl
+      // this.previewUrl = resultDataUrl
 
       // Reset svg elements
-      this.svgElements = []
-      this.selectedSvgElementId = null
+      this.svgObjects = []
+      this.selectedSvgObjectId = null
 
       return resultDataUrl
     },

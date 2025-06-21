@@ -84,7 +84,11 @@ export function useExportToolSettings(imageStore, t) {
   }
 
   const exportFile = () => {
-    imageStore.exportFile(t)
+    const success = imageStore.exportFile(t)
+    if (!success) {
+      console.error('Failed to export file')
+      return
+    }
     isVisible.value = false
   }
 
