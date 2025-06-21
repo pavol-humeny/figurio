@@ -255,18 +255,13 @@ export const useImageStore = defineStore('imageStore', {
       )
     },
 
-    checkFile(file, t) {
+    checkFile(file) {
       const supportedTypes = ['image/jpeg', 'image/png', 'image/jpg', 'application/pdf']
 
       if (!supportedTypes.includes(file.type)) {
-        showToastModal(
-          'error',
-          t('imageStore.toast.errorUnsupportedFileType.title'),
-          t('imageStore.toast.errorUnsupportedFileType.message', { fileType: file.type }),
-        )
-        return
+        return false
       } else {
-        this.setFile(file, t)
+        return true
       }
     },
 
@@ -282,7 +277,15 @@ export const useImageStore = defineStore('imageStore', {
         return
       }
 
-      this.checkFile(files[0], t)
+      if (this.checkFile(files[0])) {
+        this.setFile(files[0], t)
+      } else {
+        showToastModal(
+          'error',
+          t('imageStore.toast.errorUnsupportedFileType.title'),
+          t('imageStore.toast.errorUnsupportedFileType.message', { fileType: files[0].type }),
+        )
+      }
 
       if (router.currentRoute.value.name !== 'editor') {
         router.push({ name: 'editor' })
