@@ -59,6 +59,7 @@ const {
               id="file-quality"
               min="0"
               max="100"
+              step="1"
               v-model.number="fileDimensions.quality"
               @input="updateDimension('quality', fileDimensions.quality)"
             />
@@ -135,12 +136,12 @@ const {
           <div class="buttons-wrapper">
             <DefaultButton
               :text="$t('tools.export.settings.general.cancelButton.text')"
-              :onClick="closeExportToolSettings"
+              @click="closeExportToolSettings"
               onlyText
             />
             <DefaultButton
               :text="$t('tools.export.settings.general.exportButton.text')"
-              :onClick="exportFile"
+              @click="exportFile"
             />
           </div>
         </div>

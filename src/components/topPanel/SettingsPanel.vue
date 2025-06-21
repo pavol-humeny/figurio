@@ -71,7 +71,7 @@ const { wrapperRef } = useClickOutside({
         :text="$t('topPanel.settingsPanel.resetSidebarWidth.button.text')"
         :tip="$t('topPanel.settingsPanel.resetSidebarWidth.button.tip')"
         position="bottom-left"
-        :onClick="resetPanelWidth"
+        @click="resetPanelWidth"
         :disabled="resetPanelWidthDisabled"
       />
     </div>
@@ -86,14 +86,14 @@ const { wrapperRef } = useClickOutside({
         :text="$t('topPanel.settingsPanel.openPrivacyAndData.button.text')"
         :tip="$t('topPanel.settingsPanel.openPrivacyAndData.button.tip')"
         position="bottom-left"
-        :onClick="openPrivacyModal"
+        @click="openPrivacyModal"
       />
     </div>
 
     <div class="close-button-wrapper">
       <DefaultButton
         text="Close"
-        :onClick="closeSettingsPanel"
+        @click="closeSettingsPanel"
       />
     </div>
   </div>

@@ -35,12 +35,12 @@ const {
         <div class="button-wrapper">
           <DefaultButton
             :text="cancelText"
-            :onClick="cancel"
+            @click="cancel"
             onlyText
           />
           <DefaultButton
             :text="confirmText"
-            :onClick="confirm"
+            @click="confirm"
           />
         </div>
       </div>

@@ -8,6 +8,7 @@
 <template>
   <div class="tool-settings">
     <!-- <ToolsSettingsTabs :tabs="tabs"/> -->
+     
 
     <div class="settings-content">
     </div>

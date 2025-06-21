@@ -41,7 +41,7 @@ const {
     <div class="button-wrapper">
       <DefaultButton
         :text="$t('dragAndDropArea.button.text')"
-        :onClick="selectFile"
+        @click="selectFile"
       />
     </div>
   </div>

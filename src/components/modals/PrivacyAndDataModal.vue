@@ -48,7 +48,7 @@ const {
         <div class="button-wrapper">
           <DefaultButton
             :text="$t('privacy.button.text')"
-            :onClick="closePrivacyAndDataModal"
+            @click="closePrivacyAndDataModal"
           />
         </div>
       </div>

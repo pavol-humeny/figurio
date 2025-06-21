@@ -62,7 +62,7 @@ const {
         <div class="button-wrapper">
           <DefaultButton
             :text="$t('help.button.text')"
-            :onClick="closeHelpModal"
+            @click="closeHelpModal"
           />
         </div>
       </div>

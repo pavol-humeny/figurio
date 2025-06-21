@@ -1,51 +1,47 @@
 <script setup>
-import ItemTip from './ItemTip.vue';
-import { defineProps } from 'vue';
+import ItemTip from './ItemTip.vue'
 
 const props = defineProps({
   disabled: {
     type: Boolean,
-    default: false
+    default: false,
   },
   text: {
     type: String,
-    required: true
+    required: true,
   },
   tip: {
     type: String,
-    default: ''
+    default: '',
   },
   position: {
     type: String,
-    default: 'bottom'
+    default: 'bottom',
   },
-  onClick: {
-    type: Function,
-    required: true
-  },
+  // onClick: {
+  //   type: Function,
+  //   required: true
+  // },
   onlyText: {
     type: Boolean,
-    default: false
-  }
-});
+    default: false,
+  },
+})
 
-const showTip = props.tip !== '';
+const emit = defineEmits(['click'])
 
+const showTip = props.tip !== ''
 </script>
 
 <template>
-  <ItemTip
-    v-if="showTip"
-    :text="props.tip"
-    :position="props.position"
-  >
+  <ItemTip v-if="showTip" :text="props.tip" :position="props.position">
     <button
       class="button"
-      @click="props.onClick"
+      @click="emit('click')"
       :class="{
         'button-text': props.onlyText,
         'button-default': !props.onlyText,
-        'button--disabled': props.disabled
+        'button--disabled': props.disabled,
       }"
     >
       {{ props.text }}
@@ -55,16 +51,15 @@ const showTip = props.tip !== '';
   <button
     v-else
     class="button"
-    @click="props.onClick"
+    @click="emit('click')"
     :class="{
       'button-text': props.onlyText,
       'button-default': !props.onlyText,
-      'button--disabled': props.disabled
+      'button--disabled': props.disabled,
     }"
   >
     {{ props.text }}
   </button>
 </template>
 
-<style scoped>
-</style>
+<style scoped></style>
