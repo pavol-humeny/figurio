@@ -6,6 +6,7 @@ import { useShaking } from '@/composables/common/useShaking'
 import { useImageStore } from '@/stores/imageStore'
 import { useI18n } from 'vue-i18n'
 import LinkValuesIcon from '../common/LinkValuesIcon.vue'
+import DefaultSlider from '../common/DefaultSlider.vue'
 
 const { t } = useI18n()
 
@@ -53,15 +54,12 @@ const {
               $t('tools.export.settings.general.fileQuality.label')
             }}</label>
             <p>{{ fileDimensions.quality }} %</p>
-            <input
-              class="file-quality-slider"
-              type="range"
-              id="file-quality"
-              min="0"
-              max="100"
-              step="1"
-              v-model.number="fileDimensions.quality"
-              @input="updateDimension('quality', fileDimensions.quality)"
+            <DefaultSlider
+              v-model="fileDimensions.quality"
+              :min="0"
+              :max="100"
+              :step="1"
+              @update:modelValue="(value) => updateDimension('quality', value)"
             />
           </div>
 
