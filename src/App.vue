@@ -1,19 +1,37 @@
 <script setup>
+import { onMounted, onBeforeUnmount } from 'vue'
 import { RouterView } from 'vue-router'
-import TopPanel from './components/topPanel/TopPanel.vue';
-import ToastModal from './components/modals/ToastModal.vue';
-import ConfirmModal from './components/modals/ConfirmModal.vue';
-import SettingsPanel from './components/topPanel/SettingsPanel.vue';
-import PrivacyAndDataModal from './components/modals/PrivacyAndDataModal.vue';
-import ExportToolSettings from './components/toolsSettings/ExportToolSettings.vue';
-import HelpModal from './components/modals/HelpModal.vue';
+import TopPanel from './components/topPanel/TopPanel.vue'
+import ToastModal from './components/modals/ToastModal.vue'
+import ConfirmModal from './components/modals/ConfirmModal.vue'
+import SettingsPanel from './components/topPanel/SettingsPanel.vue'
+import PrivacyAndDataModal from './components/modals/PrivacyAndDataModal.vue'
+import ExportToolSettings from './components/toolsSettings/ExportToolSettings.vue'
+import HelpModal from './components/modals/HelpModal.vue'
+import { useImageStore } from './stores/imageStore'
+
+const imageStore = useImageStore()
 
 const check = (event) => {
-  if (event.ctrlKey){
-    event.preventDefault();
+  if (event.ctrlKey) {
+    event.preventDefault()
   }
-};
+}
 
+const handleBeforeUnload = (event) => {
+  if (imageStore.file !== null) {
+    event.preventDefault()
+    event.returnValue = ''
+  }
+}
+
+onMounted(() => {
+  window.addEventListener('beforeunload', handleBeforeUnload)
+})
+
+onBeforeUnmount(() => {
+  window.removeEventListener('beforeunload', handleBeforeUnload)
+})
 </script>
 
 <template>
@@ -32,7 +50,6 @@ const check = (event) => {
       <RouterView />
     </div>
   </div>
-
 </template>
 
 <style scoped>
