@@ -1,5 +1,5 @@
 import { computed } from 'vue'
-import { useConfirmModal } from '../modals/useConfirmModal'
+import { useConfirmModal } from '@/composables/modals/useConfirmModal'
 
 export function useCloseFileButton(imageStore, t){
   const disabled = computed(() => {

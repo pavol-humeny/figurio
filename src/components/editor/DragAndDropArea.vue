@@ -1,7 +1,7 @@
 <script setup>
-import BaseIcon from '../icons/BaseIcon.vue'
-import DefaultButton from '../common/DefaultButton.vue'
-import ItemTip from '../common/ItemTip.vue'
+import BaseIcon from '@/components/icons/BaseIcon.vue'
+import DefaultButton from '@/components/common/DefaultButton.vue'
+import ItemTip from '@/components/common/ItemTip.vue'
 import { useDragAndDropArea } from '@/composables/editor/useDragAndDropArea'
 import { useI18n } from 'vue-i18n'
 import { useImageStore } from '@/stores/imageStore'

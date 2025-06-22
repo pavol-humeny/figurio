@@ -2,7 +2,7 @@
 import BaseIcon from '@/components/icons/BaseIcon.vue'
 import { useUndoRedo } from '@/composables/topPanel/useUndoRedo'
 import { useImageStore } from '@/stores/imageStore'
-import ItemTip from '../common/ItemTip.vue'
+import ItemTip from '@/components/common/ItemTip.vue'
 
 const imageStore = useImageStore()
 

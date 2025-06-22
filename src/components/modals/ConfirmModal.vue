@@ -1,6 +1,6 @@
 <script setup>
 import { useConfirmModal } from '@/composables/modals/useConfirmModal';
-import DefaultButton from '../common/DefaultButton.vue';
+import DefaultButton from '@/components/common/DefaultButton.vue';
 import { useShaking } from '@/composables/common/useShaking';
 
 const {

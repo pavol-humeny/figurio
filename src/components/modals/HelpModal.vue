@@ -1,6 +1,6 @@
 <script setup>
-import BaseIcon from '../icons/BaseIcon.vue';
-import DefaultButton from '../common/DefaultButton.vue';
+import BaseIcon from '@/components/icons/BaseIcon.vue';
+import DefaultButton from '@/components/common/DefaultButton.vue';
 import { useShaking } from '@/composables/common/useShaking';
 import { useHelpModal } from '@/composables/modals/useHelpModal';
 import { useI18n } from 'vue-i18n'

@@ -4,7 +4,7 @@ import { useImageStore } from '@/stores/imageStore';
 import { useFileNameDisplay } from '@/composables/topPanel/useFileNameDisplay';
 import { useI18n } from 'vue-i18n'
 
-import ItemTip from '../common/ItemTip.vue';
+import ItemTip from '@/components/common/ItemTip.vue';
 
 const { t } = useI18n()
 

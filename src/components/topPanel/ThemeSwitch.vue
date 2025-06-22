@@ -3,7 +3,7 @@ import { useThemeSwitch } from '@/composables/topPanel/useThemeSwitch'
 import { useUiStore } from '@/stores/uiStore'
 
 import BaseIcon from '@/components/icons/BaseIcon.vue'
-import ItemTip from '../common/ItemTip.vue'
+import ItemTip from '@/components/common/ItemTip.vue'
 
 const {
   theme,

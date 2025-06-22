@@ -1,5 +1,5 @@
 <script setup>
-import DefaultSlider from '../common/DefaultSlider.vue'
+import DefaultSlider from '@/components/common/DefaultSlider.vue'
 import { useViewportStore } from '@/stores/viewportStore'
 import { useMoveToolSettings } from '@/composables/toolsSettings/useMoveToolSettings'
 

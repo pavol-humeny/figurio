@@ -1,6 +1,6 @@
 <script setup>
 import BaseIcon from '@/components/icons/BaseIcon.vue';
-import ItemTip from '../common/ItemTip.vue';
+import ItemTip from '@/components/common/ItemTip.vue';
 import { useSettingsPanel } from '@/composables/topPanel/useSettingsPanel';
 
 const {

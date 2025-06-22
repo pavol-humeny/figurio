@@ -1,5 +1,5 @@
 import { ref, onMounted, nextTick, computed } from 'vue'
-import { useExportToolSettings } from '../toolsSettings/useExportToolSettings'
+import { useExportToolSettings } from '@/composables/toolsSettings/useExportToolSettings'
 import { useImageStore } from '@/stores/imageStore'
 import { useI18n } from 'vue-i18n'
 

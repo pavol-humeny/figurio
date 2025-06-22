@@ -3,7 +3,7 @@ import BaseIcon from '@/components/icons/BaseIcon.vue'
 import { useZoomControl } from '@/composables/topPanel/useZoomControl'
 import { useViewportStore } from '@/stores/viewportStore'
 import { useImageStore } from '@/stores/imageStore'
-import ItemTip from '../common/ItemTip.vue'
+import ItemTip from '@/components/common/ItemTip.vue'
 
 const imageStore = useImageStore()
 

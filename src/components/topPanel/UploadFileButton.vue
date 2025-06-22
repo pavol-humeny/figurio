@@ -1,6 +1,6 @@
 <script setup>
 import BaseIcon from '@/components/icons/BaseIcon.vue';
-import ItemTip from '../common/ItemTip.vue';
+import ItemTip from '@/components/common/ItemTip.vue';
 import { useImageStore } from '@/stores/imageStore';
 import { useUploadFileButton } from '@/composables/topPanel/useUploadFileButton';
 import { useI18n } from 'vue-i18n';

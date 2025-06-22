@@ -1,9 +1,9 @@
 <script setup>
-import BaseIcon from '../icons/BaseIcon.vue';
+import BaseIcon from '@/components/icons/BaseIcon.vue';
 import LanguageSwitch from './LanguageSwitch.vue';
 import ThemeSwitch from './ThemeSwitch.vue';
-import DefaultButton from '../common/DefaultButton.vue';
-import ToggleButton from '../common/ToggleButton.vue';
+import DefaultButton from '@/components/common/DefaultButton.vue';
+import ToggleButton from '@/components/common/ToggleButton.vue';
 import { useSettingsPanel } from '@/composables/topPanel/useSettingsPanel';
 import { useUiStore } from '@/stores/uiStore';
 import { useClickOutside } from '@/composables/common/useClickOutside';

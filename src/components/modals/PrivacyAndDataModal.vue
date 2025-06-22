@@ -1,7 +1,7 @@
 <script setup>
 import { usePrivacyAndDataModal } from '@/composables/modals/usePrivacyAndDataModal';
-import BaseIcon from '../icons/BaseIcon.vue';
-import DefaultButton from '../common/DefaultButton.vue';
+import BaseIcon from '@/components/icons/BaseIcon.vue';
+import DefaultButton from '@/components/common/DefaultButton.vue';
 
 import { useI18n } from 'vue-i18n'
 import { computed } from 'vue'

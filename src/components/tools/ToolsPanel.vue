@@ -1,5 +1,5 @@
 <script setup>
-import BaseIcon from '../icons/BaseIcon.vue'
+import BaseIcon from '@/components/icons/BaseIcon.vue'
 import OneTool from './OneTool.vue'
 import { useI18n } from 'vue-i18n'
 import { computed } from 'vue'

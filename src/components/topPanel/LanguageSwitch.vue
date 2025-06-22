@@ -2,7 +2,7 @@
 import { ref } from 'vue'
 import { useLanguageSwitch } from '@/composables/topPanel/useLanguageSwitch'
 
-import ItemTip from '../common/ItemTip.vue'
+import ItemTip from '@/components/common/ItemTip.vue'
 
 const { locale, switchLanguage } = useLanguageSwitch()
 

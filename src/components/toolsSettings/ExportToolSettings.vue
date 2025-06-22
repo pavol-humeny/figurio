@@ -1,12 +1,12 @@
 <script setup>
 import { useExportToolSettings } from '@/composables/toolsSettings/useExportToolSettings'
-import DefaultButton from '../common/DefaultButton.vue'
-import BaseIcon from '../icons/BaseIcon.vue'
+import DefaultButton from '@/components/common/DefaultButton.vue'
+import BaseIcon from '@/components/icons/BaseIcon.vue'
 import { useShaking } from '@/composables/common/useShaking'
 import { useImageStore } from '@/stores/imageStore'
 import { useI18n } from 'vue-i18n'
-import LinkValuesIcon from '../common/LinkValuesIcon.vue'
-import DefaultSlider from '../common/DefaultSlider.vue'
+import LinkValuesIcon from '@/components/common/LinkValuesIcon.vue'
+import DefaultSlider from '@/components/common/DefaultSlider.vue'
 
 const { t } = useI18n()
 

@@ -1,6 +1,6 @@
 <script setup>
 import BaseIcon from '@/components/icons/BaseIcon.vue'
-import ItemHint from '../common/ItemTip.vue'
+import ItemHint from '@/components/common/ItemTip.vue'
 import { useHelpModal } from '@/composables/modals/useHelpModal'
 
 const {

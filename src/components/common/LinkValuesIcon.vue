@@ -1,5 +1,5 @@
 <script setup>
-import BaseIcon from '../icons/BaseIcon.vue';
+import BaseIcon from '@/components/icons/BaseIcon.vue';
 import { defineProps } from 'vue';
 import { useLinkValuesIcon } from '@/composables/common/useLinkValuesIcon';
 
