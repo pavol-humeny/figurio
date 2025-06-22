@@ -5,9 +5,13 @@ import { useMoveToolSettings } from '@/composables/toolsSettings/useMoveToolSett
 
 const {
   zoomSpeed,
+  zoomSpeedMin,
+  zoomSpeedMax,
   updateZoomSpeed,
   resetZoomSpeed,
   movementSpeed,
+  movementSpeedMin,
+  movementSpeedMax,
   updateMovementSpeed,
   resetMovementSpeed,
 } = useMoveToolSettings(useViewportStore())
@@ -18,11 +22,12 @@ const {
     <div class="tool-settings-item">
       <DefaultSlider
         v-model="zoomSpeed"
-        :min="0.01"
-        :max="0.4"
-        :step="0.01"
+        :min="zoomSpeedMin"
+        :max="zoomSpeedMax"
+        :step="1"
         showValue
         :valueDescription="$t('tools.move.settings.general.zoomSpeed.label')"
+        valueUnit="%"
         @update:modelValue="(value) => updateZoomSpeed(value)"
         @dblclick="resetZoomSpeed"
         :tip="$t('tools.move.settings.general.zoomSpeed.tip')"
@@ -32,11 +37,12 @@ const {
     <div class="tool-settings-item">
       <DefaultSlider
         v-model="movementSpeed"
-        :min="0.01"
-        :max="5"
-        :step="0.01"
+        :min="movementSpeedMin"
+        :max="movementSpeedMax"
+        :step="1"
         showValue
         :valueDescription="$t('tools.move.settings.general.movementSpeed.label')"
+        valueUnit="%"
         @update:modelValue="(value) => updateMovementSpeed(value)"
         @dblclick="resetMovementSpeed"
         :tip="$t('tools.move.settings.general.movementSpeed.tip')"
