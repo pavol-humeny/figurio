@@ -1,7 +1,9 @@
 <script setup>
+// import { ref } from 'vue'
 import DefaultSlider from '@/components/common/DefaultSlider.vue'
 import { useViewportStore } from '@/stores/viewportStore'
 import { useMoveToolSettings } from '@/composables/toolsSettings/useMoveToolSettings'
+// import { useImageStore } from '@/stores/imageStore'
 
 const {
   zoomSpeed,
@@ -15,6 +17,19 @@ const {
   updateMovementSpeed,
   resetMovementSpeed,
 } = useMoveToolSettings(useViewportStore())
+
+// const brightness = ref(0)
+
+// const applyGrayscale = () => {
+//   const imageStore = useImageStore()
+//   imageStore.setGrayscale(true)
+// }
+
+// const updateBrightness = (value) => {
+//   const imageStore = useImageStore()
+//   imageStore.setBrightness(value)
+// }
+
 </script>
 
 <template>
@@ -49,6 +64,21 @@ const {
         position="bottom-left"
       />
     </div>
+    <!-- <div class="tool-settings-item">
+      <button @click="applyGrayscale">GrayScale</button>
+    </div>
+    <div class="tool-settings-item">
+      <DefaultSlider
+        v-model="brightness"
+        :min="-100"
+        :max="100"
+        :step="1"
+        showValue
+        valueUnit="%"
+        @update:modelValue="(value) => updateBrightness(value)"
+        @dblclick="brightness = 0"
+      />
+    </div> -->
 
     <div class="settings-content"></div>
   </div>

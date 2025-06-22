@@ -68,6 +68,15 @@ export const useImageStore = defineStore('imageStore', {
     //   },
     // ],
     selectedSvgObjectId: null,
+
+    imageEffects: {
+      brightness: 0, //  -100 - +100
+      contrast: 0, //  -100 - +100
+      saturation: 0,
+      grayscale: false,
+      // sepia: 0,
+      invert: false,
+    },
   }),
   actions: {
     isImageLoaded() {
@@ -329,6 +338,8 @@ export const useImageStore = defineStore('imageStore', {
           const ctx = canvas.getContext('2d')
           ctx.drawImage(image, 0, 0, width, height)
 
+          // this.applyEffectsToContext(ctx, canvas)
+
           canvas.toBlob(
             (blob) => {
               if (!blob) return
@@ -420,5 +431,90 @@ export const useImageStore = defineStore('imageStore', {
 
       return resultDataUrl
     },
+
+    // applyImageEffects() {
+    //   if (!this.originalImage) return
+
+    //   const img = this.originalImage
+    //   const canvas = document.createElement('canvas')
+    //   const ctx = canvas.getContext('2d')
+    //   canvas.width = img.width
+    //   canvas.height = img.height
+
+    //   const { brightness, contrast, grayscale, invert } = this.imageEffects
+
+    //   // Použi CSS-like filter (1 je pôvodná hodnota)
+    //   const filterString = `
+    //     brightness(${1 + brightness / 100})
+    //     contrast(${1 + contrast / 100})
+    //     grayscale(${grayscale ? 1 : 0})
+    //     invert(${invert ? 1 : 0})
+    //   `.trim()
+
+    //   ctx.filter = filterString
+    //   ctx.drawImage(img, 0, 0)
+
+    //   this.renderedImage = canvas
+    //   this.previewUrl = canvas.toDataURL()
+    // },
+
+    // setBrightness(value) {
+    //   this.imageEffects.brightness = value
+    //   this.applyImageEffects()
+    // },
+    // setGrayscale(value) {
+    //   // console.log('setGrayscale', value)
+    //   this.imageEffects.grayscale = value
+    //   this.applyImageEffects()
+    // },
+
+    // applyEffectsToContext(ctx, canvas) {
+    //   const { brightness, contrast, grayscale, invert } = this.imageEffects
+
+    //   if (brightness === 0 && contrast === 0 && !grayscale && !invert) {
+    //     return
+    //   }
+
+    //   const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height)
+    //   const data = imageData.data
+
+    //   const contrastFactor = (259 * (contrast + 100)) / (255 * (259 - contrast - 100))
+    //   const brightnessOffset = 255 * (brightness / 100)
+
+    //   for (let i = 0; i < data.length; i += 4) {
+    //     let r = data[i]
+    //     let g = data[i + 1]
+    //     let b = data[i + 2]
+
+    //     // Brightness
+    //     r += brightnessOffset
+    //     g += brightnessOffset
+    //     b += brightnessOffset
+
+    //     // Contrast
+    //     r = contrastFactor * (r - 128) + 128
+    //     g = contrastFactor * (g - 128) + 128
+    //     b = contrastFactor * (b - 128) + 128
+
+    //     // Invert (true/false)
+    //     if (invert) {
+    //       r = 255 - r
+    //       g = 255 - g
+    //       b = 255 - b
+    //     }
+
+    //     // Grayscale (true/false)
+    //     if (grayscale) {
+    //       const gray = 0.299 * r + 0.587 * g + 0.114 * b
+    //       r = g = b = gray
+    //     }
+
+    //     data[i] = Math.min(255, Math.max(0, r))
+    //     data[i + 1] = Math.min(255, Math.max(0, g))
+    //     data[i + 2] = Math.min(255, Math.max(0, b))
+    //   }
+
+    //   ctx.putImageData(imageData, 0, 0)
+    // },
   },
 })
