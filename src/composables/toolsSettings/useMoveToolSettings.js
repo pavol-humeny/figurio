@@ -1,5 +1,5 @@
 import { computed } from 'vue'
-import { useMath } from '../common/useMath'
+import { useMath } from '@/composables/common/useMath'
 
 export function useMoveToolSettings(viewportStore) {
   const { round } = useMath()

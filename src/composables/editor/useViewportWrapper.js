@@ -1,7 +1,11 @@
 import { computed, ref, nextTick, onMounted, watch, onBeforeUnmount } from 'vue'
 import { viewportConfig } from '@/config/viewportConfig'
+import { useMath } from '@/composables/common/useMath'
+
 
 export function useViewportWrapper(viewportStore, imageStore, editorStore, contentRef) {
+  const { clamp } = useMath()
+
   // Zoom and pan properties
   const zoomLevel = computed(() => viewportStore.realZoomLevel)
   const panX = computed({
@@ -46,8 +50,6 @@ export function useViewportWrapper(viewportStore, imageStore, editorStore, conte
   const isDraggingHorizontal = ref(false)
   const isDraggingVertical = ref(false)
   const isMiddleDragging = ref(false)
-
-  const clamp = (value, min, max) => Math.min(Math.max(value, min), max)
 
   // Update initial dimensions of the wrapper and content
   const updateInitialDimensions = () => {

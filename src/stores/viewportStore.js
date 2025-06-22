@@ -1,5 +1,8 @@
 import { defineStore } from 'pinia'
 import { viewportConfig } from '@/config/viewportConfig'
+import { useMath } from '@/composables/common/useMath'
+
+const { round } = useMath()
 
 export const useViewportStore = defineStore('viewportStore', {
   state: () => ({
@@ -21,20 +24,20 @@ export const useViewportStore = defineStore('viewportStore', {
   }),
   getters: {
     realZoomLevel(state) {
-      return (state.zoomLevel) / state.fitZoomLevel
+      return state.zoomLevel / state.fitZoomLevel
     },
   },
   actions: {
     setZoomLevel(level) {
-      this.zoomLevel = Math.round(level * 100) / 100 // Round to two decimal places
+      this.zoomLevel = round(level, 2)
     },
     zoomIn() {
       const newZoomLevel = this.zoomLevel * (1 + this.zoomSpeed)
-      this.zoomLevel = Math.round(Math.min(newZoomLevel, this.maxZoomLevel) * 100) / 100 // Round to two decimal places
+      this.zoomLevel = round(Math.min(newZoomLevel, this.maxZoomLevel), 2)
     },
     zoomOut() {
       const newZoomLevel = this.zoomLevel / (1 + this.zoomSpeed)
-      this.zoomLevel = Math.round(Math.max(newZoomLevel, this.minZoomLevel) * 100) / 100 // Round to two decimal places
+      this.zoomLevel = round(Math.max(newZoomLevel, this.minZoomLevel), 2)
     },
     resetZoom() {
       this.zoomLevel = this.defaultZoomLevel
