@@ -44,7 +44,7 @@ const { applyRotation90, resetRotation, applyRotation, rotationAngle } = useRota
   t,
 )
 
-const tabs = ['rotate', 'scale', 'flip', 'crop']
+const tabs = ['rotate', 'flip', 'crop']
 </script>
 
 <template>
@@ -268,7 +268,7 @@ const tabs = ['rotate', 'scale', 'flip', 'crop']
           <!-- Empty space -->
         </div>
       </div>
-      <div
+      <!-- <div
         v-if="editorStore.selectedTabPerTool[editorStore.selectedToolKey] === 'scale'"
         class="specific-settings"
       >
@@ -276,9 +276,9 @@ const tabs = ['rotate', 'scale', 'flip', 'crop']
           <div class="scale-wrapper"></div>
         </div>
         <div class="settings-content" style="border: none">
-          <!-- Empty space -->
+          Empty space
         </div>
-      </div>
+      </div> -->
       <div
         v-if="editorStore.selectedTabPerTool[editorStore.selectedToolKey] === 'rotate'"
         class="specific-settings"
@@ -318,7 +318,7 @@ const tabs = ['rotate', 'scale', 'flip', 'crop']
         <div class="settings-content-wrapper">
           <div class="rotate-wrapper">
             <div class="rotate-title">
-              <BaseIcon name="IconRotateLeft" size="25" :color="'var(--primary-c)'" />
+              <BaseIcon name="IconFreeRotate" size="25" :color="'var(--primary-c)'" />
               <p>
                 {{ $t('tools.transform.settings.rotate.freeRotation') }}
               </p>
