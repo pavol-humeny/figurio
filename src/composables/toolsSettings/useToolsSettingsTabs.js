@@ -1,7 +1,9 @@
 import { ref, onMounted, computed } from 'vue'
 
 export function useToolsSettingsTabs(editorStore, defaultTab) {
-  const activeTab = computed(() => editorStore.selectedTabPerTool[editorStore.selectedToolKey] || defaultTab)
+  const activeTab = computed(
+    () => editorStore.selectedTabPerTool[editorStore.selectedToolKey] || defaultTab,
+  )
   const wrapperRef = ref(null)
 
   const isDragging = ref(false)
@@ -15,13 +17,20 @@ export function useToolsSettingsTabs(editorStore, defaultTab) {
     const element = wrapperRef.value
     if (!element) return
 
-    element.addEventListener('wheel', (e) => {
+    // Set default tab
+    if (!editorStore.selectedTabPerTool[editorStore.selectedToolKey]) {
+      editorStore.selectTab(defaultTab)
+    }
+
+    element.addEventListener(
+      'wheel',
+      (e) => {
         if (Math.abs(e.deltaY) > Math.abs(e.deltaX)) {
           e.preventDefault()
           element.scrollBy({ left: e.deltaY / 4, behavior: 'auto' })
         }
       },
-      { passive: false }
+      { passive: false },
     )
   })
 
@@ -53,6 +62,6 @@ export function useToolsSettingsTabs(editorStore, defaultTab) {
     isDragging,
     wrapperRef,
     setActiveTab,
-    startDragging
+    startDragging,
   }
 }

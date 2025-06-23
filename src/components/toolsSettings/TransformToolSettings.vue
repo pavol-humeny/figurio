@@ -8,6 +8,8 @@ import LinkValuesIcon from '../common/LinkValuesIcon.vue'
 import { useCropTool } from '@/composables/tools/useCropTool'
 import BaseIcon from '../icons/BaseIcon.vue'
 import { useI18n } from 'vue-i18n'
+import { useFlipTool } from '@/composables/tools/useFlipTool'
+import { useRotateTool } from '@/composables/tools/useRotateTool'
 
 const { t } = useI18n()
 
@@ -34,7 +36,11 @@ const {
   applyCrop,
 } = useCropTool(useImageStore(), useViewportStore(), useEditorStore(), t)
 
-const tabs = ['rotation', 'scale', 'flip', 'crop']
+const { applyFlip } = useFlipTool(useImageStore())
+
+const { applyRotation90, resetRotation } = useRotateTool(useImageStore(), t)
+
+const tabs = ['rotate', 'scale', 'flip', 'crop']
 </script>
 
 <template>
@@ -218,6 +224,105 @@ const tabs = ['rotation', 'scale', 'flip', 'crop']
           <!-- Empty space -->
         </div>
       </div>
+      <div
+        v-if="editorStore.selectedTabPerTool[editorStore.selectedToolKey] === 'flip'"
+        class="specific-settings"
+      >
+        <div class="settings-content-wrapper">
+          <div class="flip-wrapper">
+            <div class="flip-title">
+              <BaseIcon name="IconFlipHorizontal" size="30" :color="'var(--primary-c)'" />
+              <p>
+                {{ $t('tools.transform.settings.flip.horizontal') }}
+              </p>
+            </div>
+            <div class="flip-button">
+              <DefaultButton
+                :text="$t('tools.transform.settings.flip.applyFlipButton.text')"
+                @click="applyFlip('horizontal')"
+              />
+            </div>
+          </div>
+        </div>
+        <div class="settings-content-wrapper">
+          <div class="flip-wrapper">
+            <div class="flip-title">
+              <BaseIcon name="IconFlipVertical" size="30" :color="'var(--primary-c)'" />
+              <p>
+                {{ $t('tools.transform.settings.flip.vertical') }}
+              </p>
+            </div>
+            <div class="flip-button">
+              <DefaultButton
+                :text="$t('tools.transform.settings.flip.applyFlipButton.text')"
+                @click="applyFlip('vertical')"
+              />
+            </div>
+          </div>
+        </div>
+        <div class="settings-content" style="border: none">
+          <!-- Empty space -->
+        </div>
+      </div>
+      <div
+        v-if="editorStore.selectedTabPerTool[editorStore.selectedToolKey] === 'scale'"
+        class="specific-settings"
+      >
+        <div class="settings-content-wrapper">
+          <div class="scale-wrapper"></div>
+        </div>
+        <div class="settings-content" style="border: none">
+          <!-- Empty space -->
+        </div>
+      </div>
+      <div
+        v-if="editorStore.selectedTabPerTool[editorStore.selectedToolKey] === 'rotate'"
+        class="specific-settings"
+      >
+        <div class="settings-content-wrapper">
+          <div class="rotate-90-wrapper">
+            <div class="rotate-title">
+              <BaseIcon name="IconRotateLeft" size="25" :color="'var(--primary-c)'" />
+              <p>
+                {{ $t('tools.transform.settings.rotate.rotateLeft') }}
+              </p>
+            </div>
+            <div class="rotate-button">
+              <DefaultButton
+                :text="$t('tools.transform.settings.rotate.applyRotationButton.text')"
+                @click="applyRotation90('left')"
+              />
+            </div>
+          </div>
+        </div>
+        <div class="settings-content-wrapper">
+          <div class="rotate-90-wrapper">
+            <div class="rotate-title">
+              <BaseIcon name="IconRotateRight" size="25" :color="'var(--primary-c)'" />
+              <p>
+                {{ $t('tools.transform.settings.rotate.rotateRight') }}
+              </p>
+            </div>
+            <div class="rotate-button">
+              <DefaultButton
+                :text="$t('tools.transform.settings.rotate.applyRotationButton.text')"
+                @click="applyRotation90('right')"
+              />
+            </div>
+          </div>
+        </div>
+        <div class="settings-content-wrapper">
+          <div class="rotate-button">
+            <DefaultButton
+              :text="$t('tools.transform.settings.rotate.resetRotationButton.text')"
+              @click="resetRotation"
+            />
+          </div>
+        </div>
+        <div class="settings-content" style="border: none">
+          <!-- Empty space -->
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -335,5 +440,53 @@ input[type='number'] {
 .crop-variant.active {
   background: var(--secondary-c);
   border-radius: 10px;
+}
+
+.flip-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.flip-title {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: row;
+  gap: 10px;
+}
+
+.scale-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.rotate-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.rotate-90-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.rotate-title {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: row;
+  gap: 10px;
 }
 </style>

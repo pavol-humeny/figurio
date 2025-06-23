@@ -486,5 +486,160 @@ export const useImageStore = defineStore('imageStore', {
 
       this.newFileDimensions = { ...this.fileDimensions }
     },
+
+    applyFlip(direction = 'horizontal') {
+      if (!this.renderedImage) return
+
+      const width = this.renderedImage.width
+      const height = this.renderedImage.height
+
+      // Flip raster
+      const canvas = document.createElement('canvas')
+      canvas.width = width
+      canvas.height = height
+
+      const ctx = canvas.getContext('2d')
+      ctx.save()
+
+      if (direction === 'horizontal') {
+        ctx.translate(width, 0)
+        ctx.scale(-1, 1)
+      } else if (direction === 'vertical') {
+        ctx.translate(0, height)
+        ctx.scale(1, -1)
+      }
+
+      ctx.drawImage(this.renderedImage, 0, 0)
+      ctx.restore()
+
+      this.renderedImage = canvas
+      this.previewUrl = canvas.toDataURL()
+
+      // Flip vector objects
+      if (this.svgObjects.length === 0) return
+
+      this.svgObjects = this.svgObjects.map((obj) => {
+        const newObj = { ...obj, attrs: { ...obj.attrs } }
+
+        const parseNum = (val) => parseFloat(val) || 0
+
+        switch (obj.tag) {
+          case 'rect':
+            if (direction === 'horizontal') {
+              const x = parseNum(obj.attrs.x)
+              const w = parseNum(obj.attrs.width)
+              newObj.attrs.x = (width - x - w).toString()
+            } else {
+              const y = parseNum(obj.attrs.y)
+              const h = parseNum(obj.attrs.height)
+              newObj.attrs.y = (height - y - h).toString()
+            }
+            break
+
+          case 'circle':
+            if (direction === 'horizontal') {
+              const cx = parseNum(obj.attrs.cx)
+              newObj.attrs.cx = (width - cx).toString()
+            } else {
+              const cy = parseNum(obj.attrs.cy)
+              newObj.attrs.cy = (height - cy).toString()
+            }
+            break
+
+          case 'ellipse':
+            if (direction === 'horizontal') {
+              const cx = parseNum(obj.attrs.cx)
+              newObj.attrs.cx = (width - cx).toString()
+            } else {
+              const cy = parseNum(obj.attrs.cy)
+              newObj.attrs.cy = (height - cy).toString()
+            }
+            break
+
+          case 'line':
+            if (direction === 'horizontal') {
+              newObj.attrs.x1 = (width - parseNum(obj.attrs.x1)).toString()
+              newObj.attrs.x2 = (width - parseNum(obj.attrs.x2)).toString()
+            } else {
+              newObj.attrs.y1 = (height - parseNum(obj.attrs.y1)).toString()
+              newObj.attrs.y2 = (height - parseNum(obj.attrs.y2)).toString()
+            }
+            break
+
+          case 'text':
+            if (direction === 'horizontal') {
+              const x = parseNum(obj.attrs.x)
+              newObj.attrs.x = (width - x).toString()
+            } else {
+              const y = parseNum(obj.attrs.y)
+              newObj.attrs.y = (height - y).toString()
+            }
+            break
+
+          // case 'path':
+          //   // This is an approximation using a transform
+          //   const currentTransform = obj.attrs.transform || ''
+          //   const flipTransform =
+          //     direction === 'horizontal'
+          //       ? `scale(-1,1) translate(${-width},0)`
+          //       : `scale(1,-1) translate(0,${-height})`
+
+          //   newObj.attrs.transform = `${currentTransform} ${flipTransform}`.trim()
+          //   break
+
+          default:
+            break
+        }
+
+        return newObj
+      })
+    },
+    async applyRotation(angle, t) {
+      if (!this.renderedImage || !angle) return
+
+      // Create confirm modal to confirm rasterization if there are SVG objects
+      if (this.svgObjects.length > 0) {
+        const confirmed = await showConfirmModal(
+          t('tools.confirmNeedRasterization.title'),
+          t('tools.confirmNeedRasterization.message'),
+          t('tools.confirmNeedRasterization.cancel'),
+          t('tools.confirmNeedRasterization.confirm'),
+        )
+        if (confirmed) {
+          await this.rasterize()
+        } else {
+          return
+        }
+      }
+
+      const radians = (angle * Math.PI) / 180
+      const oldCanvas = this.renderedImage
+      const oldWidth = oldCanvas.width
+      const oldHeight = oldCanvas.height
+
+      const sin = Math.abs(Math.sin(radians))
+      const cos = Math.abs(Math.cos(radians))
+
+      const newWidth = Math.round(oldWidth * cos + oldHeight * sin)
+      const newHeight = Math.round(oldWidth * sin + oldHeight * cos)
+
+      const canvas = document.createElement('canvas')
+      canvas.width = newWidth
+      canvas.height = newHeight
+
+      const ctx = canvas.getContext('2d')
+
+      ctx.translate(newWidth / 2, newHeight / 2)
+      ctx.rotate(radians)
+      ctx.drawImage(oldCanvas, -oldWidth / 2, -oldHeight / 2)
+
+      this.renderedImage = canvas
+      this.previewUrl = canvas.toDataURL()
+
+      this.fileDimensions.width = newWidth
+      this.fileDimensions.height = newHeight
+      this.fileDimensions.fileAspectRatio = newWidth / newHeight
+      this.newFileDimensions = { ...this.fileDimensions }
+    },
   },
 })

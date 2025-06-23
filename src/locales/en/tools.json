@@ -22,11 +22,16 @@
     "tip": "Rotate, scale, flip or crop the image.",
     "tipDisabled": "",
     "settings": {
-      "rotation": {
+      "rotate": {
         "label": "Rotation",
         "rotateLeft": "Rotate left",
         "rotateRight": "Rotate right",
-        "reset": "Reset rotation"
+        "resetRotationButton": {
+          "text": "Reset rotation"
+        },
+        "applyRotationButton": {
+          "text": "Apply rotation"
+        }
       },
       "scale": {
         "label": "Scale"
@@ -34,7 +39,10 @@
       "flip": {
         "label": "Flip",
         "horizontal": "Flip horizontally",
-        "vertical": "Flip vertically"
+        "vertical": "Flip vertically",
+        "applyFlipButton": {
+          "text": "Apply flip"
+        }
       },
       "crop": {
         "label": "Crop",

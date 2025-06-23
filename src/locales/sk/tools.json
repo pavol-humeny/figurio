@@ -22,11 +22,16 @@
     "tip": "Otoč, zmeň mierku, prevráť alebo orež obrázok.",
     "tipDisabled": "",
     "settings": {
-      "rotation": {
+      "rotate": {
         "label": "Rotácia",
         "rotateLeft": "Otočiť doľava",
         "rotateRight": "Otočiť doprava",
-        "reset": "Resetovať rotáciu"
+        "resetRotationButton": {
+          "text": "Resetovať rotáciu"
+        },
+        "applyRotationButton": {
+          "text": "Použiť rotáciu"
+        }
       },
       "scale": {
         "label": "Mierka"
@@ -34,7 +39,10 @@
       "flip": {
         "label": "Zrkadliť",
         "horizontal": "Zrkadliť horizontálne",
-        "vertical": "Zrkadliť vertikálne"
+        "vertical": "Zrkadliť vertikálne",
+        "applyFlipButton": {
+          "text": "Použiť zrkadlenie"
+        }
       },
       "crop": {
         "label": "Orezanie",
