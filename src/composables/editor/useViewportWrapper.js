@@ -326,6 +326,7 @@ export function useViewportWrapper(viewportStore, imageStore, editorStore, conte
     () => {
       nextTick(() => {
         console.log('Center on change')
+        viewportStore.resetZoom()
         fitToScreenZoomLevel()
         centerImage()
       })
