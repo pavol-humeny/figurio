@@ -7,10 +7,11 @@ import { useImageStore } from '@/stores/imageStore'
 import { useViewportStore } from '@/stores/viewportStore'
 import LinkValuesIcon from '../common/LinkValuesIcon.vue'
 import { useCropTool } from '@/composables/tools/useCropTool'
+import BaseIcon from '../icons/BaseIcon.vue'
 
 const editorStore = useEditorStore()
 
-const { applyCrop, freeCropBox } = useTransformToolSettings(useImageStore(), useViewportStore())
+const { applyCrop, cropBox } = useTransformToolSettings(useImageStore(), useViewportStore())
 
 const {
   maxCropHeight,
@@ -28,7 +29,9 @@ const {
   updatePosition,
   PositionXInputRef,
   PositionYInputRef,
-} = useCropTool(useImageStore(), useViewportStore(), freeCropBox)
+  selectSubTool,
+  cropRatio,
+} = useCropTool(useImageStore(), useViewportStore(), useEditorStore(), cropBox)
 
 const tabs = ['rotation', 'scale', 'flip', 'crop']
 </script>
@@ -42,49 +45,6 @@ const tabs = ['rotation', 'scale', 'flip', 'crop']
         v-if="editorStore.selectedTabPerTool[editorStore.selectedToolKey] === 'crop'"
         class="crop-settings"
       >
-        <div class="settings-content-wrapper">
-          <div class="settings-content-wrapper-title">
-            <label>Crop dimensions</label>
-          </div>
-          <div class="settings-content-wrapper-inputs">
-            <div class="width">
-              <label for="width-input">Width</label>
-              <input
-                id="width-input"
-                ref="widthInputRef"
-                v-model.number="tmpCropWidth"
-                type="number"
-                min="0"
-                :max="maxCropWidth"
-                @blur="updateDimension('width', tmpCropWidth)"
-                @keydown.enter="updateDimension('width', tmpCropWidth)"
-              />
-            </div>
-
-            <div class="settings-content-wrapper-icon-wrapper">
-              <LinkValuesIcon
-                v-model="isDimensionsLinked"
-                tipLinked="unlink"
-                tipUnlinked="link"
-                size="30"
-              />
-            </div>
-
-            <div class="height">
-              <label for="height-input">Height</label>
-              <input
-                id="height-input"
-                ref="heightInputRef"
-                v-model.number="tmpCropHeight"
-                type="number"
-                min="0"
-                :max="maxCropHeight"
-                @blur="updateDimension('height', tmpCropHeight)"
-                @keydown.enter="updateDimension('height', tmpCropHeight)"
-              />
-            </div>
-          </div>
-        </div>
         <div class="settings-content-wrapper">
           <div class="settings-content-wrapper-title">
             <label>Crop position</label>
@@ -122,7 +82,106 @@ const tabs = ['rotation', 'scale', 'flip', 'crop']
           </div>
         </div>
         <div class="settings-content-wrapper">
+          <div class="settings-content-wrapper-title">
+            <label>Crop dimensions</label>
+          </div>
+          <div class="settings-content-wrapper-inputs">
+            <div class="width">
+              <label for="width-input">Width</label>
+              <input
+                id="width-input"
+                ref="widthInputRef"
+                v-model.number="tmpCropWidth"
+                type="number"
+                min="0"
+                :max="maxCropWidth"
+                @blur="updateDimension('width', tmpCropWidth)"
+                @keydown.enter="updateDimension('width', tmpCropWidth)"
+              />
+            </div>
+
+            <div class="settings-content-wrapper-icon-wrapper">
+              <LinkValuesIcon
+                v-model="isDimensionsLinked"
+                :tipLinked="cropRatio !== null ? 'unlink' : ''"
+                :tipUnlinked="cropRatio !== null ? 'link' : ''"
+                size="30"
+                :disabled="cropRatio !== null"
+              />
+            </div>
+
+            <div class="height">
+              <label for="height-input">Height</label>
+              <input
+                id="height-input"
+                ref="heightInputRef"
+                v-model.number="tmpCropHeight"
+                type="number"
+                min="0"
+                :max="maxCropHeight"
+                @blur="updateDimension('height', tmpCropHeight)"
+                @keydown.enter="updateDimension('height', tmpCropHeight)"
+              />
+            </div>
+          </div>
+        </div>
+        <div class="settings-content-wrapper">
+          <div class="crop-variants-wrapper">
+            <div
+              class="crop-variant"
+              :class="{ active: editorStore.selectedSubToolKey === 'cropFree' }"
+              @click="selectSubTool('cropFree')"
+            >
+              <BaseIcon name="IconCropFree" size="40" :color="'var(--primary-c)'" />
+              <p>Custom</p>
+            </div>
+            <div
+              class="crop-variant"
+              :class="{ active: editorStore.selectedSubToolKey === 'crop11' }"
+              @click="selectSubTool('crop11')"
+            >
+              <BaseIcon name="IconCrop11" size="40" :color="'var(--primary-c)'" />
+              <p>1:1</p>
+            </div>
+            <div
+              class="crop-variant"
+              :class="{ active: editorStore.selectedSubToolKey === 'crop43' }"
+              @click="selectSubTool('crop43')"
+            >
+              <BaseIcon name="IconCrop43" size="40" :color="'var(--primary-c)'" />
+              <p>4:3</p>
+            </div>
+            <div
+              class="crop-variant"
+              :class="{ active: editorStore.selectedSubToolKey === 'crop34' }"
+              @click="selectSubTool('crop34')"
+            >
+              <BaseIcon name="IconCrop34" size="40" :color="'var(--primary-c)'" />
+              <p>3:4</p>
+            </div>
+            <div
+              class="crop-variant"
+              :class="{ active: editorStore.selectedSubToolKey === 'crop169' }"
+              @click="selectSubTool('crop169')"
+            >
+              <BaseIcon name="IconCrop169" size="40" :color="'var(--primary-c)'" />
+              <p>16:9</p>
+            </div>
+            <div
+              class="crop-variant"
+              :class="{ active: editorStore.selectedSubToolKey === 'crop916' }"
+              @click="selectSubTool('crop916')"
+            >
+              <BaseIcon name="IconCrop916" size="40" :color="'var(--primary-c)'" />
+              <p>9:16</p>
+            </div>
+          </div>
+        </div>
+        <div class="settings-content-wrapper">
           <DefaultButton text="Apply crop" @click="applyCrop" />
+        </div>
+        <div class="settings-content-wrapper" style="border: none">
+          <!-- Empty space -->
         </div>
       </div>
     </div>
@@ -141,9 +200,9 @@ const tabs = ['rotation', 'scale', 'flip', 'crop']
   justify-content: center;
   width: 100%;
   height: 100%;
-  /* padding-right: 30px; */
   color: var(--text-c);
-  overflow: hidden;
+  overflow-y: auto;
+  overflow-x: hidden;
 }
 .crop-settings {
   width: 100%;
@@ -214,5 +273,32 @@ const tabs = ['rotation', 'scale', 'flip', 'crop']
 
 input[type='number'] {
   text-align: center;
+}
+
+.crop-variants-wrapper {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  justify-items: center;
+  max-height: 300px;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+.crop-variant {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 2px;
+  cursor: pointer;
+  height: 70px;
+  width: 60px;
+  background: none;
+  font-size: 12px;
+}
+
+.crop-variant.active {
+  background: var(--secondary-c);
+  border-radius: 10px;
 }
 </style>

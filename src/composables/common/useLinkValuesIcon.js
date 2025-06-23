@@ -1,4 +1,4 @@
-import { ref, computed, watch  } from 'vue'
+import { ref, watch  } from 'vue'
 
 export function useLinkValuesIcon(props, emit){
   const isLinked = ref(props.modelValue)
@@ -13,11 +13,8 @@ export function useLinkValuesIcon(props, emit){
     isLinked.value = value
   })
 
-  const showTip = computed(() => props.tip !== '')
-
   return {
     isLinked,
     toggleLinkedValue,
-    showTip
   }
 }

@@ -1,12 +1,13 @@
 <script setup>
 import { useImageStore } from '@/stores/imageStore'
+import { useEditorStore } from '@/stores/editorStore'
 import { useViewportStore } from '@/stores/viewportStore'
 import { useTransformToolSettings } from '@/composables/toolsSettings/useTransformToolSettings'
 import { useCropTool } from '@/composables/tools/useCropTool'
 
-const { freeCropBox } = useTransformToolSettings(useImageStore(), useViewportStore())
+const { cropBox } = useTransformToolSettings(useImageStore(), useViewportStore())
 
-const { startPan, startResize } = useCropTool(useImageStore(), useViewportStore(), freeCropBox)
+const { startPan, startResize } = useCropTool(useImageStore(), useViewportStore(), useEditorStore(), cropBox)
 </script>
 
 <template>
@@ -14,10 +15,10 @@ const { startPan, startResize } = useCropTool(useImageStore(), useViewportStore(
     <div
       class="crop-box"
       :style="{
-        left: freeCropBox.x + 'px',
-        top: freeCropBox.y + 'px',
-        width: freeCropBox.width + 'px',
-        height: freeCropBox.height + 'px',
+        left: cropBox.x + 'px',
+        top: cropBox.y + 'px',
+        width: cropBox.width + 'px',
+        height: cropBox.height + 'px',
       }"
       @mousedown="startPan"
     >

@@ -1,43 +1,44 @@
 <script setup>
-import BaseIcon from '@/components/icons/BaseIcon.vue';
-import { defineProps } from 'vue';
-import { useLinkValuesIcon } from '@/composables/common/useLinkValuesIcon';
+import BaseIcon from '@/components/icons/BaseIcon.vue'
+import { defineProps } from 'vue'
+import { useLinkValuesIcon } from '@/composables/common/useLinkValuesIcon'
 
 const props = defineProps({
   modelValue: {
     type: Boolean,
-    default: false
+    default: false,
   },
   tipLinked: {
     type: String,
-    default: ''
+    default: '',
   },
   tipUnlinked: {
     type: String,
-    default: ''
+    default: '',
   },
   position: {
     type: String,
-    default: 'bottom'
+    default: 'bottom',
   },
   size: {
     type: [Number, String],
-    default: 30
+    default: 30,
   },
   color: {
     type: String,
-    default: 'var(--primary-c)'
-  }
-});
+    default: 'var(--primary-c)',
+  },
+  disabled: {
+    type: Boolean,
+    default: false,
+  },
+})
+
+const showTip = props.tipLinked !== '' || props.tipUnlinked !== ''
 
 const emit = defineEmits(['update:modelValue'])
 
-const {
-  isLinked,
-  toggleLinkedValue,
-  showTip
-} = useLinkValuesIcon(props, emit)
-
+const { isLinked, toggleLinkedValue } = useLinkValuesIcon(props, emit)
 </script>
 
 <template>
@@ -46,9 +47,14 @@ const {
     :size="size"
     :color="color"
     @click="toggleLinkedValue"
-    :tip="showTip ? isLinked ? tipLinked : tipUnlinked : ''"
+    :tip="showTip ? (isLinked ? tipLinked : tipUnlinked) : ''"
+    :class="disabled ? 'disabled' : ''"
   />
 </template>
 
 <style scoped>
+.disabled {
+  opacity: 0.5;
+  pointer-events: none;
+}
 </style>

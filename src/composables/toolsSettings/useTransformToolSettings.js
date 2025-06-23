@@ -1,7 +1,7 @@
 import { ref, watch } from 'vue'
 
-// One instance of freeCropBox
-const freeCropBox = ref({
+// One instance of cropBox
+const cropBox = ref({
   x: 0,
   y: 0,
   width: 100,
@@ -18,21 +18,21 @@ export function useTransformToolSettings(imageStore) {
     () => imageStore.fileDimensions,
     (fileDimensions) => {
       if (fileDimensions.width && fileDimensions.height) {
-        freeCropBox.value.width = fileDimensions.width
-        freeCropBox.value.height = fileDimensions.height
-        freeCropBox.value.x = 0
-        freeCropBox.value.y = 0
+        cropBox.value.width = fileDimensions.width
+        cropBox.value.height = fileDimensions.height
+        cropBox.value.x = 0
+        cropBox.value.y = 0
       }
     },
     { immediate: true, deep: true },
   )
 
   const applyCrop = () => {
-    imageStore.applyCrop(freeCropBox.value)
+    imageStore.applyCrop(cropBox.value)
   }
 
   return {
-    freeCropBox,
+    cropBox,
     applyCrop,
   }
 }

@@ -1,0 +1,33 @@
+<template>
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    viewBox="-0.835 -0.835 20 20"
+    fill="none"
+    stroke="currentColor"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+    id="Box-Select--Streamline-Lucide"
+    height="20"
+    width="20"
+  >
+    <desc>Box Select Streamline Icon: https://streamlinehq.com</desc>
+    <path
+      d="M3.81875 2.2912500000000002a1.5275 1.5275 0 0 0 -1.5275 1.5275"
+      stroke-width="1.67"
+    ></path>
+    <path
+      d="M14.51125 2.2912500000000002a1.5275 1.5275 0 0 1 1.5275 1.5275"
+      stroke-width="1.67"
+    ></path>
+    <path d="M16.03875 14.51125a1.5275 1.5275 0 0 1 -1.5275 1.5275" stroke-width="1.67"></path>
+    <path d="M3.81875 16.03875a1.5275 1.5275 0 0 1 -1.5275 -1.5275" stroke-width="1.67"></path>
+    <path d="M6.87375 2.2912500000000002h0.76375" stroke-width="1.67"></path>
+    <path d="M6.87375 16.03875h0.76375" stroke-width="1.67"></path>
+    <path d="M10.6925 2.2912500000000002h0.76375" stroke-width="1.67"></path>
+    <path d="M10.6925 16.03875h0.76375" stroke-width="1.67"></path>
+    <path d="M2.2912500000000002 6.87375v0.76375" stroke-width="1.67"></path>
+    <path d="M16.03875 6.87375v0.76375" stroke-width="1.67"></path>
+    <path d="M2.2912500000000002 10.6925v0.76375" stroke-width="1.67"></path>
+    <path d="M16.03875 10.6925v0.76375" stroke-width="1.67"></path>
+  </svg>
+</template>

@@ -1,26 +1,28 @@
 import { useMath } from '@/composables/common/useMath'
-import { computed, ref, nextTick, watch } from 'vue'
+import { computed, ref, nextTick, watch, onMounted } from 'vue'
 
-export function useCropTool(imageStore, viewportStore, freeCropBox) {
+const cropRatio = ref(null)
+
+export function useCropTool(imageStore, viewportStore, editorStore, cropBox) {
   const { clamp } = useMath()
 
   const maxCropPositionX = computed(() => {
-    return imageStore.fileDimensions.width - freeCropBox.value.width
+    return imageStore.fileDimensions.width - cropBox.value.width
   })
   const maxCropPositionY = computed(() => {
-    return imageStore.fileDimensions.height - freeCropBox.value.height
+    return imageStore.fileDimensions.height - cropBox.value.height
   })
   const cropPositionX = computed({
-    get: () => freeCropBox.value.x,
+    get: () => cropBox.value.x,
     set: (value) => {
-      freeCropBox.value.x = Math.round(clamp(value, 0, maxCropPositionX.value))
+      cropBox.value.x = Math.round(clamp(value, 0, maxCropPositionX.value))
     },
   })
 
   const cropPositionY = computed({
-    get: () => freeCropBox.value.y,
+    get: () => cropBox.value.y,
     set: (value) => {
-      freeCropBox.value.y = Math.round(clamp(value, 0, maxCropPositionY.value))
+      cropBox.value.y = Math.round(clamp(value, 0, maxCropPositionY.value))
     },
   })
 
@@ -32,70 +34,95 @@ export function useCropTool(imageStore, viewportStore, freeCropBox) {
   const isDimensionsLinked = ref(false)
 
   const maxCropWidth = computed(() => {
-    return imageStore.fileDimensions.width - freeCropBox.value.x
+    return imageStore.fileDimensions.width - cropBox.value.x
   })
   const maxCropHeight = computed(() => {
-    return imageStore.fileDimensions.height - freeCropBox.value.y
+    return imageStore.fileDimensions.height - cropBox.value.y
   })
 
   const cropWidth = computed({
-    get: () => freeCropBox.value.width,
+    get: () => cropBox.value.width,
     set: (value) => {
-      freeCropBox.value.width = Math.round(clamp(value, 0, maxCropWidth.value))
+      cropBox.value.width = Math.round(clamp(value, 0, maxCropWidth.value))
     },
   })
 
   const cropHeight = computed({
-    get: () => freeCropBox.value.height,
+    get: () => cropBox.value.height,
     set: (value) => {
-      freeCropBox.value.height = Math.round(clamp(value, 0, maxCropHeight.value))
+      cropBox.value.height = Math.round(clamp(value, 0, maxCropHeight.value))
     },
   })
 
-  const tmpCropWidth = ref(freeCropBox.value.width)
-  const tmpCropHeight = ref(freeCropBox.value.height)
+  const tmpCropWidth = ref(cropBox.value.width)
+  const tmpCropHeight = ref(cropBox.value.height)
 
   watch(
-    () => freeCropBox.value.width,
+    () => cropBox.value.width,
     (val) => {
       tmpCropWidth.value = val
     },
   )
 
   watch(
-    () => freeCropBox.value.height,
+    () => cropBox.value.height,
     (val) => {
       tmpCropHeight.value = val
     },
   )
 
   const updateDimension = (key, value) => {
-    const originalWidth = freeCropBox.value.width
-    const originalHeight = freeCropBox.value.height
+    const originalWidth = cropBox.value.width
+    const originalHeight = cropBox.value.height
 
     if (key === 'width') {
       const clampedWidth = Math.round(clamp(value, 0, maxCropWidth.value))
 
-      if (isDimensionsLinked.value && originalWidth > 0) {
+      // Crop ratio is set
+      if (cropRatio.value !== null) {
+        cropBox.value.width = clampedWidth
+        cropBox.value.height = Math.round(
+          clamp(clampedWidth / cropRatio.value, 0, maxCropHeight.value),
+        )
+        if (cropBox.value.height === maxCropHeight.value) {
+          cropBox.value.width = cropBox.value.height
+        }
+      }
+      // Dimensions are linked
+      else if (isDimensionsLinked.value && originalWidth > 0) {
         const aspectRatio = originalHeight / originalWidth
-        freeCropBox.value.width = clampedWidth
-        freeCropBox.value.height = Math.round(
+        cropBox.value.width = clampedWidth
+        cropBox.value.height = Math.round(
           clamp(clampedWidth * aspectRatio, 0, maxCropHeight.value),
         )
-      } else {
-        freeCropBox.value.width = clampedWidth
+      }
+      // Free crop
+      else {
+        cropBox.value.width = clampedWidth
       }
     } else if (key === 'height') {
       const clampedHeight = Math.round(clamp(value, 0, maxCropHeight.value))
 
-      if (isDimensionsLinked.value && originalHeight > 0) {
+      if (cropRatio.value !== 0) {
+        cropBox.value.height = clampedHeight
+        cropBox.value.width = Math.round(
+          clamp(clampedHeight / cropRatio.value, 0, maxCropWidth.value),
+        )
+        if (cropBox.value.width === maxCropWidth.value) {
+          cropBox.value.height = cropBox.value.width
+        }
+      }
+      // Dimensions are linked
+      else if (isDimensionsLinked.value && originalHeight > 0) {
         const aspectRatio = originalWidth / originalHeight
-        freeCropBox.value.height = clampedHeight
-        freeCropBox.value.width = Math.round(
+        cropBox.value.height = clampedHeight
+        cropBox.value.width = Math.round(
           clamp(clampedHeight * aspectRatio, 0, maxCropWidth.value),
         )
-      } else {
-        freeCropBox.value.height = clampedHeight
+      }
+      // Free crop
+      else {
+        cropBox.value.height = clampedHeight
       }
     }
     nextTick(() => {
@@ -106,9 +133,9 @@ export function useCropTool(imageStore, viewportStore, freeCropBox) {
 
   const updatePosition = (key, value) => {
     if (key === 'x') {
-      freeCropBox.value.x = Math.round(clamp(value, 0, maxCropPositionX.value))
+      cropBox.value.x = Math.round(clamp(value, 0, maxCropPositionX.value))
     } else if (key === 'y') {
-      freeCropBox.value.y = Math.round(clamp(value, 0, maxCropPositionY.value))
+      cropBox.value.y = Math.round(clamp(value, 0, maxCropPositionY.value))
     }
     nextTick(() => {
       PositionXInputRef.value.value = cropPositionX.value
@@ -120,33 +147,33 @@ export function useCropTool(imageStore, viewportStore, freeCropBox) {
   const startPan = (event) => {
     if (event.button !== 1) {
       event.preventDefault()
-      freeCropBox.value.dragging = true
-      freeCropBox.value.startX = event.clientX
-      freeCropBox.value.startY = event.clientY
+      cropBox.value.dragging = true
+      cropBox.value.startX = event.clientX
+      cropBox.value.startY = event.clientY
 
       const onMouseMove = (e) => {
-        const dx = e.clientX - freeCropBox.value.startX
-        const dy = e.clientY - freeCropBox.value.startY
-        freeCropBox.value.x = Math.round(
+        const dx = e.clientX - cropBox.value.startX
+        const dy = e.clientY - cropBox.value.startY
+        cropBox.value.x = Math.round(
           clamp(
-            freeCropBox.value.x + dx / viewportStore.realZoomLevel,
+            cropBox.value.x + dx / viewportStore.realZoomLevel,
             0,
-            imageStore.fileDimensions.width - freeCropBox.value.width,
+            imageStore.fileDimensions.width - cropBox.value.width,
           ),
         )
-        freeCropBox.value.y = Math.round(
+        cropBox.value.y = Math.round(
           clamp(
-            freeCropBox.value.y + dy / viewportStore.realZoomLevel,
+            cropBox.value.y + dy / viewportStore.realZoomLevel,
             0,
-            imageStore.fileDimensions.height - freeCropBox.value.height,
+            imageStore.fileDimensions.height - cropBox.value.height,
           ),
         )
-        freeCropBox.value.startX = e.clientX
-        freeCropBox.value.startY = e.clientY
+        cropBox.value.startX = e.clientX
+        cropBox.value.startY = e.clientY
       }
 
       const onMouseUp = () => {
-        freeCropBox.value.dragging = false
+        cropBox.value.dragging = false
         document.removeEventListener('mousemove', onMouseMove)
         document.removeEventListener('mouseup', onMouseUp)
       }
@@ -160,81 +187,157 @@ export function useCropTool(imageStore, viewportStore, freeCropBox) {
   const startResize = (e, direction) => {
     e.preventDefault()
     e.stopPropagation()
-    freeCropBox.value.resizing = true
-    freeCropBox.value.resizeDir = direction
-    freeCropBox.value.startX = e.clientX
-    freeCropBox.value.startY = e.clientY
+    cropBox.value.resizing = true
+    cropBox.value.resizeDir = direction
+    cropBox.value.startX = e.clientX
+    cropBox.value.startY = e.clientY
+
+    // Ulož pôvodný pomer strán len raz
+    let originalAspectRatio = cropBox.value.width / cropBox.value.height
 
     const onMouseMove = (ev) => {
-      const dx = ev.clientX - freeCropBox.value.startX
-      const dy = ev.clientY - freeCropBox.value.startY
+      const dx = ev.clientX - cropBox.value.startX
+      const dy = ev.clientY - cropBox.value.startY
+      const dxNorm = dx / viewportStore.realZoomLevel
+      const dyNorm = dy / viewportStore.realZoomLevel
+      const isShiftPressed = ev.shiftKey
+
+
+      const getActiveRatio = () => {
+        if (cropRatio.value !== null) return cropRatio.value
+        if (isShiftPressed) return originalAspectRatio
+        return null
+      }
+
+      const ratio = getActiveRatio()
 
       if (direction.includes('right')) {
-        freeCropBox.value.width = Math.round(
-          clamp(
-            freeCropBox.value.width + dx / viewportStore.realZoomLevel,
-            0,
-            imageStore.fileDimensions.width - freeCropBox.value.x,
-          ),
-        )
-      }
-      if (direction.includes('left')) {
-        if (freeCropBox.value.width > 0) {
-          freeCropBox.value.x = Math.round(
-            clamp(
-              freeCropBox.value.x + dx / viewportStore.realZoomLevel,
-              0,
-              imageStore.fileDimensions.width - freeCropBox.value.width,
-            ),
+        if (ratio !== null) {
+          const maxWidth = Math.min(
+            imageStore.fileDimensions.width - cropBox.value.x,
+            (imageStore.fileDimensions.height - cropBox.value.y) * ratio,
           )
-        }
-        if (freeCropBox.value.x > 0 || dx > 0) {
-          freeCropBox.value.width = Math.round(
+          const newWidth = clamp(cropBox.value.width + dxNorm, 0, maxWidth)
+          cropBox.value.width = Math.round(newWidth)
+          cropBox.value.height = Math.round(newWidth / ratio)
+        } else {
+          cropBox.value.width = Math.round(
             clamp(
-              freeCropBox.value.width - dx / viewportStore.realZoomLevel,
+              cropBox.value.width + dxNorm,
               0,
-              imageStore.fileDimensions.width - freeCropBox.value.x,
-            ),
-          )
-        }
-      }
-      if (direction.includes('bottom')) {
-        freeCropBox.value.height = Math.round(
-          clamp(
-            freeCropBox.value.height + dy / viewportStore.realZoomLevel,
-            0,
-            imageStore.fileDimensions.height - freeCropBox.value.y,
-          ),
-        )
-      }
-      if (direction.includes('top')) {
-        if (freeCropBox.value.height > 0) {
-          freeCropBox.value.y = Math.round(
-            clamp(
-              freeCropBox.value.y + dy / viewportStore.realZoomLevel,
-              0,
-              imageStore.fileDimensions.height - freeCropBox.value.height,
-            ),
-          )
-        }
-        if (freeCropBox.value.y > 0 || dy > 0) {
-          freeCropBox.value.height = Math.round(
-            clamp(
-              freeCropBox.value.height - dy / viewportStore.realZoomLevel,
-              0,
-              imageStore.fileDimensions.height - freeCropBox.value.y,
+              imageStore.fileDimensions.width - cropBox.value.x,
             ),
           )
         }
       }
 
-      freeCropBox.value.startX = ev.clientX
-      freeCropBox.value.startY = ev.clientY
+      if (direction.includes('left')) {
+        if (ratio !== null) {
+          const newWidth = clamp(
+            cropBox.value.width - dxNorm,
+            0,
+            Math.min(
+              cropBox.value.x + cropBox.value.width,
+              (imageStore.fileDimensions.height - cropBox.value.y) * ratio,
+            ),
+          )
+          const newHeight = newWidth / ratio
+          const maxX = cropBox.value.x + cropBox.value.width
+
+          cropBox.value.width = Math.round(newWidth)
+          cropBox.value.height = Math.round(newHeight)
+          cropBox.value.x = Math.round(
+            clamp(maxX - cropBox.value.width, 0, imageStore.fileDimensions.width),
+          )
+        } else {
+          if (cropBox.value.width > 0) {
+            cropBox.value.x = Math.round(
+              clamp(
+                cropBox.value.x + dxNorm,
+                0,
+                imageStore.fileDimensions.width - cropBox.value.width,
+              ),
+            )
+          }
+          if (cropBox.value.x > 0 || dx > 0) {
+            cropBox.value.width = Math.round(
+              clamp(
+                cropBox.value.width - dxNorm,
+                0,
+                imageStore.fileDimensions.width - cropBox.value.x,
+              ),
+            )
+          }
+        }
+      }
+
+      if (direction.includes('bottom')) {
+        if (ratio !== null) {
+          const maxHeight = Math.min(
+            imageStore.fileDimensions.height - cropBox.value.y,
+            (imageStore.fileDimensions.width - cropBox.value.x) / ratio,
+          )
+          const newHeight = clamp(cropBox.value.height + dyNorm, 0, maxHeight)
+          cropBox.value.height = Math.round(newHeight)
+          cropBox.value.width = Math.round(newHeight * ratio)
+        } else {
+          cropBox.value.height = Math.round(
+            clamp(
+              cropBox.value.height + dyNorm,
+              0,
+              imageStore.fileDimensions.height - cropBox.value.y,
+            ),
+          )
+        }
+      }
+
+      if (direction.includes('top')) {
+        if (ratio !== null) {
+          const newHeight = clamp(
+            cropBox.value.height - dyNorm,
+            0,
+            Math.min(
+              cropBox.value.y + cropBox.value.height,
+              (imageStore.fileDimensions.width - cropBox.value.x) / ratio,
+            ),
+          )
+          const newWidth = newHeight * ratio
+          const maxY = cropBox.value.y + cropBox.value.height
+
+          cropBox.value.height = Math.round(newHeight)
+          cropBox.value.width = Math.round(newWidth)
+          cropBox.value.y = Math.round(
+            clamp(maxY - cropBox.value.height, 0, imageStore.fileDimensions.height),
+          )
+        } else {
+          if (cropBox.value.height > 0) {
+            cropBox.value.y = Math.round(
+              clamp(
+                cropBox.value.y + dyNorm,
+                0,
+                imageStore.fileDimensions.height - cropBox.value.height,
+              ),
+            )
+          }
+          if (cropBox.value.y > 0 || dy > 0) {
+            cropBox.value.height = Math.round(
+              clamp(
+                cropBox.value.height - dyNorm,
+                0,
+                imageStore.fileDimensions.height - cropBox.value.y,
+              ),
+            )
+          }
+        }
+      }
+
+      cropBox.value.startX = ev.clientX
+      cropBox.value.startY = ev.clientY
     }
 
     const onMouseUp = () => {
-      freeCropBox.value.resizing = false
-      freeCropBox.value.resizeDir = ''
+      cropBox.value.resizing = false
+      cropBox.value.resizeDir = ''
       document.removeEventListener('mousemove', onMouseMove)
       document.removeEventListener('mouseup', onMouseUp)
     }
@@ -242,6 +345,95 @@ export function useCropTool(imageStore, viewportStore, freeCropBox) {
     document.addEventListener('mousemove', onMouseMove)
     document.addEventListener('mouseup', onMouseUp)
   }
+
+  // Set default sub-tool on mount
+  onMounted(() => {
+    editorStore.selectSubTool('cropFree')
+  })
+
+  // Select type of crop
+  const selectSubTool = (subTool) => {
+    editorStore.selectSubTool(subTool)
+    cropBox.value.x = 0
+    cropBox.value.y = 0
+
+    const { width: fileWidth, height: fileHeight } = imageStore.fileDimensions
+
+    let cropWidth = fileWidth
+    let cropHeight = fileHeight
+
+    switch (subTool) {
+      case 'cropFree':
+        cropRatio.value = null
+        cropBox.value.width = fileWidth
+        cropBox.value.height = fileHeight
+        break
+
+      case 'crop11':
+        cropRatio.value = 1
+        if (fileWidth >= fileHeight) {
+          cropHeight = fileHeight
+          cropWidth = fileHeight
+        } else {
+          cropWidth = fileWidth
+          cropHeight = fileWidth
+        }
+        break
+
+      case 'crop43':
+        cropRatio.value = 4 / 3
+        if (fileWidth / fileHeight >= cropRatio.value) {
+          cropHeight = fileHeight
+          cropWidth = fileHeight * cropRatio.value
+        } else {
+          cropWidth = fileWidth
+          cropHeight = fileWidth / cropRatio.value
+        }
+        break
+
+      case 'crop34':
+        cropRatio.value = 3 / 4
+        if (fileWidth / fileHeight >= cropRatio.value) {
+          cropHeight = fileHeight
+          cropWidth = fileHeight * cropRatio.value
+        } else {
+          cropWidth = fileWidth
+          cropHeight = fileWidth / cropRatio.value
+        }
+        break
+
+      case 'crop169':
+        cropRatio.value = 16 / 9
+        if (fileWidth / fileHeight >= cropRatio.value) {
+          cropHeight = fileHeight
+          cropWidth = fileHeight * cropRatio.value
+        } else {
+          cropWidth = fileWidth
+          cropHeight = fileWidth / cropRatio.value
+        }
+        break
+
+      case 'crop916':
+        cropRatio.value = 9 / 16
+        if (fileWidth / fileHeight >= cropRatio.value) {
+          cropHeight = fileHeight
+          cropWidth = fileHeight * cropRatio.value
+        } else {
+          cropWidth = fileWidth
+          cropHeight = fileWidth / cropRatio.value
+        }
+        break
+    }
+
+    // Set crop box dimensions
+    cropBox.value.width = Math.round(cropWidth)
+    cropBox.value.height = Math.round(cropHeight)
+
+    // Set crop box position to center
+    cropBox.value.x = Math.round((fileWidth - cropBox.value.width) / 2)
+    cropBox.value.y = Math.round((fileHeight - cropBox.value.height) / 2)
+  }
+
   return {
     startPan,
     startResize,
@@ -262,5 +454,7 @@ export function useCropTool(imageStore, viewportStore, freeCropBox) {
     updatePosition,
     PositionXInputRef,
     PositionYInputRef,
+    selectSubTool,
+    cropRatio,
   }
 }
