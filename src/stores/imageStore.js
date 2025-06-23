@@ -642,7 +642,6 @@ export const useImageStore = defineStore('imageStore', {
     async applyRotation(angle, t) {
       if (!this.renderedImage || !angle) return
 
-      // Ask for rasterization confirmation if vector objects exist
       if (this.svgObjects.length > 0) {
         const confirmed = await showConfirmModal(
           t('tools.confirmNeedRasterization.title'),
@@ -661,37 +660,27 @@ export const useImageStore = defineStore('imageStore', {
           this.imageOperations.transformations.rotation + angle,
           [0, 90, 180, 270, 360, -90, -180, -270, -360],
         )
-        if (
-          this.imageOperations.transformations.rotation === 360 ||
-          this.imageOperations.transformations.rotation === -360
-        ) {
+        if (Math.abs(this.imageOperations.transformations.rotation) === 360) {
           this.imageOperations.transformations.rotation = 0
         }
-        console.log('Rotation angle set to:', this.imageOperations.transformations.rotation)
       } else {
         this.imageOperations.transformations.rotation = closest(
           this.imageOperations.transformations.rotation,
           [0, 90, 180, 270, 360, -90, -180, -270, -360],
         )
-
-        console.log('Rotation angle set to2:', this.imageOperations.transformations.rotation)
-
-        if (
-          this.imageOperations.transformations.rotation === 360 ||
-          this.imageOperations.transformations.rotation === -360
-        ) {
+        if (Math.abs(this.imageOperations.transformations.rotation) === 360) {
           this.imageOperations.transformations.rotation = 0
         }
         this.imageOperations.transformations.rotation += angle
       }
 
       angle = this.imageOperations.transformations.rotation
-
       const radians = (angle * Math.PI) / 180
 
       const oldCanvas = this.originalImage
       const oldWidth = oldCanvas.width
       const oldHeight = oldCanvas.height
+      const aspectRatio = oldWidth / oldHeight
 
       const sin = Math.abs(Math.sin(radians))
       const cos = Math.abs(Math.cos(radians))
@@ -699,7 +688,7 @@ export const useImageStore = defineStore('imageStore', {
       const rotatedWidth = Math.round(oldWidth * cos + oldHeight * sin)
       const rotatedHeight = Math.round(oldWidth * sin + oldHeight * cos)
 
-      // Step 1: Rotate into larger temporary canvas
+      // Rotate into temp canvas
       const tempCanvas = document.createElement('canvas')
       tempCanvas.width = rotatedWidth
       tempCanvas.height = rotatedHeight
@@ -709,50 +698,48 @@ export const useImageStore = defineStore('imageStore', {
       tempCtx.rotate(radians)
       tempCtx.drawImage(oldCanvas, -oldWidth / 2, -oldHeight / 2)
 
-      let finalCanvas = tempCanvas
-      let finalWidth = rotatedWidth
-      let finalHeight = rotatedHeight
+      let finalCanvas, finalWidth, finalHeight
 
-      // Step 2: If rotation is less than 90 degrees, crop and scale to fill original area
-      // if (Math.abs(angle) < 90) {
-      //   finalCanvas = document.createElement('canvas')
-      //   finalCanvas.width = oldWidth
-      //   finalCanvas.height = oldHeight
+      const isRightAngle = Math.abs(angle) % 90 === 0
 
-      //   // Compute center crop area
-      //   const cropX = Math.round((rotatedWidth - oldWidth) / 2)
-      //   const cropY = Math.round((rotatedHeight - oldHeight) / 2)
-      //   const croppedImageData = tempCtx.getImageData(cropX, cropY, oldWidth, oldHeight)
+      if (!isRightAngle) {
+        // Crop the rotated image to fit the original aspect ratio
+        const absSin = Math.abs(Math.sin(radians))
+        const absCos = Math.abs(Math.cos(radians))
 
-      //   // Optional scale-up to eliminate border gaps caused by rotation
-      //   const scaleUpCanvas = document.createElement('canvas')
-      //   scaleUpCanvas.width = oldWidth
-      //   scaleUpCanvas.height = oldHeight
-      //   const scaleCtx = scaleUpCanvas.getContext('2d')
+        const denom = oldHeight * absSin + oldWidth * absCos
+        const maxInnerWidth = (oldWidth * oldHeight) / denom
+        const maxInnerHeight = maxInnerWidth / aspectRatio
 
-      //   // Create an intermediate canvas to draw cropped result
-      //   const cropBuffer = document.createElement('canvas')
-      //   cropBuffer.width = oldWidth
-      //   cropBuffer.height = oldHeight
-      //   const cropCtx = cropBuffer.getContext('2d')
-      //   cropCtx.putImageData(croppedImageData, 0, 0)
+        const cropX = (rotatedWidth - maxInnerWidth) / 2
+        const cropY = (rotatedHeight - maxInnerHeight) / 2
 
-      //   // Calculate scale factor to eliminate corner gaps
-      //   const scaleFactor = angle * 0.08
-      //   console.log('Scale factor:', scaleFactor)
+        finalCanvas = document.createElement('canvas')
+        finalCanvas.width = oldWidth
+        finalCanvas.height = oldHeight
+        const finalCtx = finalCanvas.getContext('2d')
 
-      //   scaleCtx.save()
-      //   scaleCtx.translate(oldWidth / 2, oldHeight / 2)
-      //   scaleCtx.scale(scaleFactor, scaleFactor)
-      //   scaleCtx.drawImage(cropBuffer, -oldWidth / 2, -oldHeight / 2)
-      //   scaleCtx.restore()
+        finalCtx.drawImage(
+          tempCanvas,
+          cropX,
+          cropY,
+          maxInnerWidth,
+          maxInnerHeight,
+          0,
+          0,
+          oldWidth,
+          oldHeight,
+        )
 
-      //   finalCanvas = scaleUpCanvas
-      //   finalWidth = oldWidth
-      //   finalHeight = oldHeight
-      // }
+        finalWidth = oldWidth
+        finalHeight = oldHeight
+      } else {
+        // No crop needed, just rotate
+        finalCanvas = tempCanvas
+        finalWidth = rotatedWidth
+        finalHeight = rotatedHeight
+      }
 
-      // Step 3: Save result
       this.renderedImage = finalCanvas
       this.previewUrl = finalCanvas.toDataURL()
 
