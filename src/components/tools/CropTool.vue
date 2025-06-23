@@ -2,12 +2,12 @@
 import { useImageStore } from '@/stores/imageStore'
 import { useEditorStore } from '@/stores/editorStore'
 import { useViewportStore } from '@/stores/viewportStore'
-import { useTransformToolSettings } from '@/composables/toolsSettings/useTransformToolSettings'
 import { useCropTool } from '@/composables/tools/useCropTool'
+import { useI18n } from 'vue-i18n'
 
-const { cropBox } = useTransformToolSettings(useImageStore(), useViewportStore())
+const { t } = useI18n()
 
-const { startPan, startResize } = useCropTool(useImageStore(), useViewportStore(), useEditorStore(), cropBox)
+const { startPan, startResize, cropBox } = useCropTool(useImageStore(), useViewportStore(), useEditorStore(), t)
 </script>
 
 <template>

@@ -3,10 +3,10 @@
     "label": "Move",
     "tip": "Move the canvas using mouse.",
     "tipDisabled": "",
-    "settings":{
+    "settings": {
       "general": {
         "resetPosition": "Reset position",
-        "zoomSpeed":{
+        "zoomSpeed": {
           "label": "Zoom speed",
           "tip": "Adjust the speed of zooming or double click to reset zoom speed"
         },
@@ -41,9 +41,9 @@
         "cropPosition": {
           "title": "Crop position",
           "x": "X",
-          "y": "Y"         
+          "y": "Y"
         },
-        "cropDimensions":{
+        "cropDimensions": {
           "title": "Crop dimensions",
           "width": "Width",
           "height": "Height",
@@ -57,7 +57,7 @@
           "crop43": "4:3",
           "crop34": "3:4",
           "crop169": "16:9",
-          "crop916": "9:16"          
+          "crop916": "9:16"
         },
         "applyCropButton": {
           "text": "Apply crop"
@@ -69,12 +69,12 @@
     "label": "Smart Crop",
     "tip": "Automatically crop the object.",
     "tipDisabled": "",
-    "settings":{
+    "settings": {
       "auto": {
         "label": "Auto",
         "apply": "Apply"
       },
-      "manual":{
+      "manual": {
         "label": "Manual",
         "top": "Top",
         "bottom": "Bottom",
@@ -87,7 +87,7 @@
     "label": "Adjust",
     "tip": "Adjust image brightness, contrast, color and more.",
     "tipDisabled": "",
-    "settings":{
+    "settings": {
       "brightness": {
         "label": "Brightness"
       },
@@ -106,7 +106,7 @@
     "label": "Annotate",
     "tip": "Draw, add text or shapes to the image.",
     "tipDisabled": "",
-    "settings":{
+    "settings": {
       "draw": {
         "label": "Draw",
         "rasterize": "Rasterize",
@@ -127,7 +127,7 @@
         "color": "Color",
         "textAlign": "Text Align"
       },
-      "shape":{
+      "shape": {
         "label": "Shape",
         "rasterize": "Rasterize",
         "shapeType": "Shape type",
@@ -141,8 +141,8 @@
     "label": "Frame",
     "tip": "Add a frame around the image.",
     "tipDisabled": "",
-    "settings":{
-      "general":{
+    "settings": {
+      "general": {
         "none": "None",
         "mat": "Mat",
         "line": "Line"
@@ -154,7 +154,7 @@
     "tip": "Export the image.",
     "tipDisabled": "There is no image to export.",
     "settings": {
-      "general":{
+      "general": {
         "title": "Export file",
         "fileFormat": "File format",
         "fileName": {
@@ -165,7 +165,7 @@
           "label": "File quality",
           "tip": "Adjust the quality of the exported file"
         },
-        "fileDimensions":{
+        "fileDimensions": {
           "label": "Dimensions",
           "width": "Width",
           "height": "Height",
@@ -175,11 +175,11 @@
             "reset": "Reset original dimensions"
           }
         },
-        "preview":{
+        "preview": {
           "label": "Preview",
           "previewUnavailable": "Preview unavailable"
         },
-        "cancelButton":{
+        "cancelButton": {
           "text": "Close",
           "tip": "Close the export window",
           "icon": "none"
@@ -194,5 +194,11 @@
   },
   "noToolSelected": {
     "label": "No tool selected"
+  },
+  "confirmNeedRasterization": {
+    "title": "Rasterization Required",
+    "message": "This operation requires rasterization because image contain vector objects. Rasterization will convert vector objects to pixels, which may result in loss of quality.",
+    "cancel": "Cancel",
+    "confirm": "Rasterize"
   }
 }

@@ -1,9 +1,11 @@
 import { defineStore } from 'pinia'
 import { useToastModal } from '@/composables/modals/useToastModal'
 import { nextTick } from 'vue'
+import { useConfirmModal } from '@/composables/modals/useConfirmModal'
 import jsPDF from 'jspdf'
 
 const { showToastModal } = useToastModal()
+const { showConfirmModal } = useConfirmModal()
 
 const isValidFileName = (name) => {
   // Invalid characters: \ / : * ? " < > |
@@ -43,30 +45,30 @@ export const useImageStore = defineStore('imageStore', {
     // Value for raster image rendering
     renderedImage: null,
     // Value for SVG rendering
-    svgObjects: [],
-    // svgObjects: [
-    //   {
-    //     tag: 'rect',
-    //     attrs: {
-    //       x: 50,
-    //       y: 40,
-    //       width: 200,
-    //       height: 100,
-    //       fill: 'red',
-    //       stroke: 'red',
-    //     },
-    //   },
-    //   {
-    //     tag: 'circle',
-    //     attrs: {
-    //       cx: 300,
-    //       cy: 200,
-    //       r: 50,
-    //       fill: 'blue',
-    //       stroke: 'black',
-    //     },
-    //   },
-    // ],
+    // svgObjects: [],
+    svgObjects: [
+      {
+        tag: 'rect',
+        attrs: {
+          x: 50,
+          y: 40,
+          width: 200,
+          height: 100,
+          fill: 'red',
+          stroke: 'red',
+        },
+      },
+      {
+        tag: 'circle',
+        attrs: {
+          cx: 300,
+          cy: 200,
+          r: 50,
+          fill: 'blue',
+          stroke: 'black',
+        },
+      },
+    ],
     selectedSvgObjectId: null,
 
     imageEffects: {
@@ -429,11 +431,29 @@ export const useImageStore = defineStore('imageStore', {
       this.svgObjects = []
       this.selectedSvgObjectId = null
 
+      this.renderedImage = canvas
+      this.previewUrl = resultDataUrl
+
       return resultDataUrl
     },
 
-    applyCrop(cropBox) {
+    async applyCrop(cropBox, t) {
       if (!this.renderedImage || !cropBox) return
+
+      // Create confirm modal to confirm rasterization if there are SVG objects
+      if (this.svgObjects.length > 0) {
+        const confirmed = await showConfirmModal(
+          t('tools.confirmNeedRasterization.title'),
+          t('tools.confirmNeedRasterization.message'),
+          t('tools.confirmNeedRasterization.cancel'),
+          t('tools.confirmNeedRasterization.confirm'),
+        )
+        if (confirmed) {
+          await this.rasterize()
+        } else {
+          return
+        }
+      }
 
       const { x, y, width, height } = cropBox
 

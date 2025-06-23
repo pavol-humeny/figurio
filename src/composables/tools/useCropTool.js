@@ -3,8 +3,33 @@ import { computed, ref, nextTick, watch, onMounted } from 'vue'
 
 const cropRatio = ref(null)
 
-export function useCropTool(imageStore, viewportStore, editorStore, cropBox) {
+const cropBox = ref({
+  x: 0,
+  y: 0,
+  width: 100,
+  height: 100,
+  dragging: false,
+  resizing: false,
+  resizeDir: '',
+  startX: 0,
+  startY: 0,
+})
+
+export function useCropTool(imageStore, viewportStore, editorStore, t) {
   const { clamp } = useMath()
+
+  watch(
+    () => imageStore.fileDimensions,
+    (fileDimensions) => {
+      if (fileDimensions.width && fileDimensions.height) {
+        cropBox.value.width = fileDimensions.width
+        cropBox.value.height = fileDimensions.height
+        cropBox.value.x = 0
+        cropBox.value.y = 0
+      }
+    },
+    { immediate: true, deep: true },
+  )
 
   const maxCropPositionX = computed(() => {
     return imageStore.fileDimensions.width - cropBox.value.width
@@ -92,9 +117,7 @@ export function useCropTool(imageStore, viewportStore, editorStore, cropBox) {
       else if (isDimensionsLinked.value && originalWidth > 0) {
         const aspectRatio = originalHeight / originalWidth
         cropBox.value.width = clampedWidth
-        cropBox.value.height = Math.round(
-          clamp(clampedWidth * aspectRatio, 0, maxCropHeight.value),
-        )
+        cropBox.value.height = Math.round(clamp(clampedWidth * aspectRatio, 0, maxCropHeight.value))
       }
       // Free crop
       else {
@@ -116,9 +139,7 @@ export function useCropTool(imageStore, viewportStore, editorStore, cropBox) {
       else if (isDimensionsLinked.value && originalHeight > 0) {
         const aspectRatio = originalWidth / originalHeight
         cropBox.value.height = clampedHeight
-        cropBox.value.width = Math.round(
-          clamp(clampedHeight * aspectRatio, 0, maxCropWidth.value),
-        )
+        cropBox.value.width = Math.round(clamp(clampedHeight * aspectRatio, 0, maxCropWidth.value))
       }
       // Free crop
       else {
@@ -201,7 +222,6 @@ export function useCropTool(imageStore, viewportStore, editorStore, cropBox) {
       const dxNorm = dx / viewportStore.realZoomLevel
       const dyNorm = dy / viewportStore.realZoomLevel
       const isShiftPressed = ev.shiftKey
-
 
       const getActiveRatio = () => {
         if (cropRatio.value !== null) return cropRatio.value
@@ -434,6 +454,10 @@ export function useCropTool(imageStore, viewportStore, editorStore, cropBox) {
     cropBox.value.y = Math.round((fileHeight - cropBox.value.height) / 2)
   }
 
+  const applyCrop = () => {
+    imageStore.applyCrop(cropBox.value, t)
+  }
+
   return {
     startPan,
     startResize,
@@ -456,5 +480,7 @@ export function useCropTool(imageStore, viewportStore, editorStore, cropBox) {
     PositionYInputRef,
     selectSubTool,
     cropRatio,
+    cropBox,
+    applyCrop,
   }
 }

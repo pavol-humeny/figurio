@@ -2,16 +2,16 @@
 import ToolsSettingsTabs from './ToolsSettingsTabs.vue'
 import { useEditorStore } from '@/stores/editorStore'
 import DefaultButton from '../common/DefaultButton.vue'
-import { useTransformToolSettings } from '@/composables/toolsSettings/useTransformToolSettings'
 import { useImageStore } from '@/stores/imageStore'
 import { useViewportStore } from '@/stores/viewportStore'
 import LinkValuesIcon from '../common/LinkValuesIcon.vue'
 import { useCropTool } from '@/composables/tools/useCropTool'
 import BaseIcon from '../icons/BaseIcon.vue'
+import { useI18n } from 'vue-i18n'
+
+const { t } = useI18n()
 
 const editorStore = useEditorStore()
-
-const { applyCrop, cropBox } = useTransformToolSettings(useImageStore(), useViewportStore())
 
 const {
   maxCropHeight,
@@ -31,7 +31,8 @@ const {
   PositionYInputRef,
   selectSubTool,
   cropRatio,
-} = useCropTool(useImageStore(), useViewportStore(), useEditorStore(), cropBox)
+  applyCrop,
+} = useCropTool(useImageStore(), useViewportStore(), useEditorStore(), t)
 
 const tabs = ['rotation', 'scale', 'flip', 'crop']
 </script>
@@ -40,18 +41,18 @@ const tabs = ['rotation', 'scale', 'flip', 'crop']
   <div class="tool-settings">
     <ToolsSettingsTabs :tabs="tabs" />
 
-    <div class="settings-content">
+    <div class="settings-wrapper">
       <div
         v-if="editorStore.selectedTabPerTool[editorStore.selectedToolKey] === 'crop'"
-        class="crop-settings"
+        class="specific-settings"
       >
         <div class="settings-content-wrapper">
-          <div class="settings-content-wrapper-title">
+          <div class="settings-content-title">
             <label>
               {{ $t('tools.transform.settings.crop.cropPosition.title') }}
             </label>
           </div>
-          <div class="settings-content-wrapper-inputs">
+          <div class="settings-content-inputs">
             <div class="x">
               <label for="x-input">
                 {{ $t('tools.transform.settings.crop.cropPosition.x') }}
@@ -68,7 +69,7 @@ const tabs = ['rotation', 'scale', 'flip', 'crop']
               />
             </div>
 
-            <div class="settings-content-wrapper-icon-wrapper"></div>
+            <div class="settings-content-icon-wrapper"></div>
 
             <div class="y">
               <label for="y-input">
@@ -88,12 +89,12 @@ const tabs = ['rotation', 'scale', 'flip', 'crop']
           </div>
         </div>
         <div class="settings-content-wrapper">
-          <div class="settings-content-wrapper-title">
+          <div class="settings-content-title">
             <label>
               {{ $t('tools.transform.settings.crop.cropDimensions.title') }}
             </label>
           </div>
-          <div class="settings-content-wrapper-inputs">
+          <div class="settings-content-inputs">
             <div class="width">
               <label for="width-input">
                 {{ $t('tools.transform.settings.crop.cropDimensions.width') }}
@@ -110,7 +111,7 @@ const tabs = ['rotation', 'scale', 'flip', 'crop']
               />
             </div>
 
-            <div class="settings-content-wrapper-icon-wrapper">
+            <div class="settings-content-icon-wrapper">
               <LinkValuesIcon
                 v-model="isDimensionsLinked"
                 :tipLinked="$t('tools.transform.settings.crop.cropDimensions.tipLinked')"
@@ -139,7 +140,7 @@ const tabs = ['rotation', 'scale', 'flip', 'crop']
           </div>
         </div>
         <div class="settings-content-wrapper">
-          <div class="settings-content-wrapper-title">
+          <div class="settings-content-title">
             <label>
               {{ $t('tools.transform.settings.crop.cropVariants.label') }}
             </label>
@@ -213,7 +214,7 @@ const tabs = ['rotation', 'scale', 'flip', 'crop']
             @click="applyCrop"
           />
         </div>
-        <div class="settings-content-wrapper" style="border: none">
+        <div class="settings-content" style="border: none">
           <!-- Empty space -->
         </div>
       </div>
@@ -226,7 +227,7 @@ const tabs = ['rotation', 'scale', 'flip', 'crop']
   width: 100%;
   height: 100%;
 }
-.settings-content {
+.settings-wrapper {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -237,7 +238,7 @@ const tabs = ['rotation', 'scale', 'flip', 'crop']
   overflow-y: auto;
   overflow-x: hidden;
 }
-.crop-settings {
+.specific-settings {
   width: 100%;
   height: 100%;
   display: flex;
@@ -255,7 +256,7 @@ const tabs = ['rotation', 'scale', 'flip', 'crop']
   border-bottom: var(--border-ui);
 }
 
-.settings-content-wrapper-title {
+.settings-content-title {
   width: 100%;
   font-size: var(--subtitle-font-size);
   font-weight: var(--subtitle-font-weight);
@@ -263,7 +264,7 @@ const tabs = ['rotation', 'scale', 'flip', 'crop']
   justify-content: center;
 }
 
-.settings-content-wrapper-inputs {
+.settings-content-inputs {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -272,7 +273,7 @@ const tabs = ['rotation', 'scale', 'flip', 'crop']
   width: 100%;
 }
 
-.settings-content-wrapper-inputs input {
+.settings-content-inputs input {
   width: 100%;
   padding: 7px 10px;
   border-radius: 10px;
@@ -282,24 +283,24 @@ const tabs = ['rotation', 'scale', 'flip', 'crop']
   width: 80px;
 }
 
-.settings-content-wrapper-inputs .width,
-.settings-content-wrapper-inputs .height,
-.settings-content-wrapper-inputs .x,
-.settings-content-wrapper-inputs .y {
+.settings-content-inputs .width,
+.settings-content-inputs .height,
+.settings-content-inputs .x,
+.settings-content-inputs .y {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   gap: 2px;
 }
-.settings-content-wrapper-inputs .width label,
-.settings-content-wrapper-inputs .height label,
-.settings-content-wrapper-inputs .x label,
-.settings-content-wrapper-inputs .y label {
+.settings-content-inputs .width label,
+.settings-content-inputs .height label,
+.settings-content-inputs .x label,
+.settings-content-inputs .y label {
   font-size: var(--text-font-size);
 }
 
-.settings-content-wrapper-icon-wrapper {
+.settings-content-icon-wrapper {
   padding-top: 20px;
   width: 30px;
   cursor: pointer;

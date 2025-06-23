@@ -194,5 +194,11 @@
   },
   "noToolSelected": {
     "label": "Žiadny vybraný nástroj"
+  },
+  "confirmNeedRasterization": {
+    "title": "Vyžaduje sa rasterizácia",
+    "message": "Operácia, vyžaduje rasterizáciu obrázka, lebo obsahuje vektorové objekty. Rasterizácia prevedie vektorové objekty na pixely, čo môže zmeniť kvalitu obrázka.",
+    "cancel": "Zrušiť",
+    "confirm": "Rasterizovať"
   }
 }

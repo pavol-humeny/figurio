@@ -31,7 +31,7 @@ export function useImageRenderer(imageStore, contentRef) {
   const renderCanvas = () => {
     if (!canvasRef.value || !imageStore.renderedImage || imageStore.fileType === 'pdf') return
 
-    // console.log('Rendering canvas...')
+    console.log('Rendering canvas...')
 
     const ctx = canvasRef.value.getContext('2d')
     const width = imageStore.fileDimensions.width
@@ -47,7 +47,7 @@ export function useImageRenderer(imageStore, contentRef) {
   const renderSvg = () => {
     if (!svgRef.value || !imageStore.svgObjects) return
 
-    // console.log('Rendering SVG...')
+    console.log('Rendering SVG...')
 
     const svg = svgRef.value
     svg.innerHTML = ''
