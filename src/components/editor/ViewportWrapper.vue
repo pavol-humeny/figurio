@@ -5,6 +5,7 @@ import { useImageRenderer } from '@/composables/editor/useImageRenderer'
 import { useImageStore } from '@/stores/imageStore'
 import { useEditorStore } from '@/stores/editorStore'
 import { ref } from 'vue'
+import CropTool from '@/components/tools/CropTool.vue'
 
 const contentRef = ref(null)
 
@@ -37,7 +38,10 @@ const {
       ref="wrapperRef"
       @wheel.passive="setZoomAndScroll"
       @mousedown="startPan"
-      :class="{ 'middle-dragging': isMiddleDragging, 'move-tool-selected': editorStore.selectedToolKey === 'move' }"
+      :class="{
+        'middle-dragging': isMiddleDragging,
+        'move-tool-selected': editorStore.selectedToolKey === 'move',
+      }"
     >
       <div
         class="viewport-content"
@@ -48,6 +52,8 @@ const {
       >
         <canvas ref="canvasRef" class="image-canvas"></canvas>
         <svg ref="svgRef" class="image-svg"></svg>
+
+        <CropTool v-if="editorStore.selectedTabPerTool[editorStore.selectedToolKey] === 'crop'" />
       </div>
     </div>
 
@@ -162,7 +168,7 @@ const {
   cursor: move;
 }
 
-.move-tool-selected{
+.move-tool-selected {
   cursor: move;
 }
 </style>

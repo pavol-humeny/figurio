@@ -77,6 +77,7 @@ export function useExportToolSettings(imageStore, t) {
     imageStore.rasterize()
     isVisible.value = true
 
+    imageStore.newFileDimensions = {...imageStore.fileDimensions }
   }
 
   const closeExportToolSettings = () => {

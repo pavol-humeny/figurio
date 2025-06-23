@@ -151,8 +151,8 @@
           "width": "Šířka",
           "height": "Výška",
           "tip": {
-            "linked": "Propojit šířku a výšku",
-            "unlinked": "Odpojit šířku a výšku",
+            "linked": "Odpojit šířku a výšku",
+            "unlinked": "Propojit šířku a výšku",
             "reset": "Resetovat původní rozměry"
           }
         },

@@ -33,6 +33,11 @@
 
   --overlay-c-light: rgba(0, 0, 0, 0.5);
   --overlay-c-dark: rgba(0, 0, 0, 0.3);
+
+  --crop-c-light: rgba(0, 0, 0, 0.3);
+  --crop-c-dark: rgba(255, 255, 255, 0.3);
+
+  --editor-highlight-c: #1B70B6;
 }
 
 :root {
@@ -53,6 +58,8 @@
   --error-background-c: var(--error-background-c-light);
 
   --overlay-c: var(--overlay-c-light);
+
+  --crop-c: var(--crop-c-light);
 }
 
 .dark{
@@ -73,6 +80,8 @@
   --error-background-c: var(--error-background-c-dark);
 
   --overlay-c: var(--overlay-c-dark);
+
+  --crop-c: var(--crop-c-dark);
 }
 
 *,
@@ -91,6 +100,7 @@ body {
   --border-input: 1px solid var(--primary-c);
   --border-button: 2px solid var(--primary-c);
   --border-drag-and-drop: 2px dashed var(--primary-c);
+  --border-crop : 2px dashed var(--text-c);
 
   --default-transition: all 0.2s ease-in-out;
 

@@ -432,89 +432,39 @@ export const useImageStore = defineStore('imageStore', {
       return resultDataUrl
     },
 
-    // applyImageEffects() {
-    //   if (!this.originalImage) return
+    applyCrop(cropBox) {
+      if (!this.renderedImage || !cropBox) return
 
-    //   const img = this.originalImage
-    //   const canvas = document.createElement('canvas')
-    //   const ctx = canvas.getContext('2d')
-    //   canvas.width = img.width
-    //   canvas.height = img.height
+      const { x, y, width, height } = cropBox
 
-    //   const { brightness, contrast, grayscale, invert } = this.imageEffects
+      const canvas = document.createElement('canvas')
+      const ctx = canvas.getContext('2d')
 
-    //   // Použi CSS-like filter (1 je pôvodná hodnota)
-    //   const filterString = `
-    //     brightness(${1 + brightness / 100})
-    //     contrast(${1 + contrast / 100})
-    //     grayscale(${grayscale ? 1 : 0})
-    //     invert(${invert ? 1 : 0})
-    //   `.trim()
+      canvas.width = width
+      canvas.height = height
 
-    //   ctx.filter = filterString
-    //   ctx.drawImage(img, 0, 0)
+      ctx.drawImage(
+        this.renderedImage,
+        x,
+        y,
+        width,
+        height, // source region
+        0,
+        0,
+        width,
+        height, // destination canvas
+      )
 
-    //   this.renderedImage = canvas
-    //   this.previewUrl = canvas.toDataURL()
-    // },
+      // Update rendered image and preview URL
+      this.renderedImage = canvas
+      this.previewUrl = canvas.toDataURL()
 
-    // setBrightness(value) {
-    //   this.imageEffects.brightness = value
-    //   this.applyImageEffects()
-    // },
-    // setGrayscale(value) {
-    //   // console.log('setGrayscale', value)
-    //   this.imageEffects.grayscale = value
-    //   this.applyImageEffects()
-    // },
+      // Update file dimensions
+      this.fileDimensions.width = width
+      this.fileDimensions.height = height
+      this.fileDimensions.fileAspectRatio = width / height || 1
 
-    // applyEffectsToContext(ctx, canvas) {
-    //   const { brightness, contrast, grayscale, invert } = this.imageEffects
-
-    //   if (brightness === 0 && contrast === 0 && !grayscale && !invert) {
-    //     return
-    //   }
-
-    //   const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height)
-    //   const data = imageData.data
-
-    //   const contrastFactor = (259 * (contrast + 100)) / (255 * (259 - contrast - 100))
-    //   const brightnessOffset = 255 * (brightness / 100)
-
-    //   for (let i = 0; i < data.length; i += 4) {
-    //     let r = data[i]
-    //     let g = data[i + 1]
-    //     let b = data[i + 2]
-
-    //     // Brightness
-    //     r += brightnessOffset
-    //     g += brightnessOffset
-    //     b += brightnessOffset
-
-    //     // Contrast
-    //     r = contrastFactor * (r - 128) + 128
-    //     g = contrastFactor * (g - 128) + 128
-    //     b = contrastFactor * (b - 128) + 128
-
-    //     // Invert (true/false)
-    //     if (invert) {
-    //       r = 255 - r
-    //       g = 255 - g
-    //       b = 255 - b
-    //     }
-
-    //     // Grayscale (true/false)
-    //     if (grayscale) {
-    //       const gray = 0.299 * r + 0.587 * g + 0.114 * b
-    //       r = g = b = gray
-    //     }
-
-    //     data[i] = Math.min(255, Math.max(0, r))
-    //     data[i + 1] = Math.min(255, Math.max(0, g))
-    //     data[i + 2] = Math.min(255, Math.max(0, b))
-    //   }
-
-    //   ctx.putImageData(imageData, 0, 0)
-    // },
+      this.newFileDimensions = { ...this.fileDimensions }
+    },
   },
 })
