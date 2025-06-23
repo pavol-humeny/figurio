@@ -49,6 +49,7 @@ const { isLinked, toggleLinkedValue } = useLinkValuesIcon(props, emit)
     @click="toggleLinkedValue"
     :tip="showTip ? (isLinked ? tipLinked : tipUnlinked) : ''"
     :class="disabled ? 'disabled' : ''"
+    :position="position"
   />
 </template>
 

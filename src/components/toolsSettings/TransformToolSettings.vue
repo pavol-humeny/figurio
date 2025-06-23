@@ -47,11 +47,15 @@ const tabs = ['rotation', 'scale', 'flip', 'crop']
       >
         <div class="settings-content-wrapper">
           <div class="settings-content-wrapper-title">
-            <label>Crop position</label>
+            <label>
+              {{ $t('tools.transform.settings.crop.cropPosition.title') }}
+            </label>
           </div>
           <div class="settings-content-wrapper-inputs">
             <div class="x">
-              <label for="x-input">X</label>
+              <label for="x-input">
+                {{ $t('tools.transform.settings.crop.cropPosition.x') }}
+              </label>
               <input
                 id="x-input"
                 ref="PositionXInputRef"
@@ -67,7 +71,9 @@ const tabs = ['rotation', 'scale', 'flip', 'crop']
             <div class="settings-content-wrapper-icon-wrapper"></div>
 
             <div class="y">
-              <label for="y-input">Y</label>
+              <label for="y-input">
+                {{ $t('tools.transform.settings.crop.cropPosition.y') }}
+              </label>
               <input
                 id="y-input"
                 ref="PositionYInputRef"
@@ -83,11 +89,15 @@ const tabs = ['rotation', 'scale', 'flip', 'crop']
         </div>
         <div class="settings-content-wrapper">
           <div class="settings-content-wrapper-title">
-            <label>Crop dimensions</label>
+            <label>
+              {{ $t('tools.transform.settings.crop.cropDimensions.title') }}
+            </label>
           </div>
           <div class="settings-content-wrapper-inputs">
             <div class="width">
-              <label for="width-input">Width</label>
+              <label for="width-input">
+                {{ $t('tools.transform.settings.crop.cropDimensions.width') }}
+              </label>
               <input
                 id="width-input"
                 ref="widthInputRef"
@@ -103,15 +113,18 @@ const tabs = ['rotation', 'scale', 'flip', 'crop']
             <div class="settings-content-wrapper-icon-wrapper">
               <LinkValuesIcon
                 v-model="isDimensionsLinked"
-                :tipLinked="cropRatio !== null ? 'unlink' : ''"
-                :tipUnlinked="cropRatio !== null ? 'link' : ''"
+                :tipLinked="$t('tools.transform.settings.crop.cropDimensions.tipLinked')"
+                :tipUnlinked="$t('tools.transform.settings.crop.cropDimensions.tipUnlinked')"
                 size="30"
                 :disabled="cropRatio !== null"
+                position="bottom-left"
               />
             </div>
 
             <div class="height">
-              <label for="height-input">Height</label>
+              <label for="height-input">
+                {{ $t('tools.transform.settings.crop.cropDimensions.height') }}
+              </label>
               <input
                 id="height-input"
                 ref="heightInputRef"
@@ -126,6 +139,11 @@ const tabs = ['rotation', 'scale', 'flip', 'crop']
           </div>
         </div>
         <div class="settings-content-wrapper">
+          <div class="settings-content-wrapper-title">
+            <label>
+              {{ $t('tools.transform.settings.crop.cropVariants.label') }}
+            </label>
+          </div>
           <div class="crop-variants-wrapper">
             <div
               class="crop-variant"
@@ -133,7 +151,9 @@ const tabs = ['rotation', 'scale', 'flip', 'crop']
               @click="selectSubTool('cropFree')"
             >
               <BaseIcon name="IconCropFree" size="40" :color="'var(--primary-c)'" />
-              <p>Custom</p>
+              <p>
+                {{ $t('tools.transform.settings.crop.cropVariants.cropFree') }}
+              </p>
             </div>
             <div
               class="crop-variant"
@@ -141,7 +161,9 @@ const tabs = ['rotation', 'scale', 'flip', 'crop']
               @click="selectSubTool('crop11')"
             >
               <BaseIcon name="IconCrop11" size="40" :color="'var(--primary-c)'" />
-              <p>1:1</p>
+              <p>
+                {{ $t('tools.transform.settings.crop.cropVariants.crop11') }}
+              </p>
             </div>
             <div
               class="crop-variant"
@@ -149,7 +171,9 @@ const tabs = ['rotation', 'scale', 'flip', 'crop']
               @click="selectSubTool('crop43')"
             >
               <BaseIcon name="IconCrop43" size="40" :color="'var(--primary-c)'" />
-              <p>4:3</p>
+              <p>
+                {{ $t('tools.transform.settings.crop.cropVariants.crop43') }}
+              </p>
             </div>
             <div
               class="crop-variant"
@@ -157,7 +181,9 @@ const tabs = ['rotation', 'scale', 'flip', 'crop']
               @click="selectSubTool('crop34')"
             >
               <BaseIcon name="IconCrop34" size="40" :color="'var(--primary-c)'" />
-              <p>3:4</p>
+              <p>
+                {{ $t('tools.transform.settings.crop.cropVariants.crop34') }}
+              </p>
             </div>
             <div
               class="crop-variant"
@@ -165,7 +191,9 @@ const tabs = ['rotation', 'scale', 'flip', 'crop']
               @click="selectSubTool('crop169')"
             >
               <BaseIcon name="IconCrop169" size="40" :color="'var(--primary-c)'" />
-              <p>16:9</p>
+              <p>
+                {{ $t('tools.transform.settings.crop.cropVariants.crop169') }}
+              </p>
             </div>
             <div
               class="crop-variant"
@@ -173,12 +201,17 @@ const tabs = ['rotation', 'scale', 'flip', 'crop']
               @click="selectSubTool('crop916')"
             >
               <BaseIcon name="IconCrop916" size="40" :color="'var(--primary-c)'" />
-              <p>9:16</p>
+              <p>
+                {{ $t('tools.transform.settings.crop.cropVariants.crop916') }}
+              </p>
             </div>
           </div>
         </div>
         <div class="settings-content-wrapper">
-          <DefaultButton text="Apply crop" @click="applyCrop" />
+          <DefaultButton
+            :text="$t('tools.transform.settings.crop.applyCropButton.text')"
+            @click="applyCrop"
+          />
         </div>
         <div class="settings-content-wrapper" style="border: none">
           <!-- Empty space -->
@@ -269,6 +302,7 @@ const tabs = ['rotation', 'scale', 'flip', 'crop']
 .settings-content-wrapper-icon-wrapper {
   padding-top: 20px;
   width: 30px;
+  cursor: pointer;
 }
 
 input[type='number'] {

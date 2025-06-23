@@ -38,11 +38,30 @@
       },
       "crop": {
         "label": "Crop",
-        "custom": "Custom",
-        "circle": "Circle",
-        "square": "1:1",
-        "landscape": "16:9",
-        "portrait": "9:16"
+        "cropPosition": {
+          "title": "Crop position",
+          "x": "X",
+          "y": "Y"         
+        },
+        "cropDimensions":{
+          "title": "Crop dimensions",
+          "width": "Width",
+          "height": "Height",
+          "tipLinked": "Unlink width and height",
+          "tipUnlinked": "Link width and height"
+        },
+        "cropVariants": {
+          "label": "Crop variants",
+          "cropFree": "Custom",
+          "crop11": "1:1",
+          "crop43": "4:3",
+          "crop34": "3:4",
+          "crop169": "16:9",
+          "crop916": "9:16"          
+        },
+        "applyCropButton": {
+          "text": "Apply crop"
+        }
       }
     }
   },
