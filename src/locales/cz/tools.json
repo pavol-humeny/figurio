@@ -26,6 +26,7 @@
         "label": "Rotace",
         "rotateLeft": "Otočit doleva",
         "rotateRight": "Otočit doprava",
+        "freeRotation": "Volná rotace",
         "resetRotationButton": {
           "text": "Resetovat rotaci"
         },

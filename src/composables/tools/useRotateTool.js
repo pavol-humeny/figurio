@@ -1,4 +1,8 @@
+import { ref } from 'vue'
+
 export function useRotateTool(imageStore, t) {
+  const rotationAngle = ref(0)
+
   const applyRotation90 = (direction) => {
     let angle = 0
     if (direction === 'left') {
@@ -9,6 +13,10 @@ export function useRotateTool(imageStore, t) {
     imageStore.applyRotation(angle, t)
   }
 
+  const applyRotation = (angle) => {
+    imageStore.applyRotation(angle, t)
+  }
+
   const resetRotation = () => {
     imageStore.resetRotation()
   }
@@ -16,5 +24,7 @@ export function useRotateTool(imageStore, t) {
   return {
     applyRotation90,
     resetRotation,
+    applyRotation,
+    rotationAngle,
   }
 }

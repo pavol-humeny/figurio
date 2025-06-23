@@ -26,6 +26,7 @@
         "label": "Rotation",
         "rotateLeft": "Rotate left",
         "rotateRight": "Rotate right",
+        "freeRotation": "Free rotation",
         "resetRotationButton": {
           "text": "Reset rotation"
         },

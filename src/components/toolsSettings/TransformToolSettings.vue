@@ -10,6 +10,7 @@ import BaseIcon from '../icons/BaseIcon.vue'
 import { useI18n } from 'vue-i18n'
 import { useFlipTool } from '@/composables/tools/useFlipTool'
 import { useRotateTool } from '@/composables/tools/useRotateTool'
+import DefaultSlider from '../common/DefaultSlider.vue'
 
 const { t } = useI18n()
 
@@ -38,7 +39,10 @@ const {
 
 const { applyFlip } = useFlipTool(useImageStore())
 
-const { applyRotation90, resetRotation } = useRotateTool(useImageStore(), t)
+const { applyRotation90, resetRotation, applyRotation, rotationAngle } = useRotateTool(
+  useImageStore(),
+  t,
+)
 
 const tabs = ['rotate', 'scale', 'flip', 'crop']
 </script>
@@ -280,7 +284,7 @@ const tabs = ['rotate', 'scale', 'flip', 'crop']
         class="specific-settings"
       >
         <div class="settings-content-wrapper">
-          <div class="rotate-90-wrapper">
+          <div class="rotate-wrapper">
             <div class="rotate-title">
               <BaseIcon name="IconRotateLeft" size="25" :color="'var(--primary-c)'" />
               <p>
@@ -296,7 +300,7 @@ const tabs = ['rotate', 'scale', 'flip', 'crop']
           </div>
         </div>
         <div class="settings-content-wrapper">
-          <div class="rotate-90-wrapper">
+          <div class="rotate-wrapper">
             <div class="rotate-title">
               <BaseIcon name="IconRotateRight" size="25" :color="'var(--primary-c)'" />
               <p>
@@ -312,10 +316,35 @@ const tabs = ['rotate', 'scale', 'flip', 'crop']
           </div>
         </div>
         <div class="settings-content-wrapper">
+          <div class="rotate-wrapper">
+            <div class="rotate-title">
+              <BaseIcon name="IconRotateLeft" size="25" :color="'var(--primary-c)'" />
+              <p>
+                {{ $t('tools.transform.settings.rotate.freeRotation') }}
+              </p>
+            </div>
+            <DefaultSlider
+              v-model="rotationAngle"
+              :min="-45"
+              :max="45"
+              :step="1"
+              :valueUnit="'°'"
+              :showValue="true"
+              :style="{ margin: '0 0 10px 0' }"
+            />
+            <div class="rotate-button">
+              <DefaultButton
+                :text="$t('tools.transform.settings.rotate.applyRotationButton.text')"
+                @click="applyRotation(rotationAngle)"
+              />
+            </div>
+          </div>
+        </div>
+        <div class="settings-content-wrapper">
           <div class="rotate-button">
             <DefaultButton
               :text="$t('tools.transform.settings.rotate.resetRotationButton.text')"
-              @click="resetRotation"
+              @click="resetRotation()"
             />
           </div>
         </div>
@@ -474,7 +503,7 @@ input[type='number'] {
   gap: 10px;
 }
 
-.rotate-90-wrapper {
+.rotate-wrapper {
   display: flex;
   align-items: center;
   justify-content: center;

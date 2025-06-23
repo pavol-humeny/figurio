@@ -3,6 +3,7 @@ import { useToastModal } from '@/composables/modals/useToastModal'
 import { nextTick } from 'vue'
 import { useConfirmModal } from '@/composables/modals/useConfirmModal'
 import jsPDF from 'jspdf'
+import { useMath } from '@/composables/common/useMath'
 
 const { showToastModal } = useToastModal()
 const { showConfirmModal } = useConfirmModal()
@@ -15,20 +16,21 @@ const isValidFileName = (name) => {
 export const useImageStore = defineStore('imageStore', {
   state: () => ({
     file: null,
+    fileType: '', // 'image' or 'pdf'
+    fileSize: 0, // In bytes
 
     fileName: '',
-    newFileName: '',
-
-    fileType: '', // 'image' or 'pdf'
     fileFormat: '', // 'png', 'jpg', 'jpeg', 'pdf'
-    newFileFormat: '', // 'png', 'jpg', 'jpeg', 'pdf'
-
     fileDimensions: {
       fileAspectRatio: 1,
       width: 0,
       height: 0,
       quality: 100,
     },
+
+    // New values used for export
+    newFileFormat: '', // 'png', 'jpg', 'jpeg', 'pdf'
+    newFileName: '',
     newFileDimensions: {
       fileAspectRatio: 1,
       width: 0,
@@ -36,12 +38,17 @@ export const useImageStore = defineStore('imageStore', {
       quality: 100,
     },
 
-    fileSize: 0, // In bytes
-
     // Value for preview image in export tool
     previewUrl: '',
     // Value for original image
     originalImage: null,
+    originalImageDimensions: {
+      fileAspectRatio: 1,
+      width: 0,
+      height: 0,
+      quality: 100,
+    },
+
     // Value for raster image rendering
     renderedImage: null,
     // Value for SVG rendering
@@ -71,13 +78,17 @@ export const useImageStore = defineStore('imageStore', {
     ],
     selectedSvgObjectId: null,
 
-    imageEffects: {
-      brightness: 0, //  -100 - +100
-      contrast: 0, //  -100 - +100
-      saturation: 0,
-      grayscale: false,
-      // sepia: 0,
-      invert: false,
+    imageOperations: {
+      effects: {
+        brightness: 0, //  -100 - +100
+        contrast: 0, //  -100 - +100
+        saturation: 0,
+        grayscale: false,
+        invert: false,
+      },
+      transformations: {
+        rotation: 0,
+      },
     },
   }),
   actions: {
@@ -176,11 +187,19 @@ export const useImageStore = defineStore('imageStore', {
         fileAspectRatio: 1,
         width: 0,
         height: 0,
+        quality: 100,
       }
       this.newFileDimensions = {
         fileAspectRatio: 1,
         width: 0,
         height: 0,
+        quality: 100,
+      }
+      this.originalImageDimensions = {
+        fileAspectRatio: 1,
+        width: 0,
+        height: 0,
+        quality: 100,
       }
       this.fileSize = 0
 
@@ -214,6 +233,7 @@ export const useImageStore = defineStore('imageStore', {
             this.fileDimensions.height = img.height
             this.fileDimensions.fileAspectRatio = img.width / img.height || 1
             this.newFileDimensions = { ...this.fileDimensions }
+            this.originalImageDimensions = { ...this.fileDimensions }
 
             this.originalImage = img
 
@@ -432,6 +452,7 @@ export const useImageStore = defineStore('imageStore', {
       this.selectedSvgObjectId = null
 
       this.renderedImage = canvas
+      this.originalImage = canvas
       this.previewUrl = resultDataUrl
 
       return resultDataUrl
@@ -477,6 +498,7 @@ export const useImageStore = defineStore('imageStore', {
 
       // Update rendered image and preview URL
       this.renderedImage = canvas
+      this.originalImage = canvas
       this.previewUrl = canvas.toDataURL()
 
       // Update file dimensions
@@ -485,6 +507,7 @@ export const useImageStore = defineStore('imageStore', {
       this.fileDimensions.fileAspectRatio = width / height || 1
 
       this.newFileDimensions = { ...this.fileDimensions }
+      this.originalImageDimensions = { ...this.fileDimensions }
     },
 
     applyFlip(direction = 'horizontal') {
@@ -594,10 +617,32 @@ export const useImageStore = defineStore('imageStore', {
         return newObj
       })
     },
+
+    resetRotation() {
+      if (!this.originalImage) return
+
+      // Create a new canvas and draw the original image
+      const canvas = document.createElement('canvas')
+      canvas.width = this.originalImage.width
+      canvas.height = this.originalImage.height
+      const ctx = canvas.getContext('2d')
+      ctx.drawImage(this.originalImage, 0, 0)
+
+      // Set other properties
+      this.renderedImage = canvas
+      this.previewUrl = canvas.toDataURL()
+      this.fileDimensions = { ...this.originalImageDimensions }
+      this.newFileDimensions = { ...this.originalImageDimensions }
+
+      this.imageOperations.transformations.rotation = 0
+
+      console.log('Reset rotation done.')
+    },
+
     async applyRotation(angle, t) {
       if (!this.renderedImage || !angle) return
 
-      // Create confirm modal to confirm rasterization if there are SVG objects
+      // Ask for rasterization confirmation if vector objects exist
       if (this.svgObjects.length > 0) {
         const confirmed = await showConfirmModal(
           t('tools.confirmNeedRasterization.title'),
@@ -605,40 +650,115 @@ export const useImageStore = defineStore('imageStore', {
           t('tools.confirmNeedRasterization.cancel'),
           t('tools.confirmNeedRasterization.confirm'),
         )
-        if (confirmed) {
-          await this.rasterize()
-        } else {
-          return
-        }
+        if (!confirmed) return
+        await this.rasterize()
       }
 
+      const { closest } = useMath()
+
+      if (angle === 90 || angle === -90) {
+        this.imageOperations.transformations.rotation = closest(
+          this.imageOperations.transformations.rotation + angle,
+          [0, 90, 180, 270, 360, -90, -180, -270, -360],
+        )
+        if (
+          this.imageOperations.transformations.rotation === 360 ||
+          this.imageOperations.transformations.rotation === -360
+        ) {
+          this.imageOperations.transformations.rotation = 0
+        }
+        console.log('Rotation angle set to:', this.imageOperations.transformations.rotation)
+      } else {
+        this.imageOperations.transformations.rotation = closest(
+          this.imageOperations.transformations.rotation,
+          [0, 90, 180, 270, 360, -90, -180, -270, -360],
+        )
+
+        console.log('Rotation angle set to2:', this.imageOperations.transformations.rotation)
+
+        if (
+          this.imageOperations.transformations.rotation === 360 ||
+          this.imageOperations.transformations.rotation === -360
+        ) {
+          this.imageOperations.transformations.rotation = 0
+        }
+        this.imageOperations.transformations.rotation += angle
+      }
+
+      angle = this.imageOperations.transformations.rotation
+
       const radians = (angle * Math.PI) / 180
-      const oldCanvas = this.renderedImage
+
+      const oldCanvas = this.originalImage
       const oldWidth = oldCanvas.width
       const oldHeight = oldCanvas.height
 
       const sin = Math.abs(Math.sin(radians))
       const cos = Math.abs(Math.cos(radians))
 
-      const newWidth = Math.round(oldWidth * cos + oldHeight * sin)
-      const newHeight = Math.round(oldWidth * sin + oldHeight * cos)
+      const rotatedWidth = Math.round(oldWidth * cos + oldHeight * sin)
+      const rotatedHeight = Math.round(oldWidth * sin + oldHeight * cos)
 
-      const canvas = document.createElement('canvas')
-      canvas.width = newWidth
-      canvas.height = newHeight
+      // Step 1: Rotate into larger temporary canvas
+      const tempCanvas = document.createElement('canvas')
+      tempCanvas.width = rotatedWidth
+      tempCanvas.height = rotatedHeight
+      const tempCtx = tempCanvas.getContext('2d')
 
-      const ctx = canvas.getContext('2d')
+      tempCtx.translate(rotatedWidth / 2, rotatedHeight / 2)
+      tempCtx.rotate(radians)
+      tempCtx.drawImage(oldCanvas, -oldWidth / 2, -oldHeight / 2)
 
-      ctx.translate(newWidth / 2, newHeight / 2)
-      ctx.rotate(radians)
-      ctx.drawImage(oldCanvas, -oldWidth / 2, -oldHeight / 2)
+      let finalCanvas = tempCanvas
+      let finalWidth = rotatedWidth
+      let finalHeight = rotatedHeight
 
-      this.renderedImage = canvas
-      this.previewUrl = canvas.toDataURL()
+      // Step 2: If rotation is less than 90 degrees, crop and scale to fill original area
+      // if (Math.abs(angle) < 90) {
+      //   finalCanvas = document.createElement('canvas')
+      //   finalCanvas.width = oldWidth
+      //   finalCanvas.height = oldHeight
 
-      this.fileDimensions.width = newWidth
-      this.fileDimensions.height = newHeight
-      this.fileDimensions.fileAspectRatio = newWidth / newHeight
+      //   // Compute center crop area
+      //   const cropX = Math.round((rotatedWidth - oldWidth) / 2)
+      //   const cropY = Math.round((rotatedHeight - oldHeight) / 2)
+      //   const croppedImageData = tempCtx.getImageData(cropX, cropY, oldWidth, oldHeight)
+
+      //   // Optional scale-up to eliminate border gaps caused by rotation
+      //   const scaleUpCanvas = document.createElement('canvas')
+      //   scaleUpCanvas.width = oldWidth
+      //   scaleUpCanvas.height = oldHeight
+      //   const scaleCtx = scaleUpCanvas.getContext('2d')
+
+      //   // Create an intermediate canvas to draw cropped result
+      //   const cropBuffer = document.createElement('canvas')
+      //   cropBuffer.width = oldWidth
+      //   cropBuffer.height = oldHeight
+      //   const cropCtx = cropBuffer.getContext('2d')
+      //   cropCtx.putImageData(croppedImageData, 0, 0)
+
+      //   // Calculate scale factor to eliminate corner gaps
+      //   const scaleFactor = angle * 0.08
+      //   console.log('Scale factor:', scaleFactor)
+
+      //   scaleCtx.save()
+      //   scaleCtx.translate(oldWidth / 2, oldHeight / 2)
+      //   scaleCtx.scale(scaleFactor, scaleFactor)
+      //   scaleCtx.drawImage(cropBuffer, -oldWidth / 2, -oldHeight / 2)
+      //   scaleCtx.restore()
+
+      //   finalCanvas = scaleUpCanvas
+      //   finalWidth = oldWidth
+      //   finalHeight = oldHeight
+      // }
+
+      // Step 3: Save result
+      this.renderedImage = finalCanvas
+      this.previewUrl = finalCanvas.toDataURL()
+
+      this.fileDimensions.width = finalWidth
+      this.fileDimensions.height = finalHeight
+      this.fileDimensions.fileAspectRatio = finalWidth / finalHeight
       this.newFileDimensions = { ...this.fileDimensions }
     },
   },
