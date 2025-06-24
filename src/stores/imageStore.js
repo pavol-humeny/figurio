@@ -3,7 +3,6 @@ import { useToastModal } from '@/composables/modals/useToastModal'
 import { nextTick } from 'vue'
 import { useConfirmModal } from '@/composables/modals/useConfirmModal'
 import jsPDF from 'jspdf'
-import { useMath } from '@/composables/common/useMath'
 
 const { showToastModal } = useToastModal()
 const { showConfirmModal } = useConfirmModal()
@@ -41,8 +40,8 @@ export const useImageStore = defineStore('imageStore', {
     // Value for preview image in export tool
     previewUrl: '',
     // Value for original image
-    originalImage: null,
-    originalImageDimensions: {
+    tmpImage: null,
+    tmpImageDimensions: {
       fileAspectRatio: 1,
       width: 0,
       height: 0,
@@ -85,9 +84,6 @@ export const useImageStore = defineStore('imageStore', {
         saturation: 0,
         grayscale: false,
         invert: false,
-      },
-      transformations: {
-        rotation: 0,
       },
     },
   }),
@@ -195,7 +191,7 @@ export const useImageStore = defineStore('imageStore', {
         height: 0,
         quality: 100,
       }
-      this.originalImageDimensions = {
+      this.tmpImageDimensions = {
         fileAspectRatio: 1,
         width: 0,
         height: 0,
@@ -203,7 +199,7 @@ export const useImageStore = defineStore('imageStore', {
       }
       this.fileSize = 0
 
-      this.originalImage = null
+      this.tmpImage = null
       this.renderedImage = null
 
       this.svgObjects = []
@@ -233,9 +229,7 @@ export const useImageStore = defineStore('imageStore', {
             this.fileDimensions.height = img.height
             this.fileDimensions.fileAspectRatio = img.width / img.height || 1
             this.newFileDimensions = { ...this.fileDimensions }
-            this.originalImageDimensions = { ...this.fileDimensions }
-
-            this.originalImage = img
+            // this.tmpImageDimensions = { ...this.fileDimensions }
 
             // Create a canvas to render the image
             const canvas = document.createElement('canvas')
@@ -246,6 +240,7 @@ export const useImageStore = defineStore('imageStore', {
             ctx.drawImage(img, 0, 0)
 
             this.renderedImage = canvas
+            // this.tmpImage = canvas
             this.previewUrl = canvas.toDataURL() // Fallback for export
           }
 
@@ -452,7 +447,7 @@ export const useImageStore = defineStore('imageStore', {
       this.selectedSvgObjectId = null
 
       this.renderedImage = canvas
-      this.originalImage = canvas
+      // this.tmpImage = canvas
       this.previewUrl = resultDataUrl
 
       return resultDataUrl
@@ -498,7 +493,7 @@ export const useImageStore = defineStore('imageStore', {
 
       // Update rendered image and preview URL
       this.renderedImage = canvas
-      this.originalImage = canvas
+      // this.tmpImage = canvas
       this.previewUrl = canvas.toDataURL()
 
       // Update file dimensions
@@ -507,7 +502,7 @@ export const useImageStore = defineStore('imageStore', {
       this.fileDimensions.fileAspectRatio = width / height || 1
 
       this.newFileDimensions = { ...this.fileDimensions }
-      this.originalImageDimensions = { ...this.fileDimensions }
+      // this.tmpImageDimensions = { ...this.fileDimensions }
     },
 
     applyFlip(direction = 'horizontal') {
@@ -618,28 +613,14 @@ export const useImageStore = defineStore('imageStore', {
       })
     },
 
-    resetRotation() {
-      if (!this.originalImage) return
-
-      // Create a new canvas and draw the original image
-      const canvas = document.createElement('canvas')
-      canvas.width = this.originalImage.width
-      canvas.height = this.originalImage.height
-      const ctx = canvas.getContext('2d')
-      ctx.drawImage(this.originalImage, 0, 0)
-
-      // Set other properties
-      this.renderedImage = canvas
-      this.previewUrl = canvas.toDataURL()
-      this.fileDimensions = { ...this.originalImageDimensions }
-      this.newFileDimensions = { ...this.originalImageDimensions }
-
-      this.imageOperations.transformations.rotation = 0
-
-      console.log('Reset rotation done.')
+    resetRotationPreview() {
+      this.renderedImage = this.tmpImage
+      this.previewUrl = this.tmpImage.toDataURL()
+      this.fileDimensions = { ...this.tmpImageDimensions }
+      this.newFileDimensions = { ...this.fileDimensions }
     },
 
-    async applyRotation(angle, t) {
+    async applyRotation(angle, t, applyCrop = false) {
       if (!this.renderedImage || !angle) return
 
       if (this.svgObjects.length > 0) {
@@ -653,34 +634,17 @@ export const useImageStore = defineStore('imageStore', {
         await this.rasterize()
       }
 
-      const { closest } = useMath()
-
-      if (angle === 90 || angle === -90) {
-        this.imageOperations.transformations.rotation = closest(
-          this.imageOperations.transformations.rotation + angle,
-          [0, 90, 180, 270, 360, -90, -180, -270, -360],
-        )
-        if (Math.abs(this.imageOperations.transformations.rotation) === 360) {
-          this.imageOperations.transformations.rotation = 0
-        }
-      } else {
-        this.imageOperations.transformations.rotation = closest(
-          this.imageOperations.transformations.rotation,
-          [0, 90, 180, 270, 360, -90, -180, -270, -360],
-        )
-        if (Math.abs(this.imageOperations.transformations.rotation) === 360) {
-          this.imageOperations.transformations.rotation = 0
-        }
-        this.imageOperations.transformations.rotation += angle
-      }
-
-      angle = this.imageOperations.transformations.rotation
+      const isRightAngle = Math.abs(angle) % 90 === 0
       const radians = (angle * Math.PI) / 180
 
-      const oldCanvas = this.originalImage
+      if (this.tmpImage === null) {
+        this.tmpImage = this.renderedImage
+        this.tmpImageDimensions = { ...this.fileDimensions }
+      }
+
+      const oldCanvas = this.tmpImage
       const oldWidth = oldCanvas.width
       const oldHeight = oldCanvas.height
-      const aspectRatio = oldWidth / oldHeight
 
       const sin = Math.abs(Math.sin(radians))
       const cos = Math.abs(Math.cos(radians))
@@ -688,7 +652,6 @@ export const useImageStore = defineStore('imageStore', {
       const rotatedWidth = Math.round(oldWidth * cos + oldHeight * sin)
       const rotatedHeight = Math.round(oldWidth * sin + oldHeight * cos)
 
-      // Rotate into temp canvas
       const tempCanvas = document.createElement('canvas')
       tempCanvas.width = rotatedWidth
       tempCanvas.height = rotatedHeight
@@ -700,19 +663,30 @@ export const useImageStore = defineStore('imageStore', {
 
       let finalCanvas, finalWidth, finalHeight
 
-      const isRightAngle = Math.abs(angle) % 90 === 0
-
       if (!isRightAngle) {
-        // Crop the rotated image to fit the original aspect ratio
-        const absSin = Math.abs(Math.sin(radians))
-        const absCos = Math.abs(Math.cos(radians))
+        // Spočítaj najväčší vnútorný obdĺžnik so zachovaným aspect ratio
+        const theta = Math.abs(radians % (Math.PI / 2))
+        const cosTheta = Math.cos(theta)
+        const sinTheta = Math.sin(theta)
 
-        const denom = oldHeight * absSin + oldWidth * absCos
-        const maxInnerWidth = (oldWidth * oldHeight) / denom
-        const maxInnerHeight = maxInnerWidth / aspectRatio
+        const w = oldWidth
+        const h = oldHeight
 
-        const cropX = (rotatedWidth - maxInnerWidth) / 2
-        const cropY = (rotatedHeight - maxInnerHeight) / 2
+        const boundW = w * cosTheta + h * sinTheta
+        const boundH = w * sinTheta + h * cosTheta
+
+        let scale = 1
+        if (w / h > boundW / boundH) {
+          scale = boundH / h
+        } else {
+          scale = boundW / w
+        }
+
+        const cropWidth = (w * 1) / scale
+        const cropHeight = (h * 1) / scale
+
+        const cropX = (rotatedWidth - cropWidth) / 2
+        const cropY = (rotatedHeight - cropHeight) / 2
 
         finalCanvas = document.createElement('canvas')
         finalCanvas.width = oldWidth
@@ -723,30 +697,35 @@ export const useImageStore = defineStore('imageStore', {
           tempCanvas,
           cropX,
           cropY,
-          maxInnerWidth,
-          maxInnerHeight,
+          cropWidth,
+          cropHeight,
           0,
           0,
-          oldWidth,
-          oldHeight,
+          finalCanvas.width,
+          finalCanvas.height,
         )
 
-        finalWidth = oldWidth
-        finalHeight = oldHeight
+        finalWidth = finalCanvas.width
+        finalHeight = finalCanvas.height
+
+        if (applyCrop) {
+          this.tmpImage = null
+          this.tmpImageDimensions = null
+        }
       } else {
-        // No crop needed, just rotate
         finalCanvas = tempCanvas
         finalWidth = rotatedWidth
         finalHeight = rotatedHeight
+        this.tmpImage = null
+        this.tmpImageDimensions = null
       }
 
       this.renderedImage = finalCanvas
-      this.previewUrl = finalCanvas.toDataURL()
-
       this.fileDimensions.width = finalWidth
       this.fileDimensions.height = finalHeight
-      this.fileDimensions.fileAspectRatio = finalWidth / finalHeight
+      this.fileDimensions.fileAspectRatio = finalWidth / finalHeight || 1
       this.newFileDimensions = { ...this.fileDimensions }
+      this.previewUrl = finalCanvas.toDataURL()
     },
   },
 })

@@ -41,7 +41,6 @@ const { applyFlip } = useFlipTool(useImageStore())
 
 const {
   applyRotation90,
-  resetRotation,
   applyRotation,
   rotationAngle,
   resetRotationAngle,
@@ -112,23 +111,18 @@ const tabs = ['rotate', 'flip', 'crop']
               position="bottom-left"
               @dblclick="resetRotationAngle()"
               @wheel="setRotationAngleByScroll"
+              @input="applyRotation(rotationAngle)"
             />
             <div class="rotate-button">
               <DefaultButton
                 :text="$t('tools.transform.settings.rotate.applyRotationButton.text')"
-                @click="applyRotation(rotationAngle)"
+                @click="applyRotation(rotationAngle, true)"
+                :disabled="rotationAngle === 0"
               />
             </div>
           </div>
         </div>
-        <div class="settings-content-wrapper">
-          <div class="rotate-button">
-            <DefaultButton
-              :text="$t('tools.transform.settings.rotate.resetRotationButton.text')"
-              @click="resetRotation()"
-            />
-          </div>
-        </div>
+
         <div class="settings-content" style="border: none">
           <!-- Empty space -->
         </div>
