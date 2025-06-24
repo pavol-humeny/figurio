@@ -147,8 +147,11 @@ export function useCropTool(imageStore, viewportStore, editorStore, t) {
       }
     }
     nextTick(() => {
-      heightInputRef.value.value = cropHeight.value
-      widthInputRef.value.value = cropWidth.value
+
+      // heightInputRef.value.value = cropHeight.value
+      heightInputRef.value.setValue(cropHeight.value)
+      // widthInputRef.value.value = cropWidth.value
+      widthInputRef.value.setValue(cropWidth.value)
     })
   }
 
@@ -159,8 +162,8 @@ export function useCropTool(imageStore, viewportStore, editorStore, t) {
       cropBox.value.y = Math.round(clamp(value, 0, maxCropPositionY.value))
     }
     nextTick(() => {
-      PositionXInputRef.value.value = cropPositionX.value
-      PositionYInputRef.value.value = cropPositionY.value
+      PositionXInputRef.value.setValue(cropPositionX.value)
+      PositionYInputRef.value.setValue(cropPositionY.value)
     })
   }
 

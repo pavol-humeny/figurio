@@ -11,6 +11,7 @@ import { useI18n } from 'vue-i18n'
 import { useFlipTool } from '@/composables/tools/useFlipTool'
 import { useRotateTool } from '@/composables/tools/useRotateTool'
 import DefaultSlider from '../common/DefaultSlider.vue'
+import NumberInput from '../common/NumberInput.vue'
 
 const { t } = useI18n()
 
@@ -194,15 +195,12 @@ const tabs = ['rotate', 'flip', 'crop']
               <label for="x-input">
                 {{ $t('tools.transform.settings.crop.cropPosition.x') }}
               </label>
-              <input
-                id="x-input"
+              <NumberInput
                 ref="PositionXInputRef"
-                v-model.number="cropPositionX"
-                type="number"
-                min="0"
+                v-model="cropPositionX"
+                :min="0"
                 :max="maxCropPositionX"
-                @blur="updatePosition('x', cropPositionX)"
-                @keydown.enter="updatePosition('x', cropPositionX)"
+                @update="(val) => updatePosition('x', val)"
               />
             </div>
 
@@ -212,15 +210,12 @@ const tabs = ['rotate', 'flip', 'crop']
               <label for="y-input">
                 {{ $t('tools.transform.settings.crop.cropPosition.y') }}
               </label>
-              <input
-                id="y-input"
+              <NumberInput
                 ref="PositionYInputRef"
-                v-model.number="cropPositionY"
-                type="number"
-                min="0"
+                v-model="cropPositionY"
+                :min="0"
                 :max="maxCropPositionY"
-                @blur="updatePosition('y', cropPositionY)"
-                @keydown.enter="updatePosition('y', cropPositionY)"
+                @update="(val) => updatePosition('y', val)"
               />
             </div>
           </div>
@@ -236,15 +231,12 @@ const tabs = ['rotate', 'flip', 'crop']
               <label for="width-input">
                 {{ $t('tools.transform.settings.crop.cropDimensions.width') }}
               </label>
-              <input
-                id="width-input"
+              <NumberInput
                 ref="widthInputRef"
-                v-model.number="tmpCropWidth"
-                type="number"
-                min="0"
+                v-model="tmpCropWidth"
+                :min="0"
                 :max="maxCropWidth"
-                @blur="updateDimension('width', tmpCropWidth)"
-                @keydown.enter="updateDimension('width', tmpCropWidth)"
+                @update="(val) => updateDimension('width', val)"
               />
             </div>
 
@@ -263,15 +255,12 @@ const tabs = ['rotate', 'flip', 'crop']
               <label for="height-input">
                 {{ $t('tools.transform.settings.crop.cropDimensions.height') }}
               </label>
-              <input
-                id="height-input"
+              <NumberInput
                 ref="heightInputRef"
-                v-model.number="tmpCropHeight"
-                type="number"
-                min="0"
+                v-model="tmpCropHeight"
+                :min="0"
                 :max="maxCropHeight"
-                @blur="updateDimension('height', tmpCropHeight)"
-                @keydown.enter="updateDimension('height', tmpCropHeight)"
+                @update="(val) => updateDimension('height', val)"
               />
             </div>
           </div>
@@ -410,16 +399,6 @@ const tabs = ['rotate', 'flip', 'crop']
   width: 100%;
 }
 
-.settings-content-inputs input {
-  width: 100%;
-  padding: 7px 10px;
-  border-radius: 10px;
-  border: none;
-  background: var(--secondary-c);
-  color: var(--text-c);
-  width: 80px;
-}
-
 .settings-content-inputs .width,
 .settings-content-inputs .height,
 .settings-content-inputs .x,
@@ -441,10 +420,6 @@ const tabs = ['rotate', 'flip', 'crop']
   padding-top: 20px;
   width: 30px;
   cursor: pointer;
-}
-
-input[type='number'] {
-  text-align: center;
 }
 
 .crop-variants-wrapper {
