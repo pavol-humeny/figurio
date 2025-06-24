@@ -1,9 +1,11 @@
 import { defineStore } from 'pinia'
+import { historyConfig } from '@/config/historyConfig'
 
 export const useHistoryStore = defineStore('historyStore', {
   state: () => ({
     history: [],
     currentIndex: -1,
+    maximumHistoryLength: historyConfig.maximumHistoryLength,
   }),
   actions: {
     push(stateSnapshot) {
@@ -13,6 +15,11 @@ export const useHistoryStore = defineStore('historyStore', {
       // Add the new state snapshot to the history
       this.history.push(JSON.parse(JSON.stringify(stateSnapshot)))
       this.currentIndex++
+
+      if (this.history.length > this.maximumHistoryLength) {
+        this.history.shift()
+        this.currentIndex--
+      }
     },
     undo() {
       if (this.currentIndex > 0) {
