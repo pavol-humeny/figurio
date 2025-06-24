@@ -23,6 +23,10 @@ const props = defineProps({
     type: String,
     default: 'bottom'
   },
+  disabled: {
+    type: Boolean,
+    default: false
+  }
 })
 
 const showTip = props.tip !== '';
@@ -55,6 +59,7 @@ const iconComponent = computed(() => {
     :is="iconComponent"
     class="icon"
     :style="{ width: size + 'px', height: size + 'px', color: color }"
+    :class="disabled ? 'disabled' : ''"
     />
   </ItemTip>
 
@@ -63,6 +68,7 @@ const iconComponent = computed(() => {
     :is="iconComponent"
     class="icon"
     :style="{ width: size + 'px', height: size + 'px', color: color }"
+    :class="disabled ? 'disabled' : ''"
     />
 
 </template>
@@ -71,5 +77,9 @@ const iconComponent = computed(() => {
 .icon {
   display: inline-block;
   vertical-align: middle;
+}
+.icon.disabled {
+  opacity: 0.5;
+  pointer-events: none;
 }
 </style>
