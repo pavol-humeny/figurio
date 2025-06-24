@@ -1,6 +1,7 @@
 import { onMounted, watch, ref, nextTick } from 'vue'
 
-export function useImageRenderer(imageStore, contentRef) {
+export function useImageRenderer(imageStore, historyStore, contentRef) {
+
   const canvasRef = ref(null)
   const svgRef = ref(null)
 
@@ -42,6 +43,10 @@ export function useImageRenderer(imageStore, contentRef) {
 
     ctx.clearRect(0, 0, width, height)
     ctx.drawImage(imageStore.renderedImage, 0, 0)
+
+    if( historyStore.history.length === 0 ) {
+      historyStore.push(imageStore.getSnapshot())
+    }
   }
 
   const renderSvg = () => {

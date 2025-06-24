@@ -35,10 +35,6 @@ export function useRotateTool(imageStore, t) {
     imageStore.applyRotation(rotationAngle.value, t)
   }
 
-  onUnmounted(() => {
-    console.log('Rotate tool unmounted, cleaning up...')
-  })
-
   return {
     applyRotation90,
     applyRotation,

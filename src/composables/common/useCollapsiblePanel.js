@@ -17,12 +17,10 @@ export function useCollapsiblePanel(uiStore) {
 
   const toggleVisibility = () => {
     if (isVisible.value){
-      console.log("CollapsiblePanel: Hiding right panel")
       tmpWidth.value = uiStore.rightPanelWidth
       uiStore.toggleRightPanel()
       uiStore.setRightPanelWidth(0)
     }else{
-      console.log("CollapsiblePanel: Showing right panel")
       uiStore.toggleRightPanel()
       uiStore.setRightPanelWidth(tmpWidth.value || uiStore.rightPanelDefaultWidth)
     }

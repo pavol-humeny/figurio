@@ -3,6 +3,7 @@ import { useToastModal } from '@/composables/modals/useToastModal'
 import { nextTick } from 'vue'
 import { useConfirmModal } from '@/composables/modals/useConfirmModal'
 import jsPDF from 'jspdf'
+import { useHistoryStore } from '@/stores/historyStore'
 
 const { showToastModal } = useToastModal()
 const { showConfirmModal } = useConfirmModal()
@@ -18,14 +19,14 @@ export const useImageStore = defineStore('imageStore', {
     fileType: '', // 'image' or 'pdf'
     fileSize: 0, // In bytes
 
-    fileName: '',
-    fileFormat: '', // 'png', 'jpg', 'jpeg', 'pdf'
+    fileName: '', // UndoRedo
+    fileFormat: '', // 'png', 'jpg', 'jpeg', 'pdf' // UndoRedo
     fileDimensions: {
       fileAspectRatio: 1,
       width: 0,
       height: 0,
       quality: 100,
-    },
+    }, // UndoRedo
 
     // New values used for export
     newFileFormat: '', // 'png', 'jpg', 'jpeg', 'pdf'
@@ -38,7 +39,8 @@ export const useImageStore = defineStore('imageStore', {
     },
 
     // Value for preview image in export tool
-    previewUrl: '',
+    previewUrl: '', // UndoRedo
+
     // Value for original image
     tmpImage: null,
     tmpImageDimensions: {
@@ -49,9 +51,9 @@ export const useImageStore = defineStore('imageStore', {
     },
 
     // Value for raster image rendering
-    renderedImage: null,
+    renderedImage: null, // UndoRedo
     // Value for SVG rendering
-    // svgObjects: [],
+    // svgObjects: [], // UndoRedo
     svgObjects: [
       {
         tag: 'rect',
@@ -229,7 +231,6 @@ export const useImageStore = defineStore('imageStore', {
             this.fileDimensions.height = img.height
             this.fileDimensions.fileAspectRatio = img.width / img.height || 1
             this.newFileDimensions = { ...this.fileDimensions }
-            // this.tmpImageDimensions = { ...this.fileDimensions }
 
             // Create a canvas to render the image
             const canvas = document.createElement('canvas')
@@ -240,7 +241,6 @@ export const useImageStore = defineStore('imageStore', {
             ctx.drawImage(img, 0, 0)
 
             this.renderedImage = canvas
-            // this.tmpImage = canvas
             this.previewUrl = canvas.toDataURL() // Fallback for export
           }
 
@@ -453,6 +453,43 @@ export const useImageStore = defineStore('imageStore', {
       return resultDataUrl
     },
 
+    // UndoRedo
+    getSnapshot() {
+      return {
+        fileName: this.fileName,
+        fileFormat: this.fileFormat,
+        fileDimensions: JSON.parse(JSON.stringify(this.fileDimensions)),
+        previewUrl: this.previewUrl,
+        renderedImage: this.renderedImage?.toDataURL() || null,
+        svgObjects: JSON.parse(JSON.stringify(this.svgObjects)),
+        imageOperations: JSON.parse(JSON.stringify(this.imageOperations)),
+      }
+    },
+    applySnapshot(snapshot) {
+      this.fileName = snapshot.fileName
+      this.fileFormat = snapshot.fileFormat
+      this.fileDimensions = JSON.parse(JSON.stringify(snapshot.fileDimensions))
+      this.previewUrl = snapshot.previewUrl
+      this.svgObjects = JSON.parse(JSON.stringify(snapshot.svgObjects))
+      this.imageOperations = JSON.parse(JSON.stringify(snapshot.imageOperations))
+
+      if (snapshot.renderedImage) {
+        const img = new Image()
+        img.onload = () => {
+          const canvas = document.createElement('canvas')
+          canvas.width = img.width
+          canvas.height = img.height
+          const ctx = canvas.getContext('2d')
+          ctx.drawImage(img, 0, 0)
+          this.renderedImage = canvas
+        }
+        img.src = snapshot.renderedImage
+      } else {
+        this.renderedImage = null
+      }
+    },
+
+    // Operations
     async applyCrop(cropBox, t) {
       if (!this.renderedImage || !cropBox) return
 
@@ -502,7 +539,9 @@ export const useImageStore = defineStore('imageStore', {
       this.fileDimensions.fileAspectRatio = width / height || 1
 
       this.newFileDimensions = { ...this.fileDimensions }
-      // this.tmpImageDimensions = { ...this.fileDimensions }
+
+      const historyStore = useHistoryStore()
+      historyStore.push(this.getSnapshot())
     },
 
     applyFlip(direction = 'horizontal') {
@@ -534,83 +573,84 @@ export const useImageStore = defineStore('imageStore', {
       this.previewUrl = canvas.toDataURL()
 
       // Flip vector objects
-      if (this.svgObjects.length === 0) return
+      if (this.svgObjects.length !== 0) {
+        this.svgObjects = this.svgObjects.map((obj) => {
+          const newObj = { ...obj, attrs: { ...obj.attrs } }
 
-      this.svgObjects = this.svgObjects.map((obj) => {
-        const newObj = { ...obj, attrs: { ...obj.attrs } }
+          const parseNum = (val) => parseFloat(val) || 0
 
-        const parseNum = (val) => parseFloat(val) || 0
+          switch (obj.tag) {
+            case 'rect':
+              if (direction === 'horizontal') {
+                const x = parseNum(obj.attrs.x)
+                const w = parseNum(obj.attrs.width)
+                newObj.attrs.x = (width - x - w).toString()
+              } else {
+                const y = parseNum(obj.attrs.y)
+                const h = parseNum(obj.attrs.height)
+                newObj.attrs.y = (height - y - h).toString()
+              }
+              break
 
-        switch (obj.tag) {
-          case 'rect':
-            if (direction === 'horizontal') {
-              const x = parseNum(obj.attrs.x)
-              const w = parseNum(obj.attrs.width)
-              newObj.attrs.x = (width - x - w).toString()
-            } else {
-              const y = parseNum(obj.attrs.y)
-              const h = parseNum(obj.attrs.height)
-              newObj.attrs.y = (height - y - h).toString()
-            }
-            break
+            case 'circle':
+              if (direction === 'horizontal') {
+                const cx = parseNum(obj.attrs.cx)
+                newObj.attrs.cx = (width - cx).toString()
+              } else {
+                const cy = parseNum(obj.attrs.cy)
+                newObj.attrs.cy = (height - cy).toString()
+              }
+              break
 
-          case 'circle':
-            if (direction === 'horizontal') {
-              const cx = parseNum(obj.attrs.cx)
-              newObj.attrs.cx = (width - cx).toString()
-            } else {
-              const cy = parseNum(obj.attrs.cy)
-              newObj.attrs.cy = (height - cy).toString()
-            }
-            break
+            case 'ellipse':
+              if (direction === 'horizontal') {
+                const cx = parseNum(obj.attrs.cx)
+                newObj.attrs.cx = (width - cx).toString()
+              } else {
+                const cy = parseNum(obj.attrs.cy)
+                newObj.attrs.cy = (height - cy).toString()
+              }
+              break
 
-          case 'ellipse':
-            if (direction === 'horizontal') {
-              const cx = parseNum(obj.attrs.cx)
-              newObj.attrs.cx = (width - cx).toString()
-            } else {
-              const cy = parseNum(obj.attrs.cy)
-              newObj.attrs.cy = (height - cy).toString()
-            }
-            break
+            case 'line':
+              if (direction === 'horizontal') {
+                newObj.attrs.x1 = (width - parseNum(obj.attrs.x1)).toString()
+                newObj.attrs.x2 = (width - parseNum(obj.attrs.x2)).toString()
+              } else {
+                newObj.attrs.y1 = (height - parseNum(obj.attrs.y1)).toString()
+                newObj.attrs.y2 = (height - parseNum(obj.attrs.y2)).toString()
+              }
+              break
 
-          case 'line':
-            if (direction === 'horizontal') {
-              newObj.attrs.x1 = (width - parseNum(obj.attrs.x1)).toString()
-              newObj.attrs.x2 = (width - parseNum(obj.attrs.x2)).toString()
-            } else {
-              newObj.attrs.y1 = (height - parseNum(obj.attrs.y1)).toString()
-              newObj.attrs.y2 = (height - parseNum(obj.attrs.y2)).toString()
-            }
-            break
+            case 'text':
+              if (direction === 'horizontal') {
+                const x = parseNum(obj.attrs.x)
+                newObj.attrs.x = (width - x).toString()
+              } else {
+                const y = parseNum(obj.attrs.y)
+                newObj.attrs.y = (height - y).toString()
+              }
+              break
 
-          case 'text':
-            if (direction === 'horizontal') {
-              const x = parseNum(obj.attrs.x)
-              newObj.attrs.x = (width - x).toString()
-            } else {
-              const y = parseNum(obj.attrs.y)
-              newObj.attrs.y = (height - y).toString()
-            }
-            break
+            // case 'path':
+            //   // This is an approximation using a transform
+            //   const currentTransform = obj.attrs.transform || ''
+            //   const flipTransform =
+            //     direction === 'horizontal'
+            //       ? `scale(-1,1) translate(${-width},0)`
+            //       : `scale(1,-1) translate(0,${-height})`
 
-          // case 'path':
-          //   // This is an approximation using a transform
-          //   const currentTransform = obj.attrs.transform || ''
-          //   const flipTransform =
-          //     direction === 'horizontal'
-          //       ? `scale(-1,1) translate(${-width},0)`
-          //       : `scale(1,-1) translate(0,${-height})`
+            //   newObj.attrs.transform = `${currentTransform} ${flipTransform}`.trim()
+            //   break
 
-          //   newObj.attrs.transform = `${currentTransform} ${flipTransform}`.trim()
-          //   break
+            default:
+              break
+          }
+        })
+      }
 
-          default:
-            break
-        }
-
-        return newObj
-      })
+      const historyStore = useHistoryStore()
+      historyStore.push(this.getSnapshot())
     },
 
     resetRotationPreview() {
@@ -726,6 +766,9 @@ export const useImageStore = defineStore('imageStore', {
       this.fileDimensions.fileAspectRatio = finalWidth / finalHeight || 1
       this.newFileDimensions = { ...this.fileDimensions }
       this.previewUrl = finalCanvas.toDataURL()
+
+      const historyStore = useHistoryStore()
+      historyStore.push(this.getSnapshot())
     },
   },
 })

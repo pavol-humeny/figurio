@@ -44,7 +44,7 @@ export function useToolsPanel(editorStore, imageStore) {
   }
 
   const exportTool = () => {
-    console.log('Export tool clicked')
+    console.log('Export tool')
     openExportToolSettings()
   }
 

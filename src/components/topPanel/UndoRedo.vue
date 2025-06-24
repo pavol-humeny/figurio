@@ -3,6 +3,7 @@ import BaseIcon from '@/components/icons/BaseIcon.vue'
 import { useUndoRedo } from '@/composables/topPanel/useUndoRedo'
 import { useImageStore } from '@/stores/imageStore'
 import ItemTip from '@/components/common/ItemTip.vue'
+import { useHistoryStore } from '@/stores/historyStore'
 
 const imageStore = useImageStore()
 
@@ -11,7 +12,7 @@ const {
   redo,
   canUndo,
   canRedo
-} = useUndoRedo()
+} = useUndoRedo(useHistoryStore(), useImageStore())
 </script>
 
 <template>

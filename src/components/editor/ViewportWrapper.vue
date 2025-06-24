@@ -6,12 +6,13 @@ import { useImageStore } from '@/stores/imageStore'
 import { useEditorStore } from '@/stores/editorStore'
 import { ref } from 'vue'
 import CropTool from '@/components/tools/CropTool.vue'
+import { useHistoryStore } from '@/stores/historyStore'
 
 const contentRef = ref(null)
 
 const editorStore = useEditorStore()
 
-const { canvasRef, svgRef } = useImageRenderer(useImageStore(), contentRef)
+const { canvasRef, svgRef } = useImageRenderer(useImageStore(), useHistoryStore(), contentRef)
 
 const {
   zoomLevel,

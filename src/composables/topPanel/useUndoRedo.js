@@ -1,23 +1,29 @@
-import { ref } from 'vue';
+import { computed } from 'vue'
 
-export function useUndoRedo() {
-  const canUndo = ref(true);
-  const canRedo = ref(false);
+export function useUndoRedo(historyStore, imageStore) {
+  const canUndo = computed(() => historyStore.currentIndex > 0)
+  const canRedo = computed(() => historyStore.currentIndex < historyStore.history.length - 1)
 
   const undo = () => {
-    // TODO - Implement undo logic here
-    if(!canUndo.value) return;
-    console.log("Undo action triggered");
+    if (!canUndo.value) return
+
+    const snapshot = historyStore.undo()
+    if (snapshot) {
+      imageStore.applySnapshot(snapshot)
+    }
   }
   const redo = () => {
-    if(!canRedo.value) return;
-    // TODO - Implement redo logic here
-    console.log("Redo action triggered");
+    if (!canRedo.value) return
+    
+    const snapshot = historyStore.redo()
+    if (snapshot) {
+      imageStore.applySnapshot(snapshot)
+    }
   }
   return {
     undo,
     redo,
     canUndo,
-    canRedo
-  };
+    canRedo,
+  }
 }

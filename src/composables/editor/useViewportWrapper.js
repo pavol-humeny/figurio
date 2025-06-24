@@ -296,8 +296,6 @@ export function useViewportWrapper(viewportStore, imageStore, editorStore, conte
       fitToScreenZoomLevel()
       centerImage()
 
-      console.log('Center on mounted')
-
       // Center the image after resizing the wrapper
       if (wrapperRef.value) {
         resizeObserver = new ResizeObserver(() => {
@@ -325,7 +323,6 @@ export function useViewportWrapper(viewportStore, imageStore, editorStore, conte
     () => imageStore.renderedImage,
     () => {
       nextTick(() => {
-        console.log('Center on change')
         viewportStore.resetZoom()
         fitToScreenZoomLevel()
         centerImage()

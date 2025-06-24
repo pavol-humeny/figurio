@@ -6,10 +6,9 @@ export function useClickOutside({ condition = () => true, onOutsideClick }) {
   const handleClickOutside = (event) => {
     if (!condition()) return
     if (wrapperRef.value && !wrapperRef.value.contains(event.target)) {
-      console.log('Clicked outside the element')
 
       // Use setTimeout to fix problem with closing and immediate re-opening
-      // of the settings panel after clicking SettingsButton 
+      // of the settings panel after clicking SettingsButton
       setTimeout(() => {
         onOutsideClick(event)
       }, 150)
