@@ -27,6 +27,7 @@
         "rotateLeft": "Rotate left",
         "rotateRight": "Rotate right",
         "freeRotation": "Free rotation",
+        "tip": "Adjust the rotation angle or double click to reset rotation",
         "resetRotationButton": {
           "text": "Reset rotation"
         },

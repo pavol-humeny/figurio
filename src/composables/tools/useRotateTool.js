@@ -21,10 +21,24 @@ export function useRotateTool(imageStore, t) {
     imageStore.resetRotation()
   }
 
+  const resetRotationAngle = () => {
+    rotationAngle.value = 0
+  }
+
+  const setRotationAngleByScroll = (event) => {
+    event.preventDefault()
+
+    const delta = event.deltaY > 0 ? -1 : 1
+    const newAngle = Math.max(-45, Math.min(45, rotationAngle.value + delta))
+    rotationAngle.value = newAngle
+  }
+
   return {
     applyRotation90,
     resetRotation,
     applyRotation,
     rotationAngle,
+    resetRotationAngle,
+    setRotationAngleByScroll,
   }
 }
