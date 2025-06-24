@@ -1,7 +1,10 @@
-import { onUnmounted, ref } from 'vue'
+import { ref } from 'vue'
+import { useMath } from '../common/useMath'
 
 export function useRotateTool(imageStore, t) {
+  const { clamp } = useMath()
   const rotationAngle = ref(0)
+  const rotationAngleInputRef = ref(null)
 
   const applyRotation90 = (direction) => {
     let angle = 0
@@ -18,6 +21,9 @@ export function useRotateTool(imageStore, t) {
     if (apply) {
       rotationAngle.value = 0
     }
+    angle = clamp(angle, -45, 45)
+    rotationAngleInputRef.value.setValue(angle)
+
     imageStore.applyRotation(angle, t, apply)
   }
 
@@ -26,20 +32,11 @@ export function useRotateTool(imageStore, t) {
     imageStore.resetRotationPreview()
   }
 
-  const setRotationAngleByScroll = (event) => {
-    event.preventDefault()
-
-    const delta = event.deltaY > 0 ? -1 : 1
-    const newAngle = Math.max(-45, Math.min(45, rotationAngle.value + delta))
-    rotationAngle.value = newAngle
-    imageStore.applyRotation(rotationAngle.value, t)
-  }
-
   return {
     applyRotation90,
     applyRotation,
     rotationAngle,
     resetRotationAngle,
-    setRotationAngleByScroll,
+    rotationAngleInputRef,
   }
 }

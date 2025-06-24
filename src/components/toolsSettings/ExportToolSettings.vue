@@ -86,14 +86,17 @@ const {
                 <label for="file-dimensions-width">{{
                   $t('tools.export.settings.general.fileDimensions.width')
                 }}</label>
-                <input
-                  v-model.number="fileDimensions.width"
-                  type="number"
-                  min="1"
-                  max="10000"
-                  @blur="updateDimension('width', fileDimensions.width)"
-                  @keydown.enter="updateDimension('width', fileDimensions.width)"
-                />
+                <div class="input-wrapper">
+                  <input
+                    v-model.number="fileDimensions.width"
+                    type="number"
+                    min="1"
+                    max="10000"
+                    @blur="updateDimension('width', fileDimensions.width)"
+                    @keydown.enter="updateDimension('width', fileDimensions.width)"
+                  />
+                  <span class="input-unit">px</span>
+                </div>
               </div>
 
               <div class="icon-wrapper">
@@ -109,15 +112,18 @@ const {
                 <label for="file-dimensions-height">{{
                   $t('tools.export.settings.general.fileDimensions.height')
                 }}</label>
-                <input
-                  v-model.number="fileDimensions.height"
-                  type="number"
-                  id="file-dimensions-height"
-                  min="1"
-                  max="10000"
-                  @blur="updateDimension('height', fileDimensions.height)"
-                  @keydown.enter="updateDimension('height', fileDimensions.height)"
-                />
+                <div class="input-wrapper">
+                  <input
+                    v-model.number="fileDimensions.height"
+                    type="number"
+                    id="file-dimensions-height"
+                    min="1"
+                    max="10000"
+                    @blur="updateDimension('height', fileDimensions.height)"
+                    @keydown.enter="updateDimension('height', fileDimensions.height)"
+                  />
+                  <span class="input-unit">px</span>
+                </div>
               </div>
 
               <div class="icon-wrapper">
@@ -233,18 +239,32 @@ const {
 .export-settings-item select,
 .export-settings-item input {
   width: 100%;
-  padding: 7px 10px;
+  padding: 7px 25px 7px 10px;
   border-radius: 10px;
   border: none;
   background: var(--background-c);
   color: var(--text-c);
 }
 
+.input-wrapper {
+  position: relative;
+  width: 100%;
+}
+
+.input-unit {
+  position: absolute;
+  right: 8px;
+  top: 45%;
+  transform: translateY(-50%);
+  font-size: 13px;
+  color: var(--text-c);
+  pointer-events: none;
+}
+
 .file-dimensions-inputs {
   display: flex;
   align-items: center;
   flex-direction: row;
-
   gap: 10px;
 }
 .file-dimensions-inputs .width,

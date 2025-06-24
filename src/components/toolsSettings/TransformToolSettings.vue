@@ -10,7 +10,6 @@ import BaseIcon from '../icons/BaseIcon.vue'
 import { useI18n } from 'vue-i18n'
 import { useFlipTool } from '@/composables/tools/useFlipTool'
 import { useRotateTool } from '@/composables/tools/useRotateTool'
-import DefaultSlider from '../common/DefaultSlider.vue'
 import NumberInput from '../common/NumberInput.vue'
 
 const { t } = useI18n()
@@ -45,7 +44,7 @@ const {
   applyRotation,
   rotationAngle,
   resetRotationAngle,
-  setRotationAngleByScroll,
+  rotationAngleInputRef,
 } = useRotateTool(useImageStore(), t)
 
 const tabs = ['rotate', 'flip', 'crop']
@@ -100,19 +99,19 @@ const tabs = ['rotate', 'flip', 'crop']
                 {{ $t('tools.transform.settings.rotate.freeRotation') }}
               </p>
             </div>
-            <DefaultSlider
+            <NumberInput
+              ref="rotationAngleInputRef"
               v-model="rotationAngle"
               :min="-45"
               :max="45"
               :step="1"
-              :valueUnit="'°'"
-              :showValue="true"
-              :style="{ margin: '0 0 10px 0' }"
+              :icon="'IconFreeRotate'"
+              :color="'var(--primary-c)'"
               :tip="$t('tools.transform.settings.rotate.tip')"
               position="bottom-left"
-              @dblclick="resetRotationAngle()"
-              @wheel="setRotationAngleByScroll"
-              @input="applyRotation(rotationAngle)"
+              @update="applyRotation(rotationAngle)"
+              :onReset="() => resetRotationAngle()"
+              unit="°"
             />
             <div class="rotate-button">
               <DefaultButton
@@ -201,6 +200,7 @@ const tabs = ['rotate', 'flip', 'crop']
                 :min="0"
                 :max="maxCropPositionX"
                 @update="(val) => updatePosition('x', val)"
+                unit="px"
               />
             </div>
 
@@ -216,6 +216,7 @@ const tabs = ['rotate', 'flip', 'crop']
                 :min="0"
                 :max="maxCropPositionY"
                 @update="(val) => updatePosition('y', val)"
+                unit="px"
               />
             </div>
           </div>
@@ -237,6 +238,7 @@ const tabs = ['rotate', 'flip', 'crop']
                 :min="0"
                 :max="maxCropWidth"
                 @update="(val) => updateDimension('width', val)"
+                unit="px"
               />
             </div>
 
@@ -261,6 +263,7 @@ const tabs = ['rotate', 'flip', 'crop']
                 :min="0"
                 :max="maxCropHeight"
                 @update="(val) => updateDimension('height', val)"
+                unit="px"
               />
             </div>
           </div>

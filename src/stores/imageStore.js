@@ -654,6 +654,8 @@ export const useImageStore = defineStore('imageStore', {
     },
 
     resetRotationPreview() {
+      if (!this.tmpImage) return
+
       this.renderedImage = this.tmpImage
       this.previewUrl = this.tmpImage.toDataURL()
       this.fileDimensions = { ...this.tmpImageDimensions }
@@ -767,8 +769,10 @@ export const useImageStore = defineStore('imageStore', {
       this.newFileDimensions = { ...this.fileDimensions }
       this.previewUrl = finalCanvas.toDataURL()
 
-      const historyStore = useHistoryStore()
-      historyStore.push(this.getSnapshot())
+      if (isRightAngle || applyCrop) {
+        const historyStore = useHistoryStore()
+        historyStore.push(this.getSnapshot())
+      }
     },
   },
 })
