@@ -43,7 +43,11 @@ export function useRotateTool(imageStore, historyStore, t) {
         t('tools.confirmNeedRasterization.cancel'),
         t('tools.confirmNeedRasterization.confirm'),
       )
-      if (!confirmed) return
+      if (!confirmed) {
+        rotationAngle.value = 0
+        return
+      }
+
       await imageStore.rasterize()
     }
 

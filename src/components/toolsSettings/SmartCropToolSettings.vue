@@ -1,19 +1,27 @@
 <script setup>
-import ToolsSettingsTabs from './ToolsSettingsTabs.vue';
+import ToolsSettingsTabs from './ToolsSettingsTabs.vue'
+import { useEditorStore } from '@/stores/editorStore'
 
-const tabs = ['auto', 'manual'];
+const editorStore = useEditorStore()
 
+const tabs = ['auto', 'manual']
 </script>
 
 <template>
   <div class="tool-settings">
-    <ToolsSettingsTabs :tabs="tabs"/>
+    <ToolsSettingsTabs :tabs="tabs" />
 
-    <div class="settings-content">
+    <div class="settings-wrapper">
+      <div
+        v-if="editorStore.selectedTabPerTool[editorStore.selectedToolKey] === 'auto'"
+        class="specific-settings"
+      >
+        <div class="settings-content-wrapper">
+          
+        </div>
+      </div>
     </div>
   </div>
-
 </template>
 
-<style scoped>
-</style>
+<style scoped></style>

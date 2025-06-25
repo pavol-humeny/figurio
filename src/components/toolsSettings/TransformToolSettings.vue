@@ -1,18 +1,17 @@
 <script setup>
 import ToolsSettingsTabs from './ToolsSettingsTabs.vue'
-import { useEditorStore } from '@/stores/editorStore'
 import DefaultButton from '../common/DefaultButton.vue'
+import LinkValuesIcon from '../common/LinkValuesIcon.vue'
+import BaseIcon from '../icons/BaseIcon.vue'
+import NumberInput from '../common/NumberInput.vue'
+import { useEditorStore } from '@/stores/editorStore'
 import { useImageStore } from '@/stores/imageStore'
 import { useViewportStore } from '@/stores/viewportStore'
-import LinkValuesIcon from '../common/LinkValuesIcon.vue'
 import { useCropTool } from '@/composables/tools/useCropTool'
-import BaseIcon from '../icons/BaseIcon.vue'
-import { useI18n } from 'vue-i18n'
 import { useFlipTool } from '@/composables/tools/useFlipTool'
 import { useRotateTool } from '@/composables/tools/useRotateTool'
-import NumberInput from '../common/NumberInput.vue'
-import { ref } from 'vue'
 import { useHistoryStore } from '@/stores/historyStore'
+import { useI18n } from 'vue-i18n'
 
 const { t } = useI18n()
 
@@ -48,8 +47,6 @@ const { applyRotation, rotationAngle, resetRotationAngle, rotationAngleInputRef 
 )
 
 const tabs = ['rotate', 'flip', 'crop']
-
-const scaleLevel = ref(1)
 </script>
 
 <template>
@@ -62,14 +59,14 @@ const scaleLevel = ref(1)
         class="specific-settings"
       >
         <div class="settings-content-wrapper">
-          <div class="rotate-wrapper">
-            <div class="rotate-title">
+          <div class="content-wrapper">
+            <div class="content-title">
               <BaseIcon name="IconRotateLeft" size="25" :color="'var(--primary-c)'" />
               <p>
                 {{ $t('tools.transform.settings.rotate.rotateLeft') }}
               </p>
             </div>
-            <div class="rotate-button">
+            <div class="content-button">
               <DefaultButton
                 :text="$t('tools.transform.settings.rotate.applyRotationButton.text')"
                 @click="applyRotation(-90)"
@@ -78,14 +75,14 @@ const scaleLevel = ref(1)
           </div>
         </div>
         <div class="settings-content-wrapper">
-          <div class="rotate-wrapper">
-            <div class="rotate-title">
+          <div class="content-wrapper">
+            <div class="content-title">
               <BaseIcon name="IconRotateRight" size="25" :color="'var(--primary-c)'" />
               <p>
                 {{ $t('tools.transform.settings.rotate.rotateRight') }}
               </p>
             </div>
-            <div class="rotate-button">
+            <div class="content-button">
               <DefaultButton
                 :text="$t('tools.transform.settings.rotate.applyRotationButton.text')"
                 @click="applyRotation(90)"
@@ -94,8 +91,8 @@ const scaleLevel = ref(1)
           </div>
         </div>
         <div class="settings-content-wrapper">
-          <div class="rotate-wrapper">
-            <div class="rotate-title">
+          <div class="content-wrapper">
+            <div class="content-title">
               <BaseIcon name="IconFreeRotate" size="25" :color="'var(--primary-c)'" />
               <p>
                 {{ $t('tools.transform.settings.rotate.freeRotation') }}
@@ -115,7 +112,7 @@ const scaleLevel = ref(1)
               :onReset="() => resetRotationAngle()"
               unit="°"
             />
-            <div class="rotate-button">
+            <div class="content-button">
               <DefaultButton
                 :text="$t('tools.transform.settings.rotate.applyRotationButton.text')"
                 @click="applyRotation(rotationAngle, true)"
@@ -125,7 +122,7 @@ const scaleLevel = ref(1)
           </div>
         </div>
 
-        <div class="settings-content" style="border: none">
+        <div class="settings-content-wrapper" style="border: none">
           <!-- Empty space -->
         </div>
       </div>
@@ -135,14 +132,14 @@ const scaleLevel = ref(1)
         class="specific-settings"
       >
         <div class="settings-content-wrapper">
-          <div class="flip-wrapper">
-            <div class="flip-title">
+          <div class="content-wrapper">
+            <div class="content-title">
               <BaseIcon name="IconFlipHorizontal" size="30" :color="'var(--primary-c)'" />
               <p>
                 {{ $t('tools.transform.settings.flip.horizontal') }}
               </p>
             </div>
-            <div class="flip-button">
+            <div class="content-button">
               <DefaultButton
                 :text="$t('tools.transform.settings.flip.applyFlipButton.text')"
                 @click="applyFlip('horizontal')"
@@ -151,14 +148,14 @@ const scaleLevel = ref(1)
           </div>
         </div>
         <div class="settings-content-wrapper">
-          <div class="flip-wrapper">
-            <div class="flip-title">
+          <div class="content-wrapper">
+            <div class="content-title">
               <BaseIcon name="IconFlipVertical" size="30" :color="'var(--primary-c)'" />
               <p>
                 {{ $t('tools.transform.settings.flip.vertical') }}
               </p>
             </div>
-            <div class="flip-button">
+            <div class="content-button">
               <DefaultButton
                 :text="$t('tools.transform.settings.flip.applyFlipButton.text')"
                 @click="applyFlip('vertical')"
@@ -166,7 +163,7 @@ const scaleLevel = ref(1)
             </div>
           </div>
         </div>
-        <div class="settings-content" style="border: none">
+        <div class="settings-content-wrapper" style="border: none">
           <!-- Empty space -->
         </div>
       </div>
@@ -174,104 +171,102 @@ const scaleLevel = ref(1)
         v-if="editorStore.selectedTabPerTool[editorStore.selectedToolKey] === 'scale'"
         class="specific-settings"
       >
-        <div class="settings-content-wrapper">
-          <div class="scale-wrapper"></div>
-        </div>
-        <div class="settings-content" style="border: none">
-          Empty space
-        </div>
       </div> -->
       <div
         v-if="editorStore.selectedTabPerTool[editorStore.selectedToolKey] === 'crop'"
         class="specific-settings"
       >
         <div class="settings-content-wrapper">
-          <div class="settings-content-title">
-            <label>
-              {{ $t('tools.transform.settings.crop.cropPosition.title') }}
-            </label>
-          </div>
-          <div class="settings-content-inputs">
-            <div class="x">
-              <label for="x-input">
-                {{ $t('tools.transform.settings.crop.cropPosition.x') }}
+          <div class="content-wrapper">
+            <div class="content-title">
+              <label>
+                {{ $t('tools.transform.settings.crop.cropPosition.title') }}
               </label>
-              <NumberInput
-                ref="PositionXInputRef"
-                v-model="cropPositionX"
-                :min="0"
-                :max="maxCropPositionX"
-                @update="(val) => updatePosition('x', val)"
-                unit="px"
-              />
             </div>
+            <div class="content-inputs">
+              <div class="content-input">
+                <label for="x-input">
+                  {{ $t('tools.transform.settings.crop.cropPosition.x') }}
+                </label>
+                <NumberInput
+                  ref="PositionXInputRef"
+                  v-model="cropPositionX"
+                  :min="0"
+                  :max="maxCropPositionX"
+                  @update="(val) => updatePosition('x', val)"
+                  unit="px"
+                />
+              </div>
 
-            <div class="settings-content-icon-wrapper"></div>
+              <div class="content-between-inputs-icon-wrapper disabled"></div>
 
-            <div class="y">
-              <label for="y-input">
-                {{ $t('tools.transform.settings.crop.cropPosition.y') }}
-              </label>
-              <NumberInput
-                ref="PositionYInputRef"
-                v-model="cropPositionY"
-                :min="0"
-                :max="maxCropPositionY"
-                @update="(val) => updatePosition('y', val)"
-                unit="px"
-              />
-            </div>
-          </div>
-        </div>
-        <div class="settings-content-wrapper">
-          <div class="settings-content-title">
-            <label>
-              {{ $t('tools.transform.settings.crop.cropDimensions.title') }}
-            </label>
-          </div>
-          <div class="settings-content-inputs">
-            <div class="width">
-              <label for="width-input">
-                {{ $t('tools.transform.settings.crop.cropDimensions.width') }}
-              </label>
-              <NumberInput
-                ref="widthInputRef"
-                v-model="tmpCropWidth"
-                :min="0"
-                :max="maxCropWidth"
-                @update="(val) => updateDimension('width', val)"
-                unit="px"
-              />
-            </div>
-
-            <div class="settings-content-icon-wrapper">
-              <LinkValuesIcon
-                v-model="isDimensionsLinked"
-                :tipLinked="$t('tools.transform.settings.crop.cropDimensions.tipLinked')"
-                :tipUnlinked="$t('tools.transform.settings.crop.cropDimensions.tipUnlinked')"
-                size="30"
-                :disabled="cropRatio !== null"
-                position="bottom-left"
-              />
-            </div>
-
-            <div class="height">
-              <label for="height-input">
-                {{ $t('tools.transform.settings.crop.cropDimensions.height') }}
-              </label>
-              <NumberInput
-                ref="heightInputRef"
-                v-model="tmpCropHeight"
-                :min="0"
-                :max="maxCropHeight"
-                @update="(val) => updateDimension('height', val)"
-                unit="px"
-              />
+              <div class="content-input">
+                <label for="y-input">
+                  {{ $t('tools.transform.settings.crop.cropPosition.y') }}
+                </label>
+                <NumberInput
+                  ref="PositionYInputRef"
+                  v-model="cropPositionY"
+                  :min="0"
+                  :max="maxCropPositionY"
+                  @update="(val) => updatePosition('y', val)"
+                  unit="px"
+                />
+              </div>
             </div>
           </div>
         </div>
         <div class="settings-content-wrapper">
-          <div class="settings-content-title">
+          <div class="content-wrapper">
+            <div class="content-title">
+              <label>
+                {{ $t('tools.transform.settings.crop.cropDimensions.title') }}
+              </label>
+            </div>
+            <div class="content-inputs">
+              <div class="content-input">
+                <label for="width-input">
+                  {{ $t('tools.transform.settings.crop.cropDimensions.width') }}
+                </label>
+                <NumberInput
+                  ref="widthInputRef"
+                  v-model="tmpCropWidth"
+                  :min="0"
+                  :max="maxCropWidth"
+                  @update="(val) => updateDimension('width', val)"
+                  unit="px"
+                />
+              </div>
+
+              <div class="content-between-inputs-icon-wrapper">
+                <LinkValuesIcon
+                  v-model="isDimensionsLinked"
+                  :tipLinked="$t('tools.transform.settings.crop.cropDimensions.tipLinked')"
+                  :tipUnlinked="$t('tools.transform.settings.crop.cropDimensions.tipUnlinked')"
+                  size="30"
+                  :disabled="cropRatio !== null"
+                  position="bottom-left"
+                />
+              </div>
+
+              <div class="content-input">
+                <label for="height-input">
+                  {{ $t('tools.transform.settings.crop.cropDimensions.height') }}
+                </label>
+                <NumberInput
+                  ref="heightInputRef"
+                  v-model="tmpCropHeight"
+                  :min="0"
+                  :max="maxCropHeight"
+                  @update="(val) => updateDimension('height', val)"
+                  unit="px"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="settings-content-wrapper">
+          <div class="content-title">
             <label>
               {{ $t('tools.transform.settings.crop.cropVariants.label') }}
             </label>
@@ -340,12 +335,16 @@ const scaleLevel = ref(1)
           </div>
         </div>
         <div class="settings-content-wrapper">
-          <DefaultButton
-            :text="$t('tools.transform.settings.crop.applyCropButton.text')"
-            @click="applyCrop"
-          />
+          <div class="content-wrapper">
+            <div class="content-button">
+              <DefaultButton
+                :text="$t('tools.transform.settings.crop.applyCropButton.text')"
+                @click="applyCrop"
+              />
+            </div>
+          </div>
         </div>
-        <div class="settings-content" style="border: none">
+        <div class="settings-content-wrapper" style="border: none">
           <!-- Empty space -->
         </div>
       </div>
@@ -354,79 +353,6 @@ const scaleLevel = ref(1)
 </template>
 
 <style scoped>
-.tool-settings {
-  width: 100%;
-  height: 100%;
-}
-.settings-wrapper {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  width: 100%;
-  height: 100%;
-  color: var(--text-c);
-  overflow-y: auto;
-  overflow-x: hidden;
-}
-.specific-settings {
-  width: 100%;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-.settings-content-wrapper {
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-  padding: 20px 30px 20px 0;
-  border-bottom: var(--border-ui);
-}
-
-.settings-content-title {
-  width: 100%;
-  font-size: var(--subtitle-font-size);
-  font-weight: var(--subtitle-font-weight);
-  display: flex;
-  justify-content: center;
-}
-
-.settings-content-inputs {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-direction: row;
-  gap: 10px;
-  width: 100%;
-}
-
-.settings-content-inputs .width,
-.settings-content-inputs .height,
-.settings-content-inputs .x,
-.settings-content-inputs .y {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 2px;
-}
-.settings-content-inputs .width label,
-.settings-content-inputs .height label,
-.settings-content-inputs .x label,
-.settings-content-inputs .y label {
-  font-size: var(--text-font-size);
-}
-
-.settings-content-icon-wrapper {
-  padding-top: 20px;
-  width: 30px;
-  cursor: pointer;
-}
-
 .crop-variants-wrapper {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -452,53 +378,5 @@ const scaleLevel = ref(1)
 .crop-variant.active {
   background: var(--secondary-c);
   border-radius: 10px;
-}
-
-.flip-wrapper {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-direction: column;
-  gap: 10px;
-}
-
-.flip-title {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-direction: row;
-  gap: 10px;
-}
-
-.scale-wrapper {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-direction: column;
-  gap: 10px;
-}
-
-.rotate-wrapper {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-direction: column;
-  gap: 10px;
-}
-
-.rotate-wrapper {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-direction: column;
-  gap: 10px;
-}
-
-.rotate-title {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-direction: row;
-  gap: 10px;
 }
 </style>

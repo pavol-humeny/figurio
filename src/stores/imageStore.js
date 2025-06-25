@@ -1,12 +1,9 @@
+import jsPDF from 'jspdf'
 import { defineStore } from 'pinia'
 import { useToastModal } from '@/composables/modals/useToastModal'
 import { nextTick } from 'vue'
-import { useConfirmModal } from '@/composables/modals/useConfirmModal'
-import jsPDF from 'jspdf'
-import { useHistoryStore } from '@/stores/historyStore'
 
 const { showToastModal } = useToastModal()
-const { showConfirmModal } = useConfirmModal()
 
 const isValidFileName = (name) => {
   // Invalid characters: \ / : * ? " < > |

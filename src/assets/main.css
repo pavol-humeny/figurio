@@ -6,6 +6,7 @@
   user-select: none;
 }
 
+/* Buttons styles */
 .button {
   border-radius: 20px;
   cursor: pointer;
@@ -69,6 +70,7 @@
   color: var(--primary-c);
 }
 
+/* Animation window shake styles */
 @keyframes shake {
   0% {
     transform: translateX(0);
@@ -93,6 +95,7 @@
   animation: shake 0.3s ease;
 }
 
+/* Input styles */
 input[type='number']::-webkit-outer-spin-button,
 input[type='number']::-webkit-inner-spin-button {
   -webkit-appearance: none;
@@ -103,6 +106,7 @@ input[type='number'] {
   -moz-appearance: textfield;
 }
 
+/* Scrollbar styles */
 /* Chrome, Edge and Safari */
 /* *::-webkit-scrollbar {
   height: 10px;
@@ -117,3 +121,100 @@ input[type='number'] {
   border-radius: 5px;
   background-color: var(--secondary-c);
 } */
+
+/* Tools settings styles */
+.tool-settings {
+  width: 100%;
+  height: 100%;
+}
+.settings-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  color: var(--text-c);
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+.content-wrapper{
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+.specific-settings {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.settings-content-wrapper {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 20px 30px 20px 0;
+  border-bottom: var(--border-ui);
+}
+
+.settings-content-title {
+  width: 100%;
+  font-size: var(--subtitle-font-size);
+  font-weight: var(--subtitle-font-weight);
+  display: flex;
+  justify-content: center;
+}
+
+.content-inputs {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: row;
+  gap: 10px;
+  width: 100%;
+}
+
+.content-input {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+}
+.content-input label {
+  font-size: var(--text-font-size);
+}
+
+.content-between-inputs-icon-wrapper {
+  padding-top: 20px;
+  width: 30px;
+  cursor: pointer;
+}
+.content-between-inputs-icon-wrapper.disabled {
+  pointer-events: none;
+}
+
+.content-title {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: row;
+  gap: 10px;
+}
+
+.content-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: row;
+  gap: 10px;
+}
