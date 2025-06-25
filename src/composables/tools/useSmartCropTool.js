@@ -1,4 +1,4 @@
-import { ref, watch,nextTick } from 'vue'
+import { ref, watch } from 'vue'
 import { useConfirmModal } from '../modals/useConfirmModal'
 import { useMath } from '../common/useMath'
 
@@ -37,6 +37,10 @@ export function useSmartCropTool(imageStore, historyStore, editorStore, t) {
   const { clamp } = useMath()
 
   const resetCropBox = () => {
+    selectedColor.value = '#ffffff'
+
+    isCropShown.value = false
+
     topIndent.value = 0
     bottomIndent.value = 0
     leftIndent.value = 0
@@ -48,6 +52,8 @@ export function useSmartCropTool(imageStore, historyStore, editorStore, t) {
     cropBox.value.bottomIndent = 0
     cropBox.value.width = imageStore.fileDimensions.width
     cropBox.value.height = imageStore.fileDimensions.height
+
+    editorStore.selectSubTool('')
   }
 
   watch(
@@ -92,17 +98,18 @@ export function useSmartCropTool(imageStore, historyStore, editorStore, t) {
     leftIndentMax.value = imageStore.fileDimensions.width - cropBox.value.rightIndent
   })
 
+  watch(selectedColor, (value) => {
+    resetCropBox()
+    selectedColor.value = value
+  })
+
   const applyAutoSmartCrop = async () => {
     await applyCrop()
-    isCropShown.value = false
-    editorStore.selectSubTool('')
   }
 
   const showAutoSmartCrop = async () => {
     await calculateIndents()
     isCropShown.value = !isCropShown.value
-
-    await nextTick()
 
     if (isCropShown.value) {
       editorStore.selectSubTool('isCropShown')
@@ -113,8 +120,6 @@ export function useSmartCropTool(imageStore, historyStore, editorStore, t) {
 
   const applyManualSmartCrop = async () => {
     await applyCrop()
-    isCropShown.value = false
-    editorStore.selectSubTool('')
   }
 
   const calculateIndents = async () => {
@@ -231,19 +236,10 @@ export function useSmartCropTool(imageStore, historyStore, editorStore, t) {
     }
 
     // Nastavenie hodnôt
-
-    topIndent.value = -1
-    bottomIndent.value = -1
-    leftIndent.value = -1
-    rightIndent.value = -1
-
-
     topIndent.value = top
     bottomIndent.value = height - 1 - bottom
     leftIndent.value = left
     rightIndent.value = width - 1 - right
-
-    console.log('cropBox', cropBox.value)
   }
 
   const applyCrop = async () => {

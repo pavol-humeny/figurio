@@ -73,6 +73,7 @@ const tabs = ['auto', 'manual']
               <DefaultButton
                 :text="$t('tools.smartCrop.settings.auto.applySmartCropAutoButton.text')"
                 @click="applyAutoSmartCrop"
+                :disabled="!isCropShown"
               />
             </div>
           </div>
