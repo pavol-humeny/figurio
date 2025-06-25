@@ -38,7 +38,7 @@ const {
   selectSubTool,
   cropRatio,
   applyCrop,
-} = useCropTool(useImageStore(), useViewportStore(), useEditorStore(), t)
+} = useCropTool(useImageStore(), useViewportStore(), useEditorStore(), useHistoryStore(), t)
 
 const { applyFlip } = useFlipTool(useImageStore(), useHistoryStore())
 

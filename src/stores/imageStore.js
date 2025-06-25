@@ -490,59 +490,6 @@ export const useImageStore = defineStore('imageStore', {
     },
 
     // Operations
-    async applyCrop(cropBox, t) {
-      if (!this.renderedImage || !cropBox) return
-
-      // Create confirm modal to confirm rasterization if there are SVG objects
-      if (this.svgObjects.length > 0) {
-        const confirmed = await showConfirmModal(
-          t('tools.confirmNeedRasterization.title'),
-          t('tools.confirmNeedRasterization.message'),
-          t('tools.confirmNeedRasterization.cancel'),
-          t('tools.confirmNeedRasterization.confirm'),
-        )
-        if (confirmed) {
-          await this.rasterize()
-        } else {
-          return
-        }
-      }
-
-      const { x, y, width, height } = cropBox
-
-      const canvas = document.createElement('canvas')
-      const ctx = canvas.getContext('2d')
-
-      canvas.width = width
-      canvas.height = height
-
-      ctx.drawImage(
-        this.renderedImage,
-        x,
-        y,
-        width,
-        height, // source region
-        0,
-        0,
-        width,
-        height, // destination canvas
-      )
-
-      // Update rendered image and preview URL
-      this.renderedImage = canvas
-      // this.tmpImage = canvas
-      this.previewUrl = canvas.toDataURL()
-
-      // Update file dimensions
-      this.fileDimensions.width = width
-      this.fileDimensions.height = height
-      this.fileDimensions.fileAspectRatio = width / height || 1
-
-      this.newFileDimensions = { ...this.fileDimensions }
-
-      const historyStore = useHistoryStore()
-      historyStore.push(this.getSnapshot())
-    },
 
     resetRotationPreview() {
       if (!this.tmpImage) return

@@ -1,5 +1,6 @@
 import { useMath } from '@/composables/common/useMath'
 import { computed, ref, nextTick, watch, onMounted } from 'vue'
+import { useConfirmModal } from '../modals/useConfirmModal'
 
 const cropRatio = ref(null)
 
@@ -15,7 +16,9 @@ const cropBox = ref({
   startY: 0,
 })
 
-export function useCropTool(imageStore, viewportStore, editorStore, t) {
+export function useCropTool(imageStore, viewportStore, editorStore, historyStore, t) {
+  const { showConfirmModal } = useConfirmModal()
+
   const { clamp } = useMath()
 
   watch(
@@ -147,7 +150,6 @@ export function useCropTool(imageStore, viewportStore, editorStore, t) {
       }
     }
     nextTick(() => {
-
       // heightInputRef.value.value = cropHeight.value
       heightInputRef.value.setValue(cropHeight.value)
       // widthInputRef.value.value = cropWidth.value
@@ -457,8 +459,56 @@ export function useCropTool(imageStore, viewportStore, editorStore, t) {
     cropBox.value.y = Math.round((fileHeight - cropBox.value.height) / 2)
   }
 
-  const applyCrop = () => {
-    imageStore.applyCrop(cropBox.value, t)
+  const applyCrop = async () => {
+    if (!imageStore.renderedImage || !cropBox.value) return
+
+    // Create confirm modal to confirm rasterization if there are SVG objects
+    if (imageStore.svgObjects.length > 0) {
+      const confirmed = await showConfirmModal(
+        t('tools.confirmNeedRasterization.title'),
+        t('tools.confirmNeedRasterization.message'),
+        t('tools.confirmNeedRasterization.cancel'),
+        t('tools.confirmNeedRasterization.confirm'),
+      )
+      if (confirmed) {
+        await imageStore.rasterize()
+      } else {
+        return
+      }
+    }
+
+    const { x, y, width, height } = cropBox.value
+
+    const canvas = document.createElement('canvas')
+    const ctx = canvas.getContext('2d')
+
+    canvas.width = width
+    canvas.height = height
+
+    ctx.drawImage(
+      imageStore.renderedImage,
+      x,
+      y,
+      width,
+      height, // Source region
+      0,
+      0,
+      width,
+      height, // Destination canvas
+    )
+
+    // Update rendered image and preview URL
+    imageStore.renderedImage = canvas
+    imageStore.previewUrl = canvas.toDataURL()
+
+    // Update file dimensions
+    imageStore.fileDimensions.width = width
+    imageStore.fileDimensions.height = height
+    imageStore.fileDimensions.fileAspectRatio = width / height || 1
+
+    imageStore.newFileDimensions = { ...imageStore.fileDimensions }
+
+    historyStore.push(imageStore.getSnapshot())
   }
 
   return {

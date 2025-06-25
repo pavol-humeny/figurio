@@ -4,10 +4,11 @@ import { useEditorStore } from '@/stores/editorStore'
 import { useViewportStore } from '@/stores/viewportStore'
 import { useCropTool } from '@/composables/tools/useCropTool'
 import { useI18n } from 'vue-i18n'
+import { useHistoryStore } from '@/stores/historyStore'
 
 const { t } = useI18n()
 
-const { startPan, startResize, cropBox } = useCropTool(useImageStore(), useViewportStore(), useEditorStore(), t)
+const { startPan, startResize, cropBox } = useCropTool(useImageStore(), useViewportStore(), useEditorStore(), useHistoryStore(), t)
 </script>
 
 <template>
