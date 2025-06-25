@@ -6,6 +6,7 @@ import { useImageStore } from '@/stores/imageStore'
 import { useEditorStore } from '@/stores/editorStore'
 import { ref } from 'vue'
 import CropTool from '@/components/tools/CropTool.vue'
+import SmartCropTool from '../tools/SmartCropTool.vue'
 import { useHistoryStore } from '@/stores/historyStore'
 
 const contentRef = ref(null)
@@ -30,6 +31,7 @@ const {
   verticalSliderHeight,
   horizontalSliderWidth,
 } = useViewportWrapper(useViewportStore(), useImageStore(), useEditorStore(), contentRef)
+
 </script>
 
 <template>
@@ -55,6 +57,12 @@ const {
         <svg ref="svgRef" class="image-svg"></svg>
 
         <CropTool v-if="editorStore.selectedTabPerTool[editorStore.selectedToolKey] === 'crop'" />
+        <SmartCropTool
+          v-if="
+            editorStore.selectedToolKey === 'smartCrop' &&
+            (editorStore.selectedSubToolKey === 'isCropShown' || editorStore.selectedTabPerTool.smartCrop === 'manual')
+          "
+        />
       </div>
     </div>
 

@@ -82,14 +82,31 @@
     "settings": {
       "auto": {
         "label": "Auto",
-        "apply": "Apply"
+        "selectColor": {
+          "title": "Select color to crop"
+        },
+        "applySmartCropAutoButton": {
+          "text": "Apply crop"
+        },
+        "showSmartCropAutoButton": {
+          "text": {
+            "show": "Show crop",
+            "hide": "Hide crop"
+          }
+        }
       },
       "manual": {
         "label": "Manual",
-        "top": "Top",
-        "bottom": "Bottom",
-        "left": "Left",
-        "right": "Right"
+        "adjustment": {
+          "title": "Manual adjustment",
+          "top": "Top indent",
+          "bottom": "Bottom indent",
+          "left": "Left indent",
+          "right": "Right indent"
+        },
+        "applySmartCropManualButton": {
+          "text": "Apply crop"
+        }
       }
     }
   },

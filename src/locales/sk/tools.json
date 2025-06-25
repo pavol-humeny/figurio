@@ -81,15 +81,32 @@
     "tipDisabled": "",
     "settings": {
       "auto": {
-        "label": "Automaticky",
-        "apply": "Použiť"
+        "label": "Automatické",
+        "selectColor": {
+          "title": "Vyber farbu na orezanie"
+        },
+        "applySmartCropAutoButton": {
+          "text": "Použiť orezanie"
+        },
+        "showSmartCropAutoButton": {
+          "text": {
+            "show": "Zobraziť orezanie",
+            "hide": "Skryť orezanie"
+          }
+        }
       },
       "manual": {
         "label": "Manuálne",
-        "top": "Hore",
-        "bottom": "Dole",
-        "left": "Vľavo",
-        "right": "Vpravo"
+        "adjustment": {
+          "title": "Manuálna úprava",
+          "top": "Horné odsadenie",
+          "bottom": "Dolné odsadenie",
+          "left": "Ľavé odsadenie",
+          "right": "Pravé odsadenie"
+        },
+        "applySmartCropManualButton": {
+          "text": "Použiť orezanie"
+        }
       }
     }
   },

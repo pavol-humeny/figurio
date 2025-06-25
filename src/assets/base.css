@@ -34,8 +34,8 @@
   --overlay-c-light: rgba(0, 0, 0, 0.5);
   --overlay-c-dark: rgba(0, 0, 0, 0.3);
 
-  --crop-c-light: rgba(0, 0, 0, 0.3);
-  --crop-c-dark: rgba(255, 255, 255, 0.3);
+  --crop-c-light: rgba(59, 117, 194, 0.4);
+  --crop-c-dark: rgba(49, 130, 197, 0.4);
 
   --editor-highlight-c: #1B70B6;
 }
@@ -100,7 +100,7 @@ body {
   --border-input: 1px solid var(--primary-c);
   --border-button: 2px solid var(--primary-c);
   --border-drag-and-drop: 2px dashed var(--primary-c);
-  --border-crop : 2px dashed var(--text-c);
+  --border-crop : 1px dashed var(--editor-highlight-c);
 
   --default-transition: all 0.2s ease-in-out;
 

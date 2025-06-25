@@ -8,7 +8,13 @@ import { useHistoryStore } from '@/stores/historyStore'
 
 const { t } = useI18n()
 
-const { startPan, startResize, cropBox } = useCropTool(useImageStore(), useViewportStore(), useEditorStore(), useHistoryStore(), t)
+const { startPan, startResize, cropBox } = useCropTool(
+  useImageStore(),
+  useViewportStore(),
+  useEditorStore(),
+  useHistoryStore(),
+  t,
+)
 </script>
 
 <template>
@@ -48,7 +54,7 @@ const { startPan, startResize, cropBox } = useCropTool(useImageStore(), useViewp
   cursor: move;
 }
 
-/* Resize úchyty */
+/* Resize corners */
 .resizer {
   position: absolute;
   width: 14px;

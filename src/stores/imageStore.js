@@ -50,30 +50,30 @@ export const useImageStore = defineStore('imageStore', {
     // Value for raster image rendering
     renderedImage: null, // UndoRedo
     // Value for SVG rendering
-    // svgObjects: [], // UndoRedo
-    svgObjects: [
-      {
-        tag: 'rect',
-        attrs: {
-          x: 50,
-          y: 40,
-          width: 200,
-          height: 100,
-          fill: 'red',
-          stroke: 'red',
-        },
-      },
-      {
-        tag: 'circle',
-        attrs: {
-          cx: 300,
-          cy: 200,
-          r: 50,
-          fill: 'blue',
-          stroke: 'black',
-        },
-      },
-    ],
+    svgObjects: [], // UndoRedo
+    // svgObjects: [
+    //   {
+    //     tag: 'rect',
+    //     attrs: {
+    //       x: 50,
+    //       y: 40,
+    //       width: 200,
+    //       height: 100,
+    //       fill: 'red',
+    //       stroke: 'red',
+    //     },
+    //   },
+    //   {
+    //     tag: 'circle',
+    //     attrs: {
+    //       cx: 300,
+    //       cy: 200,
+    //       r: 50,
+    //       fill: 'blue',
+    //       stroke: 'black',
+    //     },
+    //   },
+    // ],
     selectedSvgObjectId: null,
 
     imageOperations: {

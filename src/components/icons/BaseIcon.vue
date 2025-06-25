@@ -79,7 +79,7 @@ const iconComponent = computed(() => {
   vertical-align: middle;
 }
 .icon.disabled {
-  opacity: 0.5;
+  opacity: 0.4;
   pointer-events: none;
 }
 </style>

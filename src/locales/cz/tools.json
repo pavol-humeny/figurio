@@ -81,15 +81,32 @@
     "tipDisabled": "",
     "settings": {
       "auto": {
-        "label": "Automaticky",
-        "apply": "Použít"
+        "label": "Automatické",
+        "selectColor": {
+          "title": "Vyber barvu oříznutí"
+        },
+        "applySmartCropAutoButton": {
+          "text": "Použít oříznutí"
+        },
+        "showSmartCropAutoButton": {
+          "text": {
+            "show": "Zobrazit oříznutí",
+            "hide": "Skrýt oříznutí"
+          }
+        }
       },
       "manual": {
-        "label": "Manuálně",
-        "top": "Nahoře",
-        "bottom": "Dole",
-        "left": "Vlevo",
-        "right": "Vpravo"
+        "label": "Manuální",
+        "adjustment": {
+          "title": "Manuální úprava",
+          "top": "Horní odsazení",
+          "bottom": "Dolní odsazení",
+          "left": "Levý odsazení",
+          "right": "Pravý odsazení"
+        },
+        "applySmartCropManualButton": {
+          "text": "Použít oříznutí"
+        }
       }
     }
   },
