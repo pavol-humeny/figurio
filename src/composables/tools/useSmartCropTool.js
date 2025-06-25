@@ -57,6 +57,15 @@ export function useSmartCropTool(imageStore, historyStore, editorStore, t) {
     editorStore.selectSubTool('')
   }
 
+  resetCropBox()
+
+  watch(
+    () => imageStore.renderedImage,
+    () => {
+      resetCropBox()
+    },
+  )
+
   watch(
     () => imageStore.fileDimensions,
     (fileDimensions) => {
