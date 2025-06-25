@@ -68,6 +68,7 @@ watch(
 const onBlurOrEnter = () => {
   emit('update:modelValue', inputValue.value)
   emit('update', inputValue.value)
+
 }
 
 const onIconDoubleClick = () => {
@@ -145,7 +146,6 @@ const showUnit = props.unit !== ''
 <style scoped>
 .input-wrapper {
   position: relative;
-  width: 100%;
 }
 
 input[type='number'] {
