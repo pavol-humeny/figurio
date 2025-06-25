@@ -11,7 +11,6 @@ import { useI18n } from 'vue-i18n'
 import { useFlipTool } from '@/composables/tools/useFlipTool'
 import { useRotateTool } from '@/composables/tools/useRotateTool'
 import NumberInput from '../common/NumberInput.vue'
-import StepperInput from '../common/StepperInput.vue'
 import { ref } from 'vue'
 import { useHistoryStore } from '@/stores/historyStore'
 
@@ -42,8 +41,11 @@ const {
 
 const { applyFlip } = useFlipTool(useImageStore(), useHistoryStore())
 
-const { applyRotation90, applyRotation, rotationAngle, resetRotationAngle, rotationAngleInputRef } =
-  useRotateTool(useImageStore(), t)
+const { applyRotation, rotationAngle, resetRotationAngle, rotationAngleInputRef } = useRotateTool(
+  useImageStore(),
+  useHistoryStore(),
+  t,
+)
 
 const tabs = ['rotate', 'flip', 'crop']
 
@@ -70,7 +72,7 @@ const scaleLevel = ref(1)
             <div class="rotate-button">
               <DefaultButton
                 :text="$t('tools.transform.settings.rotate.applyRotationButton.text')"
-                @click="applyRotation90('left')"
+                @click="applyRotation(-90)"
               />
             </div>
           </div>
@@ -86,7 +88,7 @@ const scaleLevel = ref(1)
             <div class="rotate-button">
               <DefaultButton
                 :text="$t('tools.transform.settings.rotate.applyRotationButton.text')"
-                @click="applyRotation90('right')"
+                @click="applyRotation(90)"
               />
             </div>
           </div>
@@ -112,14 +114,6 @@ const scaleLevel = ref(1)
               @update="applyRotation(rotationAngle)"
               :onReset="() => resetRotationAngle()"
               unit="°"
-            />
-            <StepperInput
-              v-model="scaleLevel"
-              :min="-10"
-              :max="10"
-              :step="1"
-              tip="Zväčši/zmenši úroveň"
-              :onReset="() => (scaleLevel = 0)"
             />
             <div class="rotate-button">
               <DefaultButton
