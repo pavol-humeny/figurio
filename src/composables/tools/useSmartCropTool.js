@@ -1,10 +1,11 @@
 import { ref, watch } from 'vue'
 import { useConfirmModal } from '../modals/useConfirmModal'
 import { useMath } from '../common/useMath'
+import { editorConfig } from '@/config/editorConfig'
 
 const isCropShown = ref(false)
 
-const selectedColor = ref('#ffffff')
+const selectedColor = ref(editorConfig.smartCropDefaultColor)
 
 // Indents
 const topIndent = ref(0)
@@ -37,7 +38,7 @@ export function useSmartCropTool(imageStore, historyStore, editorStore, t) {
   const { clamp } = useMath()
 
   const resetCropBox = () => {
-    selectedColor.value = '#ffffff'
+    selectedColor.value = editorConfig.smartCropDefaultColor
 
     isCropShown.value = false
 
@@ -165,7 +166,7 @@ export function useSmartCropTool(imageStore, historyStore, editorStore, t) {
       const r = imageData[index]
       const g = imageData[index + 1]
       const b = imageData[index + 2]
-      const tolerance = 5
+      const tolerance = editorConfig.smartCropColorTolerance
       return (
         Math.abs(r - target.r) <= tolerance &&
         Math.abs(g - target.g) <= tolerance &&
