@@ -87,12 +87,18 @@ export function useViewportWrapper(viewportStore, imageStore, editorStore, conte
   }
   const setValuesForCenterImage = () => {
     if (!wrapperRef.value || !contentRef.value) return
+    // Reset zoom
+    const tmpZoomLevel = viewportStore.zoomLevel
+    viewportStore.resetZoom()
+
     updateInitialDimensions()
     updateZoomDependentDimensions()
 
     viewportStore.defaultPanX = wrapperWidth.value / 2 - (contentWidth.value * zoomLevel.value) / 2
     viewportStore.defaultPanY =
       wrapperHeight.value / 2 - (contentHeight.value * zoomLevel.value) / 2
+
+    viewportStore.setZoomLevel(tmpZoomLevel)
   }
 
   // Fit the image to the screen
