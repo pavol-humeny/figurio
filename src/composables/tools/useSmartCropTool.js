@@ -57,8 +57,6 @@ export function useSmartCropTool(imageStore, historyStore, editorStore, t) {
     editorStore.selectSubTool('')
   }
 
-  resetCropBox()
-
   watch(
     () => imageStore.renderedImage,
     () => {
@@ -125,6 +123,7 @@ export function useSmartCropTool(imageStore, historyStore, editorStore, t) {
       editorStore.selectSubTool('isCropShown')
     } else {
       editorStore.selectSubTool('')
+      resetCropBox()
     }
   }
 
