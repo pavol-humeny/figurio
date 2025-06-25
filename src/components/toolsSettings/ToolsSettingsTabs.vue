@@ -8,26 +8,19 @@ const editorStore = useEditorStore()
 const props = defineProps({
   tabs: {
     type: Array,
-    required: true
-  }
+    required: true,
+  },
 })
 
-const {
-  activeTab,
-  isDragging,
-  wrapperRef,
-  setActiveTab,
-  startDragging
-} = useToolsSettingsTabs(useEditorStore(), props.tabs[0])
-
+const { activeTab, isDragging, wrapperRef, setActiveTab, startDragging } = useToolsSettingsTabs(
+  useEditorStore(),
+  props.tabs[0],
+)
 </script>
 
 <template>
   <div class="settings-tabs">
-    <div
-      class="tabs-wrapper"
-      ref="wrapperRef"
-    >
+    <div class="tabs-wrapper" ref="wrapperRef">
       <div
         class="tab"
         v-for="tab in props.tabs"
@@ -57,12 +50,10 @@ const {
   display: flex;
   overflow-x: auto;
   height: 100%;
-  padding-right: 30px;
 }
 .tabs-wrapper::-webkit-scrollbar {
   display: none;
 }
-
 
 .tab {
   padding: 0 20px;
@@ -77,7 +68,7 @@ const {
 .tab:hover {
   background: var(--secondary-c);
 }
-.tab.grabbing{
+.tab.grabbing {
   cursor: grabbing;
 }
 

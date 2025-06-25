@@ -179,9 +179,9 @@ const tabs = ['rotate', 'flip', 'crop']
         <div class="settings-content-wrapper">
           <div class="content-wrapper">
             <div class="content-title">
-              <label>
+              <p>
                 {{ $t('tools.transform.settings.crop.cropPosition.title') }}
-              </label>
+              </p>
             </div>
             <div class="content-inputs">
               <div class="content-input">
@@ -219,9 +219,9 @@ const tabs = ['rotate', 'flip', 'crop']
         <div class="settings-content-wrapper">
           <div class="content-wrapper">
             <div class="content-title">
-              <label>
+              <p>
                 {{ $t('tools.transform.settings.crop.cropDimensions.title') }}
-              </label>
+              </p>
             </div>
             <div class="content-inputs">
               <div class="content-input">
@@ -267,9 +267,9 @@ const tabs = ['rotate', 'flip', 'crop']
         </div>
         <div class="settings-content-wrapper">
           <div class="content-title">
-            <label>
+            <p>
               {{ $t('tools.transform.settings.crop.cropVariants.label') }}
-            </label>
+            </p>
           </div>
           <div class="crop-variants-wrapper">
             <div

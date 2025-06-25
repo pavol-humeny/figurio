@@ -1,6 +1,7 @@
 <script setup>
 import ToolsSettingsTabs from './ToolsSettingsTabs.vue'
 import { useEditorStore } from '@/stores/editorStore'
+import ColorPicker from '../common/ColorPicker.vue'
 
 const editorStore = useEditorStore()
 
@@ -17,7 +18,13 @@ const tabs = ['auto', 'manual']
         class="specific-settings"
       >
         <div class="settings-content-wrapper">
-          
+          <div class="content-wrapper">
+            <div class="content-title">
+              <p>Select color to remove</p>
+            </div>
+            <ColorPicker
+            />
+          </div>
         </div>
       </div>
     </div>
