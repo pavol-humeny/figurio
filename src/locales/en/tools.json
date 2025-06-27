@@ -205,6 +205,38 @@
       }
     }
   },
+  "preset": {
+    "label": "Presets",
+    "tip": "Apply a preset to the image.",
+    "tipDisabled": "",
+    "settings": {
+      "createPreset": {
+        "label": "Create preset",
+        "createPresetButton": {
+          "text": "Create preset"
+        },
+        "savePresetButton": {
+          "text": "Save preset"
+        },
+        "presetAlreadyExists": {
+          "title": "Preset already exists",
+          "message": "A preset with this name already exists. Please choose a different name."
+        },
+        "invalidPresetName": {
+          "title": "Invalid preset name",
+          "message": "Preset name cannot be empty or contain special characters."
+        },
+        "presetSuccessfullyCreated": {
+          "title": "Preset created",
+          "message": "Preset has been successfully created."
+        }
+      },
+
+      "myPresets": {
+        "label": "My presets"
+      }
+    }
+  },
   "export": {
     "label": "Export",
     "tip": "Export the image.",

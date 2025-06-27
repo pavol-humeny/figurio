@@ -205,6 +205,37 @@
       }
     }
   },
+  "preset": {
+    "label": "Šablony",
+    "tip": "Použij šablonu na obrázek.",
+    "tipDisabled": "",
+    "settings": {
+      "createPreset": {
+        "label": "Vytvořit šablonu",
+        "createPresetButton": {
+          "text": "Vytvořit šablonu"
+        },
+        "savePresetButton": {
+          "text": "Uložit šablonu"
+        },
+        "presetAlreadyExists": {
+          "title": "Šablona již existuje",
+          "message": "Šablona s tímto názvem již existuje. Prosím, zvolte jiný název."
+        },
+        "invalidPresetName": {
+          "title": "Neplatný název šablony",
+          "message": "Název šablony nesmí být prázdný a nesmí obsahovat speciální znaky."
+        },
+        "presetSuccessfullyCreated": {
+          "title": "Šablona úspěšně vytvořena",
+          "message": "Šablona byla úspěšně vytvořena."
+        }
+      },
+      "myPresets": {
+        "label": "Moje šablony"
+      }
+    }
+  },
   "export": {
     "label": "Export",
     "tip": "Exportuj obrázek.",

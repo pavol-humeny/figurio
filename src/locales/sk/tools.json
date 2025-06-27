@@ -205,6 +205,37 @@
       }
     }
   },
+  "preset": {
+    "label": "Šablóny",
+    "tip": "Aplikuj šablónu na obrázok.",
+    "tipDisabled": "",
+    "settings": {
+      "createPreset": {
+        "label": "Vytvoriť šablónu",
+        "createPresetButton": {
+          "text": "Vytvoriť šablónu"
+        },
+        "savePresetButton": {
+          "text": "Uložiť šablónu"
+        },
+        "presetAlreadyExists": {
+          "title": "Šablóna už existuje",
+          "message": "Šablóna s týmto názvom už existuje. Prosím, zvoľ iný názov."
+        },
+        "invalidPresetName": {
+          "title": "Neplatný názov šablóny",
+          "message": "Názov šablóny nesmie byť prázdny a nesmie obsahovať špeciálne znaky."
+        },
+        "presetSuccessfullyCreated": {
+          "title": "Šablóna úspešne vytvorená",
+          "message": "Šablóna bola úspešne vytvorená."
+        }
+      },
+      "myPresets": {
+        "label": "Moje šablóny"
+      }
+    }
+  },
   "export": {
     "label": "Export",
     "tip": "Exportuj obrázok.",

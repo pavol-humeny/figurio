@@ -63,6 +63,7 @@ const showTip = computed(() => props.tip !== '')
   transition: var(--default-transition);
   border: 2px solid transparent;
   cursor: pointer;
+  flex-shrink: 0;
 }
 
 .tool:hover {
