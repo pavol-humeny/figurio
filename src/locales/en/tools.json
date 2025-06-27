@@ -193,6 +193,14 @@
         "frameWidth": {
           "label": "Frame width",
           "tip": "Adjust the width of the frame or double click icon to reset width"
+        },
+        "frameVariants": {
+          "label": "Frame variants",
+          "frameSolid": "Solid",
+          "frameMacBrowser": "Mac browser",
+          "frameWindowsBrowser": "Windows browser",
+          "framePhoneIOS": "Phone iOS",
+          "framePhoneAndroid": "Phone Android"
         }
       }
     }

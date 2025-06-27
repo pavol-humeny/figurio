@@ -193,6 +193,14 @@
         "frameWidth": {
           "label": "Šířka rámu",
           "tip": "Uprav šířku rámu nebo dvakrát klikni na ikonu pro resetování šířky"
+        },
+        "frameVariants": {
+          "label": "Varianty rámu",
+          "frameSolid": "Plný",
+          "frameMacBrowser": "Mac prohlížeč",
+          "frameWindowsBrowser": "Windows prohlížeč",
+          "framePhoneIOS": "Telefon iOS",
+          "framePhoneAndroid": "Telefon Android"
         }
       }
     }

@@ -353,5 +353,6 @@ export function useViewportWrapper(viewportStore, imageStore, editorStore, conte
     verticalSliderHeight,
     horizontalSliderWidth,
     centerImage,
+    setValuesForCenterImage,
   }
 }

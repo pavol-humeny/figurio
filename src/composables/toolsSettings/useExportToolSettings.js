@@ -80,9 +80,9 @@ export function useExportToolSettings(imageStore, t) {
     if (imageStore.imageOperations.frame?.enabled) {
       imageStore.newFileDimensions = {
         width: imageStore.imageOperations.frame.width * 2 + imageStore.fileDimensions.width,
-        height: imageStore.imageOperations.frame.width * 2 + imageStore.fileDimensions.height,
+        height: imageStore.imageOperations.frame.height * 2 + imageStore.fileDimensions.height,
         fileAspectRatio: (imageStore.imageOperations.frame.width * 2 + imageStore.fileDimensions.width) /
-          (imageStore.imageOperations.frame.width * 2 + imageStore.fileDimensions.height) || 1,
+          (imageStore.imageOperations.frame.height * 2 + imageStore.fileDimensions.height) || 1,
       }
     } else {
       imageStore.newFileDimensions = { ...imageStore.fileDimensions }

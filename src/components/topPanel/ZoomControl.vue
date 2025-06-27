@@ -64,10 +64,10 @@ const {
   height: 40px;
 }
 
-.zoom-control.disabled{
+/* .zoom-control.disabled{
   opacity: 0.5;
   pointer-events: none;
-}
+} */
 
 .zoom-in-button,
 .zoom-out-button {

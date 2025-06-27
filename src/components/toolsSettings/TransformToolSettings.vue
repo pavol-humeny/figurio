@@ -230,71 +230,73 @@ const tabs = ['rotate', 'flip', 'crop']
           </div>
         </div>
         <div class="settings-content-wrapper">
-          <div class="content-title">
-            <p>
-              {{ $t('tools.transform.settings.crop.cropVariants.label') }}
-            </p>
-          </div>
-          <div class="crop-variants-wrapper">
-            <div
-              class="crop-variant"
-              :class="{ active: editorStore.selectedSubToolKey === 'cropFree' }"
-              @click="selectSubTool('cropFree')"
-            >
-              <BaseIcon name="IconCropFree" size="40" :color="'var(--primary-c)'" />
+          <div class="content-wrapper">
+            <div class="content-title">
               <p>
-                {{ $t('tools.transform.settings.crop.cropVariants.cropFree') }}
+                {{ $t('tools.transform.settings.crop.cropVariants.label') }}
               </p>
             </div>
-            <div
-              class="crop-variant"
-              :class="{ active: editorStore.selectedSubToolKey === 'crop11' }"
-              @click="selectSubTool('crop11')"
-            >
-              <BaseIcon name="IconCrop11" size="40" :color="'var(--primary-c)'" />
-              <p>
-                {{ $t('tools.transform.settings.crop.cropVariants.crop11') }}
-              </p>
-            </div>
-            <div
-              class="crop-variant"
-              :class="{ active: editorStore.selectedSubToolKey === 'crop43' }"
-              @click="selectSubTool('crop43')"
-            >
-              <BaseIcon name="IconCrop43" size="40" :color="'var(--primary-c)'" />
-              <p>
-                {{ $t('tools.transform.settings.crop.cropVariants.crop43') }}
-              </p>
-            </div>
-            <div
-              class="crop-variant"
-              :class="{ active: editorStore.selectedSubToolKey === 'crop34' }"
-              @click="selectSubTool('crop34')"
-            >
-              <BaseIcon name="IconCrop34" size="40" :color="'var(--primary-c)'" />
-              <p>
-                {{ $t('tools.transform.settings.crop.cropVariants.crop34') }}
-              </p>
-            </div>
-            <div
-              class="crop-variant"
-              :class="{ active: editorStore.selectedSubToolKey === 'crop169' }"
-              @click="selectSubTool('crop169')"
-            >
-              <BaseIcon name="IconCrop169" size="40" :color="'var(--primary-c)'" />
-              <p>
-                {{ $t('tools.transform.settings.crop.cropVariants.crop169') }}
-              </p>
-            </div>
-            <div
-              class="crop-variant"
-              :class="{ active: editorStore.selectedSubToolKey === 'crop916' }"
-              @click="selectSubTool('crop916')"
-            >
-              <BaseIcon name="IconCrop916" size="40" :color="'var(--primary-c)'" />
-              <p>
-                {{ $t('tools.transform.settings.crop.cropVariants.crop916') }}
-              </p>
+            <div class="crop-variants-wrapper">
+              <div
+                class="crop-variant"
+                :class="{ active: editorStore.selectedSubToolKey === 'cropFree' }"
+                @click="selectSubTool('cropFree')"
+              >
+                <BaseIcon name="IconCropFree" size="40" :color="'var(--primary-c)'" />
+                <p>
+                  {{ $t('tools.transform.settings.crop.cropVariants.cropFree') }}
+                </p>
+              </div>
+              <div
+                class="crop-variant"
+                :class="{ active: editorStore.selectedSubToolKey === 'crop11' }"
+                @click="selectSubTool('crop11')"
+              >
+                <BaseIcon name="IconCrop11" size="40" :color="'var(--primary-c)'" />
+                <p>
+                  {{ $t('tools.transform.settings.crop.cropVariants.crop11') }}
+                </p>
+              </div>
+              <div
+                class="crop-variant"
+                :class="{ active: editorStore.selectedSubToolKey === 'crop43' }"
+                @click="selectSubTool('crop43')"
+              >
+                <BaseIcon name="IconCrop43" size="40" :color="'var(--primary-c)'" />
+                <p>
+                  {{ $t('tools.transform.settings.crop.cropVariants.crop43') }}
+                </p>
+              </div>
+              <div
+                class="crop-variant"
+                :class="{ active: editorStore.selectedSubToolKey === 'crop34' }"
+                @click="selectSubTool('crop34')"
+              >
+                <BaseIcon name="IconCrop34" size="40" :color="'var(--primary-c)'" />
+                <p>
+                  {{ $t('tools.transform.settings.crop.cropVariants.crop34') }}
+                </p>
+              </div>
+              <div
+                class="crop-variant"
+                :class="{ active: editorStore.selectedSubToolKey === 'crop169' }"
+                @click="selectSubTool('crop169')"
+              >
+                <BaseIcon name="IconCrop169" size="40" :color="'var(--primary-c)'" />
+                <p>
+                  {{ $t('tools.transform.settings.crop.cropVariants.crop169') }}
+                </p>
+              </div>
+              <div
+                class="crop-variant"
+                :class="{ active: editorStore.selectedSubToolKey === 'crop916' }"
+                @click="selectSubTool('crop916')"
+              >
+                <BaseIcon name="IconCrop916" size="40" :color="'var(--primary-c)'" />
+                <p>
+                  {{ $t('tools.transform.settings.crop.cropVariants.crop916') }}
+                </p>
+              </div>
             </div>
           </div>
         </div>

@@ -139,7 +139,7 @@ const showIcon = props.icon !== ''
 <style scoped>
 .select-wrapper {
   position: relative;
-  width: 100%;
+  /* width: 100%; */
 }
 
 .select-input {

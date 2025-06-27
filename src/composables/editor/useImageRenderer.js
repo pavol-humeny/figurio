@@ -57,7 +57,7 @@ export function useImageRenderer(
 
     if (imageStore.imageOperations.frame?.enabled) {
       width = imageStore.imageOperations.frame.width * 2 + imageStore.fileDimensions.width
-      height = imageStore.imageOperations.frame.width * 2 + imageStore.fileDimensions.height
+      height = imageStore.imageOperations.frame.height * 2 + imageStore.fileDimensions.height
       console.log('Applying frame dimensions:', width, height)
     } else {
       width = imageStore.fileDimensions.width
@@ -179,7 +179,7 @@ export function useImageRenderer(
                   imageStore.fileDimensions = { ...imageStore.originalFileDimensions }
 
                   renderAll()
-                  
+
                   return // End watch block execution
                 }
               }

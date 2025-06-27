@@ -51,10 +51,10 @@ const {
   align-items: center;
 }
 
-.undo-redo.disabled{
+/* .undo-redo.disabled{
   opacity: 0.5;
   pointer-events: none;
-}
+} */
 
 .undo-button,
 .redo-button {

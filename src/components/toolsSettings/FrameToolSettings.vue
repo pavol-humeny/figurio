@@ -6,15 +6,19 @@ import { useFrameTool } from '@/composables/tools/useFrameTool'
 import { useHistoryStore } from '@/stores/historyStore'
 import { useEditorStore } from '@/stores/editorStore'
 import { useI18n } from 'vue-i18n'
+import DropdownSelect from '../common/DropdownSelect.vue'
 
 const { t } = useI18n()
 
-const { frameColor, frameWidthRef, frameWidth, setFrameWidth } = useFrameTool(
-  useImageStore(),
-  useHistoryStore(),
-  useEditorStore(),
-  t,
-)
+const {
+  frameColor,
+  frameWidthRef,
+  frameWidth,
+  setFrameWidth,
+  selectedFrameVariant,
+  frameOptions,
+  handleFrameChange,
+} = useFrameTool(useImageStore(), useHistoryStore(), useEditorStore(), t)
 </script>
 
 <template>
@@ -31,7 +35,10 @@ const { frameColor, frameWidthRef, frameWidth, setFrameWidth } = useFrameTool(
             <ColorPicker v-model="frameColor" />
           </div>
         </div>
-        <div class="settings-content-wrapper">
+        <div
+          class="settings-content-wrapper"
+          :class="{ disabled: selectedFrameVariant !== 'frameSolid' }"
+        >
           <div class="content-wrapper">
             <div class="content-title">
               <p>
@@ -52,6 +59,21 @@ const { frameColor, frameWidthRef, frameWidth, setFrameWidth } = useFrameTool(
               :onReset="() => setFrameWidth(0)"
               :tip="t('tools.frame.settings.general.frameWidth.tip')"
               position="bottom-left"
+            />
+          </div>
+        </div>
+        <div class="settings-content-wrapper">
+          <div class="content-wrapper">
+            <div class="content-title">
+              <p>
+                {{ t('tools.frame.settings.general.frameVariants.label') }}
+              </p>
+            </div>
+            <DropdownSelect
+              v-model="selectedFrameVariant"
+              :options="frameOptions"
+              icon="IconFrame"
+              @update="handleFrameChange"
             />
           </div>
         </div>
