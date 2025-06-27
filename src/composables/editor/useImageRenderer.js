@@ -4,7 +4,8 @@ import { useRotateTool } from '../tools/useRotateTool'
 import { useFrameTool } from '../tools/useFrameTool'
 import { useSmartCropTool } from '../tools/useSmartCropTool'
 import { useCropTool } from '../tools/useCropTool'
-// import { useViewportStore } from '@/stores/viewportStore'
+import { useConfirmModal } from '@/composables/modals/useConfirmModal'
+import { useToastModal } from '@/composables/modals/useToastModal'
 
 export function useImageRenderer(
   imageStore,
@@ -14,6 +15,9 @@ export function useImageRenderer(
   contentRef,
   t,
 ) {
+  const { showConfirmModal } = useConfirmModal()
+  const { showToastModal } = useToastModal()
+
   const canvasRef = ref(null)
   const svgRef = ref(null)
 
@@ -132,16 +136,56 @@ export function useImageRenderer(
               console.log('Applying rotate operation:', operation.value)
               await useRotateTool(imageStore, historyStore, t).applyRotationRender(operation.value)
               break
-            case 'crop':
+            case 'crop': {
               console.log('Applying crop operation:', operation.value)
-              await useCropTool(
+              const result = await useCropTool(
                 imageStore,
                 viewportStore,
                 editorStore,
                 historyStore,
                 t,
               ).applyCropRender(operation.value)
+
+              if (result === false) {
+                const confirmed = await showConfirmModal(
+                  t('tools.transform.settings.crop.confirmRemoveCropFromTransformations.title'),
+                  t('tools.transform.settings.crop.confirmRemoveCropFromTransformations.message'),
+                  t('tools.transform.settings.crop.confirmRemoveCropFromTransformations.cancel'),
+                  t('tools.transform.settings.crop.confirmRemoveCropFromTransformations.confirm'),
+                )
+                if (confirmed) {
+                  // Remove the crop operation from transformations and continue with the next operation
+                  imageStore.imageOperations.transformations =
+                    imageStore.imageOperations.transformations.filter(
+                      (op) =>
+                        !(
+                          op.type === 'crop' &&
+                          JSON.stringify(op.value) === JSON.stringify(operation.value)
+                        ),
+                    )
+                } else {
+                  console.log('Crop operation cancelled by user. Resetting to original.')
+
+                  showToastModal(
+                    'error',
+                    t('tools.transform.settings.crop.toast.presetCannotBeApplied.title'),
+                    t('tools.transform.settings.crop.toast.presetCannotBeApplied.message'),
+                  )
+
+                  historyStore.reset()
+
+                  imageStore.resetImageOperations()
+                  imageStore.renderedImage = imageStore.originalImage
+                  imageStore.fileDimensions = { ...imageStore.originalFileDimensions }
+
+                  renderAll()
+                  
+                  return // End watch block execution
+                }
+              }
+
               break
+            }
           }
         }
       }
@@ -156,101 +200,10 @@ export function useImageRenderer(
         await useFrameTool(imageStore, historyStore, editorStore, t).applyFrameRender()
       }
 
-      // await nextTick()
       renderAll()
     },
     { deep: true },
   )
-
-  // let previousImageOperations = JSON.stringify(imageStore.imageOperations)
-  // let suspendWatch = false
-
-  // watch(
-  //   () => [imageStore.imageOperations],
-  //   async ([imageOperations]) => {
-  //     if (suspendWatch) return // Zablokuj rekurziu
-
-  //     await nextTick()
-
-  //     const currentOps = JSON.stringify(imageOperations)
-
-  //     if (currentOps !== previousImageOperations) {
-  //       previousImageOperations = currentOps
-  //       console.log('[watch] imageOperations changed, applying operations')
-
-  //       suspendWatch = true // 🔒 Zablokuj spätné spustenie počas úprav
-
-  //       // Obnov pôvodný obrázok
-  //       imageStore.renderedImage = imageStore.originalImage
-  //       imageStore.fileDimensions = { ...imageStore.originalFileDimensions }
-
-  //       // Aplikuj všetky transformácie
-  //       if (imageOperations.transformations?.length > 0) {
-  //         for (const operation of imageOperations.transformations) {
-  //           switch (operation.type) {
-  //             case 'flip':
-  //               console.log('Applying flip operation:', operation.value)
-  //               await useFlipTool(imageStore, historyStore).applyFlipRender(operation.value)
-  //               break
-  //             case 'rotate':
-  //               console.log('Applying rotate operation:', operation.value)
-  //               await useRotateTool(imageStore, historyStore, t).applyRotationRender(
-  //                 operation.value,
-  //               )
-  //               break
-  //           }
-  //         }
-  //       }
-
-  //       if (imageOperations.smartCrop?.enabled) {
-  //         console.log('Applying smart crop operation')
-  //         await useSmartCropTool(
-  //           imageStore,
-  //           historyStore,
-  //           editorStore,
-  //           t,
-  //         ).applyAutoSmartCropRender()
-  //       }
-
-  //       if (imageOperations.frame?.enabled) {
-  //         console.log('Applying frame operation')
-  //         await useFrameTool(imageStore, historyStore, editorStore, t).applyFrameRender()
-  //       }
-
-  //       await nextTick()
-  //       renderAll()
-
-  //       suspendWatch = false // 🔓 Opäť povol reakciu
-  //     }
-  //     // else {
-  //     //   // Ak sa nezmenili operácie, iba prekresli
-  //     //   console.log('[watch] only renderedImage changed')
-  //     //   renderAll()
-  //     // }
-  //   },
-  //   { deep: true },
-  // )
-
-  // watch(
-  //   () => imageStore.originalImage,
-  //   () => {
-  //     if (imageStore.historyRestore) {
-  //       imageStore.historyRestore = false
-  //       imageStore.renderedImage = imageStore.originalImage
-  //       imageStore.fileDimensions = { ...imageStore.originalFileDimensions }
-
-  //       console.log('[watch] History restore in progress, skipping original image change')
-  //       return
-  //     }
-
-  //     console.log('[watch] Original image changed, resetting operations')
-
-  //     imageStore.renderedImage = imageStore.originalImage
-  //     imageStore.fileDimensions = { ...imageStore.originalFileDimensions }
-
-  //     renderAll()
-  //   },
-  // )
 
   return {
     canvasRef,

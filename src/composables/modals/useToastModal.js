@@ -11,7 +11,7 @@ export function useToastModal() {
     // Auto-remove after 4s
     setTimeout(() => {
       toasts.value = toasts.value.filter(t => t.id !== id)
-    }, 4000)
+    }, 6000)
   }
 
   function removeToastModal(id) {

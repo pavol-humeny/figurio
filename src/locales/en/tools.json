@@ -71,6 +71,22 @@
         },
         "applyCropButton": {
           "text": "Apply crop"
+        },
+        "toast": {
+          "cropBoxTooLarge": {
+            "title": "Crop Warning",
+            "message": "Crop box is larger than the original image dimensions. No cropping applied."
+          },
+          "presetCannotBeApplied": {
+            "title": "Crop error",
+            "message": "Preset with current crop cannot be applied because the crop box is larger than the original image dimensions. Resetting image to original image."
+          }
+        },
+        "confirmRemoveCropFromTransformations": {
+          "title": "Confirm Crop Removal",
+          "message": "The crop operation failed. Do you want to remove it from transformations and continue?",
+          "cancel": "Cancel",
+          "confirm": "Remove Crop"
         }
       }
     }

@@ -1,6 +1,7 @@
 import { useMath } from '@/composables/common/useMath'
 import { computed, ref, nextTick, watch } from 'vue'
 import { useConfirmModal } from '../modals/useConfirmModal'
+import { useToastModal } from '../modals/useToastModal'
 
 const cropRatio = ref(null)
 
@@ -18,6 +19,7 @@ const cropBox = ref({
 
 export function useCropTool(imageStore, viewportStore, editorStore, historyStore, t) {
   const { showConfirmModal } = useConfirmModal()
+  const { showToastModal } = useToastModal()
 
   const { clamp } = useMath()
 
@@ -460,15 +462,6 @@ export function useCropTool(imageStore, viewportStore, editorStore, historyStore
   }
 
   const applyCrop = async () => {
-    imageStore.addTransformation({ type: 'crop', value: cropBox.value })
-
-    historyStore.push(imageStore.getSnapshot())
-  }
-
-  const applyCropRender = async (cropBox) => {
-    if (!imageStore.renderedImage || !cropBox) return
-
-    // Create confirm modal to confirm rasterization if there are SVG objects
     if (imageStore.svgObjects.length > 0) {
       const confirmed = await showConfirmModal(
         t('tools.confirmNeedRasterization.title'),
@@ -481,6 +474,27 @@ export function useCropTool(imageStore, viewportStore, editorStore, historyStore
       } else {
         return
       }
+    }
+
+    imageStore.addTransformation({ type: 'crop', value: cropBox.value })
+
+    historyStore.push(imageStore.getSnapshot())
+  }
+
+  const applyCropRender = async (cropBox) => {
+    if (!imageStore.renderedImage || !cropBox) return
+
+    // Check if the crop box is equal or smaller than the original image dimensions
+    if (
+      cropBox.width >= imageStore.fileDimensions.width ||
+      cropBox.height >= imageStore.fileDimensions.height
+    ) {
+      showToastModal(
+        'warning',
+        t('tools.transform.settings.crop.toast.cropBoxTooLarge.title'),
+        t('tools.transform.settings.crop.toast.cropBoxTooLarge.message'),
+      )
+      return false
     }
 
     const { x, y, width, height } = cropBox
@@ -514,11 +528,8 @@ export function useCropTool(imageStore, viewportStore, editorStore, historyStore
     imageStore.fileDimensions.fileAspectRatio = width / height || 1
 
     imageStore.newFileDimensions = { ...imageStore.fileDimensions }
-    // imageStore.originalFileDimensions = { ...imageStore.fileDimensions }
 
-    // imageStore.resetImageOperations()
-
-    // historyStore.push(imageStore.getSnapshot())
+    return true
   }
 
   return {
