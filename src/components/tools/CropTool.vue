@@ -5,6 +5,9 @@ import { useViewportStore } from '@/stores/viewportStore'
 import { useCropTool } from '@/composables/tools/useCropTool'
 import { useI18n } from 'vue-i18n'
 import { useHistoryStore } from '@/stores/historyStore'
+import { onMounted } from 'vue'
+
+const editorStore = useEditorStore()
 
 const { t } = useI18n()
 
@@ -15,6 +18,10 @@ const { startPan, startResize, cropBox } = useCropTool(
   useHistoryStore(),
   t,
 )
+
+onMounted(() => {
+  editorStore.selectSubTool('cropFree')
+})
 </script>
 
 <template>

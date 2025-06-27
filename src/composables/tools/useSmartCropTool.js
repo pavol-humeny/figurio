@@ -112,6 +112,13 @@ export function useSmartCropTool(imageStore, historyStore, editorStore, t) {
   })
 
   const applyAutoSmartCrop = async () => {
+    imageStore.imageOperations.smartCrop.enabled = true
+
+    historyStore.push(imageStore.getSnapshot())
+  }
+
+  const applyAutoSmartCropRender = async () => {
+    await calculateIndents()
     await applyCrop()
   }
 
@@ -291,7 +298,7 @@ export function useSmartCropTool(imageStore, historyStore, editorStore, t) {
 
     // Update rendered image and preview URL
     imageStore.renderedImage = canvas
-    imageStore.previewUrl = canvas.toDataURL()
+    // imageStore.previewUrl = canvas.toDataURL()
 
     // Update file dimensions
     imageStore.fileDimensions.width = width
@@ -299,8 +306,6 @@ export function useSmartCropTool(imageStore, historyStore, editorStore, t) {
     imageStore.fileDimensions.fileAspectRatio = width / height || 1
 
     imageStore.newFileDimensions = { ...imageStore.fileDimensions }
-
-    historyStore.push(imageStore.getSnapshot())
 
     resetCropBox()
   }
@@ -323,6 +328,7 @@ export function useSmartCropTool(imageStore, historyStore, editorStore, t) {
     cropBox,
     showAutoSmartCrop,
     applyAutoSmartCrop,
+    applyAutoSmartCropRender,
     applyManualSmartCrop,
   }
 }

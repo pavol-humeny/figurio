@@ -12,12 +12,12 @@ const isValidFileName = (name) => {
 
 export const useImageStore = defineStore('imageStore', {
   state: () => ({
+    historyRestore: false,
     file: null,
     fileType: '', // 'image' or 'pdf'
-    fileSize: 0, // In bytes
 
     fileName: '', // UndoRedo
-    fileFormat: '', // 'png', 'jpg', 'jpeg', 'pdf' // UndoRedo
+    fileFormat: '', // 'png', 'jpg', 'jpeg', 'pdf'
     fileDimensions: {
       fileAspectRatio: 1,
       width: 0,
@@ -26,8 +26,8 @@ export const useImageStore = defineStore('imageStore', {
     }, // UndoRedo
 
     // New values used for export
-    newFileFormat: '', // 'png', 'jpg', 'jpeg', 'pdf'
     newFileName: '',
+    newFileFormat: '', // 'png', 'jpg', 'jpeg', 'pdf'
     newFileDimensions: {
       fileAspectRatio: 1,
       width: 0,
@@ -39,8 +39,8 @@ export const useImageStore = defineStore('imageStore', {
     previewUrl: '', // UndoRedo
 
     // Value for original image
-    tmpImage: null,
-    tmpImageDimensions: {
+    originalImage: null,
+    originalFileDimensions: {
       fileAspectRatio: 1,
       width: 0,
       height: 0,
@@ -77,24 +77,45 @@ export const useImageStore = defineStore('imageStore', {
     selectedSvgObjectId: null,
 
     imageOperations: {
-      effects: {
-        brightness: 0, //  -100 - +100
-        contrast: 0, //  -100 - +100
-        saturation: 0,
-        grayscale: false,
-        invert: false,
+      transformations: [
+        // Example transformations
+        // { type: 'rotate', value: 90 },
+        // { type: 'flipHorizontal', value: true },
+        // { type: 'rotate', value: -90 },
+      ],
+      smartCrop: {
+        enabled: false,
       },
       frame: {
+        enabled: false,
         color: '#000000',
         width: 0,
         type: 'solid',
       },
-      transformations: {
-        rotation: 0, // In degrees
-      },
     },
   }),
   actions: {
+    resetImageOperations() {
+      this.imageOperations = {
+        transformations: [],
+        smartCrop: {
+          enabled: false,
+        },
+        frame: {
+          color: '#000000',
+          width: 0,
+          type: 'solid',
+        },
+      }
+    },
+    addTransformation(operation) {
+      const deepCopy = JSON.parse(JSON.stringify(operation))
+      this.imageOperations.transformations.push(deepCopy)
+    },
+    getTransformations() {
+      return JSON.parse(JSON.stringify(this.imageOperations.transformations))
+    },
+
     isImageLoaded() {
       return this.fileName && this.fileName.trim() !== ''
     },
@@ -198,15 +219,14 @@ export const useImageStore = defineStore('imageStore', {
         height: 0,
         quality: 100,
       }
-      this.tmpImageDimensions = {
+      this.originalFileDimensions = {
         fileAspectRatio: 1,
         width: 0,
         height: 0,
         quality: 100,
       }
-      this.fileSize = 0
 
-      this.tmpImage = null
+      this.originalImage = null
       this.renderedImage = null
 
       this.svgObjects = []
@@ -217,7 +237,6 @@ export const useImageStore = defineStore('imageStore', {
       this.file = file
 
       this.setFileName(file.name, t)
-      this.fileSize = file.size
       this.fileFormat = file.name.split('.').pop().toLowerCase()
       this.newFileFormat = this.fileFormat
       this.fileType = file.type.startsWith('image/')
@@ -236,6 +255,7 @@ export const useImageStore = defineStore('imageStore', {
             this.fileDimensions.height = img.height
             this.fileDimensions.fileAspectRatio = img.width / img.height || 1
             this.newFileDimensions = { ...this.fileDimensions }
+            this.originalFileDimensions = { ...this.fileDimensions }
 
             // Create a canvas to render the image
             const canvas = document.createElement('canvas')
@@ -246,6 +266,7 @@ export const useImageStore = defineStore('imageStore', {
             ctx.drawImage(img, 0, 0)
 
             this.renderedImage = canvas
+            this.originalImage = canvas
             this.previewUrl = canvas.toDataURL() // Fallback for export
           }
 
@@ -324,6 +345,7 @@ export const useImageStore = defineStore('imageStore', {
       if (this.svgObjects) {
         this.rasterize()
       } else {
+        console.log('No SVG objects to rasterize, using rendered image directly.')
         this.previewUrl = this.renderedImage.toDataURL()
       }
 
@@ -394,12 +416,21 @@ export const useImageStore = defineStore('imageStore', {
     },
 
     async rasterize() {
-      if (!this.renderedImage || !this.svgObjects) return
+      if (!this.renderedImage || this.svgObjects.length === 0) return
 
       console.log('Rasterizing image with SVG objects...')
 
-      const width = this.fileDimensions.width
-      const height = this.fileDimensions.height
+      let width = 0
+      let height = 0
+      if (this.imageOperations.frame?.enabled) {
+        // Apply frame dimensions to the rasterization
+        width = this.imageOperations.frame.width * 2 + this.fileDimensions.width
+        height = this.imageOperations.frame.width * 2 + this.fileDimensions.height
+      } else {
+        // Use original dimensions
+        width = this.fileDimensions.width
+        height = this.fileDimensions.height
+      }
 
       // Create SVG string from svgObjects
       const svgString = `
@@ -452,7 +483,7 @@ export const useImageStore = defineStore('imageStore', {
       this.selectedSvgObjectId = null
 
       this.renderedImage = canvas
-      // this.tmpImage = canvas
+      // this.originalImage = canvas
       this.previewUrl = resultDataUrl
 
       return resultDataUrl
@@ -460,25 +491,47 @@ export const useImageStore = defineStore('imageStore', {
 
     // UndoRedo
     getSnapshot() {
-      return {
+      const snapshot = {
         fileName: this.fileName,
-        fileFormat: this.fileFormat,
         fileDimensions: JSON.parse(JSON.stringify(this.fileDimensions)),
+        originalFileDimensions: JSON.parse(JSON.stringify(this.originalFileDimensions)),
         previewUrl: this.previewUrl,
-        renderedImage: this.renderedImage?.toDataURL() || null,
+        // renderedImage: this.renderedImage?.toDataURL() || null,
+        originalImage: this.originalImage?.toDataURL() || null,
         svgObjects: JSON.parse(JSON.stringify(this.svgObjects)),
         imageOperations: JSON.parse(JSON.stringify(this.imageOperations)),
       }
+
+      console.log('[getSnapshot] imageOperations:', snapshot.imageOperations)
+
+      return snapshot
     },
     applySnapshot(snapshot) {
+      this.historyRestore = true
+
       this.fileName = snapshot.fileName
-      this.fileFormat = snapshot.fileFormat
       this.fileDimensions = JSON.parse(JSON.stringify(snapshot.fileDimensions))
+      this.originalFileDimensions = JSON.parse(JSON.stringify(snapshot.fileDimensions))
       this.previewUrl = snapshot.previewUrl
       this.svgObjects = JSON.parse(JSON.stringify(snapshot.svgObjects))
       this.imageOperations = JSON.parse(JSON.stringify(snapshot.imageOperations))
 
-      if (snapshot.renderedImage) {
+      // if (snapshot.renderedImage) {
+      //   const img = new Image()
+      //   img.onload = () => {
+      //     const canvas = document.createElement('canvas')
+      //     canvas.width = img.width
+      //     canvas.height = img.height
+      //     const ctx = canvas.getContext('2d')
+      //     ctx.drawImage(img, 0, 0)
+      //     this.renderedImage = canvas
+      //   }
+      //   img.src = snapshot.renderedImage
+      // } else {
+      //   this.renderedImage = null
+      // }
+
+      if (snapshot.originalImage) {
         const img = new Image()
         img.onload = () => {
           const canvas = document.createElement('canvas')
@@ -486,12 +539,14 @@ export const useImageStore = defineStore('imageStore', {
           canvas.height = img.height
           const ctx = canvas.getContext('2d')
           ctx.drawImage(img, 0, 0)
-          this.renderedImage = canvas
+          this.originalImage = canvas
         }
-        img.src = snapshot.renderedImage
+        img.src = snapshot.originalImage
       } else {
-        this.renderedImage = null
+        this.originalImage = null
       }
+
+      console.log('[applySnapshot] imageOperations (after apply):', this.imageOperations)
     },
   },
 })

@@ -170,9 +170,14 @@
     "tipDisabled": "",
     "settings": {
       "general": {
-        "none": "None",
-        "mat": "Mat",
-        "line": "Line"
+        "frameColor": {
+          "label": "Frame color",
+          "tip": "Select the color of the frame"
+        },
+        "frameWidth": {
+          "label": "Frame width",
+          "tip": "Adjust the width of the frame or double click icon to reset width"
+        }
       }
     }
   },

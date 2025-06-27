@@ -36,6 +36,10 @@ const props = defineProps({
     type: String,
     default: '',
   },
+  iconTop: {
+    type: Number,
+    default: 50,
+  },
   color: {
     type: String,
     default: 'var(--text-c)',
@@ -68,7 +72,6 @@ watch(
 const onBlurOrEnter = () => {
   emit('update:modelValue', inputValue.value)
   emit('update', inputValue.value)
-
 }
 
 const onIconDoubleClick = () => {
@@ -113,6 +116,7 @@ const showUnit = props.unit !== ''
         :size="props.size"
         :color="props.color"
         @dblclick="onIconDoubleClick"
+        :style="{ top: props.iconTop + '%' }"
       />
       <span v-if="showUnit" class="input-unit">{{ props.unit }}</span>
     </div>
@@ -138,6 +142,7 @@ const showUnit = props.unit !== ''
       :size="props.size"
       :color="props.color"
       @dblclick="onIconDoubleClick"
+      :style="{ top: props.iconTop + '%' }"
     />
     <span v-if="showUnit" class="input-unit">{{ props.unit }}</span>
   </div>
@@ -169,7 +174,6 @@ input[type='number'] {
 .input-icon {
   position: absolute;
   left: 8px;
-  top: 45%;
   transform: translateY(-50%);
   pointer-events: auto;
   cursor: pointer;

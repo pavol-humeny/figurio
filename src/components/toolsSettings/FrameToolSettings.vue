@@ -6,7 +6,6 @@ import { useFrameTool } from '@/composables/tools/useFrameTool'
 import { useHistoryStore } from '@/stores/historyStore'
 import { useEditorStore } from '@/stores/editorStore'
 import { useI18n } from 'vue-i18n'
-import DefaultButton from '../common/DefaultButton.vue'
 
 const { t } = useI18n()
 
@@ -25,7 +24,9 @@ const { frameColor, frameWidthRef, frameWidth, setFrameWidth } = useFrameTool(
         <div class="settings-content-wrapper">
           <div class="content-wrapper">
             <div class="content-title">
-              <p>Frame color</p>
+              <p>
+                {{ t('tools.frame.settings.general.frameColor.label') }}
+              </p>
             </div>
             <ColorPicker v-model="frameColor" />
           </div>
@@ -33,7 +34,9 @@ const { frameColor, frameWidthRef, frameWidth, setFrameWidth } = useFrameTool(
         <div class="settings-content-wrapper">
           <div class="content-wrapper">
             <div class="content-title">
-              <p>Frame width</p>
+              <p>
+                {{ t('tools.frame.settings.general.frameWidth.label') }}
+              </p>
             </div>
             <NumberInput
               ref="frameWidthRef"
@@ -43,17 +46,13 @@ const { frameColor, frameWidthRef, frameWidth, setFrameWidth } = useFrameTool(
               :step="1"
               unit="px"
               @update="setFrameWidth(frameWidth)"
+              icon="IconArrowWidth"
+              :color="'var(--primary-c)'"
+              size="22"
+              :onReset="() => setFrameWidth(0)"
+              :tip="t('tools.frame.settings.general.frameWidth.tip')"
+              position="bottom-left"
             />
-          </div>
-        </div>
-        <div class="settings-content-wrapper">
-          <div class="content-wrapper">
-            <div class="content-button">
-              <DefaultButton
-                text="Apply"
-                :disabled="rotationAngle === 0"
-              />
-            </div>
           </div>
         </div>
         <div class="settings-content-wrapper" style="border: none">

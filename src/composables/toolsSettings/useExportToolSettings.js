@@ -77,7 +77,16 @@ export function useExportToolSettings(imageStore, t) {
     imageStore.rasterize()
     isVisible.value = true
 
-    imageStore.newFileDimensions = {...imageStore.fileDimensions }
+    if (imageStore.imageOperations.frame?.enabled) {
+      imageStore.newFileDimensions = {
+        width: imageStore.imageOperations.frame.width * 2 + imageStore.fileDimensions.width,
+        height: imageStore.imageOperations.frame.width * 2 + imageStore.fileDimensions.height,
+        fileAspectRatio: (imageStore.imageOperations.frame.width * 2 + imageStore.fileDimensions.width) /
+          (imageStore.imageOperations.frame.width * 2 + imageStore.fileDimensions.height) || 1,
+      }
+    } else {
+      imageStore.newFileDimensions = { ...imageStore.fileDimensions }
+    }
   }
 
   const closeExportToolSettings = () => {

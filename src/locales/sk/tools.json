@@ -170,9 +170,14 @@
     "tipDisabled": "",
     "settings": {
       "general": {
-        "none": "Žiadny",
-        "mat": "Pasparta",
-        "line": "Čiara"
+        "frameColor": {
+          "label": "Farba rámu",
+          "tip": "Vyber farbu rámu"
+        },
+        "frameWidth": {
+          "label": "Šírka rámu",
+          "tip": "Uprav šírku rámu alebo dvakrát klikni na ikonu pre resetovanie šírky"
+        }
       }
     }
   },

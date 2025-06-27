@@ -40,11 +40,7 @@ const {
 
 const { applyFlip } = useFlipTool(useImageStore(), useHistoryStore())
 
-const { applyRotation, rotationAngle, resetRotationAngle, rotationAngleInputRef } = useRotateTool(
-  useImageStore(),
-  useHistoryStore(),
-  t,
-)
+const { applyRotation } = useRotateTool(useImageStore(), useHistoryStore(), t)
 
 const tabs = ['rotate', 'flip', 'crop']
 </script>
@@ -90,38 +86,6 @@ const tabs = ['rotate', 'flip', 'crop']
             </div>
           </div>
         </div>
-        <div class="settings-content-wrapper">
-          <div class="content-wrapper">
-            <div class="content-title">
-              <BaseIcon name="IconFreeRotate" size="25" :color="'var(--primary-c)'" />
-              <p>
-                {{ $t('tools.transform.settings.rotate.freeRotation') }}
-              </p>
-            </div>
-            <NumberInput
-              ref="rotationAngleInputRef"
-              v-model="rotationAngle"
-              :min="-45"
-              :max="45"
-              :step="1"
-              :icon="'IconFreeRotate'"
-              :color="'var(--primary-c)'"
-              :tip="$t('tools.transform.settings.rotate.tip')"
-              position="bottom-left"
-              @update="applyRotation(rotationAngle)"
-              :onReset="() => resetRotationAngle()"
-              unit="°"
-            />
-            <div class="content-button">
-              <DefaultButton
-                :text="$t('tools.transform.settings.rotate.applyRotationButton.text')"
-                @click="applyRotation(rotationAngle, true)"
-                :disabled="rotationAngle === 0"
-              />
-            </div>
-          </div>
-        </div>
-
         <div class="settings-content-wrapper" style="border: none">
           <!-- Empty space -->
         </div>

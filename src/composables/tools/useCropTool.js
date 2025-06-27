@@ -1,5 +1,5 @@
 import { useMath } from '@/composables/common/useMath'
-import { computed, ref, nextTick, watch, onMounted } from 'vue'
+import { computed, ref, nextTick, watch } from 'vue'
 import { useConfirmModal } from '../modals/useConfirmModal'
 
 const cropRatio = ref(null)
@@ -372,9 +372,9 @@ export function useCropTool(imageStore, viewportStore, editorStore, historyStore
   }
 
   // Set default sub-tool on mount
-  onMounted(() => {
-    editorStore.selectSubTool('cropFree')
-  })
+  // onMounted(() => {
+  //   editorStore.selectSubTool('cropFree')
+  // })
 
   // Select type of crop
   const selectSubTool = (subTool) => {
@@ -460,7 +460,13 @@ export function useCropTool(imageStore, viewportStore, editorStore, historyStore
   }
 
   const applyCrop = async () => {
-    if (!imageStore.renderedImage || !cropBox.value) return
+    imageStore.addTransformation({ type: 'crop', value: cropBox.value })
+
+    historyStore.push(imageStore.getSnapshot())
+  }
+
+  const applyCropRender = async (cropBox) => {
+    if (!imageStore.renderedImage || !cropBox) return
 
     // Create confirm modal to confirm rasterization if there are SVG objects
     if (imageStore.svgObjects.length > 0) {
@@ -477,7 +483,7 @@ export function useCropTool(imageStore, viewportStore, editorStore, historyStore
       }
     }
 
-    const { x, y, width, height } = cropBox.value
+    const { x, y, width, height } = cropBox
 
     const canvas = document.createElement('canvas')
     const ctx = canvas.getContext('2d')
@@ -499,7 +505,8 @@ export function useCropTool(imageStore, viewportStore, editorStore, historyStore
 
     // Update rendered image and preview URL
     imageStore.renderedImage = canvas
-    imageStore.previewUrl = canvas.toDataURL()
+    // imageStore.originalImage = canvas // Update original image for undo/redo
+    // imageStore.previewUrl = canvas.toDataURL()
 
     // Update file dimensions
     imageStore.fileDimensions.width = width
@@ -507,8 +514,11 @@ export function useCropTool(imageStore, viewportStore, editorStore, historyStore
     imageStore.fileDimensions.fileAspectRatio = width / height || 1
 
     imageStore.newFileDimensions = { ...imageStore.fileDimensions }
+    // imageStore.originalFileDimensions = { ...imageStore.fileDimensions }
 
-    historyStore.push(imageStore.getSnapshot())
+    // imageStore.resetImageOperations()
+
+    // historyStore.push(imageStore.getSnapshot())
   }
 
   return {
@@ -535,5 +545,6 @@ export function useCropTool(imageStore, viewportStore, editorStore, historyStore
     cropRatio,
     cropBox,
     applyCrop,
+    applyCropRender,
   }
 }

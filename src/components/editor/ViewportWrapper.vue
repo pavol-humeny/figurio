@@ -8,12 +8,15 @@ import { ref } from 'vue'
 import CropTool from '@/components/tools/CropTool.vue'
 import SmartCropTool from '../tools/SmartCropTool.vue'
 import { useHistoryStore } from '@/stores/historyStore'
+import { useI18n } from 'vue-i18n'
+
+const { t } = useI18n()
 
 const contentRef = ref(null)
 
 const editorStore = useEditorStore()
 
-const { canvasRef, svgRef } = useImageRenderer(useImageStore(), useHistoryStore(), contentRef)
+const { canvasRef, svgRef } = useImageRenderer(useImageStore(), useHistoryStore(), useEditorStore(), useViewportStore(), contentRef, t)
 
 const {
   zoomLevel,
@@ -31,7 +34,6 @@ const {
   verticalSliderHeight,
   horizontalSliderWidth,
 } = useViewportWrapper(useViewportStore(), useImageStore(), useEditorStore(), contentRef)
-
 </script>
 
 <template>
@@ -60,7 +62,8 @@ const {
         <SmartCropTool
           v-if="
             editorStore.selectedToolKey === 'smartCrop' &&
-            (editorStore.selectedSubToolKey === 'isCropShown' || editorStore.selectedTabPerTool.smartCrop === 'manual')
+            (editorStore.selectedSubToolKey === 'isCropShown' ||
+              editorStore.selectedTabPerTool.smartCrop === 'manual')
           "
         />
       </div>

@@ -1,5 +1,11 @@
 export function useFlipTool(imageStore, historyStore) {
   const applyFlip = (direction) => {
+    imageStore.addTransformation({ type: 'flip', value: direction })
+
+    historyStore.push(imageStore.getSnapshot())
+  }
+
+  const applyFlipRender = (direction) => {
     if (!imageStore.renderedImage) return
 
     const width = imageStore.renderedImage.width
@@ -14,18 +20,18 @@ export function useFlipTool(imageStore, historyStore) {
     ctx.save()
 
     if (direction === 'horizontal') {
-      ctx.translate(width, 0)
-      ctx.scale(-1, 1)
-    } else if (direction === 'vertical') {
       ctx.translate(0, height)
       ctx.scale(1, -1)
+    } else if (direction === 'vertical') {
+      ctx.translate(width, 0)
+      ctx.scale(-1, 1)
     }
 
     ctx.drawImage(imageStore.renderedImage, 0, 0)
     ctx.restore()
 
     imageStore.renderedImage = canvas
-    imageStore.previewUrl = canvas.toDataURL()
+    // imageStore.previewUrl = canvas.toDataURL()
 
     // Flip vector objects
     if (Array.isArray(imageStore.svgObjects) && imageStore.svgObjects.length !== 0) {
@@ -105,11 +111,10 @@ export function useFlipTool(imageStore, historyStore) {
         return newObj
       })
     }
-
-    historyStore.push(imageStore.getSnapshot())
   }
 
   return {
     applyFlip,
+    applyFlipRender,
   }
 }
