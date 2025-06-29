@@ -1,44 +1,39 @@
 <script setup>
-import ItemTip from './ItemTip.vue';
+import ItemTip from './ItemTip.vue'
 import { defineProps, defineEmits } from 'vue'
-import { useToggleButton } from '@/composables/common/useToggleButton';
+import { useToggleButton } from '@/composables/common/useToggleButton'
 
 const props = defineProps({
   disabled: {
     type: Boolean,
-    default: false
+    default: false,
   },
   tip: {
     type: String,
-    default: ''
+    default: '',
   },
   position: {
     type: String,
-    default: 'bottom'
+    default: 'bottom',
   },
   modelValue: {
     type: Boolean,
-    default: false
-  }
-});
+    default: false,
+  },
+  scale: {
+    type: Number,
+    default: 1,
+  },
+})
 
 const emit = defineEmits(['update:modelValue'])
 
-const {
-  isActive,
-  toggleSwitch,
-  showTip
-} = useToggleButton(props, emit);
-
+const { isActive, toggleSwitch, showTip } = useToggleButton(props, emit)
 </script>
 
 <template>
-    <ItemTip
-    v-if="showTip"
-    :text="props.tip"
-    :position="props.position"
-  >
-    <div class="toggle-switch">
+  <ItemTip v-if="showTip" :text="props.tip" :position="props.position">
+    <div class="toggle-switch" :style="{ transform: `scale(${props.scale})` }">
       <div
         class="toggle-switch-wrapper"
         :class="{ 'toggle-disabled': props.disabled }"
@@ -49,7 +44,7 @@ const {
     </div>
   </ItemTip>
 
-  <div v-else class="toggle-switch">
+  <div v-else class="toggle-switch" :style="{ transform: `scale(${props.scale})` }">
     <div
       class="toggle-switch-wrapper"
       :class="{ 'toggle-disabled': props.disabled }"

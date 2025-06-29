@@ -220,6 +220,10 @@
         "presetSuccessfullyCreated": {
           "title": "Preset created",
           "message": "Preset has been successfully created."
+        },
+        "presetSuccessfullySaved": {
+          "title": "Preset saved",
+          "message": "Preset with name: {presetName} has been successfully saved."
         }
       },
 

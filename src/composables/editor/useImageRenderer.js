@@ -132,7 +132,7 @@ export function useImageRenderer(
       }
 
       // Rotation operation
-      if (imageStore.imageOperations.transformations.rotationAngle) {
+      if (imageStore.imageOperations.transformations.rotationAngle !== 0) {
         console.log(
           'Applying rotation operation:',
           imageStore.imageOperations.transformations.rotationAngle,

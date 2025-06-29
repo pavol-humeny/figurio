@@ -183,6 +183,14 @@ input[type='number'] {
   width: 100%;
 }
 
+.content-text-input {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 30px;
+}
+
 .content-input {
   display: flex;
   flex-direction: column;

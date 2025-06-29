@@ -220,6 +220,10 @@
         "presetSuccessfullyCreated": {
           "title": "Šablóna úspešne vytvorená",
           "message": "Šablóna bola úspešne vytvorená."
+        },
+        "presetSuccessfullySaved": {
+          "title": "Šablóna úspešne uložená",
+          "message": "Šablóna s názvom: {presetName} bola úspešne uložená."
         }
       },
       "myPresets": {

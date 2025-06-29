@@ -23,6 +23,10 @@ const props = defineProps({
     type: String,
     default: '',
   },
+  updateOnChange: {
+    type: Boolean,
+    default: false,
+  },
 })
 
 const emit = defineEmits(['update:modelValue'])
@@ -38,6 +42,12 @@ watch(
 
 const onBlurOrEnter = () => {
   emit('update:modelValue', inputValue.value)
+}
+
+const onInput = () => {
+  if (props.updateOnChange) {
+    emit('update:modelValue', inputValue.value)
+  }
 }
 
 defineExpose({
@@ -59,6 +69,7 @@ const showTip = props.tip !== ''
       :placeholder="props.placeholder"
       @blur="onBlurOrEnter"
       @keydown.enter="onBlurOrEnter"
+      @input="onInput"
     />
   </ItemTip>
 
@@ -71,6 +82,7 @@ const showTip = props.tip !== ''
     :placeholder="props.placeholder"
     @blur="onBlurOrEnter"
     @keydown.enter="onBlurOrEnter"
+    @input="onInput"
   />
 </template>
 

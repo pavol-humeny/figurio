@@ -72,7 +72,6 @@ const {
             <DropdownSelect
               v-model="selectedFrameVariant"
               :options="frameOptions"
-              icon="IconFrame"
               @update="handleFrameChange"
             />
           </div>

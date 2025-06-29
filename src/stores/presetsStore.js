@@ -1,4 +1,7 @@
 import { defineStore } from 'pinia'
+import { useToastModal } from '@/composables/modals/useToastModal'
+
+const { showToastModal } = useToastModal()
 
 export const usePresetsStore = defineStore('presetsStore', {
   state: () => ({
@@ -18,42 +21,51 @@ export const usePresetsStore = defineStore('presetsStore', {
   actions: {
     createPreset(name) {
       if (!name || typeof name !== 'string' || name.trim() === '') {
-        console.warn('Invalid preset name provided.')
         return false
       }
 
-      const exists = this.presets.some((p) => p.name === name)
-      if (exists) {
-        console.warn(`Preset with name "${name}" already exists.`)
+      // check if preset with this name already exists
+      if (this.allPresetNames.includes(name.trim())) {
         return false
       }
 
       this.presets.push({
         name: name.trim(),
         imageOperations: {
-          transformations: [],
+          transformations: {},
           frame: {},
           smartCrop: {},
         },
       })
 
       this.selectedPresetName = name.trim()
+
       return true
     },
 
-    addPreset(preset) {
-      if (!preset.name || typeof preset.imageOperations !== 'object') return false
+    updatePreset(originalName, newName, newImageOperations = {}) {
+      //Print all preset names for debugging
+      console.log('All preset names:', this.allPresetNames)
 
-      const exists = this.presets.some((p) => p.name === preset.name)
-      if (exists) {
-        console.warn(`Preset with name "${preset.name}" already exists.`)
+      if (!newName || typeof newName !== 'string' || newName.trim() === '') {
         return false
       }
 
-      this.presets.push({
-        name: preset.name,
-        imageOperations: JSON.parse(JSON.stringify(preset.imageOperations)),
-      })
+      // check if preset with this name exists
+      if (!this.allPresetNames.includes(newName)) {
+        return false
+      }
+
+      console.log('Updating preset:', originalName, newName, newImageOperations)
+
+      const preset = this.presets.find((p) => p.name === originalName)
+      if (!preset) return false
+
+      preset.name = newName
+      preset.imageOperations = {
+        ...preset.imageOperations,
+        ...newImageOperations,
+      }
 
       return true
     },
