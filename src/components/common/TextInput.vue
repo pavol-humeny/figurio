@@ -19,6 +19,10 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
+  placeholder: {
+    type: String,
+    default: '',
+  },
 })
 
 const emit = defineEmits(['update:modelValue'])
@@ -52,6 +56,7 @@ const showTip = props.tip !== ''
       class="text-input"
       v-model="inputValue"
       :disabled="props.disabled"
+      :placeholder="props.placeholder"
       @blur="onBlurOrEnter"
       @keydown.enter="onBlurOrEnter"
     />
@@ -63,6 +68,7 @@ const showTip = props.tip !== ''
     class="text-input"
     v-model="inputValue"
     :disabled="props.disabled"
+    :placeholder="props.placeholder"
     @blur="onBlurOrEnter"
     @keydown.enter="onBlurOrEnter"
   />

@@ -40,7 +40,10 @@ const tabs = ['myPresets', 'createPreset']
                 {{ $t('tools.preset.settings.createPreset.label') }}
               </p>
             </div>
-            <TextInput v-model="newPresetName" />
+            <TextInput
+              v-model="newPresetName"
+              :placeholder="$t('tools.preset.settings.createPreset.presetNamePlaceholder')"
+            />
             <div class="content-button">
               <DefaultButton
                 :text="$t('tools.preset.settings.createPreset.createPresetButton.text')"

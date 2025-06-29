@@ -76,17 +76,7 @@
           "cropBoxTooLarge": {
             "title": "Oříznutí selhalo",
             "message": "Orezávací rámček je väčší ako pôvodné rozmery obrázka. Orezanie sa neuplatnilo."
-          },
-          "presetCannotBeApplied": {
-            "title": "Chyba orezania",
-            "message": "Predvoľba s aktuálnym orezaním nemôže byť použitá, pretože orezávací rámček je väčší ako pôvodné rozmery obrázka. Obnovujem obrázok na pôvodný obrázok."
           }
-        },
-        "confirmRemoveCropFromTransformations": {
-          "title": "Potvrdiť odstránenie orezania",
-          "message": "Operácia orezania zlyhala. Chcete ju odstrániť z transformácií a pokračovať?",
-          "cancel": "Zrušit",
-          "confirm": "Odstranit oříznutí"
         }
       }
     }
@@ -212,6 +202,7 @@
     "settings": {
       "createPreset": {
         "label": "Vytvořit šablonu",
+        "presetNamePlaceholder": "Název šablony",
         "createPresetButton": {
           "text": "Vytvořit šablonu"
         },

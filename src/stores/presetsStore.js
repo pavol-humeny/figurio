@@ -71,22 +71,12 @@ export const usePresetsStore = defineStore('presetsStore', {
     },
 
     // --- TRANSFORMATIONS ---
-    addTransformation(presetName, transformation) {
+    updateTransformation(presetName, newTransformation) {
       const preset = this.presets.find((p) => p.name === presetName)
       if (!preset) return
-      preset.imageOperations.transformations ??= []
-      preset.imageOperations.transformations.push({ ...transformation })
-    },
-
-    removeTransformation(presetName, index) {
-      const preset = this.presets.find((p) => p.name === presetName)
-      if (
-        preset &&
-        Array.isArray(preset.imageOperations.transformations) &&
-        index >= 0 &&
-        index < preset.imageOperations.transformations.length
-      ) {
-        preset.imageOperations.transformations.splice(index, 1)
+      preset.imageOperations.transformations = {
+        ...preset.imageOperations.transformations,
+        ...newTransformation,
       }
     },
 
