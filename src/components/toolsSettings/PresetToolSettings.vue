@@ -80,7 +80,6 @@ const tabs = ['myPresets', 'createPreset']
               <DropdownSelect
                 v-model="newPresetRotation"
                 :options="presetRotationOptions"
-                icon="IconFrame"
                 :style="{ margin: '6px 0' }"
               />
             </div>

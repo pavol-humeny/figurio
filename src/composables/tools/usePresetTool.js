@@ -25,6 +25,7 @@ export function usePresetTool(imageStore, historyStore, editorStore, presetsStor
   // Watch for changes to set newPresetIsModified
   watch(
     [
+      newPresetName,
       newPresetRotation,
       newPresetHorizontalFlip,
       newPresetVerticalFlip,
@@ -87,6 +88,7 @@ export function usePresetTool(imageStore, historyStore, editorStore, presetsStor
         }),
       )
 
+      newPresetIsModified.value = false
       newPresetCreated.value = true
       createdPresetName.value = newPresetName.value
     } else {
@@ -119,7 +121,8 @@ export function usePresetTool(imageStore, historyStore, editorStore, presetsStor
         }),
       )
 
-      newPresetCreated.value = true
+      newPresetCreated.value = false
+      presetNameInputRef.value.setValue('')
       createdPresetName.value = newPresetName.value
     } else {
       showToastModal(
@@ -127,6 +130,7 @@ export function usePresetTool(imageStore, historyStore, editorStore, presetsStor
         t('tools.preset.settings.createPreset.invalidPresetName.title'),
         t('tools.preset.settings.createPreset.invalidPresetName.message'),
       )
+
       presetNameInputRef.value.setValue(createdPresetName.value)
     }
   }

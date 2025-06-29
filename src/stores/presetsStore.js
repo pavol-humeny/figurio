@@ -1,7 +1,8 @@
 import { defineStore } from 'pinia'
 import { useToastModal } from '@/composables/modals/useToastModal'
+import { useI18n } from 'vue-i18n'
 
-const { showToastModal } = useToastModal()
+const STORAGE_KEY = 'imageEditorPresets'
 
 export const usePresetsStore = defineStore('presetsStore', {
   state: () => ({
@@ -19,18 +20,36 @@ export const usePresetsStore = defineStore('presetsStore', {
   },
 
   actions: {
-    createPreset(name) {
-      if (!name || typeof name !== 'string' || name.trim() === '') {
-        return false
+    loadFromStorage() {
+      const raw = localStorage.getItem(STORAGE_KEY)
+      if (raw) {
+        try {
+          const parsed = JSON.parse(raw)
+          this.presets = parsed.presets || []
+          this.selectedPresetName = parsed.selectedPresetName || null
+        } catch (e) {
+          console.error('Failed to load presets from localStorage:', e)
+        }
       }
+    },
 
-      // check if preset with this name already exists
-      if (this.allPresetNames.includes(name.trim())) {
-        return false
+    saveToStorage() {
+      const data = {
+        presets: this.presets,
+        selectedPresetName: this.selectedPresetName,
       }
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(data))
+    },
+
+    createPreset(name) {
+      const trimmed = name.trim()
+      if (!trimmed) return false
+
+      const exists = this.presets.some((p) => p.name === trimmed)
+      if (exists) return false
 
       this.presets.push({
-        name: name.trim(),
+        name: trimmed,
         imageOperations: {
           transformations: {},
           frame: {},
@@ -38,41 +57,56 @@ export const usePresetsStore = defineStore('presetsStore', {
         },
       })
 
-      this.selectedPresetName = name.trim()
+      this.selectedPresetName = trimmed
+
+      this.saveToStorage()
 
       return true
     },
 
     updatePreset(originalName, newName, newImageOperations = {}) {
-      //Print all preset names for debugging
-      console.log('All preset names:', this.allPresetNames)
+      console.log('All presets:', this.presets)
 
-      if (!newName || typeof newName !== 'string' || newName.trim() === '') {
-        return false
-      }
-
-      // check if preset with this name exists
-      if (!this.allPresetNames.includes(newName)) {
-        return false
-      }
-
-      console.log('Updating preset:', originalName, newName, newImageOperations)
+      const trimmedNewName = newName.trim()
+      if (!trimmedNewName) return false
 
       const preset = this.presets.find((p) => p.name === originalName)
       if (!preset) return false
 
-      preset.name = newName
-      preset.imageOperations = {
-        ...preset.imageOperations,
-        ...newImageOperations,
+      // If name is changing, check for conflict
+      if (originalName !== trimmedNewName) {
+        const nameExists = this.presets.some((p) => p.name === trimmedNewName)
+        if (nameExists) return false
+        preset.name = trimmedNewName
       }
 
+      // Deep merge operation values
+      const mergeDeep = (target, source) => {
+        for (const key in source) {
+          if (source[key] && typeof source[key] === 'object' && !Array.isArray(source[key])) {
+            target[key] = mergeDeep({ ...(target[key] || {}) }, source[key])
+          } else {
+            target[key] = source[key]
+          }
+        }
+        return target
+      }
+
+      preset.imageOperations = mergeDeep(preset.imageOperations, newImageOperations)
+
+      // Update selected name if affected
+      if (this.selectedPresetName === originalName) {
+        this.selectedPresetName = preset.name
+      }
+
+      this.saveToStorage()
       return true
     },
 
     selectPreset(name) {
       const found = this.presets.find((p) => p.name === name)
       this.selectedPresetName = found ? name : null
+      this.saveToStorage()
     },
 
     deletePreset(name) {
@@ -80,36 +114,7 @@ export const usePresetsStore = defineStore('presetsStore', {
       if (this.selectedPresetName === name) {
         this.selectedPresetName = null
       }
-    },
-
-    // --- TRANSFORMATIONS ---
-    updateTransformation(presetName, newTransformation) {
-      const preset = this.presets.find((p) => p.name === presetName)
-      if (!preset) return
-      preset.imageOperations.transformations = {
-        ...preset.imageOperations.transformations,
-        ...newTransformation,
-      }
-    },
-
-    // --- FRAME ---
-    updateFrame(presetName, newFrameSettings) {
-      const preset = this.presets.find((p) => p.name === presetName)
-      if (!preset) return
-      preset.imageOperations.frame = {
-        ...preset.imageOperations.frame,
-        ...newFrameSettings,
-      }
-    },
-
-    // --- SMART CROP ---
-    updateSmartCrop(presetName, newSmartCropSettings) {
-      const preset = this.presets.find((p) => p.name === presetName)
-      if (!preset) return
-      preset.imageOperations.smartCrop = {
-        ...preset.imageOperations.smartCrop,
-        ...newSmartCropSettings,
-      }
+      this.saveToStorage()
     },
   },
 })
