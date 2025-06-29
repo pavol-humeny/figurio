@@ -112,33 +112,6 @@ export function useSmartCropTool(imageStore, historyStore, editorStore, t) {
   })
 
   const applyAutoSmartCrop = async () => {
-    imageStore.imageOperations.smartCrop.enabled = true
-
-    historyStore.push(imageStore.getSnapshot())
-  }
-
-  const applyAutoSmartCropRender = async () => {
-    await calculateIndents()
-    await applyCrop()
-  }
-
-  const showAutoSmartCrop = async () => {
-    await calculateIndents()
-    isCropShown.value = !isCropShown.value
-
-    if (isCropShown.value) {
-      editorStore.selectSubTool('isCropShown')
-    } else {
-      editorStore.selectSubTool('')
-      resetCropBox()
-    }
-  }
-
-  const applyManualSmartCrop = async () => {
-    await applyCrop()
-  }
-
-  const calculateIndents = async () => {
     if (imageStore.svgObjects.length > 0) {
       const confirmed = await showConfirmModal(
         t('tools.confirmNeedRasterization.title'),
@@ -153,6 +126,33 @@ export function useSmartCropTool(imageStore, historyStore, editorStore, t) {
       }
     }
 
+    imageStore.imageOperations.smartCrop.enabled = true
+
+    historyStore.push(imageStore.getSnapshot())
+  }
+
+  const applyAutoSmartCropRender = async () => {
+    calculateIndents()
+    await applyCrop()
+  }
+
+  const showAutoSmartCrop = () => {
+    calculateIndents()
+    isCropShown.value = !isCropShown.value
+
+    if (isCropShown.value) {
+      editorStore.selectSubTool('isCropShown')
+    } else {
+      editorStore.selectSubTool('')
+      resetCropBox()
+    }
+  }
+
+  const applyManualSmartCrop = async () => {
+    await applyCrop()
+  }
+
+  const calculateIndents = () => {
     if (!imageStore.renderedImage) return
 
     const canvas = document.createElement('canvas')

@@ -476,12 +476,14 @@ export function useCropTool(imageStore, viewportStore, editorStore, historyStore
       }
     }
 
-    imageStore.addTransformation({ type: 'crop', value: cropBox.value })
+    // imageStore.addTransformation({ type: 'crop', value: cropBox.value })
+
+    imageStore.imageOperations.transformations.cropBox = { ...cropBox.value }
 
     historyStore.push(imageStore.getSnapshot())
   }
 
-  const applyCropRender = async (cropBox) => {
+  const applyCropRender = (cropBox) => {
     if (!imageStore.renderedImage || !cropBox) return
 
     // Check if the crop box is equal or smaller than the original image dimensions
@@ -494,7 +496,7 @@ export function useCropTool(imageStore, viewportStore, editorStore, historyStore
         t('tools.transform.settings.crop.toast.cropBoxTooLarge.title'),
         t('tools.transform.settings.crop.toast.cropBoxTooLarge.message'),
       )
-      return false
+      return
     }
 
     const { x, y, width, height } = cropBox
@@ -528,8 +530,6 @@ export function useCropTool(imageStore, viewportStore, editorStore, historyStore
     imageStore.fileDimensions.fileAspectRatio = width / height || 1
 
     imageStore.newFileDimensions = { ...imageStore.fileDimensions }
-
-    return true
   }
 
   return {

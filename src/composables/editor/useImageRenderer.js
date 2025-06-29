@@ -4,8 +4,8 @@ import { useRotateTool } from '../tools/useRotateTool'
 import { useFrameTool } from '../tools/useFrameTool'
 import { useSmartCropTool } from '../tools/useSmartCropTool'
 import { useCropTool } from '../tools/useCropTool'
-import { useConfirmModal } from '@/composables/modals/useConfirmModal'
-import { useToastModal } from '@/composables/modals/useToastModal'
+// import { useConfirmModal } from '@/composables/modals/useConfirmModal'
+// import { useToastModal } from '@/composables/modals/useToastModal'
 
 export function useImageRenderer(
   imageStore,
@@ -15,8 +15,8 @@ export function useImageRenderer(
   contentRef,
   t,
 ) {
-  const { showConfirmModal } = useConfirmModal()
-  const { showToastModal } = useToastModal()
+  // const { showConfirmModal } = useConfirmModal()
+  // const { showToastModal } = useToastModal()
 
   const canvasRef = ref(null)
   const svgRef = ref(null)
@@ -121,83 +121,52 @@ export function useImageRenderer(
       imageStore.fileDimensions = { ...imageStore.originalFileDimensions }
 
       console.log('[watch] Original image or operations changed, applying operations')
-      if (imageStore.imageOperations.transformations?.length > 0) {
-        console.log('Applying transformations:', imageStore.imageOperations.transformations)
 
-        const transformations = imageStore.getTransformations()
+      // Crop operation
+      if (imageStore.imageOperations.transformations.cropBox) {
+        console.log('Applying crop operation:', imageStore.imageOperations.transformations.cropBox)
 
-        for (const operation of transformations) {
-          switch (operation.type) {
-            case 'flip':
-              console.log('Applying flip operation:', operation.value)
-              await useFlipTool(imageStore, historyStore).applyFlipRender(operation.value)
-              break
-            case 'rotate':
-              console.log('Applying rotate operation:', operation.value)
-              await useRotateTool(imageStore, historyStore, t).applyRotationRender(operation.value)
-              break
-            case 'crop': {
-              console.log('Applying crop operation:', operation.value)
-              const result = await useCropTool(
-                imageStore,
-                viewportStore,
-                editorStore,
-                historyStore,
-                t,
-              ).applyCropRender(operation.value)
-
-              if (result === false) {
-                const confirmed = await showConfirmModal(
-                  t('tools.transform.settings.crop.confirmRemoveCropFromTransformations.title'),
-                  t('tools.transform.settings.crop.confirmRemoveCropFromTransformations.message'),
-                  t('tools.transform.settings.crop.confirmRemoveCropFromTransformations.cancel'),
-                  t('tools.transform.settings.crop.confirmRemoveCropFromTransformations.confirm'),
-                )
-                if (confirmed) {
-                  // Remove the crop operation from transformations and continue with the next operation
-                  imageStore.imageOperations.transformations =
-                    imageStore.imageOperations.transformations.filter(
-                      (op) =>
-                        !(
-                          op.type === 'crop' &&
-                          JSON.stringify(op.value) === JSON.stringify(operation.value)
-                        ),
-                    )
-                } else {
-                  console.log('Crop operation cancelled by user. Resetting to original.')
-
-                  showToastModal(
-                    'error',
-                    t('tools.transform.settings.crop.toast.presetCannotBeApplied.title'),
-                    t('tools.transform.settings.crop.toast.presetCannotBeApplied.message'),
-                  )
-
-                  historyStore.reset()
-
-                  imageStore.resetImageOperations()
-                  imageStore.renderedImage = imageStore.originalImage
-                  imageStore.fileDimensions = { ...imageStore.originalFileDimensions }
-
-                  renderAll()
-
-                  return // End watch block execution
-                }
-              }
-
-              break
-            }
-          }
-        }
+        useCropTool(imageStore, historyStore, t).applyCropRender(
+          imageStore.imageOperations.transformations.cropBox,
+        )
       }
 
+      // Rotation operation
+      if (imageStore.imageOperations.transformations.rotationAngle) {
+        console.log(
+          'Applying rotation operation:',
+          imageStore.imageOperations.transformations.rotationAngle,
+        )
+
+        useRotateTool(imageStore, historyStore, t).applyRotationRender(
+          imageStore.imageOperations.transformations.rotationAngle,
+        )
+      }
+
+      // Flip operation
+      if (imageStore.imageOperations.transformations.flipHorizontal) {
+        console.log('Applying horizontal flip operation')
+
+        useFlipTool(imageStore, historyStore).applyFlipRender('horizontal')
+      }
+      if (imageStore.imageOperations.transformations.flipVertical) {
+        console.log('Applying vertical flip operation')
+
+        useFlipTool(imageStore, historyStore).applyFlipRender('vertical')
+      }
+
+      // SmartCrop operation
       if (imageStore.imageOperations.smartCrop?.enabled) {
         console.log('Applying smart crop operation')
+
         await useSmartCropTool(imageStore, historyStore, editorStore, t).applyAutoSmartCropRender()
       }
 
+      // Frame operation
       if (imageStore.imageOperations.frame?.enabled) {
         console.log('Applying frame operation')
-        await useFrameTool(imageStore, historyStore, editorStore, t).applyFrameRender()
+
+        useFrameTool(imageStore, historyStore, editorStore, t).applyFrameRender()
       }
 
       renderAll()

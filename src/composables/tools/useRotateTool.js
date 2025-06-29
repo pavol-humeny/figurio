@@ -3,15 +3,7 @@ import { useConfirmModal } from '../modals/useConfirmModal'
 export function useRotateTool(imageStore, historyStore, t) {
   const { showConfirmModal } = useConfirmModal()
 
-  const applyRotation = (angle) => {
-    imageStore.addTransformation({ type: 'rotate', value: angle })
-
-    historyStore.push(imageStore.getSnapshot())
-  }
-
-  const applyRotationRender = async (angle) => {
-    if (!imageStore.renderedImage || !angle) return
-
+  const applyRotation = async (angle) => {
     if (imageStore.svgObjects.length > 0) {
       const confirmed = await showConfirmModal(
         t('tools.confirmNeedRasterization.title'),
@@ -19,10 +11,19 @@ export function useRotateTool(imageStore, historyStore, t) {
         t('tools.confirmNeedRasterization.cancel'),
         t('tools.confirmNeedRasterization.confirm'),
       )
-      if (!confirmed) return
-
-      await imageStore.rasterize()
+      if (confirmed) {
+        await imageStore.rasterize()
+      } else {
+        return
+      }
     }
+    imageStore.imageOperations.transformations.rotationAngle += angle
+
+    historyStore.push(imageStore.getSnapshot())
+  }
+
+  const applyRotationRender = (angle) => {
+    if (!imageStore.renderedImage || !angle) return
 
     const radians = (angle * Math.PI) / 180
 

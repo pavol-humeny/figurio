@@ -77,12 +77,12 @@ export const useImageStore = defineStore('imageStore', {
     selectedSvgObjectId: null,
 
     imageOperations: {
-      transformations: [
-        // Example transformations
-        // { type: 'rotate', value: 90 },
-        // { type: 'flipHorizontal', value: true },
-        // { type: 'rotate', value: -90 },
-      ],
+      transformations: {
+        rotationAngle: 0, // In degrees
+        flipHorizontal: false,
+        flipVertical: false,
+        cropBox: null, // { x: 0, y: 0, width: 0, height: 0 }
+      },
       smartCrop: {
         enabled: false,
       },
@@ -109,10 +109,10 @@ export const useImageStore = defineStore('imageStore', {
         },
       }
     },
-    addTransformation(operation) {
-      const deepCopy = JSON.parse(JSON.stringify(operation))
-      this.imageOperations.transformations.push(deepCopy)
-    },
+    // addTransformation(operation) {
+    //   const deepCopy = JSON.parse(JSON.stringify(operation))
+    //   this.imageOperations.transformations.push(deepCopy)
+    // },
     getTransformations() {
       return JSON.parse(JSON.stringify(this.imageOperations.transformations))
     },
