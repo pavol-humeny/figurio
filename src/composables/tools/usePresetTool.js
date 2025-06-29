@@ -1,4 +1,4 @@
-import { ref, computed, watch } from 'vue'
+import { ref, computed, watch, reactive, nextTick } from 'vue'
 import { useToastModal } from '../modals/useToastModal'
 
 export function usePresetTool(imageStore, historyStore, editorStore, presetsStore, t) {
@@ -6,36 +6,97 @@ export function usePresetTool(imageStore, historyStore, editorStore, presetsStor
 
   const presetNameInputRef = ref(null)
   const presetFrameWidthRef = ref(null)
+  const presetIsModified = ref(false)
+  const presetModifying = ref(false)
+
+  const presetsOptions = computed(() => {
+    return presetsStore.allPresetNames.map((name) => ({
+      label: name,
+      value: name,
+    }))
+  })
+
+  const selectedPresetName = ref(presetsStore.selectedPresetName)
+
+  watch(selectedPresetName, (newName) => {
+    presetsStore.selectPreset(newName)
+  })
+
+  watch(
+    () => presetsStore.selectedPresetName,
+    (newName) => {
+      selectedPresetName.value = newName
+      presetIsModified.value = false
+    },
+  )
+
+  const localPresetName = ref('')
+  const originalPresetName = ref('')
+
+  const localImageOperations = reactive({
+    transformations: {},
+    smartCrop: {},
+    frame: {},
+  })
+
   const newPresetName = ref('')
-  const createdPresetName = ref('')
-
-  const newPresetCreated = ref(false)
-  const newPresetIsModified = ref(false)
-
   const newPresetRotation = ref(0)
   const newPresetHorizontalFlip = ref(false)
   const newPresetVerticalFlip = ref(false)
   const newPresetSmartCrop = ref(false)
   const newPresetFrame = ref({
+    enabled: false,
     type: 'frameSolid',
     color: '#000000',
     width: 0,
   })
 
-  // Watch for changes to set newPresetIsModified
+  const isInitializing = ref(false)
+
+  watch(
+    () => presetsStore.selectedPreset,
+    (preset) => {
+      if (!preset) return
+
+      isInitializing.value = true
+
+      localPresetName.value = preset.name
+      originalPresetName.value = preset.name
+
+      Object.assign(
+        localImageOperations.transformations,
+        preset.imageOperations.transformations || {},
+      )
+      Object.assign(localImageOperations.smartCrop, preset.imageOperations.smartCrop || {})
+      Object.assign(localImageOperations.frame, preset.imageOperations.frame || {})
+
+      presetIsModified.value = false
+
+      // Odložené vypnutie inicializačného režimu (na ďalší tick)
+      nextTick(() => {
+        isInitializing.value = false
+      })
+    },
+    { immediate: true },
+  )
+
+  // Watch for changes to set presetIsModified
   watch(
     [
-      newPresetName,
-      newPresetRotation,
-      newPresetHorizontalFlip,
-      newPresetVerticalFlip,
-      newPresetSmartCrop,
-      newPresetFrame,
+      () => localPresetName.value,
+      () => localImageOperations.transformations.rotationAngle,
+      () => localImageOperations.transformations.flipHorizontal,
+      () => localImageOperations.transformations.flipVertical,
+      () => localImageOperations.smartCrop.enabled,
+      () => localImageOperations.frame.type,
+      () => localImageOperations.frame.color,
+      () => localImageOperations.frame.width,
     ],
     () => {
-      newPresetIsModified.value = true
+      if (!isInitializing.value) {
+        presetIsModified.value = true
+      }
     },
-    { deep: true },
   )
 
   const presetRotationOptions = [
@@ -72,25 +133,46 @@ export function usePresetTool(imageStore, historyStore, editorStore, presetsStor
       newPresetFrame.value.width = width
     } else {
       newPresetFrame.value.width = width
-      presetFrameWidthRef.value.setValue(width)
     }
+    presetFrameWidthRef.value.setValue(width)
   }
 
   const createPreset = () => {
-    console.log('Creating preset:', newPresetName.value)
+    const name = newPresetName.value.trim()
+    console.log('Creating preset:', name)
 
-    if (presetsStore.createPreset(newPresetName.value)) {
+    if (!name) return
+
+    const created = presetsStore.createPreset(name)
+
+    if (created) {
+      // Skladáme imageOperations z new* premenných
+      const newImageOperations = {
+        transformations: {
+          rotationAngle: newPresetRotation.value,
+          flipHorizontal: newPresetHorizontalFlip.value,
+          flipVertical: newPresetVerticalFlip.value,
+        },
+        smartCrop: {
+          enabled: newPresetSmartCrop.value,
+        },
+        frame: {
+          ...newPresetFrame.value,
+        },
+      }
+
+      // Update
+      presetsStore.updatePreset(name, name, newImageOperations)
+
       showToastModal(
         'success',
         t('tools.preset.settings.createPreset.presetSuccessfullyCreated.title'),
         t('tools.preset.settings.createPreset.presetSuccessfullyCreated.message', {
-          presetName: newPresetName.value,
+          presetName: name,
         }),
       )
 
-      newPresetIsModified.value = false
-      newPresetCreated.value = true
-      createdPresetName.value = newPresetName.value
+      newPresetName.value = ''
     } else {
       showToastModal(
         'error',
@@ -102,46 +184,55 @@ export function usePresetTool(imageStore, historyStore, editorStore, presetsStor
   }
 
   const savePreset = () => {
-    console.log('Saving preset:', newPresetName.value)
+    if (!originalPresetName.value) return
 
-    const newImageOperations = {
-      transformations: {},
-      frame: {},
-      smartCrop: {},
-    }
+    const success = presetsStore.updatePreset(
+      originalPresetName.value,
+      localPresetName.value,
+      JSON.parse(JSON.stringify(localImageOperations)),
+    )
 
-    if (
-      presetsStore.updatePreset(createdPresetName.value, newPresetName.value, newImageOperations)
-    ) {
+    if (success) {
       showToastModal(
         'success',
         t('tools.preset.settings.createPreset.presetSuccessfullySaved.title'),
         t('tools.preset.settings.createPreset.presetSuccessfullySaved.message', {
-          presetName: newPresetName.value,
+          presetName: localPresetName.value,
         }),
       )
-
-      newPresetCreated.value = false
-      presetNameInputRef.value.setValue('')
-      createdPresetName.value = newPresetName.value
+      presetIsModified.value = false
+      presetModifying.value = false
     } else {
       showToastModal(
         'error',
         t('tools.preset.settings.createPreset.invalidPresetName.title'),
         t('tools.preset.settings.createPreset.invalidPresetName.message'),
       )
-
-      presetNameInputRef.value.setValue(createdPresetName.value)
     }
+  }
+
+  const applyPreset = () => {
+    console.log('Applying preset:', selectedPresetName.value)
+  }
+
+  const modifyPreset = () => {
+    presetModifying.value = true
+  }
+
+  const closeModifying = () => {
+    presetModifying.value = false
   }
 
   return {
     presetNameInputRef,
     presetFrameWidthRef,
     newPresetName,
-    newPresetCreated,
     createPreset,
     savePreset,
+    applyPreset,
+    modifyPreset,
+    presetModifying,
+    closeModifying,
     setFrameWidth,
     presetRotationOptions,
     presetFrameOptions,
@@ -150,6 +241,11 @@ export function usePresetTool(imageStore, historyStore, editorStore, presetsStor
     newPresetVerticalFlip,
     newPresetSmartCrop,
     newPresetFrame,
-    newPresetIsModified,
+    presetIsModified,
+    presetsOptions,
+    localPresetName,
+    originalPresetName,
+    localImageOperations,
+    selectedPresetName,
   }
 }

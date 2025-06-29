@@ -7,7 +7,7 @@ const STORAGE_KEY = 'imageEditorPresets'
 export const usePresetsStore = defineStore('presetsStore', {
   state: () => ({
     presets: [],
-    selectedPresetName: null,
+    selectedPresetName: '',
   }),
 
   getters: {
@@ -15,7 +15,7 @@ export const usePresetsStore = defineStore('presetsStore', {
       return state.presets.map((p) => p.name)
     },
     selectedPreset(state) {
-      return state.presets.find((p) => p.name === state.selectedPresetName) || null
+      return state.presets.find((p) => p.name === state.selectedPresetName) || ''
     },
   },
 
@@ -26,7 +26,7 @@ export const usePresetsStore = defineStore('presetsStore', {
         try {
           const parsed = JSON.parse(raw)
           this.presets = parsed.presets || []
-          this.selectedPresetName = parsed.selectedPresetName || null
+          this.selectedPresetName = parsed.selectedPresetName || ''
         } catch (e) {
           console.error('Failed to load presets from localStorage:', e)
         }
@@ -51,9 +51,22 @@ export const usePresetsStore = defineStore('presetsStore', {
       this.presets.push({
         name: trimmed,
         imageOperations: {
-          transformations: {},
-          frame: {},
-          smartCrop: {},
+          transformations: {
+            rotationAngle: 0,
+            flipHorizontal: false,
+            flipVertical: false,
+            cropBox: null,
+          },
+          smartCrop: {
+            enabled: false,
+          },
+          frame: {
+            enabled: false,
+            color: '#000000',
+            width: 0,
+            height: 0,
+            type: 'frameSolid',
+          },
         },
       })
 
@@ -105,14 +118,14 @@ export const usePresetsStore = defineStore('presetsStore', {
 
     selectPreset(name) {
       const found = this.presets.find((p) => p.name === name)
-      this.selectedPresetName = found ? name : null
+      this.selectedPresetName = found ? name : ''
       this.saveToStorage()
     },
 
     deletePreset(name) {
       this.presets = this.presets.filter((p) => p.name !== name)
       if (this.selectedPresetName === name) {
-        this.selectedPresetName = null
+        this.selectedPresetName = ''
       }
       this.saveToStorage()
     },
