@@ -128,13 +128,20 @@ export const useImageStore = defineStore('imageStore', {
 
     resetImageOperations() {
       this.imageOperations = {
-        transformations: [],
+        transformations: {
+          rotationAngle: 0, // In degrees
+          flipHorizontal: false,
+          flipVertical: false,
+          cropBox: null, // { x: 0, y: 0, width: 0, height: 0 }
+        },
         smartCrop: {
           enabled: false,
         },
         frame: {
+          enabled: false,
           color: '#000000',
           width: 0,
+          height: 0,
           type: 'solid',
         },
       }
@@ -255,6 +262,8 @@ export const useImageStore = defineStore('imageStore', {
 
       this.svgObjects = []
       this.selectedSvgObjectId = null
+
+      this.resetImageOperations()
     },
 
     setFile(file, t) {

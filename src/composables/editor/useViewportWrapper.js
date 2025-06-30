@@ -2,7 +2,6 @@ import { computed, ref, nextTick, onMounted, watch, onBeforeUnmount } from 'vue'
 import { viewportConfig } from '@/config/viewportConfig'
 import { useMath } from '@/composables/common/useMath'
 
-
 export function useViewportWrapper(viewportStore, imageStore, editorStore, contentRef) {
   const { clamp } = useMath()
 
@@ -105,8 +104,14 @@ export function useViewportWrapper(viewportStore, imageStore, editorStore, conte
   const fitToScreenZoomLevel = () => {
     updateInitialDimensions()
 
-    const scaleX = wrapperWidth.value / contentWidth.value
-    const scaleY = wrapperHeight.value / contentHeight.value
+    const frameWidth = imageStore.imageOperations.frame?.enabled
+      ? imageStore.imageOperations.frame.width
+      : 0
+
+    const scaleX = wrapperWidth.value / (contentWidth.value + frameWidth * 2)
+    const scaleY = wrapperHeight.value / (contentHeight.value + frameWidth * 2)
+
+    console.log('Scale X:', scaleX, 'Scale Y:', scaleY)
 
     const optimalZoom = Math.min(scaleX, scaleY)
 
@@ -311,6 +316,18 @@ export function useViewportWrapper(viewportStore, imageStore, editorStore, conte
       }
     })
   })
+
+  // Watch for changes in frame
+  watch(
+    () => imageStore.imageOperations.frame,
+    () => {
+      nextTick(() => {
+        fitToScreenZoomLevel()
+        centerImage()
+      })
+    },
+    { deep: true },
+  )
 
   // Cleanup on unmount
   onBeforeUnmount(() => {

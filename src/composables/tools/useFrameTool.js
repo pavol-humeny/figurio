@@ -89,98 +89,80 @@ export function useFrameTool(imageStore, historyStore, editorStore, t) {
     historyStore.push(imageStore.getSnapshot())
   }
 
-  // const applyFrameRender = () => {
-  //   const sourceCanvas = imageStore.renderedImage
-  //   if (!sourceCanvas) return
+  function applyBrowserFrame(ctx, w, h, type, color) {
+    const headerHeight = 30
+    ctx.fillStyle = color
+    ctx.fillRect(0, 0, w, headerHeight)
 
-  //   // Use different frame for different variants
-  //   switch (imageStore.imageOperations.frame.type) {
-  //     case 'frameSolid':
-  //       break
-  //     case 'frameMacBrowser':
-  //       break
-  //     case 'frameWindowsBrowser':
-  //       break
-  //     case 'framePhoneIOS':
-  //       break
-  //     case 'framePhoneAndroid':
-  //       break
-  //   }
-
-  //   const fw = imageStore.imageOperations.frame.width
-  //   const newWidth = imageStore.fileDimensions.width + fw * 2
-  //   const newHeight = imageStore.fileDimensions.height + fw * 2
-
-  //   const canvas = document.createElement('canvas')
-  //   canvas.width = newWidth
-  //   canvas.height = newHeight
-
-  //   const ctx = canvas.getContext('2d')
-
-  //   // Draw frame
-  //   ctx.fillStyle = imageStore.imageOperations.frame.color
-  //   ctx.fillRect(0, 0, newWidth, newHeight)
-
-  //   // Draw the original image in the center
-  //   ctx.drawImage(sourceCanvas, fw, fw)
-
-  //   // Update store
-  //   imageStore.renderedImage = canvas
-  // }
-  const applySolidFrame = () => {
-    const sourceCanvas = imageStore.renderedImage
-    if (!sourceCanvas) return
-
-    const fw = imageStore.imageOperations.frame.width
-    const newWidth = imageStore.fileDimensions.width + fw * 2
-    const newHeight = imageStore.fileDimensions.height + fw * 2
-
-    const canvas = document.createElement('canvas')
-    canvas.width = newWidth
-    canvas.height = newHeight
-
-    const ctx = canvas.getContext('2d')
-
-    // Draw frame
-    ctx.fillStyle = imageStore.imageOperations.frame.color
-    ctx.fillRect(0, 0, newWidth, newHeight)
-
-    // Draw the original image in the center
-    ctx.drawImage(sourceCanvas, fw, fw)
-
-    // Update store
-    imageStore.renderedImage = canvas
+    if (type === 'mac') {
+      const r = 6
+      const padding = 10
+      const colors = ['#ff5f56', '#ffbd2e', '#27c93f']
+      colors.forEach((c, i) => {
+        ctx.beginPath()
+        ctx.fillStyle = c
+        ctx.arc(padding + i * 15, headerHeight / 2, r, 0, Math.PI * 2)
+        ctx.fill()
+      })
+    } else if (type === 'windows') {
+      ctx.fillStyle = '#fff'
+      ctx.fillRect(w - 50, 8, 10, 10)
+      ctx.fillRect(w - 35, 8, 10, 10)
+      ctx.beginPath()
+      ctx.moveTo(w - 15, 8)
+      ctx.lineTo(w - 5, 18)
+      ctx.strokeStyle = '#fff'
+      ctx.stroke()
+    }
   }
 
-  const applyPhoneAndroidFrame = () => {}
-  const applyPhoneIOSFrame = () => {}
-  const applyMacBrowserFrame = () => {}
-  const applyWindowsBrowserFrame = () => {}
+  function applyPhoneFrame(ctx, w, h, type) {
+    ctx.strokeStyle = '#000'
+    ctx.lineWidth = 8
+    ctx.strokeRect(4, 4, w - 8, h - 8)
 
-  const applyFrameRender = () => {
-    const type = imageStore.imageOperations.frame.type
-
-    if (imageStore.imageOperations.frame.enabled === false) {
-      // Skip rendering if frame is not enabled
-      return
+    if (type === 'ios') {
+      ctx.fillStyle = '#000'
+      ctx.fillRect(w / 2 - 40, 0, 80, 20)
     }
+  }
+
+  const applyFrameRender = (ctx, canvasWidth, canvasHeight) => {
+    const frame = imageStore.imageOperations.frame
+    if (!ctx || !frame?.enabled) return
+
+    const fw = frame.width
+    const fh = frame.height
+    const color = frame.color
+    const type = frame.type
+
+    ctx.clearRect(0, 0, canvasWidth, canvasHeight)
 
     switch (type) {
       case 'frameSolid':
-        applySolidFrame()
+        ctx.fillStyle = color
+        ctx.fillRect(0, 0, canvasWidth, fh) // top
+        ctx.fillRect(0, canvasHeight - fh, canvasWidth, fh) // bottom
+        ctx.fillRect(0, fh, fw, canvasHeight - fh * 2) // left
+        ctx.fillRect(canvasWidth - fw, fh, fw, canvasHeight - fh * 2) // right
         break
-      case 'framePhoneAndroid':
-        applyPhoneAndroidFrame()
-        break
+
       case 'frameMacBrowser':
-        applyMacBrowserFrame()
+        applyBrowserFrame(ctx, canvasWidth, canvasHeight, 'mac', color)
         break
+
       case 'frameWindowsBrowser':
-        applyWindowsBrowserFrame()
+        applyBrowserFrame(ctx, canvasWidth, canvasHeight, 'windows', color)
         break
+
       case 'framePhoneIOS':
-        applyPhoneIOSFrame()
+        applyPhoneFrame(ctx, canvasWidth, canvasHeight, 'ios')
         break
+
+      case 'framePhoneAndroid':
+        applyPhoneFrame(ctx, canvasWidth, canvasHeight, 'android')
+        break
+
       default:
         console.warn(`Unknown frame type: ${type}`)
     }

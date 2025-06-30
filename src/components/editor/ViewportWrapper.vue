@@ -16,7 +16,14 @@ const contentRef = ref(null)
 
 const editorStore = useEditorStore()
 
-const { canvasRef, svgRef } = useImageRenderer(useImageStore(), useHistoryStore(), useEditorStore(), useViewportStore(), contentRef, t)
+const { canvasRef, svgRef, frameCanvasRef } = useImageRenderer(
+  useImageStore(),
+  useHistoryStore(),
+  useEditorStore(),
+  useViewportStore(),
+  contentRef,
+  t,
+)
 
 const {
   zoomLevel,
@@ -57,6 +64,8 @@ const {
       >
         <canvas ref="canvasRef" class="image-canvas"></canvas>
         <svg ref="svgRef" class="image-svg"></svg>
+
+        <canvas ref="frameCanvasRef" class="frame-canvas"></canvas>
 
         <CropTool v-if="editorStore.selectedTabPerTool[editorStore.selectedToolKey] === 'crop'" />
         <SmartCropTool
@@ -116,12 +125,13 @@ const {
 .viewport-content {
   position: relative;
   transform-origin: top left;
-  display: inline-block;
+  /* display: inline-block; */
+  display: block;
 }
 
 .image-canvas,
 .image-svg,
-.pdf-svg-render {
+.frame-canvas {
   position: absolute;
   top: 0;
   left: 0;

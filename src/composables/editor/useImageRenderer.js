@@ -20,6 +20,7 @@ export function useImageRenderer(
 
   const canvasRef = ref(null)
   const svgRef = ref(null)
+  const frameCanvasRef = ref(null)
 
   const updateSizes = () => {
     const width = imageStore.fileDimensions.width
@@ -43,29 +44,34 @@ export function useImageRenderer(
     //   pdfWrapperRef.value.style.width = `${width}px`
     //   pdfWrapperRef.value.style.height = `${height}px`
     // }
+
+    if (frameCanvasRef.value) {
+      const frame = imageStore.imageOperations.frame
+      const frameEnabled = frame?.enabled && frame.width > 0
+
+      const width = imageStore.fileDimensions.width + (frameEnabled ? frame.width * 2 : 0)
+      const height = imageStore.fileDimensions.height + (frameEnabled ? frame.width * 2 : 0)
+
+      frameCanvasRef.value.style.width = `${width}px`
+      frameCanvasRef.value.style.height = `${height}px`
+      frameCanvasRef.value.width = width
+      frameCanvasRef.value.height = height
+    }
   }
 
   const renderCanvas = () => {
     if (!canvasRef.value || !imageStore.renderedImage || imageStore.fileType === 'pdf') return
 
-    console.log('Rendering canvas...')
+    console.log('Rendering canvas (image only)...')
 
     const ctx = canvasRef.value.getContext('2d')
-
-    let width = 0
-    let height = 0
-
-    if (imageStore.imageOperations.frame?.enabled) {
-      width = imageStore.imageOperations.frame.width * 2 + imageStore.fileDimensions.width
-      height = imageStore.imageOperations.frame.height * 2 + imageStore.fileDimensions.height
-      console.log('Applying frame dimensions:', width, height)
-    } else {
-      width = imageStore.fileDimensions.width
-      height = imageStore.fileDimensions.height
-    }
+    const width = imageStore.fileDimensions.width
+    const height = imageStore.fileDimensions.height
 
     canvasRef.value.width = width
     canvasRef.value.height = height
+    canvasRef.value.style.width = `${width}px`
+    canvasRef.value.style.height = `${height}px`
 
     ctx.clearRect(0, 0, width, height)
     ctx.drawImage(imageStore.renderedImage, 0, 0)
@@ -100,9 +106,43 @@ export function useImageRenderer(
     })
   }
 
+  const renderFrameCanvas = () => {
+    if (!imageStore.imageOperations.frame || !imageStore.imageOperations.frame.enabled) return
+
+    console.log('Rendering frame canvas...')
+
+    const frameCanvas = frameCanvasRef.value
+    const ctx = frameCanvas?.getContext('2d')
+    const frame = imageStore.imageOperations.frame
+    const fw = frame?.enabled ? frame.width : 0
+    const fh = frame?.enabled ? frame.height : 0
+    const width = imageStore.fileDimensions.width
+    const height = imageStore.fileDimensions.height
+
+    if (!frameCanvas || !ctx || !frame?.enabled) return
+
+    const canvasWidth = width + fw * 2
+    const canvasHeight = height + fh * 2
+
+    frameCanvas.width = canvasWidth
+    frameCanvas.height = canvasHeight
+    frameCanvas.style.width = `${canvasWidth}px`
+    frameCanvas.style.height = `${canvasHeight}px`
+    frameCanvas.style.left = `-${fw}px`
+    frameCanvas.style.top = `-${fh}px`
+
+    // renderFrameToCanvas(ctx, canvasWidth, canvasHeight)
+    useFrameTool(imageStore, historyStore, editorStore, t).applyFrameRender(
+      ctx,
+      canvasWidth,
+      canvasHeight,
+    )
+  }
+
   const renderAll = async () => {
     updateSizes()
     renderCanvas()
+    renderFrameCanvas()
     renderSvg()
   }
 
@@ -113,6 +153,15 @@ export function useImageRenderer(
       }
     })
   })
+
+  // watch(
+  //   () => imageStore.imageOperations.frame,
+  //   () => {
+  //     console.log('[watch] Frame settings changed, re-rendering frame')
+  //     renderFrameCanvas()
+  //   },
+  //   { deep: true },
+  // )
 
   watch(
     () => [imageStore.originalImage, imageStore.imageOperations],
@@ -162,11 +211,6 @@ export function useImageRenderer(
         await useSmartCropTool(imageStore, historyStore, editorStore, t).applyAutoSmartCropRender()
       }
 
-      // Frame operation
-      console.log('Applying frame operation')
-
-      useFrameTool(imageStore, historyStore, editorStore, t).applyFrameRender()
-
       renderAll()
     },
     { deep: true },
@@ -175,5 +219,6 @@ export function useImageRenderer(
   return {
     canvasRef,
     svgRef,
+    frameCanvasRef,
   }
 }
