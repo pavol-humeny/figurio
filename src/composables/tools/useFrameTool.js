@@ -86,60 +86,93 @@ export function useFrameTool(imageStore, historyStore, editorStore, t) {
       selectedFrameVariant.value === 'frameWindowsBrowser'
     ) {
       // For other frames, we can use a fixed width
-      imageStore.imageOperations.frame.width = 2
-      imageStore.imageOperations.frame.height = 2
+      imageStore.imageOperations.frame.width = Math.floor(
+        (1 / 200) * imageStore.fileDimensions.height,
+      )
+      imageStore.imageOperations.frame.height = Math.floor(
+        (1 / 200) * imageStore.fileDimensions.height,
+      )
+      imageStore.imageOperations.frame.headerSize = Math.floor(
+        0.04 * imageStore.fileDimensions.height,
+      ) // 4% of height
+      console.warn(
+        'border, heder size:',
+        imageStore.imageOperations.frame.width,
+        imageStore.imageOperations.frame.headerSize,
+      )
     }
 
     historyStore.push(imageStore.getSnapshot())
   }
 
   function applyBrowserFrame(ctx, w, h, type, color) {
-    const headerHeight = 30
-    const borderSize = imageStore.imageOperations.frame.width || 2
+    const headerHeight = imageStore.imageOperations.frame.headerSize
+    const borderSize = imageStore.imageOperations.frame.width
     imageStore.imageOperations.frame.headerSize = headerHeight
+    console.log(
+      '!!!!!!!!!!!!!!!!!Applying browser frame:',
+      type,
+      'with header height:',
+      headerHeight,
+      'and border size:',
+      borderSize,
+    )
 
     // Kresli hlavičku (hore)
     ctx.fillStyle = color
     ctx.fillRect(0, 0, w, headerHeight)
 
-    // Kresli rámik vľavo
-    ctx.fillStyle = color
-    ctx.fillRect(0, 0, borderSize, h)
+    // Rámiky
+    ctx.fillRect(0, 0, borderSize, h) // ľavý
+    ctx.fillRect(w - borderSize, 0, borderSize, h) // pravý
+    ctx.fillRect(0, h - borderSize, w, borderSize) // dolný
 
-    // Rámik vpravo
-    ctx.fillRect(w - borderSize, 0, borderSize, h)
-
-    // Rámik dole
-    ctx.fillRect(0, h - borderSize, w, borderSize)
-
-    // Ovládacie prvky hlavičky
     if (type === 'mac') {
-      const r = 6
-      const padding = 10
-      const spacing = 15
+      const radius = Math.max(4, Math.min(headerHeight * 0.25, 8))
+      const spacing = radius * 2 + 4 // 4px medzi kruhmi
+      const startX = borderSize + radius // trochu posun od ľavého rámika
+      const centerY = headerHeight / 2
+
       const colors = ['#ff5f56', '#ffbd2e', '#27c93f']
 
       colors.forEach((c, i) => {
         ctx.beginPath()
         ctx.fillStyle = c
-        ctx.arc(padding + i * spacing, headerHeight / 2, r, 0, Math.PI * 2)
+        ctx.arc(startX + i * spacing, centerY, radius, 0, Math.PI * 2)
         ctx.fill()
       })
-    } else if (type === 'windows') {
-      ctx.fillStyle = '#fff'
-      ctx.fillRect(w - 50, 8, 10, 10) // minimize
-      ctx.fillRect(w - 35, 8, 10, 10) // maximize
+    }
 
-      ctx.beginPath()
-      ctx.moveTo(w - 15, 8)
-      ctx.lineTo(w - 5, 18) // close
+    if (type === 'windows') {
+      const size = Math.max(8, headerHeight * 0.3)
+      const spacing = size + 8
+      const centerY = headerHeight / 2
+      const startX = w - borderSize - spacing * 2 - size -1   // zarovnanie 3 ikon z prava
+
+      // mínus (–)
       ctx.strokeStyle = '#fff'
       ctx.lineWidth = 2
+      ctx.beginPath()
+      ctx.moveTo(startX, centerY + 1)
+      ctx.lineTo(startX + size, centerY + 1)
+      ctx.stroke()
+
+      // štvorec (▢)
+      ctx.strokeRect(startX + spacing, centerY - size / 2, size, size)
+
+      // krížik (×)
+      const x = startX + spacing * 2
+      ctx.beginPath()
+      ctx.moveTo(x, centerY - size / 2)
+      ctx.lineTo(x + size, centerY + size / 2)
+      ctx.moveTo(x + size, centerY - size / 2)
+      ctx.lineTo(x, centerY + size / 2)
       ctx.stroke()
     }
   }
 
   function applyPhoneFrame(ctx, w, h, type) {
+    // TODO
     ctx.strokeStyle = '#000'
     ctx.lineWidth = 8
     ctx.strokeRect(4, 4, w - 8, h - 8)
