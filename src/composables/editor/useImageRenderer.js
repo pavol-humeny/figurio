@@ -40,10 +40,6 @@ export function useImageRenderer(
       canvasRef.value.width = width
       canvasRef.value.height = height
     }
-    // if (pdfWrapperRef.value) {
-    //   pdfWrapperRef.value.style.width = `${width}px`
-    //   pdfWrapperRef.value.style.height = `${height}px`
-    // }
 
     if (frameCanvasRef.value) {
       const frame = imageStore.imageOperations.frame
@@ -153,15 +149,6 @@ export function useImageRenderer(
       }
     })
   })
-
-  // watch(
-  //   () => imageStore.imageOperations.frame,
-  //   () => {
-  //     console.log('[watch] Frame settings changed, re-rendering frame')
-  //     renderFrameCanvas()
-  //   },
-  //   { deep: true },
-  // )
 
   watch(
     () => [imageStore.originalImage, imageStore.imageOperations],

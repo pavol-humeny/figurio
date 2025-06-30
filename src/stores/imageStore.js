@@ -372,15 +372,10 @@ export const useImageStore = defineStore('imageStore', {
       document.body.removeChild(input)
     },
 
-    exportFile(t) {
+    async exportFile(t) {
       if (!this.renderedImage) return false
 
-      if (this.svgObjects) {
-        this.rasterize()
-      } else {
-        console.log('No SVG objects to rasterize, using rendered image directly.')
-        this.previewUrl = this.renderedImage.toDataURL()
-      }
+      await this.generatePreviewWithFrame()
 
       const isPdf = this.newFileFormat === 'pdf'
 
@@ -520,6 +515,34 @@ export const useImageStore = defineStore('imageStore', {
       this.previewUrl = resultDataUrl
 
       return resultDataUrl
+    },
+
+    async generatePreviewWithFrame() {
+      await this.rasterize()
+
+      const frameCanvas = document.querySelector('.frame-canvas')
+      const imageCanvas = document.querySelector('.image-canvas')
+
+      if (!frameCanvas || !imageCanvas) {
+        console.warn('Canvases not found')
+        return
+      }
+
+      // Create a new canvas for the preview
+      const exportCanvas = document.createElement('canvas')
+      exportCanvas.width = frameCanvas.width
+      exportCanvas.height = frameCanvas.height
+      const ctx = exportCanvas.getContext('2d')
+
+      // Draw frame
+      ctx.drawImage(frameCanvas, 0, 0)
+
+      // Draw image
+      const frameWidth = this.imageOperations.frame?.width || 0
+      ctx.drawImage(imageCanvas, frameWidth, frameWidth)
+
+      // Save to previewUrl
+      this.previewUrl = exportCanvas.toDataURL()
     },
 
     // UndoRedo

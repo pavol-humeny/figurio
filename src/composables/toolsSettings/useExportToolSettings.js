@@ -69,20 +69,18 @@ export function useExportToolSettings(imageStore, t) {
     }
   }
 
-  const openExportToolSettings = () => {
-    if (!imageStore?.rasterize) {
-      console.warn('imageStore or rasterize not available')
-      return
-    }
-    imageStore.rasterize()
+  const openExportToolSettings = async () => {
+    await imageStore.generatePreviewWithFrame()
+
     isVisible.value = true
 
     if (imageStore.imageOperations.frame?.enabled) {
       imageStore.newFileDimensions = {
         width: imageStore.imageOperations.frame.width * 2 + imageStore.fileDimensions.width,
         height: imageStore.imageOperations.frame.height * 2 + imageStore.fileDimensions.height,
-        fileAspectRatio: (imageStore.imageOperations.frame.width * 2 + imageStore.fileDimensions.width) /
-          (imageStore.imageOperations.frame.height * 2 + imageStore.fileDimensions.height) || 1,
+        fileAspectRatio:
+          (imageStore.imageOperations.frame.width * 2 + imageStore.fileDimensions.width) /
+            (imageStore.imageOperations.frame.height * 2 + imageStore.fileDimensions.height) || 1,
       }
     } else {
       imageStore.newFileDimensions = { ...imageStore.fileDimensions }
