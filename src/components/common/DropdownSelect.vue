@@ -47,9 +47,12 @@ const emit = defineEmits(['update:modelValue', 'update'])
 
 const selectedValue = ref(props.modelValue)
 
-watch(() => props.modelValue, (newVal) => {
-  selectedValue.value = newVal
-})
+watch(
+  () => props.modelValue,
+  (newVal) => {
+    selectedValue.value = newVal
+  },
+)
 
 const onChange = () => {
   emit('update:modelValue', selectedValue.value)
@@ -95,12 +98,7 @@ const showIcon = props.icon !== ''
         @dblclick="onIconDoubleClick"
       />
 
-      <BaseIcon
-        name="IconArrowDown"
-        class="input-icon-right"
-        size="20"
-        color="var(--text-c)"
-      />
+      <BaseIcon name="IconDropDown" class="input-icon-right" size="12" color="var(--primary-c)" />
     </div>
   </ItemTip>
 </template>
@@ -138,9 +136,8 @@ const showIcon = props.icon !== ''
 .input-icon-right {
   position: absolute;
   right: 8px;
-  /* transform: translateY(-50%); */
-  transform: rotate(180deg);
-  top: 25%;
+  transform: translateY(0%);
+  top: 10%;
   pointer-events: none;
 }
 </style>
