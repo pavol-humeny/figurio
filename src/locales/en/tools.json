@@ -202,12 +202,32 @@
     "settings": {
       "createPreset": {
         "label": "Create preset",
-        "presetNamePlaceholder": "Preset name",
+        "presetName": {
+          "text": "Preset name",
+          "placeholder": "Enter preset name"
+        },
+        "useCurrentModifications": {
+          "text": "Use current modifications",
+          "tip": "Use current image modifications as preset values"
+        },
+        "presetValues": {
+          "transformations": {
+            "label": "Transformations",
+            "rotation": "Rotation",
+            "horizontalFlip": "Horizontal flip",
+            "verticalFlip": "Vertical flip"
+          },
+          "smartCrop": "Smart crop",
+          "frame": {
+            "label": "Frame",
+            "enabled": "Enabled",
+            "color": "Color",
+            "width": "Width",
+            "type": "Type"
+          }
+        },
         "createPresetButton": {
           "text": "Create preset"
-        },
-        "savePresetButton": {
-          "text": "Save preset"
         },
         "presetAlreadyExists": {
           "title": "Preset already exists",
@@ -220,15 +240,69 @@
         "presetSuccessfullyCreated": {
           "title": "Preset created",
           "message": "Preset has been successfully created."
+        }
+      },
+      "myPresets": {
+        "label": "My presets",
+        "noPresets": "No presets available",
+        "selectPreset": "Select preset",
+        "presetName": {
+          "text": "Preset name",
+          "placeholder": "Enter preset name"
+        },
+        "applyPresetButton": {
+          "text": "Apply preset"
+        },
+        "presetValues": {
+          "transformations": {
+            "label": "Transformations",
+            "rotation": "Rotation",
+            "horizontalFlip": "Horizontal flip",
+            "verticalFlip": "Vertical flip"
+          },
+          "smartCrop": "Smart crop",
+          "frame": {
+            "label": "Frame",
+            "enabled": "Enabled",
+            "color": "Color",
+            "width": "Width",
+            "type": "Type"
+          }
+        },
+        "deletePresetButton": {
+          "text": "Delete preset"
+        },
+        "deletePresetConfirmation": {
+          "title": "Delete preset",
+          "message": "Are you sure you want to delete the preset: {presetName}?",
+          "cancel": "Cancel",
+          "confirm": "Delete"
+        },
+        "presetSuccessfullyDeleted": {
+          "title": "Preset deleted",
+          "message": "Preset with name: {presetName} has been successfully deleted."
+        },
+        "closeModifyingButton": {
+          "text": "Close"
+        },
+        "modifyPresetButton": {
+          "text": "Modify preset"
+        },
+        "savePresetButton": {
+          "text": "Save preset"
         },
         "presetSuccessfullySaved": {
           "title": "Preset saved",
           "message": "Preset with name: {presetName} has been successfully saved."
+        },
+        "successfullyApplied": {
+          "title": "Preset applied",
+          "message": "Preset with name: {presetName} has been successfully applied."
+        },
+        "presetAlreadyApplied": {
+          "title": "Preset already applied",
+          "message": "Preset with name: {presetName} is already applied to the image."
         }
-      },
-
-      "myPresets": {
-        "label": "My presets"
       }
     }
   },

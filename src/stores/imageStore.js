@@ -96,6 +96,32 @@ export const useImageStore = defineStore('imageStore', {
     },
   }),
   actions: {
+    setImageOperations(operations) {
+      this.imageOperations = {
+        transformations: {
+          rotationAngle: operations.transformations?.rotationAngle || 0,
+          flipHorizontal: operations.transformations?.flipHorizontal || false,
+          flipVertical: operations.transformations?.flipVertical || false,
+          cropBox: null, // vždy resetuj pri aplikácii
+        },
+        smartCrop: {
+          enabled: operations.smartCrop?.enabled || false,
+        },
+        frame: {
+          enabled: operations.frame?.enabled || false,
+          color: operations.frame?.color || '#000000',
+          width: operations.frame?.width || 0,
+          height: operations.frame?.height || operations.frame?.width || 0,
+          type: operations.frame?.type || 'solid',
+        },
+      }
+      console.log('[setImageOperations] imageOperations:', this.imageOperations)
+    },
+
+    getImageOperations() {
+      return JSON.parse(JSON.stringify(this.imageOperations))
+    },
+
     resetImageOperations() {
       this.imageOperations = {
         transformations: [],
@@ -109,10 +135,7 @@ export const useImageStore = defineStore('imageStore', {
         },
       }
     },
-    // addTransformation(operation) {
-    //   const deepCopy = JSON.parse(JSON.stringify(operation))
-    //   this.imageOperations.transformations.push(deepCopy)
-    // },
+
     getTransformations() {
       return JSON.parse(JSON.stringify(this.imageOperations.transformations))
     },

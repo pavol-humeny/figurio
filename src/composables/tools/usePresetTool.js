@@ -51,6 +51,7 @@ export function usePresetTool(imageStore, historyStore, editorStore, presetsStor
     type: 'frameSolid',
     color: '#000000',
     width: 0,
+    height: 0,
   })
 
   const isInitializing = ref(false)
@@ -90,6 +91,7 @@ export function usePresetTool(imageStore, historyStore, editorStore, presetsStor
       () => localImageOperations.transformations.flipHorizontal,
       () => localImageOperations.transformations.flipVertical,
       () => localImageOperations.smartCrop.enabled,
+      () => localImageOperations.frame.enabled,
       () => localImageOperations.frame.type,
       () => localImageOperations.frame.color,
       () => localImageOperations.frame.width,
@@ -197,8 +199,8 @@ export function usePresetTool(imageStore, historyStore, editorStore, presetsStor
     if (success) {
       showToastModal(
         'success',
-        t('tools.preset.settings.createPreset.presetSuccessfullySaved.title'),
-        t('tools.preset.settings.createPreset.presetSuccessfullySaved.message', {
+        t('tools.preset.settings.myPresets.presetSuccessfullySaved.title'),
+        t('tools.preset.settings.myPresets.presetSuccessfullySaved.message', {
           presetName: localPresetName.value,
         }),
       )
@@ -215,6 +217,43 @@ export function usePresetTool(imageStore, historyStore, editorStore, presetsStor
 
   const applyPreset = () => {
     console.log('Applying preset:', selectedPresetName.value)
+    console.log('Preset operations:', presetsStore.selectedPreset.imageOperations)
+
+    // Check if preset is identical to current operations
+    const currentOps = imageStore.getImageOperations()
+    const newOps = JSON.parse(JSON.stringify(presetsStore.selectedPreset.imageOperations))
+
+    // Reset cropBox to null in both for fair comparison
+    currentOps.transformations.cropBox = null
+    newOps.transformations.cropBox = null
+    if (newOps.frame.enabled && newOps.frame.width !== 0 && newOps.frame.height === 0) {
+      newOps.frame.height = newOps.frame.width
+    }
+
+    const isEqual = JSON.stringify(currentOps) === JSON.stringify(newOps)
+
+    if (isEqual) {
+      showToastModal(
+        'info',
+        t('tools.preset.settings.myPresets.presetAlreadyApplied.title'),
+        t('tools.preset.settings.myPresets.presetAlreadyApplied.message', {
+          presetName: selectedPresetName.value,
+        }),
+      )
+      return
+    }
+
+    imageStore.setImageOperations(presetsStore.selectedPreset.imageOperations)
+
+    historyStore.push(imageStore.getSnapshot())
+
+    showToastModal(
+      'success',
+      t('tools.preset.settings.myPresets.successfullyApplied.title'),
+      t('tools.preset.settings.myPresets.successfullyApplied.message', {
+        presetName: selectedPresetName.value,
+      }),
+    )
   }
 
   const modifyPreset = () => {
@@ -227,10 +266,12 @@ export function usePresetTool(imageStore, historyStore, editorStore, presetsStor
 
   const deletePreset = async () => {
     const confirmed = await showConfirmModal(
-      t('privacy.confirmResetLocalPreferences.title'),
-      t('privacy.confirmResetLocalPreferences.text'),
-      t('privacy.confirmResetLocalPreferences.cancel'),
-      t('privacy.confirmResetLocalPreferences.confirm'),
+      t('tools.preset.settings.myPresets.deletePresetConfirmation.title'),
+      t('tools.preset.settings.myPresets.deletePresetConfirmation.message', {
+        presetName: selectedPresetName.value,
+      }),
+      t('tools.preset.settings.myPresets.deletePresetConfirmation.cancel'),
+      t('tools.preset.settings.myPresets.deletePresetConfirmation.confirm'),
     )
     if (!confirmed) {
       return
@@ -242,8 +283,8 @@ export function usePresetTool(imageStore, historyStore, editorStore, presetsStor
 
     showToastModal(
       'success',
-      t('tools.preset.settings.createPreset.presetSuccessfullyDeleted.title'),
-      t('tools.preset.settings.createPreset.presetSuccessfullyDeleted.message', {
+      t('tools.preset.settings.myPresets.presetSuccessfullyDeleted.title'),
+      t('tools.preset.settings.myPresets.presetSuccessfullyDeleted.message', {
         presetName: selectedPresetName.value,
       }),
     )
@@ -259,6 +300,7 @@ export function usePresetTool(imageStore, historyStore, editorStore, presetsStor
       type: imageStore.imageOperations.frame.type,
       color: imageStore.imageOperations.frame.color,
       width: imageStore.imageOperations.frame.width,
+      height: imageStore.imageOperations.frame.height,
     }
   }
 

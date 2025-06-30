@@ -131,9 +131,8 @@ export function useFrameTool(imageStore, historyStore, editorStore, t) {
     if (!sourceCanvas) return
 
     const fw = imageStore.imageOperations.frame.width
-    const fh = imageStore.imageOperations.frame.height
     const newWidth = imageStore.fileDimensions.width + fw * 2
-    const newHeight = imageStore.fileDimensions.height + fh * 2
+    const newHeight = imageStore.fileDimensions.height + fw * 2
 
     const canvas = document.createElement('canvas')
     canvas.width = newWidth
@@ -146,7 +145,7 @@ export function useFrameTool(imageStore, historyStore, editorStore, t) {
     ctx.fillRect(0, 0, newWidth, newHeight)
 
     // Draw the original image in the center
-    ctx.drawImage(sourceCanvas, fw, fh)
+    ctx.drawImage(sourceCanvas, fw, fw)
 
     // Update store
     imageStore.renderedImage = canvas
