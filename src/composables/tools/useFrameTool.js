@@ -6,6 +6,7 @@ export function useFrameTool(imageStore, historyStore, editorStore, t) {
   const frameWidthRef = ref(null)
 
   const frameOptions = computed(() => [
+    { label: t('tools.frame.settings.general.frameVariants.none'), value: 'none' },
     { label: t('tools.frame.settings.general.frameVariants.frameSolid'), value: 'frameSolid' },
     {
       label: t('tools.frame.settings.general.frameVariants.frameMacBrowser'),
@@ -25,7 +26,7 @@ export function useFrameTool(imageStore, historyStore, editorStore, t) {
     },
   ])
 
-  const selectedFrameVariant = ref('frameSolid')
+  const selectedFrameVariant = ref('none')
 
   const handleFrameChange = (value) => {
     console.log('Selected frame variant:', value)
@@ -62,8 +63,11 @@ export function useFrameTool(imageStore, historyStore, editorStore, t) {
     imageStore.imageOperations.frame.enabled = true
 
     console.log('Width:', width, 'Color:', color, 'Type:', type)
-
-    if (selectedFrameVariant.value === 'frameSolid') {
+    if (selectedFrameVariant.value === 'none') {
+      imageStore.imageOperations.frame.enabled = false
+      imageStore.imageOperations.frame.width = 0
+      imageStore.imageOperations.frame.height = 0
+    } else if (selectedFrameVariant.value === 'frameSolid') {
       imageStore.imageOperations.frame.width = width
       imageStore.imageOperations.frame.height = width
 
@@ -82,8 +86,8 @@ export function useFrameTool(imageStore, historyStore, editorStore, t) {
       selectedFrameVariant.value === 'frameWindowsBrowser'
     ) {
       // For other frames, we can use a fixed width
-      imageStore.imageOperations.frame.width = 5
-      imageStore.imageOperations.frame.height = 5
+      imageStore.imageOperations.frame.width = 2
+      imageStore.imageOperations.frame.height = 2
     }
 
     historyStore.push(imageStore.getSnapshot())
@@ -91,27 +95,46 @@ export function useFrameTool(imageStore, historyStore, editorStore, t) {
 
   function applyBrowserFrame(ctx, w, h, type, color) {
     const headerHeight = 30
+    const borderSize = imageStore.imageOperations.frame.width || 2
+    imageStore.imageOperations.frame.headerSize = headerHeight
+
+    // Kresli hlavičku (hore)
     ctx.fillStyle = color
     ctx.fillRect(0, 0, w, headerHeight)
 
+    // Kresli rámik vľavo
+    ctx.fillStyle = color
+    ctx.fillRect(0, 0, borderSize, h)
+
+    // Rámik vpravo
+    ctx.fillRect(w - borderSize, 0, borderSize, h)
+
+    // Rámik dole
+    ctx.fillRect(0, h - borderSize, w, borderSize)
+
+    // Ovládacie prvky hlavičky
     if (type === 'mac') {
       const r = 6
       const padding = 10
+      const spacing = 15
       const colors = ['#ff5f56', '#ffbd2e', '#27c93f']
+
       colors.forEach((c, i) => {
         ctx.beginPath()
         ctx.fillStyle = c
-        ctx.arc(padding + i * 15, headerHeight / 2, r, 0, Math.PI * 2)
+        ctx.arc(padding + i * spacing, headerHeight / 2, r, 0, Math.PI * 2)
         ctx.fill()
       })
     } else if (type === 'windows') {
       ctx.fillStyle = '#fff'
-      ctx.fillRect(w - 50, 8, 10, 10)
-      ctx.fillRect(w - 35, 8, 10, 10)
+      ctx.fillRect(w - 50, 8, 10, 10) // minimize
+      ctx.fillRect(w - 35, 8, 10, 10) // maximize
+
       ctx.beginPath()
       ctx.moveTo(w - 15, 8)
-      ctx.lineTo(w - 5, 18)
+      ctx.lineTo(w - 5, 18) // close
       ctx.strokeStyle = '#fff'
+      ctx.lineWidth = 2
       ctx.stroke()
     }
   }

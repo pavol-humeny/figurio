@@ -30,29 +30,29 @@ export function useImageRenderer(
       contentRef.value.style.width = `${width}px`
       contentRef.value.style.height = `${height}px`
     }
-    if (svgRef.value) {
-      svgRef.value.style.width = `${width}px`
-      svgRef.value.style.height = `${height}px`
-    }
-    if (canvasRef.value) {
-      canvasRef.value.style.width = `${width}px`
-      canvasRef.value.style.height = `${height}px`
-      canvasRef.value.width = width
-      canvasRef.value.height = height
-    }
+    // if (svgRef.value) {
+    //   svgRef.value.style.width = `${width}px`
+    //   svgRef.value.style.height = `${height}px`
+    // }
+    // if (canvasRef.value) {
+    //   canvasRef.value.style.width = `${width}px`
+    //   canvasRef.value.style.height = `${height}px`
+    //   canvasRef.value.width = width
+    //   canvasRef.value.height = height
+    // }
 
-    if (frameCanvasRef.value) {
-      const frame = imageStore.imageOperations.frame
-      const frameEnabled = frame?.enabled && frame.width > 0
+    // if (frameCanvasRef.value) {
+    //   const frame = imageStore.imageOperations.frame
+    //   const frameEnabled = frame?.enabled && frame.width > 0
 
-      const width = imageStore.fileDimensions.width + (frameEnabled ? frame.width * 2 : 0)
-      const height = imageStore.fileDimensions.height + (frameEnabled ? frame.width * 2 : 0)
+    //   const width = imageStore.fileDimensions.width + (frameEnabled ? frame.width * 2 : 0)
+    //   const height = imageStore.fileDimensions.height + (frameEnabled ? frame.width * 2 : 0)
 
-      frameCanvasRef.value.style.width = `${width}px`
-      frameCanvasRef.value.style.height = `${height}px`
-      frameCanvasRef.value.width = width
-      frameCanvasRef.value.height = height
-    }
+    //   frameCanvasRef.value.style.width = `${width}px`
+    //   frameCanvasRef.value.style.height = `${height}px`
+    //   frameCanvasRef.value.width = width
+    //   frameCanvasRef.value.height = height
+    // }
   }
 
   const renderCanvas = () => {
@@ -103,38 +103,56 @@ export function useImageRenderer(
   }
 
   const renderFrameCanvas = () => {
-    if (!imageStore.imageOperations.frame || !imageStore.imageOperations.frame.enabled) return
-
-    console.log('Rendering frame canvas...')
-
     const frameCanvas = frameCanvasRef.value
     const ctx = frameCanvas?.getContext('2d')
+    if (!frameCanvas || !ctx) return
+
     const frame = imageStore.imageOperations.frame
-    const fw = frame?.enabled ? frame.width : 0
-    const fh = frame?.enabled ? frame.height : 0
+    const frameEnabled = frame?.enabled && frame.width > 0
+
+    const fw = frameEnabled ? frame.width : 0
+    const fh = frameEnabled ? frame.height : 0
+
     const width = imageStore.fileDimensions.width
     const height = imageStore.fileDimensions.height
 
-    if (!frameCanvas || !ctx || !frame?.enabled) return
-
     const canvasWidth = width + fw * 2
-    const canvasHeight = height + fh * 2
+    let canvasHeight = height + fh * 2
+
+    if (
+      imageStore.imageOperations.frame.type === 'frameMacBrowser' ||
+      imageStore.imageOperations.frame.type === 'frameWindowsBrowser'
+    ) {
+      canvasHeight = height + frame.headerSize + fh
+      console.log('-----------------------Applying browser frame...: ', canvasHeight)
+    }
 
     frameCanvas.width = canvasWidth
     frameCanvas.height = canvasHeight
     frameCanvas.style.width = `${canvasWidth}px`
     frameCanvas.style.height = `${canvasHeight}px`
     frameCanvas.style.left = `-${fw}px`
-    frameCanvas.style.top = `-${fh}px`
 
-    // renderFrameToCanvas(ctx, canvasWidth, canvasHeight)
+    if (
+      imageStore.imageOperations.frame.type === 'frameMacBrowser' ||
+      imageStore.imageOperations.frame.type === 'frameWindowsBrowser'
+    ) {
+      frameCanvas.style.top = `-${frame.headerSize}px`
+    } else {
+      frameCanvas.style.top = `-${fh}px`
+    }
+
+    ctx.clearRect(0, 0, canvasWidth, canvasHeight)
+
+    if (!frameEnabled) return
+
+    console.log('Rendering frame canvas...')
     useFrameTool(imageStore, historyStore, editorStore, t).applyFrameRender(
       ctx,
       canvasWidth,
       canvasHeight,
     )
   }
-
   const renderAll = async () => {
     updateSizes()
     renderCanvas()

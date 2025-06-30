@@ -63,6 +63,7 @@ export const usePresetsStore = defineStore('presetsStore', {
             color: '#000000',
             width: 0,
             height: 0,
+            headerSize: 30, // For browser frames
             type: 'frameSolid',
           },
         },

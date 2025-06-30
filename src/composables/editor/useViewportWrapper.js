@@ -111,8 +111,6 @@ export function useViewportWrapper(viewportStore, imageStore, editorStore, conte
     const scaleX = wrapperWidth.value / (contentWidth.value + frameWidth * 2)
     const scaleY = wrapperHeight.value / (contentHeight.value + frameWidth * 2)
 
-    console.log('Scale X:', scaleX, 'Scale Y:', scaleY)
-
     const optimalZoom = Math.min(scaleX, scaleY)
 
     viewportStore.fitZoomLevel = (viewportStore.zoomLevel / optimalZoom) * 1.05

@@ -186,6 +186,7 @@
         },
         "frameVariants": {
           "label": "Varianty rámu",
+          "none": "Žiadny",
           "frameSolid": "Plný",
           "frameMacBrowser": "Mac prehliadač",
           "frameWindowsBrowser": "Windows prehliadač",

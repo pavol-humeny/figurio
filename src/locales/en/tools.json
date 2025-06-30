@@ -186,6 +186,7 @@
         },
         "frameVariants": {
           "label": "Frame variants",
+          "none": "None",
           "frameSolid": "Solid",
           "frameMacBrowser": "Mac browser",
           "frameWindowsBrowser": "Windows browser",

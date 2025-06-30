@@ -91,6 +91,7 @@ export const useImageStore = defineStore('imageStore', {
         color: '#000000',
         width: 0,
         height: 0,
+        headerSize: 30, // For browser frames
         type: 'solid',
       },
     },
@@ -117,6 +118,7 @@ export const useImageStore = defineStore('imageStore', {
           color: operations.frame?.color || '#000000',
           width: operations.frame?.width || 0,
           height: operations.frame?.height || operations.frame?.width || 0,
+          headerSize: operations.frame?.headerSize || 30, // For browser frames
           type: operations.frame?.type || 'solid',
         },
       }
@@ -142,6 +144,7 @@ export const useImageStore = defineStore('imageStore', {
           color: '#000000',
           width: 0,
           height: 0,
+          headerSize: 30, // For browser frames
           type: 'solid',
         },
       }
@@ -535,11 +538,21 @@ export const useImageStore = defineStore('imageStore', {
       const ctx = exportCanvas.getContext('2d')
 
       // Draw frame
-      ctx.drawImage(frameCanvas, 0, 0)
 
       // Draw image
       const frameWidth = this.imageOperations.frame?.width || 0
-      ctx.drawImage(imageCanvas, frameWidth, frameWidth)
+      let frameHeight = this.imageOperations.frame?.height || frameWidth
+
+      if (
+        this.imageOperations.frame.type === 'frameMacBrowser' ||
+        this.imageOperations.frame.type === 'frameWindowsBrowser'
+      ) {
+        frameHeight = this.imageOperations.frame.headerSize
+      }
+
+      ctx.drawImage(imageCanvas, frameWidth, frameHeight)
+
+      ctx.drawImage(frameCanvas, 0, 0)
 
       // Save to previewUrl
       this.previewUrl = exportCanvas.toDataURL()
