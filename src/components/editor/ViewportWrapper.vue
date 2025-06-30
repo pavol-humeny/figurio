@@ -68,13 +68,7 @@ const {
         <canvas ref="frameCanvasRef" class="frame-canvas"></canvas>
 
         <CropTool v-if="editorStore.selectedTabPerTool[editorStore.selectedToolKey] === 'crop'" />
-        <SmartCropTool
-          v-if="
-            editorStore.selectedToolKey === 'smartCrop' &&
-            (editorStore.selectedSubToolKey === 'isCropShown' ||
-              editorStore.selectedTabPerTool.smartCrop === 'manual')
-          "
-        />
+        <SmartCropTool v-if="editorStore.selectedSubToolKey === 'isCropShown'" />
       </div>
     </div>
 

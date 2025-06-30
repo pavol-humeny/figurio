@@ -81,6 +81,7 @@ export function useSmartCropTool(imageStore, historyStore, editorStore, t) {
     cropBox.value.topIndent = clamp(value, topIndentMin.value, topIndentMax.value)
     cropBox.value.height =
       imageStore.fileDimensions.height - cropBox.value.topIndent - bottomIndent.value
+    console.log('Top indent:', cropBox.value.topIndent, 'Height:', cropBox.value.height)
 
     bottomIndentMax.value = imageStore.fileDimensions.height - cropBox.value.topIndent
   })
@@ -110,6 +111,30 @@ export function useSmartCropTool(imageStore, historyStore, editorStore, t) {
     resetCropBox()
     selectedColor.value = value
   })
+
+  watch(
+    () => ({
+      tool: editorStore.selectedToolKey,
+      tab: editorStore.selectedTabPerTool[editorStore.selectedToolKey],
+    }),
+    (newVal, oldVal) => {
+      console.log('Zmena nástroja alebo tabu:')
+      console.log('Stav predtým:', oldVal)
+      console.log('Stav teraz:', newVal)
+
+      if (newVal.tool === 'smartCrop' && newVal.tab === 'manual') {
+        editorStore.selectSubTool('isCropShown')
+        isCropShown.value = true
+      }
+
+      if (newVal.tool === 'smartCrop' && newVal.tab === 'auto') {
+        console.log('Auto smart crop tab selected')
+        editorStore.selectSubTool('')
+        isCropShown.value = false
+      }
+    },
+    { deep: false },
+  )
 
   const applyAutoSmartCrop = async () => {
     if (imageStore.svgObjects.length > 0) {
@@ -144,7 +169,7 @@ export function useSmartCropTool(imageStore, historyStore, editorStore, t) {
       editorStore.selectSubTool('isCropShown')
     } else {
       editorStore.selectSubTool('')
-      resetCropBox()
+      // resetCropBox()
     }
   }
 
@@ -167,11 +192,6 @@ export function useSmartCropTool(imageStore, historyStore, editorStore, t) {
 
     ctx.drawImage(img, 0, 0)
     const imageData = ctx.getImageData(0, 0, width, height).data
-    const frameWidth = imageStore.imageOperations.frame.width || 0
-
-    console.log('Calculating smart crop with frame width:', frameWidth)
-    console.log('Image dimensions:', width, 'x', height)
-
 
     const parseHex = (hex) => {
       const bigint = parseInt(hex.replace('#', ''), 16)
@@ -197,10 +217,10 @@ export function useSmartCropTool(imageStore, historyStore, editorStore, t) {
     const targetColor = parseHex(selectedColor.value)
 
     // Top
-    let top = frameWidth
-    while (top < height - frameWidth) {
+    let top = 0
+    while (top < height) {
       let match = true
-      for (let x = frameWidth; x < width - frameWidth; x++) {
+      for (let x = 0; x < width; x++) {
         const i = (top * width + x) * 4
         if (!isColorMatch(i, targetColor)) {
           match = false
@@ -212,10 +232,10 @@ export function useSmartCropTool(imageStore, historyStore, editorStore, t) {
     }
 
     // Bottom
-    let bottom = height - frameWidth - 1
-    while (bottom >= top) {
+    let bottom = height - 1
+    while (bottom >= 0) {
       let match = true
-      for (let x = frameWidth; x < width - frameWidth; x++) {
+      for (let x = 0; x < width; x++) {
         const i = (bottom * width + x) * 4
         if (!isColorMatch(i, targetColor)) {
           match = false
@@ -227,8 +247,8 @@ export function useSmartCropTool(imageStore, historyStore, editorStore, t) {
     }
 
     // Left
-    let left = frameWidth
-    while (left < width - frameWidth) {
+    let left = 0
+    while (left < width) {
       let match = true
       for (let y = top; y <= bottom; y++) {
         const i = (y * width + left) * 4
@@ -242,8 +262,8 @@ export function useSmartCropTool(imageStore, historyStore, editorStore, t) {
     }
 
     // Right
-    let right = width - frameWidth - 1
-    while (right >= left) {
+    let right = width - 1
+    while (right >= 0) {
       let match = true
       for (let y = top; y <= bottom; y++) {
         const i = (y * width + right) * 4
@@ -256,28 +276,14 @@ export function useSmartCropTool(imageStore, historyStore, editorStore, t) {
       right--
     }
 
-    // 🛡️ Ochrana pred úplným orezaním
-    const validCrop =
-      top < bottom &&
-      left < right &&
-      top >= frameWidth &&
-      left >= frameWidth &&
-      bottom < height - frameWidth &&
-      right < width - frameWidth
-
-    if (!validCrop) {
-      // všetko by sa oreže – vráť celé
-      top = frameWidth
-      bottom = height - frameWidth - 1
-      left = frameWidth
-      right = width - frameWidth - 1
-    }
-
     // Nastavenie hodnôt
     topIndent.value = top
-    bottomIndent.value = height - 1 - bottom
+    bottomIndent.value = height - bottom - 1
     leftIndent.value = left
-    rightIndent.value = width - 1 - right
+    rightIndent.value =   width - right - 1
+
+    cropBox.value.width = imageStore.fileDimensions.width - leftIndent.value - rightIndent.value
+    cropBox.value.height = imageStore.fileDimensions.height - topIndent.value - bottomIndent.value
   }
 
   const applyCrop = async () => {
