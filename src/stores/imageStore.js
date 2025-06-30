@@ -85,6 +85,7 @@ export const useImageStore = defineStore('imageStore', {
       },
       smartCrop: {
         enabled: false,
+        cropBox: null,
       },
       frame: {
         enabled: false,
@@ -112,6 +113,7 @@ export const useImageStore = defineStore('imageStore', {
         },
         smartCrop: {
           enabled: operations.smartCrop?.enabled || false,
+          cropBox: operations.smartCrop?.cropBox || null,
         },
         frame: {
           enabled: operations.frame?.enabled || false,
@@ -138,6 +140,7 @@ export const useImageStore = defineStore('imageStore', {
         },
         smartCrop: {
           enabled: false,
+          cropBox: null,
         },
         frame: {
           enabled: false,

@@ -123,6 +123,7 @@ export function useSmartCropTool(imageStore, historyStore, editorStore, t) {
       console.log('Stav teraz:', newVal)
 
       if (newVal.tool === 'smartCrop' && newVal.tab === 'manual') {
+        console.log('Manual smart crop tab selected')
         editorStore.selectSubTool('isCropShown')
         isCropShown.value = true
       }
@@ -153,6 +154,14 @@ export function useSmartCropTool(imageStore, historyStore, editorStore, t) {
 
     imageStore.imageOperations.smartCrop.enabled = true
 
+    const newCrop = { ...cropBox.value }
+    const prevCrop = imageStore.imageOperations.smartCrop.cropBox
+    if (prevCrop) {
+      newCrop.leftIndent += prevCrop.leftIndent || 0
+      newCrop.topIndent += prevCrop.topIndent || 0
+    }
+    imageStore.imageOperations.smartCrop.cropBox = newCrop
+
     historyStore.push(imageStore.getSnapshot())
   }
 
@@ -174,6 +183,7 @@ export function useSmartCropTool(imageStore, historyStore, editorStore, t) {
   }
 
   const applyManualSmartCrop = async () => {
+    console.log('Applying manual smart crop with crop box:', cropBox.value)
     await applyCrop()
   }
 
@@ -280,14 +290,14 @@ export function useSmartCropTool(imageStore, historyStore, editorStore, t) {
     topIndent.value = top
     bottomIndent.value = height - bottom - 1
     leftIndent.value = left
-    rightIndent.value =   width - right - 1
+    rightIndent.value = width - right - 1
 
     cropBox.value.width = imageStore.fileDimensions.width - leftIndent.value - rightIndent.value
     cropBox.value.height = imageStore.fileDimensions.height - topIndent.value - bottomIndent.value
   }
 
   const applyCrop = async () => {
-    if (!imageStore.renderedImage || !cropBox.value) return
+    if (!imageStore.renderedImage) return
 
     // Create confirm modal to confirm rasterization if there are SVG objects
     if (imageStore.svgObjects.length > 0) {
@@ -304,7 +314,7 @@ export function useSmartCropTool(imageStore, historyStore, editorStore, t) {
       }
     }
 
-    const { topIndent, leftIndent, width, height } = cropBox.value
+    const { topIndent, leftIndent, width, height } = imageStore.imageOperations.smartCrop.cropBox
 
     const canvas = document.createElement('canvas')
     const ctx = canvas.getContext('2d')
