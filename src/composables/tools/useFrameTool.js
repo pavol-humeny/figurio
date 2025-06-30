@@ -45,15 +45,14 @@ export function useFrameTool(imageStore, historyStore, editorStore, t) {
   const setFrameWidth = (width) => {
     if (width <= 0) {
       width = 0
-      frameWidthRef.value.setValue(width)
-    } else {
-      frameWidth.value = width
-      frameWidthRef.value.setValue(width)
-      applyFrame()
     }
+    frameWidth.value = width
+    frameWidthRef.value.setValue(width)
+    applyFrame()
   }
 
   const applyFrame = () => {
+    console.log('Applying frame with color:', frameColor.value, 'and width:', frameWidth.value)
     const width = frameWidth.value
     const color = frameColor.value
     const type = selectedFrameVariant.value
@@ -158,6 +157,11 @@ export function useFrameTool(imageStore, historyStore, editorStore, t) {
 
   const applyFrameRender = () => {
     const type = imageStore.imageOperations.frame.type
+
+    if (imageStore.imageOperations.frame.enabled === false) {
+      // Skip rendering if frame is not enabled
+      return
+    }
 
     switch (type) {
       case 'frameSolid':

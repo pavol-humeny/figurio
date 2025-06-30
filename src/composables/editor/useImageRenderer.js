@@ -163,11 +163,11 @@ export function useImageRenderer(
       }
 
       // Frame operation
-      if (imageStore.imageOperations.frame?.enabled) {
-        console.log('Applying frame operation')
+      // if (imageStore.imageOperations.frame?.enabled) {
+      console.log('Applying frame operation')
 
-        useFrameTool(imageStore, historyStore, editorStore, t).applyFrameRender()
-      }
+      useFrameTool(imageStore, historyStore, editorStore, t).applyFrameRender()
+      // }
 
       renderAll()
     },
