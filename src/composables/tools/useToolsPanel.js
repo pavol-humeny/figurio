@@ -51,6 +51,12 @@ export function useToolsPanel(editorStore, imageStore) {
   const selectTool = (toolKey) => {
     if (isToolDisabled.value) return
 
+    // Export tool
+    if (toolKey === 'export') {
+      exportTool()
+      return
+    }
+
     toggleTool(toolKey)
   }
 

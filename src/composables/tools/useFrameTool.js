@@ -43,11 +43,11 @@ export function useFrameTool(imageStore, historyStore, editorStore, t) {
   })
 
   const setFrameWidth = (width) => {
-    if (width <= 0) {
+    if (width < 0) {
       width = 0
     }
-    frameWidth.value = width
     frameWidthRef.value.setValue(width)
+    frameWidth.value = width
     applyFrame()
   }
 
@@ -61,12 +61,14 @@ export function useFrameTool(imageStore, historyStore, editorStore, t) {
     imageStore.imageOperations.frame.type = type
     imageStore.imageOperations.frame.enabled = true
 
+    console.log('Width:', width, 'Color:', color, 'Type:', type)
+
     if (selectedFrameVariant.value === 'frameSolid') {
+      imageStore.imageOperations.frame.width = width
+      imageStore.imageOperations.frame.height = width
+
       if (width <= 0) {
         imageStore.imageOperations.frame.enabled = false
-      } else {
-        imageStore.imageOperations.frame.width = width
-        imageStore.imageOperations.frame.height = width
       }
     } else if (
       selectedFrameVariant.value === 'framePhoneAndroid' ||

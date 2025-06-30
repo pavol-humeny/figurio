@@ -167,6 +167,11 @@ export function useSmartCropTool(imageStore, historyStore, editorStore, t) {
 
     ctx.drawImage(img, 0, 0)
     const imageData = ctx.getImageData(0, 0, width, height).data
+    const frameWidth = imageStore.imageOperations.frame.width || 0
+
+    console.log('Calculating smart crop with frame width:', frameWidth)
+    console.log('Image dimensions:', width, 'x', height)
+
 
     const parseHex = (hex) => {
       const bigint = parseInt(hex.replace('#', ''), 16)
@@ -192,10 +197,10 @@ export function useSmartCropTool(imageStore, historyStore, editorStore, t) {
     const targetColor = parseHex(selectedColor.value)
 
     // Top
-    let top = 0
-    while (top < height) {
+    let top = frameWidth
+    while (top < height - frameWidth) {
       let match = true
-      for (let x = 0; x < width; x++) {
+      for (let x = frameWidth; x < width - frameWidth; x++) {
         const i = (top * width + x) * 4
         if (!isColorMatch(i, targetColor)) {
           match = false
@@ -205,13 +210,12 @@ export function useSmartCropTool(imageStore, historyStore, editorStore, t) {
       if (!match) break
       top++
     }
-    if (top === height) top = 0 // všetko bolo rovnaké – nechaj celý obrázok
 
     // Bottom
-    let bottom = height - 1
+    let bottom = height - frameWidth - 1
     while (bottom >= top) {
       let match = true
-      for (let x = 0; x < width; x++) {
+      for (let x = frameWidth; x < width - frameWidth; x++) {
         const i = (bottom * width + x) * 4
         if (!isColorMatch(i, targetColor)) {
           match = false
@@ -221,14 +225,10 @@ export function useSmartCropTool(imageStore, historyStore, editorStore, t) {
       if (!match) break
       bottom--
     }
-    if (bottom < top) {
-      top = 0
-      bottom = height - 1
-    }
 
     // Left
-    let left = 0
-    while (left < width) {
+    let left = frameWidth
+    while (left < width - frameWidth) {
       let match = true
       for (let y = top; y <= bottom; y++) {
         const i = (y * width + left) * 4
@@ -240,10 +240,9 @@ export function useSmartCropTool(imageStore, historyStore, editorStore, t) {
       if (!match) break
       left++
     }
-    if (left === width) left = 0
 
     // Right
-    let right = width - 1
+    let right = width - frameWidth - 1
     while (right >= left) {
       let match = true
       for (let y = top; y <= bottom; y++) {
@@ -256,9 +255,22 @@ export function useSmartCropTool(imageStore, historyStore, editorStore, t) {
       if (!match) break
       right--
     }
-    if (right < left) {
-      left = 0
-      right = width - 1
+
+    // 🛡️ Ochrana pred úplným orezaním
+    const validCrop =
+      top < bottom &&
+      left < right &&
+      top >= frameWidth &&
+      left >= frameWidth &&
+      bottom < height - frameWidth &&
+      right < width - frameWidth
+
+    if (!validCrop) {
+      // všetko by sa oreže – vráť celé
+      top = frameWidth
+      bottom = height - frameWidth - 1
+      left = frameWidth
+      right = width - frameWidth - 1
     }
 
     // Nastavenie hodnôt
