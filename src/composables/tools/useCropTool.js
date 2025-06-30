@@ -374,11 +374,6 @@ export function useCropTool(imageStore, viewportStore, editorStore, historyStore
     document.addEventListener('mouseup', onMouseUp)
   }
 
-  // Set default sub-tool on mount
-  // onMounted(() => {
-  //   editorStore.selectSubTool('cropFree')
-  // })
-
   // Select type of crop
   const selectSubTool = (subTool) => {
     editorStore.selectSubTool(subTool)
@@ -470,16 +465,20 @@ export function useCropTool(imageStore, viewportStore, editorStore, historyStore
         t('tools.confirmNeedRasterization.cancel'),
         t('tools.confirmNeedRasterization.confirm'),
       )
-      if (confirmed) {
-        await imageStore.rasterize()
-      } else {
-        return
-      }
+      if (!confirmed) return
+
+      await imageStore.rasterize()
     }
 
-    // imageStore.addTransformation({ type: 'crop', value: cropBox.value })
+    const newCrop = { ...cropBox.value }
 
-    imageStore.imageOperations.transformations.cropBox = { ...cropBox.value }
+    const prevCrop = imageStore.imageOperations.transformations.cropBox
+    if (prevCrop) {
+      newCrop.x += prevCrop.x || 0
+      newCrop.y += prevCrop.y || 0
+    }
+
+    imageStore.imageOperations.transformations.cropBox = newCrop
 
     historyStore.push(imageStore.getSnapshot())
   }
