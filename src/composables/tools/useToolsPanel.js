@@ -8,7 +8,7 @@ export function useToolsPanel(editorStore, imageStore) {
   const atTop = ref(true)
   const atBottom = ref(false)
 
-  const isExportDisabled = computed(() => !imageStore.isImageLoaded())
+  const isToolDisabled = computed(() => !imageStore.isImageLoaded())
 
   const activeTool = computed(() => editorStore.selectedToolKey)
 
@@ -48,14 +48,10 @@ export function useToolsPanel(editorStore, imageStore) {
     openExportToolSettings()
   }
 
-  const clickFunction = (toolKey) => {
-    if (toolKey === 'export') {
-      if (!isExportDisabled.value) {
-        exportTool()
-      }
-    } else {
-      toggleTool(toolKey)
-    }
+  const selectTool = (toolKey) => {
+    if (isToolDisabled.value) return
+
+    toggleTool(toolKey)
   }
 
   return {
@@ -68,7 +64,7 @@ export function useToolsPanel(editorStore, imageStore) {
     checkScroll,
     toggleTool,
     exportTool,
-    clickFunction,
-    isExportDisabled,
+    selectTool,
+    isToolDisabled,
   }
 }

@@ -1,7 +1,6 @@
 <script setup>
 import BaseIcon from '@/components/icons/BaseIcon.vue'
 import ItemTip from '@/components/common/ItemTip.vue'
-import { computed } from 'vue'
 
 const props = defineProps({
   iconName: {
@@ -26,26 +25,15 @@ const props = defineProps({
   },
 })
 
-const showTip = computed(() => props.tip !== '')
 </script>
 
 <template>
-  <ItemTip v-if="showTip" :text="props.tip" position="right">
+  <ItemTip :text="props.tip" position="right">
     <div class="tool" :class="{ active: props.active, disabled: props.disabled }">
       <BaseIcon :name="props.iconName" :size="27" :color="'var(--primary-c)'" />
       <p>{{ props.label }}</p>
     </div>
   </ItemTip>
-
-  <div
-    v-else
-    class="tool"
-    :class="{ active: props.active, disabled: props.disabled }"
-    @click="$emit('click')"
-  >
-    <BaseIcon :name="props.iconName" :size="27" :color="'var(--primary-c)'" />
-    <p>{{ props.label }}</p>
-  </div>
 </template>
 
 <style setup>

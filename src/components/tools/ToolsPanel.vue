@@ -20,8 +20,8 @@ const {
   checkScroll,
   scrollUp,
   scrollDown,
-  clickFunction,
-  isExportDisabled,
+  selectTool,
+  isToolDisabled,
 } = useToolsPanel(useEditorStore(), useImageStore())
 
 const tools = computed(() =>
@@ -46,18 +46,10 @@ const tools = computed(() =>
         :key="tool.key"
         :iconName="tool.iconName"
         :label="tool.label"
-        :tip="
-          imageStore.file === null
-            ? ''
-            : tool.key === 'export' && isExportDisabled
-              ? tool.tipDisabled
-              : tool.tip
-        "
+        :tip="isToolDisabled ? tool.tipDisabled : tool.tip"
         :active="activeTool === tool.key"
-        @click="clickFunction(tool.key)"
-        :disabled="
-          imageStore.file === null ? true : tool.key === 'export' ? isExportDisabled : false
-        "
+        @click="selectTool(tool.key)"
+        :disabled="isToolDisabled"
       />
     </div>
 
