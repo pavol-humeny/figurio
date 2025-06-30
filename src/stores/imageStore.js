@@ -115,7 +115,6 @@ export const useImageStore = defineStore('imageStore', {
           type: operations.frame?.type || 'solid',
         },
       }
-      console.log('[setImageOperations] imageOperations:', this.imageOperations)
     },
 
     getImageOperations() {

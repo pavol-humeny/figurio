@@ -143,7 +143,6 @@ export function usePresetTool(imageStore, historyStore, editorStore, presetsStor
 
   const createPreset = () => {
     const name = newPresetName.value.trim()
-    console.log('Creating preset:', name)
 
     if (!name) return
 
@@ -216,9 +215,6 @@ export function usePresetTool(imageStore, historyStore, editorStore, presetsStor
   }
 
   const applyPreset = () => {
-    console.log('Applying preset:', selectedPresetName.value)
-    console.log('Preset operations:', presetsStore.selectedPreset.imageOperations)
-
     // Check if preset is identical to current operations
     const currentOps = imageStore.getImageOperations()
     const newOps = JSON.parse(JSON.stringify(presetsStore.selectedPreset.imageOperations))

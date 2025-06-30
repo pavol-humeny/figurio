@@ -202,32 +202,107 @@
     "settings": {
       "createPreset": {
         "label": "Vytvořit šablonu",
-        "presetNamePlaceholder": "Název šablony",
+        "presetName": {
+          "text": "Název šablony",
+          "placeholder": "Zadejte název šablony"
+        },
+        "useCurrentModifications": {
+          "text": "Použít aktuální úpravy",
+          "tip": "Použít aktuální úpravy obrázku jako hodnoty šablony"
+        },
+        "presetValues": {
+          "transformations": {
+            "label": "Transformace",
+            "rotation": "Rotace",
+            "horizontalFlip": "Horizontální otočení",
+            "verticalFlip": "Vertikální otočení"
+          },
+          "smartCrop": "Chytré oříznutí",
+          "frame": {
+            "label": "Rámeček",
+            "enabled": "Povoleno",
+            "color": "Barva",
+            "width": "Šířka",
+            "type": "Typ"
+          }
+        },
         "createPresetButton": {
           "text": "Vytvořit šablonu"
+        },
+        "presetAlreadyExists": {
+          "title": "Šablona již existuje",
+          "message": "Šablona s tímto názvem již existuje. Zvolte prosím jiný název."
+        },
+        "invalidPresetName": {
+          "title": "Neplatný název šablony",
+          "message": "Název šablony nesmí být prázdný nebo obsahovat speciální znaky."
+        },
+        "presetSuccessfullyCreated": {
+          "title": "Šablona vytvořena",
+          "message": "Šablona byla úspěšně vytvořena."
+        }
+      },
+      "myPresets": {
+        "label": "Moje šablony",
+        "noPresets": "Žádné šablony nejsou k dispozici",
+        "selectPreset": "Vyberte šablonu",
+        "presetName": {
+          "text": "Název šablony",
+          "placeholder": "Zadejte název šablony"
+        },
+        "applyPresetButton": {
+          "text": "Použít šablonu"
+        },
+        "presetValues": {
+          "transformations": {
+            "label": "Transformace",
+            "rotation": "Rotace",
+            "horizontalFlip": "Horizontální otočení",
+            "verticalFlip": "Vertikální otočení"
+          },
+          "smartCrop": "Chytré oříznutí",
+          "frame": {
+            "label": "Rámeček",
+            "enabled": "Povoleno",
+            "color": "Barva",
+            "width": "Šířka",
+            "type": "Typ"
+          }
+        },
+        "deletePresetButton": {
+          "text": "Smazat šablonu"
+        },
+        "deletePresetConfirmation": {
+          "title": "Smazat šablonu",
+          "message": "Opravdu chcete smazat šablonu: {presetName}?",
+          "cancel": "Zrušit",
+          "confirm": "Smazat"
+        },
+        "presetSuccessfullyDeleted": {
+          "title": "Šablona smazána",
+          "message": "Šablona s názvem: {presetName} byla úspěšně smazána."
+        },
+        "closeModifyingButton": {
+          "text": "Zavřít"
+        },
+        "modifyPresetButton": {
+          "text": "Upravit šablonu"
         },
         "savePresetButton": {
           "text": "Uložit šablonu"
         },
-        "presetAlreadyExists": {
-          "title": "Šablona již existuje",
-          "message": "Šablona s tímto názvem již existuje. Prosím, zvolte jiný název."
-        },
-        "invalidPresetName": {
-          "title": "Neplatný název šablony",
-          "message": "Název šablony nesmí být prázdný a nesmí obsahovat speciální znaky."
-        },
-        "presetSuccessfullyCreated": {
-          "title": "Šablona úspěšně vytvořena",
-          "message": "Šablona byla úspěšně vytvořena."
-        },
         "presetSuccessfullySaved": {
-          "title": "Šablona úspěšně uložena",
+          "title": "Šablona uložena",
           "message": "Šablona s názvem: {presetName} byla úspěšně uložena."
+        },
+        "successfullyApplied": {
+          "title": "Šablona použita",
+          "message": "Šablona s názvem: {presetName} byla úspěšně použita."
+        },
+        "presetAlreadyApplied": {
+          "title": "Šablona již použita",
+          "message": "Šablona s názvem: {presetName} je již použita na obrázku."
         }
-      },
-      "myPresets": {
-        "label": "Moje šablony"
       }
     }
   },

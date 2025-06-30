@@ -77,6 +77,7 @@ const tabs = ['myPresets', 'createPreset']
               <DefaultButton
                 :text="$t('tools.preset.settings.createPreset.useCurrentModifications.text')"
                 :tip="$t('tools.preset.settings.createPreset.useCurrentModifications.tip')"
+                position="bottom-left"
                 @click="useCurrentModifications()"
               />
             </div>

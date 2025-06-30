@@ -76,8 +76,6 @@ export const usePresetsStore = defineStore('presetsStore', {
     },
 
     updatePreset(originalName, newName, newImageOperations = {}) {
-      console.log('All presets:', this.presets)
-
       const trimmedNewName = newName.trim()
       if (!trimmedNewName) return false
 

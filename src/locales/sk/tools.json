@@ -202,32 +202,107 @@
     "settings": {
       "createPreset": {
         "label": "Vytvoriť šablónu",
-        "presetNamePlaceholder": "Názov šablóny",
+        "presetName": {
+          "text": "Názov šablóny",
+          "placeholder": "Zadajte názov šablóny"
+        },
+        "useCurrentModifications": {
+          "text": "Použiť aktuálne úpravy",
+          "tip": "Použiť aktuálne úpravy obrázka ako hodnoty šablóny"
+        },
+        "presetValues": {
+          "transformations": {
+            "label": "Transformácie",
+            "rotation": "Rotácia",
+            "horizontalFlip": "Horizontálne otočenie",
+            "verticalFlip": "Vertikálne otočenie"
+          },
+          "smartCrop": "Inteligentné orezanie",
+          "frame": {
+            "label": "Rámik",
+            "enabled": "Povolené",
+            "color": "Farba",
+            "width": "Šírka",
+            "type": "Typ"
+          }
+        },
         "createPresetButton": {
           "text": "Vytvoriť šablónu"
+        },
+        "presetAlreadyExists": {
+          "title": "Šablóna už existuje",
+          "message": "Šablóna s týmto názvom už existuje. Zvoľte prosím iný názov."
+        },
+        "invalidPresetName": {
+          "title": "Neplatný názov šablóny",
+          "message": "Názov šablóny nemôže byť prázdny alebo obsahovať špeciálne znaky."
+        },
+        "presetSuccessfullyCreated": {
+          "title": "Šablóna vytvorená",
+          "message": "Šablóna bola úspešne vytvorená."
+        }
+      },
+      "myPresets": {
+        "label": "Moje šablóny",
+        "noPresets": "Žiadne šablóny nie sú dostupné",
+        "selectPreset": "Vyberte šablónu",
+        "presetName": {
+          "text": "Názov šablóny",
+          "placeholder": "Zadajte názov šablóny"
+        },
+        "applyPresetButton": {
+          "text": "Použiť šablónu"
+        },
+        "presetValues": {
+          "transformations": {
+            "label": "Transformácie",
+            "rotation": "Rotácia",
+            "horizontalFlip": "Horizontálne otočenie",
+            "verticalFlip": "Vertikálne otočenie"
+          },
+          "smartCrop": "Inteligentné orezanie",
+          "frame": {
+            "label": "Rámik",
+            "enabled": "Povolené",
+            "color": "Farba",
+            "width": "Šírka",
+            "type": "Typ"
+          }
+        },
+        "deletePresetButton": {
+          "text": "Odstrániť šablónu"
+        },
+        "deletePresetConfirmation": {
+          "title": "Odstrániť šablónu",
+          "message": "Naozaj chcete odstrániť šablónu: {presetName}?",
+          "cancel": "Zrušiť",
+          "confirm": "Odstrániť"
+        },
+        "presetSuccessfullyDeleted": {
+          "title": "Šablóna odstránená",
+          "message": "Šablóna s názvom: {presetName} bola úspešne odstránená."
+        },
+        "closeModifyingButton": {
+          "text": "Zavrieť"
+        },
+        "modifyPresetButton": {
+          "text": "Upraviť šablónu"
         },
         "savePresetButton": {
           "text": "Uložiť šablónu"
         },
-        "presetAlreadyExists": {
-          "title": "Šablóna už existuje",
-          "message": "Šablóna s týmto názvom už existuje. Prosím, zvoľ iný názov."
-        },
-        "invalidPresetName": {
-          "title": "Neplatný názov šablóny",
-          "message": "Názov šablóny nesmie byť prázdny a nesmie obsahovať špeciálne znaky."
-        },
-        "presetSuccessfullyCreated": {
-          "title": "Šablóna úspešne vytvorená",
-          "message": "Šablóna bola úspešne vytvorená."
-        },
         "presetSuccessfullySaved": {
-          "title": "Šablóna úspešne uložená",
+          "title": "Šablóna uložená",
           "message": "Šablóna s názvom: {presetName} bola úspešne uložená."
+        },
+        "successfullyApplied": {
+          "title": "Šablóna použitá",
+          "message": "Šablóna s názvom: {presetName} bola úspešne použitá."
+        },
+        "presetAlreadyApplied": {
+          "title": "Šablóna už použitá",
+          "message": "Šablóna s názvom: {presetName} je už použitá na obrázku."
         }
-      },
-      "myPresets": {
-        "label": "Moje šablóny"
       }
     }
   },
