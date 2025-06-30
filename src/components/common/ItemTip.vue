@@ -1,39 +1,31 @@
 <script setup>
-import { useItemTip } from '@/composables/common/useItemTip';
+import { useItemTip } from '@/composables/common/useItemTip'
 
 const props = defineProps({
   text: {
     type: String,
-    required: true
+    required: true,
   },
   position: {
     type: String,
     default: 'top',
+  },
+})
 
-  }
-});
-
-const {
-  isVisible,
-  wrapper,
-  itemTipStyle,
-  handleMouseEnter,
-  handleMouseLeave
-} = useItemTip({ position: props.position });
+const { isVisible, wrapper, itemTipStyle, handleMouseEnter, handleMouseLeave, showTip } =
+  useItemTip({
+    position: props.position,
+    text: props.text,
+  })
 </script>
 
 <template>
-  <div
-    class="item-tip"
-    ref="wrapper"
-    @mouseenter="handleMouseEnter"
-    @mouseleave="handleMouseLeave"
-  >
+  <div class="item-tip" ref="wrapper" @mouseenter="handleMouseEnter" @mouseleave="handleMouseLeave">
     <slot></slot>
 
     <teleport to="body">
       <div
-        v-if="isVisible"
+        v-if="isVisible && showTip"
         :style="itemTipStyle"
         :class="['item-tip-bubble', props.position]"
       >
@@ -65,12 +57,24 @@ const {
   transform: translate(-50%, -50%);
 }
 
-.item-tip-bubble.top    { transform: translate(-50%, -100%); }
-.item-tip-bubble.bottom { transform: translate(-50%, 0); }
-.item-tip-bubble.left   { transform: translate(-100%, -50%); }
-.item-tip-bubble.right  { transform: translate(0, -50%); }
-.item-tip-bubble.bottom-right {transform: translate(0, 0);}
-.item-tip-bubble.bottom-left {transform: translate(-100%, 0);}
+.item-tip-bubble.top {
+  transform: translate(-50%, -100%);
+}
+.item-tip-bubble.bottom {
+  transform: translate(-50%, 0);
+}
+.item-tip-bubble.left {
+  transform: translate(-100%, -50%);
+}
+.item-tip-bubble.right {
+  transform: translate(0, -50%);
+}
+.item-tip-bubble.bottom-right {
+  transform: translate(0, 0);
+}
+.item-tip-bubble.bottom-left {
+  transform: translate(-100%, 0);
+}
 
 .item-tip-arrow {
   position: absolute;
