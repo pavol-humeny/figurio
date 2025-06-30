@@ -23,6 +23,7 @@ export function useCropTool(imageStore, viewportStore, editorStore, historyStore
 
   const { clamp } = useMath()
 
+  // Set initial crop box dimensions based on image dimensions
   watch(
     () => imageStore.fileDimensions,
     (fileDimensions) => {

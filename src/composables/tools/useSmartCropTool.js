@@ -205,10 +205,11 @@ export function useSmartCropTool(imageStore, historyStore, editorStore, t) {
       if (!match) break
       top++
     }
+    if (top === height) top = 0 // všetko bolo rovnaké – nechaj celý obrázok
 
     // Bottom
     let bottom = height - 1
-    while (bottom >= 0) {
+    while (bottom >= top) {
       let match = true
       for (let x = 0; x < width; x++) {
         const i = (bottom * width + x) * 4
@@ -219,6 +220,10 @@ export function useSmartCropTool(imageStore, historyStore, editorStore, t) {
       }
       if (!match) break
       bottom--
+    }
+    if (bottom < top) {
+      top = 0
+      bottom = height - 1
     }
 
     // Left
@@ -235,10 +240,11 @@ export function useSmartCropTool(imageStore, historyStore, editorStore, t) {
       if (!match) break
       left++
     }
+    if (left === width) left = 0
 
     // Right
     let right = width - 1
-    while (right >= 0) {
+    while (right >= left) {
       let match = true
       for (let y = top; y <= bottom; y++) {
         const i = (y * width + right) * 4
@@ -249,6 +255,10 @@ export function useSmartCropTool(imageStore, historyStore, editorStore, t) {
       }
       if (!match) break
       right--
+    }
+    if (right < left) {
+      left = 0
+      right = width - 1
     }
 
     // Nastavenie hodnôt
