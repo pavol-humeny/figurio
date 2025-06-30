@@ -2,6 +2,7 @@ import jsPDF from 'jspdf'
 import { defineStore } from 'pinia'
 import { useToastModal } from '@/composables/modals/useToastModal'
 import { nextTick } from 'vue'
+import { useHistoryStore } from './historyStore'
 
 const { showToastModal } = useToastModal()
 
@@ -95,6 +96,9 @@ export const useImageStore = defineStore('imageStore', {
         headerSize: 30, // For browser frames
         type: 'solid',
       },
+      grayScale: {
+        enabled: false,
+      },
     },
   }),
   getters: {
@@ -123,6 +127,9 @@ export const useImageStore = defineStore('imageStore', {
           headerSize: operations.frame?.headerSize || 30, // For browser frames
           type: operations.frame?.type || 'solid',
         },
+        grayScale: {
+          enabled: operations.grayScale?.enabled || false,
+        },
       }
     },
 
@@ -149,6 +156,9 @@ export const useImageStore = defineStore('imageStore', {
           height: 0,
           headerSize: 30, // For browser frames
           type: 'solid',
+        },
+        grayScale: {
+          enabled: false,
         },
       }
     },
@@ -270,6 +280,9 @@ export const useImageStore = defineStore('imageStore', {
       this.selectedSvgObjectId = null
 
       this.resetImageOperations()
+
+      const historyStore = useHistoryStore()
+      historyStore.reset()
     },
 
     setFile(file, t) {

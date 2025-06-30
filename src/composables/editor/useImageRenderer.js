@@ -4,6 +4,7 @@ import { useRotateTool } from '../tools/useRotateTool'
 import { useFrameTool } from '../tools/useFrameTool'
 import { useSmartCropTool } from '../tools/useSmartCropTool'
 import { useCropTool } from '../tools/useCropTool'
+import { useGrayscaleTool } from '../tools/useGrayscaleTool'
 // import { useConfirmModal } from '@/composables/modals/useConfirmModal'
 // import { useToastModal } from '@/composables/modals/useToastModal'
 
@@ -214,6 +215,12 @@ export function useImageRenderer(
         console.log('Applying smart crop operation')
 
         await useSmartCropTool(imageStore, historyStore, editorStore, t).applyAutoSmartCropRender()
+      }
+
+      // GrayScale operation
+      if (imageStore.imageOperations.grayScale?.enabled) {
+        console.log('Applying grayscale operation')
+        await useGrayscaleTool(imageStore, historyStore, t).applyGrayScaleRender()
       }
 
       renderAll()

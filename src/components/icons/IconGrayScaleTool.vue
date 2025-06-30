@@ -1,0 +1,21 @@
+<template>
+  <svg
+    id="Gradient--Streamline-Carbon"
+    xmlns="http://www.w3.org/2000/svg"
+    viewBox="0 0 20 20"
+    height="20"
+    width="20"
+  >
+    <desc>Gradient Streamline Icon: https://streamlinehq.com</desc>
+    <defs></defs>
+    <path
+      d="M16.25 2.5H3.75a1.2514375 1.2514375 0 0 0 -1.25 1.25v12.5a1.2514375 1.2514375 0 0 0 1.25 1.25h12.5a1.2514375 1.2514375 0 0 0 1.25 -1.25V3.75a1.2514375 1.2514375 0 0 0 -1.25 -1.25Zm-2.5 13.75v-2.5h-2.5v2.5h-2.5v-2.5h-2.5v-2.5h2.5v-2.5h-2.5v-2.5h2.5V3.75h2.5v2.5h2.5V3.75h2.5v12.5Z"
+      fill="currentColor"
+      stroke-width="0.625"
+    ></path>
+    <path d="M8.75 6.25h2.5v2.5h-2.5Z" fill="currentColor" stroke-width="0.625"></path>
+    <path d="M8.75 11.25h2.5v2.5h-2.5Z" fill="currentColor" stroke-width="0.625"></path>
+    <path d="M11.25 8.75h2.5v2.5h-2.5Z" fill="currentColor" stroke-width="0.625"></path>
+    <path id="_Transparent_Rectangle_" d="M0 0h20v20H0Z" fill="none" stroke-width="0.625"></path>
+  </svg>
+</template>

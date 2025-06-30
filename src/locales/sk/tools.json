@@ -116,6 +116,11 @@
       }
     }
   },
+  "grayScale": {
+    "label": "Grayscale",
+    "tip": "Prevedenie obrázka na odtiene šedej.",
+    "tipDisabled": ""
+  },
   "adjust": {
     "label": "Úpravy",
     "tip": "Uprav jas, kontrast, farby a ďalšie.",

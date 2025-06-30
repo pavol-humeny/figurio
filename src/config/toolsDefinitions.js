@@ -14,6 +14,11 @@ export const toolsDefinitions = [
     iconName: 'IconSmartCropTool',
     settingsComponent: () => import('@/components/toolsSettings/SmartCropToolSettings.vue'),
   },
+  {
+    key: 'grayScale',
+    iconName: 'IconGrayScaleTool',
+    settingsComponent: () => import('@/components/toolsSettings/GrayScaleToolSettings.vue'),
+  },
   // {
   //   key: 'adjust',
   //   iconName: 'IconAdjustTool',

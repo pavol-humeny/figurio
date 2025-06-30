@@ -116,6 +116,16 @@
       }
     }
   },
+  "grayScale": {
+    "label": "Grayscale",
+    "tip": "Convert the image to grayscale.",
+    "tipDisabled": "",
+    "settings": {
+      "convertToGrayScaleButton": {
+        "text": "Convert to grayscale"
+      }
+    }
+  },
   "adjust": {
     "label": "Adjust",
     "tip": "Adjust image brightness, contrast, color and more.",
