@@ -27,6 +27,8 @@ const {
   applyPreset,
   modifyPreset,
   closeModifying,
+  deletePreset,
+  useCurrentModifications,
   presetModifying,
   presetRotationOptions,
   presetFrameOptions,
@@ -65,6 +67,16 @@ const tabs = ['myPresets', 'createPreset']
               :placeholder="$t('tools.preset.settings.createPreset.presetNamePlaceholder')"
               updateOnChange
             />
+          </div>
+        </div>
+        <div class="settings-content-wrapper" :class="{ disabled: newPresetName === '' }">
+          <div class="content-wrapper">
+            <div class="content-button">
+              <DefaultButton
+                text="use current modifications as preset"
+                @click="useCurrentModifications()"
+              />
+            </div>
           </div>
         </div>
         <div class="settings-content-wrapper" :class="{ disabled: newPresetName === '' }">
@@ -157,7 +169,7 @@ const tabs = ['myPresets', 'createPreset']
         v-if="editorStore.selectedTabPerTool[editorStore.selectedToolKey] === 'myPresets'"
         class="specific-settings"
       >
-        <div class="settings-content-wrapper">
+        <div class="settings-content-wrapper" v-if="!presetModifying">
           <div v-if="presetsOptions.length > 0" class="content-wrapper">
             <div class="content-title">
               <p>Select Preset</p>
@@ -172,6 +184,9 @@ const tabs = ['myPresets', 'createPreset']
         </div>
         <div v-if="selectedPresetName !== ''" class="settings-content-wrapper">
           <div class="content-wrapper">
+            <div class="content-title">
+              <p>Preset name</p>
+            </div>
             <TextInput
               ref="presetNameInputRef"
               v-model="localPresetName"
@@ -281,6 +296,14 @@ const tabs = ['myPresets', 'createPreset']
                 v-model="localImageOperations.frame.type"
                 :options="presetFrameOptions"
               />
+            </div>
+          </div>
+        </div>
+
+        <div v-if="selectedPresetName !== '' && presetModifying" class="settings-content-wrapper">
+          <div class="content-wrapper">
+            <div class="content-button">
+              <DefaultButton text="Delete" @click="deletePreset()" />
             </div>
           </div>
         </div>

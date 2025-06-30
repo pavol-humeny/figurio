@@ -14,16 +14,16 @@ export const toolsDefinitions = [
     iconName: 'IconSmartCropTool',
     settingsComponent: () => import('@/components/toolsSettings/SmartCropToolSettings.vue'),
   },
-  {
-    key: 'adjust',
-    iconName: 'IconAdjustTool',
-    settingsComponent: () => import('@/components/toolsSettings/AdjustToolSettings.vue'),
-  },
-  {
-    key: 'annotate',
-    iconName: 'IconAnnotateTool',
-    settingsComponent: () => import('@/components/toolsSettings/AnnotateToolSettings.vue'),
-  },
+  // {
+  //   key: 'adjust',
+  //   iconName: 'IconAdjustTool',
+  //   settingsComponent: () => import('@/components/toolsSettings/AdjustToolSettings.vue'),
+  // },
+  // {
+  //   key: 'annotate',
+  //   iconName: 'IconAnnotateTool',
+  //   settingsComponent: () => import('@/components/toolsSettings/AnnotateToolSettings.vue'),
+  // },
   {
     key: 'frame',
     iconName: 'IconFrameTool',

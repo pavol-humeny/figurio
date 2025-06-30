@@ -1,8 +1,10 @@
 import { ref, computed, watch, reactive, nextTick } from 'vue'
 import { useToastModal } from '../modals/useToastModal'
+import { useConfirmModal } from '../modals/useConfirmModal'
 
 export function usePresetTool(imageStore, historyStore, editorStore, presetsStore, t) {
-  const { showToastModal } = useToastModal(editorStore, t)
+  const { showToastModal } = useToastModal()
+  const { showConfirmModal } = useConfirmModal()
 
   const presetNameInputRef = ref(null)
   const presetFrameWidthRef = ref(null)
@@ -223,6 +225,43 @@ export function usePresetTool(imageStore, historyStore, editorStore, presetsStor
     presetModifying.value = false
   }
 
+  const deletePreset = async () => {
+    const confirmed = await showConfirmModal(
+      t('privacy.confirmResetLocalPreferences.title'),
+      t('privacy.confirmResetLocalPreferences.text'),
+      t('privacy.confirmResetLocalPreferences.cancel'),
+      t('privacy.confirmResetLocalPreferences.confirm'),
+    )
+    if (!confirmed) {
+      return
+    }
+
+    presetsStore.deletePreset(selectedPresetName.value)
+
+    presetModifying.value = false
+
+    showToastModal(
+      'success',
+      t('tools.preset.settings.createPreset.presetSuccessfullyDeleted.title'),
+      t('tools.preset.settings.createPreset.presetSuccessfullyDeleted.message', {
+        presetName: selectedPresetName.value,
+      }),
+    )
+  }
+
+  const useCurrentModifications = () => {
+    newPresetRotation.value = imageStore.imageOperations.transformations.rotationAngle
+    newPresetHorizontalFlip.value = imageStore.imageOperations.transformations.flipHorizontal
+    newPresetVerticalFlip.value = imageStore.imageOperations.transformations.flipVertical
+    newPresetSmartCrop.value = imageStore.imageOperations.smartCrop.enabled
+    newPresetFrame.value = {
+      enabled: imageStore.imageOperations.frame.enabled,
+      type: imageStore.imageOperations.frame.type,
+      color: imageStore.imageOperations.frame.color,
+      width: imageStore.imageOperations.frame.width,
+    }
+  }
+
   return {
     presetNameInputRef,
     presetFrameWidthRef,
@@ -234,6 +273,8 @@ export function usePresetTool(imageStore, historyStore, editorStore, presetsStor
     presetModifying,
     closeModifying,
     setFrameWidth,
+    deletePreset,
+    useCurrentModifications,
     presetRotationOptions,
     presetFrameOptions,
     newPresetRotation,

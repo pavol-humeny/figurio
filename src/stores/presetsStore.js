@@ -1,6 +1,4 @@
 import { defineStore } from 'pinia'
-import { useToastModal } from '@/composables/modals/useToastModal'
-import { useI18n } from 'vue-i18n'
 
 const STORAGE_KEY = 'imageEditorPresets'
 
