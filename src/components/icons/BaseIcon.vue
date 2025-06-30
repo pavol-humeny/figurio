@@ -17,19 +17,17 @@ const props = defineProps({
   },
   tip: {
     type: String,
-    default: ''
+    default: '',
   },
   position: {
     type: String,
-    default: 'bottom'
+    default: 'bottom',
   },
   disabled: {
     type: Boolean,
-    default: false
-  }
+    default: false,
+  },
 })
-
-const showTip = props.tip !== '';
 
 // Get all icons
 const icons = import.meta.glob('@/components/icons/Icon*.vue')
@@ -46,31 +44,17 @@ const iconComponent = computed(() => {
 
   return defineAsyncComponent(loader)
 })
-
 </script>
 
 <template>
-  <ItemTip
-    v-if="showTip"
-    :text="props.tip"
-    :position="props.position"
-  >
+  <ItemTip :text="props.tip" :position="props.position">
     <component
-    :is="iconComponent"
-    class="icon"
-    :style="{ width: size + 'px', height: size + 'px', color: color }"
-    :class="disabled ? 'disabled' : ''"
+      :is="iconComponent"
+      class="icon"
+      :style="{ width: size + 'px', height: size + 'px', color: color }"
+      :class="disabled ? 'disabled' : ''"
     />
   </ItemTip>
-
-  <component
-    v-else
-    :is="iconComponent"
-    class="icon"
-    :style="{ width: size + 'px', height: size + 'px', color: color }"
-    :class="disabled ? 'disabled' : ''"
-    />
-
 </template>
 
 <style scoped>

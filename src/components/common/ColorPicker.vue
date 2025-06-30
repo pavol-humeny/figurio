@@ -40,11 +40,10 @@ defineExpose({
   },
 })
 
-const showTip = props.tip !== ''
 </script>
 
 <template>
-  <ItemTip v-if="showTip" :text="props.tip" :position="props.position">
+  <ItemTip :text="props.tip" :position="props.position">
     <div class="color-wrapper">
       <input
         type="color"
@@ -55,16 +54,6 @@ const showTip = props.tip !== ''
       />
     </div>
   </ItemTip>
-
-  <div v-else class="color-wrapper">
-    <input
-      type="color"
-      class="color-input"
-      v-model="colorValue"
-      :disabled="props.disabled"
-      @change="onChange"
-    />
-  </div>
 </template>
 
 <style scoped>

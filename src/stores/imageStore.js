@@ -95,6 +95,11 @@ export const useImageStore = defineStore('imageStore', {
       },
     },
   }),
+  getters: {
+    isImageLoaded: (state) => {
+      return state.file !== null
+    },
+  },
   actions: {
     setImageOperations(operations) {
       this.imageOperations = {
@@ -137,10 +142,6 @@ export const useImageStore = defineStore('imageStore', {
 
     getTransformations() {
       return JSON.parse(JSON.stringify(this.imageOperations.transformations))
-    },
-
-    isImageLoaded() {
-      return this.fileName && this.fileName.trim() !== ''
     },
 
     setFileName(newName, t, isNewFileName = false) {

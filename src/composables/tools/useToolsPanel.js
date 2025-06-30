@@ -8,7 +8,7 @@ export function useToolsPanel(editorStore, imageStore) {
   const atTop = ref(true)
   const atBottom = ref(false)
 
-  const isToolDisabled = computed(() => !imageStore.isImageLoaded())
+  const isToolDisabled = computed(() => !imageStore.isImageLoaded)
 
   const activeTool = computed(() => editorStore.selectedToolKey)
 

@@ -34,8 +34,6 @@ const props = defineProps({
   },
 })
 
-const showTip = props.tipLinked !== '' || props.tipUnlinked !== ''
-
 const emit = defineEmits(['update:modelValue'])
 
 const { isLinked, toggleLinkedValue } = useLinkValuesIcon(props, emit)
@@ -47,7 +45,7 @@ const { isLinked, toggleLinkedValue } = useLinkValuesIcon(props, emit)
     :size="size"
     :color="color"
     @click="toggleLinkedValue"
-    :tip="showTip ? (isLinked ? tipLinked : tipUnlinked) : ''"
+    :tip="isLinked ? tipLinked : tipUnlinked"
     :class="disabled ? 'disabled' : ''"
     :position="position"
   />

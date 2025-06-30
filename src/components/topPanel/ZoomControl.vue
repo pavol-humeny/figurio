@@ -25,7 +25,7 @@ const {
       <div
         class="zoom-out-button button button-control button-circle"
         @click="zoomOut"
-        :class="{ 'button--disabled': !canZoomOut }"
+        :class="{ 'disabled': !canZoomOut }"
       >
         <BaseIcon name="IconMinus" size="24" />
       </div>
@@ -49,7 +49,7 @@ const {
       <div
         class="zoom-in-button button button-control button-circle"
         @click="zoomIn"
-        :class="{ 'button--disabled': !canZoomIn }"
+        :class="{ 'disabled': !canZoomIn }"
       >
         <BaseIcon name="IconPlus" size="24" />
       </div>

@@ -86,13 +86,12 @@ defineExpose({
   },
 })
 
-const showTip = props.tip !== ''
 const showIcon = props.icon !== ''
 const showUnit = props.unit !== ''
 </script>
 
 <template>
-  <ItemTip v-if="showTip" :text="props.tip" :position="props.position">
+  <ItemTip :text="props.tip" :position="props.position">
     <div class="input-wrapper">
       <input
         type="number"
@@ -121,31 +120,6 @@ const showUnit = props.unit !== ''
       <span v-if="showUnit" class="input-unit">{{ props.unit }}</span>
     </div>
   </ItemTip>
-
-  <div v-else class="input-wrapper">
-    <input
-      type="number"
-      class="value-input"
-      :style="{ paddingLeft: showIcon ? '30px' : '10px', paddingRight: showUnit ? '25px' : '10px' }"
-      v-model.number="inputValue"
-      :min="props.min"
-      :max="props.max"
-      :step="props.step"
-      :disabled="props.disabled"
-      @blur="onBlurOrEnter"
-      @keydown.enter="onBlurOrEnter"
-    />
-    <BaseIcon
-      v-if="showIcon"
-      :name="props.icon"
-      class="input-icon"
-      :size="props.size"
-      :color="props.color"
-      @dblclick="onIconDoubleClick"
-      :style="{ top: props.iconTop + '%' }"
-    />
-    <span v-if="showUnit" class="input-unit">{{ props.unit }}</span>
-  </div>
 </template>
 
 <style scoped>

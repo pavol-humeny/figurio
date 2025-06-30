@@ -68,12 +68,11 @@ defineExpose({
   },
 })
 
-const showTip = props.tip !== ''
 const showIcon = props.icon !== ''
 </script>
 
 <template>
-  <ItemTip v-if="showTip" :text="props.tip" :position="props.position">
+  <ItemTip :text="props.tip" :position="props.position">
     <div class="select-wrapper">
       <select
         class="select-input"
@@ -104,36 +103,6 @@ const showIcon = props.icon !== ''
       />
     </div>
   </ItemTip>
-
-  <div v-else class="select-wrapper">
-    <select
-      class="select-input"
-      v-model="selectedValue"
-      :disabled="props.disabled"
-      :style="{ paddingLeft: showIcon ? '30px' : '10px', paddingRight: '25px' }"
-      @change="onChange"
-    >
-      <option v-for="option in props.options" :key="option.value" :value="option.value">
-        {{ option.label }}
-      </option>
-    </select>
-
-    <BaseIcon
-      v-if="showIcon"
-      :name="props.icon"
-      class="input-icon-left"
-      :size="props.size"
-      :color="props.color"
-      @dblclick="onIconDoubleClick"
-    />
-
-    <BaseIcon
-      name="IconArrowDown"
-      class="input-icon-right"
-      size="16"
-      color="var(--primary-c)"
-    />
-  </div>
 </template>
 
 <style scoped>

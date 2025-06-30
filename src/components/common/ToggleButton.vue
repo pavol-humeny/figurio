@@ -28,11 +28,11 @@ const props = defineProps({
 
 const emit = defineEmits(['update:modelValue'])
 
-const { isActive, toggleSwitch, showTip } = useToggleButton(props, emit)
+const { isActive, toggleSwitch } = useToggleButton(props, emit)
 </script>
 
 <template>
-  <ItemTip v-if="showTip" :text="props.tip" :position="props.position">
+  <ItemTip :text="props.tip" :position="props.position">
     <div class="toggle-switch" :style="{ transform: `scale(${props.scale})` }">
       <div
         class="toggle-switch-wrapper"
@@ -43,16 +43,6 @@ const { isActive, toggleSwitch, showTip } = useToggleButton(props, emit)
       </div>
     </div>
   </ItemTip>
-
-  <div v-else class="toggle-switch" :style="{ transform: `scale(${props.scale})` }">
-    <div
-      class="toggle-switch-wrapper"
-      :class="{ 'toggle-disabled': props.disabled }"
-      @click="toggleSwitch"
-    >
-      <div class="toggle-switch-slider" :class="{ active: isActive }"></div>
-    </div>
-  </div>
 </template>
 
 <style scoped>

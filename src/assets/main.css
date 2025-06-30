@@ -60,16 +60,6 @@
   border-radius: 50%;
 }
 
-.button--disabled {
-  opacity: 0.5;
-  pointer-events: none;
-}
-
-.button--disabled:hover {
-  background: var(--secondary-c);
-  color: var(--primary-c);
-}
-
 /* Animation window shake styles */
 @keyframes shake {
   0% {

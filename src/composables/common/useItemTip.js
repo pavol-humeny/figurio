@@ -1,9 +1,9 @@
 import { ref, computed, onMounted, onBeforeUnmount, watch, nextTick } from 'vue'
+import { editorConfig } from '@/config/editorConfig'
 
 export function useItemTip(options = {}) {
-  const { position = 'top', delay = 700, offset = 8, text = '' } = options
+  const { position = 'top', delay = editorConfig.tipDelay, offset = 8 } = options
 
-  const showTip = computed(() => text && text.length > 0)
   const isVisible = ref(false)
   const wrapper = ref(null)
   const hoverTimeout = ref(null)
@@ -82,7 +82,6 @@ export function useItemTip(options = {}) {
   })
 
   return {
-    showTip,
     isVisible,
     wrapper,
     itemTipStyle,

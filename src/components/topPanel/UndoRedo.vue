@@ -7,37 +7,26 @@ import { useHistoryStore } from '@/stores/historyStore'
 
 const imageStore = useImageStore()
 
-const {
-  undo,
-  redo,
-  canUndo,
-  canRedo
-} = useUndoRedo(useHistoryStore(), useImageStore())
+const { undo, redo, canUndo, canRedo } = useUndoRedo(useHistoryStore(), useImageStore())
 </script>
 
 <template>
   <div class="undo-redo" :class="{ disabled: imageStore.file === null }">
-    <ItemTip
-      :text="$t('topPanel.undoRedo.tip.undo')"
-      position="bottom"
-    >
+    <ItemTip :text="canUndo ? $t('topPanel.undoRedo.tip.undo') : ''" position="bottom">
       <div
         class="undo-button button button-control button-circle"
         @click="undo"
-        :class="{ 'button--disabled': !canUndo }"
+        :class="{ disabled: !canUndo }"
       >
         <BaseIcon name="IconUndo" size="24" />
       </div>
     </ItemTip>
 
-    <ItemTip
-      :text="$t('topPanel.undoRedo.tip.redo')"
-      position="bottom"
-    >
+    <ItemTip :text="canRedo ? $t('topPanel.undoRedo.tip.redo') : ''" position="bottom">
       <div
         class="redo-button button button-control button-circle"
         @click="redo"
-        :class="{ 'button--disabled': !canRedo }"
+        :class="{ disabled: !canRedo }"
       >
         <BaseIcon name="IconRedo" size="24" />
       </div>
@@ -50,11 +39,6 @@ const {
   display: flex;
   align-items: center;
 }
-
-/* .undo-redo.disabled{
-  opacity: 0.5;
-  pointer-events: none;
-} */
 
 .undo-button,
 .redo-button {
@@ -71,6 +55,4 @@ const {
 .redo-button {
   border-radius: 0 20px 20px 0;
 }
-
-
 </style>

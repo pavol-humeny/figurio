@@ -26,7 +26,7 @@ const {
   >
     <div
       class="file-name-display-wrapper"
-      :class="{'file-name-display-wrapper--disabled': disabled}"
+      :class="{'disabled': disabled}"
       >
       <input
         ref="inputRef"
@@ -40,7 +40,7 @@ const {
       />
       <BaseIcon
         :name="editEnabled ? 'IconTick' : 'IconEditPencil'"
-        :size="30"
+        :size="23"
         :color="'var(--primary-c)'"
         @click="editEnabled ? saveNewFileName() : startEditing()"
       />
@@ -59,10 +59,6 @@ const {
   width: 200px;
   padding: 8px 16px;
   gap: 8px;
-}
-.file-name-display-wrapper--disabled {
-  opacity: 0.5;
-  pointer-events: none;
 }
 
 .file-name-display-input {

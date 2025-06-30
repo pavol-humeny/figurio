@@ -1,5 +1,6 @@
 <script setup>
 import { useItemTip } from '@/composables/common/useItemTip'
+import { computed } from 'vue'
 
 const props = defineProps({
   text: {
@@ -12,11 +13,12 @@ const props = defineProps({
   },
 })
 
-const { isVisible, wrapper, itemTipStyle, handleMouseEnter, handleMouseLeave, showTip } =
-  useItemTip({
-    position: props.position,
-    text: props.text,
-  })
+const { isVisible, wrapper, itemTipStyle, handleMouseEnter, handleMouseLeave } = useItemTip({
+  position: props.position,
+  text: props.text,
+})
+
+const showTip = computed(() => props.text !== '')
 </script>
 
 <template>

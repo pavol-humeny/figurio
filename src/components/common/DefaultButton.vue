@@ -30,36 +30,22 @@ const props = defineProps({
 
 const emit = defineEmits(['click'])
 
-const showTip = props.tip !== ''
 </script>
 
 <template>
-  <ItemTip v-if="showTip" :text="props.tip" :position="props.position">
+  <ItemTip :text="props.tip" :position="props.position">
     <button
       class="button"
       @click="emit('click')"
       :class="{
         'button-text': props.onlyText,
         'button-default': !props.onlyText,
-        'button--disabled': props.disabled,
+        'disabled': props.disabled,
       }"
     >
       {{ props.text }}
     </button>
   </ItemTip>
-
-  <button
-    v-else
-    class="button"
-    @click="emit('click')"
-    :class="{
-      'button-text': props.onlyText,
-      'button-default': !props.onlyText,
-      'button--disabled': props.disabled,
-    }"
-  >
-    {{ props.text }}
-  </button>
 </template>
 
 <style scoped></style>

@@ -56,11 +56,10 @@ defineExpose({
   },
 })
 
-const showTip = props.tip !== ''
 </script>
 
 <template>
-  <ItemTip v-if="showTip" :text="props.tip" :position="props.position">
+  <ItemTip :text="props.tip" :position="props.position">
     <input
       type="text"
       class="text-input"
@@ -72,18 +71,6 @@ const showTip = props.tip !== ''
       @input="onInput"
     />
   </ItemTip>
-
-  <input
-    v-else
-    type="text"
-    class="text-input"
-    v-model="inputValue"
-    :disabled="props.disabled"
-    :placeholder="props.placeholder"
-    @blur="onBlurOrEnter"
-    @keydown.enter="onBlurOrEnter"
-    @input="onInput"
-  />
 </template>
 
 <style scoped>

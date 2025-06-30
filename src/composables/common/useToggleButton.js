@@ -1,6 +1,6 @@
-import { ref, computed, watch  } from 'vue'
+import { ref, watch } from 'vue'
 
-export function useToggleButton(props, emit){
+export function useToggleButton(props, emit) {
   const isActive = ref(props.modelValue)
 
   const toggleSwitch = () => {
@@ -9,15 +9,15 @@ export function useToggleButton(props, emit){
     emit('update:modelValue', isActive.value)
   }
 
-  watch(() => props.modelValue, (value) => {
-    isActive.value = value
-  })
-
-  const showTip = computed(() => props.tip !== '')
+  watch(
+    () => props.modelValue,
+    (value) => {
+      isActive.value = value
+    },
+  )
 
   return {
     isActive,
     toggleSwitch,
-    showTip
   }
 }

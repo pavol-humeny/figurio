@@ -94,7 +94,7 @@ const changeValue = (event) => {
 </script>
 
 <template>
-  <ItemTip v-if="tip" :text="tip" position="bottom">
+  <ItemTip :text="tip" position="bottom">
     <div class="stepper">
       <BaseIcon
         name="IconMinus"
@@ -115,26 +115,6 @@ const changeValue = (event) => {
       />
     </div>
   </ItemTip>
-
-  <div v-else class="stepper">
-    <BaseIcon
-      name="IconMinus"
-      :color="'var(--primary-c)'"
-      :size="16"
-      @click="decrease"
-      :disabled="disableDecrease()"
-      class="increase-decrease-icon"
-    />
-    <span class="value" @dblclick="handleReset" @wheel="changeValue">{{ value }}</span>
-    <BaseIcon
-      name="IconPlus"
-      :color="'var(--primary-c)'"
-      :size="16"
-      @click="increase"
-      :disabled="disableIncrease()"
-      class="increase-decrease-icon"
-    />
-  </div>
 </template>
 
 <style scoped>

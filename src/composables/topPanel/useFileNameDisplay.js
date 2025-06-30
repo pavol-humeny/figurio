@@ -7,19 +7,20 @@ export function useFileNameDisplay(imageStore, t) {
   // const fileNameInput = computed(() => imageStore.fileName)
   const inputRef = ref(null)
 
-  watch(() => imageStore.fileName, (newName) => {
-    fileNameInput.value = newName
-  })
+  watch(
+    () => imageStore.fileName,
+    (newName) => {
+      fileNameInput.value = newName
+    },
+  )
 
-  const disabled = computed(() => {
-    return !imageStore.isImageLoaded()
-  })
+  const disabled = computed(() => !imageStore.isImageLoaded)
 
   const saveNewFileName = () => {
     editEnabled.value = false
 
     const success = imageStore.setFileName(fileNameInput.value, t)
-    if (success){
+    if (success) {
       nextTick(() => {
         inputRef.value?.blur()
       })
@@ -39,6 +40,6 @@ export function useFileNameDisplay(imageStore, t) {
     fileNameInput,
     inputRef,
     startEditing,
-    saveNewFileName
+    saveNewFileName,
   }
 }
