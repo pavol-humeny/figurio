@@ -152,42 +152,48 @@ export function useSmartCropTool(imageStore, historyStore, editorStore, t) {
       }
     }
 
-    imageStore.imageOperations.smartCrop.enabled = true
+    const color = selectedColor.value
 
-    const newCrop = { ...cropBox.value }
-    const prevCrop = imageStore.imageOperations.smartCrop.cropBox
-    if (prevCrop) {
-      newCrop.leftIndent += prevCrop.leftIndent || 0
-      newCrop.topIndent += prevCrop.topIndent || 0
-    }
-    imageStore.imageOperations.smartCrop.cropBox = newCrop
+    imageStore.imageOperations.smartCrop.enabled = true
+    imageStore.imageOperations.smartCrop.color = color
+    // const newCrop = { ...cropBox.value }
+    // const prevCrop = imageStore.imageOperations.smartCrop.cropBox
+    // if (prevCrop) {
+    //   newCrop.leftIndent += prevCrop.leftIndent || 0
+    //   newCrop.topIndent += prevCrop.topIndent || 0
+    // }
+    imageStore.imageOperations.smartCrop.cropBox = cropBox.value
+
+    applyAutoSmartCropRender(cropBox.value)
 
     historyStore.push(imageStore.getSnapshot())
   }
 
-  const applyAutoSmartCropRender = async () => {
-    calculateIndents()
-    await applyCrop()
+  const applyAutoSmartCropRender = async (cropBox) => {
+    calculateIndents(selectedColor.value)
+    await applyCrop(cropBox)
   }
 
   const showAutoSmartCrop = () => {
-    calculateIndents()
+    calculateIndents(selectedColor.value)
     isCropShown.value = !isCropShown.value
 
     if (isCropShown.value) {
       editorStore.selectSubTool('isCropShown')
     } else {
       editorStore.selectSubTool('')
-      // resetCropBox()
     }
   }
 
   const applyManualSmartCrop = async () => {
     console.log('Applying manual smart crop with crop box:', cropBox.value)
-    await applyCrop()
+    await applyCrop(cropBox.value)
+
+    historyStore.push(imageStore.getSnapshot())
   }
 
-  const calculateIndents = () => {
+  const calculateIndents = (color) => {
+    console.log('Calculating indents for color:', color)
     if (!imageStore.renderedImage) return
 
     const canvas = document.createElement('canvas')
@@ -224,7 +230,7 @@ export function useSmartCropTool(imageStore, historyStore, editorStore, t) {
       )
     }
 
-    const targetColor = parseHex(selectedColor.value)
+    const targetColor = parseHex(color)
 
     // Top
     let top = 0
@@ -294,9 +300,11 @@ export function useSmartCropTool(imageStore, historyStore, editorStore, t) {
 
     cropBox.value.width = imageStore.fileDimensions.width - leftIndent.value - rightIndent.value
     cropBox.value.height = imageStore.fileDimensions.height - topIndent.value - bottomIndent.value
+
+    return cropBox.value
   }
 
-  const applyCrop = async () => {
+  const applyCrop = async (cropBox) => {
     if (!imageStore.renderedImage) return
 
     // Create confirm modal to confirm rasterization if there are SVG objects
@@ -314,7 +322,7 @@ export function useSmartCropTool(imageStore, historyStore, editorStore, t) {
       }
     }
 
-    const { topIndent, leftIndent, width, height } = imageStore.imageOperations.smartCrop.cropBox
+    const { topIndent, leftIndent, width, height } = cropBox
 
     const canvas = document.createElement('canvas')
     const ctx = canvas.getContext('2d')
@@ -368,5 +376,6 @@ export function useSmartCropTool(imageStore, historyStore, editorStore, t) {
     applyAutoSmartCrop,
     applyAutoSmartCropRender,
     applyManualSmartCrop,
+    calculateIndents,
   }
 }

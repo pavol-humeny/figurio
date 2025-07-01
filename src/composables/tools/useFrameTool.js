@@ -53,7 +53,6 @@ export function useFrameTool(imageStore, historyStore, editorStore, t) {
   }
 
   const applyFrame = () => {
-    console.log('Applying frame with color:', frameColor.value, 'and width:', frameWidth.value)
     const width = frameWidth.value
     const color = frameColor.value
     const type = selectedFrameVariant.value
@@ -62,7 +61,6 @@ export function useFrameTool(imageStore, historyStore, editorStore, t) {
     imageStore.imageOperations.frame.type = type
     imageStore.imageOperations.frame.enabled = true
 
-    console.log('Width:', width, 'Color:', color, 'Type:', type)
     if (selectedFrameVariant.value === 'none') {
       imageStore.imageOperations.frame.enabled = false
       imageStore.imageOperations.frame.width = 0
@@ -101,6 +99,8 @@ export function useFrameTool(imageStore, historyStore, editorStore, t) {
         imageStore.imageOperations.frame.headerSize,
       )
     }
+
+
 
     historyStore.push(imageStore.getSnapshot())
   }

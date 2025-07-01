@@ -9,6 +9,8 @@ export function useFlipTool(imageStore, historyStore) {
         !imageStore.imageOperations.transformations.flipVertical
     }
 
+    applyFlipRender(direction)
+
     historyStore.push(imageStore.getSnapshot())
   }
 

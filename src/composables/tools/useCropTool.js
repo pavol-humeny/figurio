@@ -470,15 +470,17 @@ export function useCropTool(imageStore, viewportStore, editorStore, historyStore
       await imageStore.rasterize()
     }
 
-    const newCrop = { ...cropBox.value }
+    // const newCrop = { ...cropBox.value }
 
-    const prevCrop = imageStore.imageOperations.transformations.cropBox
-    if (prevCrop) {
-      newCrop.x += prevCrop.x || 0
-      newCrop.y += prevCrop.y || 0
-    }
+    // const prevCrop = imageStore.imageOperations.transformations.cropBox
+    // if (prevCrop) {
+    //   newCrop.x += prevCrop.x || 0
+    //   newCrop.y += prevCrop.y || 0
+    // }
 
-    imageStore.imageOperations.transformations.cropBox = newCrop
+    imageStore.imageOperations.transformations.cropBox = cropBox.value
+
+    applyCropRender(cropBox.value)
 
     historyStore.push(imageStore.getSnapshot())
   }

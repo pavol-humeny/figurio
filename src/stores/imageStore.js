@@ -86,6 +86,7 @@ export const useImageStore = defineStore('imageStore', {
       },
       smartCrop: {
         enabled: false,
+        color: '#000000', // Default color for smart crop
         cropBox: null,
       },
       frame: {
@@ -117,6 +118,7 @@ export const useImageStore = defineStore('imageStore', {
         },
         smartCrop: {
           enabled: operations.smartCrop?.enabled || false,
+          color: operations.smartCrop?.color || '#000000', // Default color for smart crop
           cropBox: operations.smartCrop?.cropBox || null,
         },
         frame: {
@@ -147,6 +149,7 @@ export const useImageStore = defineStore('imageStore', {
         },
         smartCrop: {
           enabled: false,
+          color: '#000000', // Default color for smart crop
           cropBox: null,
         },
         frame: {
@@ -579,10 +582,10 @@ export const useImageStore = defineStore('imageStore', {
       const snapshot = {
         fileName: this.fileName,
         fileDimensions: JSON.parse(JSON.stringify(this.fileDimensions)),
-        originalFileDimensions: JSON.parse(JSON.stringify(this.originalFileDimensions)),
+        // originalFileDimensions: JSON.parse(JSON.stringify(this.originalFileDimensions)),
         previewUrl: this.previewUrl,
-        // renderedImage: this.renderedImage?.toDataURL() || null,
-        originalImage: this.originalImage?.toDataURL() || null,
+        renderedImage: this.renderedImage?.toDataURL() || null,
+        // originalImage: this.originalImage?.toDataURL() || null,
         svgObjects: JSON.parse(JSON.stringify(this.svgObjects)),
         imageOperations: JSON.parse(JSON.stringify(this.imageOperations)),
       }
@@ -596,27 +599,12 @@ export const useImageStore = defineStore('imageStore', {
 
       this.fileName = snapshot.fileName
       this.fileDimensions = JSON.parse(JSON.stringify(snapshot.fileDimensions))
-      this.originalFileDimensions = JSON.parse(JSON.stringify(snapshot.fileDimensions))
+      // this.originalFileDimensions = JSON.parse(JSON.stringify(snapshot.fileDimensions))
       this.previewUrl = snapshot.previewUrl
       this.svgObjects = JSON.parse(JSON.stringify(snapshot.svgObjects))
       this.imageOperations = JSON.parse(JSON.stringify(snapshot.imageOperations))
 
-      // if (snapshot.renderedImage) {
-      //   const img = new Image()
-      //   img.onload = () => {
-      //     const canvas = document.createElement('canvas')
-      //     canvas.width = img.width
-      //     canvas.height = img.height
-      //     const ctx = canvas.getContext('2d')
-      //     ctx.drawImage(img, 0, 0)
-      //     this.renderedImage = canvas
-      //   }
-      //   img.src = snapshot.renderedImage
-      // } else {
-      //   this.renderedImage = null
-      // }
-
-      if (snapshot.originalImage) {
+      if (snapshot.renderedImage) {
         const img = new Image()
         img.onload = () => {
           const canvas = document.createElement('canvas')
@@ -624,12 +612,27 @@ export const useImageStore = defineStore('imageStore', {
           canvas.height = img.height
           const ctx = canvas.getContext('2d')
           ctx.drawImage(img, 0, 0)
-          this.originalImage = canvas
+          this.renderedImage = canvas
         }
-        img.src = snapshot.originalImage
+        img.src = snapshot.renderedImage
       } else {
-        this.originalImage = null
+        this.renderedImage = null
       }
+
+      // if (snapshot.originalImage) {
+      //   const img = new Image()
+      //   img.onload = () => {
+      //     const canvas = document.createElement('canvas')
+      //     canvas.width = img.width
+      //     canvas.height = img.height
+      //     const ctx = canvas.getContext('2d')
+      //     ctx.drawImage(img, 0, 0)
+      //     this.originalImage = canvas
+      //   }
+      //   img.src = snapshot.originalImage
+      // } else {
+      //   this.originalImage = null
+      // }
 
       console.log('[applySnapshot] imageOperations (after apply):', this.imageOperations)
     },

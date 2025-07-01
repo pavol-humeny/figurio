@@ -35,8 +35,10 @@ const {
   newPresetRotation,
   newPresetHorizontalFlip,
   newPresetVerticalFlip,
-  newPresetSmartCrop,
+  newPresetSmartCropEnabled,
+  newPresetSmartCropColor,
   newPresetFrame,
+  newPresetGrayScale,
   presetIsModified,
   presetsOptions,
   localPresetName,
@@ -122,11 +124,32 @@ const tabs = ['myPresets', 'createPreset']
         </div>
         <div class="settings-content-wrapper" :class="{ disabled: newPresetName === '' }">
           <div class="content-wrapper">
+            <div class="content-title">
+              <p>
+                {{ $t('tools.preset.settings.createPreset.presetValues.smartCrop.label') }}
+              </p>
+            </div>
             <div class="content-text-input">
               <p>
-                {{ $t('tools.preset.settings.createPreset.presetValues.smartCrop') }}
+                {{ $t('tools.preset.settings.createPreset.presetValues.smartCrop.enabled') }}
               </p>
-              <ToggleButton v-model="newPresetSmartCrop" :scale="0.6" />
+              <ToggleButton v-model="newPresetSmartCropEnabled" :scale="0.6" />
+            </div>
+            <div class="content-text-input" :class="{ disabled: !newPresetSmartCropEnabled }">
+              <p>
+                {{ $t('tools.preset.settings.createPreset.presetValues.smartCrop.color') }}
+              </p>
+              <ColorPicker v-model="newPresetSmartCropColor" />
+            </div>
+          </div>
+        </div>
+        <div class="settings-content-wrapper" :class="{ disabled: newPresetName === '' }">
+          <div class="content-wrapper">
+            <div class="content-text-input">
+              <p>
+                {{ $t('tools.preset.settings.createPreset.presetValues.grayScale') }}
+              </p>
+              <ToggleButton v-model="newPresetGrayScale" :scale="0.6" />
             </div>
           </div>
         </div>
@@ -290,11 +313,36 @@ const tabs = ['myPresets', 'createPreset']
           :class="{ disabled: !presetModifying }"
         >
           <div class="content-wrapper">
+            <div class="content-title">
+              <p>
+                {{ $t('tools.preset.settings.myPresets.presetValues.smartCrop.label') }}
+              </p>
+            </div>
             <div class="content-text-input">
               <p>
-                {{ $t('tools.preset.settings.myPresets.presetValues.smartCrop') }}
+                {{ $t('tools.preset.settings.myPresets.presetValues.smartCrop.enabled') }}
               </p>
               <ToggleButton v-model="localImageOperations.smartCrop.enabled" :scale="0.6" />
+            </div>
+            <div class="content-text-input">
+              <p>
+                {{ $t('tools.preset.settings.myPresets.presetValues.smartCrop.color') }}
+              </p>
+              <ColorPicker v-model="localImageOperations.smartCrop.color" />
+            </div>
+          </div>
+        </div>
+        <div
+          v-if="selectedPresetName !== ''"
+          class="settings-content-wrapper"
+          :class="{ disabled: !presetModifying }"
+        >
+          <div class="content-wrapper">
+            <div class="content-text-input">
+              <p>
+                {{ $t('tools.preset.settings.myPresets.presetValues.grayScale') }}
+              </p>
+              <ToggleButton v-model="localImageOperations.grayScale.enabled" :scale="0.6" />
             </div>
           </div>
         </div>

@@ -223,7 +223,12 @@
             "horizontalFlip": "Horizontální otočení",
             "verticalFlip": "Vertikální otočení"
           },
-          "smartCrop": "Chytré oříznutí",
+          "smartCrop": {
+            "label": "Chytré oříznutí",
+            "enabled": "Povoleno",
+            "color": "Barva"
+          },
+          "grayScale": "Grayscale",
           "frame": {
             "label": "Rámeček",
             "enabled": "Povoleno",
@@ -266,7 +271,12 @@
             "horizontalFlip": "Horizontální otočení",
             "verticalFlip": "Vertikální otočení"
           },
-          "smartCrop": "Chytré oříznutí",
+          "smartCrop": {
+            "label": "Chytré oříznutí",
+            "enabled": "Povoleno",
+            "color": "Barva"
+          },
+          "grayScale": "Grayscale",
           "frame": {
             "label": "Rámeček",
             "enabled": "Povoleno",

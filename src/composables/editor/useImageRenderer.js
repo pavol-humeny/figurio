@@ -1,10 +1,10 @@
 import { onMounted, watch, ref, nextTick } from 'vue'
-import { useFlipTool } from '../tools/useFlipTool'
-import { useRotateTool } from '../tools/useRotateTool'
 import { useFrameTool } from '../tools/useFrameTool'
-import { useSmartCropTool } from '../tools/useSmartCropTool'
-import { useCropTool } from '../tools/useCropTool'
-import { useGrayscaleTool } from '../tools/useGrayscaleTool'
+// import { useFlipTool } from '../tools/useFlipTool'
+// import { useRotateTool } from '../tools/useRotateTool'
+// import { useSmartCropTool } from '../tools/useSmartCropTool'
+// import { useCropTool } from '../tools/useCropTool'
+// import { useGrayscaleTool } from '../tools/useGrayscaleTool'
 // import { useConfirmModal } from '@/composables/modals/useConfirmModal'
 // import { useToastModal } from '@/composables/modals/useToastModal'
 
@@ -154,7 +154,7 @@ export function useImageRenderer(
       canvasHeight,
     )
   }
-  const renderAll = async () => {
+  const renderAll = () => {
     updateSizes()
     renderCanvas()
     renderFrameCanvas()
@@ -169,64 +169,86 @@ export function useImageRenderer(
     })
   })
 
+  // watch on imageStore.renderedImage
   watch(
-    () => [imageStore.originalImage, imageStore.imageOperations],
-    async () => {
-      imageStore.renderedImage = imageStore.originalImage
-      imageStore.fileDimensions = { ...imageStore.originalFileDimensions }
-
-      console.log('[watch] Original image or operations changed, applying operations')
-
-      // Crop operation
-      if (imageStore.imageOperations.transformations.cropBox) {
-        console.log('Applying crop operation:', imageStore.imageOperations.transformations.cropBox)
-
-        useCropTool(imageStore, historyStore, t).applyCropRender(
-          imageStore.imageOperations.transformations.cropBox,
-        )
+    () => imageStore.renderedImage,
+    (newImage) => {
+      if (newImage) {
+        renderAll()
       }
+    },
+  )
 
-      // Rotation operation
-      if (imageStore.imageOperations.transformations.rotationAngle !== 0) {
-        console.log(
-          'Applying rotation operation:',
-          imageStore.imageOperations.transformations.rotationAngle,
-        )
-
-        useRotateTool(imageStore, historyStore, t).applyRotationRender(
-          imageStore.imageOperations.transformations.rotationAngle,
-        )
+  //watch on imageStore.imageOperations.frame
+  watch(
+    () => imageStore.imageOperations.frame,
+    (newFrame) => {
+      if (newFrame) {
+        console.log('Frame operations changed, re-rendering frame canvas')
+        renderFrameCanvas()
       }
-
-      // Flip operation
-      if (imageStore.imageOperations.transformations.flipHorizontal) {
-        console.log('Applying horizontal flip operation')
-
-        useFlipTool(imageStore, historyStore).applyFlipRender('horizontal')
-      }
-      if (imageStore.imageOperations.transformations.flipVertical) {
-        console.log('Applying vertical flip operation')
-
-        useFlipTool(imageStore, historyStore).applyFlipRender('vertical')
-      }
-
-      // SmartCrop operation
-      if (imageStore.imageOperations.smartCrop?.enabled) {
-        console.log('Applying smart crop operation')
-
-        await useSmartCropTool(imageStore, historyStore, editorStore, t).applyAutoSmartCropRender()
-      }
-
-      // GrayScale operation
-      if (imageStore.imageOperations.grayScale?.enabled) {
-        console.log('Applying grayscale operation')
-        await useGrayscaleTool(imageStore, historyStore, t).applyGrayScaleRender()
-      }
-
-      renderAll()
     },
     { deep: true },
   )
+
+  // watch(
+  //   () => [imageStore.originalImage, imageStore.imageOperations],
+  //   async () => {
+  //     imageStore.renderedImage = imageStore.originalImage
+  //     imageStore.fileDimensions = { ...imageStore.originalFileDimensions }
+
+  //     console.log('[watch] Original image or operations changed, applying operations')
+
+  //     // Crop operation
+      // if (imageStore.imageOperations.transformations.cropBox) {
+      //   console.log('Applying crop operation:', imageStore.imageOperations.transformations.cropBox)
+
+      //   useCropTool(imageStore, historyStore, t).applyCropRender(
+      //     imageStore.imageOperations.transformations.cropBox,
+      //   )
+      // }
+
+      // // Rotation operation
+      // if (imageStore.imageOperations.transformations.rotationAngle !== 0) {
+      //   console.log(
+      //     'Applying rotation operation:',
+      //     imageStore.imageOperations.transformations.rotationAngle,
+      //   )
+
+      //   useRotateTool(imageStore, historyStore, t).applyRotationRender(
+      //     imageStore.imageOperations.transformations.rotationAngle,
+      //   )
+      // }
+
+      // // Flip operation
+      // if (imageStore.imageOperations.transformations.flipHorizontal) {
+      //   console.log('Applying horizontal flip operation')
+
+      //   useFlipTool(imageStore, historyStore).applyFlipRender('horizontal')
+      // }
+      // if (imageStore.imageOperations.transformations.flipVertical) {
+      //   console.log('Applying vertical flip operation')
+
+      //   useFlipTool(imageStore, historyStore).applyFlipRender('vertical')
+      // }
+
+      // // SmartCrop operation
+      // if (imageStore.imageOperations.smartCrop?.enabled) {
+      //   console.log('Applying smart crop operation')
+
+      //   await useSmartCropTool(imageStore, historyStore, editorStore, t).applyAutoSmartCropRender()
+      // }
+
+      // // GrayScale operation
+      // if (imageStore.imageOperations.grayScale?.enabled) {
+      //   console.log('Applying grayscale operation')
+      //   await useGrayscaleTool(imageStore, historyStore, t).applyGrayScaleRender()
+      // }
+
+  //     renderAll()
+  //   },
+  //   { deep: true },
+  // )
 
   return {
     canvasRef,

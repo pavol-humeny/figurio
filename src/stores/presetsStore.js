@@ -57,6 +57,7 @@ export const usePresetsStore = defineStore('presetsStore', {
           },
           smartCrop: {
             enabled: false,
+            color: '#000000', // Default color for smart crop
           },
           frame: {
             enabled: false,

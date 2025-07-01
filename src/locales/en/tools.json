@@ -228,7 +228,12 @@
             "horizontalFlip": "Horizontal flip",
             "verticalFlip": "Vertical flip"
           },
-          "smartCrop": "Smart crop",
+          "smartCrop": {
+            "label": "Smart crop",
+            "enabled": "Enabled",
+            "color": "Color"
+          },
+          "grayScale": "Grayscale",
           "frame": {
             "label": "Frame",
             "enabled": "Enabled",
@@ -271,7 +276,12 @@
             "horizontalFlip": "Horizontal flip",
             "verticalFlip": "Vertical flip"
           },
-          "smartCrop": "Smart crop",
+          "smartCrop": {
+            "label": "Smart crop",
+            "enabled": "Enabled",
+            "color": "Color"
+          },
+          "grayScale": "Grayscale",
           "frame": {
             "label": "Frame",
             "enabled": "Enabled",

@@ -11,6 +11,8 @@ export function useGrayscaleTool(imageStore, historyStore, t) {
   const applyGrayScale = () => {
     imageStore.imageOperations.grayScale.enabled = true
 
+    applyGrayScaleRender()
+
     historyStore.push(imageStore.getSnapshot())
   }
 

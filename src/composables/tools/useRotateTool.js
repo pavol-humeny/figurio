@@ -3,6 +3,11 @@ import { useConfirmModal } from '../modals/useConfirmModal'
 export function useRotateTool(imageStore, historyStore, t) {
   const { showConfirmModal } = useConfirmModal()
 
+  function normalizeAngle(angle) {
+    angle = ((((angle + 180) % 360) + 360) % 360) - 180
+    return angle
+  }
+
   const applyRotation = async (angle) => {
     if (imageStore.svgObjects.length > 0) {
       const confirmed = await showConfirmModal(
@@ -18,6 +23,11 @@ export function useRotateTool(imageStore, historyStore, t) {
       }
     }
     imageStore.imageOperations.transformations.rotationAngle += angle
+    imageStore.imageOperations.transformations.rotationAngle = normalizeAngle(
+      imageStore.imageOperations.transformations.rotationAngle,
+    )
+
+    applyRotationRender(angle)
 
     historyStore.push(imageStore.getSnapshot())
   }

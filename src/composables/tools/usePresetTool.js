@@ -1,6 +1,10 @@
 import { ref, computed, watch, reactive, nextTick } from 'vue'
 import { useToastModal } from '../modals/useToastModal'
 import { useConfirmModal } from '../modals/useConfirmModal'
+import { useSmartCropTool } from '../tools/useSmartCropTool'
+import { useGrayscaleTool } from '../tools/useGrayscaleTool'
+import { useFlipTool } from '../tools/useFlipTool'
+import { useRotateTool } from '../tools/useRotateTool'
 
 export function usePresetTool(imageStore, historyStore, editorStore, presetsStore, t) {
   const { showToastModal } = useToastModal()
@@ -38,6 +42,7 @@ export function usePresetTool(imageStore, historyStore, editorStore, presetsStor
   const localImageOperations = reactive({
     transformations: {},
     smartCrop: {},
+    grayScale: {},
     frame: {},
   })
 
@@ -45,7 +50,10 @@ export function usePresetTool(imageStore, historyStore, editorStore, presetsStor
   const newPresetRotation = ref(0)
   const newPresetHorizontalFlip = ref(false)
   const newPresetVerticalFlip = ref(false)
-  const newPresetSmartCrop = ref(false)
+  const newPresetGrayScale = ref(false)
+  const newPresetSmartCropEnabled = ref(false)
+  const newPresetSmartCropColor = ref('#000000')
+
   const newPresetFrame = ref({
     enabled: false,
     type: 'frameSolid',
@@ -66,16 +74,20 @@ export function usePresetTool(imageStore, historyStore, editorStore, presetsStor
       localPresetName.value = preset.name
       originalPresetName.value = preset.name
 
+      // Transformations
       Object.assign(
         localImageOperations.transformations,
         preset.imageOperations.transformations || {},
       )
+      // SmartCrop
       Object.assign(localImageOperations.smartCrop, preset.imageOperations.smartCrop || {})
+      // GrayScale
+      localImageOperations.grayScale.enabled = preset.imageOperations.grayScale?.enabled || false
+      // Frame
       Object.assign(localImageOperations.frame, preset.imageOperations.frame || {})
 
       presetIsModified.value = false
 
-      // Odložené vypnutie inicializačného režimu (na ďalší tick)
       nextTick(() => {
         isInitializing.value = false
       })
@@ -91,6 +103,8 @@ export function usePresetTool(imageStore, historyStore, editorStore, presetsStor
       () => localImageOperations.transformations.flipHorizontal,
       () => localImageOperations.transformations.flipVertical,
       () => localImageOperations.smartCrop.enabled,
+      () => localImageOperations.smartCrop.color,
+      () => localImageOperations.grayScale,
       () => localImageOperations.frame.enabled,
       () => localImageOperations.frame.type,
       () => localImageOperations.frame.color,
@@ -157,10 +171,14 @@ export function usePresetTool(imageStore, historyStore, editorStore, presetsStor
           flipVertical: newPresetVerticalFlip.value,
         },
         smartCrop: {
-          enabled: newPresetSmartCrop.value,
+          enabled: newPresetSmartCropEnabled.value,
+          color: newPresetSmartCropColor.value,
         },
         frame: {
           ...newPresetFrame.value,
+        },
+        grayScale: {
+          enabled: newPresetGrayScale.value,
         },
       }
 
@@ -241,6 +259,8 @@ export function usePresetTool(imageStore, historyStore, editorStore, presetsStor
 
     imageStore.setImageOperations(presetsStore.selectedPreset.imageOperations)
 
+    applyOperationsOnOriginalImage()
+
     historyStore.push(imageStore.getSnapshot())
 
     showToastModal(
@@ -250,6 +270,55 @@ export function usePresetTool(imageStore, historyStore, editorStore, presetsStor
         presetName: selectedPresetName.value,
       }),
     )
+  }
+
+  const applyOperationsOnOriginalImage = async () => {
+    imageStore.renderedImage = imageStore.originalImage
+    imageStore.fileDimensions = { ...imageStore.originalFileDimensions }
+
+    // Rotation operation
+    if (imageStore.imageOperations.transformations.rotationAngle !== 0) {
+      console.log(
+        'Preset - Applying rotation operation:',
+        imageStore.imageOperations.transformations.rotationAngle,
+      )
+      useRotateTool(imageStore, historyStore, t).applyRotationRender(
+        imageStore.imageOperations.transformations.rotationAngle,
+      )
+    }
+    // Flip operation
+    if (imageStore.imageOperations.transformations.flipHorizontal) {
+      console.log('Preset - Applying horizontal flip operation')
+
+      useFlipTool(imageStore, historyStore).applyFlipRender('horizontal')
+    }
+    if (imageStore.imageOperations.transformations.flipVertical) {
+      console.log('Preset - Applying vertical flip operation')
+
+      useFlipTool(imageStore, historyStore).applyFlipRender('vertical')
+    }
+
+    // SmartCrop operation
+    if (imageStore.imageOperations.smartCrop?.enabled) {
+      console.log('Preset - Applying smart crop operation')
+
+
+      const cropBox = useSmartCropTool(imageStore, historyStore, editorStore, t).calculateIndents(
+        imageStore.imageOperations.smartCrop.color,
+      )
+
+      console.log('Preset - Crop box calculated:', cropBox)
+
+      await useSmartCropTool(imageStore, historyStore, editorStore, t).applyAutoSmartCropRender(
+        cropBox,
+      )
+    }
+
+    // GrayScale operation
+    if (imageStore.imageOperations.grayScale?.enabled) {
+      console.log('Preset - Applying grayscale operation')
+      await useGrayscaleTool(imageStore, historyStore, t).applyGrayScaleRender()
+    }
   }
 
   const modifyPreset = () => {
@@ -290,7 +359,9 @@ export function usePresetTool(imageStore, historyStore, editorStore, presetsStor
     newPresetRotation.value = imageStore.imageOperations.transformations.rotationAngle
     newPresetHorizontalFlip.value = imageStore.imageOperations.transformations.flipHorizontal
     newPresetVerticalFlip.value = imageStore.imageOperations.transformations.flipVertical
-    newPresetSmartCrop.value = imageStore.imageOperations.smartCrop.enabled
+    newPresetSmartCropEnabled.value = imageStore.imageOperations.smartCrop.enabled
+    newPresetSmartCropColor.value = imageStore.imageOperations.smartCrop.color
+    newPresetGrayScale.value = imageStore.imageOperations.grayScale?.enabled || false
     newPresetFrame.value = {
       enabled: imageStore.imageOperations.frame.enabled,
       type: imageStore.imageOperations.frame.type,
@@ -318,7 +389,9 @@ export function usePresetTool(imageStore, historyStore, editorStore, presetsStor
     newPresetRotation,
     newPresetHorizontalFlip,
     newPresetVerticalFlip,
-    newPresetSmartCrop,
+    newPresetGrayScale,
+    newPresetSmartCropEnabled,
+    newPresetSmartCropColor,
     newPresetFrame,
     presetIsModified,
     presetsOptions,
