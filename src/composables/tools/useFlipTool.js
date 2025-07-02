@@ -2,11 +2,15 @@ export function useFlipTool(imageStore, historyStore) {
   const applyFlip = (direction) => {
     // imageStore.addTransformation({ type: 'flip', value: direction })
     if (direction === 'horizontal') {
-      imageStore.imageOperations.transformations.flipHorizontal =
-        !imageStore.imageOperations.transformations.flipHorizontal
+      imageStore.addImageOperation({
+        type: 'flip',
+        direction: 'horizontal',
+      })
     } else if (direction === 'vertical') {
-      imageStore.imageOperations.transformations.flipVertical =
-        !imageStore.imageOperations.transformations.flipVertical
+      imageStore.addImageOperation({
+        type: 'flip',
+        direction: 'vertical',
+      })
     }
 
     applyFlipRender(direction)

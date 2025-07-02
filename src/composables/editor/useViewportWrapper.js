@@ -104,8 +104,8 @@ export function useViewportWrapper(viewportStore, imageStore, editorStore, conte
   const fitToScreenZoomLevel = () => {
     updateInitialDimensions()
 
-    const frameWidth = imageStore.imageOperations.frame?.enabled
-      ? imageStore.imageOperations.frame.width
+    const frameWidth = imageStore.frame?.enabled
+      ? imageStore.frame.width
       : 0
 
     const scaleX = wrapperWidth.value / (contentWidth.value + frameWidth * 2)
@@ -317,7 +317,7 @@ export function useViewportWrapper(viewportStore, imageStore, editorStore, conte
 
   // Watch for changes in frame
   watch(
-    () => imageStore.imageOperations.frame,
+    () => imageStore.frame,
     () => {
       nextTick(() => {
         fitToScreenZoomLevel()

@@ -1,19 +1,10 @@
-import { ref, computed, watch, reactive, nextTick } from 'vue'
-import { useToastModal } from '../modals/useToastModal'
-import { useConfirmModal } from '../modals/useConfirmModal'
-import { useSmartCropTool } from '../tools/useSmartCropTool'
-import { useGrayscaleTool } from '../tools/useGrayscaleTool'
-import { useFlipTool } from '../tools/useFlipTool'
-import { useRotateTool } from '../tools/useRotateTool'
+import { ref, computed, watch } from 'vue'
 
 export function usePresetTool(imageStore, historyStore, editorStore, presetsStore, t) {
-  const { showToastModal } = useToastModal()
-  const { showConfirmModal } = useConfirmModal()
-
-  const presetNameInputRef = ref(null)
-  const presetFrameWidthRef = ref(null)
-  const presetIsModified = ref(false)
-  const presetModifying = ref(false)
+  // myPresets
+  const isPresetModified = ref(false)
+  const isModifyingPreset = ref(false)
+  const initializing = ref(false)
 
   const presetsOptions = computed(() => {
     return presetsStore.allPresetNames.map((name) => ({
@@ -22,100 +13,102 @@ export function usePresetTool(imageStore, historyStore, editorStore, presetsStor
     }))
   })
 
-  const selectedPresetName = ref(presetsStore.selectedPresetName)
-
-  watch(selectedPresetName, (newName) => {
-    presetsStore.selectPreset(newName)
-  })
-
-  watch(
-    () => presetsStore.selectedPresetName,
-    (newName) => {
-      selectedPresetName.value = newName
-      presetIsModified.value = false
+  const selectedPresetName = computed({
+    get: () => presetsStore.selectedPresetName,
+    set: (name) => {
+      presetsStore.selectPreset(name)
     },
-  )
+  })
 
   const localPresetName = ref('')
-  const originalPresetName = ref('')
-
-  const localImageOperations = reactive({
-    transformations: {},
-    smartCrop: {},
-    grayScale: {},
-    frame: {},
-  })
-
-  const newPresetName = ref('')
-  const newPresetRotation = ref(0)
-  const newPresetHorizontalFlip = ref(false)
-  const newPresetVerticalFlip = ref(false)
-  const newPresetGrayScale = ref(false)
-  const newPresetSmartCropEnabled = ref(false)
-  const newPresetSmartCropColor = ref('#000000')
-
-  const newPresetFrame = ref({
-    enabled: false,
-    type: 'frameSolid',
-    color: '#000000',
-    width: 0,
-    height: 0,
-  })
-
-  const isInitializing = ref(false)
+  const localImageOperations = ref({})
 
   watch(
     () => presetsStore.selectedPreset,
     (preset) => {
       if (!preset) return
 
-      isInitializing.value = true
+      initializing.value = true
 
       localPresetName.value = preset.name
-      originalPresetName.value = preset.name
+      localImageOperations.value = JSON.parse(JSON.stringify(preset.imageOperations))
 
-      // Transformations
-      Object.assign(
-        localImageOperations.transformations,
-        preset.imageOperations.transformations || {},
-      )
-      // SmartCrop
-      Object.assign(localImageOperations.smartCrop, preset.imageOperations.smartCrop || {})
-      // GrayScale
-      localImageOperations.grayScale.enabled = preset.imageOperations.grayScale?.enabled || false
-      // Frame
-      Object.assign(localImageOperations.frame, preset.imageOperations.frame || {})
+      isPresetModified.value = false
 
-      presetIsModified.value = false
-
-      nextTick(() => {
-        isInitializing.value = false
-      })
+      initializing.value = false
     },
     { immediate: true },
   )
 
-  // Watch for changes to set presetIsModified
   watch(
-    [
-      () => localPresetName.value,
-      () => localImageOperations.transformations.rotationAngle,
-      () => localImageOperations.transformations.flipHorizontal,
-      () => localImageOperations.transformations.flipVertical,
-      () => localImageOperations.smartCrop.enabled,
-      () => localImageOperations.smartCrop.color,
-      () => localImageOperations.grayScale,
-      () => localImageOperations.frame.enabled,
-      () => localImageOperations.frame.type,
-      () => localImageOperations.frame.color,
-      () => localImageOperations.frame.width,
-    ],
+    [() => localPresetName.value, () => localImageOperations.value],
     () => {
-      if (!isInitializing.value) {
-        presetIsModified.value = true
-      }
+      if (initializing.value) return
+      isPresetModified.value = true
     },
+    { deep: true },
   )
+
+  const modifyPreset = () => {
+    isModifyingPreset.value = true
+  }
+
+  const savePresetChanges = () => {
+    presetsStore.updatePreset(
+      presetsStore.selectedPresetName,
+      localPresetName.value,
+      JSON.parse(JSON.stringify(localImageOperations.value)),
+    )
+    isPresetModified.value = false
+    isModifyingPreset.value = false
+  }
+
+  const closeModifyPreset = () => {
+    isModifyingPreset.value = false
+    isPresetModified.value = false
+  }
+
+  const deletePreset = () => {
+    presetsStore.deletePreset(presetsStore.selectedPresetName)
+    isModifyingPreset.value = false
+    isPresetModified.value = false
+    selectedPresetName.value = '' // Reset selected preset name
+    localPresetName.value = ''
+    localImageOperations.value = {}
+  }
+
+  // createPreset
+
+  const frameWidthRef = ref(null)
+  const presetNameRef = ref(null)
+
+  const newPreset = ref({
+    presetName: '',
+    transformations: {
+      rotationAngle: 0,
+      horizontalFlip: false,
+      verticalFlip: false,
+    },
+    smartCrop: {
+      enabled: false,
+      color: '#000000',
+    },
+    grayscale: {
+      enabled: false,
+    },
+    frame: {
+      type: 'none',
+      color: '#000000',
+      width: 0,
+    },
+    // UPDATE
+  })
+
+  const isShowManualPresetSetting = ref(false)
+
+  const showManualPresetSetting = () => {
+    isShowManualPresetSetting.value = true
+  }
 
   const presetRotationOptions = [
     { label: '-180°', value: -180 },
@@ -145,259 +138,100 @@ export function usePresetTool(imageStore, historyStore, editorStore, presetsStor
     },
   ])
 
-  const setFrameWidth = (width) => {
-    if (width <= 0) {
-      width = 0
-      newPresetFrame.value.width = width
-    } else {
-      newPresetFrame.value.width = width
+  const resetPreset = () => {
+    newPreset.value = {
+      presetName: '',
+      transformations: {
+        rotationAngle: 0,
+        horizontalFlip: false,
+        verticalFlip: false,
+      },
+      smartCrop: {
+        enabled: false,
+        color: '#000000',
+      },
+      grayscale: {
+        enabled: false,
+      },
+      frame: {
+        type: 'none',
+        color: '#000000',
+        width: 0,
+      },
+      // UPDATE
     }
-    presetFrameWidthRef.value.setValue(width)
+
+    isShowManualPresetSetting.value = false
   }
 
   const createPreset = () => {
-    const name = newPresetName.value.trim()
+    console.log('Creating preset:', newPreset.value.presetName)
 
-    if (!name) return
-
-    const created = presetsStore.createPreset(name)
-
-    if (created) {
-      // Skladáme imageOperations z new* premenných
-      const newImageOperations = {
-        transformations: {
-          rotationAngle: newPresetRotation.value,
-          flipHorizontal: newPresetHorizontalFlip.value,
-          flipVertical: newPresetVerticalFlip.value,
-        },
-        smartCrop: {
-          enabled: newPresetSmartCropEnabled.value,
-          color: newPresetSmartCropColor.value,
-        },
-        frame: {
-          ...newPresetFrame.value,
-        },
-        grayScale: {
-          enabled: newPresetGrayScale.value,
-        },
-      }
-
-      // Update
-      presetsStore.updatePreset(name, name, newImageOperations)
-
-      showToastModal(
-        'success',
-        t('tools.preset.settings.createPreset.presetSuccessfullyCreated.title'),
-        t('tools.preset.settings.createPreset.presetSuccessfullyCreated.message', {
-          presetName: name,
-        }),
-      )
-
-      newPresetName.value = ''
-    } else {
-      showToastModal(
-        'error',
-        t('tools.preset.settings.createPreset.invalidPresetName.title'),
-        t('tools.preset.settings.createPreset.invalidPresetName.message'),
-      )
-      presetNameInputRef.value.setValue('')
+    const imageOperations = {
+      transformations: {
+        rotationAngle: newPreset.value.transformations.rotationAngle,
+        horizontalFlip: newPreset.value.transformations.horizontalFlip,
+        verticalFlip: newPreset.value.transformations.verticalFlip,
+      },
+      smartCrop: {
+        enabled: newPreset.value.smartCrop.enabled,
+        color: newPreset.value.smartCrop.color,
+      },
+      grayscale: {
+        enabled: newPreset.value.grayscale.enabled,
+      },
+      frame: {
+        type: newPreset.value.frame.type,
+        color: newPreset.value.frame.color,
+        width: newPreset.value.frame.width,
+      },
+      // UPDATE
     }
-  }
 
-  const savePreset = () => {
-    if (!originalPresetName.value) return
-
-    const success = presetsStore.updatePreset(
-      originalPresetName.value,
-      localPresetName.value,
-      JSON.parse(JSON.stringify(localImageOperations)),
+    presetsStore.createPreset(
+      structuredClone(newPreset.value.presetName),
+      structuredClone(imageOperations),
     )
 
-    if (success) {
-      showToastModal(
-        'success',
-        t('tools.preset.settings.myPresets.presetSuccessfullySaved.title'),
-        t('tools.preset.settings.myPresets.presetSuccessfullySaved.message', {
-          presetName: localPresetName.value,
-        }),
-      )
-      presetIsModified.value = false
-      presetModifying.value = false
-    } else {
-      showToastModal(
-        'error',
-        t('tools.preset.settings.createPreset.invalidPresetName.title'),
-        t('tools.preset.settings.createPreset.invalidPresetName.message'),
-      )
-    }
+    resetPreset()
   }
 
-  const applyPreset = () => {
-    // Check if preset is identical to current operations
-    const currentOps = imageStore.getImageOperations()
-    const newOps = JSON.parse(JSON.stringify(presetsStore.selectedPreset.imageOperations))
-
-    // Reset cropBox to null in both for fair comparison
-    currentOps.transformations.cropBox = null
-    newOps.transformations.cropBox = null
-    if (newOps.frame.enabled && newOps.frame.width !== 0 && newOps.frame.height === 0) {
-      newOps.frame.height = newOps.frame.width
-    }
-
-    const isEqual = JSON.stringify(currentOps) === JSON.stringify(newOps)
-
-    if (isEqual) {
-      showToastModal(
-        'info',
-        t('tools.preset.settings.myPresets.presetAlreadyApplied.title'),
-        t('tools.preset.settings.myPresets.presetAlreadyApplied.message', {
-          presetName: selectedPresetName.value,
-        }),
-      )
-      return
-    }
-
-    imageStore.setImageOperations(presetsStore.selectedPreset.imageOperations)
-
-    applyOperationsOnOriginalImage()
-
-    historyStore.push(imageStore.getSnapshot())
-
-    showToastModal(
-      'success',
-      t('tools.preset.settings.myPresets.successfullyApplied.title'),
-      t('tools.preset.settings.myPresets.successfullyApplied.message', {
-        presetName: selectedPresetName.value,
-      }),
-    )
-  }
-
-  const applyOperationsOnOriginalImage = async () => {
-    imageStore.renderedImage = imageStore.originalImage
-    imageStore.fileDimensions = { ...imageStore.originalFileDimensions }
-
-    // Rotation operation
-    if (imageStore.imageOperations.transformations.rotationAngle !== 0) {
-      console.log(
-        'Preset - Applying rotation operation:',
-        imageStore.imageOperations.transformations.rotationAngle,
-      )
-      useRotateTool(imageStore, historyStore, t).applyRotationRender(
-        imageStore.imageOperations.transformations.rotationAngle,
-      )
-    }
-    // Flip operation
-    if (imageStore.imageOperations.transformations.flipHorizontal) {
-      console.log('Preset - Applying horizontal flip operation')
-
-      useFlipTool(imageStore, historyStore).applyFlipRender('horizontal')
-    }
-    if (imageStore.imageOperations.transformations.flipVertical) {
-      console.log('Preset - Applying vertical flip operation')
-
-      useFlipTool(imageStore, historyStore).applyFlipRender('vertical')
-    }
-
-    // SmartCrop operation
-    if (imageStore.imageOperations.smartCrop?.enabled) {
-      console.log('Preset - Applying smart crop operation')
-
-
-      const cropBox = useSmartCropTool(imageStore, historyStore, editorStore, t).calculateIndents(
-        imageStore.imageOperations.smartCrop.color,
-      )
-
-      console.log('Preset - Crop box calculated:', cropBox)
-
-      await useSmartCropTool(imageStore, historyStore, editorStore, t).applyAutoSmartCropRender(
-        cropBox,
-      )
-    }
-
-    // GrayScale operation
-    if (imageStore.imageOperations.grayScale?.enabled) {
-      console.log('Preset - Applying grayscale operation')
-      await useGrayscaleTool(imageStore, historyStore, t).applyGrayScaleRender()
-    }
-  }
-
-  const modifyPreset = () => {
-    presetModifying.value = true
-  }
-
-  const closeModifying = () => {
-    presetModifying.value = false
-  }
-
-  const deletePreset = async () => {
-    const confirmed = await showConfirmModal(
-      t('tools.preset.settings.myPresets.deletePresetConfirmation.title'),
-      t('tools.preset.settings.myPresets.deletePresetConfirmation.message', {
-        presetName: selectedPresetName.value,
-      }),
-      t('tools.preset.settings.myPresets.deletePresetConfirmation.cancel'),
-      t('tools.preset.settings.myPresets.deletePresetConfirmation.confirm'),
-    )
-    if (!confirmed) {
-      return
-    }
-
-    presetsStore.deletePreset(selectedPresetName.value)
-
-    presetModifying.value = false
-
-    showToastModal(
-      'success',
-      t('tools.preset.settings.myPresets.presetSuccessfullyDeleted.title'),
-      t('tools.preset.settings.myPresets.presetSuccessfullyDeleted.message', {
-        presetName: selectedPresetName.value,
-      }),
-    )
+  const resetFrameWidth = () => {
+    newPreset.value.frame.width = 0
+    frameWidthRef.value.setValue(0)
   }
 
   const useCurrentModifications = () => {
-    newPresetRotation.value = imageStore.imageOperations.transformations.rotationAngle
-    newPresetHorizontalFlip.value = imageStore.imageOperations.transformations.flipHorizontal
-    newPresetVerticalFlip.value = imageStore.imageOperations.transformations.flipVertical
-    newPresetSmartCropEnabled.value = imageStore.imageOperations.smartCrop.enabled
-    newPresetSmartCropColor.value = imageStore.imageOperations.smartCrop.color
-    newPresetGrayScale.value = imageStore.imageOperations.grayScale?.enabled || false
-    newPresetFrame.value = {
-      enabled: imageStore.imageOperations.frame.enabled,
-      type: imageStore.imageOperations.frame.type,
-      color: imageStore.imageOperations.frame.color,
-      width: imageStore.imageOperations.frame.width,
-      height: imageStore.imageOperations.frame.height,
-    }
+    console.log('Using current modifications to create preset')
+
+    presetsStore.createPreset(
+      structuredClone(newPreset.value.presetName),
+      structuredClone(imageStore.getImageOperations()),
+    )
+
+    resetPreset()
   }
 
   return {
-    presetNameInputRef,
-    presetFrameWidthRef,
-    newPresetName,
+    newPreset,
     createPreset,
-    savePreset,
-    applyPreset,
-    modifyPreset,
-    presetModifying,
-    closeModifying,
-    setFrameWidth,
-    deletePreset,
-    useCurrentModifications,
+    isShowManualPresetSetting,
     presetRotationOptions,
     presetFrameOptions,
-    newPresetRotation,
-    newPresetHorizontalFlip,
-    newPresetVerticalFlip,
-    newPresetGrayScale,
-    newPresetSmartCropEnabled,
-    newPresetSmartCropColor,
-    newPresetFrame,
-    presetIsModified,
-    presetsOptions,
-    localPresetName,
-    originalPresetName,
-    localImageOperations,
+    frameWidthRef,
+    resetFrameWidth,
+    showManualPresetSetting,
+    useCurrentModifications,
+    presetNameRef,
     selectedPresetName,
+    localPresetName,
+    localImageOperations,
+    savePresetChanges,
+    isPresetModified,
+    presetsOptions,
+    isModifyingPreset,
+    modifyPreset,
+    deletePreset,
+    closeModifyPreset,
   }
 }

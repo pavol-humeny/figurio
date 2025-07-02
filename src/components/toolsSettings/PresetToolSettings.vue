@@ -18,32 +18,26 @@ const { t } = useI18n()
 const editorStore = useEditorStore()
 
 const {
-  presetNameInputRef,
-  presetFrameWidthRef,
-  newPresetName,
+  newPreset,
   createPreset,
-  savePreset,
-  setFrameWidth,
-  applyPreset,
-  modifyPreset,
-  closeModifying,
-  deletePreset,
-  useCurrentModifications,
-  presetModifying,
+  isShowManualPresetSetting,
   presetRotationOptions,
   presetFrameOptions,
-  newPresetRotation,
-  newPresetHorizontalFlip,
-  newPresetVerticalFlip,
-  newPresetSmartCropEnabled,
-  newPresetSmartCropColor,
-  newPresetFrame,
-  newPresetGrayScale,
-  presetIsModified,
-  presetsOptions,
+  frameWidthRef,
+  resetFrameWidth,
+  showManualPresetSetting,
+  useCurrentModifications,
+  presetNameRef,
+  selectedPresetName,
   localPresetName,
   localImageOperations,
-  selectedPresetName,
+  savePresetChanges,
+  isPresetModified,
+  presetsOptions,
+  isModifyingPreset,
+  modifyPreset,
+  deletePreset,
+  closeModifyPreset,
 } = usePresetTool(useImageStore(), useHistoryStore(), useEditorStore(), usePresetsStore(), t)
 
 const tabs = ['myPresets', 'createPreset']
@@ -52,171 +46,13 @@ const tabs = ['myPresets', 'createPreset']
 <template>
   <div class="tool-settings">
     <ToolsSettingsTabs :tabs="tabs" />
-
     <div class="settings-wrapper">
-      <div
-        v-if="editorStore.selectedTabPerTool[editorStore.selectedToolKey] === 'createPreset'"
-        class="specific-settings"
-      >
-        <div class="settings-content-wrapper">
-          <div class="content-wrapper">
-            <div class="content-title">
-              <p>
-                {{ $t('tools.preset.settings.createPreset.presetName.text') }}
-              </p>
-            </div>
-            <TextInput
-              ref="presetNameInputRef"
-              v-model="newPresetName"
-              :placeholder="$t('tools.preset.settings.createPreset.presetName.placeholder')"
-              updateOnChange
-            />
-          </div>
-        </div>
-        <div class="settings-content-wrapper" :class="{ disabled: newPresetName === '' }">
-          <div class="content-wrapper">
-            <div class="content-button">
-              <DefaultButton
-                :text="$t('tools.preset.settings.createPreset.useCurrentModifications.text')"
-                :tip="$t('tools.preset.settings.createPreset.useCurrentModifications.tip')"
-                position="bottom-left"
-                @click="useCurrentModifications()"
-              />
-            </div>
-          </div>
-        </div>
-        <div class="settings-content-wrapper" :class="{ disabled: newPresetName === '' }">
-          <div class="content-wrapper">
-            <div class="content-title">
-              <p>
-                {{ $t('tools.preset.settings.createPreset.presetValues.transformations.label') }}
-              </p>
-            </div>
-            <div class="content-text-input">
-              <p>
-                {{ $t('tools.preset.settings.createPreset.presetValues.transformations.rotation') }}
-              </p>
-              <DropdownSelect
-                v-model="newPresetRotation"
-                :options="presetRotationOptions"
-                :style="{ margin: '6px 0' }"
-              />
-            </div>
-            <div class="content-text-input">
-              <p>
-                {{
-                  $t(
-                    'tools.preset.settings.createPreset.presetValues.transformations.horizontalFlip',
-                  )
-                }}
-              </p>
-              <ToggleButton v-model="newPresetHorizontalFlip" :scale="0.6" />
-            </div>
-            <div class="content-text-input">
-              <p>
-                {{
-                  $t('tools.preset.settings.createPreset.presetValues.transformations.verticalFlip')
-                }}
-              </p>
-              <ToggleButton v-model="newPresetVerticalFlip" :scale="0.6" />
-            </div>
-          </div>
-        </div>
-        <div class="settings-content-wrapper" :class="{ disabled: newPresetName === '' }">
-          <div class="content-wrapper">
-            <div class="content-title">
-              <p>
-                {{ $t('tools.preset.settings.createPreset.presetValues.smartCrop.label') }}
-              </p>
-            </div>
-            <div class="content-text-input">
-              <p>
-                {{ $t('tools.preset.settings.createPreset.presetValues.smartCrop.enabled') }}
-              </p>
-              <ToggleButton v-model="newPresetSmartCropEnabled" :scale="0.6" />
-            </div>
-            <div class="content-text-input" :class="{ disabled: !newPresetSmartCropEnabled }">
-              <p>
-                {{ $t('tools.preset.settings.createPreset.presetValues.smartCrop.color') }}
-              </p>
-              <ColorPicker v-model="newPresetSmartCropColor" />
-            </div>
-          </div>
-        </div>
-        <div class="settings-content-wrapper" :class="{ disabled: newPresetName === '' }">
-          <div class="content-wrapper">
-            <div class="content-text-input">
-              <p>
-                {{ $t('tools.preset.settings.createPreset.presetValues.grayScale') }}
-              </p>
-              <ToggleButton v-model="newPresetGrayScale" :scale="0.6" />
-            </div>
-          </div>
-        </div>
-        <div class="settings-content-wrapper" :class="{ disabled: newPresetName === '' }">
-          <div class="content-wrapper">
-            <div class="content-title">
-              <p>
-                {{ $t('tools.preset.settings.createPreset.presetValues.frame.label') }}
-              </p>
-            </div>
-            <div class="content-text-input">
-              <p>{{ $t('tools.preset.settings.createPreset.presetValues.frame.enabled') }}</p>
-              <ToggleButton v-model="newPresetFrame.enabled" :scale="0.6" />
-            </div>
-            <div class="content-text-input" :class="{ disabled: !newPresetFrame.enabled }">
-              <p>{{ $t('tools.preset.settings.createPreset.presetValues.frame.color') }}</p>
-              <ColorPicker v-model="newPresetFrame.color" />
-            </div>
-            <div class="content-text-input" :class="{ disabled: !newPresetFrame.enabled }">
-              <p>{{ $t('tools.preset.settings.createPreset.presetValues.frame.width') }}</p>
-              <NumberInput
-                ref="presetFrameWidthRef"
-                v-model="newPresetFrame.width"
-                :min="0"
-                :max="100"
-                :step="1"
-                unit="px"
-                @update="setFrameWidth(newPresetFrame.width)"
-                icon="IconArrowWidth"
-                :color="'var(--primary-c)'"
-                size="22"
-                :onReset="() => setFrameWidth(0)"
-              />
-            </div>
-            <div class="content-text-input" :class="{ disabled: !newPresetFrame.enabled }">
-              <p>{{ $t('tools.preset.settings.createPreset.presetValues.frame.type') }}</p>
-              <DropdownSelect
-                :style="{ padding: '6px 0' }"
-                v-model="newPresetFrame.type"
-                :options="presetFrameOptions"
-              />
-            </div>
-          </div>
-        </div>
-        <div class="settings-content-wrapper">
-          <div class="content-wrapper">
-            <div class="content-button">
-              <DefaultButton
-                :text="$t('tools.preset.settings.createPreset.createPresetButton.text')"
-                @click="createPreset()"
-                :disabled="newPresetName === ''"
-              />
-            </div>
-          </div>
-        </div>
-        <div class="settings-content-wrapper" style="border: none">
-          <!-- Empty space -->
-        </div>
-      </div>
-
       <!-- My Presets -->
-
       <div
         v-if="editorStore.selectedTabPerTool[editorStore.selectedToolKey] === 'myPresets'"
         class="specific-settings"
       >
-        <div class="settings-content-wrapper" v-if="!presetModifying">
+        <div class="settings-content-wrapper" v-if="!isModifyingPreset">
           <div v-if="presetsOptions.length > 0" class="content-wrapper">
             <div class="content-title">
               <p>
@@ -233,11 +69,7 @@ const tabs = ['myPresets', 'createPreset']
             </div>
           </div>
         </div>
-        <div
-          v-if="selectedPresetName !== ''"
-          class="settings-content-wrapper"
-          :class="{ disabled: !presetModifying }"
-        >
+        <div class="settings-content-wrapper" v-if="presetsOptions.length > 0">
           <div class="content-wrapper">
             <div class="content-title">
               <p>
@@ -252,210 +84,257 @@ const tabs = ['myPresets', 'createPreset']
             />
           </div>
         </div>
-        <div v-if="selectedPresetName !== '' && !presetModifying" class="settings-content-wrapper">
+        <div class="settings-content-wrapper" v-if="presetsOptions.length > 0">
+          <div class="content-wrapper">
+            <div class="content-title">
+              <p>Operations</p>
+            </div>
+            <p v-for="(operation, index) in localImageOperations" :key="index">
+              {{ operation }}
+            </p>
+          </div>
+        </div>
+        <div class="settings-content-wrapper" v-if="isModifyingPreset && presetsOptions.length > 0">
+          <div class="content-wrapper">
+            <DefaultButton
+              :text="t('tools.preset.settings.myPresets.deletePresetButton.text')"
+              @click="deletePreset()"
+            />
+          </div>
+        </div>
+        <div class="settings-content-wrapper" v-if="presetsOptions.length > 0">
+          <div class="content-wrapper">
+            <DefaultButton
+              v-if="isModifyingPreset && isPresetModified"
+              :text="t('tools.preset.settings.myPresets.savePresetButton.text')"
+              @click="savePresetChanges()"
+            />
+            <DefaultButton
+              v-else-if="isModifyingPreset && !isPresetModified"
+              :text="t('tools.preset.settings.myPresets.closeModifyingButton.text')"
+              @click="closeModifyPreset()"
+            />
+            <DefaultButton
+              v-else-if="!isModifyingPreset"
+              :text="t('tools.preset.settings.myPresets.modifyPresetButton.text')"
+              @click="modifyPreset()"
+            />
+          </div>
+        </div>
+        <div class="settings-content-wrapper" style="border: none">
+          <!-- Empty space -->
+        </div>
+      </div>
+
+      <!-- Create Preset -->
+      <div
+        v-if="editorStore.selectedTabPerTool[editorStore.selectedToolKey] === 'createPreset'"
+        class="specific-settings"
+      >
+        <div class="settings-content-wrapper" v-if="!isShowManualPresetSetting">
+          <div class="content-wrapper">
+            <div class="content-title">
+              <p>
+                {{ t('tools.preset.settings.createPreset.presetName.text') }}
+              </p>
+            </div>
+            <div class="content-aligned one-item">
+              <TextInput
+                ref="presetNameRef"
+                v-model="newPreset.presetName"
+                :placeholder="t('tools.preset.settings.createPreset.presetName.placeholder')"
+                updateOnChange
+              />
+            </div>
+            <div class="content-button">
+              <DefaultButton
+                :text="t('tools.preset.settings.createPreset.manualPresetSetting.text')"
+                @click="showManualPresetSetting()"
+                :disabled="newPreset.presetName === ''"
+              />
+            </div>
+            <div class="content-button">
+              <DefaultButton
+                :text="t('tools.preset.settings.createPreset.useCurrentModifications.text')"
+                @click="useCurrentModifications()"
+                :disabled="newPreset.presetName === ''"
+              />
+            </div>
+          </div>
+        </div>
+        <div v-if="isShowManualPresetSetting" class="settings-content-wrapper">
+          <div class="content-wrapper">
+            <div class="content-title">
+              <p>
+                {{ t('tools.preset.settings.createPreset.presetName.text') }}
+              </p>
+            </div>
+            <div class="content-aligned one-item">
+              <TextInput
+                v-model="newPreset.presetName"
+                :placeholder="t('tools.preset.settings.createPreset.presetName.placeholder')"
+                updateOnChange
+              />
+            </div>
+          </div>
+        </div>
+        <div v-if="isShowManualPresetSetting" class="settings-content-wrapper">
           <div class="content-wrapper">
             <div class="content-button">
               <DefaultButton
-                :text="$t('tools.preset.settings.myPresets.applyPresetButton.text')"
-                @click="applyPreset()"
+                :text="t('tools.preset.settings.createPreset.useCurrentModifications.text')"
+                :tip="t('tools.preset.settings.createPreset.useCurrentModifications.tip')"
+                @click="useCurrentValues()"
               />
             </div>
           </div>
         </div>
-        <div
-          v-if="selectedPresetName !== ''"
-          class="settings-content-wrapper"
-          :class="{ disabled: !presetModifying }"
-        >
+        <div v-if="isShowManualPresetSetting" class="settings-content-wrapper">
           <div class="content-wrapper">
             <div class="content-title">
               <p>
-                {{ $t('tools.preset.settings.myPresets.presetValues.transformations.label') }}
+                {{ t('tools.preset.settings.createPreset.presetValues.transformations.label') }}
               </p>
             </div>
-            <div class="content-text-input">
+            <div class="content-aligned two-items">
               <p>
-                {{ $t('tools.preset.settings.myPresets.presetValues.transformations.rotation') }}
+                {{ t('tools.preset.settings.createPreset.presetValues.transformations.rotation') }}
               </p>
               <DropdownSelect
-                v-model="localImageOperations.transformations.rotationAngle"
+                v-model="newPreset.transformations.rotationAngle"
                 :options="presetRotationOptions"
-                :style="{ margin: '6px 0' }"
               />
             </div>
-            <div class="content-text-input">
+            <div class="content-aligned two-items">
               <p>
                 {{
-                  $t('tools.preset.settings.myPresets.presetValues.transformations.horizontalFlip')
+                  t(
+                    'tools.preset.settings.createPreset.presetValues.transformations.horizontalFlip',
+                  )
                 }}
               </p>
               <ToggleButton
-                v-model="localImageOperations.transformations.flipHorizontal"
+                v-model="newPreset.transformations.horizontalFlip"
                 :scale="0.6"
+                :style="{ transform: 'translateX(16px)' }"
               />
             </div>
-            <div class="content-text-input">
+            <div class="content-aligned two-items">
               <p>
                 {{
-                  $t('tools.preset.settings.myPresets.presetValues.transformations.verticalFlip')
+                  t('tools.preset.settings.createPreset.presetValues.transformations.verticalFlip')
                 }}
               </p>
               <ToggleButton
-                v-model="localImageOperations.transformations.flipVertical"
+                v-model="newPreset.transformations.verticalFlip"
                 :scale="0.6"
+                :style="{ transform: 'translateX(16px)' }"
               />
             </div>
           </div>
         </div>
-        <div
-          v-if="selectedPresetName !== ''"
-          class="settings-content-wrapper"
-          :class="{ disabled: !presetModifying }"
-        >
+        <div v-if="isShowManualPresetSetting" class="settings-content-wrapper">
           <div class="content-wrapper">
             <div class="content-title">
               <p>
-                {{ $t('tools.preset.settings.myPresets.presetValues.smartCrop.label') }}
+                {{ t('tools.preset.settings.createPreset.presetValues.smartCrop.label') }}
               </p>
             </div>
-            <div class="content-text-input">
+            <div class="content-aligned two-items">
               <p>
-                {{ $t('tools.preset.settings.myPresets.presetValues.smartCrop.enabled') }}
+                {{ t('tools.preset.settings.createPreset.presetValues.smartCrop.enabled') }}
               </p>
-              <ToggleButton v-model="localImageOperations.smartCrop.enabled" :scale="0.6" />
+              <ToggleButton
+                v-model="newPreset.smartCrop.enabled"
+                :scale="0.6"
+                :style="{ transform: 'translateX(16px)' }"
+              />
             </div>
-            <div class="content-text-input">
+            <div class="content-aligned two-items">
               <p>
-                {{ $t('tools.preset.settings.myPresets.presetValues.smartCrop.color') }}
+                {{ t('tools.preset.settings.createPreset.presetValues.smartCrop.color') }}
               </p>
-              <ColorPicker v-model="localImageOperations.smartCrop.color" />
+              <ColorPicker v-model="newPreset.smartCrop.color" />
             </div>
           </div>
         </div>
-        <div
-          v-if="selectedPresetName !== ''"
-          class="settings-content-wrapper"
-          :class="{ disabled: !presetModifying }"
-        >
-          <div class="content-wrapper">
-            <div class="content-text-input">
-              <p>
-                {{ $t('tools.preset.settings.myPresets.presetValues.grayScale') }}
-              </p>
-              <ToggleButton v-model="localImageOperations.grayScale.enabled" :scale="0.6" />
-            </div>
-          </div>
-        </div>
-        <div
-          v-if="selectedPresetName !== ''"
-          class="settings-content-wrapper"
-          :class="{ disabled: !presetModifying }"
-        >
+        <div v-if="isShowManualPresetSetting" class="settings-content-wrapper">
           <div class="content-wrapper">
             <div class="content-title">
               <p>
-                {{ $t('tools.preset.settings.myPresets.presetValues.frame.label') }}
+                {{ t('tools.preset.settings.createPreset.presetValues.grayScale.label') }}
               </p>
             </div>
-            <div class="content-text-input">
+            <div class="content-aligned two-items">
               <p>
-                {{ $t('tools.preset.settings.myPresets.presetValues.frame.enabled') }}
+                {{ t('tools.preset.settings.createPreset.presetValues.grayScale.enabled') }}
               </p>
-              <ToggleButton v-model="localImageOperations.frame.enabled" :scale="0.6" />
+              <ToggleButton
+                v-model="newPreset.grayscale.enabled"
+                :scale="0.6"
+                :style="{ transform: 'translateX(16px)' }"
+              />
             </div>
-            <div
-              class="content-text-input"
-              :class="{ disabled: !localImageOperations.frame.enabled }"
-            >
+          </div>
+        </div>
+        <div v-if="isShowManualPresetSetting" class="settings-content-wrapper">
+          <div class="content-wrapper">
+            <div class="content-title">
               <p>
-                {{ $t('tools.preset.settings.myPresets.presetValues.frame.color') }}
+                <!-- frame -->
+                {{ t('tools.preset.settings.createPreset.presetValues.frame.label') }}
               </p>
-              <ColorPicker v-model="localImageOperations.frame.color" />
             </div>
-            <div
-              class="content-text-input"
-              :class="{ disabled: !localImageOperations.frame.enabled }"
-            >
+            <div class="content-aligned two-items">
               <p>
-                {{ $t('tools.preset.settings.myPresets.presetValues.frame.width') }}
+                {{ t('tools.preset.settings.createPreset.presetValues.frame.enabled') }}
+              </p>
+              <ToggleButton
+                v-model="newPreset.frame.enabled"
+                :scale="0.6"
+                :style="{ transform: 'translateX(16px)' }"
+              />
+            </div>
+            <div class="content-aligned two-items">
+              <p>
+                {{ t('tools.preset.settings.createPreset.presetValues.frame.type') }}
+              </p>
+              <DropdownSelect v-model="newPreset.frame.type" :options="presetFrameOptions" />
+            </div>
+            <div class="content-aligned two-items">
+              <p>
+                {{ t('tools.preset.settings.createPreset.presetValues.frame.color') }}
+              </p>
+              <ColorPicker v-model="newPreset.frame.color" />
+            </div>
+            <div class="content-aligned two-items">
+              <p>
+                {{ t('tools.preset.settings.createPreset.presetValues.frame.width') }}
               </p>
               <NumberInput
-                ref="presetFrameWidthRef"
-                v-model="localImageOperations.frame.width"
+                ref="frameWidthRef"
+                v-model="newPreset.frame.width"
                 :min="0"
                 :max="100"
                 :step="1"
                 unit="px"
-                @update="setFrameWidth(localImageOperations.frame.width)"
                 icon="IconArrowWidth"
-                :color="'var(--primary-c)'"
-                size="22"
-                :onReset="() => setFrameWidth(0)"
-              />
-            </div>
-            <div
-              class="content-text-input"
-              :class="{ disabled: !localImageOperations.frame.enabled }"
-            >
-              <p>
-                {{ $t('tools.preset.settings.myPresets.presetValues.frame.type') }}
-              </p>
-              <DropdownSelect
-                :style="{ padding: '6px 0' }"
-                v-model="localImageOperations.frame.type"
-                :options="presetFrameOptions"
+                :iconTop="45"
+                :onReset="() => resetFrameWidth()"
               />
             </div>
           </div>
         </div>
-
-        <div v-if="selectedPresetName !== '' && presetModifying" class="settings-content-wrapper">
+        <div v-if="isShowManualPresetSetting" class="settings-content-wrapper">
           <div class="content-wrapper">
             <div class="content-button">
               <DefaultButton
-                :text="$t('tools.preset.settings.myPresets.deletePresetButton.text')"
-                @click="deletePreset()"
+                :text="t('tools.preset.settings.createPreset.createPresetButton.text')"
+                @click="createPreset()"
               />
             </div>
           </div>
         </div>
-        <div
-          v-if="selectedPresetName !== '' && presetModifying && presetIsModified"
-          class="settings-content-wrapper"
-        >
-          <div class="content-wrapper">
-            <div class="content-button">
-              <DefaultButton
-                :text="$t('tools.preset.settings.myPresets.savePresetButton.text')"
-                @click="savePreset()"
-              />
-            </div>
-          </div>
-        </div>
-        <div
-          v-if="selectedPresetName !== '' && presetModifying && !presetIsModified"
-          class="settings-content-wrapper"
-        >
-          <div class="content-wrapper">
-            <div class="content-button">
-              <DefaultButton
-                :text="$t('tools.preset.settings.myPresets.closeModifyingButton.text')"
-                @click="closeModifying()"
-              />
-            </div>
-          </div>
-        </div>
-        <div v-if="selectedPresetName !== '' && !presetModifying" class="settings-content-wrapper">
-          <div class="content-wrapper">
-            <div class="content-button">
-              <DefaultButton
-                :text="$t('tools.preset.settings.myPresets.modifyPresetButton.text')"
-                @click="modifyPreset()"
-              />
-            </div>
-          </div>
-        </div>
-
         <div class="settings-content-wrapper" style="border: none">
           <!-- Empty space -->
         </div>
@@ -464,4 +343,19 @@ const tabs = ['myPresets', 'createPreset']
   </div>
 </template>
 
-<style scoped></style>
+<style scoped>
+.content-aligned {
+  width: 80%;
+  display: flex;
+  align-items: center;
+  padding: 5px 0;
+}
+.one-item {
+  justify-content: center;
+}
+
+.two-items {
+  flex-direction: row;
+  justify-content: space-between;
+}
+</style>

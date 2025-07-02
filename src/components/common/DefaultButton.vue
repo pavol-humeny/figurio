@@ -18,10 +18,6 @@ const props = defineProps({
     type: String,
     default: 'bottom',
   },
-  // onClick: {
-  //   type: Function,
-  //   required: true
-  // },
   onlyText: {
     type: Boolean,
     default: false,

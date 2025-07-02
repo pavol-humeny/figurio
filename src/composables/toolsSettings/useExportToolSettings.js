@@ -74,13 +74,13 @@ export function useExportToolSettings(imageStore, t) {
 
     isVisible.value = true
 
-    if (imageStore.imageOperations.frame?.enabled) {
+    if (imageStore.frame?.enabled) {
       imageStore.newFileDimensions = {
-        width: imageStore.imageOperations.frame.width * 2 + imageStore.fileDimensions.width,
-        height: imageStore.imageOperations.frame.height * 2 + imageStore.fileDimensions.height,
+        width: imageStore.frame.width * 2 + imageStore.fileDimensions.width,
+        height: imageStore.frame.height * 2 + imageStore.fileDimensions.height,
         fileAspectRatio:
-          (imageStore.imageOperations.frame.width * 2 + imageStore.fileDimensions.width) /
-            (imageStore.imageOperations.frame.height * 2 + imageStore.fileDimensions.height) || 1,
+          (imageStore.frame.width * 2 + imageStore.fileDimensions.width) /
+            (imageStore.frame.height * 2 + imageStore.fileDimensions.height) || 1,
       }
     } else {
       imageStore.newFileDimensions = { ...imageStore.fileDimensions }

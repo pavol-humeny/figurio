@@ -478,7 +478,10 @@ export function useCropTool(imageStore, viewportStore, editorStore, historyStore
     //   newCrop.y += prevCrop.y || 0
     // }
 
-    imageStore.imageOperations.transformations.cropBox = cropBox.value
+    imageStore.addImageOperation({
+      type: 'crop',
+      cropBox: { ...cropBox.value },
+    })
 
     applyCropRender(cropBox.value)
 

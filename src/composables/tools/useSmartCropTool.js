@@ -152,17 +152,22 @@ export function useSmartCropTool(imageStore, historyStore, editorStore, t) {
       }
     }
 
-    const color = selectedColor.value
 
-    imageStore.imageOperations.smartCrop.enabled = true
-    imageStore.imageOperations.smartCrop.color = color
-    // const newCrop = { ...cropBox.value }
-    // const prevCrop = imageStore.imageOperations.smartCrop.cropBox
-    // if (prevCrop) {
-    //   newCrop.leftIndent += prevCrop.leftIndent || 0
-    //   newCrop.topIndent += prevCrop.topIndent || 0
-    // }
-    imageStore.imageOperations.smartCrop.cropBox = cropBox.value
+    // imageStore.imageOperations.smartCrop.enabled = true
+    // imageStore.imageOperations.smartCrop.color = color
+    // // const newCrop = { ...cropBox.value }
+    // // const prevCrop = imageStore.imageOperations.smartCrop.cropBox
+    // // if (prevCrop) {
+    // //   newCrop.leftIndent += prevCrop.leftIndent || 0
+    // //   newCrop.topIndent += prevCrop.topIndent || 0
+    // // }
+    // imageStore.imageOperations.smartCrop.cropBox = cropBox.value
+
+    imageStore.addImageOperation({
+      type: 'smartCrop',
+      color: structuredClone(selectedColor.value),
+      cropBox: structuredClone(cropBox.value),
+    })
 
     applyAutoSmartCropRender(cropBox.value)
 

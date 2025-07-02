@@ -5,11 +5,14 @@ export function useGrayscaleTool(imageStore, historyStore, t) {
   const { showConfirmModal } = useConfirmModal()
 
   const isGrayScaleApplied = computed(() => {
-    return imageStore.imageOperations.grayScale.enabled
+    return imageStore.hasGrayscaleOperation()
   })
 
   const applyGrayScale = () => {
-    imageStore.imageOperations.grayScale.enabled = true
+    imageStore.addImageOperation({
+      type: 'grayScale',
+      enabled: true,
+    })
 
     applyGrayScaleRender()
 

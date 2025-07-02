@@ -1,8 +1,8 @@
 import { ref, watch, computed } from 'vue'
 
 export function useFrameTool(imageStore, historyStore, editorStore, t) {
-  const frameColor = ref(imageStore.imageOperations.frame.color || '#000000')
-  const frameWidth = ref(imageStore.imageOperations.frame.width || 0)
+  const frameColor = ref(imageStore.frame.color || '#000000')
+  const frameWidth = ref(imageStore.frame.width || 0)
   const frameWidthRef = ref(null)
 
   const frameOptions = computed(() => [
@@ -30,7 +30,7 @@ export function useFrameTool(imageStore, historyStore, editorStore, t) {
 
   const handleFrameChange = (value) => {
     console.log('Selected frame variant:', value)
-    imageStore.imageOperations.frame.type = value
+    imageStore.frame.type = value
     // Apply frame
 
     applyFrame()
@@ -57,58 +57,45 @@ export function useFrameTool(imageStore, historyStore, editorStore, t) {
     const color = frameColor.value
     const type = selectedFrameVariant.value
 
-    imageStore.imageOperations.frame.color = color
-    imageStore.imageOperations.frame.type = type
-    imageStore.imageOperations.frame.enabled = true
+    imageStore.frame.color = color
+    imageStore.frame.type = type
+    imageStore.frame.enabled = true
 
     if (selectedFrameVariant.value === 'none') {
-      imageStore.imageOperations.frame.enabled = false
-      imageStore.imageOperations.frame.width = 0
-      imageStore.imageOperations.frame.height = 0
+      imageStore.frame.enabled = false
+      imageStore.frame.width = 0
+      imageStore.frame.height = 0
     } else if (selectedFrameVariant.value === 'frameSolid') {
-      imageStore.imageOperations.frame.width = width
-      imageStore.imageOperations.frame.height = width
+      imageStore.frame.width = width
+      imageStore.frame.height = width
 
       if (width <= 0) {
-        imageStore.imageOperations.frame.enabled = false
+        imageStore.frame.enabled = false
       }
     } else if (
       selectedFrameVariant.value === 'framePhoneAndroid' ||
       selectedFrameVariant.value === 'framePhoneIOS'
     ) {
       // For phone Android frame, we can use a fixed width
-      imageStore.imageOperations.frame.width = 5
-      imageStore.imageOperations.frame.height = 5
+      imageStore.frame.width = 5
+      imageStore.frame.height = 5
     } else if (
       selectedFrameVariant.value === 'frameMacBrowser' ||
       selectedFrameVariant.value === 'frameWindowsBrowser'
     ) {
       // For other frames, we can use a fixed width
-      imageStore.imageOperations.frame.width = Math.floor(
-        (1 / 200) * imageStore.fileDimensions.height,
-      )
-      imageStore.imageOperations.frame.height = Math.floor(
-        (1 / 200) * imageStore.fileDimensions.height,
-      )
-      imageStore.imageOperations.frame.headerSize = Math.floor(
-        0.04 * imageStore.fileDimensions.height,
-      ) // 4% of height
-      console.warn(
-        'border, heder size:',
-        imageStore.imageOperations.frame.width,
-        imageStore.imageOperations.frame.headerSize,
-      )
+      imageStore.frame.width = Math.floor((1 / 200) * imageStore.fileDimensions.height)
+      imageStore.frame.height = Math.floor((1 / 200) * imageStore.fileDimensions.height)
+      imageStore.frame.headerSize = Math.floor(0.04 * imageStore.fileDimensions.height) // 4% of height
     }
-
-
 
     historyStore.push(imageStore.getSnapshot())
   }
 
   function applyBrowserFrame(ctx, w, h, type, color) {
-    const headerHeight = imageStore.imageOperations.frame.headerSize
-    const borderSize = imageStore.imageOperations.frame.width
-    imageStore.imageOperations.frame.headerSize = headerHeight
+    const headerHeight = imageStore.frame.headerSize
+    const borderSize = imageStore.frame.width
+    imageStore.frame.headerSize = headerHeight
     console.log(
       '!!!!!!!!!!!!!!!!!Applying browser frame:',
       type,
@@ -147,7 +134,7 @@ export function useFrameTool(imageStore, historyStore, editorStore, t) {
       const size = Math.max(8, headerHeight * 0.3)
       const spacing = size + 8
       const centerY = headerHeight / 2
-      const startX = w - borderSize - spacing * 2 - size -1   // zarovnanie 3 ikon z prava
+      const startX = w - borderSize - spacing * 2 - size - 1 // zarovnanie 3 ikon z prava
 
       // mínus (–)
       ctx.strokeStyle = '#fff'
@@ -184,7 +171,7 @@ export function useFrameTool(imageStore, historyStore, editorStore, t) {
   }
 
   const applyFrameRender = (ctx, canvasWidth, canvasHeight) => {
-    const frame = imageStore.imageOperations.frame
+    const frame = imageStore.frame
     if (!ctx || !frame?.enabled) return
 
     const fw = frame.width

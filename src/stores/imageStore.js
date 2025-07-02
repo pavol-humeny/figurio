@@ -77,29 +77,18 @@ export const useImageStore = defineStore('imageStore', {
     // ],
     selectedSvgObjectId: null,
 
-    imageOperations: {
-      transformations: {
-        rotationAngle: 0, // In degrees
-        flipHorizontal: false,
-        flipVertical: false,
-        cropBox: null, // { x: 0, y: 0, width: 0, height: 0 }
-      },
-      smartCrop: {
-        enabled: false,
-        color: '#000000', // Default color for smart crop
-        cropBox: null,
-      },
-      frame: {
-        enabled: false,
-        color: '#000000',
-        width: 0,
-        height: 0,
-        headerSize: 30, // For browser frames
-        type: 'solid',
-      },
-      grayScale: {
-        enabled: false,
-      },
+    imageOperations: [],
+    // imageOperations: [
+    // {'grayScale': {'enabled': true}},
+    // {'crop': {'x': 50, 'y': 50, 'width': 200, 'height': 200}},
+
+    frame: {
+      enabled: false,
+      type: 'none', // 'none', 'frameSolid', 'framePhoneAndroid',
+      width: 0, // Width of the frame in pixels
+      height: 0, // Height of the frame in pixels
+      color: '#000000', // Color of the frame
+      headerSize: 0, // Size of the header for browser frames
     },
   }),
   getters: {
@@ -108,31 +97,11 @@ export const useImageStore = defineStore('imageStore', {
     },
   },
   actions: {
-    setImageOperations(operations) {
-      this.imageOperations = {
-        transformations: {
-          rotationAngle: operations.transformations?.rotationAngle || 0,
-          flipHorizontal: operations.transformations?.flipHorizontal || false,
-          flipVertical: operations.transformations?.flipVertical || false,
-          cropBox: null, // vždy resetuj pri aplikácii
-        },
-        smartCrop: {
-          enabled: operations.smartCrop?.enabled || false,
-          color: operations.smartCrop?.color || '#000000', // Default color for smart crop
-          cropBox: operations.smartCrop?.cropBox || null,
-        },
-        frame: {
-          enabled: operations.frame?.enabled || false,
-          color: operations.frame?.color || '#000000',
-          width: operations.frame?.width || 0,
-          height: operations.frame?.height || operations.frame?.width || 0,
-          headerSize: operations.frame?.headerSize || 30, // For browser frames
-          type: operations.frame?.type || 'solid',
-        },
-        grayScale: {
-          enabled: operations.grayScale?.enabled || false,
-        },
-      }
+    hasGrayscaleOperation() {
+      return this.imageOperations.some((op) => op.type === 'grayScale')
+    },
+    addImageOperation(operation) {
+      this.imageOperations.push(structuredClone(operation))
     },
 
     getImageOperations() {
@@ -140,38 +109,10 @@ export const useImageStore = defineStore('imageStore', {
     },
 
     resetImageOperations() {
-      this.imageOperations = {
-        transformations: {
-          rotationAngle: 0, // In degrees
-          flipHorizontal: false,
-          flipVertical: false,
-          cropBox: null, // { x: 0, y: 0, width: 0, height: 0 }
-        },
-        smartCrop: {
-          enabled: false,
-          color: '#000000', // Default color for smart crop
-          cropBox: null,
-        },
-        frame: {
-          enabled: false,
-          color: '#000000',
-          width: 0,
-          height: 0,
-          headerSize: 30, // For browser frames
-          type: 'solid',
-        },
-        grayScale: {
-          enabled: false,
-        },
-      }
-    },
-
-    getTransformations() {
-      return JSON.parse(JSON.stringify(this.imageOperations.transformations))
+      this.imageOperations = []
     },
 
     setFileName(newName, t, isNewFileName = false) {
-      // this.fileName = newName.trim()
       let trimmedName = newName.trim()
 
       // Empty name
@@ -472,10 +413,10 @@ export const useImageStore = defineStore('imageStore', {
 
       let width = 0
       let height = 0
-      if (this.imageOperations.frame?.enabled) {
+      if (this.frame?.enabled) {
         // Apply frame dimensions to the rasterization
-        width = this.imageOperations.frame.width * 2 + this.fileDimensions.width
-        height = this.imageOperations.frame.height * 2 + this.fileDimensions.height
+        width = this.frame.width * 2 + this.fileDimensions.width
+        height = this.frame.height * 2 + this.fileDimensions.height
       } else {
         // Use original dimensions
         width = this.fileDimensions.width
@@ -559,14 +500,11 @@ export const useImageStore = defineStore('imageStore', {
       // Draw frame
 
       // Draw image
-      const frameWidth = this.imageOperations.frame?.width || 0
-      let frameHeight = this.imageOperations.frame?.height || frameWidth
+      const frameWidth = this.frame?.width || 0
+      let frameHeight = this.frame?.height || frameWidth
 
-      if (
-        this.imageOperations.frame.type === 'frameMacBrowser' ||
-        this.imageOperations.frame.type === 'frameWindowsBrowser'
-      ) {
-        frameHeight = this.imageOperations.frame.headerSize
+      if (this.frame.type === 'frameMacBrowser' || this.frame.type === 'frameWindowsBrowser') {
+        frameHeight = this.frame.headerSize
       }
 
       ctx.drawImage(imageCanvas, frameWidth, frameHeight)
@@ -588,6 +526,7 @@ export const useImageStore = defineStore('imageStore', {
         // originalImage: this.originalImage?.toDataURL() || null,
         svgObjects: JSON.parse(JSON.stringify(this.svgObjects)),
         imageOperations: JSON.parse(JSON.stringify(this.imageOperations)),
+        frame: JSON.parse(JSON.stringify(this.frame)),
       }
 
       console.log('[getSnapshot] imageOperations:', snapshot.imageOperations)
@@ -603,6 +542,7 @@ export const useImageStore = defineStore('imageStore', {
       this.previewUrl = snapshot.previewUrl
       this.svgObjects = JSON.parse(JSON.stringify(snapshot.svgObjects))
       this.imageOperations = JSON.parse(JSON.stringify(snapshot.imageOperations))
+      this.frame = JSON.parse(JSON.stringify(snapshot.frame))
 
       if (snapshot.renderedImage) {
         const img = new Image()

@@ -13,7 +13,7 @@ export const usePresetsStore = defineStore('presetsStore', {
       return state.presets.map((p) => p.name)
     },
     selectedPreset(state) {
-      return state.presets.find((p) => p.name === state.selectedPresetName) || ''
+      return state.presets.find((p) => p.name === state.selectedPresetName) || null
     },
   },
 
@@ -39,7 +39,7 @@ export const usePresetsStore = defineStore('presetsStore', {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(data))
     },
 
-    createPreset(name) {
+    createPreset(name, imageOperations = []) {
       const trimmed = name.trim()
       if (!trimmed) return false
 
@@ -48,36 +48,19 @@ export const usePresetsStore = defineStore('presetsStore', {
 
       this.presets.push({
         name: trimmed,
-        imageOperations: {
-          transformations: {
-            rotationAngle: 0,
-            flipHorizontal: false,
-            flipVertical: false,
-            cropBox: null,
-          },
-          smartCrop: {
-            enabled: false,
-            color: '#000000', // Default color for smart crop
-          },
-          frame: {
-            enabled: false,
-            color: '#000000',
-            width: 0,
-            height: 0,
-            headerSize: 30, // For browser frames
-            type: 'frameSolid',
-          },
-        },
+        imageOperations: imageOperations,
       })
 
       this.selectedPresetName = trimmed
 
       this.saveToStorage()
 
+      console
+
       return true
     },
 
-    updatePreset(originalName, newName, newImageOperations = {}) {
+    updatePreset(originalName, newName, newImageOperations = []) {
       const trimmedNewName = newName.trim()
       if (!trimmedNewName) return false
 
@@ -91,19 +74,7 @@ export const usePresetsStore = defineStore('presetsStore', {
         preset.name = trimmedNewName
       }
 
-      // Deep merge operation values
-      const mergeDeep = (target, source) => {
-        for (const key in source) {
-          if (source[key] && typeof source[key] === 'object' && !Array.isArray(source[key])) {
-            target[key] = mergeDeep({ ...(target[key] || {}) }, source[key])
-          } else {
-            target[key] = source[key]
-          }
-        }
-        return target
-      }
-
-      preset.imageOperations = mergeDeep(preset.imageOperations, newImageOperations)
+      preset.imageOperations = newImageOperations
 
       // Update selected name if affected
       if (this.selectedPresetName === originalName) {

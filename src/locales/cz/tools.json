@@ -228,7 +228,10 @@
             "enabled": "Povoleno",
             "color": "Barva"
           },
-          "grayScale": "Grayscale",
+          "grayScale": {
+            "label": "Grayscale",
+            "enabled": "Povoleno"
+          },
           "frame": {
             "label": "Rámeček",
             "enabled": "Povoleno",
@@ -251,6 +254,9 @@
         "presetSuccessfullyCreated": {
           "title": "Šablona vytvořena",
           "message": "Šablona byla úspěšně vytvořena."
+        },
+        "manualPresetSetting": {
+          "text": "Manuální nastavení šablony"
         }
       },
       "myPresets": {
@@ -276,7 +282,10 @@
             "enabled": "Povoleno",
             "color": "Barva"
           },
-          "grayScale": "Grayscale",
+          "grayScale": {
+            "label": "Grayscale",
+            "enabled": "Povoleno"
+          },
           "frame": {
             "label": "Rámeček",
             "enabled": "Povoleno",

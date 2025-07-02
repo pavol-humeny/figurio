@@ -228,7 +228,10 @@
             "enabled": "Povolené",
             "color": "Farba"
           },
-          "grayScale": "Grayscale",
+          "grayScale": {
+            "label": "Grayscale",
+            "enabled": "Povolené"
+          },
           "frame": {
             "label": "Rámik",
             "enabled": "Povolené",
@@ -251,6 +254,9 @@
         "presetSuccessfullyCreated": {
           "title": "Šablóna vytvorená",
           "message": "Šablóna bola úspešne vytvorená."
+        },
+        "manualPresetSetting": {
+          "text": "Manuálne nastavenie šablóny"
         }
       },
       "myPresets": {
@@ -276,7 +282,10 @@
             "enabled": "Povolené",
             "color": "Farba"
           },
-          "grayScale": "Grayscale",
+          "grayScale": {
+            "label": "Grayscale",
+            "enabled": "Povolené"
+          },
           "frame": {
             "label": "Rámik",
             "enabled": "Povolené",

@@ -108,7 +108,7 @@ export function useImageRenderer(
     const ctx = frameCanvas?.getContext('2d')
     if (!frameCanvas || !ctx) return
 
-    const frame = imageStore.imageOperations.frame
+    const frame = imageStore.frame
     const frameEnabled = frame?.enabled && frame.width > 0
 
     const fw = frameEnabled ? frame.width : 0
@@ -121,8 +121,8 @@ export function useImageRenderer(
     let canvasHeight = height + fh * 2
 
     if (
-      imageStore.imageOperations.frame.type === 'frameMacBrowser' ||
-      imageStore.imageOperations.frame.type === 'frameWindowsBrowser'
+      imageStore.frame.type === 'frameMacBrowser' ||
+      imageStore.frame.type === 'frameWindowsBrowser'
     ) {
       canvasHeight = height + frame.headerSize + fh
       console.log('-----------------------Applying browser frame...: ', canvasHeight)
@@ -135,8 +135,8 @@ export function useImageRenderer(
     frameCanvas.style.left = `-${fw}px`
 
     if (
-      imageStore.imageOperations.frame.type === 'frameMacBrowser' ||
-      imageStore.imageOperations.frame.type === 'frameWindowsBrowser'
+      imageStore.frame.type === 'frameMacBrowser' ||
+      imageStore.frame.type === 'frameWindowsBrowser'
     ) {
       frameCanvas.style.top = `-${frame.headerSize}px`
     } else {
@@ -179,9 +179,9 @@ export function useImageRenderer(
     },
   )
 
-  //watch on imageStore.imageOperations.frame
+  //watch on imageStore.frame
   watch(
-    () => imageStore.imageOperations.frame,
+    () => imageStore.frame,
     (newFrame) => {
       if (newFrame) {
         console.log('Frame operations changed, re-rendering frame canvas')
@@ -192,7 +192,7 @@ export function useImageRenderer(
   )
 
   // watch(
-  //   () => [imageStore.originalImage, imageStore.imageOperations],
+  //   () => [imageStore.originalImage, imageStore.frame],
   //   async () => {
   //     imageStore.renderedImage = imageStore.originalImage
   //     imageStore.fileDimensions = { ...imageStore.originalFileDimensions }

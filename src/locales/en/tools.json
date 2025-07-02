@@ -233,7 +233,10 @@
             "enabled": "Enabled",
             "color": "Color"
           },
-          "grayScale": "Grayscale",
+          "grayScale": {
+            "label": "Grayscale",
+            "enabled": "Enabled"
+          },
           "frame": {
             "label": "Frame",
             "enabled": "Enabled",
@@ -256,6 +259,9 @@
         "presetSuccessfullyCreated": {
           "title": "Preset created",
           "message": "Preset has been successfully created."
+        },
+        "manualPresetSetting": {
+          "text": "Manual preset setting"
         }
       },
       "myPresets": {
@@ -281,7 +287,10 @@
             "enabled": "Enabled",
             "color": "Color"
           },
-          "grayScale": "Grayscale",
+          "grayScale": {
+            "label": "Grayscale",
+            "enabled": "Enabled"
+          },
           "frame": {
             "label": "Frame",
             "enabled": "Enabled",
