@@ -152,7 +152,6 @@ export function useSmartCropTool(imageStore, historyStore, editorStore, t) {
       }
     }
 
-
     // imageStore.imageOperations.smartCrop.enabled = true
     // imageStore.imageOperations.smartCrop.color = color
     // // const newCrop = { ...cropBox.value }
@@ -166,7 +165,7 @@ export function useSmartCropTool(imageStore, historyStore, editorStore, t) {
     imageStore.addImageOperation({
       type: 'smartCrop',
       color: structuredClone(selectedColor.value),
-      cropBox: structuredClone(cropBox.value),
+      cropBox: JSON.parse(JSON.stringify(cropBox.value)),
     })
 
     applyAutoSmartCropRender(cropBox.value)

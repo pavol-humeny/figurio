@@ -1,5 +1,6 @@
 <script setup>
-import { ref } from 'vue'
+import { ref, watch } from 'vue'
+import draggable from 'vuedraggable'
 
 const props = defineProps({
   localImageOperations: {
@@ -14,115 +15,119 @@ const props = defineProps({
 
 const emit = defineEmits(['removeOperation', 'update:localImageOperations'])
 
-const draggedIndex = ref(null)
+const internalList = ref([...props.localImageOperations])
+const selectedOperation = ref(null)
+watch(
+  () => props.localImageOperations,
+  (newVal) => {
+    internalList.value = [...newVal]
+  },
+  { immediate: true },
+)
 
-const onDragStart = (event, index) => {
-  draggedIndex.value = index
-  event.dataTransfer.effectAllowed = 'move'
-  event.dataTransfer.setData('text/plain', index)
-  event.dataTransfer.setDragImage(event.target, 0, 0)
+const onUpdate = (evt) => {
+  emit('update:localImageOperations', [...internalList.value])
 }
 
-const onDrop = (index) => {
-  if (draggedIndex.value === null || draggedIndex.value === index) return
-
-  const updated = [...props.localImageOperations]
-  const [movedItem] = updated.splice(draggedIndex.value, 1)
-  updated.splice(index, 0, movedItem)
-
-  emit('update:localImageOperations', updated)
-  draggedIndex.value = null
+const removeOperation = (index, operation) => {
+  if (operation === selectedOperation.value) {
+    selectedOperation.value = null
+  }
+  internalList.value.splice(index, 1)
+  emit('update:localImageOperations', [...internalList.value])
 }
 
-const onDragOver = (event) => {
-  event.preventDefault()
-}
-
-const removeOperation = (index) => {
-  emit('removeOperation', index)
+const selectOperation = (operation) => {
+  if (selectedOperation.value === null) {
+    selectedOperation.value = operation
+  } else {
+    if (selectedOperation.value === operation) {
+      selectedOperation.value = null
+      return
+    }else{
+      selectedOperation.value = operation
+    }
+  }
 }
 </script>
 
 <template>
-  <transition-group name="fade-move" tag="div" class="operations-list">
-    <div
-      v-for="(operation, index) in props.localImageOperations"
-      :key="operation.id || index"
-      class="operation-item"
-      :class="{ dragging: draggedIndex === index }"
-      @dragover="onDragOver"
-      @drop="onDrop(index)"
-    >
+  <draggable
+    v-model="internalList"
+    tag="div"
+    item-key="id"
+    handle=".drag-handle"
+    animation="200"
+    ghost-class="drag-ghost"
+    @update="onUpdate"
+    class="operations-list"
+  >
+    <template #item="{ element, index }">
       <div
-        class="drag-handle"
-        draggable="true"
-        @dragstart="(e) => onDragStart(e, index)"
-        @dragend="() => { draggedIndex = null }"
-        :class="{ hide: !props.modificationEnabled }"
+        class="operation-item"
+        @click="selectOperation(element)"
+        :class="{
+          selected: selectedOperation === element && props.modificationEnabled,
+          modificationEnabled: props.modificationEnabled,
+        }"
       >
-        ☰
-      </div>
+        <div class="drag-handle" :class="{ hide: !props.modificationEnabled }">☰</div>
 
-      <div class="operation-type">
-        {{ operation.type }}
-      </div>
+        <div class="operation-type">
+          {{ element.type }}
+        </div>
 
-      <div class="operation-value">
-        <div v-if="operation.type === 'rotation'">
-          <p>{{ operation.angle }}°</p>
+        <div class="operation-value">
+          <div v-if="element.type === 'rotation'">
+            <p>{{ element.angle }}°</p>
+          </div>
+          <div v-else-if="element.type === 'flip'">
+            <p>{{ element.direction }}</p>
+          </div>
+          <div v-else-if="element.type === 'smartCrop'">
+            <p :style="{ color: element.color }">{{ element.color }}</p>
+          </div>
         </div>
-        <div v-else-if="operation.type === 'flip'">
-          <p>{{ operation.direction }}</p>
-        </div>
-        <div v-else-if="operation.type === 'smartCrop'">
-          <p :style="{ color: operation.color }">{{ operation.color }}</p>
-        </div>
-      </div>
 
-      <div
-        class="remove-button"
-        @click="removeOperation(index)"
-        :class="{ hide: !props.modificationEnabled }"
-      >
-        ✕
+        <div
+          class="remove-button"
+          @click.stop="removeOperation(index, element)"
+          :class="{ hide: !props.modificationEnabled }"
+        >
+          ✕
+        </div>
       </div>
-    </div>
-  </transition-group>
+    </template>
+  </draggable>
 </template>
 
 <style scoped>
 .operations-list {
   height: 300px;
+  width: 240px;
   overflow-y: auto;
   border-radius: 10px;
-  padding: 7px 10px;
+  /* padding: 7px 0; */
   margin-top: 10px;
   background: var(--secondary-c);
   border: solid 1px var(--secondary-c);
 }
 
-/* Animácia presunu */
-.fade-move-move {
-  transition: transform 0.25s ease;
-}
-
-/* Každá položka v zozname */
 .operation-item {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
   gap: 10px;
   border-bottom: 1px solid var(--background-c);
-  padding: 6px 0;
-  transition: transform 0.25s ease, opacity 0.2s ease;
+  padding: 6px 10px;
+  transition: 0.25s ease;
 }
 
-/* Položka pri ťahaní */
-.operation-item.dragging {
-  opacity: 0.5;
-  transform: scale(1.02);
-  z-index: 10;
-  position: relative;
+.operation-item.selected {
+  background-color: var(--background-c);
+}
+.operation-item.modificationEnabled {
+  cursor: pointer;
 }
 
 .drag-handle {
@@ -136,15 +141,23 @@ const removeOperation = (index) => {
   cursor: grabbing;
 }
 
+.drag-ghost {
+  opacity: 0.4;
+  background-color: rgba(255, 255, 255, 0.1);
+  border: 1px dashed var(--primary-c);
+}
+
 .operation-type {
   font-size: var(--text-font-size);
-  width: 100px;
   flex-shrink: 0;
   color: var(--text-c);
 }
 
 .operation-value {
   flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: end;
   color: var(--text-c);
   font-size: var(--text-font-size);
 }

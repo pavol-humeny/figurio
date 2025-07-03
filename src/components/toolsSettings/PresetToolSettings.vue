@@ -93,10 +93,16 @@ const tabs = ['myPresets', 'createPreset']
             </div>
             <OperationsList
               :localImageOperations="localImageOperations"
-              @removeOperation="(index) => localImageOperations.splice(index, 1)"
               :modificationEnabled="isModifyingPreset"
               @update:localImageOperations="(newList) => (localImageOperations = newList)"
             />
+          </div>
+        </div>
+        <div class="settings-content-wrapper" v-if="presetsOptions.length > 0">
+          <div class="content-wrapper">
+            <div class="content-title">
+              <p>Frame</p>
+            </div>
             <p>
               {{ localImageFrame }}
             </p>
