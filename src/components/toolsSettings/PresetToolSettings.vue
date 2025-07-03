@@ -13,6 +13,7 @@ import DropdownSelect from '../common/DropdownSelect.vue'
 import ToggleButton from '../common/ToggleButton.vue'
 import ColorPicker from '../common/ColorPicker.vue'
 import OperationsList from '../common/PresetOperationsList.vue'
+import OperationDetails from '../common/OperationDetails.vue'
 
 const { t } = useI18n()
 
@@ -40,6 +41,7 @@ const {
   deletePreset,
   closeModifyPreset,
   localImageFrame,
+  selectedOperation,
 } = usePresetTool(useImageStore(), useHistoryStore(), useEditorStore(), usePresetsStore(), t)
 
 const tabs = ['myPresets', 'createPreset']
@@ -83,6 +85,7 @@ const tabs = ['myPresets', 'createPreset']
               v-model="localPresetName"
               :placeholder="$t('tools.preset.settings.myPresets.presetName.placeholder')"
               updateOnChange
+              :disabled="!isModifyingPreset"
             />
           </div>
         </div>
@@ -95,8 +98,15 @@ const tabs = ['myPresets', 'createPreset']
               :localImageOperations="localImageOperations"
               :modificationEnabled="isModifyingPreset"
               @update:localImageOperations="(newList) => (localImageOperations = newList)"
+              @selectOperation="(op) => (selectedOperation = op)"
+              :disabled="!isModifyingPreset"
             />
           </div>
+          <OperationDetails
+            v-if="selectedOperation"
+            :operation="selectedOperation"
+            @update:operation="(newOp) => Object.assign(selectedOperation, newOp)"
+          />
         </div>
         <div class="settings-content-wrapper" v-if="presetsOptions.length > 0">
           <div class="content-wrapper">
@@ -369,19 +379,4 @@ const tabs = ['myPresets', 'createPreset']
   </div>
 </template>
 
-<style scoped>
-.content-aligned {
-  width: 80%;
-  display: flex;
-  align-items: center;
-  padding: 5px 0;
-}
-.one-item {
-  justify-content: center;
-}
-
-.two-items {
-  flex-direction: row;
-  justify-content: space-between;
-}
-</style>
+<style scoped></style>

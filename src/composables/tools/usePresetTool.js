@@ -5,6 +5,8 @@ export function usePresetTool(imageStore, historyStore, editorStore, presetsStor
   const isPresetModified = ref(false)
   const isModifyingPreset = ref(false)
   const initializing = ref(false)
+  const selectedOperation = ref(null)
+
 
   const presetsOptions = computed(() => {
     return presetsStore.allPresetNames.map((name) => ({
@@ -65,11 +67,13 @@ export function usePresetTool(imageStore, historyStore, editorStore, presetsStor
     )
     isPresetModified.value = false
     isModifyingPreset.value = false
+    selectedOperation.value = null
   }
 
   const closeModifyPreset = () => {
     isModifyingPreset.value = false
     isPresetModified.value = false
+    selectedOperation.value = null 
   }
 
   const deletePreset = () => {
@@ -248,5 +252,6 @@ export function usePresetTool(imageStore, historyStore, editorStore, presetsStor
     deletePreset,
     closeModifyPreset,
     localImageFrame,
+    selectedOperation,
   }
 }

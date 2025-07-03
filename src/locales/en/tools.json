@@ -268,6 +268,7 @@
         "label": "My presets",
         "noPresets": "No presets available",
         "selectPreset": "Select preset",
+        "modifyOperation": "Modify operation",
         "presetName": {
           "text": "Preset name",
           "placeholder": "Enter preset name"
@@ -279,8 +280,9 @@
           "transformations": {
             "label": "Transformations",
             "rotation": "Rotation",
-            "horizontalFlip": "Horizontal flip",
-            "verticalFlip": "Vertical flip"
+            "horizontalFlip": "Horizontal",
+            "verticalFlip": "Vertical",
+            "flip": "Flip"
           },
           "smartCrop": {
             "label": "Smart crop",
@@ -288,7 +290,7 @@
             "color": "Color"
           },
           "grayScale": {
-            "label": "Grayscale",
+            "label": "GrayScale",
             "enabled": "Enabled"
           },
           "frame": {

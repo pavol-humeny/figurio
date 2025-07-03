@@ -263,6 +263,7 @@
         "label": "Moje šablóny",
         "noPresets": "Žiadne šablóny nie sú dostupné",
         "selectPreset": "Vyberte šablónu",
+        "modifyOperation": "Upraviť operáciu",
         "presetName": {
           "text": "Názov šablóny",
           "placeholder": "Zadajte názov šablóny"
@@ -274,8 +275,9 @@
           "transformations": {
             "label": "Transformácie",
             "rotation": "Rotácia",
-            "horizontalFlip": "Horizontálne otočenie",
-            "verticalFlip": "Vertikálne otočenie"
+            "horizontalFlip": "Horizontálne",
+            "verticalFlip": "Vertikálne",
+            "flip": "Prevrátenie"
           },
           "smartCrop": {
             "label": "Inteligentné orezanie",
@@ -283,7 +285,7 @@
             "color": "Farba"
           },
           "grayScale": {
-            "label": "Grayscale",
+            "label": "Odtiene šedi",
             "enabled": "Povolené"
           },
           "frame": {

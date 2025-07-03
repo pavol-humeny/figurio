@@ -217,6 +217,21 @@ input[type='number'] {
   gap: 10px;
 }
 
+.content-aligned {
+  width: 80%;
+  display: flex;
+  align-items: center;
+  padding: 5px 0;
+}
+.one-item {
+  justify-content: center;
+}
+
+.two-items {
+  flex-direction: row;
+  justify-content: space-between;
+}
+
 .disabled {
   opacity: 0.5;
   pointer-events: none;

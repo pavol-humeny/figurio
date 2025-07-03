@@ -1,6 +1,9 @@
 <script setup>
 import { ref, watch } from 'vue'
 import draggable from 'vuedraggable'
+import { useI18n } from 'vue-i18n'
+
+const { t } = useI18n()
 
 const props = defineProps({
   localImageOperations: {
@@ -11,12 +14,17 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
+  disabled: {
+    type: Boolean,
+    default: false,
+  },
 })
 
-const emit = defineEmits(['removeOperation', 'update:localImageOperations'])
+const emit = defineEmits(['removeOperation', 'update:localImageOperations', 'selectOperation'])
 
 const internalList = ref([...props.localImageOperations])
 const selectedOperation = ref(null)
+
 watch(
   () => props.localImageOperations,
   (newVal) => {
@@ -38,15 +46,33 @@ const removeOperation = (index, operation) => {
 }
 
 const selectOperation = (operation) => {
-  if (selectedOperation.value === null) {
-    selectedOperation.value = operation
+  if (selectedOperation.value === operation) {
+    selectedOperation.value = null
+    emit('selectOperation', null)
   } else {
-    if (selectedOperation.value === operation) {
-      selectedOperation.value = null
-      return
-    }else{
-      selectedOperation.value = operation
-    }
+    selectedOperation.value = operation
+    emit('selectOperation', operation)
+  }
+}
+
+const handleSelect = (e, operation) => {
+  if (e.target.closest('.drag-handle')) return
+
+  selectOperation(operation)
+}
+
+const getOperationLabel = (type) => {
+  switch (type) {
+    case 'rotation':
+      return t('tools.preset.settings.myPresets.presetValues.transformations.rotation')
+    case 'flip':
+      return t('tools.preset.settings.myPresets.presetValues.transformations.flip')
+    case 'smartCrop':
+      return t('tools.preset.settings.myPresets.presetValues.smartCrop.label')
+    case 'grayScale':
+      return t('tools.preset.settings.myPresets.presetValues.grayScale.label')
+    default:
+      return type
   }
 }
 </script>
@@ -61,11 +87,12 @@ const selectOperation = (operation) => {
     ghost-class="drag-ghost"
     @update="onUpdate"
     class="operations-list"
+    :class="{ 'disabled-list': props.disabled }"
   >
     <template #item="{ element, index }">
       <div
         class="operation-item"
-        @click="selectOperation(element)"
+        @click="(e) => handleSelect(e, element)"
         :class="{
           selected: selectedOperation === element && props.modificationEnabled,
           modificationEnabled: props.modificationEnabled,
@@ -74,7 +101,7 @@ const selectOperation = (operation) => {
         <div class="drag-handle" :class="{ hide: !props.modificationEnabled }">☰</div>
 
         <div class="operation-type">
-          {{ element.type }}
+          {{ getOperationLabel(element.type) }}
         </div>
 
         <div class="operation-value">
@@ -82,7 +109,13 @@ const selectOperation = (operation) => {
             <p>{{ element.angle }}°</p>
           </div>
           <div v-else-if="element.type === 'flip'">
-            <p>{{ element.direction }}</p>
+            <p>
+              {{
+                element.direction === 'horizontal'
+                  ? t('tools.preset.settings.myPresets.presetValues.transformations.horizontalFlip')
+                  : t('tools.preset.settings.myPresets.presetValues.transformations.verticalFlip')
+              }}
+            </p>
           </div>
           <div v-else-if="element.type === 'smartCrop'">
             <p :style="{ color: element.color }">{{ element.color }}</p>
@@ -104,7 +137,8 @@ const selectOperation = (operation) => {
 <style scoped>
 .operations-list {
   height: 300px;
-  width: 240px;
+  /* min-width: 240px; */
+  width: 80%;
   overflow-y: auto;
   border-radius: 10px;
   /* padding: 7px 0; */
@@ -162,6 +196,10 @@ const selectOperation = (operation) => {
   font-size: var(--text-font-size);
 }
 
+.operation-value p {
+  font-size: var(--text-font-size);
+}
+
 .remove-button {
   cursor: pointer;
   color: var(--primary-c);
@@ -171,5 +209,9 @@ const selectOperation = (operation) => {
 
 .hide {
   display: none;
+}
+
+.disabled-list {
+  opacity: 0.5;
 }
 </style>

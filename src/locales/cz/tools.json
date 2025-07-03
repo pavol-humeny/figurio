@@ -263,6 +263,7 @@
         "label": "Moje šablony",
         "noPresets": "Žádné šablony nejsou k dispozici",
         "selectPreset": "Vyberte šablonu",
+        "modifyOperation": "Upravit operaci",
         "presetName": {
           "text": "Název šablony",
           "placeholder": "Zadejte název šablony"
@@ -274,8 +275,9 @@
           "transformations": {
             "label": "Transformace",
             "rotation": "Rotace",
-            "horizontalFlip": "Horizontální otočení",
-            "verticalFlip": "Vertikální otočení"
+            "horizontalFlip": "Horizontální",
+            "verticalFlip": "Vertikální",
+            "flip": "Překlopení"
           },
           "smartCrop": {
             "label": "Chytré oříznutí",
@@ -283,7 +285,7 @@
             "color": "Barva"
           },
           "grayScale": {
-            "label": "Grayscale",
+            "label": "Odstíny šedi",
             "enabled": "Povoleno"
           },
           "frame": {
