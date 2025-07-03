@@ -24,7 +24,7 @@ export function useRotateTool(imageStore, historyStore, t) {
     }
 
     imageStore.addImageOperation({
-      type: 'rotate',
+      type: 'rotation',
       angle: angle,
     })
 

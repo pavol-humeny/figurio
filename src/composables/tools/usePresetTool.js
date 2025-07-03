@@ -21,7 +21,8 @@ export function usePresetTool(imageStore, historyStore, editorStore, presetsStor
   })
 
   const localPresetName = ref('')
-  const localImageOperations = ref({})
+  const localImageOperations = ref([])
+  const localImageFrame = ref({}) //
 
   watch(
     () => presetsStore.selectedPreset,
@@ -32,6 +33,7 @@ export function usePresetTool(imageStore, historyStore, editorStore, presetsStor
 
       localPresetName.value = preset.name
       localImageOperations.value = JSON.parse(JSON.stringify(preset.imageOperations))
+      localImageFrame.value = JSON.parse(JSON.stringify(preset.imageFrame))
 
       isPresetModified.value = false
 
@@ -41,7 +43,7 @@ export function usePresetTool(imageStore, historyStore, editorStore, presetsStor
   )
 
   watch(
-    [() => localPresetName.value, () => localImageOperations.value],
+    [() => localPresetName.value, () => localImageOperations.value, localImageFrame.value],
     () => {
       if (initializing.value) return
       isPresetModified.value = true
@@ -51,6 +53,7 @@ export function usePresetTool(imageStore, historyStore, editorStore, presetsStor
 
   const modifyPreset = () => {
     isModifyingPreset.value = true
+    isPresetModified.value = false
   }
 
   const savePresetChanges = () => {
@@ -58,6 +61,7 @@ export function usePresetTool(imageStore, historyStore, editorStore, presetsStor
       presetsStore.selectedPresetName,
       localPresetName.value,
       JSON.parse(JSON.stringify(localImageOperations.value)),
+      JSON.parse(JSON.stringify(localImageFrame.value)),
     )
     isPresetModified.value = false
     isModifyingPreset.value = false
@@ -167,30 +171,40 @@ export function usePresetTool(imageStore, historyStore, editorStore, presetsStor
   const createPreset = () => {
     console.log('Creating preset:', newPreset.value.presetName)
 
-    const imageOperations = {
-      transformations: {
-        rotationAngle: newPreset.value.transformations.rotationAngle,
-        horizontalFlip: newPreset.value.transformations.horizontalFlip,
-        verticalFlip: newPreset.value.transformations.verticalFlip,
-      },
-      smartCrop: {
-        enabled: newPreset.value.smartCrop.enabled,
+    const imageOperations = [] // UPDATE
+    const imageFrame = {}
+
+    if (newPreset.value.transformations.rotationAngle !== 0) {
+      imageOperations.push({
+        type: 'rotation',
+        angle: newPreset.value.transformations.rotationAngle,
+      })
+    }
+    if (newPreset.value.transformations.horizontalFlip) {
+      imageOperations.push({ type: 'flip', direction: 'horizontal' })
+    }
+    if (newPreset.value.transformations.verticalFlip) {
+      imageOperations.push({ type: 'flip', direction: 'vertical' })
+    }
+    if (newPreset.value.smartCrop.enabled) {
+      imageOperations.push({
+        type: 'smartCrop',
         color: newPreset.value.smartCrop.color,
-      },
-      grayscale: {
-        enabled: newPreset.value.grayscale.enabled,
-      },
-      frame: {
-        type: newPreset.value.frame.type,
-        color: newPreset.value.frame.color,
-        width: newPreset.value.frame.width,
-      },
-      // UPDATE
+      })
+    }
+    if (newPreset.value.grayscale.enabled) {
+      imageOperations.push({ type: 'grayscale', enabled: true })
+    }
+    if (newPreset.value.frame.type !== 'none') {
+      imageFrame.type = newPreset.value.frame.type
+      imageFrame.color = newPreset.value.frame.color
+      imageFrame.width = newPreset.value.frame.width
     }
 
     presetsStore.createPreset(
       structuredClone(newPreset.value.presetName),
       structuredClone(imageOperations),
+      structuredClone(imageFrame),
     )
 
     resetPreset()
@@ -233,5 +247,6 @@ export function usePresetTool(imageStore, historyStore, editorStore, presetsStor
     modifyPreset,
     deletePreset,
     closeModifyPreset,
+    localImageFrame,
   }
 }

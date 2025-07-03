@@ -39,7 +39,7 @@ export const usePresetsStore = defineStore('presetsStore', {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(data))
     },
 
-    createPreset(name, imageOperations = []) {
+    createPreset(name, imageOperations = [], imageFrame = {}) {
       const trimmed = name.trim()
       if (!trimmed) return false
 
@@ -49,6 +49,7 @@ export const usePresetsStore = defineStore('presetsStore', {
       this.presets.push({
         name: trimmed,
         imageOperations: imageOperations,
+        imageFrame: imageFrame,
       })
 
       this.selectedPresetName = trimmed
@@ -60,7 +61,7 @@ export const usePresetsStore = defineStore('presetsStore', {
       return true
     },
 
-    updatePreset(originalName, newName, newImageOperations = []) {
+    updatePreset(originalName, newName, newImageOperations = [], newImageFrame = {}) {
       const trimmedNewName = newName.trim()
       if (!trimmedNewName) return false
 
@@ -75,6 +76,7 @@ export const usePresetsStore = defineStore('presetsStore', {
       }
 
       preset.imageOperations = newImageOperations
+      preset.imageFrame = newImageFrame
 
       // Update selected name if affected
       if (this.selectedPresetName === originalName) {

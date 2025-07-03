@@ -12,6 +12,7 @@ import NumberInput from '../common/NumberInput.vue'
 import DropdownSelect from '../common/DropdownSelect.vue'
 import ToggleButton from '../common/ToggleButton.vue'
 import ColorPicker from '../common/ColorPicker.vue'
+import OperationsList from '../common/PresetOperationsList.vue'
 
 const { t } = useI18n()
 
@@ -38,6 +39,7 @@ const {
   modifyPreset,
   deletePreset,
   closeModifyPreset,
+  localImageFrame,
 } = usePresetTool(useImageStore(), useHistoryStore(), useEditorStore(), usePresetsStore(), t)
 
 const tabs = ['myPresets', 'createPreset']
@@ -89,8 +91,14 @@ const tabs = ['myPresets', 'createPreset']
             <div class="content-title">
               <p>Operations</p>
             </div>
-            <p v-for="(operation, index) in localImageOperations" :key="index">
-              {{ operation }}
+            <OperationsList
+              :localImageOperations="localImageOperations"
+              @removeOperation="(index) => localImageOperations.splice(index, 1)"
+              :modificationEnabled="isModifyingPreset"
+              @update:localImageOperations="(newList) => (localImageOperations = newList)"
+            />
+            <p>
+              {{ localImageFrame }}
             </p>
           </div>
         </div>
@@ -250,7 +258,10 @@ const tabs = ['myPresets', 'createPreset']
                 :style="{ transform: 'translateX(16px)' }"
               />
             </div>
-            <div class="content-aligned two-items">
+            <div
+              class="content-aligned two-items"
+              :class="newPreset.smartCrop.enabled ? '' : 'disabled'"
+            >
               <p>
                 {{ t('tools.preset.settings.createPreset.presetValues.smartCrop.color') }}
               </p>
@@ -295,19 +306,28 @@ const tabs = ['myPresets', 'createPreset']
                 :style="{ transform: 'translateX(16px)' }"
               />
             </div>
-            <div class="content-aligned two-items">
+            <div
+              class="content-aligned two-items"
+              :class="newPreset.frame.enabled ? '' : 'disabled'"
+            >
               <p>
                 {{ t('tools.preset.settings.createPreset.presetValues.frame.type') }}
               </p>
               <DropdownSelect v-model="newPreset.frame.type" :options="presetFrameOptions" />
             </div>
-            <div class="content-aligned two-items">
+            <div
+              class="content-aligned two-items"
+              :class="newPreset.frame.enabled ? '' : 'disabled'"
+            >
               <p>
                 {{ t('tools.preset.settings.createPreset.presetValues.frame.color') }}
               </p>
               <ColorPicker v-model="newPreset.frame.color" />
             </div>
-            <div class="content-aligned two-items">
+            <div
+              class="content-aligned two-items"
+              :class="newPreset.frame.enabled ? '' : 'disabled'"
+            >
               <p>
                 {{ t('tools.preset.settings.createPreset.presetValues.frame.width') }}
               </p>
