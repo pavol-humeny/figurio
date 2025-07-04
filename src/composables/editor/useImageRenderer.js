@@ -118,6 +118,8 @@ export function useImageRenderer(
       fh = fw
 
       imageStore.frame.headerSize = Math.floor(0.04 * imageStore.fileDimensions.height) // 4% of height
+    } else if (frame.type === 'framePhoneAndroid' || frame.type === 'framePhoneIOS') {
+      //TODO
     }
 
     const width = imageStore.fileDimensions.width
