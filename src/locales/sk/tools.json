@@ -117,9 +117,14 @@
     }
   },
   "grayscale": {
-    "label": "Grayscale",
-    "tip": "Prevedenie obrázka na odtiene šedej.",
-    "tipDisabled": ""
+    "label": "Odtiene šedi",
+    "tip": "Převeď obrázek na odstíny šedi.",
+    "tipDisabled": "",
+    "settings": {
+      "convertToGrayscaleButton": {
+        "text": "Převést na odstíny šedi"
+      }
+    }
   },
   "adjust": {
     "label": "Úpravy",
