@@ -104,8 +104,21 @@ export function useImageRenderer(
     const frame = imageStore.frame
     const frameEnabled = frame?.enabled && frame.width > 0
 
-    const fw = frameEnabled ? frame.width : 0
-    const fh = frameEnabled ? frame.height : 0
+    let fw = frameEnabled ? frame.width : 0
+    let fh = frameEnabled ? frame.height : 0
+
+    if (frame.type === 'frameMacBrowser' || frame.type === 'frameWindowsBrowser') {
+      fw = Math.floor(
+        (1 / 200) *
+          (imageStore.fileDimensions.height >= imageStore.fileDimensions.width
+            ? imageStore.fileDimensions.height
+            : imageStore.fileDimensions.width),
+      ) // 0.5% of the larger dimension
+
+      fh = fw
+
+      imageStore.frame.headerSize = Math.floor(0.04 * imageStore.fileDimensions.height) // 4% of height
+    }
 
     const width = imageStore.fileDimensions.width
     const height = imageStore.fileDimensions.height
@@ -193,50 +206,50 @@ export function useImageRenderer(
   //     console.log('[watch] Original image or operations changed, applying operations')
 
   //     // Crop operation
-      // if (imageStore.imageOperations.transformations.cropBox) {
-      //   console.log('Applying crop operation:', imageStore.imageOperations.transformations.cropBox)
+  // if (imageStore.imageOperations.transformations.cropBox) {
+  //   console.log('Applying crop operation:', imageStore.imageOperations.transformations.cropBox)
 
-      //   useCropTool(imageStore, historyStore, t).applyCropRender(
-      //     imageStore.imageOperations.transformations.cropBox,
-      //   )
-      // }
+  //   useCropTool(imageStore, historyStore, t).applyCropRender(
+  //     imageStore.imageOperations.transformations.cropBox,
+  //   )
+  // }
 
-      // // Rotation operation
-      // if (imageStore.imageOperations.transformations.rotationAngle !== 0) {
-      //   console.log(
-      //     'Applying rotation operation:',
-      //     imageStore.imageOperations.transformations.rotationAngle,
-      //   )
+  // // Rotation operation
+  // if (imageStore.imageOperations.transformations.rotationAngle !== 0) {
+  //   console.log(
+  //     'Applying rotation operation:',
+  //     imageStore.imageOperations.transformations.rotationAngle,
+  //   )
 
-      //   useRotateTool(imageStore, historyStore, t).applyRotationRender(
-      //     imageStore.imageOperations.transformations.rotationAngle,
-      //   )
-      // }
+  //   useRotateTool(imageStore, historyStore, t).applyRotationRender(
+  //     imageStore.imageOperations.transformations.rotationAngle,
+  //   )
+  // }
 
-      // // Flip operation
-      // if (imageStore.imageOperations.transformations.flipHorizontal) {
-      //   console.log('Applying horizontal flip operation')
+  // // Flip operation
+  // if (imageStore.imageOperations.transformations.flipHorizontal) {
+  //   console.log('Applying horizontal flip operation')
 
-      //   useFlipTool(imageStore, historyStore).applyFlipRender('horizontal')
-      // }
-      // if (imageStore.imageOperations.transformations.flipVertical) {
-      //   console.log('Applying vertical flip operation')
+  //   useFlipTool(imageStore, historyStore).applyFlipRender('horizontal')
+  // }
+  // if (imageStore.imageOperations.transformations.flipVertical) {
+  //   console.log('Applying vertical flip operation')
 
-      //   useFlipTool(imageStore, historyStore).applyFlipRender('vertical')
-      // }
+  //   useFlipTool(imageStore, historyStore).applyFlipRender('vertical')
+  // }
 
-      // // SmartCrop operation
-      // if (imageStore.imageOperations.smartCrop?.enabled) {
-      //   console.log('Applying smart crop operation')
+  // // SmartCrop operation
+  // if (imageStore.imageOperations.smartCrop?.enabled) {
+  //   console.log('Applying smart crop operation')
 
-      //   await useSmartCropTool(imageStore, historyStore, editorStore, t).applyAutoSmartCropRender()
-      // }
+  //   await useSmartCropTool(imageStore, historyStore, editorStore, t).applyAutoSmartCropRender()
+  // }
 
-      // // Grayscale operation
-      // if (imageStore.imageOperations.grayscale?.enabled) {
-      //   console.log('Applying grayscale operation')
-      //   await useGrayscaleTool(imageStore, historyStore, t).applyGrayscaleRender()
-      // }
+  // // Grayscale operation
+  // if (imageStore.imageOperations.grayscale?.enabled) {
+  //   console.log('Applying grayscale operation')
+  //   await useGrayscaleTool(imageStore, historyStore, t).applyGrayscaleRender()
+  // }
 
   //     renderAll()
   //   },

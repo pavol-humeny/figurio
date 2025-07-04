@@ -344,7 +344,7 @@
           "message": "Šablona s názvem: {presetName} byla úspěšně použita."
         },
         "presetAlreadyApplied": {
-          "title": "Šablona již použita",
+          "title": "Šablona je již použita",
           "message": "Šablona s názvem: {presetName} je již použita na obrázku."
         },
         "closeWithoutSavingConfirmation": {

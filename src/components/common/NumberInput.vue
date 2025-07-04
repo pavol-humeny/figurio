@@ -75,6 +75,7 @@ const onBlurOrEnter = () => {
 }
 
 const onIconDoubleClick = () => {
+  if (props.disabled) return
   if (typeof props.onReset === 'function') {
     props.onReset()
   }
@@ -115,6 +116,7 @@ const showUnit = props.unit !== ''
         :size="props.size"
         :color="props.color"
         @dblclick="onIconDoubleClick"
+        :class="{ 'not-allowed': props.disabled }"
         :style="{ top: props.iconTop + '%' }"
       />
       <span v-if="showUnit" class="input-unit">{{ props.unit }}</span>
@@ -151,6 +153,10 @@ input[type='number'] {
   transform: translateY(-50%);
   pointer-events: auto;
   cursor: pointer;
+}
+
+.input-icon.not-allowed {
+  cursor: default;
 }
 
 .input-unit {

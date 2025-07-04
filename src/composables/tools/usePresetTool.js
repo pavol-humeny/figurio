@@ -201,11 +201,19 @@ export function usePresetTool(imageStore, historyStore, editorStore, presetsStor
     const currentImageFrame = imageStore.getImageFrame()
     const presetFrame = JSON.parse(JSON.stringify(preset.imageFrame))
 
-
     const areOperationsEqual =
       JSON.stringify(currentImageOperations) === JSON.stringify(presetOperations)
 
-    const areFramesEqual = JSON.stringify(currentImageFrame) === JSON.stringify(presetFrame)
+    let areFramesEqual = true
+    if (currentImageFrame.type !== presetFrame.type) {
+      areFramesEqual = true
+    } else {
+      if (currentImageFrame.type === 'frameSolid') {
+        areFramesEqual =
+          currentImageFrame.color === presetFrame.color &&
+          currentImageFrame.width === presetFrame.width
+      }
+    }
 
     if (areOperationsEqual && areFramesEqual) {
       showToastModal(
@@ -234,6 +242,7 @@ export function usePresetTool(imageStore, historyStore, editorStore, presetsStor
       })
     }
 
+    // Apply frame
     imageStore.frame = JSON.parse(JSON.stringify(preset.imageFrame))
 
     // Save current operations to imageStore

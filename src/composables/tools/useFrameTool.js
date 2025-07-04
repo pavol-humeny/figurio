@@ -26,7 +26,7 @@ export function useFrameTool(imageStore, historyStore, editorStore, t) {
     },
   ])
 
-  const selectedFrameVariant = ref('none')
+  const selectedFrameVariant = ref(imageStore.frame.type || 'none')
 
   const handleFrameChange = (value) => {
     console.log('Selected frame variant:', value)
@@ -40,6 +40,13 @@ export function useFrameTool(imageStore, historyStore, editorStore, t) {
   watch(frameColor, (newColor) => {
     if (newColor) {
       applyFrame()
+    }
+  })
+
+  // watch type
+  watch(selectedFrameVariant, (newType) => {
+    if (newType !== 'frameSolid') {
+      frameWidth.value = 0
     }
   })
 
@@ -72,30 +79,40 @@ export function useFrameTool(imageStore, historyStore, editorStore, t) {
       if (width <= 0) {
         imageStore.frame.enabled = false
       }
-    } else if (
-      selectedFrameVariant.value === 'framePhoneAndroid' ||
-      selectedFrameVariant.value === 'framePhoneIOS'
-    ) {
-      // For phone Android frame, we can use a fixed width
-      imageStore.frame.width = 5
-      imageStore.frame.height = 5
-    } else if (
-      selectedFrameVariant.value === 'frameMacBrowser' ||
-      selectedFrameVariant.value === 'frameWindowsBrowser'
-    ) {
-      // For other frames, we can use a fixed width
-      imageStore.frame.width = Math.floor((1 / 200) * imageStore.fileDimensions.height)
-      imageStore.frame.height = Math.floor((1 / 200) * imageStore.fileDimensions.height)
-      imageStore.frame.headerSize = Math.floor(0.04 * imageStore.fileDimensions.height) // 4% of height
     }
+    // else if (
+    //   selectedFrameVariant.value === 'framePhoneAndroid' ||
+    //   selectedFrameVariant.value === 'framePhoneIOS'
+    // ) {
+    //   // For phone Android frame, we can use a fixed width
+    //   imageStore.frame.width = 5
+    //   imageStore.frame.height = 5
+    // } else if (
+    //   selectedFrameVariant.value === 'frameMacBrowser' ||
+    //   selectedFrameVariant.value === 'frameWindowsBrowser'
+    // ) {
+    //   // For other frames, we can use a fixed width
+    //   imageStore.frame.width = Math.floor((1 / 200) * imageStore.fileDimensions.height)
+    //   imageStore.frame.height = Math.floor((1 / 200) * imageStore.fileDimensions.height)
+    //   imageStore.frame.headerSize = Math.floor(0.04 * imageStore.fileDimensions.height) // 4% of height
+    // }
 
     historyStore.push(imageStore.getSnapshot())
   }
 
   function applyBrowserFrame(ctx, w, h, type, color) {
     const headerHeight = imageStore.frame.headerSize
+
+    // const headerHeight = Math.floor(0.04 * imageStore.fileDimensions.height) // 4% of height
+
     const borderSize = imageStore.frame.width
+    // const borderSize = Math.floor((1 / 200) * imageStore.fileDimensions.height)
+
+    imageStore.frame.width = borderSize
+    imageStore.frame.height = borderSize
+
     imageStore.frame.headerSize = headerHeight
+
     console.log(
       '!!!!!!!!!!!!!!!!!Applying browser frame:',
       type,
@@ -174,21 +191,22 @@ export function useFrameTool(imageStore, historyStore, editorStore, t) {
     const frame = imageStore.frame
     if (!ctx || !frame?.enabled) return
 
-    const fw = frame.width
-    const fh = frame.height
     const color = frame.color
     const type = frame.type
 
     ctx.clearRect(0, 0, canvasWidth, canvasHeight)
 
     switch (type) {
-      case 'frameSolid':
+      case 'frameSolid': {
+        const fw = frame.width
+        const fh = frame.height
         ctx.fillStyle = color
         ctx.fillRect(0, 0, canvasWidth, fh) // top
         ctx.fillRect(0, canvasHeight - fh, canvasWidth, fh) // bottom
         ctx.fillRect(0, fh, fw, canvasHeight - fh * 2) // left
         ctx.fillRect(canvasWidth - fw, fh, fw, canvasHeight - fh * 2) // right
         break
+      }
 
       case 'frameMacBrowser':
         applyBrowserFrame(ctx, canvasWidth, canvasHeight, 'mac', color)
