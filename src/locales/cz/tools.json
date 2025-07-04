@@ -318,6 +318,9 @@
         "savePresetButton": {
           "text": "Uložit šablonu"
         },
+        "addNewOperationButton": {
+          "text": "Přidat novou operaci"
+        },
         "presetSuccessfullySaved": {
           "title": "Šablona uložena",
           "message": "Šablona s názvem: {presetName} byla úspěšně uložena."

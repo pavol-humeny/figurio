@@ -13,7 +13,9 @@ import DropdownSelect from '../common/DropdownSelect.vue'
 import ToggleButton from '../common/ToggleButton.vue'
 import ColorPicker from '../common/ColorPicker.vue'
 import OperationsList from '../common/PresetOperationsList.vue'
-import OperationDetails from '../common/OperationDetails.vue'
+import PresetOperationDetails from '../common/PresetOperationDetails.vue'
+import BaseIcon from '../icons/BaseIcon.vue'
+import PresetNewOperation from '../common/PresetNewOperation.vue'
 
 const { t } = useI18n()
 
@@ -42,6 +44,10 @@ const {
   closeModifyPreset,
   localImageFrame,
   selectedOperation,
+  createNewOperation,
+  addNewOperation,
+  creatingNewOperation,
+  newOperation,
 } = usePresetTool(useImageStore(), useHistoryStore(), useEditorStore(), usePresetsStore(), t)
 
 const tabs = ['myPresets', 'createPreset']
@@ -101,12 +107,34 @@ const tabs = ['myPresets', 'createPreset']
               @selectOperation="(op) => (selectedOperation = op)"
               :disabled="!isModifyingPreset"
             />
+            <button
+              class="button button-circle button-control"
+              @click="() => createNewOperation()"
+              v-if="isModifyingPreset && !creatingNewOperation"
+            >
+              <BaseIcon name="IconPlus" :size="23" />
+            </button>
+
+            <PresetOperationDetails
+              v-if="selectedOperation"
+              :operation="selectedOperation"
+              @update:operation="(newOp) => Object.assign(selectedOperation, newOp)"
+            />
           </div>
-          <OperationDetails
-            v-if="selectedOperation"
-            :operation="selectedOperation"
-            @update:operation="(newOp) => Object.assign(selectedOperation, newOp)"
-          />
+        </div>
+        <div class="settings-content-wrapper" v-if="creatingNewOperation">
+          <div class="content-wrapper">
+            <div class="content-title">
+              <p>Add new operation</p>
+            </div>
+            <PresetNewOperation v-model:operation="newOperation" />
+
+            <DefaultButton
+              v-if="newOperation.type !== ''"
+              :text="t('tools.preset.settings.myPresets.addNewOperationButton.text')"
+              @click="addNewOperation()"
+            />
+          </div>
         </div>
         <div class="settings-content-wrapper" v-if="presetsOptions.length > 0">
           <div class="content-wrapper">
@@ -134,7 +162,7 @@ const tabs = ['myPresets', 'createPreset']
               @click="savePresetChanges()"
             />
             <DefaultButton
-              v-else-if="isModifyingPreset && !isPresetModified"
+              v-if="isModifyingPreset && !isPresetModified"
               :text="t('tools.preset.settings.myPresets.closeModifyingButton.text')"
               @click="closeModifyPreset()"
             />

@@ -323,6 +323,9 @@
         "savePresetButton": {
           "text": "Save preset"
         },
+        "addNewOperationButton": {
+          "text": "Add new operation"
+        },
         "presetSuccessfullySaved": {
           "title": "Preset saved",
           "message": "Preset with name: {presetName} has been successfully saved."

@@ -6,7 +6,8 @@ export function usePresetTool(imageStore, historyStore, editorStore, presetsStor
   const isModifyingPreset = ref(false)
   const initializing = ref(false)
   const selectedOperation = ref(null)
-
+  const creatingNewOperation = ref(false)
+  const newOperation = ref(null)
 
   const presetsOptions = computed(() => {
     return presetsStore.allPresetNames.map((name) => ({
@@ -59,6 +60,7 @@ export function usePresetTool(imageStore, historyStore, editorStore, presetsStor
   }
 
   const savePresetChanges = () => {
+    console.log('Saving preset changes')
     presetsStore.updatePreset(
       presetsStore.selectedPresetName,
       localPresetName.value,
@@ -68,12 +70,16 @@ export function usePresetTool(imageStore, historyStore, editorStore, presetsStor
     isPresetModified.value = false
     isModifyingPreset.value = false
     selectedOperation.value = null
+    newOperation.value = null
+    creatingNewOperation.value = false
   }
 
   const closeModifyPreset = () => {
     isModifyingPreset.value = false
     isPresetModified.value = false
-    selectedOperation.value = null 
+    selectedOperation.value = null
+    newOperation.value = null
+    creatingNewOperation.value = false
   }
 
   const deletePreset = () => {
@@ -83,6 +89,22 @@ export function usePresetTool(imageStore, historyStore, editorStore, presetsStor
     selectedPresetName.value = '' // Reset selected preset name
     localPresetName.value = ''
     localImageOperations.value = {}
+    selectedOperation.value = null
+    newOperation.value = null
+    creatingNewOperation.value = false
+  }
+
+  const createNewOperation = () => {
+    newOperation.value = { type: '' }
+    creatingNewOperation.value = true
+    selectedOperation.value = null
+  }
+
+  const addNewOperation = () => {
+    creatingNewOperation.value = false
+    if (!newOperation.value) return
+
+    localImageOperations.value.push(JSON.parse(JSON.stringify(newOperation.value)))
   }
 
   // createPreset
@@ -253,5 +275,9 @@ export function usePresetTool(imageStore, historyStore, editorStore, presetsStor
     closeModifyPreset,
     localImageFrame,
     selectedOperation,
+    createNewOperation,
+    addNewOperation,
+    creatingNewOperation,
+    newOperation,
   }
 }

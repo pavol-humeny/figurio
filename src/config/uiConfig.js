@@ -4,7 +4,7 @@ export const uiConfig = {
   rightPanelOpen: true,
   rightPanelDefaultWidth: 300,
   rightPanelWidth: 300,
-  rightPanelMinWidth: 200,
+  rightPanelMinWidth: 300,
   rightPanelMaxWidth: 600,
   collapseButtonWidth: 30,
 }

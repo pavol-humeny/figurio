@@ -22,26 +22,27 @@ const props = defineProps({
 
 const emit = defineEmits(['removeOperation', 'update:localImageOperations', 'selectOperation'])
 
-const internalList = ref([...props.localImageOperations])
 const selectedOperation = ref(null)
+const internalList = ref([...props.localImageOperations])
 
 watch(
   () => props.localImageOperations,
   (newVal) => {
     internalList.value = [...newVal]
   },
-  { immediate: true },
+  { immediate: true, deep: true },
 )
-
-const onUpdate = (evt) => {
-  emit('update:localImageOperations', [...internalList.value])
-}
 
 const removeOperation = (index, operation) => {
   if (operation === selectedOperation.value) {
+    console.log('Removing selected operation:', operation)
     selectedOperation.value = null
   }
   internalList.value.splice(index, 1)
+  emit('update:localImageOperations', [...internalList.value])
+}
+
+const onDragUpdate = () => {
   emit('update:localImageOperations', [...internalList.value])
 }
 
@@ -56,8 +57,7 @@ const selectOperation = (operation) => {
 }
 
 const handleSelect = (e, operation) => {
-  if (e.target.closest('.drag-handle')) return
-
+  if (e.target.closest('.drag-handle') || props.disabled) return
   selectOperation(operation)
 }
 
@@ -70,7 +70,7 @@ const getOperationLabel = (type) => {
     case 'smartCrop':
       return t('tools.preset.settings.myPresets.presetValues.smartCrop.label')
     case 'grayscale':
-      return t('tools.preset.settings.myPresets.presetValues.grayScale.label')
+      return t('tools.preset.settings.myPresets.presetValues.grayscale.label')
     default:
       return type
   }
@@ -85,8 +85,8 @@ const getOperationLabel = (type) => {
     handle=".drag-handle"
     animation="200"
     ghost-class="drag-ghost"
-    @update="onUpdate"
     class="operations-list"
+    @update="onDragUpdate"
     :class="{ 'disabled-list': props.disabled }"
   >
     <template #item="{ element, index }">
@@ -118,7 +118,7 @@ const getOperationLabel = (type) => {
             </p>
           </div>
           <div v-else-if="element.type === 'smartCrop'">
-            <p :style="{ color: element.color }">{{ element.color }}</p>
+            <div class="color-circle" :style="{ backgroundColor: element.color }"></div>
           </div>
         </div>
 
@@ -150,7 +150,7 @@ const getOperationLabel = (type) => {
 .operation-item {
   display: flex;
   justify-content: space-between;
-  align-items: flex-start;
+  align-items: center;
   gap: 10px;
   border-bottom: 1px solid var(--background-c);
   padding: 6px 10px;
@@ -213,5 +213,12 @@ const getOperationLabel = (type) => {
 
 .disabled-list {
   opacity: 0.5;
+}
+
+.color-circle {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  border: var(--border-input);
 }
 </style>

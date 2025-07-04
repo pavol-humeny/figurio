@@ -14,8 +14,11 @@ const props = defineProps({
 })
 
 const presetRotationOptions = [
+  { label: '180°', value: 180 },
   { label: '90°', value: 90 },
+  { label: '0°', value: 0 },
   { label: '-90°', value: -90 },
+  { label: '-180°', value: -180 },
 ]
 
 const presetFlipOptions = [
@@ -47,7 +50,7 @@ const update = () => {
 </script>
 
 <template>
-  <div class="operation-details">
+  <div class="operation-details" v-if="localOperation.type !== 'grayscale'">
     <div class="content-title" :style="{ padding: '10px 0' }">
       <p>
         {{ t('tools.preset.settings.myPresets.modifyOperation') }}
