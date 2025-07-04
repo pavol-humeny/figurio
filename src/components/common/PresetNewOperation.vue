@@ -56,7 +56,7 @@ const operationOptions = [
 const selectedType = ref(props.operation?.type || '')
 
 const params = reactive({
-  angle: 90,
+  angle: 0,
   direction: 'horizontal',
   color: '#000000',
 })

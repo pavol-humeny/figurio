@@ -277,6 +277,15 @@
           "text": "Apply preset"
         },
         "presetValues": {
+          "operationsTexts": {
+            "label": "Operations",
+            "noOperations": "No operations",
+            "addNewOperation": "Add new operation"
+          },
+          "frameTexts": {
+            "label": "Frame",
+            "noFrame": "No frame"
+          },
           "transformations": {
             "label": "Transformations",
             "rotation": "Rotation",
@@ -337,6 +346,16 @@
         "presetAlreadyApplied": {
           "title": "Preset already applied",
           "message": "Preset with name: {presetName} is already applied to the image."
+        },
+        "closeWithoutSavingConfirmation": {
+          "title": "Close without saving",
+          "message": "Are you sure you want to close without saving changes?",
+          "cancel": "Cancel",
+          "confirm": "Close without saving"
+        },
+        "closeWithoutSaving": {
+          "title": "Close without saving",
+          "message": "Your changes were deleted."
         }
       }
     }

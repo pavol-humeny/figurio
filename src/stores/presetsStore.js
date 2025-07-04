@@ -41,10 +41,10 @@ export const usePresetsStore = defineStore('presetsStore', {
 
     createPreset(name, imageOperations = [], imageFrame = {}) {
       const trimmed = name.trim()
-      if (!trimmed) return false
+      if (!trimmed) return 'invalid'
 
       const exists = this.presets.some((p) => p.name === trimmed)
-      if (exists) return false
+      if (exists) return 'alreadyExists'
 
       this.presets.push({
         name: trimmed,

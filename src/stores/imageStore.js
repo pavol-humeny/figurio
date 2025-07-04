@@ -108,6 +108,10 @@ export const useImageStore = defineStore('imageStore', {
       return JSON.parse(JSON.stringify(this.imageOperations))
     },
 
+    getImageFrame() {
+      return JSON.parse(JSON.stringify(this.frame))
+    },
+
     resetImageOperations() {
       this.imageOperations = []
     },

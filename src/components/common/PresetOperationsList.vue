@@ -1,5 +1,5 @@
 <script setup>
-import { ref, watch } from 'vue'
+import { ref, watch, onMounted, onUpdated, nextTick } from 'vue'
 import draggable from 'vuedraggable'
 import { useI18n } from 'vue-i18n'
 
@@ -137,11 +137,11 @@ const getOperationLabel = (type) => {
 <style scoped>
 .operations-list {
   height: 300px;
-  /* min-width: 240px; */
-  width: 80%;
+  width: fit-content;
+  max-width: 100%;
+  min-width: 80%;
   overflow-y: auto;
   border-radius: 10px;
-  /* padding: 7px 0; */
   margin-top: 10px;
   background: var(--secondary-c);
   border: solid 1px var(--secondary-c);

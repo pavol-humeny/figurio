@@ -1,6 +1,11 @@
 import { ref, computed, watch } from 'vue'
+import { useToastModal } from '../modals/useToastModal'
+import { useConfirmModal } from '../modals/useConfirmModal'
 
 export function usePresetTool(imageStore, historyStore, editorStore, presetsStore, t) {
+  const { showToastModal } = useToastModal()
+  const { showConfirmModal } = useConfirmModal()
+
   // myPresets
   const isPresetModified = ref(false)
   const isModifyingPreset = ref(false)
@@ -24,8 +29,11 @@ export function usePresetTool(imageStore, historyStore, editorStore, presetsStor
   })
 
   const localPresetName = ref('')
+  const tmpLocalPresetName = ref('')
   const localImageOperations = ref([])
-  const localImageFrame = ref({}) //
+  const tmpLocalImageOperations = ref([])
+  const localImageFrame = ref({})
+  const tmpLocalImageFrame = ref({})
 
   watch(
     () => presetsStore.selectedPreset,
@@ -57,6 +65,10 @@ export function usePresetTool(imageStore, historyStore, editorStore, presetsStor
   const modifyPreset = () => {
     isModifyingPreset.value = true
     isPresetModified.value = false
+
+    tmpLocalImageFrame.value = JSON.parse(JSON.stringify(localImageFrame.value))
+    tmpLocalPresetName.value = localPresetName.value
+    tmpLocalImageOperations.value = JSON.parse(JSON.stringify(localImageOperations.value))
   }
 
   const savePresetChanges = () => {
@@ -72,23 +84,77 @@ export function usePresetTool(imageStore, historyStore, editorStore, presetsStor
     selectedOperation.value = null
     newOperation.value = null
     creatingNewOperation.value = false
+
+    showToastModal(
+      'success',
+      t('tools.preset.settings.myPresets.presetSuccessfullySaved.title'),
+      t('tools.preset.settings.myPresets.presetSuccessfullySaved.message', {
+        presetName: localPresetName.value,
+      }),
+    )
   }
 
-  const closeModifyPreset = () => {
+  const closeModifyPreset = async () => {
+    if (isPresetModified.value) {
+      const confirmed = await showConfirmModal(
+        t('tools.preset.settings.myPresets.closeWithoutSavingConfirmation.title'),
+        t('tools.preset.settings.myPresets.closeWithoutSavingConfirmation.message'),
+        t('tools.preset.settings.myPresets.closeWithoutSavingConfirmation.cancel'),
+        t('tools.preset.settings.myPresets.closeWithoutSavingConfirmation.confirm'),
+      )
+      if (!confirmed) {
+        return
+      } else {
+        showToastModal(
+          'info',
+          t('tools.preset.settings.myPresets.closeWithoutSaving.title'),
+          t('tools.preset.settings.myPresets.closeWithoutSaving.message'),
+        )
+      }
+    }
+
     isModifyingPreset.value = false
     isPresetModified.value = false
     selectedOperation.value = null
     newOperation.value = null
     creatingNewOperation.value = false
+
+    localPresetName.value = tmpLocalPresetName.value
+    localImageOperations.value = JSON.parse(JSON.stringify(tmpLocalImageOperations.value))
+    localImageFrame.value = JSON.parse(JSON.stringify(tmpLocalImageFrame.value))
+    tmpLocalPresetName.value = ''
+    tmpLocalImageOperations.value = []
+    tmpLocalImageFrame.value = {}
   }
 
-  const deletePreset = () => {
+  const deletePreset = async () => {
+    const confirmed = await showConfirmModal(
+      t('tools.preset.settings.myPresets.deletePresetConfirmation.title'),
+      t('tools.preset.settings.myPresets.deletePresetConfirmation.message', {
+        presetName: presetsStore.selectedPresetName,
+      }),
+      t('tools.preset.settings.myPresets.deletePresetConfirmation.cancel'),
+      t('tools.preset.settings.myPresets.deletePresetConfirmation.confirm'),
+    )
+    if (!confirmed) {
+      return
+    }
+
+    showToastModal(
+      'success',
+      t('tools.preset.settings.myPresets.presetSuccessfullyDeleted.title'),
+      t('tools.preset.settings.myPresets.presetSuccessfullyDeleted.message', {
+        presetName: presetsStore.selectedPresetName,
+      }),
+    )
+
     presetsStore.deletePreset(presetsStore.selectedPresetName)
     isModifyingPreset.value = false
     isPresetModified.value = false
     selectedPresetName.value = '' // Reset selected preset name
     localPresetName.value = ''
     localImageOperations.value = {}
+    localImageFrame.value = {}
     selectedOperation.value = null
     newOperation.value = null
     creatingNewOperation.value = false
@@ -168,6 +234,25 @@ export function usePresetTool(imageStore, historyStore, editorStore, presetsStor
     },
   ])
 
+  watch(
+    () => localImageFrame.value.enabled,
+    (enabled) => {
+      isPresetModified.value = true
+      if (enabled) {
+        // Set default values for frame if not already set
+        if (
+          !localImageFrame.value.type ||
+          !localImageFrame.value.color ||
+          localImageFrame.value.width == null
+        ) {
+          localImageFrame.value.type = 'frameSolid'
+          localImageFrame.value.color = '#000000'
+          localImageFrame.value.width = 0
+        }
+      }
+    },
+  )
+
   const resetPreset = () => {
     newPreset.value = {
       presetName: '',
@@ -234,6 +319,12 @@ export function usePresetTool(imageStore, historyStore, editorStore, presetsStor
     )
 
     resetPreset()
+
+    showToastModal(
+      'success',
+      t('tools.preset.settings.createPreset.presetSuccessfullyCreated.title'),
+      t('tools.preset.settings.createPreset.presetSuccessfullyCreated.message'),
+    )
   }
 
   const resetFrameWidth = () => {
@@ -244,12 +335,35 @@ export function usePresetTool(imageStore, historyStore, editorStore, presetsStor
   const useCurrentModifications = () => {
     console.log('Using current modifications to create preset')
 
-    presetsStore.createPreset(
+    const result = presetsStore.createPreset(
       structuredClone(newPreset.value.presetName),
       structuredClone(imageStore.getImageOperations()),
+      structuredClone(imageStore.getImageFrame()),
     )
 
+    if (result === 'invalid') {
+      showToastModal(
+        'error',
+        t('tools.preset.settings.createPreset.invalidPresetName.title'),
+        t('tools.preset.settings.createPreset.invalidPresetName.message'),
+      )
+      return
+    } else if (result === 'alreadyExists') {
+      showToastModal(
+        'error',
+        t('tools.preset.settings.createPreset.presetAlreadyExists.title'),
+        t('tools.preset.settings.createPreset.presetAlreadyExists.message'),
+      )
+      return
+    }
+
     resetPreset()
+
+    showToastModal(
+      'success',
+      t('tools.preset.settings.createPreset.presetSuccessfullyCreated.title'),
+      t('tools.preset.settings.createPreset.presetSuccessfullyCreated.message'),
+    )
   }
 
   return {

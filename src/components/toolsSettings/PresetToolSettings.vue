@@ -79,7 +79,7 @@ const tabs = ['myPresets', 'createPreset']
             </div>
           </div>
         </div>
-        <div class="settings-content-wrapper" v-if="presetsOptions.length > 0">
+        <div class="settings-content-wrapper" v-if="selectedPresetName !== ''">
           <div class="content-wrapper">
             <div class="content-title">
               <p>
@@ -95,10 +95,15 @@ const tabs = ['myPresets', 'createPreset']
             />
           </div>
         </div>
-        <div class="settings-content-wrapper" v-if="presetsOptions.length > 0">
+        <div
+          class="settings-content-wrapper"
+          v-if="presetsOptions.length > 0 && (localImageOperations.length > 0 || isModifyingPreset)"
+        >
           <div class="content-wrapper">
             <div class="content-title">
-              <p>Operations</p>
+              <p>
+                {{ t('tools.preset.settings.myPresets.presetValues.operationsTexts.label') }}
+              </p>
             </div>
             <OperationsList
               :localImageOperations="localImageOperations"
@@ -122,13 +127,30 @@ const tabs = ['myPresets', 'createPreset']
             />
           </div>
         </div>
+        <div
+          v-else-if="
+            presetsOptions.length > 0 && (localImageOperations.length === 0 || !isModifyingPreset)
+          "
+          class="settings-content-wrapper"
+        >
+          <div class="content-wrapper">
+            <div class="content-title">
+              <p>
+                {{ t('tools.preset.settings.myPresets.presetValues.operationsTexts.noOperations') }}
+              </p>
+            </div>
+          </div>
+        </div>
         <div class="settings-content-wrapper" v-if="creatingNewOperation">
           <div class="content-wrapper">
             <div class="content-title">
-              <p>Add new operation</p>
+              <p>
+                {{
+                  t('tools.preset.settings.myPresets.presetValues.operationsTexts.addNewOperation')
+                }}
+              </p>
             </div>
             <PresetNewOperation v-model:operation="newOperation" />
-
             <DefaultButton
               v-if="newOperation.type !== ''"
               :text="t('tools.preset.settings.myPresets.addNewOperationButton.text')"
@@ -136,14 +158,79 @@ const tabs = ['myPresets', 'createPreset']
             />
           </div>
         </div>
-        <div class="settings-content-wrapper" v-if="presetsOptions.length > 0">
+        <div class="settings-content-wrapper" v-if="localImageFrame.enabled || isModifyingPreset">
           <div class="content-wrapper">
             <div class="content-title">
-              <p>Frame</p>
+              <p>
+                {{ t('tools.preset.settings.myPresets.presetValues.frameTexts.label') }}
+              </p>
             </div>
-            <p>
-              {{ localImageFrame }}
-            </p>
+            <div
+              class="content-aligned two-items"
+              v-if="isModifyingPreset"
+              :class="!isModifyingPreset ? 'disabled' : ''"
+            >
+              <p>
+                {{ t('tools.preset.settings.myPresets.presetValues.frame.enabled') }}
+              </p>
+              <ToggleButton
+                v-model="localImageFrame.enabled"
+                :scale="0.6"
+                :style="{ transform: 'translateX(16px)' }"
+              />
+            </div>
+            <div
+              class="content-aligned two-items"
+              v-if="localImageFrame.enabled"
+              :class="!isModifyingPreset ? 'disabled' : ''"
+            >
+              <p>
+                {{ t('tools.preset.settings.myPresets.presetValues.frame.type') }}
+              </p>
+              <DropdownSelect v-model="localImageFrame.type" :options="presetFrameOptions" />
+            </div>
+            <div
+              class="content-aligned two-items"
+              v-if="localImageFrame.enabled"
+              :class="!isModifyingPreset ? 'disabled' : ''"
+            >
+              <p>
+                {{ t('tools.preset.settings.myPresets.presetValues.frame.color') }}
+              </p>
+              <ColorPicker v-model="localImageFrame.color" />
+            </div>
+            <div
+              class="content-aligned two-items"
+              v-if="localImageFrame.enabled"
+              :class="localImageFrame.type !== 'frameSolid' ? 'disabled' : ''"
+            >
+              <p>
+                {{ t('tools.preset.settings.myPresets.presetValues.frame.width') }}
+              </p>
+              <NumberInput
+                ref="frameWidthRef"
+                v-model="localImageFrame.width"
+                :min="0"
+                :max="100"
+                :step="1"
+                unit="px"
+                icon="IconArrowWidth"
+                :iconTop="45"
+                :onReset="() => resetFrameWidth()"
+              />
+            </div>
+          </div>
+        </div>
+        <div
+          v-else-if="!localImageFrame.enabled && !isModifyingPreset"
+          class="settings-content-wrapper"
+        >
+          <div class="content-wrapper">
+            <div class="content-title">
+              <p>
+                {{ t('tools.preset.settings.myPresets.presetValues.frameTexts.noFrame') }}
+              </p>
+            </div>
           </div>
         </div>
         <div class="settings-content-wrapper" v-if="isModifyingPreset && presetsOptions.length > 0">
@@ -154,7 +241,10 @@ const tabs = ['myPresets', 'createPreset']
             />
           </div>
         </div>
-        <div class="settings-content-wrapper" v-if="presetsOptions.length > 0">
+        <div
+          class="settings-content-wrapper"
+          v-if="presetsOptions.length > 0 && selectedPresetName !== ''"
+        >
           <div class="content-wrapper">
             <DefaultButton
               v-if="isModifyingPreset && isPresetModified"
@@ -162,7 +252,7 @@ const tabs = ['myPresets', 'createPreset']
               @click="savePresetChanges()"
             />
             <DefaultButton
-              v-if="isModifyingPreset && !isPresetModified"
+              v-if="isModifyingPreset"
               :text="t('tools.preset.settings.myPresets.closeModifyingButton.text')"
               @click="closeModifyPreset()"
             />
@@ -173,6 +263,7 @@ const tabs = ['myPresets', 'createPreset']
             />
           </div>
         </div>
+
         <div class="settings-content-wrapper" style="border: none">
           <!-- Empty space -->
         </div>
@@ -336,7 +427,6 @@ const tabs = ['myPresets', 'createPreset']
           <div class="content-wrapper">
             <div class="content-title">
               <p>
-                <!-- frame -->
                 {{ t('tools.preset.settings.createPreset.presetValues.frame.label') }}
               </p>
             </div>
