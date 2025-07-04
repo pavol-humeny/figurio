@@ -48,6 +48,7 @@ const {
   addNewOperation,
   creatingNewOperation,
   newOperation,
+  applyPreset,
 } = usePresetTool(useImageStore(), useHistoryStore(), useEditorStore(), usePresetsStore(), t)
 
 const tabs = ['myPresets', 'createPreset']
@@ -93,6 +94,21 @@ const tabs = ['myPresets', 'createPreset']
               updateOnChange
               :disabled="!isModifyingPreset"
             />
+          </div>
+        </div>
+        <div
+          class="settings-content-wrapper"
+          v-if="selectedPresetName !== '' && !isModifyingPreset"
+        >
+          <div class="content-wrapper">
+            <div class="content-title">
+              <div class="content-button">
+                <DefaultButton
+                  :text="$t('tools.preset.settings.myPresets.applyPresetButton.text')"
+                  @click="applyPreset()"
+                />
+              </div>
+            </div>
           </div>
         </div>
         <div

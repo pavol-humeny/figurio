@@ -97,6 +97,13 @@ export const useImageStore = defineStore('imageStore', {
     },
   },
   actions: {
+    resetRenderedImageToOriginal() {
+      if (this.originalImage) {
+        this.renderedImage = this.originalImage
+        this.fileDimensions = { ...this.originalFileDimensions }
+      }
+    },
+
     hasGrayscaleOperation() {
       return this.imageOperations.some((op) => op.type === 'grayscale')
     },

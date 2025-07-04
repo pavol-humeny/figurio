@@ -8,20 +8,7 @@ export function useGrayscaleTool(imageStore, historyStore, t) {
     return imageStore.hasGrayscaleOperation()
   })
 
-  const applyGrayscale = () => {
-    imageStore.addImageOperation({
-      type: 'grayscale',
-      enabled: true,
-    })
-
-    applyGrayscaleRender()
-
-    historyStore.push(imageStore.getSnapshot())
-  }
-
-  const applyGrayscaleRender = async () => {
-    if (!imageStore.renderedImage) return
-
+  const applyGrayscale = async () => {
     if (imageStore.svgObjects.length > 0) {
       const confirmed = await showConfirmModal(
         t('tools.confirmNeedRasterization.title'),
@@ -35,6 +22,19 @@ export function useGrayscaleTool(imageStore, historyStore, t) {
         return
       }
     }
+
+    imageStore.addImageOperation({
+      type: 'grayscale',
+      enabled: true,
+    })
+
+    applyGrayscaleRender()
+
+    historyStore.push(imageStore.getSnapshot())
+  }
+
+  const applyGrayscaleRender = () => {
+    if (!imageStore.renderedImage) return
 
     const canvas = document.createElement('canvas')
     const ctx = canvas.getContext('2d')

@@ -1,12 +1,5 @@
 import { onMounted, watch, ref, nextTick } from 'vue'
 import { useFrameTool } from '../tools/useFrameTool'
-// import { useFlipTool } from '../tools/useFlipTool'
-// import { useRotateTool } from '../tools/useRotateTool'
-// import { useSmartCropTool } from '../tools/useSmartCropTool'
-// import { useCropTool } from '../tools/useCropTool'
-// import { useGrayscaleTool } from '../tools/useGrayscaleTool'
-// import { useConfirmModal } from '@/composables/modals/useConfirmModal'
-// import { useToastModal } from '@/composables/modals/useToastModal'
 
 export function useImageRenderer(
   imageStore,

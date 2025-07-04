@@ -168,14 +168,14 @@ export function useSmartCropTool(imageStore, historyStore, editorStore, t) {
       cropBox: JSON.parse(JSON.stringify(cropBox.value)),
     })
 
-    applyAutoSmartCropRender(cropBox.value)
+    applyAutoSmartCropRender()
 
     historyStore.push(imageStore.getSnapshot())
   }
 
-  const applyAutoSmartCropRender = async (cropBox) => {
-    calculateIndents(selectedColor.value)
-    await applyCrop(cropBox)
+  const applyAutoSmartCropRender = async () => {
+    const newCropBox = calculateIndents(selectedColor.value)
+    await applyCrop(newCropBox)
   }
 
   const showAutoSmartCrop = () => {

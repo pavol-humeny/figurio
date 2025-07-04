@@ -1,6 +1,10 @@
 import { ref, computed, watch } from 'vue'
 import { useToastModal } from '../modals/useToastModal'
 import { useConfirmModal } from '../modals/useConfirmModal'
+import { useFlipTool } from './useFlipTool'
+import { useRotateTool } from './useRotateTool'
+import { useSmartCropTool } from './useSmartCropTool'
+import { useGrayscaleTool } from './useGrayscaleTool'
 
 export function usePresetTool(imageStore, historyStore, editorStore, presetsStore, t) {
   const { showToastModal } = useToastModal()
@@ -171,6 +175,71 @@ export function usePresetTool(imageStore, historyStore, editorStore, presetsStor
     if (!newOperation.value) return
 
     localImageOperations.value.push(JSON.parse(JSON.stringify(newOperation.value)))
+  }
+
+  const applyPreset = async () => {
+    if (imageStore.svgObjects.length > 0) {
+      const confirmed = await showConfirmModal(
+        t('tools.confirmNeedRasterization.title'),
+        t('tools.confirmNeedRasterization.message'),
+        t('tools.confirmNeedRasterization.cancel'),
+        t('tools.confirmNeedRasterization.confirm'),
+      )
+      if (confirmed) {
+        await imageStore.rasterize()
+      } else {
+        return
+      }
+    }
+
+    const preset = presetsStore.selectedPreset
+
+    // Get image operations from imageStore and compare with preset
+    const currentImageOperations = imageStore.getImageOperations()
+    const presetOperations = JSON.parse(JSON.stringify(preset.imageOperations))
+
+    const currentImageFrame = imageStore.getImageFrame()
+    const presetFrame = JSON.parse(JSON.stringify(preset.imageFrame))
+
+
+    const areOperationsEqual =
+      JSON.stringify(currentImageOperations) === JSON.stringify(presetOperations)
+
+    const areFramesEqual = JSON.stringify(currentImageFrame) === JSON.stringify(presetFrame)
+
+    if (areOperationsEqual && areFramesEqual) {
+      showToastModal(
+        'info',
+        t('tools.preset.settings.myPresets.presetAlreadyApplied.title'),
+        t('tools.preset.settings.myPresets.presetAlreadyApplied.message', {
+          presetName: preset.name,
+        }),
+      )
+      return
+    }
+
+    imageStore.resetRenderedImageToOriginal()
+
+    if (preset.imageOperations.length !== 0) {
+      preset.imageOperations.forEach((operation) => {
+        if (operation.type === 'rotation') {
+          useRotateTool(imageStore, historyStore, t).applyRotationRender(operation.angle)
+        } else if (operation.type === 'flip') {
+          useFlipTool(imageStore, historyStore).applyFlipRender(operation.direction)
+        } else if (operation.type === 'smartCrop') {
+          useSmartCropTool(imageStore, historyStore).applyAutoSmartCropRender(operation)
+        } else if (operation.type === 'grayscale') {
+          useGrayscaleTool(imageStore, historyStore).applyGrayscaleRender()
+        }
+      })
+    }
+
+    imageStore.frame = JSON.parse(JSON.stringify(preset.imageFrame))
+
+    // Save current operations to imageStore
+    imageStore.imageOperations = JSON.parse(JSON.stringify(preset.imageOperations))
+
+    historyStore.push(imageStore.getSnapshot())
   }
 
   // createPreset
@@ -393,5 +462,6 @@ export function usePresetTool(imageStore, historyStore, editorStore, presetsStor
     addNewOperation,
     creatingNewOperation,
     newOperation,
+    applyPreset,
   }
 }
