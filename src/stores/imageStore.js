@@ -79,7 +79,7 @@ export const useImageStore = defineStore('imageStore', {
 
     imageOperations: [],
     // imageOperations: [
-    // {'grayScale': {'enabled': true}},
+    // {'grayscale': {'enabled': true}},
     // {'crop': {'x': 50, 'y': 50, 'width': 200, 'height': 200}},
 
     frame: {
@@ -98,7 +98,7 @@ export const useImageStore = defineStore('imageStore', {
   },
   actions: {
     hasGrayscaleOperation() {
-      return this.imageOperations.some((op) => op.type === 'grayScale')
+      return this.imageOperations.some((op) => op.type === 'grayscale')
     },
     addImageOperation(operation) {
       this.imageOperations.push(structuredClone(operation))

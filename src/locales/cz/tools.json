@@ -116,7 +116,7 @@
       }
     }
   },
-  "grayScale": {
+  "grayscale": {
     "label": "Grayscale",
     "tip": "Převeď obrázek na odstíny šedi.",
     "tipDisabled": ""
@@ -228,7 +228,7 @@
             "enabled": "Povoleno",
             "color": "Barva"
           },
-          "grayScale": {
+          "grayscale": {
             "label": "Grayscale",
             "enabled": "Povoleno"
           },
@@ -284,7 +284,7 @@
             "enabled": "Povoleno",
             "color": "Barva"
           },
-          "grayScale": {
+          "grayscale": {
             "label": "Odstíny šedi",
             "enabled": "Povoleno"
           },

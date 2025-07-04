@@ -36,7 +36,7 @@
         }
       },
       "scale": {
-        "label": "Scale"
+        "label": "scale"
       },
       "flip": {
         "label": "Flip",
@@ -116,12 +116,12 @@
       }
     }
   },
-  "grayScale": {
+  "grayscale": {
     "label": "Grayscale",
     "tip": "Convert the image to grayscale.",
     "tipDisabled": "",
     "settings": {
-      "convertToGrayScaleButton": {
+      "convertToGrayscaleButton": {
         "text": "Convert to grayscale"
       }
     }
@@ -233,7 +233,7 @@
             "enabled": "Enabled",
             "color": "Color"
           },
-          "grayScale": {
+          "grayscale": {
             "label": "Grayscale",
             "enabled": "Enabled"
           },
@@ -289,8 +289,8 @@
             "enabled": "Enabled",
             "color": "Color"
           },
-          "grayScale": {
-            "label": "GrayScale",
+          "grayscale": {
+            "label": "Grayscale",
             "enabled": "Enabled"
           },
           "frame": {

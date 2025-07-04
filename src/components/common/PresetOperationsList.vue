@@ -69,7 +69,7 @@ const getOperationLabel = (type) => {
       return t('tools.preset.settings.myPresets.presetValues.transformations.flip')
     case 'smartCrop':
       return t('tools.preset.settings.myPresets.presetValues.smartCrop.label')
-    case 'grayScale':
+    case 'grayscale':
       return t('tools.preset.settings.myPresets.presetValues.grayScale.label')
     default:
       return type

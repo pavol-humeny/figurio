@@ -289,12 +289,12 @@ const tabs = ['myPresets', 'createPreset']
           <div class="content-wrapper">
             <div class="content-title">
               <p>
-                {{ t('tools.preset.settings.createPreset.presetValues.grayScale.label') }}
+                {{ t('tools.preset.settings.createPreset.presetValues.grayscale.label') }}
               </p>
             </div>
             <div class="content-aligned two-items">
               <p>
-                {{ t('tools.preset.settings.createPreset.presetValues.grayScale.enabled') }}
+                {{ t('tools.preset.settings.createPreset.presetValues.grayscale.enabled') }}
               </p>
               <ToggleButton
                 v-model="newPreset.grayscale.enabled"

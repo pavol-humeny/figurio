@@ -4,22 +4,22 @@ import { computed } from 'vue'
 export function useGrayscaleTool(imageStore, historyStore, t) {
   const { showConfirmModal } = useConfirmModal()
 
-  const isGrayScaleApplied = computed(() => {
+  const isGrayscaleApplied = computed(() => {
     return imageStore.hasGrayscaleOperation()
   })
 
-  const applyGrayScale = () => {
+  const applyGrayscale = () => {
     imageStore.addImageOperation({
-      type: 'grayScale',
+      type: 'grayscale',
       enabled: true,
     })
 
-    applyGrayScaleRender()
+    applyGrayscaleRender()
 
     historyStore.push(imageStore.getSnapshot())
   }
 
-  const applyGrayScaleRender = async () => {
+  const applyGrayscaleRender = async () => {
     if (!imageStore.renderedImage) return
 
     if (imageStore.svgObjects.length > 0) {
@@ -61,8 +61,8 @@ export function useGrayscaleTool(imageStore, historyStore, t) {
   }
 
   return {
-    applyGrayScale,
-    applyGrayScaleRender,
-    isGrayScaleApplied,
+    applyGrayscale,
+    applyGrayscaleRender,
+    isGrayscaleApplied,
   }
 }

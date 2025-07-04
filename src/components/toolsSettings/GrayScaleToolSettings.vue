@@ -7,7 +7,7 @@ import { useI18n } from 'vue-i18n'
 
 const { t } = useI18n()
 
-const { applyGrayScale, isGrayScaleApplied } = useGrayscaleTool(
+const { applyGrayscale, isGrayscaleApplied } = useGrayscaleTool(
   useImageStore(),
   useHistoryStore(),
   t,
@@ -21,9 +21,9 @@ const { applyGrayScale, isGrayScaleApplied } = useGrayscaleTool(
         <div class="settings-content-wrapper">
           <div class="content-wrapper">
             <DefaultButton
-              :text="$t('tools.grayScale.settings.convertToGrayScaleButton.text')"
-              @click="applyGrayScale"
-              :disabled="isGrayScaleApplied"
+              :text="$t('tools.grayscale.settings.convertToGrayscaleButton.text')"
+              @click="applyGrayscale"
+              :disabled="isGrayscaleApplied"
             />
           </div>
         </div>

@@ -239,10 +239,10 @@ export function useImageRenderer(
       //   await useSmartCropTool(imageStore, historyStore, editorStore, t).applyAutoSmartCropRender()
       // }
 
-      // // GrayScale operation
-      // if (imageStore.imageOperations.grayScale?.enabled) {
+      // // Grayscale operation
+      // if (imageStore.imageOperations.grayscale?.enabled) {
       //   console.log('Applying grayscale operation')
-      //   await useGrayscaleTool(imageStore, historyStore, t).applyGrayScaleRender()
+      //   await useGrayscaleTool(imageStore, historyStore, t).applyGrayscaleRender()
       // }
 
   //     renderAll()
