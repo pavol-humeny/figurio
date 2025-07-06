@@ -134,7 +134,7 @@ input[type='number'] {
 }
 
 .value-input {
-  width: 100%;
+  width: 12ch;
   padding: 7px 10px 7px 10px;
   border-radius: 10px;
   border: none;
