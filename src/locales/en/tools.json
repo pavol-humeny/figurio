@@ -1,7 +1,7 @@
 {
   "move": {
     "label": "Move",
-    "tip": "Move the canvas using mouse.",
+    "tip": "Move tool",
     "tipDisabled": "",
     "settings": {
       "general": {
@@ -19,7 +19,7 @@
   },
   "transform": {
     "label": "Transform",
-    "tip": "Rotate, scale, flip or crop the image.",
+    "tip": "Transform tool",
     "tipDisabled": "",
     "settings": {
       "rotate": {
@@ -85,7 +85,7 @@
   },
   "smartCrop": {
     "label": "Smart Crop",
-    "tip": "Automatically crop the object.",
+    "tip": "Smart crop tool",
     "tipDisabled": "",
     "settings": {
       "auto": {

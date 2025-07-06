@@ -35,12 +35,19 @@ export function useToolsPanel(editorStore, imageStore) {
     nextTick(() => checkScroll())
   })
 
-  const toggleTool = (toolKey) => {
-    if (editorStore.selectedToolKey === toolKey) {
+  const toggleTool = (toolKey, subToolKey) => {
+    console.log('Toggle tool:', toolKey)
+
+    if (editorStore.selectedToolKey === toolKey && subToolKey === null) {
       editorStore.selectTool('')
       return
     }
     editorStore.selectTool(toolKey)
+
+    if (subToolKey) {
+      console.log('Sub tool:', subToolKey)
+      editorStore.selectTab(subToolKey)
+    }
   }
 
   const exportTool = () => {
@@ -48,7 +55,7 @@ export function useToolsPanel(editorStore, imageStore) {
     openExportToolSettings()
   }
 
-  const selectTool = (toolKey) => {
+  const selectTool = (toolKey, subToolKey) => {
     if (isToolDisabled.value) return
 
     // Export tool
@@ -57,7 +64,7 @@ export function useToolsPanel(editorStore, imageStore) {
       return
     }
 
-    toggleTool(toolKey)
+    toggleTool(toolKey, subToolKey)
   }
 
   return {

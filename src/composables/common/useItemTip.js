@@ -28,6 +28,18 @@ export function useItemTip(options = {}) {
           left: rect.left + rect.width / 2,
         }
         break
+      case 'top-right':
+        coords.value = {
+          top: rect.top - offset,
+          left: rect.left,
+        }
+        break
+      case 'top-left':
+        coords.value = {
+          top: rect.top - offset,
+          left: rect.right,
+        }
+        break
       case 'bottom':
         coords.value = {
           top: rect.bottom + offset,

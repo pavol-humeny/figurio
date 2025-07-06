@@ -62,6 +62,12 @@ const showTip = computed(() => props.text !== '')
 .item-tip-bubble.top {
   transform: translate(-50%, -100%);
 }
+.item-tip-bubble.top-right {
+  transform: translate(0, -100%);
+}
+.item-tip-bubble.top-left {
+  transform: translate(-100%, -100%);
+}
 .item-tip-bubble.bottom {
   transform: translate(-50%, 0);
 }
@@ -88,6 +94,24 @@ const showTip = computed(() => props.text !== '')
   bottom: -6px;
   left: 50%;
   transform: translateX(-50%);
+  border-left: 6px solid transparent;
+  border-right: 6px solid transparent;
+  border-top: 6px solid var(--secondary-c);
+}
+
+.item-tip-arrow.top-right {
+  bottom: -6px;
+  left: 20px;
+  transform: translateX(-50%);
+  border-left: 6px solid transparent;
+  border-right: 6px solid transparent;
+  border-top: 6px solid var(--secondary-c);
+}
+
+.item-tip-arrow.top-left {
+  bottom: -6px;
+  right: 20px;
+  transform: translateX(50%);
   border-left: 6px solid transparent;
   border-right: 6px solid transparent;
   border-top: 6px solid var(--secondary-c);

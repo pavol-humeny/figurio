@@ -8,6 +8,26 @@ export const toolsDefinitions = [
     key: 'transform',
     iconName: 'IconTransformTool',
     settingsComponent: () => import('@/components/toolsSettings/TransformToolSettings.vue'),
+    subTools: [
+      {
+        key: 'rotate',
+        label: 'Rotate',
+        tip: 'Rotate the image.',
+        iconName: 'IconRotateTool',
+      },
+      {
+        key: 'flip',
+        label: 'Flip',
+        tip: 'Flip the image horizontally or vertically.',
+        iconName: 'IconFlipTool',
+      },
+      {
+        key: 'crop',
+        label: 'Crop',
+        tip: 'Crop the image.',
+        iconName: 'IconCropTool',
+      },
+    ],
   },
   {
     key: 'smartCrop',

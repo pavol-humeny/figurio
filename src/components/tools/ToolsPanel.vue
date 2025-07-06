@@ -10,8 +10,6 @@ import { useImageStore } from '@/stores/imageStore'
 
 const { t } = useI18n()
 
-const imageStore = useImageStore()
-
 const {
   activeTool,
   toolsRef,
@@ -44,11 +42,10 @@ const tools = computed(() =>
       <OneTool
         v-for="tool in tools"
         :key="tool.key"
-        :iconName="tool.iconName"
-        :label="tool.label"
+        :tool="tool"
         :tip="isToolDisabled ? tool.tipDisabled : tool.tip"
         :active="activeTool === tool.key"
-        @click="selectTool(tool.key)"
+        @click="selectTool"
         :disabled="isToolDisabled"
       />
     </div>
