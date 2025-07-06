@@ -64,6 +64,7 @@ export function useSmartCropTool(imageStore, historyStore, editorStore, t) {
     () => {
       resetCropBox()
     },
+    { immediate: true },
   )
 
   watch(
@@ -130,7 +131,7 @@ export function useSmartCropTool(imageStore, historyStore, editorStore, t) {
         isCropShown.value = false
       }
     },
-    { deep: false },
+    { immediate: true, deep: false },
   )
 
   const applyAutoSmartCrop = async () => {
