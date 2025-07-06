@@ -15,7 +15,7 @@ export const toolsDefinitions = [
       },
       {
         key: 'flip',
-        iconName: 'IconFlipTool',
+        iconName: 'IconFlipVertical',
       },
       {
         key: 'crop',
@@ -69,7 +69,7 @@ export const toolsDefinitions = [
       },
       {
         key: 'createPreset',
-        iconName: 'IconCreatePresetTool',
+        iconName: 'IconPlus',
       },
     ],
   },
