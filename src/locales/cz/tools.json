@@ -72,11 +72,13 @@
         "applyCropButton": {
           "text": "Použít oříznutí"
         },
-        "toast": {
-          "cropBoxTooLarge": {
-            "title": "Oříznutí selhalo",
-            "message": "Orezávací rámček je väčší ako pôvodné rozmery obrázka. Orezanie sa neuplatnilo."
-          }
+        "invalidCropBox": {
+          "title": "Neplatné oříznutí",
+          "message": "Rozměry nebo pozice oříznutí jsou neplatné. Musí být v rámci rozměrů obrázku a mít kladnou šířku a výšku."
+        },
+        "cropBoxIsSameAsOriginalImage": {
+          "title": "Orezanie je rovnaké ako pôvodný obrázok",
+          "message": "Orezanie je rovnaké ako pôvodný obrázok. Orezanie nebolo použité."
         }
       }
     }
@@ -266,6 +268,14 @@
         },
         "manualPresetSetting": {
           "text": "Manuální nastavení šablony"
+        },
+        "presetContainsCropOperation": {
+          "title": "Šablona obsahuje manuální oříznutí",
+          "message": "Šablona nebude automaticky aplikována, pokud bude obrázek menší než oříznutí."
+        },
+        "presetContainsMultipleCropOperations": {
+          "title": "Šablona obsahuje více oříznutí",
+          "message": "Šablona nemůže být vytvořena s více oříznutími. Použijte maximálně jednu operaci oříznutí."
         }
       },
       "myPresets": {
@@ -312,6 +322,11 @@
             "color": "Barva",
             "width": "Šířka",
             "type": "Typ"
+          },
+          "crop": {
+            "label": "Oříznutí",
+            "tip": "Neplatný oříznutí pro tento obrázek",
+            "noModifications": "Žádné úpravy"
           }
         },
         "deletePresetButton": {
@@ -360,6 +375,10 @@
         "closeWithoutSaving": {
           "title": "Zavřeno bez uložení",
           "message": "Vaše změny byly odstraněny."
+        },
+        "presetContainsMultipleCropOperations": {
+          "title": "Šablona obsahuje více oříznutí",
+          "message": "Šablona nemůže být vytvořena s více oříznutími. Použijte maximálně jednu operaci oříznutí."
         }
       }
     }

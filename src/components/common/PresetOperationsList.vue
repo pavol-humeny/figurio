@@ -1,7 +1,11 @@
 <script setup>
-import { ref, watch, onMounted, onUpdated, nextTick } from 'vue'
+import { ref, watch } from 'vue'
 import draggable from 'vuedraggable'
 import { useI18n } from 'vue-i18n'
+import BaseIcon from '../icons/BaseIcon.vue'
+import { useImageStore } from '@/stores/imageStore'
+
+const imageStore = useImageStore()
 
 const { t } = useI18n()
 
@@ -18,6 +22,10 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
+  clearSelected: {
+    type: Boolean,
+    default: true,
+  },
 })
 
 const emit = defineEmits(['removeOperation', 'update:localImageOperations', 'selectOperation'])
@@ -31,6 +39,17 @@ watch(
     internalList.value = [...newVal]
   },
   { immediate: true, deep: true },
+)
+
+watch(
+  () => props.clearSelected,
+  (newVal) => {
+    if (newVal) {
+      selectedOperation.value = null
+      emit('selectOperation', null)
+    }
+  },
+  { immediate: true },
 )
 
 const removeOperation = (index, operation) => {
@@ -71,9 +90,28 @@ const getOperationLabel = (type) => {
       return t('tools.preset.settings.myPresets.presetValues.smartCrop.label')
     case 'grayscale':
       return t('tools.preset.settings.myPresets.presetValues.grayscale.label')
+    case 'crop':
+      return t('tools.preset.settings.myPresets.presetValues.crop.label')
     default:
       return type
+    // UPDATE
   }
+}
+
+const imageCanBeCropped = (cropBox) => {
+  console.log('Checking crop box:', cropBox)
+  console.log('Image dimensions:', imageStore.fileDimensions)
+  if (
+    cropBox.x + cropBox.width > imageStore.fileDimensions.width ||
+    cropBox.y + cropBox.height > imageStore.fileDimensions.height ||
+    cropBox.x < 0 ||
+    cropBox.y < 0 ||
+    cropBox.width <= 0 ||
+    cropBox.height <= 0
+  ) {
+    return false
+  }
+  return true
 }
 </script>
 
@@ -101,7 +139,17 @@ const getOperationLabel = (type) => {
         <div class="drag-handle" :class="{ hide: !props.modificationEnabled }">☰</div>
 
         <div class="operation-type">
-          {{ getOperationLabel(element.type) }}
+          <BaseIcon
+            v-if="element.type === 'crop' && !imageCanBeCropped(element.cropBox)"
+            name="IconWarning"
+            :size="18"
+            :color="'var(--warning-c)'"
+            :tip="t('tools.preset.settings.myPresets.presetValues.crop.tip')"
+            :position="'bottom-left'"
+          />
+          <p>
+            {{ getOperationLabel(element.type) }}
+          </p>
         </div>
 
         <div class="operation-value">
@@ -119,6 +167,12 @@ const getOperationLabel = (type) => {
           </div>
           <div v-else-if="element.type === 'smartCrop'">
             <div class="color-circle" :style="{ backgroundColor: element.color }"></div>
+          </div>
+          <div v-else-if="element.type === 'crop'">
+            <p>
+              ({{ element.cropBox.x }}, {{ element.cropBox.y }}, {{ element.cropBox.width }},
+              {{ element.cropBox.height }})
+            </p>
           </div>
         </div>
 
@@ -163,6 +217,9 @@ const getOperationLabel = (type) => {
 .operation-item.modificationEnabled {
   cursor: pointer;
 }
+/* .operation-item.warning {
+  background-color: rgb(255, 187, 0);
+} */
 
 .drag-handle {
   cursor: grab;
@@ -185,6 +242,10 @@ const getOperationLabel = (type) => {
   font-size: var(--text-font-size);
   flex-shrink: 0;
   color: var(--text-c);
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 5px;
 }
 
 .operation-value {

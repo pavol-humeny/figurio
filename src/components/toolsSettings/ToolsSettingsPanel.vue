@@ -11,7 +11,7 @@ const {
 <template>
   <div class="tools-settings-panel">
     <component :is="settingsComponent" v-if="settingsComponent" />
-    <p v-else class="no-settings">
+    <p v-else class="no-settings no-value">
       {{ $t('tools.noToolSelected.label') }}
     </p>
   </div>

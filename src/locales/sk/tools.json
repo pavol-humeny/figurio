@@ -72,11 +72,13 @@
         "applyCropButton": {
           "text": "Použiť orezanie"
         },
-        "toast": {
-          "cropBoxTooLarge": {
-            "title": "Orezanie zlyhalo",
-            "message": "Orezávací rámček je väčší ako pôvodné rozmery obrázka. Orezanie sa neuplatnilo."
-          }
+        "invalidCropBox": {
+          "title": "Neplatné orezanie",
+          "message": "Rozmery alebo pozícia orezania sú neplatné. Musí byť v rámci rozmerov obrázka a mať kladnú šírku a výšku."
+        },
+        "cropBoxIsSameAsOriginalImage": {
+          "title": "Orezanie je rovnaké ako pôvodný obrázok",
+          "message": "Orezanie je rovnaké ako pôvodný obrázok. Orezanie nebolo použité."
         }
       }
     }
@@ -266,6 +268,14 @@
         },
         "manualPresetSetting": {
           "text": "Manuálne nastavenie šablóny"
+        },
+        "presetContainsCropOperation": {
+          "title": "Šablóna obsahuje manuálne orezanie",
+          "message": "Šablóna nebude automaticky aplikovaná, ak bude obrázok menší ako orezanie."
+        },
+        "presetContainsMultipleCropOperations": {
+          "title": "Šablóna obsahuje viac orezaní",
+          "message": "Šablóna nemôže byť vytvorená s viac ako jednou operáciou orezania."
         }
       },
       "myPresets": {
@@ -312,6 +322,11 @@
             "color": "Farba",
             "width": "Šírka",
             "type": "Typ"
+          },
+          "crop": {
+            "label": "Orezanie",
+            "tip": "Neplatné orezanie pre tento obrázok",
+            "noModifications": "Žiadne úpravy"
           }
         },
         "deletePresetButton": {
@@ -360,6 +375,10 @@
         "closeWithoutSaving": {
           "title": "Zavreté bez uloženia",
           "message": "Vaše zmeny boli odstránené."
+        },
+        "presetContainsMultipleCropOperations": {
+          "title": "Šablóna obsahuje viac orezaní",
+          "message": "Šablóna nemôže byť vytvorená s viac ako jednou operáciou orezania."
         }
       }
     }

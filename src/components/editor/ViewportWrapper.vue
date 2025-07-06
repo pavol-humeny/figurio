@@ -6,6 +6,7 @@ import { useImageStore } from '@/stores/imageStore'
 import { useEditorStore } from '@/stores/editorStore'
 import { ref } from 'vue'
 import CropTool from '@/components/tools/CropTool.vue'
+import PresetCropTool from '../tools/PresetCropTool.vue'
 import SmartCropTool from '../tools/SmartCropTool.vue'
 import { useHistoryStore } from '@/stores/historyStore'
 import { useI18n } from 'vue-i18n'
@@ -69,6 +70,11 @@ const {
 
         <CropTool v-if="editorStore.selectedTabPerTool[editorStore.selectedToolKey] === 'crop'" />
         <SmartCropTool v-if="editorStore.selectedSubToolKey === 'isCropShown'" />
+        <PresetCropTool
+          v-if="
+            editorStore.selectedToolKey === 'preset' && editorStore.selectedSubToolKey === 'crop'
+          "
+        />
       </div>
     </div>
 

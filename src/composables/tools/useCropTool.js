@@ -458,6 +458,21 @@ export function useCropTool(imageStore, viewportStore, editorStore, historyStore
   }
 
   const applyCrop = async () => {
+    // Check if crop box is same as image dimensions
+    if (
+      cropBox.value.x === 0 &&
+      cropBox.value.y === 0 &&
+      cropBox.value.width === imageStore.fileDimensions.width &&
+      cropBox.value.height === imageStore.fileDimensions.height
+    ) {
+      showToastModal(
+        'info',
+        t('tools.transform.settings.crop.cropBoxIsSameAsOriginalImage.title'),
+        t('tools.transform.settings.crop.cropBoxIsSameAsOriginalImage.message'),
+      )
+      return
+    }
+
     if (imageStore.svgObjects.length > 0) {
       const confirmed = await showConfirmModal(
         t('tools.confirmNeedRasterization.title'),
@@ -491,20 +506,39 @@ export function useCropTool(imageStore, viewportStore, editorStore, historyStore
   const applyCropRender = (cropBox) => {
     if (!imageStore.renderedImage || !cropBox) return
 
-    // Check if the crop box is equal or smaller than the original image dimensions
+    const { x, y, width, height } = cropBox
+
+    // Check if crop box is same as image dimensions
     if (
-      cropBox.width >= imageStore.fileDimensions.width ||
-      cropBox.height >= imageStore.fileDimensions.height
+      x === 0 &&
+      y === 0 &&
+      width === imageStore.fileDimensions.width &&
+      height === imageStore.fileDimensions.height
     ) {
       showToastModal(
-        'warning',
-        t('tools.transform.settings.crop.toast.cropBoxTooLarge.title'),
-        t('tools.transform.settings.crop.toast.cropBoxTooLarge.message'),
+        'info',
+        t('tools.transform.settings.crop.cropBoxIsSameAsOriginalImage.title'),
+        t('tools.transform.settings.crop.cropBoxIsSameAsOriginalImage.message'),
       )
       return
     }
 
-    const { x, y, width, height } = cropBox
+    // Check if crop box is valid
+    if (
+      x < 0 ||
+      y < 0 ||
+      width <= 0 ||
+      height <= 0 ||
+      x + width > imageStore.fileDimensions.width ||
+      y + height > imageStore.fileDimensions.height
+    ) {
+      showToastModal(
+        'warning',
+        t('tools.transform.settings.crop.invalidCropBox.title'),
+        t('tools.transform.settings.crop.invalidCropBox.message'),
+      )
+      return
+    }
 
     const canvas = document.createElement('canvas')
     const ctx = canvas.getContext('2d')

@@ -16,6 +16,7 @@ import OperationsList from '../common/PresetOperationsList.vue'
 import PresetOperationDetails from '../common/PresetOperationDetails.vue'
 import BaseIcon from '../icons/BaseIcon.vue'
 import PresetNewOperation from '../common/PresetNewOperation.vue'
+import { useViewportStore } from '@/stores/viewportStore'
 
 const { t } = useI18n()
 
@@ -49,7 +50,15 @@ const {
   creatingNewOperation,
   newOperation,
   applyPreset,
-} = usePresetTool(useImageStore(), useHistoryStore(), useEditorStore(), usePresetsStore(), t)
+  clearSelected,
+} = usePresetTool(
+  useImageStore(),
+  useHistoryStore(),
+  useEditorStore(),
+  usePresetsStore(),
+  useViewportStore(),
+  t,
+)
 
 const tabs = ['myPresets', 'createPreset']
 </script>
@@ -113,7 +122,11 @@ const tabs = ['myPresets', 'createPreset']
         </div>
         <div
           class="settings-content-wrapper"
-          v-if="presetsOptions.length > 0 && (localImageOperations.length > 0 || isModifyingPreset)"
+          v-if="
+            presetsOptions.length > 0 &&
+            (localImageOperations.length > 0 || isModifyingPreset) &&
+            selectedPresetName !== ''
+          "
         >
           <div class="content-wrapper">
             <div class="content-title">
@@ -126,6 +139,7 @@ const tabs = ['myPresets', 'createPreset']
               :modificationEnabled="isModifyingPreset"
               @update:localImageOperations="(newList) => (localImageOperations = newList)"
               @selectOperation="(op) => (selectedOperation = op)"
+              :clearSelected="clearSelected"
               :disabled="!isModifyingPreset"
             />
             <button
@@ -137,7 +151,7 @@ const tabs = ['myPresets', 'createPreset']
             </button>
 
             <PresetOperationDetails
-              v-if="selectedOperation"
+              v-if="selectedOperation && localImageOperations.length > 0"
               :operation="selectedOperation"
               @update:operation="(newOp) => Object.assign(selectedOperation, newOp)"
             />
@@ -145,7 +159,9 @@ const tabs = ['myPresets', 'createPreset']
         </div>
         <div
           v-else-if="
-            presetsOptions.length > 0 && (localImageOperations.length === 0 || !isModifyingPreset)
+            presetsOptions.length > 0 &&
+            (localImageOperations.length === 0 || !isModifyingPreset) &&
+            selectedPresetName !== ''
           "
           class="settings-content-wrapper"
         >

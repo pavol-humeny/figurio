@@ -72,11 +72,13 @@
         "applyCropButton": {
           "text": "Apply crop"
         },
-        "toast": {
-          "cropBoxTooLarge": {
-            "title": "Crop Warning",
-            "message": "Crop box is larger than the original image dimensions. No cropping applied."
-          }
+        "invalidCropBox": {
+          "title": "Invalid crop",
+          "message": "Crop dimensions or position are invalid. It must be within the image dimensions and have positive width and height."
+        },
+        "cropBoxIsSameAsOriginalImage": {
+          "title": "Crop box is same as original image",
+          "message": "Crop box is same as original image. No crop was applied."
         }
       }
     }
@@ -266,6 +268,14 @@
         },
         "manualPresetSetting": {
           "text": "Manual preset setting"
+        },
+        "presetContainsCropOperation": {
+          "title": "Preset contains manual crop operation",
+          "message": "Preset will not be applied automatically if image will be smaller than crop box."
+        },
+        "presetContainsMultipleCropOperations": {
+          "title": "Preset contains multiple crop operations",
+          "message": "Preset can not be created with multiple crop operations. Please use maximum one crop operation."
         }
       },
       "myPresets": {
@@ -312,6 +322,11 @@
             "color": "Color",
             "width": "Width",
             "type": "Type"
+          },
+          "crop": {
+            "label": "Crop",
+            "tip": "Invalid crop box for this image",
+            "noModifications": "No modifications"
           }
         },
         "deletePresetButton": {
@@ -360,6 +375,10 @@
         "closeWithoutSaving": {
           "title": "Close without saving",
           "message": "Your changes were deleted."
+        },
+        "presetContainsMultipleCropOperations": {
+          "title": "Preset contains multiple crop operations",
+          "message": "Preset can not be created with multiple crop operations. Please use maximum one crop operation."
         }
       }
     }

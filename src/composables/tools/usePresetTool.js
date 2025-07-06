@@ -5,8 +5,16 @@ import { useFlipTool } from './useFlipTool'
 import { useRotateTool } from './useRotateTool'
 import { useSmartCropTool } from './useSmartCropTool'
 import { useGrayscaleTool } from './useGrayscaleTool'
+import { useCropTool } from './useCropTool'
 
-export function usePresetTool(imageStore, historyStore, editorStore, presetsStore, t) {
+export function usePresetTool(
+  imageStore,
+  historyStore,
+  editorStore,
+  presetsStore,
+  viewportStore,
+  t,
+) {
   const { showToastModal } = useToastModal()
   const { showConfirmModal } = useConfirmModal()
 
@@ -17,6 +25,7 @@ export function usePresetTool(imageStore, historyStore, editorStore, presetsStor
   const selectedOperation = ref(null)
   const creatingNewOperation = ref(false)
   const newOperation = ref(null)
+  const clearSelected = ref(false)
 
   const presetsOptions = computed(() => {
     return presetsStore.allPresetNames.map((name) => ({
@@ -75,14 +84,48 @@ export function usePresetTool(imageStore, historyStore, editorStore, presetsStor
     tmpLocalImageOperations.value = JSON.parse(JSON.stringify(localImageOperations.value))
   }
 
+  // Update crop box in preset immediately when localImageOperations changes
+  watch(
+    localImageOperations,
+    (newOperations) => {
+      const selectedPreset = presetsStore.selectedPreset
+      if (!selectedPreset) return
+
+      const cropOpIndex = newOperations.findIndex((op) => op.type === 'crop')
+      if (cropOpIndex === -1) return
+
+      const updatedCropBox = newOperations[cropOpIndex].cropBox
+
+      const presetCropOp = selectedPreset.imageOperations.find((op) => op.type === 'crop')
+      if (presetCropOp && updatedCropBox) {
+        presetCropOp.cropBox = JSON.parse(JSON.stringify(updatedCropBox))
+      }
+    },
+    { deep: true },
+  )
+
   const savePresetChanges = () => {
     console.log('Saving preset changes')
+
+    const operations = JSON.parse(JSON.stringify(localImageOperations.value))
+
+    const cropOperations = operations.filter((op) => op.type === 'crop')
+    if (cropOperations.length > 1) {
+      showToastModal(
+        'error',
+        t('tools.preset.settings.myPresets.presetContainsMultipleCropOperations.title'),
+        t('tools.preset.settings.myPresets.presetContainsMultipleCropOperations.message'),
+      )
+      return
+    }
+
     presetsStore.updatePreset(
       presetsStore.selectedPresetName,
       localPresetName.value,
-      JSON.parse(JSON.stringify(localImageOperations.value)),
+      operations,
       JSON.parse(JSON.stringify(localImageFrame.value)),
     )
+
     isPresetModified.value = false
     isModifyingPreset.value = false
     selectedOperation.value = null
@@ -96,6 +139,8 @@ export function usePresetTool(imageStore, historyStore, editorStore, presetsStor
         presetName: localPresetName.value,
       }),
     )
+
+    editorStore.selectSubTool('')
   }
 
   const closeModifyPreset = async () => {
@@ -129,6 +174,8 @@ export function usePresetTool(imageStore, historyStore, editorStore, presetsStor
     tmpLocalPresetName.value = ''
     tmpLocalImageOperations.value = []
     tmpLocalImageFrame.value = {}
+
+    editorStore.selectSubTool('')
   }
 
   const deletePreset = async () => {
@@ -168,6 +215,7 @@ export function usePresetTool(imageStore, historyStore, editorStore, presetsStor
     newOperation.value = { type: '' }
     creatingNewOperation.value = true
     selectedOperation.value = null
+    clearSelected.value = true
   }
 
   const addNewOperation = () => {
@@ -176,6 +224,14 @@ export function usePresetTool(imageStore, historyStore, editorStore, presetsStor
 
     localImageOperations.value.push(JSON.parse(JSON.stringify(newOperation.value)))
   }
+
+  // Watch on selectedOperation, if it is not null set creatingNewOperation to false
+  watch(selectedOperation, (op) => {
+    if (op) {
+      creatingNewOperation.value = false
+      clearSelected.value = false
+    }
+  })
 
   const applyPreset = async () => {
     if (imageStore.svgObjects.length > 0) {
@@ -226,6 +282,26 @@ export function usePresetTool(imageStore, historyStore, editorStore, presetsStor
       return
     }
 
+    // Check if operations contain crop operation
+    const cropOperation = presetOperations.filter((op) => op.type === 'crop')
+    if (cropOperation.length > 0) {
+      if (
+        cropOperation[0].cropBox.x < 0 ||
+        cropOperation[0].cropBox.y < 0 ||
+        cropOperation[0].cropBox.width <= 0 ||
+        cropOperation[0].cropBox.height <= 0 ||
+        cropOperation[0].cropBox.x + cropOperation[0].cropBox.width > imageStore.fileDimensions.width ||
+        cropOperation[0].cropBox.y + cropOperation[0].cropBox.height > imageStore.fileDimensions.height
+      ) {
+        showToastModal(
+          'error',
+          t('tools.transform.settings.crop.invalidCropBox.title'),
+          t('tools.transform.settings.crop.invalidCropBox.message'),
+        )
+        return
+      }
+    }
+
     imageStore.resetRenderedImageToOriginal()
 
     if (preset.imageOperations.length !== 0) {
@@ -238,7 +314,12 @@ export function usePresetTool(imageStore, historyStore, editorStore, presetsStor
           useSmartCropTool(imageStore, historyStore).applyAutoSmartCropRender(operation)
         } else if (operation.type === 'grayscale') {
           useGrayscaleTool(imageStore, historyStore).applyGrayscaleRender()
+        } else if (operation.type === 'crop') {
+          useCropTool(imageStore, viewportStore, editorStore, historyStore, t).applyCropRender(
+            operation.cropBox,
+          )
         }
+        // UPDATE
       })
     }
 
@@ -389,6 +470,7 @@ export function usePresetTool(imageStore, historyStore, editorStore, presetsStor
       imageFrame.color = newPreset.value.frame.color
       imageFrame.width = newPreset.value.frame.width
     }
+    // UPDATE
 
     presetsStore.createPreset(
       structuredClone(newPreset.value.presetName),
@@ -413,9 +495,24 @@ export function usePresetTool(imageStore, historyStore, editorStore, presetsStor
   const useCurrentModifications = () => {
     console.log('Using current modifications to create preset')
 
+    const imageOperations = imageStore.getImageOperations()
+    const cropOperations = imageOperations.filter((op) => op.type === 'crop')
+
+    if (cropOperations.length > 1) {
+      showToastModal(
+        'error',
+        t('tools.preset.settings.createPreset.presetContainsMultipleCropOperations.title'),
+        t('tools.preset.settings.createPreset.presetContainsMultipleCropOperations.message'),
+      )
+
+      resetPreset()
+
+      return
+    }
+
     const result = presetsStore.createPreset(
       structuredClone(newPreset.value.presetName),
-      structuredClone(imageStore.getImageOperations()),
+      structuredClone(imageOperations),
       structuredClone(imageStore.getImageFrame()),
     )
 
@@ -442,6 +539,18 @@ export function usePresetTool(imageStore, historyStore, editorStore, presetsStor
       t('tools.preset.settings.createPreset.presetSuccessfullyCreated.title'),
       t('tools.preset.settings.createPreset.presetSuccessfullyCreated.message'),
     )
+
+    // Add delay 2 seconds before showing another toast
+    setTimeout(() => {
+      // Check if preset operations contain crop operation
+      if (cropOperations.length === 1) {
+        showToastModal(
+          'warning',
+          t('tools.preset.settings.createPreset.presetContainsCropOperation.title'),
+          t('tools.preset.settings.createPreset.presetContainsCropOperation.message'),
+        )
+      }
+    }, 2000)
   }
 
   return {
@@ -472,5 +581,6 @@ export function usePresetTool(imageStore, historyStore, editorStore, presetsStor
     creatingNewOperation,
     newOperation,
     applyPreset,
+    clearSelected,
   }
 }
