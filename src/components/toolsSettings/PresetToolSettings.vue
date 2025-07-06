@@ -190,7 +190,10 @@ const tabs = ['myPresets', 'createPreset']
             />
           </div>
         </div>
-        <div class="settings-content-wrapper" v-if="localImageFrame.enabled || isModifyingPreset">
+        <div
+          class="settings-content-wrapper"
+          v-if="(localImageFrame.enabled || isModifyingPreset) && selectedPresetName !== ''"
+        >
           <div class="content-wrapper">
             <div class="content-title">
               <p>
@@ -251,7 +254,7 @@ const tabs = ['myPresets', 'createPreset']
           </div>
         </div>
         <div
-          v-else-if="!localImageFrame.enabled && !isModifyingPreset"
+          v-else-if="!localImageFrame.enabled && !isModifyingPreset && selectedPresetName !== ''"
           class="settings-content-wrapper"
         >
           <div class="content-wrapper">
