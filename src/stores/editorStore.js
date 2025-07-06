@@ -5,6 +5,7 @@ export const useEditorStore = defineStore('editorStore', {
     selectedToolKey: '',
     selectedTabPerTool: {},
     selectedSubToolKey: '',
+    toolWithOpenSubToolsKey: '',
   }),
   actions: {
     selectTool(toolKey) {
@@ -17,6 +18,9 @@ export const useEditorStore = defineStore('editorStore', {
     },
     selectSubTool(subToolKey) {
       this.selectedSubToolKey = subToolKey
+    },
+    setToolWithOpenSubTools(toolKey) {
+      this.toolWithOpenSubToolsKey = toolKey
     },
   },
 })

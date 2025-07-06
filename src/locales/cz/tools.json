@@ -21,6 +21,20 @@
     "label": "Úpravy",
     "tip": "Otoč, změň měřítko, překlop nebo ořízni obrázek.",
     "tipDisabled": "",
+    "subTools": {
+      "rotate": {
+        "label": "Otočit",
+        "tip": "Nástoj otočení"
+      },
+      "flip": {
+        "label": "Překlopit",
+        "tip": "Nástoj překlopení"
+      },
+      "crop": {
+        "label": "Oříznout",
+        "tip": "Nástoj oříznutí"
+      }
+    },
     "settings": {
       "rotate": {
         "label": "Rotace",
@@ -87,6 +101,16 @@
     "label": "Smart oříznutí",
     "tip": "Automaticky ořízni objekt.",
     "tipDisabled": "",
+    "subTools": {
+      "auto": {
+        "label": "Automatické",
+        "tip": "Automaticky ořízni obrázek na základě vybrané barvy."
+      },
+      "manual": {
+        "label": "Manuální",
+        "tip": "Manuálně uprav orezávací rámec."
+      }
+    },
     "settings": {
       "auto": {
         "label": "Automatické",
@@ -216,6 +240,16 @@
     "label": "Šablony",
     "tip": "Použij šablonu na obrázek.",
     "tipDisabled": "",
+    "subTools": {
+      "myPresets": {
+        "label": "Moje šablony",
+        "tip": "Spravovat své šablony"
+      },
+      "createPreset": {
+        "label": "Vytvořit šablonu",
+        "tip": "Vytvoř novou šablonu."
+      }
+    },
     "settings": {
       "createPreset": {
         "label": "Vytvořit šablonu",

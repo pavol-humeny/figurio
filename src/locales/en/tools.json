@@ -21,6 +21,20 @@
     "label": "Transform",
     "tip": "Transform tool",
     "tipDisabled": "",
+    "subTools": {
+      "rotate": {
+        "label": "Rotate",
+        "tip": "Rotate tool"
+      },
+      "flip": {
+        "label": "Flip",
+        "tip": "Flip tool"
+      },
+      "crop": {
+        "label": "Crop",
+        "tip": "Crop tool"
+      }
+    },
     "settings": {
       "rotate": {
         "label": "Rotation",
@@ -87,6 +101,16 @@
     "label": "Smart Crop",
     "tip": "Smart crop tool",
     "tipDisabled": "",
+    "subTools": {
+      "auto": {
+        "label": "Auto",
+        "tip": "Automatically crop the image based on the selected color."
+      },
+      "manual": {
+        "label": "Manual",
+        "tip": "Manually adjust the crop box."
+      }
+    },
     "settings": {
       "auto": {
         "label": "Auto",
@@ -216,6 +240,16 @@
     "label": "Presets",
     "tip": "Apply a preset to the image.",
     "tipDisabled": "",
+    "subTools": {
+      "myPresets": {
+        "label": "My presets",
+        "tip": "Manage your presets"
+      },
+      "createPreset": {
+        "label": "Create preset",
+        "tip": "Create a new preset."
+      }
+    },
     "settings": {
       "createPreset": {
         "label": "Create preset",

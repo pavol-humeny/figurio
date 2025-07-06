@@ -28,6 +28,12 @@ const tools = computed(() =>
     label: t(`tools.${tool.key}.label`),
     tip: t(`tools.${tool.key}.tip`),
     tipDisabled: t(`tools.${tool.key}.tipDisabled`),
+    subTools:
+      tool.subTools?.map((subTool) => ({
+        ...subTool,
+        label: t(`tools.${tool.key}.subTools.${subTool.key}.label`),
+        tip: t(`tools.${tool.key}.subTools.${subTool.key}.tip`),
+      })) || [],
   })),
 )
 </script>

@@ -2,16 +2,11 @@
 import { ref, nextTick, onMounted, onBeforeUnmount } from 'vue'
 import BaseIcon from '@/components/icons/BaseIcon.vue'
 import ItemTip from '@/components/common/ItemTip.vue'
+import { useEditorStore } from '@/stores/editorStore'
+
+const editorStore = useEditorStore()
 
 const props = defineProps({
-  // iconName: {
-  //   type: String,
-  //   required: true,
-  // },
-  // label: {
-  //   type: String,
-  //   required: true,
-  // },
   tool: {
     type: Object,
     required: true,
@@ -32,7 +27,7 @@ const props = defineProps({
 
 const emit = defineEmits(['click'])
 
-const showSubTools = ref(false)
+// const showSubTools = ref(false)
 const subToolPos = ref({ top: 0, left: 0 })
 const wrapperRef = ref(null)
 
@@ -40,8 +35,8 @@ const onRightClick = async (e) => {
   e.preventDefault()
   if (!props.tool.subTools) return
 
-  if (showSubTools.value) {
-    showSubTools.value = false
+  if (editorStore.toolWithOpenSubToolsKey === props.tool.key) {
+    editorStore.setToolWithOpenSubTools('')
     return
   }
 
@@ -51,28 +46,29 @@ const onRightClick = async (e) => {
     top: rect.top,
     left: rect.right + 10,
   }
-  showSubTools.value = true
+  editorStore.setToolWithOpenSubTools(props.tool.key)
 }
 
 const onClickSubTool = (subToolKey) => {
-  showSubTools.value = false
+  editorStore.setToolWithOpenSubTools('')
+  editorStore.selectSubTool(subToolKey)
   emit('click', props.tool.key, subToolKey)
 }
 
 const onClickTool = () => {
-  showSubTools.value = false
+  editorStore.setToolWithOpenSubTools('')
   emit('click', props.tool.key, null)
 }
 
 const handleClickOutside = (e) => {
   const toolEl = wrapperRef.value
   if (
-    showSubTools.value &&
+    editorStore.toolWithOpenSubToolsKey !== '' &&
     toolEl &&
     !toolEl.contains(e.target) &&
     !document.querySelector('.subTools-popup')?.contains(e.target)
   ) {
-    showSubTools.value = false
+    editorStore.setToolWithOpenSubTools('')
   }
 }
 
@@ -96,7 +92,10 @@ onBeforeUnmount(() => {
       </div>
     </div>
 
-    <Teleport to="body" v-if="showSubTools && props.tool.subTools">
+    <Teleport
+      to="body"
+      v-if="editorStore.toolWithOpenSubToolsKey === props.tool.key && props.tool.subTools"
+    >
       <div
         class="subTools-popup"
         :style="{
