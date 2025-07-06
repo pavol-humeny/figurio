@@ -15,6 +15,7 @@ export function useImageRenderer(
   const canvasRef = ref(null)
   const svgRef = ref(null)
   const frameCanvasRef = ref(null)
+  let renderingFrameCanvas = ref(false)
 
   const updateSizes = () => {
     const width = imageStore.fileDimensions.width
@@ -97,12 +98,17 @@ export function useImageRenderer(
   }
 
   const renderFrameCanvas = () => {
+    if (renderingFrameCanvas.value) return
+
+    console.log('Rendering frame canvas...')
+    renderingFrameCanvas.value = true
+
     const frameCanvas = frameCanvasRef.value
     const ctx = frameCanvas?.getContext('2d')
     if (!frameCanvas || !ctx) return
 
     const frame = imageStore.frame
-    const frameEnabled = frame?.enabled && frame.width > 0
+    const frameEnabled = frame?.enabled
 
     let fw = frameEnabled ? frame.width : 0
     let fh = frameEnabled ? frame.height : 0
@@ -117,9 +123,12 @@ export function useImageRenderer(
 
       fh = fw
 
+      imageStore.frame.width = fw
+      imageStore.frame.height = fh
       imageStore.frame.headerSize = Math.floor(0.04 * imageStore.fileDimensions.height) // 4% of height
     } else if (frame.type === 'framePhoneAndroid' || frame.type === 'framePhoneIOS') {
       //TODO
+      console.warn('Phone frames are not implemented yet')
     }
 
     const width = imageStore.fileDimensions.width
@@ -155,17 +164,17 @@ export function useImageRenderer(
 
     if (!frameEnabled) return
 
-    console.log('Rendering frame canvas...')
     useFrameTool(imageStore, historyStore, editorStore, t).applyFrameRender(
       ctx,
       canvasWidth,
       canvasHeight,
     )
+    renderingFrameCanvas.value = false
   }
   const renderAll = () => {
     updateSizes()
     renderCanvas()
-    renderFrameCanvas()
+    // renderFrameCanvas()
     renderSvg()
   }
 
@@ -191,7 +200,7 @@ export function useImageRenderer(
   watch(
     () => imageStore.frame,
     (newFrame) => {
-      if (newFrame) {
+      if (newFrame && !renderingFrameCanvas.value) {
         console.log('Frame operations changed, re-rendering frame canvas')
         renderFrameCanvas()
       }

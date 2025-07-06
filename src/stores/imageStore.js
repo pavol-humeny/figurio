@@ -123,6 +123,17 @@ export const useImageStore = defineStore('imageStore', {
       this.imageOperations = []
     },
 
+    resetFrame() {
+      this.frame = {
+        enabled: false,
+        type: 'none', // 'none', 'frameSolid', 'framePhoneAndroid',
+        width: 0,
+        height: 0,
+        color: '#000000',
+        headerSize: 0, // Size of the header for browser frames
+      }
+    },
+
     setFileName(newName, t, isNewFileName = false) {
       let trimmedName = newName.trim()
 
@@ -235,6 +246,7 @@ export const useImageStore = defineStore('imageStore', {
       this.selectedSvgObjectId = null
 
       this.resetImageOperations()
+      this.resetFrame()
 
       const historyStore = useHistoryStore()
       historyStore.reset()

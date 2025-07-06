@@ -188,6 +188,7 @@ export function useFrameTool(imageStore, historyStore, editorStore, t) {
   }
 
   const applyFrameRender = (ctx, canvasWidth, canvasHeight) => {
+    console.log('Applying frame render')
     const frame = imageStore.frame
     if (!ctx || !frame?.enabled) return
 
