@@ -113,6 +113,10 @@
         "applySmartCropManualButton": {
           "text": "Použít oříznutí"
         }
+      },
+      "noCropApplied": {
+        "title": "Žádné oříznutí",
+        "message": "Žádné oříznutí nebylo použito. Oříznutí je stejné jako původní obrázek."
       }
     }
   },

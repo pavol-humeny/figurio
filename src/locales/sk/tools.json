@@ -113,6 +113,10 @@
         "applySmartCropManualButton": {
           "text": "Použiť orezanie"
         }
+      },
+      "noCropApplied": {
+        "title": "Žiadne orezanie",
+        "message": "Žiadne orezanie nebolo použité. Orezanie je rovnaké ako pôvodný obrázok."
       }
     }
   },

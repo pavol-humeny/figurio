@@ -113,6 +113,10 @@
         "applySmartCropManualButton": {
           "text": "Apply crop"
         }
+      },
+      "noCropApplied": {
+        "title": "No crop applied",
+        "message": "No crop was applied. Crop box is same as original image."
       }
     }
   },

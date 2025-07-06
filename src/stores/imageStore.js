@@ -85,9 +85,9 @@ export const useImageStore = defineStore('imageStore', {
     frame: {
       enabled: false,
       type: 'none', // 'none', 'frameSolid', 'framePhoneAndroid',
-      width: 0, // Width of the frame in pixels
-      height: 0, // Height of the frame in pixels
-      color: '#000000', // Color of the frame
+      width: 0,
+      height: 0,
+      color: '#000000',
       headerSize: 0, // Size of the header for browser frames
     },
   }),

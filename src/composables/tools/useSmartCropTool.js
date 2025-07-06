@@ -2,6 +2,7 @@ import { ref, watch } from 'vue'
 import { useConfirmModal } from '../modals/useConfirmModal'
 import { useMath } from '../common/useMath'
 import { editorConfig } from '@/config/editorConfig'
+import { useToastModal } from '../modals/useToastModal'
 
 const isCropShown = ref(false)
 
@@ -15,13 +16,13 @@ const rightIndent = ref(0)
 
 // Limits
 const topIndentMin = ref(0)
-const topIndentMax = ref(1000)
+const topIndentMax = ref(0)
 const rightIndentMin = ref(0)
-const rightIndentMax = ref(1000)
+const rightIndentMax = ref(0)
 const bottomIndentMin = ref(0)
-const bottomIndentMax = ref(1000)
+const bottomIndentMax = ref(0)
 const leftIndentMin = ref(0)
-const leftIndentMax = ref(1000)
+const leftIndentMax = ref(0)
 
 // Crop box values
 const cropBox = ref({
@@ -35,6 +36,7 @@ const cropBox = ref({
 
 export function useSmartCropTool(imageStore, historyStore, editorStore, t) {
   const { showConfirmModal } = useConfirmModal()
+  const { showToastModal } = useToastModal()
   const { clamp } = useMath()
 
   const resetCropBox = () => {
@@ -117,19 +119,13 @@ export function useSmartCropTool(imageStore, historyStore, editorStore, t) {
       tool: editorStore.selectedToolKey,
       tab: editorStore.selectedTabPerTool[editorStore.selectedToolKey],
     }),
-    (newVal, oldVal) => {
-      console.log('Zmena nástroja alebo tabu:')
-      console.log('Stav predtým:', oldVal)
-      console.log('Stav teraz:', newVal)
-
+    (newVal) => {
       if (newVal.tool === 'smartCrop' && newVal.tab === 'manual') {
-        console.log('Manual smart crop tab selected')
         editorStore.selectSubTool('isCropShown')
         isCropShown.value = true
       }
 
       if (newVal.tool === 'smartCrop' && newVal.tab === 'auto') {
-        console.log('Auto smart crop tab selected')
         editorStore.selectSubTool('')
         isCropShown.value = false
       }
@@ -152,16 +148,6 @@ export function useSmartCropTool(imageStore, historyStore, editorStore, t) {
       }
     }
 
-    // imageStore.imageOperations.smartCrop.enabled = true
-    // imageStore.imageOperations.smartCrop.color = color
-    // // const newCrop = { ...cropBox.value }
-    // // const prevCrop = imageStore.imageOperations.smartCrop.cropBox
-    // // if (prevCrop) {
-    // //   newCrop.leftIndent += prevCrop.leftIndent || 0
-    // //   newCrop.topIndent += prevCrop.topIndent || 0
-    // // }
-    // imageStore.imageOperations.smartCrop.cropBox = cropBox.value
-
     imageStore.addImageOperation({
       type: 'smartCrop',
       color: structuredClone(selectedColor.value),
@@ -174,7 +160,11 @@ export function useSmartCropTool(imageStore, historyStore, editorStore, t) {
   }
 
   const applyAutoSmartCropRender = async () => {
-    const newCropBox = calculateIndents(selectedColor.value)
+    let newCropBox = cropBox.value
+    if (!isCropShown.value) {
+      newCropBox = calculateIndents(selectedColor.value)
+    }
+
     await applyCrop(newCropBox)
   }
 
@@ -190,14 +180,12 @@ export function useSmartCropTool(imageStore, historyStore, editorStore, t) {
   }
 
   const applyManualSmartCrop = async () => {
-    console.log('Applying manual smart crop with crop box:', cropBox.value)
     await applyCrop(cropBox.value)
 
     historyStore.push(imageStore.getSnapshot())
   }
 
   const calculateIndents = (color) => {
-    console.log('Calculating indents for color:', color)
     if (!imageStore.renderedImage) return
 
     const canvas = document.createElement('canvas')
@@ -310,6 +298,21 @@ export function useSmartCropTool(imageStore, historyStore, editorStore, t) {
 
   const applyCrop = async (cropBox) => {
     if (!imageStore.renderedImage) return
+
+    if (
+      cropBox.width === imageStore.fileDimensions.width &&
+      cropBox.height === imageStore.fileDimensions.height
+    ) {
+      // No crop needed, just reset the crop box
+      showToastModal(
+        'info',
+        t('tools.smartCrop.settings.noCropApplied.title'),
+        t('tools.smartCrop.settings.noCropApplied.message'),
+      )
+
+      resetCropBox()
+      return
+    }
 
     // Create confirm modal to confirm rasterization if there are SVG objects
     if (imageStore.svgObjects.length > 0) {
