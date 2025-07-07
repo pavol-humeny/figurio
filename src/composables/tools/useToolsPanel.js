@@ -67,24 +67,24 @@ export function useToolsPanel(editorStore, imageStore) {
     toggleTool(toolKey, tabKey)
   }
 
-  // watch(
-  //   () => ({
-  //     tool: editorStore.selectedToolKey,
-  //     tab: editorStore.selectedTabPerTool[editorStore.selectedToolKey],
-  //   }),
-  //   (newVal) => {
-  //     if (
-  //       newVal.tool === 'move' ||
-  //       newVal.tool === 'transform' ||
-  //       newVal.tool === 'grayscale' ||
-  //       newVal.tool === 'frame' ||
-  //       newVal.tool === 'export'
-  //     ) {
-  //       editorStore.selectSubTool('')
-  //     }
-  //   },
-  //   { immediate: true, deep: false },
-  // )
+  watch(
+    () => ({
+      tool: editorStore.selectedToolKey,
+      tab: editorStore.selectedTabPerTool[editorStore.selectedToolKey],
+    }),
+    (newVal) => {
+      if (
+        newVal.tool === 'move' ||
+        newVal.tool === 'transform' ||
+        newVal.tool === 'grayscale' ||
+        newVal.tool === 'frame' ||
+        newVal.tool === 'export'
+      ) {
+        editorStore.selectSubTool('')
+      }
+    },
+    { immediate: true, deep: false },
+  )
 
   return {
     activeTool,

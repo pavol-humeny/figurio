@@ -4,7 +4,7 @@ import { useViewportStore } from '@/stores/viewportStore'
 import { useImageRenderer } from '@/composables/editor/useImageRenderer'
 import { useImageStore } from '@/stores/imageStore'
 import { useEditorStore } from '@/stores/editorStore'
-import { ref } from 'vue'
+import { ref, watch } from 'vue'
 import CropTool from '@/components/tools/CropTool.vue'
 import PresetCropTool from '../tools/PresetCropTool.vue'
 import SmartCropTool from '../tools/SmartCropTool.vue'
@@ -42,6 +42,17 @@ const {
   verticalSliderHeight,
   horizontalSliderWidth,
 } = useViewportWrapper(useViewportStore(), useImageStore(), useEditorStore(), contentRef)
+
+const isCropShown = ref(false)
+
+// Sleduj zmenu hodnoty `selectedSubToolKey`
+watch(
+  () => editorStore.selectedSubToolKey,
+  (newVal) => {
+    isCropShown.value = newVal === 'isCropShown'
+  },
+  { immediate: true },
+)
 </script>
 
 <template>
@@ -69,7 +80,7 @@ const {
         <canvas ref="frameCanvasRef" class="frame-canvas"></canvas>
 
         <CropTool v-if="editorStore.selectedTabPerTool[editorStore.selectedToolKey] === 'crop'" />
-        <SmartCropTool v-if="editorStore.selectedSubToolKey === 'isCropShown'" />
+        <SmartCropTool v-if="isCropShown" />
         <PresetCropTool
           v-if="
             editorStore.selectedToolKey === 'preset' && editorStore.selectedSubToolKey === 'crop'

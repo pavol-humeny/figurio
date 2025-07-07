@@ -27,7 +27,7 @@ const props = defineProps({
 
 const emit = defineEmits(['click'])
 
-const { wrapperRef, subToolPos, onRightClick, onClickSubTool, onClickTool } = useOneTool(
+const { wrapperRef, subToolPos, onRightClick, onClickTab, onClickTool } = useOneTool(
   useEditorStore(),
   props,
   emit,
@@ -59,7 +59,7 @@ const { wrapperRef, subToolPos, onRightClick, onClickSubTool, onClickTool } = us
         }"
       >
         <ItemTip v-for="sub in props.tool.subTools" :key="sub.key" :text="sub.tip" position="right">
-          <div class="subTool" @click.stop="onClickSubTool(sub.key)">
+          <div class="subTool" @click.stop="onClickTab(sub.key)">
             <BaseIcon :name="sub.iconName" :size="27" :color="'var(--primary-c)'" />
           </div>
         </ItemTip>
