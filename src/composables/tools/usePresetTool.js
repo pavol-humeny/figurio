@@ -290,8 +290,10 @@ export function usePresetTool(
         cropOperation[0].cropBox.y < 0 ||
         cropOperation[0].cropBox.width <= 0 ||
         cropOperation[0].cropBox.height <= 0 ||
-        cropOperation[0].cropBox.x + cropOperation[0].cropBox.width > imageStore.fileDimensions.width ||
-        cropOperation[0].cropBox.y + cropOperation[0].cropBox.height > imageStore.fileDimensions.height
+        cropOperation[0].cropBox.x + cropOperation[0].cropBox.width >
+          imageStore.fileDimensions.width ||
+        cropOperation[0].cropBox.y + cropOperation[0].cropBox.height >
+          imageStore.fileDimensions.height
       ) {
         showToastModal(
           'error',
@@ -311,7 +313,9 @@ export function usePresetTool(
         } else if (operation.type === 'flip') {
           useFlipTool(imageStore, historyStore).applyFlipRender(operation.direction)
         } else if (operation.type === 'smartCrop') {
-          useSmartCropTool(imageStore, historyStore).applyAutoSmartCropRender(operation)
+          useSmartCropTool(imageStore, historyStore, editorStore, t).applyAutoSmartCropRender(
+            operation.color,
+          )
         } else if (operation.type === 'grayscale') {
           useGrayscaleTool(imageStore, historyStore).applyGrayscaleRender()
         } else if (operation.type === 'crop') {

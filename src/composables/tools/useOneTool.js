@@ -22,10 +22,10 @@ export function useOneTool(editorStore, props, emit) {
     editorStore.setToolWithOpenSubTools(props.tool.key)
   }
 
-  const onClickSubTool = (subToolKey) => {
+  const onClickTab = (tabKey) => {
     editorStore.setToolWithOpenSubTools('')
-    editorStore.selectSubTool(subToolKey)
-    emit('click', props.tool.key, subToolKey)
+    editorStore.selectTab(tabKey)
+    emit('click', props.tool.key, tabKey)
   }
 
   const onClickTool = () => {
@@ -56,7 +56,7 @@ export function useOneTool(editorStore, props, emit) {
     wrapperRef,
     subToolPos,
     onRightClick,
-    onClickSubTool,
+    onClickTab,
     onClickTool,
   }
 }

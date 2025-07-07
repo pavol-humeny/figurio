@@ -35,18 +35,18 @@ export function useToolsPanel(editorStore, imageStore) {
     nextTick(() => checkScroll())
   })
 
-  const toggleTool = (toolKey, subToolKey) => {
+  const toggleTool = (toolKey, tabKey) => {
     console.log('Toggle tool:', toolKey)
 
-    if (editorStore.selectedToolKey === toolKey && subToolKey === null) {
+    if (editorStore.selectedToolKey === toolKey && tabKey === null) {
       editorStore.selectTool('')
       return
     }
     editorStore.selectTool(toolKey)
 
-    if (subToolKey) {
-      console.log('Sub tool:', subToolKey)
-      editorStore.selectTab(subToolKey)
+    if (tabKey) {
+      console.log('Sub tool:', tabKey)
+      editorStore.selectTab(tabKey)
     }
   }
 
@@ -55,7 +55,7 @@ export function useToolsPanel(editorStore, imageStore) {
     openExportToolSettings()
   }
 
-  const selectTool = (toolKey, subToolKey) => {
+  const selectTool = (toolKey, tabKey) => {
     if (isToolDisabled.value) return
 
     // Export tool
@@ -64,27 +64,27 @@ export function useToolsPanel(editorStore, imageStore) {
       return
     }
 
-    toggleTool(toolKey, subToolKey)
+    toggleTool(toolKey, tabKey)
   }
 
-  watch(
-    () => ({
-      tool: editorStore.selectedToolKey,
-      tab: editorStore.selectedTabPerTool[editorStore.selectedToolKey],
-    }),
-    (newVal) => {
-      if (
-        newVal.tool === 'move' ||
-        newVal.tool === 'transform' ||
-        newVal.tool === 'grayscale' ||
-        newVal.tool === 'frame' ||
-        newVal.tool === 'export'
-      ) {
-        editorStore.selectSubTool('')
-      }
-    },
-    { immediate: true, deep: false },
-  )
+  // watch(
+  //   () => ({
+  //     tool: editorStore.selectedToolKey,
+  //     tab: editorStore.selectedTabPerTool[editorStore.selectedToolKey],
+  //   }),
+  //   (newVal) => {
+  //     if (
+  //       newVal.tool === 'move' ||
+  //       newVal.tool === 'transform' ||
+  //       newVal.tool === 'grayscale' ||
+  //       newVal.tool === 'frame' ||
+  //       newVal.tool === 'export'
+  //     ) {
+  //       editorStore.selectSubTool('')
+  //     }
+  //   },
+  //   { immediate: true, deep: false },
+  // )
 
   return {
     activeTool,

@@ -64,7 +64,6 @@ export function useSmartCropTool(imageStore, historyStore, editorStore, t) {
     () => {
       resetCropBox()
     },
-    { immediate: true },
   )
 
   watch(
@@ -131,7 +130,6 @@ export function useSmartCropTool(imageStore, historyStore, editorStore, t) {
         isCropShown.value = false
       }
     },
-    { immediate: true, deep: false },
   )
 
   const applyAutoSmartCrop = async () => {
@@ -160,11 +158,11 @@ export function useSmartCropTool(imageStore, historyStore, editorStore, t) {
     historyStore.push(imageStore.getSnapshot())
   }
 
-  const applyAutoSmartCropRender = async () => {
-    let newCropBox = cropBox.value
-    if (!isCropShown.value) {
-      newCropBox = calculateIndents(selectedColor.value)
-    }
+  const applyAutoSmartCropRender = async (color) => {
+    const newCropBox = calculateIndents(color || selectedColor.value)
+
+    console.log('Applying auto smart crop with color:', color || selectedColor.value)
+    console.log('New crop box:', newCropBox)
 
     await applyCrop(newCropBox)
   }
@@ -285,7 +283,17 @@ export function useSmartCropTool(imageStore, historyStore, editorStore, t) {
       right--
     }
 
-    // Nastavenie hodnôt
+    // Set cropBox values for cropping
+    const cropBox2 = {
+      topIndent: top,
+      leftIndent: left,
+      rightIndent: width - right - 1,
+      bottomIndent: height - bottom - 1,
+      width: width - left - (width - right - 1), // width: width - left - cropBox2.rightIndent,
+      height: height - top - (height - bottom - 1), // height: height - top - cropBox2.bottomIndent,
+    }
+
+    // Set cropBox values for display
     topIndent.value = top
     bottomIndent.value = height - bottom - 1
     leftIndent.value = left
@@ -294,7 +302,7 @@ export function useSmartCropTool(imageStore, historyStore, editorStore, t) {
     cropBox.value.width = imageStore.fileDimensions.width - leftIndent.value - rightIndent.value
     cropBox.value.height = imageStore.fileDimensions.height - topIndent.value - bottomIndent.value
 
-    return cropBox.value
+    return cropBox2
   }
 
   const applyCrop = async (cropBox) => {
