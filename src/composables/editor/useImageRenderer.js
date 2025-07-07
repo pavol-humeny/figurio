@@ -162,7 +162,10 @@ export function useImageRenderer(
 
     ctx.clearRect(0, 0, canvasWidth, canvasHeight)
 
-    if (!frameEnabled) return
+    if (!frameEnabled) {
+      renderingFrameCanvas.value = false
+      return
+    }
 
     useFrameTool(imageStore, historyStore, editorStore, t).applyFrameRender(
       ctx,
@@ -174,7 +177,7 @@ export function useImageRenderer(
   const renderAll = () => {
     updateSizes()
     renderCanvas()
-    // renderFrameCanvas()
+    renderFrameCanvas()
     renderSvg()
   }
 

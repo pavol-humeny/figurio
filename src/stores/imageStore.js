@@ -361,6 +361,8 @@ export const useImageStore = defineStore('imageStore', {
     async exportFile(t) {
       if (!this.renderedImage) return false
 
+      console.log('Exporting file...')
+
       await this.generatePreviewWithFrame()
 
       const isPdf = this.newFileFormat === 'pdf'
@@ -505,6 +507,8 @@ export const useImageStore = defineStore('imageStore', {
 
     async generatePreviewWithFrame() {
       await this.rasterize()
+
+      console.log('Generating preview with frame...')
 
       const frameCanvas = document.querySelector('.frame-canvas')
       const imageCanvas = document.querySelector('.image-canvas')
