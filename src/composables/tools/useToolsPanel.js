@@ -1,4 +1,4 @@
-import { ref, onMounted, nextTick, computed } from 'vue'
+import { ref, onMounted, nextTick, computed, watch } from 'vue'
 import { useExportToolSettings } from '@/composables/toolsSettings/useExportToolSettings'
 import { useImageStore } from '@/stores/imageStore'
 import { useI18n } from 'vue-i18n'
@@ -66,6 +66,25 @@ export function useToolsPanel(editorStore, imageStore) {
 
     toggleTool(toolKey, subToolKey)
   }
+
+  watch(
+    () => ({
+      tool: editorStore.selectedToolKey,
+      tab: editorStore.selectedTabPerTool[editorStore.selectedToolKey],
+    }),
+    (newVal) => {
+      if (
+        newVal.tool === 'move' ||
+        newVal.tool === 'transform' ||
+        newVal.tool === 'grayscale' ||
+        newVal.tool === 'frame' ||
+        newVal.tool === 'export'
+      ) {
+        editorStore.selectSubTool('')
+      }
+    },
+    { immediate: true, deep: false },
+  )
 
   return {
     activeTool,
