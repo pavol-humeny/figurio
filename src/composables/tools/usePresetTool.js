@@ -233,6 +233,19 @@ export function usePresetTool(
     }
   })
 
+  // Watch localImageFrame.width if it is different than frameSolid reset width to 0
+  watch(
+    () => localImageFrame.value.type,
+    (type) => {
+      if (type !== 'frameSolid') {
+        localImageFrame.value.width = 0
+        if (frameWidthRef.value) {
+          frameWidthRef.value.setValue(0)
+        }
+      }
+    },
+  )
+
   const applyPreset = async () => {
     if (imageStore.svgObjects.length > 0) {
       const confirmed = await showConfirmModal(
@@ -356,9 +369,12 @@ export function usePresetTool(
       enabled: false,
     },
     frame: {
-      type: 'none',
-      color: '#000000',
+      enabled: false,
+      type: 'frameSolid',
       width: 0,
+      height: 0,
+      color: '#000000',
+      headerSize: 0,
     },
     // UPDATE
   })
@@ -432,9 +448,12 @@ export function usePresetTool(
         enabled: false,
       },
       frame: {
-        type: 'none',
-        color: '#000000',
+        enabled: false,
+        type: 'frameSolid',
         width: 0,
+        height: 0,
+        color: '#000000',
+        headerSize: 0,
       },
       // UPDATE
     }
@@ -445,7 +464,7 @@ export function usePresetTool(
   const createPreset = () => {
     console.log('Creating preset:', newPreset.value.presetName)
 
-    const imageOperations = [] // UPDATE
+    const imageOperations = []
     const imageFrame = {}
 
     if (newPreset.value.transformations.rotationAngle !== 0) {
@@ -469,7 +488,9 @@ export function usePresetTool(
     if (newPreset.value.grayscale.enabled) {
       imageOperations.push({ type: 'grayscale', enabled: true })
     }
+
     if (newPreset.value.frame.type !== 'none') {
+      imageFrame.enabled = newPreset.value.frame.enabled
       imageFrame.type = newPreset.value.frame.type
       imageFrame.color = newPreset.value.frame.color
       imageFrame.width = newPreset.value.frame.width
@@ -477,10 +498,12 @@ export function usePresetTool(
     // UPDATE
 
     presetsStore.createPreset(
-      structuredClone(newPreset.value.presetName),
-      structuredClone(imageOperations),
-      structuredClone(imageFrame),
+      JSON.parse(JSON.stringify(newPreset.value.presetName)),
+      JSON.parse(JSON.stringify(imageOperations)),
+      JSON.parse(JSON.stringify(imageFrame)),
     )
+
+    console.log('Preset created:', presetsStore.selectedPreset)
 
     resetPreset()
 

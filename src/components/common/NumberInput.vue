@@ -116,10 +116,12 @@ const showUnit = props.unit !== ''
         :size="props.size"
         :color="props.color"
         @dblclick="onIconDoubleClick"
-        :class="{ 'not-allowed': props.disabled }"
+        :class="{ 'not-allowed': props.disabled, disabled: props.disabled }"
         :style="{ top: props.iconTop + '%' }"
       />
-      <span v-if="showUnit" class="input-unit">{{ props.unit }}</span>
+      <span v-if="showUnit" class="input-unit" :class="{ disabled: props.disabled }">{{
+        props.unit
+      }}</span>
     </div>
   </ItemTip>
 </template>

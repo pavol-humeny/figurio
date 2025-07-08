@@ -248,7 +248,7 @@ const tabs = ['myPresets', 'createPreset']
                 icon="IconArrowWidth"
                 :iconTop="45"
                 :onReset="() => resetFrameWidth()"
-                :disabled="!isModifyingPreset"
+                :disabled="!isModifyingPreset || localImageFrame.type !== 'frameSolid'"
               />
             </div>
           </div>
@@ -490,11 +490,14 @@ const tabs = ['myPresets', 'createPreset']
               </p>
               <ColorPicker v-model="newPreset.frame.color" />
             </div>
-            <div
-              class="content-aligned two-items"
-              :class="newPreset.frame.enabled ? '' : 'disabled'"
-            >
-              <p>
+            <div class="content-aligned two-items">
+              <p
+                :class="
+                  !newPreset.frame.enabled || newPreset.frame.type !== 'frameSolid'
+                    ? 'disabled'
+                    : ''
+                "
+              >
                 {{ t('tools.preset.settings.createPreset.presetValues.frame.width') }}
               </p>
               <NumberInput
@@ -507,6 +510,7 @@ const tabs = ['myPresets', 'createPreset']
                 icon="IconArrowWidth"
                 :iconTop="45"
                 :onReset="() => resetFrameWidth()"
+                :disabled="!newPreset.frame.enabled || newPreset.frame.type !== 'frameSolid'"
               />
             </div>
           </div>

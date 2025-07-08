@@ -7,7 +7,6 @@
     height="20"
     width="20"
   >
-    <desc>Cursor Hand 2 Streamline Icon: https://streamlinehq.com</desc>
     <path
       stroke="currentColor"
       stroke-linecap="round"

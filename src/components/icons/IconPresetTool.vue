@@ -7,7 +7,6 @@
     height="20"
     width="20"
   >
-    <desc>Layers 1 Streamline Icon: https://streamlinehq.com</desc>
     <g id="layers-1--design-layer-layers-pile-stack-align">
       <path
         id="Vector"

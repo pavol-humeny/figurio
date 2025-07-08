@@ -10,7 +10,6 @@
     height="20"
     width="20"
   >
-    <desc>Box Select Streamline Icon: https://streamlinehq.com</desc>
     <path
       d="M3.81875 2.2912500000000002a1.5275 1.5275 0 0 0 -1.5275 1.5275"
       stroke-width="1.67"

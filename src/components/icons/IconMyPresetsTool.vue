@@ -7,7 +7,6 @@
     height="20"
     width="20"
   >
-    <desc>Common File Stack Streamline Icon: https://streamlinehq.com</desc>
     <path
       stroke="currentColor"
       stroke-linecap="round"

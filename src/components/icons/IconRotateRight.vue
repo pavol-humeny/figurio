@@ -7,7 +7,6 @@
     height="20"
     width="20"
   >
-    <desc>Rotate Counter Clockwise Streamline Icon: https://streamlinehq.com</desc>
     <path
       fill-rule="evenodd"
       clip-rule="evenodd"

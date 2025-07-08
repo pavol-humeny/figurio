@@ -7,7 +7,6 @@
     height="20"
     width="20"
   >
-    <desc>Rotate Angle 45 Streamline Icon: https://streamlinehq.com</desc>
     <g id="rotate-angle-45--rotate-angle-company-office-supplies-work">
       <path
         id="Vector"
