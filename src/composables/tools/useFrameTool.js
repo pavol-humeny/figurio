@@ -240,6 +240,9 @@ export function useFrameTool(imageStore, historyStore, editorStore, t) {
     let fw = frame.width || 0
     let fh = frame.height || 0
 
+    console.log('Applying frame render:', frame.type, 'with color:', color)
+    console.log('Frame dimensions:', fw, fh)
+
     if (frame.type === 'frameMacBrowser' || frame.type === 'frameWindowsBrowser') {
       fw = Math.floor((1 / 200) * Math.max(w, h))
       fh = fw
@@ -251,6 +254,8 @@ export function useFrameTool(imageStore, historyStore, editorStore, t) {
       fh = fw
       imageStore.frame.width = fw
       imageStore.frame.height = fh
+      imageStore.frame.headerSize = 0
+    } else {
       imageStore.frame.headerSize = 0
     }
 

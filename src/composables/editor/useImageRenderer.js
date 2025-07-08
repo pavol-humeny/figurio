@@ -20,36 +20,52 @@ export function useImageRenderer(
   let skipNextRenderAll = ref(false)
 
   const updateSizes = () => {
+    console.log('Updating sizes for image renderer...')
     const width = imageStore.fileDimensions.width
     const height = imageStore.fileDimensions.height
 
+    // Nastavenie pre .viewport-content wrapper
     if (contentRef.value) {
       contentRef.value.style.width = `${width}px`
       contentRef.value.style.height = `${height}px`
     }
-    // if (svgRef.value) {
-    //   svgRef.value.style.width = `${width}px`
-    //   svgRef.value.style.height = `${height}px`
-    // }
-    // if (canvasRef.value) {
-    //   canvasRef.value.style.width = `${width}px`
-    //   canvasRef.value.style.height = `${height}px`
-    //   canvasRef.value.width = width
-    //   canvasRef.value.height = height
-    // }
 
-    // if (frameSvgRef.value) {
-    //   const frame = imageStore.imageOperations.frame
-    //   const frameEnabled = frame?.enabled && frame.width > 0
+    // Nastavenie canvas vrstvy
+    if (canvasRef.value) {
+      canvasRef.value.width = width
+      canvasRef.value.height = height
+      canvasRef.value.style.width = `${width}px`
+      canvasRef.value.style.height = `${height}px`
+    }
 
-    //   const width = imageStore.fileDimensions.width + (frameEnabled ? frame.width * 2 : 0)
-    //   const height = imageStore.fileDimensions.height + (frameEnabled ? frame.width * 2 : 0)
+    // Nastavenie SVG vrstvy (vektorové prvky)
+    if (svgRef.value) {
+      svgRef.value.setAttribute('width', width)
+      svgRef.value.setAttribute('height', height)
+      svgRef.value.style.width = `${width}px`
+      svgRef.value.style.height = `${height}px`
+    }
 
-    //   frameSvgRef.value.style.width = `${width}px`
-    //   frameSvgRef.value.style.height = `${height}px`
-    //   frameSvgRef.value.width = width
-    //   frameSvgRef.value.height = height
-    // }
+    // Nastavenie SVG rámika
+    if (frameSvgRef.value) {
+      const frame = imageStore.frame
+      const frameEnabled = frame?.enabled && (frame.width > 0 || frame.height > 0)
+
+      const fw = frameEnabled ? frame.width : 0
+      const fh = frameEnabled ? frame.height : 0
+
+      const header = frame?.headerSize || 0
+      const isBrowserFrame =
+        frame.type === 'frameMacBrowser' || frame.type === 'frameWindowsBrowser'
+
+      const frameWidth = width + fw * 2
+      const frameHeight = height + fh * 2 + (isBrowserFrame ? header - fh : 0)
+
+      frameSvgRef.value.setAttribute('width', frameWidth)
+      frameSvgRef.value.setAttribute('height', frameHeight)
+      frameSvgRef.value.style.width = `${frameWidth}px`
+      frameSvgRef.value.style.height = `${frameHeight}px`
+    }
   }
 
   const renderCanvas = () => {
@@ -164,10 +180,11 @@ export function useImageRenderer(
       imageStore.renderedImage = canvas
       imageStore.previewUrl = canvas.toDataURL()
 
-      renderCanvas()
 
       console.log(`Rounded corners with radius ${radius}px`)
     }
+    console.log('-------------------------------------')
+    renderCanvas()
 
     renderingFrameSvg.value = false
   }
@@ -206,6 +223,7 @@ export function useImageRenderer(
     (newFrame) => {
       if (newFrame && !renderingFrameSvg.value) {
         console.log('Frame operations changed, re-rendering frame svg')
+        updateSizes()
         renderFrameSvg()
       }
     },

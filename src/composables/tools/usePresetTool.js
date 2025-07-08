@@ -275,7 +275,7 @@ export function usePresetTool(
 
     let areFramesEqual = true
     if (currentImageFrame.type !== presetFrame.type) {
-      areFramesEqual = true
+      areFramesEqual = false
     } else {
       if (currentImageFrame.type === 'frameSolid') {
         areFramesEqual =
@@ -428,6 +428,17 @@ export function usePresetTool(
           localImageFrame.value.color = '#000000'
           localImageFrame.value.width = 0
         }
+      }
+    },
+  )
+
+  // watch localImageFrame.type
+  watch(
+    () => localImageFrame.value.type,
+    (type) => {
+      isPresetModified.value = true
+      if (type !== 'frameSolid') {
+        localImageFrame.value.width = 0
       }
     },
   )

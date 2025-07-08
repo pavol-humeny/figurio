@@ -104,16 +104,14 @@ export function useViewportWrapper(viewportStore, imageStore, editorStore, conte
   const fitToScreenZoomLevel = () => {
     updateInitialDimensions()
 
-    const frameWidth = imageStore.frame?.enabled
-      ? imageStore.frame.width
-      : 0
+    const frameWidth = imageStore.frame?.enabled ? imageStore.frame.width : 0
 
     const scaleX = wrapperWidth.value / (contentWidth.value + frameWidth * 2)
     const scaleY = wrapperHeight.value / (contentHeight.value + frameWidth * 2)
 
     const optimalZoom = Math.min(scaleX, scaleY)
 
-    viewportStore.fitZoomLevel = (viewportStore.zoomLevel / optimalZoom) * 1.05
+    viewportStore.fitZoomLevel = (viewportStore.zoomLevel / optimalZoom) * 1.1
 
     updateZoomDependentDimensions()
   }
@@ -320,8 +318,7 @@ export function useViewportWrapper(viewportStore, imageStore, editorStore, conte
     () => imageStore.frame,
     () => {
       nextTick(() => {
-        fitToScreenZoomLevel()
-        centerImage()
+        setValuesForCenterImage()
       })
     },
     { deep: true },
