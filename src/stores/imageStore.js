@@ -50,6 +50,7 @@ export const useImageStore = defineStore('imageStore', {
 
     // Value for raster image rendering
     renderedImage: null, // UndoRedo
+    // tmpRenderedImage: null, // Temporary value for saving changes before applying crop in frame tool
     // Value for SVG rendering
     svgObjects: [], // UndoRedo
     // svgObjects: [
@@ -97,6 +98,14 @@ export const useImageStore = defineStore('imageStore', {
     },
   },
   actions: {
+    // initWatchers() {
+    //   this.$subscribe((mutation, state) => {
+    //     if (mutation.events.some((e) => e.key === 'renderedImage')) {
+    //       this.tmpRenderedImage = state.renderedImage
+    //       console.log('[ImageStore] tmpRenderedImage synchronized with renderedImage')
+    //     }
+    //   })
+    // },
     resetRenderedImageToOriginal() {
       if (this.originalImage) {
         this.renderedImage = this.originalImage
@@ -508,25 +517,39 @@ export const useImageStore = defineStore('imageStore', {
     async generatePreviewWithFrame() {
       await this.rasterize()
 
-      console.log('Generating preview with frame...')
+      console.log('Generating preview with SVG frame...')
 
-      const frameCanvas = document.querySelector('.frame-canvas')
       const imageCanvas = document.querySelector('.image-canvas')
+      const frameSvg = document.querySelector('.frame-svg')
 
-      if (!frameCanvas || !imageCanvas) {
-        console.warn('Canvases not found')
+      if (!frameSvg || !imageCanvas) {
+        console.warn('Missing SVG or image canvas')
         return
       }
 
-      // Create a new canvas for the preview
+      const svgWidth = parseInt(frameSvg.getAttribute('width'), 10)
+      const svgHeight = parseInt(frameSvg.getAttribute('height'), 10)
+
+      // 1. Vytvoríme bitmapu z SVG rámika
+      const svgString = new XMLSerializer().serializeToString(frameSvg)
+      const svgBlob = new Blob([svgString], { type: 'image/svg+xml;charset=utf-8' })
+      const url = URL.createObjectURL(svgBlob)
+
+      const svgImage = await new Promise((resolve) => {
+        const img = new Image()
+        img.onload = () => {
+          URL.revokeObjectURL(url)
+          resolve(img)
+        }
+        img.src = url
+      })
+
+      // 2. Vytvor export canvas
       const exportCanvas = document.createElement('canvas')
-      exportCanvas.width = frameCanvas.width
-      exportCanvas.height = frameCanvas.height
+      exportCanvas.width = svgWidth
+      exportCanvas.height = svgHeight
       const ctx = exportCanvas.getContext('2d')
 
-      // Draw frame
-
-      // Draw image
       const frameWidth = this.frame?.width || 0
       let frameHeight = this.frame?.height || frameWidth
 
@@ -534,11 +557,13 @@ export const useImageStore = defineStore('imageStore', {
         frameHeight = this.frame.headerSize
       }
 
+      // 3. Vykreslenie obrázka (posunutého podľa rámika)
       ctx.drawImage(imageCanvas, frameWidth, frameHeight)
 
-      ctx.drawImage(frameCanvas, 0, 0)
+      // 4. Vykreslenie rámika navrch
+      ctx.drawImage(svgImage, 0, 0)
 
-      // Save to previewUrl
+      // 5. Výsledok
       this.previewUrl = exportCanvas.toDataURL()
     },
 

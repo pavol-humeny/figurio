@@ -14,8 +14,10 @@ export function useImageRenderer(
 
   const canvasRef = ref(null)
   const svgRef = ref(null)
-  const frameCanvasRef = ref(null)
-  let renderingFrameCanvas = ref(false)
+  // const frameSvgRef = ref(null)
+  const frameSvgRef = ref(null)
+  let renderingFrameSvg = ref(false)
+  let skipNextRenderAll = ref(false)
 
   const updateSizes = () => {
     const width = imageStore.fileDimensions.width
@@ -36,17 +38,17 @@ export function useImageRenderer(
     //   canvasRef.value.height = height
     // }
 
-    // if (frameCanvasRef.value) {
+    // if (frameSvgRef.value) {
     //   const frame = imageStore.imageOperations.frame
     //   const frameEnabled = frame?.enabled && frame.width > 0
 
     //   const width = imageStore.fileDimensions.width + (frameEnabled ? frame.width * 2 : 0)
     //   const height = imageStore.fileDimensions.height + (frameEnabled ? frame.width * 2 : 0)
 
-    //   frameCanvasRef.value.style.width = `${width}px`
-    //   frameCanvasRef.value.style.height = `${height}px`
-    //   frameCanvasRef.value.width = width
-    //   frameCanvasRef.value.height = height
+    //   frameSvgRef.value.style.width = `${width}px`
+    //   frameSvgRef.value.style.height = `${height}px`
+    //   frameSvgRef.value.width = width
+    //   frameSvgRef.value.height = height
     // }
   }
 
@@ -97,93 +99,88 @@ export function useImageRenderer(
     })
   }
 
-  const renderFrameCanvas = () => {
-    if (renderingFrameCanvas.value) return
+  const renderFrameSvg = async () => {
+    if (renderingFrameSvg.value) return
 
-    console.log('Rendering frame canvas...')
-    renderingFrameCanvas.value = true
+    console.log('Rendering frame SVG...')
 
-    const frameCanvas = frameCanvasRef.value
-    const ctx = frameCanvas?.getContext('2d')
-    if (!frameCanvas || !ctx) return
+    renderingFrameSvg.value = true
 
-    const frame = imageStore.frame
-    const frameEnabled = frame?.enabled
-
-    let fw = frameEnabled ? frame.width : 0
-    let fh = frameEnabled ? frame.height : 0
-
-    if (frame.type === 'frameMacBrowser' || frame.type === 'frameWindowsBrowser') {
-      fw = Math.floor(
-        (1 / 200) *
-          (imageStore.fileDimensions.height >= imageStore.fileDimensions.width
-            ? imageStore.fileDimensions.height
-            : imageStore.fileDimensions.width),
-      ) // 0.5% of the larger dimension
-
-      fh = fw
-
-      imageStore.frame.width = fw
-      imageStore.frame.height = fh
-      imageStore.frame.headerSize = Math.floor(0.04 * imageStore.fileDimensions.height) // 4% of height
-    } else if (frame.type === 'framePhoneAndroid' || frame.type === 'framePhoneIOS') {
-      //TODO
-      console.warn('Phone frames are not implemented yet')
-    }
-
-    const width = imageStore.fileDimensions.width
-    const height = imageStore.fileDimensions.height
-
-    const canvasWidth = width + fw * 2
-    let canvasHeight = height + fh * 2
-
-    if (
-      imageStore.frame.type === 'frameMacBrowser' ||
-      imageStore.frame.type === 'frameWindowsBrowser'
-    ) {
-      canvasHeight = height + frame.headerSize + fh
-      console.log('-----------------------Applying browser frame...: ', canvasHeight)
-    }
-
-    frameCanvas.width = canvasWidth
-    frameCanvas.height = canvasHeight
-    frameCanvas.style.width = `${canvasWidth}px`
-    frameCanvas.style.height = `${canvasHeight}px`
-    frameCanvas.style.left = `-${fw}px`
-
-    if (
-      imageStore.frame.type === 'frameMacBrowser' ||
-      imageStore.frame.type === 'frameWindowsBrowser'
-    ) {
-      frameCanvas.style.top = `-${frame.headerSize}px`
-    } else {
-      frameCanvas.style.top = `-${fh}px`
-    }
-
-    ctx.clearRect(0, 0, canvasWidth, canvasHeight)
-
-    if (!frameEnabled) {
-      renderingFrameCanvas.value = false
+    const el = frameSvgRef.value
+    if (!el) {
+      renderingFrameSvg.value = false
       return
     }
 
-    useFrameTool(imageStore, historyStore, editorStore, t).applyFrameRender(
-      ctx,
-      canvasWidth,
-      canvasHeight,
-    )
-    renderingFrameCanvas.value = false
+    el.innerHTML = ''
+    useFrameTool(imageStore, historyStore, editorStore, t).applyFrameRender(el)
+
+    // Round corners for phone frames
+    if (
+      imageStore.frame.type === 'framePhoneIOS' ||
+      imageStore.frame.type === 'framePhoneAndroid'
+    ) {
+      const header = imageStore.frame.headerSize || 0
+      const svgWidth = imageStore.fileDimensions.width + imageStore.frame.width * 2
+      const svgHeight =
+        imageStore.fileDimensions.height +
+        imageStore.frame.height * 2 +
+        (header > 0 ? header - imageStore.frame.height : 0)
+
+      const radius = Math.floor(Math.min(svgWidth, svgHeight) * 0.06) // 6% of the smaller dimension
+
+      const renderedImage = imageStore.renderedImage
+      if (!renderedImage) return
+
+      const w = renderedImage.width
+      const h = renderedImage.height
+
+      const canvas = document.createElement('canvas')
+      canvas.width = w
+      canvas.height = h
+      const ctx = canvas.getContext('2d')
+
+      const path = new Path2D()
+
+      // Create rounded rectangle path
+      path.moveTo(radius, 0)
+      path.lineTo(w - radius, 0)
+      path.quadraticCurveTo(w, 0, w, radius)
+      path.lineTo(w, h - radius)
+      path.quadraticCurveTo(w, h, w - radius, h)
+      path.lineTo(radius, h)
+      path.quadraticCurveTo(0, h, 0, h - radius)
+      path.lineTo(0, radius)
+      path.quadraticCurveTo(0, 0, radius, 0)
+      path.closePath()
+
+      // Round corners by clipping
+      ctx.save()
+      ctx.clip(path)
+      ctx.drawImage(renderedImage, 0, 0)
+      ctx.restore()
+
+      skipNextRenderAll.value = true
+      imageStore.renderedImage = canvas
+      imageStore.previewUrl = canvas.toDataURL()
+
+      renderCanvas()
+
+      console.log(`Rounded corners with radius ${radius}px`)
+    }
+
+    renderingFrameSvg.value = false
   }
   const renderAll = () => {
     updateSizes()
     renderCanvas()
-    renderFrameCanvas()
+    renderFrameSvg()
     renderSvg()
   }
 
   onMounted(() => {
     nextTick(() => {
-      if (imageStore.renderedImage || imageStore.renderedPdf) {
+      if (imageStore.renderedImage) {
         renderAll()
       }
     })
@@ -194,85 +191,30 @@ export function useImageRenderer(
     () => imageStore.renderedImage,
     (newImage) => {
       if (newImage) {
+        if (skipNextRenderAll.value) {
+          skipNextRenderAll.value = false
+          return
+        }
         renderAll()
       }
     },
   )
 
-  //watch on imageStore.frame
+  // watch on imageStore.frame
   watch(
     () => imageStore.frame,
     (newFrame) => {
-      if (newFrame && !renderingFrameCanvas.value) {
-        console.log('Frame operations changed, re-rendering frame canvas')
-        renderFrameCanvas()
+      if (newFrame && !renderingFrameSvg.value) {
+        console.log('Frame operations changed, re-rendering frame svg')
+        renderFrameSvg()
       }
     },
-    { deep: true },
+    { immediate: true, deep: true },
   )
-
-  // watch(
-  //   () => [imageStore.originalImage, imageStore.frame],
-  //   async () => {
-  //     imageStore.renderedImage = imageStore.originalImage
-  //     imageStore.fileDimensions = { ...imageStore.originalFileDimensions }
-
-  //     console.log('[watch] Original image or operations changed, applying operations')
-
-  //     // Crop operation
-  // if (imageStore.imageOperations.transformations.cropBox) {
-  //   console.log('Applying crop operation:', imageStore.imageOperations.transformations.cropBox)
-
-  //   useCropTool(imageStore, historyStore, t).applyCropRender(
-  //     imageStore.imageOperations.transformations.cropBox,
-  //   )
-  // }
-
-  // // Rotation operation
-  // if (imageStore.imageOperations.transformations.rotationAngle !== 0) {
-  //   console.log(
-  //     'Applying rotation operation:',
-  //     imageStore.imageOperations.transformations.rotationAngle,
-  //   )
-
-  //   useRotateTool(imageStore, historyStore, t).applyRotationRender(
-  //     imageStore.imageOperations.transformations.rotationAngle,
-  //   )
-  // }
-
-  // // Flip operation
-  // if (imageStore.imageOperations.transformations.flipHorizontal) {
-  //   console.log('Applying horizontal flip operation')
-
-  //   useFlipTool(imageStore, historyStore).applyFlipRender('horizontal')
-  // }
-  // if (imageStore.imageOperations.transformations.flipVertical) {
-  //   console.log('Applying vertical flip operation')
-
-  //   useFlipTool(imageStore, historyStore).applyFlipRender('vertical')
-  // }
-
-  // // SmartCrop operation
-  // if (imageStore.imageOperations.smartCrop?.enabled) {
-  //   console.log('Applying smart crop operation')
-
-  //   await useSmartCropTool(imageStore, historyStore, editorStore, t).applyAutoSmartCropRender()
-  // }
-
-  // // Grayscale operation
-  // if (imageStore.imageOperations.grayscale?.enabled) {
-  //   console.log('Applying grayscale operation')
-  //   await useGrayscaleTool(imageStore, historyStore, t).applyGrayscaleRender()
-  // }
-
-  //     renderAll()
-  //   },
-  //   { deep: true },
-  // )
 
   return {
     canvasRef,
     svgRef,
-    frameCanvasRef,
+    frameSvgRef,
   }
 }

@@ -17,7 +17,7 @@ const contentRef = ref(null)
 
 const editorStore = useEditorStore()
 
-const { canvasRef, svgRef, frameCanvasRef } = useImageRenderer(
+const { canvasRef, svgRef, frameSvgRef } = useImageRenderer(
   useImageStore(),
   useHistoryStore(),
   useEditorStore(),
@@ -77,7 +77,10 @@ watch(
         <canvas ref="canvasRef" class="image-canvas"></canvas>
         <svg ref="svgRef" class="image-svg"></svg>
 
+        <!--
         <canvas ref="frameCanvasRef" class="frame-canvas"></canvas>
+        -->
+        <svg ref="frameSvgRef" class="frame-svg"></svg>
 
         <CropTool v-if="editorStore.selectedTabPerTool[editorStore.selectedToolKey] === 'crop'" />
         <SmartCropTool v-if="isCropShown" />
@@ -142,7 +145,7 @@ watch(
 
 .image-canvas,
 .image-svg,
-.frame-canvas {
+.frame-svg {
   position: absolute;
   top: 0;
   left: 0;
