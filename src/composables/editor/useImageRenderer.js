@@ -55,11 +55,14 @@ export function useImageRenderer(
       const fh = frameEnabled ? frame.height : 0
 
       const header = frame?.headerSize || 0
+      const footer = frame?.footerSize || 0
       const isBrowserFrame =
         frame.type === 'frameMacBrowser' || frame.type === 'frameWindowsBrowser'
+      const isWindowsFrame = frame.type === 'frameWindowsTaskBar'
 
       const frameWidth = width + fw * 2
-      const frameHeight = height + fh * 2 + (isBrowserFrame ? header - fh : 0)
+      const frameHeight =
+        height + fh * 2 + (isBrowserFrame ? header - fh : 0) + (isWindowsFrame ? footer : 0)
 
       frameSvgRef.value.setAttribute('width', frameWidth)
       frameSvgRef.value.setAttribute('height', frameHeight)
@@ -193,9 +196,9 @@ export function useImageRenderer(
   const renderAll = () => {
     updateSizes()
 
-    if(imageStore.frame.enabled){
+    if (imageStore.frame.enabled) {
       renderFrameSvg()
-    }else{
+    } else {
       renderCanvas()
     }
     renderSvg()

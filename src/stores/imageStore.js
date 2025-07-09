@@ -90,6 +90,7 @@ export const useImageStore = defineStore('imageStore', {
       height: 0,
       color: '#000000',
       headerSize: 0, // Size of the header for browser frames
+      footerSize: 0, // Size of the footer for windows frame
       outlineEnabled: false, // Whether to draw an outline around the frame
     },
   }),
@@ -141,6 +142,7 @@ export const useImageStore = defineStore('imageStore', {
         height: 0,
         color: '#000000',
         headerSize: 0, // Size of the header for browser frames
+        footerSize: 0, // Size of the footer for windows frame
         outlineEnabled: false, // Whether to draw an outline around the frame
       }
     },
@@ -558,6 +560,8 @@ export const useImageStore = defineStore('imageStore', {
       // UPDATE new frame type
       if (this.frame.type === 'frameMacBrowser' || this.frame.type === 'frameWindowsBrowser') {
         frameHeight = this.frame.headerSize
+      } else if (this.frame.type === 'frameWindowsTaskBar') {
+        frameHeight = this.frame.footerSize
       }
 
       // Draw the original image

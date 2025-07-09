@@ -74,7 +74,8 @@ export function useFrameTool(imageStore, historyStore, editorStore, t) {
     if (width < 0) {
       if (
         selectedFrameVariant.value === 'frameMacBrowser' ||
-        selectedFrameVariant.value === 'frameWindowsBrowser'
+        selectedFrameVariant.value === 'frameWindowsBrowser' ||
+        selectedFrameVariant.value === 'frameWindowsTaskBar'
       ) {
         width = Math.floor(
           (1 / 200) * Math.max(imageStore.fileDimensions.width, imageStore.fileDimensions.height),
@@ -149,15 +150,12 @@ export function useFrameTool(imageStore, historyStore, editorStore, t) {
 
     // UPDATE new frame type
     if (frame.type === 'frameMacBrowser' || frame.type === 'frameWindowsBrowser') {
-      if (frame.outlineEnabled) {
-        // fw = Math.floor((1 / 200) * Math.max(w, h))
-        // fh = fw
-        imageStore.frame.headerSize = Math.floor(0.04 * h)
-      } else {
+      if (!frame.outlineEnabled) {
         fw = 0
         fh = 0
-        imageStore.frame.headerSize = Math.floor(0.04 * h)
       }
+      imageStore.frame.headerSize = Math.floor(0.04 * h)
+      imageStore.frame.footerSize = 0
     } else if (
       frame.type === 'framePhoneAndroid' ||
       frame.type === 'framePhoneAndroid2' ||
@@ -168,20 +166,26 @@ export function useFrameTool(imageStore, historyStore, editorStore, t) {
       console.log('Calculated frame width:', fw)
       fh = fw
       imageStore.frame.headerSize = 0
+      imageStore.frame.footerSize = 0
     } else if (frame.type === 'frameWindowsTaskBar') {
-      fw = Math.floor((1 / 100) * Math.max(w, h))
-      fh = fw
-      imageStore.frame.headerSize = Math.floor(0.04 * h)
+      if (!frame.outlineEnabled) {
+        fw = 0
+        fh = 0
+      }
+      imageStore.frame.footerSize = Math.floor(0.04 * h)
+      imageStore.frame.headerSize = 0
     } else {
       imageStore.frame.headerSize = 0
+      imageStore.frame.footerSize = 0
     }
 
     imageStore.frame.width = fw
     imageStore.frame.height = fh
 
     const header = frame.headerSize
+    const footer = frame.footerSize
     const svgWidth = w + fw * 2
-    const svgHeight = h + fh * 2 + (header > 0 ? header - fh : 0)
+    const svgHeight = h + fh * 2 + (header > 0 ? header - fh : 0) + (footer > 0 ? footer - fh : 0)
 
     el.setAttribute('width', svgWidth)
     el.setAttribute('height', svgHeight)
@@ -578,6 +582,67 @@ export function useFrameTool(imageStore, historyStore, editorStore, t) {
       camera.setAttribute('fill', contrastColor)
       el.appendChild(camera)
     } else if (frame.type === 'frameWindowsTaskBar') {
+      // Footer bar
+      const footerRect = document.createElementNS(ns, 'rect')
+      footerRect.setAttribute('x', 0)
+      footerRect.setAttribute('y', svgHeight - footer)
+      footerRect.setAttribute('width', svgWidth)
+      footerRect.setAttribute('height', footer)
+      footerRect.setAttribute('fill', color)
+      el.appendChild(footerRect)
+
+      // Windows logo
+      const logoSize = footer * 0.2
+      const logoSpacing = logoSize * 0.2
+      const logoStartX = fw + logoSize * 3
+      const logoStartY = svgHeight - footer + footer / 2 - logoSize - logoSpacing / 2
+
+      const logoRects = [
+        { x: logoStartX, y: logoStartY },
+        { x: logoStartX + logoSize + logoSpacing, y: logoStartY },
+        { x: logoStartX, y: logoStartY + logoSize + logoSpacing },
+        { x: logoStartX + logoSize + logoSpacing, y: logoStartY + logoSize + logoSpacing },
+      ]
+
+      logoRects.forEach((pos) => {
+        const rect = document.createElementNS(ns, 'rect')
+        rect.setAttribute('x', pos.x)
+        rect.setAttribute('y', pos.y)
+        rect.setAttribute('width', logoSize)
+        rect.setAttribute('height', logoSize)
+        rect.setAttribute('fill', contrastColor)
+        el.appendChild(rect)
+      })
+
+      // Search bar (vedľa loga)
+      const searchX = logoStartX + (logoSize + logoSpacing) * 2 + logoSize * 2
+      const searchHeight = footer * 0.2 * 2 + footer * 0.1
+      const searchWidth = searchHeight * 12
+      const searchY = svgHeight - footer / 2 - searchHeight / 2
+
+      const searchBar = document.createElementNS(ns, 'rect')
+      searchBar.setAttribute('x', searchX)
+      searchBar.setAttribute('y', searchY)
+      searchBar.setAttribute('width', searchWidth)
+      searchBar.setAttribute('height', searchHeight)
+      searchBar.setAttribute('rx', footer * 0.1)
+      searchBar.setAttribute('fill', '#ffffff33') // semi-transparent white
+      el.appendChild(searchBar)
+
+      // Outline
+      if (frame.outlineEnabled) {
+        const borders = [
+          { x: 0, y: 0, width: fw, height: svgHeight }, // left
+          { x: svgWidth - fw, y: 0, width: fw, height: svgHeight }, // right
+          { x: 0, y: 0, width: svgWidth, height: fh }, // top
+        ]
+        borders.forEach((s) => {
+          const r = document.createElementNS(ns, 'rect')
+          Object.entries(s).forEach(([k, v]) => r.setAttribute(k, v))
+          r.setAttribute('fill', color)
+          el.appendChild(r)
+        })
+      }
     }
   }
 
