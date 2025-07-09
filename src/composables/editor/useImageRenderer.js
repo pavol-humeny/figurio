@@ -192,8 +192,12 @@ export function useImageRenderer(
   }
   const renderAll = () => {
     updateSizes()
-    renderCanvas()
-    renderFrameSvg()
+
+    if(imageStore.frame.enabled){
+      renderFrameSvg()
+    }else{
+      renderCanvas()
+    }
     renderSvg()
   }
 

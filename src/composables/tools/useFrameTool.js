@@ -3,6 +3,7 @@ import { ref, watch, computed } from 'vue'
 export function useFrameTool(imageStore, historyStore, editorStore, t) {
   const frameColor = ref(imageStore.frame.color || '#000000')
   const frameWidth = ref(imageStore.frame.width || 0)
+  const drawOutline = ref(false)
   const frameWidthRef = ref(null)
 
   // UPDATE new frame type
@@ -33,6 +34,10 @@ export function useFrameTool(imageStore, historyStore, editorStore, t) {
       label: t('tools.frame.settings.general.frameVariants.framePhoneAndroid2'),
       value: 'framePhoneAndroid2',
     },
+    {
+      label: t('tools.frame.settings.general.frameVariants.frameWindowsTaskBar'),
+      value: 'frameWindowsTaskBar',
+    },
   ])
 
   const selectedFrameVariant = ref(imageStore.frame.type || 'none')
@@ -59,9 +64,24 @@ export function useFrameTool(imageStore, historyStore, editorStore, t) {
     }
   })
 
+  // watch drawOutline
+  watch(drawOutline, (newValue) => {
+    imageStore.frame.outlineEnabled = newValue
+    applyFrame()
+  })
+
   const setFrameWidth = (width) => {
     if (width < 0) {
-      width = 0
+      if (
+        selectedFrameVariant.value === 'frameMacBrowser' ||
+        selectedFrameVariant.value === 'frameWindowsBrowser'
+      ) {
+        width = Math.floor(
+          (1 / 200) * Math.max(imageStore.fileDimensions.width, imageStore.fileDimensions.height),
+        )
+      } else {
+        width = 0
+      }
     }
     frameWidthRef.value.setValue(width)
     frameWidth.value = width
@@ -69,13 +89,16 @@ export function useFrameTool(imageStore, historyStore, editorStore, t) {
   }
 
   const applyFrame = () => {
+    // TODO - copy without reference
     const width = frameWidth.value
     const color = frameColor.value
     const type = selectedFrameVariant.value
+    const outlineEnabled = drawOutline.value
 
     imageStore.frame.color = color
     imageStore.frame.type = type
     imageStore.frame.enabled = true
+    imageStore.frame.outlineEnabled = outlineEnabled
 
     if (selectedFrameVariant.value === 'none') {
       imageStore.frame.enabled = false
@@ -88,6 +111,9 @@ export function useFrameTool(imageStore, historyStore, editorStore, t) {
       if (width <= 0) {
         imageStore.frame.enabled = false
       }
+    } else {
+      imageStore.frame.width = width
+      imageStore.frame.height = width
     }
     historyStore.push(imageStore.getSnapshot())
   }
@@ -107,6 +133,8 @@ export function useFrameTool(imageStore, historyStore, editorStore, t) {
   }
 
   const applyFrameRender = (el) => {
+    console.log('Applying frame render...')
+
     const ns = 'http://www.w3.org/2000/svg'
     const frame = imageStore.frame
     if (!frame?.enabled || !el) return
@@ -119,16 +147,17 @@ export function useFrameTool(imageStore, historyStore, editorStore, t) {
     let fw = frame.width || 0
     let fh = frame.height || 0
 
-    console.log('Applying frame render:', frame.type, 'with color:', color)
-    console.log('Frame dimensions:', fw, fh)
-
     // UPDATE new frame type
     if (frame.type === 'frameMacBrowser' || frame.type === 'frameWindowsBrowser') {
-      fw = Math.floor((1 / 200) * Math.max(w, h))
-      fh = fw
-      imageStore.frame.width = fw
-      imageStore.frame.height = fh
-      imageStore.frame.headerSize = Math.floor(0.04 * h)
+      if (frame.outlineEnabled) {
+        // fw = Math.floor((1 / 200) * Math.max(w, h))
+        // fh = fw
+        imageStore.frame.headerSize = Math.floor(0.04 * h)
+      } else {
+        fw = 0
+        fh = 0
+        imageStore.frame.headerSize = Math.floor(0.04 * h)
+      }
     } else if (
       frame.type === 'framePhoneAndroid' ||
       frame.type === 'framePhoneAndroid2' ||
@@ -138,14 +167,19 @@ export function useFrameTool(imageStore, historyStore, editorStore, t) {
       fw = Math.floor((1 / 100) * Math.max(w, h))
       console.log('Calculated frame width:', fw)
       fh = fw
-      imageStore.frame.width = fw
-      imageStore.frame.height = fh
       imageStore.frame.headerSize = 0
+    } else if (frame.type === 'frameWindowsTaskBar') {
+      fw = Math.floor((1 / 100) * Math.max(w, h))
+      fh = fw
+      imageStore.frame.headerSize = Math.floor(0.04 * h)
     } else {
       imageStore.frame.headerSize = 0
     }
 
-    const header = frame.headerSize || 0
+    imageStore.frame.width = fw
+    imageStore.frame.height = fh
+
+    const header = frame.headerSize
     const svgWidth = w + fw * 2
     const svgHeight = h + fh * 2 + (header > 0 ? header - fh : 0)
 
@@ -194,17 +228,19 @@ export function useFrameTool(imageStore, historyStore, editorStore, t) {
       })
 
       // Outline
-      const borders = [
-        { x: 0, y: 0, width: fw, height: svgHeight }, // left
-        { x: svgWidth - fw, y: 0, width: fw, height: svgHeight }, // right
-        { x: 0, y: svgHeight - fh, width: svgWidth, height: fh }, // bottom
-      ]
-      borders.forEach((s) => {
-        const r = document.createElementNS(ns, 'rect')
-        Object.entries(s).forEach(([k, v]) => r.setAttribute(k, v))
-        r.setAttribute('fill', color)
-        el.appendChild(r)
-      })
+      if (frame.outlineEnabled) {
+        const borders = [
+          { x: 0, y: 0, width: fw, height: svgHeight }, // left
+          { x: svgWidth - fw, y: 0, width: fw, height: svgHeight }, // right
+          { x: 0, y: svgHeight - fh, width: svgWidth, height: fh }, // bottom
+        ]
+        borders.forEach((s) => {
+          const r = document.createElementNS(ns, 'rect')
+          Object.entries(s).forEach(([k, v]) => r.setAttribute(k, v))
+          r.setAttribute('fill', color)
+          el.appendChild(r)
+        })
+      }
     } else if (frame.type === 'frameWindowsBrowser') {
       const headerRect = document.createElementNS(ns, 'rect')
       headerRect.setAttribute('x', 0)
@@ -257,17 +293,19 @@ export function useFrameTool(imageStore, historyStore, editorStore, t) {
       el.appendChild(iconGroup)
 
       // Outline
-      const borders = [
-        { x: 0, y: 0, width: fw, height: svgHeight },
-        { x: svgWidth - fw, y: 0, width: fw, height: svgHeight },
-        { x: 0, y: svgHeight - fh, width: svgWidth, height: fh },
-      ]
-      borders.forEach((s) => {
-        const r = document.createElementNS(ns, 'rect')
-        Object.entries(s).forEach(([k, v]) => r.setAttribute(k, v))
-        r.setAttribute('fill', color)
-        el.appendChild(r)
-      })
+      if (frame.outlineEnabled) {
+        const borders = [
+          { x: 0, y: 0, width: fw, height: svgHeight },
+          { x: svgWidth - fw, y: 0, width: fw, height: svgHeight },
+          { x: 0, y: svgHeight - fh, width: svgWidth, height: fh },
+        ]
+        borders.forEach((s) => {
+          const r = document.createElementNS(ns, 'rect')
+          Object.entries(s).forEach(([k, v]) => r.setAttribute(k, v))
+          r.setAttribute('fill', color)
+          el.appendChild(r)
+        })
+      }
     } else if (frame.type === 'framePhoneIOS') {
       const outline = document.createElementNS(ns, 'path')
       outline.setAttribute('fill', 'none')
@@ -539,6 +577,7 @@ export function useFrameTool(imageStore, historyStore, editorStore, t) {
       camera.setAttribute('r', cameraRadius)
       camera.setAttribute('fill', contrastColor)
       el.appendChild(camera)
+    } else if (frame.type === 'frameWindowsTaskBar') {
     }
   }
 
@@ -551,5 +590,6 @@ export function useFrameTool(imageStore, historyStore, editorStore, t) {
     selectedFrameVariant,
     frameOptions,
     handleFrameChange,
+    drawOutline,
   }
 }

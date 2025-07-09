@@ -233,7 +233,11 @@
           "framePhoneIOS": "Phone iOS",
           "framePhoneIOS2": "Phone iOS 2",
           "framePhoneAndroid": "Phone Android",
-          "framePhoneAndroid2": "Phone Android 2"
+          "framePhoneAndroid2": "Phone Android 2",
+          "frameWindowsTaskBar": "Windows task bar"
+        },
+        "useFrameOutline": {
+          "label": "Use outline"
         }
       }
     }

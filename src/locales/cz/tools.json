@@ -233,7 +233,12 @@
           "framePhoneIOS": "Telefon iOS",
           "framePhoneIOS2": "Telefon iOS 2",
           "framePhoneAndroid": "Telefon Android",
-          "framePhoneAndroid2": "Telefon Android 2"
+          "framePhoneAndroid2": "Telefon Android 2",
+          "frameWindowsTaskBar": "Windows task bar"
+          
+        },
+        "useFrameOutline": {
+          "label": "Použít obrys"
         }
       }
     }

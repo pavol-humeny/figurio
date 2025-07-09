@@ -90,6 +90,7 @@ export const useImageStore = defineStore('imageStore', {
       height: 0,
       color: '#000000',
       headerSize: 0, // Size of the header for browser frames
+      outlineEnabled: false, // Whether to draw an outline around the frame
     },
   }),
   getters: {
@@ -140,6 +141,7 @@ export const useImageStore = defineStore('imageStore', {
         height: 0,
         color: '#000000',
         headerSize: 0, // Size of the header for browser frames
+        outlineEnabled: false, // Whether to draw an outline around the frame
       }
     },
 
@@ -530,7 +532,7 @@ export const useImageStore = defineStore('imageStore', {
       const svgWidth = parseInt(frameSvg.getAttribute('width'), 10)
       const svgHeight = parseInt(frameSvg.getAttribute('height'), 10)
 
-      // 1. Vytvoríme bitmapu z SVG rámika
+      // Create SVG string from the frame SVG element
       const svgString = new XMLSerializer().serializeToString(frameSvg)
       const svgBlob = new Blob([svgString], { type: 'image/svg+xml;charset=utf-8' })
       const url = URL.createObjectURL(svgBlob)
@@ -544,7 +546,7 @@ export const useImageStore = defineStore('imageStore', {
         img.src = url
       })
 
-      // 2. Vytvor export canvas
+      // Create canvas
       const exportCanvas = document.createElement('canvas')
       exportCanvas.width = svgWidth
       exportCanvas.height = svgHeight
@@ -553,17 +555,17 @@ export const useImageStore = defineStore('imageStore', {
       const frameWidth = this.frame?.width || 0
       let frameHeight = this.frame?.height || frameWidth
 
+      // UPDATE new frame type
       if (this.frame.type === 'frameMacBrowser' || this.frame.type === 'frameWindowsBrowser') {
         frameHeight = this.frame.headerSize
       }
 
-      // 3. Vykreslenie obrázka (posunutého podľa rámika)
+      // Draw the original image
       ctx.drawImage(imageCanvas, frameWidth, frameHeight)
 
-      // 4. Vykreslenie rámika navrch
+      // Draw the SVG frame
       ctx.drawImage(svgImage, 0, 0)
 
-      // 5. Výsledok
       this.previewUrl = exportCanvas.toDataURL()
     },
 

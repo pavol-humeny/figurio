@@ -7,6 +7,7 @@ import { useHistoryStore } from '@/stores/historyStore'
 import { useEditorStore } from '@/stores/editorStore'
 import { useI18n } from 'vue-i18n'
 import DropdownSelect from '../common/DropdownSelect.vue'
+import ToggleButton from '../common/ToggleButton.vue'
 
 const { t } = useI18n()
 
@@ -18,6 +19,7 @@ const {
   selectedFrameVariant,
   frameOptions,
   handleFrameChange,
+  drawOutline
 } = useFrameTool(useImageStore(), useHistoryStore(), useEditorStore(), t)
 </script>
 
@@ -35,31 +37,17 @@ const {
             <ColorPicker v-model="frameColor" />
           </div>
         </div>
-        <div
-          class="settings-content-wrapper"
-          :class="{ disabled: selectedFrameVariant !== 'frameSolid' }"
-        >
+        <div class="settings-content-wrapper">
           <div class="content-wrapper">
             <div class="content-title">
-              <p>
+              <p :class="{ disabled: selectedFrameVariant !== 'frameSolid' && !drawOutline }">
                 {{ t('tools.frame.settings.general.frameWidth.label') }}
               </p>
             </div>
-            <NumberInput
-              ref="frameWidthRef"
-              v-model="frameWidth"
-              :min="0"
-              :max="100"
-              :step="1"
-              unit="px"
-              @update="setFrameWidth(frameWidth)"
-              icon="IconArrowWidth"
-              :color="'var(--primary-c)'"
-              size="22"
-              :onReset="() => setFrameWidth(0)"
-              :tip="t('tools.frame.settings.general.frameWidth.tip')"
-              position="bottom-left"
-            />
+            <NumberInput ref="frameWidthRef" v-model="frameWidth" :min="0" :max="100" :step="1" unit="px"
+              @update="setFrameWidth(frameWidth)" icon="IconArrowWidth" :color="'var(--primary-c)'" size="22"
+              :onReset="() => setFrameWidth(-1)" :tip="t('tools.frame.settings.general.frameWidth.tip')"
+              position="bottom-left" :disabled="selectedFrameVariant !== 'frameSolid' && !drawOutline" />
           </div>
         </div>
         <div class="settings-content-wrapper">
@@ -69,11 +57,19 @@ const {
                 {{ t('tools.frame.settings.general.frameVariants.label') }}
               </p>
             </div>
-            <DropdownSelect
-              v-model="selectedFrameVariant"
-              :options="frameOptions"
-              @update="handleFrameChange"
-            />
+            <DropdownSelect v-model="selectedFrameVariant" :options="frameOptions" @update="handleFrameChange" />
+          </div>
+        </div>
+        <div
+          v-if="selectedFrameVariant === 'frameWindowsBrowser' || selectedFrameVariant === 'frameMacBrowser' || selectedFrameVariant === 'frameWindowsTaskBar'"
+          class="settings-content-wrapper">
+          <div class="content-wrapper">
+            <div class="content-aligned two-items">
+              <p>
+                {{ t('tools.frame.settings.general.useFrameOutline.label') }}
+              </p>
+              <ToggleButton v-model="drawOutline" style="transform: scale(0.6);" />
+            </div>
           </div>
         </div>
         <div class="settings-content-wrapper" style="border: none">
