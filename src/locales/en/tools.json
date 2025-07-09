@@ -231,7 +231,9 @@
           "frameMacBrowser": "Mac browser",
           "frameWindowsBrowser": "Windows browser",
           "framePhoneIOS": "Phone iOS",
-          "framePhoneAndroid": "Phone Android"
+          "framePhoneIOS2": "Phone iOS 2",
+          "framePhoneAndroid": "Phone Android",
+          "framePhoneAndroid2": "Phone Android 2"
         }
       }
     }

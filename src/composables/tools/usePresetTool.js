@@ -393,6 +393,7 @@ export function usePresetTool(
     { label: '180°', value: 180 },
   ]
 
+  // UPDATE new frame type
   const presetFrameOptions = computed(() => [
     { label: t('tools.frame.settings.general.frameVariants.frameSolid'), value: 'frameSolid' },
     {
@@ -408,8 +409,16 @@ export function usePresetTool(
       value: 'framePhoneIOS',
     },
     {
+      label: t('tools.frame.settings.general.frameVariants.framePhoneIOS2'),
+      value: 'framePhoneIOS2',
+    },
+    {
       label: t('tools.frame.settings.general.frameVariants.framePhoneAndroid'),
       value: 'framePhoneAndroid',
+    },
+    {
+      label: t('tools.frame.settings.general.frameVariants.framePhoneAndroid2'),
+      value: 'framePhoneAndroid2',
     },
   ])
 

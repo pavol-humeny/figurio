@@ -231,7 +231,9 @@
           "frameMacBrowser": "Mac prehliadač",
           "frameWindowsBrowser": "Windows prehliadač",
           "framePhoneIOS": "Telefón iOS",
-          "framePhoneAndroid": "Telefón Android"
+          "framePhoneIOS2": "Telefón iOS 2",
+          "framePhoneAndroid": "Telefón Android",
+          "framePhoneAndroid2": "Telefón Android 2"
         }
       }
     }

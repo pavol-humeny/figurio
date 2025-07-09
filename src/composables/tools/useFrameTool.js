@@ -5,6 +5,7 @@ export function useFrameTool(imageStore, historyStore, editorStore, t) {
   const frameWidth = ref(imageStore.frame.width || 0)
   const frameWidthRef = ref(null)
 
+  // UPDATE new frame type
   const frameOptions = computed(() => [
     { label: t('tools.frame.settings.general.frameVariants.none'), value: 'none' },
     { label: t('tools.frame.settings.general.frameVariants.frameSolid'), value: 'frameSolid' },
@@ -21,8 +22,16 @@ export function useFrameTool(imageStore, historyStore, editorStore, t) {
       value: 'framePhoneIOS',
     },
     {
+      label: t('tools.frame.settings.general.frameVariants.framePhoneIOS2'),
+      value: 'framePhoneIOS2',
+    },
+    {
       label: t('tools.frame.settings.general.frameVariants.framePhoneAndroid'),
       value: 'framePhoneAndroid',
+    },
+    {
+      label: t('tools.frame.settings.general.frameVariants.framePhoneAndroid2'),
+      value: 'framePhoneAndroid2',
     },
   ])
 
@@ -80,155 +89,23 @@ export function useFrameTool(imageStore, historyStore, editorStore, t) {
         imageStore.frame.enabled = false
       }
     }
-    // else if (
-    //   selectedFrameVariant.value === 'framePhoneAndroid' ||
-    //   selectedFrameVariant.value === 'framePhoneIOS'
-    // ) {
-    //   // For phone Android frame, we can use a fixed width
-    //   imageStore.frame.width = 5
-    //   imageStore.frame.height = 5
-    // } else if (
-    //   selectedFrameVariant.value === 'frameMacBrowser' ||
-    //   selectedFrameVariant.value === 'frameWindowsBrowser'
-    // ) {
-    //   // For other frames, we can use a fixed width
-    //   imageStore.frame.width = Math.floor((1 / 200) * imageStore.fileDimensions.height)
-    //   imageStore.frame.height = Math.floor((1 / 200) * imageStore.fileDimensions.height)
-    //   imageStore.frame.headerSize = Math.floor(0.04 * imageStore.fileDimensions.height) // 4% of height
-    // }
-
     historyStore.push(imageStore.getSnapshot())
   }
 
-  // function applyBrowserFrame(ctx, w, h, type, color) {
-  //   const headerHeight = imageStore.frame.headerSize
+  const getContrastColor = (hex) => {
+    hex = hex.replace('#', '')
+    if (hex.length === 3)
+      hex = hex
+        .split('')
+        .map((c) => c + c)
+        .join('')
+    const r = parseInt(hex.substring(0, 2), 16)
+    const g = parseInt(hex.substring(2, 4), 16)
+    const b = parseInt(hex.substring(4, 6), 16)
+    const luminance = 0.299 * r + 0.587 * g + 0.114 * b
+    return luminance > 186 ? '#000000' : '#ffffff'
+  }
 
-  //   // const headerHeight = Math.floor(0.04 * imageStore.fileDimensions.height) // 4% of height
-
-  //   const borderSize = imageStore.frame.width
-  //   // const borderSize = Math.floor((1 / 200) * imageStore.fileDimensions.height)
-
-  //   imageStore.frame.width = borderSize
-  //   imageStore.frame.height = borderSize
-
-  //   imageStore.frame.headerSize = headerHeight
-
-  //   console.log(
-  //     '!!!!!!!!!!!!!!!!!Applying browser frame:',
-  //     type,
-  //     'with header height:',
-  //     headerHeight,
-  //     'and border size:',
-  //     borderSize,
-  //   )
-
-  //   // Kresli hlavičku (hore)
-  //   ctx.fillStyle = color
-  //   ctx.fillRect(0, 0, w, headerHeight)
-
-  //   // Rámiky
-  //   ctx.fillRect(0, 0, borderSize, h) // ľavý
-  //   ctx.fillRect(w - borderSize, 0, borderSize, h) // pravý
-  //   ctx.fillRect(0, h - borderSize, w, borderSize) // dolný
-
-  //   if (type === 'mac') {
-  //     const radius = Math.max(4, Math.min(headerHeight * 0.25, 8))
-  //     const spacing = radius * 2 + 4 // 4px medzi kruhmi
-  //     const startX = borderSize + radius // trochu posun od ľavého rámika
-  //     const centerY = headerHeight / 2
-
-  //     const colors = ['#ff5f56', '#ffbd2e', '#27c93f']
-
-  //     colors.forEach((c, i) => {
-  //       ctx.beginPath()
-  //       ctx.fillStyle = c
-  //       ctx.arc(startX + i * spacing, centerY, radius, 0, Math.PI * 2)
-  //       ctx.fill()
-  //     })
-  //   }
-
-  //   if (type === 'windows') {
-  //     const size = Math.max(8, headerHeight * 0.3)
-  //     const spacing = size + 8
-  //     const centerY = headerHeight / 2
-  //     const startX = w - borderSize - spacing * 2 - size - 1 // zarovnanie 3 ikon z prava
-
-  //     // mínus (–)
-  //     ctx.strokeStyle = '#fff'
-  //     ctx.lineWidth = 2
-  //     ctx.beginPath()
-  //     ctx.moveTo(startX, centerY + 1)
-  //     ctx.lineTo(startX + size, centerY + 1)
-  //     ctx.stroke()
-
-  //     // štvorec (▢)
-  //     ctx.strokeRect(startX + spacing, centerY - size / 2, size, size)
-
-  //     // krížik (×)
-  //     const x = startX + spacing * 2
-  //     ctx.beginPath()
-  //     ctx.moveTo(x, centerY - size / 2)
-  //     ctx.lineTo(x + size, centerY + size / 2)
-  //     ctx.moveTo(x + size, centerY - size / 2)
-  //     ctx.lineTo(x, centerY + size / 2)
-  //     ctx.stroke()
-  //   }
-  // }
-
-  // function applyPhoneFrame(ctx, w, h, type) {
-  //   // TODO
-  //   ctx.strokeStyle = '#000'
-  //   ctx.lineWidth = 8
-  //   ctx.strokeRect(4, 4, w - 8, h - 8)
-
-  //   if (type === 'ios') {
-  //     ctx.fillStyle = '#000'
-  //     ctx.fillRect(w / 2 - 40, 0, 80, 20)
-  //   }
-  // }
-
-  // const applyFrameRender = (ctx, canvasWidth, canvasHeight) => {
-  //   console.log('Applying frame render')
-  //   const frame = imageStore.frame
-  //   if (!ctx || !frame?.enabled) return
-
-  //   const color = frame.color
-  //   const type = frame.type
-
-  //   ctx.clearRect(0, 0, canvasWidth, canvasHeight)
-
-  //   switch (type) {
-  //     case 'frameSolid': {
-  //       const fw = frame.width
-  //       const fh = frame.height
-  //       ctx.fillStyle = color
-  //       ctx.fillRect(0, 0, canvasWidth, fh) // top
-  //       ctx.fillRect(0, canvasHeight - fh, canvasWidth, fh) // bottom
-  //       ctx.fillRect(0, fh, fw, canvasHeight - fh * 2) // left
-  //       ctx.fillRect(canvasWidth - fw, fh, fw, canvasHeight - fh * 2) // right
-  //       break
-  //     }
-
-  //     case 'frameMacBrowser':
-  //       applyBrowserFrame(ctx, canvasWidth, canvasHeight, 'mac', color)
-  //       break
-
-  //     case 'frameWindowsBrowser':
-  //       applyBrowserFrame(ctx, canvasWidth, canvasHeight, 'windows', color)
-  //       break
-
-  //     case 'framePhoneIOS':
-  //       applyPhoneFrame(ctx, canvasWidth, canvasHeight, 'ios')
-  //       break
-
-  //     case 'framePhoneAndroid':
-  //       applyPhoneFrame(ctx, canvasWidth, canvasHeight, 'android')
-  //       break
-
-  //     default:
-  //       console.warn(`Unknown frame type: ${type}`)
-  //   }
-  // }
   const applyFrameRender = (el) => {
     const ns = 'http://www.w3.org/2000/svg'
     const frame = imageStore.frame
@@ -237,20 +114,29 @@ export function useFrameTool(imageStore, historyStore, editorStore, t) {
     const w = imageStore.fileDimensions.width
     const h = imageStore.fileDimensions.height
     const color = frame.color || '#000000'
+    const contrastColor = getContrastColor(color)
+
     let fw = frame.width || 0
     let fh = frame.height || 0
 
     console.log('Applying frame render:', frame.type, 'with color:', color)
     console.log('Frame dimensions:', fw, fh)
 
+    // UPDATE new frame type
     if (frame.type === 'frameMacBrowser' || frame.type === 'frameWindowsBrowser') {
       fw = Math.floor((1 / 200) * Math.max(w, h))
       fh = fw
       imageStore.frame.width = fw
       imageStore.frame.height = fh
       imageStore.frame.headerSize = Math.floor(0.04 * h)
-    } else if (frame.type === 'framePhoneAndroid' || frame.type === 'framePhoneIOS') {
+    } else if (
+      frame.type === 'framePhoneAndroid' ||
+      frame.type === 'framePhoneAndroid2' ||
+      frame.type === 'framePhoneIOS' ||
+      frame.type === 'framePhoneIOS2'
+    ) {
       fw = Math.floor((1 / 100) * Math.max(w, h))
+      console.log('Calculated frame width:', fw)
       fh = fw
       imageStore.frame.width = fw
       imageStore.frame.height = fh
@@ -268,7 +154,7 @@ export function useFrameTool(imageStore, historyStore, editorStore, t) {
     el.style.left = `-${fw}px`
     el.style.top = `-${header > 0 ? header : fh}px`
 
-    // Vykreslenie podľa typu
+    // UPDATE new frame type
     if (frame.type === 'frameSolid') {
       // 4 sides
       const sides = [
@@ -294,9 +180,9 @@ export function useFrameTool(imageStore, historyStore, editorStore, t) {
 
       // 3 circles
       const colors = ['#ff5f56', '#ffbd2e', '#27c93f']
-      const radius = Math.max(4, Math.min(header * 0.25, 8))
-      const spacing = radius * 2 + 4
-      const startX = fw + radius
+      const radius = header * 0.17
+      const spacing = radius * 2.9
+      const startX = fw + radius * 2
       const centerY = header / 2
       colors.forEach((c, i) => {
         const circle = document.createElementNS(ns, 'circle')
@@ -328,13 +214,15 @@ export function useFrameTool(imageStore, historyStore, editorStore, t) {
       headerRect.setAttribute('fill', color)
       el.appendChild(headerRect)
 
-      const iconGroup = document.createElementNS(ns, 'g')
-      iconGroup.setAttribute('stroke', 'white')
-      iconGroup.setAttribute('stroke-width', 2)
+      const strokeWidth = Math.max(1, Math.floor(header * 0.07))
 
-      const size = Math.max(8, header * 0.3)
-      const spacing = size + 8
-      const startX = svgWidth - fw - spacing * 2 - size - 1
+      const iconGroup = document.createElementNS(ns, 'g')
+      iconGroup.setAttribute('stroke', contrastColor)
+      iconGroup.setAttribute('stroke-width', strokeWidth)
+
+      const size = header * 0.35
+      const spacing = size * 3
+      const startX = svgWidth - fw - spacing * 2 - size - 1 - size
       const centerY = header / 2
 
       // Minimize
@@ -346,11 +234,13 @@ export function useFrameTool(imageStore, historyStore, editorStore, t) {
       iconGroup.appendChild(line)
 
       // Maximize
+      const maximizeScale = 0.1
       const rect = document.createElementNS(ns, 'rect')
-      rect.setAttribute('x', startX + spacing)
-      rect.setAttribute('y', centerY - size / 2)
-      rect.setAttribute('width', size)
-      rect.setAttribute('height', size)
+      rect.setAttribute('x', startX + spacing + size * maximizeScale)
+      rect.setAttribute('y', centerY - size / 2 + size * maximizeScale)
+      rect.setAttribute('width', size - size * maximizeScale * 2)
+      rect.setAttribute('height', size - size * maximizeScale * 2)
+      rect.setAttribute('fill', color)
       iconGroup.appendChild(rect)
 
       // Close
@@ -387,7 +277,7 @@ export function useFrameTool(imageStore, historyStore, editorStore, t) {
       // Dimensions and offsets
       const outerRadius = Math.floor(Math.min(svgWidth, svgHeight) * 0.06)
       const r = outerRadius
-      const offset = fw / 2
+      const offset = fw
       const left = offset
       const top = offset
       const right = svgWidth - offset
@@ -411,7 +301,7 @@ export function useFrameTool(imageStore, historyStore, editorStore, t) {
       el.appendChild(outline)
 
       // Dynamic island
-      const notchWidth = Math.min(Math.floor(svgWidth * 0.22), 150)
+      const notchWidth = Math.max(Math.floor(svgWidth * 0.22), 150)
       const notchHeight = Math.floor(svgHeight * 0.035)
       const notchRadius = Math.floor(notchHeight * 0.45)
       const notchMarginTop = Math.floor(svgHeight * 0.015)
@@ -423,7 +313,7 @@ export function useFrameTool(imageStore, historyStore, editorStore, t) {
       notch.setAttribute('height', notchHeight)
       notch.setAttribute('rx', notchRadius)
       notch.setAttribute('ry', notchRadius)
-      notch.setAttribute('fill', '#000')
+      notch.setAttribute('fill', color)
       el.appendChild(notch)
 
       // Camera
@@ -431,7 +321,97 @@ export function useFrameTool(imageStore, historyStore, editorStore, t) {
       camera.setAttribute('cx', svgWidth / 2 + notchWidth * 0.2)
       camera.setAttribute('cy', top + notchMarginTop + notchHeight / 2)
       camera.setAttribute('r', notchHeight * 0.15)
-      camera.setAttribute('fill', '#1e88e5')
+      camera.setAttribute('fill', contrastColor)
+      el.appendChild(camera)
+    } else if (frame.type === 'framePhoneIOS2') {
+      const outline = document.createElementNS(ns, 'path')
+      outline.setAttribute('fill', 'none')
+      outline.setAttribute('stroke', color)
+      outline.setAttribute('stroke-width', fw)
+
+      // Dimensions and offsets
+      const outerRadius = Math.floor(Math.min(svgWidth, svgHeight) * 0.06)
+      const r = outerRadius
+      const offset = fw
+      const left = offset
+      const top = offset
+      const right = svgWidth - offset
+      const bottom = svgHeight - offset
+
+      // Outline
+      const d = [
+        `M ${left + r} ${top}`,
+        `H ${right - r}`,
+        `A ${r} ${r} 0 0 1 ${right} ${top + r}`,
+        `V ${bottom - r}`,
+        `A ${r} ${r} 0 0 1 ${right - r} ${bottom}`,
+        `H ${left + r}`,
+        `A ${r} ${r} 0 0 1 ${left} ${bottom - r}`,
+        `V ${top + r}`,
+        `A ${r} ${r} 0 0 1 ${left + r} ${top}`,
+        'Z',
+      ].join(' ')
+
+      outline.setAttribute('d', d)
+      el.appendChild(outline)
+
+      // Notch with rounded bottom corners and top arcs
+      const notchWidth = Math.max(Math.floor(svgWidth * 0.26), 150)
+      const notchHeight = Math.floor(svgHeight * 0.04)
+      const notchRadius = notchHeight / 2
+
+      const nw = notchWidth
+      const nh = notchHeight
+      const nx = svgWidth / 2 - nw / 2
+      const ny = top + fh / 2
+      const r2 = notchRadius
+      const arcR = nh * 0.4
+
+      const notch = document.createElementNS(ns, 'path')
+
+      const notchPath = [
+        // Left top arc
+        `M ${nx - arcR} ${ny}`,
+        `A ${arcR} ${arcR} 0 0 1 ${nx} ${ny + arcR}`,
+
+        // Right side
+        `V ${ny + nh - r2}`,
+        `A ${r2} ${r2} 0 0 0 ${nx + r2} ${ny + nh}`,
+        `H ${nx + nw - r2}`,
+        `A ${r2} ${r2} 0 0 0 ${nx + nw} ${ny + nh - r2}`,
+        `V ${ny + arcR}`,
+
+        // Right top arc
+        `A ${arcR} ${arcR} 0 0 1 ${nx + nw + arcR} ${ny}`,
+        'Z',
+      ].join(' ')
+
+      notch.setAttribute('d', notchPath)
+      notch.setAttribute('fill', color)
+      el.appendChild(notch)
+
+      // Speaker (slim oval)
+      const speaker = document.createElementNS(ns, 'rect')
+      const speakerWidth = Math.floor(nw * 0.3)
+      const speakerHeight = Math.floor(nh * 0.2)
+      const speakerX = svgWidth / 2 - speakerWidth / 2
+      const speakerY = ny + nh * 0.25 + fh / 2
+      speaker.setAttribute('x', speakerX)
+      speaker.setAttribute('y', speakerY)
+      speaker.setAttribute('width', speakerWidth)
+      speaker.setAttribute('height', speakerHeight)
+      speaker.setAttribute('rx', speakerHeight / 2)
+      speaker.setAttribute('ry', speakerHeight / 2)
+      speaker.setAttribute('fill', contrastColor)
+      el.appendChild(speaker)
+
+      // Camera (small circle)
+      const camera = document.createElementNS(ns, 'circle')
+      const cameraRadius = speakerHeight / 1.5
+      camera.setAttribute('cx', svgWidth / 2 + nw * 0.25)
+      camera.setAttribute('cy', speakerY + speakerHeight / 2)
+      camera.setAttribute('r', cameraRadius)
+      camera.setAttribute('fill', contrastColor)
       el.appendChild(camera)
     } else if (frame.type === 'framePhoneAndroid') {
       const outline = document.createElementNS(ns, 'path')
@@ -442,7 +422,8 @@ export function useFrameTool(imageStore, historyStore, editorStore, t) {
       // Dimensions and offsets
       const outerRadius = Math.floor(Math.min(svgWidth, svgHeight) * 0.06)
       const r = outerRadius
-      const offset = fw / 2
+      // const offset = fw / 2
+      const offset = fw
       const left = offset
       const top = offset
       const right = svgWidth - offset
@@ -473,7 +454,90 @@ export function useFrameTool(imageStore, historyStore, editorStore, t) {
       camera.setAttribute('cx', svgWidth / 2)
       camera.setAttribute('cy', top + cameraOffset)
       camera.setAttribute('r', cameraRadius)
-      camera.setAttribute('fill', '#000')
+      camera.setAttribute('fill', color)
+      el.appendChild(camera)
+    } else if (frame.type === 'framePhoneAndroid2') {
+      const outline = document.createElementNS(ns, 'path')
+      outline.setAttribute('fill', 'none')
+      outline.setAttribute('stroke', color)
+      outline.setAttribute('stroke-width', fw)
+
+      // Dimensions and offsets
+      const outerRadius = Math.floor(Math.min(svgWidth, svgHeight) * 0.06)
+      const r = outerRadius
+      const offset = fw
+      const left = offset
+      const top = offset
+      const right = svgWidth - offset
+      const bottom = svgHeight - offset
+
+      // Outline
+      const d = [
+        `M ${left + r} ${top}`,
+        `H ${right - r}`,
+        `A ${r} ${r} 0 0 1 ${right} ${top + r}`,
+        `V ${bottom - r}`,
+        `A ${r} ${r} 0 0 1 ${right - r} ${bottom}`,
+        `H ${left + r}`,
+        `A ${r} ${r} 0 0 1 ${left} ${bottom - r}`,
+        `V ${top + r}`,
+        `A ${r} ${r} 0 0 1 ${left + r} ${top}`,
+        'Z',
+      ].join(' ')
+      outline.setAttribute('d', d)
+      el.appendChild(outline)
+
+      // Drop notch
+      const dropHeight = svgHeight * 0.055
+      const dropWidth = dropHeight * 1.05
+      const arcRadius = 0.5 * dropHeight
+
+      const dropCenterX = svgWidth / 2
+      const dropTopY = top + fh / 2
+      const leftDrop = dropCenterX - dropWidth / 2
+      const rightDrop = dropCenterX + dropWidth / 2
+      const bottomDrop = dropTopY + dropHeight
+
+      const dropPath = document.createElementNS(ns, 'path')
+
+      const path = [
+        // Start to the left of the notch (arc transition into the notch)
+        `M ${leftDrop - arcRadius} ${dropTopY}`,
+        `A ${arcRadius} ${arcRadius} 0 0 1 ${leftDrop} ${dropTopY + arcRadius}`,
+
+        // Right edge of the rectangle with rounded bottom right corner
+        `V ${bottomDrop - arcRadius}`,
+        `A ${arcRadius} ${arcRadius} 0 0 0 ${leftDrop + arcRadius} ${bottomDrop}`,
+
+        // Bottom edge
+        `H ${rightDrop - arcRadius}`,
+
+        // Bottom left corner
+        `A ${arcRadius} ${arcRadius} 0 0 0 ${rightDrop} ${bottomDrop - arcRadius}`,
+
+        // Right edge up to the notch
+        `V ${dropTopY + arcRadius}`,
+
+        // Final right top arc
+        `A ${arcRadius} ${arcRadius} 0 0 1 ${rightDrop + arcRadius} ${dropTopY}`,
+
+        'Z',
+      ].join(' ')
+
+      dropPath.setAttribute('d', path)
+      dropPath.setAttribute('fill', color)
+      el.appendChild(dropPath)
+
+      // Camera in the center of the drop notch
+      const camera = document.createElementNS(ns, 'circle')
+      const cameraRadius = dropHeight * 0.18
+      const cameraCX = dropCenterX
+      const cameraCY = bottomDrop - dropHeight / 2
+
+      camera.setAttribute('cx', cameraCX)
+      camera.setAttribute('cy', cameraCY)
+      camera.setAttribute('r', cameraRadius)
+      camera.setAttribute('fill', contrastColor) // blue camera dot
       el.appendChild(camera)
     }
   }

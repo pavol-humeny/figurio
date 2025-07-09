@@ -85,7 +85,7 @@ export const useImageStore = defineStore('imageStore', {
 
     frame: {
       enabled: false,
-      type: 'none', // 'none', 'frameSolid', 'framePhoneAndroid',
+      type: 'none',
       width: 0,
       height: 0,
       color: '#000000',
@@ -135,7 +135,7 @@ export const useImageStore = defineStore('imageStore', {
     resetFrame() {
       this.frame = {
         enabled: false,
-        type: 'none', // 'none', 'frameSolid', 'framePhoneAndroid',
+        type: 'none',
         width: 0,
         height: 0,
         color: '#000000',

@@ -132,9 +132,12 @@ export function useImageRenderer(
     useFrameTool(imageStore, historyStore, editorStore, t).applyFrameRender(el)
 
     // Round corners for phone frames
+    // UPDATE new frame type
     if (
       imageStore.frame.type === 'framePhoneIOS' ||
-      imageStore.frame.type === 'framePhoneAndroid'
+      imageStore.frame.type === 'framePhoneIOS2' ||
+      imageStore.frame.type === 'framePhoneAndroid' ||
+      imageStore.frame.type === 'framePhoneAndroid2'
     ) {
       const header = imageStore.frame.headerSize || 0
       const svgWidth = imageStore.fileDimensions.width + imageStore.frame.width * 2
@@ -179,7 +182,6 @@ export function useImageRenderer(
       skipNextRenderAll.value = true
       imageStore.renderedImage = canvas
       imageStore.previewUrl = canvas.toDataURL()
-
 
       console.log(`Rounded corners with radius ${radius}px`)
     }
