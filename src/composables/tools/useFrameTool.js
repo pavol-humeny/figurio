@@ -363,7 +363,7 @@ export function useFrameTool(imageStore, historyStore, editorStore, t) {
       const nw = notchWidth
       const nh = notchHeight
       const nx = svgWidth / 2 - nw / 2
-      const ny = top + fh / 2
+      const ny = top + fh / 2 - 1
       const r2 = notchRadius
       const arcR = nh * 0.4
 
@@ -493,7 +493,7 @@ export function useFrameTool(imageStore, historyStore, editorStore, t) {
       const arcRadius = 0.5 * dropHeight
 
       const dropCenterX = svgWidth / 2
-      const dropTopY = top + fh / 2
+      const dropTopY = top + fh / 2 - 1
       const leftDrop = dropCenterX - dropWidth / 2
       const rightDrop = dropCenterX + dropWidth / 2
       const bottomDrop = dropTopY + dropHeight
@@ -537,7 +537,7 @@ export function useFrameTool(imageStore, historyStore, editorStore, t) {
       camera.setAttribute('cx', cameraCX)
       camera.setAttribute('cy', cameraCY)
       camera.setAttribute('r', cameraRadius)
-      camera.setAttribute('fill', contrastColor) // blue camera dot
+      camera.setAttribute('fill', contrastColor)
       el.appendChild(camera)
     }
   }
