@@ -68,7 +68,7 @@ export function usePresetTool(
 
   watch(
     [() => localPresetName.value, () => localImageOperations.value, () => localImageFrame.value],
-    (newValues, oldValues) => {
+    () => {
       if (initializing.value) return
       isPresetModified.value = true
     },
