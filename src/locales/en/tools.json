@@ -288,7 +288,8 @@
             "enabled": "Enabled",
             "color": "Color",
             "width": "Width",
-            "type": "Type"
+            "type": "Type",
+            "useFrameOutline": "Use outline"
           }
         },
         "createPresetButton": {
@@ -361,7 +362,8 @@
             "enabled": "Enabled",
             "color": "Color",
             "width": "Width",
-            "type": "Type"
+            "type": "Type",
+            "useFrameOutline": "Use outline"
           },
           "crop": {
             "label": "Crop",

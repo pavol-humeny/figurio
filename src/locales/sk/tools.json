@@ -278,7 +278,8 @@
             "enabled": "Povolené",
             "color": "Farba",
             "width": "Šírka",
-            "type": "Typ"
+            "type": "Typ",
+            "useFrameOutline": "Použiť obrys"
           }
         },
         "createPresetButton": {
@@ -351,7 +352,8 @@
             "enabled": "Povolené",
             "color": "Farba",
             "width": "Šírka",
-            "type": "Typ"
+            "type": "Typ",
+            "useFrameOutline": "Použiť obrys"
           },
           "crop": {
             "label": "Orezanie",

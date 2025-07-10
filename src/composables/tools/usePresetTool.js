@@ -104,6 +104,16 @@ export function usePresetTool(
     { deep: true },
   )
 
+  // Watch localImageFrame width - set height to width
+  watch(
+    () => localImageFrame.value.width,
+    (width) => {
+      if (width !== undefined && width !== null) {
+        localImageFrame.value.height = width
+      }
+    },
+  )
+
   const savePresetChanges = () => {
     console.log('Saving preset changes')
 
@@ -238,7 +248,13 @@ export function usePresetTool(
     () => localImageFrame.value.type,
     (type) => {
       if (type !== 'frameSolid') {
-        localImageFrame.value.width = 0
+        if (localImageFrame.value.outlineEnabled) {
+          localImageFrame.value.width = Math.floor(
+            (1 / 200) * Math.max(imageStore.fileDimensions.width, imageStore.fileDimensions.height),
+          )
+        } else {
+          localImageFrame.value.width = 0
+        }
         if (frameWidthRef.value) {
           frameWidthRef.value.setValue(0)
         }
@@ -277,11 +293,10 @@ export function usePresetTool(
     if (currentImageFrame.type !== presetFrame.type) {
       areFramesEqual = false
     } else {
-      if (currentImageFrame.type === 'frameSolid') {
-        areFramesEqual =
-          currentImageFrame.color === presetFrame.color &&
-          currentImageFrame.width === presetFrame.width
-      }
+      areFramesEqual =
+        currentImageFrame.color === presetFrame.color &&
+        currentImageFrame.width === presetFrame.width &&
+        currentImageFrame.outlineEnabled === presetFrame.outlineEnabled
     }
 
     if (areOperationsEqual && areFramesEqual) {
@@ -336,7 +351,7 @@ export function usePresetTool(
             operation.cropBox,
           )
         }
-        // UPDATE
+        // UPDATE new tool
       })
     }
 
@@ -375,8 +390,10 @@ export function usePresetTool(
       height: 0,
       color: '#000000',
       headerSize: 0,
+      footerSize: 0,
+      outlineEnabled: false,
     },
-    // UPDATE
+    // UPDATE new tool
   })
 
   const isShowManualPresetSetting = ref(false)
@@ -478,8 +495,10 @@ export function usePresetTool(
         height: 0,
         color: '#000000',
         headerSize: 0,
+        footerSize: 0,
+        outlineEnabled: false,
       },
-      // UPDATE
+      // UPDATE new tool
     }
 
     isShowManualPresetSetting.value = false
@@ -518,8 +537,9 @@ export function usePresetTool(
       imageFrame.type = newPreset.value.frame.type
       imageFrame.color = newPreset.value.frame.color
       imageFrame.width = newPreset.value.frame.width
+      imageFrame.outlineEnabled = newPreset.value.frame.outlineEnabled
     }
-    // UPDATE
+    // UPDATE new tool
 
     presetsStore.createPreset(
       JSON.parse(JSON.stringify(newPreset.value.presetName)),
