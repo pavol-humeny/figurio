@@ -385,16 +385,23 @@ const tabs = ['myPresets', 'createPreset']
               </p>
               <ColorPicker v-model="newPreset.frame.color" />
             </div>
-            <div class="content-aligned two-items">
-              <p :class="!newPreset.frame.enabled || newPreset.frame.type !== 'frameSolid'
-                ? 'disabled'
-                : ''
-                ">
+            <div v-if="newPreset.frame.type === 'frameSolid' || newPreset.frame.outlineEnabled"
+              class="content-aligned two-items">
+              <p :class="newPreset.frame.enabled ? '' : 'disabled'">
                 {{ t('tools.preset.settings.createPreset.presetValues.frame.width') }}
               </p>
               <NumberInput ref="frameWidthRef" v-model="newPreset.frame.width" :min="0" :max="100" :step="1" unit="px"
                 icon="IconArrowWidth" :iconTop="45" :onReset="() => resetFrameWidth()"
-                :disabled="!newPreset.frame.enabled || newPreset.frame.type !== 'frameSolid'" />
+                :disabled="!newPreset.frame.enabled" />
+            </div>
+            <div
+              v-if="newPreset.frame.type === 'frameWindowsBrowser' || newPreset.frame.type === 'frameMacBrowser' || newPreset.frame.type === 'frameWindowsTaskBar'"
+              :class="newPreset.frame.enabled ? '' : 'disabled'" class="content-aligned two-items">
+              <p>
+                {{ t('tools.preset.settings.createPreset.presetValues.frame.useFrameOutline') }}
+              </p>
+              <ToggleButton v-model="newPreset.frame.outlineEnabled" :scale="0.6"
+                :style="{ transform: 'translateX(16px)' }" />
             </div>
           </div>
         </div>

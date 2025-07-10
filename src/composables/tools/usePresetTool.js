@@ -504,6 +504,20 @@ export function usePresetTool(
     isShowManualPresetSetting.value = false
   }
 
+  // watch new preset frame type and if it is solid set outlineEnabled to false
+  watch(
+    () => newPreset.value.frame.type,
+    (type) => {
+      if (
+        type !== 'frameWindowsBrowser' ||
+        type !== 'frameMacBrowser' ||
+        type !== 'frameWindowsTaskBar'
+      ) {
+        newPreset.value.frame.outlineEnabled = false
+      }
+    },
+  )
+
   const createPreset = () => {
     console.log('Creating preset:', newPreset.value.presetName)
 
