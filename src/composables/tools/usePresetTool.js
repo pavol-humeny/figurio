@@ -67,22 +67,13 @@ export function usePresetTool(
   )
 
   watch(
-    [() => localPresetName.value, () => localImageOperations.value, localImageFrame.value],
-    () => {
+    [() => localPresetName.value, () => localImageOperations.value, () => localImageFrame.value],
+    (newValues, oldValues) => {
       if (initializing.value) return
       isPresetModified.value = true
     },
     { deep: true },
   )
-
-  const modifyPreset = () => {
-    isModifyingPreset.value = true
-    isPresetModified.value = false
-
-    tmpLocalImageFrame.value = JSON.parse(JSON.stringify(localImageFrame.value))
-    tmpLocalPresetName.value = localPresetName.value
-    tmpLocalImageOperations.value = JSON.parse(JSON.stringify(localImageOperations.value))
-  }
 
   // Update crop box in preset immediately when localImageOperations changes
   watch(
@@ -113,6 +104,73 @@ export function usePresetTool(
       }
     },
   )
+
+  // Watch on selectedOperation, if it is not null set creatingNewOperation to false
+  watch(selectedOperation, (op) => {
+    if (op) {
+      creatingNewOperation.value = false
+      clearSelected.value = false
+    }
+  })
+
+  // Watch localImageFrame.width if it is different than frameSolid reset width
+  watch(
+    () => localImageFrame.value.type,
+    (type) => {
+      if (type !== 'frameSolid') {
+        if (localImageFrame.value.outlineEnabled) {
+          localImageFrame.value.width = Math.floor(
+            (1 / 200) * Math.max(imageStore.fileDimensions.width, imageStore.fileDimensions.height),
+          )
+          console.log('================Setting frame width to:', localImageFrame.value.width)
+        } else {
+          localImageFrame.value.width = 0
+        }
+        if (frameWidthRef.value) {
+          frameWidthRef.value.setValue(0)
+        }
+      }
+    },
+  )
+
+  watch(
+    () => localImageFrame.value.enabled,
+    (enabled) => {
+      isPresetModified.value = true
+      if (enabled) {
+        // Set default values for frame if not already set
+        if (
+          !localImageFrame.value.type ||
+          !localImageFrame.value.color ||
+          localImageFrame.value.width == null
+        ) {
+          localImageFrame.value.type = 'frameSolid'
+          localImageFrame.value.color = '#000000'
+          localImageFrame.value.width = 0
+        }
+      }
+    },
+  )
+
+  // Watch localImageFrame.type
+  watch(
+    () => localImageFrame.value.type,
+    (type) => {
+      isPresetModified.value = true
+      if (type !== 'frameSolid') {
+        localImageFrame.value.width = 0
+      }
+    },
+  )
+
+  const modifyPreset = () => {
+    isModifyingPreset.value = true
+    isPresetModified.value = false
+
+    tmpLocalImageFrame.value = JSON.parse(JSON.stringify(localImageFrame.value))
+    tmpLocalPresetName.value = localPresetName.value
+    tmpLocalImageOperations.value = JSON.parse(JSON.stringify(localImageOperations.value))
+  }
 
   const savePresetChanges = () => {
     console.log('Saving preset changes')
@@ -235,33 +293,6 @@ export function usePresetTool(
     localImageOperations.value.push(JSON.parse(JSON.stringify(newOperation.value)))
   }
 
-  // Watch on selectedOperation, if it is not null set creatingNewOperation to false
-  watch(selectedOperation, (op) => {
-    if (op) {
-      creatingNewOperation.value = false
-      clearSelected.value = false
-    }
-  })
-
-  // Watch localImageFrame.width if it is different than frameSolid reset width to 0
-  watch(
-    () => localImageFrame.value.type,
-    (type) => {
-      if (type !== 'frameSolid') {
-        if (localImageFrame.value.outlineEnabled) {
-          localImageFrame.value.width = Math.floor(
-            (1 / 200) * Math.max(imageStore.fileDimensions.width, imageStore.fileDimensions.height),
-          )
-        } else {
-          localImageFrame.value.width = 0
-        }
-        if (frameWidthRef.value) {
-          frameWidthRef.value.setValue(0)
-        }
-      }
-    },
-  )
-
   const applyPreset = async () => {
     if (imageStore.svgObjects.length > 0) {
       const confirmed = await showConfirmModal(
@@ -368,6 +399,7 @@ export function usePresetTool(
 
   const frameWidthRef = ref(null)
   const presetNameRef = ref(null)
+  const isShowManualPresetSetting = ref(false)
 
   const newPreset = ref({
     presetName: '',
@@ -395,12 +427,6 @@ export function usePresetTool(
     },
     // UPDATE new tool
   })
-
-  const isShowManualPresetSetting = ref(false)
-
-  const showManualPresetSetting = () => {
-    isShowManualPresetSetting.value = true
-  }
 
   const presetRotationOptions = [
     { label: '-180°', value: -180 },
@@ -443,35 +469,34 @@ export function usePresetTool(
     },
   ])
 
+  // Watch new preset frame type and if it is solid set outlineEnabled to false
   watch(
-    () => localImageFrame.value.enabled,
-    (enabled) => {
-      isPresetModified.value = true
-      if (enabled) {
-        // Set default values for frame if not already set
-        if (
-          !localImageFrame.value.type ||
-          !localImageFrame.value.color ||
-          localImageFrame.value.width == null
-        ) {
-          localImageFrame.value.type = 'frameSolid'
-          localImageFrame.value.color = '#000000'
-          localImageFrame.value.width = 0
-        }
+    () => newPreset.value.frame.type,
+    (type) => {
+      console.log('New preset frame type changed:', type)
+      if (
+        type !== 'frameWindowsBrowser' &&
+        type !== 'frameMacBrowser' &&
+        type !== 'frameWindowsTaskBar'
+      ) {
+        newPreset.value.frame.outlineEnabled = false
+      }
+
+      if (
+        type === 'frameWindowsBrowser' ||
+        type === 'frameMacBrowser' ||
+        type === 'frameWindowsTaskBar'
+      ) {
+        newPreset.value.frame.width = Math.floor(
+          (1 / 200) * Math.max(imageStore.fileDimensions.width, imageStore.fileDimensions.height),
+        )
       }
     },
   )
 
-  // watch localImageFrame.type
-  watch(
-    () => localImageFrame.value.type,
-    (type) => {
-      isPresetModified.value = true
-      if (type !== 'frameSolid') {
-        localImageFrame.value.width = 0
-      }
-    },
-  )
+  const showManualPresetSetting = () => {
+    isShowManualPresetSetting.value = true
+  }
 
   const resetPreset = () => {
     newPreset.value = {
@@ -503,20 +528,6 @@ export function usePresetTool(
 
     isShowManualPresetSetting.value = false
   }
-
-  // watch new preset frame type and if it is solid set outlineEnabled to false
-  watch(
-    () => newPreset.value.frame.type,
-    (type) => {
-      if (
-        type !== 'frameWindowsBrowser' ||
-        type !== 'frameMacBrowser' ||
-        type !== 'frameWindowsTaskBar'
-      ) {
-        newPreset.value.frame.outlineEnabled = false
-      }
-    },
-  )
 
   const createPreset = () => {
     console.log('Creating preset:', newPreset.value.presetName)
@@ -551,6 +562,7 @@ export function usePresetTool(
       imageFrame.type = newPreset.value.frame.type
       imageFrame.color = newPreset.value.frame.color
       imageFrame.width = newPreset.value.frame.width
+      imageFrame.height = newPreset.value.frame.width
       imageFrame.outlineEnabled = newPreset.value.frame.outlineEnabled
     }
     // UPDATE new tool
@@ -573,8 +585,21 @@ export function usePresetTool(
   }
 
   const resetFrameWidth = () => {
-    newPreset.value.frame.width = 0
-    frameWidthRef.value.setValue(0)
+    if (
+      newPreset.value.frame.type === 'frameWindowsBrowser' ||
+      newPreset.value.frame.type === 'frameMacBrowser' ||
+      newPreset.value.frame.type === 'frameWindowsTaskBar' ||
+      localImageFrame.value.type === 'frameWindowsBrowser' ||
+      localImageFrame.value.type === 'frameMacBrowser' ||
+      localImageFrame.value.type === 'frameWindowsTaskBar'
+    ) {
+      newPreset.value.frame.width = Math.floor(
+        (1 / 200) * Math.max(imageStore.fileDimensions.width, imageStore.fileDimensions.height),
+      )
+    } else {
+      newPreset.value.frame.width = 0
+    }
+    frameWidthRef.value.setValue(newPreset.value.frame.width)
   }
 
   const useCurrentModifications = () => {
