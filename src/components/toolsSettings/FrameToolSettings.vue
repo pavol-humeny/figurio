@@ -37,7 +37,9 @@ const {
             <ColorPicker v-model="frameColor" />
           </div>
         </div>
-        <div class="settings-content-wrapper">
+        <div
+          v-if="selectedFrameVariant === 'frameSolid' || selectedFrameVariant === 'frameMacBrowser' || selectedFrameVariant === 'frameWindowsBrowser' || selectedFrameVariant === 'frameWindowsTaskBar'"
+          class="settings-content-wrapper">
           <div class="content-wrapper">
             <div class="content-title">
               <p :class="{ disabled: selectedFrameVariant !== 'frameSolid' && !drawOutline }">

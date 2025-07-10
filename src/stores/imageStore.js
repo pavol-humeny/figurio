@@ -560,10 +560,8 @@ export const useImageStore = defineStore('imageStore', {
       // UPDATE new frame type
       if (this.frame.type === 'frameMacBrowser' || this.frame.type === 'frameWindowsBrowser') {
         frameHeight = this.frame.headerSize
-      } else if (this.frame.type === 'frameWindowsTaskBar') {
-        frameHeight = this.frame.footerSize
       }
-
+      
       // Draw the original image
       ctx.drawImage(imageCanvas, frameWidth, frameHeight)
 
