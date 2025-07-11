@@ -192,6 +192,85 @@ export function useFrameTool(imageStore, historyStore, editorStore, t) {
     el.style.left = `-${fw}px`
     el.style.top = `-${header > 0 ? header : fh}px`
 
+    // Button rendering function (rounded only on one side)
+    const drawSideButton = (x, y, width, height, radius, side) => {
+      const path = document.createElementNS(ns, 'path')
+
+      const d =
+        side !== 'right'
+          ? [
+              `M ${x + width} ${y}`, // top-right
+              `H ${x + radius}`, // move left before corner
+              `A ${radius} ${radius} 0 0 0 ${x} ${y + radius}`, // top-left corner
+              `V ${y + height - radius}`, // down
+              `A ${radius} ${radius} 0 0 0 ${x + radius} ${y + height}`, // bottom-left corner
+              `H ${x + width}`, // right
+              'Z',
+            ]
+          : [
+              `M ${x} ${y}`, // top-left
+              `H ${x + width - radius}`, // move right before corner
+              `A ${radius} ${radius} 0 0 1 ${x + width} ${y + radius}`, // top-right corner
+              `V ${y + height - radius}`, // down
+              `A ${radius} ${radius} 0 0 1 ${x + width - radius} ${y + height}`, // bottom-right corner
+              `H ${x}`, // left
+              'Z',
+            ]
+
+      path.setAttribute('d', d.join(' '))
+      path.setAttribute('fill', color)
+      return path
+    }
+
+    const drawVolumeAndPowerButtons = () => {
+      // Volume buttons (left side)
+      const volumeButtonWidth = fw / 2
+      const volumeButtonHeight = fw * 7
+      const volumeButtonRadius = volumeButtonWidth
+      const volumeButtonX = 0
+      const volumeUpY = svgHeight * 0.22
+      const volumeDownY = volumeUpY + volumeButtonHeight + fw * 0.5
+
+      el.appendChild(
+        drawSideButton(
+          volumeButtonX,
+          volumeUpY,
+          volumeButtonWidth,
+          volumeButtonHeight,
+          volumeButtonRadius,
+          'left',
+        ),
+      )
+
+      el.appendChild(
+        drawSideButton(
+          volumeButtonX,
+          volumeDownY,
+          volumeButtonWidth,
+          volumeButtonHeight,
+          volumeButtonRadius,
+          'left',
+        ),
+      )
+
+      // Power button (right side)
+      const powerButtonWidth = fw / 2
+      const powerButtonHeight = fw * 8
+      const powerButtonRadius = powerButtonWidth
+      const powerButtonX = svgWidth - powerButtonWidth
+      const powerButtonY = svgHeight * 0.35
+
+      el.appendChild(
+        drawSideButton(
+          powerButtonX,
+          powerButtonY,
+          powerButtonWidth,
+          powerButtonHeight,
+          powerButtonRadius,
+          'right',
+        ),
+      )
+    }
     // UPDATE new frame type
     if (frame.type === 'frameSolid') {
       // 4 sides
@@ -365,6 +444,9 @@ export function useFrameTool(imageStore, historyStore, editorStore, t) {
       camera.setAttribute('r', notchHeight * 0.15)
       camera.setAttribute('fill', contrastColor)
       el.appendChild(camera)
+
+      // Volume and power buttons
+      drawVolumeAndPowerButtons()
     } else if (frame.type === 'framePhoneIOS2') {
       const outline = document.createElementNS(ns, 'path')
       outline.setAttribute('fill', 'none')
@@ -455,6 +537,9 @@ export function useFrameTool(imageStore, historyStore, editorStore, t) {
       camera.setAttribute('r', cameraRadius)
       camera.setAttribute('fill', contrastColor)
       el.appendChild(camera)
+
+      // Volume and power buttons
+      drawVolumeAndPowerButtons()
     } else if (frame.type === 'framePhoneAndroid') {
       const outline = document.createElementNS(ns, 'path')
       outline.setAttribute('fill', 'none')
@@ -498,6 +583,9 @@ export function useFrameTool(imageStore, historyStore, editorStore, t) {
       camera.setAttribute('r', cameraRadius)
       camera.setAttribute('fill', color)
       el.appendChild(camera)
+
+      // Volume and power buttons
+      drawVolumeAndPowerButtons()
     } else if (frame.type === 'framePhoneAndroid2') {
       const outline = document.createElementNS(ns, 'path')
       outline.setAttribute('fill', 'none')
@@ -530,8 +618,8 @@ export function useFrameTool(imageStore, historyStore, editorStore, t) {
       el.appendChild(outline)
 
       // Drop notch
-      const dropHeight = svgHeight * 0.055
-      const dropWidth = dropHeight * 1.05
+      const dropHeight = svgHeight * 0.035
+      const dropWidth = dropHeight * 1.02
       const arcRadius = 0.5 * dropHeight
 
       const dropCenterX = svgWidth / 2
@@ -581,6 +669,9 @@ export function useFrameTool(imageStore, historyStore, editorStore, t) {
       camera.setAttribute('r', cameraRadius)
       camera.setAttribute('fill', contrastColor)
       el.appendChild(camera)
+
+      // Volume and power buttons
+      drawVolumeAndPowerButtons()
     } else if (frame.type === 'frameWindowsTaskBar') {
       // Footer bar
       const footerRect = document.createElementNS(ns, 'rect')
