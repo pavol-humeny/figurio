@@ -163,7 +163,6 @@ export function useFrameTool(imageStore, historyStore, editorStore, t) {
       frame.type === 'framePhoneIOS2'
     ) {
       fw = Math.floor((1 / 100) * Math.max(w, h))
-      console.log('Calculated frame width:', fw)
       fh = fw
       imageStore.frame.headerSize = 0
       imageStore.frame.footerSize = 0
