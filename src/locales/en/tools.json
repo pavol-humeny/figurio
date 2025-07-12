@@ -238,6 +238,10 @@
         },
         "useFrameOutline": {
           "label": "Use outline"
+        },
+        "phoneButtonsCanNotBeDrawn": {
+          "title": "Phone buttons can not be drawn",
+          "message": "Phone buttons can not be drawn, because the frame is not height enough."
         }
       }
     }

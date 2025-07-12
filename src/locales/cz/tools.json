@@ -239,6 +239,10 @@
         },
         "useFrameOutline": {
           "label": "Použít obrys"
+        },
+        "phoneButtonsCanNotBeDrawn": {
+          "title": "Tlačítka telefonu nelze nakreslit",
+          "message": "Tlačítka telefonu nelze nakreslit, protože rám není dostatečně vysoký."
         }
       }
     }

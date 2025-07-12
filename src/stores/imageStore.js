@@ -96,7 +96,19 @@ export const useImageStore = defineStore('imageStore', {
       outlineEnabled: false, // Whether to draw an outline around the frame
     },
 
-    newFrame: '', // Raw SVG frame for vector export
+    newFrameSvg: '', // Raw SVG frame for vector export
+
+    newFrame: {
+      enabled: false,
+      type: 'none',
+      width: 0,
+      height: 0,
+      color: '#000000',
+      headerSize: 0,
+      footerSize: 0,
+      outlineEnabled: false,
+    },
+
   }),
   getters: {
     isImageLoaded: (state) => {
@@ -380,7 +392,7 @@ export const useImageStore = defineStore('imageStore', {
 
       console.log('Exporting file...')
 
-      await this.generatePreviewWithFrame(editorStore, historyStore, t)
+      await this.generatePreview(editorStore, historyStore, t)
 
       const isPdf = this.newFileFormat === 'pdf'
 
@@ -497,27 +509,22 @@ export const useImageStore = defineStore('imageStore', {
         img.src = svgUrl
       })
 
-      // const resultDataUrl = canvas.toDataURL()
-
-      // Clear SVG objects after rasterization
-      this.svgObjects = []
-      this.selectedSvgObjectId = null
-
       // Store result either as renderedImage or newRenderedImage
       if (storeAsNew) {
         this.newRenderedImage = canvas
       } else {
         this.renderedImage = canvas
+
+        // Clear svg values
+        this.svgObjects = []
+        this.selectedSvgObjectId = null
       }
-
-      // // Update preview
-      // this.previewUrl = resultDataUrl
-
-      // return resultDataUrl
     },
 
-    async generatePreviewWithFrame(editorStore, historyStore, t, renderAsRaster = true) {
+    async generatePreview(editorStore, historyStore, t, renderAsRaster = true) {
       console.log('Generating preview with frame...')
+
+      this.newFrame = { ...this.frame }
 
       const targetWidth = this.newFileDimensions.width
       const targetHeight = this.newFileDimensions.height
@@ -532,7 +539,7 @@ export const useImageStore = defineStore('imageStore', {
       }
 
       // If frame is not enabled, just return the base image
-      if (!this.frame.enabled) {
+      if (!this.newFrame.enabled) {
         this.previewUrl = baseImage.toDataURL()
         return
       }
@@ -542,11 +549,11 @@ export const useImageStore = defineStore('imageStore', {
       // Create temporary SVG element and apply frame
       const tempFrameSvg = document.createElementNS('http://www.w3.org/2000/svg', 'svg')
       const { applyFrameRender } = useFrameTool(this, historyStore, editorStore, t)
-      applyFrameRender(tempFrameSvg, targetWidth, targetHeight)
+      applyFrameRender(tempFrameSvg, targetWidth, targetHeight, true)
 
       // If vector export only, store raw SVG frame and exit
       if (!renderAsRaster) {
-        this.newFrame = new XMLSerializer().serializeToString(tempFrameSvg)
+        this.newFrameSvg = new XMLSerializer().serializeToString(tempFrameSvg)
         return
       }
 
@@ -569,12 +576,12 @@ export const useImageStore = defineStore('imageStore', {
       const canvasHeight = parseInt(tempFrameSvg.getAttribute('height'), 10)
 
       // Determine image offset inside the frame
-      const offsetX = this.frame?.width || 0
-      let offsetY = this.frame?.height || offsetX
+      const offsetX = this.newFrame?.width || 0
+      let offsetY = this.newFrame?.height || offsetX
 
       // UPDATE new frame type
-      if (this.frame.type === 'frameMacBrowser' || this.frame.type === 'frameWindowsBrowser') {
-        offsetY = this.frame.headerSize
+      if (this.newFrame.type === 'frameMacBrowser' || this.newFrame.type === 'frameWindowsBrowser') {
+        offsetY = this.newFrame.headerSize
       }
 
       // Create final canvas and render both layers

@@ -58,7 +58,7 @@ export function useExportToolSettings(imageStore, editorStore, historyStore, t) 
       imageStore.newFileDimensions.fileAspectRatio = Math.round((width / height) * 100) / 100
     }
 
-    await imageStore.generatePreviewWithFrame(editorStore, historyStore, t)
+    await imageStore.generatePreview(editorStore, historyStore, t)
   }
 
   const saveNewFileName = () => {
@@ -72,22 +72,24 @@ export function useExportToolSettings(imageStore, editorStore, historyStore, t) 
   }
 
   const openExportToolSettings = async () => {
-    await imageStore.generatePreviewWithFrame(editorStore, historyStore, t)
+    await imageStore.generatePreview(editorStore, historyStore, t)
 
     isVisible.value = true
 
-    // if (imageStore.frame?.enabled) {
-    //   imageStore.newFileDimensions = {
-    //     width: imageStore.frame.width * 2 + imageStore.fileDimensions.width,
-    //     height: imageStore.frame.height * 2 + imageStore.fileDimensions.height,
-    //     fileAspectRatio:
-    //       (imageStore.frame.width * 2 + imageStore.fileDimensions.width) /
-    //         (imageStore.frame.height * 2 + imageStore.fileDimensions.height) || 1,
-    //   }
-    // } else {
-    //   imageStore.newFileDimensions = { ...imageStore.fileDimensions }
-    // }
-    imageStore.newFileDimensions = { ...imageStore.fileDimensions }
+    if (imageStore.frame?.enabled) {
+      imageStore.newFileDimensions.width = imageStore.fileDimensions.width + imageStore.frame.width * 2
+      if (imageStore.frame.headerSize > 0) {
+        imageStore.newFileDimensions.height =
+          imageStore.fileDimensions.height + imageStore.frame.height + imageStore.frame.headerSize
+      } else if (imageStore.frame.footerSize > 0) {
+        imageStore.newFileDimensions.height =
+          imageStore.fileDimensions.height + imageStore.frame.height + imageStore.frame.footerSize
+      } else {
+        imageStore.newFileDimensions.height = imageStore.fileDimensions.height + imageStore.frame.height * 2
+      }
+    } else {
+      imageStore.newFileDimensions = { ...imageStore.fileDimensions }
+    }
   }
 
   const closeExportToolSettings = () => {

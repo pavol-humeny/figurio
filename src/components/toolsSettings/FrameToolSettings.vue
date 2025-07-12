@@ -19,7 +19,9 @@ const {
   selectedFrameVariant,
   frameOptions,
   handleFrameChange,
-  drawOutline
+  drawOutline,
+  setFrameColor,
+  setFrameOutline,
 } = useFrameTool(useImageStore(), useHistoryStore(), useEditorStore(), t)
 </script>
 
@@ -27,14 +29,14 @@ const {
   <div class="tool-settings">
     <div class="settings-wrapper">
       <div class="specific-settings">
-        <div class="settings-content-wrapper">
+        <div v-if="selectedFrameVariant !== 'none'" class="settings-content-wrapper">
           <div class="content-wrapper">
             <div class="content-title">
               <p>
                 {{ t('tools.frame.settings.general.frameColor.label') }}
               </p>
             </div>
-            <ColorPicker v-model="frameColor" />
+            <ColorPicker v-model="frameColor" @update="setFrameColor(frameColor)" />
           </div>
         </div>
         <div
@@ -70,7 +72,8 @@ const {
               <p>
                 {{ t('tools.frame.settings.general.useFrameOutline.label') }}
               </p>
-              <ToggleButton v-model="drawOutline" style="transform: scale(0.6);" />
+              <ToggleButton v-model="drawOutline" style="transform: scale(0.6);"
+                @update="setFrameOutline(drawOutline)" />
             </div>
           </div>
         </div>
