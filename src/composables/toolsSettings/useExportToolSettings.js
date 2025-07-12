@@ -2,7 +2,7 @@ import { ref, computed, nextTick, watch } from 'vue'
 
 const isVisible = ref(false)
 
-export function useExportToolSettings(imageStore, t) {
+export function useExportToolSettings(imageStore, editorStore, historyStore, t) {
   const inputFileNameRef = ref(null)
   const isDimensionsLinked = ref(true)
 
@@ -27,7 +27,7 @@ export function useExportToolSettings(imageStore, t) {
 
   const fileDimensions = computed(() => imageStore.newFileDimensions)
 
-  const updateDimension = (type, value) => {
+  const updateDimension = async (type, value) => {
     if (!value || value <= 0) return
 
     if (type === 'width') {
@@ -57,6 +57,8 @@ export function useExportToolSettings(imageStore, t) {
     if (width > 0 && height > 0) {
       imageStore.newFileDimensions.fileAspectRatio = Math.round((width / height) * 100) / 100
     }
+
+    await imageStore.generatePreviewWithFrame(editorStore, historyStore, t)
   }
 
   const saveNewFileName = () => {
@@ -70,21 +72,22 @@ export function useExportToolSettings(imageStore, t) {
   }
 
   const openExportToolSettings = async () => {
-    await imageStore.generatePreviewWithFrame()
+    await imageStore.generatePreviewWithFrame(editorStore, historyStore, t)
 
     isVisible.value = true
 
-    if (imageStore.frame?.enabled) {
-      imageStore.newFileDimensions = {
-        width: imageStore.frame.width * 2 + imageStore.fileDimensions.width,
-        height: imageStore.frame.height * 2 + imageStore.fileDimensions.height,
-        fileAspectRatio:
-          (imageStore.frame.width * 2 + imageStore.fileDimensions.width) /
-            (imageStore.frame.height * 2 + imageStore.fileDimensions.height) || 1,
-      }
-    } else {
-      imageStore.newFileDimensions = { ...imageStore.fileDimensions }
-    }
+    // if (imageStore.frame?.enabled) {
+    //   imageStore.newFileDimensions = {
+    //     width: imageStore.frame.width * 2 + imageStore.fileDimensions.width,
+    //     height: imageStore.frame.height * 2 + imageStore.fileDimensions.height,
+    //     fileAspectRatio:
+    //       (imageStore.frame.width * 2 + imageStore.fileDimensions.width) /
+    //         (imageStore.frame.height * 2 + imageStore.fileDimensions.height) || 1,
+    //   }
+    // } else {
+    //   imageStore.newFileDimensions = { ...imageStore.fileDimensions }
+    // }
+    imageStore.newFileDimensions = { ...imageStore.fileDimensions }
   }
 
   const closeExportToolSettings = () => {
@@ -92,7 +95,7 @@ export function useExportToolSettings(imageStore, t) {
   }
 
   const exportFile = () => {
-    const success = imageStore.exportFile(t)
+    const success = imageStore.exportFile(editorStore, historyStore, t)
     if (!success) {
       console.error('Failed to export file')
       return

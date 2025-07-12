@@ -133,20 +133,20 @@ export function useFrameTool(imageStore, historyStore, editorStore, t) {
     return luminance > 186 ? '#000000' : '#ffffff'
   }
 
-  const applyFrameRender = (el) => {
+  const applyFrameRender = (el, width = null, height = null) => {
     console.log('Applying frame render...')
 
     const ns = 'http://www.w3.org/2000/svg'
     const frame = imageStore.frame
     if (!frame?.enabled || !el) return
 
-    const w = imageStore.fileDimensions.width
-    const h = imageStore.fileDimensions.height
-    const color = frame.color || '#000000'
+    const w = width ?? imageStore.fileDimensions.width
+    const h = height ?? imageStore.fileDimensions.height
+    const color = frame.color
     const contrastColor = getContrastColor(color)
 
-    let fw = frame.width || 0
-    let fh = frame.height || 0
+    let fw = frame.width
+    let fh = frame.height
 
     // UPDATE new frame type
     if (frame.type === 'frameMacBrowser' || frame.type === 'frameWindowsBrowser') {

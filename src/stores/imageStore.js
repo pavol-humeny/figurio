@@ -3,6 +3,7 @@ import { defineStore } from 'pinia'
 import { useToastModal } from '@/composables/modals/useToastModal'
 import { nextTick } from 'vue'
 import { useHistoryStore } from './historyStore'
+import { useFrameTool } from '@/composables/tools/useFrameTool'
 
 const { showToastModal } = useToastModal()
 
@@ -50,6 +51,7 @@ export const useImageStore = defineStore('imageStore', {
 
     // Value for raster image rendering
     renderedImage: null, // UndoRedo
+    newRenderedImage: null,
     // tmpRenderedImage: null, // Temporary value for saving changes before applying crop in frame tool
     // Value for SVG rendering
     svgObjects: [], // UndoRedo
@@ -93,6 +95,8 @@ export const useImageStore = defineStore('imageStore', {
       footerSize: 0, // Size of the footer for windows frame
       outlineEnabled: false, // Whether to draw an outline around the frame
     },
+
+    newFrame: '', // Raw SVG frame for vector export
   }),
   getters: {
     isImageLoaded: (state) => {
@@ -371,12 +375,12 @@ export const useImageStore = defineStore('imageStore', {
       document.body.removeChild(input)
     },
 
-    async exportFile(t) {
+    async exportFile(editorStore, historyStore, t) {
       if (!this.renderedImage) return false
 
       console.log('Exporting file...')
 
-      await this.generatePreviewWithFrame()
+      await this.generatePreviewWithFrame(editorStore, historyStore, t)
 
       const isPdf = this.newFileFormat === 'pdf'
 
@@ -411,8 +415,6 @@ export const useImageStore = defineStore('imageStore', {
           const ctx = canvas.getContext('2d')
           ctx.drawImage(image, 0, 0, width, height)
 
-          // this.applyEffectsToContext(ctx, canvas)
-
           canvas.toBlob(
             (blob) => {
               if (!blob) return
@@ -444,51 +446,43 @@ export const useImageStore = defineStore('imageStore', {
       return true
     },
 
-    async rasterize() {
+    async rasterize(width = null, height = null, storeAsNew = false) {
       if (!this.renderedImage || this.svgObjects.length === 0) return
 
       console.log('Rasterizing image with SVG objects...')
 
-      let width = 0
-      let height = 0
-      if (this.frame?.enabled) {
-        // Apply frame dimensions to the rasterization
-        width = this.frame.width * 2 + this.fileDimensions.width
-        height = this.frame.height * 2 + this.fileDimensions.height
-      } else {
-        // Use original dimensions
-        width = this.fileDimensions.width
-        height = this.fileDimensions.height
-      }
+      // Determine target dimensions
+      const usedWidth = width ?? this.fileDimensions.width
+      const usedHeight = height ?? this.fileDimensions.height
 
-      // Create SVG string from svgObjects
+      // Create SVG markup from svgObjects
       const svgString = `
-    <svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}">
-      ${this.svgObjects
-        .map((obj) => {
-          const attrs = Object.entries(obj.attrs || {})
-            .map(([key, val]) => `${key}="${val}"`)
-            .join(' ')
-          return `<${obj.tag} ${attrs} />`
-        })
-        .join('\n')}
-    </svg>
-    `.trim()
+        <svg xmlns="http://www.w3.org/2000/svg" width="${usedWidth}" height="${usedHeight}">
+          ${this.svgObjects
+            .map((obj) => {
+              const attrs = Object.entries(obj.attrs || {})
+                .map(([key, val]) => `${key}="${val}"`)
+                .join(' ')
+              return `<${obj.tag} ${attrs} />`
+            })
+            .join('\n')}
+        </svg>
+      `.trim()
 
-      // Create a Blob from the SVG string
+      // Convert SVG string to image
       const svgBlob = new Blob([svgString], { type: 'image/svg+xml' })
       const svgUrl = URL.createObjectURL(svgBlob)
 
-      // Create a canvas
+      // Prepare canvas and context
       const canvas = document.createElement('canvas')
-      canvas.width = width
-      canvas.height = height
+      canvas.width = usedWidth
+      canvas.height = usedHeight
       const ctx = canvas.getContext('2d')
 
-      // Draw the rendered image on the canvas
-      ctx.drawImage(this.renderedImage, 0, 0)
+      // Draw base image, scaled if necessary
+      ctx.drawImage(this.renderedImage, 0, 0, usedWidth, usedHeight)
 
-      // Convert SVG to Image and draw it on the canvas
+      // Draw SVG overlay on top of the image
       await new Promise((resolve, reject) => {
         const img = new Image()
         img.onload = () => {
@@ -497,76 +491,110 @@ export const useImageStore = defineStore('imageStore', {
           resolve()
         }
         img.onerror = (e) => {
-          console.error('Error during image loading', e)
+          console.error('Error loading SVG overlay image', e)
           reject(e)
         }
         img.src = svgUrl
       })
 
-      // Result - base64
-      const resultDataUrl = canvas.toDataURL()
-      // this.previewUrl = resultDataUrl
+      // const resultDataUrl = canvas.toDataURL()
 
-      // Reset svg elements
+      // Clear SVG objects after rasterization
       this.svgObjects = []
       this.selectedSvgObjectId = null
 
-      this.renderedImage = canvas
-      // this.originalImage = canvas
-      this.previewUrl = resultDataUrl
+      // Store result either as renderedImage or newRenderedImage
+      if (storeAsNew) {
+        this.newRenderedImage = canvas
+      } else {
+        this.renderedImage = canvas
+      }
 
-      return resultDataUrl
+      // // Update preview
+      // this.previewUrl = resultDataUrl
+
+      // return resultDataUrl
     },
 
-    async generatePreviewWithFrame() {
-      await this.rasterize()
+    async generatePreviewWithFrame(editorStore, historyStore, t, renderAsRaster = true) {
+      console.log('Generating preview with frame...')
 
-      console.log('Generating preview with SVG frame...')
+      const targetWidth = this.newFileDimensions.width
+      const targetHeight = this.newFileDimensions.height
 
-      const imageCanvas = document.querySelector('.image-canvas')
-      const frameSvg = document.querySelector('.frame-svg')
+      // Rasterize base image + SVG objects at export size
+      await this.rasterize(targetWidth, targetHeight, true)
 
-      if (!frameSvg || !imageCanvas) {
-        console.warn('Missing SVG or image canvas')
+      const baseImage = this.newRenderedImage || this.renderedImage
+      if (!baseImage) {
+        console.warn('No base image available for preview generation')
         return
       }
 
-      const svgWidth = parseInt(frameSvg.getAttribute('width'), 10)
-      const svgHeight = parseInt(frameSvg.getAttribute('height'), 10)
+      // If frame is not enabled, just return the base image
+      if (!this.frame.enabled) {
+        this.previewUrl = baseImage.toDataURL()
+        return
+      }
 
-      // Create SVG string from the frame SVG element
-      const svgString = new XMLSerializer().serializeToString(frameSvg)
-      const svgBlob = new Blob([svgString], { type: 'image/svg+xml;charset=utf-8' })
-      const url = URL.createObjectURL(svgBlob)
+      console.log('Generating preview with SVG frame...')
 
-      const svgImage = await new Promise((resolve) => {
+      // Create temporary SVG element and apply frame
+      const tempFrameSvg = document.createElementNS('http://www.w3.org/2000/svg', 'svg')
+      const { applyFrameRender } = useFrameTool(this, historyStore, editorStore, t)
+      applyFrameRender(tempFrameSvg, targetWidth, targetHeight)
+
+      // If vector export only, store raw SVG frame and exit
+      if (!renderAsRaster) {
+        this.newFrame = new XMLSerializer().serializeToString(tempFrameSvg)
+        return
+      }
+
+      // Render frame + base image into previewUrl
+      const frameSvgString = new XMLSerializer().serializeToString(tempFrameSvg)
+      const frameBlob = new Blob([frameSvgString], { type: 'image/svg+xml;charset=utf-8' })
+      const frameUrl = URL.createObjectURL(frameBlob)
+
+      const frameImg = await new Promise((resolve) => {
         const img = new Image()
         img.onload = () => {
-          URL.revokeObjectURL(url)
+          URL.revokeObjectURL(frameUrl)
           resolve(img)
         }
-        img.src = url
+        img.src = frameUrl
       })
 
-      // Create canvas
-      const exportCanvas = document.createElement('canvas')
-      exportCanvas.width = svgWidth
-      exportCanvas.height = svgHeight
-      const ctx = exportCanvas.getContext('2d')
+      // Get canvas size from rendered frame SVG
+      const canvasWidth = parseInt(tempFrameSvg.getAttribute('width'), 10)
+      const canvasHeight = parseInt(tempFrameSvg.getAttribute('height'), 10)
 
-      const frameWidth = this.frame?.width || 0
-      let frameHeight = this.frame?.height || frameWidth
+      // Determine image offset inside the frame
+      const offsetX = this.frame?.width || 0
+      let offsetY = this.frame?.height || offsetX
 
       // UPDATE new frame type
       if (this.frame.type === 'frameMacBrowser' || this.frame.type === 'frameWindowsBrowser') {
-        frameHeight = this.frame.headerSize
+        offsetY = this.frame.headerSize
       }
-      
-      // Draw the original image
-      ctx.drawImage(imageCanvas, frameWidth, frameHeight)
 
-      // Draw the SVG frame
-      ctx.drawImage(svgImage, 0, 0)
+      // Create final canvas and render both layers
+      const exportCanvas = document.createElement('canvas')
+      exportCanvas.width = canvasWidth
+      exportCanvas.height = canvasHeight
+      const ctx = exportCanvas.getContext('2d')
+
+      ctx.drawImage(
+        baseImage,
+        0,
+        0,
+        baseImage.width,
+        baseImage.height,
+        offsetX,
+        offsetY,
+        targetWidth,
+        targetHeight,
+      )
+      ctx.drawImage(frameImg, 0, 0)
 
       this.previewUrl = exportCanvas.toDataURL()
     },
