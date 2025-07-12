@@ -7,6 +7,8 @@ import { useImageStore } from '@/stores/imageStore'
 import { useI18n } from 'vue-i18n'
 import LinkValuesIcon from '@/components/common/LinkValuesIcon.vue'
 import DefaultSlider from '@/components/common/DefaultSlider.vue'
+import { useEditorStore } from '@/stores/editorStore'
+import { useHistoryStore } from '@/stores/historyStore'
 
 const { t } = useI18n()
 
@@ -25,7 +27,7 @@ const {
   exportFile,
   isDimensionsLinked,
   previewUrl,
-} = useExportToolSettings(useImageStore(), t)
+} = useExportToolSettings(useImageStore(), useEditorStore(), useHistoryStore(), t)
 </script>
 
 <template>
@@ -52,114 +54,72 @@ const {
             <!-- slider for quality setting -->
             <label for="file-quality">{{
               $t('tools.export.settings.general.fileQuality.label')
-            }}</label>
+              }}</label>
             <p>{{ fileDimensions.quality }} %</p>
-            <DefaultSlider
-              v-model="fileDimensions.quality"
-              :min="0"
-              :max="100"
-              :step="1"
+            <DefaultSlider v-model="fileDimensions.quality" :min="0" :max="100" :step="1"
               @update:modelValue="(value) => updateDimension('quality', value)"
-              :backgroundColor="'var(--background-c)'"
-            />
+              :backgroundColor="'var(--background-c)'" />
           </div>
 
           <div class="export-settings-item">
             <label for="file-name">{{ $t('tools.export.settings.general.fileName.label') }}</label>
-            <input
-              ref="inputFileNameRef"
-              type="text"
-              v-model="fileName"
-              id="file-name"
-              :placeholder="$t('tools.export.settings.general.fileName.placeholder')"
-              @blur="saveNewFileName"
-              @keydown.enter="saveNewFileName"
-            />
+            <input ref="inputFileNameRef" type="text" v-model="fileName" id="file-name"
+              :placeholder="$t('tools.export.settings.general.fileName.placeholder')" @blur="saveNewFileName"
+              @keydown.enter="saveNewFileName" />
           </div>
 
           <div class="export-settings-item">
             <label for="file-dimensions">{{
               $t('tools.export.settings.general.fileDimensions.label')
-            }}</label>
+              }}</label>
             <div class="file-dimensions-inputs">
               <div class="width">
                 <label for="file-dimensions-width">{{
                   $t('tools.export.settings.general.fileDimensions.width')
-                }}</label>
+                  }}</label>
                 <div class="input-wrapper">
-                  <input
-                    v-model.number="fileDimensions.width"
-                    type="number"
-                    min="1"
-                    max="10000"
+                  <input v-model.number="fileDimensions.width" type="number" min="1" max="10000"
                     @blur="updateDimension('width', fileDimensions.width)"
-                    @keydown.enter="updateDimension('width', fileDimensions.width)"
-                  />
+                    @keydown.enter="updateDimension('width', fileDimensions.width)" />
                   <span class="input-unit">px</span>
                 </div>
               </div>
 
               <div class="icon-wrapper">
-                <LinkValuesIcon
-                  v-model="isDimensionsLinked"
+                <LinkValuesIcon v-model="isDimensionsLinked"
                   :tipLinked="$t('tools.export.settings.general.fileDimensions.tip.linked')"
-                  :tipUnlinked="$t('tools.export.settings.general.fileDimensions.tip.unlinked')"
-                  size="30"
-                />
+                  :tipUnlinked="$t('tools.export.settings.general.fileDimensions.tip.unlinked')" size="30" />
               </div>
 
               <div class="height">
                 <label for="file-dimensions-height">{{
                   $t('tools.export.settings.general.fileDimensions.height')
-                }}</label>
+                  }}</label>
                 <div class="input-wrapper">
-                  <input
-                    v-model.number="fileDimensions.height"
-                    type="number"
-                    id="file-dimensions-height"
-                    min="1"
-                    max="10000"
-                    @blur="updateDimension('height', fileDimensions.height)"
-                    @keydown.enter="updateDimension('height', fileDimensions.height)"
-                  />
+                  <input v-model.number="fileDimensions.height" type="number" id="file-dimensions-height" min="1"
+                    max="10000" @blur="updateDimension('height', fileDimensions.height)"
+                    @keydown.enter="updateDimension('height', fileDimensions.height)" />
                   <span class="input-unit">px</span>
                 </div>
               </div>
 
               <div class="icon-wrapper">
-                <BaseIcon
-                  name="IconReset"
-                  size="25"
-                  color="var(--primary-c)"
-                  @click="resetFileDimensions"
-                  :tip="$t('tools.export.settings.general.fileDimensions.tip.reset')"
-                />
+                <BaseIcon name="IconReset" size="25" color="var(--primary-c)" @click="resetFileDimensions"
+                  :tip="$t('tools.export.settings.general.fileDimensions.tip.reset')" />
               </div>
             </div>
           </div>
 
           <div class="buttons-wrapper">
-            <DefaultButton
-              :text="$t('tools.export.settings.general.cancelButton.text')"
-              @click="closeExportToolSettings"
-              onlyText
-            />
-            <DefaultButton
-              :text="$t('tools.export.settings.general.exportButton.text')"
-              @click="exportFile"
-            />
+            <DefaultButton :text="$t('tools.export.settings.general.cancelButton.text')"
+              @click="closeExportToolSettings" onlyText />
+            <DefaultButton :text="$t('tools.export.settings.general.exportButton.text')" @click="exportFile" />
           </div>
         </div>
         <div class="export-preview">
-          <img
-            v-if="previewUrl"
-            :src="previewUrl"
-            alt="Export Preview"
-            class="export-preview-img"
-            :style="{
-              aspectRatio: fileDimensions.width + ' / ' + fileDimensions.height,
-            }"
-          />
+          <img v-if="previewUrl" :src="previewUrl" alt="Export Preview" class="export-preview-img" :style="{
+            aspectRatio: fileDimensions.width + ' / ' + fileDimensions.height,
+          }" />
           <div v-else class="export-preview-placeholder">
             {{ $t('tools.export.settings.general.preview.previewUnavailable') }}
           </div>
@@ -267,16 +227,19 @@ const {
   flex-direction: row;
   gap: 10px;
 }
+
 .file-dimensions-inputs .width,
 .file-dimensions-inputs .height {
   display: flex;
   flex-direction: column;
   gap: 2px;
 }
+
 .file-dimensions-inputs .width label,
 .file-dimensions-inputs .height label {
   font-size: var(--text-font-size);
 }
+
 .icon-wrapper {
   padding-top: 20px;
   width: 40px;
@@ -324,9 +287,11 @@ input[type='range']::-webkit-slider-runnable-track {
 
 /* slider thumb */
 input[type='range']::-webkit-slider-thumb {
-  -webkit-appearance: none; /* Override default look */
+  -webkit-appearance: none;
+  /* Override default look */
   appearance: none;
-  margin-top: -5px; /* Centers thumb on the track */
+  margin-top: -5px;
+  /* Centers thumb on the track */
   background-color: var(--primary-c);
   border-radius: 10px;
   height: 20px;

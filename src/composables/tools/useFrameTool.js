@@ -1,8 +1,23 @@
 import { ref, watch, computed } from 'vue'
+import { useToastModal } from '../modals/useToastModal'
 
 export function useFrameTool(imageStore, historyStore, editorStore, t) {
+  const { showToastModal } = useToastModal()
+
   const frameColor = ref(imageStore.frame.color || '#000000')
+  watch(
+    () => imageStore.frame.color,
+    (newColor) => {
+      frameColor.value = newColor
+    },
+  )
   const frameWidth = ref(imageStore.frame.width || 0)
+  watch(
+    () => imageStore.frame.width,
+    (newWidth) => {
+      frameWidth.value = newWidth
+    },
+  )
   const drawOutline = ref(false)
   const frameWidthRef = ref(null)
 
@@ -40,22 +55,22 @@ export function useFrameTool(imageStore, historyStore, editorStore, t) {
     },
   ])
 
-  const selectedFrameVariant = ref(imageStore.frame.type || 'none')
+  const selectedFrameVariant = computed(() => imageStore.frame.type || 'none')
 
   const handleFrameChange = (value) => {
     console.log('Selected frame variant:', value)
     imageStore.frame.type = value
-    // Apply frame
 
     applyFrame()
   }
 
-  // watch color
-  watch(frameColor, (newColor) => {
-    if (newColor) {
+  // Color
+  const setFrameColor = (color) => {
+    frameColor.value = color
+    if (frameWidth.value > 0) {
       applyFrame()
     }
-  })
+  }
 
   // watch type
   watch(selectedFrameVariant, (newType) => {
@@ -64,11 +79,11 @@ export function useFrameTool(imageStore, historyStore, editorStore, t) {
     }
   })
 
-  // watch drawOutline
-  watch(drawOutline, (newValue) => {
-    imageStore.frame.outlineEnabled = newValue
+  // drawOutline
+  const setFrameOutline = (value) => {
+    drawOutline.value = value
     applyFrame()
-  })
+  }
 
   const setFrameWidth = (width) => {
     if (width < 0) {
@@ -133,20 +148,20 @@ export function useFrameTool(imageStore, historyStore, editorStore, t) {
     return luminance > 186 ? '#000000' : '#ffffff'
   }
 
-  const applyFrameRender = (el) => {
+  const applyFrameRender = (el, width = null, height = null, updateNewFrame = false) => {
     console.log('Applying frame render...')
 
     const ns = 'http://www.w3.org/2000/svg'
     const frame = imageStore.frame
     if (!frame?.enabled || !el) return
 
-    const w = imageStore.fileDimensions.width
-    const h = imageStore.fileDimensions.height
-    const color = frame.color || '#000000'
+    const w = width ?? imageStore.fileDimensions.width
+    const h = height ?? imageStore.fileDimensions.height
+    const color = frame.color
     const contrastColor = getContrastColor(color)
 
-    let fw = frame.width || 0
-    let fh = frame.height || 0
+    let fw = frame.width
+    let fh = frame.height
 
     // UPDATE new frame type
     if (frame.type === 'frameMacBrowser' || frame.type === 'frameWindowsBrowser') {
@@ -154,8 +169,13 @@ export function useFrameTool(imageStore, historyStore, editorStore, t) {
         fw = 0
         fh = 0
       }
-      imageStore.frame.headerSize = Math.floor(0.04 * h)
-      imageStore.frame.footerSize = 0
+      if (!updateNewFrame) {
+        imageStore.frame.headerSize = Math.floor(0.04 * h)
+        imageStore.frame.footerSize = 0
+      } else {
+        imageStore.newFrame.headerSize = Math.floor(0.04 * h)
+        imageStore.newFrame.footerSize = 0
+      }
     } else if (
       frame.type === 'framePhoneAndroid' ||
       frame.type === 'framePhoneAndroid2' ||
@@ -164,27 +184,48 @@ export function useFrameTool(imageStore, historyStore, editorStore, t) {
     ) {
       fw = Math.floor((1 / 100) * Math.max(w, h))
       fh = fw
-      imageStore.frame.headerSize = 0
-      imageStore.frame.footerSize = 0
+      if (!updateNewFrame) {
+        imageStore.frame.headerSize = 0
+        imageStore.frame.footerSize = 0
+      } else {
+        imageStore.newFrame.headerSize = 0
+        imageStore.newFrame.footerSize = 0
+      }
     } else if (frame.type === 'frameWindowsTaskBar') {
       if (!frame.outlineEnabled) {
         fw = 0
         fh = 0
       }
-      imageStore.frame.footerSize = Math.floor(0.04 * h)
-      imageStore.frame.headerSize = 0
+      if (!updateNewFrame) {
+        imageStore.frame.footerSize = Math.floor(0.04 * h)
+        imageStore.frame.headerSize = 0
+      } else {
+        imageStore.newFrame.footerSize = Math.floor(0.04 * h)
+        imageStore.newFrame.headerSize = 0
+      }
     } else {
-      imageStore.frame.headerSize = 0
-      imageStore.frame.footerSize = 0
+      if (!updateNewFrame) {
+        imageStore.frame.headerSize = 0
+        imageStore.frame.footerSize = 0
+      } else {
+        imageStore.newFrame.headerSize = 0
+        imageStore.newFrame.footerSize = 0
+      }
     }
 
-    imageStore.frame.width = fw
-    imageStore.frame.height = fh
+    if (!updateNewFrame) {
+      imageStore.frame.width = fw
+      imageStore.frame.height = fh
+    } else {
+      imageStore.newFrame.width = fw
+      imageStore.newFrame.height = fh
+    }
 
     const header = frame.headerSize
     const footer = frame.footerSize
     const svgWidth = w + fw * 2
     const svgHeight = h + fh * 2 + (header > 0 ? header - fh : 0) + (footer > 0 ? footer - fh : 0)
+    const phoneCornerRadius = Math.floor(Math.min(svgWidth, svgHeight) * 0.06)
 
     el.setAttribute('width', svgWidth)
     el.setAttribute('height', svgHeight)
@@ -229,6 +270,15 @@ export function useFrameTool(imageStore, historyStore, editorStore, t) {
       const volumeButtonX = 0
       const volumeUpY = svgHeight * 0.22
       const volumeDownY = volumeUpY + volumeButtonHeight + fw * 0.5
+
+      if (volumeButtonHeight + fw * 0.5 + volumeUpY + 50 + phoneCornerRadius > svgHeight) {
+        showToastModal(
+          'warning',
+          t('tools.frame.settings.general.phoneButtonsCanNotBeDrawn.title'),
+          t('tools.frame.settings.general.phoneButtonsCanNotBeDrawn.message'),
+        )
+        return
+      }
 
       el.appendChild(
         drawSideButton(
@@ -395,7 +445,7 @@ export function useFrameTool(imageStore, historyStore, editorStore, t) {
       outline.setAttribute('stroke-width', fw)
 
       // Dimensions and offsets
-      const outerRadius = Math.floor(Math.min(svgWidth, svgHeight) * 0.06)
+      const outerRadius = phoneCornerRadius
       const r = outerRadius
       const offset = fw
       const left = offset
@@ -421,7 +471,7 @@ export function useFrameTool(imageStore, historyStore, editorStore, t) {
       el.appendChild(outline)
 
       // Dynamic island
-      const notchWidth = Math.max(Math.floor(svgWidth * 0.22), 150)
+      const notchWidth = Math.floor(svgWidth * 0.22)
       const notchHeight = Math.floor(svgHeight * 0.035)
       const notchRadius = Math.floor(notchHeight * 0.45)
       const notchMarginTop = Math.floor(svgHeight * 0.015)
@@ -453,7 +503,7 @@ export function useFrameTool(imageStore, historyStore, editorStore, t) {
       outline.setAttribute('stroke-width', fw)
 
       // Dimensions and offsets
-      const outerRadius = Math.floor(Math.min(svgWidth, svgHeight) * 0.06)
+      const outerRadius = phoneCornerRadius
       const r = outerRadius
       const offset = fw
       const left = offset
@@ -479,7 +529,7 @@ export function useFrameTool(imageStore, historyStore, editorStore, t) {
       el.appendChild(outline)
 
       // Notch with rounded bottom corners and top arcs
-      const notchWidth = Math.max(Math.floor(svgWidth * 0.26), 150)
+      const notchWidth = Math.floor(svgWidth * 0.26)
       const notchHeight = Math.floor(svgHeight * 0.04)
       const notchRadius = notchHeight / 2
 
@@ -546,7 +596,7 @@ export function useFrameTool(imageStore, historyStore, editorStore, t) {
       outline.setAttribute('stroke-width', fw)
 
       // Dimensions and offsets
-      const outerRadius = Math.floor(Math.min(svgWidth, svgHeight) * 0.06)
+      const outerRadius = phoneCornerRadius
       const r = outerRadius
       // const offset = fw / 2
       const offset = fw
@@ -592,7 +642,7 @@ export function useFrameTool(imageStore, historyStore, editorStore, t) {
       outline.setAttribute('stroke-width', fw)
 
       // Dimensions and offsets
-      const outerRadius = Math.floor(Math.min(svgWidth, svgHeight) * 0.06)
+      const outerRadius = phoneCornerRadius
       const r = outerRadius
       const offset = fw
       const left = offset
@@ -746,5 +796,7 @@ export function useFrameTool(imageStore, historyStore, editorStore, t) {
     frameOptions,
     handleFrameChange,
     drawOutline,
+    setFrameColor,
+    setFrameOutline,
   }
 }

@@ -26,7 +26,7 @@ const props = defineProps({
   },
 })
 
-const emit = defineEmits(['update:modelValue'])
+const emit = defineEmits(['update:modelValue', 'update'])
 
 const { isActive, toggleSwitch } = useToggleButton(props, emit)
 </script>

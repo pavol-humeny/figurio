@@ -2,6 +2,8 @@ import { ref, onMounted, nextTick, computed, watch } from 'vue'
 import { useExportToolSettings } from '@/composables/toolsSettings/useExportToolSettings'
 import { useImageStore } from '@/stores/imageStore'
 import { useI18n } from 'vue-i18n'
+import { useEditorStore } from '@/stores/editorStore'
+import { useHistoryStore } from '@/stores/historyStore'
 
 export function useToolsPanel(editorStore, imageStore) {
   const toolsRef = ref(null)
@@ -14,7 +16,12 @@ export function useToolsPanel(editorStore, imageStore) {
 
   const { t } = useI18n()
 
-  const { openExportToolSettings } = useExportToolSettings(useImageStore(), t)
+  const { openExportToolSettings } = useExportToolSettings(
+    useImageStore(),
+    useEditorStore(),
+    useHistoryStore(),
+    t,
+  )
 
   const scrollUp = () => {
     toolsRef.value?.scrollBy({ top: -100, behavior: 'smooth' })

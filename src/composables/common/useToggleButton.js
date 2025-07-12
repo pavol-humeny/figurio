@@ -7,6 +7,7 @@ export function useToggleButton(props, emit) {
     if (props.disabled) return
     isActive.value = !isActive.value
     emit('update:modelValue', isActive.value)
+    emit('update', isActive.value)
   }
 
   watch(
