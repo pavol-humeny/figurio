@@ -77,7 +77,8 @@ export function useExportToolSettings(imageStore, editorStore, historyStore, t) 
     isVisible.value = true
 
     if (imageStore.frame?.enabled) {
-      imageStore.newFileDimensions.width = imageStore.fileDimensions.width + imageStore.frame.width * 2
+      imageStore.newFileDimensions.width =
+        imageStore.fileDimensions.width + imageStore.frame.width * 2
       if (imageStore.frame.headerSize > 0) {
         imageStore.newFileDimensions.height =
           imageStore.fileDimensions.height + imageStore.frame.height + imageStore.frame.headerSize
@@ -85,7 +86,8 @@ export function useExportToolSettings(imageStore, editorStore, historyStore, t) 
         imageStore.newFileDimensions.height =
           imageStore.fileDimensions.height + imageStore.frame.height + imageStore.frame.footerSize
       } else {
-        imageStore.newFileDimensions.height = imageStore.fileDimensions.height + imageStore.frame.height * 2
+        imageStore.newFileDimensions.height =
+          imageStore.fileDimensions.height + imageStore.frame.height * 2
       }
     } else {
       imageStore.newFileDimensions = { ...imageStore.fileDimensions }
@@ -105,13 +107,15 @@ export function useExportToolSettings(imageStore, editorStore, historyStore, t) 
     isVisible.value = false
   }
 
-  const resetFileDimensions = () => {
+  const resetFileDimensions = async () => {
     imageStore.newFileDimensions = {
       width: imageStore.fileDimensions.width,
       height: imageStore.fileDimensions.height,
       fileAspectRatio: imageStore.fileDimensions.fileAspectRatio,
     }
     isDimensionsLinked.value = true
+
+    await imageStore.generatePreview(editorStore, historyStore, t)
   }
 
   return {

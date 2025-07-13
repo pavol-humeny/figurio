@@ -187,7 +187,7 @@ export function useFrameTool(imageStore, historyStore, editorStore, t) {
       frame.type === 'framePhoneIOS2' ||
       frame.type === 'framePhoneSimple'
     ) {
-      fw = Math.floor((1 / 100) * Math.max(w, h)) * 1.5
+      fw = Math.max(Math.floor((1 / 100) * Math.max(w, h)), 2) * 1.5
       fh = fw / 1.5
       if (!updateNewFrame) {
         imageStore.frame.headerSize = 0
@@ -501,7 +501,8 @@ export function useFrameTool(imageStore, historyStore, editorStore, t) {
       const notchFits =
         notchX >= phoneFrameValues.left &&
         notchX + notchWidth * notchPadding <= phoneFrameValues.right &&
-        notchY + notchHeight * notchPadding <= phoneFrameValues.bottom
+        notchY + notchHeight * notchPadding <= phoneFrameValues.bottom &&
+        notchHeight >= 3
 
       if (notchFits) {
         const notch = document.createElementNS(ns, 'rect')
