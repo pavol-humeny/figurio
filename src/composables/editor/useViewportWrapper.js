@@ -338,7 +338,7 @@ export function useViewportWrapper(viewportStore, imageStore, editorStore, conte
 
   // Center the image when the rendered image changes
   watch(
-    () => imageStore.renderedImage,
+    () => imageStore.getRenderedImage(),
     () => {
       nextTick(() => {
         viewportStore.resetZoom()

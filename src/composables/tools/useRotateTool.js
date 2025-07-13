@@ -34,11 +34,11 @@ export function useRotateTool(imageStore, historyStore, t) {
   }
 
   const applyRotationRender = (angle) => {
-    if (!imageStore.renderedImage || !angle) return
+    if (!imageStore.getRenderedImage() || !angle) return
 
     const radians = (angle * Math.PI) / 180
 
-    const oldCanvas = imageStore.renderedImage
+    const oldCanvas = imageStore.getRenderedImage()
     const oldWidth = oldCanvas.width
     const oldHeight = oldCanvas.height
 
@@ -62,7 +62,7 @@ export function useRotateTool(imageStore, historyStore, t) {
     imageStore.fileDimensions.height = rotatedHeight
     imageStore.fileDimensions.fileAspectRatio = rotatedWidth / rotatedHeight || 1
     imageStore.newFileDimensions = { ...imageStore.fileDimensions }
-    // imageStore.previewUrl = imageStore.renderedImage.toDataURL()
+    // imageStore.previewUrl = imageStore.getRenderedImage().toDataURL()
   }
 
   return {

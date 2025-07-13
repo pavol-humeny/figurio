@@ -18,10 +18,10 @@ export function useFlipTool(imageStore, historyStore) {
   }
 
   const applyFlipRender = (direction) => {
-    if (!imageStore.renderedImage) return
+    if (!imageStore.getRenderedImage()) return
 
-    const width = imageStore.renderedImage.width
-    const height = imageStore.renderedImage.height
+    const width = imageStore.getRenderedImage().width
+    const height = imageStore.getRenderedImage().height
 
     // Flip raster
     const canvas = document.createElement('canvas')
@@ -39,7 +39,7 @@ export function useFlipTool(imageStore, historyStore) {
       ctx.scale(-1, 1)
     }
 
-    ctx.drawImage(imageStore.renderedImage, 0, 0)
+    ctx.drawImage(imageStore.getRenderedImage(), 0, 0)
     ctx.restore()
 
     imageStore.setRenderedImage(canvas)

@@ -504,7 +504,7 @@ export function useCropTool(imageStore, viewportStore, editorStore, historyStore
   }
 
   const applyCropRender = (cropBox) => {
-    if (!imageStore.renderedImage || !cropBox) return
+    if (!imageStore.getRenderedImage() || !cropBox) return
 
     const { x, y, width, height } = cropBox
 
@@ -547,7 +547,7 @@ export function useCropTool(imageStore, viewportStore, editorStore, historyStore
     canvas.height = height
 
     ctx.drawImage(
-      imageStore.renderedImage,
+      imageStore.getRenderedImage(),
       x,
       y,
       width,

@@ -34,11 +34,11 @@ export function useGrayscaleTool(imageStore, historyStore, t) {
   }
 
   const applyGrayscaleRender = () => {
-    if (!imageStore.renderedImage) return
+    if (!imageStore.getRenderedImage()) return
 
     const canvas = document.createElement('canvas')
     const ctx = canvas.getContext('2d')
-    const img = imageStore.renderedImage
+    const img = imageStore.getRenderedImage()
 
     canvas.width = img.width
     canvas.height = img.height

@@ -51,8 +51,10 @@ export const useImageStore = defineStore('imageStore', {
 
     // Value for raster image rendering
     renderedImage: null, // UndoRedo
+    tmpRenderedImage: null, // Temporary value for saving canvas if frame with rounded corners is applied
+
     newRenderedImage: null, // Used for rasterizing SVG objects before export
-    // tmpRenderedImage: null, // Temporary value for saving changes before applying crop in frame tool
+
     // Value for SVG rendering
     svgObjects: [], // UndoRedo
     // svgObjects: [
@@ -116,13 +118,35 @@ export const useImageStore = defineStore('imageStore', {
   },
   actions: {
     // Setters
-    setRenderedImage(image) {
+    setRenderedImage(image, onlyOriginal = false) {
       this.renderedImage = image
+      if (!onlyOriginal) {
+        this.tmpRenderedImage = image
+      }
+    },
+
+    // Getters
+    getRenderedImage(renderCall = false) {
+      if (renderCall) {
+        if (
+          this.frame.enabled &&
+          (this.frame.type === 'framePhoneIOS' ||
+            this.frame.type === 'framePhoneIOS2' ||
+            this.frame.type === 'framePhoneAndroid' ||
+            this.frame.type === 'framePhoneAndroid2')
+        ) {
+          return this.renderedImage
+        } else {
+          return this.tmpRenderedImage
+        }
+      } else {
+        return this.tmpRenderedImage
+      }
     },
 
     resetRenderedImageToOriginal() {
       if (this.originalImage) {
-        this.renderedImage = this.originalImage
+        this.setRenderedImage(this.originalImage)
         this.fileDimensions = { ...this.originalFileDimensions }
       }
     },
@@ -265,7 +289,7 @@ export const useImageStore = defineStore('imageStore', {
       }
 
       this.originalImage = null
-      this.renderedImage = null
+      this.setRenderedImage(null)
 
       this.svgObjects = []
       this.selectedSvgObjectId = null
@@ -309,7 +333,7 @@ export const useImageStore = defineStore('imageStore', {
             const ctx = canvas.getContext('2d')
             ctx.drawImage(img, 0, 0)
 
-            this.renderedImage = canvas
+            this.setRenderedImage(canvas)
             this.originalImage = canvas
             this.previewUrl = canvas.toDataURL() // Fallback for export
           }
@@ -384,7 +408,7 @@ export const useImageStore = defineStore('imageStore', {
     },
 
     async exportFile(editorStore, historyStore, t) {
-      if (!this.renderedImage) return false
+      if (!this.getRenderedImage(true)) return false
 
       console.log('Exporting file...')
 
@@ -455,7 +479,7 @@ export const useImageStore = defineStore('imageStore', {
     },
 
     async rasterize(width = null, height = null, storeAsNew = false) {
-      if (!this.renderedImage || this.svgObjects.length === 0) return
+      if (!this.getRenderedImage(true) || this.svgObjects.length === 0) return
 
       console.log('Rasterizing image with SVG objects...')
 
@@ -488,7 +512,7 @@ export const useImageStore = defineStore('imageStore', {
       const ctx = canvas.getContext('2d')
 
       // Draw base image, scaled if necessary
-      ctx.drawImage(this.renderedImage, 0, 0, usedWidth, usedHeight)
+      ctx.drawImage(this.getRenderedImage(true), 0, 0, usedWidth, usedHeight)
 
       // Draw SVG overlay on top of the image
       await new Promise((resolve, reject) => {
@@ -509,7 +533,7 @@ export const useImageStore = defineStore('imageStore', {
       if (storeAsNew) {
         this.newRenderedImage = canvas
       } else {
-        this.renderedImage = canvas
+        this.setRenderedImage(canvas)
 
         // Clear svg values
         this.svgObjects = []
@@ -528,7 +552,7 @@ export const useImageStore = defineStore('imageStore', {
       // Rasterize base image + SVG objects at export size
       await this.rasterize(targetWidth, targetHeight, true)
 
-      const baseImage = this.newRenderedImage || this.renderedImage
+      const baseImage = this.newRenderedImage || this.getRenderedImage(true)
       if (!baseImage) {
         console.warn('No base image available for preview generation')
         return
@@ -612,7 +636,7 @@ export const useImageStore = defineStore('imageStore', {
         fileDimensions: JSON.parse(JSON.stringify(this.fileDimensions)),
         // originalFileDimensions: JSON.parse(JSON.stringify(this.originalFileDimensions)),
         previewUrl: this.previewUrl,
-        renderedImage: this.renderedImage?.toDataURL() || null,
+        renderedImage: this.getRenderedImage(true)?.toDataURL() || null,
         // originalImage: this.originalImage?.toDataURL() || null,
         svgObjects: JSON.parse(JSON.stringify(this.svgObjects)),
         imageOperations: JSON.parse(JSON.stringify(this.imageOperations)),
@@ -642,11 +666,11 @@ export const useImageStore = defineStore('imageStore', {
           canvas.height = img.height
           const ctx = canvas.getContext('2d')
           ctx.drawImage(img, 0, 0)
-          this.renderedImage = canvas
+          this.setRenderedImage(canvas)
         }
         img.src = snapshot.renderedImage
       } else {
-        this.renderedImage = null
+        this.setRenderedImage(null)
       }
 
       // if (snapshot.originalImage) {

@@ -60,7 +60,7 @@ export function useSmartCropTool(imageStore, historyStore, editorStore, t) {
   }
 
   watch(
-    () => imageStore.renderedImage,
+    () => imageStore.getRenderedImage(),
     () => {
       resetCropBox()
     },
@@ -185,11 +185,11 @@ export function useSmartCropTool(imageStore, historyStore, editorStore, t) {
   }
 
   const calculateIndents = (color) => {
-    if (!imageStore.renderedImage) return
+    if (!imageStore.getRenderedImage()) return
 
     const canvas = document.createElement('canvas')
     const ctx = canvas.getContext('2d')
-    const img = imageStore.renderedImage
+    const img = imageStore.getRenderedImage()
 
     const width = img.width
     const height = img.height
@@ -306,7 +306,7 @@ export function useSmartCropTool(imageStore, historyStore, editorStore, t) {
   }
 
   const applyCrop = async (cropBox) => {
-    if (!imageStore.renderedImage) return
+    if (!imageStore.getRenderedImage()) return
 
     if (
       cropBox.width === imageStore.fileDimensions.width &&
@@ -347,7 +347,7 @@ export function useSmartCropTool(imageStore, historyStore, editorStore, t) {
     canvas.height = height
 
     ctx.drawImage(
-      imageStore.renderedImage,
+      imageStore.getRenderedImage(),
       leftIndent, // x
       topIndent, // y
       width,

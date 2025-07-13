@@ -72,7 +72,7 @@ export function useImageRenderer(
   }
 
   const renderCanvas = () => {
-    if (!canvasRef.value || !imageStore.renderedImage || imageStore.fileType === 'pdf') return
+    if (!canvasRef.value || !imageStore.getRenderedImage() || imageStore.fileType === 'pdf') return
 
     console.log('Rendering canvas (image only)...')
 
@@ -86,7 +86,7 @@ export function useImageRenderer(
     canvasRef.value.style.height = `${height}px`
 
     ctx.clearRect(0, 0, width, height)
-    ctx.drawImage(imageStore.renderedImage, 0, 0)
+    ctx.drawImage(imageStore.getRenderedImage(true), 0, 0)
 
     if (historyStore.history.length === 0) {
       historyStore.push(imageStore.getSnapshot())
@@ -151,7 +151,7 @@ export function useImageRenderer(
 
       const radius = Math.floor(Math.min(svgWidth, svgHeight) * 0.06) // 6% of the smaller dimension
 
-      const renderedImage = imageStore.renderedImage
+      const renderedImage = imageStore.getRenderedImage()
       if (!renderedImage) return
 
       const w = renderedImage.width
@@ -183,7 +183,7 @@ export function useImageRenderer(
       ctx.restore()
 
       skipNextRenderAll.value = true
-      imageStore.setRenderedImage(canvas)
+      imageStore.setRenderedImage(canvas, true) // Set only original image, not tmpRenderedImage
       imageStore.previewUrl = canvas.toDataURL()
 
       console.log(`Rounded corners with radius ${radius}px`)
@@ -206,15 +206,15 @@ export function useImageRenderer(
 
   onMounted(() => {
     nextTick(() => {
-      if (imageStore.renderedImage) {
+      if (imageStore.getRenderedImage()) {
         renderAll()
       }
     })
   })
 
-  // watch on imageStore.renderedImage
+  // watch on imageStore.getRenderedImage()
   watch(
-    () => imageStore.renderedImage,
+    () => imageStore.getRenderedImage(),
     (newImage) => {
       if (newImage) {
         if (skipNextRenderAll.value) {
