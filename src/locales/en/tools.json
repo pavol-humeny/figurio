@@ -234,6 +234,7 @@
           "framePhoneIOS2": "Phone iOS 2",
           "framePhoneAndroid": "Phone Android",
           "framePhoneAndroid2": "Phone Android 2",
+          "framePhoneSimple": "Phone simple",
           "frameWindowsTaskBar": "Windows task bar"
         },
         "useFrameOutline": {

@@ -464,6 +464,10 @@ export function usePresetTool(
       value: 'framePhoneAndroid2',
     },
     {
+      label: t('tools.frame.settings.general.frameVariants.framePhoneSimple'),
+      value: 'framePhoneSimple',
+    },
+    {
       label: t('tools.frame.settings.general.frameVariants.frameWindowsTaskBar'),
       value: 'frameWindowsTaskBar',
     },

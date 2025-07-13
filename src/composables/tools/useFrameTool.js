@@ -50,6 +50,10 @@ export function useFrameTool(imageStore, historyStore, editorStore, t) {
       value: 'framePhoneAndroid2',
     },
     {
+      label: t('tools.frame.settings.general.frameVariants.framePhoneSimple'),
+      value: 'framePhoneSimple',
+    },
+    {
       label: t('tools.frame.settings.general.frameVariants.frameWindowsTaskBar'),
       value: 'frameWindowsTaskBar',
     },
@@ -180,7 +184,8 @@ export function useFrameTool(imageStore, historyStore, editorStore, t) {
       frame.type === 'framePhoneAndroid' ||
       frame.type === 'framePhoneAndroid2' ||
       frame.type === 'framePhoneIOS' ||
-      frame.type === 'framePhoneIOS2'
+      frame.type === 'framePhoneIOS2' ||
+      frame.type === 'framePhoneSimple'
     ) {
       fw = Math.floor((1 / 100) * Math.max(w, h)) * 1.5
       fh = fw / 1.5
@@ -700,6 +705,31 @@ export function useFrameTool(imageStore, historyStore, editorStore, t) {
 
       // Volume and power buttons
       drawVolumeAndPowerButtons()
+    } else if (frame.type === 'framePhoneSimple') {
+      const outline = document.createElementNS(ns, 'path')
+      outline.setAttribute('fill', 'none')
+      outline.setAttribute('stroke', color)
+      outline.setAttribute('stroke-width', phoneFrameValues.strokeWidth)
+
+      // Outline
+      const d = [
+        `M ${phoneFrameValues.left + phoneFrameValues.radius} ${phoneFrameValues.top}`,
+        `H ${phoneFrameValues.right - phoneFrameValues.radius}`,
+        `A ${phoneFrameValues.radius} ${phoneFrameValues.radius} 0 0 1 ${phoneFrameValues.right} ${phoneFrameValues.top + phoneFrameValues.radius}`,
+        `V ${phoneFrameValues.bottom - phoneFrameValues.radius}`,
+        `A ${phoneFrameValues.radius} ${phoneFrameValues.radius} 0 0 1 ${phoneFrameValues.right - phoneFrameValues.radius} ${phoneFrameValues.bottom}`,
+        `H ${phoneFrameValues.left + phoneFrameValues.radius}`,
+        `A ${phoneFrameValues.radius} ${phoneFrameValues.radius} 0 0 1 ${phoneFrameValues.left} ${phoneFrameValues.bottom - phoneFrameValues.radius}`,
+        `V ${phoneFrameValues.top + phoneFrameValues.radius}`,
+        `A ${phoneFrameValues.radius} ${phoneFrameValues.radius} 0 0 1 ${phoneFrameValues.left + phoneFrameValues.radius} ${phoneFrameValues.top}`,
+        'Z',
+      ].join(' ')
+
+      outline.setAttribute('d', d)
+      el.appendChild(outline)
+
+      // Volume and power buttons
+      drawVolumeAndPowerButtons()
     } else if (frame.type === 'frameWindowsTaskBar') {
       // Footer bar
       const footerRect = document.createElementNS(ns, 'rect')
@@ -770,7 +800,8 @@ export function useFrameTool(imageStore, historyStore, editorStore, t) {
       imageStore.frame.type === 'framePhoneIOS' ||
       imageStore.frame.type === 'framePhoneIOS2' ||
       imageStore.frame.type === 'framePhoneAndroid' ||
-      imageStore.frame.type === 'framePhoneAndroid2'
+      imageStore.frame.type === 'framePhoneAndroid2' ||
+      imageStore.frame.type === 'framePhoneSimple'
     ) {
       const header = imageStore.frame.headerSize || 0
       const svgWidth = imageStore.fileDimensions.width + imageStore.frame.width * 2

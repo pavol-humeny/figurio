@@ -128,12 +128,14 @@ export const useImageStore = defineStore('imageStore', {
     // Getters
     getRenderedImage(renderCall = false) {
       if (renderCall) {
+        // UPDATE new frame type
         if (
           this.frame.enabled &&
           (this.frame.type === 'framePhoneIOS' ||
             this.frame.type === 'framePhoneIOS2' ||
             this.frame.type === 'framePhoneAndroid' ||
-            this.frame.type === 'framePhoneAndroid2')
+            this.frame.type === 'framePhoneAndroid2' ||
+            this.frame.type === 'framePhoneSimple')
         ) {
           return this.renderedImage
         } else {
