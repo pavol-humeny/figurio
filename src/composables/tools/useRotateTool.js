@@ -57,7 +57,7 @@ export function useRotateTool(imageStore, historyStore, t) {
     tempCtx.rotate(radians)
     tempCtx.drawImage(oldCanvas, -oldWidth / 2, -oldHeight / 2)
 
-    imageStore.renderedImage = canvas
+    imageStore.setRenderedImage(canvas)
     imageStore.fileDimensions.width = rotatedWidth
     imageStore.fileDimensions.height = rotatedHeight
     imageStore.fileDimensions.fileAspectRatio = rotatedWidth / rotatedHeight || 1

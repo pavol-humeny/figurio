@@ -51,7 +51,7 @@ export const useImageStore = defineStore('imageStore', {
 
     // Value for raster image rendering
     renderedImage: null, // UndoRedo
-    newRenderedImage: null,
+    newRenderedImage: null, // Used for rasterizing SVG objects before export
     // tmpRenderedImage: null, // Temporary value for saving changes before applying crop in frame tool
     // Value for SVG rendering
     svgObjects: [], // UndoRedo
@@ -108,7 +108,6 @@ export const useImageStore = defineStore('imageStore', {
       footerSize: 0,
       outlineEnabled: false,
     },
-
   }),
   getters: {
     isImageLoaded: (state) => {
@@ -116,14 +115,11 @@ export const useImageStore = defineStore('imageStore', {
     },
   },
   actions: {
-    // initWatchers() {
-    //   this.$subscribe((mutation, state) => {
-    //     if (mutation.events.some((e) => e.key === 'renderedImage')) {
-    //       this.tmpRenderedImage = state.renderedImage
-    //       console.log('[ImageStore] tmpRenderedImage synchronized with renderedImage')
-    //     }
-    //   })
-    // },
+    // Setters
+    setRenderedImage(image) {
+      this.renderedImage = image
+    },
+
     resetRenderedImageToOriginal() {
       if (this.originalImage) {
         this.renderedImage = this.originalImage
@@ -580,7 +576,10 @@ export const useImageStore = defineStore('imageStore', {
       let offsetY = this.newFrame?.height || offsetX
 
       // UPDATE new frame type
-      if (this.newFrame.type === 'frameMacBrowser' || this.newFrame.type === 'frameWindowsBrowser') {
+      if (
+        this.newFrame.type === 'frameMacBrowser' ||
+        this.newFrame.type === 'frameWindowsBrowser'
+      ) {
         offsetY = this.newFrame.headerSize
       }
 

@@ -359,8 +359,7 @@ export function useSmartCropTool(imageStore, historyStore, editorStore, t) {
     )
 
     // Update rendered image and preview URL
-    imageStore.renderedImage = canvas
-    // imageStore.previewUrl = canvas.toDataURL()
+    imageStore.setRenderedImage(canvas)
 
     // Update file dimensions
     imageStore.fileDimensions.width = width

@@ -559,7 +559,7 @@ export function useCropTool(imageStore, viewportStore, editorStore, historyStore
     )
 
     // Update rendered image and preview URL
-    imageStore.renderedImage = canvas
+    imageStore.setRenderedImage(canvas)
     // imageStore.originalImage = canvas // Update original image for undo/redo
     // imageStore.previewUrl = canvas.toDataURL()
 

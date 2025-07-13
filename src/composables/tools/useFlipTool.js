@@ -42,7 +42,7 @@ export function useFlipTool(imageStore, historyStore) {
     ctx.drawImage(imageStore.renderedImage, 0, 0)
     ctx.restore()
 
-    imageStore.renderedImage = canvas
+    imageStore.setRenderedImage(canvas)
     // imageStore.previewUrl = canvas.toDataURL()
 
     // Flip vector objects

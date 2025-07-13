@@ -57,7 +57,7 @@ export function useGrayscaleTool(imageStore, historyStore, t) {
 
     ctx.putImageData(imageData, 0, 0)
 
-    imageStore.renderedImage = canvas
+    imageStore.setRenderedImage(canvas)
   }
 
   return {

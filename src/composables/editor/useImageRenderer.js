@@ -183,7 +183,7 @@ export function useImageRenderer(
       ctx.restore()
 
       skipNextRenderAll.value = true
-      imageStore.renderedImage = canvas
+      imageStore.setRenderedImage(canvas)
       imageStore.previewUrl = canvas.toDataURL()
 
       console.log(`Rounded corners with radius ${radius}px`)
@@ -221,6 +221,7 @@ export function useImageRenderer(
           skipNextRenderAll.value = false
           return
         }
+        console.log('#################### Image rendered changed, re-rendering all...')
         renderAll()
       }
     },
@@ -231,7 +232,7 @@ export function useImageRenderer(
     () => imageStore.frame,
     (newFrame) => {
       if (newFrame && !renderingFrameSvg.value) {
-        console.log('Frame operations changed, re-rendering frame svg')
+        console.log('#################### Frame operations changed, re-rendering frame svg')
         updateSizes()
         renderFrameSvg()
       }
