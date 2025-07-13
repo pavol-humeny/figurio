@@ -182,8 +182,8 @@ export function useFrameTool(imageStore, historyStore, editorStore, t) {
       frame.type === 'framePhoneIOS' ||
       frame.type === 'framePhoneIOS2'
     ) {
-      fw = Math.floor((1 / 100) * Math.max(w, h))
-      fh = fw
+      fw = Math.floor((1 / 100) * Math.max(w, h)) * 1.5
+      fh = fw / 1.5
       if (!updateNewFrame) {
         imageStore.frame.headerSize = 0
         imageStore.frame.footerSize = 0
@@ -227,6 +227,20 @@ export function useFrameTool(imageStore, historyStore, editorStore, t) {
     const svgHeight = h + fh * 2 + (header > 0 ? header - fh : 0) + (footer > 0 ? footer - fh : 0)
     const phoneCornerRadius = Math.floor(Math.min(svgWidth, svgHeight) * 0.06)
 
+    // Values for phone frames
+    const strokeWidth = (fw / 3) * 2 // 2/3 of frame width
+    const offset = strokeWidth / 2
+
+    const phoneFrameValues = {
+      strokeWidth,
+      radius: phoneCornerRadius,
+      offset,
+      left: strokeWidth,
+      top: offset,
+      right: svgWidth - strokeWidth,
+      bottom: svgHeight - offset,
+    }
+
     el.setAttribute('width', svgWidth)
     el.setAttribute('height', svgHeight)
     el.style.left = `-${fw}px`
@@ -264,14 +278,14 @@ export function useFrameTool(imageStore, historyStore, editorStore, t) {
 
     const drawVolumeAndPowerButtons = () => {
       // Volume buttons (left side)
-      const volumeButtonWidth = fw / 2
-      const volumeButtonHeight = fw * 7
+      const volumeButtonWidth = fw / 3 // 1/3 of frame width
+      const volumeButtonHeight = volumeButtonWidth * 25
       const volumeButtonRadius = volumeButtonWidth
       const volumeButtonX = 0
       const volumeUpY = svgHeight * 0.22
-      const volumeDownY = volumeUpY + volumeButtonHeight + fw * 0.5
+      const volumeDownY = volumeUpY + volumeButtonHeight + volumeButtonWidth * 3
 
-      if (volumeButtonHeight + fw * 0.5 + volumeUpY + 50 + phoneCornerRadius > svgHeight) {
+      if (volumeDownY + volumeButtonHeight + 50 + phoneCornerRadius > svgHeight) {
         showToastModal(
           'warning',
           t('tools.frame.settings.general.phoneButtonsCanNotBeDrawn.title'),
@@ -303,8 +317,8 @@ export function useFrameTool(imageStore, historyStore, editorStore, t) {
       )
 
       // Power button (right side)
-      const powerButtonWidth = fw / 2
-      const powerButtonHeight = fw * 8
+      const powerButtonWidth = fw / 3 // 1/3 of frame width
+      const powerButtonHeight = powerButtonWidth * 17
       const powerButtonRadius = powerButtonWidth
       const powerButtonX = svgWidth - powerButtonWidth
       const powerButtonY = svgHeight * 0.35
@@ -442,28 +456,19 @@ export function useFrameTool(imageStore, historyStore, editorStore, t) {
       const outline = document.createElementNS(ns, 'path')
       outline.setAttribute('fill', 'none')
       outline.setAttribute('stroke', color)
-      outline.setAttribute('stroke-width', fw)
-
-      // Dimensions and offsets
-      const outerRadius = phoneCornerRadius
-      const r = outerRadius
-      const offset = fw
-      const left = offset
-      const top = offset
-      const right = svgWidth - offset
-      const bottom = svgHeight - offset
+      outline.setAttribute('stroke-width', phoneFrameValues.strokeWidth)
 
       // Outline
       const d = [
-        `M ${left + r} ${top}`,
-        `H ${right - r}`,
-        `A ${r} ${r} 0 0 1 ${right} ${top + r}`,
-        `V ${bottom - r}`,
-        `A ${r} ${r} 0 0 1 ${right - r} ${bottom}`,
-        `H ${left + r}`,
-        `A ${r} ${r} 0 0 1 ${left} ${bottom - r}`,
-        `V ${top + r}`,
-        `A ${r} ${r} 0 0 1 ${left + r} ${top}`,
+        `M ${phoneFrameValues.left + phoneFrameValues.radius} ${phoneFrameValues.top}`,
+        `H ${phoneFrameValues.right - phoneFrameValues.radius}`,
+        `A ${phoneFrameValues.radius} ${phoneFrameValues.radius} 0 0 1 ${phoneFrameValues.right} ${phoneFrameValues.top + phoneFrameValues.radius}`,
+        `V ${phoneFrameValues.bottom - phoneFrameValues.radius}`,
+        `A ${phoneFrameValues.radius} ${phoneFrameValues.radius} 0 0 1 ${phoneFrameValues.right - phoneFrameValues.radius} ${phoneFrameValues.bottom}`,
+        `H ${phoneFrameValues.left + phoneFrameValues.radius}`,
+        `A ${phoneFrameValues.radius} ${phoneFrameValues.radius} 0 0 1 ${phoneFrameValues.left} ${phoneFrameValues.bottom - phoneFrameValues.radius}`,
+        `V ${phoneFrameValues.top + phoneFrameValues.radius}`,
+        `A ${phoneFrameValues.radius} ${phoneFrameValues.radius} 0 0 1 ${phoneFrameValues.left + phoneFrameValues.radius} ${phoneFrameValues.top}`,
         'Z',
       ].join(' ')
 
@@ -478,7 +483,7 @@ export function useFrameTool(imageStore, historyStore, editorStore, t) {
 
       const notch = document.createElementNS(ns, 'rect')
       notch.setAttribute('x', svgWidth / 2 - notchWidth / 2)
-      notch.setAttribute('y', top + notchMarginTop)
+      notch.setAttribute('y', phoneFrameValues.top + notchMarginTop)
       notch.setAttribute('width', notchWidth)
       notch.setAttribute('height', notchHeight)
       notch.setAttribute('rx', notchRadius)
@@ -489,7 +494,7 @@ export function useFrameTool(imageStore, historyStore, editorStore, t) {
       // Camera
       const camera = document.createElementNS(ns, 'circle')
       camera.setAttribute('cx', svgWidth / 2 + notchWidth * 0.2)
-      camera.setAttribute('cy', top + notchMarginTop + notchHeight / 2)
+      camera.setAttribute('cy', phoneFrameValues.top + notchMarginTop + notchHeight / 2)
       camera.setAttribute('r', notchHeight * 0.15)
       camera.setAttribute('fill', contrastColor)
       el.appendChild(camera)
@@ -500,28 +505,21 @@ export function useFrameTool(imageStore, historyStore, editorStore, t) {
       const outline = document.createElementNS(ns, 'path')
       outline.setAttribute('fill', 'none')
       outline.setAttribute('stroke', color)
-      outline.setAttribute('stroke-width', fw)
+      outline.setAttribute('stroke-width', phoneFrameValues.strokeWidth)
 
       // Dimensions and offsets
-      const outerRadius = phoneCornerRadius
-      const r = outerRadius
-      const offset = fw
-      const left = offset
-      const top = offset
-      const right = svgWidth - offset
-      const bottom = svgHeight - offset
 
       // Outline
       const d = [
-        `M ${left + r} ${top}`,
-        `H ${right - r}`,
-        `A ${r} ${r} 0 0 1 ${right} ${top + r}`,
-        `V ${bottom - r}`,
-        `A ${r} ${r} 0 0 1 ${right - r} ${bottom}`,
-        `H ${left + r}`,
-        `A ${r} ${r} 0 0 1 ${left} ${bottom - r}`,
-        `V ${top + r}`,
-        `A ${r} ${r} 0 0 1 ${left + r} ${top}`,
+        `M ${phoneFrameValues.left + phoneFrameValues.radius} ${phoneFrameValues.top}`,
+        `H ${phoneFrameValues.right - phoneFrameValues.radius}`,
+        `A ${phoneFrameValues.radius} ${phoneFrameValues.radius} 0 0 1 ${phoneFrameValues.right} ${phoneFrameValues.top + phoneFrameValues.radius}`,
+        `V ${phoneFrameValues.bottom - phoneFrameValues.radius}`,
+        `A ${phoneFrameValues.radius} ${phoneFrameValues.radius} 0 0 1 ${phoneFrameValues.right - phoneFrameValues.radius} ${phoneFrameValues.bottom}`,
+        `H ${phoneFrameValues.left + phoneFrameValues.radius}`,
+        `A ${phoneFrameValues.radius} ${phoneFrameValues.radius} 0 0 1 ${phoneFrameValues.left} ${phoneFrameValues.bottom - phoneFrameValues.radius}`,
+        `V ${phoneFrameValues.top + phoneFrameValues.radius}`,
+        `A ${phoneFrameValues.radius} ${phoneFrameValues.radius} 0 0 1 ${phoneFrameValues.left + phoneFrameValues.radius} ${phoneFrameValues.top}`,
         'Z',
       ].join(' ')
 
@@ -536,7 +534,7 @@ export function useFrameTool(imageStore, historyStore, editorStore, t) {
       const nw = notchWidth
       const nh = notchHeight
       const nx = svgWidth / 2 - nw / 2
-      const ny = top + fh / 2 - 1
+      const ny = phoneFrameValues.top + fh / 2 - 1
       const r2 = notchRadius
       const arcR = nh * 0.4
 
@@ -593,29 +591,19 @@ export function useFrameTool(imageStore, historyStore, editorStore, t) {
       const outline = document.createElementNS(ns, 'path')
       outline.setAttribute('fill', 'none')
       outline.setAttribute('stroke', color)
-      outline.setAttribute('stroke-width', fw)
-
-      // Dimensions and offsets
-      const outerRadius = phoneCornerRadius
-      const r = outerRadius
-      // const offset = fw / 2
-      const offset = fw
-      const left = offset
-      const top = offset
-      const right = svgWidth - offset
-      const bottom = svgHeight - offset
+      outline.setAttribute('stroke-width', phoneFrameValues.strokeWidth)
 
       // Outline
       const d = [
-        `M ${left + r} ${top}`,
-        `H ${right - r}`,
-        `A ${r} ${r} 0 0 1 ${right} ${top + r}`,
-        `V ${bottom - r}`,
-        `A ${r} ${r} 0 0 1 ${right - r} ${bottom}`,
-        `H ${left + r}`,
-        `A ${r} ${r} 0 0 1 ${left} ${bottom - r}`,
-        `V ${top + r}`,
-        `A ${r} ${r} 0 0 1 ${left + r} ${top}`,
+        `M ${phoneFrameValues.left + phoneFrameValues.radius} ${phoneFrameValues.top}`,
+        `H ${phoneFrameValues.right - phoneFrameValues.radius}`,
+        `A ${phoneFrameValues.radius} ${phoneFrameValues.radius} 0 0 1 ${phoneFrameValues.right} ${phoneFrameValues.top + phoneFrameValues.radius}`,
+        `V ${phoneFrameValues.bottom - phoneFrameValues.radius}`,
+        `A ${phoneFrameValues.radius} ${phoneFrameValues.radius} 0 0 1 ${phoneFrameValues.right - phoneFrameValues.radius} ${phoneFrameValues.bottom}`,
+        `H ${phoneFrameValues.left + phoneFrameValues.radius}`,
+        `A ${phoneFrameValues.radius} ${phoneFrameValues.radius} 0 0 1 ${phoneFrameValues.left} ${phoneFrameValues.bottom - phoneFrameValues.radius}`,
+        `V ${phoneFrameValues.top + phoneFrameValues.radius}`,
+        `A ${phoneFrameValues.radius} ${phoneFrameValues.radius} 0 0 1 ${phoneFrameValues.left + phoneFrameValues.radius} ${phoneFrameValues.top}`,
         'Z',
       ].join(' ')
 
@@ -628,7 +616,7 @@ export function useFrameTool(imageStore, historyStore, editorStore, t) {
       const cameraOffset = Math.floor(svgHeight * 0.03)
 
       camera.setAttribute('cx', svgWidth / 2)
-      camera.setAttribute('cy', top + cameraOffset)
+      camera.setAttribute('cy', phoneFrameValues.top + cameraOffset)
       camera.setAttribute('r', cameraRadius)
       camera.setAttribute('fill', color)
       el.appendChild(camera)
@@ -639,28 +627,19 @@ export function useFrameTool(imageStore, historyStore, editorStore, t) {
       const outline = document.createElementNS(ns, 'path')
       outline.setAttribute('fill', 'none')
       outline.setAttribute('stroke', color)
-      outline.setAttribute('stroke-width', fw)
-
-      // Dimensions and offsets
-      const outerRadius = phoneCornerRadius
-      const r = outerRadius
-      const offset = fw
-      const left = offset
-      const top = offset
-      const right = svgWidth - offset
-      const bottom = svgHeight - offset
+      outline.setAttribute('stroke-width', phoneFrameValues.strokeWidth)
 
       // Outline
       const d = [
-        `M ${left + r} ${top}`,
-        `H ${right - r}`,
-        `A ${r} ${r} 0 0 1 ${right} ${top + r}`,
-        `V ${bottom - r}`,
-        `A ${r} ${r} 0 0 1 ${right - r} ${bottom}`,
-        `H ${left + r}`,
-        `A ${r} ${r} 0 0 1 ${left} ${bottom - r}`,
-        `V ${top + r}`,
-        `A ${r} ${r} 0 0 1 ${left + r} ${top}`,
+        `M ${phoneFrameValues.left + phoneFrameValues.radius} ${phoneFrameValues.top}`,
+        `H ${phoneFrameValues.right - phoneFrameValues.radius}`,
+        `A ${phoneFrameValues.radius} ${phoneFrameValues.radius} 0 0 1 ${phoneFrameValues.right} ${phoneFrameValues.top + phoneFrameValues.radius}`,
+        `V ${phoneFrameValues.bottom - phoneFrameValues.radius}`,
+        `A ${phoneFrameValues.radius} ${phoneFrameValues.radius} 0 0 1 ${phoneFrameValues.right - phoneFrameValues.radius} ${phoneFrameValues.bottom}`,
+        `H ${phoneFrameValues.left + phoneFrameValues.radius}`,
+        `A ${phoneFrameValues.radius} ${phoneFrameValues.radius} 0 0 1 ${phoneFrameValues.left} ${phoneFrameValues.bottom - phoneFrameValues.radius}`,
+        `V ${phoneFrameValues.top + phoneFrameValues.radius}`,
+        `A ${phoneFrameValues.radius} ${phoneFrameValues.radius} 0 0 1 ${phoneFrameValues.left + phoneFrameValues.radius} ${phoneFrameValues.top}`,
         'Z',
       ].join(' ')
       outline.setAttribute('d', d)
@@ -672,7 +651,7 @@ export function useFrameTool(imageStore, historyStore, editorStore, t) {
       const arcRadius = 0.5 * dropHeight
 
       const dropCenterX = svgWidth / 2
-      const dropTopY = top + fh / 2 - 1
+      const dropTopY = phoneFrameValues.top + fh / 2 - 1
       const leftDrop = dropCenterX - dropWidth / 2
       const rightDrop = dropCenterX + dropWidth / 2
       const bottomDrop = dropTopY + dropHeight
