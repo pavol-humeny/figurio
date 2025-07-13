@@ -132,7 +132,7 @@ export function useCropTool(imageStore, viewportStore, editorStore, historyStore
     } else if (key === 'height') {
       const clampedHeight = Math.round(clamp(value, 0, maxCropHeight.value))
 
-      if (cropRatio.value !== 0) {
+      if (cropRatio.value !== null) {
         cropBox.value.height = clampedHeight
         cropBox.value.width = Math.round(
           clamp(clampedHeight / cropRatio.value, 0, maxCropWidth.value),
