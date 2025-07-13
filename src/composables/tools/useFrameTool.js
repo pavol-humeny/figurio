@@ -784,6 +784,60 @@ export function useFrameTool(imageStore, historyStore, editorStore, t) {
         })
       }
     }
+
+    // Round corners for phone frames
+    // UPDATE new frame type
+    if (
+      imageStore.frame.type === 'framePhoneIOS' ||
+      imageStore.frame.type === 'framePhoneIOS2' ||
+      imageStore.frame.type === 'framePhoneAndroid' ||
+      imageStore.frame.type === 'framePhoneAndroid2'
+    ) {
+      const header = imageStore.frame.headerSize || 0
+      const svgWidth = imageStore.fileDimensions.width + imageStore.frame.width * 2
+      const svgHeight =
+        imageStore.fileDimensions.height +
+        imageStore.frame.height * 2 +
+        (header > 0 ? header - imageStore.frame.height : 0)
+
+      const radius = Math.floor(Math.min(svgWidth, svgHeight) * 0.06) // 6% of the smaller dimension
+
+      const renderedImage = imageStore.getRenderedImage()
+      if (!renderedImage) return
+
+      const w = renderedImage.width
+      const h = renderedImage.height
+
+      const canvas = document.createElement('canvas')
+      canvas.width = w
+      canvas.height = h
+      const ctx = canvas.getContext('2d')
+
+      const path = new Path2D()
+
+      // Create rounded rectangle path
+      path.moveTo(radius, 0)
+      path.lineTo(w - radius, 0)
+      path.quadraticCurveTo(w, 0, w, radius)
+      path.lineTo(w, h - radius)
+      path.quadraticCurveTo(w, h, w - radius, h)
+      path.lineTo(radius, h)
+      path.quadraticCurveTo(0, h, 0, h - radius)
+      path.lineTo(0, radius)
+      path.quadraticCurveTo(0, 0, radius, 0)
+      path.closePath()
+
+      // Round corners by clipping
+      ctx.save()
+      ctx.clip(path)
+      ctx.drawImage(renderedImage, 0, 0)
+      ctx.restore()
+
+      imageStore.setRenderedImage(canvas, true) // Set only original image, not tmpRenderedImage
+      imageStore.previewUrl = canvas.toDataURL()
+
+      console.log(`--------------Rounding corners ${radius}px`)
+    }
   }
 
   return {
