@@ -98,6 +98,8 @@ export const useImageStore = defineStore('imageStore', {
       outlineEnabled: false, // Whether to draw an outline around the frame
     },
 
+    phoneButtonsCanNotBeDrawnToastFlag: false,
+
     newFrameSvg: '', // Raw SVG frame for vector export
 
     newFrame: {

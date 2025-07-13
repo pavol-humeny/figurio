@@ -81,6 +81,7 @@ export function useFrameTool(imageStore, historyStore, editorStore, t) {
     if (newType !== 'frameSolid') {
       frameWidth.value = 0
     }
+    imageStore.phoneButtonsCanNotBeDrawnToastFlag = false // Reset flag when changing frame type
   })
 
   // drawOutline
@@ -291,11 +292,14 @@ export function useFrameTool(imageStore, historyStore, editorStore, t) {
       const volumeDownY = volumeUpY + volumeButtonHeight + volumeButtonWidth * 3
 
       if (volumeDownY + volumeButtonHeight + 50 + phoneCornerRadius > svgHeight) {
-        showToastModal(
-          'warning',
-          t('tools.frame.settings.general.phoneButtonsCanNotBeDrawn.title'),
-          t('tools.frame.settings.general.phoneButtonsCanNotBeDrawn.message'),
-        )
+        if (!imageStore.phoneButtonsCanNotBeDrawnToastFlag) {
+          showToastModal(
+            'warning',
+            t('tools.frame.settings.general.phoneButtonsCanNotBeDrawn.title'),
+            t('tools.frame.settings.general.phoneButtonsCanNotBeDrawn.message'),
+          )
+          imageStore.phoneButtonsCanNotBeDrawnToastFlag = true
+        }
         return
       }
 
