@@ -174,10 +174,10 @@ export function useFrameTool(imageStore, historyStore, editorStore, t) {
         fh = 0
       }
       if (!updateNewFrame) {
-        imageStore.frame.headerSize = Math.floor(0.04 * h)
+        imageStore.frame.headerSize = Math.max(Math.floor(0.04 * h), 5)
         imageStore.frame.footerSize = 0
       } else {
-        imageStore.newFrame.headerSize = Math.floor(0.04 * h)
+        imageStore.newFrame.headerSize = Math.max(Math.floor(0.04 * h), 5)
         imageStore.newFrame.footerSize = 0
       }
     } else if (
@@ -202,10 +202,10 @@ export function useFrameTool(imageStore, historyStore, editorStore, t) {
         fh = 0
       }
       if (!updateNewFrame) {
-        imageStore.frame.footerSize = Math.floor(0.04 * h)
+        imageStore.frame.footerSize = Math.max(Math.floor(0.04 * h), 5)
         imageStore.frame.headerSize = 0
       } else {
-        imageStore.newFrame.footerSize = Math.floor(0.04 * h)
+        imageStore.newFrame.footerSize = Math.max(Math.floor(0.04 * h), 5)
         imageStore.newFrame.headerSize = 0
       }
     } else {
@@ -502,7 +502,7 @@ export function useFrameTool(imageStore, historyStore, editorStore, t) {
         notchX >= phoneFrameValues.left &&
         notchX + notchWidth * notchPadding <= phoneFrameValues.right &&
         notchY + notchHeight * notchPadding <= phoneFrameValues.bottom &&
-        notchHeight >= 3
+        notchHeight >= 5
 
       if (notchFits) {
         const notch = document.createElementNS(ns, 'rect')
@@ -575,7 +575,8 @@ export function useFrameTool(imageStore, historyStore, editorStore, t) {
       const notchFits =
         nx >= phoneFrameValues.left &&
         nx + nw * notchPadding <= phoneFrameValues.right &&
-        ny + nh * notchPadding <= phoneFrameValues.bottom
+        ny + nh * notchPadding <= phoneFrameValues.bottom &&
+        notchHeight >= 5
 
       // Render notch only if it fits
       if (notchFits) {
@@ -706,7 +707,8 @@ export function useFrameTool(imageStore, historyStore, editorStore, t) {
       const dropFits =
         leftDrop >= phoneFrameValues.left &&
         rightDrop <= phoneFrameValues.right &&
-        bottomDrop * notchPadding <= phoneFrameValues.bottom
+        bottomDrop * notchPadding <= phoneFrameValues.bottom &&
+        dropHeight >= 5
 
       if (dropFits) {
         // === Drop notch path ===
@@ -789,15 +791,19 @@ export function useFrameTool(imageStore, historyStore, editorStore, t) {
         { x: logoStartX + logoSize + logoSpacing, y: logoStartY + logoSize + logoSpacing },
       ]
 
-      logoRects.forEach((pos) => {
-        const rect = document.createElementNS(ns, 'rect')
-        rect.setAttribute('x', pos.x)
-        rect.setAttribute('y', pos.y)
-        rect.setAttribute('width', logoSize)
-        rect.setAttribute('height', logoSize)
-        rect.setAttribute('fill', contrastColor)
-        el.appendChild(rect)
-      })
+      const logoFits = logoSize + logoStartX * 2 <= svgWidth
+
+      if (logoFits) {
+        logoRects.forEach((pos) => {
+          const rect = document.createElementNS(ns, 'rect')
+          rect.setAttribute('x', pos.x)
+          rect.setAttribute('y', pos.y)
+          rect.setAttribute('width', logoSize)
+          rect.setAttribute('height', logoSize)
+          rect.setAttribute('fill', contrastColor)
+          el.appendChild(rect)
+        })
+      }
 
       // Search bar (vedľa loga)
       const searchX = logoStartX + (logoSize + logoSpacing) * 2 + logoSize * 2
@@ -805,14 +811,18 @@ export function useFrameTool(imageStore, historyStore, editorStore, t) {
       const searchWidth = searchHeight * 12
       const searchY = svgHeight - footer / 2 - searchHeight / 2
 
-      const searchBar = document.createElementNS(ns, 'rect')
-      searchBar.setAttribute('x', searchX)
-      searchBar.setAttribute('y', searchY)
-      searchBar.setAttribute('width', searchWidth)
-      searchBar.setAttribute('height', searchHeight)
-      searchBar.setAttribute('rx', footer * 0.1)
-      searchBar.setAttribute('fill', '#ffffff33') // semi-transparent white
-      el.appendChild(searchBar)
+      const searchFits = searchWidth + searchX + logoSize <= svgWidth
+
+      if (searchFits) {
+        const searchBar = document.createElementNS(ns, 'rect')
+        searchBar.setAttribute('x', searchX)
+        searchBar.setAttribute('y', searchY)
+        searchBar.setAttribute('width', searchWidth)
+        searchBar.setAttribute('height', searchHeight)
+        searchBar.setAttribute('rx', footer * 0.1)
+        searchBar.setAttribute('fill', '#ffffff33') // semi-transparent white
+        el.appendChild(searchBar)
+      }
 
       // Outline
       if (frame.outlineEnabled) {
