@@ -547,6 +547,7 @@ export const useImageStore = defineStore('imageStore', {
 
     async generatePreview(editorStore, historyStore, t, renderAsRaster = true) {
       console.log('Generating preview with frame...')
+      this.phoneButtonsCanNotBeDrawnToastFlag = true // Set flag to prevent toast showing
 
       this.newFrame = { ...this.frame }
 
