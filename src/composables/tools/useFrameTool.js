@@ -303,7 +303,7 @@ export function useFrameTool(imageStore, historyStore, editorStore, t) {
         drawSideButton(
           volumeButtonX,
           volumeUpY,
-          volumeButtonWidth,
+          volumeButtonWidth + fh * 0.3,
           volumeButtonHeight,
           volumeButtonRadius,
           'left',
@@ -314,7 +314,7 @@ export function useFrameTool(imageStore, historyStore, editorStore, t) {
         drawSideButton(
           volumeButtonX,
           volumeDownY,
-          volumeButtonWidth,
+          volumeButtonWidth + fh * 0.3,
           volumeButtonHeight,
           volumeButtonRadius,
           'left',
@@ -330,9 +330,9 @@ export function useFrameTool(imageStore, historyStore, editorStore, t) {
 
       el.appendChild(
         drawSideButton(
-          powerButtonX,
+          powerButtonX - fh * 0.3,
           powerButtonY,
-          powerButtonWidth,
+          powerButtonWidth + fh * 0.3,
           powerButtonHeight,
           powerButtonRadius,
           'right',
@@ -845,7 +845,7 @@ export function useFrameTool(imageStore, historyStore, editorStore, t) {
         imageStore.frame.height * 2 +
         (header > 0 ? header - imageStore.frame.height : 0)
 
-      const radius = Math.floor(Math.min(svgWidth, svgHeight) * 0.06) // 6% of the smaller dimension
+      const radius = Math.floor(Math.min(svgWidth, svgHeight) * 0.06) - fh * 0.3 // 6% of the smaller dimension + a bit of padding (20% of frame height)
 
       const renderedImage = imageStore.getRenderedImage()
       if (!renderedImage) return
