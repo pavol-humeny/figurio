@@ -480,29 +480,48 @@ export function useFrameTool(imageStore, historyStore, editorStore, t) {
       outline.setAttribute('d', d)
       el.appendChild(outline)
 
-      // Dynamic island
-      const notchWidth = Math.floor(svgWidth * 0.22)
-      const notchHeight = Math.floor(svgHeight * 0.035)
+      let notchWidth, notchHeight
+      const aspectRatio = 1 / 4
+      if (svgWidth >= svgHeight) {
+        notchWidth = Math.floor(svgWidth * 0.22)
+        notchHeight = Math.floor(notchWidth * aspectRatio)
+      } else {
+        notchHeight = Math.floor(svgHeight * 0.035)
+        notchWidth = Math.floor(notchHeight / aspectRatio)
+      }
+
+      const notchMarginTop = phoneFrameValues.strokeWidth * 1.5
       const notchRadius = Math.floor(notchHeight * 0.45)
-      const notchMarginTop = Math.floor(svgHeight * 0.015)
 
-      const notch = document.createElementNS(ns, 'rect')
-      notch.setAttribute('x', svgWidth / 2 - notchWidth / 2)
-      notch.setAttribute('y', phoneFrameValues.top + notchMarginTop)
-      notch.setAttribute('width', notchWidth)
-      notch.setAttribute('height', notchHeight)
-      notch.setAttribute('rx', notchRadius)
-      notch.setAttribute('ry', notchRadius)
-      notch.setAttribute('fill', color)
-      el.appendChild(notch)
+      const notchX = svgWidth / 2 - notchWidth / 2
+      const notchY = phoneFrameValues.top + notchMarginTop
 
-      // Camera
-      const camera = document.createElementNS(ns, 'circle')
-      camera.setAttribute('cx', svgWidth / 2 + notchWidth * 0.2)
-      camera.setAttribute('cy', phoneFrameValues.top + notchMarginTop + notchHeight / 2)
-      camera.setAttribute('r', notchHeight * 0.15)
-      camera.setAttribute('fill', contrastColor)
-      el.appendChild(camera)
+      // Check if notch fits inside the frame area
+      const notchPadding = 1.5
+      const notchFits =
+        notchX >= phoneFrameValues.left &&
+        notchX + notchWidth * notchPadding <= phoneFrameValues.right &&
+        notchY + notchHeight * notchPadding <= phoneFrameValues.bottom
+
+      if (notchFits) {
+        const notch = document.createElementNS(ns, 'rect')
+        notch.setAttribute('x', notchX)
+        notch.setAttribute('y', notchY)
+        notch.setAttribute('width', notchWidth)
+        notch.setAttribute('height', notchHeight)
+        notch.setAttribute('rx', notchRadius)
+        notch.setAttribute('ry', notchRadius)
+        notch.setAttribute('fill', color)
+        el.appendChild(notch)
+
+        // Camera
+        const camera = document.createElementNS(ns, 'circle')
+        camera.setAttribute('cx', svgWidth / 2 + notchWidth * 0.2)
+        camera.setAttribute('cy', notchY + notchHeight / 2)
+        camera.setAttribute('r', notchHeight * 0.15)
+        camera.setAttribute('fill', contrastColor)
+        el.appendChild(camera)
+      }
 
       // Volume and power buttons
       drawVolumeAndPowerButtons()
@@ -531,64 +550,75 @@ export function useFrameTool(imageStore, historyStore, editorStore, t) {
       outline.setAttribute('d', d)
       el.appendChild(outline)
 
-      // Notch with rounded bottom corners and top arcs
-      const notchWidth = Math.floor(svgWidth * 0.26)
-      const notchHeight = Math.floor(svgHeight * 0.04)
+      // Notch
+      const aspectRatio = 1 / 4
+      let notchWidth, notchHeight
+
+      if (svgWidth >= svgHeight) {
+        notchWidth = Math.floor(svgWidth * 0.26)
+        notchHeight = Math.floor(notchWidth * aspectRatio)
+      } else {
+        notchHeight = Math.floor(svgHeight * 0.04)
+        notchWidth = Math.floor(notchHeight / aspectRatio)
+      }
+
+      const notchPadding = 1.5
       const notchRadius = notchHeight / 2
+      const arcR = Math.floor(notchHeight * 0.4)
 
       const nw = notchWidth
       const nh = notchHeight
       const nx = svgWidth / 2 - nw / 2
-      const ny = phoneFrameValues.top + fh / 2 - 1
-      const r2 = notchRadius
-      const arcR = nh * 0.4
+      const ny = phoneFrameValues.top + phoneFrameValues.strokeWidth * 0.5 - 1 // Slightly above the top edge
 
-      const notch = document.createElementNS(ns, 'path')
+      const notchFits =
+        nx >= phoneFrameValues.left &&
+        nx + nw * notchPadding <= phoneFrameValues.right &&
+        ny + nh * notchPadding <= phoneFrameValues.bottom
 
-      const notchPath = [
-        // Left top arc
-        `M ${nx - arcR} ${ny}`,
-        `A ${arcR} ${arcR} 0 0 1 ${nx} ${ny + arcR}`,
+      // Render notch only if it fits
+      if (notchFits) {
+        // Notch with rounded corners and top arcs
+        const notch = document.createElementNS(ns, 'path')
+        const notchPath = [
+          `M ${nx - arcR} ${ny}`,
+          `A ${arcR} ${arcR} 0 0 1 ${nx} ${ny + arcR}`,
+          `V ${ny + nh - notchRadius}`,
+          `A ${notchRadius} ${notchRadius} 0 0 0 ${nx + notchRadius} ${ny + nh}`,
+          `H ${nx + nw - notchRadius}`,
+          `A ${notchRadius} ${notchRadius} 0 0 0 ${nx + nw} ${ny + nh - notchRadius}`,
+          `V ${ny + arcR}`,
+          `A ${arcR} ${arcR} 0 0 1 ${nx + nw + arcR} ${ny}`,
+          'Z',
+        ].join(' ')
+        notch.setAttribute('d', notchPath)
+        notch.setAttribute('fill', color)
+        el.appendChild(notch)
 
-        // Right side
-        `V ${ny + nh - r2}`,
-        `A ${r2} ${r2} 0 0 0 ${nx + r2} ${ny + nh}`,
-        `H ${nx + nw - r2}`,
-        `A ${r2} ${r2} 0 0 0 ${nx + nw} ${ny + nh - r2}`,
-        `V ${ny + arcR}`,
+        // Speaker (slim oval)
+        const speaker = document.createElementNS(ns, 'rect')
+        const speakerWidth = Math.floor(nw * 0.3)
+        const speakerHeight = Math.floor(nh * 0.2)
+        const speakerX = svgWidth / 2 - speakerWidth / 2
+        const speakerY = ny + nh * 0.25
+        speaker.setAttribute('x', speakerX)
+        speaker.setAttribute('y', speakerY)
+        speaker.setAttribute('width', speakerWidth)
+        speaker.setAttribute('height', speakerHeight)
+        speaker.setAttribute('rx', speakerHeight / 2)
+        speaker.setAttribute('ry', speakerHeight / 2)
+        speaker.setAttribute('fill', contrastColor)
+        el.appendChild(speaker)
 
-        // Right top arc
-        `A ${arcR} ${arcR} 0 0 1 ${nx + nw + arcR} ${ny}`,
-        'Z',
-      ].join(' ')
-
-      notch.setAttribute('d', notchPath)
-      notch.setAttribute('fill', color)
-      el.appendChild(notch)
-
-      // Speaker (slim oval)
-      const speaker = document.createElementNS(ns, 'rect')
-      const speakerWidth = Math.floor(nw * 0.3)
-      const speakerHeight = Math.floor(nh * 0.2)
-      const speakerX = svgWidth / 2 - speakerWidth / 2
-      const speakerY = ny + nh * 0.25 + fh / 2
-      speaker.setAttribute('x', speakerX)
-      speaker.setAttribute('y', speakerY)
-      speaker.setAttribute('width', speakerWidth)
-      speaker.setAttribute('height', speakerHeight)
-      speaker.setAttribute('rx', speakerHeight / 2)
-      speaker.setAttribute('ry', speakerHeight / 2)
-      speaker.setAttribute('fill', contrastColor)
-      el.appendChild(speaker)
-
-      // Camera (small circle)
-      const camera = document.createElementNS(ns, 'circle')
-      const cameraRadius = speakerHeight / 1.5
-      camera.setAttribute('cx', svgWidth / 2 + nw * 0.25)
-      camera.setAttribute('cy', speakerY + speakerHeight / 2)
-      camera.setAttribute('r', cameraRadius)
-      camera.setAttribute('fill', contrastColor)
-      el.appendChild(camera)
+        // Camera (small circle)
+        const camera = document.createElementNS(ns, 'circle')
+        const cameraRadius = speakerHeight / 1.5
+        camera.setAttribute('cx', svgWidth / 2 + nw * 0.25)
+        camera.setAttribute('cy', speakerY + speakerHeight / 2)
+        camera.setAttribute('r', cameraRadius)
+        camera.setAttribute('fill', contrastColor)
+        el.appendChild(camera)
+      }
 
       // Volume and power buttons
       drawVolumeAndPowerButtons()
@@ -616,15 +646,25 @@ export function useFrameTool(imageStore, historyStore, editorStore, t) {
       el.appendChild(outline)
 
       // Camera circle
-      const camera = document.createElementNS(ns, 'circle')
       const cameraRadius = Math.floor(svgHeight * 0.012)
       const cameraOffset = Math.floor(svgHeight * 0.03)
+      const cx = svgWidth / 2
+      const cy = phoneFrameValues.top + cameraOffset
 
-      camera.setAttribute('cx', svgWidth / 2)
-      camera.setAttribute('cy', phoneFrameValues.top + cameraOffset)
-      camera.setAttribute('r', cameraRadius)
-      camera.setAttribute('fill', color)
-      el.appendChild(camera)
+      const cameraPadding = 1.5
+      const cameraFits =
+        cx - cameraRadius * cameraPadding >= phoneFrameValues.left &&
+        cx + cameraRadius * cameraPadding <= phoneFrameValues.right &&
+        cy + cameraRadius * cameraPadding <= phoneFrameValues.bottom
+
+      if (cameraFits) {
+        const camera = document.createElementNS(ns, 'circle')
+        camera.setAttribute('cx', cx)
+        camera.setAttribute('cy', cy)
+        camera.setAttribute('r', cameraRadius)
+        camera.setAttribute('fill', color)
+        el.appendChild(camera)
+      }
 
       // Volume and power buttons
       drawVolumeAndPowerButtons()
@@ -656,52 +696,47 @@ export function useFrameTool(imageStore, historyStore, editorStore, t) {
       const arcRadius = 0.5 * dropHeight
 
       const dropCenterX = svgWidth / 2
-      const dropTopY = phoneFrameValues.top + fh / 2 - 1
+      const dropTopY = phoneFrameValues.top + phoneFrameValues.strokeWidth * 0.5 - 1 // Slightly above the top edge
       const leftDrop = dropCenterX - dropWidth / 2
       const rightDrop = dropCenterX + dropWidth / 2
       const bottomDrop = dropTopY + dropHeight
 
-      const dropPath = document.createElementNS(ns, 'path')
+      const notchPadding = 1.5
+      const dropFits =
+        leftDrop >= phoneFrameValues.left &&
+        rightDrop <= phoneFrameValues.right &&
+        bottomDrop * notchPadding <= phoneFrameValues.bottom
 
-      const path = [
-        // Start to the left of the notch (arc transition into the notch)
-        `M ${leftDrop - arcRadius} ${dropTopY}`,
-        `A ${arcRadius} ${arcRadius} 0 0 1 ${leftDrop} ${dropTopY + arcRadius}`,
+      if (dropFits) {
+        // === Drop notch path ===
+        const dropPath = document.createElementNS(ns, 'path')
+        const path = [
+          `M ${leftDrop - arcRadius} ${dropTopY}`,
+          `A ${arcRadius} ${arcRadius} 0 0 1 ${leftDrop} ${dropTopY + arcRadius}`,
+          `V ${bottomDrop - arcRadius}`,
+          `A ${arcRadius} ${arcRadius} 0 0 0 ${leftDrop + arcRadius} ${bottomDrop}`,
+          `H ${rightDrop - arcRadius}`,
+          `A ${arcRadius} ${arcRadius} 0 0 0 ${rightDrop} ${bottomDrop - arcRadius}`,
+          `V ${dropTopY + arcRadius}`,
+          `A ${arcRadius} ${arcRadius} 0 0 1 ${rightDrop + arcRadius} ${dropTopY}`,
+          'Z',
+        ].join(' ')
+        dropPath.setAttribute('d', path)
+        dropPath.setAttribute('fill', color)
+        el.appendChild(dropPath)
 
-        // Right edge of the rectangle with rounded bottom right corner
-        `V ${bottomDrop - arcRadius}`,
-        `A ${arcRadius} ${arcRadius} 0 0 0 ${leftDrop + arcRadius} ${bottomDrop}`,
+        // === Camera inside drop notch ===
+        const camera = document.createElementNS(ns, 'circle')
+        const cameraRadius = dropHeight * 0.18
+        const cameraCX = dropCenterX
+        const cameraCY = bottomDrop - dropHeight / 2
 
-        // Bottom edge
-        `H ${rightDrop - arcRadius}`,
-
-        // Bottom left corner
-        `A ${arcRadius} ${arcRadius} 0 0 0 ${rightDrop} ${bottomDrop - arcRadius}`,
-
-        // Right edge up to the notch
-        `V ${dropTopY + arcRadius}`,
-
-        // Final right top arc
-        `A ${arcRadius} ${arcRadius} 0 0 1 ${rightDrop + arcRadius} ${dropTopY}`,
-
-        'Z',
-      ].join(' ')
-
-      dropPath.setAttribute('d', path)
-      dropPath.setAttribute('fill', color)
-      el.appendChild(dropPath)
-
-      // Camera in the center of the drop notch
-      const camera = document.createElementNS(ns, 'circle')
-      const cameraRadius = dropHeight * 0.18
-      const cameraCX = dropCenterX
-      const cameraCY = bottomDrop - dropHeight / 2
-
-      camera.setAttribute('cx', cameraCX)
-      camera.setAttribute('cy', cameraCY)
-      camera.setAttribute('r', cameraRadius)
-      camera.setAttribute('fill', contrastColor)
-      el.appendChild(camera)
+        camera.setAttribute('cx', cameraCX)
+        camera.setAttribute('cy', cameraCY)
+        camera.setAttribute('r', cameraRadius)
+        camera.setAttribute('fill', contrastColor)
+        el.appendChild(camera)
+      }
 
       // Volume and power buttons
       drawVolumeAndPowerButtons()
