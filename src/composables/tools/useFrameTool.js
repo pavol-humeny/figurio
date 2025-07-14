@@ -18,7 +18,7 @@ export function useFrameTool(imageStore, historyStore, editorStore, t) {
       frameWidth.value = newWidth
     },
   )
-  const drawOutline = ref(false)
+  const drawOutline = ref(imageStore.frame.outlineEnabled)
   const frameWidthRef = ref(null)
 
   // UPDATE new frame type

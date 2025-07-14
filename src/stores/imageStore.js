@@ -431,14 +431,14 @@ export const useImageStore = defineStore('imageStore', {
           let offsetY = this.newFrame.enabled ? this.newFrame.height : 0
 
           const finalWidth = width
-          let finalHeight =  height 
+          const finalHeight = height
 
           // Korekcia pre špeciálne typy rámikov
           if (
             this.newFrame.type === 'frameMacBrowser' ||
             this.newFrame.type === 'frameWindowsBrowser'
           ) {
-            finalHeight = height + this.newFrame.headerSize + this.newFrame.height
+            offsetY = this.newFrame.headerSize
           }
 
           console.log(
@@ -594,12 +594,21 @@ export const useImageStore = defineStore('imageStore', {
       const targetWidth = this.newFrame.enabled
         ? this.newFileDimensions.width - 2 * this.newFrame.width
         : this.newFileDimensions.width
-      const targetHeight = this.newFrame.enabled
-        ? this.newFileDimensions.height -
-          2 * this.newFrame.height -
-          this.newFrame.headerSize -
-          this.newFrame.footerSize
+      let targetHeight = this.newFrame.enabled
+        ? this.newFileDimensions.height - 2 * this.newFrame.height
         : this.newFileDimensions.height
+
+      // UPDATE new frame type
+      if (
+        this.newFrame.type === 'frameMacBrowser' ||
+        this.newFrame.type === 'frameWindowsBrowser'
+      ) {
+        targetHeight =
+          this.newFileDimensions.height - this.newFrame.headerSize - this.newFrame.height
+      } else if (this.newFrame.type === 'frameWindowsTaskBar') {
+        targetHeight =
+          this.newFileDimensions.height - this.newFrame.footerSize - this.newFrame.height
+      }
 
       // Rasterize base image + SVG objects at export size
       await this.rasterize(targetWidth, targetHeight, true)
