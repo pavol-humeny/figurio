@@ -108,10 +108,21 @@ export function useExportToolSettings(imageStore, editorStore, historyStore, t) 
   }
 
   const resetFileDimensions = async () => {
-    imageStore.newFileDimensions = {
-      width: imageStore.fileDimensions.width,
-      height: imageStore.fileDimensions.height,
-      fileAspectRatio: imageStore.fileDimensions.fileAspectRatio,
+    if (imageStore.frame?.enabled) {
+      imageStore.newFileDimensions.width =
+        imageStore.fileDimensions.width + imageStore.frame.width * 2
+      if (imageStore.frame.headerSize > 0) {
+        imageStore.newFileDimensions.height =
+          imageStore.fileDimensions.height + imageStore.frame.height + imageStore.frame.headerSize
+      } else if (imageStore.frame.footerSize > 0) {
+        imageStore.newFileDimensions.height =
+          imageStore.fileDimensions.height + imageStore.frame.height + imageStore.frame.footerSize
+      } else {
+        imageStore.newFileDimensions.height =
+          imageStore.fileDimensions.height + imageStore.frame.height * 2
+      }
+    } else {
+      imageStore.newFileDimensions = { ...imageStore.fileDimensions }
     }
     isDimensionsLinked.value = true
 

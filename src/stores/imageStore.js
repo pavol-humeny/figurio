@@ -1,4 +1,5 @@
 import jsPDF from 'jspdf'
+import { svg2pdf } from 'svg2pdf.js'
 import { defineStore } from 'pinia'
 import { useToastModal } from '@/composables/modals/useToastModal'
 import { nextTick } from 'vue'
@@ -39,6 +40,7 @@ export const useImageStore = defineStore('imageStore', {
 
     // Value for preview image in export tool
     previewUrl: '', // UndoRedo
+    renderUrl: '', // Used for rendering final image
 
     // Value for original image
     originalImage: null,
@@ -416,26 +418,64 @@ export const useImageStore = defineStore('imageStore', {
 
       console.log('Exporting file...')
 
-      await this.generatePreview(editorStore, historyStore, t)
-
       const isPdf = this.newFileFormat === 'pdf'
 
+      await this.generatePreview(editorStore, historyStore, t, !isPdf)
+
+      const { width, height, quality } = this.newFileDimensions
+
       const image = new Image()
-      image.onload = () => {
-        const { width, height, quality } = this.newFileDimensions
-
+      image.onload = async () => {
         if (isPdf) {
-          // Conversion of px to mm (1 px = 0.264583 mm)
-          const mmWidth = width * 0.264583
-          const mmHeight = height * 0.264583
+          const offsetX = this.newFrame.enabled ? this.newFrame.width : 0
+          let offsetY = this.newFrame.enabled ? this.newFrame.height : 0
 
+          const finalWidth = width
+          let finalHeight =  height 
+
+          // Korekcia pre špeciálne typy rámikov
+          if (
+            this.newFrame.type === 'frameMacBrowser' ||
+            this.newFrame.type === 'frameWindowsBrowser'
+          ) {
+            finalHeight = height + this.newFrame.headerSize + this.newFrame.height
+          }
+
+          console.log(
+            `-------------Exporting PDF with dimensions: ${finalWidth}x${finalHeight}, offset: ${offsetX}, ${offsetY}`,
+          )
+
+          // Inicializuj PDF dokument
           const pdf = new jsPDF({
-            orientation: mmWidth > mmHeight ? 'landscape' : 'portrait',
-            unit: 'mm',
-            format: [mmWidth, mmHeight],
+            orientation: finalWidth > finalHeight ? 'landscape' : 'portrait',
+            unit: 'px', // používame px kvôli SVG pozíciám
+            format: [finalWidth, finalHeight],
           })
 
-          pdf.addImage(image, 'PNG', 0, 0, mmWidth, mmHeight)
+          // Vlož rastrový obrázok ako pozadie
+          pdf.addImage(image, 'PNG', offsetX, offsetY, image.width, image.height)
+
+          // Ak je rámik aktívny a máme SVG dáta
+          if (this.newFrame.enabled && this.newFrameSvg) {
+            try {
+              const parser = new DOMParser()
+              const svgElement = parser.parseFromString(
+                this.newFrameSvg,
+                'image/svg+xml',
+              ).documentElement
+
+              // Vlož SVG ako vektor nad obrázok
+              await svg2pdf(svgElement, pdf, {
+                xOffset: 0,
+                yOffset: 0,
+                scale: 1,
+              })
+            } catch (e) {
+              console.error('Chyba pri exporte SVG rámika do PDF:', e)
+            }
+          }
+
+          // Ulož PDF
           pdf.save(`${this.newFileName}.pdf`)
         } else {
           const mimeType =
@@ -477,7 +517,7 @@ export const useImageStore = defineStore('imageStore', {
         )
       }
 
-      image.src = this.previewUrl
+      image.src = this.getRenderedImage(true).toDataURL()
 
       return true
     },
@@ -551,8 +591,15 @@ export const useImageStore = defineStore('imageStore', {
 
       this.newFrame = { ...this.frame }
 
-      const targetWidth = this.newFileDimensions.width
-      const targetHeight = this.newFileDimensions.height
+      const targetWidth = this.newFrame.enabled
+        ? this.newFileDimensions.width - 2 * this.newFrame.width
+        : this.newFileDimensions.width
+      const targetHeight = this.newFrame.enabled
+        ? this.newFileDimensions.height -
+          2 * this.newFrame.height -
+          this.newFrame.headerSize -
+          this.newFrame.footerSize
+        : this.newFileDimensions.height
 
       // Rasterize base image + SVG objects at export size
       await this.rasterize(targetWidth, targetHeight, true)
@@ -565,6 +612,7 @@ export const useImageStore = defineStore('imageStore', {
 
       // If frame is not enabled, just return the base image
       if (!this.newFrame.enabled) {
+        console.log('Frame not enabled, using base image for preview')
         this.previewUrl = baseImage.toDataURL()
         return
       }
@@ -578,7 +626,15 @@ export const useImageStore = defineStore('imageStore', {
 
       // If vector export only, store raw SVG frame and exit
       if (!renderAsRaster) {
-        this.newFrameSvg = new XMLSerializer().serializeToString(tempFrameSvg)
+        // After serializing the SVG
+        const rawSvg = new XMLSerializer().serializeToString(tempFrameSvg)
+
+        // Remove any style attribute from the <svg> tag
+        const cleanedSvg = rawSvg.replace(/<svg([^>]+)style="[^"]*"([^>]*)>/, '<svg$1$2>')
+
+        this.newFrameSvg = cleanedSvg
+
+        console.log('Vector export only, stored SVG frame:', this.newFrameSvg)
         return
       }
 
