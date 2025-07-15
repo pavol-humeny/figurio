@@ -1,6 +1,22 @@
 <script setup>
 import ItemTip from './ItemTip.vue'
 
+/**
+ * @typedef {Object} SliderProps
+ * @property {number} modelValue - The current value of the slider (v-model)
+ * @property {number} [min=0] - Minimum allowed slider value
+ * @property {number} [max=100] - Maximum allowed slider value
+ * @property {number} [step=1] - Increment step of the slider
+ * @property {boolean} [disabled=false] - Whether the slider is disabled
+ * @property {string} [tip=''] - Tooltip text shown on hover
+ * @property {string} [position='bottom'] - Tooltip position
+ * @property {boolean} [showValue=false] - Whether to display the current value
+ * @property {string} [valueDescription=''] - Optional description label next to value
+ * @property {string} [valueUnit=''] - Unit displayed after the value
+ * @property {string} [backgroundColor='var(--secondary-c)'] - Background color of the slider track
+ */
+
+/** @type {SliderProps} */
 const props = defineProps({
   modelValue: {
     type: Number,
@@ -48,8 +64,16 @@ const props = defineProps({
   },
 })
 
+/**
+ * @event update:modelValue - Emitted when the slider value changes (for v-model)
+ * @event dblclick - Emitted when the slider is double-clicked (can be used to reset)
+ */
 const emit = defineEmits(['update:modelValue', 'dblclick'])
 
+/**
+ * Handles input change and emits updated value.
+ * @param {Event} event - Input event from range element
+ */
 const onInput = (event) => {
   const value = Number(event.target.value)
   emit('update:modelValue', value)
@@ -66,17 +90,9 @@ const onInput = (event) => {
         <p class="slider-value">{{ modelValue }}</p>
         <p v-if="props.valueUnit !== ''" class="slider-value-unit">{{ props.valueUnit }}</p>
       </div>
-      <input
-        type="range"
-        :min="props.min"
-        :max="props.max"
-        :step="props.step"
-        :value="modelValue"
-        :disabled="props.disabled"
-        @input="onInput"
-        @dblclick="$emit('dblclick')"
-        :style="{ '--slider-bg': props.backgroundColor }"
-      />
+      <input type="range" :min="props.min" :max="props.max" :step="props.step" :value="modelValue"
+        :disabled="props.disabled" @input="onInput" @dblclick="$emit('dblclick')"
+        :style="{ '--slider-bg': props.backgroundColor }" />
     </div>
   </ItemTip>
 </template>
@@ -126,9 +142,11 @@ input[type='range']::-webkit-slider-runnable-track {
 
 /* slider thumb */
 input[type='range']::-webkit-slider-thumb {
-  -webkit-appearance: none; /* Override default look */
+  -webkit-appearance: none;
+  /* Override default look */
   appearance: none;
-  margin-top: -5px; /* Centers thumb on the track */
+  margin-top: -5px;
+  /* Centers thumb on the track */
   background-color: var(--primary-c);
   border-radius: 10px;
   height: 20px;
