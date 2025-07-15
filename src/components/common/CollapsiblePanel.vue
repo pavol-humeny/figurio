@@ -3,22 +3,26 @@ import BaseIcon from '@/components/icons/BaseIcon.vue'
 import { useCollapsiblePanel } from '@/composables/common/useCollapsiblePanel'
 import { useUiStore } from '@/stores/uiStore'
 
+/**
+ * @typedef {Object} CollapsiblePanelState
+ * @property {boolean} isVisible - Whether the panel is currently visible
+ * @property {Function} toggleVisibility - Toggles visibility of the panel
+ * @property {number} rightSidePanelWidth - Total width of the visible panel (including collapse button)
+ * @property {number} collapseButtonWidth - Width of the toggle button
+ * @property {Function} startResize - Starts panel resize on mousedown
+ */
+
+/**
+ * @type {CollapsiblePanelState}
+ */
 const { isVisible, toggleVisibility, rightSidePanelWidth, collapseButtonWidth, startResize } =
   useCollapsiblePanel(useUiStore())
 </script>
 
 <template>
   <div class="collapsible-panel" :style="{ width: rightSidePanelWidth + 'px' }">
-    <div
-      class="toggle-button"
-      @click="toggleVisibility"
-      :style="{ width: collapseButtonWidth + 'px' }"
-    >
-      <BaseIcon
-        :name="isVisible ? 'IconArrowRight' : 'IconArrowLeft'"
-        size="24"
-        color="var(--border-c)"
-      />
+    <div class="toggle-button" @click="toggleVisibility" :style="{ width: collapseButtonWidth + 'px' }">
+      <BaseIcon :name="isVisible ? 'IconArrowRight' : 'IconArrowLeft'" size="24" color="var(--border-c)" />
     </div>
 
     <div class="panel-content" :class="{ hidden: !isVisible }">
