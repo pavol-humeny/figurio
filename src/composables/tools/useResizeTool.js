@@ -1,21 +1,43 @@
-import { ref, nextTick } from 'vue'
+import { ref, nextTick, watch } from 'vue'
 
 export function useResizeTool(imageStore, historyStore, t) {
+  const isUpdatingFromStore = ref(false)
   const maxFileDimensionWidth = ref(10000)
   const maxFileDimensionHeight = ref(10000)
 
-  const isFileDimensionsLinked = ref(false)
+  const isFileDimensionsLinked = ref(true)
 
   const fileDimensionWidth = ref(imageStore.fileDimensions.width)
   const fileDimensionHeight = ref(imageStore.fileDimensions.height)
 
-  const originalAspectRatio = imageStore.fileDimensions.width / imageStore.fileDimensions.height
+  let originalAspectRatio = imageStore.fileDimensions.width / imageStore.fileDimensions.height
+
+  watch(
+    () => imageStore.fileDimensions,
+    (newVal) => {
+      isUpdatingFromStore.value = true
+
+      fileDimensionWidth.value = newVal.width
+      fileDimensionHeight.value = newVal.height
+
+      originalAspectRatio = newVal.width / newVal.height
+
+      nextTick(() => {
+        FileDimensionWidthInputRef.value?.setValue(fileDimensionWidth.value)
+        FileDimensionHeightInputRef.value?.setValue(fileDimensionHeight.value)
+
+        isUpdatingFromStore.value = false
+      })
+    },
+    { immediate: true, deep: true },
+  )
 
   const FileDimensionWidthInputRef = ref(null)
   const FileDimensionHeightInputRef = ref(null)
 
   const updateFileDimension = (key, value) => {
-    console.log(`Updating file dimension: ${key} = ${value}`)
+    if (isUpdatingFromStore.value) return
+
     if (isNaN(value) || value <= 0) return
 
     if (key === 'width') {
@@ -27,7 +49,14 @@ export function useResizeTool(imageStore, historyStore, t) {
 
       fileDimensionWidth.value = value
       if (isFileDimensionsLinked.value) {
-        fileDimensionHeight.value = Math.round(value / originalAspectRatio)
+        const newHeight = Math.round(value / originalAspectRatio)
+        if (newHeight < 1) {
+          fileDimensionHeight.value = 1
+        } else if (newHeight > maxFileDimensionHeight.value) {
+          fileDimensionHeight.value = maxFileDimensionHeight.value
+        } else {
+          fileDimensionHeight.value = newHeight
+        }
       }
     } else if (key === 'height') {
       if (value > maxFileDimensionHeight.value) {
@@ -38,7 +67,14 @@ export function useResizeTool(imageStore, historyStore, t) {
 
       fileDimensionHeight.value = value
       if (isFileDimensionsLinked.value) {
-        fileDimensionWidth.value = Math.round(value * originalAspectRatio)
+        const newWidth = Math.round(value * originalAspectRatio)
+        if (newWidth < 1) {
+          fileDimensionWidth.value = 1
+        } else if (newWidth > maxFileDimensionWidth.value) {
+          fileDimensionWidth.value = maxFileDimensionWidth.value
+        } else {
+          fileDimensionWidth.value = newWidth
+        }
       }
     }
 
@@ -51,6 +87,10 @@ export function useResizeTool(imageStore, historyStore, t) {
   }
 
   const applyResize = () => {
+    console.log('Applying resize with dimensions:', {
+      width: fileDimensionWidth.value,
+      height: fileDimensionHeight.value,
+    })
     imageStore.addImageOperation({
       type: 'resize',
       dimensions: {
