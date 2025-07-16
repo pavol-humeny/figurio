@@ -40,78 +40,59 @@ const {
             <p>{{ $t('tools.export.settings.general.title') }}</p>
           </div>
 
-          <div class="export-settings-wrapper">
-            <div class="export-settings-item">
-              <label for="file-format">{{ $t('tools.export.settings.general.fileFormat') }}</label>
-              <select id="file-format" v-model="fileFormat">
-                <option value="png">PNG</option>
-                <option value="jpg">JPG</option>
-                <option value="pdf">PDF</option>
-                <option value="webp">WebP</option>
-              </select>
-            </div>
-
-            <div class="export-settings-item" v-if="fileFormat === 'jpg' || fileFormat === 'webp'">
-              <!-- slider for quality setting -->
-              <label for="file-quality">{{
-                $t('tools.export.settings.general.fileQuality.label')
-              }}</label>
-              <p>{{ fileDimensions.quality }} %</p>
-              <DefaultSlider v-model="fileDimensions.quality" :min="0" :max="100" :step="1"
-                @update:modelValue="(value) => updateDimension('quality', value)"
-                :backgroundColor="'var(--background-c)'" />
-            </div>
-
-            <div class="export-settings-item">
-              <label for="file-name">{{ $t('tools.export.settings.general.fileName.label') }}</label>
-              <input ref="inputFileNameRef" type="text" v-model="fileName" id="file-name"
-                :placeholder="$t('tools.export.settings.general.fileName.placeholder')" @blur="saveNewFileName"
-                @keydown.enter="saveNewFileName" />
-            </div>
-          </div>
-          <!--
           <div class="export-settings-item">
-            <label for="file-dimensions">{{
-              $t('tools.export.settings.general.fileDimensions.label')
+            <label for="file-format">{{ $t('tools.export.settings.general.fileFormat') }}</label>
+            <select id="file-format" v-model="fileFormat">
+              <option value="png">PNG</option>
+              <option value="jpg">JPG</option>
+              <option value="pdf">PDF</option>
+              <option value="webp">WebP</option>
+            </select>
+          </div>
+
+          <div class="export-settings-item" v-if="fileFormat === 'jpg' || fileFormat === 'webp'">
+            <!-- Quality setting -->
+            <label for="file-quality">{{
+              $t('tools.export.settings.general.fileQuality.label')
               }}</label>
-            <div class="file-dimensions-inputs">
-              <div class="width">
-                <label for="file-dimensions-width">{{
+            <p>{{ fileDimensions.quality }} %</p>
+            <DefaultSlider v-model="fileDimensions.quality" :min="0" :max="100" :step="1"
+              @update:modelValue="(value) => updateDimension('quality', value)"
+              :backgroundColor="'var(--background-c)'" />
+          </div>
+
+          <div class="export-settings-item">
+            <!-- File name -->
+            <label for="file-name">{{ $t('tools.export.settings.general.fileName.label') }}</label>
+            <input ref="inputFileNameRef" type="text" v-model="fileName" id="file-name"
+              :placeholder="$t('tools.export.settings.general.fileName.placeholder')" @blur="saveNewFileName"
+              @keydown.enter="saveNewFileName" />
+          </div>
+          <div class="export-settings-item">
+            <!-- File dimensions -->
+            <label>{{
+              $t('tools.export.settings.general.fileDimensions.label')
+            }}</label>
+            <div class="file-dimensions">
+              <div class="width disabled">
+                <label>{{
                   $t('tools.export.settings.general.fileDimensions.width')
-                  }}</label>
-                <div class="input-wrapper">
-                  <input v-model.number="fileDimensions.width" type="number" min="1" max="10000"
-                    @blur="updateDimension('width', fileDimensions.width)"
-                    @keydown.enter="updateDimension('width', fileDimensions.width)" />
-                  <span class="input-unit">px</span>
-                </div>
+                }}</label>
+                <label>
+                  : {{ fileDimensions.width }}px
+                </label>
               </div>
 
-              <div class="icon-wrapper">
-                <LinkValuesIcon v-model="isDimensionsLinked"
-                  :tipLinked="$t('tools.export.settings.general.fileDimensions.tip.linked')"
-                  :tipUnlinked="$t('tools.export.settings.general.fileDimensions.tip.unlinked')" size="30" />
-              </div>
-
-              <div class="height">
-                <label for="file-dimensions-height">{{
+              <div class="height disabled">
+                <label>{{
                   $t('tools.export.settings.general.fileDimensions.height')
-                  }}</label>
-                <div class="input-wrapper">
-                  <input v-model.number="fileDimensions.height" type="number" id="file-dimensions-height" min="1"
-                    max="10000" @blur="updateDimension('height', fileDimensions.height)"
-                    @keydown.enter="updateDimension('height', fileDimensions.height)" />
-                  <span class="input-unit">px</span>
-                </div>
-              </div>
-
-              <div class="icon-wrapper">
-                <BaseIcon name="IconReset" size="25" color="var(--primary-c)" @click="resetFileDimensions"
-                  :tip="$t('tools.export.settings.general.fileDimensions.tip.reset')" />
+                }}</label>
+                <label>
+                  : {{ fileDimensions.height }}px
+                </label>
               </div>
             </div>
           </div>
-          -->
 
           <div class="buttons-wrapper">
             <DefaultButton :text="$t('tools.export.settings.general.cancelButton.text')"
@@ -153,8 +134,8 @@ const {
   border-radius: 20px;
   min-width: 900px;
   max-width: 80vh;
-  height: 500px;
-
+  min-height: 500px;
+  max-height: 80vh;
   box-shadow: var(--box-shadow-ui);
   display: flex;
   flex-direction: row;
@@ -167,9 +148,9 @@ const {
   flex: 1;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
-  /* gap: 30px; */
+  gap: 30px;
 }
 
 .title-wrapper {
@@ -185,16 +166,6 @@ const {
 .title-wrapper p {
   font-size: var(--title-font-size);
   font-weight: var(--title-font-weight);
-}
-
-.export-settings-wrapper {
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: top;
-  height: 100%;
-  padding: 20px 0;
-  gap: 40px;
 }
 
 .export-settings-item {
@@ -235,22 +206,25 @@ const {
   pointer-events: none;
 }
 
-.file-dimensions-inputs {
+.file-dimensions {
+  background-color: var(--background-c);
+  border-radius: 10px;
+  padding: 7px 10px;
   display: flex;
   align-items: center;
+  justify-content: space-between;
   flex-direction: row;
-  gap: 10px;
 }
 
-.file-dimensions-inputs .width,
-.file-dimensions-inputs .height {
+.file-dimensions .width,
+.file-dimensions .height {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   gap: 2px;
 }
 
-.file-dimensions-inputs .width label,
-.file-dimensions-inputs .height label {
+.file-dimensions .width label,
+.file-dimensions .height label {
   font-size: var(--text-font-size);
 }
 

@@ -102,18 +102,7 @@ export const useImageStore = defineStore('imageStore', {
 
     phoneButtonsCanNotBeDrawnToastFlag: false,
 
-    newFrameSvg: '', // Raw SVG frame for vector export
-
-    newFrame: {
-      enabled: false,
-      type: 'none',
-      width: 0,
-      height: 0,
-      color: '#000000',
-      headerSize: 0,
-      footerSize: 0,
-      outlineEnabled: false,
-    },
+    frameSvg: '', // Raw SVG frame for vector export
   }),
   getters: {
     isImageLoaded: (state) => {
@@ -427,18 +416,15 @@ export const useImageStore = defineStore('imageStore', {
       const image = new Image()
       image.onload = async () => {
         if (isPdf) {
-          const offsetX = this.newFrame.enabled ? this.newFrame.width : 0
-          let offsetY = this.newFrame.enabled ? this.newFrame.height : 0
+          const offsetX = this.frame.enabled ? this.frame.width : 0
+          let offsetY = this.frame.enabled ? this.frame.height : 0
 
           const finalWidth = width
           const finalHeight = height
 
           // Korekcia pre špeciálne typy rámikov
-          if (
-            this.newFrame.type === 'frameMacBrowser' ||
-            this.newFrame.type === 'frameWindowsBrowser'
-          ) {
-            offsetY = this.newFrame.headerSize
+          if (this.frame.type === 'frameMacBrowser' || this.frame.type === 'frameWindowsBrowser') {
+            offsetY = this.frame.headerSize
           }
 
           console.log(
@@ -456,11 +442,11 @@ export const useImageStore = defineStore('imageStore', {
           pdf.addImage(image, 'PNG', offsetX, offsetY, image.width, image.height)
 
           // Ak je rámik aktívny a máme SVG dáta
-          if (this.newFrame.enabled && this.newFrameSvg) {
+          if (this.frame.enabled && this.frameSvg) {
             try {
               const parser = new DOMParser()
               const svgElement = parser.parseFromString(
-                this.newFrameSvg,
+                this.frameSvg,
                 'image/svg+xml',
               ).documentElement
 
@@ -517,7 +503,7 @@ export const useImageStore = defineStore('imageStore', {
         )
       }
 
-      image.src = this.getRenderedImage(true).toDataURL()
+      image.src = isPdf ? this.getRenderedImage(true).toDataURL() : this.previewUrl
 
       return true
     },
@@ -589,25 +575,18 @@ export const useImageStore = defineStore('imageStore', {
       console.log('Generating preview with frame...')
       this.phoneButtonsCanNotBeDrawnToastFlag = true // Set flag to prevent toast showing
 
-      this.newFrame = { ...this.frame }
-
-      const targetWidth = this.newFrame.enabled
-        ? this.newFileDimensions.width - 2 * this.newFrame.width
+      const targetWidth = this.frame.enabled
+        ? this.newFileDimensions.width - 2 * this.frame.width
         : this.newFileDimensions.width
-      let targetHeight = this.newFrame.enabled
-        ? this.newFileDimensions.height - 2 * this.newFrame.height
+      let targetHeight = this.frame.enabled
+        ? this.newFileDimensions.height - 2 * this.frame.height
         : this.newFileDimensions.height
 
       // UPDATE new frame type
-      if (
-        this.newFrame.type === 'frameMacBrowser' ||
-        this.newFrame.type === 'frameWindowsBrowser'
-      ) {
-        targetHeight =
-          this.newFileDimensions.height - this.newFrame.headerSize - this.newFrame.height
-      } else if (this.newFrame.type === 'frameWindowsTaskBar') {
-        targetHeight =
-          this.newFileDimensions.height - this.newFrame.footerSize - this.newFrame.height
+      if (this.frame.type === 'frameMacBrowser' || this.frame.type === 'frameWindowsBrowser') {
+        targetHeight = this.newFileDimensions.height - this.frame.headerSize - this.frame.height
+      } else if (this.frame.type === 'frameWindowsTaskBar') {
+        targetHeight = this.newFileDimensions.height - this.frame.footerSize - this.frame.height
       }
 
       // Rasterize base image + SVG objects at export size
@@ -620,7 +599,7 @@ export const useImageStore = defineStore('imageStore', {
       }
 
       // If frame is not enabled, just return the base image
-      if (!this.newFrame.enabled) {
+      if (!this.frame.enabled) {
         console.log('Frame not enabled, using base image for preview')
         this.previewUrl = baseImage.toDataURL()
         return
@@ -631,7 +610,7 @@ export const useImageStore = defineStore('imageStore', {
       // Create temporary SVG element and apply frame
       const tempFrameSvg = document.createElementNS('http://www.w3.org/2000/svg', 'svg')
       const { applyFrameRender } = useFrameTool(this, historyStore, editorStore, t)
-      applyFrameRender(tempFrameSvg, targetWidth, targetHeight, true)
+      applyFrameRender(tempFrameSvg, targetWidth, targetHeight)
 
       // If vector export only, store raw SVG frame and exit
       if (!renderAsRaster) {
@@ -641,9 +620,9 @@ export const useImageStore = defineStore('imageStore', {
         // Remove any style attribute from the <svg> tag
         const cleanedSvg = rawSvg.replace(/<svg([^>]+)style="[^"]*"([^>]*)>/, '<svg$1$2>')
 
-        this.newFrameSvg = cleanedSvg
+        this.frameSvg = cleanedSvg
 
-        console.log('Vector export only, stored SVG frame:', this.newFrameSvg)
+        console.log('Vector export only, stored SVG frame:', this.frameSvg)
         return
       }
 
@@ -666,15 +645,12 @@ export const useImageStore = defineStore('imageStore', {
       const canvasHeight = parseInt(tempFrameSvg.getAttribute('height'), 10)
 
       // Determine image offset inside the frame
-      const offsetX = this.newFrame?.width || 0
-      let offsetY = this.newFrame?.height || offsetX
+      const offsetX = this.frame?.width || 0
+      let offsetY = this.frame?.height || offsetX
 
       // UPDATE new frame type
-      if (
-        this.newFrame.type === 'frameMacBrowser' ||
-        this.newFrame.type === 'frameWindowsBrowser'
-      ) {
-        offsetY = this.newFrame.headerSize
+      if (this.frame.type === 'frameMacBrowser' || this.frame.type === 'frameWindowsBrowser') {
+        offsetY = this.frame.headerSize
       }
 
       // Create final canvas and render both layers

@@ -72,9 +72,9 @@ export function useExportToolSettings(imageStore, editorStore, historyStore, t) 
   }
 
   const openExportToolSettings = async () => {
-    await imageStore.generatePreview(editorStore, historyStore, t)
-
-    isVisible.value = true
+    imageStore.newFileDimensions = { ...imageStore.fileDimensions }
+    imageStore.newFileFormat = imageStore.fileFormat
+    imageStore.newFileName = imageStore.fileName
 
     if (imageStore.frame?.enabled) {
       imageStore.newFileDimensions.width =
@@ -92,6 +92,10 @@ export function useExportToolSettings(imageStore, editorStore, historyStore, t) 
     } else {
       imageStore.newFileDimensions = { ...imageStore.fileDimensions }
     }
+
+    await imageStore.generatePreview(editorStore, historyStore, t)
+
+    isVisible.value = true
   }
 
   const closeExportToolSettings = () => {

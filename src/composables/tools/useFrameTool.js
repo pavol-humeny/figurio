@@ -153,8 +153,7 @@ export function useFrameTool(imageStore, historyStore, editorStore, t) {
     return luminance > 186 ? '#000000' : '#ffffff'
   }
 
-  const applyFrameRender = (el, width = null, height = null, updateNewFrame = false) => {
-
+  const applyFrameRender = (el, width = null, height = null) => {
     const ns = 'http://www.w3.org/2000/svg'
     const frame = imageStore.frame
     if (!frame?.enabled || !el) return
@@ -173,13 +172,9 @@ export function useFrameTool(imageStore, historyStore, editorStore, t) {
         fw = 0
         fh = 0
       }
-      if (!updateNewFrame) {
-        imageStore.frame.headerSize = Math.max(Math.floor(0.04 * h), 5)
-        imageStore.frame.footerSize = 0
-      } else {
-        imageStore.newFrame.headerSize = Math.max(Math.floor(0.04 * h), 5)
-        imageStore.newFrame.footerSize = 0
-      }
+
+      imageStore.frame.headerSize = Math.max(Math.floor(0.04 * h), 5)
+      imageStore.frame.footerSize = 0
     } else if (
       frame.type === 'framePhoneAndroid' ||
       frame.type === 'framePhoneAndroid2' ||
@@ -189,45 +184,27 @@ export function useFrameTool(imageStore, historyStore, editorStore, t) {
     ) {
       fw = Math.max(Math.floor((1 / 100) * Math.max(w, h)), 2) * 1.5
       fh = fw / 1.5
-      if (!updateNewFrame) {
-        imageStore.frame.headerSize = 0
-        imageStore.frame.footerSize = 0
-      } else {
-        imageStore.newFrame.headerSize = 0
-        imageStore.newFrame.footerSize = 0
-      }
+
+      imageStore.frame.headerSize = 0
+      imageStore.frame.footerSize = 0
     } else if (frame.type === 'frameWindowsTaskBar') {
       if (!frame.outlineEnabled) {
         fw = 0
         fh = 0
       }
-      if (!updateNewFrame) {
-        imageStore.frame.footerSize = Math.max(Math.floor(0.04 * h), 5)
-        imageStore.frame.headerSize = 0
-      } else {
-        imageStore.newFrame.footerSize = Math.max(Math.floor(0.04 * h), 5)
-        imageStore.newFrame.headerSize = 0
-      }
+
+      imageStore.frame.footerSize = Math.max(Math.floor(0.04 * h), 5)
+      imageStore.frame.headerSize = 0
     } else {
-      if (!updateNewFrame) {
-        imageStore.frame.headerSize = 0
-        imageStore.frame.footerSize = 0
-      } else {
-        imageStore.newFrame.headerSize = 0
-        imageStore.newFrame.footerSize = 0
-      }
+      imageStore.frame.headerSize = 0
+      imageStore.frame.footerSize = 0
     }
 
-    if (!updateNewFrame) {
-      imageStore.frame.width = fw
-      imageStore.frame.height = fh
-    } else {
-      imageStore.newFrame.width = fw
-      imageStore.newFrame.height = fh
-    }
+    imageStore.frame.width = fw
+    imageStore.frame.height = fh
 
-    const header = !updateNewFrame ? imageStore.frame.headerSize : imageStore.newFrame.headerSize
-    const footer = !updateNewFrame ? imageStore.frame.footerSize : imageStore.newFrame.footerSize
+    const header = imageStore.frame.headerSize
+    const footer = imageStore.frame.footerSize
     const svgWidth = w + fw * 2
     const svgHeight = h + fh * 2 + (header > 0 ? header - fh : 0) + (footer > 0 ? footer - fh : 0)
     const phoneCornerRadius = Math.floor(Math.min(svgWidth, svgHeight) * 0.06)
