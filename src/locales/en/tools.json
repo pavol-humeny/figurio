@@ -33,6 +33,10 @@
       "crop": {
         "label": "Crop",
         "tip": "Crop tool"
+      },
+      "resize": {
+        "label": "Resize",
+        "tip": "Resize tool"
       }
     },
     "settings": {
@@ -48,9 +52,6 @@
         "applyRotationButton": {
           "text": "Apply rotation"
         }
-      },
-      "scale": {
-        "label": "scale"
       },
       "flip": {
         "label": "Flip",
@@ -93,6 +94,16 @@
         "cropBoxIsSameAsOriginalImage": {
           "title": "Crop box is same as original image",
           "message": "Crop box is same as original image. No crop was applied."
+        }
+      },
+      "resize":{
+        "label": "Resize",
+        "resizeDimensions": {
+          "title": "Resize dimensions",
+          "width": "Width",
+          "height": "Height",
+          "tipLinked": "Unlink width and height",
+          "tipUnlinked": "Link width and height"
         }
       }
     }

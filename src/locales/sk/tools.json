@@ -33,6 +33,10 @@
       "crop": {
         "label": "Orezanie",
         "tip": "Nástroj orezanie"
+      },
+      "resize": {
+        "label": "Zmena veľkosti",
+        "tip": "Nástroj zmena veľkosti"
       }
     },
     "settings": {
@@ -48,9 +52,6 @@
         "applyRotationButton": {
           "text": "Použiť rotáciu"
         }
-      },
-      "scale": {
-        "label": "Mierka"
       },
       "flip": {
         "label": "Zrkadliť",
@@ -93,6 +94,16 @@
         "cropBoxIsSameAsOriginalImage": {
           "title": "Orezanie je rovnaké ako pôvodný obrázok",
           "message": "Orezanie je rovnaké ako pôvodný obrázok. Orezanie nebolo použité."
+        }
+      },
+      "resize": {
+        "label": "Zmena veľkosti",
+        "resizeDimensions": {
+          "title": "Rozmery obrázka",
+          "width": "Šírka",
+          "height": "Výška",
+          "tipLinked": "Odpojiť šírku a výšku",
+          "tipUnlinked": "Prepojiť šírku a výšku"
         }
       }
     }
@@ -251,6 +262,16 @@
     "label": "Šablóny",
     "tip": "Aplikuj šablónu na obrázok.",
     "tipDisabled": "",
+    "subTools": {
+      "myPresets": {
+        "label": "Moje šablóny",
+        "tip": "Zobraz moje šablóny."
+      },
+      "createPreset": {
+        "label": "Vytvoriť šablónu",
+        "tip": "Vytvor novú šablónu z aktuálnych úprav obrázka."
+      }
+    },
     "settings": {
       "createPreset": {
         "label": "Vytvoriť šablónu",

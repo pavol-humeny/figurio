@@ -11,6 +11,7 @@ import { useCropTool } from '@/composables/tools/useCropTool'
 import { useFlipTool } from '@/composables/tools/useFlipTool'
 import { useRotateTool } from '@/composables/tools/useRotateTool'
 import { useHistoryStore } from '@/stores/historyStore'
+import { useResizeTool } from '@/composables/tools/useResizeTool'
 import { useI18n } from 'vue-i18n'
 
 const { t } = useI18n()
@@ -42,7 +43,18 @@ const { applyFlip } = useFlipTool(useImageStore(), useHistoryStore())
 
 const { applyRotation } = useRotateTool(useImageStore(), useHistoryStore(), t)
 
-const tabs = ['rotate', 'flip', 'crop']
+const {
+  fileDimensionWidth,
+  fileDimensionHeight,
+  maxFileDimensionWidth,
+  maxFileDimensionHeight,
+  updateFileDimension,
+  FileDimensionWidthInputRef,
+  FileDimensionHeightInputRef,
+  isFileDimensionsLinked,
+} = useResizeTool(useImageStore(), useHistoryStore(), t)
+
+const tabs = ['rotate', 'flip', 'crop', 'resize']
 </script>
 
 <template>
@@ -50,10 +62,7 @@ const tabs = ['rotate', 'flip', 'crop']
     <ToolsSettingsTabs :tabs="tabs" />
 
     <div class="settings-wrapper">
-      <div
-        v-if="editorStore.selectedTabPerTool[editorStore.selectedToolKey] === 'rotate'"
-        class="specific-settings"
-      >
+      <div v-if="editorStore.selectedTabPerTool[editorStore.selectedToolKey] === 'rotate'" class="specific-settings">
         <div class="settings-content-wrapper">
           <div class="content-wrapper">
             <div class="content-title">
@@ -63,10 +72,8 @@ const tabs = ['rotate', 'flip', 'crop']
               </p>
             </div>
             <div class="content-button">
-              <DefaultButton
-                :text="$t('tools.transform.settings.rotate.applyRotationButton.text')"
-                @click="applyRotation(-90)"
-              />
+              <DefaultButton :text="$t('tools.transform.settings.rotate.applyRotationButton.text')"
+                @click="applyRotation(-90)" />
             </div>
           </div>
         </div>
@@ -79,10 +86,8 @@ const tabs = ['rotate', 'flip', 'crop']
               </p>
             </div>
             <div class="content-button">
-              <DefaultButton
-                :text="$t('tools.transform.settings.rotate.applyRotationButton.text')"
-                @click="applyRotation(90)"
-              />
+              <DefaultButton :text="$t('tools.transform.settings.rotate.applyRotationButton.text')"
+                @click="applyRotation(90)" />
             </div>
           </div>
         </div>
@@ -91,10 +96,7 @@ const tabs = ['rotate', 'flip', 'crop']
         </div>
       </div>
 
-      <div
-        v-if="editorStore.selectedTabPerTool[editorStore.selectedToolKey] === 'flip'"
-        class="specific-settings"
-      >
+      <div v-if="editorStore.selectedTabPerTool[editorStore.selectedToolKey] === 'flip'" class="specific-settings">
         <div class="settings-content-wrapper">
           <div class="content-wrapper">
             <div class="content-title">
@@ -104,10 +106,8 @@ const tabs = ['rotate', 'flip', 'crop']
               </p>
             </div>
             <div class="content-button">
-              <DefaultButton
-                :text="$t('tools.transform.settings.flip.applyFlipButton.text')"
-                @click="applyFlip('horizontal')"
-              />
+              <DefaultButton :text="$t('tools.transform.settings.flip.applyFlipButton.text')"
+                @click="applyFlip('horizontal')" />
             </div>
           </div>
         </div>
@@ -120,10 +120,8 @@ const tabs = ['rotate', 'flip', 'crop']
               </p>
             </div>
             <div class="content-button">
-              <DefaultButton
-                :text="$t('tools.transform.settings.flip.applyFlipButton.text')"
-                @click="applyFlip('vertical')"
-              />
+              <DefaultButton :text="$t('tools.transform.settings.flip.applyFlipButton.text')"
+                @click="applyFlip('vertical')" />
             </div>
           </div>
         </div>
@@ -136,10 +134,7 @@ const tabs = ['rotate', 'flip', 'crop']
         class="specific-settings"
       >
       </div> -->
-      <div
-        v-if="editorStore.selectedTabPerTool[editorStore.selectedToolKey] === 'crop'"
-        class="specific-settings"
-      >
+      <div v-if="editorStore.selectedTabPerTool[editorStore.selectedToolKey] === 'crop'" class="specific-settings">
         <div class="settings-content-wrapper">
           <div class="content-wrapper">
             <div class="content-title">
@@ -152,14 +147,8 @@ const tabs = ['rotate', 'flip', 'crop']
                 <label for="x-input">
                   {{ $t('tools.transform.settings.crop.cropPosition.x') }}
                 </label>
-                <NumberInput
-                  ref="PositionXInputRef"
-                  v-model="cropPositionX"
-                  :min="0"
-                  :max="maxCropPositionX"
-                  @update="(val) => updatePosition('x', val)"
-                  unit="px"
-                />
+                <NumberInput ref="PositionXInputRef" v-model="cropPositionX" :min="0" :max="maxCropPositionX"
+                  @update="(val) => updatePosition('x', val)" unit="px" />
               </div>
 
               <div class="content-between-inputs-icon-wrapper disabled"></div>
@@ -168,14 +157,8 @@ const tabs = ['rotate', 'flip', 'crop']
                 <label for="y-input">
                   {{ $t('tools.transform.settings.crop.cropPosition.y') }}
                 </label>
-                <NumberInput
-                  ref="PositionYInputRef"
-                  v-model="cropPositionY"
-                  :min="0"
-                  :max="maxCropPositionY"
-                  @update="(val) => updatePosition('y', val)"
-                  unit="px"
-                />
+                <NumberInput ref="PositionYInputRef" v-model="cropPositionY" :min="0" :max="maxCropPositionY"
+                  @update="(val) => updatePosition('y', val)" unit="px" />
               </div>
             </div>
           </div>
@@ -192,39 +175,23 @@ const tabs = ['rotate', 'flip', 'crop']
                 <label for="width-input">
                   {{ $t('tools.transform.settings.crop.cropDimensions.width') }}
                 </label>
-                <NumberInput
-                  ref="widthInputRef"
-                  v-model="tmpCropWidth"
-                  :min="0"
-                  :max="maxCropWidth"
-                  @update="(val) => updateDimension('width', val)"
-                  unit="px"
-                />
+                <NumberInput ref="widthInputRef" v-model="tmpCropWidth" :min="0" :max="maxCropWidth"
+                  @update="(val) => updateDimension('width', val)" unit="px" />
               </div>
 
               <div class="content-between-inputs-icon-wrapper">
-                <LinkValuesIcon
-                  v-model="isDimensionsLinked"
+                <LinkValuesIcon v-model="isDimensionsLinked"
                   :tipLinked="$t('tools.transform.settings.crop.cropDimensions.tipLinked')"
-                  :tipUnlinked="$t('tools.transform.settings.crop.cropDimensions.tipUnlinked')"
-                  size="30"
-                  :disabled="cropRatio !== null"
-                  position="bottom-left"
-                />
+                  :tipUnlinked="$t('tools.transform.settings.crop.cropDimensions.tipUnlinked')" size="30"
+                  :disabled="cropRatio !== null" position="bottom-left" />
               </div>
 
               <div class="content-input">
                 <label for="height-input">
                   {{ $t('tools.transform.settings.crop.cropDimensions.height') }}
                 </label>
-                <NumberInput
-                  ref="heightInputRef"
-                  v-model="tmpCropHeight"
-                  :min="0"
-                  :max="maxCropHeight"
-                  @update="(val) => updateDimension('height', val)"
-                  unit="px"
-                />
+                <NumberInput ref="heightInputRef" v-model="tmpCropHeight" :min="0" :max="maxCropHeight"
+                  @update="(val) => updateDimension('height', val)" unit="px" />
               </div>
             </div>
           </div>
@@ -237,61 +204,43 @@ const tabs = ['rotate', 'flip', 'crop']
               </p>
             </div>
             <div class="crop-variants-wrapper">
-              <div
-                class="crop-variant"
-                :class="{ active: editorStore.selectedSubToolKey === 'cropFree' }"
-                @click="selectSubTool('cropFree')"
-              >
+              <div class="crop-variant" :class="{ active: editorStore.selectedSubToolKey === 'cropFree' }"
+                @click="selectSubTool('cropFree')">
                 <BaseIcon name="IconCropFree" size="40" :color="'var(--primary-c)'" />
                 <p>
                   {{ $t('tools.transform.settings.crop.cropVariants.cropFree') }}
                 </p>
               </div>
-              <div
-                class="crop-variant"
-                :class="{ active: editorStore.selectedSubToolKey === 'crop11' }"
-                @click="selectSubTool('crop11')"
-              >
+              <div class="crop-variant" :class="{ active: editorStore.selectedSubToolKey === 'crop11' }"
+                @click="selectSubTool('crop11')">
                 <BaseIcon name="IconCrop11" size="40" :color="'var(--primary-c)'" />
                 <p>
                   {{ $t('tools.transform.settings.crop.cropVariants.crop11') }}
                 </p>
               </div>
-              <div
-                class="crop-variant"
-                :class="{ active: editorStore.selectedSubToolKey === 'crop43' }"
-                @click="selectSubTool('crop43')"
-              >
+              <div class="crop-variant" :class="{ active: editorStore.selectedSubToolKey === 'crop43' }"
+                @click="selectSubTool('crop43')">
                 <BaseIcon name="IconCrop43" size="40" :color="'var(--primary-c)'" />
                 <p>
                   {{ $t('tools.transform.settings.crop.cropVariants.crop43') }}
                 </p>
               </div>
-              <div
-                class="crop-variant"
-                :class="{ active: editorStore.selectedSubToolKey === 'crop34' }"
-                @click="selectSubTool('crop34')"
-              >
+              <div class="crop-variant" :class="{ active: editorStore.selectedSubToolKey === 'crop34' }"
+                @click="selectSubTool('crop34')">
                 <BaseIcon name="IconCrop34" size="40" :color="'var(--primary-c)'" />
                 <p>
                   {{ $t('tools.transform.settings.crop.cropVariants.crop34') }}
                 </p>
               </div>
-              <div
-                class="crop-variant"
-                :class="{ active: editorStore.selectedSubToolKey === 'crop169' }"
-                @click="selectSubTool('crop169')"
-              >
+              <div class="crop-variant" :class="{ active: editorStore.selectedSubToolKey === 'crop169' }"
+                @click="selectSubTool('crop169')">
                 <BaseIcon name="IconCrop169" size="40" :color="'var(--primary-c)'" />
                 <p>
                   {{ $t('tools.transform.settings.crop.cropVariants.crop169') }}
                 </p>
               </div>
-              <div
-                class="crop-variant"
-                :class="{ active: editorStore.selectedSubToolKey === 'crop916' }"
-                @click="selectSubTool('crop916')"
-              >
+              <div class="crop-variant" :class="{ active: editorStore.selectedSubToolKey === 'crop916' }"
+                @click="selectSubTool('crop916')">
                 <BaseIcon name="IconCrop916" size="40" :color="'var(--primary-c)'" />
                 <p>
                   {{ $t('tools.transform.settings.crop.cropVariants.crop916') }}
@@ -303,13 +252,49 @@ const tabs = ['rotate', 'flip', 'crop']
         <div class="settings-content-wrapper">
           <div class="content-wrapper">
             <div class="content-button">
-              <DefaultButton
-                :text="$t('tools.transform.settings.crop.applyCropButton.text')"
-                @click="applyCrop"
-              />
+              <DefaultButton :text="$t('tools.transform.settings.crop.applyCropButton.text')" @click="applyCrop" />
             </div>
           </div>
         </div>
+        <div class="settings-content-wrapper" style="border: none">
+          <!-- Empty space -->
+        </div>
+      </div>
+      <div v-if="editorStore.selectedTabPerTool[editorStore.selectedToolKey] === 'resize'" class="specific-settings">
+        <div class="settings-content-wrapper">
+          <div class="content-wrapper">
+            <div class="content-title">
+              <p>
+                {{ $t('tools.transform.settings.resize.resizeDimensions.title') }}
+              </p>
+            </div>
+            <div class="content-inputs">
+              <div class="content-input">
+                <label for="width-input">
+                  {{ $t('tools.transform.settings.resize.resizeDimensions.width') }}
+                </label>
+                <NumberInput ref="FileDimensionWidthInputRef" v-model="fileDimensionWidth" :min="1"
+                  :max="maxFileDimensionWidth" @update="(val) => updateFileDimension('width', val)" unit="px" />
+              </div>
+
+              <div class="content-between-inputs-icon-wrapper">
+                <LinkValuesIcon v-model="isFileDimensionsLinked"
+                  :tipLinked="$t('tools.transform.settings.resize.resizeDimensions.tipLinked')"
+                  :tipUnlinked="$t('tools.transform.settings.resize.resizeDimensions.tipUnlinked')" size="30"
+                  position="bottom-left" />
+              </div>
+
+              <div class="content-input">
+                <label for="height-input">
+                  {{ $t('tools.transform.settings.resize.resizeDimensions.height') }}
+                </label>
+                <NumberInput ref="FileDimensionHeightInputRef" v-model="fileDimensionHeight" :min="1"
+                  :max="maxFileDimensionHeight" @update="(val) => updateFileDimension('height', val)" unit="px" />
+              </div>
+            </div>
+          </div>
+        </div>
+
         <div class="settings-content-wrapper" style="border: none">
           <!-- Empty space -->
         </div>
@@ -328,6 +313,7 @@ const tabs = ['rotate', 'flip', 'crop']
   overflow-y: auto;
   overflow-x: hidden;
 }
+
 .crop-variant {
   display: flex;
   align-items: center;

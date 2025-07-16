@@ -21,6 +21,10 @@ export const toolsDefinitions = [
         key: 'crop',
         iconName: 'IconCropTool',
       },
+      {
+        key: 'resize',
+        iconName: 'IconResizeTool',
+      },
     ],
   },
   {

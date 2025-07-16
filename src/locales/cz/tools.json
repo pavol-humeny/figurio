@@ -33,6 +33,10 @@
       "crop": {
         "label": "Oříznout",
         "tip": "Nástoj oříznutí"
+      },
+      "resize": {
+        "label": "Změnit velikost",
+        "tip": "Nástroj změny velikosti"
       }
     },
     "settings": {
@@ -48,9 +52,6 @@
         "applyRotationButton": {
           "text": "Použít rotaci"
         }
-      },
-      "scale": {
-        "label": "Měřítko"
       },
       "flip": {
         "label": "Překlopit",
@@ -93,6 +94,16 @@
         "cropBoxIsSameAsOriginalImage": {
           "title": "Orezanie je rovnaké ako pôvodný obrázok",
           "message": "Orezanie je rovnaké ako pôvodný obrázok. Orezanie nebolo použité."
+        }
+      },
+      "resize":{
+        "label": "Změnit velikost",
+        "resizeDimensions": {
+          "title": "Rozměry obrázku",
+          "width": "Šířka",
+          "height": "Výška",
+          "tipLinked": "Odpojit šířku a výšku",
+          "tipUnlinked": "Propojit šířku a výšku"
         }
       }
     }
