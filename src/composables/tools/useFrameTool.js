@@ -154,7 +154,6 @@ export function useFrameTool(imageStore, historyStore, editorStore, t) {
   }
 
   const applyFrameRender = (el, width = null, height = null, updateNewFrame = false) => {
-    console.log('Applying frame render...')
 
     const ns = 'http://www.w3.org/2000/svg'
     const frame = imageStore.frame
@@ -227,8 +226,8 @@ export function useFrameTool(imageStore, historyStore, editorStore, t) {
       imageStore.newFrame.height = fh
     }
 
-    const header = frame.headerSize
-    const footer = frame.footerSize
+    const header = !updateNewFrame ? imageStore.frame.headerSize : imageStore.newFrame.headerSize
+    const footer = !updateNewFrame ? imageStore.frame.footerSize : imageStore.newFrame.footerSize
     const svgWidth = w + fw * 2
     const svgHeight = h + fh * 2 + (header > 0 ? header - fh : 0) + (footer > 0 ? footer - fh : 0)
     const phoneCornerRadius = Math.floor(Math.min(svgWidth, svgHeight) * 0.06)

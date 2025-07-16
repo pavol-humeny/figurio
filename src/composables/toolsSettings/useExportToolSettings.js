@@ -4,7 +4,7 @@ const isVisible = ref(false)
 
 export function useExportToolSettings(imageStore, editorStore, historyStore, t) {
   const inputFileNameRef = ref(null)
-  const isDimensionsLinked = ref(true)
+  // const isDimensionsLinked = ref(true)
 
   const previewUrl = computed(() => imageStore?.previewUrl || '')
 
@@ -30,23 +30,23 @@ export function useExportToolSettings(imageStore, editorStore, historyStore, t) 
   const updateDimension = async (type, value) => {
     if (!value || value <= 0) return
 
-    if (type === 'width') {
-      imageStore.newFileDimensions.width = value
+    // if (type === 'width') {
+    //   imageStore.newFileDimensions.width = value
 
-      if (isDimensionsLinked.value) {
-        const ratio = imageStore.newFileDimensions.fileAspectRatio
-        imageStore.newFileDimensions.height = Math.round(value / ratio)
-      }
-    }
+    //   if (isDimensionsLinked.value) {
+    //     const ratio = imageStore.newFileDimensions.fileAspectRatio
+    //     imageStore.newFileDimensions.height = Math.round(value / ratio)
+    //   }
+    // }
 
-    if (type === 'height') {
-      imageStore.newFileDimensions.height = value
+    // if (type === 'height') {
+    //   imageStore.newFileDimensions.height = value
 
-      if (isDimensionsLinked.value) {
-        const ratio = imageStore.newFileDimensions.fileAspectRatio
-        imageStore.newFileDimensions.width = Math.round(value * ratio)
-      }
-    }
+    //   if (isDimensionsLinked.value) {
+    //     const ratio = imageStore.newFileDimensions.fileAspectRatio
+    //     imageStore.newFileDimensions.width = Math.round(value * ratio)
+    //   }
+    // }
 
     if (type === 'quality') {
       imageStore.newFileDimensions.quality = value
@@ -107,27 +107,27 @@ export function useExportToolSettings(imageStore, editorStore, historyStore, t) 
     isVisible.value = false
   }
 
-  const resetFileDimensions = async () => {
-    if (imageStore.frame?.enabled) {
-      imageStore.newFileDimensions.width =
-        imageStore.fileDimensions.width + imageStore.frame.width * 2
-      if (imageStore.frame.headerSize > 0) {
-        imageStore.newFileDimensions.height =
-          imageStore.fileDimensions.height + imageStore.frame.height + imageStore.frame.headerSize
-      } else if (imageStore.frame.footerSize > 0) {
-        imageStore.newFileDimensions.height =
-          imageStore.fileDimensions.height + imageStore.frame.height + imageStore.frame.footerSize
-      } else {
-        imageStore.newFileDimensions.height =
-          imageStore.fileDimensions.height + imageStore.frame.height * 2
-      }
-    } else {
-      imageStore.newFileDimensions = { ...imageStore.fileDimensions }
-    }
-    isDimensionsLinked.value = true
+  // const resetFileDimensions = async () => {
+  //   if (imageStore.frame?.enabled) {
+  //     imageStore.newFileDimensions.width =
+  //       imageStore.fileDimensions.width + imageStore.frame.width * 2
+  //     if (imageStore.frame.headerSize > 0) {
+  //       imageStore.newFileDimensions.height =
+  //         imageStore.fileDimensions.height + imageStore.frame.height + imageStore.frame.headerSize
+  //     } else if (imageStore.frame.footerSize > 0) {
+  //       imageStore.newFileDimensions.height =
+  //         imageStore.fileDimensions.height + imageStore.frame.height + imageStore.frame.footerSize
+  //     } else {
+  //       imageStore.newFileDimensions.height =
+  //         imageStore.fileDimensions.height + imageStore.frame.height * 2
+  //     }
+  //   } else {
+  //     imageStore.newFileDimensions = { ...imageStore.fileDimensions }
+  //   }
+  //   isDimensionsLinked.value = true
 
-    await imageStore.generatePreview(editorStore, historyStore, t)
-  }
+  //   await imageStore.generatePreview(editorStore, historyStore, t)
+  // }
 
   return {
     isVisible,
@@ -137,11 +137,11 @@ export function useExportToolSettings(imageStore, editorStore, historyStore, t) 
     fileDimensions,
     updateDimension,
     saveNewFileName,
-    resetFileDimensions,
+    // resetFileDimensions,
     openExportToolSettings,
     closeExportToolSettings,
     exportFile,
-    isDimensionsLinked,
+    // isDimensionsLinked,
     previewUrl,
   }
 }

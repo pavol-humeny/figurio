@@ -5,7 +5,7 @@ import BaseIcon from '@/components/icons/BaseIcon.vue'
 import { useShaking } from '@/composables/common/useShaking'
 import { useImageStore } from '@/stores/imageStore'
 import { useI18n } from 'vue-i18n'
-import LinkValuesIcon from '@/components/common/LinkValuesIcon.vue'
+// import LinkValuesIcon from '@/components/common/LinkValuesIcon.vue'
 import DefaultSlider from '@/components/common/DefaultSlider.vue'
 import { useEditorStore } from '@/stores/editorStore'
 import { useHistoryStore } from '@/stores/historyStore'
@@ -22,10 +22,10 @@ const {
   fileDimensions,
   updateDimension,
   saveNewFileName,
-  resetFileDimensions,
+  // resetFileDimensions,
   closeExportToolSettings,
   exportFile,
-  isDimensionsLinked,
+  // isDimensionsLinked,
   previewUrl,
 } = useExportToolSettings(useImageStore(), useEditorStore(), useHistoryStore(), t)
 </script>
@@ -40,34 +40,36 @@ const {
             <p>{{ $t('tools.export.settings.general.title') }}</p>
           </div>
 
-          <div class="export-settings-item">
-            <label for="file-format">{{ $t('tools.export.settings.general.fileFormat') }}</label>
-            <select id="file-format" v-model="fileFormat">
-              <option value="png">PNG</option>
-              <option value="jpg">JPG</option>
-              <option value="pdf">PDF</option>
-              <option value="webp">WebP</option>
-            </select>
-          </div>
+          <div class="export-settings-wrapper">
+            <div class="export-settings-item">
+              <label for="file-format">{{ $t('tools.export.settings.general.fileFormat') }}</label>
+              <select id="file-format" v-model="fileFormat">
+                <option value="png">PNG</option>
+                <option value="jpg">JPG</option>
+                <option value="pdf">PDF</option>
+                <option value="webp">WebP</option>
+              </select>
+            </div>
 
-          <div class="export-settings-item" v-if="fileFormat === 'jpg' || fileFormat === 'webp'">
-            <!-- slider for quality setting -->
-            <label for="file-quality">{{
-              $t('tools.export.settings.general.fileQuality.label')
+            <div class="export-settings-item" v-if="fileFormat === 'jpg' || fileFormat === 'webp'">
+              <!-- slider for quality setting -->
+              <label for="file-quality">{{
+                $t('tools.export.settings.general.fileQuality.label')
               }}</label>
-            <p>{{ fileDimensions.quality }} %</p>
-            <DefaultSlider v-model="fileDimensions.quality" :min="0" :max="100" :step="1"
-              @update:modelValue="(value) => updateDimension('quality', value)"
-              :backgroundColor="'var(--background-c)'" />
-          </div>
+              <p>{{ fileDimensions.quality }} %</p>
+              <DefaultSlider v-model="fileDimensions.quality" :min="0" :max="100" :step="1"
+                @update:modelValue="(value) => updateDimension('quality', value)"
+                :backgroundColor="'var(--background-c)'" />
+            </div>
 
-          <div class="export-settings-item">
-            <label for="file-name">{{ $t('tools.export.settings.general.fileName.label') }}</label>
-            <input ref="inputFileNameRef" type="text" v-model="fileName" id="file-name"
-              :placeholder="$t('tools.export.settings.general.fileName.placeholder')" @blur="saveNewFileName"
-              @keydown.enter="saveNewFileName" />
+            <div class="export-settings-item">
+              <label for="file-name">{{ $t('tools.export.settings.general.fileName.label') }}</label>
+              <input ref="inputFileNameRef" type="text" v-model="fileName" id="file-name"
+                :placeholder="$t('tools.export.settings.general.fileName.placeholder')" @blur="saveNewFileName"
+                @keydown.enter="saveNewFileName" />
+            </div>
           </div>
-
+          <!--
           <div class="export-settings-item">
             <label for="file-dimensions">{{
               $t('tools.export.settings.general.fileDimensions.label')
@@ -109,6 +111,7 @@ const {
               </div>
             </div>
           </div>
+          -->
 
           <div class="buttons-wrapper">
             <DefaultButton :text="$t('tools.export.settings.general.cancelButton.text')"
@@ -150,8 +153,8 @@ const {
   border-radius: 20px;
   min-width: 900px;
   max-width: 80vh;
-  min-height: 500px;
-  max-height: 80vh;
+  height: 500px;
+
   box-shadow: var(--box-shadow-ui);
   display: flex;
   flex-direction: row;
@@ -160,12 +163,13 @@ const {
 }
 
 .export-settings {
+  height: 100%;
   flex: 1;
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: space-between;
   align-items: center;
-  gap: 30px;
+  /* gap: 30px; */
 }
 
 .title-wrapper {
@@ -181,6 +185,16 @@ const {
 .title-wrapper p {
   font-size: var(--title-font-size);
   font-weight: var(--title-font-weight);
+}
+
+.export-settings-wrapper {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: top;
+  height: 100%;
+  padding: 20px 0;
+  gap: 40px;
 }
 
 .export-settings-item {
