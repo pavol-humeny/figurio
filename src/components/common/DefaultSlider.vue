@@ -1,4 +1,5 @@
 <script setup>
+import { ref, watch } from 'vue'
 import ItemTip from './ItemTip.vue'
 
 /**
@@ -68,7 +69,18 @@ const props = defineProps({
  * @event update:modelValue - Emitted when the slider value changes (for v-model)
  * @event dblclick - Emitted when the slider is double-clicked (can be used to reset)
  */
-const emit = defineEmits(['update:modelValue', 'dblclick'])
+const emit = defineEmits(['update:modelValue', 'dblclick', 'update'])
+
+/**
+ * Reactive current value used internally
+ * @type {import('vue').Ref<number>}
+ */
+const currentValue = ref(props.modelValue)
+
+// Sync currentValue when modelValue changes
+watch(() => props.modelValue, (val) => {
+  currentValue.value = val
+})
 
 /**
  * Handles input change and emits updated value.
@@ -77,6 +89,7 @@ const emit = defineEmits(['update:modelValue', 'dblclick'])
 const onInput = (event) => {
   const value = Number(event.target.value)
   emit('update:modelValue', value)
+  emit('update', value)
 }
 </script>
 
@@ -87,10 +100,10 @@ const onInput = (event) => {
         <p v-if="props.valueDescription !== ''" class="slider-value-description">
           {{ props.valueDescription + ':' }}
         </p>
-        <p class="slider-value">{{ modelValue }}</p>
+        <p class="slider-value">{{ currentValue }}</p>
         <p v-if="props.valueUnit !== ''" class="slider-value-unit">{{ props.valueUnit }}</p>
       </div>
-      <input type="range" :min="props.min" :max="props.max" :step="props.step" :value="modelValue"
+      <input type="range" :min="props.min" :max="props.max" :step="props.step" v-model="currentValue"
         :disabled="props.disabled" @input="onInput" @dblclick="$emit('dblclick')"
         :style="{ '--slider-bg': props.backgroundColor }" />
     </div>
