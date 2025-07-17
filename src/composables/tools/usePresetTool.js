@@ -382,6 +382,7 @@ export function usePresetTool(
             operation.cropBox,
           )
         }
+        // TODO
         // UPDATE new tool
       })
     }
@@ -431,6 +432,11 @@ export function usePresetTool(
       width: 0,
       height: 0,
     },
+    resizeDimensions: {
+      width: 0,
+      height: 0,
+    },
+
     // UPDATE new tool
   })
 
@@ -539,6 +545,10 @@ export function usePresetTool(
         width: 0,
         height: 0,
       },
+      resizeDimensions: {
+        width: 0,
+        height: 0,
+      },
       // UPDATE new tool
     }
 
@@ -581,6 +591,16 @@ export function usePresetTool(
           y: newPreset.value.cropBox.y,
           width: newPreset.value.cropBox.width,
           height: newPreset.value.cropBox.height,
+        },
+      })
+    }
+
+    if (newPreset.value.resizeDimensions.width > 0 && newPreset.value.resizeDimensions.height > 0) {
+      imageOperations.push({
+        type: 'resize',
+        resizeDimensions: {
+          width: newPreset.value.resizeDimensions.width,
+          height: newPreset.value.resizeDimensions.height,
         },
       })
     }
@@ -691,19 +711,18 @@ export function usePresetTool(
     }, 2000)
   }
 
-  const updateCropPositionAndDimensions = (type, value) => {
-    if (type === 'x') {
-      newPreset.value.cropBox.x = value
-    } else if (type === 'y') {
-      newPreset.value.cropBox.y = value
-    } else if (type === 'width') {
-      newPreset.value.cropBox.width = value
-    } else if (type === 'height') {
-      newPreset.value.cropBox.height = value
-    }
+  const MAX_SIZE = 10000
 
-    isPresetModified.value = true
-  }
+  const maxCropBoxPositionX = computed(() => MAX_SIZE)
+  const maxCropBoxPositionY = computed(() => MAX_SIZE)
+
+  const maxCropBoxWidth = computed(() => {
+    return Math.max(0, MAX_SIZE - newPreset.value.cropBox.x)
+  })
+
+  const maxCropBoxHeight = computed(() => {
+    return Math.max(0, MAX_SIZE - newPreset.value.cropBox.y)
+  })
 
   return {
     newPreset,
@@ -734,6 +753,9 @@ export function usePresetTool(
     newOperation,
     applyPreset,
     clearSelected,
-    updateCropPositionAndDimensions,
+    maxCropBoxPositionX,
+    maxCropBoxPositionY,
+    maxCropBoxWidth,
+    maxCropBoxHeight,
   }
 }

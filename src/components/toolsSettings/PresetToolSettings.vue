@@ -51,7 +51,10 @@ const {
   newOperation,
   applyPreset,
   clearSelected,
-  updateCropPositionAndDimensions,
+  maxCropBoxPositionX,
+  maxCropBoxPositionY,
+  maxCropBoxWidth,
+  maxCropBoxHeight,
 } = usePresetTool(
   useImageStore(),
   useHistoryStore(),
@@ -390,16 +393,16 @@ const tabs = ['myPresets', 'createPreset']
                 <label for="x-input">
                   {{ $t('tools.transform.settings.crop.cropPosition.x') }}
                 </label>
-                <NumberInput ref="cropPositionXInputRef" v-model="newPreset.cropBox.x" :min="0" :max="10000"
-                  @update="(val) => updateCropPositionAndDimensions('x', val)" unit="px" />
+                <NumberInput ref="cropPositionXInputRef" v-model="newPreset.cropBox.x" :min="0"
+                  :max="maxCropBoxPositionX" unit="px" />
               </div>
               <div class="content-between-inputs-icon-wrapper disabled"></div>
               <div class="content-input">
                 <label for="y-input">
                   {{ $t('tools.transform.settings.crop.cropPosition.y') }}
                 </label>
-                <NumberInput ref="cropPositionYInputRef" v-model="newPreset.cropBox.y" :min="0" :max="10000"
-                  @update="(val) => updateCropPositionAndDimensions('y', val)" unit="px" />
+                <NumberInput ref="cropPositionYInputRef" v-model="newPreset.cropBox.y" :min="0"
+                  :max="maxCropBoxPositionY" unit="px" />
               </div>
             </div>
             <div class="content-inputs" :style="{ marginTop: '10px' }">
@@ -408,7 +411,7 @@ const tabs = ['myPresets', 'createPreset']
                   {{ $t('tools.transform.settings.crop.cropDimensions.width') }}
                 </label>
                 <NumberInput ref="cropWidthInputRef" v-model="newPreset.cropBox.width" :min="0" :max="maxCropBoxWidth"
-                  @update="(value) => updateCropPositionAndDimensions('width', value)" unit="px" />
+                  unit="px" />
               </div>
 
               <div class="content-between-inputs-icon-wrapper disabled"></div>
@@ -418,12 +421,23 @@ const tabs = ['myPresets', 'createPreset']
                   {{ $t('tools.transform.settings.crop.cropDimensions.height') }}
                 </label>
                 <NumberInput ref="cropHeightInputRef" v-model="newPreset.cropBox.height" :min="0"
-                  :max="maxCropBoxHeight" @update="(value) => updateCropPositionAndDimensions('height', value)"
-                  unit="px" />
+                  :max="maxCropBoxHeight" unit="px" />
               </div>
             </div>
           </div>
         </div>
+
+        <!-- Resize -->
+        <div v-if="isShowManualPresetSetting" class="settings-content-wrapper">
+          <div class="content-wrapper">
+            <div class="content-title">
+              <p>
+                {{ t('tools.preset.settings.createPreset.presetValues.resize.label') }}
+              </p>
+            </div>
+          </div>
+        </div>
+
         <!-- Frame -->
         <div v-if="isShowManualPresetSetting" class="settings-content-wrapper">
           <div class="content-wrapper">

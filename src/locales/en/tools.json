@@ -410,6 +410,9 @@
             "label": "Crop",
             "tip": "Invalid crop box for this image",
             "noModifications": "No modifications"
+          },
+          "resize": {
+            "label": "Resize"
           }
         },
         "deletePresetButton": {

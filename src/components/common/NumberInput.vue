@@ -70,8 +70,17 @@ watch(
 )
 
 const onBlurOrEnter = () => {
-  emit('update:modelValue', inputValue.value)
-  emit('update', inputValue.value)
+  let value = inputValue.value
+
+  if (value < props.min) {
+    value = props.min
+  } else if (value > props.max) {
+    value = props.max
+  }
+
+  inputValue.value = value
+  emit('update:modelValue', value)
+  emit('update', value)
 }
 
 const onIconDoubleClick = () => {
@@ -94,34 +103,17 @@ const showUnit = props.unit !== ''
 <template>
   <ItemTip :text="props.tip" :position="props.position">
     <div class="input-wrapper">
-      <input
-        type="number"
-        class="value-input"
-        :style="{
-          paddingLeft: showIcon ? '30px' : '10px',
-          paddingRight: showUnit ? '25px' : '10px',
-        }"
-        v-model.number="inputValue"
-        :min="props.min"
-        :max="props.max"
-        :step="props.step"
-        :disabled="props.disabled"
-        @blur="onBlurOrEnter"
-        @keydown.enter="onBlurOrEnter"
-      />
-      <BaseIcon
-        v-if="showIcon"
-        :name="props.icon"
-        class="input-icon"
-        :size="props.size"
-        :color="props.color"
-        @dblclick="onIconDoubleClick"
-        :class="{ 'not-allowed': props.disabled, disabled: props.disabled }"
-        :style="{ top: props.iconTop + '%' }"
-      />
+      <input type="number" class="value-input" :style="{
+        paddingLeft: showIcon ? '30px' : '10px',
+        paddingRight: showUnit ? '25px' : '10px',
+      }" v-model.number="inputValue" :min="props.min" :max="props.max" :step="props.step" :disabled="props.disabled"
+        @blur="onBlurOrEnter" @keydown.enter="onBlurOrEnter" />
+      <BaseIcon v-if="showIcon" :name="props.icon" class="input-icon" :size="props.size" :color="props.color"
+        @dblclick="onIconDoubleClick" :class="{ 'not-allowed': props.disabled, disabled: props.disabled }"
+        :style="{ top: props.iconTop + '%' }" />
       <span v-if="showUnit" class="input-unit" :class="{ disabled: props.disabled }">{{
         props.unit
-      }}</span>
+        }}</span>
     </div>
   </ItemTip>
 </template>

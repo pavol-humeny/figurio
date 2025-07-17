@@ -93,7 +93,7 @@ export function useResizeTool(imageStore, historyStore, t) {
     })
     imageStore.addImageOperation({
       type: 'resize',
-      dimensions: {
+      resizeDimensions: {
         width: fileDimensionWidth.value,
         height: fileDimensionHeight.value,
       },

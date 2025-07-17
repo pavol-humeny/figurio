@@ -92,9 +92,11 @@ const getOperationLabel = (type) => {
       return t('tools.preset.settings.myPresets.presetValues.grayscale.label')
     case 'crop':
       return t('tools.preset.settings.myPresets.presetValues.crop.label')
+    case 'resize':
+      return t('tools.preset.settings.myPresets.presetValues.resize.label')
     default:
       return type
-    // UPDATE
+    // UPDATE new tool
   }
 }
 
@@ -116,37 +118,20 @@ const imageCanBeCropped = (cropBox) => {
 </script>
 
 <template>
-  <draggable
-    v-model="internalList"
-    tag="div"
-    item-key="id"
-    handle=".drag-handle"
-    animation="200"
-    ghost-class="drag-ghost"
-    class="operations-list"
-    @update="onDragUpdate"
-    :class="{ 'disabled-list': props.disabled }"
-  >
+  <draggable v-model="internalList" tag="div" item-key="id" handle=".drag-handle" animation="200"
+    ghost-class="drag-ghost" class="operations-list" @update="onDragUpdate"
+    :class="{ 'disabled-list': props.disabled }">
     <template #item="{ element, index }">
-      <div
-        class="operation-item"
-        @click="(e) => handleSelect(e, element)"
-        :class="{
-          selected: selectedOperation === element && props.modificationEnabled,
-          modificationEnabled: props.modificationEnabled,
-        }"
-      >
+      <div class="operation-item" @click="(e) => handleSelect(e, element)" :class="{
+        selected: selectedOperation === element && props.modificationEnabled,
+        modificationEnabled: props.modificationEnabled,
+      }">
         <div class="drag-handle" :class="{ hide: !props.modificationEnabled }">☰</div>
 
         <div class="operation-type">
-          <BaseIcon
-            v-if="element.type === 'crop' && !imageCanBeCropped(element.cropBox)"
-            name="IconWarning"
-            :size="18"
-            :color="'var(--warning-c)'"
-            :tip="t('tools.preset.settings.myPresets.presetValues.crop.tip')"
-            :position="'bottom-left'"
-          />
+          <BaseIcon v-if="element.type === 'crop' && !imageCanBeCropped(element.cropBox)" name="IconWarning" :size="18"
+            :color="'var(--warning-c)'" :tip="t('tools.preset.settings.myPresets.presetValues.crop.tip')"
+            :position="'bottom-left'" />
           <p>
             {{ getOperationLabel(element.type) }}
           </p>
@@ -174,14 +159,16 @@ const imageCanBeCropped = (cropBox) => {
               {{ element.cropBox.height }})
             </p>
           </div>
-        </div>
+          <div v-else-if="element.type === 'resize'">
+            <p>
+              {{ element.resizeDimensions.width }}px x {{ element.resizeDimensions.height }}px
+            </p>
+          </div>
 
-        <div
-          class="remove-button"
-          @click.stop="removeOperation(index, element)"
-          :class="{ hide: !props.modificationEnabled }"
-        >
-          ✕
+          <div class="remove-button" @click.stop="removeOperation(index, element)"
+            :class="{ hide: !props.modificationEnabled }">
+            ✕
+          </div>
         </div>
       </div>
     </template>
@@ -214,9 +201,11 @@ const imageCanBeCropped = (cropBox) => {
 .operation-item.selected {
   background-color: var(--background-c);
 }
+
 .operation-item.modificationEnabled {
   cursor: pointer;
 }
+
 /* .operation-item.warning {
   background-color: rgb(255, 187, 0);
 } */

@@ -140,7 +140,12 @@ const presetFlipOptions = [
       </div>
     </template>
 
-    <!-- UPDATE - add new template -->
+    <!-- Resize -->
+    <template v-else-if="localOperation.type === 'resize'">
+      <!-- TODO -->
+    </template>
+
+    <!-- UPDATE new tool - add new template -->
   </div>
 </template>
 
