@@ -6,6 +6,7 @@ import { useRotateTool } from './useRotateTool'
 import { useSmartCropTool } from './useSmartCropTool'
 import { useGrayscaleTool } from './useGrayscaleTool'
 import { useCropTool } from './useCropTool'
+import { editorConfig } from '@/config/editorConfig'
 
 export function usePresetTool(
   imageStore,
@@ -587,10 +588,10 @@ export function usePresetTool(
       imageOperations.push({
         type: 'crop',
         cropBox: {
-          x: newPreset.value.cropBox.x,
-          y: newPreset.value.cropBox.y,
-          width: newPreset.value.cropBox.width,
-          height: newPreset.value.cropBox.height,
+          x: newPreset.value.cropBox.x || 0,
+          y: newPreset.value.cropBox.y || 0,
+          width: newPreset.value.cropBox.width || 0,
+          height: newPreset.value.cropBox.height || 0,
         },
       })
     }
@@ -599,8 +600,8 @@ export function usePresetTool(
       imageOperations.push({
         type: 'resize',
         resizeDimensions: {
-          width: newPreset.value.resizeDimensions.width,
-          height: newPreset.value.resizeDimensions.height,
+          width: newPreset.value.resizeDimensions.width || 0,
+          height: newPreset.value.resizeDimensions.height || 0,
         },
       })
     }
@@ -711,17 +712,15 @@ export function usePresetTool(
     }, 2000)
   }
 
-  const MAX_SIZE = 10000
-
-  const maxCropBoxPositionX = computed(() => MAX_SIZE)
-  const maxCropBoxPositionY = computed(() => MAX_SIZE)
+  const maxCropBoxPositionX = computed(() => editorConfig.maxFileDimensionWidth)
+  const maxCropBoxPositionY = computed(() => editorConfig.maxFileDimensionHeight)
 
   const maxCropBoxWidth = computed(() => {
-    return Math.max(0, MAX_SIZE - newPreset.value.cropBox.x)
+    return Math.max(0, editorConfig.maxFileDimensionWidth - newPreset.value.cropBox.x)
   })
 
   const maxCropBoxHeight = computed(() => {
-    return Math.max(0, MAX_SIZE - newPreset.value.cropBox.y)
+    return Math.max(0, editorConfig.maxFileDimensionHeight - newPreset.value.cropBox.y)
   })
 
   return {

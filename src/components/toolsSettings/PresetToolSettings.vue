@@ -17,6 +17,7 @@ import PresetOperationDetails from '../common/PresetOperationDetails.vue'
 import BaseIcon from '../icons/BaseIcon.vue'
 import PresetNewOperation from '../common/PresetNewOperation.vue'
 import { useViewportStore } from '@/stores/viewportStore'
+import { editorConfig } from '@/config/editorConfig'
 
 const { t } = useI18n()
 
@@ -389,7 +390,7 @@ const tabs = ['myPresets', 'createPreset']
               </p>
             </div>
             <div class="content-inputs">
-              <div class="content-input">
+              <div class="content-input" :class="newPreset.cropBox.x === 0 ? 'no-value' : ''">
                 <label for="x-input">
                   {{ $t('tools.transform.settings.crop.cropPosition.x') }}
                 </label>
@@ -397,7 +398,7 @@ const tabs = ['myPresets', 'createPreset']
                   :max="maxCropBoxPositionX" unit="px" />
               </div>
               <div class="content-between-inputs-icon-wrapper disabled"></div>
-              <div class="content-input">
+              <div class="content-input" :class="newPreset.cropBox.y === 0 ? 'no-value' : ''">
                 <label for="y-input">
                   {{ $t('tools.transform.settings.crop.cropPosition.y') }}
                 </label>
@@ -406,7 +407,7 @@ const tabs = ['myPresets', 'createPreset']
               </div>
             </div>
             <div class="content-inputs" :style="{ marginTop: '10px' }">
-              <div class="content-input">
+              <div class="content-input" :class="newPreset.cropBox.width === 0 ? 'no-value' : ''">
                 <label for="width-input">
                   {{ $t('tools.transform.settings.crop.cropDimensions.width') }}
                 </label>
@@ -416,7 +417,7 @@ const tabs = ['myPresets', 'createPreset']
 
               <div class="content-between-inputs-icon-wrapper disabled"></div>
 
-              <div class="content-input">
+              <div class="content-input" :class="newPreset.cropBox.height === 0 ? 'no-value' : ''">
                 <label for="height-input">
                   {{ $t('tools.transform.settings.crop.cropDimensions.height') }}
                 </label>
@@ -434,6 +435,25 @@ const tabs = ['myPresets', 'createPreset']
               <p>
                 {{ t('tools.preset.settings.createPreset.presetValues.resize.label') }}
               </p>
+            </div>
+            <div class="content-inputs">
+              <div class="content-input" :class="newPreset.resizeDimensions.width === 0 ? 'no-value' : ''">
+                <label for="width-input">
+                  {{ $t('tools.transform.settings.resize.resizeDimensions.width') }}
+                </label>
+                <NumberInput ref="FileDimensionWidthInputRef" v-model="newPreset.resizeDimensions.width" :min="0"
+                  :max="editorConfig.maxFileDimensionWidth" unit="px" />
+              </div>
+
+              <div class="content-between-inputs-icon-wrapper disabled"></div>
+
+              <div class="content-input" :class="newPreset.resizeDimensions.height === 0 ? 'no-value' : ''">
+                <label for="height-input">
+                  {{ $t('tools.transform.settings.resize.resizeDimensions.height') }}
+                </label>
+                <NumberInput ref="FileDimensionHeightInputRef" v-model="newPreset.resizeDimensions.height" :min="0"
+                  :max="editorConfig.maxFileDimensionHeight" unit="px" />
+              </div>
             </div>
           </div>
         </div>
