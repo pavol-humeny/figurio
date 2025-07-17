@@ -62,6 +62,7 @@ const tabs = ['rotate', 'flip', 'crop', 'resize']
     <ToolsSettingsTabs :tabs="tabs" />
 
     <div class="settings-wrapper">
+      <!-- Rotate -->
       <div v-if="editorStore.selectedTabPerTool[editorStore.selectedToolKey] === 'rotate'" class="specific-settings">
         <div class="settings-content-wrapper">
           <div class="content-wrapper">
@@ -96,6 +97,7 @@ const tabs = ['rotate', 'flip', 'crop', 'resize']
         </div>
       </div>
 
+      <!-- Flip -->
       <div v-if="editorStore.selectedTabPerTool[editorStore.selectedToolKey] === 'flip'" class="specific-settings">
         <div class="settings-content-wrapper">
           <div class="content-wrapper">
@@ -129,11 +131,8 @@ const tabs = ['rotate', 'flip', 'crop', 'resize']
           <!-- Empty space -->
         </div>
       </div>
-      <!-- <div
-        v-if="editorStore.selectedTabPerTool[editorStore.selectedToolKey] === 'scale'"
-        class="specific-settings"
-      >
-      </div> -->
+
+      <!-- Crop -->
       <div v-if="editorStore.selectedTabPerTool[editorStore.selectedToolKey] === 'crop'" class="specific-settings">
         <div class="settings-content-wrapper">
           <div class="content-wrapper">
@@ -260,6 +259,8 @@ const tabs = ['rotate', 'flip', 'crop', 'resize']
           <!-- Empty space -->
         </div>
       </div>
+
+      <!-- Resize -->
       <div v-if="editorStore.selectedTabPerTool[editorStore.selectedToolKey] === 'resize'" class="specific-settings">
         <div class="settings-content-wrapper">
           <div class="content-wrapper">

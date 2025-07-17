@@ -425,6 +425,12 @@ export function usePresetTool(
       footerSize: 0,
       outlineEnabled: false,
     },
+    cropBox: {
+      x: 0,
+      y: 0,
+      width: 0,
+      height: 0,
+    },
     // UPDATE new tool
   })
 
@@ -527,6 +533,12 @@ export function usePresetTool(
         footerSize: 0,
         outlineEnabled: false,
       },
+      cropBox: {
+        x: 0,
+        y: 0,
+        width: 0,
+        height: 0,
+      },
       // UPDATE new tool
     }
 
@@ -559,6 +571,18 @@ export function usePresetTool(
     }
     if (newPreset.value.grayscale.enabled) {
       imageOperations.push({ type: 'grayscale', enabled: true })
+    }
+
+    if (newPreset.value.cropBox.width > 0 && newPreset.value.cropBox.height > 0) {
+      imageOperations.push({
+        type: 'crop',
+        cropBox: {
+          x: newPreset.value.cropBox.x,
+          y: newPreset.value.cropBox.y,
+          width: newPreset.value.cropBox.width,
+          height: newPreset.value.cropBox.height,
+        },
+      })
     }
 
     if (newPreset.value.frame.type !== 'none') {
@@ -667,6 +691,20 @@ export function usePresetTool(
     }, 2000)
   }
 
+  const updateCropPositionAndDimensions = (type, value) => {
+    if (type === 'x') {
+      newPreset.value.cropBox.x = value
+    } else if (type === 'y') {
+      newPreset.value.cropBox.y = value
+    } else if (type === 'width') {
+      newPreset.value.cropBox.width = value
+    } else if (type === 'height') {
+      newPreset.value.cropBox.height = value
+    }
+
+    isPresetModified.value = true
+  }
+
   return {
     newPreset,
     createPreset,
@@ -696,5 +734,6 @@ export function usePresetTool(
     newOperation,
     applyPreset,
     clearSelected,
+    updateCropPositionAndDimensions,
   }
 }

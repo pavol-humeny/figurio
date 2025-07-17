@@ -485,14 +485,6 @@ export function useCropTool(imageStore, viewportStore, editorStore, historyStore
       await imageStore.rasterize()
     }
 
-    // const newCrop = { ...cropBox.value }
-
-    // const prevCrop = imageStore.imageOperations.transformations.cropBox
-    // if (prevCrop) {
-    //   newCrop.x += prevCrop.x || 0
-    //   newCrop.y += prevCrop.y || 0
-    // }
-
     imageStore.addImageOperation({
       type: 'crop',
       cropBox: { ...cropBox.value },
@@ -560,8 +552,6 @@ export function useCropTool(imageStore, viewportStore, editorStore, historyStore
 
     // Update rendered image and preview URL
     imageStore.setRenderedImage(canvas)
-    // imageStore.originalImage = canvas // Update original image for undo/redo
-    // imageStore.previewUrl = canvas.toDataURL()
 
     // Update file dimensions
     imageStore.fileDimensions.width = width

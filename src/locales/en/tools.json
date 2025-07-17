@@ -306,6 +306,31 @@
             "width": "Width",
             "type": "Type",
             "useFrameOutline": "Use outline"
+          },
+          "crop": {
+            "label": "Crop",
+            "cropPosition": {
+              "title": "Crop position",
+              "x": "X",
+              "y": "Y"
+            },
+            "cropDimensions": {
+              "title": "Crop dimensions",
+              "width": "Width",
+              "height": "Height",
+              "tipLinked": "Unlink width and height",
+              "tipUnlinked": "Link width and height"
+            }
+          },
+          "resize": {
+            "label": "Resize",
+            "resizeDimensions": {
+              "title": "Resize dimensions",
+              "width": "Width",
+              "height": "Height",
+              "tipLinked": "Unlink width and height",
+              "tipUnlinked": "Link width and height"
+            }
           }
         },
         "createPresetButton": {

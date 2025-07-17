@@ -306,6 +306,31 @@
             "width": "Šírka",
             "type": "Typ",
             "useFrameOutline": "Použiť obrys"
+          },
+          "crop": {
+            "label": "Orezanie",
+            "cropPosition": {
+              "title": "Pozícia orezania",
+              "x": "X",
+              "y": "Y"
+            },
+            "cropDimensions": {
+              "title": "Rozmery orezania",
+              "width": "Šírka",
+              "height": "Výška",
+              "tipLinked": "Odpojiť šírku a výšku",
+              "tipUnlinked": "Spojiť šírku a výšku"
+            }
+          },
+          "resize": {
+            "label": "Zmena veľkosti",
+            "resizeDimensions": {
+              "title": "Rozmery obrázka",
+              "width": "Šírka",
+              "height": "Výška",
+              "tipLinked": "Odpojiť šírku a výšku",
+              "tipUnlinked": "Spojiť šírku a výšku"
+            }
           }
         },
         "createPresetButton": {

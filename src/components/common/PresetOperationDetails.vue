@@ -65,32 +65,27 @@ const presetFlipOptions = [
       </p>
     </div>
 
+    <!-- Rotation -->
     <template v-if="localOperation.type === 'rotation'">
       <div class="content-aligned two-items">
         <p>
           {{ t('tools.preset.settings.myPresets.presetValues.transformations.rotation') }}
         </p>
-        <DropdownSelect
-          v-model="localOperation.angle"
-          :options="presetRotationOptions"
-          @update="update"
-        />
+        <DropdownSelect v-model="localOperation.angle" :options="presetRotationOptions" @update="update" />
       </div>
     </template>
 
+    <!-- Flip -->
     <template v-else-if="localOperation.type === 'flip'">
       <div class="content-aligned two-items">
         <p>
           {{ t('tools.preset.settings.myPresets.presetValues.transformations.flip') }}
         </p>
-        <DropdownSelect
-          v-model="localOperation.direction"
-          :options="presetFlipOptions"
-          @update="update"
-        />
+        <DropdownSelect v-model="localOperation.direction" :options="presetFlipOptions" @update="update" />
       </div>
     </template>
 
+    <!-- SmartCrop -->
     <template v-else-if="localOperation.type === 'smartCrop'">
       <div class="content-aligned two-items">
         <p>
@@ -100,34 +95,23 @@ const presetFlipOptions = [
       </div>
     </template>
 
+    <!-- Crop -->
     <template v-else-if="localOperation.type === 'crop'">
       <div class="content-inputs">
         <div class="content-input">
           <label for="x-input">
             {{ $t('tools.transform.settings.crop.cropPosition.x') }}
           </label>
-          <NumberInput
-            ref="cropPositionXInputRef"
-            v-model="localOperation.cropBox.x"
-            :min="0"
-            :max="maxCropPositionX"
-            @update="(val) => updatePosition('x', val)"
-            unit="px"
-          />
+          <NumberInput ref="cropPositionXInputRef" v-model="localOperation.cropBox.x" :min="0" :max="maxCropPositionX"
+            @update="(val) => updatePosition('x', val)" unit="px" />
         </div>
         <div class="content-between-inputs-icon-wrapper disabled"></div>
         <div class="content-input">
           <label for="y-input">
             {{ $t('tools.transform.settings.crop.cropPosition.y') }}
           </label>
-          <NumberInput
-            ref="cropPositionYInputRef"
-            v-model="localOperation.cropBox.y"
-            :min="0"
-            :max="maxCropPositionY"
-            @update="(val) => updatePosition('y', val)"
-            unit="px"
-          />
+          <NumberInput ref="cropPositionYInputRef" v-model="localOperation.cropBox.y" :min="0" :max="maxCropPositionY"
+            @update="(val) => updatePosition('y', val)" unit="px" />
         </div>
       </div>
       <div class="content-inputs" :style="{ marginTop: '10px' }">
@@ -135,38 +119,23 @@ const presetFlipOptions = [
           <label for="width-input">
             {{ $t('tools.transform.settings.crop.cropDimensions.width') }}
           </label>
-          <NumberInput
-            ref="cropWidthInputRef"
-            v-model="tmpCropWidth"
-            :min="0"
-            :max="maxCropWidth"
-            @update="(val) => updateDimension('width', val)"
-            unit="px"
-          />
+          <NumberInput ref="cropWidthInputRef" v-model="tmpCropWidth" :min="0" :max="maxCropWidth"
+            @update="(val) => updateDimension('width', val)" unit="px" />
         </div>
 
         <div class="content-between-inputs-icon-wrapper">
-          <LinkValuesIcon
-            v-model="isDimensionsLinked"
+          <LinkValuesIcon v-model="isDimensionsLinked"
             :tipLinked="$t('tools.transform.settings.crop.cropDimensions.tipLinked')"
-            :tipUnlinked="$t('tools.transform.settings.crop.cropDimensions.tipUnlinked')"
-            size="30"
-            position="bottom-left"
-          />
+            :tipUnlinked="$t('tools.transform.settings.crop.cropDimensions.tipUnlinked')" size="30"
+            position="bottom-left" />
         </div>
 
         <div class="content-input">
           <label for="height-input">
             {{ $t('tools.transform.settings.crop.cropDimensions.height') }}
           </label>
-          <NumberInput
-            ref="cropHeightInputRef"
-            v-model="tmpCropHeight"
-            :min="0"
-            :max="maxCropHeight"
-            @update="(val) => updateDimension('height', val)"
-            unit="px"
-          />
+          <NumberInput ref="cropHeightInputRef" v-model="tmpCropHeight" :min="0" :max="maxCropHeight"
+            @update="(val) => updateDimension('height', val)" unit="px" />
         </div>
       </div>
     </template>

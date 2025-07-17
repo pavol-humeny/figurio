@@ -51,6 +51,7 @@ const {
   newOperation,
   applyPreset,
   clearSelected,
+  updateCropPositionAndDimensions,
 } = usePresetTool(
   useImageStore(),
   useHistoryStore(),
@@ -69,6 +70,7 @@ const tabs = ['myPresets', 'createPreset']
     <div class="settings-wrapper">
       <!-- My Presets -->
       <div v-if="editorStore.selectedTabPerTool[editorStore.selectedToolKey] === 'myPresets'" class="specific-settings">
+        <!-- Select preset -->
         <div class="settings-content-wrapper" v-if="!isModifyingPreset">
           <div v-if="presetsOptions.length > 0" class="content-wrapper">
             <div class="content-title">
@@ -86,6 +88,7 @@ const tabs = ['myPresets', 'createPreset']
             </div>
           </div>
         </div>
+        <!-- Preset name -->
         <div class="settings-content-wrapper" v-if="selectedPresetName !== ''">
           <div class="content-wrapper">
             <div class="content-title">
@@ -98,6 +101,7 @@ const tabs = ['myPresets', 'createPreset']
               :disabled="!isModifyingPreset" />
           </div>
         </div>
+        <!-- Apply preset -->
         <div class="settings-content-wrapper" v-if="selectedPresetName !== '' && !isModifyingPreset">
           <div class="content-wrapper">
             <div class="content-title">
@@ -108,6 +112,7 @@ const tabs = ['myPresets', 'createPreset']
             </div>
           </div>
         </div>
+        <!-- Preset operations -->
         <div class="settings-content-wrapper" v-if="
           presetsOptions.length > 0 &&
           (localImageOperations.length > 0 || isModifyingPreset) &&
@@ -132,6 +137,7 @@ const tabs = ['myPresets', 'createPreset']
               :operation="selectedOperation" @update:operation="(newOp) => Object.assign(selectedOperation, newOp)" />
           </div>
         </div>
+        <!-- No operations -->
         <div v-else-if="
           presetsOptions.length > 0 &&
           (localImageOperations.length === 0 || !isModifyingPreset) &&
@@ -145,6 +151,7 @@ const tabs = ['myPresets', 'createPreset']
             </div>
           </div>
         </div>
+        <!-- Add new operation -->
         <div class="settings-content-wrapper" v-if="creatingNewOperation">
           <div class="content-wrapper">
             <div class="content-title">
@@ -159,6 +166,7 @@ const tabs = ['myPresets', 'createPreset']
               :text="t('tools.preset.settings.myPresets.addNewOperationButton.text')" @click="addNewOperation()" />
           </div>
         </div>
+        <!-- Frame -->
         <div class="settings-content-wrapper"
           v-if="(localImageFrame.enabled || isModifyingPreset) && selectedPresetName !== ''">
           <div class="content-wrapper">
@@ -209,6 +217,7 @@ const tabs = ['myPresets', 'createPreset']
             </div>
           </div>
         </div>
+        <!-- No frame -->
         <div v-else-if="!localImageFrame.enabled && !isModifyingPreset && selectedPresetName !== ''"
           class="settings-content-wrapper">
           <div class="content-wrapper">
@@ -219,12 +228,14 @@ const tabs = ['myPresets', 'createPreset']
             </div>
           </div>
         </div>
+        <!-- Delete preset -->
         <div class="settings-content-wrapper" v-if="isModifyingPreset && presetsOptions.length > 0">
           <div class="content-wrapper">
             <DefaultButton :text="t('tools.preset.settings.myPresets.deletePresetButton.text')"
               @click="deletePreset()" />
           </div>
         </div>
+        <!-- Save, close, modify preset -->
         <div class="settings-content-wrapper" v-if="presetsOptions.length > 0 && selectedPresetName !== ''">
           <div class="content-wrapper">
             <DefaultButton v-if="isModifyingPreset && isPresetModified"
@@ -244,6 +255,7 @@ const tabs = ['myPresets', 'createPreset']
       <!-- Create Preset -->
       <div v-if="editorStore.selectedTabPerTool[editorStore.selectedToolKey] === 'createPreset'"
         class="specific-settings">
+        <!-- Preset name create and create buttons -->
         <div class="settings-content-wrapper" v-if="!isShowManualPresetSetting">
           <div class="content-wrapper">
             <div class="content-title">
@@ -265,6 +277,7 @@ const tabs = ['myPresets', 'createPreset']
             </div>
           </div>
         </div>
+        <!-- Preset name update -->
         <div v-if="isShowManualPresetSetting" class="settings-content-wrapper">
           <div class="content-wrapper">
             <div class="content-title">
@@ -278,6 +291,7 @@ const tabs = ['myPresets', 'createPreset']
             </div>
           </div>
         </div>
+        <!-- Use current modifications -->
         <div v-if="isShowManualPresetSetting" class="settings-content-wrapper">
           <div class="content-wrapper">
             <div class="content-button">
@@ -287,6 +301,7 @@ const tabs = ['myPresets', 'createPreset']
             </div>
           </div>
         </div>
+        <!-- Transformations -->
         <div v-if="isShowManualPresetSetting" class="settings-content-wrapper">
           <div class="content-wrapper">
             <div class="content-title">
@@ -322,6 +337,7 @@ const tabs = ['myPresets', 'createPreset']
             </div>
           </div>
         </div>
+        <!-- SmartCrop -->
         <div v-if="isShowManualPresetSetting" class="settings-content-wrapper">
           <div class="content-wrapper">
             <div class="content-title">
@@ -344,6 +360,7 @@ const tabs = ['myPresets', 'createPreset']
             </div>
           </div>
         </div>
+        <!-- Grayscale -->
         <div v-if="isShowManualPresetSetting" class="settings-content-wrapper">
           <div class="content-wrapper">
             <div class="content-title">
@@ -360,6 +377,54 @@ const tabs = ['myPresets', 'createPreset']
             </div>
           </div>
         </div>
+        <!-- Crop -->
+        <div v-if="isShowManualPresetSetting" class="settings-content-wrapper">
+          <div class="content-wrapper">
+            <div class="content-title">
+              <p>
+                {{ t('tools.preset.settings.createPreset.presetValues.crop.label') }}
+              </p>
+            </div>
+            <div class="content-inputs">
+              <div class="content-input">
+                <label for="x-input">
+                  {{ $t('tools.transform.settings.crop.cropPosition.x') }}
+                </label>
+                <NumberInput ref="cropPositionXInputRef" v-model="newPreset.cropBox.x" :min="0" :max="10000"
+                  @update="(val) => updateCropPositionAndDimensions('x', val)" unit="px" />
+              </div>
+              <div class="content-between-inputs-icon-wrapper disabled"></div>
+              <div class="content-input">
+                <label for="y-input">
+                  {{ $t('tools.transform.settings.crop.cropPosition.y') }}
+                </label>
+                <NumberInput ref="cropPositionYInputRef" v-model="newPreset.cropBox.y" :min="0" :max="10000"
+                  @update="(val) => updateCropPositionAndDimensions('y', val)" unit="px" />
+              </div>
+            </div>
+            <div class="content-inputs" :style="{ marginTop: '10px' }">
+              <div class="content-input">
+                <label for="width-input">
+                  {{ $t('tools.transform.settings.crop.cropDimensions.width') }}
+                </label>
+                <NumberInput ref="cropWidthInputRef" v-model="newPreset.cropBox.width" :min="0" :max="maxCropBoxWidth"
+                  @update="(value) => updateCropPositionAndDimensions('width', value)" unit="px" />
+              </div>
+
+              <div class="content-between-inputs-icon-wrapper disabled"></div>
+
+              <div class="content-input">
+                <label for="height-input">
+                  {{ $t('tools.transform.settings.crop.cropDimensions.height') }}
+                </label>
+                <NumberInput ref="cropHeightInputRef" v-model="newPreset.cropBox.height" :min="0"
+                  :max="maxCropBoxHeight" @update="(value) => updateCropPositionAndDimensions('height', value)"
+                  unit="px" />
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Frame -->
         <div v-if="isShowManualPresetSetting" class="settings-content-wrapper">
           <div class="content-wrapper">
             <div class="content-title">
@@ -405,6 +470,7 @@ const tabs = ['myPresets', 'createPreset']
             </div>
           </div>
         </div>
+        <!-- Create preset -->
         <div v-if="isShowManualPresetSetting" class="settings-content-wrapper">
           <div class="content-wrapper">
             <div class="content-button">
