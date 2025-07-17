@@ -471,6 +471,12 @@
         "presetContainsMultipleCropOperations": {
           "title": "Šablona obsahuje více oříznutí",
           "message": "Šablona nemůže být vytvořena s více oříznutími. Použijte maximálně jednu operaci oříznutí."
+        },
+        "addPresetOperationsOrReplace": {
+          "title": "Přidat operace šablóny nebo nahradit",
+          "message": "Chcete přidat operace šablóny k aktuálním operacím obrázku nebo je nahradit?",
+          "cancel": "Přidat",
+          "confirm": "Nahradit"
         }
       }
     }

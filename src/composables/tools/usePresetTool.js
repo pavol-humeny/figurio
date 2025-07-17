@@ -310,6 +310,17 @@ export function usePresetTool(
       }
     }
 
+    let replace = false
+    const confirmed = await showConfirmModal(
+      t('tools.preset.settings.myPresets.addPresetOperationsOrReplace.title'),
+      t('tools.preset.settings.myPresets.addPresetOperationsOrReplace.message'),
+      t('tools.preset.settings.myPresets.addPresetOperationsOrReplace.cancel'),
+      t('tools.preset.settings.myPresets.addPresetOperationsOrReplace.confirm'),
+    )
+    if (confirmed) {
+      replace = true
+    }
+
     const preset = presetsStore.selectedPreset
 
     // Get image operations from imageStore and compare with preset
@@ -365,9 +376,9 @@ export function usePresetTool(
       }
     }
 
-    imageStore.resetRenderedImageToOriginal()
-
-    console.log('presetOperations:', presetOperations)
+    if (replace) {
+      imageStore.resetRenderedImageToOriginal()
+    }
 
     if (preset.imageOperations.length !== 0) {
       preset.imageOperations.forEach((operation) => {
@@ -397,7 +408,13 @@ export function usePresetTool(
     }
 
     // Apply frame
-    imageStore.frame = JSON.parse(JSON.stringify(preset.imageFrame))
+    if (!replace) {
+      if (presetFrame.enabled) {
+        imageStore.frame = JSON.parse(JSON.stringify(preset.imageFrame))
+      }
+    } else {
+      imageStore.frame = JSON.parse(JSON.stringify(preset.imageFrame))
+    }
 
     // Save current operations to imageStore
     imageStore.imageOperations = JSON.parse(JSON.stringify(preset.imageOperations))

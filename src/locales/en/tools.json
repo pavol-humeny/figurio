@@ -470,6 +470,12 @@
         "presetContainsMultipleCropOperations": {
           "title": "Preset contains multiple crop operations",
           "message": "Preset can not be created with multiple crop operations. Please use maximum one crop operation."
+        },
+        "addPresetOperationsOrReplace": {
+          "title": "Add preset operations or replace",
+          "message": "Do you want to add preset operations to the current image operations or replace them?",
+          "cancel": "Add",
+          "confirm": "Replace"
         }
       }
     }
