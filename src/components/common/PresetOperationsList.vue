@@ -101,8 +101,6 @@ const getOperationLabel = (type) => {
 }
 
 const imageCanBeCropped = (cropBox) => {
-  console.log('Checking crop box:', cropBox)
-  console.log('Image dimensions:', imageStore.fileDimensions)
   if (
     cropBox.x + cropBox.width > imageStore.fileDimensions.width ||
     cropBox.y + cropBox.height > imageStore.fileDimensions.height ||
@@ -110,6 +108,16 @@ const imageCanBeCropped = (cropBox) => {
     cropBox.y < 0 ||
     cropBox.width <= 0 ||
     cropBox.height <= 0
+  ) {
+    return false
+  }
+  return true
+}
+
+const imageCanBeResize = (resizeDimensions) => {
+  if (
+    resizeDimensions.width <= 0 ||
+    resizeDimensions.height <= 0
   ) {
     return false
   }
@@ -131,6 +139,9 @@ const imageCanBeCropped = (cropBox) => {
         <div class="operation-type">
           <BaseIcon v-if="element.type === 'crop' && !imageCanBeCropped(element.cropBox)" name="IconWarning" :size="18"
             :color="'var(--warning-c)'" :tip="t('tools.preset.settings.myPresets.presetValues.crop.tip')"
+            :position="'bottom-left'" />
+          <BaseIcon v-if="element.type === 'resize' && !imageCanBeResize(element.resizeDimensions)" name="IconWarning"
+            :size="18" :color="'var(--warning-c)'" :tip="t('tools.preset.settings.myPresets.presetValues.resize.tip')"
             :position="'bottom-left'" />
           <p>
             {{ getOperationLabel(element.type) }}

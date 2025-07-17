@@ -6,6 +6,7 @@ import NumberInput from './NumberInput.vue'
 import { useImageStore } from '@/stores/imageStore'
 import LinkValuesIcon from '../common/LinkValuesIcon.vue'
 import { usePresetNewOperation } from '@/composables/common/usePresetNewOperation'
+import { editorConfig } from '@/config/editorConfig'
 
 const { t } = useI18n()
 
@@ -56,12 +57,16 @@ const {
         {{ t('tools.preset.settings.myPresets.presetValues.smartCrop.label') }}
       </p>
 
+      <!-- Rotate -->
       <DropdownSelect v-if="selectedType === 'rotation'" v-model="params.angle" :options="rotationOptions" />
 
+      <!-- Flip -->
       <DropdownSelect v-if="selectedType === 'flip'" v-model="params.direction" :options="flipOptions" />
 
+      <!-- SmartCrop -->
       <ColorPicker v-if="selectedType === 'smartCrop'" v-model="params.color" />
 
+      <!-- Crop -->
       <div class="crop-inputs" v-if="selectedType === 'crop'">
         <div class="content-inputs">
           <div class="content-input">
@@ -106,8 +111,28 @@ const {
         </div>
       </div>
 
+      <!-- Resize -->
       <div class="resize-inputs" v-if="selectedType === 'resize'">
-        <!-- TODO -->
+        <div class="content-inputs">
+          <div class="content-input">
+            <label for="width-input">
+              {{ $t('tools.transform.settings.resize.resizeDimensions.width') }}
+            </label>
+            <NumberInput v-model="params.resizeDimensions.width" :min="0" :max="editorConfig.maxFileDimensionWidth"
+              unit="px" />
+          </div>
+
+          <div class="content-between-inputs-icon-wrapper disabled">
+          </div>
+
+          <div class="content-input">
+            <label for="height-input">
+              {{ $t('tools.transform.settings.resize.resizeDimensions.height') }}
+            </label>
+            <NumberInput v-model="params.resizeDimensions.height" :min="0" :max="editorConfig.maxFileDimensionHeight"
+              unit="px" />
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -123,7 +148,8 @@ const {
   gap: 12px;
 }
 
-.crop-inputs {
+.crop-inputs,
+.resize-inputs {
   display: flex;
   flex-direction: column;
   width: 100%;

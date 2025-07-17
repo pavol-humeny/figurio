@@ -104,6 +104,10 @@
           "height": "Height",
           "tipLinked": "Unlink width and height",
           "tipUnlinked": "Link width and height"
+        },
+        "invalidResizeDimensions": {
+          "title": "Invalid resize dimensions",
+          "message": "Resize dimensions must be greater than 0"
         }
       }
     }
@@ -412,7 +416,8 @@
             "noModifications": "No modifications"
           },
           "resize": {
-            "label": "Resize"
+            "label": "Resize",
+            "tip": "Invalid resize dimensions"
           }
         },
         "deletePresetButton": {

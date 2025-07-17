@@ -104,6 +104,10 @@
           "height": "Výška",
           "tipLinked": "Odpojiť šírku a výšku",
           "tipUnlinked": "Prepojiť šírku a výšku"
+        },
+        "invalidResizeDimensions": {
+          "title": "Neplatné rozmery zmeny veľkosti",
+          "message": "Rozmery zmeny veľkosti musia byť väčšie ako 0"
         }
       }
     }
@@ -410,6 +414,10 @@
             "label": "Orezanie",
             "tip": "Neplatné orezanie pre tento obrázok",
             "noModifications": "Žiadne úpravy"
+          },
+          "resize": {
+            "label": "Zmeniť veľkosť",
+            "tip": "Neplatné rozmery zmeny veľkosti"
           }
         },
         "deletePresetButton": {

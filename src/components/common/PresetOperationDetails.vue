@@ -7,6 +7,7 @@ import { useImageStore } from '@/stores/imageStore'
 import { useEditorStore } from '@/stores/editorStore'
 import LinkValuesIcon from '../common/LinkValuesIcon.vue'
 import { usePresetOperationDetails } from '@/composables/common/usePresetOperationDetails'
+import { editorConfig } from '@/config/editorConfig'
 
 const { t } = useI18n()
 
@@ -16,6 +17,8 @@ const props = defineProps({
     required: true,
   },
 })
+
+console.log('PresetOperationDetails props:', props)
 
 const emit = defineEmits(['update:operation'])
 
@@ -142,7 +145,26 @@ const presetFlipOptions = [
 
     <!-- Resize -->
     <template v-else-if="localOperation.type === 'resize'">
-      <!-- TODO -->
+      <div class="content-inputs">
+        <div class="content-input">
+          <label for="width-input">
+            {{ $t('tools.transform.settings.resize.resizeDimensions.width') }}
+          </label>
+          <NumberInput ref="FileDimensionWidthInputRef" v-model="localOperation.resizeDimensions.width" :min="0"
+            :max="editorConfig.maxFileDimensionWidth" unit="px" />
+        </div>
+
+        <div class="content-between-inputs-icon-wrapper disabled">
+        </div>
+
+        <div class="content-input">
+          <label for="height-input">
+            {{ $t('tools.transform.settings.resize.resizeDimensions.height') }}
+          </label>
+          <NumberInput ref="FileDimensionHeightInputRef" v-model="localOperation.resizeDimensions.height" :min="1"
+            :max="editorConfig.maxFileDimensionHeight" unit="px" />
+        </div>
+      </div>
     </template>
 
     <!-- UPDATE new tool - add new template -->

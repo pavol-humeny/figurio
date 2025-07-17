@@ -7,6 +7,7 @@ import { useSmartCropTool } from './useSmartCropTool'
 import { useGrayscaleTool } from './useGrayscaleTool'
 import { useCropTool } from './useCropTool'
 import { editorConfig } from '@/config/editorConfig'
+import { useResizeTool } from './useResizeTool'
 
 export function usePresetTool(
   imageStore,
@@ -366,6 +367,8 @@ export function usePresetTool(
 
     imageStore.resetRenderedImageToOriginal()
 
+    console.log('presetOperations:', presetOperations)
+
     if (preset.imageOperations.length !== 0) {
       preset.imageOperations.forEach((operation) => {
         if (operation.type === 'rotation') {
@@ -382,8 +385,13 @@ export function usePresetTool(
           useCropTool(imageStore, viewportStore, editorStore, historyStore, t).applyCropRender(
             operation.cropBox,
           )
+        } else if (operation.type === 'resize') {
+          useResizeTool(imageStore, historyStore, t).applyResizeRender(
+            operation.resizeDimensions.width,
+            operation.resizeDimensions.height,
+          )
         }
-        // TODO
+
         // UPDATE new tool
       })
     }

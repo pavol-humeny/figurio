@@ -104,6 +104,10 @@
           "height": "Výška",
           "tipLinked": "Odpojit šířku a výšku",
           "tipUnlinked": "Propojit šířku a výšku"
+        },
+        "invalidResizeDimensions": {
+          "title": "Neplatné rozměry pro změnu velikosti",
+          "message": "Rozměry pro změnu velikosti musí být větší než 0"
         }
       }
     }
@@ -307,6 +311,31 @@
             "width": "Šířka",
             "type": "Typ",
             "useFrameOutline": "Použít obrys"
+          },
+          "crop": {
+            "label": "Oříznutí",
+            "cropPosition": {
+              "title": "Pozice oříznutí",
+              "x": "X",
+              "y": "Y"
+            },
+            "cropDimensions": {
+              "title": "Rozměry oříznutí",
+              "width": "Šířka",
+              "height": "Výška",
+              "tipLinked": "Odpojit šířku a výšku",
+              "tipUnlinked": "Propojit šířku a výšku"
+            }
+          },
+          "resize": {
+            "label": "Změnit velikost",
+            "resizeDimensions": {
+              "title": "Rozměry změny velikosti",
+              "width": "Šířka",
+              "height": "Výška",
+              "tipLinked": "Odpojit šířku a výšku",
+              "tipUnlinked": "Propojit šířku a výšku"
+            }
           }
         },
         "createPresetButton": {
@@ -386,6 +415,10 @@
             "label": "Oříznutí",
             "tip": "Neplatný oříznutí pro tento obrázek",
             "noModifications": "Žádné úpravy"
+          },
+          "resize": {
+            "label": "Změnit velikost",
+            "tip": "Neplatné rozměry změny velikosti"
           }
         },
         "deletePresetButton": {

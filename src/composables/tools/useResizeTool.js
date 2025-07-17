@@ -1,6 +1,8 @@
 import { ref, nextTick, watch } from 'vue'
+import { useToastModal } from '../modals/useToastModal'
 
 export function useResizeTool(imageStore, historyStore, t) {
+  const { showToastModal } = useToastModal()
   const isUpdatingFromStore = ref(false)
   const maxFileDimensionWidth = ref(10000)
   const maxFileDimensionHeight = ref(10000)
@@ -105,6 +107,17 @@ export function useResizeTool(imageStore, historyStore, t) {
   }
 
   const applyResizeRender = (width, height) => {
+    if (width <= 0 || height <= 0) {
+      showToastModal(
+        'error',
+        t('tools.transform.settings.resize.invalidResizeDimensions.title'),
+        t('tools.transform.settings.resize.invalidResizeDimensions.message'),
+      )
+      return
+    }
+
+    console.log('Applying resize render with dimensions:', { width, height })
+
     const oldImage = imageStore.getRenderedImage()
     if (!oldImage) return
 

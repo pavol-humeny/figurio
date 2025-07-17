@@ -44,7 +44,11 @@ export function usePresetNewOperation(imageStore, props, emit, t) {
       label: t('tools.preset.settings.myPresets.presetValues.crop.label'),
       value: 'crop',
     },
-    // UPDATE
+    {
+      label: t('tools.preset.settings.myPresets.presetValues.resize.label'),
+      value: 'resize',
+    },
+    // UPDATE new tool
   ]
 
   const selectedType = ref(props.operation?.type || '')
@@ -54,6 +58,8 @@ export function usePresetNewOperation(imageStore, props, emit, t) {
     direction: 'horizontal',
     color: '#000000',
     cropBox: { x: 0, y: 0, width: 0, height: 0 },
+    resizeDimensions: { width: 0, height: 0 },
+    // UPDATE new tool
   })
 
   const isDimensionsLinked = ref(true)
@@ -72,6 +78,7 @@ export function usePresetNewOperation(imageStore, props, emit, t) {
 
   watch(selectedType, (type) => {
     let op = null
+    // UPDATE new tool
     if (type === 'rotation') {
       op = { type, angle: 0 }
     } else if (type === 'flip') {
@@ -82,6 +89,8 @@ export function usePresetNewOperation(imageStore, props, emit, t) {
       op = { type, enable: true }
     } else if (type === 'crop') {
       op = { type, cropBox: { x: 0, y: 0, width: 0, height: 0 } }
+    } else if (type === 'resize') {
+      op = { type, resizeDimensions: { width: 0, height: 0 } }
     } else {
       op = null
     }
@@ -100,7 +109,10 @@ export function usePresetNewOperation(imageStore, props, emit, t) {
       if (selectedType.value === 'crop') {
         op.cropBox = { ...params.cropBox }
       }
-      // UPDATE
+      if (selectedType.value === 'resize') {
+        op.resizeDimensions = { ...params.resizeDimensions }
+      }
+      // UPDATE new tool
 
       emit('update:operation', op)
     },
