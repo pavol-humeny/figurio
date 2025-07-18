@@ -21,6 +21,11 @@ import { useRoute } from 'vue-router';
 import { useToolsPanel } from '@/composables/tools/useToolsPanel';
 import { useEditorStore } from '@/stores/editorStore';
 import { useExportToolSettings } from '@/composables/toolsSettings/useExportToolSettings';
+import { useHelpModal } from '@/composables/modals/useHelpModal';
+import { useSettingsPanel } from '@/composables/topPanel/useSettingsPanel';
+import { useUiStore } from '@/stores/uiStore';
+import { usePrivacyAndDataModal } from '@/composables/modals/usePrivacyAndDataModal';
+import { useFileNameDisplay } from '@/composables/topPanel/useFileNameDisplay';
 
 const { undo, redo } = useUndoRedo(useHistoryStore(), useImageStore())
 const { zoomIn, zoomOut, resetZoom } = useZoomControl(useViewportStore())
@@ -28,8 +33,13 @@ const { closeFile } = useCloseFileButton(useImageStore(), t)
 const { uploadFile } = useUploadFileButton(useImageStore(), t, useRoute())
 const { toggleTool } = useToolsPanel(useEditorStore(), useImageStore())
 const { openExportToolSettings } = useExportToolSettings(useImageStore(), useEditorStore(), useHistoryStore(), t)
+const { openHelpModal } = useHelpModal()
+const { openSettingsPanel } = useSettingsPanel(useUiStore())
+const { openPrivacyAndDataModal } = usePrivacyAndDataModal(t)
+const { startEditing } = useFileNameDisplay(useImageStore(), t)
 
-useKeyboardShortcuts({ undo, redo, zoomIn, zoomOut, resetZoom, closeFile, uploadFile, toggleTool, openExportToolSettings })
+
+useKeyboardShortcuts({ undo, redo, zoomIn, zoomOut, resetZoom, closeFile, uploadFile, toggleTool, openExportToolSettings, openHelpModal, openSettingsPanel, openPrivacyAndDataModal, startEditing });
 // === ===
 
 const imageStore = useImageStore()

@@ -6,7 +6,7 @@ const isVisible = ref(false)
 export function usePrivacyAndDataModal(t) {
   const { showConfirmModal } = useConfirmModal()
 
-  const showPrivacyAndDataModal = () => {
+  const openPrivacyAndDataModal = () => {
     if (isVisible.value) {
       return
     }
@@ -49,7 +49,7 @@ export function usePrivacyAndDataModal(t) {
 
   return {
     isVisible,
-    showPrivacyAndDataModal,
+    openPrivacyAndDataModal,
     clearLocalStorage,
     closePrivacyAndDataModal,
   }

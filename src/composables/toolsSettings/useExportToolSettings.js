@@ -99,6 +99,9 @@ export function useExportToolSettings(imageStore, editorStore, historyStore, t) 
     if (e.key === 'Escape' && isVisible.value) {
       e.preventDefault()
       closeExportToolSettings()
+    } else if (e.key === 'Enter' && isVisible.value) {
+      e.preventDefault()
+      exportFile()
     }
   }
 

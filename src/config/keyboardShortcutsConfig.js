@@ -34,6 +34,27 @@ export const keyboardShortcuts = [
     action: 'closeFile',
     description: 'Close file',
   },
+  {
+    keys: ['f2'],
+    action: 'startEditing',
+    description: 'Rename file',
+  },
+  // Help, settings, and privacy shortcuts
+  {
+    keys: ['f1'],
+    action: 'openHelpModal',
+    description: 'Show help modal',
+  },
+  {
+    keys: ['ctrl', ','],
+    action: 'openSettingsPanel',
+    description: 'Show settings modal',
+  },
+  {
+    keys: ['ctrl', 'i'],
+    action: 'openPrivacyAndDataModal',
+    description: 'Show privacy and data modal',
+  },
   // Tool shortcuts
   {
     keys: ['v'],

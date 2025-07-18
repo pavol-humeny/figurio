@@ -1,21 +1,20 @@
-import { computed, ref } from 'vue'
-import { usePrivacyAndDataModal } from '@/composables/modals/usePrivacyAndDataModal';
+import { computed, ref, onMounted, onBeforeUnmount } from 'vue'
+import { usePrivacyAndDataModal } from '@/composables/modals/usePrivacyAndDataModal'
 
 const isVisible = ref(false)
 
 export function useSettingsPanel(uiStore) {
-  const {
-    isVisible: privacyModalVisible,
-    showPrivacyAndDataModal
-  } = usePrivacyAndDataModal()
+  const { isVisible: privacyModalVisible, openPrivacyAndDataModal } = usePrivacyAndDataModal()
 
   const enableShortcuts = computed({
     get: () => uiStore.keyShortcutsEnabled,
-    set: (val) => uiStore.setKeyShortcuts(val)
+    set: (val) => uiStore.setKeyShortcuts(val),
   })
 
   const resetPanelWidthDisabled = computed(() => {
-    return uiStore.rightPanelWidth === uiStore.rightPanelDefaultWidth || uiStore.rightPanelOpen === false
+    return (
+      uiStore.rightPanelWidth === uiStore.rightPanelDefaultWidth || uiStore.rightPanelOpen === false
+    )
   })
 
   const openSettingsPanel = () => {
@@ -39,8 +38,23 @@ export function useSettingsPanel(uiStore) {
   }
 
   const openPrivacyModal = () => {
-    showPrivacyAndDataModal()
+    openPrivacyAndDataModal()
   }
+
+  const handleKeydown = (e) => {
+    if (e.key === 'Escape' && isVisible.value) {
+      e.preventDefault()
+      closeSettingsPanel()
+    }
+  }
+
+  onMounted(() => {
+    window.addEventListener('keydown', handleKeydown)
+  })
+
+  onBeforeUnmount(() => {
+    window.removeEventListener('keydown', handleKeydown)
+  })
 
   return {
     isVisible,
@@ -50,7 +64,6 @@ export function useSettingsPanel(uiStore) {
     resetPanelWidthDisabled,
     resetPanelWidth,
     openPrivacyModal,
-    privacyModalVisible
+    privacyModalVisible,
   }
 }
-

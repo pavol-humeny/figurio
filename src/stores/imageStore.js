@@ -200,17 +200,17 @@ export const useImageStore = defineStore('imageStore', {
         return false
       }
 
-      // Same name
-      if (trimmedName === this.fileName) {
-        const tmp = this.fileName
-        this.fileName = ''
-        this.newFileName = ''
-        nextTick(() => {
-          this.fileName = tmp // Reset to previous name
-          this.newFileName = tmp
-        })
-        return true
-      }
+      // // Same name
+      // if (trimmedName === this.fileName) {
+      //   const tmp = this.fileName
+      //   this.fileName = ''
+      //   this.newFileName = ''
+      //   nextTick(() => {
+      //     this.fileName = tmp // Reset to previous name
+      //     this.newFileName = tmp
+      //   })
+      //   return true
+      // }
 
       // Invalid characters
       if (!isValidFileName(trimmedName)) {

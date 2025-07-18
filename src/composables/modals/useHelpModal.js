@@ -7,7 +7,7 @@ export function useHelpModal() {
   const atTop = ref(true)
   const atBottom = ref(false)
 
-  const showHelpModal = () => {
+  const openHelpModal = () => {
     if (isVisible.value) {
       return
     }
@@ -60,7 +60,7 @@ export function useHelpModal() {
     scrollUp,
     scrollDown,
     checkScroll,
-    showHelpModal,
+    openHelpModal,
     closeHelpModal,
   }
 }

@@ -1,11 +1,10 @@
 import { ref, nextTick, computed, watch } from 'vue'
-// import { useToastModal } from '@/composables/modals/useToastModal'
+
+const inputRef = ref(null)
 
 export function useFileNameDisplay(imageStore, t) {
   const editEnabled = ref(false)
   const fileNameInput = ref(imageStore.fileName)
-  // const fileNameInput = computed(() => imageStore.fileName)
-  const inputRef = ref(null)
 
   watch(
     () => imageStore.fileName,
@@ -19,6 +18,14 @@ export function useFileNameDisplay(imageStore, t) {
   const saveNewFileName = () => {
     editEnabled.value = false
 
+    // If file name hasn't changed, just blur the input
+    if (imageStore.fileName === fileNameInput.value) {
+      nextTick(() => {
+        inputRef.value?.blur()
+      })
+      return
+    }
+
     const success = imageStore.setFileName(fileNameInput.value, t)
     if (success) {
       nextTick(() => {
@@ -28,6 +35,8 @@ export function useFileNameDisplay(imageStore, t) {
   }
 
   const startEditing = () => {
+    if (!imageStore.isImageLoaded) return
+
     editEnabled.value = true
     nextTick(() => {
       inputRef.value?.focus()
