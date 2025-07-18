@@ -26,6 +26,7 @@ import { useSettingsPanel } from '@/composables/topPanel/useSettingsPanel';
 import { useUiStore } from '@/stores/uiStore';
 import { usePrivacyAndDataModal } from '@/composables/modals/usePrivacyAndDataModal';
 import { useFileNameDisplay } from '@/composables/topPanel/useFileNameDisplay';
+import FileTabs from '@/components/editor/FileTabs.vue';
 
 const { undo, redo } = useUndoRedo(useHistoryStore(), useImageStore())
 const { zoomIn, zoomOut, resetZoom } = useZoomControl(useViewportStore())
@@ -49,9 +50,7 @@ const imageStore = useImageStore()
   <div class="editor-view">
     <ToolsPanel />
     <div class="editor-content" :class="{ 'drag-and-drop-area': imageStore.file === null }">
-      <div v-if="imageStore.isImageLoaded" class="file-tabs">
-
-      </div>
+      <FileTabs v-if="imageStore.isImageLoaded" />
       <ViewportWrapper v-if="imageStore.isImageLoaded" />
       <DragAndDropArea v-else />
     </div>
@@ -74,15 +73,10 @@ const imageStore = useImageStore()
 
 .editor-content {
   flex: 1;
+  overflow: hidden;
 }
 
 .editor-content.drag-and-drop-area {
   padding: 20px 25px;
-}
-
-.file-tabs {
-  height: 30px;
-  width: 100%;
-  border: solid 1px red;
 }
 </style>

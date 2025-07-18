@@ -131,5 +131,7 @@ body {
   --tip-font-size: 13px;
   --tip-title-font-weight: 700;
 
+  --file-tabs-name-font-size: 12px;
+
   --ruler-size: 15px;
 }
