@@ -11,6 +11,18 @@ const props = defineProps({
     type: String,
     default: 'top',
   },
+  advance: {
+    type: Boolean,
+    default: false,
+  },
+  title: {
+    type: String,
+    default: '',
+  },
+  shortcut: {
+    type: String,
+    default: '',
+  },
 })
 
 const { isVisible, wrapper, itemTipStyle, handleMouseEnter, handleMouseLeave } = useItemTip({
@@ -26,12 +38,18 @@ const showTip = computed(() => props.text !== '')
     <slot></slot>
 
     <teleport to="body">
-      <div
-        v-if="isVisible && showTip"
-        :style="itemTipStyle"
-        :class="['item-tip-bubble', props.position]"
-      >
-        {{ props.text }}
+      <div v-if="isVisible && showTip" :style="itemTipStyle" :class="['item-tip-bubble', props.position]">
+        <template v-if="props.advance">
+          <div class="item-tip-title-row">
+            <span class="tip-title">{{ props.title }}</span>
+            <span v-if="props.shortcut" class="tip-shortcut">{{ props.shortcut }}</span>
+          </div>
+          <div class="tip-description">{{ props.text }}</div>
+        </template>
+
+        <template v-else>
+          {{ props.text }}
+        </template>
         <div class="item-tip-arrow" :class="props.position"></div>
       </div>
     </teleport>
@@ -62,24 +80,31 @@ const showTip = computed(() => props.text !== '')
 .item-tip-bubble.top {
   transform: translate(-50%, -100%);
 }
+
 .item-tip-bubble.top-right {
   transform: translate(0, -100%);
 }
+
 .item-tip-bubble.top-left {
   transform: translate(-100%, -100%);
 }
+
 .item-tip-bubble.bottom {
   transform: translate(-50%, 0);
 }
+
 .item-tip-bubble.left {
   transform: translate(-100%, -50%);
 }
+
 .item-tip-bubble.right {
   transform: translate(0, -50%);
 }
+
 .item-tip-bubble.bottom-right {
   transform: translate(0, 0);
 }
+
 .item-tip-bubble.bottom-left {
   transform: translate(-100%, 0);
 }
@@ -160,5 +185,36 @@ const showTip = computed(() => props.text !== '')
   border-left: 6px solid transparent;
   border-right: 6px solid transparent;
   border-bottom: 6px solid var(--secondary-c);
+}
+
+/* Advance tip */
+.item-tip-title-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+
+  font-size: calc(var(--tip-font-size) + 2px);
+  margin-bottom: 4px;
+  white-space: nowrap;
+}
+
+.tip-title {
+  font-weight: var(--tip-title-font-weight);
+  color: var(--text-c);
+}
+
+.tip-shortcut {
+  background-color: var(--border-c);
+  color: var(--text-c);
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 0.85em;
+  font-family: monospace;
+}
+
+.tip-description {
+  color: var(--text-c);
+  font-size: var(--tip-font-size);
+  white-space: nowrap;
 }
 </style>

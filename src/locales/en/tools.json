@@ -1,8 +1,9 @@
 {
   "move": {
     "label": "Move",
-    "tip": "Move tool",
+    "tip": "Adjusts properties of image movement and zoom sensitivity",
     "tipDisabled": "",
+    "shortcut": "V",
     "settings": {
       "general": {
         "resetPosition": "Reset position",
@@ -19,24 +20,29 @@
   },
   "transform": {
     "label": "Transform",
-    "tip": "Transform tool",
+    "tip": "Applies rotation, flipping, cropping or resizing to the image",
     "tipDisabled": "",
+    "shortcut": "",
     "subTools": {
       "rotate": {
         "label": "Rotate",
-        "tip": "Rotate tool"
+        "tip": "Applies rotation to the image",
+        "shortcut": "R"
       },
       "flip": {
         "label": "Flip",
-        "tip": "Flip tool"
+        "tip": "Applies horizontal or vertical flipping to the image",
+        "shortcut": "F"
       },
       "crop": {
         "label": "Crop",
-        "tip": "Crop tool"
+        "tip": "Applies cropping to the selected area of the image",
+        "shortcut": "C"
       },
       "resize": {
         "label": "Resize",
-        "tip": "Resize tool"
+        "tip": "Changes the dimensions of the image",
+        "shortcut": "Shift + R"
       }
     },
     "settings": {
@@ -114,16 +120,20 @@
   },
   "smartCrop": {
     "label": "Smart Crop",
-    "tip": "Smart crop tool",
+    "tip": "Automatically crop empty borders from the image",
     "tipDisabled": "",
+    "shortcut": "Shift + C",
     "subTools": {
       "auto": {
         "label": "Auto",
-        "tip": "Automatically crop the image based on the selected color."
+        "tip": "Automatically crop the image based on the selected color.",
+        "shortcut": ""
+        
       },
       "manual": {
         "label": "Manual",
-        "tip": "Manually adjust the crop box."
+        "tip": "Manually adjust the crop box.",
+        "shortcut": ""
       }
     },
     "settings": {
@@ -163,8 +173,9 @@
   },
   "grayscale": {
     "label": "Grayscale",
-    "tip": "Convert the image to grayscale.",
+    "tip": "Converts the image to grayscale",
     "tipDisabled": "",
+    "shortcut": "G",
     "settings": {
       "convertToGrayscaleButton": {
         "text": "Convert to grayscale"
@@ -227,8 +238,9 @@
   },
   "frame": {
     "label": "Frame",
-    "tip": "Add a frame around the image.",
+    "tip": "Adds various types of frames such as solid, browser or phone",
     "tipDisabled": "",
+    "shortcut": "Shift + F",
     "settings": {
       "general": {
         "frameColor": {
@@ -264,16 +276,18 @@
   },
   "preset": {
     "label": "Presets",
-    "tip": "Apply a preset to the image.",
+    "tip": "Applies a preset to the image",
     "tipDisabled": "",
     "subTools": {
       "myPresets": {
         "label": "My presets",
-        "tip": "Manage your presets"
+        "tip": "Manages your presets",
+        "shortcut": "P"
       },
       "createPreset": {
         "label": "Create preset",
-        "tip": "Create a new preset."
+        "tip": "Creates a new preset",
+        "shortcut": "Shift + P"
       }
     },
     "settings": {
@@ -482,8 +496,9 @@
   },
   "export": {
     "label": "Export",
-    "tip": "Export the image.",
-    "tipDisabled": "There is no image to export.",
+    "tip": "Exports the image and allows setting the output format",
+    "tipDisabled": "",
+    "shortcut": "CTRL + S",
     "settings": {
       "general": {
         "title": "Export file",

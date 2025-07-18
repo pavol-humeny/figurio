@@ -129,6 +129,7 @@ body {
 
   --text-font-size: 15px;
   --tip-font-size: 13px;
+  --tip-title-font-weight: 700;
 
   --ruler-size: 15px;
 }

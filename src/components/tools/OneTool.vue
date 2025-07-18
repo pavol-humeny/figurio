@@ -23,6 +23,10 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
+  advanceTip: {
+    type: Object,
+    default: null,
+  },
 })
 
 const emit = defineEmits(['click'])
@@ -35,30 +39,35 @@ const { wrapperRef, subToolPos, onRightClick, onClickTab, onClickTool } = useOne
 </script>
 
 <template>
-  <ItemTip :text="props.tip" position="top-right">
+  <ItemTip v-bind="props.advanceTip?.advance ? {
+    text: props.advanceTip.text,
+    title: props.advanceTip.title,
+    shortcut: props.advanceTip.shortcut,
+    advance: true,
+    position: 'top-right',
+  } : {
+    text: props.tip,
+    position: 'top-right',
+  }">
     <div class="tool-wrapper" ref="wrapperRef" @contextmenu="onRightClick">
-      <div
-        class="tool"
-        :class="{ active: props.active, disabled: props.disabled }"
-        @click.left="onClickTool"
-      >
+      <div class="tool" :class="{ active: props.active, disabled: props.disabled }" @click.left="onClickTool">
         <BaseIcon :name="props.tool.iconName" :size="27" :color="'var(--primary-c)'" />
       </div>
     </div>
 
-    <Teleport
-      to="body"
-      v-if="editorStore.toolWithOpenSubToolsKey === props.tool.key && props.tool.subTools"
-    >
-      <div
-        class="subTools-popup"
-        :style="{
-          position: 'absolute',
-          top: subToolPos.top + 'px',
-          left: subToolPos.left + 'px',
-        }"
-      >
-        <ItemTip v-for="sub in props.tool.subTools" :key="sub.key" :text="sub.tip" position="right">
+    <Teleport to="body" v-if="editorStore.toolWithOpenSubToolsKey === props.tool.key && props.tool.subTools">
+      <div class="subTools-popup" :style="{
+        position: 'absolute',
+        top: subToolPos.top + 'px',
+        left: subToolPos.left + 'px',
+      }">
+        <ItemTip v-for="sub in props.tool.subTools" :key="sub.key" v-bind="{
+          text: sub.tip,
+          title: sub.label,
+          shortcut: sub.shortcut || '',
+          advance: true,
+          position: 'right',
+        }">
           <div class="subTool" @click.stop="onClickTab(sub.key)">
             <BaseIcon :name="sub.iconName" :size="27" :color="'var(--primary-c)'" />
           </div>

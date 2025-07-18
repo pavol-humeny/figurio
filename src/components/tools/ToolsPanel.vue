@@ -27,12 +27,14 @@ const tools = computed(() =>
     ...tool,
     label: t(`tools.${tool.key}.label`),
     tip: t(`tools.${tool.key}.tip`),
+    shortcut: t(`tools.${tool.key}.shortcut`),
     tipDisabled: t(`tools.${tool.key}.tipDisabled`),
     subTools:
       tool.subTools?.map((subTool) => ({
         ...subTool,
         label: t(`tools.${tool.key}.subTools.${subTool.key}.label`),
         tip: t(`tools.${tool.key}.subTools.${subTool.key}.tip`),
+        shortcut: t(`tools.${tool.key}.subTools.${subTool.key}.shortcut`),
       })) || [],
   })),
 )
@@ -45,15 +47,13 @@ const tools = computed(() =>
     </div>
 
     <div ref="toolsRef" class="tools-wrapper" @scroll="checkScroll">
-      <OneTool
-        v-for="tool in tools"
-        :key="tool.key"
-        :tool="tool"
-        :tip="isToolDisabled ? tool.tipDisabled : tool.tip"
-        :active="activeTool === tool.key"
-        @click="selectTool"
-        :disabled="isToolDisabled"
-      />
+      <OneTool v-for="tool in tools" :key="tool.key" :tool="tool" :tip="isToolDisabled ? tool.tipDisabled : tool.tip"
+        :active="activeTool === tool.key" :advance-tip="{
+          advance: true,
+          title: tool.label,
+          shortcut: tool.shortcut || '',
+          text: isToolDisabled ? tool.tipDisabled : tool.tip,
+        }" @click="selectTool" :disabled="isToolDisabled" />
     </div>
 
     <div v-if="!atBottom" class="arrow-down" @click="scrollDown">
@@ -80,13 +80,11 @@ const tools = computed(() =>
   scrollbar-width: none;
   padding: 30px 20px;
   height: 100%;
-  mask-image: linear-gradient(
-    to bottom,
-    transparent,
-    black 30px,
-    rgb(0, 0, 0) calc(100% - 30px),
-    transparent 100%
-  );
+  mask-image: linear-gradient(to bottom,
+      transparent,
+      black 30px,
+      rgb(0, 0, 0) calc(100% - 30px),
+      transparent 100%);
 }
 
 .arrow-up,
@@ -99,9 +97,11 @@ const tools = computed(() =>
   align-items: center;
   cursor: pointer;
 }
+
 .arrow-up {
   top: 0;
 }
+
 .arrow-down {
   bottom: 0;
 }

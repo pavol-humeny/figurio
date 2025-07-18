@@ -1,8 +1,9 @@
 {
   "move": {
     "label": "Posun",
-    "tip": "Posuň plátno pomocou myši.",
+    "tip": "Upravuje vlastnosti pohybu obrázka a citlivosť priblíženia",
     "tipDisabled": "",
+    "shortcut": "V",
     "settings": {
       "general": {
         "resetPosition": "Resetovať pozíciu",
@@ -19,24 +20,29 @@
   },
   "transform": {
     "label": "Úpravy",
-    "tip": "Otoč, zmeň mierku, prevráť alebo orež obrázok.",
+    "tip": "Aplikuje rotáciu, zrkadlenie, orezanie alebo zmenu veľkosti obrázka",
     "tipDisabled": "",
+    "shortcut": "",
     "subTools": {
       "rotate": {
-        "label": "Otočenie",
-        "tip": "Nástroj otočenie"
+        "label": "Otočiť",
+        "tip": "Aplikuje rotáciu na obrázok",
+        "shortcut": "R"
       },
       "flip": {
-        "label": "Prevrátenie",
-        "tip": "Nástroj prevrátenie"
+        "label": "Preklopiť",
+        "tip": "Aplikuje horizontálne alebo vertikálne preklopenie obrázka",
+        "shortcut": "F"
       },
       "crop": {
-        "label": "Orezanie",
-        "tip": "Nástroj orezanie"
+        "label": "Orezať",
+        "tip": "Oreže vybranú oblasť obrázka",
+        "shortcut": "C"
       },
       "resize": {
-        "label": "Zmena veľkosti",
-        "tip": "Nástroj zmena veľkosti"
+        "label": "Zmeniť veľkosť",
+        "tip": "Zmení rozmery obrázka",
+        "shortcut": "Shift + R"
       }
     },
     "settings": {
@@ -114,16 +120,19 @@
   },
   "smartCrop": {
     "label": "Smart orezanie",
-    "tip": "Automaticky orež objekt.",
+    "tip": "Automaticky oreže prázdne okraje obrázka",
     "tipDisabled": "",
+    "shortcut": "Shift + C",
     "subTools": {
       "auto": {
         "label": "Automatické",
-        "tip": "Automatické orezanie obrázka na základe vybranej farby."
+        "tip": "Automatické orezanie obrázka na základe vybranej farby.",
+        "shortcut": ""
       },
       "manual": {
         "label": "Manuálne",
-        "tip": "Manuálne uprav orezávací rámec."
+        "tip": "Manuálne uprav orezávací rámec.",
+        "shortcut": ""
       }
     },
     "settings": {
@@ -163,8 +172,9 @@
   },
   "grayscale": {
     "label": "Odtiene šedi",
-    "tip": "Převeď obrázek na odstíny šedi.",
+    "tip": "Konvertuje obrázok na odtiene sivej",
     "tipDisabled": "",
+    "shortcut": "G",
     "settings": {
       "convertToGrayscaleButton": {
         "text": "Převést na odstíny šedi"
@@ -227,8 +237,9 @@
   },
   "frame": {
     "label": "Rám",
-    "tip": "Pridaj rám okolo obrázku.",
+    "tip": "Pridáva rôzne typy rámov ako plný, prehliadač alebo telefón",
     "tipDisabled": "",
+    "shortcut": "Shift + F",
     "settings": {
       "general": {
         "frameColor": {
@@ -264,16 +275,18 @@
   },
   "preset": {
     "label": "Šablóny",
-    "tip": "Aplikuj šablónu na obrázok.",
+    "tip": "Aplikuje predvoľbu na obrázok",
     "tipDisabled": "",
     "subTools": {
       "myPresets": {
-        "label": "Moje šablóny",
-        "tip": "Zobraz moje šablóny."
+        "label": "Moje predvoľby",
+        "tip": "Spravuje tvoje predvoľby",
+        "shortcut": "P"
       },
       "createPreset": {
-        "label": "Vytvoriť šablónu",
-        "tip": "Vytvor novú šablónu z aktuálnych úprav obrázka."
+        "label": "Vytvoriť predvoľbu",
+        "tip": "Vytvorí novú predvoľbu",
+        "shortcut": "Shift + P"
       }
     },
     "settings": {
@@ -482,8 +495,9 @@
   },
   "export": {
     "label": "Export",
-    "tip": "Exportuj obrázok.",
-    "tipDisabled": "Nie je k dispozícii žiadny obrázok na export.",
+    "tip": "Exportuje obrázok a umožňuje nastavenie výstupného formátu",
+    "tipDisabled": "",
+    "shortcut": "CTRL + S",
     "settings": {
       "general": {
         "title": "Exportovať súbor",
