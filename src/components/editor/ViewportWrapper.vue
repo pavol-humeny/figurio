@@ -267,6 +267,7 @@ watch(
   transform: translateX(2px);
   white-space: nowrap;
   pointer-events: none;
+  opacity: 0.7;
 }
 
 .ruler-mark.horizontal .ruler-label {
