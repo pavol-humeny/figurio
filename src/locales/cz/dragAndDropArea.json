@@ -5,5 +5,11 @@
   "button": {
     "text": "Vybrat soubor"
   },
-  "tip": "Vybrat soubor"
+  "tip": "Vybrat soubor",
+  "toast": {
+    "warningPasteNotImage": {
+      "title": "Obsah schránky není obrázek",
+      "message": "Prosím, vložte obrázek."
+    }
+  }
 }

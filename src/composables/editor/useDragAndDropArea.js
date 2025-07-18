@@ -1,6 +1,8 @@
 import { ref, onMounted, onUnmounted } from 'vue'
+import { useToastModal } from '../modals/useToastModal'
 
 export function useDragAndDropArea(imageStore, t, router) {
+  const { showToastModal } = useToastModal()
   const isDragging = ref(false)
 
   const handleDragOver = (event) => {
@@ -33,7 +35,11 @@ export function useDragAndDropArea(imageStore, t, router) {
       console.log('Pasted file:', file)
       imageStore.saveToImageStore([file], t, router)
     } else {
-      console.log('First clipboard item is not a file:', firstItem)
+      showToastModal(
+        'warning',
+        t('dragAndDropArea.toast.warningPasteNotImage.title'),
+        t('dragAndDropArea.toast.warningPasteNotImage.message'),
+      )
     }
   }
 

@@ -5,5 +5,11 @@
   "button": {
     "text": "Select file"
   },
-  "tip": "Select a file"
+  "tip": "Select a file",
+  "toast": {
+    "warningPasteNotImage": {
+      "title": "Clipboard content is not an image",
+      "message": "Please paste an image."
+    }
+  }
 }

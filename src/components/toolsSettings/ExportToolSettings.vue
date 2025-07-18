@@ -39,6 +39,7 @@ const {
             <p>{{ $t('tools.export.settings.general.title') }}</p>
           </div>
 
+          <!-- File format -->
           <div class="export-settings-item">
             <label for="file-format">{{ $t('tools.export.settings.general.fileFormat') }}</label>
             <select id="file-format" v-model="fileFormat">
@@ -50,8 +51,8 @@ const {
             </select>
           </div>
 
+          <!-- Quality setting -->
           <div class="export-settings-item" v-if="fileFormat === 'jpg' || fileFormat === 'webp'">
-            <!-- Quality setting -->
             <label for="file-quality">{{
               $t('tools.export.settings.general.fileQuality.label')
             }}</label>
@@ -60,15 +61,16 @@ const {
               @update:modelValue="(value) => updateQuality(value)" :backgroundColor="'var(--background-c)'" />
           </div>
 
+          <!-- File name -->
           <div class="export-settings-item">
-            <!-- File name -->
             <label for="file-name">{{ $t('tools.export.settings.general.fileName.label') }}</label>
             <input ref="inputFileNameRef" type="text" v-model="fileName" id="file-name"
               :placeholder="$t('tools.export.settings.general.fileName.placeholder')" @blur="saveNewFileName"
               @keydown.enter="saveNewFileName" />
           </div>
+
+          <!-- File dimensions -->
           <div class="export-settings-item">
-            <!-- File dimensions -->
             <label>{{
               $t('tools.export.settings.general.fileDimensions.label')
               }}</label>
@@ -93,17 +95,21 @@ const {
             </div>
           </div>
 
+          <!-- Copy to clipboard button for PNG format -->
           <div v-if="fileFormat === 'png'" class="export-settings-item">
             <DefaultButton :text="$t('tools.export.settings.general.copyToClipboardButton.text')"
               :tip="$t('tools.export.settings.general.copyToClipboardButton.tip')" @click="copyImageToClipboard" />
           </div>
 
+          <!-- Export or close -->
           <div class="buttons-wrapper">
             <DefaultButton :text="$t('tools.export.settings.general.cancelButton.text')"
               @click="closeExportToolSettings" onlyText />
             <DefaultButton :text="$t('tools.export.settings.general.exportButton.text')" @click="exportFile" />
           </div>
         </div>
+
+        <!-- Export preview -->
         <div class="export-preview">
           <img v-if="previewUrl" :src="previewUrl" alt="Export Preview" class="export-preview-img" :style="{
             aspectRatio: fileDimensions.width + ' / ' + fileDimensions.height,
