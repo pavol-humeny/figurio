@@ -311,7 +311,7 @@ export const useImageStore = defineStore('imageStore', {
       const reader = new FileReader()
 
       if (this.fileType.startsWith('image')) {
-        reader.onload = (e) => {
+        reader.onload = (event) => {
           const img = new Image()
           img.onload = () => {
             this.fileDimensions.width = img.width
@@ -333,7 +333,7 @@ export const useImageStore = defineStore('imageStore', {
             this.previewUrl = canvas.toDataURL() // Fallback for export
           }
 
-          img.src = e.target.result
+          img.src = event.target.result
         }
 
         reader.readAsDataURL(file)
@@ -407,118 +407,23 @@ export const useImageStore = defineStore('imageStore', {
 
       console.log('Exporting file...')
 
-      const isPdf = this.newFileFormat === 'pdf'
-
-      await this.generatePreview(editorStore, historyStore, t, !isPdf)
-
       const { width, height, quality } = this.newFileDimensions
+      const isPdf = this.newFileFormat === 'pdf'
+      const isSvg = this.newFileFormat === 'svg'
+
+      await this.generatePreview(editorStore, historyStore, t, !isPdf && !isSvg)
+
+      if (isSvg) {
+        await this.exportAsSvg(width, height, t)
+        return true
+      }
 
       const image = new Image()
       image.onload = async () => {
         if (isPdf) {
-          const offsetX = this.frame.enabled ? this.frame.width : 0
-          let offsetY = this.frame.enabled ? this.frame.height : 0
-
-          const finalWidth = width
-          const finalHeight = height
-
-          // Correction for frame header/footer
-          if (this.frame.type === 'frameMacBrowser' || this.frame.type === 'frameWindowsBrowser') {
-            offsetY = this.frame.headerSize
-          }
-
-          // Initialize jsPDF with correct orientation and size
-          const pdf = new jsPDF({
-            orientation: finalWidth > finalHeight ? 'landscape' : 'portrait',
-            unit: 'px', // používame px kvôli SVG pozíciám
-            format: [finalWidth, finalHeight],
-          })
-
-          // === 1. Render base image into PDF ===
-          pdf.addImage(image, 'PNG', offsetX, offsetY, image.width, image.height)
-
-          // === 2. Add svg objects if any ===
-          if (this.svgObjects.length > 0) {
-            const svgString = `
-              <svg xmlns="http://www.w3.org/2000/svg" width="${finalWidth}" height="${finalHeight}">
-                <g transform="translate(${offsetX}, ${offsetY})">
-                  ${this.svgObjects
-                    .map((obj) => {
-                      const attrs = Object.entries(obj.attrs || {})
-                        .map(([key, val]) => `${key}="${val}"`)
-                        .join(' ')
-                      return `<${obj.tag} ${attrs} />`
-                    })
-                    .join('\n')}
-                </g>
-              </svg>
-            `.trim()
-
-            try {
-              const svgElement = new DOMParser().parseFromString(
-                svgString,
-                'image/svg+xml',
-              ).documentElement
-              await svg2pdf(svgElement, pdf, {
-                xOffset: 0,
-                yOffset: 0,
-                scale: 1,
-              })
-            } catch (e) {
-              console.error('Chyba pri exporte svgObjects do PDF:', e)
-            }
-          }
-
-          // === 3. Add frame SVG if enabled ===
-          if (this.frame.enabled && this.frameSvg) {
-            try {
-              const parser = new DOMParser()
-              const svgElement = parser.parseFromString(
-                this.frameSvg,
-                'image/svg+xml',
-              ).documentElement
-
-              await svg2pdf(svgElement, pdf, {
-                xOffset: 0,
-                yOffset: 0,
-                scale: 1,
-              })
-            } catch (e) {
-              console.error('Chyba pri exporte SVG rámika do PDF:', e)
-            }
-          }
-
-          // Set file name and save PDF
-          pdf.save(`${this.newFileName}.pdf`)
+          await this.exportAsPdf(image, width, height)
         } else {
-          const mimeType =
-            this.newFileFormat === 'jpeg' || this.newFileFormat === 'jpg'
-              ? 'image/jpeg'
-              : this.newFileFormat === 'webp'
-                ? 'image/webp'
-                : 'image/png'
-
-          const canvas = document.createElement('canvas')
-          canvas.width = width
-          canvas.height = height
-          const ctx = canvas.getContext('2d')
-          ctx.drawImage(image, 0, 0, width, height)
-
-          canvas.toBlob(
-            (blob) => {
-              if (!blob) return
-              const blobUrl = URL.createObjectURL(blob)
-
-              const link = document.createElement('a')
-              link.href = blobUrl
-              link.download = `${this.newFileName}.${this.newFileFormat}`
-              link.click()
-
-              URL.revokeObjectURL(blobUrl)
-            },
-            mimeType,
-            quality / 100,
-          )
+          await this.exportAsRaster(image, width, height, quality)
         }
 
         showToastModal(
@@ -533,6 +438,167 @@ export const useImageStore = defineStore('imageStore', {
       image.src = isPdf ? this.getRenderedImage(true).toDataURL() : this.previewUrl
 
       return true
+    },
+
+    async exportAsRaster(image, width, height, quality) {
+      const mimeType =
+        this.newFileFormat === 'jpeg' || this.newFileFormat === 'jpg'
+          ? 'image/jpeg'
+          : this.newFileFormat === 'webp'
+            ? 'image/webp'
+            : 'image/png'
+
+      const canvas = document.createElement('canvas')
+      canvas.width = width
+      canvas.height = height
+      const ctx = canvas.getContext('2d')
+      ctx.drawImage(image, 0, 0, width, height)
+
+      canvas.toBlob(
+        (blob) => {
+          if (!blob) return
+          const blobUrl = URL.createObjectURL(blob)
+          const link = document.createElement('a')
+          link.href = blobUrl
+          link.download = `${this.newFileName}.${this.newFileFormat}`
+          link.click()
+          URL.revokeObjectURL(blobUrl)
+        },
+        mimeType,
+        quality / 100,
+      )
+    },
+
+    async exportAsPdf(image, width, height) {
+      const offsetX = this.frame.enabled ? this.frame.width : 0
+      let offsetY = this.frame.enabled ? this.frame.height : 0
+
+      const finalWidth = width
+      const finalHeight = height
+
+      // Correction for frame header/footer
+      if (this.frame.type === 'frameMacBrowser' || this.frame.type === 'frameWindowsBrowser') {
+        offsetY = this.frame.headerSize
+      }
+
+      // Initialize jsPDF with correct orientation and size
+      const pdf = new jsPDF({
+        orientation: finalWidth > finalHeight ? 'landscape' : 'portrait',
+        unit: 'px', // používame px kvôli SVG pozíciám
+        format: [finalWidth, finalHeight],
+      })
+
+      // === 1. Render base image into PDF ===
+      pdf.addImage(image, 'PNG', offsetX, offsetY, image.width, image.height)
+
+      // === 2. Add svg objects if any ===
+      if (this.svgObjects.length > 0) {
+        const svgString = `
+              <svg xmlns="http://www.w3.org/2000/svg" width="${finalWidth}" height="${finalHeight}">
+                <g transform="translate(${offsetX}, ${offsetY})">
+                  ${this.svgObjects
+                    .map((obj) => {
+                      const attrs = Object.entries(obj.attrs || {})
+                        .map(([key, val]) => `${key}="${val}"`)
+                        .join(' ')
+                      return `<${obj.tag} ${attrs} />`
+                    })
+                    .join('\n')}
+                </g>
+              </svg>
+            `.trim()
+
+        try {
+          const svgElement = new DOMParser().parseFromString(
+            svgString,
+            'image/svg+xml',
+          ).documentElement
+          await svg2pdf(svgElement, pdf, {
+            xOffset: 0,
+            yOffset: 0,
+            scale: 1,
+          })
+        } catch (e) {
+          console.error('Error during svgObjects export to PDF:', e)
+        }
+      }
+
+      // === 3. Add frame SVG if enabled ===
+      if (this.frame.enabled && this.frameSvg) {
+        try {
+          const parser = new DOMParser()
+          const svgElement = parser.parseFromString(this.frameSvg, 'image/svg+xml').documentElement
+
+          await svg2pdf(svgElement, pdf, {
+            xOffset: 0,
+            yOffset: 0,
+            scale: 1,
+          })
+        } catch (e) {
+          console.error('Error during frame SVG export to PDF:', e)
+        }
+      }
+
+      // Set file name and save PDF
+      pdf.save(`${this.newFileName}.pdf`)
+    },
+
+    async exportAsSvg(width, height, t) {
+      const offsetX = this.frame.enabled ? this.frame.width : 0
+      let offsetY = this.frame.enabled ? this.frame.height : 0
+
+      if (this.frame.type === 'frameMacBrowser' || this.frame.type === 'frameWindowsBrowser') {
+        offsetY = this.frame.headerSize
+      }
+
+      const renderedImage = this.getRenderedImage(true)
+      if (!renderedImage) {
+        console.warn('No image to export as SVG')
+        return
+      }
+
+      const imageDataUrl = renderedImage.toDataURL()
+      const imageTag = `<image href="${imageDataUrl}" x="${offsetX}" y="${offsetY}" width="${renderedImage.width}" height="${renderedImage.height}" />`
+
+      const svgObjectsTag = this.svgObjects
+        .map((obj) => {
+          const attrs = Object.entries(obj.attrs || {})
+            .map(([k, v]) => `${k}="${v}"`)
+            .join(' ')
+          return `<${obj.tag} ${attrs} />`
+        })
+        .join('\n')
+
+      let cleanedFrameSvg = (this.frameSvg || '')
+        .replace(/<\/svg>/g, '')
+        .replace(/<svg[^>]*>/g, '')
+        .trim()
+
+      const svgContent = `
+        <svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}">
+          ${imageTag}
+          <g transform="translate(${offsetX}, ${offsetY})">
+            ${svgObjectsTag}
+          </g>
+          ${cleanedFrameSvg}
+        </svg>
+      `.trim()
+
+      const blob = new Blob([svgContent], { type: 'image/svg+xml' })
+      const url = URL.createObjectURL(blob)
+      const link = document.createElement('a')
+      link.href = url
+      link.download = `${this.newFileName}.svg`
+      link.click()
+      URL.revokeObjectURL(url)
+
+      showToastModal(
+        'success',
+        t('imageStore.toast.successFileExported.title'),
+        t('imageStore.toast.successFileExported.message', {
+          fileName: this.newFileName,
+        }),
+      )
     },
 
     async rasterize(width = null, height = null, storeAsNew = false) {

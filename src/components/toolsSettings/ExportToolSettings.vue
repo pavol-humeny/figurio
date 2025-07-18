@@ -47,6 +47,7 @@ const {
               <option value="jpg">JPG</option>
               <option value="pdf">PDF</option>
               <option value="webp">WebP</option>
+              <option value="svg">SVG</option>
             </select>
           </div>
 
@@ -54,7 +55,7 @@ const {
             <!-- Quality setting -->
             <label for="file-quality">{{
               $t('tools.export.settings.general.fileQuality.label')
-              }}</label>
+            }}</label>
             <p>{{ fileDimensions.quality }} %</p>
             <DefaultSlider v-model="fileDimensions.quality" :min="0" :max="100" :step="1"
               @update:modelValue="(value) => updateDimension('quality', value)"
@@ -72,12 +73,12 @@ const {
             <!-- File dimensions -->
             <label>{{
               $t('tools.export.settings.general.fileDimensions.label')
-            }}</label>
+              }}</label>
             <div class="file-dimensions">
               <div class="width disabled">
                 <label>{{
                   $t('tools.export.settings.general.fileDimensions.width')
-                }}</label>
+                  }}</label>
                 <label>
                   : {{ fileDimensions.width }}px
                 </label>
@@ -86,7 +87,7 @@ const {
               <div class="height disabled">
                 <label>{{
                   $t('tools.export.settings.general.fileDimensions.height')
-                }}</label>
+                  }}</label>
                 <label>
                   : {{ fileDimensions.height }}px
                 </label>
