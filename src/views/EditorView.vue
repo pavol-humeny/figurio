@@ -7,10 +7,17 @@ import DragAndDropArea from '@/components/editor/DragAndDropArea.vue';
 import { useImageStore } from '@/stores/imageStore'
 import { useKeyboardShortcuts } from '@/composables/editor/useKeyboardShortcuts';
 import { useHistoryStore } from '@/stores/historyStore';
+
+// === Keyboard shortcuts configuration ===
 import { useUndoRedo } from '@/composables/topPanel/useUndoRedo';
+import { useZoomControl } from '@/composables/topPanel/useZoomControl';
+import { useViewportStore } from '@/stores/viewportStore';
 
 const { undo, redo } = useUndoRedo(useHistoryStore(), useImageStore())
-useKeyboardShortcuts({ undo, redo })
+const { zoomIn, zoomOut, resetZoom } = useZoomControl(useViewportStore())
+
+useKeyboardShortcuts({ undo, redo, zoomIn, zoomOut, resetZoom })
+// === ===
 
 const imageStore = useImageStore()
 </script>
