@@ -46,6 +46,9 @@ const {
   horizontalSliderWidth,
   horizontalRulerMarks,
   verticalRulerMarks,
+  onMouseMove,
+  mouseX,
+  mouseY,
 } = useViewportWrapper(useViewportStore(), useImageStore(), useEditorStore(), contentRef)
 
 const isCropShown = ref(false)
@@ -63,7 +66,7 @@ watch(
 <template>
   <div class="viewport-wrapper">
     <div class="viewport-content-wrapper" ref="wrapperRef" @wheel.passive="setZoomAndScroll" @mousedown="startPan"
-      :class="{
+      @mousemove="onMouseMove" :class="{
         'middle-dragging': isMiddleDragging,
         'move-tool-selected': editorStore.selectedToolKey === 'move',
       }">
@@ -86,6 +89,7 @@ watch(
       </div>
     </div>
 
+    <!-- Sliders -->
     <div class="vertical-slider-wrapper">
       <div class="slider" @mousedown="(e) => startDrag('y', e)" :style="{
         top: verticalSliderTop + 'px',
@@ -100,20 +104,24 @@ watch(
       }" :class="{ active: isDraggingHorizontal }"></div>
     </div>
 
+    <!-- Rulers -->
     <div v-if="uiStore.rulersEnabled" class="horizontal-ruler-wrapper">
       <div class="ruler">
-        <div v-for="(mark, i) in horizontalRulerMarks" :key="'h' + i" class="ruler-mark horizontal"
-          :style="{ left: mark.left + 'px' }">
-          <span class="ruler-label">{{ mark.label }}</span>
+        <div v-for="(mark, i) in horizontalRulerMarks" :key="'h' + i"
+          :class="['ruler-mark', 'horizontal', { 'sub-mark': mark.isSub }]" :style="{ left: mark.left + 'px' }">
+          <span v-if="!mark.isSub" class="ruler-label">{{ mark.label }}</span>
         </div>
+        <div v-if="mouseX !== null" class="ruler-cursor-mark horizontal" :style="{ left: mouseX + 'px' }"></div>
+
       </div>
     </div>
     <div v-if="uiStore.rulersEnabled" class="vertical-ruler-wrapper">
       <div class="ruler">
-        <div v-for="(mark, i) in verticalRulerMarks" :key="'v' + i" class="ruler-mark vertical"
-          :style="{ top: mark.top + 'px' }">
-          <span class="ruler-label">{{ mark.label }}</span>
+        <div v-for="(mark, i) in verticalRulerMarks" :key="'v' + i"
+          :class="['ruler-mark', 'vertical', { 'sub-mark': mark.isSub }]" :style="{ top: mark.top + 'px' }">
+          <span v-if="!mark.isSub" class="ruler-label">{{ mark.label }}</span>
         </div>
+        <div v-if="mouseY !== null" class="ruler-cursor-mark vertical" :style="{ top: mouseY + 'px' }"></div>
       </div>
     </div>
     <div v-if="uiStore.rulersEnabled" class="ruler-padding"></div>
@@ -154,6 +162,7 @@ watch(
   display: block;
 }
 
+/* Sliders */
 .vertical-slider-wrapper {
   position: absolute;
   top: 0;
@@ -212,13 +221,14 @@ watch(
   cursor: move;
 }
 
+/* Rulers */
 .horizontal-ruler-wrapper {
   position: absolute;
   left: 0px;
   top: 0;
   background-color: var(--secondary-c);
   width: 100%;
-  height: 12px;
+  height: var(--ruler-size);
   z-index: var(--z-index-rulers);
   overflow: hidden;
 }
@@ -228,7 +238,7 @@ watch(
   top: 0px;
   left: 0;
   background-color: var(--secondary-c);
-  width: 12px;
+  width: var(--ruler-size);
   height: 100%;
   z-index: var(--z-index-rulers);
   overflow: hidden;
@@ -238,8 +248,8 @@ watch(
   position: absolute;
   top: 0;
   left: 0;
-  width: 12px;
-  height: 12px;
+  width: var(--ruler-size);
+  height: var(--ruler-size);
   background: var(--secondary-c);
   z-index: var(--z-index-rulers-padding);
 }
@@ -280,5 +290,39 @@ watch(
   left: 0px;
   writing-mode: vertical-rl;
   transform: translateY(2px) rotate(180deg);
+}
+
+/* SubMarks */
+.ruler-mark.sub-mark.horizontal {
+  height: 30%;
+  background-color: var(--border-c);
+  top: 70%;
+}
+
+.ruler-mark.sub-mark.vertical {
+  width: 30%;
+  background-color: var(--border-c);
+  left: 70%;
+}
+
+/* Cursor Marks */
+.ruler-cursor-mark.horizontal {
+  position: absolute;
+  top: 0;
+  width: 2px;
+  height: 100%;
+  background-color: var(--primary-c);
+  z-index: 2;
+  pointer-events: none;
+}
+
+.ruler-cursor-mark.vertical {
+  position: absolute;
+  left: 0;
+  height: 2px;
+  width: 100%;
+  background-color: var(--primary-c);
+  z-index: 2;
+  pointer-events: none;
 }
 </style>

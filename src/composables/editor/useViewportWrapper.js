@@ -361,34 +361,58 @@ export function useViewportWrapper(viewportStore, imageStore, editorStore, conte
   const horizontalRulerMarks = computed(() => {
     const spacing = dynamicStep.value * zoomLevel.value
     const width = wrapperRef.value?.clientWidth || 0
-
     const start = Math.floor(-panX.value / spacing) - 1
     const end = Math.ceil((width - panX.value) / spacing) + 1
 
-    return Array.from({ length: end - start }, (_, i) => {
-      const index = start + i
-      return {
-        left: index * spacing + panX.value,
-        label: index * dynamicStep.value,
+    const marks = []
+
+    for (let i = start; i < end; i++) {
+      const base = i * spacing + panX.value
+      // Hlavná značka
+      marks.push({ left: base, label: i * dynamicStep.value, isSub: false })
+
+      // Medziznačky (4 medzi každé dve hlavné)
+      for (let j = 1; j < 5; j++) {
+        const subLeft = base + (j * spacing) / 5
+        marks.push({ left: subLeft, label: '', isSub: true })
       }
-    })
+    }
+
+    return marks
   })
 
   const verticalRulerMarks = computed(() => {
     const spacing = dynamicStep.value * zoomLevel.value
     const height = wrapperRef.value?.clientHeight || 0
-
     const start = Math.floor(-panY.value / spacing) - 1
     const end = Math.ceil((height - panY.value) / spacing) + 1
 
-    return Array.from({ length: end - start }, (_, i) => {
-      const index = start + i
-      return {
-        top: index * spacing + panY.value,
-        label: index * dynamicStep.value,
+    const marks = []
+
+    for (let i = start; i < end; i++) {
+      const base = i * spacing + panY.value
+      marks.push({ top: base, label: i * dynamicStep.value, isSub: false })
+
+      for (let j = 1; j < 5; j++) {
+        const subTop = base + (j * spacing) / 5
+        marks.push({ top: subTop, label: '', isSub: true })
       }
-    })
+    }
+
+    return marks
   })
+
+  // Ruler cursor mark
+  const mouseX = ref(null)
+  const mouseY = ref(null)
+
+  const onMouseMove = (e) => {
+    const rect = wrapperRef.value?.getBoundingClientRect()
+    if (!rect) return
+
+    mouseX.value = e.clientX - rect.left
+    mouseY.value = e.clientY - rect.top
+  }
 
   return {
     zoomLevel,
@@ -410,5 +434,8 @@ export function useViewportWrapper(viewportStore, imageStore, editorStore, conte
     setValuesForCenterImage,
     horizontalRulerMarks,
     verticalRulerMarks,
+    onMouseMove,
+    mouseX,
+    mouseY,
   }
 }
