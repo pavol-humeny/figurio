@@ -113,6 +113,9 @@ body {
   --z-index-top-panel: 700;
   --z-index-tools-settings-panel: 600;
   --z-index-tools-panel: 600;
+  --z-index-sliders: 550;
+  --z-index-rulers-padding: 530;
+  --z-index-rulers: 525;
   --z-index-viewport: 500;
 
   --box-shadow-ui: 1px 3px 6px rgba(0, 0, 0, 0.4);

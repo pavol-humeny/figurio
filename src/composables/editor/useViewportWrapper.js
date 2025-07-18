@@ -347,6 +347,48 @@ export function useViewportWrapper(viewportStore, imageStore, editorStore, conte
       })
     },
   )
+  const dynamicStep = computed(() => {
+    const z = zoomLevel.value
+    if (z >= 4) return 5
+    if (z >= 2) return 10
+    if (z >= 1.5) return 20
+    if (z >= 1.0) return 40
+    if (z >= 0.5) return 80
+    if (z >= 0.25) return 160
+    return 320 // stále necháva menej značiek pri minimálnom zoome
+  })
+
+  const horizontalRulerMarks = computed(() => {
+    const spacing = dynamicStep.value * zoomLevel.value
+    const width = wrapperRef.value?.clientWidth || 0
+
+    const start = Math.floor(-panX.value / spacing) - 1
+    const end = Math.ceil((width - panX.value) / spacing) + 1
+
+    return Array.from({ length: end - start }, (_, i) => {
+      const index = start + i
+      return {
+        left: index * spacing + panX.value,
+        label: index * dynamicStep.value,
+      }
+    })
+  })
+
+  const verticalRulerMarks = computed(() => {
+    const spacing = dynamicStep.value * zoomLevel.value
+    const height = wrapperRef.value?.clientHeight || 0
+
+    const start = Math.floor(-panY.value / spacing) - 1
+    const end = Math.ceil((height - panY.value) / spacing) + 1
+
+    return Array.from({ length: end - start }, (_, i) => {
+      const index = start + i
+      return {
+        top: index * spacing + panY.value,
+        label: index * dynamicStep.value,
+      }
+    })
+  })
 
   return {
     zoomLevel,
@@ -366,5 +408,7 @@ export function useViewportWrapper(viewportStore, imageStore, editorStore, conte
     horizontalSliderWidth,
     centerImage,
     setValuesForCenterImage,
+    horizontalRulerMarks,
+    verticalRulerMarks,
   }
 }

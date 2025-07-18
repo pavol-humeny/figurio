@@ -41,6 +41,8 @@ const {
   horizontalSliderLeft,
   verticalSliderHeight,
   horizontalSliderWidth,
+  horizontalRulerMarks,
+  verticalRulerMarks,
 } = useViewportWrapper(useViewportStore(), useImageStore(), useEditorStore(), contentRef)
 
 const isCropShown = ref(false)
@@ -57,23 +59,14 @@ watch(
 
 <template>
   <div class="viewport-wrapper">
-    <div
-      class="viewport-content-wrapper"
-      ref="wrapperRef"
-      @wheel.passive="setZoomAndScroll"
-      @mousedown="startPan"
+    <div class="viewport-content-wrapper" ref="wrapperRef" @wheel.passive="setZoomAndScroll" @mousedown="startPan"
       :class="{
         'middle-dragging': isMiddleDragging,
         'move-tool-selected': editorStore.selectedToolKey === 'move',
-      }"
-    >
-      <div
-        class="viewport-content"
-        ref="contentRef"
-        :style="{
-          transform: `translate(${panX}px, ${panY}px) scale(${zoomLevel})`,
-        }"
-      >
+      }">
+      <div class="viewport-content" ref="contentRef" :style="{
+        transform: `translate(${panX}px, ${panY}px) scale(${zoomLevel})`,
+      }">
         <canvas ref="canvasRef" class="image-canvas"></canvas>
         <svg ref="svgRef" class="image-svg"></svg>
 
@@ -84,37 +77,43 @@ watch(
 
         <CropTool v-if="editorStore.selectedTabPerTool[editorStore.selectedToolKey] === 'crop'" />
         <SmartCropTool v-if="isCropShown" />
-        <PresetCropTool
-          v-if="
-            editorStore.selectedToolKey === 'preset' && editorStore.selectedSubToolKey === 'crop'
-          "
-        />
+        <PresetCropTool v-if="
+          editorStore.selectedToolKey === 'preset' && editorStore.selectedSubToolKey === 'crop'
+        " />
       </div>
     </div>
 
     <div class="vertical-slider-wrapper">
-      <div
-        class="slider"
-        @mousedown="(e) => startDrag('y', e)"
-        :style="{
-          top: verticalSliderTop + 'px',
-          height: verticalSliderHeight + 'px',
-        }"
-        :class="{ active: isDraggingVertical }"
-      ></div>
+      <div class="slider" @mousedown="(e) => startDrag('y', e)" :style="{
+        top: verticalSliderTop + 'px',
+        height: verticalSliderHeight + 'px',
+      }" :class="{ active: isDraggingVertical }"></div>
     </div>
 
     <div class="horizontal-slider-wrapper">
-      <div
-        class="slider"
-        @mousedown="(e) => startDrag('x', e)"
-        :style="{
-          left: horizontalSliderLeft + 'px',
-          width: horizontalSliderWidth + 'px',
-        }"
-        :class="{ active: isDraggingHorizontal }"
-      ></div>
+      <div class="slider" @mousedown="(e) => startDrag('x', e)" :style="{
+        left: horizontalSliderLeft + 'px',
+        width: horizontalSliderWidth + 'px',
+      }" :class="{ active: isDraggingHorizontal }"></div>
     </div>
+
+    <div class="horizontal-ruler-wrapper">
+      <div class="ruler">
+        <div v-for="(mark, i) in horizontalRulerMarks" :key="'h' + i" class="ruler-mark horizontal"
+          :style="{ left: mark.left + 'px' }">
+          <span class="ruler-label">{{ mark.label }}</span>
+        </div>
+      </div>
+    </div>
+    <div class="vertical-ruler-wrapper">
+      <div class="ruler">
+        <div v-for="(mark, i) in verticalRulerMarks" :key="'v' + i" class="ruler-mark vertical"
+          :style="{ top: mark.top + 'px' }">
+          <span class="ruler-label">{{ mark.label }}</span>
+        </div>
+      </div>
+    </div>
+    <div class="ruler-padding"></div>
   </div>
 </template>
 
@@ -162,6 +161,7 @@ watch(
   flex-direction: column;
   align-items: center;
   overflow: hidden;
+  z-index: var(--z-index-sliders);
 }
 
 .horizontal-slider-wrapper {
@@ -173,6 +173,7 @@ watch(
   overflow: hidden;
   display: flex;
   align-items: center;
+  z-index: var(--z-index-sliders);
 }
 
 .slider {
@@ -206,5 +207,74 @@ watch(
 
 .move-tool-selected {
   cursor: move;
+}
+
+.horizontal-ruler-wrapper {
+  position: absolute;
+  left: 0px;
+  top: 0;
+  background-color: var(--secondary-c);
+  width: 100%;
+  height: 12px;
+  z-index: var(--z-index-rulers);
+  overflow: hidden;
+}
+
+.vertical-ruler-wrapper {
+  position: absolute;
+  top: 0px;
+  left: 0;
+  background-color: var(--secondary-c);
+  width: 12px;
+  height: 100%;
+  z-index: var(--z-index-rulers);
+  overflow: hidden;
+}
+
+.ruler-padding {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 12px;
+  height: 12px;
+  background: var(--secondary-c);
+  z-index: var(--z-index-rulers-padding);
+}
+
+.ruler-mark.horizontal {
+  position: absolute;
+  top: 0;
+  width: 2px;
+  height: 100%;
+  background-color: var(--border-c);
+}
+
+.ruler-mark.vertical {
+  position: absolute;
+  left: 0;
+  height: 2px;
+  width: 100%;
+  background-color: var(--border-c);
+}
+
+.ruler-label {
+  position: absolute;
+  color: var(--text-placeholder-c);
+  font-size: 10px;
+  transform: translateX(2px);
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+.ruler-mark.horizontal .ruler-label {
+  top: 0px;
+  left: 2px;
+}
+
+.ruler-mark.vertical .ruler-label {
+  top: 2px;
+  left: 0px;
+  writing-mode: vertical-rl;
+  transform: translateY(2px) rotate(180deg);
 }
 </style>
