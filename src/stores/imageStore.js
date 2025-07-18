@@ -402,6 +402,23 @@ export const useImageStore = defineStore('imageStore', {
       document.body.removeChild(input)
     },
 
+    async copyImageToClipboard(t) {
+      const dataUrl = this.previewUrl || ''
+      if (!dataUrl) {
+        console.warn('No preview available for clipboard export')
+      }
+
+      const blob = await (await fetch(dataUrl)).blob()
+
+      await navigator.clipboard.write([new ClipboardItem({ [blob.type]: blob })])
+
+      showToastModal(
+        'success',
+        t('imageStore.toast.successFileCopiedToClipboard.title'),
+        t('imageStore.toast.successFileCopiedToClipboard.message'),
+      )
+    },
+
     async exportFile(editorStore, historyStore, t) {
       if (!this.getRenderedImage(true)) return false
 
@@ -694,7 +711,17 @@ export const useImageStore = defineStore('imageStore', {
       // If frame is not enabled, just return the base image
       if (!this.frame.enabled) {
         console.log('Frame not enabled, using base image for preview')
-        this.previewUrl = baseImage.toDataURL()
+
+        const mimeType =
+          this.newFileFormat === 'jpeg' || this.newFileFormat === 'jpg'
+            ? 'image/jpeg'
+            : this.newFileFormat === 'webp'
+              ? 'image/webp'
+              : 'image/png'
+
+        const quality = this.newFileDimensions.quality / 100
+
+        this.previewUrl = baseImage.toDataURL(mimeType, quality)
         return
       }
 
@@ -765,7 +792,16 @@ export const useImageStore = defineStore('imageStore', {
       )
       ctx.drawImage(frameImg, 0, 0)
 
-      this.previewUrl = exportCanvas.toDataURL()
+      const mimeType =
+        this.newFileFormat === 'jpeg' || this.newFileFormat === 'jpg'
+          ? 'image/jpeg'
+          : this.newFileFormat === 'webp'
+            ? 'image/webp'
+            : 'image/png'
+
+      const quality = this.newFileDimensions.quality / 100
+
+      this.previewUrl = exportCanvas.toDataURL(mimeType, quality)
     },
 
     // UndoRedo

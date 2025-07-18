@@ -510,6 +510,10 @@
           "label": "Náhľad",
           "previewUnavailable": "Náhľad nie je k dispozícii"
         },
+        "copyToClipboardButton": {
+          "text": "Kopírovať do schránky",
+          "tip": "Kopírovať obrázok do schránky bez nutnosti exportu"
+        },
         "cancelButton": {
           "text": "Zavrieť",
           "tip": "Zavrieť okno exportu",

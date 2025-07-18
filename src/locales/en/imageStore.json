@@ -35,6 +35,10 @@
     "successFileExported":{
       "title": "File exported successfully",
       "message": "The file {fileName} has been exported."
+    },
+    "successFileCopiedToClipboard": {
+      "title": "File copied to clipboard",
+      "message": "The image has been successfully copied to the clipboard."
     }
   }
 }

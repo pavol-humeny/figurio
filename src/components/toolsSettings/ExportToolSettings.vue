@@ -20,13 +20,12 @@ const {
   fileName,
   fileFormat,
   fileDimensions,
-  updateDimension,
+  updateQuality,
   saveNewFileName,
-  // resetFileDimensions,
   closeExportToolSettings,
   exportFile,
-  // isDimensionsLinked,
   previewUrl,
+  copyImageToClipboard
 } = useExportToolSettings(useImageStore(), useEditorStore(), useHistoryStore(), t)
 </script>
 
@@ -58,8 +57,7 @@ const {
             }}</label>
             <p>{{ fileDimensions.quality }} %</p>
             <DefaultSlider v-model="fileDimensions.quality" :min="0" :max="100" :step="1"
-              @update:modelValue="(value) => updateDimension('quality', value)"
-              :backgroundColor="'var(--background-c)'" />
+              @update:modelValue="(value) => updateQuality(value)" :backgroundColor="'var(--background-c)'" />
           </div>
 
           <div class="export-settings-item">
@@ -93,6 +91,11 @@ const {
                 </label>
               </div>
             </div>
+          </div>
+
+          <div v-if="fileFormat === 'png'" class="export-settings-item">
+            <DefaultButton :text="$t('tools.export.settings.general.copyToClipboardButton.text')"
+              :tip="$t('tools.export.settings.general.copyToClipboardButton.tip')" @click="copyImageToClipboard" />
           </div>
 
           <div class="buttons-wrapper">

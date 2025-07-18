@@ -25,39 +25,17 @@ export function useExportToolSettings(imageStore, editorStore, historyStore, t) 
     set: (value) => (imageStore.newFileFormat = value),
   })
 
+  watch(
+    () => fileFormat.value,
+    async () => {
+      await imageStore.generatePreview(editorStore, historyStore, t)
+    },
+  )
+
   const fileDimensions = computed(() => imageStore.newFileDimensions)
 
-  const updateDimension = async (type, value) => {
-    if (!value || value <= 0) return
-
-    // if (type === 'width') {
-    //   imageStore.newFileDimensions.width = value
-
-    //   if (isDimensionsLinked.value) {
-    //     const ratio = imageStore.newFileDimensions.fileAspectRatio
-    //     imageStore.newFileDimensions.height = Math.round(value / ratio)
-    //   }
-    // }
-
-    // if (type === 'height') {
-    //   imageStore.newFileDimensions.height = value
-
-    //   if (isDimensionsLinked.value) {
-    //     const ratio = imageStore.newFileDimensions.fileAspectRatio
-    //     imageStore.newFileDimensions.width = Math.round(value * ratio)
-    //   }
-    // }
-
-    if (type === 'quality') {
-      imageStore.newFileDimensions.quality = value
-    }
-
-    const width = imageStore.newFileDimensions.width
-    const height = imageStore.newFileDimensions.height
-    if (width > 0 && height > 0) {
-      imageStore.newFileDimensions.fileAspectRatio = Math.round((width / height) * 100) / 100
-    }
-
+  const updateQuality = async (value) => {
+    imageStore.newFileDimensions.quality = value
     await imageStore.generatePreview(editorStore, historyStore, t)
   }
 
@@ -111,27 +89,9 @@ export function useExportToolSettings(imageStore, editorStore, historyStore, t) 
     isVisible.value = false
   }
 
-  // const resetFileDimensions = async () => {
-  //   if (imageStore.frame?.enabled) {
-  //     imageStore.newFileDimensions.width =
-  //       imageStore.fileDimensions.width + imageStore.frame.width * 2
-  //     if (imageStore.frame.headerSize > 0) {
-  //       imageStore.newFileDimensions.height =
-  //         imageStore.fileDimensions.height + imageStore.frame.height + imageStore.frame.headerSize
-  //     } else if (imageStore.frame.footerSize > 0) {
-  //       imageStore.newFileDimensions.height =
-  //         imageStore.fileDimensions.height + imageStore.frame.height + imageStore.frame.footerSize
-  //     } else {
-  //       imageStore.newFileDimensions.height =
-  //         imageStore.fileDimensions.height + imageStore.frame.height * 2
-  //     }
-  //   } else {
-  //     imageStore.newFileDimensions = { ...imageStore.fileDimensions }
-  //   }
-  //   isDimensionsLinked.value = true
-
-  //   await imageStore.generatePreview(editorStore, historyStore, t)
-  // }
+  const copyImageToClipboard = async () => {
+    await imageStore.copyImageToClipboard(t)
+  }
 
   return {
     isVisible,
@@ -139,13 +99,12 @@ export function useExportToolSettings(imageStore, editorStore, historyStore, t) 
     fileName,
     fileFormat,
     fileDimensions,
-    updateDimension,
+    updateQuality,
     saveNewFileName,
-    // resetFileDimensions,
     openExportToolSettings,
     closeExportToolSettings,
     exportFile,
-    // isDimensionsLinked,
     previewUrl,
+    copyImageToClipboard,
   }
 }

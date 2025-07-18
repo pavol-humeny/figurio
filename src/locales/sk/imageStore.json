@@ -35,6 +35,10 @@
     "successFileExported":{
       "title": "Súbor bol úspešne exportovaný",
       "message": "Súbor {fileName} bol exportovaný."
+    },
+    "successFileCopiedToClipboard": {
+      "title": "Súbor skopírovaný do schránky",
+      "message": "Obrázok bol úspešne skopírovaný do schránky."
     }
   }
 }

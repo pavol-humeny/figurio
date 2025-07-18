@@ -251,7 +251,6 @@
           "framePhoneAndroid2": "Telefon Android 2",
           "framePhoneSimple": "Telefon jednoduchý",
           "frameWindowsTaskBar": "Windows task bar"
-          
         },
         "useFrameOutline": {
           "label": "Použít obrys"
@@ -510,6 +509,10 @@
         "preview": {
           "label": "Náhled",
           "previewUnavailable": "Náhled není k dispozici"
+        },
+        "copyToClipboardButton": {
+          "text": "Kopírovat do schránky",
+          "tip": "Kopírovat obrázek do schránky bez nutnosti exportu"
         },
         "cancelButton": {
           "text": "Zavřít",

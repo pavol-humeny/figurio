@@ -510,6 +510,10 @@
           "label": "Preview",
           "previewUnavailable": "Preview unavailable"
         },
+        "copyToClipboardButton": {
+          "text": "Copy to clipboard",
+          "tip": "Copy the image to the clipboard without exporting"
+        },
         "cancelButton": {
           "text": "Close",
           "tip": "Close the export window",
