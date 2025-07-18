@@ -49,6 +49,10 @@ const {
   onMouseMove,
   mouseX,
   mouseY,
+  cursorPosX,
+  cursorPosY,
+  cursorPosXSameAsImageWidth,
+  cursorPosYSameAsImageHeight,
 } = useViewportWrapper(useViewportStore(), useImageStore(), useEditorStore(), contentRef)
 
 const isCropShown = ref(false)
@@ -111,7 +115,10 @@ watch(
           :class="['ruler-mark', 'horizontal', { 'sub-mark': mark.isSub }]" :style="{ left: mark.left + 'px' }">
           <span v-if="!mark.isSub" class="ruler-label">{{ mark.label }}</span>
         </div>
-        <div v-if="mouseX !== null" class="ruler-cursor-mark horizontal" :style="{ left: mouseX + 'px' }"></div>
+        <div v-if="mouseX !== null" class="ruler-cursor-mark horizontal" :style="{ left: mouseX + 'px' }">
+          <span class="ruler-cursor-label horizontal" :class="{ 'active': cursorPosXSameAsImageWidth }">{{ cursorPosX
+            }}</span>
+        </div>
 
       </div>
     </div>
@@ -121,7 +128,10 @@ watch(
           :class="['ruler-mark', 'vertical', { 'sub-mark': mark.isSub }]" :style="{ top: mark.top + 'px' }">
           <span v-if="!mark.isSub" class="ruler-label">{{ mark.label }}</span>
         </div>
-        <div v-if="mouseY !== null" class="ruler-cursor-mark vertical" :style="{ top: mouseY + 'px' }"></div>
+        <div v-if="mouseY !== null" class="ruler-cursor-mark vertical" :style="{ top: mouseY + 'px' }">
+          <span class="ruler-cursor-label vertical" :class="{ 'active': cursorPosYSameAsImageHeight }">{{ cursorPosY
+            }}</span>
+        </div>
       </div>
     </div>
     <div v-if="uiStore.rulersEnabled" class="ruler-padding"></div>
@@ -324,5 +334,35 @@ watch(
   background-color: var(--primary-c);
   z-index: 2;
   pointer-events: none;
+}
+
+/* Ruler cursor label */
+.ruler-cursor-label {
+  position: absolute;
+  font-size: 10px;
+  color: var(--primary-c);
+  background: var(--background-c);
+  border-radius: 4px;
+  pointer-events: none;
+  opacity: 0.8;
+}
+
+.ruler-cursor-label.horizontal {
+  top: 0;
+  left: 4px;
+  padding: 1px 4px;
+}
+
+.ruler-cursor-label.vertical {
+  top: 4px;
+  left: 0;
+  padding: 4px 1px;
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);
+}
+
+.ruler-cursor-label.active {
+  background: var(--primary-c);
+  color: var(--background-c);
 }
 </style>

@@ -422,6 +422,16 @@ export function useViewportWrapper(viewportStore, imageStore, editorStore, conte
     mouseY.value = e.clientY - rect.top
   }
 
+  const cursorPosX = computed(() => Math.round((mouseX.value - panX.value) / zoomLevel.value))
+  const cursorPosY = computed(() => Math.round((mouseY.value - panY.value) / zoomLevel.value))
+
+  const cursorPosXSameAsImageWidth = computed(() => {
+    return cursorPosX.value == imageStore.fileDimensions.width || cursorPosX.value == 0
+  })
+  const cursorPosYSameAsImageHeight = computed(() => {
+    return cursorPosY.value == imageStore.fileDimensions.height || cursorPosY.value == 0
+  })
+
   return {
     zoomLevel,
     setZoomAndScroll,
@@ -445,5 +455,9 @@ export function useViewportWrapper(viewportStore, imageStore, editorStore, conte
     onMouseMove,
     mouseX,
     mouseY,
+    cursorPosX,
+    cursorPosY,
+    cursorPosXSameAsImageWidth,
+    cursorPosYSameAsImageHeight,
   }
 }
