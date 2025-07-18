@@ -277,6 +277,7 @@
     "label": "Šablony",
     "tip": "Aplikuje předvolbu na obrázek",
     "tipDisabled": "",
+    "shortcut": "",
     "subTools": {
       "myPresets": {
         "label": "Moje předvolby",

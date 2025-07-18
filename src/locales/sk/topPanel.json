@@ -1,58 +1,51 @@
 {
   "fileNameDisplay": {
-    "tip": "Uprav názov aktuálne otvoreného súboru",
-    "tipDisabled": "Aktuálne nie je otvorený žiadny súbor"
+    "tip": "Upravuje názov aktuálne otvoreného súboru",
+    "tipDisabled": "Nie je otvorený žiadny súbor"
   },
-
   "uploadFileButton": {
-    "tip": "Nahrať nový súbor",
+    "tip": "Nahráva nový súbor",
     "confirm": {
-      "title": "Potvrdiť nahranie súboru",
-      "message": "Naozaj chcete nahrať nový súbor? Týmto nahradíte aktuálny súbor.",
+      "title": "Potvrdiť nahratie súboru",
+      "message": "Naozaj chcete nahrať nový súbor? Tým sa nahradí aktuálny súbor",
       "cancel": "Zrušiť",
       "confirm": "Nahrať"
     }
   },
-
   "closeFileButton": {
-    "tip": "Zavrieť aktuálne otvorený súbor",
+    "tip": "Zatvára aktuálne otvorený súbor",
     "toast": {
       "success": {
-        "title": "Súbor bol zavretý",
-        "message": "Súbor bol úspešne zavretý."
+        "title": "Súbor zatvorený",
+        "message": "Súbor bol úspešne zatvorený"
       }
     },
     "confirm": {
       "title": "Potvrdiť zatvorenie súboru",
-      "message": "Naozaj chcete zatvoriť aktuálny súbor? Všetky neuložené zmeny budú stratené.",
+      "message": "Naozaj chcete zatvoriť aktuálny súbor? Neuložené zmeny budú stratené",
       "cancel": "Nie",
       "confirm": "Áno, zatvoriť"
     }
   },
-
   "undoRedo": {
     "tip": {
-      "undo": "Späť poslednú akciu",
-      "redo": "Znova poslednú akciu"
+      "undo": "Vráti poslednú akciu späť",
+      "redo": "Zopakuje poslednú akciu"
     }
   },
-
   "zoomControl": {
     "tip": {
-      "zoomIn": "Priblížiť",
-      "zoomOut": "Oddialiť",
-      "setZoom": "Dvakrát kliknúť pre reset"
+      "zoomIn": "Približuje plátno",
+      "zoomOut": "Oddiaľuje plátno",
+      "setZoom": "Dvojklikom obnoví úroveň priblíženia"
     }
   },
-  
   "helpButton": {
-    "tip": "Zobraziť alebo skryť nápovedu"
+    "tip": "Zobrazí alebo skryje nápovedu"
   },
-
   "settingsButton": {
-    "tip": "Otvoriť alebo zavrieť panel nastavení"
+    "tip": "Otvorí alebo zatvorí panel nastavení"
   },
-
   "settingsPanel": {
     "title": "Nastavenia",
     "language": {
@@ -60,43 +53,43 @@
       "en": "EN",
       "sk": "SK",
       "cz": "CZ",
-      "tip": "Zmeniť jazyk aplikácie"
+      "tip": "Vyberie jazyk aplikácie"
     },
     "theme": {
       "label": "Téma",
       "button": {
-        "tip": "Prepnúť medzi svetlou a tmavou témou"
+        "tip": "Prepína medzi svetlou a tmavou témou"
       }
     },
     "enableShortcuts": {
       "label": "Klávesové skratky",
       "button": {
-        "tip": "Zapnúť alebo vypnúť klávesové skratky"
+        "tip": "Prepína klávesové skratky"
       }
     },
     "enableRulers": {
       "label": "Pravítka",
       "button": {
-        "tip": "Prepnúť viditeľnosť pravítok"
+        "tip": "Prepína viditeľnosť pravítok"
       }
     },
     "resetSidebarWidth": {
-      "label": "Resetovať šírku bočného panelu",
+      "label": "Obnoviť šírku panela",
       "button": {
-        "text": "Reset",
-        "tip": "Obnoviť predvolenú šírku bočného panelu"
+        "text": "Obnoviť",
+        "tip": "Obnoví predvolenú šírku bočného panela"
       }
     },
     "openPrivacyAndData": {
-      "label": "Ochrana súkromia a údaje",
+      "label": "Ochrana súkromia a dáta",
       "button": {
         "text": "Otvoriť",
-        "tip": "Zobraziť a spravovať nastavenia ochrany súkromia a údajov"
+        "tip": "Zobrazí a spravuje nastavenia ochrany osobných údajov"
       }
     },
     "closeButton": {
       "text": "Zavrieť",
-      "tip": "Zavrieť panel nastavení"
+      "tip": "Zatvorí panel nastavení"
     }
   }
 }

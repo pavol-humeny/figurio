@@ -278,6 +278,7 @@
     "label": "Presets",
     "tip": "Applies a preset to the image",
     "tipDisabled": "",
+    "shortcut": "",
     "subTools": {
       "myPresets": {
         "label": "My presets",

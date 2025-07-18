@@ -1,58 +1,51 @@
 {
   "fileNameDisplay": {
-    "tip": "Uprav název aktuálně otevřeného souboru",
-    "tipDisabled": "Aktuálně není otevřen žádný soubor"
+    "tip": "Upravuje název aktuálně otevřeného souboru",
+    "tipDisabled": "Není otevřen žádný soubor"
   },
-
   "uploadFileButton": {
-    "tip": "Nahrát nový soubor",
+    "tip": "Nahrává nový soubor",
     "confirm": {
       "title": "Potvrdit nahrání souboru",
-      "message": "Opravdu chcete nahrát nový soubor? Tím bude nahrazen aktuální soubor.",
+      "message": "Opravdu chcete nahrát nový soubor? Tím nahradíte aktuální soubor",
       "cancel": "Zrušit",
       "confirm": "Nahrát"
     }
   },
-
   "closeFileButton": {
-    "tip": "Zavřít aktuálně otevřený soubor",
+    "tip": "Zavírá aktuálně otevřený soubor",
     "toast": {
       "success": {
-        "title": "Soubor byl zavřen",
-        "message": "Soubor byl úspěšně zavřen."
+        "title": "Soubor zavřen",
+        "message": "Soubor byl úspěšně zavřen"
       }
     },
     "confirm": {
       "title": "Potvrdit zavření souboru",
-      "message": "Opravdu chcete zavřít aktuální soubor? Veškeré neuložené změny budou ztraceny.",
+      "message": "Opravdu chcete zavřít aktuální soubor? Neuložené změny budou ztraceny",
       "cancel": "Ne",
       "confirm": "Ano, zavřít"
     }
   },
-
   "undoRedo": {
     "tip": {
-      "undo": "Zpět poslední akci",
-      "redo": "Znovu poslední akci"
+      "undo": "Vrací poslední akci zpět",
+      "redo": "Opakuje poslední akci"
     }
   },
-
   "zoomControl": {
     "tip": {
-      "zoomIn": "Přiblížit",
-      "zoomOut": "Oddálit",
-      "setZoom": "Dvakrát kliknout pro reset"
+      "zoomIn": "Přibližuje plátno",
+      "zoomOut": "Oddaluje plátno",
+      "setZoom": "Dvojklikem obnoví úroveň přiblížení"
     }
   },
-
   "helpButton": {
-    "tip": "Zobrazit nebo skrýt nápovědu"
+    "tip": "Zobrazí nebo skryje nápovědu"
   },
-
   "settingsButton": {
-    "tip": "Otevřít alebo zavřít panel nastavení"
+    "tip": "Otevře nebo zavře panel nastavení"
   },
-
   "settingsPanel": {
     "title": "Nastavení",
     "language": {
@@ -60,43 +53,43 @@
       "en": "EN",
       "sk": "SK",
       "cz": "CZ",
-      "tip": "Změnit jazyk aplikace"
+      "tip": "Vybere jazyk aplikace"
     },
     "theme": {
-      "label": "Téma",
+      "label": "Motiv",
       "button": {
-        "tip": "Přepnout mezi světlým a tmavým režimem"
+        "tip": "Přepíná mezi světlým a tmavým režimem"
       }
     },
     "enableShortcuts": {
       "label": "Klávesové zkratky",
       "button": {
-        "tip": "Zapnout nebo vypnout klávesové zkratky"
+        "tip": "Přepíná klávesové zkratky"
       }
     },
     "enableRulers": {
       "label": "Pravítka",
       "button": {
-        "tip": "Přepnout viditelnost pravítek"
+        "tip": "Přepíná viditelnost pravítek"
       }
     },
     "resetSidebarWidth": {
-      "label": "Resetovat šířku postranního panelu",
+      "label": "Obnovit šířku panelu",
       "button": {
-        "text": "Reset",
-        "tip": "Obnovit výchozí šířku postranního panelu"
+        "text": "Obnovit",
+        "tip": "Obnoví výchozí šířku postranního panelu"
       }
     },
     "openPrivacyAndData": {
-      "label": "Soukromí a data",
+      "label": "Ochrana soukromí a data",
       "button": {
         "text": "Otevřít",
-        "tip": "Zobrazit a spravovat nastavení soukromí a dat"
+        "tip": "Zobrazí a spravuje nastavení ochrany soukromí a dat"
       }
     },
     "closeButton": {
       "text": "Zavřít",
-      "tip": "Zavřít panel nastavení"
+      "tip": "Zavře panel nastavení"
     }
   }
 }

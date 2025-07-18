@@ -1,11 +1,10 @@
 {
-  "fileNameDisplay":{
-    "tip": "Edit the name of the currently opened file",
+  "fileNameDisplay": {
+    "tip": "Edits the name of the currently opened file",
     "tipDisabled": "No file is currently opened"
   },
-
-  "uploadFileButton":{
-    "tip": "Upload a new file",
+  "uploadFileButton": {
+    "tip": "Uploads a new file",
     "confirm": {
       "title": "Confirm file upload",
       "message": "Are you sure you want to upload a new file? This will replace the current file.",
@@ -13,9 +12,8 @@
       "confirm": "Upload"
     }
   },
-
-  "closeFileButton":{
-    "tip": "Close the currently opened file",
+  "closeFileButton": {
+    "tip": "Closes the currently opened file",
     "toast": {
       "success": {
         "title": "File closed",
@@ -29,30 +27,25 @@
       "confirm": "Yes, close"
     }
   },
-
-  "undoRedo":{
-    "tip":{
-      "undo": "Undo last action",
-      "redo": "Redo last action"
+  "undoRedo": {
+    "tip": {
+      "undo": "Undoes the last action",
+      "redo": "Redoes the last action"
     }
   },
-
   "zoomControl": {
     "tip": {
-      "zoomIn": "Zoom in",
-      "zoomOut": "Zoom out",
-      "setZoom": "Double-click to reset"
+      "zoomIn": "Zooms in on the canvas",
+      "zoomOut": "Zooms out from the canvas",
+      "setZoom": "Double-click to reset zoom level"
     }
   },
-
   "helpButton": {
-    "tip": "Show or hide help overlay"
+    "tip": "Shows or hides the help overlay"
   },
-
   "settingsButton": {
-    "tip": "Open or close settings panel"
+    "tip": "Opens or closes the settings panel"
   },
-
   "settingsPanel": {
     "title": "Settings",
     "language": {
@@ -60,44 +53,43 @@
       "en": "EN",
       "sk": "SK",
       "cz": "CZ",
-      "tip": "Select the language for the application"
+      "tip": "Selects the language for the application"
     },
     "theme": {
       "label": "Theme",
       "button": {
-        "tip": "Toggle between light and dark themes"
+        "tip": "Toggles between light and dark themes"
       }
     },
     "enableShortcuts": {
       "label": "Key shortcuts",
       "button": {
-        "tip": "Toggle key shortcuts"
+        "tip": "Toggles key shortcuts"
       }
     },
     "enableRulers": {
       "label": "Rulers",
       "button": {
-        "tip": "Toggle rulers visibility"
+        "tip": "Toggles ruler visibility"
       }
     },
     "resetSidebarWidth": {
       "label": "Reset side panel width",
-      "button":
-        {
-          "text": "Reset",
-          "tip": "Restore default sidebar width"
-        }
+      "button": {
+        "text": "Reset",
+        "tip": "Restores default sidebar width"
+      }
     },
     "openPrivacyAndData": {
       "label": "Privacy & Data Policy",
       "button": {
         "text": "Open",
-        "tip": "View and manage privacy and data settings"
+        "tip": "Opens privacy and data settings"
       }
     },
-    "closeButton":{
+    "closeButton": {
       "text": "Close",
-      "tip": "Close the settings panel"
+      "tip": "Closes the settings panel"
     }
   }
 }
