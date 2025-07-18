@@ -1,7 +1,7 @@
 import { onMounted, onBeforeUnmount } from 'vue'
 import { keyboardShortcuts } from '@/config/keyboardShortcutsConfig'
 
-export function useKeyboardShortcuts(actions) {
+export function useKeyboardShortcuts(actions, uiStore) {
   const normalizeKey = (e) => {
     const keys = []
     if (e.ctrlKey || e.metaKey) keys.push('ctrl') // support macOS
@@ -12,6 +12,8 @@ export function useKeyboardShortcuts(actions) {
   }
 
   const handleKeydown = (e) => {
+    if (!uiStore.keyShortcutsEnabled) return
+    
     const el = document.activeElement
     const isTyping =
       el && (el.isContentEditable || ['INPUT', 'TEXTAREA', 'SELECT'].includes(el.tagName))

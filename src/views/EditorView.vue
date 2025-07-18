@@ -39,7 +39,7 @@ const { openPrivacyAndDataModal } = usePrivacyAndDataModal(t)
 const { startEditing } = useFileNameDisplay(useImageStore(), t)
 
 
-useKeyboardShortcuts({ undo, redo, zoomIn, zoomOut, resetZoom, closeFile, uploadFile, toggleTool, openExportToolSettings, openHelpModal, openSettingsPanel, openPrivacyAndDataModal, startEditing });
+useKeyboardShortcuts({ undo, redo, zoomIn, zoomOut, resetZoom, closeFile, uploadFile, toggleTool, openExportToolSettings, openHelpModal, openSettingsPanel, openPrivacyAndDataModal, startEditing }, useUiStore());
 // === ===
 
 const imageStore = useImageStore()
