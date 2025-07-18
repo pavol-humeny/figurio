@@ -49,7 +49,7 @@ const imageStore = useImageStore()
   <div class="editor-view">
     <ToolsPanel />
     <div class="editor-content" :class="{ 'drag-and-drop-area': imageStore.file === null }">
-      <div v-if="imageStore.isImageLoaded" class="files-tabs">
+      <div v-if="imageStore.isImageLoaded" class="file-tabs">
 
       </div>
       <ViewportWrapper v-if="imageStore.isImageLoaded" />
@@ -80,7 +80,7 @@ const imageStore = useImageStore()
   padding: 20px 25px;
 }
 
-.files-tabs {
+.file-tabs {
   height: 30px;
   width: 100%;
   border: solid 1px red;

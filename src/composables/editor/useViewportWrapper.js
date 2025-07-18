@@ -370,7 +370,10 @@ export function useViewportWrapper(viewportStore, imageStore, editorStore, conte
     if (z >= 1.0) return 40
     if (z >= 0.5) return 80
     if (z >= 0.25) return 160
-    return 320
+    if (z >= 0.2) return 320
+    if (z >= 0.1) return 640
+
+    return 1020
   })
 
   const horizontalRulerMarks = computed(() => {
