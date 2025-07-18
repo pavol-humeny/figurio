@@ -1,0 +1,118 @@
+import { describe, it, expect } from 'vitest'
+import { mount } from '@vue/test-utils'
+import DefaultSlider from '@/components/common/DefaultSlider.vue'
+
+describe('DefaultSlider.vue', () => {
+  it('renders the input range with correct default attributes', () => {
+    const wrapper = mount(DefaultSlider, {
+      props: {
+        modelValue: 50,
+      },
+    })
+
+    const input = wrapper.find('input[type="range"]')
+    expect(input.exists()).toBe(true)
+    expect(input.element.value).toBe('50')
+    expect(input.attributes('min')).toBe('0')
+    expect(input.attributes('max')).toBe('100')
+    expect(input.attributes('step')).toBe('1')
+    expect(input.attributes('disabled')).toBeUndefined()
+  })
+
+  it('renders with custom min, max, and step', () => {
+    const wrapper = mount(DefaultSlider, {
+      props: {
+        modelValue: 10,
+        min: 5,
+        max: 15,
+        step: 0.5,
+      },
+    })
+
+    const input = wrapper.find('input[type="range"]')
+    expect(input.attributes('min')).toBe('5')
+    expect(input.attributes('max')).toBe('15')
+    expect(input.attributes('step')).toBe('0.5')
+  })
+
+  it('renders value, description and unit when showValue is true', () => {
+    const wrapper = mount(DefaultSlider, {
+      props: {
+        modelValue: 42,
+        showValue: true,
+        valueDescription: 'Contrast',
+        valueUnit: '%',
+      },
+    })
+
+    expect(wrapper.text()).toContain('Contrast:')
+    expect(wrapper.text()).toContain('42')
+    expect(wrapper.text()).toContain('%')
+  })
+
+  it('hides value info when showValue is false', () => {
+    const wrapper = mount(DefaultSlider, {
+      props: {
+        modelValue: 25,
+        showValue: false,
+        valueDescription: 'Brightness',
+        valueUnit: '%',
+      },
+    })
+
+    expect(wrapper.find('.slider-value-wrapper').exists()).toBe(false)
+  })
+
+  it('emits update:modelValue and update on input', async () => {
+    const wrapper = mount(DefaultSlider, {
+      props: {
+        modelValue: 20,
+      },
+    })
+
+    const input = wrapper.find('input[type="range"]')
+    await input.setValue(90)
+
+    expect(wrapper.emitted('update:modelValue')).toBeTruthy()
+    expect(wrapper.emitted('update')).toBeTruthy()
+    expect(wrapper.emitted('update:modelValue')[0]).toEqual([90])
+    expect(wrapper.emitted('update')[0]).toEqual([90])
+  })
+
+  it('emits dblclick when input is double-clicked', async () => {
+    const wrapper = mount(DefaultSlider, {
+      props: {
+        modelValue: 30,
+      },
+    })
+
+    const input = wrapper.find('input[type="range"]')
+    await input.trigger('dblclick')
+
+    expect(wrapper.emitted('dblclick')).toBeTruthy()
+  })
+
+  it('disables the slider when disabled is true', () => {
+    const wrapper = mount(DefaultSlider, {
+      props: {
+        modelValue: 15,
+        disabled: true,
+      },
+    })
+
+    const input = wrapper.find('input[type="range"]')
+    expect(input.attributes('disabled')).toBeDefined()
+  })
+
+  it('applies custom background color as CSS variable', () => {
+    const wrapper = mount(DefaultSlider, {
+      props: {
+        modelValue: 40,
+        backgroundColor: 'blue',
+      },
+    })
+
+    const input = wrapper.find('input[type="range"]')
+    expect(input.attributes('style')).toContain('--slider-bg: blue')
+  })
+})
