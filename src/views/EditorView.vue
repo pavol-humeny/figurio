@@ -5,6 +5,12 @@ import ToolsSettingsPanel from '@/components/toolsSettings/ToolsSettingsPanel.vu
 import ViewportWrapper from '@/components/editor/ViewportWrapper.vue';
 import DragAndDropArea from '@/components/editor/DragAndDropArea.vue';
 import { useImageStore } from '@/stores/imageStore'
+import { useKeyboardShortcuts } from '@/composables/editor/useKeyboardShortcuts';
+import { useHistoryStore } from '@/stores/historyStore';
+import { useUndoRedo } from '@/composables/topPanel/useUndoRedo';
+
+const { undo, redo } = useUndoRedo(useHistoryStore(), useImageStore())
+useKeyboardShortcuts({ undo, redo })
 
 const imageStore = useImageStore()
 </script>
@@ -16,7 +22,7 @@ const imageStore = useImageStore()
       <ViewportWrapper v-if="imageStore.file !== null" />
       <DragAndDropArea v-else />
     </div>
-    <div class="right-panel" >
+    <div class="right-panel">
       <CollapsiblePanel v-if="imageStore.file !== null">
         <ToolsSettingsPanel />
       </CollapsiblePanel>
@@ -40,5 +46,4 @@ const imageStore = useImageStore()
 .editor-content.drag-and-drop-area {
   padding: 20px 25px;
 }
-
 </style>
