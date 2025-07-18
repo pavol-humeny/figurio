@@ -1,17 +1,18 @@
 import { ref } from 'vue'
 
-export function useShaking() {
-  const isShaking = ref(false)
+const isShaking = ref(false)
 
+export function useShaking() {
   const triggerShake = () => {
     if (isShaking.value) return
+    console.log('Triggering shake effect')
     isShaking.value = true
     setTimeout(() => {
       isShaking.value = false
     }, 500)
   }
 
-  return{
+  return {
     isShaking,
     triggerShake,
   }

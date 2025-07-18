@@ -20,14 +20,16 @@ import { useUploadFileButton } from '@/composables/topPanel/useUploadFileButton'
 import { useRoute } from 'vue-router';
 import { useToolsPanel } from '@/composables/tools/useToolsPanel';
 import { useEditorStore } from '@/stores/editorStore';
+import { useExportToolSettings } from '@/composables/toolsSettings/useExportToolSettings';
 
 const { undo, redo } = useUndoRedo(useHistoryStore(), useImageStore())
 const { zoomIn, zoomOut, resetZoom } = useZoomControl(useViewportStore())
 const { closeFile } = useCloseFileButton(useImageStore(), t)
 const { uploadFile } = useUploadFileButton(useImageStore(), t, useRoute())
 const { toggleTool } = useToolsPanel(useEditorStore(), useImageStore())
+const { openExportToolSettings } = useExportToolSettings(useImageStore(), useEditorStore(), useHistoryStore(), t)
 
-useKeyboardShortcuts({ undo, redo, zoomIn, zoomOut, resetZoom, closeFile, uploadFile, toggleTool })
+useKeyboardShortcuts({ undo, redo, zoomIn, zoomOut, resetZoom, closeFile, uploadFile, toggleTool, openExportToolSettings })
 // === ===
 
 const imageStore = useImageStore()

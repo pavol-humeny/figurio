@@ -1,4 +1,5 @@
-import { ref } from 'vue'
+import { ref, onMounted, onBeforeUnmount } from 'vue'
+import { useShaking } from '@/composables/common/useShaking'
 
 const isVisible = ref(false)
 const title = ref('')
@@ -6,6 +7,8 @@ const message = ref('')
 const cancelText = ref('Cancel')
 const confirmText = ref('Confirm')
 let resolver = null
+
+const { triggerShake } = useShaking()
 
 export function useConfirmModal() {
   const showConfirmModal = (modalTitle, modalMessage, modalCancelText, modalConfirmText) => {
@@ -34,7 +37,22 @@ export function useConfirmModal() {
     resolver?.(false)
   }
 
-  return{
+  const handleKeydown = (e) => {
+    if (e.key === 'Escape' && isVisible.value) {
+      e.preventDefault()
+      triggerShake()
+    }
+  }
+
+  onMounted(() => {
+    window.addEventListener('keydown', handleKeydown)
+  })
+
+  onBeforeUnmount(() => {
+    window.removeEventListener('keydown', handleKeydown)
+  })
+
+  return {
     isVisible,
     title,
     message,

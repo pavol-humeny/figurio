@@ -1,4 +1,4 @@
-import { ref, onMounted, nextTick } from 'vue'
+import { ref, onMounted, nextTick, onBeforeUnmount } from 'vue'
 
 const isVisible = ref(false)
 
@@ -36,17 +36,21 @@ export function useHelpModal() {
   onMounted(() => {
     nextTick(() => checkScroll())
   })
-  // const confirmed = await showConfirmModal(
-  //   t('privacy.confirmResetLocalPreferences.title'),
-  //   t('privacy.confirmResetLocalPreferences.text'),
-  //   t('privacy.confirmResetLocalPreferences.cancel'),
-  //   t('privacy.confirmResetLocalPreferences.confirm'),
-  // )
-  // if (confirmed) {
-  //   closePrivacyAndDataModal()
-  //   location.reload()
-  // }
 
+  const handleKeydown = (e) => {
+    if (e.key === 'Escape' && isVisible.value) {
+      e.preventDefault()
+      closeHelpModal()
+    }
+  }
+
+  onMounted(() => {
+    window.addEventListener('keydown', handleKeydown)
+  })
+
+  onBeforeUnmount(() => {
+    window.removeEventListener('keydown', handleKeydown)
+  })
 
   return {
     messagesRef,

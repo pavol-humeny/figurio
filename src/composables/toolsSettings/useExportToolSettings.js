@@ -1,4 +1,4 @@
-import { ref, computed, nextTick, watch } from 'vue'
+import { ref, computed, nextTick, watch, onMounted, onBeforeUnmount } from 'vue'
 
 const isVisible = ref(false)
 
@@ -94,6 +94,21 @@ export function useExportToolSettings(imageStore, editorStore, historyStore, t) 
   const copyImageToClipboard = async () => {
     await imageStore.copyImageToClipboard(t)
   }
+
+  const handleKeydown = (e) => {
+    if (e.key === 'Escape' && isVisible.value) {
+      e.preventDefault()
+      closeExportToolSettings()
+    }
+  }
+
+  onMounted(() => {
+    window.addEventListener('keydown', handleKeydown)
+  })
+
+  onBeforeUnmount(() => {
+    window.removeEventListener('keydown', handleKeydown)
+  })
 
   return {
     isVisible,

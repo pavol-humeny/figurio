@@ -26,7 +26,7 @@ export function useKeyboardShortcuts(actions) {
         e.stopImmediatePropagation()
         const fn = actions[shortcut.action]
         if (typeof fn === 'function') {
-          fn(...(shortcut.args || []))
+          fn(...(shortcut.args || []))  
           console.log(`[Shortcut] ${shortcut.description}`)
         }
       }

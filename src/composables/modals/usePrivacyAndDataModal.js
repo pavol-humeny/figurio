@@ -1,4 +1,4 @@
-import { ref } from 'vue'
+import { ref, onMounted, onBeforeUnmount } from 'vue'
 import { useConfirmModal } from './useConfirmModal'
 
 const isVisible = ref(false)
@@ -30,9 +30,22 @@ export function usePrivacyAndDataModal(t) {
       closePrivacyAndDataModal()
       location.reload()
     }
-
-
   }
+
+  const handleKeydown = (e) => {
+    if (e.key === 'Escape' && isVisible.value) {
+      e.preventDefault()
+      closePrivacyAndDataModal()
+    }
+  }
+
+  onMounted(() => {
+    window.addEventListener('keydown', handleKeydown)
+  })
+
+  onBeforeUnmount(() => {
+    window.removeEventListener('keydown', handleKeydown)
+  })
 
   return {
     isVisible,
