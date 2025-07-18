@@ -78,11 +78,16 @@ export function useViewportWrapper(viewportStore, imageStore, editorStore, conte
     updateInitialDimensions()
     updateZoomDependentDimensions()
     panX.value = wrapperWidth.value / 2 - (contentWidth.value * zoomLevel.value) / 2
-    panY.value = wrapperHeight.value / 2 - (contentHeight.value * zoomLevel.value) / 2
+    panY.value =
+      wrapperHeight.value / 2 -
+      (contentHeight.value * zoomLevel.value) / 2 -
+      (wrapperHeight.value - contentHeight.value * zoomLevel.value) / 10 // minus 10% of the height for better centering because of file tabs
 
     viewportStore.defaultPanX = wrapperWidth.value / 2 - (contentWidth.value * zoomLevel.value) / 2
     viewportStore.defaultPanY =
-      wrapperHeight.value / 2 - (contentHeight.value * zoomLevel.value) / 2
+      wrapperHeight.value / 2 -
+      (contentHeight.value * zoomLevel.value) / 2 -
+      (wrapperHeight.value - contentHeight.value * zoomLevel.value) / 10 // minus 10% of the height for better centering because of file tabs
   }
   const setValuesForCenterImage = () => {
     if (!wrapperRef.value || !contentRef.value) return
@@ -95,7 +100,9 @@ export function useViewportWrapper(viewportStore, imageStore, editorStore, conte
 
     viewportStore.defaultPanX = wrapperWidth.value / 2 - (contentWidth.value * zoomLevel.value) / 2
     viewportStore.defaultPanY =
-      wrapperHeight.value / 2 - (contentHeight.value * zoomLevel.value) / 2
+      wrapperHeight.value / 2 -
+      (contentHeight.value * zoomLevel.value) / 2 -
+      (wrapperHeight.value - contentHeight.value * zoomLevel.value) / 10 // minus 10% of the height for better centering because of file tabs
 
     viewportStore.setZoomLevel(tmpZoomLevel)
   }

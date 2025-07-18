@@ -49,11 +49,14 @@ const imageStore = useImageStore()
   <div class="editor-view">
     <ToolsPanel />
     <div class="editor-content" :class="{ 'drag-and-drop-area': imageStore.file === null }">
-      <ViewportWrapper v-if="imageStore.file !== null" />
+      <div v-if="imageStore.isImageLoaded" class="files-tabs">
+
+      </div>
+      <ViewportWrapper v-if="imageStore.isImageLoaded" />
       <DragAndDropArea v-else />
     </div>
     <div class="right-panel">
-      <CollapsiblePanel v-if="imageStore.file !== null">
+      <CollapsiblePanel v-if="imageStore.isImageLoaded">
         <ToolsSettingsPanel />
       </CollapsiblePanel>
     </div>
@@ -75,5 +78,11 @@ const imageStore = useImageStore()
 
 .editor-content.drag-and-drop-area {
   padding: 20px 25px;
+}
+
+.files-tabs {
+  height: 30px;
+  width: 100%;
+  border: solid 1px red;
 }
 </style>
