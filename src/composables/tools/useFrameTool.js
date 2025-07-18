@@ -1,5 +1,6 @@
 import { ref, watch, computed } from 'vue'
 import { useToastModal } from '../modals/useToastModal'
+import { editorConfig } from '@/config/editorConfig'
 
 export function useFrameTool(imageStore, historyStore, editorStore, t) {
   const { showToastModal } = useToastModal()
@@ -98,7 +99,8 @@ export function useFrameTool(imageStore, historyStore, editorStore, t) {
         selectedFrameVariant.value === 'frameWindowsTaskBar'
       ) {
         width = Math.floor(
-          (1 / 200) * Math.max(imageStore.fileDimensions.width, imageStore.fileDimensions.height),
+          editorConfig.browserFrameDefaultSize *
+            Math.max(imageStore.fileDimensions.width, imageStore.fileDimensions.height),
         )
       } else {
         width = 0
@@ -173,7 +175,7 @@ export function useFrameTool(imageStore, historyStore, editorStore, t) {
         fh = 0
       }
 
-      imageStore.frame.headerSize = Math.max(Math.floor(0.04 * h), 5)
+      imageStore.frame.headerSize = Math.max(Math.floor(editorConfig.frameHeaderFooterSize * h), 5)
       imageStore.frame.footerSize = 0
     } else if (
       frame.type === 'framePhoneAndroid' ||
@@ -182,7 +184,7 @@ export function useFrameTool(imageStore, historyStore, editorStore, t) {
       frame.type === 'framePhoneIOS2' ||
       frame.type === 'framePhoneSimple'
     ) {
-      fw = Math.max(Math.floor((1 / 100) * Math.max(w, h)), 2) * 1.5
+      fw = Math.max(Math.floor(editorConfig.phoneFrameDefaultSize * Math.max(w, h)), 2) * 1.5
       fh = fw / 1.5
 
       imageStore.frame.headerSize = 0
@@ -539,7 +541,7 @@ export function useFrameTool(imageStore, historyStore, editorStore, t) {
         notchWidth = Math.floor(svgWidth * 0.26)
         notchHeight = Math.floor(notchWidth * aspectRatio)
       } else {
-        notchHeight = Math.floor(svgHeight * 0.04)
+        notchHeight = Math.floor(svgHeight * editorConfig.frameHeaderFooterSize)
         notchWidth = Math.floor(notchHeight / aspectRatio)
       }
 

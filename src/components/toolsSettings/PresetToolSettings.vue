@@ -179,6 +179,7 @@ const tabs = ['myPresets', 'createPreset']
                 {{ t('tools.preset.settings.myPresets.presetValues.frameTexts.label') }}
               </p>
             </div>
+            <!-- Enabled -->
             <div class="content-aligned two-items" v-if="isModifyingPreset"
               :class="!isModifyingPreset ? 'disabled' : ''">
               <p>
@@ -186,6 +187,7 @@ const tabs = ['myPresets', 'createPreset']
               </p>
               <ToggleButton v-model="localImageFrame.enabled" :scale="0.6" :style="{ transform: 'translateX(16px)' }" />
             </div>
+            <!-- Type -->
             <div class="content-aligned two-items" v-if="localImageFrame.enabled"
               :class="!isModifyingPreset ? 'disabled' : ''">
               <p>
@@ -193,6 +195,7 @@ const tabs = ['myPresets', 'createPreset']
               </p>
               <DropdownSelect v-model="localImageFrame.type" :options="presetFrameOptions" />
             </div>
+            <!-- Color -->
             <div class="content-aligned two-items" v-if="localImageFrame.enabled"
               :class="!isModifyingPreset ? 'disabled' : ''">
               <p>
@@ -200,6 +203,7 @@ const tabs = ['myPresets', 'createPreset']
               </p>
               <ColorPicker v-model="localImageFrame.color" />
             </div>
+            <!-- Width -->
             <div class="content-aligned two-items"
               v-if="localImageFrame.enabled && (localImageFrame.outlineEnabled || localImageFrame.type === 'frameSolid')">
               <p
@@ -210,8 +214,9 @@ const tabs = ['myPresets', 'createPreset']
                 icon="IconArrowWidth" :iconTop="45" :onReset="() => resetFrameWidth()"
                 :disabled="!isModifyingPreset || (localImageFrame.type !== 'frameSolid' && !localImageFrame.outlineEnabled)" />
             </div>
+            <!-- Use outline -->
             <div
-              v-if="localImageFrame.type === 'frameWindowsBrowser' || localImageFrame.type === 'frameMacBrowser' || localImageFrame.type === 'frameWindowsTaskBar'"
+              v-if="localImageFrame.enabled && (localImageFrame.type === 'frameWindowsBrowser' || localImageFrame.type === 'frameMacBrowser' || localImageFrame.type === 'frameWindowsTaskBar')"
               class="content-aligned two-items">
               <p :class="!isModifyingPreset ? 'disabled' : ''">
                 {{ t('tools.preset.settings.myPresets.presetValues.frame.useFrameOutline') }}

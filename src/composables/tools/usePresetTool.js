@@ -115,26 +115,35 @@ export function usePresetTool(
     }
   })
 
-  // Watch localImageFrame.width if it is different than frameSolid reset width
+  // Watch localImageFrame.type if it is different than frameSolid reset width
   watch(
     () => localImageFrame.value.type,
     (type) => {
+      console.log('Local image frame type changed:', type)
+      isPresetModified.value = true
       if (type !== 'frameSolid') {
-        if (localImageFrame.value.outlineEnabled) {
-          localImageFrame.value.width = Math.floor(
-            (1 / 200) * Math.max(imageStore.fileDimensions.width, imageStore.fileDimensions.height),
-          )
-          console.log('================Setting frame width to:', localImageFrame.value.width)
-        } else {
-          localImageFrame.value.width = 0
-        }
-        if (frameWidthRef.value) {
-          frameWidthRef.value.setValue(0)
-        }
+        localImageFrame.value.outlineEnabled = false
       }
     },
   )
 
+  // Watch localImageFrame.outlineEnabled, if it is true set width to default value
+  watch(
+    () => localImageFrame.value.outlineEnabled,
+    (enabled) => {
+      isPresetModified.value = true
+      if (enabled) {
+        localImageFrame.value.width = Math.floor(
+          editorConfig.browserFrameDefaultSize *
+            Math.max(imageStore.fileDimensions.width, imageStore.fileDimensions.height),
+        )
+      } else {
+        localImageFrame.value.width = 0
+      }
+    },
+  )
+
+  // Watch localImageFrame.enabled, if it is true set default values for frame
   watch(
     () => localImageFrame.value.enabled,
     (enabled) => {
@@ -150,17 +159,6 @@ export function usePresetTool(
           localImageFrame.value.color = '#000000'
           localImageFrame.value.width = 0
         }
-      }
-    },
-  )
-
-  // Watch localImageFrame.type
-  watch(
-    () => localImageFrame.value.type,
-    (type) => {
-      isPresetModified.value = true
-      if (type !== 'frameSolid') {
-        localImageFrame.value.width = 0
       }
     },
   )
@@ -531,7 +529,8 @@ export function usePresetTool(
         type === 'frameWindowsTaskBar'
       ) {
         newPreset.value.frame.width = Math.floor(
-          (1 / 200) * Math.max(imageStore.fileDimensions.width, imageStore.fileDimensions.height),
+          editorConfig.browserFrameDefaultSize *
+            Math.max(imageStore.fileDimensions.width, imageStore.fileDimensions.height),
         )
       }
     },
@@ -660,6 +659,7 @@ export function usePresetTool(
   }
 
   const resetFrameWidth = () => {
+    // UPDATE new frame type
     if (
       newPreset.value.frame.type === 'frameWindowsBrowser' ||
       newPreset.value.frame.type === 'frameMacBrowser' ||
@@ -669,7 +669,8 @@ export function usePresetTool(
       localImageFrame.value.type === 'frameWindowsTaskBar'
     ) {
       newPreset.value.frame.width = Math.floor(
-        (1 / 200) * Math.max(imageStore.fileDimensions.width, imageStore.fileDimensions.height),
+        editorConfig.browserFrameDefaultSize *
+          Math.max(imageStore.fileDimensions.width, imageStore.fileDimensions.height),
       )
     } else {
       newPreset.value.frame.width = 0
