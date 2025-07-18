@@ -74,6 +74,12 @@
         "tip": "Toggle key shortcuts"
       }
     },
+    "enableRulers": {
+      "label": "Rulers",
+      "button": {
+        "tip": "Toggle rulers visibility"
+      }
+    },
     "resetSidebarWidth": {
       "label": "Reset side panel width",
       "button":

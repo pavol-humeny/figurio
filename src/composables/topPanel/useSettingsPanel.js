@@ -8,7 +8,12 @@ export function useSettingsPanel(uiStore) {
 
   const enableShortcuts = computed({
     get: () => uiStore.keyShortcutsEnabled,
-    set: (val) => uiStore.setKeyShortcuts(val),
+    set: (value) => uiStore.setKeyShortcuts(value),
+  })
+
+  const enableRulers = computed({
+    get: () => uiStore.rulersEnabled,
+    set: (value) => uiStore.setRulers(value),
   })
 
   const resetPanelWidthDisabled = computed(() => {
@@ -65,5 +70,6 @@ export function useSettingsPanel(uiStore) {
     resetPanelWidth,
     openPrivacyModal,
     privacyModalVisible,
+    enableRulers,
   }
 }

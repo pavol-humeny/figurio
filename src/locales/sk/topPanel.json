@@ -74,6 +74,12 @@
         "tip": "Zapnúť alebo vypnúť klávesové skratky"
       }
     },
+    "enableRulers": {
+      "label": "Pravítka",
+      "button": {
+        "tip": "Prepnúť viditeľnosť pravítok"
+      }
+    },
     "resetSidebarWidth": {
       "label": "Resetovať šírku bočného panelu",
       "button": {

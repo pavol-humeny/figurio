@@ -10,8 +10,11 @@ import PresetCropTool from '../tools/PresetCropTool.vue'
 import SmartCropTool from '../tools/SmartCropTool.vue'
 import { useHistoryStore } from '@/stores/historyStore'
 import { useI18n } from 'vue-i18n'
+import { useUiStore } from '@/stores/uiStore'
 
 const { t } = useI18n()
+
+const uiStore = useUiStore()
 
 const contentRef = ref(null)
 
@@ -97,7 +100,7 @@ watch(
       }" :class="{ active: isDraggingHorizontal }"></div>
     </div>
 
-    <div class="horizontal-ruler-wrapper">
+    <div v-if="uiStore.rulersEnabled" class="horizontal-ruler-wrapper">
       <div class="ruler">
         <div v-for="(mark, i) in horizontalRulerMarks" :key="'h' + i" class="ruler-mark horizontal"
           :style="{ left: mark.left + 'px' }">
@@ -105,7 +108,7 @@ watch(
         </div>
       </div>
     </div>
-    <div class="vertical-ruler-wrapper">
+    <div v-if="uiStore.rulersEnabled" class="vertical-ruler-wrapper">
       <div class="ruler">
         <div v-for="(mark, i) in verticalRulerMarks" :key="'v' + i" class="ruler-mark vertical"
           :style="{ top: mark.top + 'px' }">
@@ -113,7 +116,7 @@ watch(
         </div>
       </div>
     </div>
-    <div class="ruler-padding"></div>
+    <div v-if="uiStore.rulersEnabled" class="ruler-padding"></div>
   </div>
 </template>
 
@@ -259,7 +262,7 @@ watch(
 
 .ruler-label {
   position: absolute;
-  color: var(--text-placeholder-c);
+  color: var(--text-c);
   font-size: 10px;
   transform: translateX(2px);
   white-space: nowrap;

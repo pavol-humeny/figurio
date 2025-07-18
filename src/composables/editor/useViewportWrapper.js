@@ -355,7 +355,7 @@ export function useViewportWrapper(viewportStore, imageStore, editorStore, conte
     if (z >= 1.0) return 40
     if (z >= 0.5) return 80
     if (z >= 0.25) return 160
-    return 320 // stále necháva menej značiek pri minimálnom zoome
+    return 320
   })
 
   const horizontalRulerMarks = computed(() => {

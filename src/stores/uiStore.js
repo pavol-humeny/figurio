@@ -28,6 +28,8 @@ export const useUiStore = defineStore('ui', {
     rightPanelMinWidth: uiConfig.rightPanelMinWidth,
     rightPanelMaxWidth: uiConfig.rightPanelMaxWidth,
     collapseButtonWidth: uiConfig.collapseButtonWidth,
+
+    rulersEnabled: getBoolean('rulersEnabled', uiConfig.rulersEnabled),
   }),
   actions: {
     toggleTheme() {
@@ -44,6 +46,11 @@ export const useUiStore = defineStore('ui', {
     setKeyShortcuts(value) {
       this.keyShortcutsEnabled = value
       localStorage.setItem('keyShortcutsEnabled', this.keyShortcutsEnabled.toString())
+    },
+
+    setRulers(value) {
+      this.rulersEnabled = value
+      localStorage.setItem('rulersEnabled', this.rulersEnabled.toString())
     },
 
     toggleRightPanel() {

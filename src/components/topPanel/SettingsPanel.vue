@@ -9,13 +9,14 @@ import { useUiStore } from '@/stores/uiStore';
 import { useClickOutside } from '@/composables/common/useClickOutside';
 
 const {
-    isVisible,
-    closeSettingsPanel,
-    enableShortcuts,
-    resetPanelWidthDisabled,
-    resetPanelWidth,
-    openPrivacyModal,
-    privacyModalVisible
+  isVisible,
+  closeSettingsPanel,
+  enableShortcuts,
+  resetPanelWidthDisabled,
+  resetPanelWidth,
+  openPrivacyModal,
+  privacyModalVisible,
+  enableRulers
 } = useSettingsPanel(useUiStore());
 
 const { wrapperRef } = useClickOutside({
@@ -26,10 +27,8 @@ const { wrapperRef } = useClickOutside({
 </script>
 
 <template>
-  <div
-    class="settings-panel"
-    v-if="isVisible"
-    ref="wrapperRef">
+  <div class="settings-panel" v-if="isVisible" ref="wrapperRef">
+    <!-- Title -->
     <div class="settings-panel-label">
       <BaseIcon name="IconSettings" :size="28" :color="'var(--text-c)'" />
       <p>
@@ -37,6 +36,7 @@ const { wrapperRef } = useClickOutside({
       </p>
     </div>
 
+    <!-- Language -->
     <div class="section">
       <label>
         {{ $t('topPanel.settingsPanel.language.label') }}
@@ -44,6 +44,7 @@ const { wrapperRef } = useClickOutside({
       <LanguageSwitch />
     </div>
 
+    <!-- Theme -->
     <div class="section">
       <label>
         {{ $t('topPanel.settingsPanel.theme.label') }}
@@ -51,15 +52,21 @@ const { wrapperRef } = useClickOutside({
       <ThemeSwitch />
     </div>
 
+    <!-- Key Shortcuts -->
     <div class="section">
       <label>
         {{ $t('topPanel.settingsPanel.enableShortcuts.label') }}
       </label>
-      <ToggleButton
-        v-model="enableShortcuts"
-        :tip="$t('topPanel.settingsPanel.enableShortcuts.button.tip')"
-        position="bottom-left"
-      />
+      <ToggleButton v-model="enableShortcuts" :tip="$t('topPanel.settingsPanel.enableShortcuts.button.tip')"
+        position="bottom-left" />
+    </div>
+
+    <div class="section">
+      <label>
+        {{ $t('topPanel.settingsPanel.enableRulers.label') }}
+      </label>
+      <ToggleButton v-model="enableRulers" :tip="$t('topPanel.settingsPanel.enableRulers.button.tip')"
+        position="bottom-left" />
     </div>
 
     <div class="section">
@@ -67,13 +74,9 @@ const { wrapperRef } = useClickOutside({
         {{ $t('topPanel.settingsPanel.resetSidebarWidth.label') }}
       </label>
 
-      <DefaultButton
-        :text="$t('topPanel.settingsPanel.resetSidebarWidth.button.text')"
-        :tip="$t('topPanel.settingsPanel.resetSidebarWidth.button.tip')"
-        position="bottom-left"
-        @click="resetPanelWidth"
-        :disabled="resetPanelWidthDisabled"
-      />
+      <DefaultButton :text="$t('topPanel.settingsPanel.resetSidebarWidth.button.text')"
+        :tip="$t('topPanel.settingsPanel.resetSidebarWidth.button.tip')" position="bottom-left" @click="resetPanelWidth"
+        :disabled="resetPanelWidthDisabled" />
     </div>
 
     <div class="section">
@@ -82,19 +85,13 @@ const { wrapperRef } = useClickOutside({
         {{ $t('topPanel.settingsPanel.openPrivacyAndData.label') }}
       </label>
 
-      <DefaultButton
-        :text="$t('topPanel.settingsPanel.openPrivacyAndData.button.text')"
-        :tip="$t('topPanel.settingsPanel.openPrivacyAndData.button.tip')"
-        position="bottom-left"
-        @click="openPrivacyModal"
-      />
+      <DefaultButton :text="$t('topPanel.settingsPanel.openPrivacyAndData.button.text')"
+        :tip="$t('topPanel.settingsPanel.openPrivacyAndData.button.tip')" position="bottom-left"
+        @click="openPrivacyModal" />
     </div>
 
     <div class="close-button-wrapper">
-      <DefaultButton
-        text="Close"
-        @click="closeSettingsPanel"
-      />
+      <DefaultButton text="Close" @click="closeSettingsPanel" />
     </div>
   </div>
 </template>
@@ -112,7 +109,7 @@ const { wrapperRef } = useClickOutside({
   z-index: var(--z-index-settings);
 }
 
-.settings-panel-label{
+.settings-panel-label {
   display: flex;
   align-items: center;
   gap: 8px;
