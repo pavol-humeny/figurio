@@ -58,30 +58,30 @@ export const useImageStore = defineStore('imageStore', {
     newRenderedImage: null, // Used for rasterizing SVG objects before export
 
     // Value for SVG rendering
-    svgObjects: [], // UndoRedo
-    // svgObjects: [
-    //   {
-    //     tag: 'rect',
-    //     attrs: {
-    //       x: 50,
-    //       y: 40,
-    //       width: 200,
-    //       height: 100,
-    //       fill: 'red',
-    //       stroke: 'red',
-    //     },
-    //   },
-    //   {
-    //     tag: 'circle',
-    //     attrs: {
-    //       cx: 300,
-    //       cy: 200,
-    //       r: 50,
-    //       fill: 'blue',
-    //       stroke: 'black',
-    //     },
-    //   },
-    // ],
+    // svgObjects: [], // UndoRedo
+    svgObjects: [
+      {
+        tag: 'rect',
+        attrs: {
+          x: 50,
+          y: 40,
+          width: 200,
+          height: 100,
+          fill: 'red',
+          stroke: 'red',
+        },
+      },
+      {
+        tag: 'circle',
+        attrs: {
+          cx: 300,
+          cy: 200,
+          r: 50,
+          fill: 'blue',
+          stroke: 'black',
+        },
+      },
+    ],
     selectedSvgObjectId: null,
 
     imageOperations: [],
@@ -422,26 +422,54 @@ export const useImageStore = defineStore('imageStore', {
           const finalWidth = width
           const finalHeight = height
 
-          // Korekcia pre špeciálne typy rámikov
+          // Correction for frame header/footer
           if (this.frame.type === 'frameMacBrowser' || this.frame.type === 'frameWindowsBrowser') {
             offsetY = this.frame.headerSize
           }
 
-          console.log(
-            `-------------Exporting PDF with dimensions: ${finalWidth}x${finalHeight}, offset: ${offsetX}, ${offsetY}`,
-          )
-
-          // Inicializuj PDF dokument
+          // Initialize jsPDF with correct orientation and size
           const pdf = new jsPDF({
             orientation: finalWidth > finalHeight ? 'landscape' : 'portrait',
             unit: 'px', // používame px kvôli SVG pozíciám
             format: [finalWidth, finalHeight],
           })
 
-          // Vlož rastrový obrázok ako pozadie
+          // === 1. Render base image into PDF ===
           pdf.addImage(image, 'PNG', offsetX, offsetY, image.width, image.height)
 
-          // Ak je rámik aktívny a máme SVG dáta
+          // === 2. Add svg objects if any ===
+          if (this.svgObjects.length > 0) {
+            const svgString = `
+              <svg xmlns="http://www.w3.org/2000/svg" width="${finalWidth}" height="${finalHeight}">
+                <g transform="translate(${offsetX}, ${offsetY})">
+                  ${this.svgObjects
+                    .map((obj) => {
+                      const attrs = Object.entries(obj.attrs || {})
+                        .map(([key, val]) => `${key}="${val}"`)
+                        .join(' ')
+                      return `<${obj.tag} ${attrs} />`
+                    })
+                    .join('\n')}
+                </g>
+              </svg>
+            `.trim()
+
+            try {
+              const svgElement = new DOMParser().parseFromString(
+                svgString,
+                'image/svg+xml',
+              ).documentElement
+              await svg2pdf(svgElement, pdf, {
+                xOffset: 0,
+                yOffset: 0,
+                scale: 1,
+              })
+            } catch (e) {
+              console.error('Chyba pri exporte svgObjects do PDF:', e)
+            }
+          }
+
+          // === 3. Add frame SVG if enabled ===
           if (this.frame.enabled && this.frameSvg) {
             try {
               const parser = new DOMParser()
@@ -450,7 +478,6 @@ export const useImageStore = defineStore('imageStore', {
                 'image/svg+xml',
               ).documentElement
 
-              // Vlož SVG ako vektor nad obrázok
               await svg2pdf(svgElement, pdf, {
                 xOffset: 0,
                 yOffset: 0,
@@ -461,7 +488,7 @@ export const useImageStore = defineStore('imageStore', {
             }
           }
 
-          // Ulož PDF
+          // Set file name and save PDF
           pdf.save(`${this.newFileName}.pdf`)
         } else {
           const mimeType =

@@ -50,6 +50,7 @@ export function usePresetTool(
   const localImageFrame = ref({})
   const tmpLocalImageFrame = ref({})
 
+  // Initialize local values when selectedPreset changes
   watch(
     () => presetsStore.selectedPreset,
     (preset) => {
@@ -68,6 +69,7 @@ export function usePresetTool(
     { immediate: true },
   )
 
+  // Watch localPresetName, localImageOperations and localImageFrame for changes and set isPresetModified to true
   watch(
     [() => localPresetName.value, () => localImageOperations.value, () => localImageFrame.value],
     () => {
@@ -514,7 +516,7 @@ export function usePresetTool(
   watch(
     () => newPreset.value.frame.type,
     (type) => {
-      console.log('New preset frame type changed:', type)
+      // UPDATE new frame type
       if (
         type !== 'frameWindowsBrowser' &&
         type !== 'frameMacBrowser' &&
