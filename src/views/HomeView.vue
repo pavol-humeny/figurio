@@ -1,5 +1,18 @@
 <script setup>
 import DragAndDropArea from '@/components/editor/DragAndDropArea.vue';
+import { useKeyboardShortcuts } from '@/composables/editor/useKeyboardShortcuts';
+import { useUiStore } from '@/stores/uiStore';
+import { useImageStore } from '@/stores/imageStore';
+import { useUploadFileButton } from '@/composables/topPanel/useUploadFileButton';
+import { useRouter } from 'vue-router';
+import { useI18n } from 'vue-i18n'
+
+const { t } = useI18n()
+
+const { uploadFile } = useUploadFileButton(useImageStore(), t, useRouter())
+
+
+useKeyboardShortcuts({ uploadFile }, useUiStore());
 
 </script>
 
@@ -18,5 +31,4 @@ import DragAndDropArea from '@/components/editor/DragAndDropArea.vue';
   background: var(--background-c);
   padding: 14px 20px;
 }
-
 </style>
