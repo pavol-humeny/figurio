@@ -7,6 +7,10 @@ export function useCloseFileButton(imageStore, t) {
   const { showConfirmModal } = useConfirmModal()
 
   const closeFile = async () => {
+    if (disabled.value) return
+
+    console.log('[Close File] Attempting to close file')
+
     const confirmed = await showConfirmModal(
       t('topPanel.closeFileButton.confirm.title'),
       t('topPanel.closeFileButton.confirm.message'),

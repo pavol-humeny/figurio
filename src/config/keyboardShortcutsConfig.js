@@ -1,4 +1,5 @@
 export const keyboardShortcuts = [
+  // History shortcuts
   {
     keys: ['ctrl', 'z'],
     action: 'undo',
@@ -9,7 +10,7 @@ export const keyboardShortcuts = [
     action: 'redo',
     description: 'Redo last undone action',
   },
-  // zoom shortcuts
+  // Zoom shortcuts
   {
     keys: ['ctrl', '='],
     action: 'zoomIn',
@@ -17,4 +18,81 @@ export const keyboardShortcuts = [
   },
   { keys: ['ctrl', '-'], action: 'zoomOut', description: 'Zoom out' },
   { keys: ['ctrl', '0'], action: 'resetZoom', description: 'Reset zoom' },
+  // File management shortcuts
+  {
+    keys: ['ctrl', 'o'],
+    action: 'uploadFile',
+    description: 'Upload file',
+  },
+  {
+    keys: ['ctrl', 's'],
+    action: 'saveFile',
+    description: 'Save file',
+  },
+  {
+    keys: ['ctrl', 'x'],
+    action: 'closeFile',
+    description: 'Close file',
+  },
+  // Tool shortcuts
+  {
+    keys: ['v'],
+    action: 'toggleTool',
+    args: ['move', null],
+    description: 'Toggle move tool',
+  },
+  {
+    keys: ['r'],
+    action: 'toggleTool',
+    args: ['transform', 'rotate'],
+    description: 'Toggle transform - rotate tool',
+  },
+  {
+    keys: ['f'],
+    action: 'toggleTool',
+    args: ['transform', 'flip'],
+    description: 'Toggle transform - flip tool',
+  },
+  {
+    keys: ['c'],
+    action: 'toggleTool',
+    args: ['transform', 'crop'],
+    description: 'Toggle transform - crop tool',
+  },
+  {
+    keys: ['shift', 'r'],
+    action: 'toggleTool',
+    args: ['transform', 'resize'],
+    description: 'Toggle transform - resize tool',
+  },
+  {
+    keys: ['shift', 'c'],
+    action: 'toggleTool',
+    args: ['smartCrop', null],
+    description: 'Toggle smart crop tool',
+  },
+  {
+    keys: ['g'],
+    action: 'toggleTool',
+    args: ['grayscale', null],
+    description: 'Toggle grayscale tool',
+  },
+  {
+    keys: ['shift', 'f'],
+    action: 'toggleTool',
+    args: ['frame', null],
+    description: 'Toggle frame tool',
+  },
+  {
+    keys: ['p'],
+    action: 'toggleTool',
+    args: ['preset', 'myPresets'],
+    description: 'Toggle preset - my presets tool',
+  },
+  {
+    keys: ['shift', 'p'],
+    action: 'toggleTool',
+    args: ['preset', 'createPreset'],
+    description: 'Toggle preset - create preset tool',
+  },
 ]

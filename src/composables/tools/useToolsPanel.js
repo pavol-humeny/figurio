@@ -43,7 +43,9 @@ export function useToolsPanel(editorStore, imageStore) {
   })
 
   const toggleTool = (toolKey, tabKey) => {
-    console.log('Toggle tool:', toolKey)
+    if (!imageStore.isImageLoaded) return
+
+    console.log('Toggle tool:', toolKey, 'Tab:', tabKey)
 
     if (editorStore.selectedToolKey === toolKey && tabKey === null) {
       editorStore.selectTool('')
@@ -52,7 +54,6 @@ export function useToolsPanel(editorStore, imageStore) {
     editorStore.selectTool(toolKey)
 
     if (tabKey) {
-      console.log('Sub tool:', tabKey)
       editorStore.selectTab(tabKey)
     }
   }

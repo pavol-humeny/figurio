@@ -23,9 +23,10 @@ export function useKeyboardShortcuts(actions) {
       const expected = shortcut.keys.map((k) => k.toLowerCase()).join('+')
       if (pressed === expected) {
         e.preventDefault()
+        e.stopImmediatePropagation()
         const fn = actions[shortcut.action]
         if (typeof fn === 'function') {
-          fn()
+          fn(...(shortcut.args || []))
           console.log(`[Shortcut] ${shortcut.description}`)
         }
       }

@@ -5,7 +5,7 @@ export function useUndoRedo(historyStore, imageStore) {
   const canRedo = computed(() => historyStore.currentIndex < historyStore.history.length - 1)
 
   const undo = () => {
-    if (!canUndo.value) return
+    if (!canUndo.value || !imageStore.isImageLoaded) return
 
     const snapshot = historyStore.undo()
     if (snapshot) {
@@ -13,8 +13,8 @@ export function useUndoRedo(historyStore, imageStore) {
     }
   }
   const redo = () => {
-    if (!canRedo.value) return
-    
+    if (!canRedo.value || !imageStore.isImageLoaded) return
+
     const snapshot = historyStore.redo()
     if (snapshot) {
       imageStore.applySnapshot(snapshot)
