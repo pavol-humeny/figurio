@@ -1,6 +1,7 @@
 {
   "title": "Drag and drop your file here",
-  "subtitle": "or click to select a file",
+  "subtitle": "or click to select file",
+  "pasteHint": "or press Ctrl+V to paste an image from clipboard.",
   "button": {
     "text": "Select file"
   },

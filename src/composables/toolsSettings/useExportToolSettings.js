@@ -28,7 +28,9 @@ export function useExportToolSettings(imageStore, editorStore, historyStore, t) 
   watch(
     () => fileFormat.value,
     async () => {
-      await imageStore.generatePreview(editorStore, historyStore, t)
+      if (isVisible.value) {
+        await imageStore.generatePreview(editorStore, historyStore, t)
+      }
     },
   )
 

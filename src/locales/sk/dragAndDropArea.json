@@ -1,6 +1,7 @@
 {
   "title": "Presuň sem svoj súbor",
-  "subtitle": "alebo klikni na výber súboru",
+  "subtitle": "alebo klikni na vybrať súbor",
+  "pasteHint": "alebo stlač Ctrl+V pre vloženie obrázka zo schránky.",
   "button": {
     "text": "Vybrať súbor"
   },

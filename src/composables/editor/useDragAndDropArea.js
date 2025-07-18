@@ -1,5 +1,4 @@
-import { ref } from 'vue'
-
+import { ref, onMounted, onUnmounted } from 'vue'
 
 export function useDragAndDropArea(imageStore, t, router) {
   const isDragging = ref(false)
@@ -22,9 +21,33 @@ export function useDragAndDropArea(imageStore, t, router) {
     }
   }
 
+  const handlePaste = (event) => {
+    console.log('Paste event detected')
+    const items = event.clipboardData?.items
+    if (!items || items.length === 0) return
+
+    const firstItem = items[0]
+    const file = firstItem.getAsFile()
+
+    if (file) {
+      console.log('Pasted file:', file)
+      imageStore.saveToImageStore([file], t, router)
+    } else {
+      console.log('First clipboard item is not a file:', firstItem)
+    }
+  }
+
   const selectFile = () => {
     imageStore.loadFile(t, router)
   }
+
+  onMounted(() => {
+    window.addEventListener('paste', handlePaste)
+  })
+
+  onUnmounted(() => {
+    window.removeEventListener('paste', handlePaste)
+  })
 
   return {
     isDragging,

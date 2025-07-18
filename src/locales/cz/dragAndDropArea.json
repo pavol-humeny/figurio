@@ -1,6 +1,7 @@
 {
   "title": "Přetáhni sem svůj soubor",
-  "subtitle": "nebo klikni pro výběr souboru",
+  "subtitle": "nebo klikni pro vybrat soubor",
+  "pasteHint": "nebo stiskni Ctrl+V pro vložení obrázku ze schránky.",
   "button": {
     "text": "Vybrat soubor"
   },

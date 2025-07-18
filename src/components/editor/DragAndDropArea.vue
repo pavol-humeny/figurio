@@ -20,13 +20,8 @@ const {
 </script>
 
 <template>
-  <div
-    class="drag-and-drop-area"
-    :class="{ dragging: isDragging }"
-    @dragover="handleDragOver"
-    @dragleave="handleDragLeave"
-    @drop="handleDrop"
-  >
+  <div class="drag-and-drop-area" :class="{ dragging: isDragging }" @dragover="handleDragOver"
+    @dragleave="handleDragLeave" @drop="handleDrop">
     <ItemTip :text="$t('dragAndDropArea.tip')" position="bottom">
       <div class="icon-wrap" @click="selectFile">
         <BaseIcon name="IconImport" size="74" :color="'var(--primary-c)'" />
@@ -37,12 +32,11 @@ const {
     </div>
     <div class="subtitle-wrapper">
       <p>{{ $t('dragAndDropArea.subtitle') }}</p>
+      <p class="small">{{ $t('dragAndDropArea.pasteHint') }}</p>
+
     </div>
     <div class="button-wrapper">
-      <DefaultButton
-        :text="$t('dragAndDropArea.button.text')"
-        @click="selectFile"
-      />
+      <DefaultButton :text="$t('dragAndDropArea.button.text')" @click="selectFile" />
     </div>
   </div>
 </template>
@@ -72,6 +66,7 @@ const {
   cursor: pointer;
   transition: var(--default-transition);
 }
+
 .icon-wrap:hover {
   transition: var(--default-transition);
   box-shadow: var(--box-shadow-hover);
@@ -87,6 +82,11 @@ const {
 .subtitle-wrapper {
   font-size: var(--subtitle-font-size);
   color: var(--primary-c);
+}
+
+.small {
+  margin-top: 5px;
+  font-size: 90%;
 }
 
 .subtitle-wrapper p {
