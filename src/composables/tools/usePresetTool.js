@@ -310,17 +310,6 @@ export function usePresetTool(
       }
     }
 
-    let replace = false
-    const confirmed = await showConfirmModal(
-      t('tools.preset.settings.myPresets.addPresetOperationsOrReplace.title'),
-      t('tools.preset.settings.myPresets.addPresetOperationsOrReplace.message'),
-      t('tools.preset.settings.myPresets.addPresetOperationsOrReplace.cancel'),
-      t('tools.preset.settings.myPresets.addPresetOperationsOrReplace.confirm'),
-    )
-    if (confirmed) {
-      replace = true
-    }
-
     const preset = presetsStore.selectedPreset
 
     // Get image operations from imageStore and compare with preset
@@ -352,6 +341,18 @@ export function usePresetTool(
         }),
       )
       return
+    }
+
+    // Replace or add operations
+    let replace = false
+    const confirmed = await showConfirmModal(
+      t('tools.preset.settings.myPresets.addPresetOperationsOrReplace.title'),
+      t('tools.preset.settings.myPresets.addPresetOperationsOrReplace.message'),
+      t('tools.preset.settings.myPresets.addPresetOperationsOrReplace.cancel'),
+      t('tools.preset.settings.myPresets.addPresetOperationsOrReplace.confirm'),
+    )
+    if (confirmed) {
+      replace = true
     }
 
     // Check if operations contain crop operation
