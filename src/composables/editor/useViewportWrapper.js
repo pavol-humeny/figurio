@@ -296,6 +296,9 @@ export function useViewportWrapper(viewportStore, imageStore, editorStore, conte
     }
   }
 
+  // Rulers size
+  const wrapperSize = ref({ width: 0, height: 0 })
+
   // Initial setup
   let resizeObserver
   onMounted(() => {
@@ -306,6 +309,11 @@ export function useViewportWrapper(viewportStore, imageStore, editorStore, conte
       // Center the image after resizing the wrapper
       if (wrapperRef.value) {
         resizeObserver = new ResizeObserver(() => {
+          wrapperSize.value = {
+            width: wrapperRef.value.clientWidth,
+            height: wrapperRef.value.clientHeight,
+          }
+
           setValuesForCenterImage()
         })
         resizeObserver.observe(wrapperRef.value)
@@ -360,7 +368,7 @@ export function useViewportWrapper(viewportStore, imageStore, editorStore, conte
 
   const horizontalRulerMarks = computed(() => {
     const spacing = dynamicStep.value * zoomLevel.value
-    const width = wrapperRef.value?.clientWidth || 0
+    const width = wrapperSize.value.width || 0
     const start = Math.floor(-panX.value / spacing) - 1
     const end = Math.ceil((width - panX.value) / spacing) + 1
 
@@ -383,7 +391,7 @@ export function useViewportWrapper(viewportStore, imageStore, editorStore, conte
 
   const verticalRulerMarks = computed(() => {
     const spacing = dynamicStep.value * zoomLevel.value
-    const height = wrapperRef.value?.clientHeight || 0
+    const height = wrapperSize.value.height || 0
     const start = Math.floor(-panY.value / spacing) - 1
     const end = Math.ceil((height - panY.value) / spacing) + 1
 
