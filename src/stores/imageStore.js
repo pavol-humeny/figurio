@@ -6,6 +6,7 @@ import { nextTick } from 'vue'
 import { useHistoryStore } from './historyStore'
 import { useFrameTool } from '@/composables/tools/useFrameTool'
 import { useWorkspaceStore } from './workspaceStore'
+import { useUiStore } from './uiStore'
 
 const { showToastModal } = useToastModal()
 
@@ -303,7 +304,7 @@ export const useImageStore = defineStore('imageStore', {
     setFile(file, t) {
       this.file = file
 
-      this.setFileName({ name: file.name, t, updateInWorkspace: false }) // Set file name without updating workspace because there might not be a tab yet
+      this.setFileName({ name: file.name, t, isNewFileName: false, updateInWorkspace: false }) // Set file name without updating workspace because there might not be a tab yet
       this.fileFormat = file.name.split('.').pop().toLowerCase()
       this.newFileFormat = this.fileFormat
       this.fileType = file.type.startsWith('image/')
@@ -317,7 +318,12 @@ export const useImageStore = defineStore('imageStore', {
       if (this.fileType.startsWith('image')) {
         reader.onload = (event) => {
           const img = new Image()
-          img.onload = () => {
+          img.onload = async () => {
+            const uiStore = useUiStore()
+            uiStore.isLoading = true
+
+            await new Promise((resolve) => setTimeout(resolve, 10))
+
             this.fileDimensions.width = img.width
             this.fileDimensions.height = img.height
             this.fileDimensions.fileAspectRatio = img.width / img.height || 1
@@ -339,6 +345,8 @@ export const useImageStore = defineStore('imageStore', {
             console.log('file name: ', this.fileName, 'file dimensions: ', this.fileDimensions)
             const workspaceStore = useWorkspaceStore()
             workspaceStore.addNewTab(this.fileName)
+
+            uiStore.isLoading = false
           }
 
           img.src = event.target.result

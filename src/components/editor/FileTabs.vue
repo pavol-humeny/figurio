@@ -1,73 +1,20 @@
 <script setup>
-import { ref, onMounted } from 'vue'
-import { useWorkspaceStore } from '@/stores/workspaceStore'
-import { storeToRefs } from 'pinia'
+import { ref } from 'vue'
+import { useFileTabs } from '@/composables/editor/useFileTabs'
 import { useUiStore } from '@/stores/uiStore'
+import { useI18n } from 'vue-i18n'
 
-const uiStore = useUiStore()
+const { t } = useI18n()
 
 const wrapperRef = ref(null)
-const dragIndex = ref(null)
-
-const workspaceStore = useWorkspaceStore()
-const { tabs, activeTabIndex } = storeToRefs(workspaceStore)
-
-const setActiveTab = async (index) => {
-  if (index !== activeTabIndex.value) {
-    uiStore.isLoading = true
-
-    await new Promise((resolve) => setTimeout(resolve, 50))
-
-    workspaceStore.updateCurrentTabState()
-    workspaceStore.switchToTab(index)
-
-    await new Promise((resolve) => setTimeout(resolve, 300))
-
-    uiStore.isLoading = false
-  }
-}
-
-const closeTab = (index) => {
-  workspaceStore.updateCurrentTabState()
-  workspaceStore.closeTab(index)
-}
-
-const onTabDragStart = (index) => {
-  dragIndex.value = index
-}
-
-const onTabDrop = (index) => {
-  if (dragIndex.value === null || dragIndex.value === index) return
-  const movedTab = tabs.value.splice(dragIndex.value, 1)[0]
-  tabs.value.splice(index, 0, movedTab)
-  if (activeTabIndex.value === dragIndex.value) {
-    activeTabIndex.value = index
-  } else if (
-    activeTabIndex.value > dragIndex.value && activeTabIndex.value <= index
-  ) {
-    activeTabIndex.value--
-  } else if (
-    activeTabIndex.value < dragIndex.value && activeTabIndex.value >= index
-  ) {
-    activeTabIndex.value++
-  }
-  dragIndex.value = null
-}
-
-onMounted(() => {
-  const element = wrapperRef.value
-  if (!element) return
-  element.addEventListener(
-    'wheel',
-    (e) => {
-      if (Math.abs(e.deltaY) > Math.abs(e.deltaX)) {
-        e.preventDefault()
-        element.scrollBy({ left: e.deltaY / 4, behavior: 'auto' })
-      }
-    },
-    { passive: false },
-  )
-})
+const {
+  tabs,
+  activeTabIndex,
+  setActiveTab,
+  closeTab,
+  onTabDragStart,
+  onTabDrop,
+} = useFileTabs(wrapperRef, useUiStore(), t)
 
 </script>
 
@@ -76,8 +23,9 @@ onMounted(() => {
     <div class="scroll-container" ref="wrapperRef">
       <div class="tabs-wrapper">
         <div v-for="(tab, i) in tabs" :key="tab.id" class="tab" draggable="true" @dragstart="onTabDragStart(i)"
-          @drop.prevent="onTabDrop(i)" @dragover.prevent :class="{ active: i === activeTabIndex }">
-          <p @click="setActiveTab(i)">{{ tab.name }}</p>
+          @drop.prevent="onTabDrop(i)" @dragover.prevent :class="{ active: i === activeTabIndex }"
+          @click="setActiveTab(i)">
+          <p>{{ tab.name }}</p>
           <span class="tab-close" @click.stop="closeTab(i)">✕</span>
         </div>
       </div>
