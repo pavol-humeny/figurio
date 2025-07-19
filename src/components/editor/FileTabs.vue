@@ -2,24 +2,56 @@
 import { ref, onMounted } from 'vue'
 import { useWorkspaceStore } from '@/stores/workspaceStore'
 import { storeToRefs } from 'pinia'
+import { useUiStore } from '@/stores/uiStore'
+
+const uiStore = useUiStore()
 
 const wrapperRef = ref(null)
-const isDragging = ref(false)
-const startX = ref(0)
+const dragIndex = ref(null)
 
 const workspaceStore = useWorkspaceStore()
 const { tabs, activeTabIndex } = storeToRefs(workspaceStore)
 
-const setActiveTab = (index) => {
+const setActiveTab = async (index) => {
   if (index !== activeTabIndex.value) {
+    uiStore.isLoading = true
+
+    await new Promise((resolve) => setTimeout(resolve, 50))
+
     workspaceStore.updateCurrentTabState()
     workspaceStore.switchToTab(index)
+
+    await new Promise((resolve) => setTimeout(resolve, 300))
+
+    uiStore.isLoading = false
   }
 }
 
 const closeTab = (index) => {
   workspaceStore.updateCurrentTabState()
   workspaceStore.closeTab(index)
+}
+
+const onTabDragStart = (index) => {
+  dragIndex.value = index
+}
+
+const onTabDrop = (index) => {
+  if (dragIndex.value === null || dragIndex.value === index) return
+  const movedTab = tabs.value.splice(dragIndex.value, 1)[0]
+  tabs.value.splice(index, 0, movedTab)
+  if (activeTabIndex.value === dragIndex.value) {
+    activeTabIndex.value = index
+  } else if (
+    activeTabIndex.value > dragIndex.value && activeTabIndex.value <= index
+  ) {
+    activeTabIndex.value--
+  } else if (
+    activeTabIndex.value < dragIndex.value && activeTabIndex.value >= index
+  ) {
+    activeTabIndex.value++
+  }
+  dragIndex.value = null
 }
 
 onMounted(() => {
@@ -37,39 +69,14 @@ onMounted(() => {
   )
 })
 
-const onMouseMove = (e) => {
-  const element = wrapperRef.value
-  if (!element) return
-  const deltaX = e.clientX - startX.value
-  element.scrollBy({ left: -deltaX, behavior: 'auto' })
-  startX.value = e.clientX
-}
-
-const onMouseUp = () => {
-  document.removeEventListener('mousemove', onMouseMove)
-  document.removeEventListener('mouseup', onMouseUp)
-  isDragging.value = false
-}
-
-const startDragging = (e) => {
-  const element = wrapperRef.value
-  if (!element) return
-  const canScroll = element.scrollWidth > element.clientWidth
-  if (!canScroll) return
-  e.preventDefault()
-  isDragging.value = true
-  startX.value = e.clientX
-  document.addEventListener('mousemove', onMouseMove)
-  document.addEventListener('mouseup', onMouseUp)
-}
 </script>
 
 <template>
   <div class="file-tabs">
     <div class="scroll-container" ref="wrapperRef">
       <div class="tabs-wrapper">
-        <div v-for="(tab, i) in tabs" :key="tab.id" class="tab"
-          :class="{ active: i === activeTabIndex, grabbing: isDragging }" @mousedown="startDragging">
+        <div v-for="(tab, i) in tabs" :key="tab.id" class="tab" draggable="true" @dragstart="onTabDragStart(i)"
+          @drop.prevent="onTabDrop(i)" @dragover.prevent :class="{ active: i === activeTabIndex }">
           <p @click="setActiveTab(i)">{{ tab.name }}</p>
           <span class="tab-close" @click.stop="closeTab(i)">✕</span>
         </div>
@@ -123,10 +130,6 @@ const startDragging = (e) => {
 
 .tab:hover {
   background: var(--secondary-c);
-}
-
-.tab.grabbing {
-  cursor: grabbing;
 }
 
 .tab.active {

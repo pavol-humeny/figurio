@@ -16,10 +16,9 @@ import LoadingSpinner from '../common/LoadingSpinner.vue'
 const { t } = useI18n()
 
 const uiStore = useUiStore()
+const editorStore = useEditorStore()
 
 const contentRef = ref(null)
-
-const editorStore = useEditorStore()
 
 const { canvasRef, svgRef, frameSvgRef } = useImageRenderer(
   useImageStore(),
@@ -77,7 +76,7 @@ watch(
         'middle-dragging': isMiddleDragging,
         'move-tool-selected': editorStore.selectedToolKey === 'move',
       }">
-      <div class="viewport-content" ref="contentRef" :style="{
+      <div :class="{'hide': uiStore.isLoading}" class="viewport-content" ref="contentRef" :style="{
         transform: `translate(${panX}px, ${panY}px) scale(${zoomLevel})`,
       }">
         <canvas ref="canvasRef" class="image-canvas"></canvas>
@@ -117,7 +116,7 @@ watch(
         </div>
         <div v-if="mouseX !== null" class="ruler-cursor-mark horizontal" :style="{ left: mouseX + 'px' }">
           <span class="ruler-cursor-label horizontal" :class="{ 'active': cursorPosXSameAsImageWidth }">{{ cursorPosX
-          }}</span>
+            }}</span>
         </div>
 
       </div>
@@ -130,7 +129,7 @@ watch(
         </div>
         <div v-if="mouseY !== null" class="ruler-cursor-mark vertical" :style="{ top: mouseY + 'px' }">
           <span class="ruler-cursor-label vertical" :class="{ 'active': cursorPosYSameAsImageHeight }">{{ cursorPosY
-          }}</span>
+            }}</span>
         </div>
       </div>
     </div>

@@ -115,7 +115,6 @@ export function useViewportWrapper(viewportStore, imageStore, editorStore, conte
     const frameHeight = imageStore.frame?.enabled
       ? imageStore.frame.height * 2 + imageStore.frame.headerSize + imageStore.frame.footerSize
       : 0
-    console.log('[ViewportWrapper] Frame height:', frameHeight)
 
     const scaleX = wrapperWidth.value / contentWidth.value
     const scaleY = wrapperHeight.value / (contentHeight.value + frameHeight)
