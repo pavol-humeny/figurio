@@ -178,7 +178,13 @@ export const useImageStore = defineStore('imageStore', {
       }
     },
 
-    setFileName({ name, t, isNewFileName = false, updateInWorkspace = true }) {
+    setFileName({
+      name,
+      t,
+      setOnlyNewFileName = false,
+      updateInWorkspace = true,
+      openingNewFile = false,
+    }) {
       let trimmedName = name.trim()
 
       // Empty name
@@ -231,7 +237,12 @@ export const useImageStore = defineStore('imageStore', {
         return false
       }
 
-      if (trimmedName !== this.fileName && this.fileName !== '' && !isNewFileName) {
+      if (
+        trimmedName !== this.fileName &&
+        this.fileName !== '' &&
+        !setOnlyNewFileName &&
+        !openingNewFile
+      ) {
         showToastModal(
           'success',
           t('imageStore.toast.successFileNameUpdated.title'),
@@ -246,7 +257,7 @@ export const useImageStore = defineStore('imageStore', {
       }
 
       // Update file name
-      if (isNewFileName) {
+      if (setOnlyNewFileName) {
         this.newFileName = trimmedName
       } else {
         this.fileName = trimmedName
@@ -304,7 +315,7 @@ export const useImageStore = defineStore('imageStore', {
     setFile(file, t) {
       this.file = file
 
-      this.setFileName({ name: file.name, t, isNewFileName: false, updateInWorkspace: false }) // Set file name without updating workspace because there might not be a tab yet
+      this.setFileName({ name: file.name, t, updateInWorkspace: false, openingNewFile: true }) // Set file name without updating workspace because there might not be a tab yet
       this.fileFormat = file.name.split('.').pop().toLowerCase()
       this.newFileFormat = this.fileFormat
       this.fileType = file.type.startsWith('image/')

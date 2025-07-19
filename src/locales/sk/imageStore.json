@@ -13,8 +13,8 @@
       "message": "Prosím vyberte iba jeden súbor naraz."
     },
     "successFileUploaded": {
-      "title": "Soubor úspěšně nahrán",
-      "message": "Soubor {fileName} byl úspěšně nahrán."
+      "title": "Súbor bol úspešne nahraný",
+      "message": "Súbor {fileName} bol úspešne nahraný."
     },
     "successFileNameUpdated": {
       "title": "Názov súboru aktualizovaný",

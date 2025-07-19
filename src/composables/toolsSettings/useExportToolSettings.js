@@ -42,7 +42,7 @@ export function useExportToolSettings(imageStore, editorStore, historyStore, t) 
   }
 
   const saveNewFileName = () => {
-    const success = imageStore.setFileName({ name: fileName.value, t, isNewFileName: true })
+    const success = imageStore.setFileName({ name: fileName.value, t, setOnlyNewFileName: true })
 
     if (success) {
       nextTick(() => {
