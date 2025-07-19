@@ -30,6 +30,9 @@ export const useUiStore = defineStore('ui', {
     collapseButtonWidth: uiConfig.collapseButtonWidth,
 
     rulersEnabled: getBoolean('rulersEnabled', uiConfig.rulersEnabled),
+
+    // Loading flag
+    isLoading: false,
   }),
   actions: {
     toggleTheme() {

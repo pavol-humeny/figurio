@@ -104,6 +104,7 @@ body {
 
   --default-transition: all 0.2s ease-in-out;
 
+  --z-index-loading: 10000;
   --z-index-tip: 9999;
   --z-index-toast: 9998;
   --z-index-modal: 9997;

@@ -11,6 +11,7 @@ import SmartCropTool from '../tools/SmartCropTool.vue'
 import { useHistoryStore } from '@/stores/historyStore'
 import { useI18n } from 'vue-i18n'
 import { useUiStore } from '@/stores/uiStore'
+import LoadingSpinner from '../common/LoadingSpinner.vue'
 
 const { t } = useI18n()
 
@@ -69,6 +70,8 @@ watch(
 
 <template>
   <div class="viewport-wrapper">
+    <LoadingSpinner />
+
     <div class="viewport-content-wrapper" ref="wrapperRef" @wheel.passive="setZoomAndScroll" @mousedown="startPan"
       @mousemove="onMouseMove" :class="{
         'middle-dragging': isMiddleDragging,
@@ -80,9 +83,6 @@ watch(
         <canvas ref="canvasRef" class="image-canvas"></canvas>
         <svg ref="svgRef" class="image-svg"></svg>
 
-        <!--
-        <canvas ref="frameCanvasRef" class="frame-canvas"></canvas>
-        -->
         <svg ref="frameSvgRef" class="frame-svg"></svg>
 
         <CropTool v-if="editorStore.selectedTabPerTool[editorStore.selectedToolKey] === 'crop'" />
@@ -117,7 +117,7 @@ watch(
         </div>
         <div v-if="mouseX !== null" class="ruler-cursor-mark horizontal" :style="{ left: mouseX + 'px' }">
           <span class="ruler-cursor-label horizontal" :class="{ 'active': cursorPosXSameAsImageWidth }">{{ cursorPosX
-            }}</span>
+          }}</span>
         </div>
 
       </div>
@@ -130,7 +130,7 @@ watch(
         </div>
         <div v-if="mouseY !== null" class="ruler-cursor-mark vertical" :style="{ top: mouseY + 'px' }">
           <span class="ruler-cursor-label vertical" :class="{ 'active': cursorPosYSameAsImageHeight }">{{ cursorPosY
-            }}</span>
+          }}</span>
         </div>
       </div>
     </div>
