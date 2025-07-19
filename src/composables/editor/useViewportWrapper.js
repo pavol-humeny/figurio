@@ -77,6 +77,7 @@ export function useViewportWrapper(viewportStore, imageStore, editorStore, conte
     if (!wrapperRef.value || !contentRef.value) return
     updateInitialDimensions()
     updateZoomDependentDimensions()
+
     panX.value = wrapperWidth.value / 2 - (contentWidth.value * zoomLevel.value) / 2
     panY.value =
       wrapperHeight.value / 2 -
@@ -111,14 +112,17 @@ export function useViewportWrapper(viewportStore, imageStore, editorStore, conte
   const fitToScreenZoomLevel = () => {
     updateInitialDimensions()
 
-    const frameWidth = imageStore.frame?.enabled ? imageStore.frame.width : 0
+    const frameHeight = imageStore.frame?.enabled
+      ? imageStore.frame.height * 2 + imageStore.frame.headerSize + imageStore.frame.footerSize
+      : 0
+    console.log('[ViewportWrapper] Frame height:', frameHeight)
 
-    const scaleX = wrapperWidth.value / (contentWidth.value + frameWidth * 2)
-    const scaleY = wrapperHeight.value / (contentHeight.value + frameWidth * 2)
+    const scaleX = wrapperWidth.value / contentWidth.value
+    const scaleY = wrapperHeight.value / (contentHeight.value + frameHeight)
 
     const optimalZoom = Math.min(scaleX, scaleY)
 
-    viewportStore.fitZoomLevel = (viewportStore.zoomLevel / optimalZoom) * 1.1
+    viewportStore.fitZoomLevel = (viewportStore.zoomLevel / optimalZoom) * 1.2
 
     updateZoomDependentDimensions()
   }
@@ -333,6 +337,7 @@ export function useViewportWrapper(viewportStore, imageStore, editorStore, conte
     () => imageStore.frame,
     () => {
       nextTick(() => {
+        fitToScreenZoomLevel()
         setValuesForCenterImage()
       })
     },
@@ -362,6 +367,7 @@ export function useViewportWrapper(viewportStore, imageStore, editorStore, conte
       })
     },
   )
+
   const dynamicStep = computed(() => {
     const z = zoomLevel.value
     if (z >= 4) return 5
