@@ -1,40 +1,30 @@
 <script setup>
 import { ref, onMounted } from 'vue'
+import { useWorkspaceStore } from '@/stores/workspaceStore'
+import { storeToRefs } from 'pinia'
 
 const wrapperRef = ref(null)
-
 const isDragging = ref(false)
 const startX = ref(0)
 
-const tabs = ref([
-  { name: 'Untitled-1' },
-  { name: 'Untitled-2' },
-  { name: 'Untitled-3' },
-  { name: 'Untitled-4' },
-  { name: 'Untitled-5' },
-])
-const activeTabIndex = ref(0)
+const workspaceStore = useWorkspaceStore()
+const { tabs, activeTabIndex } = storeToRefs(workspaceStore)
 
 const setActiveTab = (index) => {
-  activeTabIndex.value = index
+  if (index !== activeTabIndex.value) {
+    workspaceStore.updateCurrentTabState()
+    workspaceStore.switchToTab(index)
+  }
 }
 
 const closeTab = (index) => {
-  tabs.value.splice(index, 1)
-  if (index === activeTabIndex.value) {
-    // If active tab was removed
-    activeTabIndex.value = Math.max(0, index - 1)
-  } else if (index < activeTabIndex.value) {
-    // Adjust active index if removed tab was before it
-    activeTabIndex.value--
-  }
+  workspaceStore.updateCurrentTabState()
+  workspaceStore.closeTab(index)
 }
 
 onMounted(() => {
   const element = wrapperRef.value
   if (!element) return
-
-
   element.addEventListener(
     'wheel',
     (e) => {
@@ -50,7 +40,6 @@ onMounted(() => {
 const onMouseMove = (e) => {
   const element = wrapperRef.value
   if (!element) return
-
   const deltaX = e.clientX - startX.value
   element.scrollBy({ left: -deltaX, behavior: 'auto' })
   startX.value = e.clientX
@@ -65,25 +54,21 @@ const onMouseUp = () => {
 const startDragging = (e) => {
   const element = wrapperRef.value
   if (!element) return
-
-  // Check if horizontal scrolling is possible
   const canScroll = element.scrollWidth > element.clientWidth
-  if (!canScroll) return // prevent dragging if not scrollable
-
+  if (!canScroll) return
   e.preventDefault()
   isDragging.value = true
   startX.value = e.clientX
   document.addEventListener('mousemove', onMouseMove)
   document.addEventListener('mouseup', onMouseUp)
 }
-
 </script>
 
 <template>
   <div class="file-tabs">
     <div class="scroll-container" ref="wrapperRef">
       <div class="tabs-wrapper">
-        <div v-for="(tab, i) in tabs" :key="i" class="tab"
+        <div v-for="(tab, i) in tabs" :key="tab.id" class="tab"
           :class="{ active: i === activeTabIndex, grabbing: isDragging }" @mousedown="startDragging">
           <p @click="setActiveTab(i)">{{ tab.name }}</p>
           <span class="tab-close" @click.stop="closeTab(i)">✕</span>
@@ -101,7 +86,6 @@ const startDragging = (e) => {
   display: flex;
   align-items: center;
   overflow: hidden;
-  /* border: solid 1px blue; */
 }
 
 .scroll-container {
@@ -156,7 +140,6 @@ const startDragging = (e) => {
   cursor: pointer;
   opacity: 0.5;
   user-select: none;
-
 }
 
 .tab-close:hover {

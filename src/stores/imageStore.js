@@ -5,6 +5,7 @@ import { useToastModal } from '@/composables/modals/useToastModal'
 import { nextTick } from 'vue'
 import { useHistoryStore } from './historyStore'
 import { useFrameTool } from '@/composables/tools/useFrameTool'
+import { useWorkspaceStore } from './workspaceStore'
 
 const { showToastModal } = useToastModal()
 
@@ -15,7 +16,6 @@ const isValidFileName = (name) => {
 
 export const useImageStore = defineStore('imageStore', {
   state: () => ({
-    historyRestore: false,
     file: null,
     fileType: '', // 'image' or 'pdf'
 
@@ -40,7 +40,6 @@ export const useImageStore = defineStore('imageStore', {
 
     // Value for preview image in export tool
     previewUrl: '', // UndoRedo
-    renderUrl: '', // Used for rendering final image
 
     // Value for original image
     originalImage: null,
@@ -87,7 +86,8 @@ export const useImageStore = defineStore('imageStore', {
     imageOperations: [],
     // imageOperations: [
     // {'grayscale': {'enabled': true}},
-    // {'crop': {'x': 50, 'y': 50, 'width': 200, 'height': 200}},
+    // {'crop': {'x': 50, 'y': 50, 'width': 200, 'height': 200}}
+    // ]
 
     frame: {
       enabled: false,
@@ -99,10 +99,9 @@ export const useImageStore = defineStore('imageStore', {
       footerSize: 0, // Size of the footer for windows frame
       outlineEnabled: false, // Whether to draw an outline around the frame
     },
+    frameSvg: '', // Raw SVG frame for vector export
 
     phoneButtonsCanNotBeDrawnToastFlag: false,
-
-    frameSvg: '', // Raw SVG frame for vector export
   }),
   getters: {
     isImageLoaded: (state) => {
@@ -178,8 +177,8 @@ export const useImageStore = defineStore('imageStore', {
       }
     },
 
-    setFileName(newName, t, isNewFileName = false) {
-      let trimmedName = newName.trim()
+    setFileName({ name, t, isNewFileName = false, updateInWorkspace = true }) {
+      let trimmedName = name.trim()
 
       // Empty name
       if (trimmedName === '') {
@@ -253,6 +252,11 @@ export const useImageStore = defineStore('imageStore', {
         this.newFileName = trimmedName
       }
 
+      if (updateInWorkspace) {
+        const workspaceStore = useWorkspaceStore()
+        workspaceStore.updateCurrentTabName(this.fileName)
+      }
+
       return true
     },
 
@@ -286,7 +290,29 @@ export const useImageStore = defineStore('imageStore', {
       this.originalImage = null
       this.setRenderedImage(null)
 
-      this.svgObjects = []
+      svgObjects: [
+        {
+          tag: 'rect',
+          attrs: {
+            x: 50,
+            y: 40,
+            width: 200,
+            height: 100,
+            fill: 'red',
+            stroke: 'red',
+          },
+        },
+        {
+          tag: 'circle',
+          attrs: {
+            cx: 300,
+            cy: 200,
+            r: 50,
+            fill: 'blue',
+            stroke: 'black',
+          },
+        },
+      ]
       this.selectedSvgObjectId = null
 
       this.resetImageOperations()
@@ -299,7 +325,7 @@ export const useImageStore = defineStore('imageStore', {
     setFile(file, t) {
       this.file = file
 
-      this.setFileName(file.name, t)
+      this.setFileName({ name: file.name, t, updateInWorkspace: false }) // Set file name without updating workspace because there might not be a tab yet
       this.fileFormat = file.name.split('.').pop().toLowerCase()
       this.newFileFormat = this.fileFormat
       this.fileType = file.type.startsWith('image/')
@@ -331,6 +357,10 @@ export const useImageStore = defineStore('imageStore', {
             this.setRenderedImage(canvas)
             this.originalImage = canvas
             this.previewUrl = canvas.toDataURL() // Fallback for export
+
+            console.log('file name: ', this.fileName, 'file dimensions: ', this.fileDimensions)
+            const workspaceStore = useWorkspaceStore()
+            workspaceStore.addNewTab(this.fileName)
           }
 
           img.src = event.target.result
@@ -619,7 +649,7 @@ export const useImageStore = defineStore('imageStore', {
     },
 
     async rasterize(width = null, height = null, storeAsNew = false) {
-      if (!this.getRenderedImage(true) || this.svgObjects.length === 0) return
+      if (this.svgObjects.length === 0) return
 
       console.log('Rasterizing image with SVG objects...')
 
@@ -823,8 +853,6 @@ export const useImageStore = defineStore('imageStore', {
       return snapshot
     },
     applySnapshot(snapshot) {
-      this.historyRestore = true
-
       this.fileName = snapshot.fileName
       this.fileDimensions = JSON.parse(JSON.stringify(snapshot.fileDimensions))
       // this.originalFileDimensions = JSON.parse(JSON.stringify(snapshot.fileDimensions))
@@ -864,6 +892,130 @@ export const useImageStore = defineStore('imageStore', {
       // }
 
       console.log('[applySnapshot] imageOperations (after apply):', this.imageOperations)
+    },
+
+    getFullSnapshot() {
+      return {
+        file: this.file,
+        fileType: this.fileType,
+
+        fileName: this.fileName,
+        fileFormat: this.fileFormat,
+        fileDimensions: JSON.parse(JSON.stringify(this.fileDimensions)),
+
+        newFileName: this.newFileName,
+        newFileFormat: this.newFileFormat,
+        newFileDimensions: JSON.parse(JSON.stringify(this.newFileDimensions)),
+
+        previewUrl: this.previewUrl,
+
+        originalImage: this.originalImage?.toDataURL() || null,
+        originalFileDimensions: JSON.parse(JSON.stringify(this.originalFileDimensions)),
+
+        renderedImage: this.getRenderedImage(true)?.toDataURL() || null,
+        tmpRenderedImage: this.tmpRenderedImage?.toDataURL() || null,
+        newRenderedImage: this.newRenderedImage?.toDataURL() || null,
+
+        svgObjects: JSON.parse(JSON.stringify(this.svgObjects)),
+        selectedSvgObjectId: this.selectedSvgObjectId,
+
+        imageOperations: JSON.parse(JSON.stringify(this.imageOperations)),
+
+        frame: JSON.parse(JSON.stringify(this.frame)),
+        frameSvg: this.frameSvg,
+
+        phoneButtonsCanNotBeDrawnToastFlag: this.phoneButtonsCanNotBeDrawnToastFlag,
+      }
+    },
+    applyFullSnapshot(snapshot) {
+      this.file = snapshot.file
+      this.fileType = snapshot.fileType
+
+      this.fileName = snapshot.fileName
+      this.fileFormat = snapshot.fileFormat
+      this.fileDimensions = JSON.parse(JSON.stringify(snapshot.fileDimensions))
+
+      this.newFileName = snapshot.newFileName
+      this.newFileFormat = snapshot.newFileFormat
+      this.newFileDimensions = JSON.parse(JSON.stringify(snapshot.newFileDimensions))
+
+      this.previewUrl = snapshot.previewUrl
+
+      this.originalFileDimensions = JSON.parse(JSON.stringify(snapshot.originalFileDimensions))
+
+      this.svgObjects = JSON.parse(JSON.stringify(snapshot.svgObjects))
+      this.selectedSvgObjectId = snapshot.selectedSvgObjectId
+
+      this.imageOperations = JSON.parse(JSON.stringify(snapshot.imageOperations))
+
+      this.frame = JSON.parse(JSON.stringify(snapshot.frame))
+      this.frameSvg = snapshot.frameSvg
+
+      this.phoneButtonsCanNotBeDrawnToastFlag = snapshot.phoneButtonsCanNotBeDrawnToastFlag
+
+      // Rendered image
+      if (snapshot.renderedImage) {
+        const img = new Image()
+        img.onload = () => {
+          const canvas = document.createElement('canvas')
+          canvas.width = img.width
+          canvas.height = img.height
+          const ctx = canvas.getContext('2d')
+          ctx.drawImage(img, 0, 0)
+          this.setRenderedImage(canvas)
+        }
+        img.src = snapshot.renderedImage
+      } else {
+        this.setRenderedImage(null)
+      }
+
+      // Original image
+      if (snapshot.originalImage) {
+        const img = new Image()
+        img.onload = () => {
+          const canvas = document.createElement('canvas')
+          canvas.width = img.width
+          canvas.height = img.height
+          const ctx = canvas.getContext('2d')
+          ctx.drawImage(img, 0, 0)
+          this.originalImage = canvas
+        }
+        img.src = snapshot.originalImage
+      } else {
+        this.originalImage = null
+      }
+
+      // Tmp rendered image
+      if (snapshot.tmpRenderedImage) {
+        const img = new Image()
+        img.onload = () => {
+          const canvas = document.createElement('canvas')
+          canvas.width = img.width
+          canvas.height = img.height
+          const ctx = canvas.getContext('2d')
+          ctx.drawImage(img, 0, 0)
+          this.tmpRenderedImage = canvas
+        }
+        img.src = snapshot.tmpRenderedImage
+      } else {
+        this.tmpRenderedImage = null
+      }
+
+      // New rendered image
+      if (snapshot.newRenderedImage) {
+        const img = new Image()
+        img.onload = () => {
+          const canvas = document.createElement('canvas')
+          canvas.width = img.width
+          canvas.height = img.height
+          const ctx = canvas.getContext('2d')
+          ctx.drawImage(img, 0, 0)
+          this.newRenderedImage = canvas
+        }
+        img.src = snapshot.newRenderedImage
+      } else {
+        this.newRenderedImage = null
+      }
     },
   },
 })

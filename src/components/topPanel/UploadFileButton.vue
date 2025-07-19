@@ -9,16 +9,12 @@ import { useRouter } from 'vue-router'
 const { t } = useI18n()
 const router = useRouter()
 
-const { disabled, uploadFile } = useUploadFileButton(useImageStore(), t, router)
+const { uploadFile } = useUploadFileButton(useImageStore(), t, router)
 </script>
 
 <template>
-  <ItemTip :text="!disabled ? $t('topPanel.uploadFileButton.tip') : ''" position="bottom">
-    <button
-      class="button button-circle button-control"
-      @click="uploadFile"
-      :class="{ disabled: disabled }"
-    >
+  <ItemTip :text="$t('topPanel.uploadFileButton.tip')" position="bottom">
+    <button class="button button-circle button-control" @click="uploadFile">
       <BaseIcon name="IconImport" :size="26" />
     </button>
   </ItemTip>

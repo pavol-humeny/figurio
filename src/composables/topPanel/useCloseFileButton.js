@@ -1,7 +1,7 @@
 import { computed } from 'vue'
 import { useConfirmModal } from '@/composables/modals/useConfirmModal'
 
-export function useCloseFileButton(imageStore, t) {
+export function useCloseFileButton(imageStore, workspaceStore, t) {
   const disabled = computed(() => !imageStore.isImageLoaded)
 
   const { showConfirmModal } = useConfirmModal()
@@ -18,7 +18,7 @@ export function useCloseFileButton(imageStore, t) {
       t('topPanel.closeFileButton.confirm.confirm'),
     )
     if (confirmed) {
-      imageStore.closeFile()
+      workspaceStore.closeTab()
     }
   }
 

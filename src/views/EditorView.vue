@@ -27,10 +27,11 @@ import { useUiStore } from '@/stores/uiStore';
 import { usePrivacyAndDataModal } from '@/composables/modals/usePrivacyAndDataModal';
 import { useFileNameDisplay } from '@/composables/topPanel/useFileNameDisplay';
 import FileTabs from '@/components/editor/FileTabs.vue';
+import { useWorkspaceStore } from '@/stores/workspaceStore';
 
 const { undo, redo } = useUndoRedo(useHistoryStore(), useImageStore())
 const { zoomIn, zoomOut, resetZoom } = useZoomControl(useViewportStore())
-const { closeFile } = useCloseFileButton(useImageStore(), t)
+const { closeFile } = useCloseFileButton(useImageStore(), useWorkspaceStore(), t)
 const { uploadFile } = useUploadFileButton(useImageStore(), t, useRoute())
 const { toggleTool } = useToolsPanel(useEditorStore(), useImageStore())
 const { openExportToolSettings } = useExportToolSettings(useImageStore(), useEditorStore(), useHistoryStore(), t)

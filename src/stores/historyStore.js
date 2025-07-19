@@ -39,5 +39,17 @@ export const useHistoryStore = defineStore('historyStore', {
       this.history = []
       this.currentIndex = -1
     },
+
+    // Full snapshot (for workspace store)
+    getFullSnapshot() {
+      return {
+        history: JSON.parse(JSON.stringify(this.history)),
+        currentIndex: this.currentIndex,
+      }
+    },
+    applyFullSnapshot(snapshot) {
+      this.history = JSON.parse(JSON.stringify(snapshot.history || []))
+      this.currentIndex = typeof snapshot.currentIndex === 'number' ? snapshot.currentIndex : -1
+    },
   },
 })

@@ -26,7 +26,7 @@ export function useFileNameDisplay(imageStore, t) {
       return
     }
 
-    const success = imageStore.setFileName(fileNameInput.value, t)
+    const success = imageStore.setFileName({ name: fileNameInput.value, t })
     if (success) {
       nextTick(() => {
         inputRef.value?.blur()
