@@ -3,8 +3,10 @@ import BaseIcon from '@/components/icons/BaseIcon.vue'
 import ItemTip from '@/components/common/ItemTip.vue'
 import { useEditorStore } from '@/stores/editorStore'
 import { useOneTool } from '@/composables/tools/useOneTool'
+import { useImageStore } from '@/stores/imageStore'
 
 const editorStore = useEditorStore()
+const imageStore = useImageStore()
 
 const props = defineProps({
   tool: {
@@ -50,7 +52,8 @@ const { wrapperRef, subToolPos, onRightClick, onClickTab, onClickTool } = useOne
     position: 'top-right',
   }">
     <div class="tool-wrapper" ref="wrapperRef" @contextmenu="onRightClick">
-      <div class="tool" :class="{ active: props.active, disabled: props.disabled }" @click.left="onClickTool">
+      <div class="tool" :class="{ active: props.active && imageStore.isImageLoaded, disabled: props.disabled }"
+        @click.left="onClickTool">
         <BaseIcon :name="props.tool.iconName" :size="27" :color="'var(--primary-c)'" />
       </div>
     </div>
