@@ -6,9 +6,17 @@ import BaseIcon from '../icons/BaseIcon.vue'
 import { useImageStore } from '@/stores/imageStore'
 
 const imageStore = useImageStore()
-
 const { t } = useI18n()
 
+/**
+ * @typedef {Object} OperationsListProps
+ * @property {Object[]} localImageOperations - List of current local operations
+ * @property {boolean} [modificationEnabled=false] - Whether the user can modify the list
+ * @property {boolean} [disabled=false] - Whether the entire list is disabled
+ * @property {boolean} [clearSelected=true] - Whether to automatically clear selected operation
+ */
+
+/** @type {OperationsListProps} */
 const props = defineProps({
   localImageOperations: {
     type: Array,
@@ -28,6 +36,11 @@ const props = defineProps({
   },
 })
 
+/**
+ * @event removeOperation - Emitted when an operation is deleted
+ * @event update:localImageOperations - Emitted when the list is changed
+ * @event selectOperation - Emitted when an operation is selected
+ */
 const emit = defineEmits(['removeOperation', 'update:localImageOperations', 'selectOperation'])
 
 const selectedOperation = ref(null)

@@ -65,7 +65,7 @@ export function usePresetOperationsList(imageStore, props, emit, t) {
         return t('tools.preset.settings.myPresets.presetValues.crop.label')
       default:
         return type
-      // UPDATE
+      // UPDATE new tool
     }
   }
 
@@ -85,6 +85,13 @@ export function usePresetOperationsList(imageStore, props, emit, t) {
     return true
   }
 
+  const imageCanBeResize = (resizeDimensions) => {
+    if (resizeDimensions.width <= 0 || resizeDimensions.height <= 0) {
+      return false
+    }
+    return true
+  }
+
   return {
     selectedOperation,
     internalList,
@@ -94,5 +101,6 @@ export function usePresetOperationsList(imageStore, props, emit, t) {
     handleSelect,
     getOperationLabel,
     imageCanBeCropped,
+    imageCanBeResize,
   }
 }

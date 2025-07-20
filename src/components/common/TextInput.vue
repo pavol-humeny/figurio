@@ -1,7 +1,18 @@
 <script setup>
-import { ref, watch, defineExpose } from 'vue'
 import ItemTip from './ItemTip.vue'
+import { useTextInput } from '@/composables/common/useTextInput'
 
+/**
+ * @typedef {Object} TextInputProps
+ * @property {string} modelValue - Current input value (v-model)
+ * @property {string} [tip=''] - Tooltip text
+ * @property {string} [position='bottom'] - Tooltip position
+ * @property {boolean} [disabled=false] - Whether the input is disabled
+ * @property {string} [placeholder=''] - Input placeholder text
+ * @property {boolean} [updateOnChange=false] - If true, emits update on each input
+ */
+
+/** @type {TextInputProps} */
 const props = defineProps({
   modelValue: {
     type: String,
@@ -29,47 +40,32 @@ const props = defineProps({
   },
 })
 
+/**
+ * @event update:modelValue - Emitted when the input value changes
+ */
 const emit = defineEmits(['update:modelValue'])
 
-const inputValue = ref(props.modelValue)
+/**
+ * Logic of the text input component
+ */
+const {
+  inputValue,
+  onBlurOrEnter,
+  onInput,
+  setValue,
+} = useTextInput(props, emit)
 
-watch(
-  () => props.modelValue,
-  (newVal) => {
-    inputValue.value = newVal
-  },
-)
-
-const onBlurOrEnter = () => {
-  emit('update:modelValue', inputValue.value)
-}
-
-const onInput = () => {
-  if (props.updateOnChange) {
-    emit('update:modelValue', inputValue.value)
-  }
-}
-
-defineExpose({
-  setValue: (val) => {
-    inputValue.value = val
-  },
-})
-
+/**
+ * Expose methods for external use
+ * @type {{ setValue: (val: string) => void }}
+ */
+defineExpose({ setValue })
 </script>
 
 <template>
   <ItemTip :text="props.tip" :position="props.position">
-    <input
-      type="text"
-      class="text-input"
-      v-model="inputValue"
-      :disabled="props.disabled"
-      :placeholder="props.placeholder"
-      @blur="onBlurOrEnter"
-      @keydown.enter="onBlurOrEnter"
-      @input="onInput"
-    />
+    <input type="text" class="text-input" v-model="inputValue" :disabled="props.disabled"
+      :placeholder="props.placeholder" @blur="onBlurOrEnter" @keydown.enter="onBlurOrEnter" @input="onInput" />
   </ItemTip>
 </template>
 

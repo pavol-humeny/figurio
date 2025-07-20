@@ -4,6 +4,9 @@ import { computed } from 'vue'
 
 const uiStore = useUiStore()
 
+/**
+ * Whether to show the loading overlay
+ */
 const isVisible = computed(() => uiStore.isLoading)
 </script>
 

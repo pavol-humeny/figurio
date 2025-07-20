@@ -2,6 +2,16 @@
 import { useItemTip } from '@/composables/common/useItemTip'
 import { computed } from 'vue'
 
+/**
+ * @typedef {Object} ItemTipProps
+ * @property {string} text - Tooltip text (required)
+ * @property {string} [position='top'] - Tooltip position (e.g. 'top', 'bottom-right')
+ * @property {boolean} [advance=false] - Whether to use advanced layout with title and shortcut
+ * @property {string} [title=''] - Optional title for advanced tooltip
+ * @property {string} [shortcut=''] - Optional keyboard shortcut to show in advanced tooltip
+ */
+
+/** @type {ItemTipProps} */
 const props = defineProps({
   text: {
     type: String,
@@ -25,11 +35,17 @@ const props = defineProps({
   },
 })
 
+/**
+ * Logic of the item tooltip
+ */
 const { isVisible, wrapper, itemTipStyle, handleMouseEnter, handleMouseLeave } = useItemTip({
   position: props.position,
   text: props.text,
 })
 
+/**
+ * Whether to show the tooltip (text must be non-empty)
+ */
 const showTip = computed(() => props.text !== '')
 </script>
 

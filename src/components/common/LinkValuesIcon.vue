@@ -3,6 +3,18 @@ import BaseIcon from '@/components/icons/BaseIcon.vue'
 import { defineProps } from 'vue'
 import { useLinkValuesIcon } from '@/composables/common/useLinkValuesIcon'
 
+/**
+ * @typedef {Object} LinkToggleIconProps
+ * @property {boolean} [modelValue=false] - Current link state (true = linked, false = unlinked)
+ * @property {string} [tipLinked=''] - Tooltip text shown when linked
+ * @property {string} [tipUnlinked=''] - Tooltip text shown when unlinked
+ * @property {string} [position='bottom'] - Tooltip position
+ * @property {number|string} [size=30] - Icon size
+ * @property {string} [color='var(--primary-c)'] - Icon color
+ * @property {boolean} [disabled=false] - Whether the icon is disabled
+ */
+
+/** @type {LinkToggleIconProps} */
 const props = defineProps({
   modelValue: {
     type: Boolean,
@@ -34,21 +46,21 @@ const props = defineProps({
   },
 })
 
+/**
+ * @event update:modelValue - Emitted when the link state changes
+ */
 const emit = defineEmits(['update:modelValue'])
 
+/**
+ * Logic of the link values icon
+ */
 const { isLinked, toggleLinkedValue } = useLinkValuesIcon(props, emit)
 </script>
 
 <template>
-  <BaseIcon
-    :name="isLinked ? 'IconLinkValues' : 'IconUnLinkValues'"
-    :size="size"
-    :color="color"
-    @click="toggleLinkedValue"
-    :tip="isLinked ? tipLinked : tipUnlinked"
-    :class="disabled ? 'disabled' : ''"
-    :position="position"
-  />
+  <BaseIcon :name="isLinked ? 'IconLinkValues' : 'IconUnLinkValues'" :size="size" :color="color"
+    @click="toggleLinkedValue" :tip="isLinked ? tipLinked : tipUnlinked" :class="disabled ? 'disabled' : ''"
+    :position="position" />
 </template>
 
 <style scoped>

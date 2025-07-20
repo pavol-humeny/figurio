@@ -1,6 +1,6 @@
 <script setup>
-import { ref, watch, defineExpose } from 'vue'
 import ItemTip from './ItemTip.vue'
+import { useColorPicker } from '@/composables/common/useColorPicker'
 
 /**
  * @typedef {Object} ColorPickerProps
@@ -38,34 +38,19 @@ const props = defineProps({
 const emit = defineEmits(['update:modelValue', 'update'])
 
 /**
- * Reactive color value used internally
- * Synced with `modelValue` prop
+ * Logic of the color picker
  */
-const colorValue = ref(props.modelValue)
-
-// Sync colorValue when modelValue changes
-watch(() => props.modelValue, (newVal) => {
-  colorValue.value = newVal
-})
+const {
+  colorValue,
+  onChange,
+  setValue,
+} = useColorPicker(props, emit)
 
 /**
- * Emits update events when the color input changes
+ * Expose methods for external use
+ * @type {{ setValue: (val: string) => void }}
  */
-const onChange = () => {
-  emit('update:modelValue', colorValue.value)
-  emit('update', colorValue.value)
-}
-
-/**
- * Exposed method to set the color
- * @param {string} value - New hex color value
- */
-defineExpose({
-  setValue: (value) => {
-    colorValue.value = value
-  },
-})
-
+defineExpose({ setValue })
 </script>
 
 <template>

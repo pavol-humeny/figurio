@@ -11,6 +11,12 @@ import { editorConfig } from '@/config/editorConfig'
 
 const { t } = useI18n()
 
+/**
+ * @typedef {Object} PresetOperationDetailsProps
+ * @property {Object} operation - The selected preset operation object
+ */
+
+/** @type {PresetOperationDetailsProps} */
 const props = defineProps({
   operation: {
     type: Object,
@@ -18,10 +24,15 @@ const props = defineProps({
   },
 })
 
-console.log('PresetOperationDetails props:', props)
 
+/**
+ * @event update:operation - Emitted when the operation is modified
+ */
 const emit = defineEmits(['update:operation'])
 
+/**
+ * Logic of the preset operation details panel
+ */
 const {
   localOperation,
   update,
@@ -40,6 +51,10 @@ const {
   maxCropHeight,
 } = usePresetOperationDetails(useImageStore(), useEditorStore(), t, props, emit)
 
+/**
+ * Dropdown options for rotation angles
+ * @type {{ label: string, value: number }[]}
+ */
 const presetRotationOptions = [
   { label: '180°', value: 180 },
   { label: '90°', value: 90 },
@@ -48,6 +63,10 @@ const presetRotationOptions = [
   { label: '-180°', value: -180 },
 ]
 
+/**
+ * Dropdown options for flip directions
+ * @type {{ label: string, value: string }[]}
+ */
 const presetFlipOptions = [
   {
     label: t('tools.preset.settings.myPresets.presetValues.transformations.horizontalFlip'),

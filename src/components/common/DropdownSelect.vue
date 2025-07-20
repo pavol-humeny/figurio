@@ -1,7 +1,7 @@
 <script setup>
-import { ref, watch, defineExpose } from 'vue'
 import ItemTip from './ItemTip.vue'
 import BaseIcon from '../icons/BaseIcon.vue'
+import { useDropdownSelect } from '@/composables/common/useDropdownSelect'
 
 /**
  * @typedef {Object} DropdownSelectProps
@@ -64,51 +64,21 @@ const props = defineProps({
 const emit = defineEmits(['update:modelValue', 'update'])
 
 /**
- * Selected option value used internally for two-way binding
- * @type {import('vue').Ref<string|number>}
+ * Logic of the dropdown select component
  */
-const selectedValue = ref(props.modelValue)
-
-// Sync with external changes to modelValue
-watch(
-  () => props.modelValue,
-  (newVal) => {
-    selectedValue.value = newVal
-  },
-)
+const {
+  selectedValue,
+  onChange,
+  onIconDoubleClick,
+  setValue,
+  showIcon,
+} = useDropdownSelect(props, emit)
 
 /**
- * Handle value change from select input
+ * Expose methods for external use
+ * @type {{ setValue: (val: string|number) => void }}
  */
-const onChange = () => {
-  emit('update:modelValue', selectedValue.value)
-  emit('update', selectedValue.value)
-}
-
-/**
- * Handle double-click on icon
- */
-const onIconDoubleClick = () => {
-  if (typeof props.onReset === 'function') {
-    props.onReset()
-  }
-}
-
-/**
- * Expose function to programmatically set selected value
- * @param {string|number} value
- */
-defineExpose({
-  setValue: (value) => {
-    selectedValue.value = value
-  },
-})
-
-/**
- * Whether to display the icon
- * @type {boolean}
- */
-const showIcon = props.icon !== ''
+defineExpose({ setValue })
 </script>
 
 <template>

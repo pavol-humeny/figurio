@@ -1,6 +1,6 @@
 <script setup>
-import { ref, watch } from 'vue'
 import ItemTip from './ItemTip.vue'
+import { useSlider } from '@/composables/common/useDefaultSlider'
 
 /**
  * @typedef {Object} SliderProps
@@ -68,29 +68,14 @@ const props = defineProps({
 /**
  * @event update:modelValue - Emitted when the slider value changes (for v-model)
  * @event dblclick - Emitted when the slider is double-clicked (can be used to reset)
+ * @event update - Custom update event with the same value
  */
 const emit = defineEmits(['update:modelValue', 'dblclick', 'update'])
 
-/**
- * Reactive current value used internally
- * @type {import('vue').Ref<number>}
- */
-const currentValue = ref(props.modelValue)
-
-// Sync currentValue when modelValue changes
-watch(() => props.modelValue, (val) => {
-  currentValue.value = val
-})
-
-/**
- * Handles input change and emits updated value.
- * @param {Event} event - Input event from range element
- */
-const onInput = (event) => {
-  const value = Number(event.target.value)
-  emit('update:modelValue', value)
-  emit('update', value)
-}
+const {
+  currentValue,
+  onInput,
+} = useSlider(props, emit)
 </script>
 
 <template>

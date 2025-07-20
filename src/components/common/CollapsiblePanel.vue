@@ -4,16 +4,7 @@ import { useCollapsiblePanel } from '@/composables/common/useCollapsiblePanel'
 import { useUiStore } from '@/stores/uiStore'
 
 /**
- * @typedef {Object} CollapsiblePanelState
- * @property {boolean} isVisible - Whether the panel is currently visible
- * @property {Function} toggleVisibility - Toggles visibility of the panel
- * @property {number} rightSidePanelWidth - Total width of the visible panel (including collapse button)
- * @property {number} collapseButtonWidth - Width of the toggle button
- * @property {Function} startResize - Starts panel resize on mousedown
- */
-
-/**
- * @type {CollapsiblePanelState}
+ * Logic of the collapsible panel
  */
 const { isVisible, toggleVisibility, rightSidePanelWidth, collapseButtonWidth, startResize } =
   useCollapsiblePanel(useUiStore())

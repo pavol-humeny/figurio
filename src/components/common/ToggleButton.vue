@@ -3,6 +3,16 @@ import ItemTip from './ItemTip.vue'
 import { defineProps, defineEmits } from 'vue'
 import { useToggleButton } from '@/composables/common/useToggleButton'
 
+/**
+ * @typedef {Object} ToggleSwitchProps
+ * @property {boolean} [disabled=false] - Whether the toggle is disabled
+ * @property {string} [tip=''] - Tooltip text
+ * @property {string} [position='bottom'] - Tooltip position
+ * @property {boolean} [modelValue=false] - Current toggle state (v-model)
+ * @property {number} [scale=1] - Scale factor for the toggle
+ */
+
+/** @type {ToggleSwitchProps} */
 const props = defineProps({
   disabled: {
     type: Boolean,
@@ -26,19 +36,22 @@ const props = defineProps({
   },
 })
 
+/**
+ * @event update:modelValue - Emitted when toggle state changes (v-model)
+ * @event update - Emitted when toggle state changes
+ */
 const emit = defineEmits(['update:modelValue', 'update'])
 
+/**
+ * Logic of the toggle button
+ */
 const { isActive, toggleSwitch } = useToggleButton(props, emit)
 </script>
 
 <template>
   <ItemTip :text="props.tip" :position="props.position">
     <div class="toggle-switch" :style="{ transform: `scale(${props.scale})` }">
-      <div
-        class="toggle-switch-wrapper"
-        :class="{ 'toggle-disabled': props.disabled }"
-        @click="toggleSwitch"
-      >
+      <div class="toggle-switch-wrapper" :class="{ 'toggle-disabled': props.disabled }" @click="toggleSwitch">
         <div class="toggle-switch-slider" :class="{ active: isActive }"></div>
       </div>
     </div>

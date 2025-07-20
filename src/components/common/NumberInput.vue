@@ -1,8 +1,26 @@
 <script setup>
-import { ref, watch, defineExpose } from 'vue'
 import ItemTip from './ItemTip.vue'
 import BaseIcon from '../icons/BaseIcon.vue'
+import { useNumberInput } from '@/composables/common/useNumberInput'
 
+/**
+ * @typedef {Object} NumberInputProps
+ * @property {number} modelValue - Bound numeric value (v-model)
+ * @property {number} [min=0] - Minimum allowed value
+ * @property {number} [max=Infinity] - Maximum allowed value
+ * @property {number} [step=1] - Step for numeric input
+ * @property {string} [tip=''] - Tooltip text
+ * @property {string} [position='bottom'] - Tooltip position
+ * @property {boolean} [disabled=false] - Whether the input is disabled
+ * @property {string} [icon=''] - Optional icon on the left
+ * @property {number} [iconTop=50] - Vertical offset (%) for icon
+ * @property {string} [color='var(--text-c)'] - Icon color
+ * @property {string|number} [size='16'] - Icon size
+ * @property {Function|null} [onReset=null] - Optional reset handler on icon double-click
+ * @property {string} [unit=''] - Optional unit shown on the right
+ */
+
+/** @type {NumberInputProps} */
 const props = defineProps({
   modelValue: {
     type: Number,
@@ -58,46 +76,29 @@ const props = defineProps({
   },
 })
 
+/**
+ * @event update:modelValue - Emitted when the value is updated (v-model)
+ * @event update - Emitted when the value is updated
+ */
 const emit = defineEmits(['update:modelValue', 'update'])
 
-const inputValue = ref(props.modelValue)
+/**
+ * Logic of the number input
+ */
+const {
+  inputValue,
+  onBlurOrEnter,
+  onIconDoubleClick,
+  setValue,
+  showIcon,
+  showUnit,
+} = useNumberInput(props, emit)
 
-watch(
-  () => props.modelValue,
-  (newVal) => {
-    inputValue.value = newVal
-  },
-)
-
-const onBlurOrEnter = () => {
-  let value = inputValue.value
-
-  if (value < props.min) {
-    value = props.min
-  } else if (value > props.max) {
-    value = props.max
-  }
-
-  inputValue.value = value
-  emit('update:modelValue', value)
-  emit('update', value)
-}
-
-const onIconDoubleClick = () => {
-  if (props.disabled) return
-  if (typeof props.onReset === 'function') {
-    props.onReset()
-  }
-}
-
-defineExpose({
-  setValue: (val) => {
-    inputValue.value = val
-  },
-})
-
-const showIcon = props.icon !== ''
-const showUnit = props.unit !== ''
+/**
+ * Expose methods for external use
+ * @type {{ setValue: (val: number) => void }}
+ */
+defineExpose({ setValue })
 </script>
 
 <template>
@@ -113,7 +114,7 @@ const showUnit = props.unit !== ''
         :style="{ top: props.iconTop + '%' }" />
       <span v-if="showUnit" class="input-unit" :class="{ disabled: props.disabled }">{{
         props.unit
-        }}</span>
+      }}</span>
     </div>
   </ItemTip>
 </template>

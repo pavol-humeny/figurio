@@ -10,6 +10,12 @@ import { editorConfig } from '@/config/editorConfig'
 
 const { t } = useI18n()
 
+/**
+ * @typedef {Object} NewPresetOperationProps
+ * @property {Object} operation - Operation object being configured
+ */
+
+/** @type {NewPresetOperationProps} */
 const props = defineProps({
   operation: {
     type: Object,
@@ -17,8 +23,14 @@ const props = defineProps({
   },
 })
 
+/**
+ * @event update:operation - Emitted when the operation parameters change
+ */
 const emit = defineEmits(['update:operation'])
 
+/**
+ * Logic of the new preset operation form
+ */
 const {
   rotationOptions,
   flipOptions,
