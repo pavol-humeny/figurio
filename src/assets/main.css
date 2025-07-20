@@ -232,6 +232,7 @@ input[type='number'] {
   justify-content: space-between;
 }
 
+/* Disabled state styles */
 .disabled {
   opacity: 0.5;
   pointer-events: none;

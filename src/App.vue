@@ -12,12 +12,24 @@ import { useImageStore } from './stores/imageStore'
 
 const imageStore = useImageStore()
 
+/**
+ * Prevents default behavior of ctrl + wheel scrolling.
+ * Useful to block unintended browser zooming.
+ *
+ * @param {WheelEvent} event
+ */
 const check = (event) => {
   if (event.ctrlKey) {
     event.preventDefault()
   }
 }
 
+/**
+ * Warns user before closing the tab if a file is loaded.
+ * Prevents accidental data loss.
+ *
+ * @param {BeforeUnloadEvent} event
+ */
 const handleBeforeUnload = (event) => {
   if (imageStore.file !== null) {
     event.preventDefault()
@@ -25,10 +37,16 @@ const handleBeforeUnload = (event) => {
   }
 }
 
+/**
+ * Register unload warning on mount
+ */
 onMounted(() => {
   window.addEventListener('beforeunload', handleBeforeUnload)
 })
 
+/**
+ * Clean up the event listener when component is unmounted
+ */
 onBeforeUnmount(() => {
   window.removeEventListener('beforeunload', handleBeforeUnload)
 })
