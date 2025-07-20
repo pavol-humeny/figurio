@@ -28,6 +28,7 @@ import { usePrivacyAndDataModal } from '@/composables/modals/usePrivacyAndDataMo
 import { useFileNameDisplay } from '@/composables/topPanel/useFileNameDisplay';
 import FileTabs from '@/components/editor/FileTabs.vue';
 import { useWorkspaceStore } from '@/stores/workspaceStore';
+import { useFileTabs } from '@/composables/editor/useFileTabs';
 
 const { undo, redo } = useUndoRedo(useHistoryStore(), useImageStore())
 const { zoomIn, zoomOut, resetZoom } = useZoomControl(useViewportStore())
@@ -39,8 +40,9 @@ const { openHelpModal } = useHelpModal()
 const { openSettingsPanel } = useSettingsPanel(useUiStore())
 const { openPrivacyAndDataModal } = usePrivacyAndDataModal(t)
 const { startEditing } = useFileNameDisplay(useImageStore(), t)
+const { switchToNextTab, switchToPreviousTab, } = useFileTabs(useUiStore(), t)
 
-useKeyboardShortcuts({ undo, redo, zoomIn, zoomOut, resetZoom, closeFile, uploadFile, toggleTool, openExportToolSettings, openHelpModal, openSettingsPanel, openPrivacyAndDataModal, startEditing }, useUiStore());
+useKeyboardShortcuts({ undo, redo, zoomIn, zoomOut, resetZoom, closeFile, uploadFile, toggleTool, openExportToolSettings, openHelpModal, openSettingsPanel, openPrivacyAndDataModal, startEditing, switchToNextTab, switchToPreviousTab }, useUiStore());
 // === ===
 
 const imageStore = useImageStore()

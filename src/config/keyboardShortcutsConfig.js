@@ -116,4 +116,17 @@ export const keyboardShortcuts = [
     args: ['preset', 'createPreset'],
     description: 'Toggle preset - create preset tool',
   },
+
+  // Multi-file management shortcuts
+  // switch to next/previous file
+  {
+    keys: ['alt', 'pagedown'],
+    action: 'switchToNextTab',
+    description: 'Switch to next tab',
+  },
+  {
+    keys: ['alt', 'pageup'],
+    action: 'switchToPreviousTab',
+    description: 'Switch to previous tab',
+  },
 ]

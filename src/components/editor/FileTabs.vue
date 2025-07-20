@@ -1,5 +1,4 @@
 <script setup>
-import { ref } from 'vue'
 import { useFileTabs } from '@/composables/editor/useFileTabs'
 import { useUiStore } from '@/stores/uiStore'
 import { useI18n } from 'vue-i18n'
@@ -10,7 +9,7 @@ const { t } = useI18n()
  * Reference to the scrollable tabs container
  * @type {import('vue').Ref<HTMLElement | null>}
  */
-const wrapperRef = ref(null)
+// const wrapperRef = ref(null)
 
 /**
  * Logic of the file tabs (drag & drop, active tab, closing)
@@ -22,7 +21,8 @@ const {
   closeTab,
   onTabDragStart,
   onTabDrop,
-} = useFileTabs(wrapperRef, useUiStore(), t)
+  wrapperRef,
+} = useFileTabs(useUiStore(), t)
 
 </script>
 

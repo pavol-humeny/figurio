@@ -117,5 +117,29 @@ export const useWorkspaceStore = defineStore('workspaceStore', {
       if (this.activeTabIndex === -1) return
       this.tabs[this.activeTabIndex].name = name
     },
+
+    /**
+     * Switch to the next tab (cyclic). Saves the current tab first.
+     */
+    switchToNextTab() {
+      if (this.tabs.length <= 1 || this.activeTabIndex === -1) return
+
+      const nextIndex = (this.activeTabIndex + 1) % this.tabs.length
+
+      this.updateCurrentTabState()
+      this.switchToTab(nextIndex)
+    },
+
+    /**
+     * Switch to the previous tab (cyclic). Saves the current tab first.
+     */
+    switchToPreviousTab() {
+      if (this.tabs.length <= 1 || this.activeTabIndex === -1) return
+
+      const prevIndex = (this.activeTabIndex - 1 + this.tabs.length) % this.tabs.length
+
+      this.updateCurrentTabState()
+      this.switchToTab(prevIndex)
+    },
   },
 })

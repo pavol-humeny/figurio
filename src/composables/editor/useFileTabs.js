@@ -3,8 +3,9 @@ import { useWorkspaceStore } from '@/stores/workspaceStore'
 import { storeToRefs } from 'pinia'
 import { useConfirmModal } from '../modals/useConfirmModal'
 
-export function useFileTabs(wrapperRef, uiStore, t) {
+export function useFileTabs(uiStore, t) {
   const { showConfirmModal } = useConfirmModal()
+  const wrapperRef = ref(null)
 
   const dragIndex = ref(null)
   const workspaceStore = useWorkspaceStore()
@@ -13,14 +14,12 @@ export function useFileTabs(wrapperRef, uiStore, t) {
   const setActiveTab = async (index) => {
     if (index !== activeTabIndex.value) {
       uiStore.isLoading = true
-
       await new Promise((resolve) => setTimeout(resolve, 10))
 
       workspaceStore.updateCurrentTabState()
       workspaceStore.switchToTab(index)
 
-      await new Promise((resolve) => setTimeout(resolve, 50))
-
+      await new Promise((resolve) => setTimeout(resolve, 10))
       uiStore.isLoading = false
     }
   }
@@ -34,14 +33,12 @@ export function useFileTabs(wrapperRef, uiStore, t) {
     )
     if (confirmed) {
       uiStore.isLoading = true
-
       await new Promise((resolve) => setTimeout(resolve, 10))
 
       workspaceStore.updateCurrentTabState()
       workspaceStore.closeTab(index)
 
       await new Promise((resolve) => setTimeout(resolve, 10))
-
       uiStore.isLoading = false
     }
   }
@@ -81,12 +78,34 @@ export function useFileTabs(wrapperRef, uiStore, t) {
     )
   })
 
+  const switchToNextTab = async () => {
+    uiStore.isLoading = true
+    await new Promise((resolve) => setTimeout(resolve, 10))
+
+    workspaceStore.switchToNextTab()
+
+    await new Promise((resolve) => setTimeout(resolve, 10))
+    uiStore.isLoading = false
+  }
+  const switchToPreviousTab = async () => {
+    uiStore.isLoading = true
+    await new Promise((resolve) => setTimeout(resolve, 10))
+
+    workspaceStore.switchToPreviousTab()
+
+    await new Promise((resolve) => setTimeout(resolve, 10))
+    uiStore.isLoading = false
+  }
+
   return {
+    wrapperRef,
     tabs,
     activeTabIndex,
     setActiveTab,
     closeTab,
     onTabDragStart,
     onTabDrop,
+    switchToNextTab,
+    switchToPreviousTab,
   }
 }
