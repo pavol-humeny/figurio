@@ -3,6 +3,9 @@ import BaseIcon from '@/components/icons/BaseIcon.vue'
 import ItemHint from '@/components/common/ItemTip.vue'
 import { useHelpModal } from '@/composables/modals/useHelpModal'
 
+/**
+ * Logic for the help button.
+ */
 const {
   openHelpModal
 } = useHelpModal()

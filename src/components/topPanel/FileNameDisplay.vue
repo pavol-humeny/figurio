@@ -8,6 +8,9 @@ import ItemTip from '@/components/common/ItemTip.vue';
 
 const { t } = useI18n()
 
+/**
+ * Logic for the file name display.
+ */
 const {
   editEnabled,
   disabled,
@@ -20,36 +23,19 @@ const {
 </script>
 
 <template>
-  <ItemTip
-    :text="disabled ? $t('topPanel.fileNameDisplay.tipDisabled') : $t('topPanel.fileNameDisplay.tip')"
-    position="bottom-right"
-  >
-    <div
-      class="file-name-display-wrapper"
-      :class="{'disabled': disabled}"
-      >
-      <input
-        ref="inputRef"
-        name="fileName"
-        v-model="fileNameInput"
-        @blur="saveNewFileName"
-        @keydown.enter="saveNewFileName"
-        @click="startEditing"
-        class="file-name-display-input"
-        type="text"
-      />
-      <BaseIcon
-        :name="editEnabled ? 'IconTick' : 'IconEditPencil'"
-        :size="23"
-        :color="'var(--primary-c)'"
-        @click="editEnabled ? saveNewFileName() : startEditing()"
-      />
+  <ItemTip :text="disabled ? $t('topPanel.fileNameDisplay.tipDisabled') : $t('topPanel.fileNameDisplay.tip')"
+    position="bottom-right">
+    <div class="file-name-display-wrapper" :class="{ 'disabled': disabled }">
+      <input ref="inputRef" name="fileName" v-model="fileNameInput" @blur="saveNewFileName"
+        @keydown.enter="saveNewFileName" @click="startEditing" class="file-name-display-input" type="text" />
+      <BaseIcon :name="editEnabled ? 'IconTick' : 'IconEditPencil'" :size="23" :color="'var(--primary-c)'"
+        @click="editEnabled ? saveNewFileName() : startEditing()" />
     </div>
   </ItemTip>
 </template>
 
 <style scoped>
-.file-name-display-wrapper{
+.file-name-display-wrapper {
   display: flex;
   align-items: center;
   cursor: pointer;
@@ -76,5 +62,4 @@ const {
   font-size: 15px;
   cursor: text;
 }
-
 </style>

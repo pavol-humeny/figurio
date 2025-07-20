@@ -7,6 +7,9 @@ import ItemTip from '@/components/common/ItemTip.vue'
 
 const imageStore = useImageStore()
 
+/**
+ * Logic for the zoom control.
+ */
 const {
   zoomLevel,
   zoomIn,
@@ -21,36 +24,27 @@ const {
 
 <template>
   <div class="zoom-control" :class="{ disabled: imageStore.file === null }">
+    <!-- Zoom Out -->
     <ItemTip :text="$t('topPanel.zoomControl.tip.zoomOut')" position="bottom">
-      <div
-        class="zoom-out-button button button-control button-circle"
-        @click="zoomOut"
-        :class="{ 'disabled': !canZoomOut }"
-      >
+      <div class="zoom-out-button button button-control button-circle" @click="zoomOut"
+        :class="{ 'disabled': !canZoomOut }">
         <BaseIcon name="IconMinus" size="24" />
       </div>
     </ItemTip>
 
+    <!-- Reset zoom -->
     <ItemTip :text="$t('topPanel.zoomControl.tip.setZoom')" position="bottom">
       <div class="zoom-level-wrapper">
-        <p
-        class="zoom-level"
-        :textContent="zoomLevel"
-        @wheel.passive="wheelZoom"
-        @dblclick="resetZoom"
-        @mousedown="startDragging"
-        ref="editableZoom"
-        >
+        <p class="zoom-level" :textContent="zoomLevel" @wheel.passive="wheelZoom" @dblclick="resetZoom"
+          @mousedown="startDragging" ref="editableZoom">
         </p>
       </div>
     </ItemTip>
 
+    <!-- Zoom In -->
     <ItemTip :text="$t('topPanel.zoomControl.tip.zoomIn')" position="bottom">
-      <div
-        class="zoom-in-button button button-control button-circle"
-        @click="zoomIn"
-        :class="{ 'disabled': !canZoomIn }"
-      >
+      <div class="zoom-in-button button button-control button-circle" @click="zoomIn"
+        :class="{ 'disabled': !canZoomIn }">
         <BaseIcon name="IconPlus" size="24" />
       </div>
     </ItemTip>
@@ -80,6 +74,7 @@ const {
 .zoom-in-button {
   border-radius: 0 20px 20px 0;
 }
+
 /* Border radius only on right side */
 .zoom-out-button {
   border-radius: 20px 0 0 20px;
@@ -90,7 +85,7 @@ const {
   height: 100%;
 }
 
-p.zoom-level{
+p.zoom-level {
   padding-right: 20px;
   width: 60px;
   height: 40px;

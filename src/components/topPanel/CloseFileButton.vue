@@ -8,8 +8,12 @@ import { useWorkspaceStore } from '@/stores/workspaceStore'
 
 const { t } = useI18n()
 
+/**
+ * Logic for the close file button.
+ */
 const { disabled, closeFile } = useCloseFileButton(useImageStore(), useWorkspaceStore(), t)
 </script>
+
 <template>
   <ItemTip :text="!disabled ? $t('topPanel.closeFileButton.tip') : ''" position="bottom">
     <button class="button button-circle button-control" @click="closeFile" :class="{ disabled: disabled }">

@@ -9,6 +9,9 @@ import { useRouter } from 'vue-router'
 const { t } = useI18n()
 const router = useRouter()
 
+/**
+ * Logic for the upload file button.
+ */
 const { uploadFile } = useUploadFileButton(useImageStore(), t, router)
 </script>
 

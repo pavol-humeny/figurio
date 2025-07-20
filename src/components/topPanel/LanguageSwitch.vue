@@ -4,10 +4,21 @@ import { useLanguageSwitch } from '@/composables/topPanel/useLanguageSwitch'
 
 import ItemTip from '@/components/common/ItemTip.vue'
 
+/**
+ * Logic for the language switch component.
+ */
 const { locale, switchLanguage } = useLanguageSwitch()
 
+/**
+ * Currently hovered language code
+ */
 const hoveredLang = ref(null)
 
+/**
+ * Returns CSS class for a language button
+ * @param {string} lang - Language code to evaluate
+ * @returns {string} - CSS class for button styling
+ */
 const getButtonClass = (lang) => {
   if (locale.value === lang && hoveredLang.value !== lang && hoveredLang.value !== null) {
     return 'button-active hovered-away'
@@ -21,34 +32,19 @@ const getButtonClass = (lang) => {
 </script>
 
 <template>
-  <ItemTip
-    :text="$t('topPanel.settingsPanel.language.tip')"
-    position="bottom-left"
-  >
+  <ItemTip :text="$t('topPanel.settingsPanel.language.tip')" position="bottom-left">
     <div class="language-switch">
       <div class="slider" :class="hoveredLang || locale"></div>
-      <button
-        :class="getButtonClass('sk')"
-        @click="switchLanguage('sk')"
-        @mouseenter="hoveredLang = 'sk'"
-        @mouseleave="hoveredLang = null"
-      >
+      <button :class="getButtonClass('sk')" @click="switchLanguage('sk')" @mouseenter="hoveredLang = 'sk'"
+        @mouseleave="hoveredLang = null">
         SK
       </button>
-      <button
-        :class="getButtonClass('en')"
-        @click="switchLanguage('en')"
-        @mouseenter="hoveredLang = 'en'"
-        @mouseleave="hoveredLang = null"
-      >
+      <button :class="getButtonClass('en')" @click="switchLanguage('en')" @mouseenter="hoveredLang = 'en'"
+        @mouseleave="hoveredLang = null">
         EN
       </button>
-      <button
-        :class="getButtonClass('cz')"
-        @click="switchLanguage('cz')"
-        @mouseenter="hoveredLang = 'cz'"
-        @mouseleave="hoveredLang = null"
-      >
+      <button :class="getButtonClass('cz')" @click="switchLanguage('cz')" @mouseenter="hoveredLang = 'cz'"
+        @mouseleave="hoveredLang = null">
         CZ
       </button>
     </div>
@@ -108,9 +104,11 @@ const getButtonClass = (lang) => {
 .slider.sk {
   left: 5px;
 }
+
 .slider.en {
   left: calc(100% / 3);
 }
+
 .slider.cz {
   left: calc(2 * (100% / 3) - 3px);
 }

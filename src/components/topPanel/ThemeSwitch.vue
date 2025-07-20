@@ -5,6 +5,9 @@ import { useUiStore } from '@/stores/uiStore'
 import BaseIcon from '@/components/icons/BaseIcon.vue'
 import ItemTip from '@/components/common/ItemTip.vue'
 
+/**
+ * Logic for the theme switch button.
+ */
 const {
   theme,
   toggleTheme
@@ -12,19 +15,9 @@ const {
 </script>
 
 <template>
-  <ItemTip
-    :text="$t('topPanel.settingsPanel.theme.button.tip')"
-    position="bottom-left"
-  >
-    <div
-      class="theme-switch button button-circle button-control"
-      @click="toggleTheme"
-    >
-      <BaseIcon
-        :key="theme"
-        :name="theme === 'dark' ? 'IconSun' : 'IconMoon'"
-        size="24"
-      />
+  <ItemTip :text="$t('topPanel.settingsPanel.theme.button.tip')" position="bottom-left">
+    <div class="theme-switch button button-circle button-control" @click="toggleTheme">
+      <BaseIcon :key="theme" :name="theme === 'dark' ? 'IconSun' : 'IconMoon'" size="24" />
     </div>
   </ItemTip>
 </template>
@@ -36,5 +29,4 @@ const {
   justify-content: center;
   gap: 10px;
 }
-
 </style>

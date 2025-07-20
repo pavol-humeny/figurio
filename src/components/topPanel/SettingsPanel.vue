@@ -8,6 +8,9 @@ import { useSettingsPanel } from '@/composables/topPanel/useSettingsPanel';
 import { useUiStore } from '@/stores/uiStore';
 import { useClickOutside } from '@/composables/common/useClickOutside';
 
+/**
+ * Logic for the settings panel.
+ */
 const {
   isVisible,
   closeSettingsPanel,
@@ -19,6 +22,9 @@ const {
   enableRulers
 } = useSettingsPanel(useUiStore());
 
+/**
+ * Logic for handling clicks outside the settings panel.
+ */
 const { wrapperRef } = useClickOutside({
   condition: () => !privacyModalVisible.value,
   onOutsideClick: () => closeSettingsPanel()
@@ -61,6 +67,7 @@ const { wrapperRef } = useClickOutside({
         position="bottom-left" />
     </div>
 
+    <!-- Rulers -->
     <div class="section">
       <label>
         {{ $t('topPanel.settingsPanel.enableRulers.label') }}
@@ -69,6 +76,7 @@ const { wrapperRef } = useClickOutside({
         position="bottom-left" />
     </div>
 
+    <!-- Reset Sidebar Width -->
     <div class="section">
       <label>
         {{ $t('topPanel.settingsPanel.resetSidebarWidth.label') }}
@@ -79,6 +87,7 @@ const { wrapperRef } = useClickOutside({
         :disabled="resetPanelWidthDisabled" />
     </div>
 
+    <!-- Privacy and Data -->
     <div class="section">
       <label>
         <BaseIcon name="IconPrivacy" :size="20" :color="'var(--text-c)'" />
@@ -90,6 +99,7 @@ const { wrapperRef } = useClickOutside({
         @click="openPrivacyModal" />
     </div>
 
+    <!-- Close Settings -->
     <div class="close-button-wrapper">
       <DefaultButton text="Close" @click="closeSettingsPanel" />
     </div>

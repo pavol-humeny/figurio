@@ -10,6 +10,9 @@ import CloseFileButton from './CloseFileButton.vue';
 import { useRoute } from 'vue-router'
 import { computed } from 'vue'
 
+/**
+ * Checks if the current view is 'home' to conditionally render parts of the top panel
+ */
 const route = useRoute()
 const isHomeView = computed(() => route.name === 'home')
 </script>
@@ -56,13 +59,14 @@ const isHomeView = computed(() => route.name === 'home')
   justify-content: flex-start;
   gap: 10px;
 }
+
 .top-panel__center {
   justify-content: center;
   gap: 10px;
 }
+
 .top-panel__right {
   justify-content: flex-end;
   gap: 10px;
 }
-
 </style>
