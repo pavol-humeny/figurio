@@ -1,6 +1,7 @@
 import { computed, ref, nextTick, onMounted, watch, onBeforeUnmount } from 'vue'
 import { viewportConfig } from '@/config/viewportConfig'
 import { useMath } from '@/composables/common/useMath'
+import { useThrottleFn } from '@vueuse/core'
 
 export function useViewportWrapper(viewportStore, imageStore, editorStore, contentRef) {
   const { clamp } = useMath()
@@ -381,7 +382,10 @@ export function useViewportWrapper(viewportStore, imageStore, editorStore, conte
     return 1020
   })
 
-  const horizontalRulerMarks = computed(() => {
+  const horizontalRulerMarks = ref([])
+  const verticalRulerMarks = ref([])
+
+  const updateHorizontalRulerMarks = () => {
     const spacing = dynamicStep.value * zoomLevel.value
     const width = wrapperSize.value.width || 0
     const start = Math.floor(-panX.value / spacing) - 1
@@ -391,20 +395,17 @@ export function useViewportWrapper(viewportStore, imageStore, editorStore, conte
 
     for (let i = start; i < end; i++) {
       const base = i * spacing + panX.value
-      // Hlavná značka
       marks.push({ left: base, label: i * dynamicStep.value, isSub: false })
-
-      // Medziznačky (4 medzi každé dve hlavné)
       for (let j = 1; j < 5; j++) {
         const subLeft = base + (j * spacing) / 5
         marks.push({ left: subLeft, label: '', isSub: true })
       }
     }
 
-    return marks
-  })
+    horizontalRulerMarks.value = marks
+  }
 
-  const verticalRulerMarks = computed(() => {
+  const updateVerticalRulerMarks = () => {
     const spacing = dynamicStep.value * zoomLevel.value
     const height = wrapperSize.value.height || 0
     const start = Math.floor(-panY.value / spacing) - 1
@@ -415,15 +416,21 @@ export function useViewportWrapper(viewportStore, imageStore, editorStore, conte
     for (let i = start; i < end; i++) {
       const base = i * spacing + panY.value
       marks.push({ top: base, label: i * dynamicStep.value, isSub: false })
-
       for (let j = 1; j < 5; j++) {
         const subTop = base + (j * spacing) / 5
         marks.push({ top: subTop, label: '', isSub: true })
       }
     }
 
-    return marks
-  })
+    verticalRulerMarks.value = marks
+  }
+
+  const throttledUpdateRulers = useThrottleFn(() => {
+    updateHorizontalRulerMarks()
+    updateVerticalRulerMarks()
+  }, 32) // cca 30 FPS
+
+  watch([panX, panY, zoomLevel], throttledUpdateRulers, { immediate: true })
 
   // Ruler cursor mark
   const mouseX = ref(null)
