@@ -10,6 +10,9 @@ import { useImageStore } from '@/stores/imageStore'
 
 const { t } = useI18n()
 
+/**
+ * Logic of the tools panel (scrolling, active tool, tool selection)
+ */
 const {
   activeTool,
   toolsRef,
@@ -22,6 +25,9 @@ const {
   isToolDisabled,
 } = useToolsPanel(useEditorStore(), useImageStore())
 
+/**
+ * Computed tool list with localized labels, tips and shortcuts
+ */
 const tools = computed(() =>
   toolsDefinitions.map((tool) => ({
     ...tool,

@@ -7,6 +7,9 @@ import { useEditorStore } from '@/stores/editorStore'
 
 const { t } = useI18n()
 
+/**
+ * Logic of the smart crop tool
+ */
 const { cropBox } = useSmartCropTool(useImageStore(), useHistoryStore(), useEditorStore(), t)
 
 </script>

@@ -10,9 +10,11 @@ import { computed } from 'vue'
 
 const editorStore = useEditorStore()
 const imageStore = useImageStore()
-
 const { t } = useI18n()
 
+/**
+ * Logic of the crop tool
+ */
 const { startPan, startResize, cropBox } = useCropTool(
   useImageStore(),
   useViewportStore(),
@@ -21,17 +23,25 @@ const { startPan, startResize, cropBox } = useCropTool(
   t,
 )
 
+/**
+ * Select crop sub-tool on mount
+ */
 onMounted(() => {
   editorStore.selectSubTool('cropFree')
 })
 
-// Resizer size based on image dimensions
+/**
+ * Computed size of resizer handles based on image width
+ */
 const resizerSize = computed(() => {
   const base = imageStore.fileDimensions?.width || 500
   const size = base / 35
   return Math.max(6, size)
 })
 
+/**
+ * Style object for resizer handles
+ */
 const resizerStyle = computed(() => {
   const size = resizerSize.value
   const offset = size / 2

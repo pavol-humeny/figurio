@@ -8,6 +8,16 @@ import { useImageStore } from '@/stores/imageStore'
 const editorStore = useEditorStore()
 const imageStore = useImageStore()
 
+/**
+ * @typedef {Object} OneToolButtonProps
+ * @property {Object} tool - Tool configuration object
+ * @property {string} [tip=''] - Tooltip text
+ * @property {boolean} [active=false] - Whether the tool is selected
+ * @property {boolean} [disabled=false] - Whether the tool is disabled
+ * @property {Object|null} [advanceTip=null] - Advanced tooltip config (title, shortcut, etc.)
+ */
+
+/** @type {OneToolButtonProps} */
 const props = defineProps({
   tool: {
     type: Object,
@@ -31,8 +41,14 @@ const props = defineProps({
   },
 })
 
+/**
+ * @event click - Emitted when the tool or subtool is clicked
+ */
 const emit = defineEmits(['click'])
 
+/**
+ * Logic of the single tool and subtools popup
+ */
 const { wrapperRef, subToolPos, onRightClick, onClickTab, onClickTool } = useOneTool(
   useEditorStore(),
   props,
