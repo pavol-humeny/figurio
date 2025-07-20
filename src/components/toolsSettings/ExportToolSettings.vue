@@ -5,7 +5,6 @@ import BaseIcon from '@/components/icons/BaseIcon.vue'
 import { useShaking } from '@/composables/common/useShaking'
 import { useImageStore } from '@/stores/imageStore'
 import { useI18n } from 'vue-i18n'
-// import LinkValuesIcon from '@/components/common/LinkValuesIcon.vue'
 import DefaultSlider from '@/components/common/DefaultSlider.vue'
 import { useEditorStore } from '@/stores/editorStore'
 import { useHistoryStore } from '@/stores/historyStore'
@@ -25,7 +24,8 @@ const {
   closeExportToolSettings,
   exportFile,
   previewUrl,
-  copyImageToClipboard
+  copyImageToClipboard,
+  expectedPreviewSize
 } = useExportToolSettings(useImageStore(), useEditorStore(), useHistoryStore(), t)
 </script>
 
@@ -55,7 +55,7 @@ const {
           <div class="export-settings-item" v-if="fileFormat === 'jpg' || fileFormat === 'webp'">
             <label for="file-quality">{{
               $t('tools.export.settings.general.fileQuality.label')
-            }}</label>
+              }}</label>
             <p>{{ fileDimensions.quality }} %</p>
             <DefaultSlider v-model="fileDimensions.quality" :min="0" :max="100" :step="1"
               @update:modelValue="(value) => updateQuality(value)" :backgroundColor="'var(--background-c)'" />
@@ -73,25 +73,34 @@ const {
           <div class="export-settings-item">
             <label>{{
               $t('tools.export.settings.general.fileDimensions.label')
-              }}</label>
-            <div class="file-dimensions">
+            }}</label>
+            <div class="export-settings-item-value">
               <div class="width disabled">
-                <label>{{
-                  $t('tools.export.settings.general.fileDimensions.width')
-                  }}</label>
-                <label>
+                <p>
+                  {{ $t('tools.export.settings.general.fileDimensions.width') }}
+                </p>
+                <p>
                   : {{ fileDimensions.width }}px
-                </label>
+                </p>
               </div>
 
               <div class="height disabled">
-                <label>{{
-                  $t('tools.export.settings.general.fileDimensions.height')
-                  }}</label>
-                <label>
+                <p>
+                  {{ $t('tools.export.settings.general.fileDimensions.height') }}
+                </p>
+                <p>
                   : {{ fileDimensions.height }}px
-                </label>
+                </p>
               </div>
+            </div>
+          </div>
+
+          <!-- Expected file size -->
+          <div v-if="fileFormat === 'png' || fileFormat === 'jpg' || fileFormat === 'webp'"
+            class="export-settings-item">
+            <label>{{ $t('tools.export.settings.general.expectedFileSize.label') }}</label>
+            <div class="export-settings-item-value ">
+              <p class="disabled">{{ expectedPreviewSize }} kB</p>
             </div>
           </div>
 
@@ -216,7 +225,7 @@ const {
   pointer-events: none;
 }
 
-.file-dimensions {
+.export-settings-item-value {
   background-color: var(--background-c);
   border-radius: 10px;
   padding: 7px 10px;
@@ -226,15 +235,14 @@ const {
   flex-direction: row;
 }
 
-.file-dimensions .width,
-.file-dimensions .height {
+.export-settings-item-value .width,
+.export-settings-item-value .height {
   display: flex;
   flex-direction: row;
   gap: 2px;
 }
 
-.file-dimensions .width label,
-.file-dimensions .height label {
+.export-settings-item p {
   font-size: var(--text-font-size);
 }
 

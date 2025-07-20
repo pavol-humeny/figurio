@@ -522,6 +522,9 @@
             "reset": "Reset original dimensions"
           }
         },
+        "expectedFileSize":{
+          "label": "Expected file size"
+        },
         "preview": {
           "label": "Preview",
           "previewUnavailable": "Preview unavailable"

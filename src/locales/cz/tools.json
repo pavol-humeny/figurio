@@ -521,6 +521,9 @@
             "reset": "Resetovat původní rozměry"
           }
         },
+        "expectedFileSize":{
+          "label": "Očekávaná velikost souboru"
+        },
         "preview": {
           "label": "Náhled",
           "previewUnavailable": "Náhled není k dispozici"

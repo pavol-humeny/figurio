@@ -1,12 +1,20 @@
 import { ref, computed, nextTick, watch, onMounted, onBeforeUnmount } from 'vue'
+import { useMath } from '../common/useMath'
 
 const isVisible = ref(false)
 
 export function useExportToolSettings(imageStore, editorStore, historyStore, t) {
+  const { round } = useMath()
+
   const inputFileNameRef = ref(null)
   // const isDimensionsLinked = ref(true)
 
   const previewUrl = computed(() => imageStore?.previewUrl || '')
+
+  const expectedPreviewSize = computed(() => {
+    if (!imageStore?.previewUrl) return 0
+    return estimateDataURLSize(imageStore.previewUrl)
+  })
 
   const fileName = ref('')
 
@@ -113,6 +121,16 @@ export function useExportToolSettings(imageStore, editorStore, historyStore, t) 
     window.removeEventListener('keydown', handleKeydown)
   })
 
+  const estimateDataURLSize = (dataUrl) => {
+    const base64String = dataUrl.split(',')[1] // Remove prefix "data:image/png;base64,"
+    const base64Length = base64String.length
+
+    // Base64 increases size by 4/3, so reverse calculation:
+    const byteLength = Math.floor((base64Length * 3) / 4)
+
+    return round(byteLength / 1024, 1) // in kB
+  }
+
   return {
     isVisible,
     inputFileNameRef,
@@ -126,5 +144,6 @@ export function useExportToolSettings(imageStore, editorStore, historyStore, t) 
     exportFile,
     previewUrl,
     copyImageToClipboard,
+    expectedPreviewSize,
   }
 }
