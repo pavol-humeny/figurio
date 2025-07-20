@@ -8,14 +8,22 @@ import { computed } from 'vue'
 
 const { locale, messages } = useI18n()
 
-
+/**
+ * Computed help sections from i18n messages
+ */
 const sections = computed(() => messages.value[locale.value]?.help?.sections || [])
 
+/**
+ * Logic of the shake animation for modal
+ */
 const {
   isShaking,
   triggerShake
 } = useShaking();
 
+/**
+ * Logic of the help modal state and scrolling
+ */
 const {
   atTop,
   atBottom,
@@ -26,7 +34,6 @@ const {
   messagesRef,
   closeHelpModal
 } = useHelpModal();
-
 </script>
 
 <template>
@@ -44,11 +51,7 @@ const {
           </div>
 
           <div class="messages-wrapper" ref="messagesRef" @scroll="checkScroll">
-            <div
-              v-for="(section, index) in sections"
-              :key="index"
-              class="message-wrapper"
-              >
+            <div v-for="(section, index) in sections" :key="index" class="message-wrapper">
               <p v-if="section.title">{{ section.title }}</p>
               <p>{{ section.text }}</p>
             </div>
@@ -60,10 +63,7 @@ const {
         </div>
 
         <div class="button-wrapper">
-          <DefaultButton
-            :text="$t('help.button.text')"
-            @click="closeHelpModal"
-          />
+          <DefaultButton :text="$t('help.button.text')" @click="closeHelpModal" />
         </div>
       </div>
     </div>
@@ -112,7 +112,7 @@ const {
   font-weight: var(--title-font-weight);
 }
 
-.messages-panel{
+.messages-panel {
   position: relative;
   flex: 1;
   width: 100%;
@@ -131,13 +131,11 @@ const {
   gap: 20px;
   padding: 20px 10px;
   scrollbar-width: none;
-  mask-image: linear-gradient(
-    to bottom,
-    transparent,
-    black 30px,
-    black calc(100% - 30px),
-    transparent 100%
-  );
+  mask-image: linear-gradient(to bottom,
+      transparent,
+      black 30px,
+      black calc(100% - 30px),
+      transparent 100%);
 }
 
 .arrow-up,
@@ -150,9 +148,11 @@ const {
   align-items: center;
   cursor: pointer;
 }
+
 .arrow-up {
   top: 0;
 }
+
 .arrow-down {
   bottom: 0;
 }
@@ -162,6 +162,7 @@ const {
   font-size: var(--subtitle-font-size);
   color: var(--text-c);
 }
+
 .message-wrapper p:last-child {
   font-size: var(--text-font-size);
   color: var(--text-secondary-c);
@@ -182,5 +183,4 @@ const {
   justify-content: space-between;
   gap: 10px;
 }
-
 </style>

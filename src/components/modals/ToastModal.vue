@@ -1,19 +1,18 @@
 <script setup>
 import { useToastModal } from '@/composables/modals/useToastModal'
+
+/**
+ * Logic of the toast modal system
+ */
 const { toasts, removeToastModal } = useToastModal()
 </script>
 
 <template>
   <Teleport to="body">
     <div class="toast-wrapper">
-      <div
-        v-for="(toast, index) in toasts"
-        :key="toast.id"
-        class="toast"
-        :class="toast.type"
-        :style="{ bottom: `${index * 10 + 40}px` }"
-      >
-        <button class="close-button" @click="removeToastModal(toast.id)">×</button>
+      <div v-for="(toast, index) in toasts" :key="toast.id" class="toast" :class="toast.type"
+        :style="{ bottom: `${index * 10 + 40}px` }">
+        <button class="close-button" @click="removeToastModal(toast.id)">✕</button>
 
         <p class="title">{{ toast.title }}</p>
         <p class="message">{{ toast.message }}</p>
@@ -63,6 +62,7 @@ const { toasts, removeToastModal } = useToastModal()
     opacity: 0;
     transform: translate(-50%, 10px);
   }
+
   to {
     opacity: 1;
     transform: translate(-50%, 0);
@@ -84,21 +84,22 @@ const { toasts, removeToastModal } = useToastModal()
   border-color: var(--error-c);
   color: var(--error-c);
 }
+
 .warning {
   background: var(--warning-background-c);
   border-color: var(--warning-c);
   color: var(--warning-c);
 }
+
 .success {
   background: var(--success-background-c);
   border-color: var(--success-c);
   color: var(--success-c);
 }
+
 .info {
   background: var(--notification-background-c);
   border-color: var(--notification-c);
   color: var(--notification-c);
 }
-
-
 </style>

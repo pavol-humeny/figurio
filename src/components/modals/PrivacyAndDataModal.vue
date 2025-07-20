@@ -9,13 +9,22 @@ import { useShaking } from '@/composables/common/useShaking';
 
 const { locale, messages, t } = useI18n()
 
+/**
+ * Computed privacy sections from i18n messages
+ */
 const sections = computed(() => messages.value[locale.value]?.privacy?.sections || [])
 
+/**
+ * Logic of the shake animation for modal
+ */
 const {
   isShaking,
   triggerShake
 } = useShaking();
 
+/**
+ * Logic of the privacy and data modal state
+ */
 const {
   isVisible,
   clearLocalStorage,
@@ -33,11 +42,7 @@ const {
         </div>
 
         <div class="messages-wrapper">
-          <div
-            v-for="(section, index) in sections"
-            :key="index"
-            class="message-wrapper"
-          >
+          <div v-for="(section, index) in sections" :key="index" class="message-wrapper">
             <p v-if="section.title">{{ section.title }}</p>
             <p>{{ section.text }}</p>
             <p v-if="section.action" class="action-text" @click="clearLocalStorage">{{ section.action.text }}</p>
@@ -46,10 +51,7 @@ const {
         </div>
 
         <div class="button-wrapper">
-          <DefaultButton
-            :text="$t('privacy.button.text')"
-            @click="closePrivacyAndDataModal"
-          />
+          <DefaultButton :text="$t('privacy.button.text')" @click="closePrivacyAndDataModal" />
         </div>
       </div>
     </div>
@@ -106,7 +108,7 @@ const {
   gap: 15px;
 }
 
-.message-wrapper{
+.message-wrapper {
   display: flex;
   flex-direction: column;
   gap: 5px;
@@ -117,6 +119,7 @@ const {
   font-size: var(--subtitle-font-size);
   color: var(--text-c);
 }
+
 .message-wrapper p:last-child {
   font-size: var(--text-font-size);
   color: var(--text-secondary-c);
@@ -138,5 +141,4 @@ const {
   gap: 10px;
   margin-top: 10px;
 }
-
 </style>
