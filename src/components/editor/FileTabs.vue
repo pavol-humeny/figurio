@@ -6,7 +6,15 @@ import { useI18n } from 'vue-i18n'
 
 const { t } = useI18n()
 
+/**
+ * Reference to the scrollable tabs container
+ * @type {import('vue').Ref<HTMLElement | null>}
+ */
 const wrapperRef = ref(null)
+
+/**
+ * Logic of the file tabs (drag & drop, active tab, closing)
+ */
 const {
   tabs,
   activeTabIndex,

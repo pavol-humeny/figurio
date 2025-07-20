@@ -14,12 +14,18 @@ import { useUiStore } from '@/stores/uiStore'
 import LoadingSpinner from '../common/LoadingSpinner.vue'
 
 const { t } = useI18n()
-
 const uiStore = useUiStore()
 const editorStore = useEditorStore()
 
+/**
+ * Reference to the viewport content element
+ * @type {import('vue').Ref<HTMLElement | null>}
+ */
 const contentRef = ref(null)
 
+/**
+ * Logic of the image renderer (canvas, SVG, frame)
+ */
 const { canvasRef, svgRef, frameSvgRef } = useImageRenderer(
   useImageStore(),
   useHistoryStore(),
@@ -29,6 +35,9 @@ const { canvasRef, svgRef, frameSvgRef } = useImageRenderer(
   t,
 )
 
+/**
+ * Logic of the viewport wrapper (zoom, pan, rulers, sliders)
+ */
 const {
   zoomLevel,
   setZoomAndScroll,
@@ -55,9 +64,14 @@ const {
   cursorPosYSameAsImageHeight,
 } = useViewportWrapper(useViewportStore(), useImageStore(), useEditorStore(), contentRef)
 
+/**
+ * Whether to show SmartCropTool
+ * @type {import('vue').Ref<boolean>}
+ */
 const isCropShown = ref(false)
-
-// Sleduj zmenu hodnoty `selectedSubToolKey`
+/**
+ * Watch selected sub-tool and toggle SmartCropTool visibility
+ */
 watch(
   () => editorStore.selectedSubToolKey,
   (newVal) => {
@@ -76,7 +90,7 @@ watch(
         'middle-dragging': isMiddleDragging,
         'move-tool-selected': editorStore.selectedToolKey === 'move',
       }">
-      <div :class="{'hide': uiStore.isLoading}" class="viewport-content" ref="contentRef" :style="{
+      <div :class="{ 'hide': uiStore.isLoading }" class="viewport-content" ref="contentRef" :style="{
         transform: `translate(${panX}px, ${panY}px) scale(${zoomLevel})`,
       }">
         <canvas ref="canvasRef" class="image-canvas"></canvas>

@@ -10,6 +10,9 @@ import { useRouter } from 'vue-router'
 const { t } = useI18n()
 const router = useRouter()
 
+/**
+ * Logic of the drag-and-drop area
+ */
 const {
   isDragging,
   handleDragOver,
