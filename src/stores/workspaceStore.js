@@ -3,13 +3,24 @@ import { useImageStore } from './imageStore'
 import { useHistoryStore } from './historyStore'
 import { useViewportStore } from './viewportStore'
 
+/**
+ * Store managing multiple workspace tabs
+ * Each tab contains a separate imageStore, historyStore, and viewportStore state
+ */
 export const useWorkspaceStore = defineStore('workspaceStore', {
   state: () => ({
+    /** Array of open tabs with snapshots and names */
     tabs: [], // Each tab: { id, name, imageSnapshot, historySnapshot, viewportSnapshot }
+
+    /** Index of the currently active tab */
     activeTabIndex: -1,
   }),
 
   actions: {
+    /**
+     * Add a new tab with current state snapshots.
+     * @param {string} name - Name of the tab (default: 'Untitled')
+     */
     addNewTab(name = 'Untitled') {
       const imageStore = useImageStore()
       const historyStore = useHistoryStore()
@@ -32,11 +43,12 @@ export const useWorkspaceStore = defineStore('workspaceStore', {
       })
 
       this.activeTabIndex = this.tabs.length - 1
-
-      // Print all tabs for debugging
-      console.log('!!!!!!! Tabs after adding new tab:', this.tabs)
     },
 
+    /**
+     * Close a tab by index and restore the next available tab if any.
+     * @param {number} index - Index of the tab to close (defaults to active)
+     */
     closeTab(index = this.activeTabIndex) {
       if (index < 0 || index >= this.tabs.length) return
 
@@ -55,12 +67,20 @@ export const useWorkspaceStore = defineStore('workspaceStore', {
       }
     },
 
+    /**
+     * Switch to a tab by its index and restore its state.
+     * @param {number} index
+     */
     switchToTab(index) {
       if (index < 0 || index >= this.tabs.length) return
       this.activeTabIndex = index
       this.restoreTab(index)
     },
 
+    /**
+     * Restore the state from a tab snapshot to all stores.
+     * @param {number} index
+     */
     restoreTab(index) {
       const imageStore = useImageStore()
       const historyStore = useHistoryStore()
@@ -74,6 +94,9 @@ export const useWorkspaceStore = defineStore('workspaceStore', {
       viewportStore.applyFullSnapshot(tab.viewportSnapshot)
     },
 
+    /**
+     * Save current state to the active tab snapshot.
+     */
     updateCurrentTabState() {
       if (this.activeTabIndex === -1) return
 
@@ -86,8 +109,11 @@ export const useWorkspaceStore = defineStore('workspaceStore', {
       this.tabs[this.activeTabIndex].viewportSnapshot = viewportStore.getFullSnapshot()
     },
 
+    /**
+     * Rename the currently active tab.
+     * @param {string} name
+     */
     updateCurrentTabName(name) {
-      console.log('--------------Renaming-------------------')
       if (this.activeTabIndex === -1) return
       this.tabs[this.activeTabIndex].name = name
     },

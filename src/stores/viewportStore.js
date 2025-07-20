@@ -4,63 +4,115 @@ import { useMath } from '@/composables/common/useMath'
 
 const { round } = useMath()
 
+/**
+ * Store managing the viewport settings
+ */
 export const useViewportStore = defineStore('viewportStore', {
   state: () => ({
+    /** Current zoom level of the viewport */
     zoomLevel: viewportConfig.defaultZoomLevel,
+    /** Zoom level when the image fits the viewport */
     fitZoomLevel: 1.0,
+    /** Default zoom level for resetting */
     defaultZoomLevel: viewportConfig.defaultZoomLevel,
+    /** Maximum zoom level allowed */
     maxZoomLevel: viewportConfig.maxZoomLevel,
+    /** Minimum zoom level allowed */
     minZoomLevel: viewportConfig.minZoomLevel,
+    /** Speed of zooming in/out */
     zoomSpeed: viewportConfig.zoomSpeed,
+    /** Default zoom speed for resetting */
     defaultZoomSpeed: viewportConfig.zoomSpeed,
 
+    /** Current pan offset in X direction */
     panX: 0,
     panY: 0,
+    /** Speed of panning movement */
     movementSpeed: viewportConfig.movementSpeed,
+    /** Default speed of panning movement for resetting */
     defaultMovementSpeed: viewportConfig.movementSpeed,
 
+    /** Default pan offset for resetting */
     defaultPanX: 0,
     defaultPanY: 0,
   }),
   getters: {
+    /**
+     * Real zoom level based on fitted image zoom
+     * @returns {number}
+     */
     realZoomLevel(state) {
       return state.zoomLevel / state.fitZoomLevel
     },
   },
   actions: {
+    /**
+     * Set the current zoom level, rounded to 2 decimal places.
+     * @param {number} level
+     */
     setZoomLevel(level) {
       this.zoomLevel = round(level, 2)
     },
+
+    /**
+     * Zoom in by increasing zoom level using zoomSpeed.
+     */
     zoomIn() {
       const newZoomLevel = this.zoomLevel * (1 + this.zoomSpeed)
       this.zoomLevel = round(Math.min(newZoomLevel, this.maxZoomLevel), 2)
     },
+
+    /**
+     * Zoom out by decreasing zoom level using zoomSpeed.
+     */
     zoomOut() {
       const newZoomLevel = this.zoomLevel / (1 + this.zoomSpeed)
       this.zoomLevel = round(Math.max(newZoomLevel, this.minZoomLevel), 2)
     },
+
+    /**
+     * Reset zoom to the default value.
+     */
     resetZoom() {
       this.zoomLevel = this.defaultZoomLevel
     },
 
+    /**
+     * Reset zoom speed to the default value.
+     */
     resetZoomSpeed() {
       this.zoomSpeed = this.defaultZoomSpeed
     },
 
+    /**
+     * Reset pan (movement) speed to the default.
+     */
     resetMovementSpeed() {
       this.movementSpeed = this.defaultMovementSpeed
     },
 
+    /**
+     * Set pan (scroll) position.
+     * @param {number} x
+     * @param {number} y
+     */
     setPan(x, y) {
       this.panX = x
       this.panY = y
     },
+
+    /**
+     * Reset pan position to default values.
+     */
     resetPan() {
       this.panX = this.defaultPanX
       this.panY = this.defaultPanY
     },
 
-    // Full snapshot (for workspace store)
+    /**
+     * Get full snapshot of viewport state (for multi-file support)
+     * @returns {object}
+     */
     getFullSnapshot() {
       return {
         zoomLevel: this.zoomLevel,
@@ -78,6 +130,11 @@ export const useViewportStore = defineStore('viewportStore', {
         defaultPanY: this.defaultPanY,
       }
     },
+
+    /**
+     * Apply a full viewport snapshot (for multi-file support)
+     * @param {object} snapshot - Snapshot to restore
+     */
     applyFullSnapshot(snapshot) {
       this.zoomLevel = snapshot.zoomLevel ?? this.defaultZoomLevel
       this.fitZoomLevel = snapshot.fitZoomLevel ?? 1.0

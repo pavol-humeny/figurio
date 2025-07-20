@@ -13,4 +13,7 @@ export const editorConfig = {
   browserFrameDefaultSize: 0.005, // 0.5% of the bigger dimension
   phoneFrameDefaultSize: 0.01, // 1% of the bigger dimension
   frameHeaderFooterSize: 0.04, // 4% of the height
+
+  // Presets
+  localStoragePresetsKey: 'imageEditorPresets',
 }

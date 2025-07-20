@@ -10,18 +10,31 @@ import { useUiStore } from './uiStore'
 
 const { showToastModal } = useToastModal()
 
+/**
+ * Checks if a file name is valid by ensuring it does not contain invalid characters.
+ *
+ * @param {string} name - The file name to validate.
+ */
 const isValidFileName = (name) => {
   // Invalid characters: \ / : * ? " < > |
   return !/[\\/:*?"<>|]/.test(name)
 }
 
+/**
+ * Store managing image-related data and operations
+ */
 export const useImageStore = defineStore('imageStore', {
   state: () => ({
+    /** The currently loaded image file */
     file: null,
+    /** Type of the loaded file */
     fileType: '', // 'image' or 'pdf'
 
+    /** Name of the loaded file */
     fileName: '', // UndoRedo
+    /** Format of the loaded file */
     fileFormat: '', // 'png', 'jpg', 'jpeg', 'pdf'
+    /** Dimensions of the loaded file */
     fileDimensions: {
       fileAspectRatio: 1,
       width: 0,
@@ -29,9 +42,11 @@ export const useImageStore = defineStore('imageStore', {
       quality: 100,
     }, // UndoRedo
 
-    // New values used for export
+    /** New file name for export */
     newFileName: '',
+    /** New file format for export */
     newFileFormat: '', // 'png', 'jpg', 'jpeg', 'pdf'
+    /** New file dimensions for export */
     newFileDimensions: {
       fileAspectRatio: 1,
       width: 0,
@@ -39,10 +54,10 @@ export const useImageStore = defineStore('imageStore', {
       quality: 100,
     },
 
-    // Value for preview image in export tool
+    /** Preview URL for the image */
     previewUrl: '', // UndoRedo
 
-    // Value for original image
+    /** Original image */
     originalImage: null,
     originalFileDimensions: {
       fileAspectRatio: 1,
@@ -52,12 +67,15 @@ export const useImageStore = defineStore('imageStore', {
     },
 
     // Value for raster image rendering
+    /** Rendered image - showed image in canvas */
     renderedImage: null, // UndoRedo
-    tmpRenderedImage: null, // Temporary value for saving canvas if frame with rounded corners is applied
+    /** Temporary rendered image - used for saving canvas if frame with rounded corners is applied */
+    tmpRenderedImage: null,
 
-    newRenderedImage: null, // Used for rasterizing SVG objects before export
+    /** New rendered image - used for rasterizing SVG objects before export */
+    newRenderedImage: null,
 
-    // Value for SVG rendering
+    /** Array of SVG objects to render on the image */
     svgObjects: [], // UndoRedo
     // svgObjects: [
     //   {
@@ -82,14 +100,17 @@ export const useImageStore = defineStore('imageStore', {
     //     },
     //   },
     // ],
+    /** ID of the currently selected SVG object */
     selectedSvgObjectId: null,
 
+    /** Array of image operations to apply */
     imageOperations: [],
     // imageOperations: [
     // {'grayscale': {'enabled': true}},
     // {'crop': {'x': 50, 'y': 50, 'width': 200, 'height': 200}}
     // ]
 
+    /** Image frame */
     frame: {
       enabled: false,
       type: 'none',
@@ -100,17 +121,28 @@ export const useImageStore = defineStore('imageStore', {
       footerSize: 0, // Size of the footer for windows frame
       outlineEnabled: false, // Whether to draw an outline around the frame
     },
-    frameSvg: '', // Raw SVG frame for vector export
+    /** Raw SVG frame for vector export */
+    frameSvg: '',
 
+    /** Flag to prevent showing multiple phone buttons can not be drawn toast */
     phoneButtonsCanNotBeDrawnToastFlag: false,
   }),
   getters: {
+    /**
+     * Returns true if an image or PDF file is currently loaded
+     * @returns {boolean}
+     */
     isImageLoaded: (state) => {
       return state.file !== null
     },
   },
   actions: {
     // Setters
+    /**
+     * Sets the current rendered image and optionally updates the temporary rendered image
+     * @param {HTMLCanvasElement} image - The image to set
+     * @param {boolean} [onlyOriginal=false] - Whether to skip updating the temporary image
+     */
     setRenderedImage(image, onlyOriginal = false) {
       this.renderedImage = image
       if (!onlyOriginal) {
@@ -119,6 +151,11 @@ export const useImageStore = defineStore('imageStore', {
     },
 
     // Getters
+    /**
+     * Returns the appropriate rendered image based on the rendering context and frame type
+     * @param {boolean} [renderCall=false] - Whether the call is part of a render operation
+     * @returns {HTMLCanvasElement|null}
+     */
     getRenderedImage(renderCall = false) {
       if (renderCall) {
         // UPDATE new frame type
@@ -139,6 +176,9 @@ export const useImageStore = defineStore('imageStore', {
       }
     },
 
+    /**
+     * Resets the rendered image to the original image and restores original dimensions
+     */
     resetRenderedImageToOriginal() {
       if (this.originalImage) {
         this.setRenderedImage(this.originalImage)
@@ -146,25 +186,48 @@ export const useImageStore = defineStore('imageStore', {
       }
     },
 
+    /**
+     * Checks whether a grayscale operation is applied
+     * @returns {boolean}
+     */
     hasGrayscaleOperation() {
       return this.imageOperations.some((op) => op.type === 'grayscale')
     },
+
+    /**
+     * Adds a deep copy of a new image operation to the operations list
+     * @param {Object} operation - The image operation to add
+     */
     addImageOperation(operation) {
       this.imageOperations.push(structuredClone(operation))
     },
 
+    /**
+     * Returns a deep copy of all image operations
+     * @returns {Array<Object>}
+     */
     getImageOperations() {
       return JSON.parse(JSON.stringify(this.imageOperations))
     },
 
+    /**
+     * Returns a deep copy of the current image frame configuration
+     * @returns {Object}
+     */
     getImageFrame() {
       return JSON.parse(JSON.stringify(this.frame))
     },
 
+    /**
+     * Resets the image operations array to an empty state
+     */
     resetImageOperations() {
       this.imageOperations = []
     },
 
+    /**
+     * Resets the image frame configuration to default values
+     */
     resetFrame() {
       this.frame = {
         enabled: false,
@@ -178,6 +241,16 @@ export const useImageStore = defineStore('imageStore', {
       }
     },
 
+    /**
+     * Sets and validates the file name, optionally updating the workspace tab name
+     * @param {Object} options
+     * @param {string} options.name - New file name
+     * @param {Function} options.t - i18n translation function
+     * @param {boolean} [options.setOnlyNewFileName=false] - Whether to update only `newFileName`
+     * @param {boolean} [options.updateInWorkspace=true] - Whether to update the workspace tab name
+     * @param {boolean} [options.openingNewFile=false] - Whether the file is being opened newly (skip toast)
+     * @returns {boolean} - Whether the name was successfully set
+     */
     setFileName({
       name,
       t,
@@ -205,18 +278,6 @@ export const useImageStore = defineStore('imageStore', {
         })
         return false
       }
-
-      // // Same name
-      // if (trimmedName === this.fileName) {
-      //   const tmp = this.fileName
-      //   this.fileName = ''
-      //   this.newFileName = ''
-      //   nextTick(() => {
-      //     this.fileName = tmp // Reset to previous name
-      //     this.newFileName = tmp
-      //   })
-      //   return true
-      // }
 
       // Invalid characters
       if (!isValidFileName(trimmedName)) {
@@ -272,26 +333,34 @@ export const useImageStore = defineStore('imageStore', {
       return true
     },
 
+    /**
+     * Closes the current file and resets all image-related state
+     */
     closeFile() {
-      this.fileName = ''
-      this.newFileName = ''
       this.file = null
-      this.previewUrl = ''
       this.fileType = ''
+
+      this.fileName = ''
       this.fileFormat = ''
-      this.newFileFormat = ''
       this.fileDimensions = {
         fileAspectRatio: 1,
         width: 0,
         height: 0,
         quality: 100,
       }
+
+      this.newFileName = ''
+      this.newFileFormat = ''
       this.newFileDimensions = {
         fileAspectRatio: 1,
         width: 0,
         height: 0,
         quality: 100,
       }
+
+      this.previewUrl = ''
+
+      this.renderedImage = null
       this.originalFileDimensions = {
         fileAspectRatio: 1,
         width: 0,
@@ -299,19 +368,30 @@ export const useImageStore = defineStore('imageStore', {
         quality: 100,
       }
 
-      this.originalImage = null
-      this.setRenderedImage(null)
+      this.renderedImage = null
+      this.tmpRenderedImage = null
+
+      this.newRenderedImage = null
 
       this.svgObjects = []
       this.selectedSvgObjectId = null
 
       this.resetImageOperations()
+
       this.resetFrame()
+      this.frameSvg = ''
+
+      this.phoneButtonsCanNotBeDrawnToastFlag = false
 
       const historyStore = useHistoryStore()
       historyStore.reset()
     },
 
+    /**
+     * Loads a file, determines its type, and initializes the state
+     * @param {File} file - File object selected by the user
+     * @param {Function} t - i18n translation function
+     */
     setFile(file, t) {
       this.file = file
 
@@ -375,6 +455,11 @@ export const useImageStore = defineStore('imageStore', {
       )
     },
 
+    /**
+     * Checks whether the file has a supported MIME type
+     * @param {File} file - File to validate
+     * @returns {boolean} - True if supported, false otherwise
+     */
     checkFile(file) {
       const supportedTypes = ['image/jpeg', 'image/png', 'image/jpg', 'application/pdf']
 
@@ -385,6 +470,12 @@ export const useImageStore = defineStore('imageStore', {
       }
     },
 
+    /**
+     * Validates and saves a single uploaded file to the image store
+     * @param {FileList} files - List of uploaded files
+     * @param {Function} t - i18n translation function
+     * @param {import('vue-router').Router} router - Vue router instance
+     */
     saveToImageStore(files, t, router) {
       if (!files) return
 
@@ -412,6 +503,11 @@ export const useImageStore = defineStore('imageStore', {
       }
     },
 
+    /**
+     * Opens a file picker and loads the selected file
+     * @param {Function} t - i18n translation function
+     * @param {import('vue-router').Router} router - Vue router instance
+     */
     loadFile(t, router) {
       const input = document.createElement('input')
       input.type = 'file'
@@ -429,6 +525,11 @@ export const useImageStore = defineStore('imageStore', {
       document.body.removeChild(input)
     },
 
+    /**
+     * Copies the current preview image to the clipboard
+     * @param {Function} t - i18n translation function
+     * @returns {Promise<void>}
+     */
     async copyImageToClipboard(t) {
       const dataUrl = this.previewUrl || ''
       if (!dataUrl) {
@@ -446,6 +547,13 @@ export const useImageStore = defineStore('imageStore', {
       )
     },
 
+    /**
+     * Exports the current image as PNG, JPEG, WebP, SVG, or PDF based on format settings
+     * @param {Object} editorStore - Store with current editor state
+     * @param {Object} historyStore - Store with current history state
+     * @param {Function} t - i18n translation function
+     * @returns {Promise<boolean>} - True if export was started
+     */
     async exportFile(editorStore, historyStore, t) {
       if (!this.getRenderedImage(true)) return false
 
@@ -484,6 +592,14 @@ export const useImageStore = defineStore('imageStore', {
       return true
     },
 
+    /**
+     * Exports the rendered image as a raster file (PNG, JPEG, or WebP)
+     * @param {HTMLImageElement} image - Image element to export
+     * @param {number} width - Target width of the export
+     * @param {number} height - Target height of the export
+     * @param {number} quality - Image quality (0–100)
+     * @returns {Promise<void>}
+     */
     async exportAsRaster(image, width, height, quality) {
       const mimeType =
         this.newFileFormat === 'jpeg' || this.newFileFormat === 'jpg'
@@ -513,6 +629,14 @@ export const useImageStore = defineStore('imageStore', {
       )
     },
 
+    /**
+     * Exports the rendered image and optional SVG objects/frame as a PDF
+     * using jsPDF and svg2pdf.
+     * @param {HTMLImageElement} image - Base image to include in PDF
+     * @param {number} width - Width of the PDF page
+     * @param {number} height - Height of the PDF page
+     * @returns {Promise<void>}
+     */
     async exportAsPdf(image, width, height) {
       const offsetX = this.frame.enabled ? this.frame.width : 0
       let offsetY = this.frame.enabled ? this.frame.height : 0
@@ -587,6 +711,13 @@ export const useImageStore = defineStore('imageStore', {
       pdf.save(`${this.newFileName}.pdf`)
     },
 
+    /**
+     * Exports the composed image (base image + SVG overlays + frame) as SVG
+     * @param {number} width - Width of the SVG canvas
+     * @param {number} height - Height of the SVG canvas
+     * @param {Function} t - i18n translation function
+     * @returns {Promise<void>}
+     */
     async exportAsSvg(width, height, t) {
       const offsetX = this.frame.enabled ? this.frame.width : 0
       let offsetY = this.frame.enabled ? this.frame.height : 0
@@ -645,6 +776,14 @@ export const useImageStore = defineStore('imageStore', {
       )
     },
 
+    /**
+     * Renders all SVG objects over the base image and rasterizes the result into a canvas.
+     * Used to prepare the image for export as raster or PDF.
+     * @param {number|null} width - Optional width to rasterize to
+     * @param {number|null} height - Optional height to rasterize to
+     * @param {boolean} storeAsNew - Whether to store the result in `newRenderedImage` or update current `renderedImage`
+     * @returns {Promise<void>}
+     */
     async rasterize(width = null, height = null, storeAsNew = false) {
       if (this.svgObjects.length === 0) return
 
@@ -708,6 +847,16 @@ export const useImageStore = defineStore('imageStore', {
       }
     },
 
+    /**
+     * Generates a preview image for export, with or without an SVG frame.
+     * The result is stored in `previewUrl`.
+     *
+     * @param {object} editorStore - Editor store instance
+     * @param {object} historyStore - History store instance
+     * @param {Function} t - Translation function (vue-i18n)
+     * @param {boolean} [renderAsRaster=true] - Whether to render the result as raster (true) or only store the frame SVG (false)
+     * @returns {Promise<void>}
+     */
     async generatePreview(editorStore, historyStore, t, renderAsRaster = true) {
       console.log('Generating preview with frame...')
       this.phoneButtonsCanNotBeDrawnToastFlag = true // Set flag to prevent toast showing
@@ -831,7 +980,12 @@ export const useImageStore = defineStore('imageStore', {
       this.previewUrl = exportCanvas.toDataURL(mimeType, quality)
     },
 
-    // UndoRedo
+    /**
+     * Returns a snapshot of the current image state.
+     * Used for undo/redo and workspace tab management.
+     *
+     * @returns {object} Snapshot object
+     */
     getSnapshot() {
       const snapshot = {
         fileName: this.fileName,
@@ -849,10 +1003,16 @@ export const useImageStore = defineStore('imageStore', {
 
       return snapshot
     },
+
+    /**
+     * Applies a previously saved snapshot to the image state.
+     *
+     * @param {object} snapshot - Snapshot object (from `getSnapshot`)
+     * @returns {void}
+     */
     applySnapshot(snapshot) {
       this.fileName = snapshot.fileName
       this.fileDimensions = JSON.parse(JSON.stringify(snapshot.fileDimensions))
-      // this.originalFileDimensions = JSON.parse(JSON.stringify(snapshot.fileDimensions))
       this.previewUrl = snapshot.previewUrl
       this.svgObjects = JSON.parse(JSON.stringify(snapshot.svgObjects))
       this.imageOperations = JSON.parse(JSON.stringify(snapshot.imageOperations))
@@ -873,24 +1033,14 @@ export const useImageStore = defineStore('imageStore', {
         this.setRenderedImage(null)
       }
 
-      // if (snapshot.originalImage) {
-      //   const img = new Image()
-      //   img.onload = () => {
-      //     const canvas = document.createElement('canvas')
-      //     canvas.width = img.width
-      //     canvas.height = img.height
-      //     const ctx = canvas.getContext('2d')
-      //     ctx.drawImage(img, 0, 0)
-      //     this.originalImage = canvas
-      //   }
-      //   img.src = snapshot.originalImage
-      // } else {
-      //   this.originalImage = null
-      // }
-
       console.log('[applySnapshot] imageOperations (after apply):', this.imageOperations)
     },
 
+    /**
+     * Returns a complete snapshot of the image store state. (for multi-file support)
+     *
+     * @returns {object} A deep clone of the full image store state.
+     */
     getFullSnapshot() {
       return {
         file: this.file,
@@ -924,6 +1074,13 @@ export const useImageStore = defineStore('imageStore', {
         phoneButtonsCanNotBeDrawnToastFlag: this.phoneButtonsCanNotBeDrawnToastFlag,
       }
     },
+
+    /**
+     * Restores the full image store state from a previously saved snapshot. (for multi-file support)
+     *
+     * @param {object} snapshot - The full snapshot object previously created by `getFullSnapshot`.
+     * @returns {void}
+     */
     applyFullSnapshot(snapshot) {
       this.file = snapshot.file
       this.fileType = snapshot.fileType
