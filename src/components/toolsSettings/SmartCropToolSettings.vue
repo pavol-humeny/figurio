@@ -13,6 +13,9 @@ const { t } = useI18n()
 
 const editorStore = useEditorStore()
 
+/**
+ * Logic of the smart crop tool settings panel
+ */
 const {
   isCropShown,
   selectedColor,
@@ -33,6 +36,9 @@ const {
   applyManualSmartCrop,
 } = useSmartCropTool(useImageStore(), useHistoryStore(), useEditorStore(), t)
 
+/**
+ * Tabs for the smart crop tool settings
+ */
 const tabs = ['auto', 'manual']
 </script>
 
@@ -41,10 +47,9 @@ const tabs = ['auto', 'manual']
     <ToolsSettingsTabs :tabs="tabs" />
 
     <div class="settings-wrapper">
-      <div
-        v-if="editorStore.selectedTabPerTool[editorStore.selectedToolKey] === 'auto'"
-        class="specific-settings"
-      >
+      <!-- Auto smart crop -->
+      <div v-if="editorStore.selectedTabPerTool[editorStore.selectedToolKey] === 'auto'" class="specific-settings">
+        <!-- Smart crop color -->
         <div class="settings-content-wrapper">
           <div class="content-wrapper">
             <div class="content-title">
@@ -53,39 +58,38 @@ const tabs = ['auto', 'manual']
             <ColorPicker v-model="selectedColor" />
           </div>
         </div>
+
+        <!-- Show button auto smart crop -->
         <div class="settings-content-wrapper">
           <div class="content-wrapper">
             <div class="content-button">
-              <DefaultButton
-                :text="
-                  isCropShown
-                    ? $t('tools.smartCrop.settings.auto.showSmartCropAutoButton.text.hide')
-                    : $t('tools.smartCrop.settings.auto.showSmartCropAutoButton.text.show')
-                "
-                @click="showAutoSmartCrop"
-              />
+              <DefaultButton :text="isCropShown
+                ? $t('tools.smartCrop.settings.auto.showSmartCropAutoButton.text.hide')
+                : $t('tools.smartCrop.settings.auto.showSmartCropAutoButton.text.show')
+                " @click="showAutoSmartCrop" />
             </div>
           </div>
         </div>
+
+        <!-- Apply auto smart crop button -->
         <div class="settings-content-wrapper">
           <div class="content-wrapper">
             <div class="content-button">
-              <DefaultButton
-                :text="$t('tools.smartCrop.settings.auto.applySmartCropAutoButton.text')"
-                @click="applyAutoSmartCrop"
-                :disabled="!isCropShown"
-              />
+              <DefaultButton :text="$t('tools.smartCrop.settings.auto.applySmartCropAutoButton.text')"
+                @click="applyAutoSmartCrop" :disabled="!isCropShown" />
             </div>
           </div>
         </div>
+
+        <!-- Empty space -->
         <div class="settings-content-wrapper" style="border: none">
           <!-- Empty space -->
         </div>
       </div>
-      <div
-        v-if="editorStore.selectedTabPerTool[editorStore.selectedToolKey] === 'manual'"
-        class="specific-settings"
-      >
+
+      <!-- Manual smart crop -->
+      <div v-if="editorStore.selectedTabPerTool[editorStore.selectedToolKey] === 'manual'" class="specific-settings">
+        <!-- Manual adjustment -->
         <div class="settings-content-wrapper">
           <div class="content-wrapper">
             <div class="content title">
@@ -94,51 +98,33 @@ const tabs = ['auto', 'manual']
             <div class="content-title">
               <p>{{ $t('tools.smartCrop.settings.manual.adjustment.top') }}</p>
             </div>
-            <StepperInput
-              v-model="topIndent"
-              :min="topIndentMin"
-              :max="topIndentMax - 2"
-              :step="1"
-            />
+            <StepperInput v-model="topIndent" :min="topIndentMin" :max="topIndentMax - 2" :step="1" />
             <div class="content-title">
               <p>{{ $t('tools.smartCrop.settings.manual.adjustment.right') }}</p>
             </div>
-            <StepperInput
-              v-model="rightIndent"
-              :min="rightIndentMin"
-              :max="rightIndentMax - 2"
-              :step="1"
-            />
+            <StepperInput v-model="rightIndent" :min="rightIndentMin" :max="rightIndentMax - 2" :step="1" />
             <div class="content-title">
               <p>{{ $t('tools.smartCrop.settings.manual.adjustment.bottom') }}</p>
             </div>
-            <StepperInput
-              v-model="bottomIndent"
-              :min="bottomIndentMin"
-              :max="bottomIndentMax - 2"
-              :step="1"
-            />
+            <StepperInput v-model="bottomIndent" :min="bottomIndentMin" :max="bottomIndentMax - 2" :step="1" />
             <div class="content-title">
               <p>{{ $t('tools.smartCrop.settings.manual.adjustment.left') }}</p>
             </div>
-            <StepperInput
-              v-model="leftIndent"
-              :min="leftIndentMin"
-              :max="leftIndentMax - 2"
-              :step="1"
-            />
+            <StepperInput v-model="leftIndent" :min="leftIndentMin" :max="leftIndentMax - 2" :step="1" />
           </div>
         </div>
+
+        <!-- Apply manual smart crop -->
         <div class="settings-content-wrapper">
           <div class="content-wrapper">
             <div class="content-button">
-              <DefaultButton
-                :text="$t('tools.smartCrop.settings.manual.applySmartCropManualButton.text')"
-                @click="applyManualSmartCrop"
-              />
+              <DefaultButton :text="$t('tools.smartCrop.settings.manual.applySmartCropManualButton.text')"
+                @click="applyManualSmartCrop" />
             </div>
           </div>
         </div>
+
+        <!-- Empty space -->
         <div class="settings-content-wrapper" style="border: none">
           <!-- Empty space -->
         </div>

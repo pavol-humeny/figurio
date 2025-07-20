@@ -5,6 +5,12 @@ import { useToolsSettingsTabs } from '@/composables/toolsSettings/useToolsSettin
 
 const editorStore = useEditorStore()
 
+/**
+ * @typedef {Object} ToolsSettingsTabsProps
+ * @property {string[]} tabs - List of tab keys to display
+ */
+
+/** @type {ToolsSettingsTabsProps} */
 const props = defineProps({
   tabs: {
     type: Array,
@@ -12,6 +18,9 @@ const props = defineProps({
   },
 })
 
+/**
+ * Logic for managing active tab 
+ */
 const { activeTab, isDragging, wrapperRef, setActiveTab, startDragging } = useToolsSettingsTabs(
   useEditorStore(),
   props.tabs[0],
@@ -21,14 +30,8 @@ const { activeTab, isDragging, wrapperRef, setActiveTab, startDragging } = useTo
 <template>
   <div class="settings-tabs">
     <div class="tabs-wrapper" ref="wrapperRef">
-      <div
-        class="tab"
-        v-for="tab in props.tabs"
-        :key="tab"
-        :class="{ active: tab === activeTab, grabbing: isDragging }"
-        @click="setActiveTab(tab)"
-        @mousedown="startDragging"
-      >
+      <div class="tab" v-for="tab in props.tabs" :key="tab" :class="{ active: tab === activeTab, grabbing: isDragging }"
+        @click="setActiveTab(tab)" @mousedown="startDragging">
         {{ $t(`tools.${editorStore.selectedToolKey}.settings.${tab}.label`) }}
       </div>
     </div>
@@ -51,6 +54,7 @@ const { activeTab, isDragging, wrapperRef, setActiveTab, startDragging } = useTo
   overflow-x: auto;
   height: 100%;
 }
+
 .tabs-wrapper::-webkit-scrollbar {
   display: none;
 }
@@ -65,9 +69,11 @@ const { activeTab, isDragging, wrapperRef, setActiveTab, startDragging } = useTo
   white-space: nowrap;
   flex-shrink: 0;
 }
+
 .tab:hover {
   background: var(--secondary-c);
 }
+
 .tab.grabbing {
   cursor: grabbing;
 }

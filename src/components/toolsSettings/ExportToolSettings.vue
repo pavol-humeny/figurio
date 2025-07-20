@@ -11,8 +11,14 @@ import { useHistoryStore } from '@/stores/historyStore'
 
 const { t } = useI18n()
 
+/**
+ * Logic of the shaking animation (used when clicking outside modal)
+ */
 const { isShaking, triggerShake } = useShaking()
 
+/**
+ * Logic of the export tool settings panel
+ */
 const {
   isVisible,
   inputFileNameRef,
@@ -55,7 +61,7 @@ const {
           <div class="export-settings-item" v-if="fileFormat === 'jpg' || fileFormat === 'webp'">
             <label for="file-quality">{{
               $t('tools.export.settings.general.fileQuality.label')
-              }}</label>
+            }}</label>
             <p>{{ fileDimensions.quality }} %</p>
             <DefaultSlider v-model="fileDimensions.quality" :min="0" :max="100" :step="1"
               @update:modelValue="(value) => updateQuality(value)" :backgroundColor="'var(--background-c)'" />
@@ -73,7 +79,7 @@ const {
           <div class="export-settings-item">
             <label>{{
               $t('tools.export.settings.general.fileDimensions.label')
-            }}</label>
+              }}</label>
             <div class="export-settings-item-value">
               <div class="width disabled">
                 <p>

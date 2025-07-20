@@ -23,6 +23,9 @@ const { t } = useI18n()
 
 const editorStore = useEditorStore()
 
+/**
+ * Logic of the preset tool settings panel
+ */
 const {
   newPreset,
   createPreset,
@@ -65,6 +68,9 @@ const {
   t,
 )
 
+/**
+ * Available tabs for the preset tool settings
+ */
 const tabs = ['myPresets', 'createPreset']
 </script>
 
@@ -92,6 +98,7 @@ const tabs = ['myPresets', 'createPreset']
             </div>
           </div>
         </div>
+
         <!-- Preset name -->
         <div class="settings-content-wrapper" v-if="selectedPresetName !== ''">
           <div class="content-wrapper">
@@ -105,6 +112,7 @@ const tabs = ['myPresets', 'createPreset']
               :disabled="!isModifyingPreset" />
           </div>
         </div>
+
         <!-- Apply preset -->
         <div class="settings-content-wrapper" v-if="selectedPresetName !== '' && !isModifyingPreset">
           <div class="content-wrapper">
@@ -116,6 +124,7 @@ const tabs = ['myPresets', 'createPreset']
             </div>
           </div>
         </div>
+
         <!-- Preset operations -->
         <div class="settings-content-wrapper" v-if="
           presetsOptions.length > 0 &&
@@ -141,6 +150,7 @@ const tabs = ['myPresets', 'createPreset']
               :operation="selectedOperation" @update:operation="(newOp) => Object.assign(selectedOperation, newOp)" />
           </div>
         </div>
+
         <!-- No operations -->
         <div v-else-if="
           presetsOptions.length > 0 &&
@@ -155,6 +165,7 @@ const tabs = ['myPresets', 'createPreset']
             </div>
           </div>
         </div>
+
         <!-- Add new operation -->
         <div class="settings-content-wrapper" v-if="creatingNewOperation">
           <div class="content-wrapper">
@@ -170,6 +181,7 @@ const tabs = ['myPresets', 'createPreset']
               :text="t('tools.preset.settings.myPresets.addNewOperationButton.text')" @click="addNewOperation()" />
           </div>
         </div>
+
         <!-- Frame -->
         <div class="settings-content-wrapper"
           v-if="(localImageFrame.enabled || isModifyingPreset) && selectedPresetName !== ''">
@@ -226,6 +238,7 @@ const tabs = ['myPresets', 'createPreset']
             </div>
           </div>
         </div>
+
         <!-- No frame -->
         <div v-else-if="!localImageFrame.enabled && !isModifyingPreset && selectedPresetName !== ''"
           class="settings-content-wrapper">
@@ -237,6 +250,7 @@ const tabs = ['myPresets', 'createPreset']
             </div>
           </div>
         </div>
+
         <!-- Delete preset -->
         <div class="settings-content-wrapper" v-if="isModifyingPreset && presetsOptions.length > 0">
           <div class="content-wrapper">
@@ -244,6 +258,7 @@ const tabs = ['myPresets', 'createPreset']
               @click="deletePreset()" />
           </div>
         </div>
+
         <!-- Save, close, modify preset -->
         <div class="settings-content-wrapper" v-if="presetsOptions.length > 0 && selectedPresetName !== ''">
           <div class="content-wrapper">
@@ -256,6 +271,7 @@ const tabs = ['myPresets', 'createPreset']
           </div>
         </div>
 
+        <!-- Empty space -->
         <div class="settings-content-wrapper" style="border: none">
           <!-- Empty space -->
         </div>
@@ -286,6 +302,7 @@ const tabs = ['myPresets', 'createPreset']
             </div>
           </div>
         </div>
+
         <!-- Preset name update -->
         <div v-if="isShowManualPresetSetting" class="settings-content-wrapper">
           <div class="content-wrapper">
@@ -300,6 +317,7 @@ const tabs = ['myPresets', 'createPreset']
             </div>
           </div>
         </div>
+
         <!-- Use current modifications -->
         <div v-if="isShowManualPresetSetting" class="settings-content-wrapper">
           <div class="content-wrapper">
@@ -310,6 +328,7 @@ const tabs = ['myPresets', 'createPreset']
             </div>
           </div>
         </div>
+
         <!-- Transformations -->
         <div v-if="isShowManualPresetSetting" class="settings-content-wrapper">
           <div class="content-wrapper">
@@ -346,6 +365,7 @@ const tabs = ['myPresets', 'createPreset']
             </div>
           </div>
         </div>
+
         <!-- SmartCrop -->
         <div v-if="isShowManualPresetSetting" class="settings-content-wrapper">
           <div class="content-wrapper">
@@ -369,6 +389,7 @@ const tabs = ['myPresets', 'createPreset']
             </div>
           </div>
         </div>
+
         <!-- Grayscale -->
         <div v-if="isShowManualPresetSetting" class="settings-content-wrapper">
           <div class="content-wrapper">
@@ -386,6 +407,7 @@ const tabs = ['myPresets', 'createPreset']
             </div>
           </div>
         </div>
+
         <!-- Crop -->
         <div v-if="isShowManualPresetSetting" class="settings-content-wrapper">
           <div class="content-wrapper">
@@ -509,6 +531,7 @@ const tabs = ['myPresets', 'createPreset']
             </div>
           </div>
         </div>
+
         <!-- Create preset -->
         <div v-if="isShowManualPresetSetting" class="settings-content-wrapper">
           <div class="content-wrapper">
@@ -518,6 +541,8 @@ const tabs = ['myPresets', 'createPreset']
             </div>
           </div>
         </div>
+
+        <!-- Empty space -->
         <div class="settings-content-wrapper" style="border: none">
           <!-- Empty space -->
         </div>

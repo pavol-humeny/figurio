@@ -7,6 +7,9 @@ import { useI18n } from 'vue-i18n'
 
 const { t } = useI18n()
 
+/**
+ * Logic of the grayscale tool settings panel
+ */
 const { applyGrayscale, isGrayscaleApplied } = useGrayscaleTool(
   useImageStore(),
   useHistoryStore(),
@@ -18,15 +21,15 @@ const { applyGrayscale, isGrayscaleApplied } = useGrayscaleTool(
   <div class="tool-settings">
     <div class="settings-wrapper">
       <div class="specific-settings">
+        <!-- Grayscale conversion button -->
         <div class="settings-content-wrapper">
           <div class="content-wrapper">
-            <DefaultButton
-              :text="$t('tools.grayscale.settings.convertToGrayscaleButton.text')"
-              @click="applyGrayscale"
-              :disabled="isGrayscaleApplied"
-            />
+            <DefaultButton :text="$t('tools.grayscale.settings.convertToGrayscaleButton.text')" @click="applyGrayscale"
+              :disabled="isGrayscaleApplied" />
           </div>
         </div>
+
+        <!-- Empty space -->
         <div class="settings-content-wrapper" style="border: none">
           <!-- Empty space -->
         </div>

@@ -11,6 +11,9 @@ import ToggleButton from '../common/ToggleButton.vue'
 
 const { t } = useI18n()
 
+/**
+ * Logic of the frame tool settings panel
+ */
 const {
   frameColor,
   frameWidthRef,
@@ -29,6 +32,7 @@ const {
   <div class="tool-settings">
     <div class="settings-wrapper">
       <div class="specific-settings">
+        <!-- Frame color -->
         <div v-if="selectedFrameVariant !== 'none'" class="settings-content-wrapper">
           <div class="content-wrapper">
             <div class="content-title">
@@ -39,6 +43,8 @@ const {
             <ColorPicker v-model="frameColor" @update="setFrameColor(frameColor)" />
           </div>
         </div>
+
+        <!-- Frame width -->
         <div
           v-if="selectedFrameVariant === 'frameSolid' || selectedFrameVariant === 'frameMacBrowser' || selectedFrameVariant === 'frameWindowsBrowser' || selectedFrameVariant === 'frameWindowsTaskBar'"
           class="settings-content-wrapper">
@@ -54,6 +60,8 @@ const {
               position="bottom-left" :disabled="selectedFrameVariant !== 'frameSolid' && !drawOutline" />
           </div>
         </div>
+
+        <!-- Frame variants -->
         <div class="settings-content-wrapper">
           <div class="content-wrapper">
             <div class="content-title">
@@ -64,6 +72,8 @@ const {
             <DropdownSelect v-model="selectedFrameVariant" :options="frameOptions" @update="handleFrameChange" />
           </div>
         </div>
+
+        <!-- Frame outline -->
         <div
           v-if="selectedFrameVariant === 'frameWindowsBrowser' || selectedFrameVariant === 'frameMacBrowser' || selectedFrameVariant === 'frameWindowsTaskBar'"
           class="settings-content-wrapper">
@@ -77,6 +87,8 @@ const {
             </div>
           </div>
         </div>
+
+        <!-- Empty space -->
         <div class="settings-content-wrapper" style="border: none">
           <!-- Empty space -->
         </div>

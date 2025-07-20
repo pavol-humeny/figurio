@@ -18,6 +18,9 @@ const { t } = useI18n()
 
 const editorStore = useEditorStore()
 
+/**
+ * Logic of the crop tool
+ */
 const {
   maxCropHeight,
   tmpCropHeight,
@@ -39,10 +42,19 @@ const {
   applyCrop,
 } = useCropTool(useImageStore(), useViewportStore(), useEditorStore(), useHistoryStore(), t)
 
+/**
+ * Logic of the flip tool
+ */
 const { applyFlip } = useFlipTool(useImageStore(), useHistoryStore())
 
+/**
+ * Logic of the rotate tool
+ */
 const { applyRotation } = useRotateTool(useImageStore(), useHistoryStore(), t)
 
+/**
+ * Logic of the resize tool
+ */
 const {
   fileDimensionWidth,
   fileDimensionHeight,
@@ -54,6 +66,9 @@ const {
   isFileDimensionsLinked,
 } = useResizeTool(useImageStore(), useHistoryStore(), t)
 
+/**
+ * Tabs for the transform tool settings
+ */
 const tabs = ['rotate', 'flip', 'crop', 'resize']
 </script>
 
@@ -64,6 +79,7 @@ const tabs = ['rotate', 'flip', 'crop', 'resize']
     <div class="settings-wrapper">
       <!-- Rotate -->
       <div v-if="editorStore.selectedTabPerTool[editorStore.selectedToolKey] === 'rotate'" class="specific-settings">
+        <!-- Rotate left -->
         <div class="settings-content-wrapper">
           <div class="content-wrapper">
             <div class="content-title">
@@ -78,6 +94,8 @@ const tabs = ['rotate', 'flip', 'crop', 'resize']
             </div>
           </div>
         </div>
+
+        <!-- Rotate right -->
         <div class="settings-content-wrapper">
           <div class="content-wrapper">
             <div class="content-title">
@@ -92,6 +110,8 @@ const tabs = ['rotate', 'flip', 'crop', 'resize']
             </div>
           </div>
         </div>
+
+        <!-- Empty space -->
         <div class="settings-content-wrapper" style="border: none">
           <!-- Empty space -->
         </div>
@@ -99,6 +119,7 @@ const tabs = ['rotate', 'flip', 'crop', 'resize']
 
       <!-- Flip -->
       <div v-if="editorStore.selectedTabPerTool[editorStore.selectedToolKey] === 'flip'" class="specific-settings">
+        <!-- Flip horizontal -->
         <div class="settings-content-wrapper">
           <div class="content-wrapper">
             <div class="content-title">
@@ -113,6 +134,8 @@ const tabs = ['rotate', 'flip', 'crop', 'resize']
             </div>
           </div>
         </div>
+
+        <!-- Flip vertical -->
         <div class="settings-content-wrapper">
           <div class="content-wrapper">
             <div class="content-title">
@@ -127,6 +150,8 @@ const tabs = ['rotate', 'flip', 'crop', 'resize']
             </div>
           </div>
         </div>
+
+        <!-- Empty space -->
         <div class="settings-content-wrapper" style="border: none">
           <!-- Empty space -->
         </div>
@@ -134,6 +159,7 @@ const tabs = ['rotate', 'flip', 'crop', 'resize']
 
       <!-- Crop -->
       <div v-if="editorStore.selectedTabPerTool[editorStore.selectedToolKey] === 'crop'" class="specific-settings">
+        <!-- Crop position -->
         <div class="settings-content-wrapper">
           <div class="content-wrapper">
             <div class="content-title">
@@ -162,6 +188,8 @@ const tabs = ['rotate', 'flip', 'crop', 'resize']
             </div>
           </div>
         </div>
+
+        <!-- Crop dimensions -->
         <div class="settings-content-wrapper">
           <div class="content-wrapper">
             <div class="content-title">
@@ -195,6 +223,8 @@ const tabs = ['rotate', 'flip', 'crop', 'resize']
             </div>
           </div>
         </div>
+
+        <!-- Crop variants -->
         <div class="settings-content-wrapper">
           <div class="content-wrapper">
             <div class="content-title">
@@ -248,6 +278,8 @@ const tabs = ['rotate', 'flip', 'crop', 'resize']
             </div>
           </div>
         </div>
+
+        <!-- Apply crop -->
         <div class="settings-content-wrapper">
           <div class="content-wrapper">
             <div class="content-button">
@@ -255,6 +287,8 @@ const tabs = ['rotate', 'flip', 'crop', 'resize']
             </div>
           </div>
         </div>
+
+        <!-- Empty space -->
         <div class="settings-content-wrapper" style="border: none">
           <!-- Empty space -->
         </div>
@@ -262,6 +296,7 @@ const tabs = ['rotate', 'flip', 'crop', 'resize']
 
       <!-- Resize -->
       <div v-if="editorStore.selectedTabPerTool[editorStore.selectedToolKey] === 'resize'" class="specific-settings">
+        <!-- Resize dimensions -->
         <div class="settings-content-wrapper">
           <div class="content-wrapper">
             <div class="content-title">
@@ -296,6 +331,7 @@ const tabs = ['rotate', 'flip', 'crop', 'resize']
           </div>
         </div>
 
+        <!-- Empty space -->
         <div class="settings-content-wrapper" style="border: none">
           <!-- Empty space -->
         </div>

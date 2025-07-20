@@ -1,13 +1,16 @@
 <script setup>
 import ToolsSettingsTabs from './ToolsSettingsTabs.vue';
 
+/**
+ * Available tabs for adjust tool settings
+ */
 const tabs = ['brightness', 'contrast', 'saturation', 'exposure'];
 
 </script>
 
 <template>
   <div class="tool-settings">
-    <ToolsSettingsTabs :tabs="tabs"/>
+    <ToolsSettingsTabs :tabs="tabs" />
 
     <div class="settings-content">
     </div>
@@ -15,5 +18,4 @@ const tabs = ['brightness', 'contrast', 'saturation', 'exposure'];
 
 </template>
 
-<style scoped>
-</style>
+<style scoped></style>

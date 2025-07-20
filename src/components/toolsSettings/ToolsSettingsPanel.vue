@@ -2,6 +2,9 @@
 import { useToolsSettingsPanel } from '@/composables/toolsSettings/useToolsSettingsPanel';
 import { useEditorStore } from '@/stores/editorStore';
 
+/**
+ * Logic of the tools settings panel
+ */
 const {
   settingsComponent
 } = useToolsSettingsPanel(useEditorStore());
