@@ -3,151 +3,105 @@ import { viewportConfig } from '@/config/viewportConfig'
 import { useMath } from '@/composables/common/useMath'
 import { useThrottleFn } from '@vueuse/core'
 
+/**
+ * Logic for managing zooming, panning, scrolling and viewport dimensions
+ *
+ * @param {ReturnType<typeof import('@/stores/viewportStore').useViewportStore>} viewportStore - Store for viewport state
+ * @param {ReturnType<typeof import('@/stores/imageStore').useImageStore>} imageStore - Store for image and its dimensions
+ * @param {ReturnType<typeof import('@/stores/workspaceStore').useWorkspaceStore>} editorStore - Editor store
+ * @param {import('vue').Ref<HTMLElement>} contentRef - Ref to the .viewport-content element
+ * @returns {Object}
+ */
 export function useViewportWrapper(viewportStore, imageStore, editorStore, contentRef) {
   const { clamp } = useMath()
 
-  // Zoom and pan properties
-  const zoomLevel = computed(() => viewportStore.realZoomLevel)
+  /**
+   * Ref to the outer wrapper element
+   */
+  const wrapperRef = ref(null)
+
+  /**
+   * Width and height of the wrapper element
+   */
+  const wrapperSize = ref({ width: 0, height: 0 })
+
+  // ------------------------------
+  // Panning
+  // ------------------------------
+
+  /**
+   * Horizontal pan offset
+   */
   const panX = computed({
     get: () => viewportStore.panX,
     set: (val) => (viewportStore.panX = val),
   })
+
+  /**
+   * Vertical pan offset
+   */
   const panY = computed({
     get: () => viewportStore.panY,
     set: (val) => (viewportStore.panY = val),
   })
 
-  const wrapperRef = ref(null)
+  /**
+   * Start panning the viewport using middle mouse button
+   * @param {MouseEvent} event - Mouse event
+   */
+  const startPan = (event) => {
+    // Middle mouse button panning
+    if (event.button === 1 || editorStore.selectedToolKey === 'move') {
+      isMiddleDragging.value = true
+      event.preventDefault()
+      const startX = event.clientX
+      const startY = event.clientY
+      const startPanX = viewportStore.panX
+      const startPanY = viewportStore.panY
 
-  // Constants for scrolling and dragging speeds
+      const onMouseMove = (e) => {
+        const deltaX = e.clientX - startX
+        const deltaY = e.clientY - startY
+        viewportStore.panX = clamp(
+          startPanX + deltaX * viewportStore.movementSpeed,
+          scrollHorizontalMin.value,
+          scrollHorizontalMax.value,
+        )
+        viewportStore.panY = clamp(
+          startPanY + deltaY * viewportStore.movementSpeed,
+          scrollVerticalMin.value,
+          scrollVerticalMax.value,
+        )
+      }
+
+      const onMouseUp = () => {
+        document.removeEventListener('mousemove', onMouseMove)
+        document.removeEventListener('mouseup', onMouseUp)
+        isMiddleDragging.value = false
+      }
+
+      document.addEventListener('mousemove', onMouseMove)
+      document.addEventListener('mouseup', onMouseUp)
+    }
+  }
+
+  // ------------------------------
+  // Scroll and zoom
+  // ------------------------------
+
+  /**
+   * Current zoom level from the store
+   */
+  const zoomLevel = computed(() => viewportStore.realZoomLevel)
+
+  /**
+   * Horizontal scroll speed (pixels per event unit)
+   */
   const horizontalSpeed = viewportConfig.scrollHorizontalSpeed
+  /**
+   * Vertical scroll speed (pixels per event unit)
+   */
   const verticalSpeed = viewportConfig.scrollVerticalSpeed
-  const dragSpeedMin = 2
-  const dragSpeedMax = viewportConfig.maxZoomLevel
-
-  // Dimensions of the wrapper and content
-  const wrapperWidth = ref(1)
-  const wrapperHeight = ref(1)
-  const contentWidth = ref(1)
-  const contentHeight = ref(1)
-
-  // Total dimensions of the content after zooming
-  const contentTotalWidth = ref(1)
-  const contentTotalHeight = ref(1)
-
-  // Slider values
-  const verticalSliderRange = ref(0)
-  const horizontalSliderRange = ref(0)
-  const minSliderSize = 30 // Minimum size for the slider
-
-  // Scroll limits (boundaries)
-  const scrollVerticalMin = ref(0)
-  const scrollVerticalMax = ref(0)
-  const scrollHorizontalMin = ref(0)
-  const scrollHorizontalMax = ref(0)
-
-  // Flags for dragging states
-  const isDraggingHorizontal = ref(false)
-  const isDraggingVertical = ref(false)
-  const isMiddleDragging = ref(false)
-
-  // Update initial dimensions of the wrapper and content
-  const updateInitialDimensions = () => {
-    wrapperWidth.value = wrapperRef.value?.clientWidth || 1
-    wrapperHeight.value = wrapperRef.value?.clientHeight || 1
-    contentWidth.value = contentRef.value?.offsetWidth || 1
-    contentHeight.value = contentRef.value?.offsetHeight || 1
-  }
-
-  // Update dimensions based on zoom level
-  const updateZoomDependentDimensions = () => {
-    contentTotalWidth.value = contentWidth.value * zoomLevel.value
-    contentTotalHeight.value = contentHeight.value * zoomLevel.value
-
-    scrollVerticalMin.value = -contentTotalHeight.value * 0.9
-    scrollVerticalMax.value = wrapperHeight.value - contentTotalHeight.value * 0.1
-    scrollHorizontalMin.value = -contentTotalWidth.value * 0.9
-    scrollHorizontalMax.value = wrapperWidth.value - contentTotalWidth.value * 0.1
-
-    verticalSliderRange.value = scrollVerticalMax.value - scrollVerticalMin.value
-    horizontalSliderRange.value = scrollHorizontalMax.value - scrollHorizontalMin.value
-  }
-
-  // Center the image in the viewport
-  const centerImage = () => {
-    if (!wrapperRef.value || !contentRef.value) return
-    updateInitialDimensions()
-    updateZoomDependentDimensions()
-
-    panX.value = wrapperWidth.value / 2 - (contentWidth.value * zoomLevel.value) / 2
-    panY.value =
-      wrapperHeight.value / 2 -
-      (contentHeight.value * zoomLevel.value) / 2 -
-      (wrapperHeight.value - contentHeight.value * zoomLevel.value) / 10 // minus 10% of the height for better centering because of file tabs
-
-    viewportStore.defaultPanX = wrapperWidth.value / 2 - (contentWidth.value * zoomLevel.value) / 2
-    viewportStore.defaultPanY =
-      wrapperHeight.value / 2 -
-      (contentHeight.value * zoomLevel.value) / 2 -
-      (wrapperHeight.value - contentHeight.value * zoomLevel.value) / 10 // minus 10% of the height for better centering because of file tabs
-  }
-  const setValuesForCenterImage = () => {
-    if (!wrapperRef.value || !contentRef.value) return
-    // Reset zoom
-    const tmpZoomLevel = viewportStore.zoomLevel
-    viewportStore.resetZoom()
-
-    updateInitialDimensions()
-    updateZoomDependentDimensions()
-
-    viewportStore.defaultPanX = wrapperWidth.value / 2 - (contentWidth.value * zoomLevel.value) / 2
-    viewportStore.defaultPanY =
-      wrapperHeight.value / 2 -
-      (contentHeight.value * zoomLevel.value) / 2 -
-      (wrapperHeight.value - contentHeight.value * zoomLevel.value) / 10 // minus 10% of the height for better centering because of file tabs
-
-    viewportStore.setZoomLevel(tmpZoomLevel)
-  }
-
-  // Fit the image to the screen
-  const fitToScreenZoomLevel = () => {
-    updateInitialDimensions()
-
-    const frameHeight = imageStore.frame?.enabled
-      ? imageStore.frame.height * 2 + imageStore.frame.headerSize + imageStore.frame.footerSize
-      : 0
-
-    const scaleX = wrapperWidth.value / contentWidth.value
-    const scaleY = wrapperHeight.value / (contentHeight.value + frameHeight)
-
-    const optimalZoom = Math.min(scaleX, scaleY)
-
-    viewportStore.fitZoomLevel = (viewportStore.zoomLevel / optimalZoom) * 1.2
-
-    updateZoomDependentDimensions()
-  }
-
-  // Slider dimensions
-  const verticalSliderHeight = computed(() => {
-    const visibleRatio = wrapperHeight.value / contentTotalHeight.value
-    return clamp((wrapperHeight.value / 3) * visibleRatio, minSliderSize, wrapperHeight.value / 3)
-  })
-  const horizontalSliderWidth = computed(() => {
-    const visibleRatio = wrapperWidth.value / contentTotalWidth.value
-    return clamp((wrapperWidth.value / 3) * visibleRatio, minSliderSize, wrapperWidth.value / 3)
-  })
-
-  // Slider positions
-  const verticalSliderTop = computed(() => {
-    const ratio = (panY.value + contentTotalHeight.value * 0.9) / verticalSliderRange.value
-    const clampedRatio = clamp(ratio, 0, 1)
-    return (1 - clampedRatio) * (wrapperHeight.value - verticalSliderHeight.value)
-  })
-  const horizontalSliderLeft = computed(() => {
-    const ratio = (panX.value + contentTotalWidth.value * 0.9) / horizontalSliderRange.value
-    const clampedRatio = clamp(ratio, 0, 1)
-    return (1 - clampedRatio) * (wrapperWidth.value - horizontalSliderWidth.value)
-  })
 
   // Zoom and scroll handling
   const setZoomAndScroll = (event) => {
@@ -224,7 +178,128 @@ export function useViewportWrapper(viewportStore, imageStore, editorStore, conte
     }
   }
 
-  // Scrolling - dragging
+  // ------------------------------
+  // Wrapper and content dimensions
+  // ------------------------------
+
+  /**
+   * Width and height of the wrapper element
+   */
+  const wrapperWidth = ref(1)
+  const wrapperHeight = ref(1)
+  /**
+   * Width and height of the content element
+   */
+  const contentWidth = ref(1)
+  const contentHeight = ref(1)
+
+  /**
+   * Width and height of content scaled by zoom
+   */
+  const contentTotalWidth = ref(1)
+  const contentTotalHeight = ref(1)
+
+  /**
+   * Update wrapper and content dimensions from DOM
+   */
+  const updateInitialDimensions = () => {
+    wrapperWidth.value = wrapperRef.value?.clientWidth || 1
+    wrapperHeight.value = wrapperRef.value?.clientHeight || 1
+    contentWidth.value = contentRef.value?.offsetWidth || 1
+    contentHeight.value = contentRef.value?.offsetHeight || 1
+  }
+
+  /**
+   * Update calculated dimensions based on current zoom level
+   */
+  const updateZoomDependentDimensions = () => {
+    contentTotalWidth.value = contentWidth.value * zoomLevel.value
+    contentTotalHeight.value = contentHeight.value * zoomLevel.value
+
+    scrollVerticalMin.value = -contentTotalHeight.value * 0.9
+    scrollVerticalMax.value = wrapperHeight.value - contentTotalHeight.value * 0.1
+    scrollHorizontalMin.value = -contentTotalWidth.value * 0.9
+    scrollHorizontalMax.value = wrapperWidth.value - contentTotalWidth.value * 0.1
+
+    verticalSliderRange.value = scrollVerticalMax.value - scrollVerticalMin.value
+    horizontalSliderRange.value = scrollHorizontalMax.value - scrollHorizontalMin.value
+  }
+
+  // ------------------------------
+  // Scrollbar slider
+  // ------------------------------
+
+  /**
+   * Vertical and horizontal slider range (max - min)
+   */
+  const verticalSliderRange = ref(0)
+  const horizontalSliderRange = ref(0)
+
+  /**
+   * Minimum pixel size of scrollbar thumb
+   */
+  const minSliderSize = 30
+
+  /**
+   * Scroll limits (boundaries)
+   */
+  const scrollVerticalMin = ref(0)
+  const scrollVerticalMax = ref(0)
+  const scrollHorizontalMin = ref(0)
+  const scrollHorizontalMax = ref(0)
+
+  /**
+   * Height and width of vertical and horizontal scrollbar thumb
+   */
+  const verticalSliderHeight = computed(() => {
+    const visibleRatio = wrapperHeight.value / contentTotalHeight.value
+    return clamp((wrapperHeight.value / 3) * visibleRatio, minSliderSize, wrapperHeight.value / 3)
+  })
+  const horizontalSliderWidth = computed(() => {
+    const visibleRatio = wrapperWidth.value / contentTotalWidth.value
+    return clamp((wrapperWidth.value / 3) * visibleRatio, minSliderSize, wrapperWidth.value / 3)
+  })
+
+  /**
+   * Top position of vertical scrollbar thumb
+   * Left position of horizontal scrollbar thumb
+   */
+  const verticalSliderTop = computed(() => {
+    const ratio = (panY.value + contentTotalHeight.value * 0.9) / verticalSliderRange.value
+    const clampedRatio = clamp(ratio, 0, 1)
+    return (1 - clampedRatio) * (wrapperHeight.value - verticalSliderHeight.value)
+  })
+  const horizontalSliderLeft = computed(() => {
+    const ratio = (panX.value + contentTotalWidth.value * 0.9) / horizontalSliderRange.value
+    const clampedRatio = clamp(ratio, 0, 1)
+    return (1 - clampedRatio) * (wrapperWidth.value - horizontalSliderWidth.value)
+  })
+
+  // ------------------------------
+  // Dragging
+  // ------------------------------
+
+  /**
+   * Minimum speed threshold for drag
+   */
+  const dragSpeedMin = 2
+  /**
+   * Maximum drag speed relative to zoom
+   */
+  const dragSpeedMax = viewportConfig.maxZoomLevel
+
+  /**
+   * Whether the user is currently dragging the viewport
+   */
+  const isDraggingHorizontal = ref(false)
+  const isDraggingVertical = ref(false)
+  const isMiddleDragging = ref(false)
+
+  /**
+   * Start dragging in the specified axis direction
+   * @param {string} axis - 'x' or 'y' for horizontal or vertical dragging
+   * @param {MouseEvent} event - Mouse event
+   */
   const startDrag = (axis, event) => {
     event.preventDefault()
     const startClient = axis === 'y' ? event.clientY : event.clientX
@@ -270,104 +345,79 @@ export function useViewportWrapper(viewportStore, imageStore, editorStore, conte
     document.addEventListener('mouseup', onMouseUp)
   }
 
-  // Pan
-  const startPan = (event) => {
-    // Middle mouse button panning
-    if (event.button === 1 || editorStore.selectedToolKey === 'move') {
-      isMiddleDragging.value = true
-      event.preventDefault()
-      const startX = event.clientX
-      const startY = event.clientY
-      const startPanX = viewportStore.panX
-      const startPanY = viewportStore.panY
+  // ------------------------------
+  // Centering and fitting the image
+  // ------------------------------
 
-      const onMouseMove = (e) => {
-        const deltaX = e.clientX - startX
-        const deltaY = e.clientY - startY
-        viewportStore.panX = clamp(
-          startPanX + deltaX * viewportStore.movementSpeed,
-          scrollHorizontalMin.value,
-          scrollHorizontalMax.value,
-        )
-        viewportStore.panY = clamp(
-          startPanY + deltaY * viewportStore.movementSpeed,
-          scrollVerticalMin.value,
-          scrollVerticalMax.value,
-        )
-      }
+  /**
+   * Center the image in the viewport
+   */
+  const centerImage = () => {
+    if (!wrapperRef.value || !contentRef.value) return
+    updateInitialDimensions()
+    updateZoomDependentDimensions()
 
-      const onMouseUp = () => {
-        document.removeEventListener('mousemove', onMouseMove)
-        document.removeEventListener('mouseup', onMouseUp)
-        isMiddleDragging.value = false
-      }
+    panX.value = wrapperWidth.value / 2 - (contentWidth.value * zoomLevel.value) / 2
+    panY.value =
+      wrapperHeight.value / 2 -
+      (contentHeight.value * zoomLevel.value) / 2 -
+      (wrapperHeight.value - contentHeight.value * zoomLevel.value) / 10 // minus 10% of the height for better centering because of file tabs
 
-      document.addEventListener('mousemove', onMouseMove)
-      document.addEventListener('mouseup', onMouseUp)
-    }
+    viewportStore.defaultPanX = wrapperWidth.value / 2 - (contentWidth.value * zoomLevel.value) / 2
+    viewportStore.defaultPanY =
+      wrapperHeight.value / 2 -
+      (contentHeight.value * zoomLevel.value) / 2 -
+      (wrapperHeight.value - contentHeight.value * zoomLevel.value) / 10 // minus 10% of the height for better centering because of file tabs
   }
 
-  // Rulers size
-  const wrapperSize = ref({ width: 0, height: 0 })
+  /**
+   * Set values for centering the image after zoom changes
+   */
+  const setValuesForCenterImage = () => {
+    if (!wrapperRef.value || !contentRef.value) return
+    // Reset zoom
+    const tmpZoomLevel = viewportStore.zoomLevel
+    viewportStore.resetZoom()
 
-  // Initial setup
-  let resizeObserver
-  onMounted(() => {
-    nextTick(() => {
-      fitToScreenZoomLevel()
-      centerImage()
-
-      // Center the image after resizing the wrapper
-      if (wrapperRef.value) {
-        resizeObserver = new ResizeObserver(() => {
-          wrapperSize.value = {
-            width: wrapperRef.value.clientWidth,
-            height: wrapperRef.value.clientHeight,
-          }
-
-          setValuesForCenterImage()
-        })
-        resizeObserver.observe(wrapperRef.value)
-      }
-    })
-  })
-
-  // Watch for changes in frame
-  watch(
-    () => imageStore.frame,
-    () => {
-      nextTick(() => {
-        fitToScreenZoomLevel()
-        setValuesForCenterImage()
-      })
-    },
-    { deep: true },
-  )
-
-  // Cleanup on unmount
-  onBeforeUnmount(() => {
-    if (resizeObserver && wrapperRef.value) {
-      resizeObserver.unobserve(wrapperRef.value)
-    }
-  })
-
-  // Update dimensions when zoom level changes
-  watch(zoomLevel, () => {
+    updateInitialDimensions()
     updateZoomDependentDimensions()
-  })
 
-  // Center the image when the rendered image changes
-  watch(
-    () => imageStore.getRenderedImage(),
-    () => {
-      nextTick(() => {
-        viewportStore.resetZoom()
-        fitToScreenZoomLevel()
-        centerImage()
-      })
-    },
-  )
+    viewportStore.defaultPanX = wrapperWidth.value / 2 - (contentWidth.value * zoomLevel.value) / 2
+    viewportStore.defaultPanY =
+      wrapperHeight.value / 2 -
+      (contentHeight.value * zoomLevel.value) / 2 -
+      (wrapperHeight.value - contentHeight.value * zoomLevel.value) / 10 // minus 10% of the height for better centering because of file tabs
 
+    viewportStore.setZoomLevel(tmpZoomLevel)
+  }
+
+  /**
+   * Fit the image to the screen based on current wrapper size
+   */
+  const fitToScreenZoomLevel = () => {
+    updateInitialDimensions()
+
+    const frameHeight = imageStore.frame?.enabled
+      ? imageStore.frame.height * 2 + imageStore.frame.headerSize + imageStore.frame.footerSize
+      : 0
+
+    const scaleX = wrapperWidth.value / contentWidth.value
+    const scaleY = wrapperHeight.value / (contentHeight.value + frameHeight)
+
+    const optimalZoom = Math.min(scaleX, scaleY)
+
+    viewportStore.fitZoomLevel = (viewportStore.zoomLevel / optimalZoom) * 1.2
+
+    updateZoomDependentDimensions()
+  }
+
+  // ------------------------------
+  // Ruler
+  // ------------------------------
+
+  /**
+   * Dynamic step size for ruler marks based on zoom level
+   */
   const dynamicStep = computed(() => {
     const z = zoomLevel.value
     if (z >= 4) return 5
@@ -382,9 +432,15 @@ export function useViewportWrapper(viewportStore, imageStore, editorStore, conte
     return 1020
   })
 
+  /**
+   * Horizontal and vertical ruler marks
+   */
   const horizontalRulerMarks = ref([])
   const verticalRulerMarks = ref([])
 
+  /**
+   * Update horizontal ruler marks based on current pan and zoom
+   */
   const updateHorizontalRulerMarks = () => {
     const spacing = dynamicStep.value * zoomLevel.value
     const width = wrapperSize.value.width || 0
@@ -404,7 +460,9 @@ export function useViewportWrapper(viewportStore, imageStore, editorStore, conte
 
     horizontalRulerMarks.value = marks
   }
-
+  /**
+   * Update vertical ruler marks based on current pan and zoom
+   */
   const updateVerticalRulerMarks = () => {
     const spacing = dynamicStep.value * zoomLevel.value
     const height = wrapperSize.value.height || 0
@@ -425,6 +483,10 @@ export function useViewportWrapper(viewportStore, imageStore, editorStore, conte
     verticalRulerMarks.value = marks
   }
 
+  /**
+   * Throttle updates to ruler marks to avoid performance issues
+   * This will update the marks at approximately 30 FPS
+   */
   const throttledUpdateRulers = useThrottleFn(() => {
     updateHorizontalRulerMarks()
     updateVerticalRulerMarks()
@@ -432,27 +494,109 @@ export function useViewportWrapper(viewportStore, imageStore, editorStore, conte
 
   watch([panX, panY, zoomLevel], throttledUpdateRulers, { immediate: true })
 
-  // Ruler cursor mark
+  /**
+   * Mouse position relative to the viewport
+   * Used for displaying cursor coordinates
+   */
   const mouseX = ref(null)
   const mouseY = ref(null)
 
-  const onMouseMove = (e) => {
+  /**
+   * Update mouse position relative to the wrapper element
+   * @param {MouseEvent} event - Mouse event
+   */
+  const onMouseMove = (event) => {
     const rect = wrapperRef.value?.getBoundingClientRect()
     if (!rect) return
 
-    mouseX.value = e.clientX - rect.left
-    mouseY.value = e.clientY - rect.top
+    mouseX.value = event.clientX - rect.left
+    mouseY.value = event.clientY - rect.top
   }
 
+  /**
+   * Computed cursor position in image coordinates for displaying position of the mouse cursor on rulers
+   */
   const cursorPosX = computed(() => Math.round((mouseX.value - panX.value) / zoomLevel.value))
   const cursorPosY = computed(() => Math.round((mouseY.value - panY.value) / zoomLevel.value))
 
+  /**
+   * Check if cursor position is at the edges of the image
+   * Used for displaying special markers on rulers
+   */
   const cursorPosXSameAsImageWidth = computed(() => {
     return cursorPosX.value == imageStore.fileDimensions.width || cursorPosX.value == 0
   })
   const cursorPosYSameAsImageHeight = computed(() => {
     return cursorPosY.value == imageStore.fileDimensions.height || cursorPosY.value == 0
   })
+
+  /**
+   * Resizing observer to adjust centering on wrapper size changes
+   */
+  let resizeObserver
+
+  //Set initial values for centering the image
+  onMounted(() => {
+    nextTick(() => {
+      fitToScreenZoomLevel()
+      centerImage()
+
+      // Center the image after resizing the wrapper
+      if (wrapperRef.value) {
+        resizeObserver = new ResizeObserver(() => {
+          wrapperSize.value = {
+            width: wrapperRef.value.clientWidth,
+            height: wrapperRef.value.clientHeight,
+          }
+
+          setValuesForCenterImage()
+        })
+        resizeObserver.observe(wrapperRef.value)
+      }
+    })
+  })
+
+  /**
+   * Watch for changes in image dimensions and re-center the image
+   */
+  watch(
+    () => imageStore.frame,
+    () => {
+      nextTick(() => {
+        fitToScreenZoomLevel()
+        setValuesForCenterImage()
+      })
+    },
+    { deep: true },
+  )
+
+  // Cleanup on unmount
+  onBeforeUnmount(() => {
+    if (resizeObserver && wrapperRef.value) {
+      resizeObserver.unobserve(wrapperRef.value)
+    }
+  })
+
+  /**
+   * Watch for changes of zoom level and update dimensions
+   */
+  watch(zoomLevel, () => {
+    updateZoomDependentDimensions()
+  })
+
+  /**
+   * Center the image when the rendered image changes
+   */
+  watch(
+    () => imageStore.getRenderedImage(),
+    () => {
+      nextTick(() => {
+        viewportStore.resetZoom()
+        fitToScreenZoomLevel()
+        centerImage()
+      })
+    },
+  )
 
   return {
     zoomLevel,

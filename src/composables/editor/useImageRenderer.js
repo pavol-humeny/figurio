@@ -1,6 +1,21 @@
 import { onMounted, watch, ref, nextTick } from 'vue'
 import { useFrameTool } from '../tools/useFrameTool'
 
+/**
+ * Logic for rendering image layers (canvas, SVG, frame) in the editor viewport
+ *
+ * @param {ReturnType<typeof import('@/stores/imageStore').useImageStore>} imageStore - Image store
+ * @param {ReturnType<typeof import('@/stores/historyStore').useHistoryStore>} historyStore - History store
+ * @param {ReturnType<typeof import('@/stores/workspaceStore').useWorkspaceStore>} editorStore - Editor store
+ * @param {ReturnType<typeof import('@/stores/viewportStore').useViewportStore>} viewportStore - Viewport store
+ * @param {import('vue').Ref<HTMLElement>} contentRef - Reference to the .viewport-content element
+ * @param {(key: string) => string} t - Translation function
+ * @returns {{
+ *   canvasRef: import('vue').Ref<HTMLCanvasElement | null>,
+ *   svgRef: import('vue').Ref<SVGSVGElement | null>,
+ *   frameSvgRef: import('vue').Ref<SVGSVGElement | null>
+ * }}
+ */
 export function useImageRenderer(
   imageStore,
   historyStore,
@@ -9,24 +24,41 @@ export function useImageRenderer(
   contentRef,
   t,
 ) {
+  /**
+   * Reference to the base canvas layer
+   */
   const canvasRef = ref(null)
+
+  /**
+   * Reference to the SVG layer for vector elements
+   */
   const svgRef = ref(null)
-  // const frameSvgRef = ref(null)
+
+  /**
+   * Reference to the SVG layer for frame
+   */
   const frameSvgRef = ref(null)
+
+  /**
+   * Internal flag to avoid overlapping frame render calls
+   */
   let renderingFrameSvg = ref(false)
 
+  /**
+   * Set dimensions of canvas, svg and frame layers based on image size and frame config
+   */
   const updateSizes = () => {
     console.log('Updating sizes for image renderer...')
     const width = imageStore.fileDimensions.width
     const height = imageStore.fileDimensions.height
 
-    // Nastavenie pre .viewport-content wrapper
+    // Set content layer dimensions
     if (contentRef.value) {
       contentRef.value.style.width = `${width}px`
       contentRef.value.style.height = `${height}px`
     }
 
-    // Nastavenie canvas vrstvy
+    // Set canvas dimensions
     if (canvasRef.value) {
       canvasRef.value.width = width
       canvasRef.value.height = height
@@ -34,7 +66,7 @@ export function useImageRenderer(
       canvasRef.value.style.height = `${height}px`
     }
 
-    // Nastavenie SVG vrstvy (vektorové prvky)
+    // Set SVG dimensions
     if (svgRef.value) {
       svgRef.value.setAttribute('width', width)
       svgRef.value.setAttribute('height', height)
@@ -42,7 +74,7 @@ export function useImageRenderer(
       svgRef.value.style.height = `${height}px`
     }
 
-    // Nastavenie SVG rámika
+    // Set frame SVG dimensions
     if (frameSvgRef.value) {
       const frame = imageStore.frame
       const frameEnabled = frame?.enabled && (frame.width > 0 || frame.height > 0)
@@ -67,6 +99,9 @@ export function useImageRenderer(
     }
   }
 
+  /**
+   * Render base canvas from rasterized image
+   */
   const renderCanvas = () => {
     if (!canvasRef.value || !imageStore.getRenderedImage() || imageStore.fileType === 'pdf') return
 
@@ -84,6 +119,7 @@ export function useImageRenderer(
     ctx.clearRect(0, 0, width, height)
     ctx.drawImage(imageStore.getRenderedImage(true), 0, 0)
 
+    // Save initial state to history if empty
     if (historyStore.history.length === 0) {
       historyStore.push(imageStore.getSnapshot())
     }
@@ -91,6 +127,9 @@ export function useImageRenderer(
     imageStore.previewUrl = canvasRef.value.toDataURL()
   }
 
+  /**
+   * Render SVG vector elements over the image
+   */
   const renderSvg = () => {
     if (!svgRef.value || !imageStore.svgObjects) return
 
@@ -114,6 +153,9 @@ export function useImageRenderer(
     })
   }
 
+  /**
+   * Render the SVG frame layer and re-render canvas after frame update
+   */
   const renderFrameSvg = async () => {
     if (renderingFrameSvg.value) return
 
@@ -130,11 +172,14 @@ export function useImageRenderer(
     el.innerHTML = ''
     useFrameTool(imageStore, historyStore, editorStore, t).applyFrameRender(el)
 
-    console.log('-------------------------------------')
     renderCanvas()
 
     renderingFrameSvg.value = false
   }
+
+  /**
+   * Render all layers based on frame state (frame, canvas, SVG)
+   */
   const renderAll = () => {
     updateSizes()
 
@@ -146,15 +191,9 @@ export function useImageRenderer(
     renderSvg()
   }
 
-  onMounted(() => {
-    nextTick(() => {
-      if (imageStore.getRenderedImage()) {
-        renderAll()
-      }
-    })
-  })
-
-  // watch on imageStore.getRenderedImage()
+  /**
+   * Watch for changes in image dimensions and re-render all layers
+   */
   watch(
     () => imageStore.getRenderedImage(),
     (newImage) => {
@@ -165,7 +204,9 @@ export function useImageRenderer(
     },
   )
 
-  // watch on imageStore.frame
+  /**
+   * Watch for changes in viewport dimensions and update sizes
+   */
   watch(
     () => imageStore.frame,
     (newFrame) => {
@@ -177,6 +218,15 @@ export function useImageRenderer(
     },
     { immediate: true, deep: true },
   )
+
+  // Initial rendering on mount
+  onMounted(() => {
+    nextTick(() => {
+      if (imageStore.getRenderedImage()) {
+        renderAll()
+      }
+    })
+  })
 
   return {
     canvasRef,
