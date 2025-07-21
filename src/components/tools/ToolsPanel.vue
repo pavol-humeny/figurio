@@ -23,7 +23,7 @@ const {
   scrollDown,
   selectTool,
   isToolDisabled,
-} = useToolsPanel(useEditorStore(), useImageStore())
+} = useToolsPanel(useEditorStore(), useImageStore(), t)
 
 /**
  * Computed tool list with localized labels, tips and shortcuts

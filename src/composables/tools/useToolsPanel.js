@@ -1,21 +1,33 @@
 import { ref, onMounted, nextTick, computed, watch } from 'vue'
 import { useExportToolSettings } from '@/composables/toolsSettings/useExportToolSettings'
 import { useImageStore } from '@/stores/imageStore'
-import { useI18n } from 'vue-i18n'
 import { useEditorStore } from '@/stores/editorStore'
 import { useHistoryStore } from '@/stores/historyStore'
 
-export function useToolsPanel(editorStore, imageStore) {
-  const toolsRef = ref(null)
-  const atTop = ref(true)
-  const atBottom = ref(false)
-
-  const isToolDisabled = computed(() => !imageStore.isImageLoaded)
-
-  const activeTool = computed(() => editorStore.selectedToolKey)
-
-  const { t } = useI18n()
-
+/**
+ * Logic for managing the left tools panel
+ *
+ * @param {ReturnType<typeof useEditorStore>} editorStore - Editor store instance
+ * @param {ReturnType<typeof useImageStore>} imageStore - Image store instance
+ * @param {Function} t - Translation function from vue-i18n
+ * @returns {{
+ *   activeTool: import('vue').ComputedRef<string>,
+ *   toolsRef: import('vue').Ref<HTMLElement | null>,
+ *   atTop: import('vue').Ref<boolean>,
+ *   atBottom: import('vue').Ref<boolean>,
+ *   scrollUp: () => void,
+ *   scrollDown: () => void,
+ *   checkScroll: () => void,
+ *   toggleTool: (toolKey: string, tabKey?: string | null) => void,
+ *   exportTool: () => void,
+ *   selectTool: (toolKey: string, tabKey?: string | null) => void,
+ *   isToolDisabled: import('vue').ComputedRef<boolean>,
+ * }}
+ */
+export function useToolsPanel(editorStore, imageStore, t) {
+  /**
+   * Method to open the export tool settings modal
+   */
   const { openExportToolSettings } = useExportToolSettings(
     useImageStore(),
     useEditorStore(),
@@ -23,14 +35,68 @@ export function useToolsPanel(editorStore, imageStore) {
     t,
   )
 
+  /**
+   * Reference to the scrollable tools panel element
+   */
+  const toolsRef = ref(null)
+
+  /**
+   * Whether scroll is at top of panel
+   */
+  const atTop = ref(true)
+  /**
+   * Whether scroll is at bottom of panel
+   */
+  const atBottom = ref(false)
+
+  /**
+   * Whether any tool should be disabled (based on image load state)
+   */
+  const isToolDisabled = computed(() => !imageStore.isImageLoaded)
+
+  /**
+   * Currently active tool key
+   */
+  const activeTool = computed(() => editorStore.selectedToolKey)
+
+  // Reset subtool if switching to a global-level tool
+  watch(
+    () => ({
+      tool: editorStore.selectedToolKey,
+      tab: editorStore.selectedTabPerTool[editorStore.selectedToolKey],
+    }),
+    (newVal) => {
+      if (
+        // UPDATE new tool
+        newVal.tool === 'move' ||
+        newVal.tool === 'transform' ||
+        newVal.tool === 'grayscale' ||
+        newVal.tool === 'frame' ||
+        newVal.tool === 'export'
+      ) {
+        editorStore.selectSubTool('')
+      }
+    },
+    { immediate: true, deep: false },
+  )
+
+  /**
+   * Scroll panel upward by 100px
+   */
   const scrollUp = () => {
     toolsRef.value?.scrollBy({ top: -100, behavior: 'smooth' })
   }
 
+  /**
+   * Scroll panel downward by 100px
+   */
   const scrollDown = () => {
     toolsRef.value?.scrollBy({ top: 100, behavior: 'smooth' })
   }
 
+  /**
+   * Check scroll position and set atTop/atBottom flags
+   */
   const checkScroll = () => {
     const element = toolsRef.value
     if (!element) return
@@ -38,10 +104,12 @@ export function useToolsPanel(editorStore, imageStore) {
     atBottom.value = element.scrollTop + element.clientHeight >= element.scrollHeight - 1
   }
 
-  onMounted(() => {
-    nextTick(() => checkScroll())
-  })
-
+  /**
+   * Toggle selected tool and optionally activate a tab
+   *
+   * @param {string} toolKey - Tool key to toggle
+   * @param {string | null} [tabKey] - Optional tab key to activate
+   */
   const toggleTool = (toolKey, tabKey) => {
     if (!imageStore.isImageLoaded) return
 
@@ -58,11 +126,20 @@ export function useToolsPanel(editorStore, imageStore) {
     }
   }
 
+  /**
+   * Open export modal via export tool
+   */
   const exportTool = () => {
     console.log('Export tool')
     openExportToolSettings()
   }
 
+  /**
+   * Select tool or open export tool
+   *
+   * @param {string} toolKey - Tool key to select
+   * @param {string | null} [tabKey] - Optional tab key
+   */
   const selectTool = (toolKey, tabKey) => {
     if (isToolDisabled.value) return
 
@@ -75,24 +152,10 @@ export function useToolsPanel(editorStore, imageStore) {
     toggleTool(toolKey, tabKey)
   }
 
-  watch(
-    () => ({
-      tool: editorStore.selectedToolKey,
-      tab: editorStore.selectedTabPerTool[editorStore.selectedToolKey],
-    }),
-    (newVal) => {
-      if (
-        newVal.tool === 'move' ||
-        newVal.tool === 'transform' ||
-        newVal.tool === 'grayscale' ||
-        newVal.tool === 'frame' ||
-        newVal.tool === 'export'
-      ) {
-        editorStore.selectSubTool('')
-      }
-    },
-    { immediate: true, deep: false },
-  )
+  // Check scroll position on mount
+  onMounted(() => {
+    nextTick(() => checkScroll())
+  })
 
   return {
     activeTool,

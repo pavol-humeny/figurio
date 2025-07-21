@@ -3,8 +3,25 @@ import { computed, ref, nextTick, watch } from 'vue'
 import { useConfirmModal } from '../modals/useConfirmModal'
 import { useToastModal } from '../modals/useToastModal'
 
+/**
+ * Currently selected crop aspect ratio
+ */
 const cropRatio = ref(null)
 
+/**
+ * Reactive state of the crop box used for user interactions
+ * @type {import('vue').Ref<{
+ *   x: number,
+ *   y: number,
+ *   width: number,
+ *   height: number,
+ *   dragging: boolean,
+ *   resizing: boolean,
+ *   resizeDir: string,
+ *   startX: number,
+ *   startY: number
+ * }>}
+ */
 const cropBox = ref({
   x: 0,
   y: 0,
@@ -17,13 +34,24 @@ const cropBox = ref({
   startY: 0,
 })
 
+/**
+ * Logic for crop tool functionality, including crop box manipulation and position constraints
+ *
+ * @param {object} imageStore - Store containing image state and metadata
+ * @param {object} viewportStore - Store managing viewport state
+ * @param {object} editorStore - Store for currently selected tool/tab
+ * @param {object} historyStore - Store for undo/redo history
+ * @param {function} t - Translation function (vue-i18n)
+ * @returns {object} Crop tool logic and reactive state
+ */
 export function useCropTool(imageStore, viewportStore, editorStore, historyStore, t) {
   const { showConfirmModal } = useConfirmModal()
   const { showToastModal } = useToastModal()
-
   const { clamp } = useMath()
 
-  // Set initial crop box dimensions based on image dimensions
+  /**
+   * Watch for changes in image dimensions and update crop box accordingly
+   */
   watch(
     () => imageStore.fileDimensions,
     (fileDimensions) => {
@@ -37,19 +65,25 @@ export function useCropTool(imageStore, viewportStore, editorStore, historyStore
     { immediate: true, deep: true },
   )
 
+  /**
+   * Maximum allowed crop position based on image dimensions
+   */
   const maxCropPositionX = computed(() => {
     return imageStore.fileDimensions.width - cropBox.value.width
   })
   const maxCropPositionY = computed(() => {
     return imageStore.fileDimensions.height - cropBox.value.height
   })
+
+  /**
+   * Position of the crop box relative to the image
+   */
   const cropPositionX = computed({
     get: () => cropBox.value.x,
     set: (value) => {
       cropBox.value.x = Math.round(clamp(value, 0, maxCropPositionX.value))
     },
   })
-
   const cropPositionY = computed({
     get: () => cropBox.value.y,
     set: (value) => {
@@ -57,13 +91,26 @@ export function useCropTool(imageStore, viewportStore, editorStore, historyStore
     },
   })
 
+  /**
+   * Ref for crop width and height input field (used for syncing external components)
+   */
   const widthInputRef = ref(null)
   const heightInputRef = ref(null)
-  const PositionXInputRef = ref(null)
-  const PositionYInputRef = ref(null)
 
+  /**
+   * Ref for crop position inputs field
+   */
+  const positionXInputRef = ref(null)
+  const positionYInputRef = ref(null)
+
+  /**
+   * Whether width and height should be linked to preserve aspect ratio
+   */
   const isDimensionsLinked = ref(false)
 
+  /**
+   * Maximum crop width and height based on current image dimensions and position
+   */
   const maxCropWidth = computed(() => {
     return imageStore.fileDimensions.width - cropBox.value.x
   })
@@ -71,13 +118,15 @@ export function useCropTool(imageStore, viewportStore, editorStore, historyStore
     return imageStore.fileDimensions.height - cropBox.value.y
   })
 
+  /**
+   * Computed properties for crop width and height with setters to update crop box
+   */
   const cropWidth = computed({
     get: () => cropBox.value.width,
     set: (value) => {
       cropBox.value.width = Math.round(clamp(value, 0, maxCropWidth.value))
     },
   })
-
   const cropHeight = computed({
     get: () => cropBox.value.height,
     set: (value) => {
@@ -85,23 +134,33 @@ export function useCropTool(imageStore, viewportStore, editorStore, historyStore
     },
   })
 
+  /**
+   * Temporary refs to store crop width and height for syncing with external components
+   */
   const tmpCropWidth = ref(cropBox.value.width)
   const tmpCropHeight = ref(cropBox.value.height)
 
+  /**
+   * Watch for changes in crop width and height to update temporary refs
+   */
   watch(
     () => cropBox.value.width,
-    (val) => {
-      tmpCropWidth.value = val
+    (value) => {
+      tmpCropWidth.value = value
     },
   )
-
   watch(
     () => cropBox.value.height,
-    (val) => {
-      tmpCropHeight.value = val
+    (value) => {
+      tmpCropHeight.value = value
     },
   )
 
+  /**
+   * Update crop dimensions based on input values
+   * @param {'width'|'height'} key - Dimension to update
+   * @param {number} value - New dimension value
+   */
   const updateDimension = (key, value) => {
     const originalWidth = cropBox.value.width
     const originalHeight = cropBox.value.height
@@ -160,6 +219,11 @@ export function useCropTool(imageStore, viewportStore, editorStore, historyStore
     })
   }
 
+  /**
+   * Update crop position based on input values
+   * @param {'x'|'y'} key - Position to update
+   * @param {number} value - New position value
+   */
   const updatePosition = (key, value) => {
     if (key === 'x') {
       cropBox.value.x = Math.round(clamp(value, 0, maxCropPositionX.value))
@@ -167,12 +231,15 @@ export function useCropTool(imageStore, viewportStore, editorStore, historyStore
       cropBox.value.y = Math.round(clamp(value, 0, maxCropPositionY.value))
     }
     nextTick(() => {
-      PositionXInputRef.value.setValue(cropPositionX.value)
-      PositionYInputRef.value.setValue(cropPositionY.value)
+      positionXInputRef.value.setValue(cropPositionX.value)
+      positionYInputRef.value.setValue(cropPositionY.value)
     })
   }
 
-  // Drag
+  /**
+   * Start panning the crop box with middle mouse button
+   * @param {MouseEvent} event - Mouse event
+   */
   const startPan = (event) => {
     if (event.button !== 1) {
       event.preventDefault()
@@ -212,7 +279,11 @@ export function useCropTool(imageStore, viewportStore, editorStore, historyStore
     }
   }
 
-  // Resize
+  /**
+   * Start resizing the crop box from a specific direction
+   * @param {MouseEvent} e - Mouse event
+   * @param {'top'|'bottom'|'left'|'right'|'top-left'|'top-right'|'bottom-left'|'bottom-right'} direction - Resize direction
+   */
   const startResize = (e, direction) => {
     e.preventDefault()
     e.stopPropagation()
@@ -374,7 +445,10 @@ export function useCropTool(imageStore, viewportStore, editorStore, historyStore
     document.addEventListener('mouseup', onMouseUp)
   }
 
-  // Select type of crop
+  /**
+   * Select a type of crop tool
+   * @param {string} subTool - Sub tool key to select
+   */
   const selectSubTool = (subTool) => {
     editorStore.selectSubTool(subTool)
     cropBox.value.x = 0
@@ -457,6 +531,9 @@ export function useCropTool(imageStore, viewportStore, editorStore, historyStore
     cropBox.value.y = Math.round((fileHeight - cropBox.value.height) / 2)
   }
 
+  /**
+   * Apply the crop operation
+   */
   const applyCrop = async () => {
     // Check if crop box is same as image dimensions
     if (
@@ -495,6 +572,10 @@ export function useCropTool(imageStore, viewportStore, editorStore, historyStore
     historyStore.push(imageStore.getSnapshot())
   }
 
+  /**
+   * Apply the crop operation to the rendered image
+   * @param {Object} cropBox - Crop box dimensions
+   */
   const applyCropRender = (cropBox) => {
     if (!imageStore.getRenderedImage() || !cropBox) return
 
@@ -579,8 +660,8 @@ export function useCropTool(imageStore, viewportStore, editorStore, historyStore
     maxCropPositionX,
     maxCropPositionY,
     updatePosition,
-    PositionXInputRef,
-    PositionYInputRef,
+    positionXInputRef,
+    positionYInputRef,
     selectSubTool,
     cropRatio,
     cropBox,

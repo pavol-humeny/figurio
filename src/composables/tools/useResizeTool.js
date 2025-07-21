@@ -1,19 +1,55 @@
 import { ref, nextTick, watch } from 'vue'
 import { useToastModal } from '../modals/useToastModal'
+import { editorConfig } from '@/config/editorConfig'
 
+/**
+ * Logic for the resize tool
+ *
+ * @param {ReturnType<typeof useImageStore>} imageStore - Image store instance
+ * @param {ReturnType<typeof useHistoryStore>} historyStore - History store instance
+ * @param {Function} t - Translation function
+ * @returns {object} Resize tool bindings and methods
+ */
 export function useResizeTool(imageStore, historyStore, t) {
   const { showToastModal } = useToastModal()
-  const isUpdatingFromStore = ref(false)
-  const maxFileDimensionWidth = ref(10000)
-  const maxFileDimensionHeight = ref(10000)
 
+  /**
+   * Flag to prevent infinite loops during updates from the store
+   */
+  const isUpdatingFromStore = ref(false)
+
+  /**
+   * Maximum allowed image width and height based on editor config
+   */
+  const maxFileDimensionWidth = ref(editorConfig.maxFileDimensionWidth)
+  const maxFileDimensionHeight = ref(editorConfig.maxFileDimensionHeight)
+
+  /**
+   * Whether to preserve the aspect ratio when resizing
+   */
   const isFileDimensionsLinked = ref(true)
 
+  /**
+   * New width and height of the image entered by the user
+   */
   const fileDimensionWidth = ref(imageStore.fileDimensions.width)
   const fileDimensionHeight = ref(imageStore.fileDimensions.height)
 
+  /**
+   * Original aspect ratio (width / height) of the image
+   * Used when dimensions are linked
+   */
   let originalAspectRatio = imageStore.fileDimensions.width / imageStore.fileDimensions.height
 
+  /**
+   * Reference to the width and height input component
+   */
+  const FileDimensionWidthInputRef = ref(null)
+  const FileDimensionHeightInputRef = ref(null)
+
+  /**
+   * Watch for changes in file dimensions and update inputs accordingly
+   */
   watch(
     () => imageStore.fileDimensions,
     (newVal) => {
@@ -34,9 +70,12 @@ export function useResizeTool(imageStore, historyStore, t) {
     { immediate: true, deep: true },
   )
 
-  const FileDimensionWidthInputRef = ref(null)
-  const FileDimensionHeightInputRef = ref(null)
-
+  /**
+   * Update dimension input values, respecting aspect ratio if enabled
+   *
+   * @param {'width'|'height'} key - Dimension to update
+   * @param {number} value - New dimension value
+   */
   const updateFileDimension = (key, value) => {
     if (isUpdatingFromStore.value) return
 
@@ -88,6 +127,9 @@ export function useResizeTool(imageStore, historyStore, t) {
     applyResize()
   }
 
+  /**
+   * Apply the resize operation to the operation history and canvas
+   */
   const applyResize = () => {
     console.log('Applying resize with dimensions:', {
       width: fileDimensionWidth.value,
@@ -106,6 +148,12 @@ export function useResizeTool(imageStore, historyStore, t) {
     historyStore.push(imageStore.getSnapshot())
   }
 
+  /**
+   * Resize the current canvas and update imageStore accordingly
+   *
+   * @param {number} width - Target width
+   * @param {number} height - Target height
+   */
   const applyResizeRender = (width, height) => {
     if (width <= 0 || height <= 0) {
       showToastModal(
@@ -115,8 +163,6 @@ export function useResizeTool(imageStore, historyStore, t) {
       )
       return
     }
-
-    console.log('Applying resize render with dimensions:', { width, height })
 
     const oldImage = imageStore.getRenderedImage()
     if (!oldImage) return

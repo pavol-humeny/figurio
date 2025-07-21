@@ -1,14 +1,27 @@
 import { useConfirmModal } from '../modals/useConfirmModal'
 
+/**
+ * Logic for the rotate tool including confirmation, operation registration, and canvas rendering
+ *
+ * @param {ReturnType<typeof useImageStore>} imageStore - Image store instance
+ * @param {ReturnType<typeof useHistoryStore>} historyStore - History store instance
+ * @param {Function} t - Translation function
+ * @returns {{
+ *   applyRotation: (angle: number) => Promise<void>,
+ *   applyRotationRender: (angle: number) => void,
+ * }}
+ */
 export function useRotateTool(imageStore, historyStore, t) {
   const { showConfirmModal } = useConfirmModal()
 
-  // function normalizeAngle(angle) {
-  //   angle = ((((angle + 180) % 360) + 360) % 360) - 180
-  //   return angle
-  // }
-
+  /**
+   * Apply rotation to the image
+   *
+   * @param {number} angle - Angle to rotate in degrees
+   * @returns {Promise<void>}
+   */
   const applyRotation = async (angle) => {
+    // Show confirmation if SVG objects need to be rasterized first
     if (imageStore.svgObjects.length > 0) {
       const confirmed = await showConfirmModal(
         t('tools.confirmNeedRasterization.title'),
@@ -23,6 +36,7 @@ export function useRotateTool(imageStore, historyStore, t) {
       }
     }
 
+    // Register operation in the operation list
     imageStore.addImageOperation({
       type: 'rotation',
       angle: angle,
@@ -30,9 +44,15 @@ export function useRotateTool(imageStore, historyStore, t) {
 
     applyRotationRender(angle)
 
+    // Push to undo history
     historyStore.push(imageStore.getSnapshot())
   }
 
+  /**
+   * Rotate the canvas image by the specified angle
+   *
+   * @param {number} angle - Angle in degrees
+   */
   const applyRotationRender = (angle) => {
     if (!imageStore.getRenderedImage() || !angle) return
 
@@ -62,7 +82,6 @@ export function useRotateTool(imageStore, historyStore, t) {
     imageStore.fileDimensions.height = rotatedHeight
     imageStore.fileDimensions.fileAspectRatio = rotatedWidth / rotatedHeight || 1
     imageStore.newFileDimensions = { ...imageStore.fileDimensions }
-    // imageStore.previewUrl = imageStore.getRenderedImage().toDataURL()
   }
 
   return {

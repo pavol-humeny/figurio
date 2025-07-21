@@ -35,8 +35,8 @@ const {
   maxCropPositionX,
   maxCropPositionY,
   updatePosition,
-  PositionXInputRef,
-  PositionYInputRef,
+  positionXInputRef,
+  positionYInputRef,
   selectSubTool,
   cropRatio,
   applyCrop,
@@ -172,7 +172,7 @@ const tabs = ['rotate', 'flip', 'crop', 'resize']
                 <label for="x-input">
                   {{ $t('tools.transform.settings.crop.cropPosition.x') }}
                 </label>
-                <NumberInput ref="PositionXInputRef" v-model="cropPositionX" :min="0" :max="maxCropPositionX"
+                <NumberInput ref="positionXInputRef" v-model="cropPositionX" :min="0" :max="maxCropPositionX"
                   @update="(val) => updatePosition('x', val)" unit="px" />
               </div>
 
@@ -182,7 +182,7 @@ const tabs = ['rotate', 'flip', 'crop', 'resize']
                 <label for="y-input">
                   {{ $t('tools.transform.settings.crop.cropPosition.y') }}
                 </label>
-                <NumberInput ref="PositionYInputRef" v-model="cropPositionY" :min="0" :max="maxCropPositionY"
+                <NumberInput ref="positionYInputRef" v-model="cropPositionY" :min="0" :max="maxCropPositionY"
                   @update="(val) => updatePosition('y', val)" unit="px" />
               </div>
             </div>

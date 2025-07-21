@@ -5,6 +5,9 @@ import { editorConfig } from '@/config/editorConfig'
 export function useFrameTool(imageStore, historyStore, editorStore, t) {
   const { showToastModal } = useToastModal()
 
+  /**
+   * Frame color
+   */
   const frameColor = ref(imageStore.frame.color || '#000000')
   watch(
     () => imageStore.frame.color,
@@ -12,6 +15,10 @@ export function useFrameTool(imageStore, historyStore, editorStore, t) {
       frameColor.value = newColor
     },
   )
+
+  /**
+   * Frame width
+   */
   const frameWidth = ref(imageStore.frame.width || 0)
   watch(
     () => imageStore.frame.width,
@@ -19,11 +26,27 @@ export function useFrameTool(imageStore, historyStore, editorStore, t) {
       frameWidth.value = newWidth
     },
   )
+
+  /**
+   * Outline visibility
+   */
   const drawOutline = ref(imageStore.frame.outlineEnabled)
+
+  /**
+   * Ref for frame width input
+   */
   const frameWidthRef = ref(null)
 
-  // UPDATE new frame type
+  /**
+   * Selected frame variant
+   */
+  const selectedFrameVariant = computed(() => imageStore.frame.type || 'none')
+
+  /**
+   * Available frame options
+   */
   const frameOptions = computed(() => [
+    // UPDATE new frame type
     { label: t('tools.frame.settings.general.frameVariants.none'), value: 'none' },
     { label: t('tools.frame.settings.general.frameVariants.frameSolid'), value: 'frameSolid' },
     {
@@ -60,24 +83,9 @@ export function useFrameTool(imageStore, historyStore, editorStore, t) {
     },
   ])
 
-  const selectedFrameVariant = computed(() => imageStore.frame.type || 'none')
-
-  const handleFrameChange = (value) => {
-    console.log('Selected frame variant:', value)
-    imageStore.frame.type = value
-
-    applyFrame()
-  }
-
-  // Color
-  const setFrameColor = (color) => {
-    frameColor.value = color
-    if (frameWidth.value > 0) {
-      applyFrame()
-    }
-  }
-
-  // watch type
+  /**
+   * Watch for frame variant changes and reset frame width if necessary
+   */
   watch(selectedFrameVariant, (newType) => {
     if (newType !== 'frameSolid') {
       frameWidth.value = 0
@@ -85,15 +93,45 @@ export function useFrameTool(imageStore, historyStore, editorStore, t) {
     imageStore.phoneButtonsCanNotBeDrawnToastFlag = false // Reset flag when changing frame type
   })
 
-  // drawOutline
+  /**
+   * Handle frame variant change
+   * @param {string} value - Selected frame variant
+   */
+  const handleFrameChange = (value) => {
+    console.log('Selected frame variant:', value)
+    imageStore.frame.type = value
+
+    applyFrame()
+  }
+
+  /**
+   * Set frame color
+   * @param {string} color - New frame color
+   */
+  const setFrameColor = (color) => {
+    frameColor.value = color
+    if (frameWidth.value > 0) {
+      applyFrame()
+    }
+  }
+
+  /**
+   * Set frame outline visibility
+   * @param {boolean} value - Whether to show outline
+   */
   const setFrameOutline = (value) => {
     drawOutline.value = value
     applyFrame()
   }
 
+  /**
+   * Set frame width
+   * @param {number} width - New frame width
+   */
   const setFrameWidth = (width) => {
     if (width < 0) {
       if (
+        // UPDATE new frame type
         selectedFrameVariant.value === 'frameMacBrowser' ||
         selectedFrameVariant.value === 'frameWindowsBrowser' ||
         selectedFrameVariant.value === 'frameWindowsTaskBar'
@@ -111,17 +149,17 @@ export function useFrameTool(imageStore, historyStore, editorStore, t) {
     applyFrame()
   }
 
+  /**
+   * Apply the selected frame settings to the image
+   */
   const applyFrame = () => {
-    // TODO - copy without reference
-    const width = frameWidth.value
-    const color = frameColor.value
-    const type = selectedFrameVariant.value
-    const outlineEnabled = drawOutline.value
+    // Deep copy to avoid reference issues
+    const width = JSON.parse(JSON.stringify(frameWidth.value))
 
-    imageStore.frame.color = color
-    imageStore.frame.type = type
+    imageStore.frame.color = JSON.parse(JSON.stringify(frameColor.value))
+    imageStore.frame.type = JSON.parse(JSON.stringify(selectedFrameVariant.value))
     imageStore.frame.enabled = true
-    imageStore.frame.outlineEnabled = outlineEnabled
+    imageStore.frame.outlineEnabled = JSON.parse(JSON.stringify(drawOutline.value))
 
     if (selectedFrameVariant.value === 'none') {
       imageStore.frame.enabled = false
@@ -141,6 +179,11 @@ export function useFrameTool(imageStore, historyStore, editorStore, t) {
     historyStore.push(imageStore.getSnapshot())
   }
 
+  /**
+   * Get contrast color for the frame based on its hex value
+   * @param {string} hex - Hex color value
+   * @returns {string} - Contrast color (black or white)
+   */
   const getContrastColor = (hex) => {
     hex = hex.replace('#', '')
     if (hex.length === 3)
@@ -155,6 +198,10 @@ export function useFrameTool(imageStore, historyStore, editorStore, t) {
     return luminance > 186 ? '#000000' : '#ffffff'
   }
 
+  /**
+   * Apply the frame rendering to the specified SVG element
+   * @param {SVGElement} el - The SVG element to apply the frame to
+   */
   const applyFrameRender = (el, width = null, height = null) => {
     const ns = 'http://www.w3.org/2000/svg'
     const frame = imageStore.frame
@@ -873,8 +920,6 @@ export function useFrameTool(imageStore, historyStore, editorStore, t) {
 
       imageStore.setRenderedImage(canvas, true) // Set only original image, not tmpRenderedImage
       imageStore.previewUrl = canvas.toDataURL()
-
-      console.log(`--------------Rounding corners ${radius}px`)
     }
   }
 

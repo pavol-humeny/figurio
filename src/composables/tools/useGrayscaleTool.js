@@ -1,13 +1,28 @@
 import { useConfirmModal } from '../modals/useConfirmModal'
 import { computed } from 'vue'
 
+/**
+ * Logic for applying grayscale
+ *
+ * @param {object} imageStore - Store containing image data and operations
+ * @param {object} historyStore - Store for undo/redo history
+ * @param {Function} t - Translation function from vue-i18n
+ * @returns {object} Grayscale tool methods and state
+ */
 export function useGrayscaleTool(imageStore, historyStore, t) {
   const { showConfirmModal } = useConfirmModal()
 
+  /**
+   * Check if grayscale operation is already applied
+   */
   const isGrayscaleApplied = computed(() => {
     return imageStore.hasGrayscaleOperation()
   })
 
+  /**
+   * Apply grayscale operation and push to history
+   * Prompts rasterization if vector elements are present
+   */
   const applyGrayscale = async () => {
     if (imageStore.svgObjects.length > 0) {
       const confirmed = await showConfirmModal(
@@ -33,6 +48,10 @@ export function useGrayscaleTool(imageStore, historyStore, t) {
     historyStore.push(imageStore.getSnapshot())
   }
 
+  /**
+   * Convert the current rendered image to grayscale
+   * using luminosity method on pixel data
+   */
   const applyGrayscaleRender = () => {
     if (!imageStore.getRenderedImage()) return
 

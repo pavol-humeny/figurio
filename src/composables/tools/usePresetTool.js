@@ -20,15 +20,49 @@ export function usePresetTool(
   const { showToastModal } = useToastModal()
   const { showConfirmModal } = useConfirmModal()
 
+  // --------------------------
   // myPresets
+  // --------------------------
+
+  /**
+   * Whether the preset is modified
+   */
   const isPresetModified = ref(false)
+
+  /**
+   * Whether the preset is being modified
+   */
   const isModifyingPreset = ref(false)
+
+  /**
+   * Whether the preset is currently being initialized
+   */
   const initializing = ref(false)
+
+  /**
+   * The currently selected operation
+   */
   const selectedOperation = ref(null)
+
+  /**
+   * Whether a new operation is being created
+   */
   const creatingNewOperation = ref(false)
+
+  /**
+   * The new operation
+   */
   const newOperation = ref(null)
+
+  /**
+   * Whether the selected operation should be cleared
+   */
   const clearSelected = ref(false)
 
+  /**
+   * Currently available presets options for selection
+   * @returns {Array} - Array of preset options with label and value
+   */
   const presetsOptions = computed(() => {
     return presetsStore.allPresetNames.map((name) => ({
       label: name,
@@ -36,6 +70,9 @@ export function usePresetTool(
     }))
   })
 
+  /**
+   * The currently selected preset name
+   */
   const selectedPresetName = computed({
     get: () => presetsStore.selectedPresetName,
     set: (name) => {
@@ -43,6 +80,9 @@ export function usePresetTool(
     },
   })
 
+  /**
+   * Local variables to hold preset data
+   */
   const localPresetName = ref('')
   const tmpLocalPresetName = ref('')
   const localImageOperations = ref([])
@@ -50,7 +90,9 @@ export function usePresetTool(
   const localImageFrame = ref({})
   const tmpLocalImageFrame = ref({})
 
-  // Initialize local values when selectedPreset changes
+  /**
+   * Watch for changes in the selected preset and update local variables accordingly
+   */
   watch(
     () => presetsStore.selectedPreset,
     (preset) => {
@@ -69,7 +111,10 @@ export function usePresetTool(
     { immediate: true },
   )
 
-  // Watch localPresetName, localImageOperations and localImageFrame for changes and set isPresetModified to true
+  /**
+   * Watch for changes in local preset name, image operations, and image frame
+   * and mark the preset as modified if any changes occur
+   */
   watch(
     [() => localPresetName.value, () => localImageOperations.value, () => localImageFrame.value],
     () => {
@@ -79,7 +124,9 @@ export function usePresetTool(
     { deep: true },
   )
 
-  // Update crop box in preset immediately when localImageOperations changes
+  /**
+   * Update crop box in preset immediately when localImageOperations changes
+   */
   watch(
     localImageOperations,
     (newOperations) => {
@@ -99,7 +146,9 @@ export function usePresetTool(
     { deep: true },
   )
 
-  // Watch localImageFrame width - set height to width
+  /**
+   * Watch localImageFrame width - set height to width
+   */
   watch(
     () => localImageFrame.value.width,
     (width) => {
@@ -109,7 +158,9 @@ export function usePresetTool(
     },
   )
 
-  // Watch on selectedOperation, if it is not null set creatingNewOperation to false
+  /**
+   * Watch on selectedOperation, if it is not null set creatingNewOperation to false
+   */
   watch(selectedOperation, (op) => {
     if (op) {
       creatingNewOperation.value = false
@@ -117,7 +168,9 @@ export function usePresetTool(
     }
   })
 
-  // Watch localImageFrame.type if it is different than frameSolid reset width
+  /**
+   * Watch localImageFrame.type if it is different than frameSolid reset width
+   */
   watch(
     () => localImageFrame.value.type,
     (type) => {
@@ -129,7 +182,9 @@ export function usePresetTool(
     },
   )
 
-  // Watch localImageFrame.outlineEnabled, if it is true set width to default value
+  /**
+   * Watch localImageFrame.outlineEnabled, if it is true set width to default value
+   */
   watch(
     () => localImageFrame.value.outlineEnabled,
     (enabled) => {
@@ -145,7 +200,9 @@ export function usePresetTool(
     },
   )
 
-  // Watch localImageFrame.enabled, if it is true set default values for frame
+  /**
+   * Watch localImageFrame.enabled, if it is true set default values for frame
+   */
   watch(
     () => localImageFrame.value.enabled,
     (enabled) => {
@@ -165,6 +222,11 @@ export function usePresetTool(
     },
   )
 
+  /**
+   * Modify the preset
+   * Copy current preset data to temporary variables
+   * to revert changes if needed
+   */
   const modifyPreset = () => {
     isModifyingPreset.value = true
     isPresetModified.value = false
@@ -174,6 +236,9 @@ export function usePresetTool(
     tmpLocalImageOperations.value = JSON.parse(JSON.stringify(localImageOperations.value))
   }
 
+  /**
+   * Save changes to the preset
+   */
   const savePresetChanges = () => {
     console.log('Saving preset changes')
 
@@ -213,6 +278,9 @@ export function usePresetTool(
     editorStore.selectSubTool('')
   }
 
+  /**
+   * Close the modify preset dialog
+   */
   const closeModifyPreset = async () => {
     if (isPresetModified.value) {
       const confirmed = await showConfirmModal(
@@ -248,6 +316,9 @@ export function usePresetTool(
     editorStore.selectSubTool('')
   }
 
+  /**
+   * Delete the selected preset
+   */
   const deletePreset = async () => {
     const confirmed = await showConfirmModal(
       t('tools.preset.settings.myPresets.deletePresetConfirmation.title'),
@@ -281,6 +352,9 @@ export function usePresetTool(
     creatingNewOperation.value = false
   }
 
+  /**
+   * Create a new operation
+   */
   const createNewOperation = () => {
     newOperation.value = { type: '' }
     creatingNewOperation.value = true
@@ -288,6 +362,9 @@ export function usePresetTool(
     clearSelected.value = true
   }
 
+  /**
+   * Add the new operation to the local image operations
+   */
   const addNewOperation = () => {
     creatingNewOperation.value = false
     if (!newOperation.value) return
@@ -295,6 +372,14 @@ export function usePresetTool(
     localImageOperations.value.push(JSON.parse(JSON.stringify(newOperation.value)))
   }
 
+  /**
+   * Apply the selected preset
+   *
+   * Apply only if current image operations and frame are different from preset
+   * If there are SVG objects, rasterize them first
+   * If the preset contains crop operation, check if it is valid
+   * Replace or add operations based on user confirmation
+   */
   const applyPreset = async () => {
     if (imageStore.svgObjects.length > 0) {
       const confirmed = await showConfirmModal(
@@ -423,12 +508,28 @@ export function usePresetTool(
     historyStore.push(imageStore.getSnapshot())
   }
 
-  // createPreset
+  // --------------------------
+  // newPreset
+  // --------------------------
 
+  /**
+   * Reference to the frame width input element
+   */
   const frameWidthRef = ref(null)
+
+  /**
+   * Reference to the preset name input element
+   */
   const presetNameRef = ref(null)
+
+  /**
+   * Whether the manual preset setting dialog is shown
+   */
   const isShowManualPresetSetting = ref(false)
 
+  /**
+   * New preset object to be created
+   */
   const newPreset = ref({
     presetName: '',
     transformations: {
@@ -467,6 +568,25 @@ export function usePresetTool(
     // UPDATE new tool
   })
 
+  /**
+   * Max crop box position based on editor config
+   */
+  const maxCropBoxPositionX = computed(() => editorConfig.maxFileDimensionWidth)
+  const maxCropBoxPositionY = computed(() => editorConfig.maxFileDimensionHeight)
+
+  /**
+   * Max crop box width and height based on editor config and current crop box position
+   */
+  const maxCropBoxWidth = computed(() => {
+    return Math.max(0, editorConfig.maxFileDimensionWidth - newPreset.value.cropBox.x)
+  })
+  const maxCropBoxHeight = computed(() => {
+    return Math.max(0, editorConfig.maxFileDimensionHeight - newPreset.value.cropBox.y)
+  })
+
+  /**
+   * Rotation options for the preset
+   */
   const presetRotationOptions = [
     { label: '-180°', value: -180 },
     { label: '-90°', value: -90 },
@@ -475,8 +595,11 @@ export function usePresetTool(
     { label: '180°', value: 180 },
   ]
 
-  // UPDATE new frame type
+  /**
+   * Available frame options for the preset
+   */
   const presetFrameOptions = computed(() => [
+    // UPDATE new frame type
     { label: t('tools.frame.settings.general.frameVariants.frameSolid'), value: 'frameSolid' },
     {
       label: t('tools.frame.settings.general.frameVariants.frameMacBrowser'),
@@ -512,7 +635,9 @@ export function usePresetTool(
     },
   ])
 
-  // Watch new preset frame type and if it is solid set outlineEnabled to false
+  /**
+   * Watch new preset frame type and if it is solid set outlineEnabled to false
+   */
   watch(
     () => newPreset.value.frame.type,
     (type) => {
@@ -538,10 +663,17 @@ export function usePresetTool(
     },
   )
 
+  /**
+   * Show the manual preset setting dialog
+   */
   const showManualPresetSetting = () => {
     isShowManualPresetSetting.value = true
   }
 
+  /**
+   * Reset the new preset to default values
+   * This is called when creating a new preset or after saving a preset
+   */
   const resetPreset = () => {
     newPreset.value = {
       presetName: '',
@@ -583,6 +715,9 @@ export function usePresetTool(
     isShowManualPresetSetting.value = false
   }
 
+  /**
+   * Create a new preset based on the current settings
+   */
   const createPreset = () => {
     console.log('Creating preset:', newPreset.value.presetName)
 
@@ -660,6 +795,9 @@ export function usePresetTool(
     )
   }
 
+  /**
+   * Reset the frame width based on the current preset and image dimensions
+   */
   const resetFrameWidth = () => {
     // UPDATE new frame type
     if (
@@ -680,6 +818,9 @@ export function usePresetTool(
     frameWidthRef.value.setValue(newPreset.value.frame.width)
   }
 
+  /**
+   * Use current modifications to create a preset
+   */
   const useCurrentModifications = () => {
     console.log('Using current modifications to create preset')
 
@@ -740,17 +881,6 @@ export function usePresetTool(
       }
     }, 2000)
   }
-
-  const maxCropBoxPositionX = computed(() => editorConfig.maxFileDimensionWidth)
-  const maxCropBoxPositionY = computed(() => editorConfig.maxFileDimensionHeight)
-
-  const maxCropBoxWidth = computed(() => {
-    return Math.max(0, editorConfig.maxFileDimensionWidth - newPreset.value.cropBox.x)
-  })
-
-  const maxCropBoxHeight = computed(() => {
-    return Math.max(0, editorConfig.maxFileDimensionHeight - newPreset.value.cropBox.y)
-  })
 
   return {
     newPreset,

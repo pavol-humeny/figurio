@@ -1,4 +1,16 @@
+/**
+ * Logic for flipping the image and associated SVG elements
+ *
+ * @param {object} imageStore - Store containing image data and operations
+ * @param {object} historyStore - Store for undo/redo history
+ * @returns {object} Flip tool methods
+ */
 export function useFlipTool(imageStore, historyStore) {
+  /**
+   * Add flip operation, apply transformation and push to history
+   *
+   * @param {'horizontal' | 'vertical'} direction - Flip direction
+   */
   const applyFlip = (direction) => {
     if (direction === 'horizontal') {
       imageStore.addImageOperation({
@@ -17,6 +29,11 @@ export function useFlipTool(imageStore, historyStore) {
     historyStore.push(imageStore.getSnapshot())
   }
 
+  /**
+   * Apply visual flip to rendered image and update SVG object positions
+   *
+   * @param {'horizontal' | 'vertical'} direction - Flip direction
+   */
   const applyFlipRender = (direction) => {
     if (!imageStore.getRenderedImage()) return
 
@@ -43,7 +60,6 @@ export function useFlipTool(imageStore, historyStore) {
     ctx.restore()
 
     imageStore.setRenderedImage(canvas)
-    // imageStore.previewUrl = canvas.toDataURL()
 
     // Flip vector objects
     if (Array.isArray(imageStore.svgObjects) && imageStore.svgObjects.length !== 0) {
