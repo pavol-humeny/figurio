@@ -2,12 +2,44 @@ import { ref, watch } from 'vue'
 
 /**
  * Logic for the <NumberInput> component
- * @param {Object} props - Component props
- * @param {Function} emit - emit function
+ *
+ * @param {{
+ *   modelValue: number,
+ *   min: number,
+ *   max: number,
+ *   disabled?: boolean,
+ *   icon?: string,
+ *   unit?: string,
+ *   onReset?: () => void
+ * }} props - Component props
+ * @param {(event: string, value: number) => void} emit - Emit function for model updates
+ * @returns {{
+ *   inputValue: import('vue').Ref<number>,
+ *   onBlurOrEnter: () => void,
+ *   onIconDoubleClick: () => void,
+ *   setValue: (val: number) => void,
+ *   showIcon: boolean,
+ *   showUnit: boolean
+ * }}
  */
 export function useNumberInput(props, emit) {
+  /**
+   * Internal reactive value bound to the number input
+   */
   const inputValue = ref(props.modelValue)
 
+  /**
+   * Whether the icon should be shown
+   */
+  const showIcon = props.icon !== ''
+  /**
+   * Whether the unit label should be shown
+   */
+  const showUnit = props.unit !== ''
+
+  /**
+   * Watch for external modelValue changes and update local value
+   */
   watch(
     () => props.modelValue,
     (newVal) => {
@@ -15,6 +47,9 @@ export function useNumberInput(props, emit) {
     },
   )
 
+  /**
+   * Handles blur or enter event, clamps value between min and max, emits update
+   */
   const onBlurOrEnter = () => {
     let value = inputValue.value
 
@@ -29,6 +64,9 @@ export function useNumberInput(props, emit) {
     emit('update', value)
   }
 
+  /**
+   * Emits reset action when icon is double-clicked
+   */
   const onIconDoubleClick = () => {
     if (props.disabled) return
     if (typeof props.onReset === 'function') {
@@ -36,12 +74,14 @@ export function useNumberInput(props, emit) {
     }
   }
 
-  const setValue = (val) => {
-    inputValue.value = val
+  /**
+   * Updates the internal input value programmatically
+   *
+   * @param {number} value - New value to assign
+   */
+  const setValue = (value) => {
+    inputValue.value = value
   }
-
-  const showIcon = props.icon !== ''
-  const showUnit = props.unit !== ''
 
   return {
     inputValue,

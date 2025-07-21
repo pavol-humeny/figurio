@@ -2,13 +2,26 @@ import { ref, watch } from 'vue'
 
 /**
  * Logic for the <DropdownSelect> component
- * @param {Object} props - Component props
- * @param {Function} emit - Emit function for model updates
+ *
+ * @param {{ modelValue: string, icon?: string, onReset?: () => void }} props - Component props
+ * @param {(event: string, value: any) => void} emit - Emit function for model updates
+ * @returns {{
+ *   selectedValue: import('vue').Ref<string>,
+ *   onChange: () => void,
+ *   onIconDoubleClick: () => void,
+ *   setValue: (value: string) => void,
+ *   showIcon: boolean
+ * }}
  */
 export function useDropdownSelect(props, emit) {
+  /**
+   * Currently selected value of the dropdown
+   */
   const selectedValue = ref(props.modelValue)
 
-  // Sync when modelValue changes externally
+  /**
+   * Watch for external changes and synchronize internal value
+   */
   watch(
     () => props.modelValue,
     (newVal) => {
@@ -17,7 +30,7 @@ export function useDropdownSelect(props, emit) {
   )
 
   /**
-   * Emits when value is changed by user
+   * Emits updated value when user selects an option
    */
   const onChange = () => {
     emit('update:modelValue', selectedValue.value)
@@ -25,7 +38,7 @@ export function useDropdownSelect(props, emit) {
   }
 
   /**
-   * Emits when icon is double-clicked
+   * Emits reset action when icon is double-clicked
    */
   const onIconDoubleClick = () => {
     if (typeof props.onReset === 'function') {
@@ -33,10 +46,18 @@ export function useDropdownSelect(props, emit) {
     }
   }
 
+  /**
+   * Sets selected value programmatically
+   *
+   * @param {string} value - New selected value
+   */
   const setValue = (value) => {
     selectedValue.value = value
   }
 
+  /**
+   * Whether the reset icon should be shown
+   */
   const showIcon = props.icon !== ''
 
   return {

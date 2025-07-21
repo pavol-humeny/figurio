@@ -1,14 +1,52 @@
 import { ref, computed, onMounted, onBeforeUnmount, watch, nextTick } from 'vue'
 import { editorConfig } from '@/config/editorConfig'
 
+/**
+ * Logic for <itemTip> component
+ *
+ * @param {{
+ *   position?: 'top' | 'top-right' | 'top-left' | 'bottom' | 'bottom-right' | 'bottom-left' | 'left' | 'right',
+ *   delay?: number,
+ *   offset?: number
+ * }} [options={}] - Optional configuration for position, delay and offset
+ * @returns {{
+ *   isVisible: import('vue').Ref<boolean>,
+ *   wrapper: import('vue').Ref<HTMLElement | null>,
+ *   itemTipStyle: import('vue').ComputedRef<Record<string, string>>,
+ *   handleMouseEnter: () => void,
+ *   handleMouseLeave: () => void,
+ *   updatePosition: () => void
+ * }}
+ */
 export function useItemTip(options = {}) {
+  /**
+   * Tooltip position (defaults to 'top')
+   */
   const { position = 'top', delay = editorConfig.tipDelay, offset = 8 } = options
 
+  /**
+   * Whether the tooltip is currently visible
+   */
   const isVisible = ref(false)
+
+  /**
+   * Reference to the DOM element the tooltip is attached to
+   */
   const wrapper = ref(null)
+
+  /**
+   * Timeout used to delay the tooltip appearance
+   */
   const hoverTimeout = ref(null)
+
+  /**
+   * Coordinates where the tooltip should appear
+   */
   const coords = ref({ top: 0, left: 0 })
 
+  /**
+   * Computed CSS style for positioning the tooltip
+   */
   const itemTipStyle = computed(() => ({
     position: 'absolute',
     top: `${coords.value.top}px`,
@@ -16,7 +54,17 @@ export function useItemTip(options = {}) {
     zIndex: 'var(--z-index-tip)',
   }))
 
-  function updatePosition() {
+  /**
+   * Watches the visibility state and updates position when it changes
+   */
+  watch(isVisible, (visible) => {
+    if (visible) nextTick(updatePosition)
+  })
+
+  /**
+   * Updates tooltip coordinates based on wrapper element and position
+   */
+  const updatePosition = () => {
     if (!wrapper.value) return
 
     const rect = wrapper.value.getBoundingClientRect()
@@ -74,24 +122,28 @@ export function useItemTip(options = {}) {
     }
   }
 
-  function handleMouseEnter() {
+  /**
+   * Handles mouseenter event and starts delayed tooltip show
+   */
+  const handleMouseEnter = () => {
     hoverTimeout.value = setTimeout(() => {
       isVisible.value = true
     }, delay)
   }
 
-  function handleMouseLeave() {
+  /**
+   * Handles mouseleave event and hides the tooltip
+   */
+  const handleMouseLeave = () => {
     clearTimeout(hoverTimeout.value)
     isVisible.value = false
   }
 
+  // Update position after mount
   onMounted(() => nextTick(updatePosition))
 
+  // Clear tooltip timeout before component unmounts
   onBeforeUnmount(() => clearTimeout(hoverTimeout.value))
-
-  watch(isVisible, (visible) => {
-    if (visible) nextTick(updatePosition)
-  })
 
   return {
     isVisible,

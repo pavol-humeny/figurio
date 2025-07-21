@@ -2,25 +2,55 @@ import { ref, watch } from 'vue'
 
 /**
  * Logic for the <StepperInput> component
- * @param {Object} props - Component props
- * @param {Function} emit - Emit function
+ *
+ * @param {{
+ *   modelValue: number,
+ *   step: number,
+ *   min: number,
+ *   max: number,
+ *   disabled?: boolean,
+ *   onReset?: () => void
+ * }} props - Component props
+ * @param {(event: string, value: number) => void} emit - Emit function for model updates
+ * @returns {{
+ *   value: import('vue').Ref<number>,
+ *   increase: () => void,
+ *   decrease: () => void,
+ *   emitChange: () => void,
+ *   handleReset: () => void,
+ *   setValue: (val: number) => void,
+ *   disableIncrease: () => boolean,
+ *   disableDecrease: () => boolean,
+ *   changeValue: (event: WheelEvent) => void
+ * }}
  */
 export function useStepperInput(props, emit) {
+  /**
+   * Internal reactive value of the input
+   */
   const value = ref(props.modelValue)
 
-  // Sync internal value with prop
+  /**
+   * Watch for external changes to modelValue and update internal state
+   */
   watch(
     () => props.modelValue,
-    (val) => {
-      value.value = val
+    (value) => {
+      value.value = value
     },
   )
 
+  /**
+   * Emits the updated value to the parent component
+   */
   const emitChange = () => {
     emit('update:modelValue', value.value)
     emit('update', value.value)
   }
 
+  /**
+   * Increases the value by step if within max bounds and not disabled
+   */
   const increase = () => {
     if (!props.disabled && value.value + props.step <= props.max) {
       value.value += props.step
@@ -28,6 +58,9 @@ export function useStepperInput(props, emit) {
     }
   }
 
+  /**
+   * Decreases the value by step if within min bounds and not disabled
+   */
   const decrease = () => {
     if (!props.disabled && value.value - props.step >= props.min) {
       value.value -= props.step
@@ -35,25 +68,48 @@ export function useStepperInput(props, emit) {
     }
   }
 
+  /**
+   * Calls the onReset prop function if defined
+   */
   const handleReset = () => {
     if (typeof props.onReset === 'function') {
       props.onReset()
     }
   }
 
-  const setValue = (val) => {
-    value.value = val
+  /**
+   * Programmatically sets the value and emits it
+   *
+   * @param {number} value - New value to set
+   */
+  const setValue = (value) => {
+    value.value = value
     emitChange()
   }
 
+  /**
+   * Returns true if the increase button should be disabled
+   *
+   * @returns {boolean}
+   */
   const disableIncrease = () => {
     return props.disabled || value.value + props.step > props.max
   }
 
+  /**
+   * Returns true if the decrease button should be disabled
+   *
+   * @returns {boolean}
+   */
   const disableDecrease = () => {
     return props.disabled || value.value - props.step < props.min
   }
 
+  /**
+   * Handles mouse wheel events to change value
+   *
+   * @param {WheelEvent} event - Mouse wheel event
+   */
   const changeValue = (event) => {
     if (event.deltaY < 0) {
       increase()

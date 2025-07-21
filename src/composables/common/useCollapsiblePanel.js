@@ -1,9 +1,9 @@
 import { computed, ref } from 'vue'
 
 /**
- * Composable for managing collapsible right-side panel UI logic.
+ * Logic for the collapsible right-side panel component
  *
- * @param {UiStore} uiStore - Pinia store
+ * @param {UiStore} uiStore - Pinia store managing panel UI state
  * @returns {{
  *   isVisible: import('vue').ComputedRef<boolean>,
  *   toggleVisibility: () => void,
@@ -13,27 +13,43 @@ import { computed, ref } from 'vue'
  * }}
  */
 export function useCollapsiblePanel(uiStore) {
-  // Width of the collapse toggle button
+  /**
+   * Width of the collapse toggle button
+   */
   const collapseButtonWidth = uiStore.collapseButtonWidth
 
-  // Total width of the right panel including collapse button
+  /**
+   * Temporarily stores the width of the panel when collapsed
+   */
+  const tmpWidth = ref(0)
+
+  /**
+   * Whether resize is currently active
+   */
+  const isResizing = ref(false)
+  /**
+   * Initial mouse X position when resizing starts
+   */
+  const startX = ref(0)
+  /**
+   * Initial panel width before resizing
+   */
+  const startWidth = ref(0)
+
+  /**
+   * Total width of the right panel including the collapse button
+   */
   const rightSidePanelWidth = computed(() => {
     return uiStore.rightPanelWidth + uiStore.collapseButtonWidth
   })
 
-  // Temporarily stores width when panel is collapsed
-  const tmpWidth = ref(0)
-
-  // Computed visibility state of the panel
+  /**
+   * Computed state to track panel visibility
+   */
   const isVisible = computed(() => uiStore.rightPanelOpen)
 
-  // Resize-related state
-  const isResizing = ref(false)
-  const startX = ref(0)
-  const startWidth = ref(0)
-
   /**
-   * Toggles the panel open/closed (storing/restoring width).
+   * Toggles the visibility of the panel.
    */
   const toggleVisibility = () => {
     if (isVisible.value) {
@@ -47,8 +63,9 @@ export function useCollapsiblePanel(uiStore) {
   }
 
   /**
-   * Starts a resize operation based on current mouse position.
-   * @param {MouseEvent} event
+   * Initiates the panel resizing operation.
+   *
+   * @param {MouseEvent} event - Mouse down event on resize handle
    */
   const startResize = (event) => {
     isResizing.value = true
@@ -59,8 +76,9 @@ export function useCollapsiblePanel(uiStore) {
   }
 
   /**
-   * Handles mousemove events to resize the panel.
-   * @param {MouseEvent} event
+   * Dynamically updates the panel width during mouse movement.
+   *
+   * @param {MouseEvent} event - Mouse move event during resize
    */
   const handleResize = (event) => {
     if (!isResizing.value) return
@@ -73,7 +91,7 @@ export function useCollapsiblePanel(uiStore) {
   }
 
   /**
-   * Stops the resize operation and removes event listeners.
+   * Ends the resize operation and removes mouse event listeners.
    */
   const stopResize = () => {
     isResizing.value = false
