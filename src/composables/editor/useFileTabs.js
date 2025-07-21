@@ -14,12 +14,12 @@ export function useFileTabs(uiStore, t) {
   const setActiveTab = async (index) => {
     if (index !== activeTabIndex.value) {
       uiStore.isLoading = true
-      await new Promise((resolve) => setTimeout(resolve, 10))
+      await new Promise((resolve) => setTimeout(resolve, 1))
 
       workspaceStore.updateCurrentTabState()
       workspaceStore.switchToTab(index)
 
-      await new Promise((resolve) => setTimeout(resolve, 10))
+      await new Promise((resolve) => setTimeout(resolve, 1))
       uiStore.isLoading = false
     }
   }
@@ -33,12 +33,12 @@ export function useFileTabs(uiStore, t) {
     )
     if (confirmed) {
       uiStore.isLoading = true
-      await new Promise((resolve) => setTimeout(resolve, 10))
+      await new Promise((resolve) => setTimeout(resolve, 1))
 
       workspaceStore.updateCurrentTabState()
       workspaceStore.closeTab(index)
 
-      await new Promise((resolve) => setTimeout(resolve, 10))
+      await new Promise((resolve) => setTimeout(resolve, 1))
       uiStore.isLoading = false
     }
   }
@@ -80,20 +80,20 @@ export function useFileTabs(uiStore, t) {
 
   const switchToNextTab = async () => {
     uiStore.isLoading = true
-    await new Promise((resolve) => setTimeout(resolve, 10))
+    await new Promise((resolve) => setTimeout(resolve, 1))
 
     workspaceStore.switchToNextTab()
 
-    await new Promise((resolve) => setTimeout(resolve, 10))
+    await new Promise((resolve) => setTimeout(resolve, 1))
     uiStore.isLoading = false
   }
   const switchToPreviousTab = async () => {
     uiStore.isLoading = true
-    await new Promise((resolve) => setTimeout(resolve, 10))
+    await new Promise((resolve) => setTimeout(resolve, 1))
 
     workspaceStore.switchToPreviousTab()
 
-    await new Promise((resolve) => setTimeout(resolve, 10))
+    await new Promise((resolve) => setTimeout(resolve, 1))
     uiStore.isLoading = false
   }
 

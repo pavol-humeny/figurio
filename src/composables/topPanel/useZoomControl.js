@@ -12,6 +12,7 @@ export function useZoomControl(viewportStore) {
   const canZoomOut = computed(() => viewportStore.zoomLevel > viewportStore.minZoomLevel)
 
   const zoomIn = () => {
+    console.log('Zooming in')
     if (!canZoomIn.value) return
     viewportStore.setZoomLevel(viewportStore.zoomLevel + 0.1)
   }

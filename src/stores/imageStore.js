@@ -438,6 +438,12 @@ export const useImageStore = defineStore('imageStore', {
             workspaceStore.addNewTab(this.fileName)
 
             uiStore.isLoading = false
+
+            showToastModal(
+              'success',
+              t('imageStore.toast.successFileUploaded.title'),
+              t('imageStore.toast.successFileUploaded.message', { fileName: file.name }),
+            )
           }
 
           img.src = event.target.result
@@ -447,12 +453,6 @@ export const useImageStore = defineStore('imageStore', {
       } else {
         console.error('Unsupported file type:', this.fileType)
       }
-
-      showToastModal(
-        'success',
-        t('imageStore.toast.successFileUploaded.title'),
-        t('imageStore.toast.successFileUploaded.message', { fileName: file.name }),
-      )
     },
 
     /**

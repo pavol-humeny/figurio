@@ -11,7 +11,7 @@ const { t } = useI18n()
 
 const { uploadFile } = useUploadFileButton(useImageStore(), t, useRouter())
 
-useKeyboardShortcuts({ uploadFile }, useUiStore());
+useKeyboardShortcuts({ uploadFile }, useUiStore(), useImageStore());
 
 </script>
 
