@@ -15,4 +15,8 @@ export const uiConfig = {
 
   // Rulers
   rulersEnabled: true,
+
+  // Toast
+  // Auto remove time
+  toastAutoRemoveTime: 6000, // 6 seconds
 }
