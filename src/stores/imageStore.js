@@ -476,7 +476,7 @@ export const useImageStore = defineStore('imageStore', {
      * @param {Function} t - i18n translation function
      * @param {import('vue-router').Router} router - Vue router instance
      */
-    saveToImageStore(files, t, router) {
+    async saveToImageStore(files, t, router) {
       if (!files) return
 
       if (files.length > 1) {
@@ -489,6 +489,14 @@ export const useImageStore = defineStore('imageStore', {
       }
 
       if (this.checkFile(files[0])) {
+        if (router.currentRoute.value.name !== 'editor') {
+          await router.push({ name: 'editor' })
+          await router.isReady()
+
+          const uiStore = useUiStore()
+          uiStore.isLoading = true
+        }
+
         this.setFile(files[0], t)
       } else {
         showToastModal(
@@ -496,10 +504,6 @@ export const useImageStore = defineStore('imageStore', {
           t('imageStore.toast.errorUnsupportedFileType.title'),
           t('imageStore.toast.errorUnsupportedFileType.message', { fileType: files[0].type }),
         )
-      }
-
-      if (router.currentRoute.value.name !== 'editor') {
-        router.push({ name: 'editor' })
       }
     },
 
