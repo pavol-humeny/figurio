@@ -1,9 +1,21 @@
 import { useMath } from '@/composables/common/useMath'
 import { ref, computed, watch, reactive, nextTick } from 'vue'
 
+/**
+ * Logic for managing new preset operation creation
+ *
+ * @param {ReturnType<typeof import('@/stores/imageStore').useImageStore>} imageStore - Image store
+ * @param {{ operation?: Object }} props - Component props with optional initial operation
+ * @param {(event: string, value: any) => void} emit - Emit function
+ * @param {(key: string) => string} t - Translation function
+ * @returns {Object}
+ */
 export function usePresetNewOperation(imageStore, props, emit, t) {
   const { clamp } = useMath()
 
+  /**
+   * Available rotation angle options
+   */
   const rotationOptions = [
     { label: '180°', value: 180 },
     { label: '270°', value: 270 },
@@ -12,6 +24,9 @@ export function usePresetNewOperation(imageStore, props, emit, t) {
     { label: '-180°', value: -180 },
   ]
 
+  /**
+   * Flip direction options with localized labels
+   */
   const flipOptions = [
     {
       label: t('tools.preset.settings.myPresets.presetValues.transformations.horizontalFlip'),
@@ -23,6 +38,9 @@ export function usePresetNewOperation(imageStore, props, emit, t) {
     },
   ]
 
+  /**
+   * Available operation types for user to choose from
+   */
   const operationOptions = [
     {
       label: t('tools.preset.settings.myPresets.presetValues.transformations.rotation'),
@@ -51,8 +69,14 @@ export function usePresetNewOperation(imageStore, props, emit, t) {
     // UPDATE new tool
   ]
 
+  /**
+   * Currently selected operation type
+   */
   const selectedType = ref(props.operation?.type || '')
 
+  /**
+   * Parameters for all supported operations
+   */
   const params = reactive({
     angle: 0,
     direction: 'horizontal',
@@ -62,20 +86,36 @@ export function usePresetNewOperation(imageStore, props, emit, t) {
     // UPDATE new tool
   })
 
+  /**
+   * Whether crop width and height should stay linked (aspect ratio)
+   */
   const isDimensionsLinked = ref(true)
+
+  /**
+   * Temporary values used for pre-filling crop dimensions
+   */
   const tmpCropWidth = ref(0)
   const tmpCropHeight = ref(0)
 
+  /**
+   * Input element refs for syncing programmatic updates
+   */
   const cropPositionXInputRef = ref(null)
   const cropPositionYInputRef = ref(null)
   const cropWidthInputRef = ref(null)
   const cropHeightInputRef = ref(null)
 
+  /**
+   * Maximum crop positions and sizes based on image dimensions
+   */
   const maxCropPositionX = computed(() => imageStore.fileDimensions.width - params.cropBox.width)
   const maxCropPositionY = computed(() => imageStore.fileDimensions.height - params.cropBox.height)
   const maxCropWidth = computed(() => imageStore.fileDimensions.width - params.cropBox.x)
   const maxCropHeight = computed(() => imageStore.fileDimensions.height - params.cropBox.y)
 
+  /**
+   * Emits operation template when selected type changes
+   */
   watch(selectedType, (type) => {
     let op = null
     // UPDATE new tool
@@ -97,6 +137,9 @@ export function usePresetNewOperation(imageStore, props, emit, t) {
     emit('update:operation', op)
   })
 
+  /**
+   * Emits updated operation whenever parameters change
+   */
   watch(
     () => [params.angle, params.direction, params.color, params.cropBox],
     () => {
@@ -119,6 +162,12 @@ export function usePresetNewOperation(imageStore, props, emit, t) {
     { deep: true, immediate: true },
   )
 
+  /**
+   * Updates crop position (X or Y), clamps to bounds and syncs inputs
+   *
+   * @param {'x' | 'y'} key - Property to update
+   * @param {number} value - New value
+   */
   const updatePosition = (key, value) => {
     if (key === 'x') {
       params.cropBox.x = Math.round(clamp(value, 0, maxCropPositionX.value))
@@ -131,6 +180,12 @@ export function usePresetNewOperation(imageStore, props, emit, t) {
     })
   }
 
+  /**
+   * Updates crop dimensions (width or height), respects aspect ratio if linked
+   *
+   * @param {'width' | 'height'} key - Dimension to update
+   * @param {number} value - New size
+   */
   const updateDimension = (key, value) => {
     const originalWidth = params.cropBox.width
     const originalHeight = params.cropBox.height
