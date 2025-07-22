@@ -16,4 +16,7 @@ export const editorConfig = {
 
   // Presets
   localStoragePresetsKey: 'imageEditorPresets',
+
+  // Max file size for uploads
+  maxFileSize: 10, // in MB
 }

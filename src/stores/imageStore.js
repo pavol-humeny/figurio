@@ -7,6 +7,7 @@ import { useHistoryStore } from './historyStore'
 import { useFrameTool } from '@/composables/tools/useFrameTool'
 import { useWorkspaceStore } from './workspaceStore'
 import { useUiStore } from './uiStore'
+import { editorConfig } from '@/config/editorConfig'
 
 const { showToastModal } = useToastModal()
 
@@ -388,12 +389,40 @@ export const useImageStore = defineStore('imageStore', {
     },
 
     /**
+     * Checks if the file size exceeds the maximum allowed size
+     * @param {number} fileSize - Size of the file in bytes
+     * @param {string} fileName - Name of the file
+     * @param {Function} t - i18n translation function
+     * @returns {boolean} - True if the file size is within limits, false otherwise
+     */
+    checkFileSize(fileSize, fileName, t) {
+      // Check if file size exceeds the maximum allowed size in MB
+      if (fileSize / 1024 / 1024 > editorConfig.maxFileSize) {
+        showToastModal(
+          'error',
+          t('imageStore.toast.errorFileTooLarge.title'),
+          t('imageStore.toast.errorFileTooLarge.message', {
+            fileName: fileName,
+            maxSize: editorConfig.maxFileSize,
+          }),
+        )
+        this.file = null
+        return false
+      }
+      return true
+    },
+
+    /**
      * Loads a file, determines its type, and initializes the state
      * @param {File} file - File object selected by the user
      * @param {Function} t - i18n translation function
      */
     setFile(file, t) {
       this.file = file
+
+      if (!this.checkFileSize(file.size, file.name, t)) {
+        return
+      }
 
       this.setFileName({ name: file.name, t, updateInWorkspace: false, openingNewFile: true }) // Set file name without updating workspace because there might not be a tab yet
       this.fileFormat = file.name.split('.').pop().toLowerCase()
