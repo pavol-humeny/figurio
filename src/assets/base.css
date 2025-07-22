@@ -94,7 +94,7 @@
 
 body {
   color: var(--text-c);
-  font-family: Inter;
+  font-family: Helvetica;
   --border-ui: 1px solid var(--border-c);
   --border-modal: 2px solid var(--primary-c);
   --border-input: 1px solid var(--primary-c);
