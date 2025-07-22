@@ -550,6 +550,8 @@ export function useViewportWrapper(viewportStore, imageStore, editorStore, conte
           }
 
           setValuesForCenterImage()
+
+          throttledUpdateRulers()
         })
         resizeObserver.observe(wrapperRef.value)
       }
