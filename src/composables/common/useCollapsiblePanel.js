@@ -63,6 +63,27 @@ export function useCollapsiblePanel(uiStore) {
   }
 
   /**
+   * If panel is not visible, show it
+   */
+  const showPanel = () => {
+    if (!isVisible.value) {
+      uiStore.toggleRightPanel()
+      uiStore.setRightPanelWidth(tmpWidth.value || uiStore.rightPanelDefaultWidth)
+    }
+  }
+
+  /**
+   * If panel is visible, hide it
+   */
+  const hidePanel = () => {
+    if (isVisible.value) {
+      tmpWidth.value = uiStore.rightPanelWidth
+      uiStore.toggleRightPanel()
+      uiStore.setRightPanelWidth(0)
+    }
+  }
+
+  /**
    * Initiates the panel resizing operation.
    *
    * @param {MouseEvent} event - Mouse down event on resize handle
@@ -105,5 +126,7 @@ export function useCollapsiblePanel(uiStore) {
     rightSidePanelWidth,
     collapseButtonWidth,
     startResize,
+    showPanel,
+    hidePanel,
   }
 }

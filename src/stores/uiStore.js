@@ -109,6 +109,7 @@ export const useUiStore = defineStore('ui', {
      * Toggle visibility of the right panel
      */
     toggleRightPanel() {
+      console.log('Toggling right panel visibility to:', !this.rightPanelOpen)
       this.rightPanelOpen = !this.rightPanelOpen
       localStorage.setItem('rightPanelOpen', this.rightPanelOpen.toString())
     },

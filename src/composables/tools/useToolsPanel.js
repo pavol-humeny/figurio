@@ -3,6 +3,7 @@ import { useExportToolSettings } from '@/composables/toolsSettings/useExportTool
 import { useImageStore } from '@/stores/imageStore'
 import { useEditorStore } from '@/stores/editorStore'
 import { useHistoryStore } from '@/stores/historyStore'
+import { useCollapsiblePanel } from '../common/useCollapsiblePanel'
 
 /**
  * Logic for managing the left tools panel
@@ -24,7 +25,7 @@ import { useHistoryStore } from '@/stores/historyStore'
  *   isToolDisabled: import('vue').ComputedRef<boolean>,
  * }}
  */
-export function useToolsPanel(editorStore, imageStore, t) {
+export function useToolsPanel(editorStore, imageStore, uiStore, t) {
   /**
    * Method to open the export tool settings modal
    */
@@ -117,9 +118,14 @@ export function useToolsPanel(editorStore, imageStore, t) {
 
     if (editorStore.selectedToolKey === toolKey && tabKey === null) {
       editorStore.selectTool('')
+      // If the panel is open, hide it
+      useCollapsiblePanel(uiStore).hidePanel()
       return
     }
     editorStore.selectTool(toolKey)
+
+    // If the panel is closed, show it 
+    useCollapsiblePanel(uiStore).showPanel()
 
     if (tabKey) {
       editorStore.selectTab(tabKey)
