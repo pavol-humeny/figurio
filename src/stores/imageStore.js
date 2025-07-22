@@ -335,6 +335,24 @@ export const useImageStore = defineStore('imageStore', {
     },
 
     /**
+     * Resets the image store to a clean state for a new file
+     */
+    resetImageStoreForNewFile() {
+      this.svgObjects = []
+      this.selectedSvgObjectId = null
+
+      this.resetImageOperations()
+
+      this.resetFrame()
+      this.frameSvg = ''
+
+      this.phoneButtonsCanNotBeDrawnToastFlag = false
+
+      const historyStore = useHistoryStore()
+      historyStore.reset()
+    },
+
+    /**
      * Closes the current file and resets all image-related state
      */
     closeFile() {
@@ -374,18 +392,7 @@ export const useImageStore = defineStore('imageStore', {
 
       this.newRenderedImage = null
 
-      this.svgObjects = []
-      this.selectedSvgObjectId = null
-
-      this.resetImageOperations()
-
-      this.resetFrame()
-      this.frameSvg = ''
-
-      this.phoneButtonsCanNotBeDrawnToastFlag = false
-
-      const historyStore = useHistoryStore()
-      historyStore.reset()
+      this.resetImageStoreForNewFile()
     },
 
     /**
@@ -418,6 +425,14 @@ export const useImageStore = defineStore('imageStore', {
      * @param {Function} t - i18n translation function
      */
     setFile(file, t) {
+      // Reset state for new file (update current tab state)
+      if (file !== null) {
+        const workspaceStore = useWorkspaceStore()
+        workspaceStore.updateCurrentTabState()
+
+        this.resetImageStoreForNewFile()
+      }
+
       this.file = file
 
       if (!this.checkFileSize(file.size, file.name, t)) {
@@ -462,7 +477,6 @@ export const useImageStore = defineStore('imageStore', {
             this.originalImage = canvas
             this.previewUrl = canvas.toDataURL() // Fallback for export
 
-            console.log('file name: ', this.fileName, 'file dimensions: ', this.fileDimensions)
             const workspaceStore = useWorkspaceStore()
             workspaceStore.addNewTab(this.fileName)
 
