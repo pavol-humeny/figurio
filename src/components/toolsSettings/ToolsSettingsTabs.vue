@@ -54,7 +54,7 @@ const { activeTab, isDragging, wrapperRef, setActiveTab, startDragging } = useTo
   overflow-x: auto;
   height: 100%;
   scrollbar-width: none; /* Firefox */
-  -ms-overflow-style: none; /* IE a starý Edge */
+  -ms-overflow-style: none; /* IE and Edge */
 }
 
 .tabs-wrapper::-webkit-scrollbar {

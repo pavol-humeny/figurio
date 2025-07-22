@@ -348,8 +348,8 @@ export const useImageStore = defineStore('imageStore', {
 
       this.phoneButtonsCanNotBeDrawnToastFlag = false
 
-      const historyStore = useHistoryStore()
-      historyStore.reset()
+      // Also reset rendered images
+      this.setRenderedImage(null)
     },
 
     /**
@@ -429,6 +429,10 @@ export const useImageStore = defineStore('imageStore', {
       if (file !== null) {
         const workspaceStore = useWorkspaceStore()
         workspaceStore.updateCurrentTabState()
+
+        // Reset history store for new file
+        const historyStore = useHistoryStore()
+        historyStore.reset()
 
         this.resetImageStoreForNewFile()
       }
