@@ -19,7 +19,7 @@ const props = defineProps({
 })
 
 /**
- * Logic for managing active tab 
+ * Logic for managing active tab
  */
 const { activeTab, isDragging, wrapperRef, setActiveTab, startDragging } = useToolsSettingsTabs(
   useEditorStore(),
@@ -53,6 +53,8 @@ const { activeTab, isDragging, wrapperRef, setActiveTab, startDragging } = useTo
   display: flex;
   overflow-x: auto;
   height: 100%;
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE a starý Edge */
 }
 
 .tabs-wrapper::-webkit-scrollbar {
