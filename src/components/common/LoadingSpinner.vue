@@ -1,37 +1,13 @@
 <script setup>
-import { onMounted, onBeforeUnmount } from 'vue'
 import { useUiStore } from '@/stores/uiStore'
-import { computed } from 'vue'
-
-const uiStore = useUiStore()
-
-onMounted(() => {
-  const blockAll = (e) => {
-    if (uiStore.isLoading) {
-      console.log('Blocking interaction due to loading state')
-      e.stopImmediatePropagation()
-      e.preventDefault()
-    }
-  }
-
-  window.addEventListener('click', blockAll, true)
-  window.addEventListener('mousedown', blockAll, true)
-  window.addEventListener('keydown', blockAll, true)
-  window.addEventListener('pointerdown', blockAll, true)
-
-  onBeforeUnmount(() => {
-    window.removeEventListener('click', blockAll, true)
-    window.removeEventListener('mousedown', blockAll, true)
-    window.removeEventListener('keydown', blockAll, true)
-    window.removeEventListener('pointerdown', blockAll, true)
-  })
-})
-
+import { useLoadingSpinner } from '@/composables/common/useLoadingSpinner'
 
 /**
- * Whether to show the loading overlay
+ * Logic for the loading spinner component
  */
-const isVisible = computed(() => uiStore.isLoading)
+const { isVisible } = useLoadingSpinner(useUiStore())
+
+
 </script>
 
 <template>

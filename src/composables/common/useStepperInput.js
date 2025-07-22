@@ -80,10 +80,10 @@ export function useStepperInput(props, emit) {
   /**
    * Programmatically sets the value and emits it
    *
-   * @param {number} value - New value to set
+   * @param {number} newValue - New value to set
    */
-  const setValue = (value) => {
-    value.value = value
+  const setValue = (newValue) => {
+    value.value = newValue
     emitChange()
   }
 

@@ -50,10 +50,10 @@ export function useTextInput(props, emit) {
   /**
    * Updates the internal value programmatically
    *
-   * @param {string} value - New value to set
+   * @param {string} newValue - New value to set
    */
-  const setValue = (value) => {
-    inputValue.value = value
+  const setValue = (newValue) => {
+    inputValue.value = newValue
   }
 
   return {

@@ -38,10 +38,10 @@ export function useColorPicker(props, emit) {
   /**
    * Updates the internal color value programmatically
    *
-   * @param {string} value - New color value
+   * @param {string} newValue - New color value
    */
-  const setValue = (value) => {
-    colorValue.value = value
+  const setValue = (newValue) => {
+    colorValue.value = newValue
   }
 
   return {

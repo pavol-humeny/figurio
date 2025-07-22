@@ -49,10 +49,10 @@ export function useDropdownSelect(props, emit) {
   /**
    * Sets selected value programmatically
    *
-   * @param {string} value - New selected value
+   * @param {string} newValue - New selected value
    */
-  const setValue = (value) => {
-    selectedValue.value = value
+  const setValue = (newValue) => {
+    selectedValue.value = newValue
   }
 
   /**

@@ -77,10 +77,10 @@ export function useNumberInput(props, emit) {
   /**
    * Updates the internal input value programmatically
    *
-   * @param {number} value - New value to assign
+   * @param {number} newValue - New value to assign
    */
-  const setValue = (value) => {
-    inputValue.value = value
+  const setValue = (newValue) => {
+    inputValue.value = newValue
   }
 
   return {
