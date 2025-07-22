@@ -1,7 +1,7 @@
 <script setup>
 import DefaultSlider from '@/components/common/DefaultSlider.vue'
 import { useViewportStore } from '@/stores/viewportStore'
-import { useMoveToolSettings } from '@/composables/toolsSettings/useMoveToolSettings'
+import { useMoveTool } from '@/composables/tools/useMoveTool'
 
 /**
  * Logic of the move tool settings panel
@@ -17,7 +17,7 @@ const {
   movementSpeedMax,
   updateMovementSpeed,
   resetMovementSpeed,
-} = useMoveToolSettings(useViewportStore())
+} = useMoveTool(useViewportStore())
 </script>
 
 <template>
