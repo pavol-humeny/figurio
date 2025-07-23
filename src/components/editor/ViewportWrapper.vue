@@ -155,15 +155,15 @@ watch(
 .viewport-wrapper {
   position: relative;
   width: 100%;
-  height: calc(100% - 30px);
+  height: calc(100% - 30px - 20px);
   display: flex;
   z-index: var(--z-index-viewport);
 }
 
 .viewport-content-wrapper {
   position: absolute;
-  top: 0;
-  left: 0;
+  top: 5px;
+  left: 5px;
   right: 0px;
   bottom: 0px;
   overflow: hidden;

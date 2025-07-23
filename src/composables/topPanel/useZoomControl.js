@@ -74,6 +74,7 @@ export function useZoomControl(viewportStore) {
   const resetZoom = () => {
     viewportStore.resetZoom()
     viewportStore.resetPan()
+    viewportStore.shouldFitToScreen = true
   }
 
   /**

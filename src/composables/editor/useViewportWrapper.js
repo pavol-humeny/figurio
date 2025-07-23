@@ -353,27 +353,28 @@ export function useViewportWrapper(viewportStore, imageStore, editorStore, conte
    * Center the image in the viewport
    */
   const centerImage = () => {
+    console.log('----------------------- Centering image -----------------------')
     if (!wrapperRef.value || !contentRef.value) return
+    fitToScreenZoomLevel()
+
     updateInitialDimensions()
     updateZoomDependentDimensions()
 
     panX.value = wrapperWidth.value / 2 - (contentWidth.value * zoomLevel.value) / 2
-    panY.value =
-      wrapperHeight.value / 2 -
-      (contentHeight.value * zoomLevel.value) / 2 -
-      (wrapperHeight.value - contentHeight.value * zoomLevel.value) / 10 // minus 10% of the height for better centering because of file tabs
+    panY.value = wrapperHeight.value / 2 - (contentHeight.value * zoomLevel.value) / 2
 
     viewportStore.defaultPanX = wrapperWidth.value / 2 - (contentWidth.value * zoomLevel.value) / 2
     viewportStore.defaultPanY =
-      wrapperHeight.value / 2 -
-      (contentHeight.value * zoomLevel.value) / 2 -
-      (wrapperHeight.value - contentHeight.value * zoomLevel.value) / 10 // minus 10% of the height for better centering because of file tabs
+      wrapperHeight.value / 2 - (contentHeight.value * zoomLevel.value) / 2
   }
 
   /**
    * Set values for centering the image after zoom changes
    */
   const setValuesForCenterImage = () => {
+    console.log(
+      '----------------------- Setting values for centering image -----------------------',
+    )
     if (!wrapperRef.value || !contentRef.value) return
     // Reset zoom
     const tmpZoomLevel = viewportStore.zoomLevel
@@ -384,9 +385,7 @@ export function useViewportWrapper(viewportStore, imageStore, editorStore, conte
 
     viewportStore.defaultPanX = wrapperWidth.value / 2 - (contentWidth.value * zoomLevel.value) / 2
     viewportStore.defaultPanY =
-      wrapperHeight.value / 2 -
-      (contentHeight.value * zoomLevel.value) / 2 -
-      (wrapperHeight.value - contentHeight.value * zoomLevel.value) / 10 // minus 10% of the height for better centering because of file tabs
+      wrapperHeight.value / 2 - (contentHeight.value * zoomLevel.value) / 2
 
     viewportStore.setZoomLevel(tmpZoomLevel)
   }
@@ -395,6 +394,7 @@ export function useViewportWrapper(viewportStore, imageStore, editorStore, conte
    * Fit the image to the screen based on current wrapper size
    */
   const fitToScreenZoomLevel = () => {
+    console.log('----------------------- Fitting image to screen -----------------------')
     updateInitialDimensions()
 
     const frameHeight = imageStore.frame?.enabled
@@ -402,14 +402,28 @@ export function useViewportWrapper(viewportStore, imageStore, editorStore, conte
       : 0
 
     const scaleX = wrapperWidth.value / contentWidth.value
-    const scaleY = wrapperHeight.value / (contentHeight.value + frameHeight)
+    const scaleY = wrapperHeight.value / contentHeight.value
 
     const optimalZoom = Math.min(scaleX, scaleY)
 
-    viewportStore.fitZoomLevel = (viewportStore.zoomLevel / optimalZoom) * 1.2
+    const scaleAccordingToFrame = 1 + frameHeight / contentHeight.value
+
+    viewportStore.fitZoomLevel =
+      (viewportStore.zoomLevel / optimalZoom) * scaleAccordingToFrame * 1.1
 
     updateZoomDependentDimensions()
   }
+
+  watch(
+    () => viewportStore.shouldFitToScreen,
+    (shouldFit) => {
+      if (shouldFit) {
+        centerImage()
+        viewportStore.shouldFitToScreen = false
+      }
+    },
+    { immediate: true },
+  )
 
   // ------------------------------
   // Ruler
@@ -538,7 +552,7 @@ export function useViewportWrapper(viewportStore, imageStore, editorStore, conte
   //Set initial values for centering the image
   onMounted(() => {
     nextTick(() => {
-      fitToScreenZoomLevel()
+      // fitToScreenZoomLevel()
       centerImage()
 
       // Center the image after resizing the wrapper
@@ -565,8 +579,8 @@ export function useViewportWrapper(viewportStore, imageStore, editorStore, conte
     () => imageStore.frame,
     () => {
       nextTick(() => {
-        fitToScreenZoomLevel()
-        setValuesForCenterImage()
+        // fitToScreenZoomLevel()
+        // setValuesForCenterImage()
       })
     },
     { deep: true },
@@ -594,7 +608,7 @@ export function useViewportWrapper(viewportStore, imageStore, editorStore, conte
     () => {
       nextTick(() => {
         viewportStore.resetZoom()
-        fitToScreenZoomLevel()
+        // fitToScreenZoomLevel()
         centerImage()
       })
     },

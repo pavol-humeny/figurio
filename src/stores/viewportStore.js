@@ -35,6 +35,8 @@ export const useViewportStore = defineStore('viewportStore', {
     /** Default pan offset for resetting */
     defaultPanX: 0,
     defaultPanY: 0,
+
+    shouldFitToScreen: false,
   }),
   getters: {
     /**
