@@ -9,7 +9,7 @@ const isVisible = ref(false)
  * Logic for the help modal with scrolling and Escape key support
  *
  * @returns {{
- *   messagesRef: import('vue').Ref<HTMLElement | null>,
+ *   helpContentRef: import('vue').Ref<HTMLElement | null>,
  *   atTop: import('vue').Ref<boolean>,
  *   atBottom: import('vue').Ref<boolean>,
  *   isVisible: import('vue').Ref<boolean>,
@@ -24,7 +24,7 @@ export function useHelpModal() {
   /**
    * Reference to the scrollable content container
    */
-  const messagesRef = ref(null)
+  const helpContentRef = ref(null)
 
   /**
    * Whether the scroll is at the top
@@ -57,21 +57,21 @@ export function useHelpModal() {
    * Scroll up the help modal content
    */
   const scrollUp = () => {
-    messagesRef.value?.scrollBy({ top: -100, behavior: 'smooth' })
+    helpContentRef.value?.scrollBy({ top: -100, behavior: 'smooth' })
   }
 
   /**
    * Scroll down the help modal content
    */
   const scrollDown = () => {
-    messagesRef.value?.scrollBy({ top: 100, behavior: 'smooth' })
+    helpContentRef.value?.scrollBy({ top: 100, behavior: 'smooth' })
   }
 
   /**
    * Check whether the scroll is at the top or bottom of the content
    */
   const checkScroll = () => {
-    const element = messagesRef.value
+    const element = helpContentRef.value
     if (!element) return
     atTop.value = element.scrollTop === 0
     atBottom.value = element.scrollTop + element.clientHeight >= element.scrollHeight - 1
@@ -105,7 +105,7 @@ export function useHelpModal() {
   })
 
   return {
-    messagesRef,
+    helpContentRef,
     atTop,
     atBottom,
     isVisible,

@@ -1,70 +1,103 @@
 {
-  "title": "Help Guide",
-  "sections": [
-    {
-      "title": "Getting Started",
-      "text": "To begin, drag and drop an image or click the central button to select a file from your device."
+  "title": "Help",
+  "helpContent":{
+    "purpose":{
+      "title": "Purpose",
+      "text": "This image editor is designed for editing of images intended for use in academic, professional, or technical documents. It provides a range of tools and modifications useful especially for these purposes."
     },
-    {
-      "title": "Canvas Controls",
-      "text": "Use the zoom buttons or mouse scroll to zoom in and out. You can also move the image by dragging with the right mouse button."
+    "tools":{
+      "title": "Tools"
     },
-    {
-      "title": "Tools Overview",
-      "text": "Choose a tool from the left panel. You can crop, rotate, flip, resize, and apply basic color adjustments."
-    },
-    {
+    "shortcuts":{
       "title": "Keyboard Shortcuts",
-      "text": "• Ctrl + Z: Undo\n• Ctrl + E: Export image\n• + / -: Zoom in/out\n• Esc: Close modals or deselect tools"
+      "text": "You can use keyboard shortcuts to quickly access various tools and features in the editor. Below is a list of available shortcuts.",
+      "shortcutsList": [
+        {
+          "description": "Undo last action",
+          "shortcut": "Ctrl + Z"
+        },
+        {
+          "description": "Redo last undone action",
+          "shortcut": "Ctrl + Y"
+        },
+        {
+          "description": "Zoom in",
+          "shortcut": "Ctrl + ="
+        },
+        {
+          "description": "Zoom out",
+          "shortcut": "Ctrl + -"
+        },
+        {
+          "description": "Reset zoom",
+          "shortcut": "Ctrl + 0"
+        },
+        {
+          "description": "Upload file",
+          "shortcut": "Ctrl + O"
+        },
+        {
+          "description": "Save file",
+          "shortcut": "Ctrl + S"
+        },
+        {
+          "description": "Close file",
+          "shortcut": "Ctrl + X"
+        },
+        {
+          "description": "Rename file",
+          "shortcut": "F2"
+        },
+        {
+          "description": "Show help modal",
+          "shortcut": "F1"
+        },
+        {
+          "description": "Show settings modal",
+          "shortcut": "Ctrl + ,"
+        },
+        {
+          "description": "Show privacy and data modal",
+          "shortcut": "Ctrl + I"
+        },
+        {
+          "description": "Switch to next tab",
+          "shortcut": "Alt + PageDown"
+        },
+        {
+          "description": "Switch to previous tab",
+          "shortcut": "Alt + PageUp"
+        },
+        {
+          "description": "Close opened modal",
+          "shortcut": "Esc"
+        }
+      ]
     },
-    {
-      "title": "Exporting Images",
-      "text": "Click the Export button in the left panel to save your edited image. You can choose the format and file name."
+    "tutorial":{
+      "title": "Interactive Tutorial",
+      "text": "A step-by-step walkthrough that introduces the most important features of the editor. Click the button below to start the tutorial and learn how to use the editor effectively."
     },
-    {
-      "title": "Interface Customization",
-      "text": "Switch between light and dark mode via the settings panel. You can also change language and reset panel sizes there."
+    "technicalLimitations":{
+      "title": "Technical Limitations",
+      "limitations": [
+        "Only the first page of a PDF file is loaded and displayed.",
+        "PDF export supports vector layers.",
+        "Very large image files may result in slower performance depending on your device capabilities.",
+        "Animated images (e.g., GIFs) are not supported.",
+        "Undo/redo history is limited.",
+        "Browser refresh will erase unsaved progress."
+      ]
     },
-    {
-      "title": "Troubleshooting",
-      "text": "If something doesn’t work as expected, try refreshing the page. You can also contact support or check the FAQ section."
-    },
-    {
-      "title": "Need More Help?",
-      "text": "For more detailed documentation, visit our support page or reach out via support@example.com."
-    },{
-      "title": "Exporting Images",
-      "text": "Click the Export button in the left panel to save your edited image. You can choose the format and file name."
-    },
-    {
-      "title": "Interface Customization",
-      "text": "Switch between light and dark mode via the settings panel. You can also change language and reset panel sizes there."
-    },
-    {
-      "title": "Troubleshooting",
-      "text": "If something doesn’t work as expected, try refreshing the page. You can also contact support or check the FAQ section."
-    },
-    {
-      "title": "Need More Help?",
-      "text": "For more detailed documentation, visit our support page or reach out via support@example.com."
-    },{
-      "title": "Exporting Images",
-      "text": "Click the Export button in the left panel to save your edited image. You can choose the format and file name."
-    },
-    {
-      "title": "Interface Customization",
-      "text": "Switch between light and dark mode via the settings panel. You can also change language and reset panel sizes there."
-    },
-    {
-      "title": "Troubleshooting",
-      "text": "If something doesn’t work as expected, try refreshing the page. You can also contact support or check the FAQ section."
-    },
-    {
-      "title": "Need More Help?",
-      "text": "For more detailed documentation, visit our support page or reach out via support@example.com."
+    "contactAndFeedback":{
+      "title": "Contact and Feedback",
+      "text": "If you have any questions, suggestions, or feedback regarding the editor, please contact me at:"
     }
-  ],
-  "button": {
+  },
+  "closeButton": {
     "text": "Close Help"
+  },
+  "startTutorialButton": {
+    "text": "Start Tutorial"
   }
 }

@@ -1,5 +1,4 @@
 <script setup>
-import { defineProps } from 'vue'
 import { useEditorStore } from '@/stores/editorStore'
 import { useToolsSettingsTabs } from '@/composables/toolsSettings/useToolsSettingsTabs'
 

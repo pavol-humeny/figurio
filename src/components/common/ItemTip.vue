@@ -218,7 +218,7 @@ const showTip = computed(() => props.text !== '')
   font-weight: var(--tip-title-font-weight);
   color: var(--text-c);
 }
-
+  
 .tip-shortcut {
   background-color: var(--border-c);
   color: var(--text-c);

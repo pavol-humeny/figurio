@@ -1,40 +1,58 @@
 {
   "title": "Nápověda",
-  "sections": [
-    {
-      "title": "Začínáme",
-      "text": "Na začátku přetáhněte obrázek do okna nebo klikněte na centrální tlačítko a vyberte soubor ze zařízení."
+  "helpContent": {
+    "purpose": {
+      "title": "Účel",
+      "text": "Tento editor obrázků je určen pro úpravy obrázků používaných v akademických, odborných nebo technických dokumentech. Nabízí řadu nástrojů a úprav vhodných právě pro tyto účely."
     },
-    {
-      "title": "Ovládání plátna",
-      "text": "Použijte tlačítka pro zoom nebo kolečko myši k přiblížení a oddálení. Obrázek lze přesouvat pomocí pravého tlačítka myši."
+    "tools": {
+      "title": "Nástroje"
     },
-    {
-      "title": "Přehled nástrojů",
-      "text": "Vyberte nástroj z levého panelu. Můžete ořezávat, otáčet, zrcadlit, měnit velikost a upravovat barvy."
-    },
-    {
+    "shortcuts": {
       "title": "Klávesové zkratky",
-      "text": "• Ctrl + Z: Zpět\n• Ctrl + E: Exportovat obrázek\n• + / -: Zoom in/out\n• Esc: Zavřít modální okno nebo zrušit výběr nástroje"
+      "text": "Pomocí klávesových zkratek můžete rychle přistupovat k různým nástrojům a funkcím editoru. Níže najdete seznam dostupných zkratek.",
+      "shortcutsList": [
+        { "description": "Zpět (undo)", "shortcut": "Ctrl + Z" },
+        { "description": "Znovu (redo)", "shortcut": "Ctrl + Y" },
+        { "description": "Přiblížit", "shortcut": "Ctrl + =" },
+        { "description": "Oddálit", "shortcut": "Ctrl + -" },
+        { "description": "Obnovit měřítko", "shortcut": "Ctrl + 0" },
+        { "description": "Načíst soubor", "shortcut": "Ctrl + O" },
+        { "description": "Uložit soubor", "shortcut": "Ctrl + S" },
+        { "description": "Zavřít soubor", "shortcut": "Ctrl + X" },
+        { "description": "Přejmenovat soubor", "shortcut": "F2" },
+        { "description": "Zobrazit nápovědu", "shortcut": "F1" },
+        { "description": "Zobrazit nastavení", "shortcut": "Ctrl + ," },
+        { "description": "Zobrazit zásady ochrany soukromí", "shortcut": "Ctrl + I" },
+        { "description": "Přepnout na další soubor", "shortcut": "Alt + PageDown" },
+        { "description": "Přepnout na předchozí soubor", "shortcut": "Alt + PageUp" },
+        { "description": "Zavřít otevřené okno", "shortcut": "Esc" }
+      ]
     },
-    {
-      "title": "Export obrázků",
-      "text": "Klikněte na tlačítko Export v levém panelu a uložte upravený obrázek. Můžete zvolit formát a název souboru."
+    "tutorial": {
+      "title": "Interaktivní tutoriál",
+      "text": "Provede vás krok za krokem nejdůležitějšími funkcemi editoru. Klikněte na tlačítko níže pro spuštění tutoriálu a naučte se editor efektivně používat."
     },
-    {
-      "title": "Přizpůsobení rozhraní",
-      "text": "V nastavení můžete přepnout mezi světlým a tmavým režimem. Také lze změnit jazyk nebo resetovat velikost panelů."
+    "technicalLimitations": {
+      "title": "Technická omezení",
+      "limitations": [
+        "Zobrazí se pouze první stránka PDF souboru.",
+        "Export do PDF podporuje vektorové vrstvy.",
+        "Velmi velké obrázky mohou zpomalit výkon v závislosti na vašem zařízení.",
+        "Animované obrázky (např. GIFy) nejsou podporovány.",
+        "Historie kroků zpět/vpřed je omezena na aktuální relaci.",
+        "Obnovení prohlížeče smaže neuložený postup."
+      ]
     },
-    {
-      "title": "Řešení problémů",
-      "text": "Pokud něco nefunguje správně, zkuste obnovit stránku. Můžete kontaktovat podporu nebo si prohlédnout sekci FAQ."
-    },
-    {
-      "title": "Potřebujete další pomoc?",
-      "text": "Podrobnější dokumentaci naleznete na stránce podpory nebo nás kontaktujte na support@example.com."
+    "contactAndFeedback": {
+      "title": "Kontakt a zpětná vazba",
+      "text": "Pokud máte jakékoli dotazy, návrhy nebo zpětnou vazbu k editoru, kontaktujte mě na:"
     }
-  ],
-  "button": {
+  },
+  "closeButton": {
     "text": "Zavřít nápovědu"
+  },
+  "startTutorialButton": {
+    "text": "Spustit tutoriál"
   }
 }

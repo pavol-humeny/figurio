@@ -30,7 +30,7 @@ export function useKeyboardShortcuts(actions, uiStore, imageStore) {
    * @param {KeyboardEvent} event - Keyboard event
    */
   const handleKeydown = (event) => {
-    if (!uiStore.keyShortcutsEnabled || !imageStore.isImageLoaded || uiStore.isLoading) return
+    if (!uiStore.keyShortcutsEnabled || uiStore.isLoading) return
 
     const el = document.activeElement
     const isTyping =
