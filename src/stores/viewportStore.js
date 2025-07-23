@@ -39,6 +39,7 @@ export const useViewportStore = defineStore('viewportStore', {
     /** Whether the viewport should fit to screen */
     shouldFitToScreen: false,
 
+    /** Whether to fit the image on load */
     fitImageOnLoad: true,
   }),
   getters: {
