@@ -55,7 +55,9 @@ const imageStore = useImageStore()
       <FileTabs v-if="imageStore.isImageLoaded" />
       <ViewportWrapper v-if="imageStore.isImageLoaded" />
       <DragAndDropArea v-else />
-      <div class="file-info"></div>
+      <div v-if="imageStore.isImageLoaded" class="file-info">
+        <p>{{ imageStore.fileDimensions.width }} px x {{ imageStore.fileDimensions.height }} px</p>
+      </div>
 
     </div>
     <div class="right-panel">
@@ -87,6 +89,16 @@ const imageStore = useImageStore()
 .file-info{
   height: 30px;
   width: 100%;
-  background: red;
+  border-top: var(--border-ui);
+  background: var(--background-c);
+  display: flex;
+  /* align-items: center; */
+  justify-content: center;
+}
+
+.file-info p {
+  font-size: var(--file-tabs-name-font-size);
+  color: var(--primary-c);
+  margin-top: 3px;
 }
 </style>
