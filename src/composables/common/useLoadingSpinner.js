@@ -3,7 +3,7 @@ import { onMounted, onBeforeUnmount, computed } from 'vue'
 export function useLoadingSpinner(uiStore) {
   onMounted(() => {
     const blockAll = (e) => {
-      if (uiStore.isLoading) {
+      if (uiStore.isLoading && uiStore.blockClicks) {
         console.log('Blocking interaction due to loading state')
         e.stopImmediatePropagation()
         e.preventDefault()
@@ -28,7 +28,10 @@ export function useLoadingSpinner(uiStore) {
    */
   const isVisible = computed(() => uiStore.isLoading)
 
+  const blockClicks = computed(() => uiStore.blockClicks)
+
   return {
     isVisible,
+    blockClicks,
   }
 }

@@ -40,5 +40,13 @@
       "title": "File copied to clipboard",
       "message": "The image has been successfully copied to the clipboard."
     }
+  },
+  "confirm":{
+    "scalePdfForBetterResolution":{
+      "title": "Scale PDF for better resolution",
+      "message": "For better resolution, consider scaling the PDF. This will improve the quality of the final image.",
+      "cancel": "No, keep original size",
+      "confirm": "Scale PDF"
+    }
   }
 }

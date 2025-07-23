@@ -103,7 +103,7 @@ export function useImageRenderer(
    * Render base canvas from rasterized image
    */
   const renderCanvas = () => {
-    if (!canvasRef.value || !imageStore.getRenderedImage() || imageStore.fileType === 'pdf') return
+    if (!canvasRef.value || !imageStore.getRenderedImage()) return
 
     console.log('Rendering canvas (image only)...')
 

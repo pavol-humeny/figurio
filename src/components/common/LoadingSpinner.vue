@@ -5,7 +5,7 @@ import { useLoadingSpinner } from '@/composables/common/useLoadingSpinner'
 /**
  * Logic for the loading spinner component
  */
-const { isVisible } = useLoadingSpinner(useUiStore())
+const { isVisible, blockClicks } = useLoadingSpinner(useUiStore())
 
 
 </script>
@@ -18,7 +18,7 @@ const { isVisible } = useLoadingSpinner(useUiStore())
     </div>
 
     <teleport to="body">
-      <div v-if="isVisible" class="click-blocker">
+      <div v-if="isVisible && blockClicks" class="click-blocker">
       </div>
     </teleport>
   </div>

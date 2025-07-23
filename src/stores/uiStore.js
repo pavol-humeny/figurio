@@ -68,6 +68,9 @@ export const useUiStore = defineStore('ui', {
 
     /** Whether a loading overlay is shown */
     isLoading: false,
+
+    /** Whether the clicks should be blocked */
+    blockClicks: true,
   }),
   actions: {
     /**

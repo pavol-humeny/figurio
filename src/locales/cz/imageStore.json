@@ -40,5 +40,13 @@
       "title": "Soubor zkopírován do schránky",
       "message": "Obrázek byl úspěšně zkopírován do schránky."
     }
+  },
+  "confirm":{
+    "scalePdfForBetterResolution":{
+      "title": "Změnit měřítko PDF pro lepší rozlišení",
+      "message": "Pro lepší rozlišení zvažte změnu měřítka PDF. To zlepší kvalitu konečného obrázku.",
+      "cancel": "Ne, zachovat původní velikost",
+      "confirm": "Změnit měřítko PDF"
+    }
   }
 }

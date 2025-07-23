@@ -8,8 +8,15 @@ import { useFrameTool } from '@/composables/tools/useFrameTool'
 import { useWorkspaceStore } from './workspaceStore'
 import { useUiStore } from './uiStore'
 import { editorConfig } from '@/config/editorConfig'
+import { useConfirmModal } from '@/composables/modals/useConfirmModal'
+
+import * as pdfjsLib from 'pdfjs-dist/legacy/build/pdf'
+import pdfjsWorker from 'pdfjs-dist/legacy/build/pdf.worker?url'
+
+pdfjsLib.GlobalWorkerOptions.workerSrc = pdfjsWorker
 
 const { showToastModal } = useToastModal()
+const { showConfirmModal } = useConfirmModal()
 
 /**
  * Checks if a file name is valid by ensuring it does not contain invalid characters.
@@ -29,7 +36,7 @@ export const useImageStore = defineStore('imageStore', {
     /** The currently loaded image file */
     file: null,
     /** Type of the loaded file */
-    fileType: '', // 'image' or 'pdf'
+    // fileType: '', // 'image' or 'pdf'
 
     /** Name of the loaded file */
     fileName: '', // UndoRedo
@@ -357,7 +364,7 @@ export const useImageStore = defineStore('imageStore', {
      */
     closeFile() {
       this.file = null
-      this.fileType = ''
+      // this.fileType = ''
 
       this.fileName = ''
       this.fileFormat = ''
@@ -424,10 +431,12 @@ export const useImageStore = defineStore('imageStore', {
      * @param {File} file - File object selected by the user
      * @param {Function} t - i18n translation function
      */
-    setFile(file, t) {
+    async setFile(file, t) {
+      const workspaceStore = useWorkspaceStore()
+      const uiStore = useUiStore()
+
       // Reset state for new file (update current tab state)
       if (file !== null) {
-        const workspaceStore = useWorkspaceStore()
         workspaceStore.updateCurrentTabState()
 
         // Reset history store for new file
@@ -446,21 +455,16 @@ export const useImageStore = defineStore('imageStore', {
       this.setFileName({ name: file.name, t, updateInWorkspace: false, openingNewFile: true }) // Set file name without updating workspace because there might not be a tab yet
       this.fileFormat = file.name.split('.').pop().toLowerCase()
       this.newFileFormat = this.fileFormat
-      this.fileType = file.type.startsWith('image/')
-        ? 'image'
-        : file.type === 'application/pdf'
-          ? 'pdf'
-          : ''
+      // this.fileType = 'image'
 
-      const reader = new FileReader()
+      uiStore.isLoading = true
 
-      if (this.fileType.startsWith('image')) {
+      if (this.file.type.startsWith('image')) {
+        console.log('Loading image file:', file.name)
+        const reader = new FileReader()
         reader.onload = (event) => {
           const img = new Image()
           img.onload = async () => {
-            const uiStore = useUiStore()
-            uiStore.isLoading = true
-
             await new Promise((resolve) => setTimeout(resolve, 10))
 
             this.fileDimensions.width = img.width
@@ -481,7 +485,6 @@ export const useImageStore = defineStore('imageStore', {
             this.originalImage = canvas
             this.previewUrl = canvas.toDataURL() // Fallback for export
 
-            const workspaceStore = useWorkspaceStore()
             workspaceStore.addNewTab(this.fileName)
 
             uiStore.isLoading = false
@@ -497,8 +500,69 @@ export const useImageStore = defineStore('imageStore', {
         }
 
         reader.readAsDataURL(file)
+      } else if (this.file.type === 'application/pdf') {
+        console.log('Loading PDF file:', file.name)
+        
+        const reader = new FileReader()
+        reader.onload = async (event) => {
+          const typedArray = new Uint8Array(event.target.result)
+
+          try {
+            const pdf = await pdfjsLib.getDocument({ data: typedArray }).promise
+            const page = await pdf.getPage(1)
+
+            let scaleLevel = 1
+
+            uiStore.blockClicks = false
+            // Confirm modal for image scale
+            const confirmed = await showConfirmModal(
+              t('imageStore.confirm.scalePdfForBetterResolution.title'),
+              t('imageStore.confirm.scalePdfForBetterResolution.message'),
+              t('imageStore.confirm.scalePdfForBetterResolution.cancel'),
+              t('imageStore.confirm.scalePdfForBetterResolution.confirm'),
+            )
+            if (confirmed) {
+              scaleLevel = 4 // Use a higher scale for better quality
+            }
+            uiStore.blockClicks = true
+
+            const viewport = page.getViewport({ scale: scaleLevel })
+
+            const canvas = document.createElement('canvas')
+            canvas.width = viewport.width
+            canvas.height = viewport.height
+            const ctx = canvas.getContext('2d')
+
+            await page.render({ canvasContext: ctx, viewport }).promise
+
+            this.fileDimensions.width = canvas.width
+            this.fileDimensions.height = canvas.height
+            this.fileDimensions.fileAspectRatio = canvas.width / canvas.height || 1
+            this.newFileDimensions = { ...this.fileDimensions }
+            this.originalFileDimensions = { ...this.fileDimensions }
+
+            this.setRenderedImage(canvas)
+            this.originalImage = canvas
+            this.previewUrl = canvas.toDataURL()
+
+            workspaceStore.addNewTab(this.fileName)
+
+            uiStore.isLoading = false
+
+            showToastModal(
+              'success',
+              t('imageStore.toast.successFileUploaded.title'),
+              t('imageStore.toast.successFileUploaded.message', { fileName: file.name }),
+            )
+          } catch (err) {
+            console.error('PDF parsing error', err)
+            uiStore.isLoading = false
+          }
+        }
+        reader.readAsArrayBuffer(file)
       } else {
-        console.error('Unsupported file type:', this.fileType)
+        uiStore.isLoading = false
+        console.error('Unsupported file type:', this.file.type)
       }
     },
 
@@ -1095,7 +1159,7 @@ export const useImageStore = defineStore('imageStore', {
     getFullSnapshot() {
       return {
         file: this.file,
-        fileType: this.fileType,
+        // fileType: this.fileType,
 
         fileName: this.fileName,
         fileFormat: this.fileFormat,
@@ -1134,7 +1198,7 @@ export const useImageStore = defineStore('imageStore', {
      */
     applyFullSnapshot(snapshot) {
       this.file = snapshot.file
-      this.fileType = snapshot.fileType
+      // this.fileType = snapshot.fileType
 
       this.fileName = snapshot.fileName
       this.fileFormat = snapshot.fileFormat
