@@ -62,7 +62,7 @@ const {
   cursorPosY,
   cursorPosXSameAsImageWidth,
   cursorPosYSameAsImageHeight,
-} = useViewportWrapper(useViewportStore(), useImageStore(), useEditorStore(), contentRef)
+} = useViewportWrapper(useViewportStore(), useImageStore(), useEditorStore(), useUiStore(), contentRef)
 
 /**
  * Whether to show SmartCropTool

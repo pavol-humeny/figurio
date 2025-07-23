@@ -12,6 +12,7 @@ import { useConfirmModal } from '@/composables/modals/useConfirmModal'
 
 import * as pdfjsLib from 'pdfjs-dist/legacy/build/pdf'
 import pdfjsWorker from 'pdfjs-dist/legacy/build/pdf.worker?url'
+import { useViewportStore } from './viewportStore'
 
 pdfjsLib.GlobalWorkerOptions.workerSrc = pdfjsWorker
 
@@ -434,15 +435,22 @@ export const useImageStore = defineStore('imageStore', {
     async setFile(file, t) {
       const workspaceStore = useWorkspaceStore()
       const uiStore = useUiStore()
+      const historyStore = useHistoryStore()
+      const viewportStore = useViewportStore()
 
       // Reset state for new file (update current tab state)
       if (file !== null) {
         workspaceStore.updateCurrentTabState()
 
         // Reset history store for new file
-        const historyStore = useHistoryStore()
         historyStore.reset()
 
+        // Reset viewport store for new file
+        console.log('---fitImageOnLoad:', viewportStore.fitImageOnLoad)
+        viewportStore.reset()
+        console.log('---fitImageOnLoad:', viewportStore.fitImageOnLoad)
+
+        // Reset image store for new file
         this.resetImageStoreForNewFile()
       }
 
@@ -457,6 +465,7 @@ export const useImageStore = defineStore('imageStore', {
       this.newFileFormat = this.fileFormat
       // this.fileType = 'image'
 
+      // Set loading new file state
       uiStore.isLoading = true
 
       if (this.file.type.startsWith('image')) {
@@ -502,7 +511,7 @@ export const useImageStore = defineStore('imageStore', {
         reader.readAsDataURL(file)
       } else if (this.file.type === 'application/pdf') {
         console.log('Loading PDF file:', file.name)
-        
+
         const reader = new FileReader()
         reader.onload = async (event) => {
           const typedArray = new Uint8Array(event.target.result)

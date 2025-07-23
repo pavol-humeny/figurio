@@ -36,7 +36,10 @@ export const useViewportStore = defineStore('viewportStore', {
     defaultPanX: 0,
     defaultPanY: 0,
 
+    /** Whether the viewport should fit to screen */
     shouldFitToScreen: false,
+
+    fitImageOnLoad: true,
   }),
   getters: {
     /**
@@ -111,6 +114,17 @@ export const useViewportStore = defineStore('viewportStore', {
       this.panY = this.defaultPanY
     },
 
+    reset() {
+      this.zoomLevel = this.defaultZoomLevel
+      this.fitZoomLevel = 1.0
+      this.panX = this.defaultPanX
+      this.panY = this.defaultPanY
+      this.zoomSpeed = this.defaultZoomSpeed
+      this.movementSpeed = this.defaultMovementSpeed
+      this.shouldFitToScreen = false
+      this.fitImageOnLoad = true
+    },
+
     /**
      * Get full snapshot of viewport state (for multi-file support)
      * @returns {object}
@@ -130,6 +144,8 @@ export const useViewportStore = defineStore('viewportStore', {
         defaultMovementSpeed: this.defaultMovementSpeed,
         defaultPanX: this.defaultPanX,
         defaultPanY: this.defaultPanY,
+        shouldFitToScreen: this.shouldFitToScreen,
+        fitImageOnLoad: this.fitImageOnLoad,
       }
     },
 
@@ -151,6 +167,8 @@ export const useViewportStore = defineStore('viewportStore', {
       this.defaultMovementSpeed = snapshot.defaultMovementSpeed ?? viewportConfig.movementSpeed
       this.defaultPanX = snapshot.defaultPanX ?? 0
       this.defaultPanY = snapshot.defaultPanY ?? 0
+      this.shouldFitToScreen = snapshot.shouldFitToScreen ?? false
+      this.fitImageOnLoad = snapshot.fitImageOnLoad ?? true
     },
   },
 })

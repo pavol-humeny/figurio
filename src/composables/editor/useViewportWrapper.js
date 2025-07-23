@@ -12,7 +12,7 @@ import { useThrottleFn } from '@vueuse/core'
  * @param {import('vue').Ref<HTMLElement>} contentRef - Ref to the .viewport-content element
  * @returns {Object}
  */
-export function useViewportWrapper(viewportStore, imageStore, editorStore, contentRef) {
+export function useViewportWrapper(viewportStore, imageStore, editorStore, uiStore, contentRef) {
   const { clamp } = useMath()
 
   /**
@@ -372,9 +372,6 @@ export function useViewportWrapper(viewportStore, imageStore, editorStore, conte
    * Set values for centering the image after zoom changes
    */
   const setValuesForCenterImage = () => {
-    console.log(
-      '----------------------- Setting values for centering image -----------------------',
-    )
     if (!wrapperRef.value || !contentRef.value) return
     // Reset zoom
     const tmpZoomLevel = viewportStore.zoomLevel
@@ -394,7 +391,6 @@ export function useViewportWrapper(viewportStore, imageStore, editorStore, conte
    * Fit the image to the screen based on current wrapper size
    */
   const fitToScreenZoomLevel = () => {
-    console.log('----------------------- Fitting image to screen -----------------------')
     updateInitialDimensions()
 
     const frameHeight = imageStore.frame?.enabled
@@ -552,7 +548,6 @@ export function useViewportWrapper(viewportStore, imageStore, editorStore, conte
   //Set initial values for centering the image
   onMounted(() => {
     nextTick(() => {
-      // fitToScreenZoomLevel()
       centerImage()
 
       // Center the image after resizing the wrapper
@@ -571,20 +566,6 @@ export function useViewportWrapper(viewportStore, imageStore, editorStore, conte
       }
     })
   })
-
-  /**
-   * Watch for changes in image dimensions and re-center the image
-   */
-  watch(
-    () => imageStore.frame,
-    () => {
-      nextTick(() => {
-        // fitToScreenZoomLevel()
-        // setValuesForCenterImage()
-      })
-    },
-    { deep: true },
-  )
 
   // Cleanup on unmount
   onBeforeUnmount(() => {
@@ -607,9 +588,13 @@ export function useViewportWrapper(viewportStore, imageStore, editorStore, conte
     () => imageStore.getRenderedImage(),
     () => {
       nextTick(() => {
-        viewportStore.resetZoom()
-        // fitToScreenZoomLevel()
-        centerImage()
+        console.log('fitImageOnLoad:', viewportStore.fitImageOnLoad)
+        if (viewportStore.fitImageOnLoad && !uiStore.isLoading) {
+          viewportStore.resetZoom()
+          centerImage()
+
+          viewportStore.fitImageOnLoad = false
+        }
       })
     },
   )
