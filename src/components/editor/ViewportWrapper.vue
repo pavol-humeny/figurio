@@ -155,7 +155,7 @@ watch(
 .viewport-wrapper {
   position: relative;
   width: 100%;
-  height: 100%;
+  height: calc(100% - 30px);
   display: flex;
   z-index: var(--z-index-viewport);
 }
