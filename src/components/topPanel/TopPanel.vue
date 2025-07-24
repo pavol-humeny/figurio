@@ -18,7 +18,7 @@ const isHomeView = computed(() => route.name === 'home')
 </script>
 
 <template>
-  <div class="top-panel">
+  <div class="top-panel" id="ahoj2">
     <div class="top-panel__left" v-if="!isHomeView">
       <FileNameDisplay />
       <UploadFileButton />

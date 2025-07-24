@@ -2,18 +2,26 @@ import { ref, computed, nextTick } from 'vue'
 import { tutorialSteps } from '@/config/tutorialSteps'
 
 /**
- * Global state of the interactive tutorial
+ * Whether the tutorial is currently running
  */
 const isRunning = ref(false)
+
+/**
+ * Current active step in the tutorial
+ * Starts at 0, which is the first step
+ */
 const activeStep = ref(0)
 
+/**
+ * Total number of steps in the tutorial
+ */
 const numberOfSteps = computed(() => tutorialSteps.length)
 
 /**
- * Tooltip and overlay positioning
+ * Tutorial item and overlay positioning
  */
 const tutorialItemRef = ref(null)
-const tooltipStyle = ref({})
+const tutorialItemStyle = ref({})
 const overlayStyles = ref({
   top: {},
   bottom: {},
@@ -36,9 +44,10 @@ const startTutorial = () => {
 }
 
 /**
- * Go to the next step or end tutorial
+ * Go to the next step
  */
 const nextStep = () => {
+  console.log('Next step:', activeStep.value + 1)
   if (activeStep.value < tutorialSteps.length - 1) {
     activeStep.value++
     updatePosition()
@@ -49,6 +58,7 @@ const nextStep = () => {
  * Go to the previous step
  */
 const prevStep = () => {
+  console.log('Previous step:', activeStep.value - 1)
   if (activeStep.value > 0) {
     activeStep.value--
     updatePosition()
@@ -56,7 +66,7 @@ const prevStep = () => {
 }
 
 /**
- * Recalculate position of tooltip and overlays for the current step
+ * Recalculate position of tutorial item and overlays for the current step
  */
 const updatePosition = () => {
   const selector = currentStep.value?.selector
@@ -103,7 +113,7 @@ const updatePosition = () => {
           style.left = `${targetRect.left + targetRect.width / 2 - popupRect.width / 2}px`
       }
 
-      tooltipStyle.value = style
+      tutorialItemStyle.value = style
 
       const { innerWidth, innerHeight } = window
       const { top, left, width, height } = targetRect
@@ -138,10 +148,14 @@ const updatePosition = () => {
   }, 100)
 }
 
+/**
+ * Close the tutorial and reset state
+ */
 const closeTutorial = () => {
+  console.log('Closing tutorial...')
   isRunning.value = false
   activeStep.value = 0
-  tooltipStyle.value = {}
+  tutorialItemStyle.value = {}
   overlayStyles.value = {
     top: {},
     bottom: {},
@@ -149,6 +163,16 @@ const closeTutorial = () => {
     right: {},
   }
   tutorialItemRef.value = null
+}
+
+/**
+ * Finish the tutorial
+ * This mark the tutorial as completed
+ */
+const finishTutorial = () => {
+  console.log('Finishing tutorial...')
+  closeTutorial()
+  // TODO - mark tutorial as completed in user settings or local storage
 }
 
 export function useInteractiveTutorial() {
@@ -159,11 +183,12 @@ export function useInteractiveTutorial() {
     startTutorial,
     nextStep,
     prevStep,
-    tooltipStyle,
+    tutorialItemStyle,
     overlayStyles,
     tutorialItemRef,
     updatePosition,
     closeTutorial,
     numberOfSteps,
+    finishTutorial,
   }
 }

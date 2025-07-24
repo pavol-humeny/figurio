@@ -2,18 +2,21 @@
 import { useInteractiveTutorial } from '@/composables/tutorial/useInteractiveTutorial'
 import BaseIcon from '../icons/BaseIcon.vue';
 
-
+/**
+ * Logic for the interactive tutorial.
+ */
 const {
   isRunning,
   currentStep,
   activeStep,
   nextStep,
   prevStep,
-  tooltipStyle,
+  tutorialItemStyle,
   overlayStyles,
   tutorialItemRef,
   closeTutorial,
-  numberOfSteps
+  numberOfSteps,
+  finishTutorial
 } = useInteractiveTutorial()
 </script>
 
@@ -22,18 +25,18 @@ const {
     <div v-if="isRunning">
       <div class="tutorial-overlay" v-for="(style, key) in overlayStyles" :key="key" :style="style"></div>
 
-      <div class="tutorial-item" ref="tutorialItemRef" :style="tooltipStyle">
+      <div class="tutorial-item" ref="tutorialItemRef" :style="tutorialItemStyle">
         <p class="tutorial-close" @click="closeTutorial">✕</p>
 
         <p class="tutorial-title">{{ currentStep.title }}</p>
         <p class="tutorial-text">{{ currentStep.text }}</p>
 
         <div class="tutorial-buttons">
-          <BaseIcon name="IconArrowLeft" size="22" @click="prevStep" :color="'var(--primary-c)'"
+          <BaseIcon name="IconArrowLeft" size="22" @click="prevStep()" :color="'var(--primary-c)'"
             :class="{ 'tutorial-navigation': activeStep !== 0 }" :disabled="activeStep === 0" />
-          <BaseIcon name="IconArrowRight" size="22" @click="nextStep" :color="'var(--primary-c)'"
-            :class="{ 'tutorial-navigation': activeStep !== numberOfSteps - 1 }"
-            :disabled="activeStep === numberOfSteps - 1" />
+          <BaseIcon :name="activeStep + 1 === numberOfSteps ? 'IconTick' : 'IconArrowRight'" size="22"
+            @click="activeStep + 1 === numberOfSteps ? finishTutorial() : nextStep()" :color="'var(--primary-c)'"
+            class="tutorial-navigation" />
         </div>
       </div>
     </div>
