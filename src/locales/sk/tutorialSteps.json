@@ -1,0 +1,12 @@
+{
+  "tutorial": {
+    "ahoj": {
+      "title": "Nástroj Ahoj",
+      "text": "Toto je základný nástroj, ktorý robí veci"
+    },
+    "ahoj2": {
+      "title": "Nástroj Ahoj 2",
+      "text": "Toto je druhý nástroj, ktorý robí veci"
+    }
+  }
+}

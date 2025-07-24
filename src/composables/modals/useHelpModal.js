@@ -21,7 +21,7 @@ const isVisible = ref(false)
  *   closeHelpModal: () => void
  * }}
  */
-export function useHelpModal() {
+export function useHelpModal(t) {
   /**
    * Reference to the scrollable content container
    */
@@ -98,7 +98,7 @@ export function useHelpModal() {
 
     closeHelpModal()
 
-    useInteractiveTutorial().startTutorial()
+    useInteractiveTutorial(t).startTutorial()
   }
 
   // Check scroll position on mount

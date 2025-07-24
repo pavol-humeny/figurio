@@ -2,13 +2,16 @@
 import BaseIcon from '@/components/icons/BaseIcon.vue'
 import ItemHint from '@/components/common/ItemTip.vue'
 import { useHelpModal } from '@/composables/modals/useHelpModal'
+import { useI18n } from 'vue-i18n'
+
+const { t } = useI18n()
 
 /**
  * Logic for the help button.
  */
 const {
   openHelpModal
-} = useHelpModal()
+} = useHelpModal(t)
 </script>
 
 <template>

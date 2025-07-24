@@ -1,6 +1,9 @@
 <script setup>
 import { useInteractiveTutorial } from '@/composables/tutorial/useInteractiveTutorial'
 import BaseIcon from '../icons/BaseIcon.vue';
+import { useI18n } from 'vue-i18n'
+
+const { t } = useI18n()
 
 /**
  * Logic for the interactive tutorial.
@@ -17,7 +20,7 @@ const {
   closeTutorial,
   numberOfSteps,
   finishTutorial
-} = useInteractiveTutorial()
+} = useInteractiveTutorial(t)
 </script>
 
 <template>

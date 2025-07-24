@@ -12,7 +12,7 @@ import { useSettingsPanel } from '@/composables/topPanel/useSettingsPanel';
 const { t } = useI18n()
 
 const { uploadFile } = useUploadFileButton(useImageStore(), t, useRouter())
-const { openHelpModal } = useHelpModal()
+const { openHelpModal } = useHelpModal(t)
 const { openSettingsPanel } = useSettingsPanel(useUiStore())
 
 useKeyboardShortcuts({ uploadFile, openHelpModal, openSettingsPanel }, useUiStore(), useImageStore());

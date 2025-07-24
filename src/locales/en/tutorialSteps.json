@@ -1,0 +1,12 @@
+{
+  "tutorial": {
+    "ahoj": {
+      "title": "Hello Tool",
+      "text": "This is a basic tool that does things"
+    },
+    "ahoj2": {
+      "title": "Hello Tool 2",
+      "text": "This is the second tool that does things"
+    }
+  }
+}

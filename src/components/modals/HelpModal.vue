@@ -6,7 +6,7 @@ import { useHelpModal } from '@/composables/modals/useHelpModal';
 import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 
-const { messages, locale } = useI18n()
+const { messages, locale, t } = useI18n()
 
 /**
  * List of shortcuts as array of objects
@@ -43,7 +43,7 @@ const {
   helpContentRef,
   closeHelpModal,
   startTutorial,
-} = useHelpModal();
+} = useHelpModal(t);
 </script>
 
 <template>

@@ -22,6 +22,10 @@ import enHelp from './en/help.json'
 import skHelp from './sk/help.json'
 import czHelp from './cz/help.json'
 
+import enTutorialSteps from './en/tutorialSteps.json'
+import skTutorialSteps from './sk/tutorialSteps.json'
+import czTutorialSteps from './cz/tutorialSteps.json'
+
 /**
  * Language-specific localization data for i18n
  */
@@ -33,6 +37,7 @@ export default {
     imageStore: enImageStore,
     tools: enTools,
     help: enHelp,
+    tutorialSteps: enTutorialSteps,
   },
   sk: {
     topPanel: skTopPanel,
@@ -41,6 +46,7 @@ export default {
     imageStore: skImageStore,
     tools: skTools,
     help: skHelp,
+    tutorialSteps: skTutorialSteps,
   },
   cz: {
     topPanel: czTopPanel,
@@ -49,5 +55,6 @@ export default {
     imageStore: czImageStore,
     tools: czTools,
     help: czHelp,
+    tutorialSteps: czTutorialSteps,
   },
 }
