@@ -1,4 +1,5 @@
 import { ref, onMounted, nextTick, onBeforeUnmount } from 'vue'
+import { useInteractiveTutorial } from '@/composables/tutorial/useInteractiveTutorial'
 
 /**
  * Whether the help modal is currently visible
@@ -89,6 +90,17 @@ export function useHelpModal() {
     }
   }
 
+  /**
+   * Start the tutorial
+   */
+  const startTutorial = () => {
+    console.log('Starting tutorial...')
+
+    closeHelpModal()
+
+    useInteractiveTutorial().startTutorial()
+  }
+
   // Check scroll position on mount
   onMounted(() => {
     nextTick(() => checkScroll())
@@ -114,5 +126,6 @@ export function useHelpModal() {
     checkScroll,
     openHelpModal,
     closeHelpModal,
+    startTutorial,
   }
 }

@@ -73,11 +73,6 @@ const showTip = computed(() => props.text !== '')
 </template>
 
 <style scoped>
-.item-tip {
-  /* width: fit-content; */
-  /* height: 100%; */
-}
-
 .item-tip-bubble {
   background: var(--secondary-c);
   color: var(--text-c);
@@ -218,7 +213,7 @@ const showTip = computed(() => props.text !== '')
   font-weight: var(--tip-title-font-weight);
   color: var(--text-c);
 }
-  
+
 .tip-shortcut {
   background-color: var(--border-c);
   color: var(--text-c);

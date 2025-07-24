@@ -1,0 +1,91 @@
+<script setup>
+import { useInteractiveTutorial } from '@/composables/tutorial/useInteractiveTutorial'
+import BaseIcon from '../icons/BaseIcon.vue';
+
+
+const {
+  isRunning,
+  currentStep,
+  activeStep,
+  nextStep,
+  prevStep,
+  tooltipStyle,
+  overlayStyles,
+  tutorialItemRef,
+  closeTutorial,
+  numberOfSteps
+} = useInteractiveTutorial()
+</script>
+
+<template>
+  <teleport to="body">
+    <div v-if="isRunning">
+      <div class="tutorial-overlay" v-for="(style, key) in overlayStyles" :key="key" :style="style"></div>
+
+      <div class="tutorial-item" ref="tutorialItemRef" :style="tooltipStyle">
+        <p class="tutorial-close" @click="closeTutorial">✕</p>
+
+        <p class="tutorial-title">{{ currentStep.title }}</p>
+        <p class="tutorial-text">{{ currentStep.text }}</p>
+
+        <div class="tutorial-buttons">
+          <BaseIcon name="IconArrowLeft" size="22" @click="prevStep" :color="'var(--primary-c)'"
+            :class="{ 'tutorial-navigation': activeStep !== 0 }" :disabled="activeStep === 0" />
+          <BaseIcon name="IconArrowRight" size="22" @click="nextStep" :color="'var(--primary-c)'"
+            :class="{ 'tutorial-navigation': activeStep !== numberOfSteps - 1 }"
+            :disabled="activeStep === numberOfSteps - 1" />
+        </div>
+      </div>
+    </div>
+  </teleport>
+</template>
+
+<style scoped>
+.tutorial-item {
+  position: absolute;
+  background: var(--secondary-c);
+  border: var(--border-modal);
+  padding: 15px 20px;
+  width: 280px;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  z-index: var(--z-index-tutorial-item);
+}
+
+.tutorial-title {
+  font-size: var(--subtitle-font-size);
+  font-weight: var(--subtitle-font-weight);
+  color: var(--text-c);
+  margin-bottom: 15px;
+}
+
+.tutorial-buttons {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 10px;
+}
+
+.tutorial-navigation {
+  cursor: pointer;
+}
+
+.tutorial-overlay {
+  position: fixed;
+  background: var(--tutorial-overlay-c);
+  z-index: var(--z-index-tutorial-overlay);
+  pointer-events: auto;
+}
+
+.tutorial-close {
+  position: absolute;
+  top: 15px;
+  right: 20px;
+  cursor: pointer;
+  color: var(--primary-c);
+  font-weight: bold;
+}
+
+.tutorial-close:hover {
+  opacity: 1;
+}
+</style>

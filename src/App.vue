@@ -9,6 +9,8 @@ import PrivacyAndDataModal from './components/modals/PrivacyAndDataModal.vue'
 import ExportToolSettings from './components/toolsSettings/ExportToolSettings.vue'
 import HelpModal from './components/modals/HelpModal.vue'
 import { useImageStore } from './stores/imageStore'
+import InteractiveTutorial from './components/tutorial/InteractiveTutorial.vue'
+
 
 const imageStore = useImageStore()
 
@@ -60,6 +62,7 @@ onBeforeUnmount(() => {
     <HelpModal />
     <SettingsPanel />
     <ExportToolSettings />
+    <InteractiveTutorial />
 
     <div class="top-panel">
       <TopPanel />

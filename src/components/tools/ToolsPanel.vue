@@ -48,7 +48,7 @@ const tools = computed(() =>
 </script>
 
 <template>
-  <div class="tools-panel">
+  <div class="tools-panel" id="ahoj">
     <div v-if="!atTop" class="arrow-up" @click="scrollUp">
       <BaseIcon name="IconArrowUp" size="24" color="var(--primary-c)" />
     </div>

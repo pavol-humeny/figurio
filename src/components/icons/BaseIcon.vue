@@ -41,6 +41,12 @@ const props = defineProps({
 })
 
 /**
+ * Emits a click event when the icon is pressed
+ * @event click
+ */
+const emit = defineEmits(['click'])
+
+/**
  * All available icons loaded via Vite's glob import
  */
 const icons = import.meta.glob('@/components/icons/Icon*.vue')
@@ -62,9 +68,9 @@ const iconComponent = computed(() => {
 </script>
 
 <template>
-  <ItemTip :text="props.tip" :position="props.position">
+  <ItemTip :text="props.tip" :position="props.position" @click="emit('click')">
     <component :is="iconComponent" class="icon" :style="{ width: size + 'px', height: size + 'px', color: color }"
-      :class="disabled ? 'disabled' : ''" />
+      :class="{ 'disabled': props.disabled }" />
   </ItemTip>
 </template>
 
@@ -74,8 +80,8 @@ const iconComponent = computed(() => {
   vertical-align: middle;
 }
 
-.icon.disabled {
+/* .icon.disabled {
   opacity: 0.4;
   pointer-events: none;
-}
+} */
 </style>

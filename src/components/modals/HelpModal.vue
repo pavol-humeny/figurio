@@ -41,7 +41,8 @@ const {
   checkScroll,
   isVisible,
   helpContentRef,
-  closeHelpModal
+  closeHelpModal,
+  startTutorial,
 } = useHelpModal();
 </script>
 
@@ -50,7 +51,7 @@ const {
     <div v-if="isVisible" class="help-modal-overlay" @click.self="triggerShake">
       <div class="modal-box" :class="{ shake: isShaking }">
         <div class="title-wrapper">
-          <BaseIcon name="IconQuestionMark" size="22" color="var(--secondary-c)" class="help-question-mark"/>
+          <BaseIcon name="IconQuestionMark" size="22" color="var(--secondary-c)" class="help-question-mark" />
           <p>{{ $t('help.title') }}</p>
         </div>
 
@@ -287,7 +288,7 @@ const {
                 </li>
               </ul>
               <div class="tutorial-button">
-                <DefaultButton :text="$t('help.startTutorialButton.text')" />
+                <DefaultButton :text="$t('help.startTutorialButton.text')" @click="startTutorial()" />
               </div>
             </div>
 
@@ -360,11 +361,12 @@ const {
   gap: 15px;
 }
 
-.help-question-mark{
+.help-question-mark {
   background: var(--text-c);
   border-radius: 50%;
   padding: 3px;
 }
+
 .title-wrapper {
   width: 100%;
   display: flex;
