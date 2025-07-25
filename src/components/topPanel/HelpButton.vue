@@ -1,6 +1,6 @@
 <script setup>
 import BaseIcon from '@/components/icons/BaseIcon.vue'
-import ItemHint from '@/components/common/ItemTip.vue'
+import ItemTip from '@/components/common/ItemTip.vue'
 import { useHelpModal } from '@/composables/modals/useHelpModal'
 import { useI18n } from 'vue-i18n'
 import { useUiStore } from '@/stores/uiStore'
@@ -16,11 +16,12 @@ const {
 </script>
 
 <template>
-  <ItemHint :text="$t('topPanel.helpButton.tip')" position="bottom-left">
+  <ItemTip :text="$t('topPanel.helpButton.tip')" position="bottom-left">
     <button class="button button-circle button-control" @click="openHelpModal">
       <BaseIcon name="IconQuestionMark" :size="23" />
     </button>
-  </ItemHint>
+  </ItemTip>
 </template>
 
-<style scoped></style>
+<style scoped>
+</style>

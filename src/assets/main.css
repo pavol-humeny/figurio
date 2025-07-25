@@ -58,6 +58,9 @@
 .button-circle {
   width: 40px;
   border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 /* Animation window shake styles */
