@@ -1,5 +1,6 @@
 import { ref, computed, nextTick } from 'vue'
 import { getTutorialSteps } from '@/config/tutorialSteps'
+import { useToastModal } from '../modals/useToastModal'
 
 /**
  * Whether the tutorial is currently running
@@ -10,7 +11,7 @@ const isRunning = ref(false)
  * Current active step in the tutorial
  * Starts at 0, which is the first step
  */
-const activeStep = ref(0)
+// const activeStep = ref(0)
 
 /**
  * Tutorial item and overlay positioning
@@ -24,8 +25,15 @@ const overlayStyles = ref({
   right: {},
 })
 
-export function useInteractiveTutorial(t) {
+export function useInteractiveTutorial(uiStore, t) {
+  const { showToastModal } = useToastModal()
+
   const steps = getTutorialSteps(t)
+
+  const activeStep = computed({
+    get: () => uiStore.tutorialStep,
+    set: (value) => uiStore.setTutorialStep(value),
+  })
 
   /**
    * Total number of steps in the tutorial
@@ -38,18 +46,29 @@ export function useInteractiveTutorial(t) {
   const currentStep = computed(() => steps[activeStep.value])
 
   /**
-   * Start the tutorial from the beginning
+   * Start the tutorial from the beginning, regardless of completion
    */
   const startTutorial = () => {
-    console.log('Starting tutorial...')
-    console.log('Total steps:', numberOfSteps.value)
+    console.log('Starting tutorial from beginning')
     activeStep.value = 0
     isRunning.value = true
     updatePosition()
   }
 
   /**
-   * Go to the next step
+   * Continue tutorial from stored step (if not completed)
+   */
+  const continueTutorial = () => {
+    if (uiStore.tutorialCompleted) {
+      console.log('Tutorial already completed')
+      return
+    }
+    isRunning.value = true
+    updatePosition()
+  }
+
+  /**
+   * Go to the next step and update store
    */
   const nextStep = () => {
     console.log('Next step:', activeStep.value + 1)
@@ -60,7 +79,7 @@ export function useInteractiveTutorial(t) {
   }
 
   /**
-   * Go to the previous step
+   * Go to the previous step and update store
    */
   const prevStep = () => {
     console.log('Previous step:', activeStep.value - 1)
@@ -68,6 +87,29 @@ export function useInteractiveTutorial(t) {
       activeStep.value--
       updatePosition()
     }
+  }
+
+  /**
+   * Close (pause) tutorial
+   */
+  const closeTutorial = () => {
+    console.log('Closing tutorial...')
+    isRunning.value = false
+  }
+
+  /**
+   * Finish tutorial and mark as completed
+   */
+  const finishTutorial = () => {
+    isRunning.value = false
+    uiStore.markTutorialCompleted()
+    console.log('Tutorial completed')
+
+    showToastModal(
+      'success',
+      t('help.helpContent.tutorial.tutorialSuccessfullyCompleted.title'),
+      t('help.helpContent.tutorial.tutorialSuccessfullyCompleted.message'),
+    )
   }
 
   /**
@@ -153,33 +195,6 @@ export function useInteractiveTutorial(t) {
     }, 100)
   }
 
-  /**
-   * Close the tutorial and reset state
-   */
-  const closeTutorial = () => {
-    console.log('Closing tutorial...')
-    isRunning.value = false
-    activeStep.value = 0
-    tutorialItemStyle.value = {}
-    overlayStyles.value = {
-      top: {},
-      bottom: {},
-      left: {},
-      right: {},
-    }
-    tutorialItemRef.value = null
-  }
-
-  /**
-   * Finish the tutorial
-   * This mark the tutorial as completed
-   */
-  const finishTutorial = () => {
-    console.log('Finishing tutorial...')
-    closeTutorial()
-    // TODO - mark tutorial as completed in user settings or local storage
-  }
-
   return {
     isRunning,
     currentStep,
@@ -194,5 +209,6 @@ export function useInteractiveTutorial(t) {
     closeTutorial,
     numberOfSteps,
     finishTutorial,
+    continueTutorial,
   }
 }

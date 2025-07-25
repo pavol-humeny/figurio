@@ -31,7 +31,12 @@
     },
     "tutorial": {
       "title": "Interaktívny tutoriál",
-      "text": "Krok za krokom vás prevedie najdôležitejšími funkciami editora. Kliknite na tlačidlo nižšie a spustite tutoriál, ktorý vám ukáže ako editor používať."
+      "text": "Krok za krokom vás prevedie najdôležitejšími funkciami editora. Kliknite na tlačidlo nižšie a spustite tutoriál, ktorý vám ukáže ako editor používať.",
+      "tutorialCompletedTip": "Tutoriál bol úspešne dokončený.",
+      "tutorialSuccessfullyCompleted": {
+        "title": "Tutoriál úspešne dokončený",
+        "message": "Gratulujeme! Práve ste úspešne dokončili tutoriál. Teraz by ste mali mať dobrý prehľad o hlavných funkciách editora a o tom, ako ich používať."
+      }
     },
     "technicalLimitations": {
       "title": "Technické obmedzenia",
@@ -54,5 +59,8 @@
   },
   "startTutorialButton": {
     "text": "Spustiť tutoriál"
+  },
+  "continueTutorialButton": {
+    "text": "Pokračovať v tutoriále"
   }
 }

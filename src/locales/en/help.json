@@ -76,7 +76,12 @@
     },
     "tutorial":{
       "title": "Interactive Tutorial",
-      "text": "A step-by-step walkthrough that introduces the most important features of the editor. Click the button below to start the tutorial and learn how to use the editor effectively."
+      "text": "A step-by-step walkthrough that introduces the most important features of the editor. Click the button below to start the tutorial and learn how to use the editor effectively.",
+      "tutorialCompletedTip": "The tutorial has been successfully completed.",
+      "tutorialSuccessfullyCompleted": {
+        "title": "Tutorial Successfully Completed",
+        "message": "Congratulations! You have successfully completed the tutorial. You should now have a good understanding of the main features of the editor and how to use them."
+      }
     },
     "technicalLimitations":{
       "title": "Technical Limitations",
@@ -99,5 +104,8 @@
   },
   "startTutorialButton": {
     "text": "Start Tutorial"
+  },
+  "continueTutorialButton": {
+    "text": "Continue Tutorial"
   }
 }

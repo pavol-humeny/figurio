@@ -3,6 +3,7 @@ import BaseIcon from '@/components/icons/BaseIcon.vue'
 import ItemHint from '@/components/common/ItemTip.vue'
 import { useHelpModal } from '@/composables/modals/useHelpModal'
 import { useI18n } from 'vue-i18n'
+import { useUiStore } from '@/stores/uiStore'
 
 const { t } = useI18n()
 
@@ -11,7 +12,7 @@ const { t } = useI18n()
  */
 const {
   openHelpModal
-} = useHelpModal(t)
+} = useHelpModal(useUiStore(), t)
 </script>
 
 <template>

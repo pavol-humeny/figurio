@@ -1,12 +1,17 @@
 <script setup>
+import { storeToRefs } from 'pinia';
 import BaseIcon from '@/components/icons/BaseIcon.vue';
 import DefaultButton from '@/components/common/DefaultButton.vue';
 import { useShaking } from '@/composables/common/useShaking';
 import { useHelpModal } from '@/composables/modals/useHelpModal';
 import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
+import { useUiStore } from '@/stores/uiStore';
 
 const { messages, locale, t } = useI18n()
+
+const uiStore = useUiStore()
+const { tutorialStep, tutorialCompleted } = storeToRefs(uiStore)
 
 /**
  * List of shortcuts as array of objects
@@ -43,7 +48,8 @@ const {
   helpContentRef,
   closeHelpModal,
   startTutorial,
-} = useHelpModal(t);
+  continueTutorial,
+} = useHelpModal(useUiStore(), t);
 </script>
 
 <template>
@@ -279,9 +285,12 @@ const {
 
             <!-- Tutorial -->
             <div class="help-content">
-              <p class="help-content-title">
-                {{ $t('help.helpContent.tutorial.title') }}
-              </p>
+              <div class="tutorial-title-wrapper">
+                <BaseIcon v-if="tutorialCompleted" class="tutorial-completed-icon" name="IconTick" size="20" :tip='$t("help.helpContent.tutorial.tutorialCompletedTip")' position="top-right"/>
+                <p class="help-content-title" style="margin-bottom: 0;">
+                  {{ $t('help.helpContent.tutorial.title') }}
+                </p>
+              </div>
               <ul class="dot-paragraph">
                 <li>
                   {{ $t('help.helpContent.tutorial.text') }}
@@ -289,6 +298,8 @@ const {
               </ul>
               <div class="tutorial-button">
                 <DefaultButton :text="$t('help.startTutorialButton.text')" @click="startTutorial()" />
+                <DefaultButton :text="$t('help.continueTutorialButton.text')" @click="continueTutorial()"
+                  v-if="!tutorialCompleted && tutorialStep !== 0" />
               </div>
             </div>
 
@@ -449,9 +460,26 @@ const {
   gap: 10px;
 }
 
+.tutorial-title-wrapper{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.tutorial-completed-icon {
+  background: var(--primary-c);
+  border-radius: 50%;
+  padding: 3px;
+}
+
 .tutorial-button {
   width: 100%;
   padding-top: 10px;
+  display: flex;
+  gap: 10px;
+  flex-direction: row;
 }
 
 .tool-description {
@@ -512,4 +540,6 @@ const {
   font-size: var(--text-font-size);
   line-height: 1.3;
 }
+
+
 </style>

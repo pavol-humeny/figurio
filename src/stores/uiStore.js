@@ -71,6 +71,12 @@ export const useUiStore = defineStore('ui', {
 
     /** Whether the clicks should be blocked */
     blockClicks: true,
+
+    /** Tutorial step */
+    tutorialStep: getNumber('tutorialStep', 0),
+
+    /** Whether the interactive tutorial is completed */
+    tutorialCompleted: getBoolean('tutorialCompleted', false),
   }),
   actions: {
     /**
@@ -132,6 +138,23 @@ export const useUiStore = defineStore('ui', {
     resetRightPanelWidth() {
       this.rightPanelWidth = this.rightPanelDefaultWidth
       localStorage.setItem('rightPanelWidth', this.rightPanelWidth.toString())
+    },
+
+    /**
+     * Set the current tutorial step
+     * @param {number} step - The step number to set
+     */
+    setTutorialStep(step) {
+      this.tutorialStep = step
+      localStorage.setItem('tutorialStep', this.tutorialStep.toString())
+    },
+
+    /**
+     * Mark the tutorial as completed
+     */
+    markTutorialCompleted() {
+      this.tutorialCompleted = true
+      localStorage.setItem('tutorialCompleted', 'true')
     },
   },
 })

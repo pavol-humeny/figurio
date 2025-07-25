@@ -2,6 +2,7 @@
 import { useInteractiveTutorial } from '@/composables/tutorial/useInteractiveTutorial'
 import BaseIcon from '../icons/BaseIcon.vue';
 import { useI18n } from 'vue-i18n'
+import { useUiStore } from '@/stores/uiStore'
 
 const { t } = useI18n()
 
@@ -19,8 +20,8 @@ const {
   tutorialItemRef,
   closeTutorial,
   numberOfSteps,
-  finishTutorial
-} = useInteractiveTutorial(t)
+  finishTutorial,
+} = useInteractiveTutorial(useUiStore(), t)
 </script>
 
 <template>
@@ -29,7 +30,7 @@ const {
       <div class="tutorial-overlay" v-for="(style, key) in overlayStyles" :key="key" :style="style"></div>
 
       <div class="tutorial-item" ref="tutorialItemRef" :style="tutorialItemStyle">
-        <p class="tutorial-close" @click="closeTutorial">✕</p>
+        <p class="tutorial-close" @click="closeTutorial()">✕</p>
 
         <p class="tutorial-title">{{ currentStep.title }}</p>
         <p class="tutorial-text">{{ currentStep.text }}</p>
