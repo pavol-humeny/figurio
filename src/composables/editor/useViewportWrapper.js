@@ -588,7 +588,6 @@ export function useViewportWrapper(viewportStore, imageStore, editorStore, uiSto
     () => imageStore.getRenderedImage(),
     () => {
       nextTick(() => {
-        console.log('fitImageOnLoad:', viewportStore.fitImageOnLoad)
         if (viewportStore.fitImageOnLoad && !uiStore.isLoading) {
           viewportStore.resetZoom()
           centerImage()

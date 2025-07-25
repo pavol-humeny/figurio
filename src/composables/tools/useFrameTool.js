@@ -98,7 +98,6 @@ export function useFrameTool(imageStore, historyStore, editorStore, t) {
    * @param {string} value - Selected frame variant
    */
   const handleFrameChange = (value) => {
-    console.log('Selected frame variant:', value)
     imageStore.frame.type = value
 
     applyFrame()

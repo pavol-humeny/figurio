@@ -67,7 +67,6 @@ watch(
 
 const removeOperation = (index, operation) => {
   if (operation === selectedOperation.value) {
-    console.log('Removing selected operation:', operation)
     selectedOperation.value = null
   }
   internalList.value.splice(index, 1)

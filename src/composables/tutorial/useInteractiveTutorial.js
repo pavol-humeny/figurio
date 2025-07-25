@@ -51,8 +51,6 @@ export function useInteractiveTutorial(uiStore, router, t) {
    * Start the tutorial from the beginning, regardless of completion
    */
   const startTutorial = () => {
-    console.log('Starting tutorial from beginning')
-
     activeStep.value = 0
 
     // Get actual steps
@@ -73,7 +71,6 @@ export function useInteractiveTutorial(uiStore, router, t) {
    */
   const continueTutorial = () => {
     if (uiStore.tutorialCompleted) {
-      console.log('Tutorial already completed')
       return
     }
 
@@ -98,7 +95,6 @@ export function useInteractiveTutorial(uiStore, router, t) {
    * Go to the next step and update store
    */
   const nextStep = () => {
-    console.log('Next step:', activeStep.value + 1)
     if (activeStep.value < steps.value.length - 1) {
       activeStep.value++
       currentStep.value = steps.value[activeStep.value] || {}
@@ -110,7 +106,6 @@ export function useInteractiveTutorial(uiStore, router, t) {
    * Go to the previous step and update store
    */
   const prevStep = () => {
-    console.log('Previous step:', activeStep.value - 1)
     if (activeStep.value > 0) {
       activeStep.value--
       currentStep.value = steps.value[activeStep.value] || {}
@@ -122,7 +117,6 @@ export function useInteractiveTutorial(uiStore, router, t) {
    * Close (pause) tutorial
    */
   const closeTutorial = () => {
-    console.log('Closing tutorial...')
     isRunning.value = false
   }
 
@@ -135,7 +129,6 @@ export function useInteractiveTutorial(uiStore, router, t) {
     }
     isRunning.value = false
     uiStore.setTutorialCompleted(true)
-    console.log('Tutorial completed')
 
     showToastModal(
       'success',

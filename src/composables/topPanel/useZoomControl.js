@@ -55,7 +55,6 @@ export function useZoomControl(viewportStore) {
    * Increase zoom level by 10%
    */
   const zoomIn = () => {
-    console.log('Zooming in')
     if (!canZoomIn.value) return
     viewportStore.setZoomLevel(viewportStore.zoomLevel + viewportConfig.defaultZoomIn)
   }

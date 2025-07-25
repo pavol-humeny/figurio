@@ -67,7 +67,6 @@ export function usePresetOperationsList(imageStore, props, emit, t) {
    */
   const removeOperation = (index, operation) => {
     if (operation === selectedOperation.value) {
-      console.log('Removing selected operation:', operation)
       selectedOperation.value = null
     }
     internalList.value.splice(index, 1)
@@ -138,8 +137,6 @@ export function usePresetOperationsList(imageStore, props, emit, t) {
    * @returns {boolean}
    */
   const imageCanBeCropped = (cropBox) => {
-    console.log('Checking crop box:', cropBox)
-    console.log('Image dimensions:', imageStore.fileDimensions)
     if (
       cropBox.x + cropBox.width > imageStore.fileDimensions.width ||
       cropBox.y + cropBox.height > imageStore.fileDimensions.height ||

@@ -121,7 +121,6 @@ export const useUiStore = defineStore('ui', {
      * Toggle visibility of the right panel
      */
     toggleRightPanel() {
-      console.log('Toggling right panel visibility to:', !this.rightPanelOpen)
       this.rightPanelOpen = !this.rightPanelOpen
       localStorage.setItem('rightPanelOpen', this.rightPanelOpen.toString())
     },
@@ -158,13 +157,6 @@ export const useUiStore = defineStore('ui', {
     setTutorialCompleted(value) {
       this.tutorialCompleted = value
       localStorage.setItem('tutorialCompleted', this.tutorialCompleted.toString())
-
-      console.log(
-        'Tutorial completed set to : ',
-        this.tutorialCompleted,
-        getBoolean('tutorialCompleted', false),
-      )
-      console.log(localStorage.getItem('tutorialCompleted'))
     },
   },
 })

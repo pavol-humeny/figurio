@@ -93,9 +93,8 @@ export function useSmartCropTool(imageStore, historyStore, editorStore, t) {
     cropBox.value.topIndent = clamp(value, topIndentMin.value, topIndentMax.value)
     cropBox.value.height =
       imageStore.fileDimensions.height - cropBox.value.topIndent - bottomIndent.value
-    console.log('Top indent:', cropBox.value.topIndent, 'Height:', cropBox.value.height)
 
-    bottomIndentMax.value = imageStore.fileDimensions.height - cropBox.value.topIndent
+      bottomIndentMax.value = imageStore.fileDimensions.height - cropBox.value.topIndent
   })
   watch(bottomIndent, (value) => {
     cropBox.value.bottomIndent = clamp(value, bottomIndentMin.value, bottomIndentMax.value)
@@ -206,9 +205,6 @@ export function useSmartCropTool(imageStore, historyStore, editorStore, t) {
    */
   const applyAutoSmartCropRender = async (color) => {
     const newCropBox = calculateIndents(color || selectedColor.value)
-
-    console.log('Applying auto smart crop with color:', color || selectedColor.value)
-    console.log('New crop box:', newCropBox)
 
     await applyCrop(newCropBox)
   }

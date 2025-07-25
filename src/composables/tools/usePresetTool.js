@@ -174,7 +174,6 @@ export function usePresetTool(
   watch(
     () => localImageFrame.value.type,
     (type) => {
-      console.log('Local image frame type changed:', type)
       isPresetModified.value = true
       if (type !== 'frameSolid') {
         localImageFrame.value.outlineEnabled = false
@@ -240,8 +239,6 @@ export function usePresetTool(
    * Save changes to the preset
    */
   const savePresetChanges = () => {
-    console.log('Saving preset changes')
-
     const operations = JSON.parse(JSON.stringify(localImageOperations.value))
 
     const cropOperations = operations.filter((op) => op.type === 'crop')
@@ -719,8 +716,6 @@ export function usePresetTool(
    * Create a new preset based on the current settings
    */
   const createPreset = () => {
-    console.log('Creating preset:', newPreset.value.presetName)
-
     const imageOperations = []
     const imageFrame = {}
 
@@ -784,8 +779,6 @@ export function usePresetTool(
       JSON.parse(JSON.stringify(imageFrame)),
     )
 
-    console.log('Preset created:', presetsStore.selectedPreset)
-
     resetPreset()
 
     showToastModal(
@@ -822,8 +815,6 @@ export function usePresetTool(
    * Use current modifications to create a preset
    */
   const useCurrentModifications = () => {
-    console.log('Using current modifications to create preset')
-
     const imageOperations = imageStore.getImageOperations()
     const cropOperations = imageOperations.filter((op) => op.type === 'crop')
 

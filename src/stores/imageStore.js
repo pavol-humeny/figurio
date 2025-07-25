@@ -446,9 +446,7 @@ export const useImageStore = defineStore('imageStore', {
         historyStore.reset()
 
         // Reset viewport store for new file
-        console.log('---fitImageOnLoad:', viewportStore.fitImageOnLoad)
         viewportStore.reset()
-        console.log('---fitImageOnLoad:', viewportStore.fitImageOnLoad)
 
         // Reset image store for new file
         this.resetImageStoreForNewFile()

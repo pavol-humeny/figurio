@@ -131,10 +131,6 @@ export function useResizeTool(imageStore, historyStore, t) {
    * Apply the resize operation to the operation history and canvas
    */
   const applyResize = () => {
-    console.log('Applying resize with dimensions:', {
-      width: fileDimensionWidth.value,
-      height: fileDimensionHeight.value,
-    })
     imageStore.addImageOperation({
       type: 'resize',
       resizeDimensions: {
