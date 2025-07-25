@@ -47,7 +47,7 @@ export function useInteractiveTutorial(uiStore, t) {
 
   /**
    * Start the tutorial from the beginning, regardless of completion
-   */ 
+   */
   const startTutorial = () => {
     console.log('Starting tutorial from beginning')
     activeStep.value = 0
@@ -102,6 +102,9 @@ export function useInteractiveTutorial(uiStore, t) {
    * Finish tutorial and mark as completed
    */
   const finishTutorial = () => {
+    if (activeStep.value < steps.length - 1) {
+      return
+    }
     isRunning.value = false
     uiStore.setTutorialCompleted(true)
     console.log('Tutorial completed')
@@ -120,95 +123,97 @@ export function useInteractiveTutorial(uiStore, t) {
     const selector = currentStep.value?.selector
     if (!selector) return
 
-    const tryFind = setInterval(() => {
-      const el = document.querySelector(selector)
-      if (!el) return
-      clearInterval(tryFind)
+    const el = document.querySelector(selector)
+    if (!el) {
+      // Go to next step if element not found
+      console.warn(`Element not found for selector: ${selector}`)
+      nextStep()
+      return
+    }
 
-      nextTick(() => {
-        const popup = tutorialItemRef.value
-        if (!popup || !el) return
+    nextTick(() => {
+      const popup = tutorialItemRef.value
+      if (!popup || !el) return
 
-        const targetRect = el.getBoundingClientRect()
-        const popupRect = popup.getBoundingClientRect()
-        const offset = 10
-        const position = currentStep.value.position || 'bottom'
+      const targetRect = el.getBoundingClientRect()
+      const popupRect = popup.getBoundingClientRect()
+      const offset = 10
+      const position = currentStep.value.position || 'bottom'
 
-        const style = {
-          position: 'fixed',
-          zIndex: 'var(--z-index-tutorial-item)',
-        }
+      const style = {
+        position: 'fixed',
+        zIndex: 'var(--z-index-tutorial-item)',
+      }
 
-        switch (position) {
-          // Outside positions
-          case 'top':
-            style.top = `${targetRect.top - offset - popupRect.height}px`
-            style.left = `${targetRect.left + targetRect.width / 2 - popupRect.width / 2}px`
-            break
-          case 'bottom':
-            style.top = `${targetRect.bottom + offset}px`
-            style.left = `${targetRect.left + targetRect.width / 2 - popupRect.width / 2}px`
-            break
-          case 'left':
-            style.top = `${targetRect.top + targetRect.height / 2 - popupRect.height / 2}px`
-            style.left = `${targetRect.left - offset - popupRect.width}px`
-            break
-          case 'right':
-            style.top = `${targetRect.top + targetRect.height / 2 - popupRect.height / 2}px`
-            style.left = `${targetRect.right + offset}px`
-            break
-          // Inside positions
-          case 'top-in':
-            style.top = `${targetRect.top + offset}px`
-            style.left = `${targetRect.left + targetRect.width / 2 - popupRect.width / 2}px`
-            break
-          case 'bottom-in':
-            style.top = `${targetRect.bottom - popupRect.height - offset}px`
-            style.left = `${targetRect.left + targetRect.width / 2 - popupRect.width / 2}px`
-            break
-          case 'left-in':
-            style.top = `${targetRect.top + targetRect.height / 2 - popupRect.height / 2}px`
-            style.left = `${targetRect.left + offset}px`
-            break
-          case 'right-in':
-            style.top = `${targetRect.top + targetRect.height / 2 - popupRect.height / 2}px`
-            style.left = `${targetRect.right - popupRect.width - offset}px`
-            break
-        }
+      switch (position) {
+        // Outside positions
+        case 'top':
+          style.top = `${targetRect.top - offset - popupRect.height}px`
+          style.left = `${targetRect.left + targetRect.width / 2 - popupRect.width / 2}px`
+          break
+        case 'bottom':
+          style.top = `${targetRect.bottom + offset}px`
+          style.left = `${targetRect.left + targetRect.width / 2 - popupRect.width / 2}px`
+          break
+        case 'left':
+          style.top = `${targetRect.top + targetRect.height / 2 - popupRect.height / 2}px`
+          style.left = `${targetRect.left - offset - popupRect.width}px`
+          break
+        case 'right':
+          style.top = `${targetRect.top + targetRect.height / 2 - popupRect.height / 2}px`
+          style.left = `${targetRect.right + offset}px`
+          break
+        // Inside positions
+        case 'top-in':
+          style.top = `${targetRect.top + offset}px`
+          style.left = `${targetRect.left + targetRect.width / 2 - popupRect.width / 2}px`
+          break
+        case 'bottom-in':
+          style.top = `${targetRect.bottom - popupRect.height - offset}px`
+          style.left = `${targetRect.left + targetRect.width / 2 - popupRect.width / 2}px`
+          break
+        case 'left-in':
+          style.top = `${targetRect.top + targetRect.height / 2 - popupRect.height / 2}px`
+          style.left = `${targetRect.left + offset}px`
+          break
+        case 'right-in':
+          style.top = `${targetRect.top + targetRect.height / 2 - popupRect.height / 2}px`
+          style.left = `${targetRect.right - popupRect.width - offset}px`
+          break
+      }
 
-        tutorialItemStyle.value = style
+      tutorialItemStyle.value = style
 
-        const { innerWidth, innerHeight } = window
-        const { top, left, width, height } = targetRect
+      const { innerWidth, innerHeight } = window
+      const { top, left, width, height } = targetRect
 
-        overlayStyles.value = {
-          top: {
-            top: 0,
-            left: 0,
-            width: '100vw',
-            height: `${top}px`,
-          },
-          bottom: {
-            top: `${top + height}px`,
-            left: 0,
-            width: '100vw',
-            height: `${innerHeight - top - height}px`,
-          },
-          left: {
-            top: `${top}px`,
-            left: 0,
-            width: `${left}px`,
-            height: `${height}px`,
-          },
-          right: {
-            top: `${top}px`,
-            left: `${left + width}px`,
-            width: `${innerWidth - left - width}px`,
-            height: `${height}px`,
-          },
-        }
-      })
-    }, 100)
+      overlayStyles.value = {
+        top: {
+          top: 0,
+          left: 0,
+          width: '100vw',
+          height: `${top}px`,
+        },
+        bottom: {
+          top: `${top + height}px`,
+          left: 0,
+          width: '100vw',
+          height: `${innerHeight - top - height}px`,
+        },
+        left: {
+          top: `${top}px`,
+          left: 0,
+          width: `${left}px`,
+          height: `${height}px`,
+        },
+        right: {
+          top: `${top}px`,
+          left: `${left + width}px`,
+          width: `${innerWidth - left - width}px`,
+          height: `${height}px`,
+        },
+      }
+    })
   }
 
   return {

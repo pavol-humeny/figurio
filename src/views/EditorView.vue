@@ -29,6 +29,7 @@ import { useFileNameDisplay } from '@/composables/topPanel/useFileNameDisplay';
 import FileTabs from '@/components/editor/FileTabs.vue';
 import { useWorkspaceStore } from '@/stores/workspaceStore';
 import { useFileTabs } from '@/composables/editor/useFileTabs';
+import { useInteractiveTutorial } from '@/composables/tutorial/useInteractiveTutorial';
 
 const { undo, redo } = useUndoRedo(useHistoryStore(), useImageStore())
 const { zoomIn, zoomOut, resetZoom } = useZoomControl(useViewportStore())
@@ -41,8 +42,9 @@ const { openSettingsPanel } = useSettingsPanel(useUiStore())
 const { openPrivacyAndDataModal } = usePrivacyAndDataModal(t)
 const { startEditing } = useFileNameDisplay(useImageStore(), t)
 const { switchToNextTab, switchToPreviousTab, } = useFileTabs(useUiStore(), t)
+const { prevStep, nextStep, finishTutorial, closeTutorial } = useInteractiveTutorial(useUiStore(), t)
 
-useKeyboardShortcuts({ undo, redo, zoomIn, zoomOut, resetZoom, closeFile, uploadFile, toggleTool, openExportToolSettings, openHelpModal, openSettingsPanel, openPrivacyAndDataModal, startEditing, switchToNextTab, switchToPreviousTab }, useUiStore(), useImageStore());
+useKeyboardShortcuts({ undo, redo, zoomIn, zoomOut, resetZoom, closeFile, uploadFile, toggleTool, openExportToolSettings, openHelpModal, openSettingsPanel, openPrivacyAndDataModal, startEditing, switchToNextTab, switchToPreviousTab, prevStep, nextStep, finishTutorial, closeTutorial }, useUiStore(), useImageStore());
 // === ===
 
 const imageStore = useImageStore()
@@ -61,7 +63,7 @@ const imageStore = useImageStore()
 
     </div>
     <div class="right-panel">
-      <CollapsiblePanel v-if="imageStore.isImageLoaded">
+      <CollapsiblePanel v-if="imageStore.isImageLoaded" id="tool-settings">
         <ToolsSettingsPanel />
       </CollapsiblePanel>
     </div>

@@ -56,7 +56,7 @@ const {
   background: var(--secondary-c);
   border: var(--border-modal);
   padding: 15px 20px;
-  width: 280px;
+  width: 330px;
   border-radius: 10px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
   z-index: var(--z-index-tutorial-item);

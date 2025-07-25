@@ -41,6 +41,7 @@ export function useKeyboardShortcuts(actions, uiStore, imageStore) {
 
     for (const shortcut of keyboardShortcuts) {
       const expected = shortcut.keys.map((k) => k.toLowerCase()).join('+')
+      // console.log(`[Shortcut] Pressed: ${pressed}, Expected: ${expected}`)
       if (pressed === expected) {
         event.preventDefault()
         event.stopImmediatePropagation()

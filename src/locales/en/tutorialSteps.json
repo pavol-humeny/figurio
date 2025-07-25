@@ -1,12 +1,33 @@
 {
   "tutorial": {
-    "ahoj": {
-      "title": "Hello Tool",
-      "text": "This is a basic tool that does things"
+    "toolsPanel": {
+      "title": "Tools panel",
+      "text": "This panel contains all available image editing tools. You can select a tool to apply various modifications. Each tool may also provide additional settings and options."
     },
-    "ahoj2": {
-      "title": "Hello Tool 2",
-      "text": "This is the second tool that does things"
+    "topPanelLeft": {
+      "title": "File Management",
+      "text": "This section allows you to view and edit the file name, open a new image file, or close the current one."
+    },
+    "topPanelCenter": {
+      "title": "Editing Controls",
+      "text": "Here you can undo or redo changes, as well as zoom in or out to adjust your view of the image."
+    },
+    "topPanelRight": {
+      "title": "Help & Settings",
+      "text": "This area provides access to the help section,  and editor configuration settings."
+    },
+    "viewport": {
+      "title": "Viewport",
+      "text": "This is the main editing area where the image is displayed. You can interact with the image directly here using various tools. You can also turn on rulers in the settings to help with precise editing."
+    },
+    "toolSettings":{
+      "title": "Tool Settings",
+      "text": "This section displays the settings for the currently selected tool. You can adjust parameters specific to the tool you are using."
+    },
+    "exportTool": {
+      "title": "Export Tool",
+      "text": "This tool allows you to save your edited image in various formats. You can choose the desired format and quality before exporting."
     }
+    
   }
 }

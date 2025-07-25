@@ -82,7 +82,7 @@ watch(
 </script>
 
 <template>
-  <div class="viewport-wrapper">
+  <div class="viewport-wrapper" id="viewport">
     <LoadingSpinner />
 
     <div class="viewport-content-wrapper" ref="wrapperRef" @wheel.passive="setZoomAndScroll" @mousedown="startPan"

@@ -129,4 +129,26 @@ export const keyboardShortcuts = [
     action: 'switchToPreviousTab',
     description: 'Switch to previous tab',
   },
+
+  // Tutorial shortcuts
+  {
+    keys: ['arrowright'],
+    action: 'nextStep',
+    description: 'Next step in tutorial',
+  },
+  {
+    keys: ['arrowleft'],
+    action: 'prevStep',
+    description: 'Previous step in tutorial',
+  },
+  {
+    keys: ['enter'],
+    action: 'finishTutorial',
+    description: 'Finish tutorial',
+  },
+  {
+    keys: ['escape'],
+    action: 'closeTutorial',
+    description: 'Close (pause) tutorial',
+  },
 ]

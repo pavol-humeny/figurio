@@ -67,7 +67,7 @@ const { wrapperRef, subToolPos, onRightClick, onClickTab, onClickTool } = useOne
     text: props.tip,
     position: 'top-right',
   }">
-    <div class="tool-wrapper" ref="wrapperRef" @contextmenu="onRightClick">
+    <div class="tool-wrapper" ref="wrapperRef" @contextmenu="onRightClick" :id="props.tool.key === 'export' ? 'export-tool' : undefined" >
       <div class="tool" :class="{ active: props.active && imageStore.isImageLoaded, disabled: props.disabled }"
         @click.left="onClickTool">
         <BaseIcon :name="props.tool.iconName" :size="27" :color="'var(--primary-c)'" />

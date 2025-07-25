@@ -18,17 +18,17 @@ const isHomeView = computed(() => route.name === 'home')
 </script>
 
 <template>
-  <div class="top-panel" id="ahoj2">
-    <div class="top-panel__left" v-if="!isHomeView">
+  <div class="top-panel">
+    <div class="top-panel__left" v-if="!isHomeView" id="top-panel-left">
       <FileNameDisplay />
       <UploadFileButton />
       <CloseFileButton />
     </div>
-    <div class="top-panel__center" v-if="!isHomeView">
+    <div class="top-panel__center" v-if="!isHomeView" id="top-panel-center">
       <UndoRedo />
       <ZoomControl />
     </div>
-    <div class="top-panel__right">
+    <div class="top-panel__right" id="top-panel-right">
       <HelpButton />
       <SettingsButton />
     </div>
