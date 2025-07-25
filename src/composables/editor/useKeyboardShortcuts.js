@@ -47,6 +47,17 @@ export function useKeyboardShortcuts(actions, uiStore, imageStore) {
         event.stopImmediatePropagation()
         const fn = actions[shortcut.action]
         if (typeof fn === 'function') {
+          if (uiStore.isTutorialRunning) {
+            if (
+              fn.name !== 'nextStep' &&
+              fn.name !== 'prevStep' &&
+              fn.name !== 'closeTutorial' &&
+              fn.name !== 'finishTutorial'
+            ) {
+              return
+            }
+          }
+
           fn(...(shortcut.args || []))
           console.log(`[Shortcut] ${shortcut.description}`)
         }

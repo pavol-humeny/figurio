@@ -3,11 +3,6 @@ import { getTutorialSteps } from '@/config/tutorialSteps'
 import { useToastModal } from '../modals/useToastModal'
 
 /**
- * Whether the tutorial is currently running
- */
-const isRunning = ref(false)
-
-/**
  * Tutorial item and overlay positioning
  */
 const tutorialItemRef = ref(null)
@@ -36,6 +31,13 @@ const steps = ref([])
 
 export function useInteractiveTutorial(uiStore, router, t) {
   const { showToastModal } = useToastModal()
+
+  const isRunning = computed({
+    get: () => uiStore.isTutorialRunning,
+    set: (value) => {
+      uiStore.isTutorialRunning = value
+    },
+  })
 
   /**
    * Active step index in the tutorial
