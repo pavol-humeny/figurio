@@ -7,7 +7,7 @@ import { uiConfig } from '@/config/uiConfig'
 
  *
  * @param {string} key - The localStorage key to read from.
- * @param {boolean} [fallback=true] - The default value if the key is not set or not 'false'.
+ * @param {boolean} [fallback=true] - The default value if the key is not set.
  * @returns {boolean} The parsed boolean value.
  */
 const getBoolean = (key, fallback = true) => {
