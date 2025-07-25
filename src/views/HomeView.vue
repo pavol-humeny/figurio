@@ -8,14 +8,17 @@ import { useRouter } from 'vue-router';
 import { useI18n } from 'vue-i18n'
 import { useHelpModal } from '@/composables/modals/useHelpModal';
 import { useSettingsPanel } from '@/composables/topPanel/useSettingsPanel';
+import { useInteractiveTutorial } from '@/composables/tutorial/useInteractiveTutorial';
+
 
 const { t } = useI18n()
 
 const { uploadFile } = useUploadFileButton(useImageStore(), t, useRouter())
 const { openHelpModal } = useHelpModal(useUiStore(), useRouter(), t)
 const { openSettingsPanel } = useSettingsPanel(useUiStore())
+const { prevStep, nextStep, finishTutorial, closeTutorial } = useInteractiveTutorial(useUiStore(), useRouter(), t)
 
-useKeyboardShortcuts({ uploadFile, openHelpModal, openSettingsPanel }, useUiStore(), useImageStore());
+useKeyboardShortcuts({ uploadFile, openHelpModal, openSettingsPanel,  prevStep, nextStep, finishTutorial, closeTutorial}, useUiStore(), useImageStore());
 
 </script>
 
