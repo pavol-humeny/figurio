@@ -29,6 +29,26 @@ const currentStep = ref({})
  */
 const steps = ref([])
 
+/**
+ * Login for the interactive tutorial
+ *
+ * @returns {{
+ *  isRunning: import('vue').ComputedRef<boolean>,
+ * currentStep: import('vue').Ref<object>,
+ * activeStep: import('vue').ComputedRef<number>,
+ * startTutorial: () => void,
+ * nextStep: () => void,
+ * prevStep: () => void,
+ * tutorialItemStyle: import('vue').Ref<object>,
+ * overlayStyles: import('vue').Ref<object>,
+ * tutorialItemRef: import('vue').Ref<HTMLElement | null>,
+ * updatePosition: () => void,
+ * closeTutorial: () => void,
+ * numberOfSteps: import('vue').Ref<number>,
+ * finishTutorial: () => void,
+ * continueTutorial: () => void
+ * }}
+ */
 export function useInteractiveTutorial(uiStore, imageStore, router, t) {
   const { showToastModal } = useToastModal()
 
@@ -57,6 +77,9 @@ export function useInteractiveTutorial(uiStore, imageStore, router, t) {
     { immediate: true },
   )
 
+  /**
+   * Watch for image loading to update tutorial steps
+   */
   watch(
     () => imageStore.isImageLoaded,
     () => {
