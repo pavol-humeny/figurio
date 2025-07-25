@@ -1,7 +1,4 @@
-import { ref, onMounted, onBeforeUnmount } from 'vue'
-import { useShaking } from '@/composables/common/useShaking'
-
-const { triggerShake } = useShaking()
+import { ref } from 'vue'
 
 /**
  * Whether the modal is currently visible
@@ -86,28 +83,6 @@ export function useConfirmModal() {
     isVisible.value = false
     resolver?.(false)
   }
-
-  /**
-   * Handle Escape key to trigger shake feedback if modal is open
-   *
-   * @param {KeyboardEvent} e
-   */
-  const handleKeydown = (e) => {
-    if (e.key === 'Escape' && isVisible.value) {
-      e.preventDefault()
-      triggerShake()
-    }
-  }
-
-  // Register global Escape key listener
-  onMounted(() => {
-    window.addEventListener('keydown', handleKeydown)
-  })
-
-  // Unregister key listener on unmount
-  onBeforeUnmount(() => {
-    window.removeEventListener('keydown', handleKeydown)
-  })
 
   return {
     isVisible,

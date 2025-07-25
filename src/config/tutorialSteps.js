@@ -66,31 +66,14 @@ export function getTutorialSteps(router, t) {
     },
   ]
 
-  console.log('111111111111111111111111111', router.currentRoute.value.name)
-
   if (router.currentRoute.value.name === 'home') {
     // Return steps for drag and drop ()
-    console.log(
-      'Returning steps for drag and drop',
-      steps.filter((_, index) => [0].includes(index)),
-    )
-
-    
-
     return steps.filter((_, index) => [0].includes(index))
   } else if (imageStore.isImageLoaded) {
     // Return steps for editor with image loaded
-    console.log(
-      'Returning steps for editor with image loaded, steps: ',
-      steps.filter((_, index) => [1, 2, 3, 4, 5, 6, 7].includes(index)),
-    )
     return steps.filter((_, index) => [1, 2, 3, 4, 5, 6, 7].includes(index))
   } else if (!imageStore.isImageLoaded) {
     // Return steps for editor without image loaded
-    console.log(
-      'Returning steps for editor without image loaded: ',
-      steps.filter((_, index) => [2, 4, 5, 6].includes(index)),
-    )
     return steps.filter((_, index) => [2, 4, 5, 6].includes(index))
   }
 }

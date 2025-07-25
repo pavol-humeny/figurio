@@ -24,7 +24,6 @@ const {
   finishTutorial,
 } = useInteractiveTutorial(useUiStore(), useRouter(), t)
 
-console.log("---------------------currentStep: ", currentStep.value, 'numberOfSteps: ', numberOfSteps.value)
 </script>
 
 <template>
