@@ -30,8 +30,13 @@ console.log("---------------------currentStep: ", currentStep.value, 'numberOfSt
 <template>
   <teleport to="body">
     <div v-if="isRunning">
+      <!-- Tutorial overlay -->
       <div class="tutorial-overlay" v-for="(style, key) in overlayStyles" :key="key" :style="style"></div>
 
+      <!-- Click blocker -->
+      <div class="tutorial-click-blocker"></div>
+
+      <!-- Tutorial item -->
       <div class="tutorial-item" ref="tutorialItemRef" :style="tutorialItemStyle">
         <p class="tutorial-close" @click="closeTutorial()">✕</p>
 
@@ -107,6 +112,17 @@ console.log("---------------------currentStep: ", currentStep.value, 'numberOfSt
 
 .tutorial-close:hover {
   opacity: 1;
+}
+
+.tutorial-click-blocker {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: var(--z-index-tutorial-click-blocker);
+  background: transparent;
+  pointer-events: all;
 }
 
 </style>

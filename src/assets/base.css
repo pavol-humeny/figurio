@@ -112,7 +112,8 @@ body {
   --default-transition: all 0.2s ease-in-out;
 
   --z-index-tutorial-item: 99999;
-  --z-index-tutorial-overlay: 99998;
+  --z-index-tutorial-click-blocker: 99995;
+  --z-index-tutorial-overlay: 99990;
   --z-index-loading-wheel: 10001;
   --z-index-loading: 10000;
   --z-index-tip: 9999;
