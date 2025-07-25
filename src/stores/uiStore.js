@@ -12,7 +12,7 @@ import { uiConfig } from '@/config/uiConfig'
  */
 const getBoolean = (key, fallback = true) => {
   const value = localStorage.getItem(key)
-  return value === 'false' ? false : fallback
+  return value === 'false' ? false : value === 'true' ? true : fallback
 }
 
 /**
@@ -152,9 +152,16 @@ export const useUiStore = defineStore('ui', {
     /**
      * Mark the tutorial as completed
      */
-    markTutorialCompleted() {
-      this.tutorialCompleted = true
-      localStorage.setItem('tutorialCompleted', 'true')
+    setTutorialCompleted(value) {
+      this.tutorialCompleted = value
+      localStorage.setItem('tutorialCompleted', this.tutorialCompleted.toString())
+
+      console.log(
+        'Tutorial completed set to : ',
+        this.tutorialCompleted,
+        getBoolean('tutorialCompleted', false),
+      )
+      console.log(localStorage.getItem('tutorialCompleted'))
     },
   },
 })

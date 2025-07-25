@@ -38,6 +38,9 @@ const {
         <div class="tutorial-buttons">
           <BaseIcon name="IconArrowLeft" size="22" @click="prevStep()" :color="'var(--primary-c)'"
             :class="{ 'tutorial-navigation': activeStep !== 0 }" :disabled="activeStep === 0" />
+
+          <p class="tutorial-step-indicator">{{ activeStep + 1 }}/{{ numberOfSteps }}</p>
+
           <BaseIcon :name="activeStep + 1 === numberOfSteps ? 'IconTick' : 'IconArrowRight'" size="22"
             @click="activeStep + 1 === numberOfSteps ? finishTutorial() : nextStep()" :color="'var(--primary-c)'"
             class="tutorial-navigation" />
@@ -69,7 +72,14 @@ const {
 .tutorial-buttons {
   display: flex;
   justify-content: space-between;
+  align-items: center;
   margin-top: 10px;
+}
+
+.tutorial-step-indicator{
+  font-size: var(--text-font-size);
+  color: var(--text-c);
+  font-weight: var(--text-font-weight);
 }
 
 .tutorial-navigation {
@@ -95,4 +105,5 @@ const {
 .tutorial-close:hover {
   opacity: 1;
 }
+
 </style>

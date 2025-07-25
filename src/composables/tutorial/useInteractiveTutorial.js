@@ -47,10 +47,11 @@ export function useInteractiveTutorial(uiStore, t) {
 
   /**
    * Start the tutorial from the beginning, regardless of completion
-   */
+   */ 
   const startTutorial = () => {
     console.log('Starting tutorial from beginning')
     activeStep.value = 0
+    uiStore.setTutorialCompleted(false)
     isRunning.value = true
     updatePosition()
   }
@@ -102,7 +103,7 @@ export function useInteractiveTutorial(uiStore, t) {
    */
   const finishTutorial = () => {
     isRunning.value = false
-    uiStore.markTutorialCompleted()
+    uiStore.setTutorialCompleted(true)
     console.log('Tutorial completed')
 
     showToastModal(
@@ -139,6 +140,7 @@ export function useInteractiveTutorial(uiStore, t) {
         }
 
         switch (position) {
+          // Outside positions
           case 'top':
             style.top = `${targetRect.top - offset - popupRect.height}px`
             style.left = `${targetRect.left + targetRect.width / 2 - popupRect.width / 2}px`
@@ -155,9 +157,23 @@ export function useInteractiveTutorial(uiStore, t) {
             style.top = `${targetRect.top + targetRect.height / 2 - popupRect.height / 2}px`
             style.left = `${targetRect.right + offset}px`
             break
-          default:
-            style.top = `${targetRect.bottom + offset}px`
+          // Inside positions
+          case 'top-in':
+            style.top = `${targetRect.top + offset}px`
             style.left = `${targetRect.left + targetRect.width / 2 - popupRect.width / 2}px`
+            break
+          case 'bottom-in':
+            style.top = `${targetRect.bottom - popupRect.height - offset}px`
+            style.left = `${targetRect.left + targetRect.width / 2 - popupRect.width / 2}px`
+            break
+          case 'left-in':
+            style.top = `${targetRect.top + targetRect.height / 2 - popupRect.height / 2}px`
+            style.left = `${targetRect.left + offset}px`
+            break
+          case 'right-in':
+            style.top = `${targetRect.top + targetRect.height / 2 - popupRect.height / 2}px`
+            style.left = `${targetRect.right - popupRect.width - offset}px`
+            break
         }
 
         tutorialItemStyle.value = style
