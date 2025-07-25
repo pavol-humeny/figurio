@@ -4,6 +4,7 @@ import BaseIcon from '../icons/BaseIcon.vue';
 import { useI18n } from 'vue-i18n'
 import { useUiStore } from '@/stores/uiStore'
 import { useRouter } from 'vue-router'
+import { useImageStore } from '@/stores/imageStore'
 
 const { t } = useI18n()
 
@@ -22,7 +23,7 @@ const {
   closeTutorial,
   numberOfSteps,
   finishTutorial,
-} = useInteractiveTutorial(useUiStore(), useRouter(), t)
+} = useInteractiveTutorial(useUiStore(), useImageStore(), useRouter(), t)
 
 </script>
 

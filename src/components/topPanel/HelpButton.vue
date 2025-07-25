@@ -5,6 +5,7 @@ import { useHelpModal } from '@/composables/modals/useHelpModal'
 import { useI18n } from 'vue-i18n'
 import { useUiStore } from '@/stores/uiStore'
 import { useRouter } from 'vue-router'
+import { useImageStore } from '@/stores/imageStore'
 
 const { t } = useI18n()
 
@@ -13,7 +14,7 @@ const { t } = useI18n()
  */
 const {
   openHelpModal
-} = useHelpModal(useUiStore(), useRouter(), t)
+} = useHelpModal(useUiStore(), useImageStore(), useRouter(), t)
 </script>
 
 <template>

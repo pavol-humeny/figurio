@@ -1,4 +1,4 @@
-import { ref, computed, nextTick } from 'vue'
+import { ref, computed, nextTick, watch } from 'vue'
 import { getTutorialSteps } from '@/config/tutorialSteps'
 import { useToastModal } from '../modals/useToastModal'
 
@@ -29,9 +29,12 @@ const currentStep = ref({})
  */
 const steps = ref([])
 
-export function useInteractiveTutorial(uiStore, router, t) {
+export function useInteractiveTutorial(uiStore, imageStore, router, t) {
   const { showToastModal } = useToastModal()
 
+  /**
+   * Whether the tutorial is currently running
+   */
   const isRunning = computed({
     get: () => uiStore.isTutorialRunning,
     set: (value) => {
@@ -39,6 +42,33 @@ export function useInteractiveTutorial(uiStore, router, t) {
     },
   })
 
+  /**
+   * Reset completed status when steps change
+   */
+  watch(
+    steps,
+    (newSteps) => {
+      if (newSteps.length !== numberOfSteps.value) {
+        console.log('Steps changed, resetting tutorial completed status')
+        uiStore.setTutorialCompleted(false)
+        uiStore.setTutorialStep(0)
+      }
+    },
+    { immediate: true },
+  )
+
+  watch(
+    () => imageStore.isImageLoaded,
+    () => {
+      console.log('Image loaded, updating tutorial steps')
+      steps.value = getTutorialSteps(router, t)
+      numberOfSteps.value = steps.value.length
+      currentStep.value = steps.value[uiStore.tutorialStep] || {}
+
+      uiStore.setTutorialCompleted(false)
+      uiStore.setTutorialStep(0)
+    },
+  )
   /**
    * Active step index in the tutorial
    */
@@ -95,6 +125,7 @@ export function useInteractiveTutorial(uiStore, router, t) {
    * Go to the next step and update store
    */
   const nextStep = () => {
+    if (!isRunning.value) return
     if (activeStep.value < steps.value.length - 1) {
       activeStep.value++
       currentStep.value = steps.value[activeStep.value] || {}
@@ -106,6 +137,7 @@ export function useInteractiveTutorial(uiStore, router, t) {
    * Go to the previous step and update store
    */
   const prevStep = () => {
+    if (!isRunning.value) return
     if (activeStep.value > 0) {
       activeStep.value--
       currentStep.value = steps.value[activeStep.value] || {}
@@ -117,6 +149,7 @@ export function useInteractiveTutorial(uiStore, router, t) {
    * Close (pause) tutorial
    */
   const closeTutorial = () => {
+    if (!isRunning.value) return
     isRunning.value = false
   }
 
@@ -124,6 +157,7 @@ export function useInteractiveTutorial(uiStore, router, t) {
    * Finish tutorial and mark as completed
    */
   const finishTutorial = () => {
+    if (!isRunning.value) return
     if (activeStep.value < steps.value.length - 1) {
       return
     }

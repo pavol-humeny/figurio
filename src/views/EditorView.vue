@@ -40,12 +40,12 @@ const { closeFile } = useCloseFileButton(useImageStore(), useWorkspaceStore(), t
 const { uploadFile } = useUploadFileButton(useImageStore(), t, useRoute())
 const { toggleTool } = useToolsPanel(useEditorStore(), useImageStore(), useUiStore(), t)
 const { openExportToolSettings } = useExportToolSettings(useImageStore(), useEditorStore(), useHistoryStore(), t)
-const { openHelpModal } = useHelpModal(useUiStore(), useRouter(), t)
+const { openHelpModal } = useHelpModal(useUiStore(), useImageStore(), useRouter(), t)
 const { openSettingsPanel } = useSettingsPanel(useUiStore())
 const { openPrivacyAndDataModal } = usePrivacyAndDataModal(t)
 const { startEditing } = useFileNameDisplay(useImageStore(), t)
 const { switchToNextTab, switchToPreviousTab, } = useFileTabs(useUiStore(), t)
-const { prevStep, nextStep, finishTutorial, closeTutorial, startTutorial } = useInteractiveTutorial(useUiStore(), useRouter(), t)
+const { prevStep, nextStep, finishTutorial, closeTutorial, startTutorial } = useInteractiveTutorial(useUiStore(), useImageStore(), useRouter(), t)
 
 useKeyboardShortcuts({ undo, redo, zoomIn, zoomOut, resetZoom, closeFile, uploadFile, toggleTool, openExportToolSettings, openHelpModal, openSettingsPanel, openPrivacyAndDataModal, startEditing, switchToNextTab, switchToPreviousTab, prevStep, nextStep, finishTutorial, closeTutorial }, useUiStore(), useImageStore());
 // === ===

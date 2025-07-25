@@ -14,9 +14,9 @@ import { useInteractiveTutorial } from '@/composables/tutorial/useInteractiveTut
 const { t } = useI18n()
 
 const { uploadFile } = useUploadFileButton(useImageStore(), t, useRouter())
-const { openHelpModal } = useHelpModal(useUiStore(), useRouter(), t)
+const { openHelpModal } = useHelpModal(useUiStore(), useImageStore(), useRouter(), t)
 const { openSettingsPanel } = useSettingsPanel(useUiStore())
-const { prevStep, nextStep, finishTutorial, closeTutorial } = useInteractiveTutorial(useUiStore(), useRouter(), t)
+const { prevStep, nextStep, finishTutorial, closeTutorial } = useInteractiveTutorial(useUiStore(), useImageStore(), useRouter(), t)
 
 useKeyboardShortcuts({ uploadFile, openHelpModal, openSettingsPanel,  prevStep, nextStep, finishTutorial, closeTutorial}, useUiStore(), useImageStore());
 

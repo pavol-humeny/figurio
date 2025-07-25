@@ -8,6 +8,7 @@ import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useUiStore } from '@/stores/uiStore';
 import { useRouter } from 'vue-router';
+import { useImageStore } from '@/stores/imageStore';
 
 const { messages, locale, t } = useI18n()
 
@@ -50,7 +51,7 @@ const {
   closeHelpModal,
   startTutorial,
   continueTutorial,
-} = useHelpModal(useUiStore(), useRouter(), t);
+} = useHelpModal(useUiStore(), useImageStore(), useRouter(), t);
 </script>
 
 <template>
