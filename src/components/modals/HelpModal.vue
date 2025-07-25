@@ -7,6 +7,7 @@ import { useHelpModal } from '@/composables/modals/useHelpModal';
 import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useUiStore } from '@/stores/uiStore';
+import { useRouter } from 'vue-router';
 
 const { messages, locale, t } = useI18n()
 
@@ -49,7 +50,7 @@ const {
   closeHelpModal,
   startTutorial,
   continueTutorial,
-} = useHelpModal(useUiStore(), t);
+} = useHelpModal(useUiStore(), useRouter(), t);
 </script>
 
 <template>

@@ -27,7 +27,10 @@
     "exportTool": {
       "title": "Export Tool",
       "text": "This tool allows you to save your edited image in various formats. You can choose the desired format and quality before exporting."
+    },
+    "dragDropArea": {
+      "title": "Drag and Drop Area",
+      "text": "You can drag and drop an image file here to open it in the editor. This is a quick way to start editing without using the file menu."
     }
-    
   }
 }

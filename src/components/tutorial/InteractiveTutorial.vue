@@ -3,6 +3,7 @@ import { useInteractiveTutorial } from '@/composables/tutorial/useInteractiveTut
 import BaseIcon from '../icons/BaseIcon.vue';
 import { useI18n } from 'vue-i18n'
 import { useUiStore } from '@/stores/uiStore'
+import { useRouter } from 'vue-router'
 
 const { t } = useI18n()
 
@@ -21,7 +22,9 @@ const {
   closeTutorial,
   numberOfSteps,
   finishTutorial,
-} = useInteractiveTutorial(useUiStore(), t)
+} = useInteractiveTutorial(useUiStore(), useRouter(), t)
+
+console.log("---------------------currentStep: ", currentStep.value, 'numberOfSteps: ', numberOfSteps.value)
 </script>
 
 <template>

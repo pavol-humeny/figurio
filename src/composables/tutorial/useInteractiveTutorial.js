@@ -8,12 +8,6 @@ import { useToastModal } from '../modals/useToastModal'
 const isRunning = ref(false)
 
 /**
- * Current active step in the tutorial
- * Starts at 0, which is the first step
- */
-// const activeStep = ref(0)
-
-/**
  * Tutorial item and overlay positioning
  */
 const tutorialItemRef = ref(null)
@@ -25,34 +19,50 @@ const overlayStyles = ref({
   right: {},
 })
 
-export function useInteractiveTutorial(uiStore, t) {
+/**
+ * Total number of steps in the tutorial
+ */
+const numberOfSteps = ref(0)
+
+/**
+ * Current step object containing selector, title, text, and position
+ */
+const currentStep = ref({})
+
+/**
+ * Array of all tutorial steps
+ */
+const steps = ref([])
+
+export function useInteractiveTutorial(uiStore, router, t) {
   const { showToastModal } = useToastModal()
 
-  const steps = getTutorialSteps(t)
-
+  /**
+   * Active step index in the tutorial
+   */
   const activeStep = computed({
     get: () => uiStore.tutorialStep,
     set: (value) => uiStore.setTutorialStep(value),
   })
 
   /**
-   * Total number of steps in the tutorial
-   */
-  const numberOfSteps = computed(() => steps.length)
-
-  /**
-   * Get the current step object
-   */
-  const currentStep = computed(() => steps[activeStep.value])
-
-  /**
    * Start the tutorial from the beginning, regardless of completion
    */
   const startTutorial = () => {
     console.log('Starting tutorial from beginning')
+
     activeStep.value = 0
+
+    // Get actual steps
+    steps.value = getTutorialSteps(router, t)
+
+    // Update current step and number of steps
+    numberOfSteps.value = steps.value.length
+    currentStep.value = steps.value[activeStep.value] || {}
+
     uiStore.setTutorialCompleted(false)
     isRunning.value = true
+
     updatePosition()
   }
 
@@ -64,7 +74,21 @@ export function useInteractiveTutorial(uiStore, t) {
       console.log('Tutorial already completed')
       return
     }
+
+    // Get actual steps
+    const newSteps = getTutorialSteps(router, t)
+    if (newSteps.length !== steps.value.length) {
+      console.warn('Tutorial steps have changed, resetting to first step')
+      activeStep.value = 0
+    }
+    steps.value = newSteps
+
+    // Update current step and number of steps
+    numberOfSteps.value = steps.value.length
+    currentStep.value = steps.value[activeStep.value] || {}
+
     isRunning.value = true
+
     updatePosition()
   }
 
@@ -73,8 +97,9 @@ export function useInteractiveTutorial(uiStore, t) {
    */
   const nextStep = () => {
     console.log('Next step:', activeStep.value + 1)
-    if (activeStep.value < steps.length - 1) {
+    if (activeStep.value < steps.value.length - 1) {
       activeStep.value++
+      currentStep.value = steps.value[activeStep.value] || {}
       updatePosition()
     }
   }
@@ -86,6 +111,7 @@ export function useInteractiveTutorial(uiStore, t) {
     console.log('Previous step:', activeStep.value - 1)
     if (activeStep.value > 0) {
       activeStep.value--
+      currentStep.value = steps.value[activeStep.value] || {}
       updatePosition()
     }
   }
@@ -102,7 +128,7 @@ export function useInteractiveTutorial(uiStore, t) {
    * Finish tutorial and mark as completed
    */
   const finishTutorial = () => {
-    if (activeStep.value < steps.length - 1) {
+    if (activeStep.value < steps.value.length - 1) {
       return
     }
     isRunning.value = false

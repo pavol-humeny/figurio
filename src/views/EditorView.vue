@@ -1,4 +1,6 @@
 <script setup>
+import { onMounted } from 'vue'
+
 import ToolsPanel from '@/components/tools/ToolsPanel.vue';
 import CollapsiblePanel from '@/components/common/CollapsiblePanel.vue';
 import ToolsSettingsPanel from '@/components/toolsSettings/ToolsSettingsPanel.vue';
@@ -30,6 +32,7 @@ import FileTabs from '@/components/editor/FileTabs.vue';
 import { useWorkspaceStore } from '@/stores/workspaceStore';
 import { useFileTabs } from '@/composables/editor/useFileTabs';
 import { useInteractiveTutorial } from '@/composables/tutorial/useInteractiveTutorial';
+import { useRouter } from 'vue-router'
 
 const { undo, redo } = useUndoRedo(useHistoryStore(), useImageStore())
 const { zoomIn, zoomOut, resetZoom } = useZoomControl(useViewportStore())
@@ -37,17 +40,25 @@ const { closeFile } = useCloseFileButton(useImageStore(), useWorkspaceStore(), t
 const { uploadFile } = useUploadFileButton(useImageStore(), t, useRoute())
 const { toggleTool } = useToolsPanel(useEditorStore(), useImageStore(), useUiStore(), t)
 const { openExportToolSettings } = useExportToolSettings(useImageStore(), useEditorStore(), useHistoryStore(), t)
-const { openHelpModal } = useHelpModal(useUiStore(), t)
+const { openHelpModal } = useHelpModal(useUiStore(), useRouter(), t)
 const { openSettingsPanel } = useSettingsPanel(useUiStore())
 const { openPrivacyAndDataModal } = usePrivacyAndDataModal(t)
 const { startEditing } = useFileNameDisplay(useImageStore(), t)
 const { switchToNextTab, switchToPreviousTab, } = useFileTabs(useUiStore(), t)
-const { prevStep, nextStep, finishTutorial, closeTutorial } = useInteractiveTutorial(useUiStore(), t)
+const { prevStep, nextStep, finishTutorial, closeTutorial, startTutorial } = useInteractiveTutorial(useUiStore(), useRouter(), t)
 
 useKeyboardShortcuts({ undo, redo, zoomIn, zoomOut, resetZoom, closeFile, uploadFile, toggleTool, openExportToolSettings, openHelpModal, openSettingsPanel, openPrivacyAndDataModal, startEditing, switchToNextTab, switchToPreviousTab, prevStep, nextStep, finishTutorial, closeTutorial }, useUiStore(), useImageStore());
 // === ===
 
 const imageStore = useImageStore()
+
+// Start tutorial if opening the editor for the first time
+onMounted(() => {
+  const uiStore = useUiStore()
+  if (uiStore.tutorialStep === -1){
+    startTutorial()
+  }
+})
 </script>
 
 <template>

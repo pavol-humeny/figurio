@@ -1,12 +1,36 @@
 {
   "tutorial": {
-    "ahoj": {
-      "title": "Nástroj Ahoj",
-      "text": "Toto je základný nástroj, ktorý robí veci"
+    "toolsPanel": {
+      "title": "Panel nástrojov",
+      "text": "Tento panel obsahuje všetky dostupné nástroje na úpravu obrázkov. Môžete vybrať nástroj na vykonanie rôznych úprav. Každý nástroj môže ponúkať ďalšie nastavenia a možnosti."
     },
-    "ahoj2": {
-      "title": "Nástroj Ahoj 2",
-      "text": "Toto je druhý nástroj, ktorý robí veci"
+    "topPanelLeft": {
+      "title": "Správa súborov",
+      "text": "Táto sekcia umožňuje zobraziť a upraviť názov súboru, otvoriť nový obrázok alebo zatvoriť aktuálny súbor."
+    },
+    "topPanelCenter": {
+      "title": "Ovládanie úprav",
+      "text": "Tu môžete vrátiť alebo zopakovať zmeny, prípadne priblížiť alebo oddialiť pohľad na obrázok."
+    },
+    "topPanelRight": {
+      "title": "Pomocník a nastavenia",
+      "text": "Táto sekcia poskytuje prístup k pomocníkovi a konfiguračným nastaveniam editora."
+    },
+    "viewport": {
+      "title": "Pracovná plocha",
+      "text": "Toto je hlavná oblasť úprav, kde sa zobrazuje obrázok. S obrázkom môžete interagovať priamo pomocou rôznych nástrojov. V nastaveniach môžete zapnúť pravítka na presnejšie úpravy."
+    },
+    "toolSettings": {
+      "title": "Nastavenia nástroja",
+      "text": "Táto sekcia zobrazuje nastavenia pre aktuálne vybraný nástroj. Môžete upraviť parametre špecifické pre daný nástroj."
+    },
+    "exportTool": {
+      "title": "Export nástroj",
+      "text": "Tento nástroj vám umožňuje uložiť upravený obrázok v rôznych formátoch. Pred exportom si môžete zvoliť požadovaný formát a kvalitu."
+    },
+    "dragDropArea": {
+      "title": "Oblasť pre potiahnutie súboru",
+      "text": "Obrázok môžete jednoducho potiahnuť a pustiť do tejto oblasti na otvorenie v editore. Je to rýchly spôsob, ako začať bez použitia menu."
     }
   }
 }

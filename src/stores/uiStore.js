@@ -73,7 +73,7 @@ export const useUiStore = defineStore('ui', {
     blockClicks: true,
 
     /** Tutorial step */
-    tutorialStep: getNumber('tutorialStep', 0),
+    tutorialStep: getNumber('tutorialStep', -1),
 
     /** Whether the interactive tutorial is completed */
     tutorialCompleted: getBoolean('tutorialCompleted', false),
