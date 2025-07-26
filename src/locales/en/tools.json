@@ -262,7 +262,8 @@
           "framePhoneAndroid": "Phone Android",
           "framePhoneAndroid2": "Phone Android 2",
           "framePhoneSimple": "Phone simple",
-          "frameWindowsTaskBar": "Windows task bar"
+          "frameWindowsTaskBar": "Windows task bar",
+          "frameVSCode": "VS Code"
         },
         "useFrameOutline": {
           "label": "Use outline"

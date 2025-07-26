@@ -171,11 +171,17 @@ export function usePresetTool(
   /**
    * Watch localImageFrame.type if it is different than frameSolid reset width
    */
+  // UPDATE new frame type
   watch(
     () => localImageFrame.value.type,
     (type) => {
       isPresetModified.value = true
-      if (type !== 'frameSolid') {
+      if (
+        type !== 'frameMacBrowser' &&
+        type !== 'frameWindowsBrowser' &&
+        type !== 'frameWindowsTaskBar' &&
+        type !== 'frameVSCode'
+      ) {
         localImageFrame.value.outlineEnabled = false
       }
     },
@@ -644,6 +650,10 @@ export function usePresetTool(
     {
       label: t('tools.frame.settings.general.frameVariants.frameWindowsTaskBar'),
       value: 'frameWindowsTaskBar',
+    },
+    {
+      label: t('tools.frame.settings.general.frameVariants.frameVSCode'),
+      value: 'frameVSCode',
     },
   ])
 

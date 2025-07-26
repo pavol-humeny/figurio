@@ -1,4 +1,4 @@
-import { ref, watch, computed } from 'vue'
+import { ref, watch, computed, nextTick } from 'vue'
 import { useToastModal } from '../modals/useToastModal'
 import { editorConfig } from '@/config/editorConfig'
 
@@ -106,6 +106,10 @@ export function useFrameTool(imageStore, historyStore, editorStore, t) {
       label: t('tools.frame.settings.general.frameVariants.frameWindowsTaskBar'),
       value: 'frameWindowsTaskBar',
     },
+    {
+      label: t('tools.frame.settings.general.frameVariants.frameVSCode'),
+      value: 'frameVSCode',
+    },
   ])
 
   /**
@@ -119,11 +123,25 @@ export function useFrameTool(imageStore, historyStore, editorStore, t) {
   })
 
   /**
+   * Watch for drawOutline and update frame width accordingly
+   */
+  watch(drawOutline, (newValue) => {
+    if (newValue) {
+      nextTick(() => {
+        setFrameWidth(imageStore.frame.width) // Reset width when outline visibility changes
+      })
+    }
+  })
+
+  /**
    * Handle frame variant change
    * @param {string} value - Selected frame variant
    */
   const handleFrameChange = (value) => {
     imageStore.frame.type = value
+    nextTick(() => {
+      setFrameWidth(imageStore.frame.width) // Reset width when outline visibility changes
+    })
 
     applyFrame()
   }
@@ -134,9 +152,7 @@ export function useFrameTool(imageStore, historyStore, editorStore, t) {
    */
   const setFrameColor = (color) => {
     frameColor.value = color
-    if (frameWidth.value > 0) {
-      applyFrame()
-    }
+    applyFrame()
   }
 
   /**
@@ -211,17 +227,18 @@ export function useFrameTool(imageStore, historyStore, editorStore, t) {
         // UPDATE new frame type
         selectedFrameVariant.value === 'frameMacBrowser' ||
         selectedFrameVariant.value === 'frameWindowsBrowser' ||
-        selectedFrameVariant.value === 'frameWindowsTaskBar'
+        selectedFrameVariant.value === 'frameWindowsTaskBar' ||
+        selectedFrameVariant.value === 'frameVSCode'
       ) {
         width = Math.floor(
           editorConfig.browserFrameDefaultSize *
             Math.max(imageStore.fileDimensions.width, imageStore.fileDimensions.height),
         )
+        frameWidthRef.value.setValue(width)
       } else {
         width = 0
       }
     }
-    frameWidthRef.value.setValue(width)
     frameWidth.value = width
     applyFrame()
   }
@@ -304,7 +321,11 @@ export function useFrameTool(imageStore, historyStore, editorStore, t) {
     let fh = frame.height
 
     // UPDATE new frame type
-    if (frame.type === 'frameMacBrowser' || frame.type === 'frameWindowsBrowser') {
+    if (
+      frame.type === 'frameMacBrowser' ||
+      frame.type === 'frameWindowsBrowser' ||
+      frame.type === 'frameVSCode'
+    ) {
       if (!frame.outlineEnabled) {
         fw = 0
         fh = 0
@@ -324,10 +345,14 @@ export function useFrameTool(imageStore, historyStore, editorStore, t) {
       fw = Math.max(Math.floor(editorConfig.phoneFrameDefaultSize * Math.max(w, h)), 2) * 1.5
       fh = fw / 1.5
 
-      if (w >= h) {
-        imageStore.frame.headerSize = Math.max(Math.floor(0.05 * w), 5)
+      if (frame.type !== 'framePhoneSimple') {
+        if (w >= h) {
+          imageStore.frame.headerSize = Math.max(Math.floor(0.05 * w), 5)
+        } else {
+          imageStore.frame.headerSize = Math.max(Math.floor(0.05 * h), 5)
+        }
       } else {
-        imageStore.frame.headerSize = Math.max(Math.floor(0.05 * h), 5)
+        imageStore.frame.headerSize = 0
       }
 
       imageStore.frame.footerSize = 0
@@ -351,6 +376,7 @@ export function useFrameTool(imageStore, historyStore, editorStore, t) {
     const isFrameWithHeader =
       frame.type === 'frameMacBrowser' ||
       frame.type === 'frameWindowsBrowser' ||
+      frame.type === 'frameVSCode' ||
       ((frame.type === 'framePhoneIOS' ||
         frame.type === 'framePhoneIOS2' ||
         frame.type === 'framePhoneAndroid' ||
@@ -503,7 +529,7 @@ export function useFrameTool(imageStore, historyStore, editorStore, t) {
         const x = phoneFrameValues.left + phoneFrameValues.offset
         const y = phoneFrameValues.top + phoneFrameValues.offset
         const width = phoneFrameValues.right - phoneFrameValues.left - phoneFrameValues.offset * 2
-        const height = phoneFrameValues.headerSize
+        const height = phoneFrameValues.headerSize + 1
         const r = Math.min(height, phoneFrameValues.radius * 0.8)
 
         const d = [
@@ -523,7 +549,7 @@ export function useFrameTool(imageStore, historyStore, editorStore, t) {
 
         el.appendChild(path)
 
-        // === Left: Time (HH:MM) ===
+        // Left: Time (HH:MM)
         const timeText = document.createElementNS(ns, 'text')
 
         const time = timeInMinutes
@@ -542,7 +568,7 @@ export function useFrameTool(imageStore, historyStore, editorStore, t) {
         timeText.setAttribute('text-anchor', 'start')
         el.appendChild(timeText)
 
-        // === Right: Signal and Battery ===
+        // Right: Signal and Battery
 
         // Battery
         const batteryWidth = height * 0.9
@@ -707,6 +733,90 @@ export function useFrameTool(imageStore, historyStore, editorStore, t) {
         `M ${x},${centerY - size / 2} L ${x + size},${centerY + size / 2} M ${x + size},${
           centerY - size / 2
         } L ${x},${centerY + size / 2}`,
+      )
+      iconGroup.appendChild(cross)
+
+      el.appendChild(iconGroup)
+
+      // Outline
+      if (frame.outlineEnabled) {
+        const borders = [
+          { x: 0, y: 0, width: fw, height: svgHeight },
+          { x: svgWidth - fw, y: 0, width: fw, height: svgHeight },
+          { x: 0, y: svgHeight - fh, width: svgWidth, height: fh },
+        ]
+        borders.forEach((s) => {
+          const r = document.createElementNS(ns, 'rect')
+          Object.entries(s).forEach(([k, v]) => r.setAttribute(k, v))
+          r.setAttribute('fill', color)
+          el.appendChild(r)
+        })
+      }
+    } else if (frame.type === 'frameVSCode') {
+      const headerRect = document.createElementNS(ns, 'rect')
+      headerRect.setAttribute('x', 0)
+      headerRect.setAttribute('y', 0)
+      headerRect.setAttribute('width', svgWidth)
+      headerRect.setAttribute('height', header)
+      headerRect.setAttribute('fill', color)
+      el.appendChild(headerRect)
+
+      const strokeWidth = Math.max(1, Math.floor(header * 0.07))
+
+      // VS Code logo
+      const logoSvg = document.createElementNS(ns, 'svg')
+      logoSvg.setAttribute('xmlns', ns)
+      logoSvg.setAttribute('viewBox', '0 0 16 16')
+      logoSvg.setAttribute('width', header * 0.7) // 70 % of header size
+      logoSvg.setAttribute('height', header * 0.7)
+      logoSvg.setAttribute('x', fw + header / 3) // horizontal offset
+      logoSvg.setAttribute('y', header * 0.15) // vertical offset
+
+      // Path with logo
+      const logoPath = document.createElementNS(ns, 'path')
+      logoPath.setAttribute(
+        'd',
+        'M11.782799999999998 0.15999999999999998 5.698933333333334 6.251666666666666 1.8573333333333333 3.2254666666666663 0.17959999999999998 4.08v7.84l1.6856 0.8545333333333334 3.865133333333333 -3.0183999999999997 6.068133333333333 6.083866666666666 4.021933333333333 -1.6228666666666665V1.728L11.782799999999998 0.15999999999999998ZM1.9984666666666666 9.8032V6.1575999999999995l1.9129999999999998 1.9051333333333331 -1.9129999999999998 1.7404666666666666Zm9.666733333333333 1.0113333333333332L8.0196 8l3.6456 -2.8145333333333333v5.629066666666667Z',
+      )
+      logoPath.setAttribute('fill', contrastColor)
+
+      logoSvg.appendChild(logoPath)
+      el.appendChild(logoSvg)
+
+      // Window icons (right side)
+      const iconGroup = document.createElementNS(ns, 'g')
+      iconGroup.setAttribute('stroke', contrastColor)
+      iconGroup.setAttribute('stroke-width', strokeWidth)
+
+      const size = header * 0.35
+      const spacing = size * 3
+      const startX = svgWidth - fw - spacing * 2 - size - 1 - size
+      const centerY = header / 2
+
+      // Minimize
+      const line = document.createElementNS(ns, 'line')
+      line.setAttribute('x1', startX)
+      line.setAttribute('y1', centerY + 1)
+      line.setAttribute('x2', startX + size)
+      line.setAttribute('y2', centerY + 1)
+      iconGroup.appendChild(line)
+
+      // Maximize
+      const maximizeScale = 0.1
+      const rect = document.createElementNS(ns, 'rect')
+      rect.setAttribute('x', startX + spacing + size * maximizeScale)
+      rect.setAttribute('y', centerY - size / 2 + size * maximizeScale)
+      rect.setAttribute('width', size - size * maximizeScale * 2)
+      rect.setAttribute('height', size - size * maximizeScale * 2)
+      rect.setAttribute('fill', color)
+      iconGroup.appendChild(rect)
+
+      // Close
+      const cross = document.createElementNS(ns, 'path')
+      const x = startX + spacing * 2
+      cross.setAttribute(
+        'd',
+        `M ${x},${centerY - size / 2} L ${x + size},${centerY + size / 2} M ${x + size},${centerY - size / 2} L ${x},${centerY + size / 2}`,
       )
       iconGroup.appendChild(cross)
 
@@ -1148,7 +1258,7 @@ export function useFrameTool(imageStore, historyStore, editorStore, t) {
       const path = new Path2D()
 
       // Create rounded rectangle path
-      if (imageStore.frame.phoneHeaderEnabled) {
+      if (imageStore.frame.phoneHeaderEnabled && imageStore.frame.type !== 'framePhoneSimple') {
         path.moveTo(0, 0) // top-left corner
         path.lineTo(w, 0) // top-right corner
         path.lineTo(w, h - radius) // right side down to curve start

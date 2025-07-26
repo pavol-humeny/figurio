@@ -60,7 +60,7 @@ const {
 
         <!-- Frame width -->
         <div
-          v-if="selectedFrameVariant === 'frameSolid' || selectedFrameVariant === 'frameMacBrowser' || selectedFrameVariant === 'frameWindowsBrowser' || selectedFrameVariant === 'frameWindowsTaskBar'"
+          v-if="selectedFrameVariant === 'frameSolid' || drawOutline"
           class="settings-content-wrapper">
           <div class="content-wrapper">
             <div class="content-title">
@@ -88,8 +88,9 @@ const {
         </div>
 
         <!-- Frame outline -->
+        <!-- UPDATE new frame type -->
         <div
-          v-if="selectedFrameVariant === 'frameWindowsBrowser' || selectedFrameVariant === 'frameMacBrowser' || selectedFrameVariant === 'frameWindowsTaskBar'"
+          v-if="selectedFrameVariant === 'frameWindowsBrowser' || selectedFrameVariant === 'frameMacBrowser' || selectedFrameVariant === 'frameWindowsTaskBar' || selectedFrameVariant === 'frameVSCode'"
           class="settings-content-wrapper">
           <div class="content-wrapper">
             <div class="content-aligned two-items">
@@ -147,7 +148,7 @@ const {
         <!-- Header and footer frames multiplier -->
         <!-- UPDATE new frame type -->
         <div
-          v-if="selectedFrameVariant === 'frameWindowsBrowser' || selectedFrameVariant === 'frameMacBrowser' || selectedFrameVariant === 'frameWindowsTaskBar'"
+          v-if="selectedFrameVariant === 'frameWindowsBrowser' || selectedFrameVariant === 'frameMacBrowser' || selectedFrameVariant === 'frameWindowsTaskBar' || selectedFrameVariant === 'frameVSCode'"
           class="settings-content-wrapper">
           <div class="content-wrapper">
             <div class="content-title">

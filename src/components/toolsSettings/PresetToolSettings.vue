@@ -229,8 +229,9 @@ const tabs = ['myPresets', 'createPreset']
                 :disabled="!isModifyingPreset || (localImageFrame.type !== 'frameSolid' && !localImageFrame.outlineEnabled)" />
             </div>
             <!-- Use outline -->
+            <!-- UPDATE new frame type -->
             <div
-              v-if="localImageFrame.enabled && (localImageFrame.type === 'frameWindowsBrowser' || localImageFrame.type === 'frameMacBrowser' || localImageFrame.type === 'frameWindowsTaskBar')"
+              v-if="localImageFrame.enabled && (localImageFrame.type === 'frameWindowsBrowser' || localImageFrame.type === 'frameMacBrowser' || localImageFrame.type === 'frameWindowsTaskBar' || localImageFrame.type === 'frameVSCode')"
               class="content-aligned two-items">
               <p :class="!isModifyingPreset ? 'disabled' : ''">
                 {{ t('tools.preset.settings.myPresets.presetValues.frame.useFrameOutline') }}
@@ -274,7 +275,7 @@ const tabs = ['myPresets', 'createPreset']
             </div>
             <!-- Header and footer frames multiplier -->
             <!-- UPDATE new frame type -->
-            <div v-if="localImageFrame.enabled && (localImageFrame.type === 'frameWindowsBrowser' || localImageFrame.type === 'frameMacBrowser' || localImageFrame.type === 'frameWindowsTaskBar')"
+            <div v-if="localImageFrame.enabled && (localImageFrame.type === 'frameWindowsBrowser' || localImageFrame.type === 'frameMacBrowser' || localImageFrame.type === 'frameWindowsTaskBar' || localImageFrame.type === 'frameVSCode')"
               class="content-aligned two-items" :class="!isModifyingPreset ? 'disabled' : ''">
               <p>
                 {{ t('tools.preset.settings.myPresets.presetValues.frame.headerFooterMultiplier') }}
@@ -572,8 +573,9 @@ const tabs = ['myPresets', 'createPreset']
                 :disabled="!newPreset.frame.enabled" />
             </div>
             <!-- Use outline -->
+            <!-- UPDATE new frame type -->
             <div
-              v-if="newPreset.frame.type === 'frameWindowsBrowser' || newPreset.frame.type === 'frameMacBrowser' || newPreset.frame.type === 'frameWindowsTaskBar'"
+              v-if="newPreset.frame.type === 'frameWindowsBrowser' || newPreset.frame.type === 'frameMacBrowser' || newPreset.frame.type === 'frameWindowsTaskBar' || newPreset.frame.type === 'frameVSCode'"
               :class="newPreset.frame.enabled ? '' : 'disabled'" class="content-aligned two-items">
               <p>
                 {{ t('tools.preset.settings.createPreset.presetValues.frame.useFrameOutline') }}
@@ -621,7 +623,7 @@ const tabs = ['myPresets', 'createPreset']
             </div>
             <!-- Header and footer frames multiplier -->
             <!-- UPDATE new frame type -->
-            <div v-if="newPreset.frame.type === 'frameWindowsBrowser' || newPreset.frame.type === 'frameMacBrowser' || newPreset.frame.type === 'frameWindowsTaskBar'"
+            <div v-if="newPreset.frame.type === 'frameWindowsBrowser' || newPreset.frame.type === 'frameMacBrowser' || newPreset.frame.type === 'frameWindowsTaskBar' || newPreset.frame.type === 'frameVSCode'"
               class="content-aligned two-items" :class="newPreset.frame.enabled ? '' : 'disabled'">
               <p>
                 {{ t('tools.preset.settings.createPreset.presetValues.frame.headerFooterMultiplier') }}

@@ -88,6 +88,7 @@ export function useImageRenderer(
       const isFrameWithHeader =
         frame.type === 'frameMacBrowser' ||
         frame.type === 'frameWindowsBrowser' ||
+        frame.type === 'frameVSCode' ||
         ((frame.type === 'framePhoneIOS' ||
           frame.type === 'framePhoneIOS2' ||
           frame.type === 'framePhoneAndroid' ||

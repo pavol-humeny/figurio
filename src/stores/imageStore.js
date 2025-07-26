@@ -781,6 +781,7 @@ export const useImageStore = defineStore('imageStore', {
       const isFrameWithHeader =
         this.frame.type === 'frameMacBrowser' ||
         this.frame.type === 'frameWindowsBrowser' ||
+        this.frame.type === 'frameVSCode' ||
         ((this.frame.type === 'framePhoneIOS' ||
           this.frame.type === 'framePhoneIOS2' ||
           this.frame.type === 'framePhoneAndroid' ||
@@ -869,6 +870,7 @@ export const useImageStore = defineStore('imageStore', {
       const isFrameWithHeader =
         this.frame.type === 'frameMacBrowser' ||
         this.frame.type === 'frameWindowsBrowser' ||
+        this.frame.type === 'frameVSCode' ||
         ((this.frame.type === 'framePhoneIOS' ||
           this.frame.type === 'framePhoneIOS2' ||
           this.frame.type === 'framePhoneAndroid' ||
@@ -1025,6 +1027,7 @@ export const useImageStore = defineStore('imageStore', {
       const isFrameWithHeader =
         this.frame.type === 'frameMacBrowser' ||
         this.frame.type === 'frameWindowsBrowser' ||
+        this.frame.type === 'frameVSCode' ||
         ((this.frame.type === 'framePhoneIOS' ||
           this.frame.type === 'framePhoneIOS2' ||
           this.frame.type === 'framePhoneAndroid' ||

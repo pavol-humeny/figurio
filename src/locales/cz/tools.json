@@ -261,7 +261,8 @@
           "framePhoneAndroid": "Telefon Android",
           "framePhoneAndroid2": "Telefon Android 2",
           "framePhoneSimple": "Telefon jednoduchý",
-          "frameWindowsTaskBar": "Windows task bar"
+          "frameWindowsTaskBar": "Windows task bar",
+          "frameVSCode": "VS Code"
         },
         "useFrameOutline": {
           "label": "Použít obrys"
