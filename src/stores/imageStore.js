@@ -615,6 +615,7 @@ export const useImageStore = defineStore('imageStore', {
       }
 
       if (this.checkFile(files[0])) {
+        // TODO - router is undefined
         if (router.currentRoute.value.name !== 'editor') {
           await router.push({ name: 'editor' })
           await router.isReady()

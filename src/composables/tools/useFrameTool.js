@@ -503,11 +503,10 @@ export function useFrameTool(imageStore, historyStore, editorStore, t) {
         const minutes = time % 60
         const timeString = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`
 
-
         timeText.textContent = timeString
 
-        timeText.setAttribute('x', x + phoneFrameValues.headerSize / 2)
-        timeText.setAttribute('y', y + height / 2 + 4)
+        timeText.setAttribute('x', x + phoneFrameValues.radius)
+        timeText.setAttribute('y', y + height / 2)
         timeText.setAttribute('fill', textColor)
         timeText.setAttribute('font-size', Math.floor(height * 0.45))
         timeText.setAttribute('font-family', 'sans-serif')
@@ -520,17 +519,18 @@ export function useFrameTool(imageStore, historyStore, editorStore, t) {
         // Battery
         const batteryWidth = height * 0.9
         const batteryHeight = height * 0.45
-        const batteryX = svgWidth - x - batteryWidth - phoneFrameValues.headerSize / 2
+        const batteryX = svgWidth - x - batteryWidth - phoneFrameValues.radius
         const batteryY = y + (height - batteryHeight) / 2
         const batteryPadding = batteryWidth * 0.05
         const batteryOutlineWidth = batteryWidth * 0.02
+        const batteryCornerRadius = Math.max(batteryPadding, 1)
 
         const battery = document.createElementNS(ns, 'rect')
         battery.setAttribute('x', batteryX)
         battery.setAttribute('y', batteryY)
         battery.setAttribute('width', batteryWidth)
         battery.setAttribute('height', batteryHeight)
-        battery.setAttribute('rx', 2)
+        battery.setAttribute('rx', batteryCornerRadius)
         battery.setAttribute('fill', 'none')
         battery.setAttribute('stroke', textColor)
         battery.setAttribute('stroke-width', batteryOutlineWidth)
@@ -546,9 +546,12 @@ export function useFrameTool(imageStore, historyStore, editorStore, t) {
 
         // Battery tip
         const batteryTip = document.createElementNS(ns, 'rect')
+
+        const batteryTipWidth = batteryPadding * 2
+
         batteryTip.setAttribute('x', batteryX + batteryWidth)
         batteryTip.setAttribute('y', batteryY + batteryHeight * 0.25)
-        batteryTip.setAttribute('width', 3)
+        batteryTip.setAttribute('width', batteryTipWidth)
         batteryTip.setAttribute('height', batteryHeight * 0.5)
         batteryTip.setAttribute('fill', textColor)
         el.appendChild(batteryTip)
