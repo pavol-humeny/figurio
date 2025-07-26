@@ -439,7 +439,12 @@
             "color": "Color",
             "width": "Width",
             "type": "Type",
-            "useFrameOutline": "Use outline"
+            "useFrameOutline": "Use outline",
+            "phoneHeaderEnabled": "Use phone header",
+            "phoneHeaderTextColor": "Text color",
+            "phoneHeaderBackgroundColor": "Background color",
+            "phoneHeaderTime": "Time"
+            
           },
           "crop": {
             "label": "Crop",

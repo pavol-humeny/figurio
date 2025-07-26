@@ -237,6 +237,40 @@ const tabs = ['myPresets', 'createPreset']
               <ToggleButton v-model="localImageFrame.outlineEnabled" :scale="0.6"
                 :style="{ transform: 'translateX(16px)' }" :disabled="!isModifyingPreset" />
             </div>
+            <!-- Phone header -->
+            <!-- Enabled -->
+            <div v-if="localImageFrame.enabled && (localImageFrame.type === 'framePhoneIOS' || localImageFrame.type === 'framePhoneIOS2' || localImageFrame.type === 'framePhoneAndroid' || localImageFrame.type === 'framePhoneAndroid2')"
+              class="content-aligned two-items" :class="!isModifyingPreset ? 'disabled' : ''">
+              <p>
+                {{ t('tools.preset.settings.myPresets.presetValues.frame.phoneHeaderEnabled') }}
+              </p>
+              <ToggleButton v-model="localImageFrame.phoneHeaderEnabled" :scale="0.6"
+                :style="{ transform: 'translateX(16px)' }" />
+            </div>
+            <!-- Background color -->
+            <div v-if="localImageFrame.enabled && localImageFrame.phoneHeaderEnabled && (localImageFrame.type === 'framePhoneIOS' || localImageFrame.type === 'framePhoneIOS2' || localImageFrame.type === 'framePhoneAndroid' || localImageFrame.type === 'framePhoneAndroid2')"
+              class="content-aligned two-items" :class="!isModifyingPreset ? 'disabled' : ''">
+              <p>
+                {{ t('tools.preset.settings.myPresets.presetValues.frame.phoneHeaderBackgroundColor') }}
+              </p>
+              <ColorPicker v-model="localImageFrame.phoneHeaderBackgroundColor" />
+            </div>
+            <!-- Text color -->
+            <div v-if="localImageFrame.enabled && localImageFrame.phoneHeaderEnabled && (localImageFrame.type === 'framePhoneIOS' || localImageFrame.type === 'framePhoneIOS2' || localImageFrame.type === 'framePhoneAndroid' || localImageFrame.type === 'framePhoneAndroid2')"
+              class="content-aligned two-items" :class="!isModifyingPreset ? 'disabled' : ''">
+              <p>
+                {{ t('tools.preset.settings.myPresets.presetValues.frame.phoneHeaderTextColor') }}
+              </p>
+              <ColorPicker v-model="localImageFrame.phoneHeaderTextColor" />
+            </div>
+            <!-- Time -->
+            <div v-if="localImageFrame.enabled && localImageFrame.phoneHeaderEnabled && (localImageFrame.type === 'framePhoneIOS' || localImageFrame.type === 'framePhoneIOS2' || localImageFrame.type === 'framePhoneAndroid' || localImageFrame.type === 'framePhoneAndroid2')"
+              class="content-aligned two-items" :class="!isModifyingPreset ? 'disabled' : ''">
+              <p>
+                {{ t('tools.preset.settings.myPresets.presetValues.frame.phoneHeaderTime') }}
+              </p>
+              <TimeInput v-model="localImageFrame.phoneHeaderTimeInMinutes" />
+            </div>
           </div>
         </div>
 
@@ -489,29 +523,34 @@ const tabs = ['myPresets', 'createPreset']
         <!-- Frame -->
         <div v-if="isShowManualPresetSetting" class="settings-content-wrapper">
           <div class="content-wrapper">
+            <!-- Label -->
             <div class="content-title">
               <p>
                 {{ t('tools.preset.settings.createPreset.presetValues.frame.label') }}
               </p>
             </div>
+            <!-- Enabled -->
             <div class="content-aligned two-items">
               <p>
                 {{ t('tools.preset.settings.createPreset.presetValues.frame.enabled') }}
               </p>
               <ToggleButton v-model="newPreset.frame.enabled" :scale="0.6" :style="{ transform: 'translateX(16px)' }" />
             </div>
+            <!-- Type -->
             <div class="content-aligned two-items" :class="newPreset.frame.enabled ? '' : 'disabled'">
               <p>
                 {{ t('tools.preset.settings.createPreset.presetValues.frame.type') }}
               </p>
               <DropdownSelect v-model="newPreset.frame.type" :options="presetFrameOptions" />
             </div>
+            <!-- Color -->
             <div class="content-aligned two-items" :class="newPreset.frame.enabled ? '' : 'disabled'">
               <p>
                 {{ t('tools.preset.settings.createPreset.presetValues.frame.color') }}
               </p>
               <ColorPicker v-model="newPreset.frame.color" />
             </div>
+            <!-- Width -->
             <div v-if="newPreset.frame.type === 'frameSolid' || newPreset.frame.outlineEnabled"
               class="content-aligned two-items">
               <p :class="newPreset.frame.enabled ? '' : 'disabled'">
@@ -521,6 +560,7 @@ const tabs = ['myPresets', 'createPreset']
                 icon="IconArrowWidth" :iconTop="45" :onReset="() => resetFrameWidth()"
                 :disabled="!newPreset.frame.enabled" />
             </div>
+            <!-- Use outline -->
             <div
               v-if="newPreset.frame.type === 'frameWindowsBrowser' || newPreset.frame.type === 'frameMacBrowser' || newPreset.frame.type === 'frameWindowsTaskBar'"
               :class="newPreset.frame.enabled ? '' : 'disabled'" class="content-aligned two-items">
@@ -530,7 +570,6 @@ const tabs = ['myPresets', 'createPreset']
               <ToggleButton v-model="newPreset.frame.outlineEnabled" :scale="0.6"
                 :style="{ transform: 'translateX(16px)' }" />
             </div>
-
             <!-- Phone header -->
             <!-- Enabled -->
             <div v-if="newPreset.frame.type === 'framePhoneIOS' || newPreset.frame.type === 'framePhoneIOS2' || newPreset.frame.type === 'framePhoneAndroid' || newPreset.frame.type === 'framePhoneAndroid2'"
@@ -560,7 +599,7 @@ const tabs = ['myPresets', 'createPreset']
               </p>
               <ColorPicker v-model="newPreset.frame.phoneHeaderTextColor" />
             </div>
-            <!-- Header time -->
+            <!-- Time -->
             <div v-if="newPreset.frame.type === 'framePhoneIOS' || newPreset.frame.type === 'framePhoneIOS2' || newPreset.frame.type === 'framePhoneAndroid' || newPreset.frame.type === 'framePhoneAndroid2'"
               class="content-aligned two-items"
               :class="newPreset.frame.enabled ? '' : 'disabled'">
