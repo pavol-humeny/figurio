@@ -335,7 +335,11 @@
             "color": "Farba",
             "width": "Šírka",
             "type": "Typ",
-            "useFrameOutline": "Použiť obrys"
+            "useFrameOutline": "Použiť obrys",
+            "phoneHeaderEnabled": "Použiť záhlavie telefónu",
+            "phoneHeaderTextColor": "Farba textu",
+            "phoneHeaderBackgroundColor": "Farba pozadia",
+            "phoneHeaderTime": "Čas"
           },
           "crop": {
             "label": "Orezanie",

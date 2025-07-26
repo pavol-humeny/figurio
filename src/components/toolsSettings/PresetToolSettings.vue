@@ -18,6 +18,7 @@ import BaseIcon from '../icons/BaseIcon.vue'
 import PresetNewOperation from '../common/PresetNewOperation.vue'
 import { useViewportStore } from '@/stores/viewportStore'
 import { editorConfig } from '@/config/editorConfig'
+import TimeInput from '../common/TimeInput.vue'
 
 const { t } = useI18n()
 
@@ -528,6 +529,45 @@ const tabs = ['myPresets', 'createPreset']
               </p>
               <ToggleButton v-model="newPreset.frame.outlineEnabled" :scale="0.6"
                 :style="{ transform: 'translateX(16px)' }" />
+            </div>
+
+            <!-- Phone header -->
+            <!-- Enabled -->
+            <div v-if="newPreset.frame.type === 'framePhoneIOS' || newPreset.frame.type === 'framePhoneIOS2' || newPreset.frame.type === 'framePhoneAndroid' || newPreset.frame.type === 'framePhoneAndroid2'"
+              class="content-aligned two-items"
+              :class="newPreset.frame.enabled ? '' : 'disabled'">
+              <p>
+                {{ t('tools.preset.settings.createPreset.presetValues.frame.phoneHeaderEnabled') }}
+              </p>
+              <ToggleButton v-model="newPreset.frame.phoneHeaderEnabled" :scale="0.6"
+                :style="{ transform: 'translateX(16px)' }" />
+            </div>
+            <!-- Background color -->
+            <div v-if="newPreset.frame.type === 'framePhoneIOS' || newPreset.frame.type === 'framePhoneIOS2' || newPreset.frame.type === 'framePhoneAndroid' || newPreset.frame.type === 'framePhoneAndroid2'"
+              class="content-aligned two-items"
+              :class="newPreset.frame.enabled ? '' : 'disabled'">
+              <p>
+                {{ t('tools.preset.settings.createPreset.presetValues.frame.phoneHeaderBackgroundColor') }}
+              </p>
+              <ColorPicker v-model="newPreset.frame.phoneHeaderBackgroundColor" />
+            </div>
+            <!-- Text Color -->
+            <div v-if="newPreset.frame.type === 'framePhoneIOS' || newPreset.frame.type === 'framePhoneIOS2' || newPreset.frame.type === 'framePhoneAndroid' || newPreset.frame.type === 'framePhoneAndroid2'"
+              class="content-aligned two-items"
+              :class="newPreset.frame.enabled ? '' : 'disabled'">
+              <p>
+                {{ t('tools.preset.settings.createPreset.presetValues.frame.phoneHeaderTextColor') }}
+              </p>
+              <ColorPicker v-model="newPreset.frame.phoneHeaderTextColor" />
+            </div>
+            <!-- Header time -->
+            <div v-if="newPreset.frame.type === 'framePhoneIOS' || newPreset.frame.type === 'framePhoneIOS2' || newPreset.frame.type === 'framePhoneAndroid' || newPreset.frame.type === 'framePhoneAndroid2'"
+              class="content-aligned two-items"
+              :class="newPreset.frame.enabled ? '' : 'disabled'">
+              <p>
+                {{ t('tools.preset.settings.createPreset.presetValues.frame.phoneHeaderTime') }}
+              </p>
+              <TimeInput v-model="newPreset.frame.phoneHeaderTimeInMinutes"/>
             </div>
           </div>
         </div>

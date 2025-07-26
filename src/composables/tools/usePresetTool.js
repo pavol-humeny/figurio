@@ -216,6 +216,9 @@ export function usePresetTool(
           localImageFrame.value.type = 'frameSolid'
           localImageFrame.value.color = '#000000'
           localImageFrame.value.width = 0
+          localImageFrame.value.phoneHeaderTimeInMinutes = 610
+          localImageFrame.value.phoneHeaderTextColor = '#000000'
+          localImageFrame.value.phoneHeaderBackgroundColor = '#ffffff'
         }
       }
     },
@@ -550,6 +553,10 @@ export function usePresetTool(
       headerSize: 0,
       footerSize: 0,
       outlineEnabled: false,
+      phoneHeaderEnabled: true,
+      phoneHeaderTimeInMinutes: 610,
+      phoneHeaderTextColor: '#000000',
+      phoneHeaderBackgroundColor: '#ffffff',
     },
     cropBox: {
       x: 0,
@@ -695,6 +702,10 @@ export function usePresetTool(
         headerSize: 0,
         footerSize: 0,
         outlineEnabled: false,
+        phoneHeaderEnabled: true,
+        phoneHeaderTimeInMinutes: 610,
+        phoneHeaderTextColor: '#000000',
+        phoneHeaderBackgroundColor: '#ffffff',
       },
       cropBox: {
         x: 0,
@@ -770,6 +781,10 @@ export function usePresetTool(
       imageFrame.width = newPreset.value.frame.width
       imageFrame.height = newPreset.value.frame.width
       imageFrame.outlineEnabled = newPreset.value.frame.outlineEnabled
+      imageFrame.phoneHeaderEnabled = newPreset.value.frame.phoneHeaderEnabled
+      imageFrame.phoneHeaderTimeInMinutes = newPreset.value.frame.phoneHeaderTimeInMinutes
+      imageFrame.phoneHeaderTextColor = newPreset.value.frame.phoneHeaderTextColor
+      imageFrame.phoneHeaderBackgroundColor = newPreset.value.frame.phoneHeaderBackgroundColor
     }
     // UPDATE new tool
 
