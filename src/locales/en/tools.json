@@ -267,6 +267,18 @@
         "useFrameOutline": {
           "label": "Use outline"
         },
+        "usePhoneHeader": {
+          "label": "Use phone header"
+        },
+        "phoneHeaderTextColor": {
+          "label": "Text color"
+        },
+        "phoneHeaderBackgroundColor": {
+          "label": "Background color"
+        },
+        "phoneHeaderTime": {
+          "label": "Time"
+        },
         "phoneButtonsCanNotBeDrawn": {
           "title": "Phone buttons can not be drawn",
           "message": "Phone buttons can not be drawn, because the frame is not height enough."

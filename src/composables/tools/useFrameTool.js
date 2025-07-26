@@ -8,13 +8,28 @@ export function useFrameTool(imageStore, historyStore, editorStore, t) {
   /**
    * Frame color
    */
-  const frameColor = ref(imageStore.frame.color || '#000000')
+  const frameColor = ref(imageStore.frame.color)
   watch(
     () => imageStore.frame.color,
     (newColor) => {
       frameColor.value = newColor
     },
   )
+
+  /**
+   * Phone header text color
+   */
+  const phoneHeaderTextColor = ref(imageStore.frame.phoneHeaderTextColor)
+
+  /**
+   * Phone header background color
+   */
+  const phoneHeaderBackgroundColor = ref(imageStore.frame.phoneHeaderBackgroundColor)
+
+  /**
+   * Phone header time in minutes
+   */
+  const phoneHeaderTimeInMinutes = ref(imageStore.frame.phoneHeaderTimeInMinutes)
 
   /**
    * Frame width
@@ -31,6 +46,11 @@ export function useFrameTool(imageStore, historyStore, editorStore, t) {
    * Outline visibility
    */
   const drawOutline = ref(imageStore.frame.outlineEnabled)
+
+  /**
+   * Phone header visibility
+   */
+  const drawPhoneHeader = ref(imageStore.frame.phoneHeaderEnabled)
 
   /**
    * Ref for frame width input
@@ -115,11 +135,47 @@ export function useFrameTool(imageStore, historyStore, editorStore, t) {
   }
 
   /**
+   * Set phone header text color
+   * @param {string} color - New phone header text color
+   */
+  const setPhoneHeaderTextColor = (color) => {
+    phoneHeaderTextColor.value = color
+    applyFrame()
+  }
+
+  /**
+   * Set phone header background color
+   * @param {string} color - New phone header background color
+   */
+  const setPhoneHeaderBackgroundColor = (color) => {
+    phoneHeaderBackgroundColor.value = color
+    applyFrame()
+  }
+
+  /**
+   * Set phone header time
+   * @param {string} time - New phone header time
+   */
+  const setPhoneHeaderTimeInMinutes = (time) => {
+    phoneHeaderTimeInMinutes.value = time
+    applyFrame()
+  }
+
+  /**
    * Set frame outline visibility
    * @param {boolean} value - Whether to show outline
    */
   const setFrameOutline = (value) => {
     drawOutline.value = value
+    applyFrame()
+  }
+
+  /**
+   * Set phone header visibility
+   * @param {boolean} value - Whether to show phone header
+   */
+  const setPhoneHeader = (value) => {
+    drawPhoneHeader.value = value
     applyFrame()
   }
 
@@ -159,6 +215,14 @@ export function useFrameTool(imageStore, historyStore, editorStore, t) {
     imageStore.frame.type = JSON.parse(JSON.stringify(selectedFrameVariant.value))
     imageStore.frame.enabled = true
     imageStore.frame.outlineEnabled = JSON.parse(JSON.stringify(drawOutline.value))
+    imageStore.frame.phoneHeaderEnabled = JSON.parse(JSON.stringify(drawPhoneHeader.value))
+    imageStore.frame.phoneHeaderTextColor = JSON.parse(JSON.stringify(phoneHeaderTextColor.value))
+    imageStore.frame.phoneHeaderBackgroundColor = JSON.parse(
+      JSON.stringify(phoneHeaderBackgroundColor.value),
+    )
+    imageStore.frame.phoneHeaderTimeInMinutes = JSON.parse(
+      JSON.stringify(phoneHeaderTimeInMinutes.value),
+    )
 
     if (selectedFrameVariant.value === 'none') {
       imageStore.frame.enabled = false
@@ -236,7 +300,12 @@ export function useFrameTool(imageStore, historyStore, editorStore, t) {
       fw = Math.max(Math.floor(editorConfig.phoneFrameDefaultSize * Math.max(w, h)), 2) * 1.5
       fh = fw / 1.5
 
-      imageStore.frame.headerSize = 0
+      if (w >= h) {
+        imageStore.frame.headerSize = Math.max(Math.floor(0.05 * w), 5)
+      } else {
+        imageStore.frame.headerSize = Math.max(Math.floor(0.05 * h), 5)
+      }
+
       imageStore.frame.footerSize = 0
     } else if (frame.type === 'frameWindowsTaskBar') {
       if (!frame.outlineEnabled) {
@@ -254,15 +323,28 @@ export function useFrameTool(imageStore, historyStore, editorStore, t) {
     imageStore.frame.width = fw
     imageStore.frame.height = fh
 
+    // UPDATE new frame type
+    const isFrameWithHeader =
+      frame.type === 'frameMacBrowser' ||
+      frame.type === 'frameWindowsBrowser' ||
+      ((frame.type === 'framePhoneIOS' ||
+        frame.type === 'framePhoneIOS2' ||
+        frame.type === 'framePhoneAndroid' ||
+        frame.type === 'framePhoneAndroid2') &&
+        imageStore.frame.phoneHeaderEnabled)
+
     const header = imageStore.frame.headerSize
     const footer = imageStore.frame.footerSize
     const svgWidth = w + fw * 2
-    const svgHeight = h + fh * 2 + (header > 0 ? header - fh : 0) + (footer > 0 ? footer - fh : 0)
+    const svgHeight =
+      h + fh * 2 + (isFrameWithHeader ? header - fh : 0) + (footer > 0 ? footer - fh : 0)
     const phoneCornerRadius = Math.floor(Math.min(svgWidth, svgHeight) * 0.06)
 
     // Values for phone frames
     const strokeWidth = (fw / 3) * 2 // 2/3 of frame width
     const offset = strokeWidth / 2
+
+    const headerSize = header - strokeWidth
 
     const phoneFrameValues = {
       strokeWidth,
@@ -272,14 +354,24 @@ export function useFrameTool(imageStore, historyStore, editorStore, t) {
       top: offset,
       right: svgWidth - strokeWidth,
       bottom: svgHeight - offset,
+      headerSize: headerSize,
     }
 
     el.setAttribute('width', svgWidth)
     el.setAttribute('height', svgHeight)
     el.style.left = `-${fw}px`
-    el.style.top = `-${header > 0 ? header : fh}px`
+    el.style.top = `-${isFrameWithHeader ? header : fh}px`
 
-    // Button rendering function (rounded only on one side)
+    /**
+     * Draws a side button with rounded corners
+     * @param {number} x - X position
+     * @param {number} y - Y position
+     * @param {number} width - Button width
+     * @param {number} height - Button height
+     * @param {number} radius - Corner radius
+     * @param {string} side - 'left' or 'right' to determine which side the button is on
+     * @return {SVGElement} - The button element
+     */
     const drawSideButton = (x, y, width, height, radius, side) => {
       const path = document.createElementNS(ns, 'path')
 
@@ -309,6 +401,9 @@ export function useFrameTool(imageStore, historyStore, editorStore, t) {
       return path
     }
 
+    /**
+     * Draws the volume and power buttons for phone frames
+     */
     const drawVolumeAndPowerButtons = () => {
       // Volume buttons (left side)
       const volumeButtonWidth = fw / 3 // 1/3 of frame width
@@ -370,6 +465,118 @@ export function useFrameTool(imageStore, historyStore, editorStore, t) {
         ),
       )
     }
+
+    /**
+     * Draws the header rectangle for phone frames
+     * @param {string} textColor - Color for the header text
+     */
+    function drawPhoneHeader(backgroundColor = '#fff', textColor = '#000', timeInMinutes = 660) {
+      if (isFrameWithHeader) {
+        const x = phoneFrameValues.left + phoneFrameValues.offset
+        const y = phoneFrameValues.top + phoneFrameValues.offset
+        const width = phoneFrameValues.right - phoneFrameValues.left - phoneFrameValues.offset * 2
+        const height = phoneFrameValues.headerSize
+        const r = Math.min(height, phoneFrameValues.radius * 0.8)
+
+        const d = [
+          `M ${x + r} ${y}`, // start after top-left corner
+          `H ${x + width - r}`, // move to before top-right corner
+          `A ${r} ${r} 0 0 1 ${x + width} ${y + r}`, // top-right corner
+          `V ${y + height}`, // down right edge
+          `H ${x}`, // move left on bottom edge
+          `V ${y + r}`, // up left edge
+          `A ${r} ${r} 0 0 1 ${x + r} ${y}`, // top-left corner
+          'Z',
+        ].join(' ')
+
+        const path = document.createElementNS(ns, 'path')
+        path.setAttribute('d', d)
+        path.setAttribute('fill', backgroundColor)
+
+        el.appendChild(path)
+
+        // === Left: Time (HH:MM) ===
+        const timeText = document.createElementNS(ns, 'text')
+
+        const time = timeInMinutes
+        const hours = Math.floor(time / 60)
+        const minutes = time % 60
+        const timeString = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`
+
+
+        timeText.textContent = timeString
+
+        timeText.setAttribute('x', x + phoneFrameValues.headerSize / 2)
+        timeText.setAttribute('y', y + height / 2 + 4)
+        timeText.setAttribute('fill', textColor)
+        timeText.setAttribute('font-size', Math.floor(height * 0.45))
+        timeText.setAttribute('font-family', 'sans-serif')
+        timeText.setAttribute('dominant-baseline', 'middle')
+        timeText.setAttribute('text-anchor', 'start')
+        el.appendChild(timeText)
+
+        // === Right: Signal and Battery ===
+
+        // Battery
+        const batteryWidth = height * 0.9
+        const batteryHeight = height * 0.45
+        const batteryX = svgWidth - x - batteryWidth - phoneFrameValues.headerSize / 2
+        const batteryY = y + (height - batteryHeight) / 2
+        const batteryPadding = batteryWidth * 0.05
+        const batteryOutlineWidth = batteryWidth * 0.02
+
+        const battery = document.createElementNS(ns, 'rect')
+        battery.setAttribute('x', batteryX)
+        battery.setAttribute('y', batteryY)
+        battery.setAttribute('width', batteryWidth)
+        battery.setAttribute('height', batteryHeight)
+        battery.setAttribute('rx', 2)
+        battery.setAttribute('fill', 'none')
+        battery.setAttribute('stroke', textColor)
+        battery.setAttribute('stroke-width', batteryOutlineWidth)
+        el.appendChild(battery)
+
+        const batteryFill = document.createElementNS(ns, 'rect')
+        batteryFill.setAttribute('x', batteryX + batteryPadding)
+        batteryFill.setAttribute('y', batteryY + batteryPadding)
+        batteryFill.setAttribute('width', batteryWidth - batteryPadding * 2)
+        batteryFill.setAttribute('height', batteryHeight - batteryPadding * 2)
+        batteryFill.setAttribute('fill', textColor)
+        el.appendChild(batteryFill)
+
+        // Battery tip
+        const batteryTip = document.createElementNS(ns, 'rect')
+        batteryTip.setAttribute('x', batteryX + batteryWidth)
+        batteryTip.setAttribute('y', batteryY + batteryHeight * 0.25)
+        batteryTip.setAttribute('width', 3)
+        batteryTip.setAttribute('height', batteryHeight * 0.5)
+        batteryTip.setAttribute('fill', textColor)
+        el.appendChild(batteryTip)
+
+        // Signal (3 bars)
+        const barWidth = phoneFrameValues.headerSize * 0.09
+        const barSpacing = barWidth * 0.5
+        const barBaseX = batteryX - barSpacing * 7
+        const barBottom = batteryY + batteryHeight
+        const barHeights = [
+          batteryHeight * 0.25,
+          batteryHeight * 0.5,
+          batteryHeight * 0.75,
+          batteryHeight,
+        ]
+
+        barHeights.forEach((h, i) => {
+          const bar = document.createElementNS(ns, 'rect')
+          bar.setAttribute('x', barBaseX - (barWidth + barSpacing) * (barHeights.length - i - 1))
+          bar.setAttribute('y', barBottom - h)
+          bar.setAttribute('width', barWidth)
+          bar.setAttribute('height', h)
+          bar.setAttribute('fill', textColor)
+          el.appendChild(bar)
+        })
+      }
+    }
+
     // UPDATE new frame type
     if (frame.type === 'frameSolid') {
       // 4 sides
@@ -494,6 +701,12 @@ export function useFrameTool(imageStore, historyStore, editorStore, t) {
       outline.setAttribute('stroke', color)
       outline.setAttribute('stroke-width', phoneFrameValues.strokeWidth)
 
+      drawPhoneHeader(
+        phoneHeaderBackgroundColor.value,
+        phoneHeaderTextColor.value,
+        phoneHeaderTimeInMinutes.value,
+      )
+
       // Outline
       const d = [
         `M ${phoneFrameValues.left + phoneFrameValues.radius} ${phoneFrameValues.top}`,
@@ -511,19 +724,13 @@ export function useFrameTool(imageStore, historyStore, editorStore, t) {
       outline.setAttribute('d', d)
       el.appendChild(outline)
 
-      let notchWidth, notchHeight
-      const aspectRatio = 1 / 4
-      if (svgWidth >= svgHeight) {
-        notchWidth = Math.floor(svgWidth * 0.22)
-        notchHeight = Math.floor(notchWidth * aspectRatio)
-      } else {
-        notchHeight = Math.floor(svgHeight * 0.035)
-        notchWidth = Math.floor(notchHeight / aspectRatio)
-      }
+      // Dynamic island
+      const notchHeight = phoneFrameValues.headerSize - phoneFrameValues.strokeWidth * 1
+      const notchWidth = notchHeight * 4
 
-      const notchMarginTop = phoneFrameValues.strokeWidth * 1.5
       const notchRadius = Math.floor(notchHeight * 0.45)
 
+      const notchMarginTop = phoneFrameValues.strokeWidth
       const notchX = svgWidth / 2 - notchWidth / 2
       const notchY = phoneFrameValues.top + notchMarginTop
 
@@ -583,16 +790,8 @@ export function useFrameTool(imageStore, historyStore, editorStore, t) {
       el.appendChild(outline)
 
       // Notch
-      const aspectRatio = 1 / 4
-      let notchWidth, notchHeight
-
-      if (svgWidth >= svgHeight) {
-        notchWidth = Math.floor(svgWidth * 0.26)
-        notchHeight = Math.floor(notchWidth * aspectRatio)
-      } else {
-        notchHeight = Math.floor(svgHeight * editorConfig.frameHeaderFooterSize)
-        notchWidth = Math.floor(notchHeight / aspectRatio)
-      }
+      const notchHeight = phoneFrameValues.headerSize
+      const notchWidth = notchHeight * 4
 
       const notchPadding = 1.5
       const notchRadius = notchHeight / 2
@@ -633,7 +832,7 @@ export function useFrameTool(imageStore, historyStore, editorStore, t) {
         const speakerWidth = Math.floor(nw * 0.3)
         const speakerHeight = Math.floor(nh * 0.2)
         const speakerX = svgWidth / 2 - speakerWidth / 2
-        const speakerY = ny + nh * 0.25
+        const speakerY = ny + nh * 0.5 - speakerHeight / 2
         speaker.setAttribute('x', speakerX)
         speaker.setAttribute('y', speakerY)
         speaker.setAttribute('width', speakerWidth)
@@ -679,14 +878,9 @@ export function useFrameTool(imageStore, historyStore, editorStore, t) {
       el.appendChild(outline)
 
       // Camera circle
-      let cameraRadius
-      if (svgWidth >= svgHeight) {
-        cameraRadius = Math.floor(svgWidth * 0.012)
-      } else {
-        cameraRadius = Math.floor(svgHeight * 0.012)
-      }
+      const cameraRadius = phoneFrameValues.headerSize / 4
 
-      const cameraOffset = fw + cameraRadius
+      const cameraOffset = fw + phoneFrameValues.headerSize / 2 - cameraRadius
       const cx = svgWidth / 2
       const cy = phoneFrameValues.top + cameraOffset
 
@@ -730,12 +924,7 @@ export function useFrameTool(imageStore, historyStore, editorStore, t) {
       el.appendChild(outline)
 
       // Drop notch
-      let dropHeight
-      if (svgWidth >= svgHeight) {
-        dropHeight = svgWidth * 0.035
-      } else {
-        dropHeight = svgHeight * 0.035
-      }
+      const dropHeight = phoneFrameValues.headerSize
 
       const dropWidth = dropHeight * 1.02
       const arcRadius = 0.5 * dropHeight
@@ -892,13 +1081,6 @@ export function useFrameTool(imageStore, historyStore, editorStore, t) {
       imageStore.frame.type === 'framePhoneAndroid2' ||
       imageStore.frame.type === 'framePhoneSimple'
     ) {
-      const header = imageStore.frame.headerSize || 0
-      const svgWidth = imageStore.fileDimensions.width + imageStore.frame.width * 2
-      const svgHeight =
-        imageStore.fileDimensions.height +
-        imageStore.frame.height * 2 +
-        (header > 0 ? header - imageStore.frame.height : 0)
-
       const radius = Math.floor(Math.min(svgWidth, svgHeight) * 0.06) - fh // 6% of the smaller dimension + a bit of padding (100% of frame height)
 
       const renderedImage = imageStore.getRenderedImage()
@@ -915,16 +1097,27 @@ export function useFrameTool(imageStore, historyStore, editorStore, t) {
       const path = new Path2D()
 
       // Create rounded rectangle path
-      path.moveTo(radius, 0)
-      path.lineTo(w - radius, 0)
-      path.quadraticCurveTo(w, 0, w, radius)
-      path.lineTo(w, h - radius)
-      path.quadraticCurveTo(w, h, w - radius, h)
-      path.lineTo(radius, h)
-      path.quadraticCurveTo(0, h, 0, h - radius)
-      path.lineTo(0, radius)
-      path.quadraticCurveTo(0, 0, radius, 0)
-      path.closePath()
+      if (imageStore.frame.phoneHeaderEnabled) {
+        path.moveTo(0, 0) // top-left corner
+        path.lineTo(w, 0) // top-right corner
+        path.lineTo(w, h - radius) // right side down to curve start
+        path.quadraticCurveTo(w, h, w - radius, h) // bottom-right curve
+        path.lineTo(radius, h) // bottom side to left curve start
+        path.quadraticCurveTo(0, h, 0, h - radius) // bottom-left curve
+        path.lineTo(0, 0) // left side up
+        path.closePath()
+      } else {
+        path.moveTo(radius, 0)
+        path.lineTo(w - radius, 0)
+        path.quadraticCurveTo(w, 0, w, radius)
+        path.lineTo(w, h - radius)
+        path.quadraticCurveTo(w, h, w - radius, h)
+        path.lineTo(radius, h)
+        path.quadraticCurveTo(0, h, 0, h - radius)
+        path.lineTo(0, radius)
+        path.quadraticCurveTo(0, 0, radius, 0)
+        path.closePath()
+      }
 
       // Round corners by clipping
       ctx.save()
@@ -949,5 +1142,13 @@ export function useFrameTool(imageStore, historyStore, editorStore, t) {
     drawOutline,
     setFrameColor,
     setFrameOutline,
+    setPhoneHeader,
+    drawPhoneHeader,
+    phoneHeaderTextColor,
+    setPhoneHeaderTextColor,
+    phoneHeaderBackgroundColor,
+    setPhoneHeaderBackgroundColor,
+    phoneHeaderTimeInMinutes,
+    setPhoneHeaderTimeInMinutes,
   }
 }

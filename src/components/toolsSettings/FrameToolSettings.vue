@@ -8,6 +8,7 @@ import { useEditorStore } from '@/stores/editorStore'
 import { useI18n } from 'vue-i18n'
 import DropdownSelect from '../common/DropdownSelect.vue'
 import ToggleButton from '../common/ToggleButton.vue'
+import TimeInput from '../common/TimeInput.vue'
 
 const { t } = useI18n()
 
@@ -25,6 +26,14 @@ const {
   drawOutline,
   setFrameColor,
   setFrameOutline,
+  setPhoneHeader,
+  drawPhoneHeader,
+  phoneHeaderTextColor,
+  setPhoneHeaderTextColor,
+  phoneHeaderBackgroundColor,
+  setPhoneHeaderBackgroundColor,
+  phoneHeaderTimeInMinutes,
+  setPhoneHeaderTimeInMinutes,
 } = useFrameTool(useImageStore(), useHistoryStore(), useEditorStore(), t)
 </script>
 
@@ -84,6 +93,48 @@ const {
               </p>
               <ToggleButton v-model="drawOutline" style="transform: scale(0.6);"
                 @update="setFrameOutline(drawOutline)" />
+            </div>
+          </div>
+        </div>
+
+        <!-- Phone header -->
+        <div
+          v-if="selectedFrameVariant === 'framePhoneIOS' || selectedFrameVariant === 'framePhoneIOS2' || selectedFrameVariant === 'framePhoneAndroid' || selectedFrameVariant === 'framePhoneAndroid2'"
+          class="settings-content-wrapper">
+          <div class="content-wrapper">
+            <div class="content-aligned two-items">
+              <p>
+                {{ t('tools.frame.settings.general.usePhoneHeader.label') }}
+              </p>
+              <ToggleButton v-model="drawPhoneHeader"
+                @update="setPhoneHeader(drawPhoneHeader)" :scale="0.6" :style="{ transform: 'translateX(16px)' }" />
+            </div>
+          </div>
+          <div v-if="drawPhoneHeader" class="content-wrapper">
+            <div class="content-aligned two-items">
+              <p>
+                {{ t('tools.frame.settings.general.phoneHeaderBackgroundColor.label') }}
+              </p>
+              <ColorPicker v-model="phoneHeaderBackgroundColor" @update="setPhoneHeaderBackgroundColor(phoneHeaderBackgroundColor)" />
+            </div>
+          </div>
+          <div v-if="drawPhoneHeader" class="content-wrapper">
+            <div class="content-aligned two-items">
+              <p>
+                {{ t('tools.frame.settings.general.phoneHeaderTextColor.label') }}
+              </p>
+              <ColorPicker v-model="phoneHeaderTextColor" @update="setPhoneHeaderTextColor(phoneHeaderTextColor)" />
+            </div>
+          </div>
+          <div v-if="drawPhoneHeader" class="content-wrapper">
+            <div class="content-aligned two-items">
+              <p>
+                {{ t('tools.frame.settings.general.phoneHeaderTime.label') }}
+              </p>
+              <TimeInput
+                v-model="phoneHeaderTimeInMinutes"
+                @update="setPhoneHeaderTimeInMinutes(phoneHeaderTimeInMinutes)"
+              />
             </div>
           </div>
         </div>

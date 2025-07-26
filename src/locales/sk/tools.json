@@ -266,6 +266,18 @@
         "useFrameOutline": {
           "label": "Použiť obrys"
         },
+        "usePhoneHeader": {
+          "label": "Použiť záhlavie telefónu"
+        },
+        "phoneHeaderTextColor": {
+          "label": "Farba textu"
+        },
+        "phoneHeaderBackgroundColor": {
+          "label": "Farba pozadia"
+        },
+        "phoneHeaderTime": {
+          "label": "Čas"
+        },
         "phoneButtonsCanNotBeDrawn": {
           "title": "Tlačidlá telefónu sa nedajú nakresliť",
           "message": "Tlačidlá telefónu sa nedajú nakresliť, pretože rám nie je dostatočne vysoký."

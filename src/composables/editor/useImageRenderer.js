@@ -82,15 +82,23 @@ export function useImageRenderer(
       const fw = frameEnabled ? frame.width : 0
       const fh = frameEnabled ? frame.height : 0
 
+      // UPDATE new frame type
       const header = frame?.headerSize || 0
       const footer = frame?.footerSize || 0
-      const isBrowserFrame =
-        frame.type === 'frameMacBrowser' || frame.type === 'frameWindowsBrowser'
-      const isWindowsFrame = frame.type === 'frameWindowsTaskBar'
+      const isFrameWithHeader =
+        frame.type === 'frameMacBrowser' ||
+        frame.type === 'frameWindowsBrowser' ||
+        ((frame.type === 'framePhoneIOS' ||
+          frame.type === 'framePhoneIOS2' ||
+          frame.type === 'framePhoneAndroid' ||
+          frame.type === 'framePhoneAndroid2') &&
+          imageStore.frame.phoneHeaderEnabled)
+
+      const isFrameWithFooter = frame.type === 'frameWindowsTaskBar'
 
       const frameWidth = width + fw * 2
       const frameHeight =
-        height + fh * 2 + (isBrowserFrame ? header - fh : 0) + (isWindowsFrame ? footer : 0)
+        height + fh * 2 + (isFrameWithHeader ? header - fh : 0) + (isFrameWithFooter ? footer : 0)
 
       frameSvgRef.value.setAttribute('width', frameWidth)
       frameSvgRef.value.setAttribute('height', frameHeight)

@@ -129,6 +129,10 @@ export const useImageStore = defineStore('imageStore', {
       headerSize: 0, // Size of the header for browser frames
       footerSize: 0, // Size of the footer for windows frame
       outlineEnabled: false, // Whether to draw an outline around the frame
+      phoneHeaderEnabled: true, // Whether to draw a header for phone frames
+      phoneHeaderTimeInMinutes: 610, // Default time for phone header (10:10)
+      phoneHeaderTextColor: '#000000', // Default text color for phone header
+      phoneHeaderBackgroundColor: '#ffffff', // Default background color for phone header
     },
     /** Raw SVG frame for vector export */
     frameSvg: '',
@@ -247,6 +251,10 @@ export const useImageStore = defineStore('imageStore', {
         headerSize: 0, // Size of the header for browser frames
         footerSize: 0, // Size of the footer for windows frame
         outlineEnabled: false, // Whether to draw an outline around the frame
+        phoneHeaderEnabled: true, // Whether to draw a header for phone frames
+        phoneHeaderTimeInMinutes: 610, // Default time for phone header (10:10)
+        phoneHeaderTextColor: '#000000', // Default text color for phone header
+        phoneHeaderBackgroundColor: '#ffffff', // Default background color for phone header
       }
     },
 
@@ -766,8 +774,18 @@ export const useImageStore = defineStore('imageStore', {
       const finalWidth = width
       const finalHeight = height
 
-      // Correction for frame header/footer
-      if (this.frame.type === 'frameMacBrowser' || this.frame.type === 'frameWindowsBrowser') {
+      // UPDATE new frame type
+      const isFrameWithHeader =
+        this.frame.type === 'frameMacBrowser' ||
+        this.frame.type === 'frameWindowsBrowser' ||
+        ((this.frame.type === 'framePhoneIOS' ||
+          this.frame.type === 'framePhoneIOS2' ||
+          this.frame.type === 'framePhoneAndroid' ||
+          this.frame.type === 'framePhoneAndroid2') &&
+          this.frame.phoneHeaderEnabled)
+
+      // Correction for frame header
+      if (isFrameWithHeader) {
         offsetY = this.frame.headerSize
       }
 
@@ -844,7 +862,17 @@ export const useImageStore = defineStore('imageStore', {
       const offsetX = this.frame.enabled ? this.frame.width : 0
       let offsetY = this.frame.enabled ? this.frame.height : 0
 
-      if (this.frame.type === 'frameMacBrowser' || this.frame.type === 'frameWindowsBrowser') {
+      // UPDATE new frame type
+      const isFrameWithHeader =
+        this.frame.type === 'frameMacBrowser' ||
+        this.frame.type === 'frameWindowsBrowser' ||
+        ((this.frame.type === 'framePhoneIOS' ||
+          this.frame.type === 'framePhoneIOS2' ||
+          this.frame.type === 'framePhoneAndroid' ||
+          this.frame.type === 'framePhoneAndroid2') &&
+          this.frame.phoneHeaderEnabled)
+
+      if (isFrameWithHeader) {
         offsetY = this.frame.headerSize
       }
 
@@ -991,9 +1019,20 @@ export const useImageStore = defineStore('imageStore', {
         : this.newFileDimensions.height
 
       // UPDATE new frame type
-      if (this.frame.type === 'frameMacBrowser' || this.frame.type === 'frameWindowsBrowser') {
+      const isFrameWithHeader =
+        this.frame.type === 'frameMacBrowser' ||
+        this.frame.type === 'frameWindowsBrowser' ||
+        ((this.frame.type === 'framePhoneIOS' ||
+          this.frame.type === 'framePhoneIOS2' ||
+          this.frame.type === 'framePhoneAndroid' ||
+          this.frame.type === 'framePhoneAndroid2') &&
+          this.frame.phoneHeaderEnabled)
+
+      const isFrameWithFooter = this.frame.type === 'frameWindowsTaskBar'
+
+      if (isFrameWithHeader) {
         targetHeight = this.newFileDimensions.height - this.frame.headerSize - this.frame.height
-      } else if (this.frame.type === 'frameWindowsTaskBar') {
+      } else if (isFrameWithFooter) {
         targetHeight = this.newFileDimensions.height - this.frame.footerSize - this.frame.height
       }
 
@@ -1066,8 +1105,8 @@ export const useImageStore = defineStore('imageStore', {
       const offsetX = this.frame?.width || 0
       let offsetY = this.frame?.height || offsetX
 
-      // UPDATE new frame type
-      if (this.frame.type === 'frameMacBrowser' || this.frame.type === 'frameWindowsBrowser') {
+      // If frame has header, adjust offsetY accordingly
+      if (isFrameWithHeader) {
         offsetY = this.frame.headerSize
       }
 
