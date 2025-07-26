@@ -37,8 +37,19 @@ export function useSlider(props, emit) {
     emit('update', value)
   }
 
+  /**
+   * Emits reset action when double-clicked
+   */
+  const onDoubleClick = () => {
+    if (props.disabled) return
+    if (typeof props.onReset === 'function') {
+      props.onReset()
+    }
+  }
+
   return {
     currentValue,
     onInput,
+    onDoubleClick,
   }
 }

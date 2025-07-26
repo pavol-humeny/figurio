@@ -32,6 +32,11 @@ export function useFrameTool(imageStore, historyStore, editorStore, t) {
   const phoneHeaderTimeInMinutes = ref(imageStore.frame.phoneHeaderTimeInMinutes)
 
   /**
+   * Header/Footer size multiplier
+   */
+  const headerFooterMultiplier = ref(imageStore.frame.headerFooterMultiplier)
+
+  /**
    * Frame width
    */
   const frameWidth = ref(imageStore.frame.width || 0)
@@ -162,6 +167,23 @@ export function useFrameTool(imageStore, historyStore, editorStore, t) {
   }
 
   /**
+   * Set header/footer size multiplier
+   * @param {number} value - New header/footer size multiplier
+   */
+  const setHeaderFooterMultiplier = (value) => {
+    headerFooterMultiplier.value = value
+    applyFrame()
+  }
+
+  /**
+   * Reset header/footer size multiplier to default
+   */
+  const resetHeaderFooterMultiplier = () => {
+    headerFooterMultiplier.value = 1
+    applyFrame()
+  }
+
+  /**
    * Set frame outline visibility
    * @param {boolean} value - Whether to show outline
    */
@@ -223,6 +245,9 @@ export function useFrameTool(imageStore, historyStore, editorStore, t) {
     imageStore.frame.phoneHeaderTimeInMinutes = JSON.parse(
       JSON.stringify(phoneHeaderTimeInMinutes.value),
     )
+    imageStore.frame.headerFooterMultiplier = JSON.parse(
+      JSON.stringify(headerFooterMultiplier.value),
+    )
 
     if (selectedFrameVariant.value === 'none') {
       imageStore.frame.enabled = false
@@ -278,8 +303,6 @@ export function useFrameTool(imageStore, historyStore, editorStore, t) {
     let fw = frame.width
     let fh = frame.height
 
-    const MULTIPLIER = 2.5
-
     // UPDATE new frame type
     if (frame.type === 'frameMacBrowser' || frame.type === 'frameWindowsBrowser') {
       if (!frame.outlineEnabled) {
@@ -288,7 +311,8 @@ export function useFrameTool(imageStore, historyStore, editorStore, t) {
       }
 
       imageStore.frame.headerSize =
-        Math.max(Math.floor(editorConfig.frameHeaderFooterSize * h), 5) * MULTIPLIER
+        Math.max(Math.floor(editorConfig.frameHeaderFooterSize * h), 5) *
+        headerFooterMultiplier.value
       imageStore.frame.footerSize = 0
     } else if (
       frame.type === 'framePhoneAndroid' ||
@@ -313,7 +337,7 @@ export function useFrameTool(imageStore, historyStore, editorStore, t) {
         fh = 0
       }
 
-      imageStore.frame.footerSize = Math.max(Math.floor(0.04 * h), 5)
+      imageStore.frame.footerSize = Math.max(Math.floor(0.04 * h), 5) * headerFooterMultiplier.value
       imageStore.frame.headerSize = 0
     } else {
       imageStore.frame.headerSize = 0
@@ -470,7 +494,11 @@ export function useFrameTool(imageStore, historyStore, editorStore, t) {
      * Draws the header rectangle for phone frames
      * @param {string} textColor - Color for the header text
      */
-    function drawPhoneHeader(backgroundColor = '#fff', textColor = '#000', timeInMinutes = 660) {
+    function drawPhoneHeader(
+      backgroundColor = '#ffffff',
+      textColor = '#000000',
+      timeInMinutes = 660,
+    ) {
       if (isFrameWithHeader) {
         const x = phoneFrameValues.left + phoneFrameValues.offset
         const y = phoneFrameValues.top + phoneFrameValues.offset
@@ -704,6 +732,7 @@ export function useFrameTool(imageStore, historyStore, editorStore, t) {
       outline.setAttribute('stroke', color)
       outline.setAttribute('stroke-width', phoneFrameValues.strokeWidth)
 
+      // Draw phone header if enabled
       drawPhoneHeader(
         phoneHeaderBackgroundColor.value,
         phoneHeaderTextColor.value,
@@ -773,7 +802,12 @@ export function useFrameTool(imageStore, historyStore, editorStore, t) {
       outline.setAttribute('stroke', color)
       outline.setAttribute('stroke-width', phoneFrameValues.strokeWidth)
 
-      // Dimensions and offsets
+      // Draw phone header if enabled
+      drawPhoneHeader(
+        phoneHeaderBackgroundColor.value,
+        phoneHeaderTextColor.value,
+        phoneHeaderTimeInMinutes.value,
+      )
 
       // Outline
       const d = [
@@ -863,6 +897,13 @@ export function useFrameTool(imageStore, historyStore, editorStore, t) {
       outline.setAttribute('stroke', color)
       outline.setAttribute('stroke-width', phoneFrameValues.strokeWidth)
 
+      // Draw phone header if enabled
+      drawPhoneHeader(
+        phoneHeaderBackgroundColor.value,
+        phoneHeaderTextColor.value,
+        phoneHeaderTimeInMinutes.value,
+      )
+
       // Outline
       const d = [
         `M ${phoneFrameValues.left + phoneFrameValues.radius} ${phoneFrameValues.top}`,
@@ -909,6 +950,13 @@ export function useFrameTool(imageStore, historyStore, editorStore, t) {
       outline.setAttribute('fill', 'none')
       outline.setAttribute('stroke', color)
       outline.setAttribute('stroke-width', phoneFrameValues.strokeWidth)
+
+      // Draw phone header if enabled
+      drawPhoneHeader(
+        phoneHeaderBackgroundColor.value,
+        phoneHeaderTextColor.value,
+        phoneHeaderTimeInMinutes.value,
+      )
 
       // Outline
       const d = [
@@ -1153,5 +1201,8 @@ export function useFrameTool(imageStore, historyStore, editorStore, t) {
     setPhoneHeaderBackgroundColor,
     phoneHeaderTimeInMinutes,
     setPhoneHeaderTimeInMinutes,
+    headerFooterMultiplier,
+    setHeaderFooterMultiplier,
+    resetHeaderFooterMultiplier,
   }
 }

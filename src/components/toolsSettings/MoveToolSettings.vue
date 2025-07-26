@@ -29,7 +29,7 @@ const {
           <div class="content-wrapper">
             <DefaultSlider v-model="zoomSpeed" :min="zoomSpeedMin" :max="zoomSpeedMax" :step="1" showValue
               :valueDescription="$t('tools.move.settings.general.zoomSpeed.label')" valueUnit="%"
-              @update:modelValue="(value) => updateZoomSpeed(value)" @dblclick="resetZoomSpeed"
+              @update:modelValue="(value) => updateZoomSpeed(value)" :onReset="resetZoomSpeed"
               :tip="$t('tools.move.settings.general.zoomSpeed.tip')" position="bottom-left" />
           </div>
         </div>
@@ -39,7 +39,7 @@ const {
           <div class="content-wrapper">
             <DefaultSlider v-model="movementSpeed" :min="movementSpeedMin" :max="movementSpeedMax" :step="1" showValue
               :valueDescription="$t('tools.move.settings.general.movementSpeed.label')" valueUnit="%"
-              @update:modelValue="(value) => updateMovementSpeed(value)" @dblclick="resetMovementSpeed"
+              @update:modelValue="(value) => updateMovementSpeed(value)" :onReset="resetMovementSpeed"
               :tip="$t('tools.move.settings.general.movementSpeed.tip')" position="bottom-left" />
           </div>
         </div>

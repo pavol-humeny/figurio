@@ -279,6 +279,9 @@
         "phoneHeaderTime": {
           "label": "Time"
         },
+        "headerFooterMultiplier":{
+          "label": "Height multiplier"
+        },
         "phoneButtonsCanNotBeDrawn": {
           "title": "Phone buttons can not be drawn",
           "message": "Phone buttons can not be drawn, because the frame is not height enough."

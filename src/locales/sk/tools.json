@@ -278,6 +278,9 @@
         "phoneHeaderTime": {
           "label": "Čas"
         },
+        "headerFooterMultiplier": {
+          "label": "Násobiteľ výšky"
+        },
         "phoneButtonsCanNotBeDrawn": {
           "title": "Tlačidlá telefónu sa nedajú nakresliť",
           "message": "Tlačidlá telefónu sa nedajú nakresliť, pretože rám nie je dostatočne vysoký."

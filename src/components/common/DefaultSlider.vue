@@ -15,6 +15,8 @@ import { useSlider } from '@/composables/common/useDefaultSlider'
  * @property {string} [valueDescription=''] - Optional description label next to value
  * @property {string} [valueUnit=''] - Unit displayed after the value
  * @property {string} [backgroundColor='var(--secondary-c)'] - Background color of the slider track
+ * @property {Function|null} [onReset=null] - Optional reset handler on double-click
+
  */
 
 /** @type {SliderProps} */
@@ -63,6 +65,10 @@ const props = defineProps({
     type: String,
     default: 'var(--secondary-c)',
   },
+  onReset: {
+    type: Function,
+    default: null,
+  },
 })
 
 /**
@@ -70,11 +76,12 @@ const props = defineProps({
  * @event dblclick - Emitted when the slider is double-clicked (can be used to reset)
  * @event update - Custom update event with the same value
  */
-const emit = defineEmits(['update:modelValue', 'dblclick', 'update'])
+const emit = defineEmits(['update:modelValue', 'update'])
 
 const {
   currentValue,
   onInput,
+  onDoubleClick
 } = useSlider(props, emit)
 </script>
 
@@ -89,7 +96,7 @@ const {
         <p v-if="props.valueUnit !== ''" class="slider-value-unit">{{ props.valueUnit }}</p>
       </div>
       <input type="range" :min="props.min" :max="props.max" :step="props.step" v-model="currentValue"
-        :disabled="props.disabled" @input="onInput" @dblclick="$emit('dblclick')"
+        :disabled="props.disabled" @input="onInput" @dblclick="onDoubleClick"
         :style="{ '--slider-bg': props.backgroundColor }" />
     </div>
   </ItemTip>

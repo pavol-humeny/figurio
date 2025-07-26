@@ -9,6 +9,7 @@ import { useI18n } from 'vue-i18n'
 import DropdownSelect from '../common/DropdownSelect.vue'
 import ToggleButton from '../common/ToggleButton.vue'
 import TimeInput from '../common/TimeInput.vue'
+import DefaultSlider from '../common/DefaultSlider.vue'
 
 const { t } = useI18n()
 
@@ -34,6 +35,9 @@ const {
   setPhoneHeaderBackgroundColor,
   phoneHeaderTimeInMinutes,
   setPhoneHeaderTimeInMinutes,
+  headerFooterMultiplier,
+  setHeaderFooterMultiplier,
+  resetHeaderFooterMultiplier,
 } = useFrameTool(useImageStore(), useHistoryStore(), useEditorStore(), t)
 </script>
 
@@ -136,6 +140,22 @@ const {
                 @update="setPhoneHeaderTimeInMinutes(phoneHeaderTimeInMinutes)"
               />
             </div>
+          </div>
+        </div>
+
+        <!-- Header and footer frames multiplier -->
+        <!-- UPDATE new frame type -->
+        <div
+          v-if="selectedFrameVariant === 'frameWindowsBrowser' || selectedFrameVariant === 'frameMacBrowser' || selectedFrameVariant === 'frameWindowsTaskBar'"
+          class="settings-content-wrapper">
+          <div class="content-wrapper">
+            <div class="content-title">
+              <p>
+                {{ t('tools.frame.settings.general.headerFooterMultiplier.label') }}
+              </p>
+            </div>
+            <DefaultSlider v-model="headerFooterMultiplier" :min="0.5" :max="5" :step="0.1"
+              @update="setHeaderFooterMultiplier(headerFooterMultiplier)" :onReset="resetHeaderFooterMultiplier" showValue />
           </div>
         </div>
 
