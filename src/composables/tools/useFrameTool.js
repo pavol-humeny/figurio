@@ -214,6 +214,8 @@ export function useFrameTool(imageStore, historyStore, editorStore, t) {
     let fw = frame.width
     let fh = frame.height
 
+    const MULTIPLIER = 2.5
+
     // UPDATE new frame type
     if (frame.type === 'frameMacBrowser' || frame.type === 'frameWindowsBrowser') {
       if (!frame.outlineEnabled) {
@@ -221,7 +223,8 @@ export function useFrameTool(imageStore, historyStore, editorStore, t) {
         fh = 0
       }
 
-      imageStore.frame.headerSize = Math.max(Math.floor(editorConfig.frameHeaderFooterSize * h), 5)
+      imageStore.frame.headerSize =
+        Math.max(Math.floor(editorConfig.frameHeaderFooterSize * h), 5) * MULTIPLIER
       imageStore.frame.footerSize = 0
     } else if (
       frame.type === 'framePhoneAndroid' ||
@@ -676,8 +679,14 @@ export function useFrameTool(imageStore, historyStore, editorStore, t) {
       el.appendChild(outline)
 
       // Camera circle
-      const cameraRadius = Math.floor(svgHeight * 0.012)
-      const cameraOffset = Math.floor(svgHeight * 0.03)
+      let cameraRadius
+      if (svgWidth >= svgHeight) {
+        cameraRadius = Math.floor(svgWidth * 0.012)
+      } else {
+        cameraRadius = Math.floor(svgHeight * 0.012)
+      }
+
+      const cameraOffset = fw + cameraRadius
       const cx = svgWidth / 2
       const cy = phoneFrameValues.top + cameraOffset
 
@@ -721,7 +730,13 @@ export function useFrameTool(imageStore, historyStore, editorStore, t) {
       el.appendChild(outline)
 
       // Drop notch
-      const dropHeight = svgHeight * 0.035
+      let dropHeight
+      if (svgWidth >= svgHeight) {
+        dropHeight = svgWidth * 0.035
+      } else {
+        dropHeight = svgHeight * 0.035
+      }
+
       const dropWidth = dropHeight * 1.02
       const arcRadius = 0.5 * dropHeight
 
@@ -884,7 +899,7 @@ export function useFrameTool(imageStore, historyStore, editorStore, t) {
         imageStore.frame.height * 2 +
         (header > 0 ? header - imageStore.frame.height : 0)
 
-      const radius = Math.floor(Math.min(svgWidth, svgHeight) * 0.06) - fh * 0.3 // 6% of the smaller dimension + a bit of padding (20% of frame height)
+      const radius = Math.floor(Math.min(svgWidth, svgHeight) * 0.06) - fh // 6% of the smaller dimension + a bit of padding (100% of frame height)
 
       const renderedImage = imageStore.getRenderedImage()
       if (!renderedImage) return
