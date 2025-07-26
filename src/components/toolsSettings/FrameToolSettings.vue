@@ -10,6 +10,7 @@ import DropdownSelect from '../common/DropdownSelect.vue'
 import ToggleButton from '../common/ToggleButton.vue'
 import TimeInput from '../common/TimeInput.vue'
 import DefaultSlider from '../common/DefaultSlider.vue'
+import { editorConfig } from '@/config/editorConfig'
 
 const { t } = useI18n()
 
@@ -154,7 +155,7 @@ const {
                 {{ t('tools.frame.settings.general.headerFooterMultiplier.label') }}
               </p>
             </div>
-            <DefaultSlider v-model="headerFooterMultiplier" :min="0.5" :max="5" :step="0.1"
+            <DefaultSlider v-model="headerFooterMultiplier" :min="editorConfig.minHeaderFooterMultiplier" :max="editorConfig.maxHeaderFooterMultiplier" :step="editorConfig.stepHeaderFooterMultiplier"
               @update="setHeaderFooterMultiplier(headerFooterMultiplier)" :onReset="resetHeaderFooterMultiplier" showValue />
           </div>
         </div>

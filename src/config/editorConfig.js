@@ -13,6 +13,10 @@ export const editorConfig = {
   browserFrameDefaultSize: 0.005, // 0.5% of the bigger dimension
   phoneFrameDefaultSize: 0.01, // 1% of the bigger dimension
   frameHeaderFooterSize: 0.04, // 4% of the height
+  minHeaderFooterMultiplier: 0.5, // Minimum multiplier for header/footer height
+  maxHeaderFooterMultiplier: 5, // Maximum multiplier for header/footer height
+  stepHeaderFooterMultiplier: 0.1, // Step for header/footer height multiplier
+
 
   // Presets
   localStoragePresetsKey: 'imageEditorPresets',

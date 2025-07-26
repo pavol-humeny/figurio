@@ -19,6 +19,7 @@ import PresetNewOperation from '../common/PresetNewOperation.vue'
 import { useViewportStore } from '@/stores/viewportStore'
 import { editorConfig } from '@/config/editorConfig'
 import TimeInput from '../common/TimeInput.vue'
+import DefaultSlider from '../common/DefaultSlider.vue'
 
 const { t } = useI18n()
 
@@ -270,6 +271,16 @@ const tabs = ['myPresets', 'createPreset']
                 {{ t('tools.preset.settings.myPresets.presetValues.frame.phoneHeaderTime') }}
               </p>
               <TimeInput v-model="localImageFrame.phoneHeaderTimeInMinutes" />
+            </div>
+            <!-- Header and footer frames multiplier -->
+            <!-- UPDATE new frame type -->
+            <div v-if="localImageFrame.enabled && (localImageFrame.type === 'frameWindowsBrowser' || localImageFrame.type === 'frameMacBrowser' || localImageFrame.type === 'frameWindowsTaskBar')"
+              class="content-aligned two-items" :class="!isModifyingPreset ? 'disabled' : ''">
+              <p>
+                {{ t('tools.preset.settings.myPresets.presetValues.frame.headerFooterMultiplier') }}
+              </p>
+              <DefaultSlider v-model="localImageFrame.headerFooterMultiplier" :min="editorConfig.minHeaderFooterMultiplier" :max="editorConfig.maxHeaderFooterMultiplier" :step="editorConfig.stepHeaderFooterMultiplier"
+              :onReset="() => { localImageFrame.headerFooterMultiplier = 1 }" showValue />
             </div>
           </div>
         </div>
@@ -607,6 +618,16 @@ const tabs = ['myPresets', 'createPreset']
                 {{ t('tools.preset.settings.createPreset.presetValues.frame.phoneHeaderTime') }}
               </p>
               <TimeInput v-model="newPreset.frame.phoneHeaderTimeInMinutes"/>
+            </div>
+            <!-- Header and footer frames multiplier -->
+            <!-- UPDATE new frame type -->
+            <div v-if="newPreset.frame.type === 'frameWindowsBrowser' || newPreset.frame.type === 'frameMacBrowser' || newPreset.frame.type === 'frameWindowsTaskBar'"
+              class="content-aligned two-items" :class="newPreset.frame.enabled ? '' : 'disabled'">
+              <p>
+                {{ t('tools.preset.settings.createPreset.presetValues.frame.headerFooterMultiplier') }}
+              </p>
+              <DefaultSlider v-model="newPreset.frame.headerFooterMultiplier" :min="editorConfig.minHeaderFooterMultiplier" :max="editorConfig.maxHeaderFooterMultiplier" :step="editorConfig.stepHeaderFooterMultiplier"
+              :onReset="() => { newPreset.frame.headerFooterMultiplier = 1 }" showValue />
             </div>
           </div>
         </div>

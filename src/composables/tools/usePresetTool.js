@@ -219,6 +219,7 @@ export function usePresetTool(
           localImageFrame.value.phoneHeaderTimeInMinutes = 610
           localImageFrame.value.phoneHeaderTextColor = '#000000'
           localImageFrame.value.phoneHeaderBackgroundColor = '#ffffff'
+          localImageFrame.value.headerFooterMultiplier = 1
         }
       }
     },
@@ -411,10 +412,16 @@ export function usePresetTool(
     if (currentImageFrame.type !== presetFrame.type) {
       areFramesEqual = false
     } else {
+      // UPDATE new frame type
       areFramesEqual =
         currentImageFrame.color === presetFrame.color &&
         currentImageFrame.width === presetFrame.width &&
-        currentImageFrame.outlineEnabled === presetFrame.outlineEnabled
+        currentImageFrame.outlineEnabled === presetFrame.outlineEnabled &&
+        currentImageFrame.phoneHeaderEnabled === presetFrame.phoneHeaderEnabled &&
+        currentImageFrame.phoneHeaderTimeInMinutes === presetFrame.phoneHeaderTimeInMinutes &&
+        currentImageFrame.phoneHeaderTextColor === presetFrame.phoneHeaderTextColor &&
+        currentImageFrame.phoneHeaderBackgroundColor === presetFrame.phoneHeaderBackgroundColor &&
+        currentImageFrame.headerFooterMultiplier === presetFrame.headerFooterMultiplier
     }
 
     if (areOperationsEqual && areFramesEqual) {
@@ -557,6 +564,7 @@ export function usePresetTool(
       phoneHeaderTimeInMinutes: 610,
       phoneHeaderTextColor: '#000000',
       phoneHeaderBackgroundColor: '#ffffff',
+      headerFooterMultiplier: 1,
     },
     cropBox: {
       x: 0,
@@ -706,6 +714,7 @@ export function usePresetTool(
         phoneHeaderTimeInMinutes: 610,
         phoneHeaderTextColor: '#000000',
         phoneHeaderBackgroundColor: '#ffffff',
+        headerFooterMultiplier: 1,
       },
       cropBox: {
         x: 0,
@@ -785,6 +794,7 @@ export function usePresetTool(
       imageFrame.phoneHeaderTimeInMinutes = newPreset.value.frame.phoneHeaderTimeInMinutes
       imageFrame.phoneHeaderTextColor = newPreset.value.frame.phoneHeaderTextColor
       imageFrame.phoneHeaderBackgroundColor = newPreset.value.frame.phoneHeaderBackgroundColor
+      imageFrame.headerFooterMultiplier = newPreset.value.frame.headerFooterMultiplier
     }
     // UPDATE new tool
 

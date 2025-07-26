@@ -342,7 +342,8 @@
             "phoneHeaderEnabled": "Použiť záhlavie telefónu",
             "phoneHeaderTextColor": "Farba textu",
             "phoneHeaderBackgroundColor": "Farba pozadia",
-            "phoneHeaderTime": "Čas"
+            "phoneHeaderTime": "Čas",
+            "headerFooterMultiplier": "Násobiteľ výšky"
           },
           "crop": {
             "label": "Orezanie",
@@ -445,7 +446,8 @@
             "phoneHeaderEnabled": "Použiť záhlavie telefónu",
             "phoneHeaderTextColor": "Farba textu",
             "phoneHeaderBackgroundColor": "Farba pozadia",
-            "phoneHeaderTime": "Čas"
+            "phoneHeaderTime": "Čas",
+            "headerFooterMultiplier": "Násobiteľ výšky"
           },
           "crop": {
             "label": "Orezanie",

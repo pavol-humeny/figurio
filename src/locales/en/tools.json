@@ -343,7 +343,8 @@
             "phoneHeaderEnabled": "Use phone header",
             "phoneHeaderTextColor": "Text color",
             "phoneHeaderBackgroundColor": "Background color",
-            "phoneHeaderTime": "Time"
+            "phoneHeaderTime": "Time",
+            "headerFooterMultiplier": "Height multiplier"
           },
           "crop": {
             "label": "Crop",
@@ -446,8 +447,8 @@
             "phoneHeaderEnabled": "Use phone header",
             "phoneHeaderTextColor": "Text color",
             "phoneHeaderBackgroundColor": "Background color",
-            "phoneHeaderTime": "Time"
-            
+            "phoneHeaderTime": "Time",
+            "headerFooterMultiplier": "Height multiplier"
           },
           "crop": {
             "label": "Crop",
