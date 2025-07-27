@@ -2,9 +2,9 @@
 import ToolsSettingsTabs from './ToolsSettingsTabs.vue';
 
 /**
- * Available tabs for adjust tool settings
+ * Available tabs for highlight tool settings
  */
-const tabs = ['brightness', 'contrast', 'saturation', 'exposure'];
+const tabs = ['add', 'modify'];
 
 </script>
 

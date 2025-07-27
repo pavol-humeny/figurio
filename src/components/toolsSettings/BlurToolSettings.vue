@@ -2,9 +2,9 @@
 import ToolsSettingsTabs from './ToolsSettingsTabs.vue';
 
 /**
- * Available tabs for annotate tool settings
+ * Available tabs for blur tool settings
  */
-const tabs = ['draw', 'erase', 'text', 'shape'];
+const tabs = ['add', 'modify'];
 
 </script>
 

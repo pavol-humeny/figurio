@@ -51,6 +51,7 @@ const emit = defineEmits(['click'])
  */
 const { wrapperRef, subToolPos, onRightClick, onClickTab, onClickTool } = useOneTool(
   useEditorStore(),
+  useImageStore(),
   props,
   emit,
 )

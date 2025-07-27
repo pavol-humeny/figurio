@@ -116,6 +116,30 @@ export const keyboardShortcuts = [
     args: ['preset', 'createPreset'],
     description: 'Toggle preset - create preset tool',
   },
+  {
+    keys: ['t'],
+    action: 'toggleTool',
+    args: ['text', null],
+    description: 'Toggle text tool',
+  },
+  {
+    keys: ['m'],
+    action: 'toggleTool',
+    args: ['magnifyArea', null],
+    description: 'Toggle magnify area tool',
+  },
+  {
+    keys: ['b'],
+    action: 'toggleTool',
+    args: ['blur', null],
+    description: 'Toggle blur tool',
+  },
+  {
+    keys: ['h'],
+    action: 'toggleTool',
+    args: ['highlight', null],
+    description: 'Toggle highlight tool',
+  },
 
   // Multi-file management shortcuts
   // switch to next/previous file

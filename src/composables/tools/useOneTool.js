@@ -8,7 +8,7 @@ import { ref, nextTick, onMounted, onBeforeUnmount } from 'vue'
  * @param {Function} emit - Emit function from the component to send events upward.
  * @returns {object} Bindings and methods for the tool component
  */
-export function useOneTool(editorStore, props, emit) {
+export function useOneTool(editorStore, imageStore, props, emit) {
   /**
    * Reference to the DOM element of the tool wrapper
    */
@@ -26,7 +26,7 @@ export function useOneTool(editorStore, props, emit) {
    */
   const onRightClick = async (event) => {
     event.preventDefault()
-    if (!props.tool.subTools) return
+    if (!props.tool.subTools || !imageStore.isImageLoaded) return
 
     // Toggle off if already open
     if (editorStore.toolWithOpenSubToolsKey === props.tool.key) {

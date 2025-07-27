@@ -182,57 +182,107 @@
       }
     }
   },
-  "adjust": {
-    "label": "Adjust",
-    "tip": "Adjust image brightness, contrast, color and more.",
+  "blur": {
+    "label": "Blur",
+    "tip": "Applies a blur effect to the image",
     "tipDisabled": "",
+    "shortcut": "B",
+    "subTools": {
+      "add": {
+        "label": "Add Blur",
+        "tip": "Add a blur effect to the image",
+        "shortcut": ""
+      },
+      "modify": {
+        "label": "Modify Blur",
+        "tip": "Modify the existing blur effect",
+        "shortcut": ""
+      }
+    },
     "settings": {
-      "brightness": {
-        "label": "Brightness"
+      "add": {
+        "label": "Add Blur"
       },
-      "contrast": {
-        "label": "Contrast"
-      },
-      "saturation": {
-        "label": "Saturation"
-      },
-      "exposure": {
-        "label": "Exposure"
+      "modify": {
+        "label": "Modify Blur"
       }
     }
   },
-  "annotate": {
-    "label": "Annotate",
-    "tip": "Draw, add text or shapes to the image.",
+  "highlight": {
+    "label": "Highlight",
+    "tip": "Highlights a specific area of the image",
     "tipDisabled": "",
+    "shortcut": "H",
+    "subTools": {
+      "add": {
+        "label": "Add Highlight",
+        "tip": "Add a highlight to the image",
+        "shortcut": ""
+      },
+      "modify": {
+        "label": "Modify Highlight",
+        "tip": "Modify the existing highlight",
+        "shortcut": ""
+      }
+    },
     "settings": {
-      "draw": {
-        "label": "Draw",
-        "rasterize": "Rasterize",
-        "width": "Width",
-        "color": "Color"
+      "add": {
+        "label": "Add Highlight"
       },
-      "erase": {
-        "label": "Erase",
-        "rasterize": "Rasterize",
-        "width": "Width"
+      "modify": {
+        "label": "Modify Highlight"
+      }
+    }
+  },
+  "magnifyArea": {
+    "label": "Magnify Area",
+    "tip": "Magnifies a specific area of the image",
+    "tipDisabled": "",
+    "shortcut": "M",
+    "subTools": {
+      "add": {
+        "label": "Add Magnify Area",
+        "tip": "Add a magnified area to the image",
+        "shortcut": ""
       },
-      "text": {
-        "label": "Text",
-        "rasterize": "Rasterize",
-        "font": "Font",
-        "fontStyle": "Font-style",
-        "fontSize": "Font-size",
-        "color": "Color",
-        "textAlign": "Text Align"
+      "modify": {
+        "label": "Modify Magnify Area",
+        "tip": "Modify the existing magnified area",    
+        "shortcut": ""
+      }
+    },
+    "settings": {
+      "add": {
+        "label": "Add Magnify Area"
       },
-      "shape": {
-        "label": "Shape",
-        "rasterize": "Rasterize",
-        "shapeType": "Shape type",
-        "lineWidth": "Line width",
-        "fillColor": "Fill color",
-        "lineColor": "Line color"
+      "modify": {
+        "label": "Modify Magnify Area"
+      }
+    }
+  },
+  "text": {
+    "label": "Text",
+    "tip": "Adds text to the image",
+    "tipDisabled": "",
+    "shortcut": "T",
+    "subTools": {
+      "add": {
+        "label": "Add Text",
+        "tip": "Add text to the image",
+        "shortcut": ""
+      },
+      "modify": {
+        "label": "Modify Text",
+        "tip": "Modify the existing text",
+        "shortcut": ""
+      }
+    },
+    "settings": {
+      "add": {
+        "label": "Add Text"
+      },
+      "modify": {
+        "label": "Modify Text"
       }
     }
   },

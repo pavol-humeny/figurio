@@ -181,57 +181,107 @@
       }
     }
   },
-  "adjust": {
-    "label": "Úpravy",
-    "tip": "Uprav jas, kontrast, barvy a další.",
+  "blur": {
+    "label": "Rozmazání",
+    "tip": "Aplikuje efekt rozmazání na obrázek",
     "tipDisabled": "",
+    "shortcut": "B",
+    "subTools": {
+      "add": {
+        "label": "Přidat rozmazání",
+        "tip": "Přidat efekt rozmazání na obrázek",
+        "shortcut": ""
+      },
+      "modify": {
+        "label": "Upravit rozmazání",
+        "tip": "Upravit existující efekt rozmazání",
+        "shortcut": ""
+      }
+    },
     "settings": {
-      "brightness": {
-        "label": "Jas"
+      "add": {
+        "label": "Přidat rozmazání"
       },
-      "contrast": {
-        "label": "Kontrast"
-      },
-      "saturation": {
-        "label": "Sytost"
-      },
-      "exposure": {
-        "label": "Expozice"
+      "modify": {
+        "label": "Upravit rozmazání"
       }
     }
   },
-  "annotate": {
-    "label": "Anotace",
-    "tip": "Kresli, přidej text nebo tvary do obrázku.",
+  "highlight": {
+    "label": "Zvýraznění",
+    "tip": "Zvýrazní konkrétní oblast na obrázku",
     "tipDisabled": "",
+    "shortcut": "H",
+    "subTools": {
+      "add": {
+        "label": "Přidat zvýraznění",
+        "tip": "Přidat zvýraznění na obrázek",
+        "shortcut": ""
+      },
+      "modify": {
+        "label": "Upravit zvýraznění",
+        "tip": "Upravit existující zvýraznění",
+        "shortcut": ""
+      }
+    },
     "settings": {
-      "draw": {
-        "label": "Kreslit",
-        "rasterize": "Rasterizovat",
-        "width": "Tloušťka",
-        "color": "Barva"
+      "add": {
+        "label": "Přidat zvýraznění"
       },
-      "erase": {
-        "label": "Guma",
-        "rasterize": "Rasterizovat",
-        "width": "Tloušťka"
+      "modify": {
+        "label": "Upravit zvýraznění"
+      }
+    }
+  },
+  "magnifyArea": {
+    "label": "Zvětšená oblast",
+    "tip": "Zvětší konkrétní oblast obrázku",
+    "tipDisabled": "",
+    "shortcut": "M",
+    "subTools": {
+      "add": {
+        "label": "Přidat zvětšení",
+        "tip": "Přidat zvětšenou oblast na obrázek",
+        "shortcut": ""
       },
-      "text": {
-        "label": "Text",
-        "rasterize": "Rasterizovat",
-        "font": "Písmo",
-        "fontStyle": "Styl písma",
-        "fontSize": "Velikost písma",
-        "color": "Barva",
-        "textAlign": "Zarovnání textu"
+      "modify": {
+        "label": "Upravit zvětšení",
+        "tip": "Upravit existující zvětšenou oblast",
+        "shortcut": ""
+      }
+    },
+    "settings": {
+      "add": {
+        "label": "Přidat zvětšení"
       },
-      "shape": {
-        "label": "Tvar",
-        "rasterize": "Rasterizovat",
-        "shapeType": "Typ tvaru",
-        "lineWidth": "Tloušťka čáry",
-        "fillColor": "Barva výplně",
-        "lineColor": "Barva čáry"
+      "modify": {
+        "label": "Upravit zvětšení"
+      }
+    }
+  },
+  "text": {
+    "label": "Text",
+    "tip": "Přidá text do obrázku",
+    "tipDisabled": "",
+    "shortcut": "T",
+    "subTools": {
+      "add": {
+        "label": "Přidat text",
+        "tip": "Přidat text do obrázku",
+        "shortcut": ""
+      },
+      "modify": {
+        "label": "Upravit text",
+        "tip": "Upravit existující text",
+        "shortcut": ""
+      }
+    },
+    "settings": {
+      "add": {
+        "label": "Přidat text"
+      },
+      "modify": {
+        "label": "Upravit text"
       }
     }
   },

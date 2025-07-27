@@ -47,16 +47,66 @@ export const toolsDefinitions = [
     iconName: 'IconGrayscaleTool',
     settingsComponent: () => import('@/components/toolsSettings/GrayscaleToolSettings.vue'),
   },
-  // {
-  //   key: 'adjust',
-  //   iconName: 'IconAdjustTool',
-  //   settingsComponent: () => import('@/components/toolsSettings/AdjustToolSettings.vue'),
-  // },
-  // {
-  //   key: 'annotate',
-  //   iconName: 'IconAnnotateTool',
-  //   settingsComponent: () => import('@/components/toolsSettings/AnnotateToolSettings.vue'),
-  // },
+  {
+    key: 'blur',
+    iconName: 'IconBlurTool',
+    settingsComponent: () => import('@/components/toolsSettings/BlurToolSettings.vue'),
+    subTools: [
+      {
+        key: 'add',
+        iconName: 'IconPlus',
+      },
+      {
+        key: 'modify',
+        iconName: 'IconModify',
+      },
+    ],
+  },
+  {
+    key: 'highlight',
+    iconName: 'IconHighlightTool',
+    settingsComponent: () => import('@/components/toolsSettings/HighlightToolSettings.vue'),
+    subTools: [
+      {
+        key: 'add',
+        iconName: 'IconPlus',
+      },
+      {
+        key: 'modify',
+        iconName: 'IconModify',
+      },
+    ],
+  },
+  {
+    key: 'text',
+    iconName: 'IconTextTool',
+    settingsComponent: () => import('@/components/toolsSettings/TextToolSettings.vue'),
+    subTools: [
+      {
+        key: 'add',
+        iconName: 'IconPlus',
+      },
+      {
+        key: 'modify',
+        iconName: 'IconModify',
+      },
+    ],
+  },
+  {
+    key: 'magnifyArea',
+    iconName: 'IconMagnifyAreaTool',
+    settingsComponent: () => import('@/components/toolsSettings/MagnifyAreaToolSettings.vue'),
+    subTools: [
+      {
+        key: 'add',
+        iconName: 'IconPlus',
+      },
+      {
+        key: 'modify',
+        iconName: 'IconModify',
+      },
+    ],
+  },
   {
     key: 'frame',
     iconName: 'IconFrameTool',
