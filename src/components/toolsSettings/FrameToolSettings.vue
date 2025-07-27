@@ -39,6 +39,9 @@ const {
   headerFooterMultiplier,
   setHeaderFooterMultiplier,
   resetHeaderFooterMultiplier,
+  isPhoneFrame,
+  isFrameWithOutline,
+  isFrameWithMultiplier
 } = useFrameTool(useImageStore(), useHistoryStore(), useEditorStore(), t)
 </script>
 
@@ -88,9 +91,8 @@ const {
         </div>
 
         <!-- Frame outline -->
-        <!-- UPDATE new frame type -->
         <div
-          v-if="selectedFrameVariant === 'frameWindowsBrowser' || selectedFrameVariant === 'frameMacBrowser' || selectedFrameVariant === 'frameWindowsTaskBar' || selectedFrameVariant === 'frameVSCode'"
+          v-if="isFrameWithOutline(selectedFrameVariant)"
           class="settings-content-wrapper">
           <div class="content-wrapper">
             <div class="content-aligned two-items">
@@ -104,9 +106,8 @@ const {
         </div>
 
         <!-- Phone header -->
-        <!-- UPDATE new frame type -->
         <div
-          v-if="selectedFrameVariant === 'framePhoneIOS' || selectedFrameVariant === 'framePhoneIOS2' || selectedFrameVariant === 'framePhoneAndroid' || selectedFrameVariant === 'framePhoneAndroid2' || selectedFrameVariant === 'framePhoneSimple'"
+          v-if="isPhoneFrame(selectedFrameVariant)"
           class="settings-content-wrapper">
           <div class="content-wrapper">
             <div class="content-aligned two-items">
@@ -147,9 +148,8 @@ const {
         </div>
 
         <!-- Header and footer frames multiplier -->
-        <!-- UPDATE new frame type -->
         <div
-          v-if="selectedFrameVariant === 'frameWindowsBrowser' || selectedFrameVariant === 'frameMacBrowser' || selectedFrameVariant === 'frameWindowsTaskBar' || selectedFrameVariant === 'frameVSCode'"
+          v-if="isFrameWithMultiplier(selectedFrameVariant)"
           class="settings-content-wrapper">
           <div class="content-wrapper">
             <div class="content-title">

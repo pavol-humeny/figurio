@@ -172,7 +172,6 @@ export const useImageStore = defineStore('imageStore', {
      * @returns {HTMLCanvasElement|null}
      */
     getRenderedImage({ t, renderCall }) {
-      console.log('----------------------- renderCall:', renderCall)
       if (renderCall) {
         const imageStore = this
         const editorStore = useEditorStore()
@@ -783,7 +782,7 @@ export const useImageStore = defineStore('imageStore', {
       const finalWidth = width
       const finalHeight = height
 
-      const isFrameWithHeader = useFrameTool(
+      const hasHeader = useFrameTool(
         imageStore,
         historyStore,
         editorStore,
@@ -791,7 +790,7 @@ export const useImageStore = defineStore('imageStore', {
       ).isFrameWithHeader(this.frame.type)
 
       // Correction for frame header
-      if (isFrameWithHeader) {
+      if (hasHeader) {
         offsetY = this.frame.headerSize
       }
 
@@ -872,14 +871,14 @@ export const useImageStore = defineStore('imageStore', {
       const offsetX = this.frame.enabled ? this.frame.width : 0
       let offsetY = this.frame.enabled ? this.frame.height : 0
 
-      const isFrameWithHeader = useFrameTool(
+      const hasHeader = useFrameTool(
         imageStore,
         historyStore,
         editorStore,
         t,
       ).isFrameWithHeader(this.frame.type)
 
-      if (isFrameWithHeader) {
+      if (hasHeader) {
         offsetY = this.frame.headerSize
       }
 
@@ -1027,23 +1026,23 @@ export const useImageStore = defineStore('imageStore', {
         ? this.newFileDimensions.height - 2 * this.frame.height
         : this.newFileDimensions.height
 
-      const isFrameWithHeader = useFrameTool(
+      const hasHeader = useFrameTool(
         imageStore,
         historyStore,
         editorStore,
         t,
       ).isFrameWithHeader(this.frame.type)
 
-      const isFrameWithFooter = useFrameTool(
+      const hasFooter = useFrameTool(
         imageStore,
         historyStore,
         editorStore,
         t,
       ).isFrameWithFooter(this.frame.type)
 
-      if (isFrameWithHeader) {
+      if (hasHeader) {
         targetHeight = this.newFileDimensions.height - this.frame.headerSize - this.frame.height
-      } else if (isFrameWithFooter) {
+      } else if (hasFooter) {
         targetHeight = this.newFileDimensions.height - this.frame.footerSize - this.frame.height
       }
 
@@ -1117,7 +1116,7 @@ export const useImageStore = defineStore('imageStore', {
       let offsetY = this.frame?.height || offsetX
 
       // If frame has header, adjust offsetY accordingly
-      if (isFrameWithHeader) {
+      if (hasHeader) {
         offsetY = this.frame.headerSize
       }
 

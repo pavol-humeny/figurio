@@ -133,6 +133,78 @@ export function useFrameTool(imageStore, historyStore, editorStore, t) {
     }
   })
 
+  // ------------------------
+  // Check frame type
+  // ------------------------
+
+  /**
+   * Whether the frame is frame with header
+   * @param {string} frameType - Frame type
+   */
+  const isFrameWithHeader = (frameType) => {
+    return (
+      frameType === 'frameMacBrowser' ||
+      frameType === 'frameWindowsBrowser' ||
+      frameType === 'frameVSCode' ||
+      ((frameType === 'framePhoneIOS' ||
+        frameType === 'framePhoneIOS2' ||
+        frameType === 'framePhoneAndroid' ||
+        frameType === 'framePhoneAndroid2' ||
+        frameType === 'framePhoneSimple') &&
+        imageStore.frame.phoneHeaderEnabled)
+    )
+  }
+
+  /**
+   * Whether the frame is frame with footer
+   * @param {string} frameType - Frame type
+   */
+  const isFrameWithFooter = (frameType) => {
+    return frameType === 'frameWindowsTaskBar'
+  }
+
+  /**
+   * Whether the frame is phone frame
+   * @param {string} frameType - Frame type
+   */
+  const isPhoneFrame = (frameType) => {
+    return (
+      frameType === 'framePhoneIOS' ||
+      frameType === 'framePhoneIOS2' ||
+      frameType === 'framePhoneAndroid' ||
+      frameType === 'framePhoneAndroid2' ||
+      frameType === 'framePhoneSimple'
+    )
+  }
+
+  /**
+   * Whether the frame is frame with outline
+   * @param {string} frameType - Frame type
+   */
+  const isFrameWithOutline = (frameType) => {
+    return (
+      frameType === 'frameMacBrowser' ||
+      frameType === 'frameWindowsBrowser' ||
+      frameType === 'frameWindowsTaskBar' ||
+      frameType === 'frameVSCode'
+    )
+  }
+
+  /**
+   * Whether the frame is frame with multiplier
+   * @param {string} frameType - Frame type
+   */
+  const isFrameWithMultiplier = (frameType) => {
+    return (
+      frameType === 'frameMacBrowser' ||
+      frameType === 'frameWindowsBrowser' ||
+      frameType === 'frameWindowsTaskBar' ||
+      frameType === 'frameVSCode'
+    )
+  }
+
+  // ------------------------
+
   /**
    * Handle frame variant change
    * @param {string} value - Selected frame variant
@@ -368,13 +440,13 @@ export function useFrameTool(imageStore, historyStore, editorStore, t) {
     imageStore.frame.width = fw
     imageStore.frame.height = fh
 
-    const isFrameWithHeader = isFrameWithHeader(frame.type)
+    const hasHeader = isFrameWithHeader(frame.type)
 
     const header = imageStore.frame.headerSize
     const footer = imageStore.frame.footerSize
     const svgWidth = w + fw * 2
     const svgHeight =
-      h + fh * 2 + (isFrameWithHeader ? header - fh : 0) + (footer > 0 ? footer - fh : 0)
+      h + fh * 2 + (hasHeader ? header - fh : 0) + (footer > 0 ? footer - fh : 0)
     const phoneCornerRadius = Math.floor(Math.min(svgWidth, svgHeight) * 0.06)
 
     // Values for phone frames
@@ -397,7 +469,7 @@ export function useFrameTool(imageStore, historyStore, editorStore, t) {
     el.setAttribute('width', svgWidth)
     el.setAttribute('height', svgHeight)
     el.style.left = `-${fw}px`
-    el.style.top = `-${isFrameWithHeader ? header : fh}px`
+    el.style.top = `-${hasHeader ? header : fh}px`
 
     /**
      * Draws a side button with rounded corners
@@ -512,7 +584,7 @@ export function useFrameTool(imageStore, historyStore, editorStore, t) {
       textColor = '#000000',
       timeInMinutes = 660,
     ) {
-      if (isFrameWithHeader) {
+      if (hasHeader) {
         const x = phoneFrameValues.left + phoneFrameValues.offset
         const y = phoneFrameValues.top + phoneFrameValues.offset
         const width = phoneFrameValues.right - phoneFrameValues.left - phoneFrameValues.offset * 2
@@ -1278,43 +1350,6 @@ export function useFrameTool(imageStore, historyStore, editorStore, t) {
     }
   }
 
-  const isFrameWithHeader = (frameType) => {
-    return (
-      frameType === 'frameMacBrowser' ||
-      frameType === 'frameWindowsBrowser' ||
-      frameType === 'frameVSCode' ||
-      ((frameType === 'framePhoneIOS' ||
-        frameType === 'framePhoneIOS2' ||
-        frameType === 'framePhoneAndroid' ||
-        frameType === 'framePhoneAndroid2' ||
-        frameType === 'framePhoneSimple') &&
-        imageStore.frame.phoneHeaderEnabled)
-    )
-  }
-
-  const isFrameWithFooter = (frameType) => {
-    return frameType === 'frameWindowsTaskBar'
-  }
-
-  const isPhoneFrame = (frameType) => {
-    return (
-      frameType === 'framePhoneIOS' ||
-      frameType === 'framePhoneIOS2' ||
-      frameType === 'framePhoneAndroid' ||
-      frameType === 'framePhoneAndroid2' ||
-      frameType === 'framePhoneSimple'
-    )
-  }
-
-  const isFrameWithEditableWidth = (frameType) => {
-    return (
-      frameType === 'frameMacBrowser' ||
-      frameType === 'frameWindowsBrowser' ||
-      frameType === 'frameWindowsTaskBar' ||
-      frameType === 'frameVSCode'
-    )
-  }
-
   return {
     frameColor,
     frameWidthRef,
@@ -1341,6 +1376,7 @@ export function useFrameTool(imageStore, historyStore, editorStore, t) {
     isFrameWithHeader,
     isFrameWithFooter,
     isPhoneFrame,
-    isFrameWithEditableWidth,
+    isFrameWithOutline,
+    isFrameWithMultiplier,
   }
 }

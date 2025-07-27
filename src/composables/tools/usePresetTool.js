@@ -176,7 +176,7 @@ export function usePresetTool(
     () => localImageFrame.value.type,
     (type) => {
       isPresetModified.value = true
-      if (!useFrameTool(imageStore, historyStore, editorStore, t).isFrameWithEditableWidth(type)) {
+      if (!useFrameTool(imageStore, historyStore, editorStore, t).isFrameWithOutline(type)) {
         localImageFrame.value.outlineEnabled = false
       }
     },
@@ -658,14 +658,9 @@ export function usePresetTool(
   watch(
     () => newPreset.value.frame.type,
     (type) => {
-      if (!useFrameTool(imageStore, historyStore, editorStore, t).isFrameWithEditableWidth(type)) {
+      if (!useFrameTool(imageStore, historyStore, editorStore, t).isFrameWithOutline(type)) {
         newPreset.value.frame.outlineEnabled = false
-      } else {
-        newPreset.value.frame.width = Math.floor(
-          editorConfig.browserFrameDefaultSize *
-            Math.max(imageStore.fileDimensions.width, imageStore.fileDimensions.height),
-        )
-      }
+      } 
     },
   )
 
@@ -812,10 +807,10 @@ export function usePresetTool(
    */
   const resetFrameWidth = () => {
     if (
-      useFrameTool(imageStore, historyStore, editorStore, t).isFrameWithEditableWidth(
+      useFrameTool(imageStore, historyStore, editorStore, t).isFrameWithOutline(
         newPreset.value.frame.type,
       ) ||
-      useFrameTool(imageStore, historyStore, editorStore, t).isFrameWithEditableWidth(
+      useFrameTool(imageStore, historyStore, editorStore, t).isFrameWithOutline(
         localImageFrame.value.type,
       )
     ) {

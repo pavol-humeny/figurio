@@ -85,14 +85,14 @@ export function useImageRenderer(
       const header = frame?.headerSize || 0
       const footer = frame?.footerSize || 0
 
-      const isFrameWithHeader = useFrameTool(
+      const hasHeader = useFrameTool(
         imageStore,
         historyStore,
         editorStore,
         t,
       ).isFrameWithHeader(frame.type)
 
-      const isFrameWithFooter = useFrameTool(
+      const hasFooter = useFrameTool(
         imageStore,
         historyStore,
         editorStore,
@@ -101,7 +101,7 @@ export function useImageRenderer(
 
       const frameWidth = width + fw * 2
       const frameHeight =
-        height + fh * 2 + (isFrameWithHeader ? header - fh : 0) + (isFrameWithFooter ? footer : 0)
+        height + fh * 2 + (hasHeader ? header - fh : 0) + (hasFooter ? footer : 0)
 
       frameSvgRef.value.setAttribute('width', frameWidth)
       frameSvgRef.value.setAttribute('height', frameHeight)
