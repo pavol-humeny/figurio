@@ -30,7 +30,7 @@ export function useRotateTool(imageStore, historyStore, t) {
         t('tools.confirmNeedRasterization.confirm'),
       )
       if (confirmed) {
-        await imageStore.rasterize()
+        await imageStore.rasterize(t)
       } else {
         return
       }
@@ -45,7 +45,7 @@ export function useRotateTool(imageStore, historyStore, t) {
     applyRotationRender(angle)
 
     // Push to undo history
-    historyStore.push(imageStore.getSnapshot())
+    historyStore.push(imageStore.getSnapshot(t))
   }
 
   /**
@@ -54,11 +54,11 @@ export function useRotateTool(imageStore, historyStore, t) {
    * @param {number} angle - Angle in degrees
    */
   const applyRotationRender = (angle) => {
-    if (!imageStore.getRenderedImage() || !angle) return
+    if (!imageStore.getRenderedImage({ t, renderCall: false }) || !angle) return
 
     const radians = (angle * Math.PI) / 180
 
-    const oldCanvas = imageStore.getRenderedImage()
+    const oldCanvas = imageStore.getRenderedImage({ t, renderCall: false })
     const oldWidth = oldCanvas.width
     const oldHeight = oldCanvas.height
 

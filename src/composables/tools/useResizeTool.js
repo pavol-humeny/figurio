@@ -141,7 +141,7 @@ export function useResizeTool(imageStore, historyStore, t) {
 
     applyResizeRender(fileDimensionWidth.value, fileDimensionHeight.value)
 
-    historyStore.push(imageStore.getSnapshot())
+    historyStore.push(imageStore.getSnapshot(t))
   }
 
   /**
@@ -160,7 +160,7 @@ export function useResizeTool(imageStore, historyStore, t) {
       return
     }
 
-    const oldImage = imageStore.getRenderedImage()
+    const oldImage = imageStore.getRenderedImage({ t, renderCall: false })
     if (!oldImage) return
 
     const canvas = document.createElement('canvas')

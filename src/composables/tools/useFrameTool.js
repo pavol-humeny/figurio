@@ -281,7 +281,7 @@ export function useFrameTool(imageStore, historyStore, editorStore, t) {
       imageStore.frame.width = width
       imageStore.frame.height = width
     }
-    historyStore.push(imageStore.getSnapshot())
+    historyStore.push(imageStore.getSnapshot(t))
   }
 
   /**
@@ -368,17 +368,7 @@ export function useFrameTool(imageStore, historyStore, editorStore, t) {
     imageStore.frame.width = fw
     imageStore.frame.height = fh
 
-    // UPDATE new frame type
-    const isFrameWithHeader =
-      frame.type === 'frameMacBrowser' ||
-      frame.type === 'frameWindowsBrowser' ||
-      frame.type === 'frameVSCode' ||
-      ((frame.type === 'framePhoneIOS' ||
-        frame.type === 'framePhoneIOS2' ||
-        frame.type === 'framePhoneAndroid' ||
-        frame.type === 'framePhoneAndroid2' ||
-        frame.type === 'framePhoneSimple') &&
-        imageStore.frame.phoneHeaderEnabled)
+    const isFrameWithHeader = isFrameWithHeader(frame.type)
 
     const header = imageStore.frame.headerSize
     const footer = imageStore.frame.footerSize
@@ -1238,17 +1228,10 @@ export function useFrameTool(imageStore, historyStore, editorStore, t) {
     }
 
     // Round corners for phone frames
-    // UPDATE new frame type
-    if (
-      imageStore.frame.type === 'framePhoneIOS' ||
-      imageStore.frame.type === 'framePhoneIOS2' ||
-      imageStore.frame.type === 'framePhoneAndroid' ||
-      imageStore.frame.type === 'framePhoneAndroid2' ||
-      imageStore.frame.type === 'framePhoneSimple'
-    ) {
+    if (isPhoneFrame(imageStore.frame.type)) {
       const radius = Math.floor(Math.min(svgWidth, svgHeight) * 0.06) - fh // 6% of the smaller dimension + a bit of padding (100% of frame height)
 
-      const renderedImage = imageStore.getRenderedImage()
+      const renderedImage = imageStore.getRenderedImage({ t, renderCall: false })
       if (!renderedImage) return
 
       const w = renderedImage.width
@@ -1295,6 +1278,43 @@ export function useFrameTool(imageStore, historyStore, editorStore, t) {
     }
   }
 
+  const isFrameWithHeader = (frameType) => {
+    return (
+      frameType === 'frameMacBrowser' ||
+      frameType === 'frameWindowsBrowser' ||
+      frameType === 'frameVSCode' ||
+      ((frameType === 'framePhoneIOS' ||
+        frameType === 'framePhoneIOS2' ||
+        frameType === 'framePhoneAndroid' ||
+        frameType === 'framePhoneAndroid2' ||
+        frameType === 'framePhoneSimple') &&
+        imageStore.frame.phoneHeaderEnabled)
+    )
+  }
+
+  const isFrameWithFooter = (frameType) => {
+    return frameType === 'frameWindowsTaskBar'
+  }
+
+  const isPhoneFrame = (frameType) => {
+    return (
+      frameType === 'framePhoneIOS' ||
+      frameType === 'framePhoneIOS2' ||
+      frameType === 'framePhoneAndroid' ||
+      frameType === 'framePhoneAndroid2' ||
+      frameType === 'framePhoneSimple'
+    )
+  }
+
+  const isFrameWithEditableWidth = (frameType) => {
+    return (
+      frameType === 'frameMacBrowser' ||
+      frameType === 'frameWindowsBrowser' ||
+      frameType === 'frameWindowsTaskBar' ||
+      frameType === 'frameVSCode'
+    )
+  }
+
   return {
     frameColor,
     frameWidthRef,
@@ -1318,5 +1338,9 @@ export function useFrameTool(imageStore, historyStore, editorStore, t) {
     headerFooterMultiplier,
     setHeaderFooterMultiplier,
     resetHeaderFooterMultiplier,
+    isFrameWithHeader,
+    isFrameWithFooter,
+    isPhoneFrame,
+    isFrameWithEditableWidth,
   }
 }

@@ -64,7 +64,7 @@ export function useSmartCropTool(imageStore, historyStore, editorStore, t) {
    * Watch for changes in the rendered image and reset the crop box
    */
   watch(
-    () => imageStore.getRenderedImage(),
+    () => imageStore.getRenderedImage({ t, renderCall: false }),
     () => {
       resetCropBox()
     },
@@ -182,7 +182,7 @@ export function useSmartCropTool(imageStore, historyStore, editorStore, t) {
         t('tools.confirmNeedRasterization.confirm'),
       )
       if (confirmed) {
-        await imageStore.rasterize()
+        await imageStore.rasterize(t)
       } else {
         return
       }
@@ -196,7 +196,7 @@ export function useSmartCropTool(imageStore, historyStore, editorStore, t) {
 
     applyAutoSmartCropRender()
 
-    historyStore.push(imageStore.getSnapshot())
+    historyStore.push(imageStore.getSnapshot(t))
   }
 
   /**
@@ -229,7 +229,7 @@ export function useSmartCropTool(imageStore, historyStore, editorStore, t) {
   const applyManualSmartCrop = async () => {
     await applyCrop(cropBox.value)
 
-    historyStore.push(imageStore.getSnapshot())
+    historyStore.push(imageStore.getSnapshot(t))
   }
 
   /**
@@ -238,11 +238,11 @@ export function useSmartCropTool(imageStore, historyStore, editorStore, t) {
    * @returns {Object} - The calculated crop box with indents and dimensions
    */
   const calculateIndents = (color) => {
-    if (!imageStore.getRenderedImage()) return
+    if (!imageStore.getRenderedImage({ t, renderCall: false })) return
 
     const canvas = document.createElement('canvas')
     const ctx = canvas.getContext('2d')
-    const img = imageStore.getRenderedImage()
+    const img = imageStore.getRenderedImage({ t, renderCall: false })
 
     const width = img.width
     const height = img.height
@@ -363,7 +363,7 @@ export function useSmartCropTool(imageStore, historyStore, editorStore, t) {
    * @param {Object} cropBox - The crop box containing indents and dimensions
    */
   const applyCrop = async (cropBox) => {
-    if (!imageStore.getRenderedImage()) return
+    if (!imageStore.getRenderedImage({ t, renderCall: false })) return
 
     if (
       cropBox.width === imageStore.fileDimensions.width &&
@@ -389,7 +389,7 @@ export function useSmartCropTool(imageStore, historyStore, editorStore, t) {
         t('tools.confirmNeedRasterization.confirm'),
       )
       if (confirmed) {
-        await imageStore.rasterize()
+        await imageStore.rasterize(t)
       } else {
         return
       }
@@ -404,7 +404,7 @@ export function useSmartCropTool(imageStore, historyStore, editorStore, t) {
     canvas.height = height
 
     ctx.drawImage(
-      imageStore.getRenderedImage(),
+      imageStore.getRenderedImage({ t, renderCall: false }),
       leftIndent, // x
       topIndent, // y
       width,

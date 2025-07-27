@@ -32,7 +32,7 @@ export function useGrayscaleTool(imageStore, historyStore, t) {
         t('tools.confirmNeedRasterization.confirm'),
       )
       if (confirmed) {
-        await imageStore.rasterize()
+        await imageStore.rasterize(t)
       } else {
         return
       }
@@ -45,7 +45,7 @@ export function useGrayscaleTool(imageStore, historyStore, t) {
 
     applyGrayscaleRender()
 
-    historyStore.push(imageStore.getSnapshot())
+    historyStore.push(imageStore.getSnapshot(t))
   }
 
   /**
@@ -53,11 +53,11 @@ export function useGrayscaleTool(imageStore, historyStore, t) {
    * using luminosity method on pixel data
    */
   const applyGrayscaleRender = () => {
-    if (!imageStore.getRenderedImage()) return
+    if (!imageStore.getRenderedImage({ t, renderCall: false })) return
 
     const canvas = document.createElement('canvas')
     const ctx = canvas.getContext('2d')
-    const img = imageStore.getRenderedImage()
+    const img = imageStore.getRenderedImage({ t, renderCall: false })
 
     canvas.width = img.width
     canvas.height = img.height

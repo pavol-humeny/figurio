@@ -8,6 +8,7 @@ import { useGrayscaleTool } from './useGrayscaleTool'
 import { useCropTool } from './useCropTool'
 import { editorConfig } from '@/config/editorConfig'
 import { useResizeTool } from './useResizeTool'
+import { useFrameTool } from './useFrameTool'
 
 export function usePresetTool(
   imageStore,
@@ -171,17 +172,11 @@ export function usePresetTool(
   /**
    * Watch localImageFrame.type if it is different than frameSolid reset width
    */
-  // UPDATE new frame type
   watch(
     () => localImageFrame.value.type,
     (type) => {
       isPresetModified.value = true
-      if (
-        type !== 'frameMacBrowser' &&
-        type !== 'frameWindowsBrowser' &&
-        type !== 'frameWindowsTaskBar' &&
-        type !== 'frameVSCode'
-      ) {
+      if (!useFrameTool(imageStore, historyStore, editorStore, t).isFrameWithEditableWidth(type)) {
         localImageFrame.value.outlineEnabled = false
       }
     },
@@ -396,7 +391,7 @@ export function usePresetTool(
         t('tools.confirmNeedRasterization.confirm'),
       )
       if (confirmed) {
-        await imageStore.rasterize()
+        await imageStore.rasterize(t)
       } else {
         return
       }
@@ -484,7 +479,7 @@ export function usePresetTool(
         if (operation.type === 'rotation') {
           useRotateTool(imageStore, historyStore, t).applyRotationRender(operation.angle)
         } else if (operation.type === 'flip') {
-          useFlipTool(imageStore, historyStore).applyFlipRender(operation.direction)
+          useFlipTool(imageStore, historyStore, t).applyFlipRender(operation.direction)
         } else if (operation.type === 'smartCrop') {
           useSmartCropTool(imageStore, historyStore, editorStore, t).applyAutoSmartCropRender(
             operation.color,
@@ -518,7 +513,7 @@ export function usePresetTool(
     // Save current operations to imageStore
     imageStore.imageOperations = JSON.parse(JSON.stringify(preset.imageOperations))
 
-    historyStore.push(imageStore.getSnapshot())
+    historyStore.push(imageStore.getSnapshot(t))
   }
 
   // --------------------------
@@ -663,20 +658,9 @@ export function usePresetTool(
   watch(
     () => newPreset.value.frame.type,
     (type) => {
-      // UPDATE new frame type
-      if (
-        type !== 'frameWindowsBrowser' &&
-        type !== 'frameMacBrowser' &&
-        type !== 'frameWindowsTaskBar'
-      ) {
+      if (!useFrameTool(imageStore, historyStore, editorStore, t).isFrameWithEditableWidth(type)) {
         newPreset.value.frame.outlineEnabled = false
-      }
-
-      if (
-        type === 'frameWindowsBrowser' ||
-        type === 'frameMacBrowser' ||
-        type === 'frameWindowsTaskBar'
-      ) {
+      } else {
         newPreset.value.frame.width = Math.floor(
           editorConfig.browserFrameDefaultSize *
             Math.max(imageStore.fileDimensions.width, imageStore.fileDimensions.height),
@@ -827,14 +811,13 @@ export function usePresetTool(
    * Reset the frame width based on the current preset and image dimensions
    */
   const resetFrameWidth = () => {
-    // UPDATE new frame type
     if (
-      newPreset.value.frame.type === 'frameWindowsBrowser' ||
-      newPreset.value.frame.type === 'frameMacBrowser' ||
-      newPreset.value.frame.type === 'frameWindowsTaskBar' ||
-      localImageFrame.value.type === 'frameWindowsBrowser' ||
-      localImageFrame.value.type === 'frameMacBrowser' ||
-      localImageFrame.value.type === 'frameWindowsTaskBar'
+      useFrameTool(imageStore, historyStore, editorStore, t).isFrameWithEditableWidth(
+        newPreset.value.frame.type,
+      ) ||
+      useFrameTool(imageStore, historyStore, editorStore, t).isFrameWithEditableWidth(
+        localImageFrame.value.type,
+      )
     ) {
       newPreset.value.frame.width = Math.floor(
         editorConfig.browserFrameDefaultSize *

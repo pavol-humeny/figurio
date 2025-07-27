@@ -13,6 +13,7 @@ import { useConfirmModal } from '@/composables/modals/useConfirmModal'
 import * as pdfjsLib from 'pdfjs-dist/legacy/build/pdf'
 import pdfjsWorker from 'pdfjs-dist/legacy/build/pdf.worker?url'
 import { useViewportStore } from './viewportStore'
+import { useEditorStore } from './editorStore'
 
 pdfjsLib.GlobalWorkerOptions.workerSrc = pdfjsWorker
 
@@ -170,16 +171,15 @@ export const useImageStore = defineStore('imageStore', {
      * @param {boolean} [renderCall=false] - Whether the call is part of a render operation
      * @returns {HTMLCanvasElement|null}
      */
-    getRenderedImage(renderCall = false) {
+    getRenderedImage({ t, renderCall }) {
+      console.log('----------------------- renderCall:', renderCall)
       if (renderCall) {
-        // UPDATE new frame type
+        const imageStore = this
+        const editorStore = useEditorStore()
+        const historyStore = useHistoryStore()
         if (
           this.frame.enabled &&
-          (this.frame.type === 'framePhoneIOS' ||
-            this.frame.type === 'framePhoneIOS2' ||
-            this.frame.type === 'framePhoneAndroid' ||
-            this.frame.type === 'framePhoneAndroid2' ||
-            this.frame.type === 'framePhoneSimple')
+          useFrameTool(imageStore, historyStore, editorStore, t).isPhoneFrame(this.frame.type)
         ) {
           return this.renderedImage
         } else {
@@ -450,7 +450,7 @@ export const useImageStore = defineStore('imageStore', {
 
       // Reset state for new file (update current tab state)
       if (file !== null) {
-        workspaceStore.updateCurrentTabState()
+        workspaceStore.updateCurrentTabState(t)
 
         // Reset history store for new file
         historyStore.reset()
@@ -502,7 +502,7 @@ export const useImageStore = defineStore('imageStore', {
             this.originalImage = canvas
             this.previewUrl = canvas.toDataURL() // Fallback for export
 
-            workspaceStore.addNewTab(this.fileName)
+            workspaceStore.addNewTab(this.fileName, t)
 
             uiStore.isLoading = false
 
@@ -562,7 +562,7 @@ export const useImageStore = defineStore('imageStore', {
             this.originalImage = canvas
             this.previewUrl = canvas.toDataURL()
 
-            workspaceStore.addNewTab(this.fileName)
+            workspaceStore.addNewTab(this.fileName, t)
 
             uiStore.isLoading = false
 
@@ -688,7 +688,7 @@ export const useImageStore = defineStore('imageStore', {
      * @returns {Promise<boolean>} - True if export was started
      */
     async exportFile(editorStore, historyStore, t) {
-      if (!this.getRenderedImage(true)) return false
+      if (!this.getRenderedImage({ t, renderCall: true })) return false
 
       console.log('Exporting file...')
 
@@ -706,7 +706,7 @@ export const useImageStore = defineStore('imageStore', {
       const image = new Image()
       image.onload = async () => {
         if (isPdf) {
-          await this.exportAsPdf(image, width, height)
+          await this.exportAsPdf(image, width, height, t)
         } else {
           await this.exportAsRaster(image, width, height, quality)
         }
@@ -720,7 +720,9 @@ export const useImageStore = defineStore('imageStore', {
         )
       }
 
-      image.src = isPdf ? this.getRenderedImage(true).toDataURL() : this.previewUrl
+      image.src = isPdf
+        ? this.getRenderedImage({ t, renderCall: true }).toDataURL()
+        : this.previewUrl
 
       return true
     },
@@ -770,24 +772,23 @@ export const useImageStore = defineStore('imageStore', {
      * @param {number} height - Height of the PDF page
      * @returns {Promise<void>}
      */
-    async exportAsPdf(image, width, height) {
+    async exportAsPdf(image, width, height, t) {
+      const imageStore = this
+      const historyStore = useHistoryStore()
+      const editorStore = useEditorStore()
+
       const offsetX = this.frame.enabled ? this.frame.width : 0
       let offsetY = this.frame.enabled ? this.frame.height : 0
 
       const finalWidth = width
       const finalHeight = height
 
-      // UPDATE new frame type
-      const isFrameWithHeader =
-        this.frame.type === 'frameMacBrowser' ||
-        this.frame.type === 'frameWindowsBrowser' ||
-        this.frame.type === 'frameVSCode' ||
-        ((this.frame.type === 'framePhoneIOS' ||
-          this.frame.type === 'framePhoneIOS2' ||
-          this.frame.type === 'framePhoneAndroid' ||
-          this.frame.type === 'framePhoneAndroid2' ||
-          this.frame.type === 'framePhoneSimple') &&
-          this.frame.phoneHeaderEnabled)
+      const isFrameWithHeader = useFrameTool(
+        imageStore,
+        historyStore,
+        editorStore,
+        t,
+      ).isFrameWithHeader(this.frame.type)
 
       // Correction for frame header
       if (isFrameWithHeader) {
@@ -864,26 +865,25 @@ export const useImageStore = defineStore('imageStore', {
      * @returns {Promise<void>}
      */
     async exportAsSvg(width, height, t) {
+      const imageStore = this
+      const historyStore = useHistoryStore()
+      const editorStore = useEditorStore()
+
       const offsetX = this.frame.enabled ? this.frame.width : 0
       let offsetY = this.frame.enabled ? this.frame.height : 0
 
-      // UPDATE new frame type
-      const isFrameWithHeader =
-        this.frame.type === 'frameMacBrowser' ||
-        this.frame.type === 'frameWindowsBrowser' ||
-        this.frame.type === 'frameVSCode' ||
-        ((this.frame.type === 'framePhoneIOS' ||
-          this.frame.type === 'framePhoneIOS2' ||
-          this.frame.type === 'framePhoneAndroid' ||
-          this.frame.type === 'framePhoneAndroid2' ||
-          this.frame.type === 'framePhoneSimple') &&
-          this.frame.phoneHeaderEnabled)
+      const isFrameWithHeader = useFrameTool(
+        imageStore,
+        historyStore,
+        editorStore,
+        t,
+      ).isFrameWithHeader(this.frame.type)
 
       if (isFrameWithHeader) {
         offsetY = this.frame.headerSize
       }
 
-      const renderedImage = this.getRenderedImage(true)
+      const renderedImage = this.getRenderedImage({ t, renderCall: true })
       if (!renderedImage) {
         console.warn('No image to export as SVG')
         return
@@ -941,7 +941,7 @@ export const useImageStore = defineStore('imageStore', {
      * @param {boolean} storeAsNew - Whether to store the result in `newRenderedImage` or update current `renderedImage`
      * @returns {Promise<void>}
      */
-    async rasterize(width = null, height = null, storeAsNew = false) {
+    async rasterize(t, width = null, height = null, storeAsNew = false) {
       if (this.svgObjects.length === 0) return
 
       console.log('Rasterizing image with SVG objects...')
@@ -975,7 +975,7 @@ export const useImageStore = defineStore('imageStore', {
       const ctx = canvas.getContext('2d')
 
       // Draw base image, scaled if necessary
-      ctx.drawImage(this.getRenderedImage(true), 0, 0, usedWidth, usedHeight)
+      ctx.drawImage(this.getRenderedImage({ t, renderCall: true }), 0, 0, usedWidth, usedHeight)
 
       // Draw SVG overlay on top of the image
       await new Promise((resolve, reject) => {
@@ -1015,6 +1015,8 @@ export const useImageStore = defineStore('imageStore', {
      * @returns {Promise<void>}
      */
     async generatePreview(editorStore, historyStore, t, renderAsRaster = true) {
+      const imageStore = this
+
       console.log('Generating preview with frame...')
       this.phoneButtonsCanNotBeDrawnToastFlag = true // Set flag to prevent toast showing
 
@@ -1025,19 +1027,19 @@ export const useImageStore = defineStore('imageStore', {
         ? this.newFileDimensions.height - 2 * this.frame.height
         : this.newFileDimensions.height
 
-      // UPDATE new frame type
-      const isFrameWithHeader =
-        this.frame.type === 'frameMacBrowser' ||
-        this.frame.type === 'frameWindowsBrowser' ||
-        this.frame.type === 'frameVSCode' ||
-        ((this.frame.type === 'framePhoneIOS' ||
-          this.frame.type === 'framePhoneIOS2' ||
-          this.frame.type === 'framePhoneAndroid' ||
-          this.frame.type === 'framePhoneAndroid2' ||
-          this.frame.type === 'framePhoneSimple') &&
-          this.frame.phoneHeaderEnabled)
+      const isFrameWithHeader = useFrameTool(
+        imageStore,
+        historyStore,
+        editorStore,
+        t,
+      ).isFrameWithHeader(this.frame.type)
 
-      const isFrameWithFooter = this.frame.type === 'frameWindowsTaskBar'
+      const isFrameWithFooter = useFrameTool(
+        imageStore,
+        historyStore,
+        editorStore,
+        t,
+      ).isFrameWithFooter(this.frame.type)
 
       if (isFrameWithHeader) {
         targetHeight = this.newFileDimensions.height - this.frame.headerSize - this.frame.height
@@ -1046,9 +1048,9 @@ export const useImageStore = defineStore('imageStore', {
       }
 
       // Rasterize base image + SVG objects at export size
-      await this.rasterize(targetWidth, targetHeight, true)
+      await this.rasterize(t, targetWidth, targetHeight, true)
 
-      const baseImage = this.newRenderedImage || this.getRenderedImage(true)
+      const baseImage = this.newRenderedImage || this.getRenderedImage({ t, renderCall: true })
       if (!baseImage) {
         console.warn('No base image available for preview generation')
         return
@@ -1156,13 +1158,13 @@ export const useImageStore = defineStore('imageStore', {
      *
      * @returns {object} Snapshot object
      */
-    getSnapshot() {
+    getSnapshot(t) {
       const snapshot = {
         fileName: this.fileName,
         fileDimensions: JSON.parse(JSON.stringify(this.fileDimensions)),
         // originalFileDimensions: JSON.parse(JSON.stringify(this.originalFileDimensions)),
         previewUrl: this.previewUrl,
-        renderedImage: this.getRenderedImage(true)?.toDataURL() || null,
+        renderedImage: this.getRenderedImage({ t, renderCall: true })?.toDataURL() || null,
         // originalImage: this.originalImage?.toDataURL() || null,
         svgObjects: JSON.parse(JSON.stringify(this.svgObjects)),
         imageOperations: JSON.parse(JSON.stringify(this.imageOperations)),
@@ -1211,7 +1213,7 @@ export const useImageStore = defineStore('imageStore', {
      *
      * @returns {object} A deep clone of the full image store state.
      */
-    getFullSnapshot() {
+    getFullSnapshot(t) {
       return {
         file: this.file,
         // fileType: this.fileType,
@@ -1229,7 +1231,7 @@ export const useImageStore = defineStore('imageStore', {
         originalImage: this.originalImage?.toDataURL() || null,
         originalFileDimensions: JSON.parse(JSON.stringify(this.originalFileDimensions)),
 
-        renderedImage: this.getRenderedImage(true)?.toDataURL() || null,
+        renderedImage: this.getRenderedImage({ t, renderCall: true })?.toDataURL() || null,
         tmpRenderedImage: this.tmpRenderedImage?.toDataURL() || null,
         newRenderedImage: this.newRenderedImage?.toDataURL() || null,
 

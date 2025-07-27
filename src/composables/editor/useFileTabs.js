@@ -43,7 +43,7 @@ export function useFileTabs(uiStore, t) {
       uiStore.isLoading = true
       await new Promise((resolve) => setTimeout(resolve, 1))
 
-      workspaceStore.updateCurrentTabState()
+      workspaceStore.updateCurrentTabState(t)
       workspaceStore.switchToTab(index)
 
       await new Promise((resolve) => setTimeout(resolve, 1))
@@ -67,7 +67,7 @@ export function useFileTabs(uiStore, t) {
       uiStore.isLoading = true
       await new Promise((resolve) => setTimeout(resolve, 1))
 
-      workspaceStore.updateCurrentTabState()
+      workspaceStore.updateCurrentTabState(t)
       workspaceStore.closeTab(index)
 
       await new Promise((resolve) => setTimeout(resolve, 1))
@@ -112,7 +112,7 @@ export function useFileTabs(uiStore, t) {
     uiStore.isLoading = true
     await new Promise((resolve) => setTimeout(resolve, 1))
 
-    workspaceStore.switchToNextTab()
+    workspaceStore.switchToNextTab(t)
 
     await new Promise((resolve) => setTimeout(resolve, 1))
     uiStore.isLoading = false
@@ -125,7 +125,7 @@ export function useFileTabs(uiStore, t) {
     uiStore.isLoading = true
     await new Promise((resolve) => setTimeout(resolve, 1))
 
-    workspaceStore.switchToPreviousTab()
+    workspaceStore.switchToPreviousTab(t)
 
     await new Promise((resolve) => setTimeout(resolve, 1))
     uiStore.isLoading = false

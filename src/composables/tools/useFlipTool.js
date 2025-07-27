@@ -5,7 +5,7 @@
  * @param {object} historyStore - Store for undo/redo history
  * @returns {object} Flip tool methods
  */
-export function useFlipTool(imageStore, historyStore) {
+export function useFlipTool(imageStore, historyStore, t) {
   /**
    * Add flip operation, apply transformation and push to history
    *
@@ -26,7 +26,7 @@ export function useFlipTool(imageStore, historyStore) {
 
     applyFlipRender(direction)
 
-    historyStore.push(imageStore.getSnapshot())
+    historyStore.push(imageStore.getSnapshot(t))
   }
 
   /**
@@ -35,10 +35,10 @@ export function useFlipTool(imageStore, historyStore) {
    * @param {'horizontal' | 'vertical'} direction - Flip direction
    */
   const applyFlipRender = (direction) => {
-    if (!imageStore.getRenderedImage()) return
+    if (!imageStore.getRenderedImage({ t, renderCall: false })) return
 
-    const width = imageStore.getRenderedImage().width
-    const height = imageStore.getRenderedImage().height
+    const width = imageStore.getRenderedImage({ t, renderCall: false }).width
+    const height = imageStore.getRenderedImage({ t, renderCall: false }).height
 
     // Flip raster
     const canvas = document.createElement('canvas')
@@ -56,7 +56,7 @@ export function useFlipTool(imageStore, historyStore) {
       ctx.scale(-1, 1)
     }
 
-    ctx.drawImage(imageStore.getRenderedImage(), 0, 0)
+    ctx.drawImage(imageStore.getRenderedImage({ t, renderCall: false }), 0, 0)
     ctx.restore()
 
     imageStore.setRenderedImage(canvas)

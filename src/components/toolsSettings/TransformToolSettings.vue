@@ -45,7 +45,7 @@ const {
 /**
  * Logic of the flip tool
  */
-const { applyFlip } = useFlipTool(useImageStore(), useHistoryStore())
+const { applyFlip } = useFlipTool(useImageStore(), useHistoryStore(), t)
 
 /**
  * Logic of the rotate tool

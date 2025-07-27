@@ -12,7 +12,7 @@ import { useThrottleFn } from '@vueuse/core'
  * @param {import('vue').Ref<HTMLElement>} contentRef - Ref to the .viewport-content element
  * @returns {Object}
  */
-export function useViewportWrapper(viewportStore, imageStore, editorStore, uiStore, contentRef) {
+export function useViewportWrapper(viewportStore, imageStore, editorStore, uiStore, contentRef, t) {
   const { clamp } = useMath()
 
   /**
@@ -585,7 +585,7 @@ export function useViewportWrapper(viewportStore, imageStore, editorStore, uiSto
    * Center the image when the rendered image changes
    */
   watch(
-    () => imageStore.getRenderedImage(),
+    () => imageStore.getRenderedImage({ t, renderCall: false }),
     () => {
       nextTick(() => {
         if (viewportStore.fitImageOnLoad && !uiStore.isLoading) {

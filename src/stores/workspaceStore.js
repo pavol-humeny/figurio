@@ -21,12 +21,12 @@ export const useWorkspaceStore = defineStore('workspaceStore', {
      * Add a new tab with current state snapshots.
      * @param {string} name - Name of the tab (default: 'Untitled')
      */
-    addNewTab(name = 'Untitled') {
+    addNewTab(name = 'Untitled', t) {
       const imageStore = useImageStore()
       const historyStore = useHistoryStore()
       const viewportStore = useViewportStore()
 
-      const imageSnapshot = structuredClone(imageStore.getFullSnapshot())
+      const imageSnapshot = structuredClone(imageStore.getFullSnapshot(t))
       const historySnapshot = structuredClone(historyStore.getFullSnapshot())
       const viewportSnapshot = structuredClone(viewportStore.getFullSnapshot())
 
@@ -97,14 +97,14 @@ export const useWorkspaceStore = defineStore('workspaceStore', {
     /**
      * Save current state to the active tab snapshot.
      */
-    updateCurrentTabState() {
+    updateCurrentTabState(t) {
       if (this.activeTabIndex === -1) return
 
       const imageStore = useImageStore()
       const historyStore = useHistoryStore()
       const viewportStore = useViewportStore()
 
-      this.tabs[this.activeTabIndex].imageSnapshot = imageStore.getFullSnapshot()
+      this.tabs[this.activeTabIndex].imageSnapshot = imageStore.getFullSnapshot(t)
       this.tabs[this.activeTabIndex].historySnapshot = historyStore.getFullSnapshot()
       this.tabs[this.activeTabIndex].viewportSnapshot = viewportStore.getFullSnapshot()
     },
@@ -121,24 +121,24 @@ export const useWorkspaceStore = defineStore('workspaceStore', {
     /**
      * Switch to the next tab (cyclic). Saves the current tab first.
      */
-    switchToNextTab() {
+    switchToNextTab(t) {
       if (this.tabs.length <= 1 || this.activeTabIndex === -1) return
 
       const nextIndex = (this.activeTabIndex + 1) % this.tabs.length
 
-      this.updateCurrentTabState()
+      this.updateCurrentTabState(t)
       this.switchToTab(nextIndex)
     },
 
     /**
      * Switch to the previous tab (cyclic). Saves the current tab first.
      */
-    switchToPreviousTab() {
+    switchToPreviousTab(t) {
       if (this.tabs.length <= 1 || this.activeTabIndex === -1) return
 
       const prevIndex = (this.activeTabIndex - 1 + this.tabs.length) % this.tabs.length
 
-      this.updateCurrentTabState()
+      this.updateCurrentTabState(t)
       this.switchToTab(prevIndex)
     },
   },

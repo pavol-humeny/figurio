@@ -559,7 +559,7 @@ export function useCropTool(imageStore, viewportStore, editorStore, historyStore
       )
       if (!confirmed) return
 
-      await imageStore.rasterize()
+      await imageStore.rasterize(t)
     }
 
     imageStore.addImageOperation({
@@ -569,7 +569,7 @@ export function useCropTool(imageStore, viewportStore, editorStore, historyStore
 
     applyCropRender(cropBox.value)
 
-    historyStore.push(imageStore.getSnapshot())
+    historyStore.push(imageStore.getSnapshot(t))
   }
 
   /**
@@ -577,7 +577,7 @@ export function useCropTool(imageStore, viewportStore, editorStore, historyStore
    * @param {Object} cropBox - Crop box dimensions
    */
   const applyCropRender = (cropBox) => {
-    if (!imageStore.getRenderedImage() || !cropBox) return
+    if (!imageStore.getRenderedImage({ t, renderCall: false }) || !cropBox) return
 
     const { x, y, width, height } = cropBox
 
@@ -620,7 +620,7 @@ export function useCropTool(imageStore, viewportStore, editorStore, historyStore
     canvas.height = height
 
     ctx.drawImage(
-      imageStore.getRenderedImage(),
+      imageStore.getRenderedImage({ t, renderCall: false }),
       x,
       y,
       width,

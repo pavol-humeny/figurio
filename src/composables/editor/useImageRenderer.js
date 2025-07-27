@@ -82,21 +82,22 @@ export function useImageRenderer(
       const fw = frameEnabled ? frame.width : 0
       const fh = frameEnabled ? frame.height : 0
 
-      // UPDATE new frame type
       const header = frame?.headerSize || 0
       const footer = frame?.footerSize || 0
-      const isFrameWithHeader =
-        frame.type === 'frameMacBrowser' ||
-        frame.type === 'frameWindowsBrowser' ||
-        frame.type === 'frameVSCode' ||
-        ((frame.type === 'framePhoneIOS' ||
-          frame.type === 'framePhoneIOS2' ||
-          frame.type === 'framePhoneAndroid' ||
-          frame.type === 'framePhoneAndroid2' ||
-          frame.type === 'framePhoneSimple') &&
-          imageStore.frame.phoneHeaderEnabled)
 
-      const isFrameWithFooter = frame.type === 'frameWindowsTaskBar'
+      const isFrameWithHeader = useFrameTool(
+        imageStore,
+        historyStore,
+        editorStore,
+        t,
+      ).isFrameWithHeader(frame.type)
+
+      const isFrameWithFooter = useFrameTool(
+        imageStore,
+        historyStore,
+        editorStore,
+        t,
+      ).isFrameWithFooter(frame.type)
 
       const frameWidth = width + fw * 2
       const frameHeight =
@@ -113,7 +114,7 @@ export function useImageRenderer(
    * Render base canvas from rasterized image
    */
   const renderCanvas = () => {
-    if (!canvasRef.value || !imageStore.getRenderedImage()) return
+    if (!canvasRef.value || !imageStore.getRenderedImage({ t, renderCall: false })) return
 
     console.log('Rendering canvas (image only)...')
 
@@ -127,11 +128,11 @@ export function useImageRenderer(
     canvasRef.value.style.height = `${height}px`
 
     ctx.clearRect(0, 0, width, height)
-    ctx.drawImage(imageStore.getRenderedImage(true), 0, 0)
+    ctx.drawImage(imageStore.getRenderedImage({ t, renderCall: true }), 0, 0)
 
     // Save initial state to history if empty
     if (historyStore.history.length === 0) {
-      historyStore.push(imageStore.getSnapshot())
+      historyStore.push(imageStore.getSnapshot(t))
     }
 
     imageStore.previewUrl = canvasRef.value.toDataURL()
@@ -205,7 +206,7 @@ export function useImageRenderer(
    * Watch for changes in image dimensions and re-render all layers
    */
   watch(
-    () => imageStore.getRenderedImage(),
+    () => imageStore.getRenderedImage({ t, renderCall: false }),
     (newImage) => {
       if (newImage) {
         console.log('#################### Image rendered changed, re-rendering all...')
@@ -232,7 +233,7 @@ export function useImageRenderer(
   // Initial rendering on mount
   onMounted(() => {
     nextTick(() => {
-      if (imageStore.getRenderedImage()) {
+      if (imageStore.getRenderedImage({ t, renderCall: false })) {
         renderAll()
       }
     })
