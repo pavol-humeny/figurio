@@ -549,21 +549,21 @@ const tabs = ['myPresets', 'createPreset']
               <ToggleButton v-model="newPreset.frame.enabled" :scale="0.6" :style="{ transform: 'translateX(16px)' }" />
             </div>
             <!-- Type -->
-            <div class="content-aligned two-items" :class="newPreset.frame.enabled ? '' : 'disabled'">
+            <div v-if="newPreset.frame.enabled" class="content-aligned two-items" :class="newPreset.frame.enabled ? '' : 'disabled'">
               <p>
                 {{ t('tools.preset.settings.createPreset.presetValues.frame.type') }}
               </p>
               <DropdownSelect v-model="newPreset.frame.type" :options="presetFrameOptions" />
             </div>
             <!-- Color -->
-            <div class="content-aligned two-items" :class="newPreset.frame.enabled ? '' : 'disabled'">
+            <div v-if="newPreset.frame.enabled" class="content-aligned two-items" :class="newPreset.frame.enabled ? '' : 'disabled'">
               <p>
                 {{ t('tools.preset.settings.createPreset.presetValues.frame.color') }}
               </p>
               <ColorPicker v-model="newPreset.frame.color" />
             </div>
             <!-- Width -->
-            <div v-if="newPreset.frame.type === 'frameSolid' || newPreset.frame.outlineEnabled"
+            <div v-if="(newPreset.frame.type === 'frameSolid' || newPreset.frame.outlineEnabled) && newPreset.frame.enabled"
               class="content-aligned two-items">
               <p :class="newPreset.frame.enabled ? '' : 'disabled'">
                 {{ t('tools.preset.settings.createPreset.presetValues.frame.width') }}
@@ -575,7 +575,7 @@ const tabs = ['myPresets', 'createPreset']
             <!-- Use outline -->
             <!-- UPDATE new frame type -->
             <div
-              v-if="newPreset.frame.type === 'frameWindowsBrowser' || newPreset.frame.type === 'frameMacBrowser' || newPreset.frame.type === 'frameWindowsTaskBar' || newPreset.frame.type === 'frameVSCode'"
+              v-if="(newPreset.frame.type === 'frameWindowsBrowser' || newPreset.frame.type === 'frameMacBrowser' || newPreset.frame.type === 'frameWindowsTaskBar' || newPreset.frame.type === 'frameVSCode') && newPreset.frame.enabled"
               :class="newPreset.frame.enabled ? '' : 'disabled'" class="content-aligned two-items">
               <p>
                 {{ t('tools.preset.settings.createPreset.presetValues.frame.useFrameOutline') }}
@@ -585,7 +585,7 @@ const tabs = ['myPresets', 'createPreset']
             </div>
             <!-- Phone header -->
             <!-- Enabled -->
-            <div v-if="newPreset.frame.type === 'framePhoneIOS' || newPreset.frame.type === 'framePhoneIOS2' || newPreset.frame.type === 'framePhoneAndroid' || newPreset.frame.type === 'framePhoneAndroid2' || newPreset.frame.type === 'framePhoneSimple'"
+            <div v-if="(newPreset.frame.type === 'framePhoneIOS' || newPreset.frame.type === 'framePhoneIOS2' || newPreset.frame.type === 'framePhoneAndroid' || newPreset.frame.type === 'framePhoneAndroid2' || newPreset.frame.type === 'framePhoneSimple') && newPreset.frame.enabled"
               class="content-aligned two-items"
               :class="newPreset.frame.enabled ? '' : 'disabled'">
               <p>
@@ -595,7 +595,7 @@ const tabs = ['myPresets', 'createPreset']
                 :style="{ transform: 'translateX(16px)' }" />
             </div>
             <!-- Background color -->
-            <div v-if="newPreset.frame.phoneHeaderEnabled && (newPreset.frame.type === 'framePhoneIOS' || newPreset.frame.type === 'framePhoneIOS2' || newPreset.frame.type === 'framePhoneAndroid' || newPreset.frame.type === 'framePhoneAndroid2' || newPreset.frame.type === 'framePhoneSimple')"
+            <div v-if="(newPreset.frame.phoneHeaderEnabled && (newPreset.frame.type === 'framePhoneIOS' || newPreset.frame.type === 'framePhoneIOS2' || newPreset.frame.type === 'framePhoneAndroid' || newPreset.frame.type === 'framePhoneAndroid2' || newPreset.frame.type === 'framePhoneSimple')) && newPreset.frame.enabled"
               class="content-aligned two-items"
               :class="newPreset.frame.enabled ? '' : 'disabled'">
               <p>
@@ -604,7 +604,7 @@ const tabs = ['myPresets', 'createPreset']
               <ColorPicker v-model="newPreset.frame.phoneHeaderBackgroundColor" />
             </div>
             <!-- Text Color -->
-            <div v-if="newPreset.frame.phoneHeaderEnabled && (newPreset.frame.type === 'framePhoneIOS' || newPreset.frame.type === 'framePhoneIOS2' || newPreset.frame.type === 'framePhoneAndroid' || newPreset.frame.type === 'framePhoneAndroid2' || newPreset.frame.type === 'framePhoneSimple')"
+            <div v-if="(newPreset.frame.phoneHeaderEnabled && (newPreset.frame.type === 'framePhoneIOS' || newPreset.frame.type === 'framePhoneIOS2' || newPreset.frame.type === 'framePhoneAndroid' || newPreset.frame.type === 'framePhoneAndroid2' || newPreset.frame.type === 'framePhoneSimple')) && newPreset.frame.enabled"
               class="content-aligned two-items"
               :class="newPreset.frame.enabled ? '' : 'disabled'">
               <p>
@@ -613,7 +613,7 @@ const tabs = ['myPresets', 'createPreset']
               <ColorPicker v-model="newPreset.frame.phoneHeaderTextColor" />
             </div>
             <!-- Time -->
-            <div v-if="newPreset.frame.phoneHeaderEnabled && (newPreset.frame.type === 'framePhoneIOS' || newPreset.frame.type === 'framePhoneIOS2' || newPreset.frame.type === 'framePhoneAndroid' || newPreset.frame.type === 'framePhoneAndroid2' || newPreset.frame.type === 'framePhoneSimple')"
+            <div v-if="(newPreset.frame.phoneHeaderEnabled && (newPreset.frame.type === 'framePhoneIOS' || newPreset.frame.type === 'framePhoneIOS2' || newPreset.frame.type === 'framePhoneAndroid' || newPreset.frame.type === 'framePhoneAndroid2' || newPreset.frame.type === 'framePhoneSimple')) && newPreset.frame.enabled"
               class="content-aligned two-items"
               :class="newPreset.frame.enabled ? '' : 'disabled'">
               <p>
@@ -623,7 +623,7 @@ const tabs = ['myPresets', 'createPreset']
             </div>
             <!-- Header and footer frames multiplier -->
             <!-- UPDATE new frame type -->
-            <div v-if="newPreset.frame.type === 'frameWindowsBrowser' || newPreset.frame.type === 'frameMacBrowser' || newPreset.frame.type === 'frameWindowsTaskBar' || newPreset.frame.type === 'frameVSCode'"
+            <div v-if="(newPreset.frame.type === 'frameWindowsBrowser' || newPreset.frame.type === 'frameMacBrowser' || newPreset.frame.type === 'frameWindowsTaskBar' || newPreset.frame.type === 'frameVSCode') && newPreset.frame.enabled"
               class="content-aligned two-items" :class="newPreset.frame.enabled ? '' : 'disabled'">
               <p>
                 {{ t('tools.preset.settings.createPreset.presetValues.frame.headerFooterMultiplier') }}
