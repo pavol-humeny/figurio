@@ -785,7 +785,8 @@ export const useImageStore = defineStore('imageStore', {
         ((this.frame.type === 'framePhoneIOS' ||
           this.frame.type === 'framePhoneIOS2' ||
           this.frame.type === 'framePhoneAndroid' ||
-          this.frame.type === 'framePhoneAndroid2') &&
+          this.frame.type === 'framePhoneAndroid2' ||
+          this.frame.type === 'framePhoneSimple') &&
           this.frame.phoneHeaderEnabled)
 
       // Correction for frame header
@@ -874,7 +875,8 @@ export const useImageStore = defineStore('imageStore', {
         ((this.frame.type === 'framePhoneIOS' ||
           this.frame.type === 'framePhoneIOS2' ||
           this.frame.type === 'framePhoneAndroid' ||
-          this.frame.type === 'framePhoneAndroid2') &&
+          this.frame.type === 'framePhoneAndroid2' ||
+          this.frame.type === 'framePhoneSimple') &&
           this.frame.phoneHeaderEnabled)
 
       if (isFrameWithHeader) {
@@ -1031,7 +1033,8 @@ export const useImageStore = defineStore('imageStore', {
         ((this.frame.type === 'framePhoneIOS' ||
           this.frame.type === 'framePhoneIOS2' ||
           this.frame.type === 'framePhoneAndroid' ||
-          this.frame.type === 'framePhoneAndroid2') &&
+          this.frame.type === 'framePhoneAndroid2' ||
+          this.frame.type === 'framePhoneSimple') &&
           this.frame.phoneHeaderEnabled)
 
       const isFrameWithFooter = this.frame.type === 'frameWindowsTaskBar'

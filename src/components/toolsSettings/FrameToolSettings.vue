@@ -104,8 +104,9 @@ const {
         </div>
 
         <!-- Phone header -->
+        <!-- UPDATE new frame type -->
         <div
-          v-if="selectedFrameVariant === 'framePhoneIOS' || selectedFrameVariant === 'framePhoneIOS2' || selectedFrameVariant === 'framePhoneAndroid' || selectedFrameVariant === 'framePhoneAndroid2'"
+          v-if="selectedFrameVariant === 'framePhoneIOS' || selectedFrameVariant === 'framePhoneIOS2' || selectedFrameVariant === 'framePhoneAndroid' || selectedFrameVariant === 'framePhoneAndroid2' || selectedFrameVariant === 'framePhoneSimple'"
           class="settings-content-wrapper">
           <div class="content-wrapper">
             <div class="content-aligned two-items">

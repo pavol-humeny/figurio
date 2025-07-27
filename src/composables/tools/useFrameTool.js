@@ -345,14 +345,10 @@ export function useFrameTool(imageStore, historyStore, editorStore, t) {
       fw = Math.max(Math.floor(editorConfig.phoneFrameDefaultSize * Math.max(w, h)), 2) * 1.5
       fh = fw / 1.5
 
-      if (frame.type !== 'framePhoneSimple') {
-        if (w >= h) {
-          imageStore.frame.headerSize = Math.max(Math.floor(0.05 * w), 5)
-        } else {
-          imageStore.frame.headerSize = Math.max(Math.floor(0.05 * h), 5)
-        }
+      if (w >= h) {
+        imageStore.frame.headerSize = Math.max(Math.floor(0.05 * w), 5)
       } else {
-        imageStore.frame.headerSize = 0
+        imageStore.frame.headerSize = Math.max(Math.floor(0.05 * h), 5)
       }
 
       imageStore.frame.footerSize = 0
@@ -380,7 +376,8 @@ export function useFrameTool(imageStore, historyStore, editorStore, t) {
       ((frame.type === 'framePhoneIOS' ||
         frame.type === 'framePhoneIOS2' ||
         frame.type === 'framePhoneAndroid' ||
-        frame.type === 'framePhoneAndroid2') &&
+        frame.type === 'framePhoneAndroid2' ||
+        frame.type === 'framePhoneSimple') &&
         imageStore.frame.phoneHeaderEnabled)
 
     const header = imageStore.frame.headerSize
@@ -1142,6 +1139,13 @@ export function useFrameTool(imageStore, historyStore, editorStore, t) {
       outline.setAttribute('stroke', color)
       outline.setAttribute('stroke-width', phoneFrameValues.strokeWidth)
 
+      // Draw phone header if enabled
+      drawPhoneHeader(
+        phoneHeaderBackgroundColor.value,
+        phoneHeaderTextColor.value,
+        phoneHeaderTimeInMinutes.value,
+      )
+
       // Outline
       const d = [
         `M ${phoneFrameValues.left + phoneFrameValues.radius} ${phoneFrameValues.top}`,
@@ -1258,7 +1262,7 @@ export function useFrameTool(imageStore, historyStore, editorStore, t) {
       const path = new Path2D()
 
       // Create rounded rectangle path
-      if (imageStore.frame.phoneHeaderEnabled && imageStore.frame.type !== 'framePhoneSimple') {
+      if (imageStore.frame.phoneHeaderEnabled) {
         path.moveTo(0, 0) // top-left corner
         path.lineTo(w, 0) // top-right corner
         path.lineTo(w, h - radius) // right side down to curve start

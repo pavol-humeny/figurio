@@ -241,7 +241,7 @@ const tabs = ['myPresets', 'createPreset']
             </div>
             <!-- Phone header -->
             <!-- Enabled -->
-            <div v-if="localImageFrame.enabled && (localImageFrame.type === 'framePhoneIOS' || localImageFrame.type === 'framePhoneIOS2' || localImageFrame.type === 'framePhoneAndroid' || localImageFrame.type === 'framePhoneAndroid2')"
+            <div v-if="localImageFrame.enabled && (localImageFrame.type === 'framePhoneIOS' || localImageFrame.type === 'framePhoneIOS2' || localImageFrame.type === 'framePhoneAndroid' || localImageFrame.type === 'framePhoneAndroid2' || localImageFrame.type === 'framePhoneSimple')"
               class="content-aligned two-items" :class="!isModifyingPreset ? 'disabled' : ''">
               <p>
                 {{ t('tools.preset.settings.myPresets.presetValues.frame.phoneHeaderEnabled') }}
@@ -250,7 +250,7 @@ const tabs = ['myPresets', 'createPreset']
                 :style="{ transform: 'translateX(16px)' }" />
             </div>
             <!-- Background color -->
-            <div v-if="localImageFrame.enabled && localImageFrame.phoneHeaderEnabled && (localImageFrame.type === 'framePhoneIOS' || localImageFrame.type === 'framePhoneIOS2' || localImageFrame.type === 'framePhoneAndroid' || localImageFrame.type === 'framePhoneAndroid2')"
+            <div v-if="localImageFrame.enabled && localImageFrame.phoneHeaderEnabled && (localImageFrame.type === 'framePhoneIOS' || localImageFrame.type === 'framePhoneIOS2' || localImageFrame.type === 'framePhoneAndroid' || localImageFrame.type === 'framePhoneAndroid2' || localImageFrame.type === 'framePhoneSimple')"
               class="content-aligned two-items" :class="!isModifyingPreset ? 'disabled' : ''">
               <p>
                 {{ t('tools.preset.settings.myPresets.presetValues.frame.phoneHeaderBackgroundColor') }}
@@ -258,7 +258,7 @@ const tabs = ['myPresets', 'createPreset']
               <ColorPicker v-model="localImageFrame.phoneHeaderBackgroundColor" />
             </div>
             <!-- Text color -->
-            <div v-if="localImageFrame.enabled && localImageFrame.phoneHeaderEnabled && (localImageFrame.type === 'framePhoneIOS' || localImageFrame.type === 'framePhoneIOS2' || localImageFrame.type === 'framePhoneAndroid' || localImageFrame.type === 'framePhoneAndroid2')"
+            <div v-if="localImageFrame.enabled && localImageFrame.phoneHeaderEnabled && (localImageFrame.type === 'framePhoneIOS' || localImageFrame.type === 'framePhoneIOS2' || localImageFrame.type === 'framePhoneAndroid' || localImageFrame.type === 'framePhoneAndroid2' || localImageFrame.type === 'framePhoneSimple')"
               class="content-aligned two-items" :class="!isModifyingPreset ? 'disabled' : ''">
               <p>
                 {{ t('tools.preset.settings.myPresets.presetValues.frame.phoneHeaderTextColor') }}
@@ -266,7 +266,7 @@ const tabs = ['myPresets', 'createPreset']
               <ColorPicker v-model="localImageFrame.phoneHeaderTextColor" />
             </div>
             <!-- Time -->
-            <div v-if="localImageFrame.enabled && localImageFrame.phoneHeaderEnabled && (localImageFrame.type === 'framePhoneIOS' || localImageFrame.type === 'framePhoneIOS2' || localImageFrame.type === 'framePhoneAndroid' || localImageFrame.type === 'framePhoneAndroid2')"
+            <div v-if="localImageFrame.enabled && localImageFrame.phoneHeaderEnabled && (localImageFrame.type === 'framePhoneIOS' || localImageFrame.type === 'framePhoneIOS2' || localImageFrame.type === 'framePhoneAndroid' || localImageFrame.type === 'framePhoneAndroid2' || localImageFrame.type === 'framePhoneSimple')"
               class="content-aligned two-items" :class="!isModifyingPreset ? 'disabled' : ''">
               <p>
                 {{ t('tools.preset.settings.myPresets.presetValues.frame.phoneHeaderTime') }}
@@ -585,7 +585,7 @@ const tabs = ['myPresets', 'createPreset']
             </div>
             <!-- Phone header -->
             <!-- Enabled -->
-            <div v-if="newPreset.frame.type === 'framePhoneIOS' || newPreset.frame.type === 'framePhoneIOS2' || newPreset.frame.type === 'framePhoneAndroid' || newPreset.frame.type === 'framePhoneAndroid2'"
+            <div v-if="newPreset.frame.type === 'framePhoneIOS' || newPreset.frame.type === 'framePhoneIOS2' || newPreset.frame.type === 'framePhoneAndroid' || newPreset.frame.type === 'framePhoneAndroid2' || newPreset.frame.type === 'framePhoneSimple'"
               class="content-aligned two-items"
               :class="newPreset.frame.enabled ? '' : 'disabled'">
               <p>
@@ -595,7 +595,7 @@ const tabs = ['myPresets', 'createPreset']
                 :style="{ transform: 'translateX(16px)' }" />
             </div>
             <!-- Background color -->
-            <div v-if="newPreset.frame.type === 'framePhoneIOS' || newPreset.frame.type === 'framePhoneIOS2' || newPreset.frame.type === 'framePhoneAndroid' || newPreset.frame.type === 'framePhoneAndroid2'"
+            <div v-if="newPreset.frame.phoneHeaderEnabled && (newPreset.frame.type === 'framePhoneIOS' || newPreset.frame.type === 'framePhoneIOS2' || newPreset.frame.type === 'framePhoneAndroid' || newPreset.frame.type === 'framePhoneAndroid2' || newPreset.frame.type === 'framePhoneSimple')"
               class="content-aligned two-items"
               :class="newPreset.frame.enabled ? '' : 'disabled'">
               <p>
@@ -604,7 +604,7 @@ const tabs = ['myPresets', 'createPreset']
               <ColorPicker v-model="newPreset.frame.phoneHeaderBackgroundColor" />
             </div>
             <!-- Text Color -->
-            <div v-if="newPreset.frame.type === 'framePhoneIOS' || newPreset.frame.type === 'framePhoneIOS2' || newPreset.frame.type === 'framePhoneAndroid' || newPreset.frame.type === 'framePhoneAndroid2'"
+            <div v-if="newPreset.frame.phoneHeaderEnabled && (newPreset.frame.type === 'framePhoneIOS' || newPreset.frame.type === 'framePhoneIOS2' || newPreset.frame.type === 'framePhoneAndroid' || newPreset.frame.type === 'framePhoneAndroid2' || newPreset.frame.type === 'framePhoneSimple')"
               class="content-aligned two-items"
               :class="newPreset.frame.enabled ? '' : 'disabled'">
               <p>
@@ -613,7 +613,7 @@ const tabs = ['myPresets', 'createPreset']
               <ColorPicker v-model="newPreset.frame.phoneHeaderTextColor" />
             </div>
             <!-- Time -->
-            <div v-if="newPreset.frame.type === 'framePhoneIOS' || newPreset.frame.type === 'framePhoneIOS2' || newPreset.frame.type === 'framePhoneAndroid' || newPreset.frame.type === 'framePhoneAndroid2'"
+            <div v-if="newPreset.frame.phoneHeaderEnabled && (newPreset.frame.type === 'framePhoneIOS' || newPreset.frame.type === 'framePhoneIOS2' || newPreset.frame.type === 'framePhoneAndroid' || newPreset.frame.type === 'framePhoneAndroid2' || newPreset.frame.type === 'framePhoneSimple')"
               class="content-aligned two-items"
               :class="newPreset.frame.enabled ? '' : 'disabled'">
               <p>

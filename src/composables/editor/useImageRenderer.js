@@ -92,7 +92,8 @@ export function useImageRenderer(
         ((frame.type === 'framePhoneIOS' ||
           frame.type === 'framePhoneIOS2' ||
           frame.type === 'framePhoneAndroid' ||
-          frame.type === 'framePhoneAndroid2') &&
+          frame.type === 'framePhoneAndroid2' ||
+          frame.type === 'framePhoneSimple') &&
           imageStore.frame.phoneHeaderEnabled)
 
       const isFrameWithFooter = frame.type === 'frameWindowsTaskBar'
