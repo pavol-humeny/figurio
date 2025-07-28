@@ -11,10 +11,10 @@ export function useMath() {
   /**
    * Rounds a number to a specified number of decimal places
    * @param {number} value - The number to round
-   * @param {number} positions - The number of decimal places to round to
+   * @param {number} positions - The number of decimal places to round to (explicit 0)
    * @returns {number} - The rounded number
    */
-  const round = (value, positions) => {
+  const round = (value, positions = 0) => {
     return Number(value.toFixed(positions))
   }
 

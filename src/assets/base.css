@@ -41,6 +41,9 @@
   --crop-c-dark: rgba(49, 130, 197, 0.4);
 
   --editor-highlight-c: #1B70B6;
+  --editor-highlight-align-c: #b61b94;
+
+
 }
 
 :root {

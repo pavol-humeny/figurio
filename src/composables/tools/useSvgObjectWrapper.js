@@ -19,6 +19,11 @@ export function useSvgObjectWrapper(
   const { clamp, pythagorean } = useMath()
 
   /**
+   * Size of the resizer handles
+   */
+  const resizerSize = 5
+
+  /**
    * Reactive reference to the SVG object
    */
   const object = computed(() => {
@@ -41,11 +46,22 @@ export function useSvgObjectWrapper(
   )
 
   /**
+   * Reactive variable to track if the SVG object is highlighted
+   */
+  const isHightLighted = ref(false)
+
+  /**
    * Reactive variables for dragging the SVG object
    */
   const isDragging = ref(false)
   const startX = ref(0)
   const startY = ref(0)
+
+  /**
+   * Reactive variables to track remaining dx and dy for smooth dragging
+   */
+  const remainingDx = ref(0)
+  const remainingDy = ref(0)
 
   /**
    * Reference to the text element for text objects
@@ -93,6 +109,9 @@ export function useSvgObjectWrapper(
     } else {
       ratio.value = 1
     }
+
+    remainingDx.value = 0
+    remainingDy.value = 0
   }
 
   const onMouseDownResizer = (event, index) => {
@@ -104,15 +123,39 @@ export function useSvgObjectWrapper(
   }
 
   /**
+   * Mouse down handler for dragging the SVG object
+   * @param {MouseEvent} event - Mouse event
+   */
+  const onMouseDownDrag = (event) => {
+    if (!areSvgObjectOperationsEnabled.value) return
+
+    imageStore.selectedSvgObjectId = object.value.id
+    isDragging.value = true
+    startX.value = event.clientX
+    startY.value = event.clientY
+    event.stopPropagation()
+  }
+
+  /**
    * Mouse move handler for dragging the SVG object
    * @param {MouseEvent} event - Mouse event
    */
   const onMouseMove = (event) => {
-    if (!areSvgObjectOperationsEnabled.value) return
-    if (!isSelected.value) return
+    const isActive = isDragging.value || activeResizerIndex.value !== null
+    if (!isActive) return
 
-    let dx = (event.clientX - startX.value) / viewportStore.realZoomLevel
-    let dy = (event.clientY - startY.value) / viewportStore.realZoomLevel
+    let rawDx = (event.clientX - startX.value) / viewportStore.realZoomLevel + remainingDx.value
+    let rawDy = (event.clientY - startY.value) / viewportStore.realZoomLevel + remainingDy.value
+
+    // Zaokrúhlený posun v pixeloch (celé čísla)
+    let dx = Math.trunc(rawDx)
+    let dy = Math.trunc(rawDy)
+
+    // Zvyšok si odlož na ďalší posun
+    remainingDx.value = rawDx - dx
+    remainingDy.value = rawDy - dy
+
+    // Posledná pozícia kurzora
     startX.value = event.clientX
     startY.value = event.clientY
 
@@ -217,6 +260,13 @@ export function useSvgObjectWrapper(
             }
           }
         }
+
+        // Highlight the object if it is a square
+        if (attrs.width === attrs.height) {
+          isHightLighted.value = true
+        } else {
+          isHightLighted.value = false
+        }
       }
 
       // ELLIPSE
@@ -314,6 +364,13 @@ export function useSvgObjectWrapper(
             }
           }
         }
+
+        // Highlight the object if it is a circle
+        if (attrs.rx === attrs.ry) {
+          isHightLighted.value = true
+        } else {
+          isHightLighted.value = false
+        }
       }
 
       // LINE
@@ -338,6 +395,13 @@ export function useSvgObjectWrapper(
             attrs.x2 = newX2
             attrs.y2 = newY2
           }
+        }
+
+        // Highlight the object if it is a horizontal or vertical line
+        if ((x1 === x2 || y1 === y2) && pythagorean(x1 - x2, y1 - y2) > minLength) {
+          isHightLighted.value = true
+        } else {
+          isHightLighted.value = false
         }
       }
 
@@ -379,11 +443,6 @@ export function useSvgObjectWrapper(
         )
       }
     }
-    // Circle
-    // else if ('cx' in attrs && 'cy' in attrs) {
-    //   attrs.cx = clamp(attrs.cx + dx, 0, imageStore.fileDimensions.width)
-    //   attrs.cy = clamp(attrs.cy + dy, 0, imageStore.fileDimensions.height)
-    // }
     // Ellipse
     else if ('cx' in attrs && 'cy' in attrs && 'rx' in attrs && 'ry' in attrs) {
       attrs.cx = clamp(attrs.cx + dx, 0, imageStore.fileDimensions.width)
@@ -391,10 +450,35 @@ export function useSvgObjectWrapper(
     }
     // Line
     else if ('x1' in attrs && 'y1' in attrs && 'x2' in attrs && 'y2' in attrs) {
-      attrs.x1 += dx
-      attrs.y1 += dy
-      attrs.x2 += dx
-      attrs.y2 += dy
+      const maxX = imageStore.fileDimensions.width
+      const maxY = imageStore.fileDimensions.height
+
+      let newX1 = attrs.x1 + dx
+      let newY1 = attrs.y1 + dy
+      let newX2 = attrs.x2 + dx
+      let newY2 = attrs.y2 + dy
+
+      // Uprav každú súradnicu individuálne, aby nešla mimo
+      const clampedX1 = clamp(newX1, 0, maxX)
+      const clampedY1 = clamp(newY1, 0, maxY)
+      const clampedX2 = clamp(newX2, 0, maxX)
+      const clampedY2 = clamp(newY2, 0, maxY)
+
+      // Ak sa aspoň jedna súradnica zmenila kvôli clamping, zmeň posun, inak nastav priamo
+      const adjustedDx1 = clampedX1 - attrs.x1
+      const adjustedDy1 = clampedY1 - attrs.y1
+      const adjustedDx2 = clampedX2 - attrs.x2
+      const adjustedDy2 = clampedY2 - attrs.y2
+
+      // Použi minimálny spoločný posun
+      const finalDx = Math.abs(adjustedDx1) < Math.abs(adjustedDx2) ? adjustedDx1 : adjustedDx2
+      const finalDy = Math.abs(adjustedDy1) < Math.abs(adjustedDy2) ? adjustedDy1 : adjustedDy2
+
+      // Posuň obidva body o rovnaký posun (aby čiara ostala konzistentná)
+      attrs.x1 += finalDx
+      attrs.y1 += finalDy
+      attrs.x2 += finalDx
+      attrs.y2 += finalDy
     }
 
     const i = imageStore.svgObjects.findIndex((o) => o.id === object.value.id)
@@ -402,32 +486,19 @@ export function useSvgObjectWrapper(
   }
 
   /**
-   * Mouse down handler for dragging the SVG object
-   * @param {MouseEvent} event - Mouse event
-   */
-  const onMouseDownDrag = (event) => {
-    if (!areSvgObjectOperationsEnabled.value) return
-
-    if (isSelected.value) {
-      isDragging.value = true
-      startX.value = event.clientX
-      startY.value = event.clientY
-      event.stopPropagation()
-    }
-  }
-
-  /**
    * Mouse up handler for stopping the drag operation
-   * @param {MouseEvent} event - Mouse event
    */
   const onMouseUp = () => {
-    if (!areSvgObjectOperationsEnabled.value) return
+    const isActive = isDragging.value || activeResizerIndex.value !== null
+    if (!isActive) return
 
-    if (isDragging.value || activeResizerIndex.value !== null) {
-      isDragging.value = false
-      activeResizerIndex.value = null
-      historyStore.push(imageStore.getSnapshot(t))
-    }
+    isDragging.value = false
+    activeResizerIndex.value = null
+    historyStore.push(imageStore.getSnapshot(t))
+    isHightLighted.value = false
+
+    remainingDx.value = 0
+    remainingDy.value = 0
   }
 
   /**
@@ -530,15 +601,6 @@ export function useSvgObjectWrapper(
   })
 
   /**
-   * Get the size of the resizers for the SVG object
-   * @returns {number} Size of the resizers
-   */
-  const resizerSize = computed(() => {
-    const base = imageStore.fileDimensions?.width || 500
-    return Math.max(1, base / 100) / viewportStore.realZoomLevel
-  })
-
-  /**
    * Watch for changes in the text element and update the bounding box accordingly
    */
   watchEffect(() => {
@@ -582,5 +644,6 @@ export function useSvgObjectWrapper(
     resizerSize,
     areSvgObjectOperationsEnabled,
     object,
+    isHightLighted,
   }
 }
