@@ -175,4 +175,23 @@ export const keyboardShortcuts = [
     action: 'closeTutorial',
     description: 'Close (pause) tutorial',
   },
+
+  // Tools control shortcuts
+  // Svg object operations
+  {
+    keys: ['delete'],
+    action: 'deleteSelectedSvgObject',
+    description: 'Delete selected SVG object',
+  },
+  {
+    keys: ['shift', 'arrowup'],
+    action: 'moveSelectedSvgObjectForward',
+    description: 'Move selected SVG object forward',
+  },
+  {
+    keys: ['shift', 'arrowdown'],
+    action: 'moveSelectedSvgObjectBackward',
+    description: 'Move selected SVG object backward',
+  },
+
 ]

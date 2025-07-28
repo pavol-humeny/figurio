@@ -47,7 +47,9 @@ const { startEditing } = useFileNameDisplay(useImageStore(), t)
 const { switchToNextTab, switchToPreviousTab, } = useFileTabs(useUiStore(), t)
 const { prevStep, nextStep, finishTutorial, closeTutorial, startTutorial } = useInteractiveTutorial(useUiStore(), useImageStore(), useRouter(), t)
 
-useKeyboardShortcuts({ undo, redo, zoomIn, zoomOut, resetZoom, closeFile, uploadFile, toggleTool, openExportToolSettings, openHelpModal, openSettingsPanel, openPrivacyAndDataModal, startEditing, switchToNextTab, switchToPreviousTab, prevStep, nextStep, finishTutorial, closeTutorial }, useUiStore(), useImageStore());
+const { deleteSelectedSvgObject, moveSelectedSvgObjectForward, moveSelectedSvgObjectBackward } = useImageStore()
+
+useKeyboardShortcuts({ undo, redo, zoomIn, zoomOut, resetZoom, closeFile, uploadFile, toggleTool, openExportToolSettings, openHelpModal, openSettingsPanel, openPrivacyAndDataModal, startEditing, switchToNextTab, switchToPreviousTab, prevStep, nextStep, finishTutorial, closeTutorial, deleteSelectedSvgObject, moveSelectedSvgObjectForward, moveSelectedSvgObjectBackward }, useUiStore(), useImageStore());
 // === ===
 
 const imageStore = useImageStore()
@@ -55,7 +57,7 @@ const imageStore = useImageStore()
 // Start tutorial if opening the editor for the first time
 onMounted(() => {
   const uiStore = useUiStore()
-  if (uiStore.tutorialStep === -1){
+  if (uiStore.tutorialStep === -1) {
     startTutorial()
   }
 })
@@ -99,7 +101,7 @@ onMounted(() => {
   padding: 20px 25px;
 }
 
-.file-info{
+.file-info {
   height: 30px;
   width: 100%;
   border-top: var(--border-ui);

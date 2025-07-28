@@ -12,10 +12,14 @@ import { useHistoryStore } from '@/stores/historyStore'
 import { useI18n } from 'vue-i18n'
 import { useUiStore } from '@/stores/uiStore'
 import LoadingSpinner from '../common/LoadingSpinner.vue'
+import SvgObjectWrapper from '../tools/SvgObjectWrapper.vue'
 
 const { t } = useI18n()
 const uiStore = useUiStore()
 const editorStore = useEditorStore()
+const imageStore = useImageStore()
+
+console.log('---------------svgObjects:', imageStore.svgObjects)
 
 /**
  * Reference to the viewport content element
@@ -94,9 +98,15 @@ watch(
         transform: `translate(${panX}px, ${panY}px) scale(${zoomLevel})`,
       }">
         <canvas ref="canvasRef" class="image-canvas"></canvas>
-        <svg ref="svgRef" class="image-svg"></svg>
+        <!-- <svg ref="svgRef" class="image-svg"></svg> -->
 
         <svg ref="frameSvgRef" class="frame-svg"></svg>
+
+        <svg ref="svgRef" class="image-svg" xmlns="http://www.w3.org/2000/svg" :width="imageStore.fileDimensions.width"
+          :height="imageStore.fileDimensions.height">
+          <SvgObjectWrapper v-for="object in imageStore.svgObjects" :key="object.id" :object="object" />
+        </svg>
+
 
         <CropTool v-if="editorStore.selectedTabPerTool[editorStore.selectedToolKey] === 'crop'" />
         <SmartCropTool v-if="isCropShown" />
@@ -105,6 +115,7 @@ watch(
         " />
       </div>
     </div>
+
 
     <!-- Sliders -->
     <div class="vertical-slider-wrapper">
@@ -130,7 +141,7 @@ watch(
         </div>
         <div v-if="mouseX !== null" class="ruler-cursor-mark horizontal" :style="{ left: mouseX + 'px' }">
           <span class="ruler-cursor-label horizontal" :class="{ 'active': cursorPosXSameAsImageWidth }">{{ cursorPosX
-            }}</span>
+          }}</span>
         </div>
 
       </div>
@@ -143,7 +154,7 @@ watch(
         </div>
         <div v-if="mouseY !== null" class="ruler-cursor-mark vertical" :style="{ top: mouseY + 'px' }">
           <span class="ruler-cursor-label vertical" :class="{ 'active': cursorPosYSameAsImageHeight }">{{ cursorPosY
-            }}</span>
+          }}</span>
         </div>
       </div>
     </div>

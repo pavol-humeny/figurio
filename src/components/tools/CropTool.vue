@@ -64,6 +64,7 @@ const resizerStyle = computed(() => {
       width: cropBox.width + 'px',
       height: cropBox.height + 'px',
     }" @mousedown="startPan">
+
       <div v-for="dir in ['top-left', 'top-right', 'bottom-left', 'bottom-right']" :key="dir" class="resizer"
         :class="dir" @mousedown="(event) => startResize(event, dir.replace('-', ''))" :style="resizerStyle"></div>
     </div>

@@ -86,30 +86,43 @@ export const useImageStore = defineStore('imageStore', {
     newRenderedImage: null,
 
     /** Array of SVG objects to render on the image */
-    svgObjects: [], // UndoRedo
-    // svgObjects: [
-    //   {
-    //     tag: 'rect',
-    //     attrs: {
-    //       x: 50,
-    //       y: 40,
-    //       width: 200,
-    //       height: 100,
-    //       fill: 'red',
-    //       stroke: 'red',
-    //     },
-    //   },
-    //   {
-    //     tag: 'circle',
-    //     attrs: {
-    //       cx: 300,
-    //       cy: 200,
-    //       r: 50,
-    //       fill: 'blue',
-    //       stroke: 'black',
-    //     },
-    //   },
-    // ],
+    // svgObjects: [], // UndoRedo
+    svgObjects: [
+      {
+        id: Date.now(),
+        tag: 'rect',
+        attrs: {
+          x: 50,
+          y: 40,
+          width: 200,
+          height: 100,
+          fill: 'red',
+          stroke: 'red',
+        },
+      },
+      {
+        id: Date.now() + 1,
+        tag: 'circle',
+        attrs: {
+          cx: 300,
+          cy: 200,
+          r: 50,
+          fill: 'blue',
+          stroke: 'black',
+        },
+      },
+      {
+        id: Date.now() + 2,
+        tag: 'text',
+        attrs: {
+          x: 100,
+          y: 350,
+          fill: 'black',
+          'font-size': '20px',
+        },
+        content: 'Sample Textiiiii',
+      },
+    ],
     /** ID of the currently selected SVG object */
     selectedSvgObjectId: null,
 
@@ -187,6 +200,22 @@ export const useImageStore = defineStore('imageStore', {
       } else {
         return this.tmpRenderedImage
       }
+    },
+
+    /**
+     * Returns the currently selected SVG object
+     * @returns {Object|null} - The currently selected SVG object or null if none is selected
+     */
+    getSelectedSvgObject() {
+      return this.svgObjects.find((obj) => obj.id === this.selectedSvgObjectId)
+    },
+
+    /**
+     * Returns the index of the currently selected SVG object
+     * @returns {number} - The index of the currently selected SVG object, or -1 if none is selected
+     */
+    getIndexOfSelectedSvgObject() {
+      return this.svgObjects.findIndex((obj) => obj.id === this.selectedSvgObjectId)
     },
 
     /**
@@ -355,8 +384,8 @@ export const useImageStore = defineStore('imageStore', {
      * Resets the image store to a clean state for a new file
      */
     resetImageStoreForNewFile() {
-      this.svgObjects = []
-      this.selectedSvgObjectId = null
+      // this.svgObjects = []
+      // this.selectedSvgObjectId = null
 
       this.resetImageOperations()
 
@@ -782,12 +811,9 @@ export const useImageStore = defineStore('imageStore', {
       const finalWidth = width
       const finalHeight = height
 
-      const hasHeader = useFrameTool(
-        imageStore,
-        historyStore,
-        editorStore,
-        t,
-      ).isFrameWithHeader(this.frame.type)
+      const hasHeader = useFrameTool(imageStore, historyStore, editorStore, t).isFrameWithHeader(
+        this.frame.type,
+      )
 
       // Correction for frame header
       if (hasHeader) {
@@ -871,12 +897,9 @@ export const useImageStore = defineStore('imageStore', {
       const offsetX = this.frame.enabled ? this.frame.width : 0
       let offsetY = this.frame.enabled ? this.frame.height : 0
 
-      const hasHeader = useFrameTool(
-        imageStore,
-        historyStore,
-        editorStore,
-        t,
-      ).isFrameWithHeader(this.frame.type)
+      const hasHeader = useFrameTool(imageStore, historyStore, editorStore, t).isFrameWithHeader(
+        this.frame.type,
+      )
 
       if (hasHeader) {
         offsetY = this.frame.headerSize
@@ -1026,19 +1049,13 @@ export const useImageStore = defineStore('imageStore', {
         ? this.newFileDimensions.height - 2 * this.frame.height
         : this.newFileDimensions.height
 
-      const hasHeader = useFrameTool(
-        imageStore,
-        historyStore,
-        editorStore,
-        t,
-      ).isFrameWithHeader(this.frame.type)
+      const hasHeader = useFrameTool(imageStore, historyStore, editorStore, t).isFrameWithHeader(
+        this.frame.type,
+      )
 
-      const hasFooter = useFrameTool(
-        imageStore,
-        historyStore,
-        editorStore,
-        t,
-      ).isFrameWithFooter(this.frame.type)
+      const hasFooter = useFrameTool(imageStore, historyStore, editorStore, t).isFrameWithFooter(
+        this.frame.type,
+      )
 
       if (hasHeader) {
         targetHeight = this.newFileDimensions.height - this.frame.headerSize - this.frame.height
@@ -1150,6 +1167,54 @@ export const useImageStore = defineStore('imageStore', {
 
       this.previewUrl = exportCanvas.toDataURL(mimeType, quality)
     },
+
+    // --------------------------------
+    // SVG object management methods
+    // --------------------------------
+    /**
+     * Delete selected SVG object
+     */
+    deleteSelectedSvgObject() {
+      if (this.selectedSvgObjectId === null) return
+
+      const i = this.getIndexOfSelectedSvgObject()
+      if (i !== -1) {
+        this.svgObjects.splice(i, 1)
+        this.selectedSvgObjectId = null
+      }
+
+      console.log('[deleteSelectedSvgObject] SVG object deleted:', this.svgObjects)
+    },
+    /**
+     * Move the selected SVG object forward
+     */
+    moveSelectedSvgObjectForward() {
+      if (this.selectedSvgObjectId === null) return
+
+      const i = this.getIndexOfSelectedSvgObject()
+      if (i !== -1 && i < this.svgObjects.length - 1) {
+        const temp = this.svgObjects[i]
+        this.svgObjects[i] = this.svgObjects[i + 1]
+        this.svgObjects[i + 1] = temp
+      }
+    },
+    /**
+     * Move the selected SVG object backward
+     */
+    moveSelectedSvgObjectBackward() {
+      if (this.selectedSvgObjectId === null) return
+
+      const i = this.getIndexOfSelectedSvgObject()
+      if (i !== -1 && i > 0) {
+        const temp = this.svgObjects[i]
+        this.svgObjects[i] = this.svgObjects[i - 1]
+        this.svgObjects[i - 1] = temp
+      }
+    },
+
+    // --------------------------------
+    // Snapshot management methods
+    // --------------------------------
 
     /**
      * Returns a snapshot of the current image state.

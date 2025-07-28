@@ -141,28 +141,28 @@ export function useImageRenderer(
   /**
    * Render SVG vector elements over the image
    */
-  const renderSvg = () => {
-    if (!svgRef.value || !imageStore.svgObjects) return
+  // const renderSvg = () => {
+  //   if (!svgRef.value || !imageStore.svgObjects) return
 
-    console.log('Rendering SVG...')
+  //   console.log('Rendering SVG...')
 
-    const svg = svgRef.value
-    svg.innerHTML = ''
+  //   const svg = svgRef.value
+  //   svg.innerHTML = ''
 
-    imageStore.svgObjects.forEach((obj) => {
-      if (!obj.tag) return
+  //   imageStore.svgObjects.forEach((obj) => {
+  //     if (!obj.tag) return
 
-      const el = document.createElementNS('http://www.w3.org/2000/svg', obj.tag)
+  //     const el = document.createElementNS('http://www.w3.org/2000/svg', obj.tag)
 
-      if (obj.attrs && typeof obj.attrs === 'object') {
-        for (const [key, value] of Object.entries(obj.attrs)) {
-          el.setAttribute(key, value)
-        }
-      }
+  //     if (obj.attrs && typeof obj.attrs === 'object') {
+  //       for (const [key, value] of Object.entries(obj.attrs)) {
+  //         el.setAttribute(key, value)
+  //       }
+  //     }
 
-      svg.appendChild(el)
-    })
-  }
+  //     svg.appendChild(el)
+  //   })
+  // }
 
   /**
    * Render the SVG frame layer and re-render canvas after frame update
@@ -199,7 +199,7 @@ export function useImageRenderer(
     } else {
       renderCanvas()
     }
-    renderSvg()
+    // renderSvg()
   }
 
   /**
