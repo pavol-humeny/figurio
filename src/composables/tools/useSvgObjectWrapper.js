@@ -147,15 +147,15 @@ export function useSvgObjectWrapper(
     let rawDx = (event.clientX - startX.value) / viewportStore.realZoomLevel + remainingDx.value
     let rawDy = (event.clientY - startY.value) / viewportStore.realZoomLevel + remainingDy.value
 
-    // Zaokrúhlený posun v pixeloch (celé čísla)
+    // Round to whole pixels
     let dx = Math.trunc(rawDx)
     let dy = Math.trunc(rawDy)
 
-    // Zvyšok si odlož na ďalší posun
+    // Save remaining dx and dy for smooth dragging
     remainingDx.value = rawDx - dx
     remainingDy.value = rawDy - dy
 
-    // Posledná pozícia kurzora
+    // Last cursor position
     startX.value = event.clientX
     startY.value = event.clientY
 
@@ -164,245 +164,207 @@ export function useSvgObjectWrapper(
     // RESIZE
     if (activeResizerIndex.value !== null) {
       const minSize = 1
-
       const keepRatio = event.shiftKey
+      const maxW = imageStore.fileDimensions.width
+      const maxH = imageStore.fileDimensions.height
 
-      // RECT
+      // RECTANGLE
       if (tag === 'rect') {
-        // const ratio = attrs.width / attrs.height
+        const right = attrs.x + attrs.width
+        const bottom = attrs.y + attrs.height
+        const left = attrs.x
+        const top = attrs.y
+
+        const applyRect = (newX, newY, newW, newH) => {
+          attrs.x = clamp(newX, 0, maxW)
+          attrs.y = clamp(newY, 0, maxH)
+          attrs.width = clamp(newW, minSize, maxW - attrs.x)
+          attrs.height = clamp(newH, minSize, maxH - attrs.y)
+        }
+
         if (activeResizerIndex.value === 0) {
-          if (keepRatio) {
-            const originalRight = attrs.x + attrs.width
-            const originalBottom = attrs.y + attrs.height
-            const newWidth = attrs.width - dx
-            const newHeight = newWidth / ratio.value
+          // Top-left
+          let newW = attrs.width - dx
+          let newH = keepRatio ? newW / ratio.value : attrs.height - dy
 
-            if (newWidth >= minSize && newHeight >= minSize) {
-              attrs.width = newWidth
-              attrs.height = newHeight
-              attrs.x = originalRight - newWidth
-              attrs.y = originalBottom - newHeight
-            }
-          } else {
-            const newWidth = attrs.width - dx
-            const newHeight = attrs.height - dy
-            if (newWidth >= minSize && newHeight >= minSize) {
-              attrs.x += dx
-              attrs.y += dy
-              attrs.width = newWidth
-              attrs.height = newHeight
-            }
+          // Do not change width if resizer is on the left edge
+          if (attrs.x <= 0 && dx < 0) {
+            newW = attrs.width
           }
+
+          // Do not change height if resizer is on the top edge
+          if (attrs.y <= 0 && dy < 0) {
+            newH = attrs.height
+          }
+
+          const newX = right - newW
+          const newY = bottom - newH
+          applyRect(newX, newY, right - newX, bottom - newY)
         } else if (activeResizerIndex.value === 1) {
-          const left = attrs.x
-          const bottom = attrs.y + attrs.height
-          if (keepRatio) {
-            const newWidth = attrs.width + dx
-            const newHeight = newWidth / ratio.value
-            if (newWidth >= minSize && newHeight >= minSize) {
-              attrs.width = newWidth
-              attrs.height = newHeight
-              attrs.x = left
-              attrs.y = bottom - newHeight
-            }
-          } else {
-            const newWidth = attrs.width + dx
-            const newHeight = attrs.height - dy
-            if (newWidth >= minSize && newHeight >= minSize) {
-              attrs.width = newWidth
-              attrs.height = newHeight
-              attrs.x = left
-              attrs.y = bottom - newHeight
-            }
+          // Top-right
+          const newW = attrs.width + dx
+          let newH = keepRatio ? newW / ratio.value : attrs.height - dy
+
+          // Do not change height if resizer is on the right edge
+          if (attrs.y <= 0 && dy < 0) {
+            newH = attrs.height
           }
+
+          const newX = left
+          const newY = bottom - newH
+          applyRect(newX, newY, newW, bottom - newY)
         } else if (activeResizerIndex.value === 2) {
-          const right = attrs.x + attrs.width
-          const top = attrs.y
-          if (keepRatio) {
-            const newWidth = attrs.width - dx
-            const newHeight = newWidth / ratio.value
-            if (newWidth >= minSize && newHeight >= minSize) {
-              attrs.width = newWidth
-              attrs.height = newHeight
-              attrs.x = right - newWidth
-              attrs.y = top
-            }
-          } else {
-            const newWidth = attrs.width - dx
-            const newHeight = attrs.height + dy
-            if (newWidth >= minSize && newHeight >= minSize) {
-              attrs.width = newWidth
-              attrs.height = newHeight
-              attrs.x = right - newWidth
-              attrs.y = top
-            }
+          // Bottom-right
+          let newW = attrs.width - dx
+          const newH = keepRatio ? newW / ratio.value : attrs.height + dy
+
+          // Do not change width if resizer is on the left edge
+          if (attrs.x <= 0 && dx < 0) {
+            newW = attrs.width
           }
+
+          const newX = right - newW
+          const newY = top
+          applyRect(newX, newY, right - newX, newH)
         } else if (activeResizerIndex.value === 3) {
-          const left = attrs.x
-          const top = attrs.y
-          if (keepRatio) {
-            const newWidth = attrs.width + dx
-            const newHeight = newWidth / ratio.value
-            if (newWidth >= minSize && newHeight >= minSize) {
-              attrs.width = newWidth
-              attrs.height = newHeight
-              attrs.x = left
-              attrs.y = top
-            }
-          } else {
-            const newWidth = attrs.width + dx
-            const newHeight = attrs.height + dy
-            if (newWidth >= minSize && newHeight >= minSize) {
-              attrs.width = newWidth
-              attrs.height = newHeight
-              attrs.x = left
-              attrs.y = top
-            }
-          }
+          // Bottom-left
+          const newW = attrs.width + dx
+          const newH = keepRatio ? newW / ratio.value : attrs.height + dy
+          const newX = left
+          const newY = top
+          applyRect(newX, newY, newW, newH)
         }
 
-        // Highlight the object if it is a square
-        if (attrs.width === attrs.height) {
-          isHightLighted.value = true
-        } else {
-          isHightLighted.value = false
-        }
+        isHightLighted.value = attrs.width === attrs.height
       }
 
       // ELLIPSE
       if (tag === 'ellipse') {
-        // Because it change radius from both sides, we need to divide dx and dy by 2
-        dx = dx / 2
-        dy = dy / 2
+        dx /= 2
+        dy /= 2
+        const applyEllipse = (newCx, newCy, newRx, newRy) => {
+          newRx = clamp(newRx, minSize, Math.min(newCx, maxW - newCx))
+          newRy = clamp(newRy, minSize, Math.min(newCy, maxH - newCy))
+          attrs.cx = clamp(newCx, newRx, maxW - newRx)
+          attrs.cy = clamp(newCy, newRy, maxH - newRy)
+          attrs.rx = newRx
+          attrs.ry = newRy
+        }
 
         if (activeResizerIndex.value === 0) {
+          // Top-left
           const right = attrs.cx + attrs.rx
           const bottom = attrs.cy + attrs.ry
-          if (keepRatio) {
-            const newRx = attrs.rx - dx
-            const newRy = newRx / ratio.value
-            if (newRx >= minSize && newRy >= minSize) {
-              attrs.rx = newRx
-              attrs.ry = newRy
-              attrs.cx = right - newRx
-              attrs.cy = bottom - newRy
-            }
-          } else {
-            const newRx = attrs.rx - dx
-            const newRy = attrs.ry - dy
-            if (newRx >= minSize && newRy >= minSize) {
-              attrs.rx = newRx
-              attrs.ry = newRy
-              attrs.cx = right - newRx
-              attrs.cy = bottom - newRy
-            }
+          let newRx = attrs.rx - dx
+          let newRy = keepRatio ? newRx / ratio.value : attrs.ry - dy
+
+          console.log('x', attrs.cx, 'y', attrs.cy, 'rx', attrs.rx, 'ry', attrs.ry)
+          console.log('newRx', newRx, 'newRy', newRy)
+
+          // Do not change radius if resizer is on the left edge
+          if (attrs.cx - attrs.rx <= 0 && dx < 0) {
+            newRx = attrs.rx
           }
+
+          // Do not change radius if resizer is on the top edge
+          if (attrs.cy - attrs.ry <= 0 && dy < 0) {
+            newRy = attrs.ry
+          }
+
+          const newCx = right - newRx
+          const newCy = bottom - newRy
+          applyEllipse(newCx, newCy, newRx, newRy)
         } else if (activeResizerIndex.value === 1) {
+          // Top-right
           const left = attrs.cx - attrs.rx
           const bottom = attrs.cy + attrs.ry
-          if (keepRatio) {
-            const newRx = attrs.rx + dx
-            const newRy = newRx / ratio.value
-            if (newRx >= minSize && newRy >= minSize) {
-              attrs.rx = newRx
-              attrs.ry = newRy
-              attrs.cx = left + newRx
-              attrs.cy = bottom - newRy
-            }
-          } else {
-            const newRx = attrs.rx + dx
-            const newRy = attrs.ry - dy
-            if (newRx >= minSize && newRy >= minSize) {
-              attrs.rx = newRx
-              attrs.ry = newRy
-              attrs.cx = left + newRx
-              attrs.cy = bottom - newRy
-            }
+          let newRx = attrs.rx + dx
+          let newRy = keepRatio ? newRx / ratio.value : attrs.ry - dy
+
+          // Do not change radius if resizer is on the right edge
+          if (attrs.cx + attrs.rx >= maxW && dx > 0) {
+            newRx = attrs.rx
           }
+
+          // Do not change radius if resizer is on the top edge
+          if (attrs.cy - attrs.ry <= 0 && dy < 0) {
+            newRy = attrs.ry
+          }
+
+          const newCx = left + newRx
+          const newCy = bottom - newRy
+          applyEllipse(newCx, newCy, newRx, newRy)
         } else if (activeResizerIndex.value === 2) {
+          console.log('bottom-right')
+          // Bottom-right
           const left = attrs.cx - attrs.rx
           const top = attrs.cy - attrs.ry
-          if (keepRatio) {
-            const newRx = attrs.rx + dx
-            const newRy = newRx / ratio.value
-            if (newRx >= minSize && newRy >= minSize) {
-              attrs.rx = newRx
-              attrs.ry = newRy
-              attrs.cx = left + newRx
-              attrs.cy = top + newRy
-            }
-          } else {
-            const newRx = attrs.rx + dx
-            const newRy = attrs.ry + dy
-            if (newRx >= minSize && newRy >= minSize) {
-              attrs.rx = newRx
-              attrs.ry = newRy
-              attrs.cx = left + newRx
-              attrs.cy = top + newRy
-            }
+          let newRx = attrs.rx + dx
+          let newRy = keepRatio ? newRx / ratio.value : attrs.ry + dy
+
+          // Do not change radius if resizer is on the bottom edge
+          if (attrs.cy + attrs.ry >= maxH && dy > 0) {
+            newRy = attrs.ry
           }
+
+          // Do not change radius if resizer is on the right edge
+          if (attrs.cx + attrs.rx >= maxW && dx > 0) {
+            newRx = attrs.rx
+          }
+
+          const newCx = left + newRx
+          const newCy = top + newRy
+          applyEllipse(newCx, newCy, newRx, newRy)
         } else if (activeResizerIndex.value === 3) {
+          // Bottom-left
           const right = attrs.cx + attrs.rx
           const top = attrs.cy - attrs.ry
-          if (keepRatio) {
-            const newRx = attrs.rx - dx
-            const newRy = newRx / ratio.value
-            if (newRx >= minSize && newRy >= minSize) {
-              attrs.rx = newRx
-              attrs.ry = newRy
-              attrs.cx = right - newRx
-              attrs.cy = top + newRy
-            }
-          } else {
-            const newRx = attrs.rx - dx
-            const newRy = attrs.ry + dy
-            if (newRx >= minSize && newRy >= minSize) {
-              attrs.rx = newRx
-              attrs.ry = newRy
-              attrs.cx = right - newRx
-              attrs.cy = top + newRy
-            }
+          let newRx = attrs.rx - dx
+          let newRy = keepRatio ? newRx / ratio.value : attrs.ry + dy
+
+          // Do not change radius if resizer is on the bottom edge
+          if (attrs.cy + attrs.ry >= maxH && dy > 0) {
+            newRy = attrs.ry
           }
+
+          // Do not change radius if resizer is on the right edge
+          if (attrs.cx - attrs.rx <= 0 && dx < 0) {
+            newRx = attrs.rx
+          }
+
+          const newCx = right - newRx
+          const newCy = top + newRy
+          applyEllipse(newCx, newCy, newRx, newRy)
         }
 
-        // Highlight the object if it is a circle
-        if (attrs.rx === attrs.ry) {
-          isHightLighted.value = true
-        } else {
-          isHightLighted.value = false
-        }
+        isHightLighted.value = attrs.rx === attrs.ry
       }
 
       // LINE
       if (tag === 'line') {
-        const { x1, y1, x2, y2 } = attrs
-
         const minLength = 2
+        const maxX = imageStore.fileDimensions.width
+        const maxY = imageStore.fileDimensions.height
 
-        if (activeResizerIndex.value === 0) {
-          const newX1 = x1 + dx
-          const newY1 = y1 + dy
-          const newLength = pythagorean(newX1 - x2, newY1 - y2)
-          if (newLength >= minLength) {
-            attrs.x1 = newX1
-            attrs.y1 = newY1
-          }
-        } else if (activeResizerIndex.value === 1) {
-          const newX2 = x2 + dx
-          const newY2 = y2 + dy
-          const newLength = pythagorean(newX2 - x1, newY2 - y1)
-          if (newLength >= minLength) {
-            attrs.x2 = newX2
-            attrs.y2 = newY2
+        if (activeResizerIndex.value === 0 || activeResizerIndex.value === 1) {
+          const keyX = activeResizerIndex.value === 0 ? 'x1' : 'x2'
+          const keyY = activeResizerIndex.value === 0 ? 'y1' : 'y2'
+          const otherX = activeResizerIndex.value === 0 ? attrs.x2 : attrs.x1
+          const otherY = activeResizerIndex.value === 0 ? attrs.y2 : attrs.y1
+
+          let newX = clamp(attrs[keyX] + dx, 0, maxX)
+          let newY = clamp(attrs[keyY] + dy, 0, maxY)
+          const len = pythagorean(newX - otherX, newY - otherY)
+
+          if (len >= minLength) {
+            attrs[keyX] = newX
+            attrs[keyY] = newY
           }
         }
 
-        // Highlight the object if it is a horizontal or vertical line
-        if ((x1 === x2 || y1 === y2) && pythagorean(x1 - x2, y1 - y2) > minLength) {
-          isHightLighted.value = true
-        } else {
-          isHightLighted.value = false
-        }
+        isHightLighted.value =
+          (attrs.x1 === attrs.x2 || attrs.y1 === attrs.y2) &&
+          pythagorean(attrs.x1 - attrs.x2, attrs.y1 - attrs.y2) > minLength
       }
 
       const i = imageStore.svgObjects.findIndex((o) => o.id === object.value.id)
@@ -418,35 +380,27 @@ export function useSvgObjectWrapper(
       if (tag === 'text' && textBBox.value) {
         const newTextX = clamp(
           textBBox.value.x + dx,
-          0 - textBBox.value.width / 2,
-          imageStore.fileDimensions.width - textBBox.value.width / 2,
+          0,
+          imageStore.fileDimensions.width - textBBox.value.width,
         )
         const newTextY = clamp(
           textBBox.value.y + dy,
-          0 - textBBox.value.height / 2,
-          imageStore.fileDimensions.height - textBBox.value.height / 2,
+          0,
+          imageStore.fileDimensions.height - textBBox.value.height,
         )
         attrs.x = newTextX
         attrs.y = newTextY - textBBox.value.y + attrs.y
         textBBox.value.x = newTextX
         textBBox.value.y = newTextY
       } else {
-        attrs.x = clamp(
-          attrs.x + dx,
-          0 - attrs.width / 2,
-          imageStore.fileDimensions.width - attrs.width / 2,
-        )
-        attrs.y = clamp(
-          attrs.y + dy,
-          0 - attrs.height / 2,
-          imageStore.fileDimensions.height - attrs.height / 2,
-        )
+        attrs.x = clamp(attrs.x + dx, 0, imageStore.fileDimensions.width - attrs.width)
+        attrs.y = clamp(attrs.y + dy, 0, imageStore.fileDimensions.height - attrs.height)
       }
     }
     // Ellipse
     else if ('cx' in attrs && 'cy' in attrs && 'rx' in attrs && 'ry' in attrs) {
-      attrs.cx = clamp(attrs.cx + dx, 0, imageStore.fileDimensions.width)
-      attrs.cy = clamp(attrs.cy + dy, 0, imageStore.fileDimensions.height)
+      attrs.cx = clamp(attrs.cx + dx, 0 + attrs.rx, imageStore.fileDimensions.width - attrs.rx)
+      attrs.cy = clamp(attrs.cy + dy, 0 + attrs.ry, imageStore.fileDimensions.height - attrs.ry)
     }
     // Line
     else if ('x1' in attrs && 'y1' in attrs && 'x2' in attrs && 'y2' in attrs) {
@@ -621,7 +575,6 @@ export function useSvgObjectWrapper(
   const objectInfo = computed(() => {
     const attrs = object.value.attrs
 
-    console.log('objectInfo', object.value.tag, attrs)
     if (!attrs) return null
 
     if (object.value.tag === 'rect') {
