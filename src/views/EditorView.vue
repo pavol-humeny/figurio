@@ -47,12 +47,15 @@ const { startEditing } = useFileNameDisplay(useImageStore(), t)
 const { switchToNextTab, switchToPreviousTab, } = useFileTabs(useUiStore(), t)
 const { prevStep, nextStep, finishTutorial, closeTutorial, startTutorial } = useInteractiveTutorial(useUiStore(), useImageStore(), useRouter(), t)
 
-const { deleteSelectedSvgObject, moveSelectedSvgObjectForward, moveSelectedSvgObjectBackward } = useImageStore()
+const imageStore = useImageStore()
 
-useKeyboardShortcuts({ undo, redo, zoomIn, zoomOut, resetZoom, closeFile, uploadFile, toggleTool, openExportToolSettings, openHelpModal, openSettingsPanel, openPrivacyAndDataModal, startEditing, switchToNextTab, switchToPreviousTab, prevStep, nextStep, finishTutorial, closeTutorial, deleteSelectedSvgObject, moveSelectedSvgObjectForward, moveSelectedSvgObjectBackward }, useUiStore(), useImageStore());
+useKeyboardShortcuts({
+  undo, redo, zoomIn, zoomOut, resetZoom, closeFile, uploadFile, toggleTool, openExportToolSettings, openHelpModal, openSettingsPanel, openPrivacyAndDataModal, startEditing, switchToNextTab, switchToPreviousTab, prevStep, nextStep, finishTutorial, closeTutorial, deleteSelectedSvgObject: () => imageStore.deleteSelectedSvgObject(t),
+  moveSelectedSvgObjectForward: () => imageStore.moveSelectedSvgObjectForward(t),
+  moveSelectedSvgObjectBackward: () => imageStore.moveSelectedSvgObjectBackward(t),
+}, useUiStore(), useImageStore());
 // === ===
 
-const imageStore = useImageStore()
 
 // Start tutorial if opening the editor for the first time
 onMounted(() => {

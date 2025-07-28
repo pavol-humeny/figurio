@@ -104,7 +104,7 @@ watch(
 
         <svg ref="svgRef" class="image-svg" xmlns="http://www.w3.org/2000/svg" :width="imageStore.fileDimensions.width"
           :height="imageStore.fileDimensions.height">
-          <SvgObjectWrapper v-for="object in imageStore.svgObjects" :key="object.id" :object="object" />
+          <SvgObjectWrapper v-for="object in imageStore.svgObjects" :key="object.id" :objectId="object.id" />
         </svg>
 
 
@@ -141,7 +141,7 @@ watch(
         </div>
         <div v-if="mouseX !== null" class="ruler-cursor-mark horizontal" :style="{ left: mouseX + 'px' }">
           <span class="ruler-cursor-label horizontal" :class="{ 'active': cursorPosXSameAsImageWidth }">{{ cursorPosX
-          }}</span>
+            }}</span>
         </div>
 
       </div>
@@ -154,7 +154,7 @@ watch(
         </div>
         <div v-if="mouseY !== null" class="ruler-cursor-mark vertical" :style="{ top: mouseY + 'px' }">
           <span class="ruler-cursor-label vertical" :class="{ 'active': cursorPosYSameAsImageHeight }">{{ cursorPosY
-          }}</span>
+            }}</span>
         </div>
       </div>
     </div>

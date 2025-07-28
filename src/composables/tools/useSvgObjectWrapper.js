@@ -1,35 +1,89 @@
-import { ref, computed, watchEffect, onMounted, onBeforeUnmount } from 'vue'
-
-/**
- * Whether interactive SVG object operations are allowed
- * Can be toggled globally (e.g. from tools)
- */
-const areSvgObjectOperationsEnabled = ref(true)
-
+import { ref, computed, watchEffect, onMounted, onBeforeUnmount, watch } from 'vue'
+import { useMath } from '../common/useMath'
 /**
  * Logic for interactive SVG object
  * @param {Object} object - SVG object (with id, tag, attrs)
+ * @param {Object} imageStore - Store for image data
+ * @param {Object} viewportStore - Store for viewport data
+ * @param {Object} editorStore - Store for editor state
+ * @returns {Object} Composable with reactive properties and methods for SVG object interaction
  */
-export function useSvgObjectWrapper(object, imageStore, viewportStore) {
+export function useSvgObjectWrapper(
+  objectId,
+  imageStore,
+  viewportStore,
+  editorStore,
+  historyStore,
+  t,
+) {
+  const { clamp } = useMath()
+
+  /**
+   * Reactive reference to the SVG object
+   */
+  const object = computed(() => {
+    return imageStore.getSvgObjectById(objectId)
+  })
+
+  /**
+   * Whether SVG object operations are allowed
+   * Can be toggled globally (e.g. from tools)
+   */
+  const areSvgObjectOperationsEnabled = computed(() => {
+    return editorStore.selectedToolKey === object.value.class
+  })
+
+  /**
+   * Whether the SVG object is currently selected
+   */
   const isSelected = computed(
-    () => imageStore.selectedSvgObjectId === object.id && areSvgObjectOperationsEnabled.value,
+    () => imageStore.selectedSvgObjectId === object.value.id && areSvgObjectOperationsEnabled.value,
   )
+
+  /**
+   * Reactive variables for dragging the SVG object
+   */
   const isDragging = ref(false)
   const startX = ref(0)
   const startY = ref(0)
 
+  /**
+   * Reference to the text element for text objects
+   * Used to calculate bounding box for text objects
+   */
   const textRef = ref(null)
+  /**
+   * Bounding box for text objects
+   */
   const textBBox = ref(null)
 
+  /**
+   * Watch for changes in the selected tool and reset the selected SVG object when the tool changes
+   */
+  watch(
+    () => editorStore.selectedToolKey,
+    () => {
+      imageStore.selectedSvgObjectId = null
+    },
+  )
+
+  /**
+   * Mouse event handlers for the SVG object
+   * @param {MouseEvent} event - Mouse event
+   */
   const onMouseDown = (event) => {
     if (!areSvgObjectOperationsEnabled.value) return
 
-    imageStore.selectedSvgObjectId = object.id
+    imageStore.selectedSvgObjectId = object.value.id
     startX.value = event.clientX
     startY.value = event.clientY
     event.stopPropagation()
   }
 
+  /**
+   * Mouse move handler for dragging the SVG object
+   * @param {MouseEvent} event - Mouse event
+   */
   const onMouseMove = (event) => {
     if (!areSvgObjectOperationsEnabled.value) return
     if (!isSelected.value || !isDragging.value) return
@@ -39,13 +93,51 @@ export function useSvgObjectWrapper(object, imageStore, viewportStore) {
     startX.value = event.clientX
     startY.value = event.clientY
 
-    const attrs = object.attrs
+    const attrs = object.value.attrs
+
+    let newX
+    let newY
+
     if ('x' in attrs && 'y' in attrs) {
-      attrs.x += dx
-      attrs.y += dy
+      if (object.value.tag === 'text' && textBBox.value) {
+        const newTextX = clamp(
+          textBBox.value.x + dx,
+          0 - textBBox.value.width / 2,
+          imageStore.fileDimensions.width - textBBox.value.width / 2,
+        )
+        const newTextY = clamp(
+          textBBox.value.y + dy,
+          0 - textBBox.value.height / 2,
+          imageStore.fileDimensions.height - textBBox.value.height / 2,
+        )
+
+        // Adjust y based on baseline offset
+        attrs.x = newTextX
+        attrs.y = newTextY - textBBox.value.y + attrs.y
+
+        // Update bounding box manually
+        textBBox.value.x = newTextX
+        textBBox.value.y = newTextY
+      } else {
+        newX = clamp(
+          attrs.x + dx,
+          0 - attrs.width / 2,
+          imageStore.fileDimensions.width - attrs.width / 2,
+        )
+        newY = clamp(
+          attrs.y + dy,
+          0 - attrs.height / 2,
+          imageStore.fileDimensions.height - attrs.height / 2,
+        )
+        attrs.x = newX
+        attrs.y = newY
+      }
     } else if ('cx' in attrs && 'cy' in attrs) {
-      attrs.cx += dx
-      attrs.cy += dy
+      const newCx = clamp(attrs.cx + dx, 0, imageStore.fileDimensions.width)
+      const newCy = clamp(attrs.cy + dy, 0, imageStore.fileDimensions.height)
+
+      attrs.cx = newCx
+      attrs.cy = newCy
     } else if ('x1' in attrs && 'y1' in attrs && 'x2' in attrs && 'y2' in attrs) {
       attrs.x1 += dx
       attrs.y1 += dy
@@ -53,15 +145,14 @@ export function useSvgObjectWrapper(object, imageStore, viewportStore) {
       attrs.y2 += dy
     }
 
-    const i = imageStore.svgObjects.findIndex((o) => o.id === object.id)
+    const i = imageStore.svgObjects.findIndex((o) => o.id === object.value.id)
     if (i !== -1) imageStore.svgObjects[i].attrs = { ...attrs }
-
-    if (object.tag === 'text' && textBBox.value) {
-      textBBox.value.x += dx
-      textBBox.value.y += dy
-    }
   }
 
+  /**
+   * Mouse down handler for dragging the SVG object
+   * @param {MouseEvent} event - Mouse event
+   */
   const onMouseDownDrag = (event) => {
     if (!areSvgObjectOperationsEnabled.value) return
 
@@ -73,64 +164,36 @@ export function useSvgObjectWrapper(object, imageStore, viewportStore) {
     }
   }
 
+  /**
+   * Mouse up handler for stopping the drag operation
+   * @param {MouseEvent} event - Mouse event
+   */
   const onMouseUp = () => {
     if (!areSvgObjectOperationsEnabled.value) return
 
-    if (isDragging.value) isDragging.value = false
+    if (isDragging.value) {
+      isDragging.value = false
+      historyStore.push(imageStore.getSnapshot(t))
+    }
   }
 
+  /**
+   * Global click handler to deselect the SVG object when clicking outside
+   * @param {MouseEvent} e - Mouse event
+   */
   const onGlobalClick = (e) => {
     if (!areSvgObjectOperationsEnabled.value) return
 
     if (!e.target.closest('g')) imageStore.selectedSvgObjectId = null
   }
 
-  // /**
-  //  * Delete currently selected SVG object
-  //  */
-  // const deleteSelectedSvgObject = () => {
-  //   if (!areSvgObjectOperationsEnabled.value) return
-  //   if (!imageStore.selectedSvgObjectId) return
-
-  //   const i = imageStore.getIndexOfSelectedSvgObject()
-  //   if (i !== -1) {
-  //     imageStore.svgObjects.splice(i, 1)
-  //     imageStore.selectedSvgObjectId = null
-  //   }
-  // }
-
-  // /**
-  //  * Move currently selected SVG object forward
-  //  */
-  // const moveSelectedSvgObjectForward = () => {
-  //   if (!areSvgObjectOperationsEnabled.value) return
-  //   if (!imageStore.selectedSvgObjectId) return
-
-  //   const i = imageStore.getIndexOfSelectedSvgObject()
-
-  //   if (i !== -1 && i < imageStore.svgObjects.length - 1) {
-  //     const obj = imageStore.svgObjects.splice(i, 1)[0]
-  //     imageStore.svgObjects.splice(i + 1, 0, obj)
-  //   }
-  // }
-
-  // /**
-  //  * Move currently selected SVG object backward
-  //  */
-  // const moveSelectedSvgObjectBackward = () => {
-  //   if (!areSvgObjectOperationsEnabled.value) return
-  //   if (!imageStore.selectedSvgObjectId) return
-
-  //   const i = imageStore.getIndexOfSelectedSvgObject()
-
-  //   if (i > 0) {
-  //     const obj = imageStore.svgObjects.splice(i, 1)[0]
-  //     imageStore.svgObjects.splice(i - 1, 0, obj)
-  //   }
-  // }
-
+  /**
+   * Get positions of resizers for the SVG object
+   * Returns an array of objects with x, y coordinates and cursor style
+   * @returns {Array} Array of resizer positions
+   */
   const getResizerPositions = () => {
-    const { tag, attrs } = object
+    const { tag, attrs } = object.value
     if (tag === 'rect') {
       const x = attrs.x || 0,
         y = attrs.y || 0,
@@ -166,6 +229,10 @@ export function useSvgObjectWrapper(object, imageStore, viewportStore) {
     return []
   }
 
+  /**
+   * Compute the bounding box of the SVG object based on its resizer positions
+   * Returns an object with x, y, width, height properties
+   */
   const boundingBox = computed(() => {
     const points = getResizerPositions()
     if (!points.length) return null
@@ -179,13 +246,20 @@ export function useSvgObjectWrapper(object, imageStore, viewportStore) {
     }
   })
 
+  /**
+   * Get the size of the resizers for the SVG object
+   * @returns {number} Size of the resizers
+   */
   const resizerSize = computed(() => {
     const base = imageStore.fileDimensions?.width || 500
     return Math.max(2, base / 100)
   })
 
+  /**
+   * Watch for changes in the text element and update the bounding box accordingly
+   */
   watchEffect(() => {
-    if (object.tag === 'text' && textRef.value) {
+    if (object.value.tag === 'text' && textRef.value) {
       const bbox = textRef.value.getBBox()
       textBBox.value = {
         x: bbox.x,
@@ -196,12 +270,18 @@ export function useSvgObjectWrapper(object, imageStore, viewportStore) {
     }
   })
 
+  /**
+   * Add global event listeners for mouse events
+   */
   onMounted(() => {
     window.addEventListener('click', onGlobalClick)
     window.addEventListener('mousemove', onMouseMove)
     window.addEventListener('mouseup', onMouseUp)
   })
 
+  /**
+   * Remove global event listeners when the component is unmounted
+   */
   onBeforeUnmount(() => {
     window.removeEventListener('click', onGlobalClick)
     window.removeEventListener('mousemove', onMouseMove)
@@ -217,5 +297,6 @@ export function useSvgObjectWrapper(object, imageStore, viewportStore) {
     boundingBox,
     resizerSize,
     areSvgObjectOperationsEnabled,
+    object,
   }
 }

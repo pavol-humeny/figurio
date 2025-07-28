@@ -90,6 +90,7 @@ export const useImageStore = defineStore('imageStore', {
     svgObjects: [
       {
         id: Date.now(),
+        class: 'blur',
         tag: 'rect',
         attrs: {
           x: 50,
@@ -102,6 +103,7 @@ export const useImageStore = defineStore('imageStore', {
       },
       {
         id: Date.now() + 1,
+        class: 'highlight',
         tag: 'circle',
         attrs: {
           cx: 300,
@@ -113,6 +115,7 @@ export const useImageStore = defineStore('imageStore', {
       },
       {
         id: Date.now() + 2,
+        class: 'text',
         tag: 'text',
         attrs: {
           x: 100,
@@ -208,6 +211,15 @@ export const useImageStore = defineStore('imageStore', {
      */
     getSelectedSvgObject() {
       return this.svgObjects.find((obj) => obj.id === this.selectedSvgObjectId)
+    },
+
+    /**
+     * Returns the SVG object by its ID
+     * @param {number} id - The ID of the SVG object
+     * @returns {Object|null} - The SVG object or null if not found
+     */
+    getSvgObjectById(id) {
+      return this.svgObjects.find((obj) => obj.id === id)
     },
 
     /**
@@ -1174,7 +1186,7 @@ export const useImageStore = defineStore('imageStore', {
     /**
      * Delete selected SVG object
      */
-    deleteSelectedSvgObject() {
+    deleteSelectedSvgObject(t) {
       if (this.selectedSvgObjectId === null) return
 
       const i = this.getIndexOfSelectedSvgObject()
@@ -1183,12 +1195,13 @@ export const useImageStore = defineStore('imageStore', {
         this.selectedSvgObjectId = null
       }
 
-      console.log('[deleteSelectedSvgObject] SVG object deleted:', this.svgObjects)
+      const historyStore = useHistoryStore()
+      historyStore.push(this.getSnapshot(t))
     },
     /**
      * Move the selected SVG object forward
      */
-    moveSelectedSvgObjectForward() {
+    moveSelectedSvgObjectForward(t) {
       if (this.selectedSvgObjectId === null) return
 
       const i = this.getIndexOfSelectedSvgObject()
@@ -1197,11 +1210,14 @@ export const useImageStore = defineStore('imageStore', {
         this.svgObjects[i] = this.svgObjects[i + 1]
         this.svgObjects[i + 1] = temp
       }
+
+      const historyStore = useHistoryStore()
+      historyStore.push(this.getSnapshot(t))
     },
     /**
      * Move the selected SVG object backward
      */
-    moveSelectedSvgObjectBackward() {
+    moveSelectedSvgObjectBackward(t) {
       if (this.selectedSvgObjectId === null) return
 
       const i = this.getIndexOfSelectedSvgObject()
@@ -1210,6 +1226,9 @@ export const useImageStore = defineStore('imageStore', {
         this.svgObjects[i] = this.svgObjects[i - 1]
         this.svgObjects[i - 1] = temp
       }
+
+      const historyStore = useHistoryStore()
+      historyStore.push(this.getSnapshot(t))
     },
 
     // --------------------------------
@@ -1251,6 +1270,7 @@ export const useImageStore = defineStore('imageStore', {
       this.fileDimensions = JSON.parse(JSON.stringify(snapshot.fileDimensions))
       this.previewUrl = snapshot.previewUrl
       this.svgObjects = JSON.parse(JSON.stringify(snapshot.svgObjects))
+      this.selectedSvgObjectId = null // Reset selected SVG object after applying snapshot
       this.imageOperations = JSON.parse(JSON.stringify(snapshot.imageOperations))
       this.frame = JSON.parse(JSON.stringify(snapshot.frame))
 
@@ -1334,7 +1354,7 @@ export const useImageStore = defineStore('imageStore', {
       this.originalFileDimensions = JSON.parse(JSON.stringify(snapshot.originalFileDimensions))
 
       this.svgObjects = JSON.parse(JSON.stringify(snapshot.svgObjects))
-      this.selectedSvgObjectId = snapshot.selectedSvgObjectId
+      this.selectedSvgObjectId = null // Reset selected SVG object after applying snapshot
 
       this.imageOperations = JSON.parse(JSON.stringify(snapshot.imageOperations))
 
