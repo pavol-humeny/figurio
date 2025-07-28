@@ -3,7 +3,8 @@
  * @returns {{
  *   round: (value: number, positions: number) => number,
  *   clamp: (value: number, min: number, max: number) => number,
- *   closest: (target: number, values: number[]) => number | null
+ *   closest: (target: number, values: number[]) => number | null,
+ *   pythagorean: (a: number, b: number) => number
  * }}
  */
 export function useMath() {
@@ -41,9 +42,20 @@ export function useMath() {
     )
   }
 
+  /**
+   * Calculates the length of the hypotenuse using the Pythagorean theorem
+   * @param {number} a - Length of the first leg
+   * @param {number} b - Length of the second leg
+   * @returns {number} - Length of the hypotenuse
+   */
+  const pythagorean = (a, b) => {
+    return Math.sqrt(a * a + b * b)
+  }
+
   return {
     round,
     clamp,
     closest,
+    pythagorean,
   }
 }

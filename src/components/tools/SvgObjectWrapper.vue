@@ -28,6 +28,7 @@ const {
   textRef,
   isSelected,
   onMouseDown,
+  onMouseDownResizer,
   onMouseDownDrag,
   getResizerPositions,
   boundingBox,
@@ -62,7 +63,8 @@ const {
     <!-- Resizers -->
     <template v-if="isSelected && object.tag !== 'text'">
       <circle v-for="(pos, i) in getResizerPositions()" :key="i" :cx="pos.x" :cy="pos.y" :r="resizerSize"
-        fill="var(--text-c)" stroke="var(--editor-highlight-c)" :style="{ cursor: pos.cursor }" />
+        fill="var(--text-c)" stroke="var(--editor-highlight-c)" :style="{ cursor: pos.cursor }"
+        @mousedown.stop.prevent="onMouseDownResizer($event, i)" />
     </template>
   </g>
 </template>

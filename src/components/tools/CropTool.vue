@@ -34,9 +34,9 @@ onMounted(() => {
  * Computed size of resizer handles based on image width
  */
 const resizerSize = computed(() => {
-  const base = imageStore.fileDimensions?.width || 500
-  const size = base / 35
-  return Math.max(6, size)
+  const base = imageStore.fileDimensions.width
+  const size = base / 55
+  return Math.max(4, size)
 })
 
 /**

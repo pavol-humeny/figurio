@@ -102,15 +102,17 @@ export const useImageStore = defineStore('imageStore', {
         },
       },
       {
-        id: Date.now() + 1,
+        id: Date.now() + 4,
         class: 'highlight',
-        tag: 'circle',
+        tag: 'ellipse',
         attrs: {
-          cx: 300,
-          cy: 200,
-          r: 50,
-          fill: 'blue',
-          stroke: 'black',
+          cx: 200, // x-ová pozícia stredu
+          cy: 150, // y-ová pozícia stredu
+          rx: 50, // polomer v smere osi x
+          ry: 50, // polomer v smere osi y
+          fill: 'yellow',
+          stroke: 'orange',
+          'stroke-width': 3,
         },
       },
       {
@@ -124,6 +126,19 @@ export const useImageStore = defineStore('imageStore', {
           'font-size': '20px',
         },
         content: 'Sample Textiiiii',
+      },
+      {
+        id: Date.now() + 3,
+        class: 'highlight',
+        tag: 'line',
+        attrs: {
+          x1: 400,
+          y1: 100,
+          x2: 600,
+          y2: 300,
+          stroke: 'green',
+          'stroke-width': 4,
+        },
       },
     ],
     /** ID of the currently selected SVG object */
@@ -845,19 +860,23 @@ export const useImageStore = defineStore('imageStore', {
       // === 2. Add svg objects if any ===
       if (this.svgObjects.length > 0) {
         const svgString = `
-              <svg xmlns="http://www.w3.org/2000/svg" width="${finalWidth}" height="${finalHeight}">
-                <g transform="translate(${offsetX}, ${offsetY})">
-                  ${this.svgObjects
-                    .map((obj) => {
-                      const attrs = Object.entries(obj.attrs || {})
-                        .map(([key, val]) => `${key}="${val}"`)
-                        .join(' ')
-                      return `<${obj.tag} ${attrs} />`
-                    })
-                    .join('\n')}
-                </g>
-              </svg>
-            `.trim()
+          <svg xmlns="http://www.w3.org/2000/svg" width="${finalWidth}" height="${finalHeight}">
+            <g transform="translate(${offsetX}, ${offsetY})">
+              ${this.svgObjects
+                .map((obj) => {
+                  const attrs = Object.entries(obj.attrs || {})
+                    .map(([key, val]) => `${key}="${val}"`)
+                    .join(' ')
+                  if (obj.tag === 'text') {
+                    const content = obj.content || ''
+                    return `<text ${attrs}>${content}</text>`
+                  }
+                  return `<${obj.tag} ${attrs} />`
+                })
+                .join('\n')}
+            </g>
+          </svg>
+        `.trim()
 
         try {
           const svgElement = new DOMParser().parseFromString(
@@ -931,6 +950,10 @@ export const useImageStore = defineStore('imageStore', {
           const attrs = Object.entries(obj.attrs || {})
             .map(([k, v]) => `${k}="${v}"`)
             .join(' ')
+          if (obj.tag === 'text') {
+            const content = obj.content || ''
+            return `<text ${attrs}>${content}</text>`
+          }
           return `<${obj.tag} ${attrs} />`
         })
         .join('\n')
@@ -992,6 +1015,10 @@ export const useImageStore = defineStore('imageStore', {
               const attrs = Object.entries(obj.attrs || {})
                 .map(([key, val]) => `${key}="${val}"`)
                 .join(' ')
+              if (obj.tag === 'text') {
+                const content = obj.content || ''
+                return `<text ${attrs}>${content}</text>`
+              }
               return `<${obj.tag} ${attrs} />`
             })
             .join('\n')}
