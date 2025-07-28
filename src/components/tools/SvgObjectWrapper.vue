@@ -5,7 +5,6 @@ import { useHistoryStore } from '@/stores/historyStore';
 import { useImageStore } from '@/stores/imageStore';
 import { useViewportStore } from '@/stores/viewportStore';
 import { useI18n } from 'vue-i18n'
-import { computed } from 'vue'
 
 const { t } = useI18n()
 
@@ -35,53 +34,12 @@ const {
   boundingBox,
   resizerSize,
   object,
-  isHightLighted
+  isHightLighted,
+  objectInfo,
+  activeResizerIndex
 } = useSvgObjectWrapper(props.objectId, useImageStore(), useViewportStore(), useEditorStore(), useHistoryStore(), t)
 
-/**
- * Compute display info for current SVG object (position and size)
- */
-const objectInfo = computed(() => {
-  const attrs = object.value.attrs
-  if (!attrs) return null
 
-  if (object.value.tag === 'rect') {
-    return {
-      x: Math.round(attrs.x),
-      y: Math.round(attrs.y),
-      width: Math.round(attrs.width),
-      height: Math.round(attrs.height),
-    }
-  } else if (object.value.tag === 'ellipse') {
-    return {
-      x: Math.round(attrs.cx),
-      y: Math.round(attrs.cy),
-      width: Math.round(attrs.rx * 2),
-      height: Math.round(attrs.ry * 2),
-    }
-  } else if (object.value.tag === 'circle') {
-    return {
-      x: Math.round(attrs.cx),
-      y: Math.round(attrs.cy),
-      width: Math.round(attrs.r * 2),
-      height: Math.round(attrs.r * 2),
-    }
-  } else if (object.value.tag === 'text') {
-    return {
-      x: Math.round(attrs.x),
-      y: Math.round(attrs.y),
-    }
-  } else if (object.value.tag === 'line') {
-    return {
-      x: Math.round(attrs.x1),
-      y: Math.round(attrs.y1),
-      width: Math.round(attrs.x2 - attrs.x1),
-      height: Math.round(attrs.y2 - attrs.y1),
-    }
-  }
-
-  return null
-})
 </script>
 
 <template>
@@ -116,11 +74,12 @@ const objectInfo = computed(() => {
     </template>
 
     <!-- Info box -->
-    <foreignObject v-if="isSelected && objectInfo && boundingBox" :x="boundingBox.x" :y="boundingBox.y - 24" width="200"
-      height="20" style="pointer-events: none">
+    <foreignObject v-if="isSelected && activeResizerIndex === null && objectInfo && boundingBox"
+      :x="(boundingBox.y < 0 || boundingBox.x < 0) ? boundingBox.x + boundingBox.width + 5 : boundingBox.x + 5"
+      :y="(boundingBox.y < 0 || boundingBox.x < 0) ? boundingBox.y + boundingBox.height + 5 : boundingBox.y + 5"
+      width="200" height="20" style="pointer-events: none">
       <div class="svg-object-info">
-        x: {{ objectInfo.x }}, y: {{ objectInfo.y }}
-        <template v-if="'width' in objectInfo"> | w: {{ objectInfo.width }}, h: {{ objectInfo.height }}</template>
+        <template v-if="'width' in objectInfo">{{ objectInfo.width }} px x {{ objectInfo.height }} px</template>
       </div>
     </foreignObject>
   </g>
@@ -128,11 +87,12 @@ const objectInfo = computed(() => {
 
 <style scoped>
 .svg-object-info {
-  font-size: 12px;
+  font-size: 8px;
   font-family: sans-serif;
-  background: rgba(0, 0, 0, 0.7);
-  color: white;
+  background: var(--overlay-c);
+  color: var(--text-c);
   padding: 2px 6px;
   border-radius: 4px;
+  width: fit-content;
 }
 </style>

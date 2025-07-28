@@ -616,6 +616,34 @@ export function useSvgObjectWrapper(
   })
 
   /**
+   * Compute display info for current SVG object (position and size)
+   */
+  const objectInfo = computed(() => {
+    const attrs = object.value.attrs
+
+    console.log('objectInfo', object.value.tag, attrs)
+    if (!attrs) return null
+
+    if (object.value.tag === 'rect') {
+      return {
+        width: Math.round(attrs.width),
+        height: Math.round(attrs.height),
+      }
+    } else if (object.value.tag === 'ellipse') {
+      return {
+        width: Math.round(attrs.rx * 2),
+        height: Math.round(attrs.ry * 2),
+      }
+    } else if (object.value.tag === 'line') {
+      return {
+        width: Math.round(attrs.x2 - attrs.x1),
+        height: Math.round(attrs.y2 - attrs.y1),
+      }
+    }
+    return null
+  })
+
+  /**
    * Add global event listeners for mouse events
    */
   onMounted(() => {
@@ -645,5 +673,8 @@ export function useSvgObjectWrapper(
     areSvgObjectOperationsEnabled,
     object,
     isHightLighted,
+    objectInfo,
+    activeResizerIndex,
+    isDragging,
   }
 }
