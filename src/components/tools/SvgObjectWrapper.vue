@@ -88,14 +88,14 @@ const {
       </template>
 
       <!-- Info box -->
-      <foreignObject v-if="showResizers && activeResizerIndex !== null && objectInfo && boundingBox"
+      <!-- <foreignObject v-if="showResizers && activeResizerIndex !== null && objectInfo && boundingBox"
         :x="(boundingBox.y < 0 || boundingBox.x < 0) ? boundingBox.x + boundingBox.width + 5 : boundingBox.x + 5"
         :y="(boundingBox.y < 0 || boundingBox.x < 0) ? boundingBox.y + boundingBox.height + 5 : boundingBox.y + 5"
         width="200" :height="50" style="pointer-events: none">
         <div class="svg-object-info">
           <template v-if="'width' in objectInfo">{{ objectInfo.width }} px x {{ objectInfo.height }} px</template>
         </div>
-      </foreignObject>
+      </foreignObject> -->
     </g>
   </g>
 </template>

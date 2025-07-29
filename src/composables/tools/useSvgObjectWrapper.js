@@ -27,19 +27,23 @@ export function useSvgObjectWrapper(
     const baseSize = 10
     const zoomAdjusted = baseSize / viewportStore.realZoomLevel
 
-    const max = imageStore.getSmallerImageDimension() * 0.05 // 1% of the bigger image dimension
-
-    // console.log('resizerSize', 2 * zoomAdjusted * editorConfig.resizerMultiplier, 'max', max)
+    const max = imageStore.getSmallerImageDimension() * 0.05 // 5% of the smaller dimension
 
     // Clamp between min and max screen size
     return 2 * clamp(zoomAdjusted, 4, max) * editorConfig.resizerMultiplier
   })
 
+  /**
+   * Size of the control icon for enabling/disabling resizers
+   */
   const controlIconSize = computed(() => {
     console.log('controlIconSize', resizerSize.value * 1.5)
     return Math.max(round(resizerSize.value * 1.5), 20)
   })
 
+  /**
+   * Width of the bounding box stroke
+   */
   const boundingBoxStrokeWidth = computed(() => {
     return clamp(round(resizerSize.value / 10), 1, 5)
   })
@@ -798,14 +802,27 @@ export function useSvgObjectWrapper(
   }
 
   /**
-   * Get snap edge targets (with rotation applied)
+   * Get snap edge targets (with rotation applied), including image borders
    * @returns {Array<{left: number, right: number, top: number, bottom: number}>}
    */
   const getSnapEdgeTargets = () => {
-    return imageStore.svgObjects
+    const targets = imageStore.svgObjects
       .filter((o) => o.id !== object.value.id)
       .map((o) => getTransformedBoundingBox(o))
       .filter(Boolean)
+
+    // Add image border as an extra snap target
+    const imgWidth = imageStore.fileDimensions.width
+    const imgHeight = imageStore.fileDimensions.height
+
+    targets.push({
+      left: 0,
+      right: imgWidth,
+      top: 0,
+      bottom: imgHeight,
+    })
+
+    return targets
   }
 
   /**
