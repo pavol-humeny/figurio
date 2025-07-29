@@ -280,14 +280,10 @@ export function useSvgObjectWrapper(
           let newW = attrs.width - dx
           let newH = keepRatio ? newW / ratio.value : attrs.height - dy
 
-          // Do not change width if resizer is on the left edge
-          if (attrs.x <= 0 && dx < 0) {
-            newW = attrs.width
-          }
-          // Do not change height if resizer is on the top edge
-          if (attrs.y <= 0 && dy < 0) {
-            newH = attrs.height
-          }
+          // Prevent resizing when resizer is on the top/left edge
+          if (keepRatio && (attrs.x <= 0 || attrs.y <= 0)) return
+          if (attrs.x <= 0 && dx < 0) newW = attrs.width
+          if (attrs.y <= 0 && dy < 0) newH = attrs.height
 
           let newX = right - newW
           let newY = bottom - newH
@@ -318,10 +314,10 @@ export function useSvgObjectWrapper(
           let newW = attrs.width + dx
           let newH = keepRatio ? newW / ratio.value : attrs.height - dy
 
-          // Do not change height if resizer is on the right edge
-          if (attrs.y <= 0 && dy < 0) {
-            newH = attrs.height
-          }
+          // Prevent resizing when resizer is on the top/right edge
+          if (keepRatio && (attrs.y <= 0 || attrs.x + attrs.width >= maxW)) return
+          if (attrs.y <= 0 && dy < 0) newH = attrs.height
+          if (attrs.x >= maxW && dx > 0) newW = attrs.width
 
           const newX = left
           let newY = bottom - newH
@@ -347,10 +343,10 @@ export function useSvgObjectWrapper(
           let newW = attrs.width - dx
           let newH = keepRatio ? newW / ratio.value : attrs.height + dy
 
-          // Do not change width if resizer is on the left edge
-          if (attrs.x <= 0 && dx < 0) {
-            newW = attrs.width
-          }
+          // Prevent resizing when resizer is on the left/bottom edge
+          if (keepRatio && (attrs.x <= 0 || attrs.y + attrs.height >= maxH)) return
+          if (attrs.x <= 0 && dx < 0) newW = attrs.width
+          if (attrs.y >= maxH && dy > 0) newH = attrs.height
 
           let newX = right - newW
           const newY = top
@@ -373,6 +369,9 @@ export function useSvgObjectWrapper(
           // Bottom-right
           let newW = attrs.width + dx
           let newH = keepRatio ? newW / ratio.value : attrs.height + dy
+
+          // Prevent resizing when resizer is on the right/bottom edge
+          if (keepRatio && (attrs.x + attrs.width >= maxW || attrs.y + attrs.height >= maxH)) return
 
           const newX = left
           const newY = top
@@ -462,6 +461,7 @@ export function useSvgObjectWrapper(
           let newRx = attrs.rx + dx
           let newRy = keepRatio ? newRx / ratio.value : attrs.ry - dy
 
+          // Prevent resizing when resizer is on the top/right edge
           if (keepRatio && (attrs.cy - attrs.ry <= 0 || attrs.cx + attrs.rx >= maxW)) return
           if (attrs.cx + attrs.rx >= maxW && dx > 0) newRx = attrs.rx
           if (attrs.cy - attrs.ry <= 0 && dy < 0) newRy = attrs.ry
