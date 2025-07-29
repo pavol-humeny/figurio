@@ -97,8 +97,7 @@ export const useImageStore = defineStore('imageStore', {
           y: 40,
           width: 200,
           height: 100,
-          fill: 'red',
-          stroke: 'red',
+          fill: 'lime',
           transform: 'rotate(45, 150, 90)'
         },
       },

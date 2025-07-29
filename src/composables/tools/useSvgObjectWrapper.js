@@ -16,7 +16,7 @@ export function useSvgObjectWrapper(
   historyStore,
   t,
 ) {
-  const { clamp, pythagorean } = useMath()
+  const { clamp, pythagorean, round } = useMath()
 
   /**
    * Size of the resizer handles
@@ -144,14 +144,6 @@ export function useSvgObjectWrapper(
     startY.value = event.clientY
     event.stopPropagation()
 
-    if (object.value.tag === 'rect') {
-      ratio.value = object.value.attrs.width / object.value.attrs.height
-    } else if (object.value.tag === 'ellipse') {
-      ratio.value = object.value.attrs.rx / object.value.attrs.ry
-    } else {
-      ratio.value = 1
-    }
-
     remainingDx.value = 0
     remainingDy.value = 0
   }
@@ -168,6 +160,14 @@ export function useSvgObjectWrapper(
     startX.value = event.clientX
     startY.value = event.clientY
     event.stopPropagation()
+
+    if (object.value.tag === 'rect') {
+      ratio.value = object.value.attrs.width / object.value.attrs.height
+    } else if (object.value.tag === 'ellipse') {
+      ratio.value = object.value.attrs.rx / object.value.attrs.ry
+    } else {
+      ratio.value = 1
+    }
   }
 
   /**
@@ -214,8 +214,8 @@ export function useSvgObjectWrapper(
     let rawDy = (event.clientY - startY.value) / viewportStore.realZoomLevel + remainingDy.value
 
     // Round to whole pixels
-    let dx = Math.trunc(rawDx)
-    let dy = Math.trunc(rawDy)
+    let dx = round(rawDx)
+    let dy = round(rawDy)
 
     // Save remaining dx and dy for smooth dragging
     remainingDx.value = rawDx - dx
@@ -301,7 +301,7 @@ export function useSvgObjectWrapper(
           applyRect(newX, newY, newW, newH)
         }
 
-        isHightLighted.value = attrs.width === attrs.height
+        isHightLighted.value = round(attrs.width) === round(attrs.height)
       }
       // Ellipse
       if (tag === 'ellipse') {
@@ -326,6 +326,11 @@ export function useSvgObjectWrapper(
           console.log('x', attrs.cx, 'y', attrs.cy, 'rx', attrs.rx, 'ry', attrs.ry)
           console.log('newRx', newRx, 'newRy', newRy)
 
+          // Prevent resizing when resizer is on the top edge and keep aspect ratio
+          if (keepRatio && (attrs.cy - attrs.ry <= 0 || attrs.cx - attrs.rx <= 0)) {
+            return
+          }
+
           // Do not change radius if resizer is on the left edge
           if (attrs.cx - attrs.rx <= 0 && dx < 0) {
             newRx = attrs.rx
@@ -345,6 +350,11 @@ export function useSvgObjectWrapper(
           const bottom = attrs.cy + attrs.ry
           let newRx = attrs.rx + dx
           let newRy = keepRatio ? newRx / ratio.value : attrs.ry - dy
+
+          // Prevent resizing when resizer is on the top edge and keep aspect ratio
+          if (keepRatio && (attrs.cy - attrs.ry <= 0 || attrs.cx + attrs.rx >= maxW)) {
+            return
+          }
 
           // Do not change radius if resizer is on the right edge
           if (attrs.cx + attrs.rx >= maxW && dx > 0) {
@@ -367,6 +377,11 @@ export function useSvgObjectWrapper(
           let newRx = attrs.rx + dx
           let newRy = keepRatio ? newRx / ratio.value : attrs.ry + dy
 
+          // Prevent resizing when resizer is on the bottom edge and keep aspect ratio
+          if (keepRatio && (attrs.cy + attrs.ry >= maxH || attrs.cx + attrs.rx >= maxW)) {
+            return
+          }
+
           // Do not change radius if resizer is on the bottom edge
           if (attrs.cy + attrs.ry >= maxH && dy > 0) {
             newRy = attrs.ry
@@ -386,6 +401,11 @@ export function useSvgObjectWrapper(
           const top = attrs.cy - attrs.ry
           let newRx = attrs.rx - dx
           let newRy = keepRatio ? newRx / ratio.value : attrs.ry + dy
+
+          // Prevent resizing when resizer is on the bottom edge and keep aspect ratio
+          if (keepRatio && (attrs.cy + attrs.ry >= maxH || attrs.cx - attrs.rx <= 0)) {
+            return
+          }
 
           // Do not change radius if resizer is on the bottom edge
           if (attrs.cy + attrs.ry >= maxH && dy > 0) {

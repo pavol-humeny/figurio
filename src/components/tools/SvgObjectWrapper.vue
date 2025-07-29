@@ -47,7 +47,7 @@ const {
 <template>
   <g @mousedown="onMouseDown" @mousedown.right.prevent.stop>
     <!-- SVG object except text -->
-    <g v-if="isSelected" @mousedown="onMouseDownDrag" style="cursor: move">
+    <g v-if="isSelected" @mousedown="onMouseDownDrag" @dblclick="showResizers = !showResizers" style="cursor: move">
       <component v-if="object.tag !== 'text'" :is="object.tag" v-bind="object.attrs" />
       <text v-else v-bind="object.attrs" style="user-select: none" ref="textRef">
         {{ object.content || '' }}
@@ -62,8 +62,8 @@ const {
       </text>
     </g>
 
-    <!-- Bounding box -->
     <g v-if="isSelected && boundingBox" :transform="object?.attrs?.transform">
+      <!-- Bounding box -->
       <rect :x="boundingBox.x" :y="boundingBox.y" :width="boundingBox.width" :height="boundingBox.height" fill="none"
         :stroke="isHightLighted ? 'var(--editor-highlight-align-c)' : 'var(--editor-highlight-c)'" stroke-width="1"
         stroke-dasharray="4 2" pointer-events="none" />
