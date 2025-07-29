@@ -99,6 +99,7 @@ export const useImageStore = defineStore('imageStore', {
           height: 100,
           fill: 'red',
           stroke: 'red',
+          transform: 'rotate(45, 150, 90)'
         },
       },
       {
@@ -113,6 +114,7 @@ export const useImageStore = defineStore('imageStore', {
           fill: 'yellow',
           stroke: 'orange',
           'stroke-width': 3,
+          transform: '',
         },
       },
       {
@@ -124,6 +126,7 @@ export const useImageStore = defineStore('imageStore', {
           y: 350,
           fill: 'black',
           'font-size': '20px',
+          transform: '',
         },
         content: 'Sample Textiiiii',
       },
@@ -138,6 +141,7 @@ export const useImageStore = defineStore('imageStore', {
           y2: 300,
           stroke: 'green',
           'stroke-width': 4,
+          transform: '',
         },
       },
     ],

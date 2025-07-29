@@ -74,9 +74,53 @@ export function useSvgObjectWrapper(
   const textBBox = ref(null)
 
   /**
+   * Reactive variable to track the aspect ratio of the SVG object
+   * Used for maintaining aspect ratio while resizing
+   */
+  const ratio = ref(1)
+
+  /**
    * Reactive variable to track the index of the active resizer
    */
   const activeResizerIndex = ref(null)
+
+  /**
+   * Variable to track if resizers should be shown
+   */
+  const showResizers = ref(false)
+
+  /**
+   * Temporary variable to store rotation angle while resizing
+   */
+  const tmpAngle = ref(0)
+
+  /**
+   * Watch for changes in the showResizers state and update the SVG object's transform accordingly
+   */
+  watch(
+    () => showResizers.value,
+    (newValue) => {
+      const { attrs } = object.value
+      if (newValue) {
+        // Save and reset rotate
+        const transform = attrs.transform || ''
+        const match = transform.match(/rotate\(([-\d.]+),\s*([-\d.]+),\s*([-\d.]+)\)/)
+        tmpAngle.value = match ? parseFloat(match[1]) : 0
+
+        const cx = attrs.x + (attrs.width || 0) / 2
+        const cy = attrs.y + (attrs.height || 0) / 2
+
+        object.value.attrs.transform = `rotate(${0}, ${cx}, ${cy})`
+      } else {
+        // Restore rotation
+        if (tmpAngle.value !== 0) {
+          const cx = attrs.x + (attrs.width || 0) / 2
+          const cy = attrs.y + (attrs.height || 0) / 2
+          attrs.transform = `rotate(${tmpAngle.value}, ${cx}, ${cy})`
+        }
+      }
+    },
+  )
 
   /**
    * Watch for changes in the selected tool and reset the selected SVG object when the tool changes
@@ -87,8 +131,6 @@ export function useSvgObjectWrapper(
       imageStore.selectedSvgObjectId = null
     },
   )
-
-  const ratio = ref(1)
 
   /**
    * Mouse event handlers for the SVG object
@@ -114,6 +156,12 @@ export function useSvgObjectWrapper(
     remainingDy.value = 0
   }
 
+  /**
+   * Mouse down handler for resizer handles
+   * @param {MouseEvent} event - Mouse event
+   * @param {number} index - Index of the resizer handle (0-3 for rectangle, 0-1 for line)
+   * This will set the active resizer index
+   */
   const onMouseDownResizer = (event, index) => {
     if (!areSvgObjectOperationsEnabled.value || !isSelected.value) return
     activeResizerIndex.value = index
@@ -134,6 +182,24 @@ export function useSvgObjectWrapper(
     startX.value = event.clientX
     startY.value = event.clientY
     event.stopPropagation()
+  }
+
+  /**
+   * Update the rotation transform of the SVG object
+   * This is called after resizing or dragging to ensure the rotation is centered correctly
+   */
+  const updateRotationTransform = () => {
+    const { attrs } = object.value
+    const match = attrs.transform?.match(/rotate\((-?\d+\.?\d*),?([^)]*)\)/)
+
+    if (!match) return
+
+    const currentAngle = parseFloat(match[1])
+
+    const centerX = attrs.x + attrs.width / 2
+    const centerY = attrs.y + attrs.height / 2
+
+    attrs.transform = `rotate(${currentAngle}, ${centerX}, ${centerY})`
   }
 
   /**
@@ -168,7 +234,7 @@ export function useSvgObjectWrapper(
       const maxW = imageStore.fileDimensions.width
       const maxH = imageStore.fileDimensions.height
 
-      // RECTANGLE
+      // Rectangle
       if (tag === 'rect') {
         const right = attrs.x + attrs.width
         const bottom = attrs.y + attrs.height
@@ -237,8 +303,7 @@ export function useSvgObjectWrapper(
 
         isHightLighted.value = attrs.width === attrs.height
       }
-
-      // ELLIPSE
+      // Ellipse
       if (tag === 'ellipse') {
         dx /= 2
         dy /= 2
@@ -339,8 +404,7 @@ export function useSvgObjectWrapper(
 
         isHightLighted.value = attrs.rx === attrs.ry
       }
-
-      // LINE
+      // Line
       if (tag === 'line') {
         const minLength = 2
         const maxX = imageStore.fileDimensions.width
@@ -367,76 +431,41 @@ export function useSvgObjectWrapper(
           pythagorean(attrs.x1 - attrs.x2, attrs.y1 - attrs.y2) > minLength
       }
 
-      const i = imageStore.svgObjects.findIndex((o) => o.id === object.value.id)
-      if (i !== -1) imageStore.svgObjects[i].attrs = { ...attrs }
-      return
+      object.value.attrs = { ...attrs }
     }
 
     // DRAG
-    if (!isDragging.value) return
+    if (isDragging.value) {
+      // Rectangle and text
+      if ('x' in attrs && 'y' in attrs) {
+        if (tag === 'text' && textBBox.value) {
+          attrs.x += dx
+          attrs.y += dy
 
-    // Rectangle and text
-    if ('x' in attrs && 'y' in attrs) {
-      if (tag === 'text' && textBBox.value) {
-        const newTextX = clamp(
-          textBBox.value.x + dx,
-          0,
-          imageStore.fileDimensions.width - textBBox.value.width,
-        )
-        const newTextY = clamp(
-          textBBox.value.y + dy,
-          0,
-          imageStore.fileDimensions.height - textBBox.value.height,
-        )
-        attrs.x = newTextX
-        attrs.y = newTextY - textBBox.value.y + attrs.y
-        textBBox.value.x = newTextX
-        textBBox.value.y = newTextY
-      } else {
-        attrs.x = clamp(attrs.x + dx, 0, imageStore.fileDimensions.width - attrs.width)
-        attrs.y = clamp(attrs.y + dy, 0, imageStore.fileDimensions.height - attrs.height)
+          textBBox.value.x = textBBox.value.x + dx
+          textBBox.value.y = textBBox.value.y + dy
+        } else {
+          attrs.x += dx
+          attrs.y += dy
+        }
+      }
+      // Ellipse
+      else if ('cx' in attrs && 'cy' in attrs && 'rx' in attrs && 'ry' in attrs) {
+        attrs.cx += dx
+        attrs.cy += dy
+      }
+      // Line
+      else if ('x1' in attrs && 'y1' in attrs && 'x2' in attrs && 'y2' in attrs) {
+        attrs.x1 += dx
+        attrs.y1 += dy
+        attrs.x2 += dx
+        attrs.y2 += dy
       }
     }
-    // Ellipse
-    else if ('cx' in attrs && 'cy' in attrs && 'rx' in attrs && 'ry' in attrs) {
-      attrs.cx = clamp(attrs.cx + dx, 0 + attrs.rx, imageStore.fileDimensions.width - attrs.rx)
-      attrs.cy = clamp(attrs.cy + dy, 0 + attrs.ry, imageStore.fileDimensions.height - attrs.ry)
-    }
-    // Line
-    else if ('x1' in attrs && 'y1' in attrs && 'x2' in attrs && 'y2' in attrs) {
-      const maxX = imageStore.fileDimensions.width
-      const maxY = imageStore.fileDimensions.height
 
-      let newX1 = attrs.x1 + dx
-      let newY1 = attrs.y1 + dy
-      let newX2 = attrs.x2 + dx
-      let newY2 = attrs.y2 + dy
+    object.value.attrs = { ...attrs }
 
-      // Uprav každú súradnicu individuálne, aby nešla mimo
-      const clampedX1 = clamp(newX1, 0, maxX)
-      const clampedY1 = clamp(newY1, 0, maxY)
-      const clampedX2 = clamp(newX2, 0, maxX)
-      const clampedY2 = clamp(newY2, 0, maxY)
-
-      // Ak sa aspoň jedna súradnica zmenila kvôli clamping, zmeň posun, inak nastav priamo
-      const adjustedDx1 = clampedX1 - attrs.x1
-      const adjustedDy1 = clampedY1 - attrs.y1
-      const adjustedDx2 = clampedX2 - attrs.x2
-      const adjustedDy2 = clampedY2 - attrs.y2
-
-      // Použi minimálny spoločný posun
-      const finalDx = Math.abs(adjustedDx1) < Math.abs(adjustedDx2) ? adjustedDx1 : adjustedDx2
-      const finalDy = Math.abs(adjustedDy1) < Math.abs(adjustedDy2) ? adjustedDy1 : adjustedDy2
-
-      // Posuň obidva body o rovnaký posun (aby čiara ostala konzistentná)
-      attrs.x1 += finalDx
-      attrs.y1 += finalDy
-      attrs.x2 += finalDx
-      attrs.y2 += finalDy
-    }
-
-    const i = imageStore.svgObjects.findIndex((o) => o.id === object.value.id)
-    if (i !== -1) imageStore.svgObjects[i].attrs = { ...attrs }
+    updateRotationTransform()
   }
 
   /**
@@ -448,11 +477,12 @@ export function useSvgObjectWrapper(
 
     isDragging.value = false
     activeResizerIndex.value = null
-    historyStore.push(imageStore.getSnapshot(t))
     isHightLighted.value = false
 
     remainingDx.value = 0
     remainingDy.value = 0
+
+    historyStore.push(imageStore.getSnapshot(t))
   }
 
   /**
@@ -462,7 +492,10 @@ export function useSvgObjectWrapper(
   const onGlobalClick = (e) => {
     if (!areSvgObjectOperationsEnabled.value) return
 
-    if (!e.target.closest('g')) imageStore.selectedSvgObjectId = null
+    if (!e.target.closest('g')) {
+      imageStore.selectedSvgObjectId = null
+      showResizers.value = false
+    }
   }
 
   /**
@@ -486,19 +519,6 @@ export function useSvgObjectWrapper(
         { x: x + w, y: y + h, cursor: 'nwse-resize' },
       ]
     }
-
-    // Circle
-    // if (tag === 'circle') {
-    //   const cx = attrs.cx || 0,
-    //     cy = attrs.cy || 0,
-    //     r = attrs.r || 0
-    //   return [
-    //     { x: cx - r, y: cy - r, cursor: 'nwse-resize' },
-    //     { x: cx + r, y: cy - r, cursor: 'nesw-resize' },
-    //     { x: cx + r, y: cy + r, cursor: 'nwse-resize' },
-    //     { x: cx - r, y: cy + r, cursor: 'nesw-resize' },
-    //   ]
-    // }
 
     // Ellipse
     if (tag === 'ellipse') {
@@ -629,5 +649,6 @@ export function useSvgObjectWrapper(
     objectInfo,
     activeResizerIndex,
     isDragging,
+    showResizers,
   }
 }

@@ -622,6 +622,12 @@
       }
     }
   },
+  "svgObject":{
+    "resizeObject":{
+      "tipStartResize": "Start resizing",
+      "tipStopResize": "Stop resizing"
+    }
+  },
   "noToolSelected": {
     "label": "No tool selected"
   },

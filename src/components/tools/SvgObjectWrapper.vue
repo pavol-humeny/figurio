@@ -5,6 +5,7 @@ import { useHistoryStore } from '@/stores/historyStore';
 import { useImageStore } from '@/stores/imageStore';
 import { useViewportStore } from '@/stores/viewportStore';
 import { useI18n } from 'vue-i18n'
+import BaseIcon from '@/components/icons/BaseIcon.vue'
 
 const { t } = useI18n()
 
@@ -36,7 +37,8 @@ const {
   object,
   isHightLighted,
   objectInfo,
-  activeResizerIndex
+  activeResizerIndex,
+  showResizers
 } = useSvgObjectWrapper(props.objectId, useImageStore(), useViewportStore(), useEditorStore(), useHistoryStore(), t)
 
 
@@ -61,27 +63,37 @@ const {
     </g>
 
     <!-- Bounding box -->
-    <rect v-if="isSelected && boundingBox" :x="boundingBox.x" :y="boundingBox.y" :width="boundingBox.width"
-      :height="boundingBox.height" fill="none"
-      :stroke="isHightLighted ? 'var(--editor-highlight-align-c)' : 'var(--editor-highlight-c)'" stroke-width="1"
-      stroke-dasharray="4 2" pointer-events="none" />
+    <g v-if="isSelected && boundingBox" :transform="object?.attrs?.transform">
+      <rect :x="boundingBox.x" :y="boundingBox.y" :width="boundingBox.width" :height="boundingBox.height" fill="none"
+        :stroke="isHightLighted ? 'var(--editor-highlight-align-c)' : 'var(--editor-highlight-c)'" stroke-width="1"
+        stroke-dasharray="4 2" pointer-events="none" />
 
-    <!-- Resizers -->
-    <template v-if="isSelected && object.tag !== 'text'">
-      <circle v-for="(pos, i) in getResizerPositions()" :key="i" :cx="pos.x" :cy="pos.y" :r="resizerSize"
-        fill="var(--text-c)" stroke="var(--editor-highlight-c)" :style="{ cursor: pos.cursor }"
-        @mousedown.stop.prevent="onMouseDownResizer($event, i)" />
-    </template>
+      <!-- Icon to turn on resize -->
+      <foreignObject :x="boundingBox.x + boundingBox.width / 2 - 10" :y="boundingBox.y - 22" width="20" height="20"
+        @mousedown.stop.prevent="showResizers = !showResizers" style="cursor: pointer">
+        <BaseIcon v-if="showResizers" :name="'IconCross'" :tip="t('tools.svgObject.resizeObject.tipStopResize')"
+          :size="20" :color="'var(--primary-c)'" />
+        <BaseIcon v-else :name="'IconResizeObject'" :tip="t('tools.svgObject.resizeObject.tipStartResize')" :size="20"
+          :color="'var(--primary-c)'" />
+      </foreignObject>
 
-    <!-- Info box -->
-    <foreignObject v-if="isSelected && activeResizerIndex !== null && objectInfo && boundingBox"
-      :x="(boundingBox.y < 0 || boundingBox.x < 0) ? boundingBox.x + boundingBox.width + 5 : boundingBox.x + 5"
-      :y="(boundingBox.y < 0 || boundingBox.x < 0) ? boundingBox.y + boundingBox.height + 5 : boundingBox.y + 5"
-      width="200" height="20" style="pointer-events: none">
-      <div class="svg-object-info">
-        <template v-if="'width' in objectInfo">{{ objectInfo.width }} px x {{ objectInfo.height }} px</template>
-      </div>
-    </foreignObject>
+      <!-- Resizers -->
+      <template v-if="showResizers && object.tag !== 'text'">
+        <circle v-for="(pos, i) in getResizerPositions()" :key="i" :cx="pos.x" :cy="pos.y" :r="resizerSize"
+          fill="var(--text-c)" stroke="var(--editor-highlight-c)" :style="{ cursor: pos.cursor }"
+          @mousedown.stop.prevent="onMouseDownResizer($event, i)" />
+      </template>
+
+      <!-- Info box -->
+      <foreignObject v-if="showResizers && activeResizerIndex !== null && objectInfo && boundingBox"
+        :x="(boundingBox.y < 0 || boundingBox.x < 0) ? boundingBox.x + boundingBox.width + 5 : boundingBox.x + 5"
+        :y="(boundingBox.y < 0 || boundingBox.x < 0) ? boundingBox.y + boundingBox.height + 5 : boundingBox.y + 5"
+        width="200" height="20" style="pointer-events: none">
+        <div class="svg-object-info">
+          <template v-if="'width' in objectInfo">{{ objectInfo.width }} px x {{ objectInfo.height }} px</template>
+        </div>
+      </foreignObject>
+    </g>
   </g>
 </template>
 

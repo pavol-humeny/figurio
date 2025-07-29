@@ -621,6 +621,12 @@
       }
     }
   },
+  "svgObject":{
+    "resizeObject":{
+      "tipStartResize": "Zmeniť veľkosť",
+      "tipStopResize": "Ukončiť zmenu veľkosti"
+    }
+  },
   "noToolSelected": {
     "label": "Žiadny vybraný nástroj"
   },
