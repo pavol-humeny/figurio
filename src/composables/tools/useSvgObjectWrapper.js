@@ -1,5 +1,6 @@
 import { ref, computed, watchEffect, onMounted, onBeforeUnmount, watch } from 'vue'
 import { useMath } from '../common/useMath'
+import { editorConfig } from '@/config/editorConfig'
 /**
  * Logic for interactive SVG object
  * @param {Object} object - SVG object (with id, tag, attrs)
@@ -21,7 +22,27 @@ export function useSvgObjectWrapper(
   /**
    * Size of the resizer handles
    */
-  const resizerSize = 5
+  const resizerSize = computed(() => {
+    // Base logical resizer size in screen pixels
+    const baseSize = 10
+    const zoomAdjusted = baseSize / viewportStore.realZoomLevel
+
+    const max = imageStore.getSmallerImageDimension() * 0.05 // 1% of the bigger image dimension
+
+    // console.log('resizerSize', 2 * zoomAdjusted * editorConfig.resizerMultiplier, 'max', max)
+
+    // Clamp between min and max screen size
+    return 2 * clamp(zoomAdjusted, 4, max) * editorConfig.resizerMultiplier
+  })
+
+  const controlIconSize = computed(() => {
+    console.log('controlIconSize', resizerSize.value * 1.5)
+    return Math.max(round(resizerSize.value * 1.5), 20)
+  })
+
+  const boundingBoxStrokeWidth = computed(() => {
+    return clamp(round(resizerSize.value / 10), 1, 5)
+  })
 
   /**
    * Reactive reference to the SVG object
@@ -267,6 +288,17 @@ export function useSvgObjectWrapper(
           let newX = right - newW
           let newY = bottom - newH
 
+          // Clamp newY so height never becomes 0
+          if (newY > bottom - minSize) {
+            newY = bottom - minSize
+            newH = bottom - newY
+          }
+          // Clamp newX so width never becomes 0
+          if (newX > right - minSize) {
+            newX = right - minSize
+            newW = right - newX
+          }
+
           // Snap to edges if Ctrl key is pressed
           if (isCtrlKey) {
             const snap = getSnapOffsetToEdges(newX, right, newY, bottom)
@@ -276,7 +308,7 @@ export function useSvgObjectWrapper(
             newH = bottom - newY
           }
 
-          applyRect(newX, newY, right - newX, bottom - newY)
+          applyRect(newX, newY, newW, newH)
         } else if (activeResizerIndex.value === 1) {
           // Top-right
           let newW = attrs.width + dx
@@ -782,10 +814,11 @@ export function useSvgObjectWrapper(
    * @param {number} right - current right edge
    * @param {number} top - current top edge
    * @param {number} bottom - current bottom edge
-   * @param {number} threshold - snap distance
    * @returns {{dx: number, dy: number}}
    */
-  const getSnapOffsetToEdges = (left, right, top, bottom, threshold = 2) => {
+  const getSnapOffsetToEdges = (left, right, top, bottom) => {
+    const threshold = imageStore.getSmallerImageDimension() * 0.01
+    console.log('threshold', threshold)
     const targets = getSnapEdgeTargets()
     let dx = 0
     let dy = 0
@@ -977,5 +1010,7 @@ export function useSvgObjectWrapper(
     activeResizerIndex,
     isDragging,
     showResizers,
+    controlIconSize,
+    boundingBoxStrokeWidth,
   }
 }

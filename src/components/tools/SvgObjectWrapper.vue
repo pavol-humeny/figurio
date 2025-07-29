@@ -38,7 +38,9 @@ const {
   isSymmetricalObject,
   objectInfo,
   activeResizerIndex,
-  showResizers
+  showResizers,
+  controlIconSize,
+  boundingBoxStrokeWidth,
 } = useSvgObjectWrapper(props.objectId, useImageStore(), useViewportStore(), useEditorStore(), useHistoryStore(), t)
 
 
@@ -65,22 +67,22 @@ const {
     <g v-if="isSelected && boundingBox" :transform="object?.attrs?.transform">
       <!-- Bounding box -->
       <rect :x="boundingBox.x" :y="boundingBox.y" :width="boundingBox.width" :height="boundingBox.height" fill="none"
-        :stroke="isSymmetricalObject ? 'var(--editor-highlight-align-c)' : 'var(--editor-highlight-c)'" stroke-width="1"
-        stroke-dasharray="4 2" pointer-events="none" />
+        :stroke="isSymmetricalObject ? 'var(--editor-highlight-align-c)' : 'var(--editor-highlight-c)'"
+        :stroke-width="boundingBoxStrokeWidth" :stroke-dasharray="[boundingBoxStrokeWidth*4, boundingBoxStrokeWidth*2]" pointer-events="none" />
 
       <!-- Icon to turn on resize -->
-      <foreignObject v-if="object.tag !== 'text'" :x="boundingBox.x + boundingBox.width / 2 - 10"
-        :y="boundingBox.y - 22" width="20" height="20" @mousedown.stop.prevent="showResizers = !showResizers"
-        style="cursor: pointer">
+      <foreignObject v-if="object.tag !== 'text'" :x="boundingBox.x + boundingBox.width / 2 - controlIconSize * 0.5"
+        :y="boundingBox.y - controlIconSize" :width="controlIconSize" :height="controlIconSize"
+        @mousedown.stop.prevent="showResizers = !showResizers" style="cursor: pointer">
         <BaseIcon v-if="showResizers" :name="'IconCross'" :tip="t('tools.svgObject.resizeObject.tipStopResize')"
-          :size="20" :color="'var(--primary-c)'" />
-        <BaseIcon v-else :name="'IconResizeObject'" :tip="t('tools.svgObject.resizeObject.tipStartResize')" :size="20"
-          :color="'var(--primary-c)'" />
+          :size="controlIconSize" :color="'var(--primary-c)'" />
+        <BaseIcon v-else :name="'IconResizeObject'" :tip="t('tools.svgObject.resizeObject.tipStartResize')"
+          :size="controlIconSize" :color="'var(--primary-c)'" />
       </foreignObject>
 
       <!-- Resizers -->
       <template v-if="showResizers && object.tag !== 'text'">
-        <circle v-for="(pos, i) in getResizerPositions()" :key="i" :cx="pos.x" :cy="pos.y" :r="resizerSize"
+        <circle v-for="(pos, i) in getResizerPositions()" :key="i" :cx="pos.x" :cy="pos.y" :r="resizerSize / 2"
           fill="var(--text-c)" stroke="var(--editor-highlight-c)" :style="{ cursor: pos.cursor }"
           @mousedown.stop.prevent="onMouseDownResizer($event, i)" />
       </template>
@@ -89,7 +91,7 @@ const {
       <foreignObject v-if="showResizers && activeResizerIndex !== null && objectInfo && boundingBox"
         :x="(boundingBox.y < 0 || boundingBox.x < 0) ? boundingBox.x + boundingBox.width + 5 : boundingBox.x + 5"
         :y="(boundingBox.y < 0 || boundingBox.x < 0) ? boundingBox.y + boundingBox.height + 5 : boundingBox.y + 5"
-        width="200" height="20" style="pointer-events: none">
+        width="200" :height="50" style="pointer-events: none">
         <div class="svg-object-info">
           <template v-if="'width' in objectInfo">{{ objectInfo.width }} px x {{ objectInfo.height }} px</template>
         </div>
@@ -100,7 +102,7 @@ const {
 
 <style scoped>
 .svg-object-info {
-  font-size: 8px;
+  font-size: 50px;
   font-family: sans-serif;
   background: var(--overlay-c);
   color: var(--text-c);

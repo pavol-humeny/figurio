@@ -111,8 +111,6 @@ export const useImageStore = defineStore('imageStore', {
           rx: 50, // polomer v smere osi x
           ry: 50, // polomer v smere osi y
           fill: 'yellow',
-          stroke: 'orange',
-          'stroke-width': 3,
           transform: '',
         },
       },
@@ -246,6 +244,30 @@ export const useImageStore = defineStore('imageStore', {
      */
     getIndexOfSelectedSvgObject() {
       return this.svgObjects.findIndex((obj) => obj.id === this.selectedSvgObjectId)
+    },
+
+    /**
+     * Returns the larger dimension (width or height) of the current file dimensions
+     * @returns {number} - The larger dimension of the image
+     */
+    getBiggerImageDimension() {
+      if (this.fileDimensions.width > this.fileDimensions.height) {
+        return this.fileDimensions.width
+      } else {
+        return this.fileDimensions.height
+      }
+    },
+
+    /**
+     * Returns the smaller dimension (width or height) of the current file dimensions
+     * @returns {number} - The smaller dimension (width or height) of the current file dimensions
+     */
+    getSmallerImageDimension() {
+      if (this.fileDimensions.width < this.fileDimensions.height) {
+        return this.fileDimensions.width
+      } else {
+        return this.fileDimensions.height
+      }
     },
 
     /**

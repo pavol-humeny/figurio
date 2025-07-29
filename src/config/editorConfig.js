@@ -17,10 +17,12 @@ export const editorConfig = {
   maxHeaderFooterMultiplier: 5, // Maximum multiplier for header/footer height
   stepHeaderFooterMultiplier: 0.1, // Step for header/footer height multiplier
 
-
   // Presets
   localStoragePresetsKey: 'imageEditorPresets',
 
   // Max file size for uploads
   maxFileSize: 10, // in MB
+
+  // Svg object wrapper
+  resizerMultiplier: 0.9, // 1 - default size
 }
