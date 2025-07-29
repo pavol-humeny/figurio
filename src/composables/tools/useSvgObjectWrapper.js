@@ -259,18 +259,27 @@ export function useSvgObjectWrapper(
           if (attrs.x <= 0 && dx < 0) {
             newW = attrs.width
           }
-
           // Do not change height if resizer is on the top edge
           if (attrs.y <= 0 && dy < 0) {
             newH = attrs.height
           }
 
-          const newX = right - newW
-          const newY = bottom - newH
+          let newX = right - newW
+          let newY = bottom - newH
+
+          // Snap to edges if Ctrl key is pressed
+          if (isCtrlKey) {
+            const snap = getSnapOffsetToEdges(newX, right, newY, bottom)
+            newX += snap.dx
+            newY += snap.dy
+            newW = right - newX
+            newH = bottom - newY
+          }
+
           applyRect(newX, newY, right - newX, bottom - newY)
         } else if (activeResizerIndex.value === 1) {
           // Top-right
-          const newW = attrs.width + dx
+          let newW = attrs.width + dx
           let newH = keepRatio ? newW / ratio.value : attrs.height - dy
 
           // Do not change height if resizer is on the right edge
@@ -279,27 +288,74 @@ export function useSvgObjectWrapper(
           }
 
           const newX = left
-          const newY = bottom - newH
+          let newY = bottom - newH
+
+          // Clamp newY so height never becomes 0
+          if (newY > bottom - minSize) {
+            newY = bottom - minSize
+            newH = bottom - newY
+          }
+
+          // Snap to edges if Ctrl key is pressed
+          if (isCtrlKey) {
+            const snap = getSnapOffsetToEdges(newX, newX + newW, newY, bottom)
+
+            newW += snap.dx
+            newY += snap.dy
+            newH = bottom - newY
+          }
+
           applyRect(newX, newY, newW, bottom - newY)
         } else if (activeResizerIndex.value === 2) {
-          // Bottom-right
+          // Bottom-left
           let newW = attrs.width - dx
-          const newH = keepRatio ? newW / ratio.value : attrs.height + dy
+          let newH = keepRatio ? newW / ratio.value : attrs.height + dy
 
           // Do not change width if resizer is on the left edge
           if (attrs.x <= 0 && dx < 0) {
             newW = attrs.width
           }
 
-          const newX = right - newW
+          let newX = right - newW
           const newY = top
+
+          // Clamp newX so width never becomes 0
+          if (newX > right - minSize) {
+            newX = right - minSize
+            newW = right - newX
+          }
+
+          // Snap to edges if Ctrl key is pressed
+          if (isCtrlKey) {
+            const snap = getSnapOffsetToEdges(newX, right, newY, newY + newH)
+            newX += snap.dx
+            newH += snap.dy
+          }
+
           applyRect(newX, newY, right - newX, newH)
         } else if (activeResizerIndex.value === 3) {
-          // Bottom-left
-          const newW = attrs.width + dx
-          const newH = keepRatio ? newW / ratio.value : attrs.height + dy
+          // Bottom-right
+          let newW = attrs.width + dx
+          let newH = keepRatio ? newW / ratio.value : attrs.height + dy
+
           const newX = left
           const newY = top
+
+          // Snap to edges if Ctrl key is pressed
+          if (isCtrlKey) {
+            const bottomBeforeSnap = newY + newH
+
+            const snap = getSnapOffsetToEdges(newX, newX + newW, newY, newY + newH)
+
+            newW += snap.dx
+
+            if (snap.dy !== 0) {
+              const newBottom = bottomBeforeSnap + snap.dy
+              newH = newBottom - newY
+            }
+            // newH += snap.dy
+          }
+
           applyRect(newX, newY, newW, newH)
         }
 
@@ -325,26 +381,43 @@ export function useSvgObjectWrapper(
           let newRx = attrs.rx - dx
           let newRy = keepRatio ? newRx / ratio.value : attrs.ry - dy
 
-          console.log('x', attrs.cx, 'y', attrs.cy, 'rx', attrs.rx, 'ry', attrs.ry)
-          console.log('newRx', newRx, 'newRy', newRy)
+          // Prevent resizing when resizer is on the top/left edge
+          if (keepRatio && (attrs.cy - attrs.ry <= 0 || attrs.cx - attrs.rx <= 0)) return
+          if (attrs.cx - attrs.rx <= 0 && dx < 0) newRx = attrs.rx
+          if (attrs.cy - attrs.ry <= 0 && dy < 0) newRy = attrs.ry
 
-          // Prevent resizing when resizer is on the top edge and keep aspect ratio
-          if (keepRatio && (attrs.cy - attrs.ry <= 0 || attrs.cx - attrs.rx <= 0)) {
-            return
+          let newCx = right - newRx
+          let newCy = bottom - newRy
+
+          // Clamp rx to prevent moving when size is minimal
+          if (newRx <= minSize) {
+            newRx = minSize
+            newCx = right - newRx
+          }
+          // Clamp ry to prevent moving when size is minimal
+          if (newRy <= minSize) {
+            newRy = minSize
+            newCy = bottom - newRy
           }
 
-          // Do not change radius if resizer is on the left edge
-          if (attrs.cx - attrs.rx <= 0 && dx < 0) {
-            newRx = attrs.rx
+          if (isCtrlKey) {
+            // Predict new bbox before applying
+            const snap = getSnapOffsetToEdges(
+              newCx - newRx,
+              newCx + newRx,
+              newCy - newRy,
+              newCy + newRy,
+            )
+
+            // Snap only position, not size (to avoid jitter)
+            newCx += snap.dx
+            newCy += snap.dy
+
+            // If snapped, reset size to original to avoid unintended resize
+            if (snap.dx !== 0) newRx = attrs.rx
+            if (snap.dy !== 0) newRy = attrs.ry
           }
 
-          // Do not change radius if resizer is on the top edge
-          if (attrs.cy - attrs.ry <= 0 && dy < 0) {
-            newRy = attrs.ry
-          }
-
-          const newCx = right - newRx
-          const newCy = bottom - newRy
           applyEllipse(newCx, newCy, newRx, newRy)
         } else if (activeResizerIndex.value === 1) {
           // Top-right
@@ -353,49 +426,78 @@ export function useSvgObjectWrapper(
           let newRx = attrs.rx + dx
           let newRy = keepRatio ? newRx / ratio.value : attrs.ry - dy
 
-          // Prevent resizing when resizer is on the top edge and keep aspect ratio
-          if (keepRatio && (attrs.cy - attrs.ry <= 0 || attrs.cx + attrs.rx >= maxW)) {
-            return
+          if (keepRatio && (attrs.cy - attrs.ry <= 0 || attrs.cx + attrs.rx >= maxW)) return
+          if (attrs.cx + attrs.rx >= maxW && dx > 0) newRx = attrs.rx
+          if (attrs.cy - attrs.ry <= 0 && dy < 0) newRy = attrs.ry
+
+          let newCx = left + newRx
+          let newCy = bottom - newRy
+
+          console.log('newCx, newCy', newCx, newCy, 'newRx, newRy', newRx, newRy)
+
+          // Clamp ry to prevent moving when size is minimal
+          if (newRy <= minSize) {
+            newRy = minSize
+            newCy = bottom - newRy
+          }
+          // Clamp rx to prevent moving when size is minimal
+          if (newRx <= minSize) {
+            newRx = minSize
+            newCx = left + newRx
           }
 
-          // Do not change radius if resizer is on the right edge
-          if (attrs.cx + attrs.rx >= maxW && dx > 0) {
-            newRx = attrs.rx
+          if (isCtrlKey) {
+            const snap = getSnapOffsetToEdges(
+              newCx - newRx,
+              newCx + newRx,
+              newCy - newRy,
+              newCy + newRy,
+            )
+            newCx += snap.dx
+            newCy += snap.dy
+            if (snap.dx !== 0) newRx = attrs.rx
+            if (snap.dy !== 0) newRy = attrs.ry
           }
 
-          // Do not change radius if resizer is on the top edge
-          if (attrs.cy - attrs.ry <= 0 && dy < 0) {
-            newRy = attrs.ry
-          }
-
-          const newCx = left + newRx
-          const newCy = bottom - newRy
           applyEllipse(newCx, newCy, newRx, newRy)
         } else if (activeResizerIndex.value === 2) {
-          console.log('bottom-right')
           // Bottom-right
           const left = attrs.cx - attrs.rx
           const top = attrs.cy - attrs.ry
           let newRx = attrs.rx + dx
           let newRy = keepRatio ? newRx / ratio.value : attrs.ry + dy
 
-          // Prevent resizing when resizer is on the bottom edge and keep aspect ratio
-          if (keepRatio && (attrs.cy + attrs.ry >= maxH || attrs.cx + attrs.rx >= maxW)) {
-            return
+          if (keepRatio && (attrs.cy + attrs.ry >= maxH || attrs.cx + attrs.rx >= maxW)) return
+          if (attrs.cx + attrs.rx >= maxW && dx > 0) newRx = attrs.rx
+          if (attrs.cy + attrs.ry >= maxH && dy > 0) newRy = attrs.ry
+
+          let newCx = left + newRx
+          let newCy = top + newRy
+
+          // Clamp ry to prevent moving when size is minimal
+          if (newRy <= minSize) {
+            newRy = minSize
+            newCy = top + newRy
+          }
+          // Clamp rx to prevent moving when size is minimal
+          if (newRx <= minSize) {
+            newRx = minSize
+            newCx = left + newRx
           }
 
-          // Do not change radius if resizer is on the bottom edge
-          if (attrs.cy + attrs.ry >= maxH && dy > 0) {
-            newRy = attrs.ry
+          if (isCtrlKey) {
+            const snap = getSnapOffsetToEdges(
+              newCx - newRx,
+              newCx + newRx,
+              newCy - newRy,
+              newCy + newRy,
+            )
+            newCx += snap.dx
+            newCy += snap.dy
+            if (snap.dx !== 0) newRx = attrs.rx
+            if (snap.dy !== 0) newRy = attrs.ry
           }
 
-          // Do not change radius if resizer is on the right edge
-          if (attrs.cx + attrs.rx >= maxW && dx > 0) {
-            newRx = attrs.rx
-          }
-
-          const newCx = left + newRx
-          const newCy = top + newRy
           applyEllipse(newCx, newCy, newRx, newRy)
         } else if (activeResizerIndex.value === 3) {
           // Bottom-left
@@ -404,23 +506,37 @@ export function useSvgObjectWrapper(
           let newRx = attrs.rx - dx
           let newRy = keepRatio ? newRx / ratio.value : attrs.ry + dy
 
-          // Prevent resizing when resizer is on the bottom edge and keep aspect ratio
-          if (keepRatio && (attrs.cy + attrs.ry >= maxH || attrs.cx - attrs.rx <= 0)) {
-            return
+          if (keepRatio && (attrs.cy + attrs.ry >= maxH || attrs.cx - attrs.rx <= 0)) return
+          if (attrs.cx - attrs.rx <= 0 && dx < 0) newRx = attrs.rx
+          if (attrs.cy + attrs.ry >= maxH && dy > 0) newRy = attrs.ry
+
+          let newCx = right - newRx
+          let newCy = top + newRy
+
+          // Clamp rx to prevent moving when size is minimal
+          if (newRx <= minSize) {
+            newRx = minSize
+            newCx = right - newRx
+          }
+          // Clamp ry to prevent moving when size is minimal
+          if (newRy <= minSize) {
+            newRy = minSize
+            newCy = top + newRy
           }
 
-          // Do not change radius if resizer is on the bottom edge
-          if (attrs.cy + attrs.ry >= maxH && dy > 0) {
-            newRy = attrs.ry
+          if (isCtrlKey) {
+            const snap = getSnapOffsetToEdges(
+              newCx - newRx,
+              newCx + newRx,
+              newCy - newRy,
+              newCy + newRy,
+            )
+            newCx += snap.dx
+            newCy += snap.dy
+            if (snap.dx !== 0) newRx = attrs.rx
+            if (snap.dy !== 0) newRy = attrs.ry
           }
 
-          // Do not change radius if resizer is on the right edge
-          if (attrs.cx - attrs.rx <= 0 && dx < 0) {
-            newRx = attrs.rx
-          }
-
-          const newCx = right - newRx
-          const newCy = top + newRy
           applyEllipse(newCx, newCy, newRx, newRy)
         }
 
@@ -432,20 +548,37 @@ export function useSvgObjectWrapper(
         const maxX = imageStore.fileDimensions.width
         const maxY = imageStore.fileDimensions.height
 
-        if (activeResizerIndex.value === 0 || activeResizerIndex.value === 1) {
-          const keyX = activeResizerIndex.value === 0 ? 'x1' : 'x2'
-          const keyY = activeResizerIndex.value === 0 ? 'y1' : 'y2'
-          const otherX = activeResizerIndex.value === 0 ? attrs.x2 : attrs.x1
-          const otherY = activeResizerIndex.value === 0 ? attrs.y2 : attrs.y1
-
-          let newX = clamp(attrs[keyX] + dx, 0, maxX)
-          let newY = clamp(attrs[keyY] + dy, 0, maxY)
+        const applyLine = (keyX, keyY, newX, newY) => {
+          const otherX = keyX === 'x1' ? attrs.x2 : attrs.x1
+          const otherY = keyY === 'y1' ? attrs.y2 : attrs.y1
           const len = pythagorean(newX - otherX, newY - otherY)
 
           if (len >= minLength) {
             attrs[keyX] = newX
             attrs[keyY] = newY
           }
+        }
+
+        if (activeResizerIndex.value === 0 || activeResizerIndex.value === 1) {
+          const keyX = activeResizerIndex.value === 0 ? 'x1' : 'x2'
+          const keyY = activeResizerIndex.value === 0 ? 'y1' : 'y2'
+
+          let newX = clamp(attrs[keyX] + dx, 0, maxX)
+          let newY = clamp(attrs[keyY] + dy, 0, maxY)
+
+          if (isCtrlKey) {
+            const snap = getSnapOffsetToEdges(newX, newX, newY, newY)
+
+            // Snap only position
+            newX += snap.dx
+            newY += snap.dy
+
+            // If snapped, reset length to original
+            if (snap.dx !== 0) newX = attrs[keyX]
+            if (snap.dy !== 0) newY = attrs[keyY]
+          }
+
+          applyLine(keyX, keyY, newX, newY)
         }
 
         isSymmetricalObject.value =
@@ -652,7 +785,7 @@ export function useSvgObjectWrapper(
    * @param {number} threshold - snap distance
    * @returns {{dx: number, dy: number}}
    */
-  const getSnapOffsetToEdges = (left, right, top, bottom, threshold = 5) => {
+  const getSnapOffsetToEdges = (left, right, top, bottom, threshold = 2) => {
     const targets = getSnapEdgeTargets()
     let dx = 0
     let dy = 0
