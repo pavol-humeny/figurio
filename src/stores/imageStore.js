@@ -1083,6 +1083,7 @@ export const useImageStore = defineStore('imageStore', {
         this.newRenderedImage = canvas
       } else {
         this.setRenderedImage(canvas)
+        this.newRenderedImage = null
 
         // Clear svg values
         this.svgObjects = []
