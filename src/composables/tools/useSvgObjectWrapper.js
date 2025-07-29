@@ -48,7 +48,7 @@ export function useSvgObjectWrapper(
   /**
    * Reactive variable to track if the SVG object is highlighted
    */
-  const isHightLighted = ref(false)
+  const isSymmetricalObject = ref(false)
 
   /**
    * Reactive variables for dragging the SVG object
@@ -71,7 +71,7 @@ export function useSvgObjectWrapper(
   /**
    * Bounding box for text objects
    */
-  const textBBox = ref(null)
+  // const textBBox = ref(null)
 
   /**
    * Reactive variable to track the aspect ratio of the SVG object
@@ -210,6 +210,8 @@ export function useSvgObjectWrapper(
     const isActive = isDragging.value || activeResizerIndex.value !== null
     if (!isActive) return
 
+    const isCtrlKey = event.ctrlKey || event.metaKey
+
     let rawDx = (event.clientX - startX.value) / viewportStore.realZoomLevel + remainingDx.value
     let rawDy = (event.clientY - startY.value) / viewportStore.realZoomLevel + remainingDy.value
 
@@ -301,7 +303,7 @@ export function useSvgObjectWrapper(
           applyRect(newX, newY, newW, newH)
         }
 
-        isHightLighted.value = round(attrs.width) === round(attrs.height)
+        isSymmetricalObject.value = round(attrs.width) === round(attrs.height)
       }
       // Ellipse
       if (tag === 'ellipse') {
@@ -422,7 +424,7 @@ export function useSvgObjectWrapper(
           applyEllipse(newCx, newCy, newRx, newRy)
         }
 
-        isHightLighted.value = attrs.rx === attrs.ry
+        isSymmetricalObject.value = attrs.rx === attrs.ry
       }
       // Line
       if (tag === 'line') {
@@ -446,7 +448,7 @@ export function useSvgObjectWrapper(
           }
         }
 
-        isHightLighted.value =
+        isSymmetricalObject.value =
           (attrs.x1 === attrs.x2 || attrs.y1 === attrs.y2) &&
           pythagorean(attrs.x1 - attrs.x2, attrs.y1 - attrs.y2) > minLength
       }
@@ -456,30 +458,67 @@ export function useSvgObjectWrapper(
 
     // DRAG
     if (isDragging.value) {
-      // Rectangle and text
-      if ('x' in attrs && 'y' in attrs) {
-        if (tag === 'text' && textBBox.value) {
-          attrs.x += dx
-          attrs.y += dy
+      let offsetX = dx
+      let offsetY = dy
 
-          textBBox.value.x = textBBox.value.x + dx
-          textBBox.value.y = textBBox.value.y + dy
-        } else {
-          attrs.x += dx
-          attrs.y += dy
+      if (isCtrlKey) {
+        if ('x' in attrs && 'y' in attrs && tag !== 'text') {
+          const snap = getSnapOffsetToEdges(
+            attrs.x + dx,
+            attrs.x + attrs.width + dx,
+            attrs.y + dy,
+            attrs.y + attrs.height + dy,
+          )
+          offsetX += snap.dx
+          offsetY += snap.dy
+        } else if (tag === 'text' && object.value.textBBox) {
+          const bbox = object.value.textBBox
+          const snap = getSnapOffsetToEdges(
+            bbox.x + dx,
+            bbox.x + bbox.width + dx,
+            bbox.y + dy,
+            bbox.y + bbox.height + dy,
+          )
+          offsetX += snap.dx
+          offsetY += snap.dy
+        } else if ('cx' in attrs && 'cy' in attrs && 'rx' in attrs && 'ry' in attrs) {
+          const snap = getSnapOffsetToEdges(
+            attrs.cx - attrs.rx + dx,
+            attrs.cx + attrs.rx + dx,
+            attrs.cy - attrs.ry + dy,
+            attrs.cy + attrs.ry + dy,
+          )
+          offsetX += snap.dx
+          offsetY += snap.dy
+        } else if ('x1' in attrs && 'x2' in attrs && 'y1' in attrs && 'y2' in attrs) {
+          const xMin = Math.min(attrs.x1, attrs.x2)
+          const xMax = Math.max(attrs.x1, attrs.x2)
+          const yMin = Math.min(attrs.y1, attrs.y2)
+          const yMax = Math.max(attrs.y1, attrs.y2)
+
+          const snap = getSnapOffsetToEdges(xMin + dx, xMax + dx, yMin + dy, yMax + dy)
+          offsetX += snap.dx
+          offsetY += snap.dy
         }
       }
-      // Ellipse
-      else if ('cx' in attrs && 'cy' in attrs && 'rx' in attrs && 'ry' in attrs) {
-        attrs.cx += dx
-        attrs.cy += dy
-      }
-      // Line
-      else if ('x1' in attrs && 'y1' in attrs && 'x2' in attrs && 'y2' in attrs) {
-        attrs.x1 += dx
-        attrs.y1 += dy
-        attrs.x2 += dx
-        attrs.y2 += dy
+
+      // Apply updated offset
+      if ('x' in attrs && 'y' in attrs) {
+        attrs.x += offsetX
+        attrs.y += offsetY
+
+        if (tag === 'text') {
+          object.value.textBBox.x += offsetX
+          object.value.textBBox.y += offsetY
+        }
+      } else if ('cx' in attrs && 'cy' in attrs) {
+        attrs.cx += offsetX
+        attrs.cy += offsetY
+      } else if ('x1' in attrs && 'y1' in attrs && 'x2' in attrs && 'y2' in attrs) {
+        attrs.x1 += offsetX
+        attrs.y1 += offsetY
+        attrs.x2 += offsetX
+        attrs.y2 += offsetY
       }
     }
 
@@ -497,12 +536,147 @@ export function useSvgObjectWrapper(
 
     isDragging.value = false
     activeResizerIndex.value = null
-    isHightLighted.value = false
+    isSymmetricalObject.value = false
 
     remainingDx.value = 0
     remainingDy.value = 0
 
     historyStore.push(imageStore.getSnapshot(t))
+  }
+
+  /**
+   * Rotate a point (x, y) around (cx, cy) by angle in degrees
+   * @param {number} x
+   * @param {number} y
+   * @param {number} cx - center x
+   * @param {number} cy - center y
+   * @param {number} angle - degrees
+   * @returns {{x: number, y: number}}
+   */
+  const rotatePoint = (x, y, cx, cy, angle) => {
+    const rad = (angle * Math.PI) / 180
+    const cos = Math.cos(rad)
+    const sin = Math.sin(rad)
+
+    const dx = x - cx
+    const dy = y - cy
+
+    return {
+      x: cx + dx * cos - dy * sin,
+      y: cy + dx * sin + dy * cos,
+    }
+  }
+
+  /**
+   * Get transformed bounding box with rotation applied
+   * @param {Object} o - SVG object
+   * @returns {{left: number, right: number, top: number, bottom: number}}
+   */
+  const getTransformedBoundingBox = (o) => {
+    const a = o.attrs
+    const transform = a.transform || ''
+    const match = transform.match(/rotate\((-?\d+\.?\d*),\s*(-?\d+\.?\d*),\s*(-?\d+\.?\d*)\)/)
+
+    const angle = match ? parseFloat(match[1]) : 0
+    const cx = match ? parseFloat(match[2]) : 0
+    const cy = match ? parseFloat(match[3]) : 0
+
+    let corners = []
+
+    // RECT
+    if ('x' in a && 'y' in a && 'width' in a && 'height' in a) {
+      corners = [
+        rotatePoint(a.x, a.y, cx, cy, angle),
+        rotatePoint(a.x + a.width, a.y, cx, cy, angle),
+        rotatePoint(a.x, a.y + a.height, cx, cy, angle),
+        rotatePoint(a.x + a.width, a.y + a.height, cx, cy, angle),
+      ]
+    }
+
+    // ELLIPSE
+    else if ('cx' in a && 'cy' in a && 'rx' in a && 'ry' in a) {
+      corners = [
+        rotatePoint(a.cx - a.rx, a.cy - a.ry, cx, cy, angle),
+        rotatePoint(a.cx + a.rx, a.cy - a.ry, cx, cy, angle),
+        rotatePoint(a.cx - a.rx, a.cy + a.ry, cx, cy, angle),
+        rotatePoint(a.cx + a.rx, a.cy + a.ry, cx, cy, angle),
+      ]
+    }
+
+    // LINE
+    else if ('x1' in a && 'y1' in a && 'x2' in a && 'y2' in a) {
+      corners = [rotatePoint(a.x1, a.y1, cx, cy, angle), rotatePoint(a.x2, a.y2, cx, cy, angle)]
+    }
+
+    // TEXT (requires precomputed bounding box!)
+    else if (o.tag === 'text' && o.textBBox) {
+      const b = o.textBBox
+      corners = [
+        rotatePoint(b.x, b.y, cx, cy, angle),
+        rotatePoint(b.x + b.width, b.y, cx, cy, angle),
+        rotatePoint(b.x, b.y + b.height, cx, cy, angle),
+        rotatePoint(b.x + b.width, b.y + b.height, cx, cy, angle),
+      ]
+    }
+
+    if (!corners.length) return null
+
+    const xs = corners.map((p) => p.x)
+    const ys = corners.map((p) => p.y)
+
+    return {
+      left: Math.min(...xs),
+      right: Math.max(...xs),
+      top: Math.min(...ys),
+      bottom: Math.max(...ys),
+    }
+  }
+
+  /**
+   * Get snap edge targets (with rotation applied)
+   * @returns {Array<{left: number, right: number, top: number, bottom: number}>}
+   */
+  const getSnapEdgeTargets = () => {
+    return imageStore.svgObjects
+      .filter((o) => o.id !== object.value.id)
+      .map((o) => getTransformedBoundingBox(o))
+      .filter(Boolean)
+  }
+
+  /**
+   * Snap to nearest edges (left, right, top, bottom) if overlapping in opposite axis
+   * @param {number} left - current left edge
+   * @param {number} right - current right edge
+   * @param {number} top - current top edge
+   * @param {number} bottom - current bottom edge
+   * @param {number} threshold - snap distance
+   * @returns {{dx: number, dy: number}}
+   */
+  const getSnapOffsetToEdges = (left, right, top, bottom, threshold = 5) => {
+    const targets = getSnapEdgeTargets()
+    let dx = 0
+    let dy = 0
+
+    for (const t of targets) {
+      const verticalOverlap = !(bottom < t.top || top > t.bottom)
+      const horizontalOverlap = !(right < t.left || left > t.right)
+
+      if (verticalOverlap) {
+        if (Math.abs(left - t.left) < threshold) dx = t.left - left
+        else if (Math.abs(left - t.right) < threshold) dx = t.right - left
+        else if (Math.abs(right - t.left) < threshold) dx = t.left - right
+        else if (Math.abs(right - t.right) < threshold) dx = t.right - right
+      }
+
+      if (horizontalOverlap) {
+        if (Math.abs(top - t.top) < threshold) dy = t.top - top
+        else if (Math.abs(top - t.bottom) < threshold) dy = t.bottom - top
+        else if (Math.abs(bottom - t.top) < threshold) dy = t.top - bottom
+        else if (Math.abs(bottom - t.bottom) < threshold) dy = t.bottom - bottom
+      }
+    }
+
+    return { dx, dy }
   }
 
   /**
@@ -555,8 +729,8 @@ export function useSvgObjectWrapper(
     }
 
     // Text
-    if (tag === 'text' && textBBox.value) {
-      const { x, y, width, height } = textBBox.value
+    if (tag === 'text' && object.value.textBBox) {
+      const { x, y, width, height } = object.value.textBBox
       return [
         { x, y, cursor: 'move' },
         { x: x + width, y, cursor: 'move' },
@@ -600,7 +774,7 @@ export function useSvgObjectWrapper(
   watchEffect(() => {
     if (object.value.tag === 'text' && textRef.value) {
       const bbox = textRef.value.getBBox()
-      textBBox.value = {
+      object.value.textBBox = {
         x: bbox.x,
         y: bbox.y,
         width: bbox.width,
@@ -665,7 +839,7 @@ export function useSvgObjectWrapper(
     resizerSize,
     areSvgObjectOperationsEnabled,
     object,
-    isHightLighted,
+    isSymmetricalObject,
     objectInfo,
     activeResizerIndex,
     isDragging,

@@ -35,7 +35,7 @@ const {
   boundingBox,
   resizerSize,
   object,
-  isHightLighted,
+  isSymmetricalObject,
   objectInfo,
   activeResizerIndex,
   showResizers
@@ -65,12 +65,13 @@ const {
     <g v-if="isSelected && boundingBox" :transform="object?.attrs?.transform">
       <!-- Bounding box -->
       <rect :x="boundingBox.x" :y="boundingBox.y" :width="boundingBox.width" :height="boundingBox.height" fill="none"
-        :stroke="isHightLighted ? 'var(--editor-highlight-align-c)' : 'var(--editor-highlight-c)'" stroke-width="1"
+        :stroke="isSymmetricalObject ? 'var(--editor-highlight-align-c)' : 'var(--editor-highlight-c)'" stroke-width="1"
         stroke-dasharray="4 2" pointer-events="none" />
 
       <!-- Icon to turn on resize -->
-      <foreignObject :x="boundingBox.x + boundingBox.width / 2 - 10" :y="boundingBox.y - 22" width="20" height="20"
-        @mousedown.stop.prevent="showResizers = !showResizers" style="cursor: pointer">
+      <foreignObject v-if="object.tag !== 'text'" :x="boundingBox.x + boundingBox.width / 2 - 10"
+        :y="boundingBox.y - 22" width="20" height="20" @mousedown.stop.prevent="showResizers = !showResizers"
+        style="cursor: pointer">
         <BaseIcon v-if="showResizers" :name="'IconCross'" :tip="t('tools.svgObject.resizeObject.tipStopResize')"
           :size="20" :color="'var(--primary-c)'" />
         <BaseIcon v-else :name="'IconResizeObject'" :tip="t('tools.svgObject.resizeObject.tipStartResize')" :size="20"
