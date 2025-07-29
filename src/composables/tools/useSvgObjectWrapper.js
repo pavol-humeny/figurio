@@ -120,6 +120,16 @@ export function useSvgObjectWrapper(
   const tmpAngle = ref(0)
 
   /**
+   * Whether the user is currently rotating the object
+   */
+  const isRotating = ref(false)
+
+  /**
+   * Starting angle when rotation begins
+   */
+  const startAngle = ref(0)
+
+  /**
    * Watch for changes in the showResizers state and update the SVG object's transform accordingly
    */
   watch(
@@ -228,11 +238,62 @@ export function useSvgObjectWrapper(
   }
 
   /**
+   * Mouse down handler for rotation
+   * @param {MouseEvent} event - Mouse event
+   */
+  const onMouseDownRotate = (event) => {
+    if (!areSvgObjectOperationsEnabled.value || !isSelected.value) return
+
+    imageStore.selectedSvgObjectId = object.value.id
+
+    // Ulož pozíciu pre výpočet dx
+    startX.value = event.clientX
+    startY.value = event.clientY
+
+    // Ulož pôvodný uhol z transform
+    const match = object.value.attrs.transform?.match(/rotate\((-?\d+\.?\d*)/)
+    startAngle.value = match ? parseFloat(match[1]) : 0
+
+    isRotating.value = true
+    event.stopPropagation()
+  }
+
+  // /**
+  //  * Apply a rotation to the SVG object
+  //  * @param {number} angle - Rotation angle in degrees
+  //  */
+  // const applyRotation = (angle) => {
+  //   const { attrs } = object.value
+
+  //   let cx = 0
+  //   let cy = 0
+
+  //   if ('x' in attrs && 'y' in attrs && 'width' in attrs && 'height' in attrs) {
+  //     cx = attrs.x + attrs.width / 2
+  //     cy = attrs.y + attrs.height / 2
+  //   } else if ('cx' in attrs && 'cy' in attrs) {
+  //     cx = attrs.cx
+  //     cy = attrs.cy
+  //   } else if ('x1' in attrs && 'x2' in attrs && 'y1' in attrs && 'y2' in attrs) {
+  //     cx = (attrs.x1 + attrs.x2) / 2
+  //     cy = (attrs.y1 + attrs.y2) / 2
+  //   } else if (object.value.tag === 'text' && object.value.textBBox) {
+  //     const bbox = object.value.textBBox
+  //     cx = bbox.x + bbox.width / 2
+  //     cy = bbox.y + bbox.height / 2
+  //   }
+
+  //   // Update the transform property
+  //   attrs.transform = `rotate(${angle}, ${cx}, ${cy})`
+  //   object.value.attrs = { ...attrs }
+  // }
+
+  /**
    * Mouse move handler for dragging the SVG object
    * @param {MouseEvent} event - Mouse event
    */
   const onMouseMove = (event) => {
-    const isActive = isDragging.value || activeResizerIndex.value !== null
+    const isActive = isDragging.value || activeResizerIndex.value !== null || isRotating.value
     if (!isActive) return
 
     const isCtrlKey = event.ctrlKey || event.metaKey
@@ -248,11 +309,62 @@ export function useSvgObjectWrapper(
     remainingDx.value = rawDx - dx
     remainingDy.value = rawDy - dy
 
+    const { tag, attrs } = object.value
+
+    // ROTATE
+    if (isRotating.value) {
+      const { clientX } = event
+      const dx = clientX - startX.value
+
+      let finalAngle = startAngle.value + dx * 0.2 // Sensitivity of rotation
+
+      // Ctrl - snap to angles
+      if (isCtrlKey) {
+        const snapAngles = [0, 45, 90, 135, 180, 225, 270, 315, 360]
+        const snapThreshold = 7 // Threshold
+
+        for (const angle of snapAngles) {
+          const distance = Math.abs((((finalAngle % 360) + 360) % 360) - angle)
+          const shortest = Math.min(distance, 360 - distance)
+          if (shortest <= snapThreshold) {
+            finalAngle = angle
+            break
+          }
+        }
+      }
+
+      const { attrs } = object.value
+
+      // Center of rotation
+      let cx = 0
+      let cy = 0
+      if ('x' in attrs && 'y' in attrs && 'width' in attrs && 'height' in attrs) {
+        cx = attrs.x + attrs.width / 2
+        cy = attrs.y + attrs.height / 2
+      } else if ('cx' in attrs && 'cy' in attrs) {
+        cx = attrs.cx
+        cy = attrs.cy
+      } else if ('x1' in attrs && 'x2' in attrs && 'y1' in attrs && 'y2' in attrs) {
+        cx = (attrs.x1 + attrs.x2) / 2
+        cy = (attrs.y1 + attrs.y2) / 2
+      } else if (object.value.tag === 'text' && object.value.textBBox) {
+        const bbox = object.value.textBBox
+        cx = bbox.x + bbox.width / 2
+        cy = bbox.y + bbox.height / 2
+      }
+
+      // Apply rotation transform
+      attrs.transform = `rotate(${finalAngle}, ${cx}, ${cy})`
+      object.value.attrs = { ...attrs }
+
+      console.log('Rotated to angle:', finalAngle)
+
+      return
+    }
+
     // Last cursor position
     startX.value = event.clientX
     startY.value = event.clientY
-
-    const { tag, attrs } = object.value
 
     // RESIZE
     if (activeResizerIndex.value !== null) {
@@ -700,12 +812,13 @@ export function useSvgObjectWrapper(
    * Mouse up handler for stopping the drag operation
    */
   const onMouseUp = () => {
-    const isActive = isDragging.value || activeResizerIndex.value !== null
+    const isActive = isDragging.value || activeResizerIndex.value !== null || isRotating.value
     if (!isActive) return
 
     isDragging.value = false
     activeResizerIndex.value = null
     isSymmetricalObject.value = false
+    isRotating.value = false
 
     remainingDx.value = 0
     remainingDy.value = 0
@@ -834,8 +947,9 @@ export function useSvgObjectWrapper(
    * @returns {{dx: number, dy: number}}
    */
   const getSnapOffsetToEdges = (left, right, top, bottom) => {
-    const threshold = imageStore.getSmallerImageDimension() * 0.01
-    console.log('threshold', threshold)
+    const threshold = imageStore.getSmallerImageDimension() * 0.01 // 1% of the smaller dimension of the image
+    // TODO konstanta na intenzitu
+
     const targets = getSnapEdgeTargets()
     let dx = 0
     let dy = 0
@@ -1029,5 +1143,6 @@ export function useSvgObjectWrapper(
     showResizers,
     controlIconSize,
     boundingBoxStrokeWidth,
+    onMouseDownRotate,
   }
 }

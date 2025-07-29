@@ -41,6 +41,7 @@ const {
   showResizers,
   controlIconSize,
   boundingBoxStrokeWidth,
+  onMouseDownRotate
 } = useSvgObjectWrapper(props.objectId, useImageStore(), useViewportStore(), useEditorStore(), useHistoryStore(), t)
 
 
@@ -68,7 +69,8 @@ const {
       <!-- Bounding box -->
       <rect :x="boundingBox.x" :y="boundingBox.y" :width="boundingBox.width" :height="boundingBox.height" fill="none"
         :stroke="isSymmetricalObject ? 'var(--editor-highlight-align-c)' : 'var(--editor-highlight-c)'"
-        :stroke-width="boundingBoxStrokeWidth" :stroke-dasharray="[boundingBoxStrokeWidth*4, boundingBoxStrokeWidth*2]" pointer-events="none" />
+        :stroke-width="boundingBoxStrokeWidth"
+        :stroke-dasharray="[boundingBoxStrokeWidth * 4, boundingBoxStrokeWidth * 2]" pointer-events="none" />
 
       <!-- Icon to turn on resize -->
       <foreignObject v-if="object.tag !== 'text'" :x="boundingBox.x + boundingBox.width / 2 - controlIconSize * 0.5"
@@ -86,6 +88,10 @@ const {
           fill="var(--text-c)" stroke="var(--editor-highlight-c)" :style="{ cursor: pos.cursor }"
           @mousedown.stop.prevent="onMouseDownResizer($event, i)" />
       </template>
+
+      <circle v-if="!showResizers && object.tag !== 'text'" :cx="boundingBox.x + boundingBox.width + resizerSize"
+        :cy="boundingBox.y + boundingBox.height / 2" :r="resizerSize / 2" fill="var(--primary-c)" stroke="var(--text-c)"
+        style="cursor: grab" @mousedown.stop.prevent="onMouseDownRotate" />
 
       <!-- Info box -->
       <!-- <foreignObject v-if="showResizers && activeResizerIndex !== null && objectInfo && boundingBox"
