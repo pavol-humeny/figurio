@@ -144,6 +144,11 @@ export function useSvgObjectWrapper(
    * If the rotation angle is within this threshold of a multiple of 45°, it will snap
    */
   const angleSnapTolerance = ref(editorConfig.angleSnapTolerance)
+  /**
+   * Rotation sensitivity multiplier
+   * Higher = rotates faster, lower = slower
+   */
+  const rotationSensitivity = ref(editorConfig.rotationSensitivity)
 
   /**
    * Watch for changes in the showResizers state and update the SVG object's transform accordingly
@@ -363,8 +368,7 @@ export function useSvgObjectWrapper(
       if (angleDelta > 180) angleDelta -= 360
       if (angleDelta < -180) angleDelta += 360
 
-      let finalAngle = originalAngle.value + angleDelta
-
+      let finalAngle = originalAngle.value + angleDelta * rotationSensitivity.value
       // Snap to closest multiple of 45° if Ctrl/Meta is held
       if (isCtrlKey) {
         const snapped = Math.round(finalAngle / 45) * 45
@@ -1184,6 +1188,6 @@ export function useSvgObjectWrapper(
     boundingBoxStrokeWidth,
     onMouseDownRotate,
     onObjectDoubleClick,
-    isRotating
+    isRotating,
   }
 }
