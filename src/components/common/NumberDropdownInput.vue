@@ -1,11 +1,24 @@
 <script setup>
-import { ref, watch } from 'vue'
 import ItemTip from './ItemTip.vue'
 import BaseIcon from '../icons/BaseIcon.vue'
-import { useMath } from '@/composables/common/useMath'
+import { useNumberDropdownInput } from '@/composables/common/useNumberDropdownInput'
 
-const { clamp } = useMath()
+/**
+ * @typedef {Object} NumberDropdownInputProps
+ * @property {number} modelValue - Current input value (v-model)
+ * @property {Array<number>} options - Dropdown options
+ * @property {string} [tip=''] - Tooltip text
+ * @property {string} [position='bottom'] - Tooltip position
+ * @property {boolean} [disabled=false] - Whether the input is disabled
+ * @property {string} [icon=''] - Icon name to display in the input
+ * @property {string} [color='var(--text-c)'] - Icon color
+ * @property {string|number} [size='16'] - Icon size
+ * @property {number} [min=0] - Minimum value for the input
+ * @property {number} [max=Infinity] - Maximum value for the input
+ * @property {number} [step=1] - Step value for the input
+ */
 
+/** @type {NumberDropdownInputProps} */
 const props = defineProps({
   modelValue: Number,
   options: Array,
@@ -47,36 +60,29 @@ const props = defineProps({
   },
 })
 
+/**
+ * @event update:modelValue - Emitted when the input value changes
+ */
 const emit = defineEmits(['update:modelValue'])
 
-const inputValue = ref(props.modelValue.toString())
-const showDropdown = ref(false)
-const inputRef = ref(null)
+/**
+ * Logic of the number dropdown input component
+ */
+const { inputValue,
+  showDropdown,
+  inputRef,
+  onInput,
+  onSelect,
+  toggleDropdown,
+  setValue
+} = useNumberDropdownInput(props, emit)
 
-watch(() => props.modelValue, (val) => {
-  inputValue.value = val.toString()
-})
 
-const onInput = () => {
-  const num = Number(inputValue.value)
-
-  if (!isNaN(num)) {
-    const clampedValue = clamp(num, props.min, props.max)
-    inputValue.value = clampedValue.toString()
-    emit('update:modelValue', clampedValue)
-  }
-}
-
-const onSelect = (val) => {
-  inputValue.value = val.toString()
-  emit('update:modelValue', Number(val))
-  showDropdown.value = false
-}
-
-const toggleDropdown = () => {
-  if (props.disabled) return
-  showDropdown.value = !showDropdown.value
-}
+/**
+ * Expose methods for external use
+ * @type {{ setValue: (val: string) => void }}
+ */
+defineExpose({ setValue })
 </script>
 
 <template>
