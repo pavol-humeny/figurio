@@ -89,9 +89,10 @@ const {
           @mousedown.stop.prevent="onMouseDownResizer($event, i)" />
       </template>
 
-      <circle v-if="!showResizers && object.tag !== 'text'" :cx="boundingBox.x + boundingBox.width + resizerSize"
+      <!-- Rotate resizer -->
+      <circle v-if="!showResizers" :cx="boundingBox.x + boundingBox.width + resizerSize"
         :cy="boundingBox.y + boundingBox.height / 2" :r="resizerSize / 2" fill="var(--primary-c)" stroke="var(--text-c)"
-        style="cursor: grab" @mousedown.stop.prevent="onMouseDownRotate" />
+        style="cursor: grab" @mousedown.stop.prevent="onMouseDownRotate($event)" />
 
       <!-- Info box -->
       <!-- <foreignObject v-if="showResizers && activeResizerIndex !== null && objectInfo && boundingBox"

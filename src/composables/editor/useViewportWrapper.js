@@ -547,6 +547,7 @@ export function useViewportWrapper(viewportStore, imageStore, editorStore, uiSto
 
   //Set initial values for centering the image
   onMounted(() => {
+    viewportStore.viewportContentRect = contentRef.value?.getBoundingClientRect() || {}
     nextTick(() => {
       centerImage()
 

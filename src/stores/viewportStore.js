@@ -9,6 +9,9 @@ const { round } = useMath()
  */
 export const useViewportStore = defineStore('viewportStore', {
   state: () => ({
+    /** Reference to the .viewport-content element */
+    viewportContentRect: {},
+
     /** Current zoom level of the viewport */
     zoomLevel: viewportConfig.defaultZoomLevel,
     /** Zoom level when the image fits the viewport */
