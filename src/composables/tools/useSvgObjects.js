@@ -1,5 +1,8 @@
 import { computed } from 'vue'
 import { useTextTool } from './useTextTool'
+import { useImageStore } from '@/stores/imageStore'
+
+const textTool = useTextTool(useImageStore())
 
 export function useSvgObjects(imageStore, historyStore, viewportStore, editorStore, t) {
   const cursorOnSvgArea = computed(() => {
@@ -213,7 +216,7 @@ export function useSvgObjects(imageStore, historyStore, viewportStore, editorSto
     const y = (event.clientY - rect.top) / viewportStore.realZoomLevel
 
     if (editorStore.selectedToolKey === 'text' && !editorStore.isSvgObjectSelected) {
-      useTextTool(imageStore, t).addTextObject(x, y)
+      textTool.addTextObject(x, y)
     }
   }
 

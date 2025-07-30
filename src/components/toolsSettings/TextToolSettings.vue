@@ -11,7 +11,7 @@ const { t } = useI18n();
 
 const { textSizeOptions,
   textFontOptions,
-  textSettings, } = useTextTool(useImageStore(), t)
+  textSettings, } = useTextTool(useImageStore())
 </script>
 
 <template>

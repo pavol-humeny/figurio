@@ -1,11 +1,21 @@
 import { ref, watch } from 'vue'
 
 /**
+ * Current text settings for editing
+ */
+export const textSettings = ref({
+  text: '',
+  size: 16,
+  color: '#000000',
+  fontFamily: 'Arial',
+})
+
+/**
  * Text editing logic for SVG text objects
  * @param {Object} imageStore - Store containing svgObjects
  * @param {Function} t - Translation function
  */
-export function useTextTool(imageStore, t) {
+export function useTextTool(imageStore) {
   const textSizeOptions = [8, 10, 12, 14, 16, 18, 20, 24, 28, 32, 36, 40, 48, 56, 64, 72]
 
   const textFontOptions = [
@@ -15,16 +25,6 @@ export function useTextTool(imageStore, t) {
     { label: 'Times New Roman', value: 'Times New Roman' },
     { label: 'Verdana', value: 'Verdana' },
   ]
-
-  /**
-   * Current text settings for editing
-   */
-  const textSettings = ref({
-    text: '',
-    size: 16,
-    color: '#000000',
-    fontFamily: 'Arial',
-  })
 
   const resetTextSettings = () => {
     textSettings.value = {
@@ -87,11 +87,16 @@ export function useTextTool(imageStore, t) {
     const id = Date.now()
     const fontSize = textSettings.value.size
 
+    console.log(`Adding text object at (${x}, ${y}) with size ${fontSize}`, textSettings.value)
+
+    // if text is empty, do not add
+    if (!textSettings.value.text.trim()) return
+
     imageStore.svgObjects.push({
       id,
       tag: 'text',
       class: 'text',
-      content: textSettings.value.text || 'text',
+      content: textSettings.value.text || '',
       attrs: {
         x,
         y: y + fontSize / 2,
