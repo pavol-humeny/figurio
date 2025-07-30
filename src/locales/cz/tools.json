@@ -626,6 +626,10 @@
       "tipStartResize": "Zmeniť velikost",
       "tipStopResize": "Ukončiť zmenu veľkosti"
     }
+    ,
+    "rotateObject":{
+      "tip": "Otočit objekt"
+    }
   },
   "noToolSelected": {
     "label": "Žádný vybraný nástroj"

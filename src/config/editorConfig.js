@@ -25,4 +25,5 @@ export const editorConfig = {
 
   // Svg object wrapper
   resizerMultiplier: 0.9, // 1 - default size
+  angleSnapTolerance: 5, // degrees
 }

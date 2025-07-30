@@ -625,6 +625,9 @@
     "resizeObject":{
       "tipStartResize": "Zmeniť veľkosť",
       "tipStopResize": "Ukončiť zmenu veľkosti"
+    },
+    "rotateObject":{
+      "tip": "Otočiť objekt"
     }
   },
   "noToolSelected": {

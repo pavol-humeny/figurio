@@ -43,6 +43,7 @@ const {
   boundingBoxStrokeWidth,
   onMouseDownRotate,
   onObjectDoubleClick,
+  isRotating
 } = useSvgObjectWrapper(props.objectId, useImageStore(), useViewportStore(), useEditorStore(), useHistoryStore(), t)
 
 
@@ -90,10 +91,14 @@ const {
           @mousedown.stop.prevent="onMouseDownResizer($event, i)" />
       </template>
 
-      <!-- Rotate resizer -->
-      <circle v-if="!showResizers" :cx="boundingBox.x + boundingBox.width + resizerSize"
-        :cy="boundingBox.y + boundingBox.height / 2" :r="resizerSize / 2" fill="var(--primary-c)" stroke="var(--text-c)"
-        style="cursor: grab" @mousedown.stop.prevent="onMouseDownRotate($event)" />
+      <!-- Rotate icon (shows only when resizers are hidden) -->
+      <foreignObject v-if="!showResizers && object.tag !== 'text' && !isRotating"
+        :x="boundingBox.x + boundingBox.width"
+        :y="boundingBox.y + boundingBox.height / 2 - controlIconSize / 2" :width="controlIconSize"
+        :height="controlIconSize" @mousedown.stop.prevent="onMouseDownRotate($event)" style="cursor: grab">
+        <BaseIcon :name="'IconRotate'" :tip="t('tools.svgObject.rotateObject.tip')" :size="controlIconSize"
+          :color="'var(--primary-c)'" />
+      </foreignObject>
 
       <!-- Info box -->
       <!-- <foreignObject v-if="showResizers && activeResizerIndex !== null && objectInfo && boundingBox"

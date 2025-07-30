@@ -626,6 +626,9 @@
     "resizeObject":{
       "tipStartResize": "Start resizing",
       "tipStopResize": "Stop resizing"
+    },
+    "rotateObject":{
+      "tip": "Rotate object"
     }
   },
   "noToolSelected": {

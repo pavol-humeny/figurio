@@ -139,6 +139,11 @@ export function useSvgObjectWrapper(
    * Original angle of the object before rotation starts
    */
   const originalAngle = ref(0)
+  /**
+   * Angle snapping tolerance in degrees
+   * If the rotation angle is within this threshold of a multiple of 45°, it will snap
+   */
+  const angleSnapTolerance = ref(editorConfig.angleSnapTolerance)
 
   /**
    * Watch for changes in the showResizers state and update the SVG object's transform accordingly
@@ -358,7 +363,15 @@ export function useSvgObjectWrapper(
       if (angleDelta > 180) angleDelta -= 360
       if (angleDelta < -180) angleDelta += 360
 
-      const finalAngle = originalAngle.value + angleDelta
+      let finalAngle = originalAngle.value + angleDelta
+
+      // Snap to closest multiple of 45° if Ctrl/Meta is held
+      if (isCtrlKey) {
+        const snapped = Math.round(finalAngle / 45) * 45
+        if (Math.abs(finalAngle - snapped) <= angleSnapTolerance.value) {
+          finalAngle = snapped
+        }
+      }
 
       attrs.transform = `rotate(${finalAngle}, ${cx}, ${cy})`
       object.value.attrs = { ...attrs }
@@ -747,42 +760,61 @@ export function useSvgObjectWrapper(
       let offsetX = dx
       let offsetY = dy
 
-      if (isCtrlKey) {
-        if ('x' in attrs && 'y' in attrs && tag !== 'text') {
-          const snap = getSnapOffsetToEdges(
-            attrs.x + dx,
-            attrs.x + attrs.width + dx,
-            attrs.y + dy,
-            attrs.y + attrs.height + dy,
-          )
-          offsetX += snap.dx
-          offsetY += snap.dy
-        } else if (tag === 'text' && object.value.textBBox) {
-          const bbox = object.value.textBBox
-          const snap = getSnapOffsetToEdges(
-            bbox.x + dx,
-            bbox.x + bbox.width + dx,
-            bbox.y + dy,
-            bbox.y + bbox.height + dy,
-          )
-          offsetX += snap.dx
-          offsetY += snap.dy
-        } else if ('cx' in attrs && 'cy' in attrs && 'rx' in attrs && 'ry' in attrs) {
-          const snap = getSnapOffsetToEdges(
-            attrs.cx - attrs.rx + dx,
-            attrs.cx + attrs.rx + dx,
-            attrs.cy - attrs.ry + dy,
-            attrs.cy + attrs.ry + dy,
-          )
-          offsetX += snap.dx
-          offsetY += snap.dy
-        } else if ('x1' in attrs && 'x2' in attrs && 'y1' in attrs && 'y2' in attrs) {
-          const xMin = Math.min(attrs.x1, attrs.x2)
-          const xMax = Math.max(attrs.x1, attrs.x2)
-          const yMin = Math.min(attrs.y1, attrs.y2)
-          const yMax = Math.max(attrs.y1, attrs.y2)
+      // TODO - toto je bez riesenia prichytavania ak je objekt otoceny (okrem obdlznika tam to uze je)
+      // if (isCtrlKey) {
+      //   if ('x' in attrs && 'y' in attrs && tag !== 'text') {
+      //     const bbox = getTransformedBoundingBox(object.value)
+      //     if (bbox) {
+      //       const snap = getSnapOffsetToEdges(
+      //         bbox.left + dx,
+      //         bbox.right + dx,
+      //         bbox.top + dy,
+      //         bbox.bottom + dy,
+      //       )
+      //       offsetX += snap.dx
+      //       offsetY += snap.dy
+      //     }
+      //   } else if (tag === 'text' && object.value.textBBox) {
+      //     const bbox = object.value.textBBox
+      //     const snap = getSnapOffsetToEdges(
+      //       bbox.x + dx,
+      //       bbox.x + bbox.width + dx,
+      //       bbox.y + dy,
+      //       bbox.y + bbox.height + dy,
+      //     )
+      //     offsetX += snap.dx
+      //     offsetY += snap.dy
+      //   } else if ('cx' in attrs && 'cy' in attrs && 'rx' in attrs && 'ry' in attrs) {
+      //     const snap = getSnapOffsetToEdges(
+      //       attrs.cx - attrs.rx + dx,
+      //       attrs.cx + attrs.rx + dx,
+      //       attrs.cy - attrs.ry + dy,
+      //       attrs.cy + attrs.ry + dy,
+      //     )
+      //     offsetX += snap.dx
+      //     offsetY += snap.dy
+      //   } else if ('x1' in attrs && 'x2' in attrs && 'y1' in attrs && 'y2' in attrs) {
+      //     const xMin = Math.min(attrs.x1, attrs.x2)
+      //     const xMax = Math.max(attrs.x1, attrs.x2)
+      //     const yMin = Math.min(attrs.y1, attrs.y2)
+      //     const yMax = Math.max(attrs.y1, attrs.y2)
 
-          const snap = getSnapOffsetToEdges(xMin + dx, xMax + dx, yMin + dy, yMax + dy)
+      //     const snap = getSnapOffsetToEdges(xMin + dx, xMax + dx, yMin + dy, yMax + dy)
+      //     offsetX += snap.dx
+      //     offsetY += snap.dy
+      //   }
+      // }
+
+      if (isCtrlKey) {
+        const bbox = getTransformedBoundingBox(object.value)
+
+        if (bbox) {
+          const snap = getSnapOffsetToEdges(
+            bbox.left + dx,
+            bbox.right + dx,
+            bbox.top + dy,
+            bbox.bottom + dy,
+          )
           offsetX += snap.dx
           offsetY += snap.dy
         }
@@ -1152,5 +1184,6 @@ export function useSvgObjectWrapper(
     boundingBoxStrokeWidth,
     onMouseDownRotate,
     onObjectDoubleClick,
+    isRotating
   }
 }
