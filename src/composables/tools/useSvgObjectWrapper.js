@@ -338,6 +338,9 @@ export function useSvgObjectWrapper(
     let rawDx = (event.clientX - startX.value) / viewportStore.realZoomLevel + remainingDx.value
     let rawDy = (event.clientY - startY.value) / viewportStore.realZoomLevel + remainingDy.value
 
+    // Reset guide line
+    viewportStore.guideLine = null
+
     // Round to whole pixels
     let dx = round(rawDx)
     let dy = round(rawDy)
@@ -369,8 +372,6 @@ export function useSvgObjectWrapper(
       if (angleDelta < -180) angleDelta += 360
 
       let finalAngle = round(originalAngle.value + angleDelta * rotationSensitivity.value, 1)
-
-      viewportStore.guideLine = null // Reset guide line
 
       // Snap to closest multiple of 45° if Ctrl/Meta is held
       if (isCtrlKey) {
@@ -831,6 +832,26 @@ export function useSvgObjectWrapper(
           )
           offsetX += snap.dx
           offsetY += snap.dy
+
+          if (snap.dx !== 0 || snap.dy !== 0) {
+            let x = null
+            let y = null
+            let angle = null
+
+            if (snap.snappedEdgeX) {
+              x = (snap.snappedEdgeX === 'left' ? bbox.left : bbox.right) + dx + snap.dx
+              y = (bbox.top + bbox.bottom) / 2 + dy + snap.dy
+              angle = 90
+            }
+
+            if (snap.snappedEdgeY) {
+              y = (snap.snappedEdgeY === 'top' ? bbox.top : bbox.bottom) + dy + snap.dy
+              x = (bbox.left + bbox.right) / 2 + dx + snap.dx
+              angle = 0
+            }
+
+            viewportStore.guideLine = { x, y, angle }
+          }
         }
       }
 
@@ -1006,29 +1027,50 @@ export function useSvgObjectWrapper(
     // TODO konstanta na intenzitu
 
     const targets = getSnapEdgeTargets()
+
     let dx = 0
     let dy = 0
+    let snappedEdgeX = null
+    let snappedEdgeY = null
 
     for (const t of targets) {
       const verticalOverlap = !(bottom < t.top || top > t.bottom)
       const horizontalOverlap = !(right < t.left || left > t.right)
 
       if (verticalOverlap) {
-        if (Math.abs(left - t.left) < threshold) dx = t.left - left
-        else if (Math.abs(left - t.right) < threshold) dx = t.right - left
-        else if (Math.abs(right - t.left) < threshold) dx = t.left - right
-        else if (Math.abs(right - t.right) < threshold) dx = t.right - right
+        if (Math.abs(left - t.left) < threshold) {
+          dx = t.left - left
+          snappedEdgeX = 'left'
+        } else if (Math.abs(left - t.right) < threshold) {
+          dx = t.right - left
+          snappedEdgeX = 'left'
+        } else if (Math.abs(right - t.left) < threshold) {
+          dx = t.left - right
+          snappedEdgeX = 'right'
+        } else if (Math.abs(right - t.right) < threshold) {
+          dx = t.right - right
+          snappedEdgeX = 'right'
+        }
       }
 
       if (horizontalOverlap) {
-        if (Math.abs(top - t.top) < threshold) dy = t.top - top
-        else if (Math.abs(top - t.bottom) < threshold) dy = t.bottom - top
-        else if (Math.abs(bottom - t.top) < threshold) dy = t.top - bottom
-        else if (Math.abs(bottom - t.bottom) < threshold) dy = t.bottom - bottom
+        if (Math.abs(top - t.top) < threshold) {
+          dy = t.top - top
+          snappedEdgeY = 'top'
+        } else if (Math.abs(top - t.bottom) < threshold) {
+          dy = t.bottom - top
+          snappedEdgeY = 'top'
+        } else if (Math.abs(bottom - t.top) < threshold) {
+          dy = t.top - bottom
+          snappedEdgeY = 'bottom'
+        } else if (Math.abs(bottom - t.bottom) < threshold) {
+          dy = t.bottom - bottom
+          snappedEdgeY = 'bottom'
+        }
       }
     }
 
-    return { dx, dy }
+    return { dx, dy, snappedEdgeX, snappedEdgeY }
   }
 
   /**
