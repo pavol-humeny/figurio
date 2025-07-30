@@ -178,6 +178,11 @@ export function useSvgObjectWrapper(
     },
   )
 
+  const onObjectDoubleClick = () => {
+    if (object.value.tag === 'text') return
+    showResizers.value = !showResizers.value
+  }
+
   /**
    * Mouse event handlers for the SVG object
    * @param {MouseEvent} event - Mouse event
@@ -231,24 +236,6 @@ export function useSvgObjectWrapper(
   }
 
   /**
-   * Update the rotation transform of the SVG object
-   * This is called after resizing or dragging to ensure the rotation is centered correctly
-   */
-  const updateRotationTransform = () => {
-    const { attrs } = object.value
-    const match = attrs.transform?.match(/rotate\((-?\d+\.?\d*),?([^)]*)\)/)
-
-    if (!match) return
-
-    const currentAngle = parseFloat(match[1])
-
-    const centerX = attrs.x + attrs.width / 2
-    const centerY = attrs.y + attrs.height / 2
-
-    attrs.transform = `rotate(${currentAngle}, ${centerX}, ${centerY})`
-  }
-
-  /**
    * Mouse down handler for rotation
    * @param {MouseEvent} event - Mouse event
    */
@@ -260,23 +247,8 @@ export function useSvgObjectWrapper(
     const mouseY = (event.clientY - rect.top) / viewportStore.realZoomLevel
 
     const { attrs } = object.value
-    let cx = 0,
-      cy = 0
 
-    if ('x' in attrs && 'y' in attrs && 'width' in attrs && 'height' in attrs) {
-      cx = attrs.x + attrs.width / 2
-      cy = attrs.y + attrs.height / 2
-    } else if ('cx' in attrs && 'cy' in attrs) {
-      cx = attrs.cx
-      cy = attrs.cy
-    } else if ('x1' in attrs && 'x2' in attrs && 'y1' in attrs && 'y2' in attrs) {
-      cx = (attrs.x1 + attrs.x2) / 2
-      cy = (attrs.y1 + attrs.y2) / 2
-    } else if (object.value.tag === 'text' && object.value.textBBox) {
-      const bbox = object.value.textBBox
-      cx = bbox.x + bbox.width / 2
-      cy = bbox.y + bbox.height / 2
-    }
+    const { cx, cy } = getObjectCenter(object.value)
 
     const dx = mouseX - cx
     const dy = mouseY - cy
@@ -285,22 +257,58 @@ export function useSvgObjectWrapper(
     const match = attrs.transform?.match(/rotate\((-?\d+\.?\d*)/)
     originalAngle.value = match ? parseFloat(match[1]) : 0
 
-    console.log(
-      'cx, cy',
-      cx,
-      cy,
-      'dx, dy',
-      dx,
-      dy,
-      'startAngle',
-      startAngle.value,
-      'clientX, clientY',
-      event.clientX,
-      event.clientY,
-    )
-
     isRotating.value = true
     event.stopPropagation()
+  }
+
+  /**
+   * Compute the center point (cx, cy) of the given object based on its tag and attributes
+   * @param {Object} object - SVG object with tag, attrs, and optionally textBBox
+   * @returns {{cx: number, cy: number}} Center coordinates
+   */
+  const getObjectCenter = (object) => {
+    const { tag, attrs, textBBox } = object
+
+    if ('x' in attrs && 'y' in attrs && 'width' in attrs && 'height' in attrs) {
+      return {
+        cx: attrs.x + attrs.width / 2,
+        cy: attrs.y + attrs.height / 2,
+      }
+    } else if ('cx' in attrs && 'cy' in attrs) {
+      return {
+        cx: attrs.cx,
+        cy: attrs.cy,
+      }
+    } else if ('x1' in attrs && 'x2' in attrs && 'y1' in attrs && 'y2' in attrs) {
+      return {
+        cx: (attrs.x1 + attrs.x2) / 2,
+        cy: (attrs.y1 + attrs.y2) / 2,
+      }
+    } else if (tag === 'text' && textBBox) {
+      return {
+        cx: textBBox.x + textBBox.width / 2,
+        cy: textBBox.y + textBBox.height / 2,
+      }
+    }
+
+    return { cx: 0, cy: 0 }
+  }
+
+  /**
+   * Update the rotation transform of the SVG object
+   * This is called after resizing or dragging to ensure the rotation is centered correctly
+   */
+  const updateRotationTransform = () => {
+    const { attrs } = object.value
+    const match = attrs.transform?.match(/rotate\((-?\d+\.?\d*),?([^)]*)\)/)
+
+    if (!match) return
+
+    const currentAngle = parseFloat(match[1])
+
+    const { cx, cy } = getObjectCenter(object.value)
+
+    attrs.transform = `rotate(${currentAngle}, ${cx}, ${cy})`
   }
 
   /**
@@ -333,23 +341,8 @@ export function useSvgObjectWrapper(
       const mouseY = (event.clientY - rect.top) / viewportStore.realZoomLevel
 
       const { attrs } = object.value
-      let cx = 0
-      let cy = 0
 
-      if ('x' in attrs && 'y' in attrs && 'width' in attrs && 'height' in attrs) {
-        cx = attrs.x + attrs.width / 2
-        cy = attrs.y + attrs.height / 2
-      } else if ('cx' in attrs && 'cy' in attrs) {
-        cx = attrs.cx
-        cy = attrs.cy
-      } else if ('x1' in attrs && 'x2' in attrs && 'y1' in attrs && 'y2' in attrs) {
-        cx = (attrs.x1 + attrs.x2) / 2
-        cy = (attrs.y1 + attrs.y2) / 2
-      } else if (object.value.tag === 'text' && object.value.textBBox) {
-        const bbox = object.value.textBBox
-        cx = bbox.x + bbox.width / 2
-        cy = bbox.y + bbox.height / 2
-      }
+      const { cx, cy } = getObjectCenter(object.value)
 
       const dx = mouseX - cx
       const dy = mouseY - cy
@@ -365,8 +358,6 @@ export function useSvgObjectWrapper(
 
       attrs.transform = `rotate(${finalAngle}, ${cx}, ${cy})`
       object.value.attrs = { ...attrs }
-
-      console.log('Rotating object', object.value.id, 'to angle', finalAngle)
 
       return
     }
@@ -748,6 +739,7 @@ export function useSvgObjectWrapper(
 
     // DRAG
     if (isDragging.value) {
+      console.log('1Dragging object', object.value.attrs.transform)
       let offsetX = dx
       let offsetY = dy
 
@@ -792,6 +784,7 @@ export function useSvgObjectWrapper(
         }
       }
 
+      console.log('2Dragging object', object.value.attrs.transform)
       // Apply updated offset
       if ('x' in attrs && 'y' in attrs) {
         attrs.x += offsetX
@@ -810,6 +803,7 @@ export function useSvgObjectWrapper(
         attrs.x2 += offsetX
         attrs.y2 += offsetY
       }
+      console.log('3Dragging object', object.value.attrs.transform)
     }
 
     object.value.attrs = { ...attrs }
@@ -1153,5 +1147,6 @@ export function useSvgObjectWrapper(
     controlIconSize,
     boundingBoxStrokeWidth,
     onMouseDownRotate,
+    onObjectDoubleClick,
   }
 }

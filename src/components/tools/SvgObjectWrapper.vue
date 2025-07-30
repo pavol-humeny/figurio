@@ -41,7 +41,8 @@ const {
   showResizers,
   controlIconSize,
   boundingBoxStrokeWidth,
-  onMouseDownRotate
+  onMouseDownRotate,
+  onObjectDoubleClick,
 } = useSvgObjectWrapper(props.objectId, useImageStore(), useViewportStore(), useEditorStore(), useHistoryStore(), t)
 
 
@@ -50,7 +51,7 @@ const {
 <template>
   <g @mousedown="onMouseDown" @mousedown.right.prevent.stop>
     <!-- SVG object except text -->
-    <g v-if="isSelected" @mousedown="onMouseDownDrag" @dblclick="showResizers = !showResizers" style="cursor: move">
+    <g v-if="isSelected" @mousedown="onMouseDownDrag" @dblclick="onObjectDoubleClick" style="cursor: move">
       <component v-if="object.tag !== 'text'" :is="object.tag" v-bind="object.attrs" />
       <text v-else v-bind="object.attrs" style="user-select: none" ref="textRef">
         {{ object.content || '' }}
