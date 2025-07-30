@@ -540,6 +540,20 @@ export function useViewportWrapper(viewportStore, imageStore, editorStore, uiSto
     return cursorPosY.value == imageStore.fileDimensions.height || cursorPosY.value == 0
   })
 
+  // ------------------------------
+  // Guide lines
+  // ------------------------------
+  /**
+   * Guide line definition (center point + angle in degrees)
+   */
+  const guideLine = computed(() => {
+    return viewportStore.guideLine
+  })
+
+  // ------------------------------
+  // Initialization and cleanup
+  // ------------------------------
+
   /**
    * Resizing observer to adjust centering on wrapper size changes
    */
@@ -626,5 +640,6 @@ export function useViewportWrapper(viewportStore, imageStore, editorStore, uiSto
     cursorPosY,
     cursorPosXSameAsImageWidth,
     cursorPosYSameAsImageHeight,
+    guideLine,
   }
 }

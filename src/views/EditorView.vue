@@ -74,6 +74,8 @@ useKeyboardShortcuts({
 // === ===
 
 
+const { selectedObjectInfo } = useSvgObjects(useImageStore(), useHistoryStore(), t)
+
 // Start tutorial if opening the editor for the first time
 onMounted(() => {
   const uiStore = useUiStore()
@@ -91,9 +93,20 @@ onMounted(() => {
       <ViewportWrapper v-if="imageStore.isImageLoaded" />
       <DragAndDropArea v-else />
       <div v-if="imageStore.isImageLoaded" class="file-info">
-        <p>{{ imageStore.fileDimensions.width }} px x {{ imageStore.fileDimensions.height }} px</p>
+        <div class="file-info-center">
+          <p>
+            {{ imageStore.fileDimensions.width }}px × {{ imageStore.fileDimensions.height }}px
+          </p>
+        </div>
+        <div class="file-info-right">
+          <p v-if="selectedObjectInfo?.width !== undefined && selectedObjectInfo?.height !== undefined">
+            {{ selectedObjectInfo.width }}px  × {{ selectedObjectInfo.height }}px
+          </p>
+          <p v-if="selectedObjectInfo?.angle !== undefined">
+            {{ selectedObjectInfo.angle }}°
+          </p>
+        </div>
       </div>
-
     </div>
     <div class="right-panel">
       <CollapsiblePanel v-if="imageStore.isImageLoaded" id="tool-settings">
@@ -127,8 +140,21 @@ onMounted(() => {
   border-top: var(--border-ui);
   background: var(--background-c);
   display: flex;
-  /* align-items: center; */
   justify-content: center;
+  position: relative;
+  z-index: var(--z-index-file-tabs);
+}
+
+.file-info-right {
+  position: absolute;
+  right: 10px;
+  /* top: 0; */
+  display: flex;
+  gap: 12px;
+  /* height: 100%; */
+  align-items: center;
+  font-size: var(--file-tabs-name-font-size);
+  color: var(--primary-c);
 }
 
 .file-info p {

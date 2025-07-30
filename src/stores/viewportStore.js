@@ -44,6 +44,8 @@ export const useViewportStore = defineStore('viewportStore', {
 
     /** Whether to fit the image on load */
     fitImageOnLoad: true,
+
+    guideLine: null, // { centerX: number, centerY: number, angle: number } - Center point and angle of the guide line
   }),
   getters: {
     /**

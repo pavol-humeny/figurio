@@ -131,6 +131,8 @@ body {
   --z-index-sliders: 550;
   --z-index-rulers-padding: 530;
   --z-index-rulers: 525;
+  --z-index-file-tabs: 520;
+  --z-index-guide-lines: 510;
   --z-index-viewport: 500;
 
   --box-shadow-ui: 1px 3px 6px rgba(0, 0, 0, 0.4);

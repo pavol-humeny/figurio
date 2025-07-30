@@ -368,12 +368,22 @@ export function useSvgObjectWrapper(
       if (angleDelta > 180) angleDelta -= 360
       if (angleDelta < -180) angleDelta += 360
 
-      let finalAngle = originalAngle.value + angleDelta * rotationSensitivity.value
+      let finalAngle = round(originalAngle.value + angleDelta * rotationSensitivity.value, 1)
+
+      viewportStore.guideLine = null // Reset guide line
+
       // Snap to closest multiple of 45° if Ctrl/Meta is held
       if (isCtrlKey) {
         const snapped = Math.round(finalAngle / 45) * 45
         if (Math.abs(finalAngle - snapped) <= angleSnapTolerance.value) {
           finalAngle = snapped
+
+          // Set guide line to the snapped angle
+          viewportStore.guideLine = {
+            x: cx,
+            y: cy,
+            angle: finalAngle,
+          }
         }
       }
 
@@ -863,6 +873,8 @@ export function useSvgObjectWrapper(
     isSymmetricalObject.value = false
     isRotating.value = false
 
+    viewportStore.guideLine = null
+
     remainingDx.value = 0
     remainingDy.value = 0
 
@@ -1124,33 +1136,6 @@ export function useSvgObjectWrapper(
   })
 
   /**
-   * Compute display info for current SVG object (position and size)
-   */
-  const objectInfo = computed(() => {
-    const attrs = object.value.attrs
-
-    if (!attrs) return null
-
-    if (object.value.tag === 'rect') {
-      return {
-        width: Math.round(attrs.width),
-        height: Math.round(attrs.height),
-      }
-    } else if (object.value.tag === 'ellipse') {
-      return {
-        width: Math.round(attrs.rx * 2),
-        height: Math.round(attrs.ry * 2),
-      }
-    } else if (object.value.tag === 'line') {
-      return {
-        width: Math.round(attrs.x2 - attrs.x1),
-        height: Math.round(attrs.y2 - attrs.y1),
-      }
-    }
-    return null
-  })
-
-  /**
    * Add global event listeners for mouse events
    */
   onMounted(() => {
@@ -1180,7 +1165,6 @@ export function useSvgObjectWrapper(
     areSvgObjectOperationsEnabled,
     object,
     isSymmetricalObject,
-    objectInfo,
     activeResizerIndex,
     isDragging,
     showResizers,

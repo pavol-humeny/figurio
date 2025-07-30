@@ -36,8 +36,6 @@ const {
   resizerSize,
   object,
   isSymmetricalObject,
-  objectInfo,
-  activeResizerIndex,
   showResizers,
   controlIconSize,
   boundingBoxStrokeWidth,

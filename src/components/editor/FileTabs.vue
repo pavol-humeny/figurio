@@ -57,6 +57,8 @@ const {
   overflow-x: auto;
   overflow-y: hidden;
   display: flex;
+  z-index: var(--z-index-file-tabs);
+  background: var(--background-c);
 }
 
 .scroll-container::-webkit-scrollbar {

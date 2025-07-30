@@ -1,3 +1,5 @@
+import { computed } from 'vue'
+
 export function useSvgObjects(imageStore, historyStore, t) {
   /**
    * Move the selected object by a specified offset in global coordinates (ignores rotation)
@@ -148,6 +150,52 @@ export function useSvgObjects(imageStore, historyStore, t) {
     historyStore.push(imageStore.getSnapshot(t))
   }
 
+  /**
+   * Compute display info for current SVG object (position and size)
+   */
+  const selectedObjectInfo = computed(() => {
+    console.log('Computing selected object info...')
+    const selectedId = imageStore.selectedSvgObjectId
+    if (selectedId === null) return null
+
+    const object = imageStore.getSvgObjectById(selectedId)
+    if (!object || !object.attrs) return null
+
+    const { tag, attrs, textBBox } = object
+
+    const transform = attrs.transform || ''
+    const match = transform.match(/rotate\((-?\d+\.?\d*),\s*([-\d.]+),\s*([-\d.]+)\)/)
+    const angle = match ? parseFloat(match[1]) : 0
+
+    if (tag === 'rect') {
+      return {
+        width: Math.round(Number(attrs.width) || 0),
+        height: Math.round(Number(attrs.height) || 0),
+        angle,
+      }
+    } else if (tag === 'ellipse') {
+      return {
+        width: Math.round((Number(attrs.rx) || 0) * 2),
+        height: Math.round((Number(attrs.ry) || 0) * 2),
+        angle,
+      }
+    } else if (tag === 'line') {
+      return {
+        width: Math.round((Number(attrs.x2) || 0) - (Number(attrs.x1) || 0)),
+        height: Math.round((Number(attrs.y2) || 0) - (Number(attrs.y1) || 0)),
+        angle,
+      }
+    } else if (tag === 'text' && textBBox) {
+      return {
+        width: Math.round(textBBox.width),
+        height: Math.round(textBBox.height),
+        angle,
+      }
+    }
+
+    return { angle }
+  })
+
   return {
     moveObjectLeftLocal,
     moveObjectRightLocal,
@@ -160,5 +208,6 @@ export function useSvgObjects(imageStore, historyStore, t) {
     deleteSelectedSvgObject,
     moveSelectedSvgObjectForward,
     moveSelectedSvgObjectBackward,
+    selectedObjectInfo,
   }
 }

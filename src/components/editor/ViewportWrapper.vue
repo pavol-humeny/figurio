@@ -66,6 +66,7 @@ const {
   cursorPosY,
   cursorPosXSameAsImageWidth,
   cursorPosYSameAsImageHeight,
+  guideLine
 } = useViewportWrapper(useViewportStore(), useImageStore(), useEditorStore(), useUiStore(), contentRef, t)
 
 /**
@@ -159,6 +160,11 @@ watch(
       </div>
     </div>
     <div v-if="uiStore.rulersEnabled" class="ruler-padding"></div>
+
+    <!-- Universal guide line rendered as a rotated div -->
+    <div v-if="guideLine" class="guide-line-rotated" :style="{
+      transform: `translate(${guideLine.x * zoomLevel + panX}px, ${guideLine.y * zoomLevel + panY}px) rotate(${guideLine.angle}deg)`,
+    }"></div>
   </div>
 </template>
 
@@ -173,11 +179,12 @@ watch(
 
 .viewport-content-wrapper {
   position: absolute;
-  top: 5px;
-  left: 5px;
+  top: 0px;
+  left: 0px;
   right: 0px;
   bottom: 0px;
   overflow: hidden;
+  z-index: var(--z-index-viewport);
 }
 
 .viewport-content {
@@ -388,5 +395,17 @@ watch(
 .ruler-cursor-label.active {
   background: var(--primary-c);
   color: var(--background-c);
+}
+
+.guide-line-rotated {
+  position: absolute;
+  width: 1000000px;
+  height: 1px;
+  background-color: var(--editor-highlight-align-c);
+  opacity: 0.6;
+  left: -500000px;
+  top: 0;
+  pointer-events: none;
+  z-index: var(--z-index-guide-lines);
 }
 </style>
