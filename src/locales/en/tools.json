@@ -265,25 +265,8 @@
     "tip": "Adds text to the image",
     "tipDisabled": "",
     "shortcut": "T",
-    "subTools": {
-      "add": {
-        "label": "Add Text",
-        "tip": "Add text to the image",
-        "shortcut": ""
-      },
-      "modify": {
-        "label": "Modify Text",
-        "tip": "Modify the existing text",
-        "shortcut": ""
-      }
-    },
     "settings": {
-      "add": {
-        "label": "Add Text"
-      },
-      "modify": {
-        "label": "Modify Text"
-      }
+      "general":{}
     }
   },
   "frame": {

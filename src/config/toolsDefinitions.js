@@ -81,16 +81,6 @@ export const toolsDefinitions = [
     key: 'text',
     iconName: 'IconTextTool',
     settingsComponent: () => import('@/components/toolsSettings/TextToolSettings.vue'),
-    subTools: [
-      {
-        key: 'add',
-        iconName: 'IconPlus',
-      },
-      {
-        key: 'modify',
-        iconName: 'IconModify',
-      },
-    ],
   },
   {
     key: 'magnifyArea',

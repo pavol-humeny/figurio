@@ -264,25 +264,8 @@
     "tip": "Pridá text do obrázka",
     "tipDisabled": "",
     "shortcut": "T",
-    "subTools": {
-      "add": {
-        "label": "Pridať text",
-        "tip": "Pridať text do obrázka",
-        "shortcut": ""
-      },
-      "modify": {
-        "label": "Upraviť text",
-        "tip": "Upraviť existujúci text",
-        "shortcut": ""
-      }
-    },
     "settings": {
-      "add": {
-        "label": "Pridať text"
-      },
-      "modify": {
-        "label": "Upraviť text"
-      }
+      "general":{}
     }
   },
   "frame": {

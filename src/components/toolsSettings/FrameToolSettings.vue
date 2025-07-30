@@ -49,6 +49,18 @@ const {
   <div class="tool-settings">
     <div class="settings-wrapper">
       <div class="specific-settings">
+        <!-- Frame variants -->
+        <div class="settings-content-wrapper">
+          <div class="content-wrapper">
+            <div class="content-title">
+              <p>
+                {{ t('tools.frame.settings.general.frameVariants.label') }}
+              </p>
+            </div>
+            <DropdownSelect v-model="selectedFrameVariant" :options="frameOptions" @update="handleFrameChange" />
+          </div>
+        </div>
+
         <!-- Frame color -->
         <div v-if="selectedFrameVariant !== 'none'" class="settings-content-wrapper">
           <div class="content-wrapper">
@@ -62,9 +74,7 @@ const {
         </div>
 
         <!-- Frame width -->
-        <div
-          v-if="selectedFrameVariant === 'frameSolid' || drawOutline"
-          class="settings-content-wrapper">
+        <div v-if="selectedFrameVariant === 'frameSolid' || drawOutline" class="settings-content-wrapper">
           <div class="content-wrapper">
             <div class="content-title">
               <p :class="{ disabled: selectedFrameVariant !== 'frameSolid' && !drawOutline }">
@@ -78,22 +88,8 @@ const {
           </div>
         </div>
 
-        <!-- Frame variants -->
-        <div class="settings-content-wrapper">
-          <div class="content-wrapper">
-            <div class="content-title">
-              <p>
-                {{ t('tools.frame.settings.general.frameVariants.label') }}
-              </p>
-            </div>
-            <DropdownSelect v-model="selectedFrameVariant" :options="frameOptions" @update="handleFrameChange" />
-          </div>
-        </div>
-
         <!-- Frame outline -->
-        <div
-          v-if="isFrameWithOutline(selectedFrameVariant)"
-          class="settings-content-wrapper">
+        <div v-if="isFrameWithOutline(selectedFrameVariant)" class="settings-content-wrapper">
           <div class="content-wrapper">
             <div class="content-aligned two-items">
               <p>
@@ -106,16 +102,14 @@ const {
         </div>
 
         <!-- Phone header -->
-        <div
-          v-if="isPhoneFrame(selectedFrameVariant)"
-          class="settings-content-wrapper">
+        <div v-if="isPhoneFrame(selectedFrameVariant)" class="settings-content-wrapper">
           <div class="content-wrapper">
             <div class="content-aligned two-items">
               <p>
                 {{ t('tools.frame.settings.general.usePhoneHeader.label') }}
               </p>
-              <ToggleButton v-model="drawPhoneHeader"
-                @update="setPhoneHeader(drawPhoneHeader)" :scale="0.6" :style="{ transform: 'translateX(16px)' }" />
+              <ToggleButton v-model="drawPhoneHeader" @update="setPhoneHeader(drawPhoneHeader)" :scale="0.6"
+                :style="{ transform: 'translateX(16px)' }" />
             </div>
           </div>
           <div v-if="drawPhoneHeader" class="content-wrapper">
@@ -123,7 +117,8 @@ const {
               <p>
                 {{ t('tools.frame.settings.general.phoneHeaderBackgroundColor.label') }}
               </p>
-              <ColorPicker v-model="phoneHeaderBackgroundColor" @update="setPhoneHeaderBackgroundColor(phoneHeaderBackgroundColor)" />
+              <ColorPicker v-model="phoneHeaderBackgroundColor"
+                @update="setPhoneHeaderBackgroundColor(phoneHeaderBackgroundColor)" />
             </div>
           </div>
           <div v-if="drawPhoneHeader" class="content-wrapper">
@@ -139,26 +134,24 @@ const {
               <p>
                 {{ t('tools.frame.settings.general.phoneHeaderTime.label') }}
               </p>
-              <TimeInput
-                v-model="phoneHeaderTimeInMinutes"
-                @update="setPhoneHeaderTimeInMinutes(phoneHeaderTimeInMinutes)"
-              />
+              <TimeInput v-model="phoneHeaderTimeInMinutes"
+                @update="setPhoneHeaderTimeInMinutes(phoneHeaderTimeInMinutes)" />
             </div>
           </div>
         </div>
 
         <!-- Header and footer frames multiplier -->
-        <div
-          v-if="isFrameWithMultiplier(selectedFrameVariant)"
-          class="settings-content-wrapper">
+        <div v-if="isFrameWithMultiplier(selectedFrameVariant)" class="settings-content-wrapper">
           <div class="content-wrapper">
             <div class="content-title">
               <p>
                 {{ t('tools.frame.settings.general.headerFooterMultiplier.label') }}
               </p>
             </div>
-            <DefaultSlider v-model="headerFooterMultiplier" :min="editorConfig.minHeaderFooterMultiplier" :max="editorConfig.maxHeaderFooterMultiplier" :step="editorConfig.stepHeaderFooterMultiplier"
-              @update="setHeaderFooterMultiplier(headerFooterMultiplier)" :onReset="resetHeaderFooterMultiplier" showValue />
+            <DefaultSlider v-model="headerFooterMultiplier" :min="editorConfig.minHeaderFooterMultiplier"
+              :max="editorConfig.maxHeaderFooterMultiplier" :step="editorConfig.stepHeaderFooterMultiplier"
+              @update="setHeaderFooterMultiplier(headerFooterMultiplier)" :onReset="resetHeaderFooterMultiplier"
+              showValue />
           </div>
         </div>
 
