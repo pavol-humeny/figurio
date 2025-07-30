@@ -47,12 +47,29 @@ const { openPrivacyAndDataModal } = usePrivacyAndDataModal(t)
 const { startEditing } = useFileNameDisplay(useImageStore(), t)
 const { switchToNextTab, switchToPreviousTab, } = useFileTabs(useUiStore(), t)
 const { prevStep, nextStep, finishTutorial, closeTutorial, startTutorial } = useInteractiveTutorial(useUiStore(), useImageStore(), useRouter(), t)
-const { moveObjectLeft, moveObjectRight, moveObjectUp, moveObjectDown, deleteSelectedSvgObject, moveSelectedSvgObjectForward, moveSelectedSvgObjectBackward, } = useSvgObjects(useImageStore(), useHistoryStore(), t)
+const {
+  moveObjectLeftLocal,
+  moveObjectRightLocal,
+  moveObjectUpLocal,
+  moveObjectDownLocal,
+  moveObjectLeftGlobal,
+  moveObjectRightGlobal,
+  moveObjectUpGlobal,
+  moveObjectDownGlobal,
+  deleteSelectedSvgObject, moveSelectedSvgObjectForward, moveSelectedSvgObjectBackward, } = useSvgObjects(useImageStore(), useHistoryStore(), t)
 
 const imageStore = useImageStore()
 
 useKeyboardShortcuts({
-  undo, redo, zoomIn, zoomOut, resetZoom, closeFile, uploadFile, toggleTool, openExportToolSettings, openHelpModal, openSettingsPanel, openPrivacyAndDataModal, startEditing, switchToNextTab, switchToPreviousTab, prevStep, nextStep, finishTutorial, closeTutorial, deleteSelectedSvgObject, moveSelectedSvgObjectForward, moveSelectedSvgObjectBackward, moveObjectLeft, moveObjectRight, moveObjectUp, moveObjectDown
+  undo, redo, zoomIn, zoomOut, resetZoom, closeFile, uploadFile, toggleTool, openExportToolSettings, openHelpModal, openSettingsPanel, openPrivacyAndDataModal, startEditing, switchToNextTab, switchToPreviousTab, prevStep, nextStep, finishTutorial, closeTutorial, deleteSelectedSvgObject, moveSelectedSvgObjectForward, moveSelectedSvgObjectBackward,
+  moveObjectLeftLocal,
+  moveObjectRightLocal,
+  moveObjectUpLocal,
+  moveObjectDownLocal,
+  moveObjectLeftGlobal,
+  moveObjectRightGlobal,
+  moveObjectUpGlobal,
+  moveObjectDownGlobal
 }, useUiStore(), useImageStore());
 // === ===
 

@@ -193,24 +193,46 @@ export const keyboardShortcuts = [
     action: 'moveSelectedSvgObjectBackward',
     description: 'Move selected SVG object backward',
   },
+  // Global movement of selected SVG object
   {
     keys: ['arrowleft'],
-    action: 'moveObjectLeft',
+    action: 'moveObjectLeftGlobal',
     description: 'Move selected SVG object left by 1px',
   },
   {
     keys: ['arrowright'],
-    action: 'moveObjectRight',
+    action: 'moveObjectRightGlobal',
     description: 'Move selected SVG object right by 1px',
   },
   {
     keys: ['arrowup'],
-    action: 'moveObjectUp',
+    action: 'moveObjectUpGlobal',
     description: 'Move selected SVG object up by 1px',
   },
   {
     keys: ['arrowdown'],
-    action: 'moveObjectDown',
+    action: 'moveObjectDownGlobal',
     description: 'Move selected SVG object down by 1px',
+  },
+  // Local movement of selected SVG object
+  {
+    keys: ['alt', 'arrowleft'],
+    action: 'moveObjectLeftLocal',
+    description: 'Move selected SVG object left by 10px',
+  },
+  {
+    keys: ['alt', 'arrowright'],
+    action: 'moveObjectRightLocal',
+    description: 'Move selected SVG object right by 10px',
+  },
+  {
+    keys: ['alt', 'arrowup'],
+    action: 'moveObjectUpLocal',
+    description: 'Move selected SVG object up by 10px',
+  },
+  {
+    keys: ['alt', 'arrowdown'],
+    action: 'moveObjectDownLocal',
+    description: 'Move selected SVG object down by 10px',
   },
 ]

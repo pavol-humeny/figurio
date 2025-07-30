@@ -4,12 +4,22 @@ export function useSvgObjects(imageStore, historyStore, t) {
    * @param {number} dx - Offset in X direction
    * @param {number} dy - Offset in Y direction
    */
-  const moveObjectBy = (dx, dy) => {
+  const moveObjectBy = (dx, dy, local = false) => {
     if (imageStore.selectedSvgObjectId === null) return
     const object = imageStore.getSvgObjectById(imageStore.selectedSvgObjectId)
     if (!object) return
 
     const { attrs, tag, textBBox } = object
+
+    const transform = attrs.transform || ''
+    const match = transform.match(/rotate\((-?\d+\.?\d*),\s*([-\d.]+),\s*([-\d.]+)\)/)
+    const angle = match ? parseFloat(match[1]) : 0
+
+    if (local) {
+      const rad = (angle * Math.PI) / 180
+      dx = dx * Math.cos(rad) - dy * Math.sin(rad)
+      dy = dx * Math.sin(rad) + dy * Math.cos(rad)
+    }
 
     // Move object
     if ('x' in attrs && 'y' in attrs) {
@@ -31,11 +41,7 @@ export function useSvgObjects(imageStore, historyStore, t) {
     }
 
     // If rotation, just update center
-    const transform = attrs.transform || ''
-    const match = transform.match(/rotate\((-?\d+\.?\d*),\s*([-\d.]+),\s*([-\d.]+)\)/)
     if (match) {
-      const angle = parseFloat(match[1])
-
       let cx = 0,
         cy = 0
       if ('x' in attrs && 'y' in attrs && 'width' in attrs && 'height' in attrs) {
@@ -59,24 +65,44 @@ export function useSvgObjects(imageStore, historyStore, t) {
   }
 
   /**
-   * Move the selected object one pixel to the left
+   * Move the selected object one pixel to the left (global)
    */
-  const moveObjectLeft = () => moveObjectBy(-1, 0)
+  const moveObjectLeftGlobal = () => moveObjectBy(-1, 0, false)
 
   /**
-   * Move the selected object one pixel to the right
+   * Move the selected object one pixel to the right (global)
    */
-  const moveObjectRight = () => moveObjectBy(1, 0)
+  const moveObjectRightGlobal = () => moveObjectBy(1, 0, false)
 
   /**
-   * Move the selected object one pixel up
+   * Move the selected object one pixel up (global)
    */
-  const moveObjectUp = () => moveObjectBy(0, -1)
+  const moveObjectUpGlobal = () => moveObjectBy(0, -1, false)
 
   /**
-   * Move the selected object one pixel down
+   * Move the selected object one pixel down (global)
    */
-  const moveObjectDown = () => moveObjectBy(0, 1)
+  const moveObjectDownGlobal = () => moveObjectBy(0, 1, false)
+
+  /**
+   * Move the selected object one pixel to the left (local)
+   */
+  const moveObjectLeftLocal = () => moveObjectBy(-1, 0, true)
+
+  /**
+   * Move the selected object one pixel to the right (local)
+   */
+  const moveObjectRightLocal = () => moveObjectBy(1, 0, true)
+
+  /**
+   * Move the selected object one pixel up (local)
+   */
+  const moveObjectUpLocal = () => moveObjectBy(0, -1, true)
+
+  /**
+   * Move the selected object one pixel down (local)
+   */
+  const moveObjectDownLocal = () => moveObjectBy(0, 1, true)
 
   /**
    * Delete selected SVG object
@@ -123,10 +149,14 @@ export function useSvgObjects(imageStore, historyStore, t) {
   }
 
   return {
-    moveObjectLeft,
-    moveObjectRight,
-    moveObjectUp,
-    moveObjectDown,
+    moveObjectLeftLocal,
+    moveObjectRightLocal,
+    moveObjectUpLocal,
+    moveObjectDownLocal,
+    moveObjectLeftGlobal,
+    moveObjectRightGlobal,
+    moveObjectUpGlobal,
+    moveObjectDownGlobal,
     deleteSelectedSvgObject,
     moveSelectedSvgObjectForward,
     moveSelectedSvgObjectBackward,
