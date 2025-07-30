@@ -102,7 +102,7 @@ export const useImageStore = defineStore('imageStore', {
         },
       },
       {
-        id: Date.now() + 4,
+        id: Date.now() + 2,
         class: 'highlight',
         tag: 'ellipse',
         attrs: {
@@ -115,7 +115,7 @@ export const useImageStore = defineStore('imageStore', {
         },
       },
       {
-        id: Date.now() + 2,
+        id: Date.now() + 3,
         class: 'text',
         tag: 'text',
         attrs: {
@@ -128,7 +128,7 @@ export const useImageStore = defineStore('imageStore', {
         content: 'Sample Textiiiii',
       },
       {
-        id: Date.now() + 3,
+        id: Date.now() + 4,
         class: 'highlight',
         tag: 'line',
         attrs: {
@@ -140,6 +140,19 @@ export const useImageStore = defineStore('imageStore', {
           'stroke-width': 4,
           transform: '',
         },
+      },
+      {
+        id: Date.now() + 5,
+        class: 'text',
+        tag: 'text',
+        attrs: {
+          x: 300,
+          y: 350,
+          fill: 'red',
+          'font-size': '10px',
+          transform: '',
+        },
+        content: 'Sample Textiiiii',
       },
     ],
     /** ID of the currently selected SVG object */

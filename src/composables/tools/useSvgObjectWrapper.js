@@ -1,4 +1,4 @@
-import { ref, computed, watchEffect, onMounted, onBeforeUnmount, watch } from 'vue'
+import { ref, computed, onMounted, onBeforeUnmount, watch, nextTick } from 'vue'
 import { useMath } from '../common/useMath'
 import { editorConfig } from '@/config/editorConfig'
 /**
@@ -18,6 +18,18 @@ export function useSvgObjectWrapper(
   t,
 ) {
   const { clamp, pythagorean, round } = useMath()
+
+  const cursorOnSvgObject = computed(() => {
+    if (isSelected.value) {
+      return 'move'
+    }
+
+    if (editorStore.selectedToolKey === object.value.class) {
+      return 'pointer'
+    } else {
+      return 'default'
+    }
+  })
 
   /**
    * Reactive reference to the SVG object
@@ -40,6 +52,12 @@ export function useSvgObjectWrapper(
   const isSelected = computed(
     () => imageStore.selectedSvgObjectId === object.value.id && areSvgObjectOperationsEnabled.value,
   )
+  /**
+   * Watch for changes in the selection state
+   */
+  watch(isSelected, (newValue) => {
+    editorStore.setIsSvgObjectSelected(newValue)
+  })
 
   /**
    * Reactive variable to track if the SVG object is highlighted
@@ -1023,7 +1041,8 @@ export function useSvgObjectWrapper(
    * @returns {{dx: number, dy: number}}
    */
   const getSnapOffsetToEdges = (left, right, top, bottom) => {
-    const threshold = imageStore.getSmallerImageDimension() * editorConfig.snapEdgeThresholdCoefficient
+    const threshold =
+      imageStore.getSmallerImageDimension() * editorConfig.snapEdgeThresholdCoefficient
 
     const targets = getSnapEdgeTargets()
 
@@ -1073,18 +1092,33 @@ export function useSvgObjectWrapper(
   }
 
   /**
-   * Global click handler to deselect the SVG object when clicking outside
+   * Global click handler to deselect the SVG object
+   * Only triggers if the click was inside the viewport content
    * @param {MouseEvent} e - Mouse event
    */
   const onGlobalClick = (e) => {
     if (!areSvgObjectOperationsEnabled.value) return
 
-    if (!e.target.closest('g')) {
+    const viewportContent = document.getElementById('viewport')
+    if (!viewportContent) return
+
+    const clickedInside = viewportContent.contains(e.target)
+    if (!clickedInside) return
+
+    const clickedObjectId = Number(e.target.getAttribute('data-id'))
+    const clickedObject = imageStore.getSvgObjectById(clickedObjectId)
+
+    const selectedObject = imageStore.getSvgObjectById(imageStore.selectedSvgObjectId)
+
+    // Deselect if clicked outside the selected object or on a different class
+    const sameClass =
+      clickedObject && selectedObject && clickedObject.class === selectedObject.class
+
+    if (!sameClass) {
       imageStore.selectedSvgObjectId = null
       showResizers.value = false
     }
   }
-
   /**
    * Get positions of resizers for the SVG object
    * Returns an array of objects with x, y coordinates and cursor style
@@ -1164,7 +1198,35 @@ export function useSvgObjectWrapper(
   /**
    * Watch for changes in the text element and update the bounding box accordingly
    */
-  watchEffect(() => {
+  watch(
+    () => ({
+      content: object.value.content,
+      fontSize: object.value.attrs['font-size'],
+      fontFamily: object.value.attrs['font-family'],
+      fill: object.value.attrs.fill,
+    }),
+    () => {
+      nextTick(() => {
+        console.log('Updating text bounding box', object.value)
+        if (object.value.tag === 'text' && textRef.value) {
+          const bbox = textRef.value.getBBox()
+          object.value.textBBox = {
+            x: bbox.x,
+            y: bbox.y,
+            width: bbox.width,
+            height: bbox.height,
+          }
+        }
+      })
+    },
+    { deep: false },
+  )
+
+  /**
+   * Add global event listeners for mouse events
+   */
+  onMounted(() => {
+    // Add initial bounding box if it is text
     if (object.value.tag === 'text' && textRef.value) {
       const bbox = textRef.value.getBBox()
       object.value.textBBox = {
@@ -1174,12 +1236,7 @@ export function useSvgObjectWrapper(
         height: bbox.height,
       }
     }
-  })
 
-  /**
-   * Add global event listeners for mouse events
-   */
-  onMounted(() => {
     window.addEventListener('click', onGlobalClick)
     window.addEventListener('mousemove', onMouseMove)
     window.addEventListener('mouseup', onMouseUp)
@@ -1214,5 +1271,6 @@ export function useSvgObjectWrapper(
     onMouseDownRotate,
     onObjectDoubleClick,
     isRotating,
+    cursorOnSvgObject,
   }
 }

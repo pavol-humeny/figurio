@@ -13,6 +13,7 @@ import { useI18n } from 'vue-i18n'
 import { useUiStore } from '@/stores/uiStore'
 import LoadingSpinner from '../common/LoadingSpinner.vue'
 import SvgObjectWrapper from '../tools/SvgObjectWrapper.vue'
+import { useSvgObjects } from '@/composables/tools/useSvgObjects'
 
 const { t } = useI18n()
 const uiStore = useUiStore()
@@ -69,6 +70,14 @@ const {
   guideLine
 } = useViewportWrapper(useViewportStore(), useImageStore(), useEditorStore(), useUiStore(), contentRef, t)
 
+const { OnClickImageSvg, cursorOnSvgArea } = useSvgObjects(
+  useImageStore(),
+  useHistoryStore(),
+  useViewportStore(),
+  useEditorStore(),
+  t
+)
+
 /**
  * Whether to show SmartCropTool
  * @type {import('vue').Ref<boolean>}
@@ -104,8 +113,8 @@ watch(
         <svg ref="frameSvgRef" class="frame-svg"></svg>
 
         <svg ref="svgRef" class="image-svg" xmlns="http://www.w3.org/2000/svg" :width="imageStore.fileDimensions.width"
-          :height="imageStore.fileDimensions.height">
-          <SvgObjectWrapper v-for="object in imageStore.svgObjects" :key="object.id" :objectId="object.id" />
+          :height="imageStore.fileDimensions.height" @click="OnClickImageSvg" :style="{ cursor: cursorOnSvgArea }">
+          <SvgObjectWrapper v-for="object in imageStore.svgObjects" :key="object.id" :objectId="object.id"  />
         </svg>
 
 
@@ -142,7 +151,7 @@ watch(
         </div>
         <div v-if="mouseX !== null" class="ruler-cursor-mark horizontal" :style="{ left: mouseX + 'px' }">
           <span class="ruler-cursor-label horizontal" :class="{ 'active': cursorPosXSameAsImageWidth }">{{ cursorPosX
-            }}</span>
+          }}</span>
         </div>
 
       </div>
@@ -155,7 +164,7 @@ watch(
         </div>
         <div v-if="mouseY !== null" class="ruler-cursor-mark vertical" :style="{ top: mouseY + 'px' }">
           <span class="ruler-cursor-label vertical" :class="{ 'active': cursorPosYSameAsImageHeight }">{{ cursorPosY
-            }}</span>
+          }}</span>
         </div>
       </div>
     </div>

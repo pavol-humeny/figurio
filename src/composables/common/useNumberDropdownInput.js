@@ -1,5 +1,5 @@
 import { useMath } from '@/composables/common/useMath'
-import { ref, watch } from 'vue'
+import { ref, watch, onMounted, onBeforeUnmount } from 'vue'
 
 /**
  * Logic for a number input with dropdown selection
@@ -49,15 +49,25 @@ export function useNumberDropdownInput(props, emit) {
   )
 
   /**
-   * Handles input changes, clamps the value, and emits updates
+   * Called on every input – updates internal value only
    */
-  const onInput = () => {
+  const onInput = (event) => {
+    inputValue.value = event.target.value
+  }
+
+  /**
+   * Called on blur or Enter – parses and clamps value
+   */
+  const onCommit = () => {
     const num = Number(inputValue.value)
 
     if (!isNaN(num)) {
-      const clampedValue = clamp(num, props.min, props.max)
-      inputValue.value = clampedValue.toString()
-      emit('update:modelValue', clampedValue)
+      const clamped = clamp(num, props.min, props.max)
+      inputValue.value = clamped.toString()
+      emit('update:modelValue', clamped)
+    } else {
+      // fallback: reset to last valid value
+      inputValue.value = props.modelValue.toString()
     }
   }
 
@@ -88,6 +98,21 @@ export function useNumberDropdownInput(props, emit) {
     inputValue.value = newValue
   }
 
+  const onClickOutside = (event) => {
+    const el = inputRef.value
+    if (el && !el.contains(event.target)) {
+      showDropdown.value = false
+    }
+  }
+
+  onMounted(() => {
+    document.addEventListener('mousedown', onClickOutside)
+  })
+
+  onBeforeUnmount(() => {
+    document.removeEventListener('mousedown', onClickOutside)
+  })
+
   return {
     inputValue,
     showDropdown,
@@ -96,5 +121,6 @@ export function useNumberDropdownInput(props, emit) {
     onSelect,
     toggleDropdown,
     setValue,
+    onCommit,
   }
 }

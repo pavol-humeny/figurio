@@ -3,24 +3,15 @@ import ColorPicker from '../common/ColorPicker.vue';
 import DropdownSelect from '../common/DropdownSelect.vue';
 import TextInput from '../common/TextInput.vue';
 import NumberDropdownInput from '../common/NumberDropdownInput.vue';
+import { useImageStore } from '@/stores/imageStore';
+import { useTextTool } from '@/composables/tools/useTextTool';
+import { useI18n } from 'vue-i18n';
 
-const textSizeOptions = [10, 12, 14, 16, 18, 20, 24, 28, 32, 36, 40, 48, 56, 64, 72];
+const { t } = useI18n();
 
-const textFontOptions = [
-  { label: 'Arial', value: 'Arial' },
-  { label: 'Courier New', value: 'Courier New' },
-  { label: 'Georgia', value: 'Georgia' },
-  { label: 'Times New Roman', value: 'Times New Roman' },
-  { label: 'Verdana', value: 'Verdana' },
-];
-
-const textSettings = {
-  text: '',
-  size: 16,
-  color: '#000000',
-  fontFamily: 'Arial',
-};
-
+const { textSizeOptions,
+  textFontOptions,
+  textSettings, } = useTextTool(useImageStore(), t)
 </script>
 
 <template>
@@ -33,7 +24,7 @@ const textSettings = {
             <p>Text</p>
           </div>
           <div class="content-wrapper">
-            <TextInput v-model="textSettings.text" placeholder="text" />
+            <TextInput v-model="textSettings.text" placeholder="text" updateOnChange />
           </div>
         </div>
 
@@ -43,7 +34,7 @@ const textSettings = {
             <p>Text size</p>
           </div>
           <div class="content-wrapper">
-            <NumberDropdownInput v-model="textSettings.size" :options="textSizeOptions" :min="0" :max="100" />
+            <NumberDropdownInput v-model="textSettings.size" :options="textSizeOptions" :min="1" :max="100" />
           </div>
         </div>
 

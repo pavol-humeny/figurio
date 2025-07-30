@@ -1,6 +1,13 @@
 import { computed } from 'vue'
+import { useTextTool } from './useTextTool'
 
-export function useSvgObjects(imageStore, historyStore, t) {
+export function useSvgObjects(imageStore, historyStore, viewportStore, editorStore, t) {
+  const cursorOnSvgArea = computed(() => {
+    return editorStore.selectedToolKey === 'text' && !editorStore.isSvgObjectSelected
+      ? 'text'
+      : 'default'
+  })
+
   /**
    * Move the selected object by a specified offset in global coordinates (ignores rotation)
    * @param {number} dx - Offset in X direction
@@ -196,6 +203,20 @@ export function useSvgObjects(imageStore, historyStore, t) {
     return { angle }
   })
 
+  const OnClickImageSvg = (event) => {
+    // if (editorStore.selectedToolKey !== 'text') return
+
+    if (event.target.closest('g') || event.target.closest('text')) return
+
+    const rect = event.currentTarget.getBoundingClientRect()
+    const x = (event.clientX - rect.left) / viewportStore.realZoomLevel
+    const y = (event.clientY - rect.top) / viewportStore.realZoomLevel
+
+    if (editorStore.selectedToolKey === 'text' && !editorStore.isSvgObjectSelected) {
+      useTextTool(imageStore, t).addTextObject(x, y)
+    }
+  }
+
   return {
     moveObjectLeftLocal,
     moveObjectRightLocal,
@@ -209,5 +230,7 @@ export function useSvgObjects(imageStore, historyStore, t) {
     moveSelectedSvgObjectForward,
     moveSelectedSvgObjectBackward,
     selectedObjectInfo,
+    OnClickImageSvg,
+    cursorOnSvgArea,
   }
 }

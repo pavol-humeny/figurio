@@ -56,7 +56,8 @@ const {
   moveObjectRightGlobal,
   moveObjectUpGlobal,
   moveObjectDownGlobal,
-  deleteSelectedSvgObject, moveSelectedSvgObjectForward, moveSelectedSvgObjectBackward, } = useSvgObjects(useImageStore(), useHistoryStore(), t)
+  deleteSelectedSvgObject, moveSelectedSvgObjectForward, moveSelectedSvgObjectBackward,
+  selectedObjectInfo } = useSvgObjects(useImageStore(), useHistoryStore(), useViewportStore(), useEditorStore(), t)
 
 const imageStore = useImageStore()
 
@@ -72,9 +73,6 @@ useKeyboardShortcuts({
   moveObjectDownGlobal
 }, useUiStore(), useImageStore());
 // === ===
-
-
-const { selectedObjectInfo } = useSvgObjects(useImageStore(), useHistoryStore(), t)
 
 // Start tutorial if opening the editor for the first time
 onMounted(() => {
@@ -100,7 +98,7 @@ onMounted(() => {
         </div>
         <div class="file-info-right">
           <p v-if="selectedObjectInfo?.width !== undefined && selectedObjectInfo?.height !== undefined">
-            {{ selectedObjectInfo.width }}px  × {{ selectedObjectInfo.height }}px
+            {{ selectedObjectInfo.width }}px × {{ selectedObjectInfo.height }}px
           </p>
           <p v-if="selectedObjectInfo?.angle !== undefined">
             {{ selectedObjectInfo.angle }}°

@@ -74,7 +74,8 @@ const { inputValue,
   onInput,
   onSelect,
   toggleDropdown,
-  setValue
+  setValue,
+  onCommit
 } = useNumberDropdownInput(props, emit)
 
 
@@ -91,7 +92,8 @@ defineExpose({ setValue })
       <BaseIcon v-if="props.icon" :name="props.icon" :size="props.size" :color="props.color" class="input-icon" />
 
       <input ref="inputRef" class="combo-input" type="number" :disabled="props.disabled" :min="props.min"
-        :max="props.max" :step="props.step" v-model="inputValue" @input="onInput" />
+        :max="props.max" :step="props.step" v-model="inputValue" @input="onInput" @blur="onCommit"
+        @keydown.enter="onCommit" />
 
       <BaseIcon name="IconDropDown" class="dropdown-icon" size="12" color="var(--primary-c)"
         :style="{ transform: showDropdown ? 'rotate(180deg) translateY(9px)' : 'rotate(0deg)' }"
