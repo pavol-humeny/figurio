@@ -178,6 +178,10 @@ export function useSvgObjectWrapper(
     },
   )
 
+  /**
+   * Toggle resizers on double-click (if not text)
+   * @returns {boolean} - Whether the SVG object should be resizable
+   */
   const onObjectDoubleClick = () => {
     if (object.value.tag === 'text') return
     showResizers.value = !showResizers.value

@@ -193,5 +193,24 @@ export const keyboardShortcuts = [
     action: 'moveSelectedSvgObjectBackward',
     description: 'Move selected SVG object backward',
   },
-
+  {
+    keys: ['arrowleft'],
+    action: 'moveObjectLeft',
+    description: 'Move selected SVG object left by 1px',
+  },
+  {
+    keys: ['arrowright'],
+    action: 'moveObjectRight',
+    description: 'Move selected SVG object right by 1px',
+  },
+  {
+    keys: ['arrowup'],
+    action: 'moveObjectUp',
+    description: 'Move selected SVG object up by 1px',
+  },
+  {
+    keys: ['arrowdown'],
+    action: 'moveObjectDown',
+    description: 'Move selected SVG object down by 1px',
+  },
 ]

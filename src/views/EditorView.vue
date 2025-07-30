@@ -33,6 +33,7 @@ import { useWorkspaceStore } from '@/stores/workspaceStore';
 import { useFileTabs } from '@/composables/editor/useFileTabs';
 import { useInteractiveTutorial } from '@/composables/tutorial/useInteractiveTutorial';
 import { useRouter } from 'vue-router'
+import { useSvgObjects } from '@/composables/tools/useSvgObjects';
 
 const { undo, redo } = useUndoRedo(useHistoryStore(), useImageStore())
 const { zoomIn, zoomOut, resetZoom } = useZoomControl(useViewportStore())
@@ -46,13 +47,12 @@ const { openPrivacyAndDataModal } = usePrivacyAndDataModal(t)
 const { startEditing } = useFileNameDisplay(useImageStore(), t)
 const { switchToNextTab, switchToPreviousTab, } = useFileTabs(useUiStore(), t)
 const { prevStep, nextStep, finishTutorial, closeTutorial, startTutorial } = useInteractiveTutorial(useUiStore(), useImageStore(), useRouter(), t)
+const { moveObjectLeft, moveObjectRight, moveObjectUp, moveObjectDown, deleteSelectedSvgObject, moveSelectedSvgObjectForward, moveSelectedSvgObjectBackward, } = useSvgObjects(useImageStore(), useHistoryStore(), t)
 
 const imageStore = useImageStore()
 
 useKeyboardShortcuts({
-  undo, redo, zoomIn, zoomOut, resetZoom, closeFile, uploadFile, toggleTool, openExportToolSettings, openHelpModal, openSettingsPanel, openPrivacyAndDataModal, startEditing, switchToNextTab, switchToPreviousTab, prevStep, nextStep, finishTutorial, closeTutorial, deleteSelectedSvgObject: () => imageStore.deleteSelectedSvgObject(t),
-  moveSelectedSvgObjectForward: () => imageStore.moveSelectedSvgObjectForward(t),
-  moveSelectedSvgObjectBackward: () => imageStore.moveSelectedSvgObjectBackward(t),
+  undo, redo, zoomIn, zoomOut, resetZoom, closeFile, uploadFile, toggleTool, openExportToolSettings, openHelpModal, openSettingsPanel, openPrivacyAndDataModal, startEditing, switchToNextTab, switchToPreviousTab, prevStep, nextStep, finishTutorial, closeTutorial, deleteSelectedSvgObject, moveSelectedSvgObjectForward, moveSelectedSvgObjectBackward, moveObjectLeft, moveObjectRight, moveObjectUp, moveObjectDown
 }, useUiStore(), useImageStore());
 // === ===
 

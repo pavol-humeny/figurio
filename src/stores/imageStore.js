@@ -222,31 +222,6 @@ export const useImageStore = defineStore('imageStore', {
     },
 
     /**
-     * Returns the currently selected SVG object
-     * @returns {Object|null} - The currently selected SVG object or null if none is selected
-     */
-    getSelectedSvgObject() {
-      return this.svgObjects.find((obj) => obj.id === this.selectedSvgObjectId)
-    },
-
-    /**
-     * Returns the SVG object by its ID
-     * @param {number} id - The ID of the SVG object
-     * @returns {Object|null} - The SVG object or null if not found
-     */
-    getSvgObjectById(id) {
-      return this.svgObjects.find((obj) => obj.id === id)
-    },
-
-    /**
-     * Returns the index of the currently selected SVG object
-     * @returns {number} - The index of the currently selected SVG object, or -1 if none is selected
-     */
-    getIndexOfSelectedSvgObject() {
-      return this.svgObjects.findIndex((obj) => obj.id === this.selectedSvgObjectId)
-    },
-
-    /**
      * Returns the larger dimension (width or height) of the current file dimensions
      * @returns {number} - The larger dimension of the image
      */
@@ -1236,52 +1211,30 @@ export const useImageStore = defineStore('imageStore', {
     // --------------------------------
     // SVG object management methods
     // --------------------------------
+
     /**
-     * Delete selected SVG object
+     * Returns the currently selected SVG object
+     * @returns {Object|null} - The currently selected SVG object or null if none is selected
      */
-    deleteSelectedSvgObject(t) {
-      if (this.selectedSvgObjectId === null) return
-
-      const i = this.getIndexOfSelectedSvgObject()
-      if (i !== -1) {
-        this.svgObjects.splice(i, 1)
-        this.selectedSvgObjectId = null
-      }
-
-      const historyStore = useHistoryStore()
-      historyStore.push(this.getSnapshot(t))
+    getSelectedSvgObject() {
+      return this.svgObjects.find((obj) => obj.id === this.selectedSvgObjectId)
     },
+
     /**
-     * Move the selected SVG object forward
+     * Returns the SVG object by its ID
+     * @param {number} id - The ID of the SVG object
+     * @returns {Object|null} - The SVG object or null if not found
      */
-    moveSelectedSvgObjectForward(t) {
-      if (this.selectedSvgObjectId === null) return
-
-      const i = this.getIndexOfSelectedSvgObject()
-      if (i !== -1 && i < this.svgObjects.length - 1) {
-        const temp = this.svgObjects[i]
-        this.svgObjects[i] = this.svgObjects[i + 1]
-        this.svgObjects[i + 1] = temp
-      }
-
-      const historyStore = useHistoryStore()
-      historyStore.push(this.getSnapshot(t))
+    getSvgObjectById(id) {
+      return this.svgObjects.find((obj) => obj.id === id)
     },
+
     /**
-     * Move the selected SVG object backward
+     * Returns the index of the currently selected SVG object
+     * @returns {number} - The index of the currently selected SVG object, or -1 if none is selected
      */
-    moveSelectedSvgObjectBackward(t) {
-      if (this.selectedSvgObjectId === null) return
-
-      const i = this.getIndexOfSelectedSvgObject()
-      if (i !== -1 && i > 0) {
-        const temp = this.svgObjects[i]
-        this.svgObjects[i] = this.svgObjects[i - 1]
-        this.svgObjects[i - 1] = temp
-      }
-
-      const historyStore = useHistoryStore()
-      historyStore.push(this.getSnapshot(t))
+    getIndexOfSelectedSvgObject() {
+      return this.svgObjects.findIndex((obj) => obj.id === this.selectedSvgObjectId)
     },
 
     // --------------------------------
