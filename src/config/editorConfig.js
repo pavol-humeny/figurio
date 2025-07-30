@@ -27,4 +27,5 @@ export const editorConfig = {
   resizerMultiplier: 0.9, // 1 - default size
   angleSnapTolerance: 5, // degrees
   rotationSensitivity: 1, // Higher = rotates faster, lower = slower
+  snapEdgeThresholdCoefficient: 0.01, // 1% of the smaller dimension of the image (higher = more sensitive)
 }

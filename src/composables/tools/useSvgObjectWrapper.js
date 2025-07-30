@@ -1023,8 +1023,7 @@ export function useSvgObjectWrapper(
    * @returns {{dx: number, dy: number}}
    */
   const getSnapOffsetToEdges = (left, right, top, bottom) => {
-    const threshold = imageStore.getSmallerImageDimension() * 0.01 // 1% of the smaller dimension of the image
-    // TODO konstanta na intenzitu
+    const threshold = imageStore.getSmallerImageDimension() * editorConfig.snapEdgeThresholdCoefficient
 
     const targets = getSnapEdgeTargets()
 
