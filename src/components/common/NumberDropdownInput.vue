@@ -160,7 +160,8 @@ defineExpose({ setValue })
   margin: 4px 0 0 0;
   padding: 0;
   border-radius: 10px;
-  overflow: hidden;
+  overflow-y: auto;
+  max-height: 140px; 
   box-shadow: var(--box-shadow-ui);
   z-index: 10;
 }
