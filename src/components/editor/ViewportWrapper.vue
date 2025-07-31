@@ -20,8 +20,6 @@ const uiStore = useUiStore()
 const editorStore = useEditorStore()
 const imageStore = useImageStore()
 
-console.log('---------------svgObjects:', imageStore.svgObjects)
-
 /**
  * Reference to the viewport content element
  * @type {import('vue').Ref<HTMLElement | null>}

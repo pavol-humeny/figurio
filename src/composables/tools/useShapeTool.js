@@ -201,8 +201,6 @@ export function useShapeTool(editorStore, imageStore) {
    */
   const applyLocalSettings = () => {
     if (!editorStore.isSvgObjectSelected) return
-    console.log('Applying local settings to active object')
-    console.log('strokeWidth', localObjectSettings.value.strokeWidth)
     const object = activeObject.value
     if (!object) return
 

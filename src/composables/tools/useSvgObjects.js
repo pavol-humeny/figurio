@@ -6,7 +6,7 @@ import { useMath } from '../common/useMath'
 
 export function useSvgObjects(imageStore, historyStore, viewportStore, editorStore, t) {
   const { round } = useMath()
-  const textTool = useTextTool(imageStore)
+  const textTool = useTextTool(imageStore, historyStore, t)
   const shapeTool = useShapeTool(editorStore, imageStore)
 
   const isDrawing = ref(false)
@@ -19,7 +19,7 @@ export function useSvgObjects(imageStore, historyStore, viewportStore, editorSto
    */
   const cursorOnSvgArea = computed(() => {
     return editorStore.selectedToolKey === 'text' && !editorStore.isSvgObjectSelected
-      ? 'text'
+      ? 'url(/cursors/textCursor.png) 10 10, auto'
       : 'default'
   })
 

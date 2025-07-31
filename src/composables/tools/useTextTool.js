@@ -15,7 +15,7 @@ export const textSettings = ref({
  * @param {Object} imageStore - Store containing svgObjects
  * @param {Function} t - Translation function
  */
-export function useTextTool(imageStore) {
+export function useTextTool(imageStore, historyStore, t) {
   const textInputRef = ref(null)
 
   const textSizeOptions = [8, 10, 12, 14, 16, 18, 20, 24, 28, 32, 36, 40, 48, 56, 64, 72]
@@ -71,10 +71,14 @@ export function useTextTool(imageStore) {
       const object = imageStore.getSvgObjectById(id)
       if (!object || object.tag !== 'text') return
 
+      console.log('Updating text object with new settings:', newVal)
+
       object.content = newVal.text
       object.attrs['font-size'] = `${newVal.size}px`
       object.attrs.fill = newVal.color
       object.attrs['font-family'] = newVal.fontFamily
+
+      historyStore.push(imageStore.getSnapshot(t))
     },
     { deep: true },
   )
@@ -108,6 +112,8 @@ export function useTextTool(imageStore) {
     })
 
     imageStore.selectedSvgObjectId = id
+
+    historyStore.push(imageStore.getSnapshot(t))
   }
 
   return {
