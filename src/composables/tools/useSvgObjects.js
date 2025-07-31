@@ -7,7 +7,7 @@ import { useMath } from '../common/useMath'
 export function useSvgObjects(imageStore, historyStore, viewportStore, editorStore, t) {
   const { round } = useMath()
   const textTool = useTextTool(imageStore, historyStore, t)
-  const shapeTool = useShapeTool(editorStore, imageStore)
+  const shapeTool = useShapeTool(editorStore, imageStore, historyStore, t)
 
   const isDrawing = ref(false)
   const drawingStart = ref({ x: 0, y: 0 })

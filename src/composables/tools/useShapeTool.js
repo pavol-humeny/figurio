@@ -15,7 +15,7 @@ const localObjectSettings = ref({
 
 const activeObject = ref(null)
 
-export function useShapeTool(editorStore, imageStore) {
+export function useShapeTool(editorStore, imageStore, historyStore, t) {
   const { clamp } = useMath()
 
   const hidePositionAndDimensions = ref(false)
@@ -145,11 +145,16 @@ export function useShapeTool(editorStore, imageStore) {
           localObjectSettings.value.fillEnabled = attrs.fill !== 'none'
           if (localObjectSettings.value.fillEnabled) {
             localObjectSettings.value.fillColor = attrs.fill
+          } else {
+            localObjectSettings.value.fillColor = '#000000'
           }
 
           if (attrs['stroke-width'] > 0) {
             localObjectSettings.value.strokeColor = attrs.stroke
             localObjectSettings.value.strokeWidth = attrs['stroke-width']
+          } else {
+            localObjectSettings.value.strokeColor = '#000000'
+            localObjectSettings.value.strokeWidth = 0
           }
         }
       } else {
@@ -237,6 +242,8 @@ export function useShapeTool(editorStore, imageStore) {
       attrs['stroke-width'] = 0
       attrs.stroke = 'none'
     }
+
+    historyStore.push(imageStore.getSnapshot(t))
   }
 
   /**

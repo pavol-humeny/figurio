@@ -8,15 +8,15 @@ import NumberInput from '../common/NumberInput.vue';
 import NumberDropdownInput from '../common/NumberDropdownInput.vue';
 import LinkValuesIcon from '../common/LinkValuesIcon.vue';
 import ToggleButton from '../common/ToggleButton.vue';
+import { useHistoryStore } from '@/stores/historyStore';
+import { useI18n } from 'vue-i18n'
 
-// const editorStore = useEditorStore();
+const { t } = useI18n()
 
 /**
  * Available tabs for blur tool settings
  */
 const tabs = ['rectangle', 'ellipse', 'line'];
-
-
 
 const {
   localObjectSettings,
@@ -32,7 +32,7 @@ const {
   tmpShapeHeight,
   tmpShapeWidth,
   hidePositionAndDimensions
-} = useShapeTool(useEditorStore(), useImageStore())
+} = useShapeTool(useEditorStore(), useImageStore(), useHistoryStore(), t)
 
 </script>
 
