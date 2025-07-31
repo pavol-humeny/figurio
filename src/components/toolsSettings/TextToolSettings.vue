@@ -5,9 +5,6 @@ import TextInput from '../common/TextInput.vue';
 import NumberDropdownInput from '../common/NumberDropdownInput.vue';
 import { useImageStore } from '@/stores/imageStore';
 import { useTextTool } from '@/composables/tools/useTextTool';
-import { useI18n } from 'vue-i18n';
-
-const { t } = useI18n();
 
 const { textSizeOptions,
   textFontOptions,

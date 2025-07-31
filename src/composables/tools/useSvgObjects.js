@@ -1,10 +1,13 @@
 import { computed } from 'vue'
 import { useTextTool } from './useTextTool'
-import { useImageStore } from '@/stores/imageStore'
-
-const textTool = useTextTool(useImageStore())
 
 export function useSvgObjects(imageStore, historyStore, viewportStore, editorStore, t) {
+  const textTool = useTextTool(imageStore)
+
+  /**
+   * Which cursor to use when hovering over the SVG area
+   * @returns {string} - CSS cursor style
+   */
   const cursorOnSvgArea = computed(() => {
     return editorStore.selectedToolKey === 'text' && !editorStore.isSvgObjectSelected
       ? 'text'
@@ -206,9 +209,11 @@ export function useSvgObjects(imageStore, historyStore, viewportStore, editorSto
     return { angle }
   })
 
+  /**
+   * Handle click on the SVG area to add object
+   * @param {MouseEvent} event - Click event
+   */
   const OnClickImageSvg = (event) => {
-    // if (editorStore.selectedToolKey !== 'text') return
-
     if (event.target.closest('g') || event.target.closest('text')) return
 
     const rect = event.currentTarget.getBoundingClientRect()

@@ -53,19 +53,24 @@ const {
   onBlurOrEnter,
   onInput,
   setValue,
+  inputRef,
 } = useTextInput(props, emit)
 
 /**
  * Expose methods for external use
  * @type {{ setValue: (val: string) => void }}
  */
-defineExpose({ setValue })
+defineExpose({
+  setValue,
+  focus: () => inputRef.value?.focus(),
+})
 </script>
 
 <template>
   <ItemTip :text="props.tip" :position="props.position">
     <input type="text" class="text-input" v-model="inputValue" :disabled="props.disabled"
-      :placeholder="props.placeholder" @blur="onBlurOrEnter" @keydown.enter="onBlurOrEnter" @input="onInput" />
+      :placeholder="props.placeholder" @blur="onBlurOrEnter" @keydown.enter="onBlurOrEnter" @input="onInput"
+      ref="inputRef" />
   </ItemTip>
 </template>
 

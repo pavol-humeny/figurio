@@ -51,17 +51,18 @@ const {
 <template>
   <g @mousedown="onMouseDown" @mousedown.right.prevent.stop>
     <!-- SVG object except text -->
-    <g v-if="isSelected" @mousedown="onMouseDownDrag" @dblclick="onObjectDoubleClick" :style="{ cursor: cursorOnSvgObject }">
-      <component v-if="object.tag !== 'text'" :is="object.tag" v-bind="object.attrs" />
-      <text v-else v-bind="object.attrs" style="user-select: none" ref="textRef">
+    <g v-if="isSelected" @mousedown="onMouseDownDrag" @dblclick="onObjectDoubleClick"
+      :style="{ cursor: cursorOnSvgObject }">
+      <component v-if="object.tag !== 'text'" :is="object.tag" v-bind="object.attrs" :data-id="object.id" />
+      <text v-else v-bind="object.attrs" style="user-select: none" ref="textRef" :data-id="object.id">
         {{ object.content || '' }}
       </text>
     </g>
 
     <!-- SVG text object -->
     <g v-else :style="{ cursor: cursorOnSvgObject }">
-      <component v-if="object.tag !== 'text'" :is="object.tag" v-bind="object.attrs" />
-      <text v-else v-bind="object.attrs" style="user-select: none">
+      <component v-if="object.tag !== 'text'" :is="object.tag" v-bind="object.attrs" :data-id="object.id"/>
+      <text v-else v-bind="object.attrs" style="user-select: none" :data-id="object.id">
         {{ object.content || '' }}
       </text>
     </g>
@@ -91,8 +92,7 @@ const {
       </template>
 
       <!-- Rotate icon  -->
-      <foreignObject v-if="!showResizers && !isRotating"
-        :x="boundingBox.x + boundingBox.width"
+      <foreignObject v-if="!showResizers && !isRotating" :x="boundingBox.x + boundingBox.width"
         :y="boundingBox.y + boundingBox.height / 2 - controlIconSize / 2" :width="controlIconSize"
         :height="controlIconSize" @mousedown.stop.prevent="onMouseDownRotate($event)" style="cursor: grab">
         <BaseIcon :name="'IconRotate'" :tip="t('tools.svgObject.rotateObject.tip')" :size="controlIconSize"

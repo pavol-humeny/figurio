@@ -16,6 +16,8 @@ export const textSettings = ref({
  * @param {Function} t - Translation function
  */
 export function useTextTool(imageStore) {
+  const textInputRef = ref(null)
+
   const textSizeOptions = [8, 10, 12, 14, 16, 18, 20, 24, 28, 32, 36, 40, 48, 56, 64, 72]
 
   const textFontOptions = [
@@ -27,12 +29,10 @@ export function useTextTool(imageStore) {
   ]
 
   const resetTextSettings = () => {
-    textSettings.value = {
-      text: '',
-      size: 16,
-      color: '#000000',
-      fontFamily: 'Arial',
-    }
+    textSettings.value.text = ''
+    textSettings.value.size = 16
+    textSettings.value.color = '#000000'
+    textSettings.value.fontFamily = 'Arial'
   }
 
   /**
@@ -41,7 +41,7 @@ export function useTextTool(imageStore) {
   watch(
     () => imageStore.selectedSvgObjectId,
     (newId) => {
-      if (newId != null) {
+      if (newId !== null) {
         const object = imageStore.getSvgObjectById(newId)
         if (object && object.tag === 'text') {
           const { attrs, content } = object
@@ -67,6 +67,7 @@ export function useTextTool(imageStore) {
     (newVal) => {
       const id = imageStore.selectedSvgObjectId
       if (id == null) return
+
       const object = imageStore.getSvgObjectById(id)
       if (!object || object.tag !== 'text') return
 
@@ -84,13 +85,11 @@ export function useTextTool(imageStore) {
    * @param {number} y - Y coordinate
    */
   const addTextObject = (x, y) => {
-    const id = Date.now()
-    const fontSize = textSettings.value.size
-
-    console.log(`Adding text object at (${x}, ${y}) with size ${fontSize}`, textSettings.value)
-
     // if text is empty, do not add
     if (!textSettings.value.text.trim()) return
+
+    const id = Date.now()
+    const fontSize = textSettings.value.size
 
     imageStore.svgObjects.push({
       id,
@@ -116,5 +115,6 @@ export function useTextTool(imageStore) {
     textSettings,
     resetTextSettings,
     addTextObject,
+    textInputRef,
   }
 }

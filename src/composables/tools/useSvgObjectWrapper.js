@@ -1,6 +1,8 @@
 import { ref, computed, onMounted, onBeforeUnmount, watch, nextTick } from 'vue'
 import { useMath } from '../common/useMath'
 import { editorConfig } from '@/config/editorConfig'
+import { useSvgObjects } from './useSvgObjects'
+
 /**
  * Logic for interactive SVG object
  * @param {Object} object - SVG object (with id, tag, attrs)
@@ -17,8 +19,18 @@ export function useSvgObjectWrapper(
   historyStore,
   t,
 ) {
+  const { deleteSelectedSvgObject } = useSvgObjects(
+    imageStore,
+    historyStore,
+    viewportStore,
+    editorStore,
+    t,
+  )
   const { clamp, pythagorean, round } = useMath()
 
+  /**
+   * Style of cursor when hovering over the SVG object
+   */
   const cursorOnSvgObject = computed(() => {
     if (isSelected.value) {
       return 'move'
@@ -30,6 +42,11 @@ export function useSvgObjectWrapper(
       return 'default'
     }
   })
+
+  /**
+   * Reactive reference to track if the mouse was moved during interaction
+   */
+  const mouseWasMoved = ref(false)
 
   /**
    * Reactive reference to the SVG object
@@ -85,7 +102,6 @@ export function useSvgObjectWrapper(
    * Size of the control icon for enabling/disabling resizers
    */
   const controlIconSize = computed(() => {
-    console.log('controlIconSize', resizerSize.value * 1.5)
     return Math.max(round(resizerSize.value * 1.5), 20)
   })
 
@@ -211,7 +227,9 @@ export function useSvgObjectWrapper(
    * @returns {boolean} - Whether the SVG object should be resizable
    */
   const onObjectDoubleClick = () => {
-    if (object.value.tag === 'text') return
+    if (object.value.tag === 'text') {
+      return
+    }
     showResizers.value = !showResizers.value
   }
 
@@ -258,9 +276,9 @@ export function useSvgObjectWrapper(
    * @param {MouseEvent} event - Mouse event
    */
   const onMouseDownDrag = (event) => {
-    if (!areSvgObjectOperationsEnabled.value) return
+    if (!areSvgObjectOperationsEnabled.value || !isSelected.value) return
 
-    imageStore.selectedSvgObjectId = object.value.id
+    // imageStore.selectedSvgObjectId = object.value.id
     isDragging.value = true
     startX.value = event.clientX
     startY.value = event.clientY
@@ -351,6 +369,8 @@ export function useSvgObjectWrapper(
     const isActive = isDragging.value || activeResizerIndex.value !== null || isRotating.value
     if (!isActive) return
 
+    mouseWasMoved.value = true
+
     const isCtrlKey = event.ctrlKey || event.metaKey
 
     let rawDx = (event.clientX - startX.value) / viewportStore.realZoomLevel + remainingDx.value
@@ -407,9 +427,6 @@ export function useSvgObjectWrapper(
       }
 
       attrs.transform = `rotate(${finalAngle}, ${cx}, ${cy})`
-      object.value.attrs = { ...attrs }
-
-      return
     }
 
     // Last cursor position
@@ -783,13 +800,10 @@ export function useSvgObjectWrapper(
           (attrs.x1 === attrs.x2 || attrs.y1 === attrs.y2) &&
           pythagorean(attrs.x1 - attrs.x2, attrs.y1 - attrs.y2) > minLength
       }
-
-      object.value.attrs = { ...attrs }
     }
 
     // DRAG
     if (isDragging.value) {
-      console.log('1Dragging object', object.value.attrs.transform)
       let offsetX = dx
       let offsetY = dy
 
@@ -873,7 +887,6 @@ export function useSvgObjectWrapper(
         }
       }
 
-      console.log('2Dragging object', object.value.attrs.transform)
       // Apply updated offset
       if ('x' in attrs && 'y' in attrs) {
         attrs.x += offsetX
@@ -892,7 +905,6 @@ export function useSvgObjectWrapper(
         attrs.x2 += offsetX
         attrs.y2 += offsetY
       }
-      console.log('3Dragging object', object.value.attrs.transform)
     }
 
     object.value.attrs = { ...attrs }
@@ -917,7 +929,10 @@ export function useSvgObjectWrapper(
     remainingDx.value = 0
     remainingDy.value = 0
 
-    historyStore.push(imageStore.getSnapshot(t))
+    if (mouseWasMoved.value) {
+      historyStore.push(imageStore.getSnapshot(t))
+      mouseWasMoved.value = false
+    }
   }
 
   /**
@@ -1207,8 +1222,14 @@ export function useSvgObjectWrapper(
     }),
     () => {
       nextTick(() => {
-        console.log('Updating text bounding box', object.value)
         if (object.value.tag === 'text' && textRef.value) {
+          // if empty text remove
+          if (object.value.content.trim() === '') {
+            console.log('Removing empty text object')
+            deleteSelectedSvgObject(t)
+            return
+          }
+
           const bbox = textRef.value.getBBox()
           object.value.textBBox = {
             x: bbox.x,

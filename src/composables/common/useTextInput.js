@@ -17,6 +17,11 @@ import { ref, watch } from 'vue'
  */
 export function useTextInput(props, emit) {
   /**
+   * Reference to the native <input> element
+   */
+  const inputRef = ref(null)
+
+  /**
    * Internal reactive value bound to the input
    */
   const inputValue = ref(props.modelValue)
@@ -61,5 +66,6 @@ export function useTextInput(props, emit) {
     onBlurOrEnter,
     onInput,
     setValue,
+    inputRef,
   }
 }
