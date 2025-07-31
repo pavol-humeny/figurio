@@ -301,6 +301,12 @@ export function useSvgObjects(imageStore, historyStore, viewportStore, editorSto
     const isCtrlKey = event.ctrlKey || event.metaKey
     const isShiftKey = event.shiftKey
 
+    const onlyOneKeyPressed = isCtrlKey !== isShiftKey
+
+    if (!isCtrlKey) {
+      viewportStore.guideLine = null
+    }
+
     const rect = viewportStore.viewportContentRect
     let x = (event.clientX - rect.left - viewportStore.panX) / viewportStore.realZoomLevel
     let y = (event.clientY - rect.top - viewportStore.panY) / viewportStore.realZoomLevel
@@ -312,7 +318,7 @@ export function useSvgObjects(imageStore, historyStore, viewportStore, editorSto
     const attrs = currentDrawingObject.value.attrs
 
     // Apply SHIFT for aspect ratio
-    if (isShiftKey) {
+    if (isShiftKey && onlyOneKeyPressed) {
       const maxDelta = Math.max(Math.abs(dx), Math.abs(dy))
       dx = dx < 0 ? -maxDelta : maxDelta
       dy = dy < 0 ? -maxDelta : maxDelta
@@ -321,7 +327,7 @@ export function useSvgObjects(imageStore, historyStore, viewportStore, editorSto
     }
 
     // Apply CTRL snap
-    if (isCtrlKey) {
+    if (isCtrlKey && onlyOneKeyPressed) {
       const x1 = Math.min(drawingStart.value.x, x)
       const x2 = Math.max(drawingStart.value.x, x)
       const y1 = Math.min(drawingStart.value.y, y)
