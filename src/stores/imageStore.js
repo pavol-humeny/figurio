@@ -103,7 +103,7 @@ export const useImageStore = defineStore('imageStore', {
       },
       {
         id: Date.now() + 2,
-        class: 'highlight',
+        class: 'shape',
         tag: 'ellipse',
         attrs: {
           cx: 200, // x-ová pozícia stredu
@@ -129,7 +129,7 @@ export const useImageStore = defineStore('imageStore', {
       },
       {
         id: Date.now() + 4,
-        class: 'highlight',
+        class: 'shape',
         tag: 'line',
         attrs: {
           x1: 400,

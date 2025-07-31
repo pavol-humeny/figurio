@@ -208,30 +208,13 @@
       }
     }
   },
-  "highlight": {
-    "label": "Highlight",
-    "tip": "Highlights a specific area of the image",
+  "shape": {
+    "label": "Shape",
+    "tip": "Adds vector shapes",
     "tipDisabled": "",
-    "shortcut": "H",
-    "subTools": {
-      "add": {
-        "label": "Add Highlight",
-        "tip": "Add a highlight to the image",
-        "shortcut": ""
-      },
-      "modify": {
-        "label": "Modify Highlight",
-        "tip": "Modify the existing highlight",
-        "shortcut": ""
-      }
-    },
+    "shortcut": "S",
     "settings": {
-      "add": {
-        "label": "Add Highlight"
-      },
-      "modify": {
-        "label": "Modify Highlight"
-      }
+      "general":{}
     }
   },
   "magnifyArea": {

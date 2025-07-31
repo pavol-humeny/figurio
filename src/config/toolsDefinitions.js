@@ -63,19 +63,9 @@ export const toolsDefinitions = [
     ],
   },
   {
-    key: 'highlight',
-    iconName: 'IconHighlightTool',
-    settingsComponent: () => import('@/components/toolsSettings/HighlightToolSettings.vue'),
-    subTools: [
-      {
-        key: 'add',
-        iconName: 'IconPlus',
-      },
-      {
-        key: 'modify',
-        iconName: 'IconModify',
-      },
-    ],
+    key: 'shape',
+    iconName: 'IconShapeTool',
+    settingsComponent: () => import('@/components/toolsSettings/ShapeToolSettings.vue'),
   },
   {
     key: 'text',

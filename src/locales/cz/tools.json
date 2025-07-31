@@ -207,30 +207,13 @@
       }
     }
   },
-  "highlight": {
-    "label": "Zvýraznění",
-    "tip": "Zvýrazní konkrétní oblast na obrázku",
+  "shape": {
+    "label": "Tvar",
+    "tip": "Přidává vektorové tvary",
     "tipDisabled": "",
-    "shortcut": "H",
-    "subTools": {
-      "add": {
-        "label": "Přidat zvýraznění",
-        "tip": "Přidat zvýraznění na obrázek",
-        "shortcut": ""
-      },
-      "modify": {
-        "label": "Upravit zvýraznění",
-        "tip": "Upravit existující zvýraznění",
-        "shortcut": ""
-      }
-    },
+    "shortcut": "S",
     "settings": {
-      "add": {
-        "label": "Přidat zvýraznění"
-      },
-      "modify": {
-        "label": "Upravit zvýraznění"
-      }
+      "general":{}
     }
   },
   "magnifyArea": {

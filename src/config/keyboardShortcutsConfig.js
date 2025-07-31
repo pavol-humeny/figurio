@@ -135,10 +135,10 @@ export const keyboardShortcuts = [
     description: 'Toggle blur tool',
   },
   {
-    keys: ['h'],
+    keys: ['s'],
     action: 'toggleTool',
-    args: ['highlight', null],
-    description: 'Toggle highlight tool',
+    args: ['shape', null],
+    description: 'Toggle shape tool',
   },
 
   // Multi-file management shortcuts

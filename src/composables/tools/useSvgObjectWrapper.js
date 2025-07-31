@@ -191,22 +191,24 @@ export function useSvgObjectWrapper(
     () => showResizers.value,
     (newValue) => {
       const { attrs } = object.value
-      if (newValue) {
-        // Save and reset rotate
-        const transform = attrs.transform || ''
-        const match = transform.match(/rotate\(([-\d.]+),\s*([-\d.]+),\s*([-\d.]+)\)/)
-        tmpAngle.value = match ? parseFloat(match[1]) : 0
+      if (object.value.tag !== 'line') {
+        if (newValue) {
+          // Save and reset rotate
+          const transform = attrs.transform || ''
+          const match = transform.match(/rotate\(([-\d.]+),\s*([-\d.]+),\s*([-\d.]+)\)/)
+          tmpAngle.value = match ? parseFloat(match[1]) : 0
 
-        const cx = attrs.x + (attrs.width || 0) / 2
-        const cy = attrs.y + (attrs.height || 0) / 2
-
-        object.value.attrs.transform = `rotate(${0}, ${cx}, ${cy})`
-      } else {
-        // Restore rotation
-        if (tmpAngle.value !== 0) {
           const cx = attrs.x + (attrs.width || 0) / 2
           const cy = attrs.y + (attrs.height || 0) / 2
-          attrs.transform = `rotate(${tmpAngle.value}, ${cx}, ${cy})`
+
+          object.value.attrs.transform = `rotate(${0}, ${cx}, ${cy})`
+        } else {
+          // Restore rotation
+          if (tmpAngle.value !== 0) {
+            const cx = attrs.x + (attrs.width || 0) / 2
+            const cy = attrs.y + (attrs.height || 0) / 2
+            attrs.transform = `rotate(${tmpAngle.value}, ${cx}, ${cy})`
+          }
         }
       }
     },
@@ -373,11 +375,12 @@ export function useSvgObjectWrapper(
 
     const isCtrlKey = event.ctrlKey || event.metaKey
 
+    if (!isCtrlKey) {
+      viewportStore.guideLine = null
+    }
+
     let rawDx = (event.clientX - startX.value) / viewportStore.realZoomLevel + remainingDx.value
     let rawDy = (event.clientY - startY.value) / viewportStore.realZoomLevel + remainingDy.value
-
-    // Reset guide line
-    viewportStore.guideLine = null
 
     // Round to whole pixels
     let dx = round(rawDx)
@@ -423,6 +426,8 @@ export function useSvgObjectWrapper(
             y: cy,
             angle: finalAngle,
           }
+        } else {
+          viewportStore.guideLine = null
         }
       }
 
@@ -481,6 +486,8 @@ export function useSvgObjectWrapper(
           // Snap to edges if Ctrl key is pressed
           if (isCtrlKey) {
             const snap = getSnapOffsetToEdges(newX, right, newY, bottom)
+            showResizeGuideLine(snap, { left: newX, right: right, top: newY, bottom: bottom })
+
             newX += snap.dx
             newY += snap.dy
             newW = right - newX
@@ -510,6 +517,7 @@ export function useSvgObjectWrapper(
           // Snap to edges if Ctrl key is pressed
           if (isCtrlKey) {
             const snap = getSnapOffsetToEdges(newX, newX + newW, newY, bottom)
+            showResizeGuideLine(snap, { left: newX, right: newX + newW, top: newY, bottom: bottom })
 
             newW += snap.dx
             newY += snap.dy
@@ -539,6 +547,8 @@ export function useSvgObjectWrapper(
           // Snap to edges if Ctrl key is pressed
           if (isCtrlKey) {
             const snap = getSnapOffsetToEdges(newX, right, newY, newY + newH)
+            showResizeGuideLine(snap, { left: newX, right: right, top: newY, bottom: newY + newH })
+
             newX += snap.dx
             newH += snap.dy
           }
@@ -560,6 +570,12 @@ export function useSvgObjectWrapper(
             const bottomBeforeSnap = newY + newH
 
             const snap = getSnapOffsetToEdges(newX, newX + newW, newY, newY + newH)
+            showResizeGuideLine(snap, {
+              left: newX,
+              right: newX + newW,
+              top: newY,
+              bottom: newY + newH,
+            })
 
             newW += snap.dx
 
@@ -622,6 +638,12 @@ export function useSvgObjectWrapper(
               newCy - newRy,
               newCy + newRy,
             )
+            showResizeGuideLine(snap, {
+              left: newCx - newRx,
+              right: newCx + newRx,
+              top: newCy - newRy,
+              bottom: newCy + newRy,
+            })
 
             // Snap only position, not size (to avoid jitter)
             newCx += snap.dx
@@ -668,6 +690,13 @@ export function useSvgObjectWrapper(
               newCy - newRy,
               newCy + newRy,
             )
+            showResizeGuideLine(snap, {
+              left: newCx - newRx,
+              right: newCx + newRx,
+              top: newCy - newRy,
+              bottom: newCy + newRy,
+            })
+
             newCx += snap.dx
             newCy += snap.dy
             if (snap.dx !== 0) newRx = attrs.rx
@@ -707,6 +736,13 @@ export function useSvgObjectWrapper(
               newCy - newRy,
               newCy + newRy,
             )
+            showResizeGuideLine(snap, {
+              left: newCx - newRx,
+              right: newCx + newRx,
+              top: newCy - newRy,
+              bottom: newCy + newRy,
+            })
+
             newCx += snap.dx
             newCy += snap.dy
             if (snap.dx !== 0) newRx = attrs.rx
@@ -746,6 +782,13 @@ export function useSvgObjectWrapper(
               newCy - newRy,
               newCy + newRy,
             )
+            showResizeGuideLine(snap, {
+              left: newCx - newRx,
+              right: newCx + newRx,
+              top: newCy - newRy,
+              bottom: newCy + newRy,
+            })
+
             newCx += snap.dx
             newCy += snap.dy
             if (snap.dx !== 0) newRx = attrs.rx
@@ -783,14 +826,16 @@ export function useSvgObjectWrapper(
 
           if (isCtrlKey) {
             const snap = getSnapOffsetToEdges(newX, newX, newY, newY)
+            showResizeGuideLine(snap, {
+              left: newX,
+              right: newX,
+              top: newY,
+              bottom: newY,
+            })
 
             // Snap only position
             newX += snap.dx
             newY += snap.dy
-
-            // If snapped, reset length to original
-            if (snap.dx !== 0) newX = attrs[keyX]
-            if (snap.dy !== 0) newY = attrs[keyY]
           }
 
           applyLine(keyX, keyY, newX, newY)
@@ -865,25 +910,7 @@ export function useSvgObjectWrapper(
           offsetX += snap.dx
           offsetY += snap.dy
 
-          if (snap.dx !== 0 || snap.dy !== 0) {
-            let x = null
-            let y = null
-            let angle = null
-
-            if (snap.snappedEdgeX) {
-              x = (snap.snappedEdgeX === 'left' ? bbox.left : bbox.right) + dx + snap.dx
-              y = (bbox.top + bbox.bottom) / 2 + dy + snap.dy
-              angle = 90
-            }
-
-            if (snap.snappedEdgeY) {
-              y = (snap.snappedEdgeY === 'top' ? bbox.top : bbox.bottom) + dy + snap.dy
-              x = (bbox.left + bbox.right) / 2 + dx + snap.dx
-              angle = 0
-            }
-
-            viewportStore.guideLine = { x, y, angle }
-          }
+          showResizeGuideLine(snap, bbox)
         }
       }
 
@@ -932,6 +959,34 @@ export function useSvgObjectWrapper(
     if (mouseWasMoved.value) {
       historyStore.push(imageStore.getSnapshot(t))
       mouseWasMoved.value = false
+    }
+  }
+
+  /**
+   * Show resize guide line based on snap offsets
+   * @param {Object} snap - Snap offsets
+   * @param {Object} bbox - Bounding box of the SVG object
+   */
+  const showResizeGuideLine = (snap, bbox) => {
+    if (snap.dx !== 0 || snap.dy !== 0) {
+      let gx = null,
+        gy = null,
+        angle = null
+
+      if (snap.snappedEdgeX) {
+        gx = snap.snappedEdgeX === 'left' ? bbox.left : bbox.right
+        gy = (bbox.top + bbox.bottom) / 2
+        angle = 90
+      }
+      if (snap.snappedEdgeY) {
+        gy = snap.snappedEdgeY === 'top' ? bbox.top : bbox.bottom
+        gx = (bbox.left + bbox.right) / 2
+        angle = 0
+      }
+
+      viewportStore.guideLine = { x: gx, y: gy, angle }
+    } else {
+      viewportStore.guideLine = null
     }
   }
 
