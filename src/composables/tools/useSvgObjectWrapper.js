@@ -640,10 +640,10 @@ export function useSvgObjectWrapper(
           if (isCtrlKey && onlyOneKeyPressed) {
             // Predict new bbox before applying
             const snap = getSnapOffsetToEdges(
-              newCx - newRx,
-              newCx + newRx,
-              newCy - newRy,
-              newCy + newRy,
+              newCx - attrs.rx,
+              newCx + attrs.rx,
+              newCy - attrs.ry,
+              newCy + attrs.ry,
             )
 
             // Snap only position, not size (to avoid jitter)
@@ -653,6 +653,14 @@ export function useSvgObjectWrapper(
             // If snapped, reset size to original to avoid unintended resize
             if (snap.dx !== 0) newRx = attrs.rx
             if (snap.dy !== 0) newRy = attrs.ry
+
+            console.log(
+              'cx, cy, rx, ry',
+              Math.trunc(newCx),
+              Math.trunc(newCy),
+              Math.trunc(newRx),
+              Math.trunc(newRy),
+            )
 
             showResizeGuideLine(snap, {
               left: newCx - newRx,
@@ -691,10 +699,10 @@ export function useSvgObjectWrapper(
 
           if (isCtrlKey && onlyOneKeyPressed) {
             const snap = getSnapOffsetToEdges(
-              newCx - newRx,
-              newCx + newRx,
-              newCy - newRy,
-              newCy + newRy,
+              newCx - attrs.rx,
+              newCx + attrs.rx,
+              newCy - attrs.ry,
+              newCy + attrs.ry,
             )
 
             newCx += snap.dx
@@ -738,10 +746,10 @@ export function useSvgObjectWrapper(
 
           if (isCtrlKey && onlyOneKeyPressed) {
             const snap = getSnapOffsetToEdges(
-              newCx - newRx,
-              newCx + newRx,
-              newCy - newRy,
-              newCy + newRy,
+              newCx - attrs.rx,
+              newCx + attrs.rx,
+              newCy - attrs.ry,
+              newCy + attrs.ry,
             )
 
             newCx += snap.dx
@@ -785,10 +793,10 @@ export function useSvgObjectWrapper(
 
           if (isCtrlKey && onlyOneKeyPressed) {
             const snap = getSnapOffsetToEdges(
-              newCx - newRx,
-              newCx + newRx,
-              newCy - newRy,
-              newCy + newRy,
+              newCx - attrs.rx,
+              newCx + attrs.rx,
+              newCy - attrs.ry,
+              newCy + attrs.ry,
             )
 
             newCx += snap.dx
