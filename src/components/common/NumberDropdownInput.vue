@@ -62,6 +62,7 @@ const props = defineProps({
 
 /**
  * @event update:modelValue - Emitted when the input value changes
+ * @event update - Emitted for compatibility with older versions
  */
 const emit = defineEmits(['update:modelValue', 'update'])
 

@@ -41,6 +41,7 @@ export function useTextInput(props, emit) {
    */
   const onBlurOrEnter = () => {
     emit('update:modelValue', inputValue.value)
+    emit('update', inputValue.value) // Emit update event for compatibility
   }
 
   /**
@@ -49,6 +50,7 @@ export function useTextInput(props, emit) {
   const onInput = () => {
     if (props.updateOnChange) {
       emit('update:modelValue', inputValue.value)
+      emit('update', inputValue.value) // Emit update event for compatibility
     }
   }
 

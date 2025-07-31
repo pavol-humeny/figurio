@@ -12,7 +12,8 @@ const { t } = useI18n()
 
 const { textSizeOptions,
   textFontOptions,
-  textSettings,
+  localTextSettings,
+  applyLocalTextSettings
   } = useTextTool(useImageStore(), useHistoryStore(), t)
 </script>
 
@@ -26,7 +27,7 @@ const { textSizeOptions,
             <p>Text</p>
           </div>
           <div class="content-wrapper">
-            <TextInput v-model="textSettings.text" placeholder="text" updateOnChange />
+            <TextInput v-model="localTextSettings.text" placeholder="text" updateOnChange @update="applyLocalTextSettings"/>
           </div>
         </div>
 
@@ -36,7 +37,7 @@ const { textSizeOptions,
             <p>Text size</p>
           </div>
           <div class="content-wrapper">
-            <NumberDropdownInput v-model="textSettings.size" :options="textSizeOptions" :min="1" :max="100" />
+            <NumberDropdownInput v-model="localTextSettings.size" :options="textSizeOptions" :min="1" :max="100" @update="applyLocalTextSettings"/>
           </div>
         </div>
 
@@ -46,7 +47,7 @@ const { textSizeOptions,
             <p>Text Font</p>
           </div>
           <div class="content-wrapper">
-            <DropdownSelect v-model="textSettings.fontFamily" :options="textFontOptions" />
+            <DropdownSelect v-model="localTextSettings.fontFamily" :options="textFontOptions" @update="applyLocalTextSettings"/>
           </div>
         </div>
 
@@ -56,7 +57,7 @@ const { textSizeOptions,
             <p>Text color</p>
           </div>
           <div class="content-wrapper">
-            <ColorPicker v-model="textSettings.color" />
+            <ColorPicker v-model="localTextSettings.color" @update="applyLocalTextSettings"/>
           </div>
         </div>
 
