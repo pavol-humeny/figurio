@@ -1,4 +1,5 @@
-import { computed, ref, watch, watchEffect } from 'vue'
+import { computed, ref, watch, watchEffect, nextTick } from 'vue'
+import { useMath } from '../common/useMath'
 
 const localObjectSettings = ref({
   type: 'rect', // Default type
@@ -15,6 +16,8 @@ const localObjectSettings = ref({
 const activeObject = ref(null)
 
 export function useShapeTool(editorStore, imageStore) {
+  const { clamp } = useMath()
+
   const resetObjectSettings = () => {
     // objectSettings.value.type = 'rect'
     localObjectSettings.value.fillColor = '#000000'
@@ -29,13 +32,58 @@ export function useShapeTool(editorStore, imageStore) {
     activeObject.value = null
   }
 
+  /**
+   * Calculate maximum and minimal position for shape objects
+   */
   const maxShapePositionX = computed(() => {
     return imageStore.fileDimensions.width - localObjectSettings.value.width
   })
-
   const maxShapePositionY = computed(() => {
     return imageStore.fileDimensions.height - localObjectSettings.value.height
   })
+
+  // -------------------------------
+  // Dimensions
+  // -------------------------------
+  /**
+   * Calculate maximum and minimum width for shape objects
+   */
+  const maxShapeWidth = computed(() => {
+    return imageStore.fileDimensions.width - localObjectSettings.value.x
+  })
+  const maxShapeHeight = computed(() => {
+    return imageStore.fileDimensions.height - localObjectSettings.value.y
+  })
+  /**
+   * Refs for width and height inputs
+   */
+  const widthInputRef = ref(null)
+  const heightInputRef = ref(null)
+  /**
+   * Temporary refs to store shape width and height for syncing with external components
+   */
+  const tmpShapeWidth = ref(localObjectSettings.value.width)
+  const tmpShapeHeight = ref(localObjectSettings.value.height)
+  /**
+   * Watch for changes in shape width and height to update temporary refs
+   */
+  watch(
+    () => localObjectSettings.value.width,
+    (value) => {
+      tmpShapeWidth.value = value
+    },
+  )
+  watch(
+    () => localObjectSettings.value.height,
+    (value) => {
+      tmpShapeHeight.value = value
+    },
+  )
+
+  /**
+   * Whether the dimensions are linked
+   */
+  const isDimensionsLinked = ref(true)
 
   /**
    * Load shape settings when shape object is selected
@@ -49,6 +97,13 @@ export function useShapeTool(editorStore, imageStore) {
           activeObject.value = object
 
           const { attrs, tag } = object
+
+          // Change selectedTabPerTool according to the object type
+          let newTab = tag
+          if (tag === 'rect') {
+            newTab = 'rectangle'
+          }
+          editorStore.selectTab(newTab)
 
           if (tag === 'rect') {
             localObjectSettings.value.x = attrs.x
@@ -152,12 +207,69 @@ export function useShapeTool(editorStore, imageStore) {
     return { ...localObjectSettings.value }
   }
 
+  const updateDimension = (key, value) => {
+    const originalWidth = localObjectSettings.value.width
+    const originalHeight = localObjectSettings.value.height
+
+    if (key === 'width') {
+      const clampedWidth = Math.round(clamp(value, 0, maxShapeWidth.value))
+
+      // Dimensions are linked
+      if (isDimensionsLinked.value && originalWidth > 0) {
+        const aspectRatio = originalHeight / originalWidth
+        localObjectSettings.value.width = clampedWidth
+        localObjectSettings.value.height = Math.round(
+          clamp(clampedWidth * aspectRatio, 0, maxShapeHeight.value),
+        )
+      } else {
+        localObjectSettings.value.width = clampedWidth
+      }
+    } else if (key === 'height') {
+      const clampedHeight = Math.round(clamp(value, 0, maxShapeHeight.value))
+
+      // Dimensions are linked
+      if (isDimensionsLinked.value && originalHeight > 0) {
+        console.log('Updating height with aspect ratio')
+        const aspectRatio = originalWidth / originalHeight
+        localObjectSettings.value.height = clampedHeight
+        localObjectSettings.value.width = Math.round(
+          clamp(clampedHeight * aspectRatio, 0, maxShapeWidth.value),
+        )
+
+        console.log(
+          'aspectRation, h, w, max w, max h',
+          aspectRatio,
+          clampedHeight,
+          localObjectSettings.value.width,
+          maxShapeWidth.value,
+          maxShapeHeight.value,
+        )
+      } else {
+        localObjectSettings.value.height = clampedHeight
+      }
+    }
+    nextTick(() => {
+      heightInputRef.value.setValue(localObjectSettings.value.height)
+      widthInputRef.value.setValue(localObjectSettings.value.width)
+    })
+
+    applyLocalSettings()
+  }
+
   return {
     localObjectSettings,
     resetObjectSettings,
     getShapeAttributes,
     maxShapePositionX,
     maxShapePositionY,
+    maxShapeWidth,
+    maxShapeHeight,
     applyLocalSettings,
+    widthInputRef,
+    heightInputRef,
+    updateDimension,
+    isDimensionsLinked,
+    tmpShapeHeight,
+    tmpShapeWidth,
   }
 }
