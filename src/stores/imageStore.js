@@ -652,17 +652,58 @@ export const useImageStore = defineStore('imageStore', {
     },
 
     /**
+     * Reads the first few bytes of the file to check its actual format
+     * @param {File} file - File to check
+     * @returns {Promise<string>} - Detected file type, e.g. 'jpeg', 'png', 'pdf', or 'unknown'
+     */
+    async detectFileType(file) {
+      const buffer = await file.slice(0, 4).arrayBuffer()
+      const bytes = new Uint8Array(buffer)
+
+      // JPEG: FF D8 FF
+      if (bytes[0] === 0xff && bytes[1] === 0xd8 && bytes[2] === 0xff) {
+        return 'jpeg'
+      }
+
+      // PNG: 89 50 4E 47
+      if (bytes[0] === 0x89 && bytes[1] === 0x50 && bytes[2] === 0x4e && bytes[3] === 0x47) {
+        return 'png'
+      }
+
+      // PDF: 25 50 44 46
+      if (bytes[0] === 0x25 && bytes[1] === 0x50 && bytes[2] === 0x44 && bytes[3] === 0x46) {
+        return 'pdf'
+      }
+
+      return 'unknown'
+    },
+
+    /**
      * Checks whether the file has a supported MIME type
      * @param {File} file - File to validate
      * @returns {boolean} - True if supported, false otherwise
      */
-    checkFile(file) {
+    async checkFile(file) {
       const supportedTypes = ['image/jpeg', 'image/png', 'image/jpg', 'application/pdf']
 
       if (!supportedTypes.includes(file.type)) {
         return false
       } else {
-        return true
+        const detectedType = await this.detectFileType(file)
+
+        // Check if the detected type is same as the file type
+        // remove leading 'image/' or 'application/' from the type
+        const realType =
+          file.type.startsWith('image/') || file.type.startsWith('application/')
+            ? file.type.split('/')[1]
+            : file.type
+
+        console.log(
+          `Detected file type: ${detectedType}, Real file type: ${realType}`,
+          realType === detectedType,
+        )
+
+        return realType === detectedType
       }
     },
 
@@ -684,7 +725,9 @@ export const useImageStore = defineStore('imageStore', {
         return
       }
 
-      if (this.checkFile(files[0])) {
+      const result = await this.checkFile(files[0])
+
+      if (result) {
         // TODO - router is undefined
         if (router.currentRoute.value.name !== 'editor') {
           await router.push({ name: 'editor' })
