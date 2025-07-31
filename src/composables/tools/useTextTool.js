@@ -86,6 +86,7 @@ export function useTextTool(imageStore) {
    */
   const addTextObject = (x, y) => {
     // if text is empty, do not add
+    // TODO - show a warning
     if (!textSettings.value.text.trim()) return
 
     const id = Date.now()

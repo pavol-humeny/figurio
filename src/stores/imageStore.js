@@ -97,7 +97,9 @@ export const useImageStore = defineStore('imageStore', {
           y: 40,
           width: 200,
           height: 100,
-          fill: 'lime',
+          fill: '#ff0000',
+          stroke: '#000000',
+          'stroke-width': 2,
           // transform: 'rotate(45, 150, 90)'
         },
       },
@@ -110,7 +112,7 @@ export const useImageStore = defineStore('imageStore', {
           cy: 150, // y-ová pozícia stredu
           rx: 50, // polomer v smere osi x
           ry: 50, // polomer v smere osi y
-          fill: 'yellow',
+          fill: '#ffff00',
           transform: '',
         },
       },
@@ -121,7 +123,7 @@ export const useImageStore = defineStore('imageStore', {
         attrs: {
           x: 100,
           y: 350,
-          fill: 'black',
+          fill: '#000000',
           'font-size': '20px',
           transform: '',
         },
@@ -136,7 +138,7 @@ export const useImageStore = defineStore('imageStore', {
           y1: 100,
           x2: 600,
           y2: 300,
-          stroke: 'green',
+          stroke: '#0000ff',
           'stroke-width': 4,
           transform: '',
         },
@@ -148,7 +150,7 @@ export const useImageStore = defineStore('imageStore', {
         attrs: {
           x: 300,
           y: 350,
-          fill: 'red',
+          fill: '#f00000',
           'font-size': '10px',
           transform: '',
         },

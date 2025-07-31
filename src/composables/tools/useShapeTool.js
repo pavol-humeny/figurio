@@ -2,11 +2,11 @@ import { computed, ref, watch, watchEffect, nextTick } from 'vue'
 import { useMath } from '../common/useMath'
 
 const localObjectSettings = ref({
-  type: 'rect', // Default type
+  type: 'none', // Default type
+  fillEnabled: true, // Default fill enabled
   fillColor: '#000000', // Default fill color
-  strokeEnabled: true, // Default outline enabled
-  strokeColor: '#e90000ff', // Default outline color
-  strokeWidth: 1, // Default outline width
+  strokeColor: '#000000', // Default outline color
+  strokeWidth: 0, // Default outline width
   width: 0, // Default width
   height: 0, // Default height
   x: 0, // Default x position
@@ -18,12 +18,13 @@ const activeObject = ref(null)
 export function useShapeTool(editorStore, imageStore) {
   const { clamp } = useMath()
 
+  const hidePositionAndDimensions = ref(false)
+
   const resetObjectSettings = () => {
-    // objectSettings.value.type = 'rect'
+    localObjectSettings.value.fillEnabled = true
     localObjectSettings.value.fillColor = '#000000'
-    localObjectSettings.value.strokeEnabled = false
     localObjectSettings.value.strokeColor = '#000000'
-    localObjectSettings.value.strokeWidth = 1
+    localObjectSettings.value.strokeWidth = localObjectSettings.value.type === 'line' ? 1 : 0
     localObjectSettings.value.width = 0
     localObjectSettings.value.height = 0
     localObjectSettings.value.x = 0
@@ -85,6 +86,20 @@ export function useShapeTool(editorStore, imageStore) {
    */
   const isDimensionsLinked = ref(true)
 
+  watch(
+    () => editorStore.selectedTabPerTool['shape'],
+    (newTab) => {
+      if (newTab === localObjectSettings.value.type) return
+
+      localObjectSettings.value.type = newTab
+      imageStore.selectedSvgObjectId = null // Reset selection when tab changes
+      editorStore.isSvgObjectSelected = false // Reset selection state
+
+      resetObjectSettings()
+    },
+    { immediate: true },
+  )
+
   /**
    * Load shape settings when shape object is selected
    */
@@ -95,6 +110,7 @@ export function useShapeTool(editorStore, imageStore) {
         const object = imageStore.getSvgObjectById(newId)
         if (object && editorStore.selectedToolKey === 'shape') {
           activeObject.value = object
+          hidePositionAndDimensions.value = false
 
           const { attrs, tag } = object
 
@@ -104,6 +120,10 @@ export function useShapeTool(editorStore, imageStore) {
             newTab = 'rectangle'
           }
           editorStore.selectTab(newTab)
+
+          localObjectSettings.value.type = tag
+
+          console.log('localObjectSettings.value.type', localObjectSettings.value.type)
 
           if (tag === 'rect') {
             localObjectSettings.value.x = attrs.x
@@ -122,18 +142,26 @@ export function useShapeTool(editorStore, imageStore) {
             localObjectSettings.value.height = attrs.y2 - attrs.y1
           }
 
-          localObjectSettings.value.fillColor = attrs.fill
-          localObjectSettings.value.strokeEnabled = attrs['stroke-width'] > 0
-          localObjectSettings.value.strokeColor = attrs.stroke
-          localObjectSettings.value.strokeWidth = attrs['stroke-width']
+          localObjectSettings.value.fillEnabled = attrs.fill !== 'none'
+          if (localObjectSettings.value.fillEnabled) {
+            localObjectSettings.value.fillColor = attrs.fill
+          }
+
+          if (attrs['stroke-width'] > 0) {
+            localObjectSettings.value.strokeColor = attrs.stroke
+            localObjectSettings.value.strokeWidth = attrs['stroke-width']
+          }
         }
       } else {
-        resetObjectSettings()
+        hidePositionAndDimensions.value = true
       }
     },
     { immediate: true },
   )
 
+  /**
+   * Update the localObjectSettings when activeObject changes
+   */
   watchEffect(() => {
     const object = activeObject.value
     if (!object || editorStore.selectedToolKey !== 'shape') return
@@ -157,13 +185,24 @@ export function useShapeTool(editorStore, imageStore) {
       localObjectSettings.value.height = attrs.y2 - attrs.y1
     }
 
-    localObjectSettings.value.fillColor = attrs.fill
-    localObjectSettings.value.strokeEnabled = attrs['stroke-width'] > 0
-    localObjectSettings.value.strokeColor = attrs.stroke
-    localObjectSettings.value.strokeWidth = attrs['stroke-width']
+    localObjectSettings.value.fillEnabled = attrs.fill !== 'none'
+    if (localObjectSettings.value.fillEnabled) {
+      localObjectSettings.value.fillColor = attrs.fill
+    }
+
+    if (attrs['stroke-width'] > 0) {
+      localObjectSettings.value.strokeColor = attrs.stroke
+      localObjectSettings.value.strokeWidth = attrs['stroke-width']
+    }
   })
 
+  /**
+   * Apply local settings to the active SVG object
+   */
   const applyLocalSettings = () => {
+    if (!editorStore.isSvgObjectSelected) return
+    console.log('Applying local settings to active object')
+    console.log('strokeWidth', localObjectSettings.value.strokeWidth)
     const object = activeObject.value
     if (!object) return
 
@@ -187,26 +226,33 @@ export function useShapeTool(editorStore, imageStore) {
       attrs.y2 = settings.y + settings.height
     }
 
-    attrs.fill = settings.fillColor
-    attrs['stroke-width'] = settings.strokeEnabled ? settings.strokeWidth : 0
-    attrs.stroke = settings.strokeEnabled ? settings.strokeColor : 'none'
+    if (settings.fillEnabled) {
+      attrs.fill = settings.fillColor
+    } else {
+      attrs.fill = 'none'
+    }
+
+    if (settings.strokeWidth > 0) {
+      attrs['stroke-width'] = settings.strokeWidth
+      attrs.stroke = settings.strokeColor
+    } else {
+      attrs['stroke-width'] = 0
+      attrs.stroke = 'none'
+    }
   }
 
-  // watch(
-  //   () => objectSettings.value,
-  //   (newSettings) => {
-  //     editorStore.selectTab(newSettings.type)
-  //   },
-  //   {
-  //     immediate: true,
-  //     deep: true,
-  //   },
-  // )
-
+  /**
+   * Get the current shape attributes for external use
+   */
   const getShapeAttributes = () => {
     return { ...localObjectSettings.value }
   }
 
+  /**
+   * Update the dimension of the shape object
+   * @param {string} key - 'width' or 'height'
+   * @param {number} value - New dimension value
+   */
   const updateDimension = (key, value) => {
     const originalWidth = localObjectSettings.value.width
     const originalHeight = localObjectSettings.value.height
@@ -271,5 +317,6 @@ export function useShapeTool(editorStore, imageStore) {
     isDimensionsLinked,
     tmpShapeHeight,
     tmpShapeWidth,
+    hidePositionAndDimensions,
   }
 }

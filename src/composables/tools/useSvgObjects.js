@@ -236,6 +236,8 @@ export function useSvgObjects(imageStore, historyStore, viewportStore, editorSto
   const onMouseDownImageSvg = (event) => {
     if (!['blur', 'shape', 'magnifyArea'].includes(editorStore.selectedToolKey)) return
 
+    if (editorStore.isSvgObjectSelected) return
+
     const objectClass = editorStore.selectedToolKey
     let objectType = editorStore.selectedTabPerTool[objectClass]
 
@@ -258,33 +260,42 @@ export function useSvgObjects(imageStore, historyStore, viewportStore, editorSto
       attrs: {},
     }
 
-    let objectFillColor
-    let objectStrokeEnabled
+    let objectFillColor = 'none'
     let objectStrokeColor
     let objectStrokeWidth
 
     if (objectClass === 'shape') {
-      const { fillColor, strokeEnabled, strokeWidth, strokeColor } = shapeTool.getShapeAttributes()
-      objectFillColor = fillColor
-      objectStrokeEnabled = strokeEnabled
+      const { fillEnabled, fillColor, strokeWidth, strokeColor } = shapeTool.getShapeAttributes()
+
+      if (fillEnabled) {
+        objectFillColor = fillColor
+      }
       objectStrokeWidth = strokeWidth
       objectStrokeColor = strokeColor
     } else if (objectClass === 'blur') {
       objectFillColor = '#ff0000'
-      objectStrokeEnabled = false
     }
+
+    console.log(
+      'objectType',
+      objectType,
+      'strokeWidth',
+      objectStrokeWidth,
+      'strokeColor',
+      objectStrokeColor,
+    )
 
     if (objectType === 'rect') {
       base.attrs = { x, y, width: 1, height: 1 }
       base.attrs.fill = objectFillColor
-      if (objectStrokeEnabled) {
+      if (objectStrokeWidth > 0) {
         base.attrs['stroke-width'] = objectStrokeWidth
         base.attrs.stroke = objectStrokeColor
       }
     } else if (objectType === 'ellipse') {
       base.attrs = { cx: x, cy: y, rx: 1, ry: 1 }
       base.attrs.fill = objectFillColor
-      if (objectStrokeEnabled) {
+      if (objectStrokeWidth > 0) {
         base.attrs['stroke-width'] = objectStrokeWidth
         base.attrs.stroke = objectStrokeColor
       }
@@ -331,10 +342,17 @@ export function useSvgObjects(imageStore, historyStore, viewportStore, editorSto
 
     // Apply CTRL snap
     if (isCtrlKey && onlyOneKeyPressed) {
-      const x1 = Math.min(drawingStart.value.x, x)
-      const x2 = Math.max(drawingStart.value.x, x)
-      const y1 = Math.min(drawingStart.value.y, y)
-      const y2 = Math.max(drawingStart.value.y, y)
+      let x1 = drawingStart.value.x
+      let y1 = drawingStart.value.y
+      let x2 = x
+      let y2 = y
+
+      if (objectType !== 'line') {
+        x1 = Math.min(drawingStart.value.x, x)
+        x2 = Math.max(drawingStart.value.x, x)
+        y1 = Math.min(drawingStart.value.y, y)
+        y2 = Math.max(drawingStart.value.y, y)
+      }
 
       const snap = getSnapOffsetToEdges(x1, x2, y1, y2)
 

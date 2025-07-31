@@ -63,7 +63,7 @@ const props = defineProps({
 /**
  * @event update:modelValue - Emitted when the input value changes
  */
-const emit = defineEmits(['update:modelValue'])
+const emit = defineEmits(['update:modelValue', 'update'])
 
 /**
  * Logic of the number dropdown input component

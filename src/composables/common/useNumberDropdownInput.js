@@ -65,6 +65,7 @@ export function useNumberDropdownInput(props, emit) {
       const clamped = clamp(num, props.min, props.max)
       inputValue.value = clamped.toString()
       emit('update:modelValue', clamped)
+      emit('update', clamped)
     } else {
       // fallback: reset to last valid value
       inputValue.value = props.modelValue.toString()
@@ -78,6 +79,7 @@ export function useNumberDropdownInput(props, emit) {
   const onSelect = (value) => {
     inputValue.value = value.toString()
     emit('update:modelValue', Number(value))
+    emit('update', Number(value))
     showDropdown.value = false
   }
 

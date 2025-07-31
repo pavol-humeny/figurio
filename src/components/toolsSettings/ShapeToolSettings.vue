@@ -7,8 +7,9 @@ import ColorPicker from '../common/ColorPicker.vue';
 import NumberInput from '../common/NumberInput.vue';
 import NumberDropdownInput from '../common/NumberDropdownInput.vue';
 import LinkValuesIcon from '../common/LinkValuesIcon.vue';
+import ToggleButton from '../common/ToggleButton.vue';
 
-const editorStore = useEditorStore();
+// const editorStore = useEditorStore();
 
 /**
  * Available tabs for blur tool settings
@@ -30,6 +31,7 @@ const {
   isDimensionsLinked,
   tmpShapeHeight,
   tmpShapeWidth,
+  hidePositionAndDimensions
 } = useShapeTool(useEditorStore(), useImageStore())
 
 </script>
@@ -38,12 +40,11 @@ const {
   <div class="tool-settings">
     <ToolsSettingsTabs :tabs="tabs" />
 
-
     <div class="settings-wrapper">
-      <!-- rectangle -->
-      <div v-if="editorStore.selectedTabPerTool[editorStore.selectedToolKey] === 'rectangle'" class="specific-settings">
+
+      <div class="specific-settings">
         <!-- Position -->
-        <div class="settings-content-wrapper">
+        <div v-if="!hidePositionAndDimensions" class="settings-content-wrapper">
           <div class="content-wrapper">
             <div class="content-title">
               <p>Rectangle position</p>
@@ -71,7 +72,7 @@ const {
         </div>
 
         <!-- Dimensions -->
-        <div class="settings-content-wrapper">
+        <div v-if="!hidePositionAndDimensions" class="settings-content-wrapper">
           <div class="content-wrapper">
             <div class="content-title">
               <p>
@@ -103,82 +104,87 @@ const {
           </div>
         </div>
 
-        <!-- Empty space -->
-        <div class="settings-content-wrapper" style="border: none">
-          <!-- Empty space -->
-        </div>
-      </div>
-
-
-      <!-- ellipse -->
-      <div v-if="editorStore.selectedTabPerTool[editorStore.selectedToolKey] === 'ellipse'" class="specific-settings">
-        <!-- Position -->
-        <div class="settings-content-wrapper">
-          <div class="content-wrapper">
-            <div class="content-title">
-              <p>Ellipse position</p>
+        <!-- Fill color -->
+        <div v-if="localObjectSettings.type !== 'line'" class="settings-content-wrapper">
+          <div class="content-aligned two-items">
+            <div class="content-wrapper">
+              <p :class="{ disabled: localObjectSettings.strokeWidth === 0 }">
+                Fill color
+              </p>
+              <ToggleButton v-model="localObjectSettings.fillEnabled" :scale="0.6" @update="applyLocalSettings"
+                :disabled="localObjectSettings.strokeWidth === 0" />
             </div>
-            <div class="content-inputs">
-              <div class="content-input">
-                <label for="x-input">
-                  X
-                </label>
-                <NumberInput ref="positionXInputRef" v-model="localObjectSettings.x" :min="0" :max="maxShapePositionX"
-                  @update="applyLocalSettings" unit="px" />
+
+            <div class="content-wrapper">
+              <div class="content-title">
+                <p>Color</p>
               </div>
-
-              <div class="content-between-inputs-icon-wrapper disabled"></div>
-
-              <div class="content-input">
-                <label for="y-input">
-                  Y
-                </label>
-                <NumberInput ref="positionYInputRef" v-model="localObjectSettings.y" :min="0" :max="maxShapePositionY"
-                  @update="applyLocalSettings" unit="px" />
+              <div class="content-inputs">
+                <ColorPicker v-model="localObjectSettings.fillColor" @update="applyLocalSettings"
+                  :disabled="!localObjectSettings.fillEnabled" />
               </div>
             </div>
           </div>
         </div>
-        <!-- Empty space -->
-        <div class="settings-content-wrapper" style="border: none">
-          <!-- Empty space -->
-        </div>
-      </div>
 
-      <!-- line -->
-      <div v-if="editorStore.selectedTabPerTool[editorStore.selectedToolKey] === 'line'" class="specific-settings">
-        <!-- Position -->
-        <div class="settings-content-wrapper">
-          <div class="content-wrapper">
-            <div class="content-title">
-              <p>Rectangle position</p>
-            </div>
-            <div class="content-inputs">
-              <div class="content-input">
-                <label for="x-input">
-                  X
-                </label>
-                <NumberInput ref="positionXInputRef" v-model="localObjectSettings.x" :min="0" :max="maxShapePositionX"
-                  @update="applyLocalSettings" unit="px" />
+        <!-- Line fill color (fill color is stroke color) -->
+        <div v-if="localObjectSettings.type === 'line'" class="settings-content-wrapper">
+          <div class="content-aligned two-items">
+            <div class="content-wrapper">
+              <div class="content-title">
+                <p>Color</p>
               </div>
-
-              <div class="content-between-inputs-icon-wrapper disabled"></div>
-
-              <div class="content-input">
-                <label for="y-input">
-                  Y
-                </label>
-                <NumberInput ref="positionYInputRef" v-model="localObjectSettings.y" :min="0" :max="maxShapePositionY"
-                  @update="applyLocalSettings" unit="px" />
+              <div class="content-inputs">
+                <ColorPicker v-model="localObjectSettings.strokeColor" @update="applyLocalSettings" />
+              </div>
+            </div>
+            <div class="content-wrapper">
+              <div class="content-title">
+                <p>Width</p>
+              </div>
+              <div class="content-inputs">
+                <NumberDropdownInput v-model="localObjectSettings.strokeWidth" :min="1" :max="100"
+                  @update="applyLocalSettings" :options="[1, 2, 3, 4, 5, 6, 7, 8, 9, 10]" unit="px" />
               </div>
             </div>
           </div>
         </div>
+
+        <!-- Stroke color -->
+        <div v-if="localObjectSettings.type !== 'line'" class="settings-content-wrapper">
+          <div class="content-aligned two-items">
+            <div class="content-wrapper">
+              <div class="content-title">
+                <p>Color</p>
+              </div>
+              <div class="content-inputs">
+                <ColorPicker v-model="localObjectSettings.strokeColor" @update="applyLocalSettings"
+                  :disabled="localObjectSettings.strokeWidth === 0" />
+              </div>
+            </div>
+            <div class="content-wrapper">
+              <div class="content-title">
+                <p>Width</p>
+              </div>
+              <div class="content-inputs">
+                <NumberDropdownInput v-model="localObjectSettings.strokeWidth"
+                  :min="localObjectSettings.fillEnabled ? 0 : 1" :max="100" @update="applyLocalSettings"
+                  :options="[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]" unit="px" />
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+
         <!-- Empty space -->
         <div class="settings-content-wrapper" style="border: none">
           <!-- Empty space -->
         </div>
       </div>
+
+
+
     </div>
   </div>
 </template>
