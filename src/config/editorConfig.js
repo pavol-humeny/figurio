@@ -28,4 +28,5 @@ export const editorConfig = {
   angleSnapTolerance: 5, // degrees
   rotationSensitivity: 1, // Higher = rotates faster, lower = slower
   snapEdgeThresholdCoefficient: 0.01, // 1% of the smaller dimension of the image (higher = more sensitive)
+  snapOnlyWhenOverlapping: true, // Snap only when the object is overlapping with the other object
 }

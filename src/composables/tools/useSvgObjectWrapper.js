@@ -489,12 +489,13 @@ export function useSvgObjectWrapper(
           // Snap to edges if Ctrl key is pressed
           if (isCtrlKey && onlyOneKeyPressed) {
             const snap = getSnapOffsetToEdges(newX, right, newY, bottom)
-            showResizeGuideLine(snap, { left: newX, right: right, top: newY, bottom: bottom })
 
             newX += snap.dx
             newY += snap.dy
             newW = right - newX
             newH = bottom - newY
+
+            showResizeGuideLine(snap, { left: newX, right: right, top: newY, bottom: bottom })
           }
 
           applyRect(newX, newY, newW, newH)
@@ -520,11 +521,12 @@ export function useSvgObjectWrapper(
           // Snap to edges if Ctrl key is pressed
           if (isCtrlKey && onlyOneKeyPressed) {
             const snap = getSnapOffsetToEdges(newX, newX + newW, newY, bottom)
-            showResizeGuideLine(snap, { left: newX, right: newX + newW, top: newY, bottom: bottom })
 
             newW += snap.dx
             newY += snap.dy
             newH = bottom - newY
+
+            showResizeGuideLine(snap, { left: newX, right: newX + newW, top: newY, bottom: bottom })
           }
 
           applyRect(newX, newY, newW, bottom - newY)
@@ -550,10 +552,11 @@ export function useSvgObjectWrapper(
           // Snap to edges if Ctrl key is pressed
           if (isCtrlKey && onlyOneKeyPressed) {
             const snap = getSnapOffsetToEdges(newX, right, newY, newY + newH)
-            showResizeGuideLine(snap, { left: newX, right: right, top: newY, bottom: newY + newH })
 
             newX += snap.dx
             newH += snap.dy
+
+            showResizeGuideLine(snap, { left: newX, right: right, top: newY, bottom: newY + newH })
           }
 
           applyRect(newX, newY, right - newX, newH)
@@ -573,14 +576,15 @@ export function useSvgObjectWrapper(
             const bottomBeforeSnap = newY + newH
 
             const snap = getSnapOffsetToEdges(newX, newX + newW, newY, newY + newH)
+
+            newW += snap.dx
+
             showResizeGuideLine(snap, {
               left: newX,
               right: newX + newW,
               top: newY,
               bottom: newY + newH,
             })
-
-            newW += snap.dx
 
             if (snap.dy !== 0) {
               const newBottom = bottomBeforeSnap + snap.dy
@@ -641,12 +645,6 @@ export function useSvgObjectWrapper(
               newCy - newRy,
               newCy + newRy,
             )
-            showResizeGuideLine(snap, {
-              left: newCx - newRx,
-              right: newCx + newRx,
-              top: newCy - newRy,
-              bottom: newCy + newRy,
-            })
 
             // Snap only position, not size (to avoid jitter)
             newCx += snap.dx
@@ -655,6 +653,13 @@ export function useSvgObjectWrapper(
             // If snapped, reset size to original to avoid unintended resize
             if (snap.dx !== 0) newRx = attrs.rx
             if (snap.dy !== 0) newRy = attrs.ry
+
+            showResizeGuideLine(snap, {
+              left: newCx - newRx,
+              right: newCx + newRx,
+              top: newCy - newRy,
+              bottom: newCy + newRy,
+            })
           }
 
           applyEllipse(newCx, newCy, newRx, newRy)
@@ -672,8 +677,6 @@ export function useSvgObjectWrapper(
 
           let newCx = left + newRx
           let newCy = bottom - newRy
-
-          console.log('newCx, newCy', newCx, newCy, 'newRx, newRy', newRx, newRy)
 
           // Clamp ry to prevent moving when size is minimal
           if (newRy <= minSize) {
@@ -693,17 +696,18 @@ export function useSvgObjectWrapper(
               newCy - newRy,
               newCy + newRy,
             )
+
+            newCx += snap.dx
+            newCy += snap.dy
+            if (snap.dx !== 0) newRx = attrs.rx
+            if (snap.dy !== 0) newRy = attrs.ry
+
             showResizeGuideLine(snap, {
               left: newCx - newRx,
               right: newCx + newRx,
               top: newCy - newRy,
               bottom: newCy + newRy,
             })
-
-            newCx += snap.dx
-            newCy += snap.dy
-            if (snap.dx !== 0) newRx = attrs.rx
-            if (snap.dy !== 0) newRy = attrs.ry
           }
 
           applyEllipse(newCx, newCy, newRx, newRy)
@@ -739,17 +743,18 @@ export function useSvgObjectWrapper(
               newCy - newRy,
               newCy + newRy,
             )
+
+            newCx += snap.dx
+            newCy += snap.dy
+            if (snap.dx !== 0) newRx = attrs.rx
+            if (snap.dy !== 0) newRy = attrs.ry
+
             showResizeGuideLine(snap, {
               left: newCx - newRx,
               right: newCx + newRx,
               top: newCy - newRy,
               bottom: newCy + newRy,
             })
-
-            newCx += snap.dx
-            newCy += snap.dy
-            if (snap.dx !== 0) newRx = attrs.rx
-            if (snap.dy !== 0) newRy = attrs.ry
           }
 
           applyEllipse(newCx, newCy, newRx, newRy)
@@ -785,17 +790,18 @@ export function useSvgObjectWrapper(
               newCy - newRy,
               newCy + newRy,
             )
+
+            newCx += snap.dx
+            newCy += snap.dy
+            if (snap.dx !== 0) newRx = attrs.rx
+            if (snap.dy !== 0) newRy = attrs.ry
+
             showResizeGuideLine(snap, {
               left: newCx - newRx,
               right: newCx + newRx,
               top: newCy - newRy,
               bottom: newCy + newRy,
             })
-
-            newCx += snap.dx
-            newCy += snap.dy
-            if (snap.dx !== 0) newRx = attrs.rx
-            if (snap.dy !== 0) newRy = attrs.ry
           }
 
           applyEllipse(newCx, newCy, newRx, newRy)
@@ -829,16 +835,17 @@ export function useSvgObjectWrapper(
 
           if (isCtrlKey && onlyOneKeyPressed) {
             const snap = getSnapOffsetToEdges(newX, newX, newY, newY)
+
+            // Snap only position
+            newX += snap.dx
+            newY += snap.dy
+
             showResizeGuideLine(snap, {
               left: newX,
               right: newX,
               top: newY,
               bottom: newY,
             })
-
-            // Snap only position
-            newX += snap.dx
-            newY += snap.dy
           }
 
           applyLine(keyX, keyY, newX, newY)
@@ -988,8 +995,6 @@ export function useSvgObjectWrapper(
       }
 
       viewportStore.guideLine = { x: gx, y: gy, angle }
-    } else {
-      viewportStore.guideLine = null
     }
   }
 
@@ -1128,7 +1133,8 @@ export function useSvgObjectWrapper(
       const verticalOverlap = !(bottom < t.top || top > t.bottom)
       const horizontalOverlap = !(right < t.left || left > t.right)
 
-      if (verticalOverlap) {
+      // TODO
+      if (verticalOverlap && editorConfig.snapOnlyWhenOverlapping) {
         if (Math.abs(left - t.left) < threshold) {
           dx = t.left - left
           snappedEdgeX = 'left'
@@ -1144,7 +1150,7 @@ export function useSvgObjectWrapper(
         }
       }
 
-      if (horizontalOverlap) {
+      if (horizontalOverlap && editorConfig.snapOnlyWhenOverlapping) {
         if (Math.abs(top - t.top) < threshold) {
           dy = t.top - top
           snappedEdgeY = 'top'
