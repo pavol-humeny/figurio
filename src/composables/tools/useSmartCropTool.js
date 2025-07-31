@@ -94,7 +94,7 @@ export function useSmartCropTool(imageStore, historyStore, editorStore, t) {
     cropBox.value.height =
       imageStore.fileDimensions.height - cropBox.value.topIndent - bottomIndent.value
 
-      bottomIndentMax.value = imageStore.fileDimensions.height - cropBox.value.topIndent
+    bottomIndentMax.value = imageStore.fileDimensions.height - cropBox.value.topIndent
   })
   watch(bottomIndent, (value) => {
     cropBox.value.bottomIndent = clamp(value, bottomIndentMin.value, bottomIndentMax.value)
@@ -174,20 +174,6 @@ export function useSmartCropTool(imageStore, historyStore, editorStore, t) {
    * Apply the auto smart crop based on the selected color
    */
   const applyAutoSmartCrop = async () => {
-    if (imageStore.svgObjects.length > 0) {
-      const confirmed = await showConfirmModal(
-        t('tools.confirmNeedRasterization.title'),
-        t('tools.confirmNeedRasterization.message'),
-        t('tools.confirmNeedRasterization.cancel'),
-        t('tools.confirmNeedRasterization.confirm'),
-      )
-      if (confirmed) {
-        await imageStore.rasterize(t)
-      } else {
-        return
-      }
-    }
-
     imageStore.addImageOperation({
       type: 'smartCrop',
       color: structuredClone(selectedColor.value),
@@ -212,7 +198,21 @@ export function useSmartCropTool(imageStore, historyStore, editorStore, t) {
   /**
    * Show or hide the auto smart crop tool
    */
-  const showAutoSmartCrop = () => {
+  const showAutoSmartCrop = async () => {
+    if (imageStore.svgObjects.length > 0) {
+      const confirmed = await showConfirmModal(
+        t('tools.confirmNeedRasterization.title'),
+        t('tools.confirmNeedRasterization.message'),
+        t('tools.confirmNeedRasterization.cancel'),
+        t('tools.confirmNeedRasterization.confirm'),
+      )
+      if (confirmed) {
+        await imageStore.rasterize(t)
+      } else {
+        return
+      }
+    }
+
     calculateIndents(selectedColor.value)
     isCropShown.value = !isCropShown.value
 
@@ -364,6 +364,20 @@ export function useSmartCropTool(imageStore, historyStore, editorStore, t) {
    */
   const applyCrop = async (cropBox) => {
     if (!imageStore.getRenderedImage({ t, renderCall: false })) return
+
+    if (imageStore.svgObjects.length > 0) {
+      const confirmed = await showConfirmModal(
+        t('tools.confirmNeedRasterization.title'),
+        t('tools.confirmNeedRasterization.message'),
+        t('tools.confirmNeedRasterization.cancel'),
+        t('tools.confirmNeedRasterization.confirm'),
+      )
+      if (confirmed) {
+        await imageStore.rasterize(t)
+      } else {
+        return
+      }
+    }
 
     if (
       cropBox.width === imageStore.fileDimensions.width &&

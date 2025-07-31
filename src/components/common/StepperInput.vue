@@ -56,7 +56,7 @@ const emit = defineEmits(['update:modelValue', 'update'])
  * Logic of the stepper input component
  */
 const {
-  value,
+  inputValue,
   increase,
   decrease,
   handleReset,
@@ -78,7 +78,7 @@ defineExpose({ setValue })
     <div class="stepper">
       <BaseIcon name="IconMinus" :color="'var(--primary-c)'" :size="16" @click="decrease" :disabled="disableDecrease()"
         class="increase-decrease-icon" />
-      <span class="value" @dblclick="handleReset" @wheel="changeValue">{{ value }}</span>
+      <span class="value" @dblclick="handleReset" @wheel="changeValue">{{ inputValue }}</span>
       <BaseIcon name="IconPlus" :color="'var(--primary-c)'" :size="16" @click="increase" :disabled="disableIncrease()"
         class="increase-decrease-icon" />
     </div>

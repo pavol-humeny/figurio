@@ -28,15 +28,15 @@ export function useStepperInput(props, emit) {
   /**
    * Internal reactive value of the input
    */
-  const value = ref(props.modelValue)
+  const inputValue = ref(props.modelValue)
 
   /**
    * Watch for external changes to modelValue and update internal state
    */
   watch(
     () => props.modelValue,
-    (value) => {
-      value.value = value
+    (newValue) => {
+      inputValue.value = newValue
     },
   )
 
@@ -44,16 +44,16 @@ export function useStepperInput(props, emit) {
    * Emits the updated value to the parent component
    */
   const emitChange = () => {
-    emit('update:modelValue', value.value)
-    emit('update', value.value)
+    emit('update:modelValue', inputValue.value)
+    emit('update', inputValue.value)
   }
 
   /**
    * Increases the value by step if within max bounds and not disabled
    */
   const increase = () => {
-    if (!props.disabled && value.value + props.step <= props.max) {
-      value.value += props.step
+    if (!props.disabled && inputValue.value + props.step <= props.max) {
+      inputValue.value += props.step
       emitChange()
     }
   }
@@ -62,8 +62,8 @@ export function useStepperInput(props, emit) {
    * Decreases the value by step if within min bounds and not disabled
    */
   const decrease = () => {
-    if (!props.disabled && value.value - props.step >= props.min) {
-      value.value -= props.step
+    if (!props.disabled && inputValue.value - props.step >= props.min) {
+      inputValue.value -= props.step
       emitChange()
     }
   }
@@ -83,7 +83,7 @@ export function useStepperInput(props, emit) {
    * @param {number} newValue - New value to set
    */
   const setValue = (newValue) => {
-    value.value = newValue
+    inputValue.value = newValue
     emitChange()
   }
 
@@ -93,7 +93,7 @@ export function useStepperInput(props, emit) {
    * @returns {boolean}
    */
   const disableIncrease = () => {
-    return props.disabled || value.value + props.step > props.max
+    return props.disabled || inputValue.value + props.step > props.max
   }
 
   /**
@@ -102,7 +102,7 @@ export function useStepperInput(props, emit) {
    * @returns {boolean}
    */
   const disableDecrease = () => {
-    return props.disabled || value.value - props.step < props.min
+    return props.disabled || inputValue.value - props.step < props.min
   }
 
   /**
@@ -119,7 +119,7 @@ export function useStepperInput(props, emit) {
   }
 
   return {
-    value,
+    inputValue,
     increase,
     decrease,
     emitChange,
