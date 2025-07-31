@@ -1298,7 +1298,7 @@ export function useSvgObjectWrapper(
         }
       })
     },
-    { deep: false},
+    { deep: false },
   )
 
   /**

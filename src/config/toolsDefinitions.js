@@ -66,6 +66,20 @@ export const toolsDefinitions = [
     key: 'shape',
     iconName: 'IconShapeTool',
     settingsComponent: () => import('@/components/toolsSettings/ShapeToolSettings.vue'),
+    subTools: [
+      {
+        key: 'rectangle',
+        iconName: 'IconRectangle',
+      },
+      {
+        key: 'ellipse',
+        iconName: 'IconEllipse',
+      },
+      {
+        key: 'line',
+        iconName: 'IconLine',
+      },
+    ],
   },
   {
     key: 'text',

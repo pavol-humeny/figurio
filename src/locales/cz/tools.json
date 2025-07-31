@@ -212,8 +212,63 @@
     "tip": "Přidává vektorové tvary",
     "tipDisabled": "",
     "shortcut": "S",
+    "subTools": {
+      "rectangle": {
+        "label": "Obdélník",
+        "tip": "Přidání obdélníku do obrázku",
+        "shortcut": ""
+      },
+      "ellipse": {
+        "label": "Elipsa",
+        "tip": "Přidání elipsy do obrázku",
+        "shortcut": ""
+      },
+      "line": {
+        "label": "Čára",
+        "tip": "Přidání čáry do obrázku",
+        "shortcut": ""
+      }
+    },
     "settings": {
-      "general":{}
+      "rectangle": {
+        "label": "Obdélník",
+        "fillColor": {
+          "label": "Barva výplně"
+        },
+        "strokeEnabled": {
+          "label": "Povolit obrys"
+        },
+        "strokeColor": {
+          "label": "Barva obrysu"
+        },
+        "strokeWidth": {
+          "label": "Tloušťka obrysu"
+        }
+      },
+      "ellipse": {
+        "label": "Elipsa",
+        "fillColor": {
+          "label": "Barva výplně"
+        },
+        "strokeEnabled": {
+          "label": "Povolit obrys"
+        },
+        "strokeColor": {
+          "label": "Barva obrysu"
+        },
+        "strokeWidth": {
+          "label": "Tloušťka obrysu"
+        }
+      },
+      "line": {
+        "label": "Čára",
+        "lineColor": {
+          "label": "Barva čáry"
+        },
+        "lineWidth": {
+          "label": "Tloušťka čáry"
+        }
+      }
     }
   },
   "magnifyArea": {

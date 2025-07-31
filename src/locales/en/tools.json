@@ -213,8 +213,63 @@
     "tip": "Adds vector shapes",
     "tipDisabled": "",
     "shortcut": "S",
+    "subTools": {
+      "rectangle": {
+        "label": "Rectangle",
+        "tip": "Add a rectangle shape to the image",
+        "shortcut": ""
+      },
+      "ellipse": {
+        "label": "Ellipse",
+        "tip": "Add an ellipse shape to the image",
+        "shortcut": ""
+      },
+      "line": {
+        "label": "Line",
+        "tip": "Add a line shape to the image",
+        "shortcut": ""
+      }
+    },
     "settings": {
-      "general":{}
+      "rectangle": {
+        "label": "Rectangle",
+        "fillColor": {
+          "label": "Fill color"
+        },
+        "strokeEnabled": {
+          "label": "Stroke enabled"
+        },
+        "strokeColor": {
+          "label": "Stroke color"
+        },
+        "strokeWidth": {
+          "label": "Stroke width"
+        }
+      },
+      "ellipse": {
+        "label": "Ellipse",
+        "fillColor": {
+          "label": "Fill color"
+        },
+        "strokeEnabled": {
+          "label": "Stroke enabled"
+        },
+        "strokeColor": {
+          "label": "Stroke color"
+        },
+        "strokeWidth": {
+          "label": "Stroke width"
+        }
+      },
+      "line": {
+        "label": "Line",
+        "lineColor": {
+          "label": "Line color"
+        },
+        "lineWidth": {
+          "label": "Line width"
+        }
+      }
     }
   },
   "magnifyArea": {

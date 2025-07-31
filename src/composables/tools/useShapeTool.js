@@ -1,6 +1,6 @@
-import { ref, watch } from 'vue'
+import { computed, ref, watch, watchEffect } from 'vue'
 
-export const objectSettings = ref({
+const localObjectSettings = ref({
   type: 'rect', // Default type
   fillColor: '#000000', // Default fill color
   strokeEnabled: true, // Default outline enabled
@@ -12,82 +12,152 @@ export const objectSettings = ref({
   y: 0, // Default y position
 })
 
-export function useShapeTool(editorStore, imageStore) {
-  const objectTypeOptions = [
-    { label: 'Rectangle', value: 'rect' },
-    { label: 'Ellipse', value: 'ellipse' },
-    { label: 'Line', value: 'line' },
-  ]
+const activeObject = ref(null)
 
+export function useShapeTool(editorStore, imageStore) {
   const resetObjectSettings = () => {
-    objectSettings.value.type = 'rect'
-    objectSettings.value.fillColor = '#000000'
-    objectSettings.value.strokeEnabled = false
-    objectSettings.value.strokeColor = '#000000'
-    objectSettings.value.strokeWidth = 1
-    objectSettings.value.width = 0
-    objectSettings.value.height = 0
-    objectSettings.value.x = 0
-    objectSettings.value.y = 0
+    // objectSettings.value.type = 'rect'
+    localObjectSettings.value.fillColor = '#000000'
+    localObjectSettings.value.strokeEnabled = false
+    localObjectSettings.value.strokeColor = '#000000'
+    localObjectSettings.value.strokeWidth = 1
+    localObjectSettings.value.width = 0
+    localObjectSettings.value.height = 0
+    localObjectSettings.value.x = 0
+    localObjectSettings.value.y = 0
+
+    activeObject.value = null
   }
 
+  const maxShapePositionX = computed(() => {
+    return imageStore.fileDimensions.width - localObjectSettings.value.width
+  })
+
+  const maxShapePositionY = computed(() => {
+    return imageStore.fileDimensions.height - localObjectSettings.value.height
+  })
+
   /**
-   * Load text settings when text object is selected
+   * Load shape settings when shape object is selected
    */
   watch(
     () => imageStore.selectedSvgObjectId,
     (newId) => {
       if (newId !== null) {
         const object = imageStore.getSvgObjectById(newId)
-        if (
-          object &&
-          object.class === editorStore.selectedTabPerTool[editorStore.selectedToolKey]
-        ) {
-          const { attrs } = object
-          objectSettings.value.type = object.tag
-          objectSettings.value.x = attrs.x
-          objectSettings.value.y = attrs.y
-          objectSettings.value.width = attrs.width
-          objectSettings.value.height = attrs.height
-          objectSettings.value.fillColor = attrs.fill
-          objectSettings.value.strokeEnabled = attrs['stroke-width'] > 0
-          objectSettings.value.strokeColor = attrs.stroke
-          objectSettings.value.strokeWidth = attrs['stroke-width']
+        if (object && editorStore.selectedToolKey === 'shape') {
+          activeObject.value = object
+
+          const { attrs, tag } = object
+
+          if (tag === 'rect') {
+            localObjectSettings.value.x = attrs.x
+            localObjectSettings.value.y = attrs.y
+            localObjectSettings.value.width = attrs.width
+            localObjectSettings.value.height = attrs.height
+          } else if (tag === 'ellipse') {
+            localObjectSettings.value.x = attrs.cx - attrs.rx
+            localObjectSettings.value.y = attrs.cy - attrs.ry
+            localObjectSettings.value.width = attrs.rx * 2
+            localObjectSettings.value.height = attrs.ry * 2
+          } else if (tag === 'line') {
+            localObjectSettings.value.x = attrs.x1
+            localObjectSettings.value.y = attrs.y1
+            localObjectSettings.value.width = attrs.x2 - attrs.x1
+            localObjectSettings.value.height = attrs.y2 - attrs.y1
+          }
+
+          localObjectSettings.value.fillColor = attrs.fill
+          localObjectSettings.value.strokeEnabled = attrs['stroke-width'] > 0
+          localObjectSettings.value.strokeColor = attrs.stroke
+          localObjectSettings.value.strokeWidth = attrs['stroke-width']
         }
+      } else {
+        resetObjectSettings()
       }
     },
     { immediate: true },
   )
 
-  watch(
-    () => objectSettings.value,
-    (newSettings) => {
-      editorStore.selectTab(newSettings.type)
-    },
-    {
-      immediate: true,
-      deep: true,
-    },
-  )
+  watchEffect(() => {
+    const object = activeObject.value
+    if (!object || editorStore.selectedToolKey !== 'shape') return
+
+    const { attrs, tag } = object
+
+    if (tag === 'rect') {
+      localObjectSettings.value.x = attrs.x
+      localObjectSettings.value.y = attrs.y
+      localObjectSettings.value.width = attrs.width
+      localObjectSettings.value.height = attrs.height
+    } else if (tag === 'ellipse') {
+      localObjectSettings.value.x = attrs.cx - attrs.rx
+      localObjectSettings.value.y = attrs.cy - attrs.ry
+      localObjectSettings.value.width = attrs.rx * 2
+      localObjectSettings.value.height = attrs.ry * 2
+    } else if (tag === 'line') {
+      localObjectSettings.value.x = attrs.x1
+      localObjectSettings.value.y = attrs.y1
+      localObjectSettings.value.width = attrs.x2 - attrs.x1
+      localObjectSettings.value.height = attrs.y2 - attrs.y1
+    }
+
+    localObjectSettings.value.fillColor = attrs.fill
+    localObjectSettings.value.strokeEnabled = attrs['stroke-width'] > 0
+    localObjectSettings.value.strokeColor = attrs.stroke
+    localObjectSettings.value.strokeWidth = attrs['stroke-width']
+  })
+
+  const applyLocalSettings = () => {
+    const object = activeObject.value
+    if (!object) return
+
+    const settings = localObjectSettings.value
+    const { tag, attrs } = object
+
+    if (tag === 'rect') {
+      attrs.x = settings.x
+      attrs.y = settings.y
+      attrs.width = settings.width
+      attrs.height = settings.height
+    } else if (tag === 'ellipse') {
+      attrs.rx = settings.width / 2
+      attrs.ry = settings.height / 2
+      attrs.cx = settings.x + attrs.rx
+      attrs.cy = settings.y + attrs.ry
+    } else if (tag === 'line') {
+      attrs.x1 = settings.x
+      attrs.y1 = settings.y
+      attrs.x2 = settings.x + settings.width
+      attrs.y2 = settings.y + settings.height
+    }
+
+    attrs.fill = settings.fillColor
+    attrs['stroke-width'] = settings.strokeEnabled ? settings.strokeWidth : 0
+    attrs.stroke = settings.strokeEnabled ? settings.strokeColor : 'none'
+  }
+
+  // watch(
+  //   () => objectSettings.value,
+  //   (newSettings) => {
+  //     editorStore.selectTab(newSettings.type)
+  //   },
+  //   {
+  //     immediate: true,
+  //     deep: true,
+  //   },
+  // )
 
   const getShapeAttributes = () => {
-    return {
-      type: objectSettings.value.type,
-      fillColor: objectSettings.value.fillColor,
-      strokeEnabled: objectSettings.value.strokeEnabled,
-      strokeColor: objectSettings.value.strokeColor,
-      strokeWidth: objectSettings.value.strokeWidth,
-      width: objectSettings.value.width,
-      height: objectSettings.value.height,
-      x: objectSettings.value.x,
-      y: objectSettings.value.y,
-    }
+    return { ...localObjectSettings.value }
   }
 
   return {
-    objectSettings,
-    objectTypeOptions,
+    localObjectSettings,
     resetObjectSettings,
     getShapeAttributes,
+    maxShapePositionX,
+    maxShapePositionY,
+    applyLocalSettings,
   }
 }

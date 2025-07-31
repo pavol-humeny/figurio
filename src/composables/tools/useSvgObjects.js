@@ -2,8 +2,10 @@ import { computed, ref, onMounted, onBeforeUnmount } from 'vue'
 import { useTextTool } from './useTextTool'
 import { useShapeTool } from './useShapeTool'
 import { editorConfig } from '@/config/editorConfig'
+import { useMath } from '../common/useMath'
 
 export function useSvgObjects(imageStore, historyStore, viewportStore, editorStore, t) {
+  const { round } = useMath()
   const textTool = useTextTool(imageStore)
   const shapeTool = useShapeTool(editorStore, imageStore)
 
@@ -174,7 +176,6 @@ export function useSvgObjects(imageStore, historyStore, viewportStore, editorSto
    * Compute display info for current SVG object (position and size)
    */
   const selectedObjectInfo = computed(() => {
-    console.log('Computing selected object info...')
     const selectedId = imageStore.selectedSvgObjectId
     if (selectedId === null) return null
 
@@ -224,8 +225,8 @@ export function useSvgObjects(imageStore, historyStore, viewportStore, editorSto
     if (event.target.closest('g') || event.target.closest('text')) return
 
     const rect = event.currentTarget.getBoundingClientRect()
-    const x = (event.clientX - rect.left) / viewportStore.realZoomLevel
-    const y = (event.clientY - rect.top) / viewportStore.realZoomLevel
+    const x = round((event.clientX - rect.left) / viewportStore.realZoomLevel)
+    const y = round((event.clientY - rect.top) / viewportStore.realZoomLevel)
 
     if (editorStore.selectedToolKey === 'text' && !editorStore.isSvgObjectSelected) {
       textTool.addTextObject(x, y)
@@ -236,13 +237,15 @@ export function useSvgObjects(imageStore, historyStore, viewportStore, editorSto
     if (!['blur', 'shape', 'magnifyArea'].includes(editorStore.selectedToolKey)) return
 
     const objectClass = editorStore.selectedToolKey
-    const objectType = editorStore.selectedTabPerTool[objectClass]
+    let objectType = editorStore.selectedTabPerTool[objectClass]
+
+    if (objectType === 'rectangle') objectType = 'rect'
 
     console.log(`Mouse down on SVG with tool: ${objectClass}, objectType: ${objectType}`)
 
     const rect = viewportStore.viewportContentRect
-    const x = (event.clientX - rect.left - viewportStore.panX) / viewportStore.realZoomLevel
-    const y = (event.clientY - rect.top - viewportStore.panY) / viewportStore.realZoomLevel
+    const x = round((event.clientX - rect.left - viewportStore.panX) / viewportStore.realZoomLevel)
+    const y = round((event.clientY - rect.top - viewportStore.panY) / viewportStore.realZoomLevel)
 
     drawingStart.value = { x, y }
     isDrawing.value = true
