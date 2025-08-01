@@ -24,6 +24,9 @@ const imageStore = useImageStore();
  */
 const tabs = ['rectangle', 'ellipse', 'line'];
 
+/**
+ * Logic for shape editing in SVG
+ */
 const {
   localObjectSettings,
   maxShapePositionX,
@@ -45,7 +48,9 @@ const {
   lineArrowOptions,
 } = useShapeTool(useEditorStore(), useImageStore(), useHistoryStore(), t)
 
-
+/**
+ * Logic for moving selected SVG objects
+ */
 const {
   moveSelectedSvgObjectForward,
   moveSelectedSvgObjectBackward,

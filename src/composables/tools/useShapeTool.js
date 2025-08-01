@@ -1,31 +1,51 @@
 import { computed, ref, watch, watchEffect, nextTick } from 'vue'
 import { useMath } from '../common/useMath'
 
+/**
+ * Local editable settings for shape tool
+ */
 const localObjectSettings = ref({
-  type: 'none', // Default type
-  fillEnabled: true, // Default fill enabled
-  fillColor: '#000000', // Default fill color
-  strokeColor: '#000000', // Default outline color
-  strokeWidth: 0, // Default outline width
-  width: 0, // Default width
-  height: 0, // Default height
-  x: 0, // Default x position
-  y: 0, // Default y position
-  rotation: 0, // Default rotation angle
-  opacity: 1, // Default opacity
-  cornerRadius: 0, // Default corner radius for rectangles
-  lineType: 'solid', // Default line type for line shapes
-  lineArrowStart: 'none', // Default start arrow type for lines
-  lineArrowEnd: 'none', // Default end arrow type for lines
+  type: 'none',
+  fillEnabled: true,
+  fillColor: '#000000',
+  strokeColor: '#000000',
+  strokeWidth: 0,
+  width: 0,
+  height: 0,
+  x: 0,
+  y: 0,
+  rotation: 0,
+  opacity: 1,
+  cornerRadius: 0,
+  lineType: 'solid',
+  lineArrowStart: 'none',
+  lineArrowEnd: 'none',
 })
 
+/**
+ * Active SVG object reference
+ */
 const activeObject = ref(null)
 
+/**
+ * Logic for shape editing in SVG
+ * @param {Object} editorStore - Store containing editor state
+ * @param {Object} imageStore - Store containing svgObjects and file dimensions
+ * @param {Object} historyStore - History store
+ * @param {Function} t - Translation function
+ * @returns {Object} Composable methods and reactive properties for shape tool
+ */
 export function useShapeTool(editorStore, imageStore, historyStore, t) {
   const { clamp } = useMath()
 
+  /**
+   * Hide position and dimensions settings in the shape tool settings
+   */
   const hidePositionAndDimensions = ref(false)
 
+  /**
+   * Reset the local object settings to default values
+   */
   const resetObjectSettings = () => {
     localObjectSettings.value.fillEnabled = true
     localObjectSettings.value.fillColor = '#000000'
@@ -177,6 +197,9 @@ export function useShapeTool(editorStore, imageStore, historyStore, t) {
     return 'solid' // fallback
   }
 
+  /**
+   * Reset the local object settings to default values when the shape is changed
+   */
   watch(
     () => editorStore.selectedTabPerTool['shape'],
     (newTab) => {
@@ -327,17 +350,6 @@ export function useShapeTool(editorStore, imageStore, historyStore, t) {
       localObjectSettings.value.width = attrs.x2 - attrs.x1
       localObjectSettings.value.height = attrs.y2 - attrs.y1
     }
-
-    // // Fill and stroke settings
-    // localObjectSettings.value.fillEnabled = attrs.fill !== 'none'
-    // if (localObjectSettings.value.fillEnabled) {
-    //   localObjectSettings.value.fillColor = attrs.fill
-    // }
-
-    // if (attrs['stroke-width'] > 0) {
-    //   localObjectSettings.value.strokeColor = attrs.stroke
-    //   localObjectSettings.value.strokeWidth = attrs['stroke-width']
-    // }
 
     // Rotation angle
     localObjectSettings.value.rotation = attrs.transform

@@ -23,7 +23,9 @@ const localTextSettings = ref({
  * Text editing logic for SVG text objects
  * @param {Object} imageStore - Store containing svgObjects
  * @param {Object} historyStore - History store
+ * @param {Object} editorStore - Store containing editor state
  * @param {Function} t - Translation function
+ * @return {Object} Composable methods and reactive properties for text tool
  */
 export function useTextTool(imageStore, historyStore, editorStore, t) {
   const { round } = useMath()

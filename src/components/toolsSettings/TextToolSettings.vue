@@ -18,6 +18,9 @@ const editorStore = useEditorStore();
 const imageStore = useImageStore();
 const { t } = useI18n()
 
+/**
+ * Logic for text editing in SVG
+ */
 const {
   textSizeOptions,
   textFontOptions,
@@ -35,6 +38,9 @@ const {
   hidePosition
 } = useTextTool(useImageStore(), useHistoryStore(), useEditorStore(), t)
 
+/**
+ * Logic for moving selected SVG objects
+ */
 const {
   moveSelectedSvgObjectForward,
   moveSelectedSvgObjectBackward,
