@@ -271,8 +271,6 @@ export function useShapeTool(editorStore, imageStore, historyStore, t) {
               attrs['stroke-dasharray'],
               attrs['stroke-width'] || 1,
             )
-
-            console.log('11111111111111111Line type detected:', localObjectSettings.value.lineType)
           }
 
           // Line arrow types for line shapes

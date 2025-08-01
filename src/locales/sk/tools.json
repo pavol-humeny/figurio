@@ -360,7 +360,62 @@
     "tipDisabled": "",
     "shortcut": "T",
     "settings": {
-      "general":{}
+      "general": {
+        "textContent": {
+          "label": "Textový obsah",
+          "placeholder": "Zadajte text"
+        },
+        "position": {
+          "label": "Pozícia",
+          "x": "X",
+          "y": "Y"
+        },
+        "rotation": {
+          "label": "Rotácia",
+          "tip": "Upravte uhol rotácie alebo dvakrát kliknite na ikonu pre resetovanie"
+        },
+        "textSize": {
+          "label": "Veľkosť textu",
+          "tip": "Upravte veľkosť textu"
+        },
+        "letterSpacing": {
+          "label": "Rozostup písmen",
+          "tip": "Upravte medzery medzi písmenami"
+        },
+        "fontFamily": {
+          "label": "Písmo",
+          "tip": "Vyberte písmo pre text"
+        },
+        "textColor": {
+          "label": "Farba textu",
+          "tip": "Vyberte farbu textu"
+        },
+        "textOpacity": {
+          "label": "Nepriehľadnosť textu",
+          "tip": "Upravte nepriehľadnosť textu alebo dvakrát kliknite na ikonu pre resetovanie"
+        },
+        "textStyle": {
+          "label": "Štýl textu",
+          "bold": "Tučné",
+          "italic": "Kurzíva",
+          "underline": "Podčiarknuté"
+        },
+        "zIndex": {
+          "label": "Pozícia na Z-osi",
+          "bringToFrontButton": {
+            "text": "Presunúť dopredu"
+          },
+          "sendToBackButton": {
+            "text": "Presunúť dozadu"
+          },
+          "moveForwardButton": {
+            "text": "Posunúť vpred"
+          },
+          "moveBackwardButton": {
+            "text": "Posunúť späť"
+          }
+        }
+      }
     }
   },
   "frame": {

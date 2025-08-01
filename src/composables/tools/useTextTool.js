@@ -1,9 +1,12 @@
-import { ref, watch, watchEffect } from 'vue'
+import { ref, watch, watchEffect, computed } from 'vue'
+import { useMath } from '../common/useMath'
 
 /**
  * Local editable settings for text tool
  */
 const localTextSettings = ref({
+  x: 0,
+  y: 0,
   text: '',
   size: 16,
   color: '#000000',
@@ -23,9 +26,26 @@ const localTextSettings = ref({
  * @param {Function} t - Translation function
  */
 export function useTextTool(imageStore, historyStore, editorStore, t) {
+  const { round } = useMath()
+
+  /**
+   * Hide position settings in the text tool settings
+   */
+  const hidePosition = ref(false)
+
+  /**
+   * Currently active text object being edited
+   */
   const activeObject = ref(null)
 
+  /**
+   * Text size options for the text tool settings
+   */
   const textSizeOptions = [8, 10, 12, 14, 16, 18, 20, 24, 28, 32, 36, 40, 48, 56, 64, 72]
+
+  /**
+   * Font family options for the text tool settings
+   */
   const textFontOptions = [
     { label: 'Arial', value: 'Arial' },
     { label: 'Courier New', value: 'Courier New' },
@@ -42,9 +62,27 @@ export function useTextTool(imageStore, historyStore, editorStore, t) {
     { label: 'Lucida Sans Unicode', value: 'Lucida Sans Unicode' },
     { label: 'Segoe UI', value: 'Segoe UI' },
     { label: 'Gill Sans', value: 'Gill Sans' },
-    { label: 'Calibri', value: 'Calibri' }, 
+    { label: 'Calibri', value: 'Calibri' },
     { label: 'Cambria', value: 'Cambria' },
   ]
+
+  /**
+   * Calculate maximum and minimal position for text
+   */
+  const maxTextPositionX = computed(() => {
+    const object = imageStore.getSvgObjectById(imageStore.selectedSvgObjectId)
+    const bboxWidth = object?.textBBox?.width ?? 0
+    return round(imageStore.fileDimensions.width - bboxWidth)
+  })
+  const maxTextPositionY = computed(() => {
+    return imageStore.fileDimensions.height
+  })
+  const minTextPositionY = computed(() => {
+    const object = imageStore.getSvgObjectById(imageStore.selectedSvgObjectId)
+    if (!object || !object.textBBox) return 0
+
+    return round(object.textBBox.height / 2)
+  })
 
   /**
    * Reset local settings to defaults
@@ -73,12 +111,25 @@ export function useTextTool(imageStore, historyStore, editorStore, t) {
       if (id !== null) {
         const obj = imageStore.getSvgObjectById(id)
         if (obj?.tag === 'text') {
+          hidePosition.value = false
+
           activeObject.value = obj
           const { attrs, content } = obj
 
+          // Position
+          localTextSettings.value.x = parseFloat(attrs.x) || 0
+          localTextSettings.value.y = parseFloat(attrs.y) || 0
+
+          // Text content
           localTextSettings.value.text = content || ''
+
+          // Size
           localTextSettings.value.size = parseInt(attrs['font-size']) || 16
+
+          // Color
           localTextSettings.value.color = attrs.fill || '#000000'
+
+          // Font family
           localTextSettings.value.fontFamily = attrs['font-family'] || 'Arial'
 
           // Rotation angle
@@ -103,6 +154,7 @@ export function useTextTool(imageStore, historyStore, editorStore, t) {
         }
       } else {
         resetTextSettings()
+        hidePosition.value = true
       }
     },
     { immediate: true },
@@ -116,6 +168,10 @@ export function useTextTool(imageStore, historyStore, editorStore, t) {
     if (!object || editorStore.selectedToolKey !== 'text') return
 
     const { attrs } = object
+
+    // Position
+    localTextSettings.value.x = parseFloat(attrs.x) || 0
+    localTextSettings.value.y = parseFloat(attrs.y) || 0
 
     // Rotation angle
     localTextSettings.value.rotation = attrs.transform
@@ -133,6 +189,10 @@ export function useTextTool(imageStore, historyStore, editorStore, t) {
 
     const { attrs } = object
     const settings = localTextSettings.value
+
+    // Update position
+    attrs.x = settings.x
+    attrs.y = settings.y // Adjust Y to center text vertically
 
     // Content
     object.content = settings.text
@@ -273,5 +333,9 @@ export function useTextTool(imageStore, historyStore, editorStore, t) {
     setBoldStyle,
     setItalicStyle,
     setUnderlineStyle,
+    maxTextPositionX,
+    maxTextPositionY,
+    minTextPositionY,
+    hidePosition,
   }
 }

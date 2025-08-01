@@ -255,6 +255,11 @@ input[type='number'] {
 .two-items {
   flex-direction: row;
   justify-content: space-between;
+  align-items: flex-end;
+}
+
+.two-items p{
+  text-align: center;
 }
 
 /* Disabled state styles */

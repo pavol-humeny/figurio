@@ -1308,6 +1308,8 @@ export function useSvgObjectWrapper(
       fontStyle: object.value.attrs['font-style'],
       textDecoration: object.value.attrs['text-decoration'],
       letterSpacing: object.value.attrs['letter-spacing'],
+      x: object.value.attrs.x,
+      y: object.value.attrs.y,
     }),
     () => {
       nextTick(() => {

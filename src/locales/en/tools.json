@@ -361,7 +361,62 @@
     "tipDisabled": "",
     "shortcut": "T",
     "settings": {
-      "general":{}
+      "general":{
+        "textContent": {
+          "label": "Text content",
+          "placeholder": "Enter text"
+        },
+        "position": {
+          "label": "Position",
+          "x": "X",
+          "y": "Y"
+        },
+        "rotation": {
+          "label": "Rotation",
+          "tip": "Adjust the rotation angle or double click icon to reset rotation"
+        },
+        "textSize": {
+          "label": "Text size",
+          "tip": "Adjust the size of the text"
+        },
+        "letterSpacing": {
+          "label": "Letter spacing",
+          "tip": "Adjust the spacing between letters"
+        },
+        "fontFamily": {
+          "label": "Text font",
+          "tip": "Select the font for the text"
+        },
+        "textColor": {
+          "label": "Text color",
+          "tip": "Select the color of the text"
+        },
+        "textOpacity": {
+          "label": "Text opacity",
+          "tip": "Adjust the opacity of the text or double click icon to reset opacity"
+        },
+        "textStyle": {
+          "label": "Text style",
+          "bold": "Bold",
+          "italic": "Italic",
+          "underline": "Underline"
+        },
+        "zIndex": {
+          "label": "Position in Z-axis",
+          "bringToFrontButton": {
+            "text": "Bring to front"
+          },
+          "sendToBackButton": {
+            "text": "Send to back"
+          },
+          "moveForwardButton": {
+            "text": "Move forward"
+          },
+          "moveBackwardButton": {
+            "text": "Move backward"
+          }
+        }
+      }
     }
   },
   "frame": {
