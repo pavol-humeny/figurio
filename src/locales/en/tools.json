@@ -286,6 +286,16 @@
         "label": "Corner radius",
         "tip": "Adjust the corner radius of the shape or double click icon to reset corner radius"
       },
+      "lineType": {
+        "label": "Line type",
+        "tip": "Select the type of line for the shape",
+        "options": {
+          "solid": "Solid",
+          "dashed": "Dashed",
+          "dotted": "Dotted",
+          "dashDot": "Dash-dot"
+        }
+      },
       "zIndex": {
         "label": "Position in Z-axis",
         "bringToFrontButton": {

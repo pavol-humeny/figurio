@@ -14,6 +14,7 @@ const localObjectSettings = ref({
   rotation: 0, // Default rotation angle
   opacity: 1, // Default opacity
   cornerRadius: 0, // Default corner radius for rectangles
+  lineType: 'solid', // Default line type for line shapes
 })
 
 const activeObject = ref(null)
@@ -35,6 +36,7 @@ export function useShapeTool(editorStore, imageStore, historyStore, t) {
     localObjectSettings.value.rotation = 0
     localObjectSettings.value.opacity = 1
     localObjectSettings.value.cornerRadius = 0
+    localObjectSettings.value.lineType = 'solid'
     activeObject.value = null
   }
 
@@ -90,6 +92,66 @@ export function useShapeTool(editorStore, imageStore, historyStore, t) {
    * Whether the dimensions are linked
    */
   const isDimensionsLinked = ref(true)
+
+  /**
+   * Line type options for the line shape
+   */
+  const lineTypeOptions = computed(() => [
+    { value: 'solid', label: t('tools.shape.settings.lineType.options.solid') },
+    { value: 'dashed', label: t('tools.shape.settings.lineType.options.dashed') },
+    { value: 'dotted', label: t('tools.shape.settings.lineType.options.dotted') },
+    { value: 'dashDot', label: t('tools.shape.settings.lineType.options.dashDot') },
+  ])
+
+  /**
+   * Mapping of lineType to pattern ratios relative to stroke-width
+   */
+  const lineDashPatternMap = {
+    solid: [],
+    dashed: [4, 2], // 4x strokeWidth dash, 2x strokeWidth gap
+    dotted: [1, 2], // 1x strokeWidth dot, 2x strokeWidth gap
+    dashDot: [4, 2, 1, 2], // dash, gap, dot, gap
+  }
+
+  /**
+   * Get stroke-dasharray string based on lineType and strokeWidth
+   * @param {'solid' | 'dashed' | 'dotted' | 'dashDot'} lineType
+   * @param {number} strokeWidth
+   * @returns {string}
+   */
+  const getDashArrayFromLineType = (lineType, strokeWidth) => {
+    console.log('getDashArrayFromLineType', lineType, strokeWidth)
+    const pattern = lineDashPatternMap[lineType]
+    if (!pattern || pattern.length === 0) return ''
+    return pattern.map((mult) => (mult * strokeWidth).toFixed(2)).join(',')
+  }
+
+  /**
+   * Convert stroke-dasharray value to lineType based on strokeWidth
+   * @param {string | undefined} dashArray - Value from attrs['stroke-dasharray']
+   * @param {number} strokeWidth
+   * @returns {'solid' | 'dashed' | 'dotted' | 'dashDot'}
+   */
+  const mapDashArrayToLineType = (dashArray, strokeWidth) => {
+    if (!dashArray || dashArray === 'none' || dashArray.trim() === '') {
+      return 'solid'
+    }
+
+    const parts = dashArray.split(',').map((n) => parseFloat(n.trim()))
+    if (parts.some(isNaN) || strokeWidth <= 0) return 'solid'
+
+    // Normalize to ratio against strokeWidth
+    const ratios = parts.map((n) => Math.round(n / strokeWidth))
+
+    // Compare with known patterns
+    const match = (a, b) => a.length === b.length && a.every((v, i) => v === b[i])
+
+    if (match(ratios, lineDashPatternMap.dashed)) return 'dashed'
+    if (match(ratios, lineDashPatternMap.dotted)) return 'dotted'
+    if (match(ratios, lineDashPatternMap.dashDot)) return 'dashDot'
+
+    return 'solid' // fallback
+  }
 
   watch(
     () => editorStore.selectedTabPerTool['shape'],
@@ -177,6 +239,16 @@ export function useShapeTool(editorStore, imageStore, historyStore, t) {
             localObjectSettings.value.cornerRadius = attrs.rx || 0 // Use rx as corner radius if available
           } else {
             localObjectSettings.value.cornerRadius = 0 // Reset for other shapes
+          }
+
+          // Line type for line shapes
+          if (tag === 'line') {
+            localObjectSettings.value.lineType = mapDashArrayToLineType(
+              attrs['stroke-dasharray'],
+              attrs['stroke-width'] || 1,
+            )
+
+            console.log('11111111111111111Line type detected:', localObjectSettings.value.lineType)
           }
         }
       } else {
@@ -287,6 +359,11 @@ export function useShapeTool(editorStore, imageStore, historyStore, t) {
       attrs.rx = 0 // Reset for other shapes
     }
 
+    // Line type for line shapes
+    if (tag === 'line') {
+      attrs['stroke-dasharray'] = getDashArrayFromLineType(settings.lineType, settings.strokeWidth)
+    }
+
     historyStore.push(imageStore.getSnapshot(t))
   }
 
@@ -294,7 +371,14 @@ export function useShapeTool(editorStore, imageStore, historyStore, t) {
    * Get the current shape attributes for external use
    */
   const getShapeAttributes = () => {
-    return { ...localObjectSettings.value }
+    const settings = { ...localObjectSettings.value }
+
+    // Ak ide o čiaru, premapuj lineType na konkrétnu hodnotu stroke-dasharray
+    if (settings.type === 'line') {
+      settings.lineType = getDashArrayFromLineType(settings.lineType, settings.strokeWidth)
+    }
+
+    return settings
   }
 
   /**
@@ -394,5 +478,6 @@ export function useShapeTool(editorStore, imageStore, historyStore, t) {
     resetRotationAngle,
     resetOpacity,
     resetCornerRadius,
+    lineTypeOptions,
   }
 }

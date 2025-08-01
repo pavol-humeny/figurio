@@ -13,6 +13,7 @@ import { useI18n } from 'vue-i18n'
 import DefaultButton from '../common/DefaultButton.vue';
 import { useSvgObjects } from '@/composables/tools/useSvgObjects';
 import { useViewportStore } from '@/stores/viewportStore';
+import DropdownSelect from '../common/DropdownSelect.vue';
 
 const { t } = useI18n()
 const editorStore = useEditorStore();
@@ -40,6 +41,7 @@ const {
   resetRotationAngle,
   resetOpacity,
   resetCornerRadius,
+  lineTypeOptions,
 } = useShapeTool(useEditorStore(), useImageStore(), useHistoryStore(), t)
 
 
@@ -255,6 +257,20 @@ const {
               :tip="$t('tools.shape.settings.cornerRadius.tip')" position="bottom-left" />
           </div>
         </div>
+
+        <!-- Line type -->
+        <div v-if="localObjectSettings.type === 'line'" class=" settings-content-wrapper">
+          <div class="content-wrapper">
+            <div class="content-title">
+              <p :class="{ disabled: localObjectSettings.strokeWidth === 0 }">
+                {{ $t('tools.shape.settings.lineType.label') }}
+              </p>
+            </div>
+            <DropdownSelect v-model="localObjectSettings.lineType" :options="lineTypeOptions"
+              @update="applyLocalSettings" :tip="$t('tools.shape.settings.lineType.tip')" position="bottom-left" />
+          </div>
+        </div>
+
 
         <!-- Z-index -->
         <div v-if="!hidePositionAndDimensions" class="settings-content-wrapper">

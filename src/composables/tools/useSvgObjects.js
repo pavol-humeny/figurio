@@ -289,9 +289,10 @@ export function useSvgObjects(imageStore, historyStore, viewportStore, editorSto
     let objectStrokeWidth
     let objectOpacity = 1
     let objectCornerRadius = 0
+    let objectLineType
 
     if (objectClass === 'shape') {
-      const { fillEnabled, fillColor, strokeWidth, strokeColor, opacity, cornerRadius } =
+      const { fillEnabled, fillColor, strokeWidth, strokeColor, opacity, cornerRadius, lineType } =
         shapeTool.getShapeAttributes()
 
       if (fillEnabled) {
@@ -301,6 +302,7 @@ export function useSvgObjects(imageStore, historyStore, viewportStore, editorSto
       objectStrokeColor = strokeColor
       objectOpacity = opacity
       objectCornerRadius = cornerRadius
+      objectLineType = lineType
     } else if (objectClass === 'blur') {
       objectFillColor = '#ff0000'
     }
@@ -338,6 +340,7 @@ export function useSvgObjects(imageStore, historyStore, viewportStore, editorSto
       base.attrs['stroke-width'] = objectStrokeWidth
       base.attrs.stroke = objectStrokeColor
       base.attrs.opacity = objectOpacity
+      base.attrs['stroke-dasharray'] = objectLineType
     }
 
     currentDrawingObject.value = base
