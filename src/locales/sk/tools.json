@@ -230,43 +230,100 @@
       }
     },
     "settings": {
-      "rectangle": {
-        "label": "Obdĺžnik",
-        "fillColor": {
-          "label": "Farba výplne"
-        },
-        "strokeEnabled": {
-          "label": "Povoliť obrys"
-        },
-        "strokeColor": {
-          "label": "Farba obrysu"
-        },
-        "strokeWidth": {
-          "label": "Hrúbka obrysu"
-        }
+      "rectangle": { 
+        "label": "Obdĺžnik" 
       },
       "ellipse": {
-        "label": "Elipsa",
-        "fillColor": {
-          "label": "Farba výplne"
-        },
-        "strokeEnabled": {
-          "label": "Povoliť obrys"
-        },
-        "strokeColor": {
-          "label": "Farba obrysu"
-        },
-        "strokeWidth": {
-          "label": "Hrúbka obrysu"
-        }
+        "label": "Elipsa"
       },
       "line": {
-        "label": "Čiara",
-        "lineColor": {
-          "label": "Farba čiary"
+        "label": "Čiara"
+      },
+      "general": {
+        "position": {
+          "label": "Pozícia",
+          "x": "X",
+          "y": "Y"
+        }
+      },
+      "dimensions": {
+        "label": "Rozmery",
+        "width": "Šírka",
+        "height": "Výška",
+        "tipLinked": "Odlúčiť šírku a výšku",
+        "tipUnlinked": "Prepojiť šírku a výšku"
+      },
+      "rotation": {
+        "label": "Rotácia",
+        "tip": "Upravte uhol rotácie alebo dvojklikom resetujte rotáciu"
+      },
+      "enableFillColor": {
+        "label": "Povoliť výplň",
+        "tip": "Povoliť alebo zakázať výplň tvaru"
+      },
+      "fillColor": {
+        "label": "Farba výplne",
+        "tip": "Vyberte farbu výplne tvaru"
+      },
+      "lineWidth": {
+        "label": "Hrúbka čiary",
+        "tip": "Upravte hrúbku čiary"
+      },
+      "strokeColor": {
+        "label": "Farba obrysu",
+        "tip": "Vyberte farbu obrysu tvaru"
+      },
+      "strokeWidth": {
+        "label": "Hrúbka obrysu",
+        "tip": "Upravte hrúbku obrysu"
+      },
+      "opacity": {
+        "label": "Priehľadnosť",
+        "tip": "Upravte priehľadnosť tvaru alebo dvojklikom resetujte priehľadnosť"
+      },
+      "cornerRadius": {
+        "label": "Zaoblenie rohov",
+        "tip": "Upravte zaoblenie rohov tvaru alebo dvojklikom resetujte hodnotu"
+      },
+      "lineType": {
+        "label": "Typ čiary",
+        "tip": "Vyberte typ čiary pre tvar",
+        "options": {
+          "solid": "Plná",
+          "dashed": "Čiarkovaná",
+          "dotted": "Bodkovaná",
+          "dashDot": "Čiarka-bodka"
+        }
+      },
+      "lineArrow": {
+        "start": {
+          "label": "Začiatok šípky",
+          "tip": "Povoliť alebo zakázať šípku na začiatku čiary"
         },
-        "lineWidth": {
-          "label": "Hrúbka čiary"
+        "end": {
+          "label": "Koniec šípky",
+          "tip": "Povoliť alebo zakázať šípku na konci čiary"
+        },
+        "options": {
+          "none": "Žiadny",
+          "arrow": "Šípka",
+          "circle": "Kruh",
+          "square": "Štvorec"
+        }
+      },
+      "zIndex": {
+        "label": "Pozícia v Z-osi",
+        "bringToFrontButton": {
+          "text": "Presunúť dopredu"
+        },
+        "sendToBackButton": {
+          "text": "Presunúť dozadu"
+        },
+        "moveForwardButton": {
+          "text": "Posunúť o úroveň vyššie"
+        },
+        "moveBackwardButton": {
+          "text": "Posunúť o úroveň nižšie"
         }
       }
     }

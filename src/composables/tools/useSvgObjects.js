@@ -290,8 +290,8 @@ export function useSvgObjects(imageStore, historyStore, viewportStore, editorSto
     let objectOpacity = 1
     let objectCornerRadius = 0
     let objectLineType
-    let objectLineArrowStart = 'none'
-    let objectLineArrowEnd = 'none'
+    // let objectLineArrowStart = 'none'
+    // let objectLineArrowEnd = 'none'
 
     if (objectClass === 'shape') {
       const {
@@ -302,8 +302,8 @@ export function useSvgObjects(imageStore, historyStore, viewportStore, editorSto
         opacity,
         cornerRadius,
         lineType,
-        lineArrowStart,
-        lineArrowEnd,
+        // lineArrowStart,
+        // lineArrowEnd,
       } = shapeTool.getShapeAttributes()
 
       if (fillEnabled) {
@@ -314,8 +314,8 @@ export function useSvgObjects(imageStore, historyStore, viewportStore, editorSto
       objectOpacity = opacity
       objectCornerRadius = cornerRadius
       objectLineType = lineType
-      objectLineArrowStart = lineArrowStart
-      objectLineArrowEnd = lineArrowEnd
+      // objectLineArrowStart = lineArrowStart
+      // objectLineArrowEnd = lineArrowEnd
     } else if (objectClass === 'blur') {
       objectFillColor = '#ff0000'
     }
@@ -353,7 +353,7 @@ export function useSvgObjects(imageStore, historyStore, viewportStore, editorSto
       base.attrs['stroke-width'] = objectStrokeWidth
       base.attrs.stroke = objectStrokeColor
       base.attrs.opacity = objectOpacity
-      // base.attrs['stroke-dasharray'] = objectLineType
+      base.attrs['stroke-dasharray'] = objectLineType
       // if (objectLineArrowStart !== 'none') {
       //   base.attrs['marker-start'] = objectLineArrowStart
       // }
@@ -389,7 +389,8 @@ export function useSvgObjects(imageStore, historyStore, viewportStore, editorSto
     const attrs = currentDrawingObject.value.attrs
 
     // Apply SHIFT for aspect ratio
-    if (isShiftKey && onlyOneKeyPressed) {
+    if (isShiftKey && onlyOneKeyPressed && objectType !== 'line') {
+      // TODO drawing in axis-aligned mode
       const maxDelta = Math.max(Math.abs(dx), Math.abs(dy))
       dx = dx < 0 ? -maxDelta : maxDelta
       dy = dy < 0 ? -maxDelta : maxDelta

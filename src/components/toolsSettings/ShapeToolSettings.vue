@@ -136,7 +136,7 @@ const {
             <div class="content-inputs">
               <NumberInput v-model="localObjectSettings.rotation" :min="-180" :max="180" @update="applyLocalSettings"
                 unit="°" icon="IconAngle" :color="'var(--primary-c)'" :iconTop="40" :onReset="resetRotationAngle"
-                :tip="$t('tools.shape.settings.rotation.tip')" />
+                :tip="$t('tools.shape.settings.rotation.tip')" position="bottom-left" />
             </div>
           </div>
         </div>
