@@ -296,6 +296,22 @@
           "dashDot": "Dash-dot"
         }
       },
+      "lineArrow": {
+        "start": {
+          "label": "Start arrow",
+          "tip": "Enable or disable start arrow for the line"
+        },
+        "end": {
+          "label": "End arrow",
+          "tip": "Enable or disable end arrow for the line"
+        },
+        "options": {
+            "none": "None",
+            "arrow": "Arrow",
+            "circle": "Circle",
+            "square": "Square"
+          }
+      },
       "zIndex": {
         "label": "Position in Z-axis",
         "bringToFrontButton": {

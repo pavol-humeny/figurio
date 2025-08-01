@@ -290,10 +290,21 @@ export function useSvgObjects(imageStore, historyStore, viewportStore, editorSto
     let objectOpacity = 1
     let objectCornerRadius = 0
     let objectLineType
+    let objectLineArrowStart = 'none'
+    let objectLineArrowEnd = 'none'
 
     if (objectClass === 'shape') {
-      const { fillEnabled, fillColor, strokeWidth, strokeColor, opacity, cornerRadius, lineType } =
-        shapeTool.getShapeAttributes()
+      const {
+        fillEnabled,
+        fillColor,
+        strokeWidth,
+        strokeColor,
+        opacity,
+        cornerRadius,
+        lineType,
+        lineArrowStart,
+        lineArrowEnd,
+      } = shapeTool.getShapeAttributes()
 
       if (fillEnabled) {
         objectFillColor = fillColor
@@ -303,6 +314,8 @@ export function useSvgObjects(imageStore, historyStore, viewportStore, editorSto
       objectOpacity = opacity
       objectCornerRadius = cornerRadius
       objectLineType = lineType
+      objectLineArrowStart = lineArrowStart
+      objectLineArrowEnd = lineArrowEnd
     } else if (objectClass === 'blur') {
       objectFillColor = '#ff0000'
     }
@@ -340,7 +353,13 @@ export function useSvgObjects(imageStore, historyStore, viewportStore, editorSto
       base.attrs['stroke-width'] = objectStrokeWidth
       base.attrs.stroke = objectStrokeColor
       base.attrs.opacity = objectOpacity
-      base.attrs['stroke-dasharray'] = objectLineType
+      // base.attrs['stroke-dasharray'] = objectLineType
+      // if (objectLineArrowStart !== 'none') {
+      //   base.attrs['marker-start'] = objectLineArrowStart
+      // }
+      // if (objectLineArrowEnd !== 'none') {
+      //   base.attrs['marker-end'] = objectLineArrowEnd
+      // }
     }
 
     currentDrawingObject.value = base

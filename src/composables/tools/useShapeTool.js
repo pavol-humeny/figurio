@@ -15,6 +15,8 @@ const localObjectSettings = ref({
   opacity: 1, // Default opacity
   cornerRadius: 0, // Default corner radius for rectangles
   lineType: 'solid', // Default line type for line shapes
+  lineArrowStart: 'none', // Default start arrow type for lines
+  lineArrowEnd: 'none', // Default end arrow type for lines
 })
 
 const activeObject = ref(null)
@@ -37,6 +39,8 @@ export function useShapeTool(editorStore, imageStore, historyStore, t) {
     localObjectSettings.value.opacity = 1
     localObjectSettings.value.cornerRadius = 0
     localObjectSettings.value.lineType = 'solid'
+    localObjectSettings.value.lineArrowStart = 'none'
+    localObjectSettings.value.lineArrowEnd = 'none'
     activeObject.value = null
   }
 
@@ -104,6 +108,16 @@ export function useShapeTool(editorStore, imageStore, historyStore, t) {
   ])
 
   /**
+   * Line arrow options for the line shape
+   */
+  const lineArrowOptions = computed(() => [
+    { value: 'none', label: t('tools.shape.settings.lineArrow.options.none') },
+    { value: 'arrow', label: t('tools.shape.settings.lineArrow.options.arrow') },
+    { value: 'square', label: t('tools.shape.settings.lineArrow.options.square') },
+    { value: 'circle', label: t('tools.shape.settings.lineArrow.options.circle') },
+  ])
+
+  /**
    * Mapping of lineType to pattern ratios relative to stroke-width
    */
   const lineDashPatternMap = {
@@ -111,6 +125,16 @@ export function useShapeTool(editorStore, imageStore, historyStore, t) {
     dashed: [4, 2], // 4x strokeWidth dash, 2x strokeWidth gap
     dotted: [1, 2], // 1x strokeWidth dot, 2x strokeWidth gap
     dashDot: [4, 2, 1, 2], // dash, gap, dot, gap
+  }
+
+  /**
+   * Mapping of marker types to SVG marker URLs
+   */
+  const markerMap = {
+    none: '',
+    arrow: 'url(#arrow-end)',
+    circle: 'url(#circle-end)',
+    square: 'url(#square-end)',
   }
 
   /**
@@ -250,6 +274,27 @@ export function useShapeTool(editorStore, imageStore, historyStore, t) {
 
             console.log('11111111111111111Line type detected:', localObjectSettings.value.lineType)
           }
+
+          // Line arrow types for line shapes
+          if (tag === 'line') {
+            localObjectSettings.value.lineArrowStart =
+              attrs['marker-start'] && attrs['marker-start'].includes('arrow')
+                ? 'arrow'
+                : attrs['marker-start'] && attrs['marker-start'].includes('circle')
+                  ? 'circle'
+                  : attrs['marker-start'] && attrs['marker-start'].includes('square')
+                    ? 'square'
+                    : 'none'
+
+            localObjectSettings.value.lineArrowEnd =
+              attrs['marker-end'] && attrs['marker-end'].includes('arrow')
+                ? 'arrow'
+                : attrs['marker-end'] && attrs['marker-end'].includes('circle')
+                  ? 'circle'
+                  : attrs['marker-end'] && attrs['marker-end'].includes('square')
+                    ? 'square'
+                    : 'none'
+          }
         }
       } else {
         hidePositionAndDimensions.value = true
@@ -359,9 +404,14 @@ export function useShapeTool(editorStore, imageStore, historyStore, t) {
       attrs.rx = 0 // Reset for other shapes
     }
 
-    // Line type for line shapes
     if (tag === 'line') {
+      // Line type
       attrs['stroke-dasharray'] = getDashArrayFromLineType(settings.lineType, settings.strokeWidth)
+
+      // Line arrow types
+      attrs['marker-start'] = markerMap[settings.lineArrowStart]
+      attrs['marker-end'] = markerMap[settings.lineArrowEnd]
+      attrs.fill = settings.strokeColor
     }
 
     historyStore.push(imageStore.getSnapshot(t))
@@ -376,6 +426,9 @@ export function useShapeTool(editorStore, imageStore, historyStore, t) {
     // Ak ide o čiaru, premapuj lineType na konkrétnu hodnotu stroke-dasharray
     if (settings.type === 'line') {
       settings.lineType = getDashArrayFromLineType(settings.lineType, settings.strokeWidth)
+
+      settings.lineArrowStart = markerMap[settings.lineArrowStart]
+      settings.lineArrowEnd = markerMap[settings.lineArrowEnd]
     }
 
     return settings
@@ -479,5 +532,6 @@ export function useShapeTool(editorStore, imageStore, historyStore, t) {
     resetOpacity,
     resetCornerRadius,
     lineTypeOptions,
+    lineArrowOptions,
   }
 }

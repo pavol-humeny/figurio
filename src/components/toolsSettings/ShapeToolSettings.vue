@@ -42,6 +42,7 @@ const {
   resetOpacity,
   resetCornerRadius,
   lineTypeOptions,
+  lineArrowOptions,
 } = useShapeTool(useEditorStore(), useImageStore(), useHistoryStore(), t)
 
 
@@ -268,6 +269,32 @@ const {
             </div>
             <DropdownSelect v-model="localObjectSettings.lineType" :options="lineTypeOptions"
               @update="applyLocalSettings" :tip="$t('tools.shape.settings.lineType.tip')" position="bottom-left" />
+          </div>
+        </div>
+
+        <!-- Line arrow -->
+        <div v-if="localObjectSettings.type === 'line' && !hidePositionAndDimensions" class=" settings-content-wrapper">
+          <div class="content-aligned two-items">
+            <div class="content-wrapper">
+              <div class="content-title">
+                <p :class="{ disabled: localObjectSettings.strokeWidth === 0 }">
+                  {{ $t('tools.shape.settings.lineArrow.start.label') }}
+                </p>
+              </div>
+              <DropdownSelect v-model="localObjectSettings.lineArrowStart" :options="lineArrowOptions"
+                @update="applyLocalSettings" :tip="$t('tools.shape.settings.lineArrow.start.tip')"
+                position="bottom-left" />
+            </div>
+            <div class="content-wrapper">
+              <div class="content-title">
+                <p :class="{ disabled: localObjectSettings.strokeWidth === 0 }">
+                  {{ $t('tools.shape.settings.lineArrow.end.label') }}
+                </p>
+              </div>
+              <DropdownSelect v-model="localObjectSettings.lineArrowEnd" :options="lineArrowOptions"
+                @update="applyLocalSettings" :tip="$t('tools.shape.settings.lineArrow.end.tip')"
+                position="bottom-left" />
+            </div>
           </div>
         </div>
 
