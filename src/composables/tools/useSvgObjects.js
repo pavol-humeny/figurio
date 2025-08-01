@@ -389,18 +389,18 @@ export function useSvgObjects(imageStore, historyStore, viewportStore, editorSto
     }
 
     if (objectType === 'rect') {
-      attrs.x = Math.min(x, drawingStart.value.x)
-      attrs.y = Math.min(y, drawingStart.value.y)
-      attrs.width = Math.abs(dx)
-      attrs.height = Math.abs(dy)
+      attrs.x = round(Math.min(x, drawingStart.value.x))
+      attrs.y = round(Math.min(y, drawingStart.value.y))
+      attrs.width = round(Math.abs(dx))
+      attrs.height = round(Math.abs(dy))
     } else if (objectType === 'ellipse') {
-      attrs.cx = (x + drawingStart.value.x) / 2
-      attrs.cy = (y + drawingStart.value.y) / 2
-      attrs.rx = Math.abs(dx) / 2
-      attrs.ry = Math.abs(dy) / 2
+      attrs.cx = round((x + drawingStart.value.x) / 2)
+      attrs.cy = round((y + drawingStart.value.y) / 2)
+      attrs.rx = round(Math.abs(dx) / 2)
+      attrs.ry = round(Math.abs(dy) / 2)
     } else if (objectType === 'line') {
-      attrs.x2 = x
-      attrs.y2 = y
+      attrs.x2 = round(x)
+      attrs.y2 = round(y)
     }
   }
 
