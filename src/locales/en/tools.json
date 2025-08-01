@@ -232,42 +232,73 @@
     },
     "settings": {
       "rectangle": {
-        "label": "Rectangle",
-        "fillColor": {
-          "label": "Fill color"
-        },
-        "strokeEnabled": {
-          "label": "Stroke enabled"
-        },
-        "strokeColor": {
-          "label": "Stroke color"
-        },
-        "strokeWidth": {
-          "label": "Stroke width"
-        }
+        "label": "Rectangle"
       },
       "ellipse": {
-        "label": "Ellipse",
-        "fillColor": {
-          "label": "Fill color"
-        },
-        "strokeEnabled": {
-          "label": "Stroke enabled"
-        },
-        "strokeColor": {
-          "label": "Stroke color"
-        },
-        "strokeWidth": {
-          "label": "Stroke width"
-        }
+        "label": "Ellipse"
       },
       "line": {
-        "label": "Line",
-        "lineColor": {
-          "label": "Line color"
+        "label": "Line"
+      },
+      "general": {
+        "position":{
+          "label": "Position",
+          "x": "X",
+          "y": "Y"
+        }
+      },
+      "dimensions": {
+        "label": "Dimensions",
+        "width": "Width",
+        "height": "Height",
+        "tipLinked": "Unlink width and height",
+        "tipUnlinked": "Link width and height"
+      },
+      "rotation":{
+        "label": "Rotation",
+        "tip": "Adjust the rotation angle or double click icon to reset rotation"
+      },
+      "enableFillColor": {
+        "label": "Enable fill color",
+        "tip": "Enable or disable fill color for the shape"
+      },
+      "fillColor": {
+        "label": "Fill color",
+        "tip": "Select the fill color for the shape"
+      },
+      "lineWidth": {
+        "label": "Line width",
+        "tip": "Adjust the width of line"
+      },
+      "strokeColor": {
+        "label": "Stroke color",
+        "tip": "Select the stroke color for the shape"
+      },
+      "strokeWidth": {
+        "label": "Stroke width",
+        "tip": "Adjust the width of stroke"
+      },
+      "opacity": {
+        "label": "Opacity",
+        "tip": "Adjust the opacity of the shape or double click icon to reset opacity"
+      },
+      "cornerRadius": {
+        "label": "Corner radius",
+        "tip": "Adjust the corner radius of the shape or double click icon to reset corner radius"
+      },
+      "zIndex": {
+        "label": "Position in Z-axis",
+        "bringToFrontButton": {
+          "text": "Bring to front"
         },
-        "lineWidth": {
-          "label": "Line width"
+        "sendToBackButton": {
+          "text": "Send to back"
+        },
+        "moveForwardButton": {
+          "text": "Move forward"
+        },
+        "moveBackwardButton": {
+          "text": "Move backward"
         }
       }
     }
