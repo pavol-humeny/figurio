@@ -922,9 +922,35 @@ export const useImageStore = defineStore('imageStore', {
       pdf.addImage(image, 'PNG', offsetX, offsetY, image.width, image.height)
 
       // === 2. Add svg objects if any ===
+      // SVG <defs> for markers (arrows, circles, squares)
+      // UPDATE svg string
+      const svgDefsString = `
+          <defs>
+            <marker id="arrow-end" markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto" markerUnits="strokeWidth">
+              <path d="M0,0 L0,6 L6,3 z" fill="context-stroke" />
+            </marker>
+            <marker id="arrow-start" markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto-start-reverse" markerUnits="strokeWidth">
+              <path d="M0,0 L0,6 L6,3 z" fill="context-stroke" />
+            </marker>
+            <marker id="circle-end" markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto" markerUnits="strokeWidth">
+              <circle cx="3" cy="3" r="2" fill="context-stroke" />
+            </marker>
+            <marker id="circle-start" markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto" markerUnits="strokeWidth">
+              <circle cx="3" cy="3" r="2" fill="context-stroke" />
+            </marker>
+            <marker id="square-end" markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto" markerUnits="strokeWidth">
+              <rect x="1.5" y="1.5" width="3" height="3" fill="context-stroke" />
+            </marker>
+            <marker id="square-start" markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto" markerUnits="strokeWidth">
+              <rect x="1.5" y="1.5" width="3" height="3" fill="context-stroke" />
+            </marker>
+          </defs>
+        `.trim()
+
       if (this.svgObjects.length > 0) {
         const svgString = `
           <svg xmlns="http://www.w3.org/2000/svg" width="${finalWidth}" height="${finalHeight}">
+          ${svgDefsString}
             <g transform="translate(${offsetX}, ${offsetY})">
               ${this.svgObjects
                 .map((obj) => {
@@ -1071,9 +1097,35 @@ export const useImageStore = defineStore('imageStore', {
       const usedWidth = width ?? this.fileDimensions.width
       const usedHeight = height ?? this.fileDimensions.height
 
+      // SVG <defs> for markers (arrows, circles, squares)
+      // UPDATE svg string
+      const svgDefsString = `
+          <defs>
+            <marker id="arrow-end" markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto" markerUnits="strokeWidth">
+              <path d="M0,0 L0,6 L6,3 z" fill="context-stroke" />
+            </marker>
+            <marker id="arrow-start" markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto-start-reverse" markerUnits="strokeWidth">
+              <path d="M0,0 L0,6 L6,3 z" fill="context-stroke" />
+            </marker>
+            <marker id="circle-end" markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto" markerUnits="strokeWidth">
+              <circle cx="3" cy="3" r="2" fill="context-stroke" />
+            </marker>
+            <marker id="circle-start" markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto" markerUnits="strokeWidth">
+              <circle cx="3" cy="3" r="2" fill="context-stroke" />
+            </marker>
+            <marker id="square-end" markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto" markerUnits="strokeWidth">
+              <rect x="1.5" y="1.5" width="3" height="3" fill="context-stroke" />
+            </marker>
+            <marker id="square-start" markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto" markerUnits="strokeWidth">
+              <rect x="1.5" y="1.5" width="3" height="3" fill="context-stroke" />
+            </marker>
+          </defs>
+        `.trim()
+
       // Create SVG markup from svgObjects
       const svgString = `
         <svg xmlns="http://www.w3.org/2000/svg" width="${usedWidth}" height="${usedHeight}">
+        ${svgDefsString}
           ${this.svgObjects
             .map((obj) => {
               const attrs = Object.entries(obj.attrs || {})

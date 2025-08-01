@@ -114,6 +114,7 @@ watch(
           :height="imageStore.fileDimensions.height" @mousedown="onMouseDownImageSvg" @click="OnClickImageSvg"
           :style="{ cursor: cursorOnSvgArea }">
           <!-- DEFS -->
+          <!-- // UPDATE svg string -->
           <defs>
             <!-- Arrows -->
             <marker id="arrow-end" markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto"
@@ -183,7 +184,7 @@ watch(
         </div>
         <div v-if="mouseX !== null" class="ruler-cursor-mark horizontal" :style="{ left: mouseX + 'px' }">
           <span class="ruler-cursor-label horizontal" :class="{ 'active': cursorPosXSameAsImageWidth }">{{ cursorPosX
-            }}</span>
+          }}</span>
         </div>
 
       </div>
@@ -196,7 +197,7 @@ watch(
         </div>
         <div v-if="mouseY !== null" class="ruler-cursor-mark vertical" :style="{ top: mouseY + 'px' }">
           <span class="ruler-cursor-label vertical" :class="{ 'active': cursorPosYSameAsImageHeight }">{{ cursorPosY
-            }}</span>
+          }}</span>
         </div>
       </div>
     </div>
