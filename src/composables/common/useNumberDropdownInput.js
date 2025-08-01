@@ -24,6 +24,11 @@ export function useNumberDropdownInput(props, emit) {
   const { clamp } = useMath()
 
   /**
+   * Reference to the wrapper element for click outside detection
+   */
+  const wrapperRef = ref(null)
+
+  /**
    * Internal reactive value bound to the input
    */
   const inputValue = ref(props.modelValue.toString())
@@ -66,6 +71,7 @@ export function useNumberDropdownInput(props, emit) {
       inputValue.value = clamped.toString()
       emit('update:modelValue', clamped)
       emit('update', clamped)
+      showDropdown.value = false
     } else {
       // fallback: reset to last valid value
       inputValue.value = props.modelValue.toString()
@@ -100,9 +106,13 @@ export function useNumberDropdownInput(props, emit) {
     inputValue.value = newValue
   }
 
+  /**
+   * Hide the dropdown when clicking outside the component
+   * @param {MouseEvent} event - Click event
+   */
   const onClickOutside = (event) => {
-    const el = inputRef.value
-    if (el && !el.contains(event.target)) {
+    const wrapper = wrapperRef.value
+    if (wrapper && !wrapper.contains(event.target)) {
       showDropdown.value = false
     }
   }
@@ -124,5 +134,6 @@ export function useNumberDropdownInput(props, emit) {
     toggleDropdown,
     setValue,
     onCommit,
+    wrapperRef,
   }
 }

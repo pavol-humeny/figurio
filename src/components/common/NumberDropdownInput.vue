@@ -76,7 +76,8 @@ const { inputValue,
   onSelect,
   toggleDropdown,
   setValue,
-  onCommit
+  onCommit,
+  wrapperRef
 } = useNumberDropdownInput(props, emit)
 
 
@@ -89,10 +90,10 @@ defineExpose({ setValue })
 
 <template>
   <ItemTip :text="props.tip" :position="props.position">
-    <div class="combo-wrapper">
+    <div class="number-dropdown-wrapper" ref="wrapperRef">
       <BaseIcon v-if="props.icon" :name="props.icon" :size="props.size" :color="props.color" class="input-icon" />
 
-      <input ref="inputRef" class="combo-input" type="number" :disabled="props.disabled" :min="props.min"
+      <input ref="inputRef" class="text-input" type="number" :disabled="props.disabled" :min="props.min"
         :max="props.max" :step="props.step" v-model="inputValue" @input="onInput" @blur="onCommit"
         @keydown.enter="onCommit" />
 
@@ -110,13 +111,13 @@ defineExpose({ setValue })
 </template>
 
 <style scoped>
-.combo-wrapper {
+.number-dropdown-wrapper {
   position: relative;
   display: inline-block;
   width: 80px;
 }
 
-.combo-input {
+.text-input {
   width: 100%;
   padding: 7px 25px 7px 10px;
   border-radius: 10px;
@@ -126,7 +127,7 @@ defineExpose({ setValue })
   text-align: center;
 }
 
-.combo-input:disabled {
+.text-input:disabled {
   opacity: 0.5;
   pointer-events: none;
 }
@@ -161,7 +162,7 @@ defineExpose({ setValue })
   padding: 0;
   border-radius: 10px;
   overflow-y: auto;
-  max-height: 140px; 
+  max-height: 140px;
   box-shadow: var(--box-shadow-ui);
   z-index: 10;
 }
