@@ -1155,7 +1155,6 @@ export function useSvgObjectWrapper(
       const verticalOverlap = !(bottom < t.top || top > t.bottom)
       const horizontalOverlap = !(right < t.left || left > t.right)
 
-      // TODO
       if (verticalOverlap && editorConfig.snapOnlyWhenOverlapping) {
         if (Math.abs(left - t.left) < threshold) {
           dx = t.left - left
@@ -1305,6 +1304,10 @@ export function useSvgObjectWrapper(
       fontSize: object.value.attrs['font-size'],
       fontFamily: object.value.attrs['font-family'],
       fill: object.value.attrs.fill,
+      fontWeight: object.value.attrs['font-weight'],
+      fontStyle: object.value.attrs['font-style'],
+      textDecoration: object.value.attrs['text-decoration'],
+      letterSpacing: object.value.attrs['letter-spacing'],
     }),
     () => {
       nextTick(() => {

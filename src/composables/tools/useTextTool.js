@@ -9,6 +9,11 @@ const localTextSettings = ref({
   color: '#000000',
   fontFamily: 'Arial',
   rotation: 0,
+  opacity: 1,
+  letterSpacing: 0,
+  bold: false,
+  italic: false,
+  underline: false,
 })
 
 /**
@@ -27,19 +32,35 @@ export function useTextTool(imageStore, historyStore, editorStore, t) {
     { label: 'Georgia', value: 'Georgia' },
     { label: 'Times New Roman', value: 'Times New Roman' },
     { label: 'Verdana', value: 'Verdana' },
+    { label: 'Tahoma', value: 'Tahoma' },
+    { label: 'Impact', value: 'Impact' },
+    { label: 'Comic Sans MS', value: 'Comic Sans MS' },
+
+    { label: 'Trebuchet MS', value: 'Trebuchet MS' },
+    { label: 'Palatino Linotype', value: 'Palatino Linotype' },
+    { label: 'Lucida Console', value: 'Lucida Console' },
+    { label: 'Lucida Sans Unicode', value: 'Lucida Sans Unicode' },
+    { label: 'Segoe UI', value: 'Segoe UI' },
+    { label: 'Gill Sans', value: 'Gill Sans' },
+    { label: 'Calibri', value: 'Calibri' }, 
+    { label: 'Cambria', value: 'Cambria' },
   ]
 
   /**
    * Reset local settings to defaults
    */
   const resetTextSettings = () => {
-    localTextSettings.value = {
-      text: '',
-      size: 16,
-      color: '#000000',
-      fontFamily: 'Arial',
-      rotation: 0,
-    }
+    localTextSettings.value.text = ''
+    localTextSettings.value.size = 16
+    localTextSettings.value.color = '#000000'
+    localTextSettings.value.fontFamily = 'Arial'
+    localTextSettings.value.rotation = 0
+    localTextSettings.value.opacity = 1
+    localTextSettings.value.letterSpacing = 0
+    localTextSettings.value.bold = false
+    localTextSettings.value.italic = false
+    localTextSettings.value.underline = false
+
     activeObject.value = null
   }
 
@@ -64,6 +85,19 @@ export function useTextTool(imageStore, historyStore, editorStore, t) {
           localTextSettings.value.rotation = attrs.transform
             ? parseFloat(attrs.transform.match(/rotate\(([^)]+)\)/)?.[1]) || 0
             : 0
+
+          // Opacity
+          localTextSettings.value.opacity = attrs.opacity !== undefined ? attrs.opacity : 1
+
+          // Letter spacing
+          localTextSettings.value.letterSpacing = attrs['letter-spacing']
+            ? parseFloat(attrs['letter-spacing'])
+            : 1
+
+          // Bold, italic, underline
+          localTextSettings.value.bold = attrs['font-weight'] === 'bold'
+          localTextSettings.value.italic = attrs['font-style'] === 'italic'
+          localTextSettings.value.underline = attrs['text-decoration'] === 'underline'
         } else {
           resetTextSettings()
         }
@@ -90,27 +124,48 @@ export function useTextTool(imageStore, historyStore, editorStore, t) {
   })
 
   /**
-   * Reset the rotation angle of the shape object
-   */
-  const resetRotationAngle = () => {
-    localTextSettings.value.rotation = 0
-    applyLocalTextSettings()
-  }
-
-  /**
    * Apply current local settings to the selected text object
    */
   const applyLocalTextSettings = () => {
     const object = activeObject.value
+
     if (!object || object.tag !== 'text') return
 
-    const s = localTextSettings.value
-    object.content = s.text
-    object.attrs['font-size'] = `${s.size}px`
-    object.attrs.fill = s.color
-    object.attrs['font-family'] = s.fontFamily
+    const { attrs } = object
+    const settings = localTextSettings.value
 
-    object.attrs.transform = `rotate(${s.rotation}, ${object.textBBox.x + object.textBBox.width / 2}, ${object.textBBox.y + object.textBBox.height / 2})`
+    // Content
+    object.content = settings.text
+
+    // Size
+    attrs['font-size'] = `${settings.size}px`
+
+    // Color
+    attrs.fill = settings.color
+
+    // Font family
+    attrs['font-family'] = settings.fontFamily
+
+    // Rotation
+    attrs.transform = `rotate(${settings.rotation}, ${object.textBBox.x + object.textBBox.width / 2}, ${object.textBBox.y + object.textBBox.height / 2})`
+
+    // Opacity
+    attrs.opacity = settings.opacity
+
+    // Letter spacing
+    attrs['letter-spacing'] = `${settings.letterSpacing}px`
+
+    // Bold, italic, underline
+    attrs['font-weight'] = settings.bold ? 'bold' : 'normal'
+    attrs['font-style'] = settings.italic ? 'italic' : 'normal'
+    attrs['text-decoration'] = settings.underline ? 'underline' : 'none'
+
+    attrs.style = `
+      font-weight: ${settings.bold ? 'bold' : 'normal'};
+      font-style: ${settings.italic ? 'italic' : 'normal'};
+      text-decoration: ${settings.underline ? 'underline' : 'none'};
+      letter-spacing: ${settings.letterSpacing}px;
+    `
 
     historyStore.push(imageStore.getSnapshot(t))
   }
@@ -138,11 +193,71 @@ export function useTextTool(imageStore, historyStore, editorStore, t) {
         fill: localTextSettings.value.color,
         'font-family': localTextSettings.value.fontFamily,
         transform: 'rotate(0, 0, 0)',
+        opacity: localTextSettings.value.opacity,
+        'letter-spacing': `${localTextSettings.value.letterSpacing}px`,
+        'font-weight': localTextSettings.value.bold ? 'bold' : 'normal',
+        'font-style': localTextSettings.value.italic ? 'italic' : 'normal',
+        'text-decoration': localTextSettings.value.underline ? 'underline' : 'none',
+
+        style: `
+          font-weight: ${localTextSettings.value.bold ? 'bold' : 'normal'};
+          font-style: ${localTextSettings.value.italic ? 'italic' : 'normal'};
+          text-decoration: ${localTextSettings.value.underline ? 'underline' : 'none'};
+          letter-spacing: ${localTextSettings.value.letterSpacing}px;
+        `,
       },
     })
 
     imageStore.selectedSvgObjectId = id
     historyStore.push(imageStore.getSnapshot(t))
+  }
+
+  /**
+   * Reset the opacity of the text object
+   */
+  const resetOpacity = () => {
+    localTextSettings.value.opacity = 1
+    applyLocalTextSettings()
+  }
+
+  /**
+   * Reset the rotation angle of the shape object
+   */
+  const resetRotationAngle = () => {
+    localTextSettings.value.rotation = 0
+    applyLocalTextSettings()
+  }
+
+  /**
+   * Reset the letter spacing of the text object
+   */
+  const resetLetterSpacing = () => {
+    localTextSettings.value.letterSpacing = 0
+    applyLocalTextSettings()
+  }
+
+  /**
+   * Toggle bold style for the text object
+   */
+  const setBoldStyle = () => {
+    localTextSettings.value.bold = !localTextSettings.value.bold
+    applyLocalTextSettings()
+  }
+
+  /**
+   * Toggle italic style for the text object
+   */
+  const setItalicStyle = () => {
+    localTextSettings.value.italic = !localTextSettings.value.italic
+    applyLocalTextSettings()
+  }
+
+  /**
+   * Toggle underline style for the text object
+   */
+  const setUnderlineStyle = () => {
+    localTextSettings.value.underline = !localTextSettings.value.underline
+    applyLocalTextSettings()
   }
 
   return {
@@ -153,5 +268,10 @@ export function useTextTool(imageStore, historyStore, editorStore, t) {
     applyLocalTextSettings,
     addTextObject,
     resetRotationAngle,
+    resetOpacity,
+    resetLetterSpacing,
+    setBoldStyle,
+    setItalicStyle,
+    setUnderlineStyle,
   }
 }
