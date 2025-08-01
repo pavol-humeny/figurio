@@ -10,10 +10,13 @@ import LinkValuesIcon from '../common/LinkValuesIcon.vue';
 import ToggleButton from '../common/ToggleButton.vue';
 import { useHistoryStore } from '@/stores/historyStore';
 import { useI18n } from 'vue-i18n'
+import DefaultButton from '../common/DefaultButton.vue';
+import { useSvgObjects } from '@/composables/tools/useSvgObjects';
+import { useViewportStore } from '@/stores/viewportStore';
 
 const { t } = useI18n()
-
 const editorStore = useEditorStore();
+const imageStore = useImageStore();
 
 /**
  * Available tabs for blur tool settings
@@ -35,8 +38,17 @@ const {
   tmpShapeWidth,
   hidePositionAndDimensions,
   resetRotationAngle,
+  resetOpacity,
+  resetCornerRadius,
 } = useShapeTool(useEditorStore(), useImageStore(), useHistoryStore(), t)
 
+
+const {
+  moveSelectedSvgObjectForward,
+  moveSelectedSvgObjectBackward,
+  sendSelectedSvgObjectToBack,
+  bringSelectedSvgObjectToFront,
+} = useSvgObjects(useImageStore(), useHistoryStore(), useViewportStore(), useEditorStore(), t);
 </script>
 
 <template>
@@ -190,6 +202,53 @@ const {
             </div>
           </div>
 
+        </div>
+
+        <!-- Opacity -->
+        <div class="settings-content-wrapper">
+          <div class="content-wrapper">
+            <div class="content-title">
+              <p :class="{ disabled: localObjectSettings.strokeWidth === 0 }">
+                Opacity
+              </p>
+            </div>
+            <NumberInput v-model="localObjectSettings.opacity" :min="0.1" :max="1" :step="0.1"
+              @update="applyLocalSettings" icon="IconOpacity" :color="'var(--primary-c)'" :size="20"
+              :onReset="resetOpacity" :disabled="!localObjectSettings.fillEnabled"
+              tip="Set opacity or double click for reset" position="bottom-left" />
+          </div>
+        </div>
+
+        <!-- Corner radius -->
+        <div v-if="localObjectSettings.type === 'rectangle' || localObjectSettings.type === 'rect'"
+          class="settings-content-wrapper">
+          <div class="content-wrapper">
+            <div class="content-title">
+              <p :class="{ disabled: localObjectSettings.strokeWidth === 0 }">
+                Corner Radius
+              </p>
+            </div>
+            <NumberInput v-model="localObjectSettings.cornerRadius" :min="0" :step="1" @update="applyLocalSettings"
+              icon="IconCornerRadius" :color="'var(--primary-c)'" :size="20" :onReset="resetCornerRadius"
+              tip="Set corner radius or double click for reset" position="bottom-left" />
+          </div>
+        </div>
+
+        <!-- Z-index -->
+        <div v-if="!hidePositionAndDimensions" class="settings-content-wrapper">
+          <div class="content-wrapper">
+            <DefaultButton text="Bring to front" @click="bringSelectedSvgObjectToFront"
+              :disabled="imageStore.isMaxZIndexOfSelectedSvgObject()" />
+
+            <DefaultButton text="Move forward" @click="moveSelectedSvgObjectForward"
+              :disabled="imageStore.isMaxZIndexOfSelectedSvgObject()" />
+
+            <DefaultButton text="Move backward" @click="moveSelectedSvgObjectBackward"
+              :disabled="imageStore.isMinZIndexOfSelectedSvgObject()" />
+
+            <DefaultButton text="Send to back" @click="sendSelectedSvgObjectToBack"
+              :disabled="imageStore.isMinZIndexOfSelectedSvgObject()" />
+          </div>
         </div>
 
 

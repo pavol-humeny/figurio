@@ -12,6 +12,8 @@ const localObjectSettings = ref({
   x: 0, // Default x position
   y: 0, // Default y position
   rotation: 0, // Default rotation angle
+  opacity: 1, // Default opacity
+  cornerRadius: 0, // Default corner radius for rectangles
 })
 
 const activeObject = ref(null)
@@ -31,7 +33,8 @@ export function useShapeTool(editorStore, imageStore, historyStore, t) {
     localObjectSettings.value.x = 0
     localObjectSettings.value.y = 0
     localObjectSettings.value.rotation = 0
-
+    localObjectSettings.value.opacity = 1
+    localObjectSettings.value.cornerRadius = 0
     activeObject.value = null
   }
 
@@ -165,6 +168,16 @@ export function useShapeTool(editorStore, imageStore, historyStore, t) {
           localObjectSettings.value.rotation = attrs.transform
             ? parseFloat(attrs.transform.match(/rotate\(([^)]+)\)/)?.[1]) || 0
             : 0
+
+          // Opacity
+          localObjectSettings.value.opacity = attrs.opacity !== undefined ? attrs.opacity : 1
+
+          // Corner radius for rectangles
+          if (tag === 'rect') {
+            localObjectSettings.value.cornerRadius = attrs.rx || 0 // Use rx as corner radius if available
+          } else {
+            localObjectSettings.value.cornerRadius = 0 // Reset for other shapes
+          }
         }
       } else {
         hidePositionAndDimensions.value = true
@@ -200,16 +213,16 @@ export function useShapeTool(editorStore, imageStore, historyStore, t) {
       localObjectSettings.value.height = attrs.y2 - attrs.y1
     }
 
-    // Fill and stroke settings
-    localObjectSettings.value.fillEnabled = attrs.fill !== 'none'
-    if (localObjectSettings.value.fillEnabled) {
-      localObjectSettings.value.fillColor = attrs.fill
-    }
+    // // Fill and stroke settings
+    // localObjectSettings.value.fillEnabled = attrs.fill !== 'none'
+    // if (localObjectSettings.value.fillEnabled) {
+    //   localObjectSettings.value.fillColor = attrs.fill
+    // }
 
-    if (attrs['stroke-width'] > 0) {
-      localObjectSettings.value.strokeColor = attrs.stroke
-      localObjectSettings.value.strokeWidth = attrs['stroke-width']
-    }
+    // if (attrs['stroke-width'] > 0) {
+    //   localObjectSettings.value.strokeColor = attrs.stroke
+    //   localObjectSettings.value.strokeWidth = attrs['stroke-width']
+    // }
 
     // Rotation angle
     localObjectSettings.value.rotation = attrs.transform
@@ -263,6 +276,16 @@ export function useShapeTool(editorStore, imageStore, historyStore, t) {
 
     // Rotation angle
     attrs.transform = `rotate(${settings.rotation}, ${settings.x + settings.width / 2}, ${settings.y + settings.height / 2})`
+
+    // Opacity
+    attrs.opacity = settings.opacity
+
+    // Corner radius for rectangles
+    if (tag === 'rect') {
+      attrs.rx = settings.cornerRadius
+    } else {
+      attrs.rx = 0 // Reset for other shapes
+    }
 
     historyStore.push(imageStore.getSnapshot(t))
   }
@@ -336,6 +359,22 @@ export function useShapeTool(editorStore, imageStore, historyStore, t) {
     applyLocalSettings()
   }
 
+  /**
+   * Reset the opacity of the shape object
+   */
+  const resetOpacity = () => {
+    localObjectSettings.value.opacity = 1
+    applyLocalSettings()
+  }
+
+  /**
+   * Reset the corner radius of the rectangle object
+   */
+  const resetCornerRadius = () => {
+    localObjectSettings.value.cornerRadius = 0
+    applyLocalSettings()
+  }
+
   return {
     localObjectSettings,
     resetObjectSettings,
@@ -353,5 +392,7 @@ export function useShapeTool(editorStore, imageStore, historyStore, t) {
     tmpShapeWidth,
     hidePositionAndDimensions,
     resetRotationAngle,
+    resetOpacity,
+    resetCornerRadius,
   }
 }

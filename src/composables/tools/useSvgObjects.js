@@ -143,6 +143,19 @@ export function useSvgObjects(imageStore, historyStore, viewportStore, editorSto
   }
 
   /**
+   * Bring the selected SVG object to front
+   */
+  const bringSelectedSvgObjectToFront = (t) => {
+    if (imageStore.selectedSvgObjectId === null) return
+    const i = imageStore.getIndexOfSelectedSvgObject()
+    if (i !== -1 && i < imageStore.svgObjects.length - 1) {
+      const obj = imageStore.svgObjects.splice(i, 1)[0]
+      imageStore.svgObjects.push(obj)
+      historyStore.push(imageStore.getSnapshot(t))
+    }
+  }
+
+  /**
    * Move the selected SVG object forward
    */
   const moveSelectedSvgObjectForward = (t) => {
@@ -152,9 +165,8 @@ export function useSvgObjects(imageStore, historyStore, viewportStore, editorSto
       const temp = imageStore.svgObjects[i]
       imageStore.svgObjects[i] = imageStore.svgObjects[i + 1]
       imageStore.svgObjects[i + 1] = temp
+      historyStore.push(imageStore.getSnapshot(t))
     }
-
-    historyStore.push(imageStore.getSnapshot(t))
   }
 
   /**
@@ -167,9 +179,21 @@ export function useSvgObjects(imageStore, historyStore, viewportStore, editorSto
       const temp = imageStore.svgObjects[i]
       imageStore.svgObjects[i] = imageStore.svgObjects[i - 1]
       imageStore.svgObjects[i - 1] = temp
+      historyStore.push(imageStore.getSnapshot(t))
     }
+  }
 
-    historyStore.push(imageStore.getSnapshot(t))
+  /**
+   * Send the selected SVG object to back
+   */
+  const sendSelectedSvgObjectToBack = (t) => {
+    if (imageStore.selectedSvgObjectId === null) return
+    const i = imageStore.getIndexOfSelectedSvgObject()
+    if (i !== -1 && i > 0) {
+      const obj = imageStore.svgObjects.splice(i, 1)[0]
+      imageStore.svgObjects.unshift(obj)
+      historyStore.push(imageStore.getSnapshot(t))
+    }
   }
 
   /**
@@ -263,15 +287,20 @@ export function useSvgObjects(imageStore, historyStore, viewportStore, editorSto
     let objectFillColor = 'none'
     let objectStrokeColor
     let objectStrokeWidth
+    let objectOpacity = 1
+    let objectCornerRadius = 0
 
     if (objectClass === 'shape') {
-      const { fillEnabled, fillColor, strokeWidth, strokeColor } = shapeTool.getShapeAttributes()
+      const { fillEnabled, fillColor, strokeWidth, strokeColor, opacity, cornerRadius } =
+        shapeTool.getShapeAttributes()
 
       if (fillEnabled) {
         objectFillColor = fillColor
       }
       objectStrokeWidth = strokeWidth
       objectStrokeColor = strokeColor
+      objectOpacity = opacity
+      objectCornerRadius = cornerRadius
     } else if (objectClass === 'blur') {
       objectFillColor = '#ff0000'
     }
@@ -292,6 +321,10 @@ export function useSvgObjects(imageStore, historyStore, viewportStore, editorSto
         base.attrs['stroke-width'] = objectStrokeWidth
         base.attrs.stroke = objectStrokeColor
       }
+      base.attrs.opacity = objectOpacity
+      if (objectCornerRadius > 0) {
+        base.attrs.rx = objectCornerRadius
+      }
     } else if (objectType === 'ellipse') {
       base.attrs = { cx: x, cy: y, rx: 1, ry: 1 }
       base.attrs.fill = objectFillColor
@@ -299,10 +332,12 @@ export function useSvgObjects(imageStore, historyStore, viewportStore, editorSto
         base.attrs['stroke-width'] = objectStrokeWidth
         base.attrs.stroke = objectStrokeColor
       }
+      base.attrs.opacity = objectOpacity
     } else if (objectType === 'line') {
       base.attrs = { x1: x, y1: y, x2: x, y2: y }
       base.attrs['stroke-width'] = objectStrokeWidth
       base.attrs.stroke = objectStrokeColor
+      base.attrs.opacity = objectOpacity
     }
 
     currentDrawingObject.value = base
@@ -593,6 +628,8 @@ export function useSvgObjects(imageStore, historyStore, viewportStore, editorSto
     deleteSelectedSvgObject,
     moveSelectedSvgObjectForward,
     moveSelectedSvgObjectBackward,
+    sendSelectedSvgObjectToBack,
+    bringSelectedSvgObjectToFront,
     selectedObjectInfo,
     OnClickImageSvg,
     cursorOnSvgArea,

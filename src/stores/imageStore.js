@@ -98,6 +98,7 @@ export const useImageStore = defineStore('imageStore', {
           width: 200,
           height: 100,
           fill: '#ff0000',
+          rx: 12,
           stroke: '#000000',
           'stroke-width': 2,
           // transform: 'rotate(45, 150, 90)'
@@ -1298,6 +1299,30 @@ export const useImageStore = defineStore('imageStore', {
      */
     getIndexOfSelectedSvgObject() {
       return this.svgObjects.findIndex((obj) => obj.id === this.selectedSvgObjectId)
+    },
+
+    /**
+     * Checks if the currently selected SVG object has the highest z-index
+     * @returns {boolean} - True if the selected SVG object is the one with the highest z-index
+     */
+    isMaxZIndexOfSelectedSvgObject() {
+      const index = this.getIndexOfSelectedSvgObject()
+      if (index !== null) {
+        return index === this.svgObjects.length - 1
+      }
+      return false
+    },
+
+    /**
+     * Checks if the currently selected SVG object has the lowest z-index
+     * @returns {boolean} - True if the selected SVG object is the one with the lowest z-index
+     */
+    isMinZIndexOfSelectedSvgObject() {
+      const index = this.getIndexOfSelectedSvgObject()
+      if (index !== null) {
+        return index === 0
+      }
+      return false
     },
 
     // --------------------------------
