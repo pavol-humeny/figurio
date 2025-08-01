@@ -365,6 +365,18 @@ export function useSvgObjectWrapper(
   }
 
   /**
+   * Normalize angle to the range [-180, 180]
+   * @param {number} angle - Angle in degrees
+   * @returns {number}
+   */
+  const normalizeAngle = (angle) => {
+    let a = angle % 360
+    if (a > 180) a -= 360
+    if (a < -180) a += 360
+    return a
+  }
+
+  /**
    * Mouse move handler for dragging the SVG object
    * @param {MouseEvent} event - Mouse event
    */
@@ -417,12 +429,13 @@ export function useSvgObjectWrapper(
       if (angleDelta < -180) angleDelta += 360
 
       let finalAngle = round(originalAngle.value + angleDelta * rotationSensitivity.value, 1)
+      finalAngle = normalizeAngle(finalAngle)
 
       // Snap to closest multiple of 45° if Ctrl/Meta is held
       if (isCtrlKey && onlyOneKeyPressed) {
         const snapped = Math.round(finalAngle / 45) * 45
         if (Math.abs(finalAngle - snapped) <= angleSnapTolerance.value) {
-          finalAngle = snapped
+          finalAngle = normalizeAngle(snapped)
 
           // Set guide line to the snapped angle
           viewportStore.guideLine = {
