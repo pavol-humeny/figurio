@@ -1,4 +1,4 @@
-import { ref, watch } from 'vue'
+import { ref, watch, watchEffect } from 'vue'
 
 /**
  * Local editable settings for text tool
@@ -8,6 +8,7 @@ const localTextSettings = ref({
   size: 16,
   color: '#000000',
   fontFamily: 'Arial',
+  rotation: 0,
 })
 
 /**
@@ -16,7 +17,7 @@ const localTextSettings = ref({
  * @param {Object} historyStore - History store
  * @param {Function} t - Translation function
  */
-export function useTextTool(imageStore, historyStore, t) {
+export function useTextTool(imageStore, historyStore, editorStore, t) {
   const activeObject = ref(null)
 
   const textSizeOptions = [8, 10, 12, 14, 16, 18, 20, 24, 28, 32, 36, 40, 48, 56, 64, 72]
@@ -37,6 +38,7 @@ export function useTextTool(imageStore, historyStore, t) {
       size: 16,
       color: '#000000',
       fontFamily: 'Arial',
+      rotation: 0,
     }
     activeObject.value = null
   }
@@ -57,6 +59,11 @@ export function useTextTool(imageStore, historyStore, t) {
           localTextSettings.value.size = parseInt(attrs['font-size']) || 16
           localTextSettings.value.color = attrs.fill || '#000000'
           localTextSettings.value.fontFamily = attrs['font-family'] || 'Arial'
+
+          // Rotation angle
+          localTextSettings.value.rotation = attrs.transform
+            ? parseFloat(attrs.transform.match(/rotate\(([^)]+)\)/)?.[1]) || 0
+            : 0
         } else {
           resetTextSettings()
         }
@@ -66,6 +73,29 @@ export function useTextTool(imageStore, historyStore, t) {
     },
     { immediate: true },
   )
+
+  /**
+   * Update the localTextSettings when activeObject changes outside this composable
+   */
+  watchEffect(() => {
+    const object = activeObject.value
+    if (!object || editorStore.selectedToolKey !== 'text') return
+
+    const { attrs } = object
+
+    // Rotation angle
+    localTextSettings.value.rotation = attrs.transform
+      ? parseFloat(attrs.transform.match(/rotate\(([^)]+)\)/)?.[1]) || 0
+      : 0
+  })
+
+  /**
+   * Reset the rotation angle of the shape object
+   */
+  const resetRotationAngle = () => {
+    localTextSettings.value.rotation = 0
+    applyLocalTextSettings()
+  }
 
   /**
    * Apply current local settings to the selected text object
@@ -79,6 +109,8 @@ export function useTextTool(imageStore, historyStore, t) {
     object.attrs['font-size'] = `${s.size}px`
     object.attrs.fill = s.color
     object.attrs['font-family'] = s.fontFamily
+
+    object.attrs.transform = `rotate(${s.rotation}, ${object.textBBox.x + object.textBBox.width / 2}, ${object.textBBox.y + object.textBBox.height / 2})`
 
     historyStore.push(imageStore.getSnapshot(t))
   }
@@ -120,5 +152,6 @@ export function useTextTool(imageStore, historyStore, t) {
     resetTextSettings,
     applyLocalTextSettings,
     addTextObject,
+    resetRotationAngle,
   }
 }
