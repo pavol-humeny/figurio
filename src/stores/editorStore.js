@@ -19,6 +19,9 @@ export const useEditorStore = defineStore('editorStore', {
 
     /** Whether any SVG object is selected */
     isSvgObjectSelected: false,
+
+    /** Whether any SVG object is currently being resized */
+    isSvgObjectResizing: false,
   }),
   actions: {
     /**

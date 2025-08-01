@@ -190,7 +190,9 @@ export function useSvgObjectWrapper(
   watch(
     () => showResizers.value,
     (newValue) => {
-      const { attrs } = object.value
+      editorStore.isSvgObjectResizing = showResizers.value
+
+      const { attrs, tag } = object.value
       if (object.value.tag !== 'line') {
         if (newValue) {
           // Save and reset rotate
@@ -198,15 +200,42 @@ export function useSvgObjectWrapper(
           const match = transform.match(/rotate\(([-\d.]+),\s*([-\d.]+),\s*([-\d.]+)\)/)
           tmpAngle.value = match ? parseFloat(match[1]) : 0
 
-          const cx = attrs.x + (attrs.width || 0) / 2
-          const cy = attrs.y + (attrs.height || 0) / 2
+          let cx
+          let cy
+          if (tag === 'rect') {
+            cx = attrs.x + (attrs.width || 0) / 2
+            cy = attrs.y + (attrs.height || 0) / 2
+          } else if (tag === 'ellipse') {
+            cx = attrs.cx
+            cy = attrs.cy
+          } else if (tag === 'text' && object.value.textBBox) {
+            cx = object.value.textBBox.x + object.value.textBBox.width / 2
+            cy = object.value.textBBox.y + object.value.textBBox.height / 2
+          } else if (tag === 'line') {
+            cx = (attrs.x1 + attrs.x2) / 2
+            cy = (attrs.y1 + attrs.y2) / 2
+          }
 
           object.value.attrs.transform = `rotate(${0}, ${cx}, ${cy})`
         } else {
           // Restore rotation
           if (tmpAngle.value !== 0) {
-            const cx = attrs.x + (attrs.width || 0) / 2
-            const cy = attrs.y + (attrs.height || 0) / 2
+            let cx
+            let cy
+            if (tag === 'rect') {
+              cx = attrs.x + (attrs.width || 0) / 2
+              cy = attrs.y + (attrs.height || 0) / 2
+            } else if (tag === 'ellipse') {
+              cx = attrs.cx
+              cy = attrs.cy
+            } else if (tag === 'text' && object.value.textBBox) {
+              cx = object.value.textBBox.x + object.value.textBBox.width / 2
+              cy = object.value.textBBox.y + object.value.textBBox.height / 2
+            } else if (tag === 'line') {
+              cx = (attrs.x1 + attrs.x2) / 2
+              cy = (attrs.y1 + attrs.y2) / 2
+            }
+
             attrs.transform = `rotate(${tmpAngle.value}, ${cx}, ${cy})`
           }
         }

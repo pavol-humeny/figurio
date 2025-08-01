@@ -11,6 +11,7 @@ const localObjectSettings = ref({
   height: 0, // Default height
   x: 0, // Default x position
   y: 0, // Default y position
+  rotation: 0, // Default rotation angle
 })
 
 const activeObject = ref(null)
@@ -29,6 +30,7 @@ export function useShapeTool(editorStore, imageStore, historyStore, t) {
     localObjectSettings.value.height = 0
     localObjectSettings.value.x = 0
     localObjectSettings.value.y = 0
+    localObjectSettings.value.rotation = 0
 
     activeObject.value = null
   }
@@ -125,6 +127,7 @@ export function useShapeTool(editorStore, imageStore, historyStore, t) {
 
           console.log('localObjectSettings.value.type', localObjectSettings.value.type)
 
+          // Position and dimensions
           if (tag === 'rect') {
             localObjectSettings.value.x = attrs.x
             localObjectSettings.value.y = attrs.y
@@ -142,6 +145,7 @@ export function useShapeTool(editorStore, imageStore, historyStore, t) {
             localObjectSettings.value.height = attrs.y2 - attrs.y1
           }
 
+          // Fill and stroke settings
           localObjectSettings.value.fillEnabled = attrs.fill !== 'none'
           if (localObjectSettings.value.fillEnabled) {
             localObjectSettings.value.fillColor = attrs.fill
@@ -156,6 +160,11 @@ export function useShapeTool(editorStore, imageStore, historyStore, t) {
             localObjectSettings.value.strokeColor = '#000000'
             localObjectSettings.value.strokeWidth = 0
           }
+
+          // Rotation angle
+          localObjectSettings.value.rotation = attrs.transform
+            ? parseFloat(attrs.transform.match(/rotate\(([^)]+)\)/)?.[1]) || 0
+            : 0
         }
       } else {
         hidePositionAndDimensions.value = true
@@ -165,7 +174,7 @@ export function useShapeTool(editorStore, imageStore, historyStore, t) {
   )
 
   /**
-   * Update the localObjectSettings when activeObject changes
+   * Update the localObjectSettings when activeObject changes outside this composable
    */
   watchEffect(() => {
     const object = activeObject.value
@@ -173,6 +182,7 @@ export function useShapeTool(editorStore, imageStore, historyStore, t) {
 
     const { attrs, tag } = object
 
+    // Position and dimensions
     if (tag === 'rect') {
       localObjectSettings.value.x = attrs.x
       localObjectSettings.value.y = attrs.y
@@ -190,6 +200,7 @@ export function useShapeTool(editorStore, imageStore, historyStore, t) {
       localObjectSettings.value.height = attrs.y2 - attrs.y1
     }
 
+    // Fill and stroke settings
     localObjectSettings.value.fillEnabled = attrs.fill !== 'none'
     if (localObjectSettings.value.fillEnabled) {
       localObjectSettings.value.fillColor = attrs.fill
@@ -199,6 +210,11 @@ export function useShapeTool(editorStore, imageStore, historyStore, t) {
       localObjectSettings.value.strokeColor = attrs.stroke
       localObjectSettings.value.strokeWidth = attrs['stroke-width']
     }
+
+    // Rotation angle
+    localObjectSettings.value.rotation = attrs.transform
+      ? parseFloat(attrs.transform.match(/rotate\(([^)]+)\)/)?.[1]) || 0
+      : 0
   })
 
   /**
@@ -212,6 +228,7 @@ export function useShapeTool(editorStore, imageStore, historyStore, t) {
     const settings = localObjectSettings.value
     const { tag, attrs } = object
 
+    // Position and dimensions
     if (tag === 'rect') {
       attrs.x = settings.x
       attrs.y = settings.y
@@ -229,6 +246,7 @@ export function useShapeTool(editorStore, imageStore, historyStore, t) {
       attrs.y2 = settings.y + settings.height
     }
 
+    // Fill and stroke settings
     if (settings.fillEnabled) {
       attrs.fill = settings.fillColor
     } else {
@@ -242,6 +260,9 @@ export function useShapeTool(editorStore, imageStore, historyStore, t) {
       attrs['stroke-width'] = 0
       attrs.stroke = 'none'
     }
+
+    // Rotation angle
+    attrs.transform = `rotate(${settings.rotation}, ${settings.x + settings.width / 2}, ${settings.y + settings.height / 2})`
 
     historyStore.push(imageStore.getSnapshot(t))
   }
@@ -307,6 +328,14 @@ export function useShapeTool(editorStore, imageStore, historyStore, t) {
     applyLocalSettings()
   }
 
+  /**
+   * Reset the rotation angle of the shape object
+   */
+  const resetRotationAngle = () => {
+    localObjectSettings.value.rotation = 0
+    applyLocalSettings()
+  }
+
   return {
     localObjectSettings,
     resetObjectSettings,
@@ -323,5 +352,6 @@ export function useShapeTool(editorStore, imageStore, historyStore, t) {
     tmpShapeHeight,
     tmpShapeWidth,
     hidePositionAndDimensions,
+    resetRotationAngle,
   }
 }

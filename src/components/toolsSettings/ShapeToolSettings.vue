@@ -13,6 +13,8 @@ import { useI18n } from 'vue-i18n'
 
 const { t } = useI18n()
 
+const editorStore = useEditorStore();
+
 /**
  * Available tabs for blur tool settings
  */
@@ -31,7 +33,8 @@ const {
   isDimensionsLinked,
   tmpShapeHeight,
   tmpShapeWidth,
-  hidePositionAndDimensions
+  hidePositionAndDimensions,
+  resetRotationAngle,
 } = useShapeTool(useEditorStore(), useImageStore(), useHistoryStore(), t)
 
 </script>
@@ -100,6 +103,19 @@ const {
                 <NumberInput ref="heightInputRef" v-model="tmpShapeHeight" :min="1" :max="maxShapeHeight"
                   @update="(val) => updateDimension('height', val)" unit="px" />
               </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Rotation -->
+        <div v-if="!hidePositionAndDimensions && !editorStore.isSvgObjectResizing" class="settings-content-wrapper">
+          <div class="content-wrapper">
+            <div class="content-title">
+              <p>Rotation</p>
+            </div>
+            <div class="content-inputs">
+              <NumberInput v-model="localObjectSettings.rotation" :min="-180" :max="180" @update="applyLocalSettings"
+                unit="°" icon="IconAngle" :color="'var(--primary-c)'" :iconTop="40" :onReset="resetRotationAngle" />
             </div>
           </div>
         </div>
