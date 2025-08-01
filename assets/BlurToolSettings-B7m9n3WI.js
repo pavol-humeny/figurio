@@ -1,0 +1,1 @@
+import{T as e}from"./ToolsSettingsTabs-CWBSUzE0.js";import{l as o,d as a,j as n,e as r}from"./index-BDxMDgMl.js";const l={class:"tool-settings"},_={__name:"BlurToolSettings",setup(c){const s=["add","modify"];return(i,t)=>(a(),o("div",l,[n(e,{tabs:s}),t[0]||(t[0]=r("div",{class:"settings-content"},null,-1))]))}};export{_ as default};

@@ -1,0 +1,1 @@
+import{T as e}from"./ToolsSettingsTabs-CWBSUzE0.js";import{l as o,d as a,j as n,e as r}from"./index-BDxMDgMl.js";const i={class:"tool-settings"},_={__name:"MagnifyAreaToolSettings",setup(l){const s=["add","modify"];return(c,t)=>(a(),o("div",i,[n(e,{tabs:s}),t[0]||(t[0]=r("div",{class:"settings-content"},null,-1))]))}};export{_ as default};
