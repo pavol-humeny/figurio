@@ -1,18 +1,30 @@
-import { computed, ref, onMounted, onBeforeUnmount } from 'vue'
+import { computed, ref, onMounted, onBeforeUnmount, nextTick } from 'vue'
 import { useTextTool } from './useTextTool'
 import { useShapeTool } from './useShapeTool'
 import { useMath } from '../common/useMath'
 import { useSvgFunctions } from './useSvgFunctions'
+import { editorConfig } from '@/config/editorConfig'
 
 export function useSvgObjects(imageStore, historyStore, viewportStore, editorStore, t) {
   const { round } = useMath()
   const textTool = useTextTool(imageStore, historyStore, editorStore, t)
   const shapeTool = useShapeTool(editorStore, imageStore, historyStore, t)
-  const { getSnapOffsetToEdges } =
-    useSvgFunctions(imageStore)
+  const { getSnapOffsetToEdges } = useSvgFunctions(imageStore)
 
+  /**
+   * Whether any SVG object is currently being drawn
+   */
   const isDrawing = ref(false)
+
+  /**
+   * Start point of the current drawing operation
+   * Used to calculate width and height of the object being drawn
+   */
   const drawingStart = ref({ x: 0, y: 0 })
+
+  /**
+   * Currently drawn object being created
+   */
   const currentDrawingObject = ref(null)
 
   /**
@@ -465,12 +477,50 @@ export function useSvgObjects(imageStore, historyStore, viewportStore, editorSto
   }
 
   const onMouseUpImageSvg = () => {
+    // If it has zero width or height, remove it
+    if (!currentDrawingObject.value) return
+    const attrs = currentDrawingObject.value.attrs
+
+    const MIN_SIZE = editorConfig.minimumObjectSize
+
+    if (
+      (attrs.width && attrs.width <= MIN_SIZE) ||
+      (attrs.height && attrs.height <= MIN_SIZE) ||
+      (attrs.rx && attrs.rx <= MIN_SIZE) ||
+      (attrs.ry && attrs.ry <= MIN_SIZE) ||
+      (attrs.x2 && attrs.x2 - attrs.x1 <= MIN_SIZE) ||
+      (attrs.y2 && attrs.y2 - attrs.y1 <= MIN_SIZE)
+    ) {
+      isDrawing.value = false
+      currentDrawingObject.value = null
+      viewportStore.guideLine = null
+
+      // Remove the last object
+      imageStore.svgObjects.pop()
+      return
+    }
+
     if (isDrawing.value && currentDrawingObject.value) {
       historyStore.push(imageStore.getSnapshot(t))
     }
+
+    imageStore.selectedSvgObjectId = currentDrawingObject.value.id
+    imageStore.justCreatedSvgObjectId = currentDrawingObject.value.id
+
+    // Reset drawing state
+    nextTick(() => {
+      requestAnimationFrame(() => {
+        imageStore.justCreatedSvgObjectId = null
+      })
+    })
+
     isDrawing.value = false
     currentDrawingObject.value = null
     viewportStore.guideLine = null
+
+    nextTick(() => {
+      editorStore.isSvgObjectDrawing = false
+    })
   }
 
   onMounted(() => {
@@ -500,6 +550,7 @@ export function useSvgObjects(imageStore, historyStore, viewportStore, editorSto
     cursorOnSvgArea,
     onMouseDownImageSvg,
     onMouseMoveImageSvg,
+    isDrawing,
     // onMouseUpImageSvg,
   }
 }

@@ -76,6 +76,9 @@ export function useSvgObjectWrapper(
    * Watch for changes in the selection state
    */
   watch(isSelected, (newValue) => {
+    // Do not set as active when drawing new object
+    // if (editorStore.isSvgObjectDrawing) return
+
     editorStore.setIsSvgObjectSelected(newValue)
   })
 
@@ -284,7 +287,6 @@ export function useSvgObjectWrapper(
   const onMouseDownDrag = (event) => {
     if (!areSvgObjectOperationsEnabled.value || !isSelected.value) return
 
-    // imageStore.selectedSvgObjectId = object.value.id
     isDragging.value = true
     startX.value = event.clientX
     startY.value = event.clientY
@@ -1002,6 +1004,8 @@ export function useSvgObjectWrapper(
    */
   const onGlobalClick = (e) => {
     if (!areSvgObjectOperationsEnabled.value) return
+
+    if (imageStore.justCreatedSvgObjectId === imageStore.selectedSvgObjectId) return
 
     const viewportContent = document.getElementById('viewport')
     if (!viewportContent) return

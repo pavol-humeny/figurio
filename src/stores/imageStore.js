@@ -165,6 +165,7 @@ export const useImageStore = defineStore('imageStore', {
     ],
     /** ID of the currently selected SVG object */
     selectedSvgObjectId: null,
+    justCreatedSvgObjectId: null,
 
     /** Array of image operations to apply */
     imageOperations: [],
