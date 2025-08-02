@@ -501,10 +501,38 @@ export const useImageStore = defineStore('imageStore', {
       if (fileSize / 1024 / 1024 > editorConfig.maxFileSize) {
         showToastModal(
           'error',
-          t('imageStore.toast.errorFileTooLarge.title'),
-          t('imageStore.toast.errorFileTooLarge.message', {
+          t('imageStore.toast.errorFileTooLargeSize.title'),
+          t('imageStore.toast.errorFileTooLargeSize.message', {
             fileName: fileName,
             maxSize: editorConfig.maxFileSize,
+          }),
+        )
+        this.file = null
+        return false
+      }
+      return true
+    },
+
+    /**
+     * Checks if the image dimensions exceed the maximum allowed width/height
+     * @param {number} width - Width of the image
+     * @param {number} height - Height of the image
+     * @param {string} fileName - File name (for error message)
+     * @param {Function} t - i18n translation function
+     * @returns {boolean} - True if dimensions are within limits
+     */
+    checkFileDimensions(width, height, fileName, t) {
+      const MAX_WIDTH = editorConfig.maxFileDimensionWidth
+      const MAX_HEIGHT = editorConfig.maxFileDimensionHeight
+
+      if (width > MAX_WIDTH || height > MAX_HEIGHT) {
+        showToastModal(
+          'error',
+          t('imageStore.toast.errorFileTooLargeDimensions.title'),
+          t('imageStore.toast.errorFileTooLargeDimensions.message', {
+            fileName,
+            maxWidth: MAX_WIDTH,
+            maxHeight: MAX_HEIGHT,
           }),
         )
         this.file = null
@@ -560,6 +588,12 @@ export const useImageStore = defineStore('imageStore', {
           img.onload = async () => {
             await new Promise((resolve) => setTimeout(resolve, 10))
 
+            // Check image dimensions
+            if (!this.checkFileDimensions(img.width, img.height, file.name, t)) {
+              uiStore.isLoading = false
+              return
+            }
+
             this.fileDimensions.width = img.width
             this.fileDimensions.height = img.height
             this.fileDimensions.fileAspectRatio = img.width / img.height || 1
@@ -578,6 +612,7 @@ export const useImageStore = defineStore('imageStore', {
             this.originalImage = canvas
             this.previewUrl = canvas.toDataURL() // Fallback for export
 
+            // Add new tab in workspace
             workspaceStore.addNewTab(this.fileName, t)
 
             uiStore.isLoading = false
@@ -615,7 +650,7 @@ export const useImageStore = defineStore('imageStore', {
               t('imageStore.confirm.scalePdfForBetterResolution.confirm'),
             )
             if (confirmed) {
-              scaleLevel = 4 // Use a higher scale for better quality
+              scaleLevel = 4 // Higher scale for better quality
             }
             uiStore.blockClicks = true
 
@@ -628,6 +663,12 @@ export const useImageStore = defineStore('imageStore', {
 
             await page.render({ canvasContext: ctx, viewport }).promise
 
+            // Check image dimensions
+            if (!this.checkFileDimensions(canvas.width, canvas.height, file.name, t)) {
+              uiStore.isLoading = false
+              return
+            }
+
             this.fileDimensions.width = canvas.width
             this.fileDimensions.height = canvas.height
             this.fileDimensions.fileAspectRatio = canvas.width / canvas.height || 1
@@ -638,6 +679,7 @@ export const useImageStore = defineStore('imageStore', {
             this.originalImage = canvas
             this.previewUrl = canvas.toDataURL()
 
+            // Add new tab in workspace
             workspaceStore.addNewTab(this.fileName, t)
 
             uiStore.isLoading = false
@@ -707,7 +749,6 @@ export const useImageStore = defineStore('imageStore', {
             : file.type
 
         console.log(
-          `Detected file type: ${detectedType}, Real file type: ${realType}`,
           realType === detectedType,
         )
 

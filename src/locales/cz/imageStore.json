@@ -4,9 +4,13 @@
       "title": "Nepodporovaný typ souboru",
       "message": "Typ souboru {fileType} není podporován. Nahrajte prosím platný obrazový soubor."
     },
-    "errorFileTooLarge": {
+    "errorFileTooLargeSize": {
       "title": "Soubor je příliš velký",
       "message": "Soubor {fileName} překračuje maximální povolenou velikost {maxSize} MB. Nahrajte prosím menší soubor."
+    },
+    "errorFileTooLargeDimensions":{
+      "title": "Soubor je příliš velký",
+      "message": "Soubor {fileName} překračuje maximální povolené rozměry {maxWidth}x{maxHeight} pixelů. Nahrajte prosím menší soubor."
     },
     "errorMultipleFiles": {
       "title": "Vybráno více souborů",

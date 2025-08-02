@@ -4,9 +4,13 @@
       "title": "Unsupported file type",
       "message": "The file type {fileType} is not supported. Please upload a valid image file."
     },
-    "errorFileTooLarge":{
+    "errorFileTooLargeSize":{
       "title": "File too large",
       "message": "The file {fileName} exceeds the maximum allowed size of {maxSize} MB. Please upload a smaller file."
+    },
+    "errorFileTooLargeDimensions":{
+      "title": "File too large",
+      "message": "The file {fileName} exceeds the maximum allowed dimensions of {maxWidth}x{maxHeight} pixels. Please upload a smaller file."
     },
     "errorMultipleFiles":{
       "title": "Multiple files selected",

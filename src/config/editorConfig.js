@@ -5,9 +5,13 @@ export const editorConfig = {
 
   tipDelay: 700,
 
+  // Max file dimensions
   // Resize and crop limits
-  maxFileDimensionWidth: 10000,
-  maxFileDimensionHeight: 10000,
+  maxFileDimensionWidth: 4000,
+  maxFileDimensionHeight: 4000,
+
+  // Max file size for uploads
+  maxFileSize: 7, // in MB
 
   // Frame settings
   browserFrameDefaultSize: 0.005, // 0.5% of the bigger dimension
@@ -19,9 +23,6 @@ export const editorConfig = {
 
   // Presets
   localStoragePresetsKey: 'imageEditorPresets',
-
-  // Max file size for uploads
-  maxFileSize: 10, // in MB
 
   // Svg object wrapper
   resizerMultiplier: 0.9, // 1 - default size
