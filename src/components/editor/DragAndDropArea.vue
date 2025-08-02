@@ -33,6 +33,9 @@ const {
     <div class="title-wrapper">
       <p>{{ $t('dragAndDropArea.title') }}</p>
     </div>
+    <div class="supported-formats-wrapper">
+      <p>{{ $t('dragAndDropArea.supportedFormats') }}</p>
+    </div>
     <div class="subtitle-wrapper">
       <p>{{ $t('dragAndDropArea.subtitle') }}</p>
       <p class="small">{{ $t('dragAndDropArea.pasteHint') }}</p>
@@ -98,5 +101,10 @@ const {
 
 .button-wrapper {
   margin-top: 20px;
+}
+
+.supported-formats-wrapper {
+  font-size: var(--tip-font-size);
+
 }
 </style>

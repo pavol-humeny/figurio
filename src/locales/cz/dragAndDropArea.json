@@ -1,5 +1,6 @@
 {
   "title": "Přetáhni sem svůj soubor",
+  "supportedFormats": "(jpg, jpeg, png, pdf)",
   "subtitle": "nebo klikni pro vybrat soubor",
   "pasteHint": "nebo stiskni Ctrl+V pro vložení obrázku ze schránky.",
   "button": {
