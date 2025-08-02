@@ -1,4 +1,6 @@
 export const editorConfig = {
+  defaultToolKey: 'move', // Default tool key when the editor is opened
+
   // Smart crop settings
   smartCropDefaultColor: '#ffffff',
   smartCropColorTolerance: 5,

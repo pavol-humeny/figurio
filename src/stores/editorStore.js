@@ -1,3 +1,4 @@
+import { editorConfig } from '@/config/editorConfig'
 import { defineStore } from 'pinia'
 
 /**
@@ -6,7 +7,7 @@ import { defineStore } from 'pinia'
 export const useEditorStore = defineStore('editorStore', {
   state: () => ({
     /** Currently selected main tool key */
-    selectedToolKey: '',
+    selectedToolKey: editorConfig.defaultToolKey,
 
     /** Mapping of selected tab per tool key */
     selectedTabPerTool: {},
