@@ -57,10 +57,16 @@ export const keyboardShortcuts = [
   },
   // Tool shortcuts
   {
-    keys: ['v'],
+    keys: ['shift', 'm'],
     action: 'toggleTool',
     args: ['move', null],
     description: 'Toggle move tool',
+  },
+  {
+    keys: ['v'],
+    action: 'toggleTool',
+    args: ['select', null],
+    description: 'Toggle select tool',
   },
   {
     keys: ['r'],
@@ -180,7 +186,7 @@ export const keyboardShortcuts = [
   // Svg object operations
   {
     keys: ['delete'],
-    action: 'deleteSelectedSvgObject',
+    action: 'deleteSelectedSvgObjects',
     description: 'Delete selected SVG object',
   },
   {

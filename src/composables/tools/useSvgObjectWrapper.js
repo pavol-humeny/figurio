@@ -20,7 +20,7 @@ export function useSvgObjectWrapper(
   historyStore,
   t,
 ) {
-  const { deleteSelectedSvgObject } = useSvgObjects(
+  const { deleteSelectedSvgObjects } = useSvgObjects(
     imageStore,
     historyStore,
     viewportStore,
@@ -72,6 +72,11 @@ export function useSvgObjectWrapper(
   const isSelected = computed(
     () => imageStore.selectedSvgObjectId === object.value.id && areSvgObjectOperationsEnabled.value,
   )
+
+  const isInMultiSelection = computed(() => {
+    return imageStore.selectedSvgObjectIds.includes(object.value.id)
+  })
+
   /**
    * Watch for changes in the selection state
    */
@@ -1125,7 +1130,7 @@ export function useSvgObjectWrapper(
           // if empty text remove
           if (object.value.content.trim() === '') {
             console.log('Removing empty text object')
-            deleteSelectedSvgObject(t)
+            deleteSelectedSvgObjects(t)
             return
           }
 
@@ -1192,5 +1197,6 @@ export function useSvgObjectWrapper(
     onObjectDoubleClick,
     isRotating,
     cursorOnSvgObject,
+    isInMultiSelection,
   }
 }

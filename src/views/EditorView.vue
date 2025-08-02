@@ -19,7 +19,6 @@ import { useZoomControl } from '@/composables/topPanel/useZoomControl';
 import { useViewportStore } from '@/stores/viewportStore';
 import { useCloseFileButton } from '@/composables/topPanel/useCloseFileButton';
 import { useUploadFileButton } from '@/composables/topPanel/useUploadFileButton';
-import { useRoute } from 'vue-router';
 import { useToolsPanel } from '@/composables/tools/useToolsPanel';
 import { useEditorStore } from '@/stores/editorStore';
 import { useExportToolSettings } from '@/composables/toolsSettings/useExportToolSettings';
@@ -56,13 +55,13 @@ const {
   moveObjectRightGlobal,
   moveObjectUpGlobal,
   moveObjectDownGlobal,
-  deleteSelectedSvgObject, moveSelectedSvgObjectForward, moveSelectedSvgObjectBackward,
+  deleteSelectedSvgObjects, moveSelectedSvgObjectForward, moveSelectedSvgObjectBackward,
   selectedObjectInfo } = useSvgObjects(useImageStore(), useHistoryStore(), useViewportStore(), useEditorStore(), t)
 
 const imageStore = useImageStore()
 
 useKeyboardShortcuts({
-  undo, redo, zoomIn, zoomOut, resetZoom, closeFile, uploadFile, toggleTool, openExportToolSettings, openHelpModal, openSettingsPanel, openPrivacyAndDataModal, startEditing, switchToNextTab, switchToPreviousTab, prevStep, nextStep, finishTutorial, closeTutorial, deleteSelectedSvgObject, moveSelectedSvgObjectForward, moveSelectedSvgObjectBackward,
+  undo, redo, zoomIn, zoomOut, resetZoom, closeFile, uploadFile, toggleTool, openExportToolSettings, openHelpModal, openSettingsPanel, openPrivacyAndDataModal, startEditing, switchToNextTab, switchToPreviousTab, prevStep, nextStep, finishTutorial, closeTutorial, deleteSelectedSvgObjects, moveSelectedSvgObjectForward, moveSelectedSvgObjectBackward,
   moveObjectLeftLocal,
   moveObjectRightLocal,
   moveObjectUpLocal,

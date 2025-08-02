@@ -5,6 +5,11 @@ export const toolsDefinitions = [
     settingsComponent: () => import('@/components/toolsSettings/MoveToolSettings.vue'),
   },
   {
+    key: 'select',
+    iconName: 'IconSelectTool',
+    settingsComponent: () => import('@/components/toolsSettings/SelectToolSettings.vue'),
+  },
+  {
     key: 'transform',
     iconName: 'IconTransformTool',
     settingsComponent: () => import('@/components/toolsSettings/TransformToolSettings.vue'),

@@ -70,6 +70,7 @@ export function useToolsPanel(editorStore, imageStore, uiStore, t) {
       if (
         // UPDATE new tool
         newVal.tool === 'move' ||
+        newVal.tool === 'select' ||
         newVal.tool === 'transform' ||
         newVal.tool === 'grayscale' ||
         newVal.tool === 'frame' ||
@@ -81,6 +82,9 @@ export function useToolsPanel(editorStore, imageStore, uiStore, t) {
       ) {
         editorStore.selectSubTool('')
       }
+
+      imageStore.selectedSvgObjectIds = [] // Reset multi-selection on tool change
+      imageStore.selectedSvgObjectId = null // Reset just created object ID
     },
     { immediate: true, deep: false },
   )

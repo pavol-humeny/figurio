@@ -3,7 +3,7 @@
     "label": "Move",
     "tip": "Adjusts properties of image movement and zoom sensitivity",
     "tipDisabled": "",
-    "shortcut": "V",
+    "shortcut": "Shift + M",
     "settings": {
       "general": {
         "resetPosition": "Reset position",
@@ -14,6 +14,25 @@
         "movementSpeed": {
           "label": "Movement speed",
           "tip": "Adjust the speed of moving the canvas or double click to reset movement speed"
+        }
+      }
+    }
+  },
+  "select": {
+    "label": "Select",
+    "tip": "Selects objects on the image",
+    "tipDisabled": "",
+    "shortcut": "V",
+    "settings": {
+      "general": {
+        "selectAllButton": {
+          "text": "Select all"
+        },
+        "deselectAllButton": {
+          "text": "Deselect all"
+        },
+        "deleteSelectedButton": {
+          "text": "Delete selected objects"
         }
       }
     }

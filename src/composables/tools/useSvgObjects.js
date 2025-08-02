@@ -12,6 +12,11 @@ export function useSvgObjects(imageStore, historyStore, viewportStore, editorSto
   const { getSnapOffsetToEdges } = useSvgFunctions(imageStore)
 
   /**
+   * Selection box rectangle (used when dragging with select tool)
+   */
+  const selectBox = ref(null)
+
+  /**
    * Whether any SVG object is currently being drawn
    */
   const isDrawing = ref(false)
@@ -145,12 +150,31 @@ export function useSvgObjects(imageStore, historyStore, viewportStore, editorSto
   /**
    * Delete selected SVG object
    */
-  const deleteSelectedSvgObject = (t) => {
-    if (imageStore.selectedSvgObjectId === null) return
-    const i = imageStore.getIndexOfSelectedSvgObject()
-    if (i !== -1) {
-      imageStore.svgObjects.splice(i, 1)
-      imageStore.selectedSvgObjectId = null
+  const deleteSelectedSvgObjects = (t) => {
+    const selectedIds = imageStore.selectedSvgObjectIds
+
+    if (imageStore.selectedSvgObjectId === null && selectedIds.length === 0) {
+      return
+    }
+
+    if (selectedIds.length === 0) {
+      const i = imageStore.getIndexOfSelectedSvgObject()
+      if (i !== -1) {
+        imageStore.svgObjects.splice(i, 1)
+        imageStore.selectedSvgObjectId = null
+      }
+    } else {
+      // Najprv zisti indexy a zotrieď ich od najväčšieho po najmenší
+      const indicesToDelete = selectedIds
+        .map((id) => imageStore.getIndexOfSvgObjectById(id))
+        .filter((i) => i !== -1)
+        .sort((a, b) => b - a)
+
+      for (const i of indicesToDelete) {
+        imageStore.svgObjects.splice(i, 1)
+      }
+
+      imageStore.selectedSvgObjectIds = []
     }
 
     historyStore.push(imageStore.getSnapshot(t))
@@ -256,10 +280,55 @@ export function useSvgObjects(imageStore, historyStore, viewportStore, editorSto
   })
 
   /**
-   * Handle click on the SVG area to add object
+   * Select all SVG objects
+   */
+  const selectAllSvgObjects = () => {
+    imageStore.selectedSvgObjectIds = imageStore.svgObjects.map((obj) => obj.id)
+  }
+
+  /**
+   * Deselect all SVG objects
+   */
+  const deselectAllSvgObjects = () => {
+    imageStore.selectedSvgObjectIds = []
+  }
+
+  /**
+   * Handle click on the SVG area to select objects or add text
    * @param {MouseEvent} event - Click event
    */
   const OnClickImageSvg = (event) => {
+    // Selecting objects
+    if (editorStore.selectedToolKey === 'select') {
+      // Check if clicked on SVG object with data-id
+      const elWithId = event.target.closest('[data-id]')
+      const clickedId = elWithId ? Number(elWithId.getAttribute('data-id')) : null
+
+      if (clickedId !== null) {
+        const clickedObject = imageStore.getSvgObjectById(clickedId)
+        if (clickedObject) {
+          if (event.shiftKey) {
+            const index = imageStore.selectedSvgObjectIds.indexOf(clickedId)
+            if (index !== -1) {
+              imageStore.selectedSvgObjectIds.splice(index, 1)
+            } else {
+              imageStore.selectedSvgObjectIds.push(clickedId)
+            }
+          } else {
+            imageStore.selectedSvgObjectIds = [clickedId]
+          }
+
+          return
+        }
+      }
+
+      // Clicked on empty area – deselect all
+      if (!event.shiftKey) {
+        imageStore.selectedSvgObjectIds = []
+      }
+    }
+
+    // Adding text object
     if (event.target.closest('g') || event.target.closest('text')) return
 
     const rect = event.currentTarget.getBoundingClientRect()
@@ -272,6 +341,21 @@ export function useSvgObjects(imageStore, historyStore, viewportStore, editorSto
   }
 
   const onMouseDownImageSvg = (event) => {
+    // Selecting objects
+    if (editorStore.selectedToolKey === 'select') {
+      const rect = viewportStore.viewportContentRect
+      const x = round(
+        (event.clientX - rect.left - viewportStore.panX) / viewportStore.realZoomLevel,
+      )
+      const y = round((event.clientY - rect.top - viewportStore.panY) / viewportStore.realZoomLevel)
+
+      drawingStart.value = { x, y }
+      selectBox.value = { x, y, width: 0, height: 0 }
+      isDrawing.value = true
+      return
+    }
+
+    // Drawing objects
     if (!['blur', 'shape', 'magnifyArea'].includes(editorStore.selectedToolKey)) return
 
     if (editorStore.isSvgObjectSelected) return
@@ -381,6 +465,30 @@ export function useSvgObjects(imageStore, historyStore, viewportStore, editorSto
   }
 
   const onMouseMoveImageSvg = (event) => {
+    // Selecting objects
+    if (isDrawing.value && editorStore.selectedToolKey === 'select' && selectBox.value) {
+      const rect = viewportStore.viewportContentRect
+      const x = round(
+        (event.clientX - rect.left - viewportStore.panX) / viewportStore.realZoomLevel,
+      )
+      const y = round((event.clientY - rect.top - viewportStore.panY) / viewportStore.realZoomLevel)
+
+      const x1 = Math.min(drawingStart.value.x, x)
+      const y1 = Math.min(drawingStart.value.y, y)
+      const x2 = Math.max(drawingStart.value.x, x)
+      const y2 = Math.max(drawingStart.value.y, y)
+
+      selectBox.value = {
+        x: x1,
+        y: y1,
+        width: x2 - x1,
+        height: y2 - y1,
+      }
+
+      return
+    }
+
+    // Drawing objects
     if (!isDrawing.value || !currentDrawingObject.value) return
 
     const isCtrlKey = event.ctrlKey || event.metaKey
@@ -477,6 +585,38 @@ export function useSvgObjects(imageStore, historyStore, viewportStore, editorSto
   }
 
   const onMouseUpImageSvg = () => {
+    // Selecting objects
+    if (editorStore.selectedToolKey === 'select' && selectBox.value) {
+      const { x, y, width, height } = selectBox.value
+      const x1 = x
+      const y1 = y
+      const x2 = x + width
+      const y2 = y + height
+
+      const { getTransformedBoundingBox } = useSvgFunctions(imageStore)
+
+      const selectedIds = []
+      for (const obj of imageStore.svgObjects) {
+        const box = getTransformedBoundingBox(obj)
+        if (!box) continue
+
+        const isInside = box.left >= x1 && box.right <= x2 && box.top >= y1 && box.bottom <= y2
+
+        if (isInside) {
+          selectedIds.push(obj.id)
+        }
+      }
+
+      if (selectedIds.length > 0) {
+        imageStore.selectedSvgObjectIds = selectedIds
+      }
+
+      selectBox.value = null
+      isDrawing.value = false
+      return
+    }
+
+    // Drawing objects
     // If it has zero width or height, remove it
     if (!currentDrawingObject.value) return
     const attrs = currentDrawingObject.value.attrs
@@ -540,7 +680,7 @@ export function useSvgObjects(imageStore, historyStore, viewportStore, editorSto
     moveObjectRightGlobal,
     moveObjectUpGlobal,
     moveObjectDownGlobal,
-    deleteSelectedSvgObject,
+    deleteSelectedSvgObjects,
     moveSelectedSvgObjectForward,
     moveSelectedSvgObjectBackward,
     sendSelectedSvgObjectToBack,
@@ -551,6 +691,9 @@ export function useSvgObjects(imageStore, historyStore, viewportStore, editorSto
     onMouseDownImageSvg,
     onMouseMoveImageSvg,
     isDrawing,
+    selectBox,
+    selectAllSvgObjects,
+    deselectAllSvgObjects,
     // onMouseUpImageSvg,
   }
 }

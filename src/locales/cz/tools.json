@@ -3,7 +3,7 @@
     "label": "Posun",
     "tip": "Upravuje vlastnosti pohybu obrázku a citlivost přiblížení",
     "tipDisabled": "",
-    "shortcut": "V",
+    "shortcut": "Shift + M",
     "settings": {
       "general": {
         "resetPosition": "Resetovat pozici",
@@ -14,6 +14,25 @@
         "movementSpeed": {
           "label": "Rychlost pohybu",
           "tip": "Uprav rychlost pohybu plátna nebo dvakrát klikni pro resetování rychlosti pohybu"
+        }
+      }
+    }
+  },
+  "select": {
+    "label": "Výběr",
+    "tip": "Vybere objekty na obrázku",
+    "tipDisabled": "",
+    "shortcut": "V",
+    "settings": {
+      "general": {
+        "selectAllButton": {
+          "text": "Vybrat vše"
+        },
+        "deselectAllButton": {
+          "text": "Zrušit výběr"
+        },
+        "deleteSelectedButton": {
+          "text": "Smazat vybrané objekty"
         }
       }
     }

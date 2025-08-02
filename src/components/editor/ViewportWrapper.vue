@@ -68,7 +68,7 @@ const {
   guideLine
 } = useViewportWrapper(useViewportStore(), useImageStore(), useEditorStore(), useUiStore(), contentRef, t)
 
-const { OnClickImageSvg, cursorOnSvgArea, onMouseDownImageSvg, onMouseMoveImageSvg } = useSvgObjects(
+const { OnClickImageSvg, cursorOnSvgArea, onMouseDownImageSvg, onMouseMoveImageSvg, selectBox } = useSvgObjects(
   useImageStore(),
   useHistoryStore(),
   useViewportStore(),
@@ -148,6 +148,9 @@ watch(
           </defs>
 
           <SvgObjectWrapper v-for="object in imageStore.svgObjects" :key="object.id" :objectId="object.id" />
+
+          <rect v-if="selectBox" :x="selectBox.x" :y="selectBox.y" :width="selectBox.width" :height="selectBox.height"
+            fill="rgba(0, 120, 255, 0.2)" stroke="rgba(0, 120, 255, 0.8)" stroke-dasharray="4" />
         </svg>
 
 
@@ -184,7 +187,7 @@ watch(
         </div>
         <div v-if="mouseX !== null" class="ruler-cursor-mark horizontal" :style="{ left: mouseX + 'px' }">
           <span class="ruler-cursor-label horizontal" :class="{ 'active': cursorPosXSameAsImageWidth }">{{ cursorPosX
-          }}</span>
+            }}</span>
         </div>
 
       </div>
@@ -197,7 +200,7 @@ watch(
         </div>
         <div v-if="mouseY !== null" class="ruler-cursor-mark vertical" :style="{ top: mouseY + 'px' }">
           <span class="ruler-cursor-label vertical" :class="{ 'active': cursorPosYSameAsImageHeight }">{{ cursorPosY
-          }}</span>
+            }}</span>
         </div>
       </div>
     </div>

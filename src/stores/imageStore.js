@@ -117,19 +117,7 @@ export const useImageStore = defineStore('imageStore', {
           transform: '',
         },
       },
-      {
-        id: Date.now() + 3,
-        class: 'text',
-        tag: 'text',
-        attrs: {
-          x: 100,
-          y: 350,
-          fill: '#000000',
-          'font-size': '20px',
-          transform: '',
-        },
-        content: 'Sample Textiiiii',
-      },
+
       {
         id: Date.now() + 4,
         class: 'shape',
@@ -144,28 +132,13 @@ export const useImageStore = defineStore('imageStore', {
           transform: '',
         },
       },
-      {
-        id: Date.now() + 5,
-        class: 'text',
-        tag: 'text',
-        attrs: {
-          x: 100,
-          y: 200,
-          fill: '#333333',
-          'font-size': '24px',
-          'font-family': 'Georgia',
-          'font-weight': 'bold',
-          'text-anchor': 'middle',
-          'dominant-baseline': 'middle',
-          'letter-spacing': '2px',
-          transform: 'rotate(-10, 100, 200)',
-        },
-        content: 'Sample Textiiiii',
-      },
     ],
     /** ID of the currently selected SVG object */
     selectedSvgObjectId: null,
-    justCreatedSvgObjectId: null,
+    /** ID of the SVG object that was just created */
+    justCreatedSvgObjectId: null, // TODO - reset value
+    /** Array of selected SVG object IDs for multi-selection */
+    selectedSvgObjectIds: [], //  TODO - reset value
 
     /** Array of image operations to apply */
     imageOperations: [],
@@ -1392,6 +1365,15 @@ export const useImageStore = defineStore('imageStore', {
      */
     getIndexOfSelectedSvgObject() {
       return this.svgObjects.findIndex((obj) => obj.id === this.selectedSvgObjectId)
+    },
+
+    /**
+     * Returns the index of an SVG object by its ID
+     * @param {*} id - The ID of the SVG object
+     * @returns {number} - The index of the SVG object, or -1 if not found
+     */
+    getIndexOfSvgObjectById(id) {
+      return this.svgObjects.findIndex((obj) => obj.id === id)
     },
 
     /**

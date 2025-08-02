@@ -42,7 +42,8 @@ const {
   onMouseDownRotate,
   onObjectDoubleClick,
   isRotating,
-  cursorOnSvgObject
+  cursorOnSvgObject,
+  isInMultiSelection
 } = useSvgObjectWrapper(props.objectId, useImageStore(), useViewportStore(), useEditorStore(), useHistoryStore(), t)
 
 
@@ -61,13 +62,13 @@ const {
 
     <!-- SVG text object -->
     <g v-else :style="{ cursor: cursorOnSvgObject }">
-      <component v-if="object.tag !== 'text'" :is="object.tag" v-bind="object.attrs" :data-id="object.id"/>
+      <component v-if="object.tag !== 'text'" :is="object.tag" v-bind="object.attrs" :data-id="object.id" />
       <text v-else v-bind="object.attrs" style="user-select: none" :data-id="object.id">
         {{ object.content || '' }}
       </text>
     </g>
 
-    <g v-if="isSelected && boundingBox" :transform="object?.attrs?.transform">
+    <g v-if="(isSelected && boundingBox) || isInMultiSelection" :transform="object?.attrs?.transform">
       <!-- Bounding box -->
       <rect :x="boundingBox.x" :y="boundingBox.y" :width="boundingBox.width" :height="boundingBox.height" fill="none"
         :stroke="isSymmetricalObject ? 'var(--editor-highlight-align-c)' : 'var(--editor-highlight-c)'"
@@ -75,9 +76,10 @@ const {
         :stroke-dasharray="[boundingBoxStrokeWidth * 4, boundingBoxStrokeWidth * 2]" pointer-events="none" />
 
       <!-- Icon to turn on resize -->
-      <foreignObject v-if="object.tag !== 'text'" :x="boundingBox.x + boundingBox.width / 2 - controlIconSize * 0.5"
-        :y="boundingBox.y - controlIconSize" :width="controlIconSize" :height="controlIconSize"
-        @mousedown.stop.prevent="showResizers = !showResizers" style="cursor: pointer">
+      <foreignObject v-if="object.tag !== 'text' && !isInMultiSelection"
+        :x="boundingBox.x + boundingBox.width / 2 - controlIconSize * 0.5" :y="boundingBox.y - controlIconSize"
+        :width="controlIconSize" :height="controlIconSize" @mousedown.stop.prevent="showResizers = !showResizers"
+        style="cursor: pointer">
         <BaseIcon v-if="showResizers" :name="'IconCross'" :tip="t('tools.svgObject.resizeObject.tipStopResize')"
           :size="controlIconSize" :color="'var(--primary-c)'" />
         <BaseIcon v-else :name="'IconResizeObject'" :tip="t('tools.svgObject.resizeObject.tipStartResize')"
@@ -92,9 +94,10 @@ const {
       </template>
 
       <!-- Rotate icon  -->
-      <foreignObject v-if="!showResizers && !isRotating" :x="boundingBox.x + boundingBox.width"
+      <foreignObject v-if="!showResizers && !isRotating && !isInMultiSelection" :x="boundingBox.x + boundingBox.width"
         :y="boundingBox.y + boundingBox.height / 2 - controlIconSize / 2" :width="controlIconSize"
-        :height="controlIconSize" @mousedown.stop.prevent="onMouseDownRotate($event)" style="cursor: url(/cursors/rotateCursor.png) 10 10, auto">
+        :height="controlIconSize" @mousedown.stop.prevent="onMouseDownRotate($event)"
+        style="cursor: url(/cursors/rotateCursor.png) 10 10, auto">
         <BaseIcon :name="'IconRotate'" :tip="t('tools.svgObject.rotateObject.tip')" :size="controlIconSize"
           :color="'var(--primary-c)'" />
       </foreignObject>
