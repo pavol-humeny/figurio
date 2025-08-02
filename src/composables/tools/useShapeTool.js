@@ -1,5 +1,6 @@
 import { computed, ref, watch, watchEffect, nextTick } from 'vue'
 import { useMath } from '../common/useMath'
+import { useSvgFunctions } from './useSvgFunctions'
 
 /**
  * Local editable settings for shape tool
@@ -37,6 +38,7 @@ const activeObject = ref(null)
  */
 export function useShapeTool(editorStore, imageStore, historyStore, t) {
   const { clamp } = useMath()
+  const { getObjectCenter } = useSvgFunctions()
 
   /**
    * Hide position and dimensions settings in the shape tool settings
@@ -375,8 +377,8 @@ export function useShapeTool(editorStore, imageStore, historyStore, t) {
       attrs.width = settings.width
       attrs.height = settings.height
     } else if (tag === 'ellipse') {
-      attrs.rx = settings.width / 2
-      attrs.ry = settings.height / 2
+      // attrs.rx = settings.width / 2
+      // attrs.ry = settings.height / 2
       attrs.cx = settings.x + attrs.rx
       attrs.cy = settings.y + attrs.ry
     } else if (tag === 'line') {
@@ -402,7 +404,8 @@ export function useShapeTool(editorStore, imageStore, historyStore, t) {
     }
 
     // Rotation angle
-    attrs.transform = `rotate(${settings.rotation}, ${settings.x + settings.width / 2}, ${settings.y + settings.height / 2})`
+    const { cx, cy } = getObjectCenter(object)
+    attrs.transform = `rotate(${settings.rotation}, ${cx}, ${cy})`
 
     // Opacity
     attrs.opacity = settings.opacity
@@ -410,8 +413,6 @@ export function useShapeTool(editorStore, imageStore, historyStore, t) {
     // Corner radius for rectangles
     if (tag === 'rect') {
       attrs.rx = settings.cornerRadius
-    } else {
-      attrs.rx = 0 // Reset for other shapes
     }
 
     if (tag === 'line') {
