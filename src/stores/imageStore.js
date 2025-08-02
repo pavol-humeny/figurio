@@ -552,6 +552,8 @@ export const useImageStore = defineStore('imageStore', {
       const historyStore = useHistoryStore()
       const viewportStore = useViewportStore()
 
+      console.warn('ahjoj', file)
+
       // Reset state for new file (update current tab state)
       if (file !== null) {
         workspaceStore.updateCurrentTabState(t)
@@ -748,9 +750,7 @@ export const useImageStore = defineStore('imageStore', {
             ? file.type.split('/')[1]
             : file.type
 
-        console.log(
-          realType === detectedType,
-        )
+        console.log(realType === detectedType)
 
         return realType === detectedType
       }
@@ -777,7 +777,6 @@ export const useImageStore = defineStore('imageStore', {
       const result = await this.checkFile(files[0])
 
       if (result) {
-        // TODO - router is undefined
         if (router.currentRoute.value.name !== 'editor') {
           await router.push({ name: 'editor' })
           await router.isReady()

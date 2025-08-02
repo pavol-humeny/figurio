@@ -38,7 +38,7 @@ import { useSvgObjects } from '@/composables/tools/useSvgObjects';
 const { undo, redo } = useUndoRedo(useHistoryStore(), useImageStore())
 const { zoomIn, zoomOut, resetZoom } = useZoomControl(useViewportStore())
 const { closeFile } = useCloseFileButton(useImageStore(), useWorkspaceStore(), t)
-const { uploadFile } = useUploadFileButton(useImageStore(), t, useRoute())
+const { uploadFile } = useUploadFileButton(useImageStore(), t, useRouter())
 const { toggleTool } = useToolsPanel(useEditorStore(), useImageStore(), useUiStore(), t)
 const { openExportToolSettings } = useExportToolSettings(useImageStore(), useEditorStore(), useHistoryStore(), t)
 const { openHelpModal } = useHelpModal(useUiStore(), useImageStore(), useRouter(), t)
