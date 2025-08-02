@@ -28,7 +28,8 @@ export function useSvgObjectWrapper(
     t,
   )
   const { clamp, pythagorean, round } = useMath()
-  const { getObjectCenter } = useSvgFunctions()
+  const { getObjectCenter, getTransformedBoundingBox, getSnapOffsetToEdges } =
+    useSvgFunctions(imageStore)
 
   /**
    * Style of cursor when hovering over the SVG object
@@ -471,7 +472,7 @@ export function useSvgObjectWrapper(
 
           // Snap to edges if Ctrl key is pressed
           if (isCtrlKey && onlyOneKeyPressed) {
-            const snap = getSnapOffsetToEdges(newX, right, newY, bottom)
+            const snap = getSnapOffsetToEdges(object.value, newX, right, newY, bottom)
 
             newX += snap.dx
             newY += snap.dy
@@ -503,7 +504,7 @@ export function useSvgObjectWrapper(
 
           // Snap to edges if Ctrl key is pressed
           if (isCtrlKey && onlyOneKeyPressed) {
-            const snap = getSnapOffsetToEdges(newX, newX + newW, newY, bottom)
+            const snap = getSnapOffsetToEdges(object.value, newX, newX + newW, newY, bottom)
 
             newW += snap.dx
             newY += snap.dy
@@ -534,7 +535,7 @@ export function useSvgObjectWrapper(
 
           // Snap to edges if Ctrl key is pressed
           if (isCtrlKey && onlyOneKeyPressed) {
-            const snap = getSnapOffsetToEdges(newX, right, newY, newY + newH)
+            const snap = getSnapOffsetToEdges(object.value, newX, right, newY, newY + newH)
 
             newX += snap.dx
             newH += snap.dy
@@ -558,7 +559,7 @@ export function useSvgObjectWrapper(
           if (isCtrlKey && onlyOneKeyPressed) {
             const bottomBeforeSnap = newY + newH
 
-            const snap = getSnapOffsetToEdges(newX, newX + newW, newY, newY + newH)
+            const snap = getSnapOffsetToEdges(object.value, newX, newX + newW, newY, newY + newH)
 
             newW += snap.dx
 
@@ -623,6 +624,7 @@ export function useSvgObjectWrapper(
           if (isCtrlKey && onlyOneKeyPressed) {
             // Predict new bbox before applying
             const snap = getSnapOffsetToEdges(
+              object.value,
               newCx - attrs.rx,
               newCx + attrs.rx,
               newCy - attrs.ry,
@@ -682,6 +684,7 @@ export function useSvgObjectWrapper(
 
           if (isCtrlKey && onlyOneKeyPressed) {
             const snap = getSnapOffsetToEdges(
+              object.value,
               newCx - attrs.rx,
               newCx + attrs.rx,
               newCy - attrs.ry,
@@ -729,6 +732,7 @@ export function useSvgObjectWrapper(
 
           if (isCtrlKey && onlyOneKeyPressed) {
             const snap = getSnapOffsetToEdges(
+              object.value,
               newCx - attrs.rx,
               newCx + attrs.rx,
               newCy - attrs.ry,
@@ -776,6 +780,7 @@ export function useSvgObjectWrapper(
 
           if (isCtrlKey && onlyOneKeyPressed) {
             const snap = getSnapOffsetToEdges(
+              object.value,
               newCx - attrs.rx,
               newCx + attrs.rx,
               newCy - attrs.ry,
@@ -825,7 +830,7 @@ export function useSvgObjectWrapper(
           let newY = clamp(attrs[keyY] + dy, 0, maxY)
 
           if (isCtrlKey && onlyOneKeyPressed) {
-            const snap = getSnapOffsetToEdges(newX, newX, newY, newY)
+            const snap = getSnapOffsetToEdges(object.value, newX, newX, newY, newY)
 
             // Snap only position
             newX += snap.dx
@@ -903,6 +908,7 @@ export function useSvgObjectWrapper(
 
         if (bbox) {
           const snap = getSnapOffsetToEdges(
+            object.value,
             bbox.left + dx,
             bbox.right + dx,
             bbox.top + dy,
@@ -987,177 +993,6 @@ export function useSvgObjectWrapper(
 
       viewportStore.guideLine = { x: gx, y: gy, angle }
     }
-  }
-
-  /**
-   * Rotate a point (x, y) around (cx, cy) by angle in degrees
-   * @param {number} x
-   * @param {number} y
-   * @param {number} cx - center x
-   * @param {number} cy - center y
-   * @param {number} angle - degrees
-   * @returns {{x: number, y: number}}
-   */
-  const rotatePoint = (x, y, cx, cy, angle) => {
-    const rad = (angle * Math.PI) / 180
-    const cos = Math.cos(rad)
-    const sin = Math.sin(rad)
-
-    const dx = x - cx
-    const dy = y - cy
-
-    return {
-      x: cx + dx * cos - dy * sin,
-      y: cy + dx * sin + dy * cos,
-    }
-  }
-
-  /**
-   * Get transformed bounding box with rotation applied
-   * @param {Object} o - SVG object
-   * @returns {{left: number, right: number, top: number, bottom: number}}
-   */
-  const getTransformedBoundingBox = (o) => {
-    const a = o.attrs
-    const transform = a.transform || ''
-    const match = transform.match(/rotate\((-?\d+\.?\d*),\s*(-?\d+\.?\d*),\s*(-?\d+\.?\d*)\)/)
-
-    const angle = match ? parseFloat(match[1]) : 0
-    const cx = match ? parseFloat(match[2]) : 0
-    const cy = match ? parseFloat(match[3]) : 0
-
-    let corners = []
-
-    // RECT
-    if ('x' in a && 'y' in a && 'width' in a && 'height' in a) {
-      corners = [
-        rotatePoint(a.x, a.y, cx, cy, angle),
-        rotatePoint(a.x + a.width, a.y, cx, cy, angle),
-        rotatePoint(a.x, a.y + a.height, cx, cy, angle),
-        rotatePoint(a.x + a.width, a.y + a.height, cx, cy, angle),
-      ]
-    }
-
-    // ELLIPSE
-    else if ('cx' in a && 'cy' in a && 'rx' in a && 'ry' in a) {
-      corners = [
-        rotatePoint(a.cx - a.rx, a.cy - a.ry, cx, cy, angle),
-        rotatePoint(a.cx + a.rx, a.cy - a.ry, cx, cy, angle),
-        rotatePoint(a.cx - a.rx, a.cy + a.ry, cx, cy, angle),
-        rotatePoint(a.cx + a.rx, a.cy + a.ry, cx, cy, angle),
-      ]
-    }
-
-    // LINE
-    else if ('x1' in a && 'y1' in a && 'x2' in a && 'y2' in a) {
-      corners = [rotatePoint(a.x1, a.y1, cx, cy, angle), rotatePoint(a.x2, a.y2, cx, cy, angle)]
-    }
-
-    // TEXT (requires precomputed bounding box!)
-    else if (o.tag === 'text' && o.textBBox) {
-      const b = o.textBBox
-      corners = [
-        rotatePoint(b.x, b.y, cx, cy, angle),
-        rotatePoint(b.x + b.width, b.y, cx, cy, angle),
-        rotatePoint(b.x, b.y + b.height, cx, cy, angle),
-        rotatePoint(b.x + b.width, b.y + b.height, cx, cy, angle),
-      ]
-    }
-
-    if (!corners.length) return null
-
-    const xs = corners.map((p) => p.x)
-    const ys = corners.map((p) => p.y)
-
-    return {
-      left: Math.min(...xs),
-      right: Math.max(...xs),
-      top: Math.min(...ys),
-      bottom: Math.max(...ys),
-    }
-  }
-
-  /**
-   * Get snap edge targets (with rotation applied), including image borders
-   * @returns {Array<{left: number, right: number, top: number, bottom: number}>}
-   */
-  const getSnapEdgeTargets = () => {
-    const targets = imageStore.svgObjects
-      .filter((o) => o.id !== object.value.id)
-      .map((o) => getTransformedBoundingBox(o))
-      .filter(Boolean)
-
-    // Add image border as an extra snap target
-    const imgWidth = imageStore.fileDimensions.width
-    const imgHeight = imageStore.fileDimensions.height
-
-    targets.push({
-      left: 0,
-      right: imgWidth,
-      top: 0,
-      bottom: imgHeight,
-    })
-
-    return targets
-  }
-
-  /**
-   * Snap to nearest edges (left, right, top, bottom) if overlapping in opposite axis
-   * @param {number} left - current left edge
-   * @param {number} right - current right edge
-   * @param {number} top - current top edge
-   * @param {number} bottom - current bottom edge
-   * @returns {{dx: number, dy: number}}
-   */
-  const getSnapOffsetToEdges = (left, right, top, bottom) => {
-    const threshold =
-      imageStore.getSmallerImageDimension() * editorConfig.snapEdgeThresholdCoefficient
-
-    const targets = getSnapEdgeTargets()
-
-    let dx = 0
-    let dy = 0
-    let snappedEdgeX = null
-    let snappedEdgeY = null
-
-    for (const t of targets) {
-      const verticalOverlap = !(bottom < t.top || top > t.bottom)
-      const horizontalOverlap = !(right < t.left || left > t.right)
-
-      if (verticalOverlap && editorConfig.snapOnlyWhenOverlapping) {
-        if (Math.abs(left - t.left) < threshold) {
-          dx = t.left - left
-          snappedEdgeX = 'left'
-        } else if (Math.abs(left - t.right) < threshold) {
-          dx = t.right - left
-          snappedEdgeX = 'left'
-        } else if (Math.abs(right - t.left) < threshold) {
-          dx = t.left - right
-          snappedEdgeX = 'right'
-        } else if (Math.abs(right - t.right) < threshold) {
-          dx = t.right - right
-          snappedEdgeX = 'right'
-        }
-      }
-
-      if (horizontalOverlap && editorConfig.snapOnlyWhenOverlapping) {
-        if (Math.abs(top - t.top) < threshold) {
-          dy = t.top - top
-          snappedEdgeY = 'top'
-        } else if (Math.abs(top - t.bottom) < threshold) {
-          dy = t.bottom - top
-          snappedEdgeY = 'top'
-        } else if (Math.abs(bottom - t.top) < threshold) {
-          dy = t.top - bottom
-          snappedEdgeY = 'bottom'
-        } else if (Math.abs(bottom - t.bottom) < threshold) {
-          dy = t.bottom - bottom
-          snappedEdgeY = 'bottom'
-        }
-      }
-    }
-
-    return { dx, dy, snappedEdgeX, snappedEdgeY }
   }
 
   /**

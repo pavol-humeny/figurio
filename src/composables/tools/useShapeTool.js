@@ -38,7 +38,7 @@ const activeObject = ref(null)
  */
 export function useShapeTool(editorStore, imageStore, historyStore, t) {
   const { clamp } = useMath()
-  const { getObjectCenter } = useSvgFunctions()
+  const { getObjectCenter } = useSvgFunctions(imageStore)
 
   /**
    * Hide position and dimensions settings in the shape tool settings
