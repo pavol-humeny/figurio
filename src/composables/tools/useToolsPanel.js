@@ -73,7 +73,11 @@ export function useToolsPanel(editorStore, imageStore, uiStore, t) {
         newVal.tool === 'transform' ||
         newVal.tool === 'grayscale' ||
         newVal.tool === 'frame' ||
-        newVal.tool === 'export'
+        newVal.tool === 'export' ||
+        newVal.tool === 'blur' ||
+        newVal.tool === 'text' ||
+        newVal.tool === 'shape' ||
+        newVal.tool === 'magnifyArea'
       ) {
         editorStore.selectSubTool('')
       }
@@ -124,7 +128,7 @@ export function useToolsPanel(editorStore, imageStore, uiStore, t) {
     }
     editorStore.selectTool(toolKey)
 
-    // If the panel is closed, show it 
+    // If the panel is closed, show it
     useCollapsiblePanel(uiStore).showPanel()
 
     if (tabKey) {

@@ -1,4 +1,5 @@
 <script setup>
+import ToolsSettingsTabs from './ToolsSettingsTabs.vue'
 import DefaultButton from '../common/DefaultButton.vue'
 import { useGrayscaleTool } from '@/composables/tools/useGrayscaleTool'
 import { useImageStore } from '@/stores/imageStore'
@@ -19,6 +20,7 @@ const { applyGrayscale, isGrayscaleApplied } = useGrayscaleTool(
 
 <template>
   <div class="tool-settings">
+    <ToolsSettingsTabs :tabs="[]" />
     <div class="settings-wrapper">
       <div class="specific-settings">
         <!-- Grayscale conversion button -->

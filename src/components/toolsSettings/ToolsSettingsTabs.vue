@@ -1,8 +1,12 @@
 <script setup>
 import { useEditorStore } from '@/stores/editorStore'
 import { useToolsSettingsTabs } from '@/composables/toolsSettings/useToolsSettingsTabs'
+import { onMounted, nextTick } from 'vue'
+import { useUiStore } from '@/stores/uiStore'
+
 
 const editorStore = useEditorStore()
+const uiStore = useUiStore()
 
 /**
  * @typedef {Object} ToolsSettingsTabsProps
@@ -24,10 +28,29 @@ const { activeTab, isDragging, wrapperRef, setActiveTab, startDragging } = useTo
   useEditorStore(),
   props.tabs[0],
 )
+onMounted(() => {
+  nextTick(() => {
+    const tabs = document.querySelectorAll('.settings-tabs .tab')
+
+    if (tabs.length === 0) {
+      // No tabs found, reset the right panel width
+      uiStore.resetRightPanelWidth()
+      return
+    }
+
+    // Calculate the total width of all tabs
+    let TabsSize = 0
+    tabs.forEach((tab) => {
+      TabsSize += tab.offsetWidth
+    })
+
+    uiStore.setRightPanelWidthIfTabsDoNotFit(TabsSize)
+  })
+})
 </script>
 
 <template>
-  <div class="settings-tabs">
+  <div v-if="props.tabs.length > 0" class="settings-tabs">
     <div class="tabs-wrapper" ref="wrapperRef">
       <div class="tab" v-for="tab in props.tabs" :key="tab" :class="{ active: tab === activeTab, grabbing: isDragging }"
         @click="setActiveTab(tab)" @mousedown="startDragging">
@@ -52,8 +75,10 @@ const { activeTab, isDragging, wrapperRef, setActiveTab, startDragging } = useTo
   display: flex;
   overflow-x: auto;
   height: 100%;
-  scrollbar-width: none; /* Firefox */
-  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none;
+  /* Firefox */
+  -ms-overflow-style: none;
+  /* IE and Edge */
 }
 
 .tabs-wrapper::-webkit-scrollbar {

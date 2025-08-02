@@ -1,4 +1,5 @@
 <script setup>
+import ToolsSettingsTabs from './ToolsSettingsTabs.vue'
 import ColorPicker from '../common/ColorPicker.vue';
 import DropdownSelect from '../common/DropdownSelect.vue';
 import TextInput from '../common/TextInput.vue';
@@ -51,6 +52,7 @@ const {
 
 <template>
   <div class="tool-settings">
+    <ToolsSettingsTabs :tabs="[]" />
     <div class="settings-wrapper">
       <div class="specific-settings">
         <!-- Text -->

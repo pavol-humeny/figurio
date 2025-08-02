@@ -1,4 +1,5 @@
 <script setup>
+import ToolsSettingsTabs from './ToolsSettingsTabs.vue'
 import DefaultSlider from '@/components/common/DefaultSlider.vue'
 import { useViewportStore } from '@/stores/viewportStore'
 import { useMoveTool } from '@/composables/tools/useMoveTool'
@@ -22,6 +23,7 @@ const {
 
 <template>
   <div class="tool-settings">
+    <ToolsSettingsTabs :tabs="[]" />
     <div class="settings-wrapper">
       <div class="specific-settings">
         <!-- Zoom speed setting -->

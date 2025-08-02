@@ -1,4 +1,5 @@
 <script setup>
+import ToolsSettingsTabs from './ToolsSettingsTabs.vue'
 import { useImageStore } from '@/stores/imageStore'
 import ColorPicker from '../common/ColorPicker.vue'
 import NumberInput from '../common/NumberInput.vue'
@@ -47,6 +48,7 @@ const {
 
 <template>
   <div class="tool-settings">
+    <ToolsSettingsTabs :tabs="[]" />
     <div class="settings-wrapper">
       <div class="specific-settings">
         <!-- Frame variants -->
