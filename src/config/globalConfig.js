@@ -6,7 +6,7 @@ export const globalConfig = {
   defaultTheme: 'dark',
 
   // Supported languages
-  supportedLanguages: ['en', 'cz', 'sk'],
+  supportedLanguages: ['en', 'sk', 'cz'],
 
   // Default tool to start with
   startTool: 'move',

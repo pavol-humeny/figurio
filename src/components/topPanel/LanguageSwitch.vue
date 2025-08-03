@@ -1,6 +1,7 @@
 <script setup>
 import { ref } from 'vue'
 import { useLanguageSwitch } from '@/composables/topPanel/useLanguageSwitch'
+import { globalConfig } from '@/config/globalConfig'
 
 import ItemTip from '@/components/common/ItemTip.vue'
 
@@ -20,13 +21,16 @@ const hoveredLang = ref(null)
  * @returns {string} - CSS class for button styling
  */
 const getButtonClass = (lang) => {
+  let classes = []
+  if (!globalConfig.supportedLanguages.includes(lang)) {
+    classes.push('disabled')
+  }
   if (locale.value === lang && hoveredLang.value !== lang && hoveredLang.value !== null) {
-    return 'button-active hovered-away'
+    classes.push('button-active', 'hovered-away')
+  } else if (locale.value === lang) {
+    classes.push('button-active')
   }
-  if (locale.value === lang) {
-    return 'button-active'
-  }
-  return ''
+  return classes.join(' ')
 }
 
 </script>

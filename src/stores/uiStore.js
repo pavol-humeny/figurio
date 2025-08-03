@@ -139,7 +139,7 @@ export const useUiStore = defineStore('ui', {
     setRightPanelWidthIfTabsDoNotFit(width) {
       if (width > this.rightPanelWidth) {
         this.setRightPanelWidth(width)
-      }else{
+      } else {
         this.setRightPanelWidth(this.rightPanelDefaultWidth)
       }
     },

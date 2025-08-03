@@ -1,3 +1,5 @@
+import { globalConfig } from '@/config/globalConfig'
+
 import enTopPanel from './en/topPanel.json'
 import skTopPanel from './sk/topPanel.json'
 import czTopPanel from './cz/topPanel.json'
@@ -29,7 +31,7 @@ import czTutorialSteps from './cz/tutorialSteps.json'
 /**
  * Language-specific localization data for i18n
  */
-export default {
+const allLocales = {
   en: {
     topPanel: enTopPanel,
     privacy: enPrivacy,
@@ -58,3 +60,15 @@ export default {
     tutorialSteps: czTutorialSteps,
   },
 }
+
+/**
+ * Filter according to supported languages in globalConfig
+ */
+const enabledLocales = {}
+for (const lang of globalConfig.supportedLanguages) {
+  if (allLocales[lang]) {
+    enabledLocales[lang] = allLocales[lang]
+  }
+}
+
+export default enabledLocales
