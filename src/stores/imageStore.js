@@ -14,6 +14,7 @@ import * as pdfjsLib from 'pdfjs-dist/legacy/build/pdf'
 import pdfjsWorker from 'pdfjs-dist/legacy/build/pdf.worker?url'
 import { useViewportStore } from './viewportStore'
 import { useEditorStore } from './editorStore'
+import { globalConfig } from '@/config/globalConfig'
 
 pdfjsLib.GlobalWorkerOptions.workerSrc = pdfjsWorker
 
@@ -737,6 +738,7 @@ export const useImageStore = defineStore('imageStore', {
      * @param {import('vue-router').Router} router - Vue router instance
      */
     async saveToImageStore(files, t, router) {
+      if (globalConfig.featureFlags.enableImageLoad === false) return
       if (!files) return
 
       if (files.length > 1) {

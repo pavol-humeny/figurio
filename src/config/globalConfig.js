@@ -10,7 +10,7 @@ export const globalConfig = {
   featureFlags: {
     enableTools: {
       move: true,
-      select: false,
+      select: true,
       transform: true,
       smartCrop: true,
       grayscale: true,
@@ -22,7 +22,7 @@ export const globalConfig = {
       preset: true,
       export: true,
     },
-    enableTutorial: false,
+    enableTutorial: true,
     enableImageLoad: true,
     notEnabledMessage: 'This feature is currently not available.',
   },
