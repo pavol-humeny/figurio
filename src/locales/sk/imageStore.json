@@ -45,12 +45,19 @@
       "message": "Obrázok bol úspešne skopírovaný do schránky."
     }
   },
-  "confirm":{
+  "modal":{
     "scalePdfForBetterResolution":{
       "title": "Zmeniť mierku PDF pre lepšie rozlíšenie",
       "message": "Pre zlepšenie rozlíšenia zvážte zmenu mierky PDF. To zlepší kvalitu konečného obrázka.",
       "cancel": "Ne, zachovať pôvodnú veľkosť",
       "confirm": "Zmeniť mierku PDF"
+    },
+    "selectPdfPage": {
+      "title": "Výber strany PDF",
+      "message": "Tento PDF súbor obsahuje viacero strán. Vyber jednu na import.",
+      "cancel": "Zrušiť",
+      "confirm": "Vybrať stranu",
+      "pageRange": "Strany: {from} – {to}"
     }
   }
 

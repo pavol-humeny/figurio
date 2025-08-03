@@ -1,0 +1,78 @@
+<script setup>
+import { ref, watchEffect, computed } from 'vue'
+import { useGeneralModal } from '@/composables/modals/useGeneralModal'
+import { useI18n } from 'vue-i18n'
+import NumberDropdownInput from '@/components/common/NumberDropdownInput.vue'
+
+const { t } = useI18n()
+const { payload } = useGeneralModal()
+
+/**
+ * Selected page number (default 1)
+ */
+const selectedPage = ref(1)
+
+/**
+ * Set default to 1 when modal is shown
+ */
+watchEffect(() => {
+  if (payload.value?.numberOfPages) {
+    selectedPage.value = 1
+  }
+})
+
+/**
+ * Generates page options (1 to numberOfPages)
+ */
+const pageOptions = computed(() => {
+  const count = payload.value?.numberOfPages || 1
+  return Array.from({ length: count }, (_, i) => i + 1)
+})
+
+/**
+ * Emits selected page when modal is confirmed
+ */
+defineExpose({
+  selectedPage
+})
+</script>
+
+<template>
+  <div class="select-pdf-page-modal">
+    <p class="modal-text">{{ t('imageStore.modal.selectPdfPage.message') }}</p>
+    <div class="page-selection">
+      <NumberDropdownInput v-model="selectedPage" :options="pageOptions" :min="1" :max="payload?.numberOfPages || 1"
+        :style="{ width: 100 }" :background="'var(--background-c)'" />
+
+      <p class="page-range">
+        {{ t('imageStore.modal.selectPdfPage.pageRange', { from: 1, to: payload?.numberOfPages || 1 }) }}
+      </p>
+
+    </div>
+  </div>
+</template>
+
+<style scoped>
+.select-pdf-page-modal {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  padding: 10px 0;
+}
+
+.modal-text {
+  font-size: var(--text-font-size);
+}
+
+.page-selection {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.page-range {
+  font-size: var(--text-font-size);
+  color: var(--text-secondary-c);
+}
+</style>

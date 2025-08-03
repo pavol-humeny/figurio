@@ -10,7 +10,6 @@ import { useHelpModal } from '@/composables/modals/useHelpModal';
 import { useSettingsPanel } from '@/composables/topPanel/useSettingsPanel';
 import { useInteractiveTutorial } from '@/composables/tutorial/useInteractiveTutorial';
 
-
 const { t } = useI18n()
 
 const { uploadFile } = useUploadFileButton(useImageStore(), t, useRouter())
@@ -18,7 +17,7 @@ const { openHelpModal } = useHelpModal(useUiStore(), useImageStore(), useRouter(
 const { openSettingsPanel } = useSettingsPanel(useUiStore())
 const { prevStep, nextStep, finishTutorial, closeTutorial } = useInteractiveTutorial(useUiStore(), useImageStore(), useRouter(), t)
 
-useKeyboardShortcuts({ uploadFile, openHelpModal, openSettingsPanel,  prevStep, nextStep, finishTutorial, closeTutorial}, useUiStore(), useImageStore());
+useKeyboardShortcuts({ uploadFile, openHelpModal, openSettingsPanel, prevStep, nextStep, finishTutorial, closeTutorial }, useUiStore(), useImageStore());
 
 </script>
 

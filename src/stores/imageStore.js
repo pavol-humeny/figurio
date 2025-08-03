@@ -15,11 +15,13 @@ import pdfjsWorker from 'pdfjs-dist/legacy/build/pdf.worker?url'
 import { useViewportStore } from './viewportStore'
 import { useEditorStore } from './editorStore'
 import { globalConfig } from '@/config/globalConfig'
+import { useGeneralModal } from '@/composables/modals/useGeneralModal'
 
 pdfjsLib.GlobalWorkerOptions.workerSrc = pdfjsWorker
 
 const { showToastModal } = useToastModal()
 const { showConfirmModal } = useConfirmModal()
+const { showGeneralModal } = useGeneralModal()
 
 /**
  * Checks if a file name is valid by ensuring it does not contain invalid characters.
@@ -614,17 +616,40 @@ export const useImageStore = defineStore('imageStore', {
 
           try {
             const pdf = await pdfjsLib.getDocument({ data: typedArray }).promise
-            const page = await pdf.getPage(1)
 
-            let scaleLevel = 1
+            // Select page
+            let pdfPageNumber = 1
+            if (pdf.numPages > 1) {
+              uiStore.blockClicks = false
 
-            uiStore.blockClicks = false
+              const result = await showGeneralModal(
+                t('imageStore.modal.selectPdfPage.title'),
+                t('imageStore.modal.selectPdfPage.cancel'),
+                t('imageStore.modal.selectPdfPage.confirm'),
+                { numberOfPages: pdf.numPages }, // payload
+              )
+
+              if (!result || !result.selectedPage) {
+                uiStore.isLoading = false
+                this.closeFile() // Reset image store if user cancels
+                return
+              }
+
+              pdfPageNumber = result.selectedPage.value
+
+              uiStore.blockClicks = true
+            }
+
+            const page = await pdf.getPage(pdfPageNumber)
+
             // Confirm modal for image scale
+            let scaleLevel = 1
+            uiStore.blockClicks = false
             const confirmed = await showConfirmModal(
-              t('imageStore.confirm.scalePdfForBetterResolution.title'),
-              t('imageStore.confirm.scalePdfForBetterResolution.message'),
-              t('imageStore.confirm.scalePdfForBetterResolution.cancel'),
-              t('imageStore.confirm.scalePdfForBetterResolution.confirm'),
+              t('imageStore.modal.scalePdfForBetterResolution.title'),
+              t('imageStore.modal.scalePdfForBetterResolution.message'),
+              t('imageStore.modal.scalePdfForBetterResolution.cancel'),
+              t('imageStore.modal.scalePdfForBetterResolution.confirm'),
             )
             if (confirmed) {
               scaleLevel = 4 // Higher scale for better quality

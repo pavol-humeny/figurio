@@ -45,12 +45,20 @@
       "message": "The image has been successfully copied to the clipboard."
     }
   },
-  "confirm":{
+  "modal":{
     "scalePdfForBetterResolution":{
       "title": "Scale PDF for better resolution",
       "message": "For better resolution, consider scaling the PDF. This will improve the quality of the final image.",
       "cancel": "No, keep original size",
       "confirm": "Scale PDF"
+    },
+    "selectPdfPage":{
+      "title": "Select PDF Page",
+      "message": "This PDF contains multiple pages. Please choose one to import.",
+      "cancel": "Cancel",
+      "confirm": "Select Page",
+      "pageRange": "Pages: {from} - {to}"
     }
+
   }
 }
