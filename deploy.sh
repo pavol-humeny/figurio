@@ -3,7 +3,11 @@
 # Stop on errors
 set -e
 
-# Build the project
+# === CONFIGURATION ===
+VERSION_OVERRIDE=""         # Ak chceš manuálne zadať verziu, inak nechaj prázdne
+CUSTOM_MESSAGE=""           # Prida sa za commit message (nepovinné)
+
+# === BUILD ===
 npm run build
 
 # Move to the build output directory
@@ -14,13 +18,14 @@ git init
 git add -A
 
 # Get data from parent folder (project root)
-VERSION=$(node -p "require('../package.json').version")
+VERSION=${VERSION_OVERRIDE:-$(node -p "require('../package.json').version")}
 BRANCH=$(git -C .. rev-parse --abbrev-ref HEAD)
 HASH=$(git -C .. log -1 --format=%h)
 DATE=$(date '+%Y-%m-%d %H:%M:%S')
 
 # Compose commit message
 COMMIT_MSG="Deploy release v$VERSION from $BRANCH ($HASH) at $DATE"
+[ -n "$CUSTOM_MESSAGE" ] && COMMIT_MSG="$COMMIT_MSG — $CUSTOM_MESSAGE"
 
 # Commit and push
 git commit -m "$COMMIT_MSG"
