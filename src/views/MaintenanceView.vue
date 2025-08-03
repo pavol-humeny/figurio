@@ -1,35 +1,19 @@
 <script setup>
-import BaseIcon from '@/components/icons/BaseIcon.vue'
 import { ref, onMounted } from 'vue'
 import { useI18n } from 'vue-i18n'
 
 const { t } = useI18n()
 
 const canvasRef = ref(null)
-const tool = ref(null) // 'draw' | null
-let ctx
-let drawing = false
+let ctx = null
+let clearTimeoutId = null
 
-const startDraw = (e) => {
-  if (tool.value !== 'draw') return
-  drawing = true
-  const { x, y } = getPos(e)
-  ctx.beginPath()
-  ctx.moveTo(x, y)
-}
+const lastPos = ref({ x: 0, y: 0 })
+const isFirst = ref(true)
 
-const draw = (e) => {
-  if (!drawing || tool.value !== 'draw') return
-  const { x, y } = getPos(e)
-  ctx.lineTo(x, y)
-  ctx.stroke()
-}
-
-const stopDraw = () => {
-  if (drawing) ctx.closePath()
-  drawing = false
-}
-
+/**
+ * Get the position of the mouse relative to the canvas.
+ */
 const getPos = (e) => {
   const rect = canvasRef.value.getBoundingClientRect()
   return {
@@ -38,45 +22,60 @@ const getPos = (e) => {
   }
 }
 
-const setTool = (type) => {
-  if (tool.value === type) {
-    tool.value = null
-    canvasRef.value.style.cursor = 'default'
-  } else {
-    tool.value = type
-    canvasRef.value.style.cursor = 'crosshair'
-    if (type === 'draw') {
-      ctx.strokeStyle =
-        getComputedStyle(document.documentElement).getPropertyValue('--primary-c') || '#ccc'
-      ctx.lineWidth = 2
-    }
+/**
+ * Draws a line on the canvas based on mouse movement.
+ * @param {MouseEvent} e - The mouse event containing the position.
+ */
+const onMouseMove = (e) => {
+  const pos = getPos(e)
+
+  if (isFirst.value) {
+    lastPos.value = pos
+    isFirst.value = false
+    return
   }
+
+  ctx.beginPath()
+  ctx.moveTo(lastPos.value.x, lastPos.value.y)
+  ctx.lineTo(pos.x, pos.y)
+  ctx.stroke()
+  ctx.closePath()
+
+  lastPos.value = pos
+
+  // Reset the timeout to clear the canvas
+  if (clearTimeoutId) clearTimeout(clearTimeoutId)
+  clearTimeoutId = setTimeout(() => {
+    clearCanvas()
+  }, 15)
 }
 
+/**
+ * Clear the canvas
+ */
 const clearCanvas = () => {
-  const canvas = canvasRef.value
-  tool.value = null
-  ctx.clearRect(0, 0, canvas.width, canvas.height)
+  ctx.clearRect(0, 0, canvasRef.value.width, canvasRef.value.height)
+  isFirst.value = true
 }
 
+/**
+ * Set the canvas size and context on mount
+ */
 onMounted(() => {
   const canvas = canvasRef.value
   canvas.width = window.innerWidth
   canvas.height = window.innerHeight
   ctx = canvas.getContext('2d')
+
+  ctx.lineWidth = 2
+  ctx.strokeStyle = getComputedStyle(document.documentElement).getPropertyValue('--primary-c') || '#ccc'
   ctx.lineCap = 'round'
 })
 </script>
 
 <template>
   <div class="maintenance-view">
-    <canvas ref="canvasRef" @mousedown="startDraw" @mousemove="draw" @mouseup="stopDraw"
-      @mouseleave="stopDraw"></canvas>
-
-    <div class="tools">
-      <BaseIcon :name="tool === 'draw' ? 'IconCross' : 'IconEditPencil'" :size="24"
-        @click="tool === 'draw' ? clearCanvas() : setTool('draw')" :class="{ active: tool === 'draw' }" />
-    </div>
+    <canvas ref="canvasRef" @mousemove="onMouseMove" />
 
     <div class="text-content">
       <h1>{{ t('maintenance.message') }}</h1>
@@ -99,33 +98,7 @@ canvas {
   top: 0;
   left: 0;
   z-index: 0;
-}
-
-.tools {
-  position: absolute;
-  top: 30px;
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: 2;
-  display: flex;
-  gap: 10px;
-  cursor: pointer;
-}
-
-.tools button {
-  background: var(--background-c);
-  color: var(--primary-c);
-  font-size: 24px;
-  border: 2px solid var(--primary-c);
-  border-radius: 8px;
-  padding: 8px 12px;
-  cursor: pointer;
-  transition: background 0.2s;
-}
-
-.tools button.active {
-  background: var(--primary-c);
-  color: var(--background-c);
+  cursor: crosshair;
 }
 
 .text-content {
