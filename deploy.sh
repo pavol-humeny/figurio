@@ -4,8 +4,8 @@
 set -e
 
 # === CONFIGURATION ===
-VERSION_OVERRIDE=""         # Ak chceš manuálne zadať verziu, inak nechaj prázdne
-CUSTOM_MESSAGE=""           # Prida sa za commit message (nepovinné)
+VERSION_OVERRIDE="1.0.0"         # Ak chceš manuálne zadať verziu, inak nechaj prázdne
+CUSTOM_MESSAGE="First deployment"           # Prida sa za commit message (nepovinné)
 
 # === BUILD ===
 npm run build

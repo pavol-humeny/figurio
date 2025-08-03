@@ -39,6 +39,7 @@ const getString = (key, fallback) => {
   return value !== null ? value : fallback
 }
 
+
 /**
  * Store managing UI settings and state
  */
