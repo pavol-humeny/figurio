@@ -1,6 +1,6 @@
 export const globalConfig = {
   // Default language for the editor
-  defaultLanguage: 'sk',
+  defaultLanguage: 'en',
 
   // Supported languages
   supportedLanguages: ['en', 'cz', 'sk'],
