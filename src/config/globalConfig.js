@@ -1,6 +1,6 @@
 export const globalConfig = {
   // If app is running
-  isRunning: false,
+  isRunning: true,
 
   // Default language for the editor
   defaultLanguage: 'en',
