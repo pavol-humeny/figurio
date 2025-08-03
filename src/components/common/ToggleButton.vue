@@ -1,6 +1,5 @@
 <script setup>
 import ItemTip from './ItemTip.vue'
-import { defineProps, defineEmits } from 'vue'
 import { useToggleButton } from '@/composables/common/useToggleButton'
 
 /**
