@@ -154,4 +154,6 @@ body {
   --file-tabs-name-font-size: 12px;
 
   --ruler-size: 15px;
+
+  --vibration-range: 1px;
 }
