@@ -4,8 +4,8 @@
 set -e
 
 # === CONFIGURATION ===
-VERSION_OVERRIDE=""         # Ak chceš manuálne zadať verziu, inak nechaj prázdne
-CUSTOM_MESSAGE=""           # Prida sa za commit message (nepovinné)
+VERSION_OVERRIDE=""         # Override version from package.json (optional)
+CUSTOM_MESSAGE=""           # Custom commit message (optional)
 
 # === BUILD ===
 npm run build
