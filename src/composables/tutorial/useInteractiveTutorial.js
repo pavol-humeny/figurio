@@ -1,6 +1,7 @@
 import { ref, computed, nextTick, watch } from 'vue'
 import { getTutorialSteps } from '@/config/tutorialSteps'
 import { useToastModal } from '../modals/useToastModal'
+import { globalConfig } from '@/config/globalConfig'
 
 /**
  * Tutorial item and overlay positioning
@@ -51,6 +52,11 @@ const steps = ref([])
  */
 export function useInteractiveTutorial(uiStore, imageStore, router, t) {
   const { showToastModal } = useToastModal()
+
+  /**
+   * If the tutorial feature is enabled
+   */
+  const isTutorialEnabled = globalConfig.featureFlags.enableTutorial
 
   /**
    * Whether the tutorial is currently running
@@ -104,6 +110,8 @@ export function useInteractiveTutorial(uiStore, imageStore, router, t) {
    * Start the tutorial from the beginning, regardless of completion
    */
   const startTutorial = () => {
+    if (!isTutorialEnabled) return
+
     activeStep.value = 0
 
     // Get actual steps
@@ -123,6 +131,8 @@ export function useInteractiveTutorial(uiStore, imageStore, router, t) {
    * Continue tutorial from stored step (if not completed)
    */
   const continueTutorial = () => {
+    if (!isTutorialEnabled) return
+
     if (uiStore.tutorialCompleted) {
       return
     }
@@ -309,5 +319,6 @@ export function useInteractiveTutorial(uiStore, imageStore, router, t) {
     numberOfSteps,
     finishTutorial,
     continueTutorial,
+    isTutorialEnabled,
   }
 }

@@ -1,4 +1,5 @@
 import { useI18n } from 'vue-i18n'
+import { globalConfig } from '@/config/globalConfig'
 
 /**
  * Logic for switching and persisting application language
@@ -14,7 +15,7 @@ export function useLanguageSwitch() {
   /**
    * Load previously saved language preference
    */
-  const savedLanguage = localStorage.getItem('language') || 'en'
+  const savedLanguage = localStorage.getItem('language') || globalConfig.defaultLanguage
   if (savedLanguage && savedLanguage !== locale.value) {
     locale.value = savedLanguage
   }

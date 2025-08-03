@@ -4,6 +4,7 @@ import ItemTip from '@/components/common/ItemTip.vue'
 import { useEditorStore } from '@/stores/editorStore'
 import { useOneTool } from '@/composables/tools/useOneTool'
 import { useImageStore } from '@/stores/imageStore'
+import { globalConfig } from '@/config/globalConfig'
 
 const editorStore = useEditorStore()
 const imageStore = useImageStore()
@@ -59,7 +60,7 @@ const { wrapperRef, subToolPos, onRightClick, onClickTab, onClickTool } = useOne
 
 <template>
   <ItemTip v-bind="props.advanceTip?.advance ? {
-    text: props.advanceTip.text,
+    text: globalConfig.featureFlags.enableTools[props.tool.key] === false ? globalConfig.featureFlags.notEnabledMessage : props.advanceTip.text,
     title: props.advanceTip.title,
     shortcut: props.advanceTip.shortcut,
     advance: true,
@@ -68,8 +69,10 @@ const { wrapperRef, subToolPos, onRightClick, onClickTab, onClickTool } = useOne
     text: props.tip,
     position: 'top-right',
   }">
-    <div class="tool-wrapper" ref="wrapperRef" @contextmenu="onRightClick" :id="props.tool.key === 'export' ? 'export-tool' : undefined" >
-      <div class="tool" :class="{ active: props.active && imageStore.isImageLoaded, disabled: props.disabled }"
+    <div class="tool-wrapper" ref="wrapperRef" @contextmenu="onRightClick"
+      :id="props.tool.key === 'export' ? 'export-tool' : undefined">
+      <div class="tool"
+        :class="{ active: props.active && imageStore.isImageLoaded, disabled: props.disabled || globalConfig.featureFlags.enableTools[props.tool.key] === false }"
         @click.left="onClickTool">
         <BaseIcon :name="props.tool.iconName" :size="27" :color="'var(--primary-c)'" />
       </div>

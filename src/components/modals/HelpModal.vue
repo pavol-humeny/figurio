@@ -9,6 +9,8 @@ import { useI18n } from 'vue-i18n'
 import { useUiStore } from '@/stores/uiStore';
 import { useRouter } from 'vue-router';
 import { useImageStore } from '@/stores/imageStore';
+import { useInteractiveTutorial } from '@/composables/tutorial/useInteractiveTutorial';
+import { globalConfig } from '@/config/globalConfig';
 
 const { messages, locale, t } = useI18n()
 
@@ -49,9 +51,16 @@ const {
   isVisible,
   helpContentRef,
   closeHelpModal,
-  startTutorial,
-  continueTutorial,
+  startInteractiveTutorial,
+  continueInteractiveTutorial,
 } = useHelpModal(useUiStore(), useImageStore(), useRouter(), t);
+
+const { isTutorialEnabled } = useInteractiveTutorial(
+  useUiStore(),
+  useImageStore(),
+  useRouter(),
+  t
+)
 </script>
 
 <template>
@@ -288,7 +297,8 @@ const {
             <!-- Tutorial -->
             <div class="help-content">
               <div class="tutorial-title-wrapper">
-                <BaseIcon v-if="tutorialCompleted" class="tutorial-completed-icon" name="IconTick" size="20" :tip='$t("help.helpContent.tutorial.tutorialCompletedTip")' position="top-right"/>
+                <BaseIcon v-if="tutorialCompleted" class="tutorial-completed-icon" name="IconTick" size="20"
+                  :tip='$t("help.helpContent.tutorial.tutorialCompletedTip")' position="top-right" />
                 <p class="help-content-title" style="margin-bottom: 0;">
                   {{ $t('help.helpContent.tutorial.title') }}
                 </p>
@@ -299,9 +309,12 @@ const {
                 </li>
               </ul>
               <div class="tutorial-button">
-                <DefaultButton :text="$t('help.startTutorialButton.text')" @click="startTutorial()" />
-                <DefaultButton :text="$t('help.continueTutorialButton.text')" @click="continueTutorial()"
-                  v-if="!tutorialCompleted && tutorialStep !== 0" />
+                <DefaultButton :disabled="!isTutorialEnabled" :text="$t('help.startTutorialButton.text')"
+                  @click="startInteractiveTutorial()"
+                  :tip="!isTutorialEnabled ? globalConfig.featureFlags.notEnabledMessage : ''" />
+                <DefaultButton :disabled="!isTutorialEnabled" :text="$t('help.continueTutorialButton.text')"
+                  @click="continueInteractiveTutorial()" v-if="!tutorialCompleted && tutorialStep !== 0"
+                  :tip="!isTutorialEnabled ? globalConfig.featureFlags.notEnabledMessage : ''" />
               </div>
             </div>
 
@@ -462,7 +475,7 @@ const {
   gap: 10px;
 }
 
-.tutorial-title-wrapper{
+.tutorial-title-wrapper {
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -542,6 +555,4 @@ const {
   font-size: var(--text-font-size);
   line-height: 1.3;
 }
-
-
 </style>

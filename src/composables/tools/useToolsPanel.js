@@ -4,6 +4,7 @@ import { useImageStore } from '@/stores/imageStore'
 import { useEditorStore } from '@/stores/editorStore'
 import { useHistoryStore } from '@/stores/historyStore'
 import { useCollapsiblePanel } from '../common/useCollapsiblePanel'
+import { globalConfig } from '@/config/globalConfig'
 
 /**
  * Logic for managing the left tools panel
@@ -121,6 +122,10 @@ export function useToolsPanel(editorStore, imageStore, uiStore, t) {
    */
   const toggleTool = (toolKey, tabKey) => {
     if (!imageStore.isImageLoaded) return
+    if (globalConfig.featureFlags.enableTools[toolKey] === false) {
+      console.log('Tool is disabled:', toolKey)
+      return
+    }
 
     console.log('Toggle tool:', toolKey, 'Tab:', tabKey)
 

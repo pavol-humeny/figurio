@@ -22,6 +22,7 @@ const isVisible = ref(false)
  * }}
  */
 export function useHelpModal(uiStore, imageStore, router, t) {
+  const { startTutorial, continueTutorial } = useInteractiveTutorial(uiStore, imageStore, router, t)
   /**
    * Reference to the scrollable content container
    */
@@ -93,19 +94,19 @@ export function useHelpModal(uiStore, imageStore, router, t) {
   /**
    * Start the tutorial
    */
-  const startTutorial = () => {
+  const startInteractiveTutorial = () => {
     closeHelpModal()
 
-    useInteractiveTutorial(uiStore, imageStore, router, t).startTutorial()
+    startTutorial()
   }
 
   /**
    * Continue the tutorial from the current step
    */
-  const continueTutorial = () => {
+  const continueInteractiveTutorial = () => {
     closeHelpModal()
 
-    useInteractiveTutorial(uiStore, imageStore, router, t).continueTutorial()
+    continueTutorial()
   }
 
   // Check scroll position on mount
@@ -133,7 +134,7 @@ export function useHelpModal(uiStore, imageStore, router, t) {
     checkScroll,
     openHelpModal,
     closeHelpModal,
-    startTutorial,
-    continueTutorial,
+    startInteractiveTutorial,
+    continueInteractiveTutorial,
   }
 }

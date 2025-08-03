@@ -84,7 +84,7 @@ const {
   margin-top: 10px;
 }
 
-.tutorial-step-indicator{
+.tutorial-step-indicator {
   font-size: var(--text-font-size);
   color: var(--text-c);
   font-weight: var(--text-font-weight);
@@ -124,5 +124,4 @@ const {
   background: transparent;
   pointer-events: all;
 }
-
 </style>
