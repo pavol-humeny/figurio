@@ -28,6 +28,10 @@ import enTutorialSteps from './en/tutorialSteps.json'
 import skTutorialSteps from './sk/tutorialSteps.json'
 import czTutorialSteps from './cz/tutorialSteps.json'
 
+import enMaintenance from './en/maintenance.json'
+import skMaintenance from './sk/maintenance.json'
+import czMaintenance from './cz/maintenance.json'
+
 /**
  * Language-specific localization data for i18n
  */
@@ -40,6 +44,7 @@ const allLocales = {
     tools: enTools,
     help: enHelp,
     tutorialSteps: enTutorialSteps,
+    maintenance: enMaintenance,
   },
   sk: {
     topPanel: skTopPanel,
@@ -49,6 +54,7 @@ const allLocales = {
     tools: skTools,
     help: skHelp,
     tutorialSteps: skTutorialSteps,
+    maintenance: skMaintenance,
   },
   cz: {
     topPanel: czTopPanel,
@@ -58,6 +64,7 @@ const allLocales = {
     tools: czTools,
     help: czHelp,
     tutorialSteps: czTutorialSteps,
+    maintenance: czMaintenance,
   },
 }
 

@@ -13,6 +13,7 @@ import InteractiveTutorial from './components/tutorial/InteractiveTutorial.vue'
 import GeneralModal from './components/modals/GeneralModal.vue'
 import SelectPdfPageModal from './components/modals/SelectPdfPageModal.vue'
 import { useRouter, useRoute } from 'vue-router'
+import { globalConfig } from './config/globalConfig.js'
 
 const router = useRouter()
 const route = useRoute()
@@ -50,6 +51,12 @@ const handleBeforeUnload = (event) => {
 onMounted(() => {
   window.addEventListener('beforeunload', handleBeforeUnload)
 
+  // If the app is not running show MaintenanceView
+  if (!globalConfig.isRunning) {
+    router.replace({ name: 'maintenance' })
+    return
+  }
+
   // Redirect to home view on reload
   if (route.name !== 'home') {
     router.replace({ name: 'home' })
@@ -77,7 +84,7 @@ onBeforeUnmount(() => {
     <ExportToolSettings />
     <InteractiveTutorial />
 
-    <div class="top-panel">
+    <div class="top-panel" v-if="globalConfig.isRunning">
       <TopPanel />
     </div>
     <div class="content">
