@@ -1,6 +1,8 @@
+import { globalConfig } from '@/config/globalConfig'
+
 export const uiConfig = {
   // Theme
-  theme: 'dark',
+  theme: globalConfig.defaultTheme,
 
   // Key Shortcuts
   keyShortcutsEnabled: true,

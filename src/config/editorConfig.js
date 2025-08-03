@@ -1,6 +1,8 @@
+import { globalConfig } from '@/config/globalConfig'
+
 export const editorConfig = {
   // Default tool key when the editor is opened
-  defaultToolKey: 'move',
+  defaultToolKey: globalConfig.startTool,
 
   // Smart crop settings
   smartCropDefaultColor: '#ffffff',

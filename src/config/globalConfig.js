@@ -2,8 +2,14 @@ export const globalConfig = {
   // Default language for the editor
   defaultLanguage: 'en',
 
+  // Default theme for the editor
+  defaultTheme: 'dark',
+
   // Supported languages
   supportedLanguages: ['en', 'cz', 'sk'],
+
+  // Default tool to start with
+  startTool: 'move',
 
   // Feature flags
   // UPDATE new tool
