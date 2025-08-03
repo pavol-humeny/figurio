@@ -10,8 +10,6 @@ import ExportToolSettings from './components/toolsSettings/ExportToolSettings.vu
 import HelpModal from './components/modals/HelpModal.vue'
 import { useImageStore } from './stores/imageStore'
 import InteractiveTutorial from './components/tutorial/InteractiveTutorial.vue'
-import GeneralModal from './components/modals/GeneralModal.vue'
-import SelectPdfPageModal from './components/modals/SelectPdfPageModal.vue'
 import { useRouter, useRoute } from 'vue-router'
 
 const router = useRouter()
