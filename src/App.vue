@@ -12,7 +12,10 @@ import { useImageStore } from './stores/imageStore'
 import InteractiveTutorial from './components/tutorial/InteractiveTutorial.vue'
 import GeneralModal from './components/modals/GeneralModal.vue'
 import SelectPdfPageModal from './components/modals/SelectPdfPageModal.vue'
+import { useRouter, useRoute } from 'vue-router'
 
+const router = useRouter()
+const route = useRoute()
 
 const imageStore = useImageStore()
 
@@ -46,6 +49,11 @@ const handleBeforeUnload = (event) => {
  */
 onMounted(() => {
   window.addEventListener('beforeunload', handleBeforeUnload)
+
+  // Redirect to home view on reload
+  if (route.name !== 'home') {
+    router.replace({ name: 'home' })
+  }
 })
 
 /**

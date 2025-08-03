@@ -2,7 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '@/views/HomeView.vue'
 
 /**
- * App router with two main views:
+ * App router with views:
  * - HomeView ("/")
  * - EditorView ("/Editor")
  */
