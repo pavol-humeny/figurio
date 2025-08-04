@@ -205,25 +205,8 @@
     "tip": "Aplikuje efekt rozmazania na obrázok",
     "tipDisabled": "",
     "shortcut": "B",
-    "subTools": {
-      "add": {
-        "label": "Pridať rozmazanie",
-        "tip": "Pridať efekt rozmazania na obrázok",
-        "shortcut": ""
-      },
-      "modify": {
-        "label": "Upraviť rozmazanie",
-        "tip": "Upraviť existujúci efekt rozmazania",
-        "shortcut": ""
-      }
-    },
-    "settings": {
-      "add": {
-        "label": "Pridať rozmazanie"
-      },
-      "modify": {
-        "label": "Upraviť rozmazanie"
-      }
+        "settings": {
+      "general":{}
     }
   },
   "shape": {

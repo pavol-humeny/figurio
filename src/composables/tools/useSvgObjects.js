@@ -4,12 +4,14 @@ import { useShapeTool } from './useShapeTool'
 import { useMath } from '../common/useMath'
 import { useSvgFunctions } from './useSvgFunctions'
 import { editorConfig } from '@/config/editorConfig'
+import { useBlurTool } from './useBlurTool'
 
 export function useSvgObjects(imageStore, historyStore, viewportStore, editorStore, t) {
   const { round } = useMath()
   const textTool = useTextTool(imageStore, historyStore, editorStore, t)
   const shapeTool = useShapeTool(editorStore, imageStore, historyStore, t)
   const { getSnapOffsetToEdges } = useSvgFunctions(imageStore)
+  const blurTool = useBlurTool(imageStore, historyStore, editorStore, t)
 
   /**
    * Selection box rectangle (used when dragging with select tool)
@@ -363,9 +365,11 @@ export function useSvgObjects(imageStore, historyStore, viewportStore, editorSto
     const objectClass = editorStore.selectedToolKey
     let objectType = editorStore.selectedTabPerTool[objectClass]
 
-    if (objectType === 'rectangle') objectType = 'rect'
+    if (objectClass === 'blur') {
+      objectType = 'rect'
+    }
 
-    console.log(`Mouse down on SVG with tool: ${objectClass}, objectType: ${objectType}`)
+    if (objectType === 'rectangle') objectType = 'rect'
 
     const rect = viewportStore.viewportContentRect
     const x = round((event.clientX - rect.left - viewportStore.panX) / viewportStore.realZoomLevel)
@@ -383,11 +387,11 @@ export function useSvgObjects(imageStore, historyStore, viewportStore, editorSto
     }
 
     let objectFillColor = 'none'
-    let objectStrokeColor
-    let objectStrokeWidth
+    let objectStrokeColor = 'none'
+    let objectStrokeWidth = 0
     let objectOpacity = 1
     let objectCornerRadius = 0
-    let objectLineType
+    let objectLineType = 'solid'
     // let objectLineArrowStart = 'none'
     // let objectLineArrowEnd = 'none'
 
@@ -415,17 +419,11 @@ export function useSvgObjects(imageStore, historyStore, viewportStore, editorSto
       // objectLineArrowStart = lineArrowStart
       // objectLineArrowEnd = lineArrowEnd
     } else if (objectClass === 'blur') {
-      objectFillColor = '#ff0000'
-    }
+      const { fillColor } = blurTool.getBlurAttributes()
 
-    console.log(
-      'objectType',
-      objectType,
-      'strokeWidth',
-      objectStrokeWidth,
-      'strokeColor',
-      objectStrokeColor,
-    )
+      console.log('Creating blur object')
+      objectFillColor = fillColor
+    }
 
     if (objectType === 'rect') {
       base.attrs = { x, y, width: 1, height: 1 }

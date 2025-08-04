@@ -206,24 +206,49 @@
     "tip": "Applies a blur effect to the image",
     "tipDisabled": "",
     "shortcut": "B",
-    "subTools": {
-      "add": {
-        "label": "Add Blur",
-        "tip": "Add a blur effect to the image",
-        "shortcut": ""
-      },
-      "modify": {
-        "label": "Modify Blur",
-        "tip": "Modify the existing blur effect",
-        "shortcut": ""
-      }
-    },
     "settings": {
-      "add": {
-        "label": "Add Blur"
-      },
-      "modify": {
-        "label": "Modify Blur"
+      "general":{
+        "position": {
+          "label": "Position",
+          "x": "X",
+          "y": "Y"
+        },
+        "dimensions": {
+          "label": "Dimensions",
+          "width": "Width",
+          "height": "Height",
+          "tipLinked": "Unlink width and height",
+          "tipUnlinked": "Link width and height"
+        },
+        "rotation": {
+          "label": "Rotation",
+          "tip": "Adjust the rotation angle or double click icon to reset rotation"
+        },
+        "blurTypes": {
+          "label": "Blur types",
+          "tip": "Select the type of blur effect",
+          "options": {
+            "gaussian": "Gaussian",
+            "box": "Box",
+            "motion": "Motion",
+            "radial": "Radial"
+          }
+        },
+        "zIndex": {
+          "label": "Z-index",
+          "bringToFrontButton": {
+            "text": "Bring to front"
+          },
+          "sendToBackButton": {
+            "text": "Send to back"
+          },
+          "moveForwardButton": {
+            "text": "Move forward"
+          },  
+          "moveBackwardButton": {
+            "text": "Move backward"
+          }
+        }
       }
     }
   },

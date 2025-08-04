@@ -205,25 +205,8 @@
     "tip": "Aplikuje efekt rozmazání na obrázek",
     "tipDisabled": "",
     "shortcut": "B",
-    "subTools": {
-      "add": {
-        "label": "Přidat rozmazání",
-        "tip": "Přidat efekt rozmazání na obrázek",
-        "shortcut": ""
-      },
-      "modify": {
-        "label": "Upravit rozmazání",
-        "tip": "Upravit existující efekt rozmazání",
-        "shortcut": ""
-      }
-    },
     "settings": {
-      "add": {
-        "label": "Přidat rozmazání"
-      },
-      "modify": {
-        "label": "Upravit rozmazání"
-      }
+      "general":{}
     }
   },
   "shape": {

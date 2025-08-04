@@ -56,16 +56,6 @@ export const toolsDefinitions = [
     key: 'blur',
     iconName: 'IconBlurTool',
     settingsComponent: () => import('@/components/toolsSettings/BlurToolSettings.vue'),
-    subTools: [
-      {
-        key: 'add',
-        iconName: 'IconPlus',
-      },
-      {
-        key: 'modify',
-        iconName: 'IconModify',
-      },
-    ],
   },
   {
     key: 'shape',

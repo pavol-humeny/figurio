@@ -254,6 +254,10 @@ export function useSvgObjectWrapper(
   const onMouseDown = (event) => {
     if (!areSvgObjectOperationsEnabled.value) return
 
+    console.log('onMouseDown in svg wrapper', object.value.id)
+
+    if (editorStore.selectedToolKey !== object.value.class) return
+
     imageStore.selectedSvgObjectId = object.value.id
     startX.value = event.clientX
     startY.value = event.clientY

@@ -43,7 +43,7 @@ export function useShapeTool(editorStore, imageStore, historyStore, t) {
   /**
    * Hide position and dimensions settings in the shape tool settings
    */
-  const hidePositionAndDimensions = ref(false)
+  const hidePositionAndDimensions = ref(true)
 
   /**
    * Reset the local object settings to default values
@@ -477,15 +477,6 @@ export function useShapeTool(editorStore, imageStore, historyStore, t) {
         localObjectSettings.value.height = clampedHeight
         localObjectSettings.value.width = Math.round(
           clamp(clampedHeight * aspectRatio, 0, maxShapeWidth.value),
-        )
-
-        console.log(
-          'aspectRation, h, w, max w, max h',
-          aspectRatio,
-          clampedHeight,
-          localObjectSettings.value.width,
-          maxShapeWidth.value,
-          maxShapeHeight.value,
         )
       } else {
         localObjectSettings.value.height = clampedHeight
