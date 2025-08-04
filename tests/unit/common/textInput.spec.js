@@ -83,4 +83,16 @@ describe('TextInput.vue', () => {
     const input = wrapper.find('input[type="text"]')
     expect(input.element.value).toBe('changed')
   })
+
+  it('focuses the input when focus() is called', async () => {
+    const wrapper = mount(TextInput, { props: { modelValue: '' } })
+    const input = wrapper.find('input[type="text"]')
+
+    // Spy on native focus method
+    const focusSpy = vi.spyOn(input.element, 'focus')
+    wrapper.vm.focus()
+    await wrapper.vm.$nextTick()
+
+    expect(focusSpy).toHaveBeenCalled()
+  })
 })
