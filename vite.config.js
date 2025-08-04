@@ -16,6 +16,12 @@ export default defineConfig({
   test: {
     globals: true,
     environment: 'jsdom',
+    coverage: {
+      provider: 'v8', 
+      reporter: ['text', 'html', 'lcov'],
+      reportsDirectory: './coverage',
+      exclude: ['**/tests/**', '**/__mocks__/**'],
+    },
   },
   define: {
     'process.env': {},
