@@ -20,11 +20,9 @@ export function useTimeInput(props, emit) {
   const hours = ref(Math.floor(props.modelValue / 60))
   const minutes = ref(props.modelValue % 60)
 
-  console.log('useTimeInput initialized with:', {
-    initialHours: hours.value,
-    initialMinutes: minutes.value,
-  })
-
+  /**
+   * Watch for external changes to modelValue and update internal state
+   */
   watch(
     () => props.modelValue,
     (val) => {
@@ -35,9 +33,10 @@ export function useTimeInput(props, emit) {
 
   /**
    * Displayed as 2-digit string, but stored as number
+   * @param {Event} event - Input event
    */
-  const onHoursInput = (e) => {
-    const val = e.target.value
+  const onHoursInput = (event) => {
+    const val = event.target.value
     const parsed = parseInt(val, 10)
 
     if (isNaN(parsed) || parsed < 0 || parsed > 23) {
@@ -47,21 +46,25 @@ export function useTimeInput(props, emit) {
     }
 
     // Always update visible value to match internal state
-    e.target.value = hours.value.toString().padStart(2, '0')
+    event.target.value = hours.value.toString().padStart(2, '0')
   }
 
-  const onMinutesInput = (e) => {
-    const val = e.target.value
+  /**
+   * Displayed as 2-digit string, but stored as number
+   * @param {Event} event - Input event
+   */
+  const onMinutesInput = (event) => {
+    const val = event.target.value
     const parsed = parseInt(val, 10)
 
     if (isNaN(parsed) || parsed < 0 || parsed > 59) {
-      minutes.value = props.modelValue % 60
+      minutes.value = 10 // Default to 10 minutes if invalid
     } else {
       minutes.value = parsed
     }
 
     // Always update visible value to match internal state
-    e.target.value = minutes.value.toString().padStart(2, '0')
+    event.target.value = minutes.value.toString().padStart(2, '0')
   }
 
   /**
