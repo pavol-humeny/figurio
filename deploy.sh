@@ -27,9 +27,11 @@ DATE=$(date '+%Y-%m-%d %H:%M:%S')
 COMMIT_MSG="Deploy release v$VERSION from $BRANCH ($HASH) at $DATE"
 [ -n "$CUSTOM_MESSAGE" ] && COMMIT_MSG="$COMMIT_MSG — $CUSTOM_MESSAGE"
 
-# Commit and push
+# Commit without pushing
 git commit -m "$COMMIT_MSG"
-git push -f git@github.com:pavol-humeny/BP_Image_editor.git master:gh-pages
+
+# Reminder to user
+echo "Build committed locally. Run the following to push:"
 
 # Go back
 cd -

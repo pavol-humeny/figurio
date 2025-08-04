@@ -11,7 +11,8 @@
     "format": "prettier --write src/",
     "test": "vitest",
     "test:ui": "vitest --ui",
-    "deploy": "sh deploy.sh"
+    "deploy": "sh deploy.sh",
+    "deploy:push": "sh deployPush.sh"
   },
   "dependencies": {
     "@vueuse/core": "^13.5.0",
