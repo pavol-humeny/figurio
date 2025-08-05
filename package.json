@@ -12,7 +12,9 @@
     "test": "vitest",
     "test:ui": "vitest --ui",
     "deploy": "sh deploy.sh",
-    "deploy:push": "sh deployPush.sh"
+    "deploy:push": "sh deployPush.sh",
+    "i18n:export": "node scripts/ExportTranslations.js",
+    "i18n:import": "node scripts/ImportTranslations.js"
   },
   "dependencies": {
     "@vueuse/core": "^13.5.0",
