@@ -136,12 +136,13 @@ export const useImageStore = defineStore('imageStore', {
         },
       },
     ],
-    /** ID of the currently selected SVG object */
-    selectedSvgObjectId: null,
+    /** ID of the currently selected SVG object */ selectedSvgObjectId: null,
     /** ID of the SVG object that was just created */
-    justCreatedSvgObjectId: null, // TODO - reset value
+    justCreatedSvgObjectId: null,
     /** Array of selected SVG object IDs for multi-selection */
-    selectedSvgObjectIds: [], //  TODO - reset value
+    selectedSvgObjectIds: [],
+    /** Dynamic SVG definitions */
+    svgDefs: [],
 
     /** Array of image operations to apply */
     imageOperations: [],
@@ -462,6 +463,13 @@ export const useImageStore = defineStore('imageStore', {
       this.tmpRenderedImage = null
 
       this.newRenderedImage = null
+
+      // TODO - uncomment
+      // this.svgObjects = []
+      // this.selectedSvgObjectId = null
+      // this.justCreatedSvgObjectId = null
+      // this.selectedSvgObjectIds = []
+      // this.svgDefs = []
 
       this.resetImageStoreForNewFile()
     },
@@ -848,7 +856,8 @@ export const useImageStore = defineStore('imageStore', {
      * @returns {Promise<boolean>} - True if export was started
      */
     async exportFile(editorStore, historyStore, t) {
-      if (!this.getRenderedImage({ t, renderCall: true })) return false
+      const canvas = this.getRenderedImage({ t, renderCall: true })
+      if (!canvas) return false
 
       console.log('Exporting file...')
 
@@ -856,20 +865,54 @@ export const useImageStore = defineStore('imageStore', {
       const isPdf = this.newFileFormat === 'pdf'
       const isSvg = this.newFileFormat === 'svg'
 
+      // Pre SVG a PDF nespúšťame raster preview
       await this.generatePreview(editorStore, historyStore, t, !isPdf && !isSvg)
 
+      // Export as SVG
       if (isSvg) {
         await this.exportAsSvg(width, height, t)
+
+        showToastModal(
+          'success',
+          t('imageStore.toast.successFileExported.title'),
+          t('imageStore.toast.successFileExported.message', {
+            fileName: this.newFileName,
+          }),
+        )
+
         return true
       }
 
+      // Export as PDF with transparency preserved
+      if (isPdf) {
+        // Use toBlob to preserve alpha channel
+        const blob = await new Promise((resolve) => canvas.toBlob(resolve, 'image/png'))
+
+        const reader = new FileReader()
+        reader.onload = async () => {
+          const image = new Image()
+          image.onload = async () => {
+            await this.exportAsPdf(image, width, height, t)
+
+            showToastModal(
+              'success',
+              t('imageStore.toast.successFileExported.title'),
+              t('imageStore.toast.successFileExported.message', {
+                fileName: this.newFileName,
+              }),
+            )
+          }
+          image.src = reader.result
+        }
+        reader.readAsDataURL(blob)
+
+        return true
+      }
+
+      // Export as raster image (PNG, JPEG, WebP)
       const image = new Image()
       image.onload = async () => {
-        if (isPdf) {
-          await this.exportAsPdf(image, width, height, t)
-        } else {
-          await this.exportAsRaster(image, width, height, quality)
-        }
+        await this.exportAsRaster(image, width, height, quality)
 
         showToastModal(
           'success',
@@ -879,10 +922,7 @@ export const useImageStore = defineStore('imageStore', {
           }),
         )
       }
-
-      image.src = isPdf
-        ? this.getRenderedImage({ t, renderCall: true }).toDataURL()
-        : this.previewUrl
+      image.src = this.previewUrl
 
       return true
     },
@@ -933,6 +973,8 @@ export const useImageStore = defineStore('imageStore', {
      * @returns {Promise<void>}
      */
     async exportAsPdf(image, width, height, t) {
+      // TODO - ak obsahuje blur efekt tak je potrebne zobrazit hlasku ze sa to nezobrazí správne (nebude vidno blur)
+      // TODO - pridat hlasku o tom ci to rasterizovať aby sa s tym uz nedalo hýbať
       const imageStore = this
       const historyStore = useHistoryStore()
       const editorStore = useEditorStore()
@@ -959,34 +1001,41 @@ export const useImageStore = defineStore('imageStore', {
         format: [finalWidth, finalHeight],
       })
 
-      // === 1. Render base image into PDF ===
+      // 1. Render base image into PDF
       pdf.addImage(image, 'PNG', offsetX, offsetY, image.width, image.height)
 
-      // === 2. Add svg objects if any ===
+      // 2. Add svg objects if any
       // SVG <defs> for markers (arrows, circles, squares)
       // UPDATE svg string
-      const svgDefsString = `
-          <defs>
-            <marker id="arrow-end" markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto" markerUnits="strokeWidth">
-              <path d="M0,0 L0,6 L6,3 z" fill="context-stroke" />
-            </marker>
-            <marker id="arrow-start" markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto-start-reverse" markerUnits="strokeWidth">
-              <path d="M0,0 L0,6 L6,3 z" fill="context-stroke" />
-            </marker>
-            <marker id="circle-end" markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto" markerUnits="strokeWidth">
-              <circle cx="3" cy="3" r="2" fill="context-stroke" />
-            </marker>
-            <marker id="circle-start" markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto" markerUnits="strokeWidth">
-              <circle cx="3" cy="3" r="2" fill="context-stroke" />
-            </marker>
-            <marker id="square-end" markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto" markerUnits="strokeWidth">
-              <rect x="1.5" y="1.5" width="3" height="3" fill="context-stroke" />
-            </marker>
-            <marker id="square-start" markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto" markerUnits="strokeWidth">
-              <rect x="1.5" y="1.5" width="3" height="3" fill="context-stroke" />
-            </marker>
-          </defs>
+      const staticDefs = `
+        <marker id="arrow-end" markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto" markerUnits="strokeWidth">
+          <path d="M0,0 L0,6 L6,3 z" fill="context-stroke" />
+        </marker>
+        <marker id="arrow-start" markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto-start-reverse" markerUnits="strokeWidth">
+          <path d="M0,0 L0,6 L6,3 z" fill="context-stroke" />
+        </marker>
+        <marker id="circle-end" markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto" markerUnits="strokeWidth">
+          <circle cx="3" cy="3" r="2" fill="context-stroke" />
+        </marker>
+        <marker id="circle-start" markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto" markerUnits="strokeWidth">
+          <circle cx="3" cy="3" r="2" fill="context-stroke" />
+        </marker>
+        <marker id="square-end" markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto" markerUnits="strokeWidth">
+          <rect x="1.5" y="1.5" width="3" height="3" fill="context-stroke" />
+        </marker>
+        <marker id="square-start" markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto" markerUnits="strokeWidth">
+          <rect x="1.5" y="1.5" width="3" height="3" fill="context-stroke" />
+        </marker>
         `.trim()
+
+      const dynamicDefs = Object.values(this.svgDefs || {}).join('\n')
+
+      const svgDefsString = `
+        <defs>
+          ${staticDefs}
+          ${dynamicDefs}
+        </defs>
+      `.trim()
 
       if (this.svgObjects.length > 0) {
         const svgString = `
@@ -1024,7 +1073,7 @@ export const useImageStore = defineStore('imageStore', {
         }
       }
 
-      // === 3. Add frame SVG if enabled ===
+      // 3. Add frame SVG if enabled
       if (this.frame.enabled && this.frameSvg) {
         try {
           const parser = new DOMParser()
@@ -1111,14 +1160,6 @@ export const useImageStore = defineStore('imageStore', {
       link.download = `${this.newFileName}.svg`
       link.click()
       URL.revokeObjectURL(url)
-
-      showToastModal(
-        'success',
-        t('imageStore.toast.successFileExported.title'),
-        t('imageStore.toast.successFileExported.message', {
-          fileName: this.newFileName,
-        }),
-      )
     },
 
     /**
@@ -1140,28 +1181,36 @@ export const useImageStore = defineStore('imageStore', {
 
       // SVG <defs> for markers (arrows, circles, squares)
       // UPDATE svg string
-      const svgDefsString = `
-          <defs>
-            <marker id="arrow-end" markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto" markerUnits="strokeWidth">
-              <path d="M0,0 L0,6 L6,3 z" fill="context-stroke" />
-            </marker>
-            <marker id="arrow-start" markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto-start-reverse" markerUnits="strokeWidth">
-              <path d="M0,0 L0,6 L6,3 z" fill="context-stroke" />
-            </marker>
-            <marker id="circle-end" markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto" markerUnits="strokeWidth">
-              <circle cx="3" cy="3" r="2" fill="context-stroke" />
-            </marker>
-            <marker id="circle-start" markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto" markerUnits="strokeWidth">
-              <circle cx="3" cy="3" r="2" fill="context-stroke" />
-            </marker>
-            <marker id="square-end" markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto" markerUnits="strokeWidth">
-              <rect x="1.5" y="1.5" width="3" height="3" fill="context-stroke" />
-            </marker>
-            <marker id="square-start" markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto" markerUnits="strokeWidth">
-              <rect x="1.5" y="1.5" width="3" height="3" fill="context-stroke" />
-            </marker>
-          </defs>
+
+      const staticDefs = `
+        <marker id="arrow-end" markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto" markerUnits="strokeWidth">
+          <path d="M0,0 L0,6 L6,3 z" fill="context-stroke" />
+        </marker>
+        <marker id="arrow-start" markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto-start-reverse" markerUnits="strokeWidth">
+          <path d="M0,0 L0,6 L6,3 z" fill="context-stroke" />
+        </marker>
+        <marker id="circle-end" markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto" markerUnits="strokeWidth">
+          <circle cx="3" cy="3" r="2" fill="context-stroke" />
+        </marker>
+        <marker id="circle-start" markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto" markerUnits="strokeWidth">
+          <circle cx="3" cy="3" r="2" fill="context-stroke" />
+        </marker>
+        <marker id="square-end" markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto" markerUnits="strokeWidth">
+          <rect x="1.5" y="1.5" width="3" height="3" fill="context-stroke" />
+        </marker>
+        <marker id="square-start" markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto" markerUnits="strokeWidth">
+          <rect x="1.5" y="1.5" width="3" height="3" fill="context-stroke" />
+        </marker>
         `.trim()
+
+      const dynamicDefs = Object.values(this.svgDefs || {}).join('\n')
+
+      const svgDefsString = `
+        <defs>
+          ${staticDefs}
+          ${dynamicDefs}
+        </defs>
+      `.trim()
 
       // Create SVG markup from svgObjects
       const svgString = `
@@ -1370,6 +1419,29 @@ export const useImageStore = defineStore('imageStore', {
     // --------------------------------
 
     /**
+     * Adds or replaces an SVG definition in the svgDefs array.
+     * @param {string} id - The ID of the SVG definition
+     * @param {string} markup - The SVG markup to add or replace
+     */
+    addOrReplaceSvgDef(id, markup) {
+      const index = this.svgDefs.findIndex((def) => def.includes(`id="${id}"`))
+      if (index !== -1) {
+        this.svgDefs[index] = markup
+      } else {
+        this.svgDefs.push(markup)
+      }
+    },
+
+    /**
+     * Returns the SVG definition by its ID
+     * @param {string} id - The ID of the SVG definition
+     * @returns {string|null} - The SVG definition markup or null if not found
+     */
+    getSvgDefById(id) {
+      return this.svgDefs.find((def) => def.includes(`id="${id}"`))
+    },
+
+    /**
      * Returns the currently selected SVG object
      * @returns {Object|null} - The currently selected SVG object or null if none is selected
      */
@@ -1446,6 +1518,7 @@ export const useImageStore = defineStore('imageStore', {
         renderedImage: this.getRenderedImage({ t, renderCall: true })?.toDataURL() || null,
         // originalImage: this.originalImage?.toDataURL() || null,
         svgObjects: JSON.parse(JSON.stringify(this.svgObjects)),
+        svgDefs: JSON.parse(JSON.stringify(this.svgDefs)),
         imageOperations: JSON.parse(JSON.stringify(this.imageOperations)),
         frame: JSON.parse(JSON.stringify(this.frame)),
       }
@@ -1469,6 +1542,7 @@ export const useImageStore = defineStore('imageStore', {
       this.selectedSvgObjectId = null // Reset selected SVG object after applying snapshot
       this.imageOperations = JSON.parse(JSON.stringify(snapshot.imageOperations))
       this.frame = JSON.parse(JSON.stringify(snapshot.frame))
+      this.svgDefs = JSON.parse(JSON.stringify(snapshot.svgDefs))
 
       if (snapshot.renderedImage) {
         const img = new Image()
@@ -1517,6 +1591,9 @@ export const useImageStore = defineStore('imageStore', {
 
         svgObjects: JSON.parse(JSON.stringify(this.svgObjects)),
         selectedSvgObjectId: this.selectedSvgObjectId,
+        // justCreatedSvgObjectId: this.justCreatedSvgObjectId,
+        // selectedSvgObjectIds: this.selectedSvgObjectIds,
+        // svgDefs: JSON.parse(JSON.stringify(this.svgDefs)),
 
         imageOperations: JSON.parse(JSON.stringify(this.imageOperations)),
 
@@ -1550,7 +1627,10 @@ export const useImageStore = defineStore('imageStore', {
       this.originalFileDimensions = JSON.parse(JSON.stringify(snapshot.originalFileDimensions))
 
       this.svgObjects = JSON.parse(JSON.stringify(snapshot.svgObjects))
-      this.selectedSvgObjectId = null // Reset selected SVG object after applying snapshot
+      this.selectedSvgObjectId = null
+      // this.justCreatedSvgObjectId = null
+      // this.selectedSvgObjectIds = []
+      // this.svgDefs = JSON.parse(JSON.stringify(snapshot.svgDefs))
 
       this.imageOperations = JSON.parse(JSON.stringify(snapshot.imageOperations))
 

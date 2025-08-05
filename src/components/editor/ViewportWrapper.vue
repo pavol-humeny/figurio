@@ -14,6 +14,7 @@ import { useUiStore } from '@/stores/uiStore'
 import LoadingSpinner from '../common/LoadingSpinner.vue'
 import SvgObjectWrapper from '../tools/SvgObjectWrapper.vue'
 import { useSvgObjects } from '@/composables/tools/useSvgObjects'
+import { useBlurTool } from '@/composables/tools/useBlurTool'
 
 const { t } = useI18n()
 const uiStore = useUiStore()
@@ -76,6 +77,13 @@ const { OnClickImageSvg, cursorOnSvgArea, onMouseDownImageSvg, onMouseMoveImageS
   t
 )
 
+const { svgDefsString } = useBlurTool(
+  useImageStore(),
+  useHistoryStore(),
+  useEditorStore(),
+  t,
+)
+
 /**
  * Whether to show SmartCropTool
  * @type {import('vue').Ref<boolean>}
@@ -116,6 +124,9 @@ watch(
           <!-- DEFS -->
           <!-- // UPDATE svg string -->
           <defs>
+            <!-- /////////////// -->
+            <!-- Shape -->
+            <!-- /////////////// -->
             <!-- Arrows -->
             <marker id="arrow-end" markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto"
               markerUnits="strokeWidth">
@@ -147,10 +158,13 @@ watch(
             </marker>
           </defs>
 
+          <!-- Dynamic SVG Definitions -->
+          <defs v-html="svgDefsString" />
+
           <SvgObjectWrapper v-for="object in imageStore.svgObjects" :key="object.id" :objectId="object.id" />
 
           <rect v-if="selectBox" :x="selectBox.x" :y="selectBox.y" :width="selectBox.width" :height="selectBox.height"
-            fill="rgba(0, 120, 255, 0.2)" stroke="rgba(0, 120, 255, 0.8)" stroke-dasharray="4" />
+            fill="va(--editor-highlight-c)" />
         </svg>
 
 
@@ -187,7 +201,7 @@ watch(
         </div>
         <div v-if="mouseX !== null" class="ruler-cursor-mark horizontal" :style="{ left: mouseX + 'px' }">
           <span class="ruler-cursor-label horizontal" :class="{ 'active': cursorPosXSameAsImageWidth }">{{ cursorPosX
-            }}</span>
+          }}</span>
         </div>
 
       </div>
@@ -200,7 +214,7 @@ watch(
         </div>
         <div v-if="mouseY !== null" class="ruler-cursor-mark vertical" :style="{ top: mouseY + 'px' }">
           <span class="ruler-cursor-label vertical" :class="{ 'active': cursorPosYSameAsImageHeight }">{{ cursorPosY
-            }}</span>
+          }}</span>
         </div>
       </div>
     </div>

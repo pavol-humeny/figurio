@@ -11,13 +11,16 @@ import NumberInput from '../common/NumberInput.vue';
 import LinkValuesIcon from '../common/LinkValuesIcon.vue';
 import DefaultButton from '../common/DefaultButton.vue';
 import DropdownSelect from '../common/DropdownSelect.vue';
-
+import DefaultSlider from '../common/DefaultSlider.vue';
+import ColorPicker from '../common/ColorPicker.vue';
 
 const { t } = useI18n();
 const imageStore = useImageStore();
 const editorStore = useEditorStore();
 
-
+/**
+ * Logic of blur tool
+ */
 const {
   localBlurSettings,
   applyLocalBlurSettings,
@@ -25,7 +28,7 @@ const {
   maxBlurPositionX,
   maxBlurPositionY,
   hidePositionAndDimensions,
-  // blurOptions,
+  blurOptions,
   maxBlurWidth,
   maxBlurHeight,
   widthInputRef,
@@ -143,9 +146,46 @@ const {
             </p>
           </div>
           <div class="content-wrapper">
-            <DropdownSelect v-model="localBlurSettings.blurType"
-              :options="[{ 'label': 'ahoj1' }, { 'label': 'ahoj2' }, { 'label': 'ahoj3' }]" @update="applyLocalBlurSettings"
+            <DropdownSelect v-model="localBlurSettings.blurType" :options="blurOptions" @update="applyLocalBlurSettings"
               :tip="$t('tools.blur.settings.general.blurTypes.tip')" position="bottom-left" />
+          </div>
+        </div>
+
+        <!-- Blur patternSize -->
+        <div v-if="localBlurSettings.blurType === 'checked'" class="settings-content-wrapper">
+          <div class="content-title">
+            <p>
+              {{ $t('tools.blur.settings.general.patternSize.label') }}
+            </p>
+          </div>
+          <div class="content-wrapper">
+            <DefaultSlider v-model="localBlurSettings.patternSize" :min="2" :max="100" @update="applyLocalBlurSettings"
+              showValue :tip="$t('tools.blur.settings.general.patternSize.tip')" />
+          </div>
+        </div>
+
+        <!-- Blur color -->
+        <div v-if="localBlurSettings.blurType === 'checked'" class="settings-content-wrapper">
+          <div class="content-title">
+            <p>
+              {{ $t('tools.blur.settings.general.blurColor.label') }}
+            </p>
+          </div>
+          <div class="content-wrapper">
+            <ColorPicker v-model="localBlurSettings.fillColor" @update="applyLocalBlurSettings"
+              :tip="$t('tools.blur.settings.general.blurColor.tip')" />
+          </div>
+        </div>
+
+        <div v-if="localBlurSettings.blurType === 'checked'" class="settings-content-wrapper">
+          <div class="content-title">
+            <p>
+              {{ $t('tools.blur.settings.general.blurStrength.label') }}
+            </p>
+          </div>
+          <div class="content-wrapper">
+            <DefaultSlider v-model="localBlurSettings.blurStrength" :min="0" :max="2" :step="0.1"
+              @update="applyLocalBlurSettings" showValue :tip="$t('tools.blur.settings.general.blurStrength.tip')" position="bottom-left" />
           </div>
         </div>
 

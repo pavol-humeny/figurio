@@ -358,7 +358,7 @@ export function useSvgObjects(imageStore, historyStore, viewportStore, editorSto
     }
 
     // Drawing objects
-    if (!['blur', 'shape', 'magnifyArea'].includes(editorStore.selectedToolKey)) return
+    if (!['blur', 'shape'].includes(editorStore.selectedToolKey)) return
 
     if (editorStore.isSvgObjectSelected) return
 
@@ -392,6 +392,7 @@ export function useSvgObjects(imageStore, historyStore, viewportStore, editorSto
     let objectOpacity = 1
     let objectCornerRadius = 0
     let objectLineType = 'solid'
+    let objectFilter = null
     // let objectLineArrowStart = 'none'
     // let objectLineArrowEnd = 'none'
 
@@ -416,23 +417,36 @@ export function useSvgObjects(imageStore, historyStore, viewportStore, editorSto
       objectOpacity = opacity
       objectCornerRadius = cornerRadius
       objectLineType = lineType
+
       // objectLineArrowStart = lineArrowStart
       // objectLineArrowEnd = lineArrowEnd
     } else if (objectClass === 'blur') {
-      const { fillColor } = blurTool.getBlurAttributes()
+      const { fillColor, filter } = blurTool.getBlurAttributes(id)
 
-      console.log('Creating blur object')
       objectFillColor = fillColor
+
+      if (filter) {
+        objectFilter = filter
+      }
     }
 
     if (objectType === 'rect') {
       base.attrs = { x, y, width: 1, height: 1 }
       base.attrs.fill = objectFillColor
+
       if (objectStrokeWidth > 0) {
         base.attrs['stroke-width'] = objectStrokeWidth
         base.attrs.stroke = objectStrokeColor
       }
+
       base.attrs.opacity = objectOpacity
+
+      // Blur filter
+      if (objectFilter) {
+        base.attrs.filter = objectFilter
+      }
+
+      // Corner radius
       if (objectCornerRadius > 0) {
         base.attrs.rx = objectCornerRadius
       }

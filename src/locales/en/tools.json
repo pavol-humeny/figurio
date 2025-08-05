@@ -228,11 +228,21 @@
           "label": "Blur types",
           "tip": "Select the type of blur effect",
           "options": {
-            "gaussian": "Gaussian",
-            "box": "Box",
-            "motion": "Motion",
-            "radial": "Radial"
+            "black": "Black",
+            "checked": "Checked"
           }
+        },
+        "blurColor": {
+          "label": "Blur color",
+          "tip": "Select the color for the blur effect"
+        },
+        "blurStrength":{
+          "label": "Blur strength",
+          "tip": "Adjust the strength of the blur effect"
+        },
+        "patternSize": {
+          "label": "Pattern size",
+          "tip": "Select the size for the blur pattern"
         },
         "zIndex": {
           "label": "Z-index",
