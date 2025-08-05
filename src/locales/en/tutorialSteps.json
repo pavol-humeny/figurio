@@ -20,7 +20,7 @@
       "title": "Viewport",
       "text": "This is the main editing area where the image is displayed. You can interact with the image directly here using various tools. You can also turn on rulers in the settings to help with precise editing."
     },
-    "toolSettings":{
+    "toolSettings": {
       "title": "Tool Settings",
       "text": "This section displays the settings for the currently selected tool. You can adjust parameters specific to the tool you are using."
     },

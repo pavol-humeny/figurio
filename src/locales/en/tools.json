@@ -121,7 +121,7 @@
           "message": "Crop box is same as original image. No crop was applied."
         }
       },
-      "resize":{
+      "resize": {
         "label": "Resize",
         "resizeDimensions": {
           "title": "Resize dimensions",
@@ -147,7 +147,6 @@
         "label": "Auto",
         "tip": "Automatically crop the image based on the selected color.",
         "shortcut": ""
-        
       },
       "manual": {
         "label": "Manual",
@@ -207,7 +206,7 @@
     "tipDisabled": "",
     "shortcut": "B",
     "settings": {
-      "general":{
+      "general": {
         "position": {
           "label": "Position",
           "x": "X",
@@ -236,7 +235,7 @@
           "label": "Blur color",
           "tip": "Select the color for the blur effect"
         },
-        "blurStrength":{
+        "blurStrength": {
           "label": "Blur strength",
           "tip": "Adjust the strength of the blur effect"
         },
@@ -254,7 +253,7 @@
           },
           "moveForwardButton": {
             "text": "Move forward"
-          },  
+          },
           "moveBackwardButton": {
             "text": "Move backward"
           }
@@ -295,7 +294,7 @@
         "label": "Line"
       },
       "general": {
-        "position":{
+        "position": {
           "label": "Position",
           "x": "X",
           "y": "Y"
@@ -308,7 +307,7 @@
         "tipLinked": "Unlink width and height",
         "tipUnlinked": "Link width and height"
       },
-      "rotation":{
+      "rotation": {
         "label": "Rotation",
         "tip": "Adjust the rotation angle or double click icon to reset rotation"
       },
@@ -360,11 +359,11 @@
           "tip": "Enable or disable end arrow for the line"
         },
         "options": {
-            "none": "None",
-            "arrow": "Arrow",
-            "circle": "Circle",
-            "square": "Square"
-          }
+          "none": "None",
+          "arrow": "Arrow",
+          "circle": "Circle",
+          "square": "Square"
+        }
       },
       "zIndex": {
         "label": "Position in Z-axis",
@@ -396,7 +395,7 @@
       },
       "modify": {
         "label": "Modify Magnify Area",
-        "tip": "Modify the existing magnified area",    
+        "tip": "Modify the existing magnified area",
         "shortcut": ""
       }
     },
@@ -415,7 +414,7 @@
     "tipDisabled": "",
     "shortcut": "T",
     "settings": {
-      "general":{
+      "general": {
         "textContent": {
           "label": "Text content",
           "placeholder": "Enter text"
@@ -517,7 +516,7 @@
         "phoneHeaderTime": {
           "label": "Time"
         },
-        "headerFooterMultiplier":{
+        "headerFooterMultiplier": {
           "label": "Height multiplier"
         },
         "phoneButtonsCanNotBeDrawn": {
@@ -785,7 +784,7 @@
             "reset": "Reset original dimensions"
           }
         },
-        "expectedFileSize":{
+        "expectedFileSize": {
           "label": "Expected file size"
         },
         "preview": {
@@ -809,12 +808,12 @@
       }
     }
   },
-  "svgObject":{
-    "resizeObject":{
+  "svgObject": {
+    "resizeObject": {
       "tipStartResize": "Start resizing",
       "tipStopResize": "Stop resizing"
     },
-    "rotateObject":{
+    "rotateObject": {
       "tip": "Rotate object"
     }
   },

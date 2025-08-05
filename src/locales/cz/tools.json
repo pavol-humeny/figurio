@@ -121,7 +121,7 @@
           "message": "Orezanie je rovnaké ako pôvodný obrázok. Orezanie nebolo použité."
         }
       },
-      "resize":{
+      "resize": {
         "label": "Změnit velikost",
         "resizeDimensions": {
           "title": "Rozměry obrázku",
@@ -206,7 +206,59 @@
     "tipDisabled": "",
     "shortcut": "B",
     "settings": {
-      "general":{}
+      "general": {
+        "position": {
+          "label": "Pozice",
+          "x": "X",
+          "y": "Y"
+        },
+        "dimensions": {
+          "label": "Rozměry",
+          "width": "Šířka",
+          "height": "Výška",
+          "tipLinked": "Odpojit šířku a výšku",
+          "tipUnlinked": "Propojit šířku a výšku"
+        },
+        "rotation": {
+          "label": "Rotace",
+          "tip": "Nastav úhel rotace nebo dvojklikem resetuj"
+        },
+        "blurTypes": {
+          "label": "Typy rozmazání",
+          "tip": "Vyber typ efektu rozmazání",
+          "options": {
+            "black": "Černé",
+            "checked": "Šachovnicové"
+          }
+        },
+        "blurColor": {
+          "label": "Barva rozmazání",
+          "tip": "Vyber barvu efektu rozmazání"
+        },
+        "blurStrength": {
+          "label": "Intenzita rozmazání",
+          "tip": "Nastav sílu rozmazání"
+        },
+        "patternSize": {
+          "label": "Velikost vzoru",
+          "tip": "Vyber velikost vzoru rozmazání"
+        },
+        "zIndex": {
+          "label": "Z-index",
+          "bringToFrontButton": {
+            "text": "Přenést dopředu"
+          },
+          "sendToBackButton": {
+            "text": "Přenést dozadu"
+          },
+          "moveForwardButton": {
+            "text": "Posunout dopředu"
+          },
+          "moveBackwardButton": {
+            "text": "Posunout dozadu"
+          }
+        }
+      }
     }
   },
   "shape": {
@@ -232,14 +284,14 @@
       }
     },
     "settings": {
-      "rectangle": { 
-        "label": "Obdélník" 
+      "rectangle": {
+        "label": "Obdélník"
       },
-      "ellipse": { 
-        "label": "Elipsa" 
+      "ellipse": {
+        "label": "Elipsa"
       },
-      "line": { 
-        "label": "Čára" 
+      "line": {
+        "label": "Čára"
       },
       "general": {
         "position": {
@@ -732,7 +784,7 @@
             "reset": "Resetovat původní rozměry"
           }
         },
-        "expectedFileSize":{
+        "expectedFileSize": {
           "label": "Očekávaná velikost souboru"
         },
         "preview": {
@@ -756,13 +808,12 @@
       }
     }
   },
-  "svgObject":{
-    "resizeObject":{
+  "svgObject": {
+    "resizeObject": {
       "tipStartResize": "Zmeniť velikost",
       "tipStopResize": "Ukončiť zmenu veľkosti"
-    }
-    ,
-    "rotateObject":{
+    },
+    "rotateObject": {
       "tip": "Otočit objekt"
     }
   },

@@ -205,8 +205,60 @@
     "tip": "Aplikuje efekt rozmazania na obrázok",
     "tipDisabled": "",
     "shortcut": "B",
-        "settings": {
-      "general":{}
+    "settings": {
+      "general": {
+        "position": {
+          "label": "Pozícia",
+          "x": "X",
+          "y": "Y"
+        },
+        "dimensions": {
+          "label": "Rozmery",
+          "width": "Šírka",
+          "height": "Výška",
+          "tipLinked": "Odpojiť šírku a výšku",
+          "tipUnlinked": "Prepojiť šírku a výšku"
+        },
+        "rotation": {
+          "label": "Rotácia",
+          "tip": "Nastav uhol rotácie alebo dvojklikom resetuj"
+        },
+        "blurTypes": {
+          "label": "Typy rozmazania",
+          "tip": "Vyber typ efektu rozmazania",
+          "options": {
+            "black": "Čierne",
+            "checked": "Šachovnicové"
+          }
+        },
+        "blurColor": {
+          "label": "Farba rozmazania",
+          "tip": "Vyber farbu efektu rozmazania"
+        },
+        "blurStrength": {
+          "label": "Intenzita rozmazania",
+          "tip": "Nastav silu rozmazania"
+        },
+        "patternSize": {
+          "label": "Veľkosť vzoru",
+          "tip": "Vyber veľkosť vzoru rozmazania"
+        },
+        "zIndex": {
+          "label": "Z-index",
+          "bringToFrontButton": {
+            "text": "Presunúť dopredu"
+          },
+          "sendToBackButton": {
+            "text": "Presunúť dozadu"
+          },
+          "moveForwardButton": {
+            "text": "Posunúť dopredu"
+          },
+          "moveBackwardButton": {
+            "text": "Posunúť dozadu"
+          }
+        }
+      }
     }
   },
   "shape": {
@@ -232,8 +284,8 @@
       }
     },
     "settings": {
-      "rectangle": { 
-        "label": "Obdĺžnik" 
+      "rectangle": {
+        "label": "Obdĺžnik"
       },
       "ellipse": {
         "label": "Elipsa"
@@ -732,7 +784,7 @@
             "reset": "Resetovať pôvodné rozmery"
           }
         },
-        "expectedFileSize":{
+        "expectedFileSize": {
           "label": "Očakávaná veľkosť súboru"
         },
         "preview": {
@@ -756,12 +808,12 @@
       }
     }
   },
-  "svgObject":{
-    "resizeObject":{
+  "svgObject": {
+    "resizeObject": {
       "tipStartResize": "Zmeniť veľkosť",
       "tipStopResize": "Ukončiť zmenu veľkosti"
     },
-    "rotateObject":{
+    "rotateObject": {
       "tip": "Otočiť objekt"
     }
   },

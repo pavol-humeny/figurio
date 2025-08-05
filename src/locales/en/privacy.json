@@ -1,33 +1,33 @@
 {
-    "title": "Privacy & Data Policy",
-    "sections": [
-      {
-        "title": "Local processing",
-        "text": "Your images and data never leave your device. We respect your privacy. No uploads. No tracking. No cloud dependencies."
-      },
-      {
-        "title": "Your preferences",
-        "text": "Settings like theme or language are stored only in your browser (via local storage) to improve your experience. You’re in control, always.",
-        "action": {
-          "text": "Clear preferences"
-        }
-      },
-      {
-        "title": "No account needed",
-        "text": "No registration, no passwords. Just open and create."
-      },
-      {
-        "title": "",
-        "text": "By using this application, you agree to these principles."
-      }
-    ],
-    "button":{
-      "text": "Close"
+  "title": "Privacy & Data Policy",
+  "sections": [
+    {
+      "title": "Local processing",
+      "text": "Your images and data never leave your device. We respect your privacy. No uploads. No tracking. No cloud dependencies."
     },
-    "confirmResetLocalPreferences": {
-      "title": "Clear Preferences",
-      "text": "Are you sure you want to clear your preferences? This will reset your settings.",
-      "cancel": "Cancel",
-      "confirm": "Clear"
+    {
+      "title": "Your preferences",
+      "text": "Settings like theme or language are stored only in your browser (via local storage) to improve your experience. You’re in control, always.",
+      "action": {
+        "text": "Clear preferences"
+      }
+    },
+    {
+      "title": "No account needed",
+      "text": "No registration, no passwords. Just open and create."
+    },
+    {
+      "title": "",
+      "text": "By using this application, you agree to these principles."
     }
+  ],
+  "button": {
+    "text": "Close"
+  },
+  "confirmResetLocalPreferences": {
+    "title": "Clear Preferences",
+    "text": "Are you sure you want to clear your preferences? This will reset your settings.",
+    "cancel": "Cancel",
+    "confirm": "Clear"
   }
+}

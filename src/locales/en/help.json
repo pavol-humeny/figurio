@@ -1,14 +1,14 @@
 {
   "title": "Help",
-  "helpContent":{
-    "purpose":{
+  "helpContent": {
+    "purpose": {
       "title": "Purpose",
       "text": "This image editor is designed for editing of images intended for use in academic, professional, or technical documents. It provides a range of tools and modifications useful especially for these purposes."
     },
-    "tools":{
+    "tools": {
       "title": "Tools"
     },
-    "shortcuts":{
+    "shortcuts": {
       "title": "Keyboard Shortcuts",
       "text": "You can use keyboard shortcuts to quickly access various tools and features in the editor. Below is a list of available shortcuts.",
       "shortcutsList": [
@@ -74,7 +74,7 @@
         }
       ]
     },
-    "tutorial":{
+    "tutorial": {
       "title": "Interactive Tutorial",
       "text": "A step-by-step walkthrough that introduces the most important features of the editor. Click the button below to start the tutorial and learn how to use the editor effectively.",
       "tutorialCompletedTip": "The tutorial has been successfully completed.",
@@ -83,7 +83,7 @@
         "message": "Congratulations! You have successfully completed the tutorial. You should now have a good understanding of the main features of the editor and how to use them."
       }
     },
-    "technicalLimitations":{
+    "technicalLimitations": {
       "title": "Technical Limitations",
       "limitations": [
         "Only the first page of a PDF file is loaded and displayed.",
@@ -94,7 +94,7 @@
         "Browser refresh will erase unsaved progress."
       ]
     },
-    "contactAndFeedback":{
+    "contactAndFeedback": {
       "title": "Contact and Feedback",
       "text": "If you have any questions, suggestions, or feedback regarding the editor, please contact me at:"
     }

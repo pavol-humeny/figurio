@@ -1,5 +1,5 @@
 {
-  "toast":{
+  "toast": {
     "errorUnsupportedFileType": {
       "title": "Nepodporovaný typ souboru",
       "message": "Typ souboru {fileType} není podporován. Nahrajte prosím platný obrazový soubor."
@@ -8,7 +8,7 @@
       "title": "Soubor je příliš velký",
       "message": "Soubor {fileName} překračuje maximální povolenou velikost {maxSize} MB. Nahrajte prosím menší soubor."
     },
-    "errorFileTooLargeDimensions":{
+    "errorFileTooLargeDimensions": {
       "title": "Súbor je príliš veľký",
       "message": "Súbor {fileName} prekračuje maximálne povolené rozmery {maxWidth}x{maxHeight} pixelov. Nahrajte prosím menší súbor."
     },
@@ -36,7 +36,7 @@
       "title": "Bez zmeny",
       "message": "Názov súboru je rovnaký ako predtým. Žiadna zmena nebola vykonaná."
     },
-    "successFileExported":{
+    "successFileExported": {
       "title": "Súbor bol úspešne exportovaný",
       "message": "Súbor {fileName} bol exportovaný."
     },
@@ -45,8 +45,8 @@
       "message": "Obrázok bol úspešne skopírovaný do schránky."
     }
   },
-  "modal":{
-    "scalePdfForBetterResolution":{
+  "modal": {
+    "scalePdfForBetterResolution": {
       "title": "Zmeniť mierku PDF pre lepšie rozlíšenie",
       "message": "Pre zlepšenie rozlíšenia zvážte zmenu mierky PDF. To zlepší kvalitu konečného obrázka.",
       "cancel": "Ne, zachovať pôvodnú veľkosť",
@@ -60,5 +60,4 @@
       "pageRange": "Strany: {from} – {to}"
     }
   }
-
 }

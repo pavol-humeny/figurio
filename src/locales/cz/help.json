@@ -12,21 +12,66 @@
       "title": "Klávesové zkratky",
       "text": "Pomocí klávesových zkratek můžete rychle přistupovat k různým nástrojům a funkcím editoru. Níže najdete seznam dostupných zkratek.",
       "shortcutsList": [
-        { "description": "Zpět (undo)", "shortcut": "Ctrl + Z" },
-        { "description": "Znovu (redo)", "shortcut": "Ctrl + Y" },
-        { "description": "Přiblížit", "shortcut": "Ctrl + =" },
-        { "description": "Oddálit", "shortcut": "Ctrl + -" },
-        { "description": "Obnovit měřítko", "shortcut": "Ctrl + 0" },
-        { "description": "Načíst soubor", "shortcut": "Ctrl + O" },
-        { "description": "Uložit soubor", "shortcut": "Ctrl + S" },
-        { "description": "Zavřít soubor", "shortcut": "Ctrl + X" },
-        { "description": "Přejmenovat soubor", "shortcut": "F2" },
-        { "description": "Zobrazit nápovědu", "shortcut": "F1" },
-        { "description": "Zobrazit nastavení", "shortcut": "Ctrl + ," },
-        { "description": "Zobrazit zásady ochrany soukromí", "shortcut": "Ctrl + I" },
-        { "description": "Přepnout na další soubor", "shortcut": "Alt + PageDown" },
-        { "description": "Přepnout na předchozí soubor", "shortcut": "Alt + PageUp" },
-        { "description": "Zavřít otevřené okno", "shortcut": "Esc" }
+        {
+          "description": "Zpět (undo)",
+          "shortcut": "Ctrl + Z"
+        },
+        {
+          "description": "Znovu (redo)",
+          "shortcut": "Ctrl + Y"
+        },
+        {
+          "description": "Přiblížit",
+          "shortcut": "Ctrl + ="
+        },
+        {
+          "description": "Oddálit",
+          "shortcut": "Ctrl + -"
+        },
+        {
+          "description": "Obnovit měřítko",
+          "shortcut": "Ctrl + 0"
+        },
+        {
+          "description": "Načíst soubor",
+          "shortcut": "Ctrl + O"
+        },
+        {
+          "description": "Uložit soubor",
+          "shortcut": "Ctrl + S"
+        },
+        {
+          "description": "Zavřít soubor",
+          "shortcut": "Ctrl + X"
+        },
+        {
+          "description": "Přejmenovat soubor",
+          "shortcut": "F2"
+        },
+        {
+          "description": "Zobrazit nápovědu",
+          "shortcut": "F1"
+        },
+        {
+          "description": "Zobrazit nastavení",
+          "shortcut": "Ctrl + ,"
+        },
+        {
+          "description": "Zobrazit zásady ochrany soukromí",
+          "shortcut": "Ctrl + I"
+        },
+        {
+          "description": "Přepnout na další soubor",
+          "shortcut": "Alt + PageDown"
+        },
+        {
+          "description": "Přepnout na předchozí soubor",
+          "shortcut": "Alt + PageUp"
+        },
+        {
+          "description": "Zavřít otevřené okno",
+          "shortcut": "Esc"
+        }
       ]
     },
     "tutorial": {

@@ -1,18 +1,18 @@
 {
-  "toast":{
-    "errorUnsupportedFileType":{
+  "toast": {
+    "errorUnsupportedFileType": {
       "title": "Unsupported file type",
       "message": "The file type {fileType} is not supported. Please upload a valid image file."
     },
-    "errorFileTooLargeSize":{
+    "errorFileTooLargeSize": {
       "title": "File too large",
       "message": "The file {fileName} exceeds the maximum allowed size of {maxSize} MB. Please upload a smaller file."
     },
-    "errorFileTooLargeDimensions":{
+    "errorFileTooLargeDimensions": {
       "title": "File too large",
       "message": "The file {fileName} exceeds the maximum allowed dimensions of {maxWidth}x{maxHeight} pixels. Please upload a smaller file."
     },
-    "errorMultipleFiles":{
+    "errorMultipleFiles": {
       "title": "Multiple files selected",
       "message": "Please select only one file at a time."
     },
@@ -20,7 +20,7 @@
       "title": "File uploaded successfully",
       "message": "The file {fileName} has been uploaded successfully."
     },
-    "successFileNameUpdated":{
+    "successFileNameUpdated": {
       "title": "File name updated",
       "message": "The file name has been successfully changed."
     },
@@ -36,7 +36,7 @@
       "title": "No change",
       "message": "The file name is the same as before. No changes were made."
     },
-    "successFileExported":{
+    "successFileExported": {
       "title": "File exported successfully",
       "message": "The file {fileName} has been exported."
     },
@@ -45,20 +45,19 @@
       "message": "The image has been successfully copied to the clipboard."
     }
   },
-  "modal":{
-    "scalePdfForBetterResolution":{
+  "modal": {
+    "scalePdfForBetterResolution": {
       "title": "Scale PDF for better resolution",
       "message": "For better resolution, consider scaling the PDF. This will improve the quality of the final image.",
       "cancel": "No, keep original size",
       "confirm": "Scale PDF"
     },
-    "selectPdfPage":{
+    "selectPdfPage": {
       "title": "Select PDF Page",
       "message": "This PDF contains multiple pages. Please choose one to import.",
       "cancel": "Cancel",
       "confirm": "Select Page",
       "pageRange": "Pages: {from} - {to}"
     }
-
   }
 }
