@@ -81,6 +81,7 @@ export function useSvgObjectWrapper(
    * Watch for changes in the selection state
    */
   watch(isSelected, (newValue) => {
+    console.log('SVG object selection state changed:', newValue, object.value.id)
     // Do not set as active when drawing new object
     // if (editorStore.isSvgObjectDrawing) return
 
@@ -255,10 +256,13 @@ export function useSvgObjectWrapper(
     if (!areSvgObjectOperationsEnabled.value) return
 
     console.log('onMouseDown in svg wrapper', object.value.id)
+    console.log('selectedToolKey', editorStore.selectedToolKey, object.value.class)
 
     if (editorStore.selectedToolKey !== object.value.class) return
 
     imageStore.selectedSvgObjectId = object.value.id
+
+    console.log('selectedSvgObjectId', imageStore.selectedSvgObjectId)
     startX.value = event.clientX
     startY.value = event.clientY
     event.stopPropagation()

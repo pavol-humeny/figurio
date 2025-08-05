@@ -300,6 +300,8 @@ export function useSvgObjects(imageStore, historyStore, viewportStore, editorSto
    * @param {MouseEvent} event - Click event
    */
   const OnClickImageSvg = (event) => {
+    console.log('OnClickImageSvg, editorStore.selectedToolKey:', editorStore.selectedToolKey)
+
     // Selecting objects
     if (editorStore.selectedToolKey === 'select') {
       // Check if clicked on SVG object with data-id
@@ -330,19 +332,20 @@ export function useSvgObjects(imageStore, historyStore, viewportStore, editorSto
       }
     }
 
-    // Adding text object
-    if (event.target.closest('g') || event.target.closest('text')) return
-
-    const rect = event.currentTarget.getBoundingClientRect()
-    const x = round((event.clientX - rect.left) / viewportStore.realZoomLevel)
-    const y = round((event.clientY - rect.top) / viewportStore.realZoomLevel)
-
+    // Add text object
     if (editorStore.selectedToolKey === 'text' && !editorStore.isSvgObjectSelected) {
+      if (event.target.closest('g') || event.target.closest('text')) return
+
+      const rect = event.currentTarget.getBoundingClientRect()
+      const x = round((event.clientX - rect.left) / viewportStore.realZoomLevel)
+      const y = round((event.clientY - rect.top) / viewportStore.realZoomLevel)
+
       textTool.addTextObject(x, y)
     }
   }
 
   const onMouseDownImageSvg = (event) => {
+    console.log('onMouseDownImageSvg')
     // Selecting objects
     if (editorStore.selectedToolKey === 'select') {
       const rect = viewportStore.viewportContentRect

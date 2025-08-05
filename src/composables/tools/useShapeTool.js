@@ -222,6 +222,7 @@ export function useShapeTool(editorStore, imageStore, historyStore, t) {
   watch(
     () => imageStore.selectedSvgObjectId,
     (newId) => {
+      console.log('Selected SVG object ID changed:', newId)
       if (newId !== null) {
         const object = imageStore.getSvgObjectById(newId)
         if (object && editorStore.selectedToolKey === 'shape') {
@@ -238,8 +239,6 @@ export function useShapeTool(editorStore, imageStore, historyStore, t) {
           editorStore.selectTab(newTab)
 
           localObjectSettings.value.type = tag
-
-          console.log('localObjectSettings.value.type', localObjectSettings.value.type)
 
           // Position and dimensions
           if (tag === 'rect') {
