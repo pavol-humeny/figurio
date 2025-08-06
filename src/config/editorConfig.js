@@ -8,7 +8,11 @@ export const editorConfig = {
   smartCropDefaultColor: '#ffffff',
   smartCropColorTolerance: 5,
 
+  // Item tip settings
   tipDelay: 700,
+
+  // Context menu settings
+  contextMenuDelay: 50, 
 
   // Max file dimensions
   // Resize and crop limits

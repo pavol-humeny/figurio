@@ -79,7 +79,7 @@ const showTip = computed(() => props.text !== '')
 
 .item-tip-bubble {
   background: var(--secondary-c);
-  color: var(--text-c);
+  color: var(--secondary-c);
   padding: 6px 10px;
   border-radius: 6px;
   font-size: var(--tip-font-size);

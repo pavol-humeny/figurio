@@ -117,8 +117,9 @@ body {
   --z-index-tutorial-item: 99999;
   --z-index-tutorial-click-blocker: 99995;
   --z-index-tutorial-overlay: 99990;
-  --z-index-loading-wheel: 10001;
-  --z-index-loading: 10000;
+  --z-index-loading-wheel: 10100;
+  --z-index-loading: 10090;
+  --z-index-context-menu: 10050;
   --z-index-tip: 9999;
   --z-index-toast: 9998;
   --z-index-modal: 9997;
@@ -148,8 +149,12 @@ body {
   --subtitle-font-weight: 700;
 
   --text-font-size: 15px;
+
   --tip-font-size: 13px;
   --tip-title-font-weight: 700;
+
+  --content-modal-font-size: 13px;
+  --content-modal-font-weight: 400;
 
   --file-tabs-name-font-size: 12px;
 
