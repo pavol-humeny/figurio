@@ -30,7 +30,7 @@ export const keyboardShortcuts = [
     description: 'Save file',
   },
   {
-    keys: ['ctrl', 'x'],
+    keys: ['ctrl', 'k'],
     action: 'closeFile',
     description: 'Close file',
   },

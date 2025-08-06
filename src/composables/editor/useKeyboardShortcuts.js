@@ -17,10 +17,19 @@ export function useKeyboardShortcuts(actions, uiStore, imageStore) {
    */
   const normalizeKey = (event) => {
     const keys = []
-    if (event.ctrlKey || event.metaKey) keys.push('ctrl') // support macOS
-    if (event.shiftKey) keys.push('shift')
+
+    if (event.ctrlKey || event.metaKey) keys.push('ctrl')
     if (event.altKey) keys.push('alt')
-    keys.push(event.key.toLowerCase())
+    if (event.shiftKey) keys.push('shift')
+
+    // Get the main key pressed (not modifier)
+    const mainKey = event.key.toLowerCase()
+
+    // Skip if it's just a modifier
+    if (!['control', 'shift', 'alt', 'meta'].includes(mainKey)) {
+      keys.push(mainKey)
+    }
+
     return keys.join('+')
   }
 
