@@ -4,7 +4,7 @@ import { useViewportStore } from '@/stores/viewportStore'
 import { useImageRenderer } from '@/composables/editor/useImageRenderer'
 import { useImageStore } from '@/stores/imageStore'
 import { useEditorStore } from '@/stores/editorStore'
-import { ref, watch } from 'vue'
+import { computed, ref, watch } from 'vue'
 import CropTool from '@/components/tools/CropTool.vue'
 import PresetCropTool from '../tools/PresetCropTool.vue'
 import SmartCropTool from '../tools/SmartCropTool.vue'
@@ -15,6 +15,7 @@ import LoadingSpinner from '../common/LoadingSpinner.vue'
 import SvgObjectWrapper from '../tools/SvgObjectWrapper.vue'
 import { useSvgObjects } from '@/composables/tools/useSvgObjects'
 import { useBlurTool } from '@/composables/tools/useBlurTool'
+import ContextMenu from '../common/ContextMenu.vue'
 
 const { t } = useI18n()
 const uiStore = useUiStore()
@@ -69,7 +70,18 @@ const {
   guideLine
 } = useViewportWrapper(useViewportStore(), useImageStore(), useEditorStore(), useUiStore(), contentRef, t)
 
-const { OnClickImageSvg, cursorOnSvgArea, onMouseDownImageSvg, onMouseMoveImageSvg, selectBox } = useSvgObjects(
+const {
+  OnClickImageSvg,
+  cursorOnSvgArea,
+  onMouseDownImageSvg,
+  onMouseMoveImageSvg,
+  selectBox,
+  copySelectedSvgObject,
+  pasteSvgObjectToCenter,
+  duplicateSelectedSvgObject,
+  cutSelectedSvgObject,
+  deleteSelectedSvgObjects,
+} = useSvgObjects(
   useImageStore(),
   useHistoryStore(),
   useViewportStore(),
@@ -99,6 +111,13 @@ watch(
   },
   { immediate: true },
 )
+
+/**
+ * Whether to show the context menu
+ */
+const hideContextMenu = computed(() => {
+  return editorStore.selectedToolKey !== 'shape' && editorStore.selectedToolKey !== 'text' && editorStore.selectedToolKey !== 'select' && editorStore.selectedToolKey !== 'blur'
+})
 </script>
 
 <template>
@@ -110,70 +129,103 @@ watch(
         'middle-dragging': isMiddleDragging,
         'move-tool-selected': editorStore.selectedToolKey === 'move',
       }">
-      <div :class="{ 'hide': uiStore.isLoading }" class="viewport-content" ref="contentRef" :style="{
-        transform: `translate(${panX}px, ${panY}px) scale(${zoomLevel})`,
-      }">
-        <canvas ref="canvasRef" class="image-canvas"></canvas>
-        <!-- <svg ref="svgRef" class="image-svg"></svg> -->
+      <ContextMenu :items="[
+        {
+          label: $t('contextMenu.paste'),
+          action: pasteSvgObjectToCenter,
+          disabled: !imageStore.clipboardSvgObject,
+          hide: hideContextMenu,
+        },
+        {
+          label: $t('contextMenu.copy'),
+          action: copySelectedSvgObject,
+          disabled: imageStore.selectedSvgObjectId === null,
+          hide: hideContextMenu,
+        },
+        {
+          label: $t('contextMenu.cut'),
+          action: cutSelectedSvgObject,
+          disabled: imageStore.selectedSvgObjectId === null,
+          hide: hideContextMenu,
+        },
+        {
+          label: $t('contextMenu.duplicate'),
+          action: duplicateSelectedSvgObject,
+          disabled: imageStore.selectedSvgObjectId === null,
+          hide: hideContextMenu,
+        },
+        {
+          label: $t('contextMenu.delete'),
+          action: () => deleteSelectedSvgObjects(t),
+          disabled: imageStore.selectedSvgObjectId === null && imageStore.selectedSvgObjectIds.length === 0,
+          hide: hideContextMenu,
+        },
+      ]">
+        <div :class="{ 'hide': uiStore.isLoading }" class="viewport-content" ref="contentRef" :style="{
+          transform: `translate(${panX}px, ${panY}px) scale(${zoomLevel})`,
+        }">
+          <canvas ref="canvasRef" class="image-canvas"></canvas>
+          <!-- <svg ref="svgRef" class="image-svg"></svg> -->
 
-        <svg ref="frameSvgRef" class="frame-svg"></svg>
+          <svg ref="frameSvgRef" class="frame-svg"></svg>
 
-        <svg ref="svgRef" class="image-svg" xmlns="http://www.w3.org/2000/svg" :width="imageStore.fileDimensions.width"
-          :height="imageStore.fileDimensions.height" @mousedown="onMouseDownImageSvg" @click="OnClickImageSvg"
-          :style="{ cursor: cursorOnSvgArea }">
-          <!-- DEFS -->
-          <!-- // UPDATE svg string -->
-          <defs>
-            <!-- /////////////// -->
-            <!-- Shape -->
-            <!-- /////////////// -->
-            <!-- Arrows -->
-            <marker id="arrow-end" markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto"
-              markerUnits="strokeWidth">
-              <path d="M0,0 L0,6 L6,3 z" fill="context-stroke" />
-            </marker>
-            <marker id="arrow-start" markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto-start-reverse"
-              markerUnits="strokeWidth">
-              <path d="M0,0 L0,6 L6,3 Z" fill="context-stroke" />
-            </marker>
+          <svg ref="svgRef" class="image-svg" xmlns="http://www.w3.org/2000/svg"
+            :width="imageStore.fileDimensions.width" :height="imageStore.fileDimensions.height"
+            @mousedown="onMouseDownImageSvg" @click="OnClickImageSvg" :style="{ cursor: cursorOnSvgArea }">
+            <!-- DEFS -->
+            <!-- // UPDATE svg string -->
+            <defs>
+              <!-- /////////////// -->
+              <!-- Shape -->
+              <!-- /////////////// -->
+              <!-- Arrows -->
+              <marker id="arrow-end" markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto"
+                markerUnits="strokeWidth">
+                <path d="M0,0 L0,6 L6,3 z" fill="context-stroke" />
+              </marker>
+              <marker id="arrow-start" markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto-start-reverse"
+                markerUnits="strokeWidth">
+                <path d="M0,0 L0,6 L6,3 Z" fill="context-stroke" />
+              </marker>
 
-            <!-- Circle -->
-            <marker id="circle-end" markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto"
-              markerUnits="strokeWidth">
-              <circle cx="3" cy="3" r="2" fill="context-stroke" />
-            </marker>
-            <marker id="circle-start" markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto-start-reverse"
-              markerUnits="strokeWidth">
-              <circle cx="3" cy="3" r="2" fill="context-stroke" />
-            </marker>
+              <!-- Circle -->
+              <marker id="circle-end" markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto"
+                markerUnits="strokeWidth">
+                <circle cx="3" cy="3" r="2" fill="context-stroke" />
+              </marker>
+              <marker id="circle-start" markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto-start-reverse"
+                markerUnits="strokeWidth">
+                <circle cx="3" cy="3" r="2" fill="context-stroke" />
+              </marker>
 
-            <!-- Square -->
-            <marker id="square-end" markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto"
-              markerUnits="strokeWidth">
-              <rect x="1.5" y="1.5" width="3" height="3" fill="context-stroke" />
-            </marker>
-            <marker id="square-start" markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto-start-reverse"
-              markerUnits="strokeWidth">
-              <rect x="1.5" y="1.5" width="3" height="3" fill="context-stroke" />
-            </marker>
-          </defs>
+              <!-- Square -->
+              <marker id="square-end" markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto"
+                markerUnits="strokeWidth">
+                <rect x="1.5" y="1.5" width="3" height="3" fill="context-stroke" />
+              </marker>
+              <marker id="square-start" markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto-start-reverse"
+                markerUnits="strokeWidth">
+                <rect x="1.5" y="1.5" width="3" height="3" fill="context-stroke" />
+              </marker>
+            </defs>
 
-          <!-- Dynamic SVG Definitions -->
-          <defs v-html="svgDefsString" />
+            <!-- Dynamic SVG Definitions -->
+            <defs v-html="svgDefsString" />
 
-          <SvgObjectWrapper v-for="object in imageStore.svgObjects" :key="object.id" :objectId="object.id" />
+            <SvgObjectWrapper v-for="object in imageStore.svgObjects" :key="object.id" :objectId="object.id" />
 
-          <rect v-if="selectBox" :x="selectBox.x" :y="selectBox.y" :width="selectBox.width" :height="selectBox.height"
-            fill="var(--editor-highlight-with-opacity-c)" />
-        </svg>
+            <rect v-if="selectBox" :x="selectBox.x" :y="selectBox.y" :width="selectBox.width" :height="selectBox.height"
+              fill="var(--editor-highlight-with-opacity-c)" />
+          </svg>
 
 
-        <CropTool v-if="editorStore.selectedTabPerTool[editorStore.selectedToolKey] === 'crop'" />
-        <SmartCropTool v-if="isCropShown" />
-        <PresetCropTool v-if="
-          editorStore.selectedToolKey === 'preset' && editorStore.selectedSubToolKey === 'crop'
-        " />
-      </div>
+          <CropTool v-if="editorStore.selectedTabPerTool[editorStore.selectedToolKey] === 'crop'" />
+          <SmartCropTool v-if="isCropShown" />
+          <PresetCropTool v-if="
+            editorStore.selectedToolKey === 'preset' && editorStore.selectedSubToolKey === 'crop'
+          " />
+        </div>
+      </ContextMenu>
     </div>
 
 

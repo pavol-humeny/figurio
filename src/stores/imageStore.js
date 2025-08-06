@@ -143,6 +143,8 @@ export const useImageStore = defineStore('imageStore', {
     selectedSvgObjectIds: [],
     /** Dynamic SVG definitions */
     svgDefs: [],
+    /** SVG object copied to clipboard */
+    clipboardSvgObject: null,
 
     /** Array of image operations to apply */
     imageOperations: [],
@@ -470,6 +472,7 @@ export const useImageStore = defineStore('imageStore', {
       // this.justCreatedSvgObjectId = null
       // this.selectedSvgObjectIds = []
       // this.svgDefs = []
+      // this.clipboardSvgObject = null
 
       this.resetImageStoreForNewFile()
     },

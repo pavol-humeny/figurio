@@ -50,11 +50,6 @@ export function useSvgObjects(imageStore, historyStore, viewportStore, editorSto
   })
 
   /**
-   * Reference to the copied SVG object, used for copy-paste functionality
-   */
-  const copiedObject = ref(null)
-
-  /**
    * Move the selected object by a specified offset in global coordinates (ignores rotation)
    * @param {number} dx - Offset in X direction
    * @param {number} dy - Offset in Y direction
@@ -202,16 +197,16 @@ export function useSvgObjects(imageStore, historyStore, viewportStore, editorSto
     if (!object) return
 
     // Deep copy of object
-    copiedObject.value = JSON.parse(JSON.stringify(object))
+    imageStore.clipboardSvgObject = JSON.parse(JSON.stringify(object))
   }
 
   /**
    * Paste copied SVG object and center it on the canvas
    */
   const pasteSvgObjectToCenter = () => {
-    if (!copiedObject.value) return
+    if (!imageStore.clipboardSvgObject) return
 
-    const newObject = JSON.parse(JSON.stringify(copiedObject.value))
+    const newObject = JSON.parse(JSON.stringify(imageStore.clipboardSvgObject))
     newObject.id = Date.now()
 
     const { width: imageWidth, height: imageHeight } = imageStore.fileDimensions
@@ -260,6 +255,9 @@ export function useSvgObjects(imageStore, historyStore, viewportStore, editorSto
     historyStore.push(imageStore.getSnapshot(t))
   }
 
+  /**
+   * Duplicate the selected SVG object and paste it to the center
+   */
   const duplicateSelectedSvgObject = () => {
     if (imageStore.selectedSvgObjectId === null) return
 
@@ -267,9 +265,22 @@ export function useSvgObjects(imageStore, historyStore, viewportStore, editorSto
     if (!object) return
 
     // Deep copy of object
-    copiedObject.value = JSON.parse(JSON.stringify(object))
+    imageStore.clipboardSvgObject = JSON.parse(JSON.stringify(object))
 
     pasteSvgObjectToCenter()
+  }
+
+  /**
+   * Cut the selected SVG object
+   */
+  const cutSelectedSvgObject = () => {
+    if (imageStore.selectedSvgObjectId === null) return
+
+    // Copy the object first
+    copySelectedSvgObject()
+
+    // Then delete it
+    deleteSelectedSvgObjects(t)
   }
 
   /**
@@ -819,5 +830,6 @@ export function useSvgObjects(imageStore, historyStore, viewportStore, editorSto
     copySelectedSvgObject,
     pasteSvgObjectToCenter,
     duplicateSelectedSvgObject,
+    cutSelectedSvgObject,
   }
 }

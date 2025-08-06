@@ -46,10 +46,11 @@ const {
   isInMultiSelection
 } = useSvgObjectWrapper(props.objectId, useImageStore(), useViewportStore(), useEditorStore(), useHistoryStore(), t)
 
-
 </script>
 
 <template>
+
+
   <g @mousedown="onMouseDown" @mousedown.right.prevent.stop>
     <!-- SVG object except text -->
     <g v-if="isSelected" @mousedown="onMouseDownDrag" @dblclick="onObjectDoubleClick"
@@ -67,6 +68,7 @@ const {
         {{ object.content || '' }}
       </text>
     </g>
+
 
     <g v-if="(isSelected && boundingBox) || isInMultiSelection" :transform="object?.attrs?.transform">
       <!-- Bounding box -->
@@ -103,6 +105,8 @@ const {
       </foreignObject>
     </g>
   </g>
+
+
 </template>
 
 <style scoped>

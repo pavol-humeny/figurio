@@ -258,4 +258,10 @@ export const keyboardShortcuts = [
     action: 'duplicateSelectedSvgObject',
     description: 'Duplicate selected SVG object',
   },
+  // Cut
+  {
+    keys: ['ctrl', 'x'],
+    action: 'cutSelectedSvgObject',
+    description: 'Cut selected SVG object',
+  },
 ]

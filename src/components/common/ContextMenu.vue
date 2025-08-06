@@ -40,9 +40,14 @@ const {
 } = useContextMenu()
 
 /**
+ * Computed property to filter out hidden items
+ */
+const visibleItems = computed(() => props.items.filter(item => !item.hide))
+
+/**
  * Whether to show the context menu
  */
-const showContextMenu = computed(() => props.items.length > 0)
+const showContextMenu = computed(() => visibleItems.value.length > 0)
 </script>
 
 <template>
@@ -53,7 +58,7 @@ const showContextMenu = computed(() => props.items.length > 0)
   <teleport to="body">
     <div v-if="isVisible && showContextMenu" class="context-menu-wrapper" :style="contextMenuStyle"
       @mouseenter="handleMenuEnter" @mouseleave="handleMenuLeave">
-      <div v-for="(item, index) in props.items" :key="index" class="context-menu-wrapper-item"
+      <div v-for="(item, index) in visibleItems" :key="index" class="context-menu-wrapper-item"
         @click="() => { item.action(); closeMenu() }" :class="{ disabled: item.disabled }">
         {{ item.label }}
       </div>
