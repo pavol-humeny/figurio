@@ -18,6 +18,7 @@ const props = defineProps({
    * {label: string, action: function}
    * label: Text to display
    * action: Function to call on click
+   * disabled: Whether the item is disabled
    */
   items: {
     type: Array,
@@ -53,7 +54,7 @@ const showContextMenu = computed(() => props.items.length > 0)
     <div v-if="isVisible && showContextMenu" class="context-menu-wrapper" :style="contextMenuStyle"
       @mouseenter="handleMenuEnter" @mouseleave="handleMenuLeave">
       <div v-for="(item, index) in props.items" :key="index" class="context-menu-wrapper-item"
-        @click="() => { item.action(); closeMenu() }">
+        @click="() => { item.action(); closeMenu() }" :class="{ disabled: item.disabled }">
         {{ item.label }}
       </div>
     </div>

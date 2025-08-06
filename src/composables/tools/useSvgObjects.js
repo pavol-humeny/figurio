@@ -24,6 +24,11 @@ export function useSvgObjects(imageStore, historyStore, viewportStore, editorSto
   const isDrawing = ref(false)
 
   /**
+   * Whether the user has dragged the mouse while drawing
+   */
+  const didDrag = ref(false)
+
+  /**
    * Start point of the current drawing operation
    * Used to calculate width and height of the object being drawn
    */
@@ -43,6 +48,11 @@ export function useSvgObjects(imageStore, historyStore, viewportStore, editorSto
       ? 'url(/cursors/textCursor.png) 10 10, auto'
       : 'default'
   })
+
+  /**
+   * Reference to the copied SVG object, used for copy-paste functionality
+   */
+  const copiedObject = ref(null)
 
   /**
    * Move the selected object by a specified offset in global coordinates (ignores rotation)
@@ -183,6 +193,86 @@ export function useSvgObjects(imageStore, historyStore, viewportStore, editorSto
   }
 
   /**
+   * Copy the currently selected SVG object
+   */
+  const copySelectedSvgObject = () => {
+    if (imageStore.selectedSvgObjectId === null) return
+
+    const object = imageStore.getSvgObjectById(imageStore.selectedSvgObjectId)
+    if (!object) return
+
+    // Deep copy of object
+    copiedObject.value = JSON.parse(JSON.stringify(object))
+  }
+
+  /**
+   * Paste copied SVG object and center it on the canvas
+   */
+  const pasteSvgObjectToCenter = () => {
+    if (!copiedObject.value) return
+
+    const newObject = JSON.parse(JSON.stringify(copiedObject.value))
+    newObject.id = Date.now()
+
+    const { width: imageWidth, height: imageHeight } = imageStore.fileDimensions
+    const centerX = imageWidth / 2
+    const centerY = imageHeight / 2
+
+    const { attrs, tag } = newObject
+
+    if (tag === 'rect') {
+      attrs.x = centerX - attrs.width / 2
+      attrs.y = centerY - attrs.height / 2
+    } else if (tag === 'ellipse' && 'rx' in attrs && 'ry' in attrs) {
+      attrs.cx = centerX
+      attrs.cy = centerY
+    } else if (tag === 'line' && 'x1' in attrs && 'x2' in attrs && 'y1' in attrs && 'y2' in attrs) {
+      const dx = (attrs.x2 - attrs.x1) / 2
+      const dy = (attrs.y2 - attrs.y1) / 2
+      attrs.x1 = centerX - dx
+      attrs.y1 = centerY - dy
+      attrs.x2 = centerX + dx
+      attrs.y2 = centerY + dy
+    } else if (tag === 'text') {
+      if (newObject.textBBox) {
+        const { width, height } = newObject.textBBox
+        attrs.x = centerX - width / 2
+        attrs.y = centerY + height / 2
+      } else {
+        attrs.x = centerX
+        attrs.y = centerY
+      }
+    }
+
+    // Recalculate rotation
+    if (attrs.transform) {
+      const angleMatch = attrs.transform.match(/rotate\((-?\d+\.?\d*)/)
+
+      if (angleMatch) {
+        const angle = parseFloat(angleMatch[1])
+        attrs.transform = `rotate(${angle}, ${centerX}, ${centerY})`
+      }
+    }
+
+    imageStore.svgObjects.push(newObject)
+    imageStore.selectedSvgObjectId = newObject.id
+
+    historyStore.push(imageStore.getSnapshot(t))
+  }
+
+  const duplicateSelectedSvgObject = () => {
+    if (imageStore.selectedSvgObjectId === null) return
+
+    const object = imageStore.getSvgObjectById(imageStore.selectedSvgObjectId)
+    if (!object) return
+
+    // Deep copy of object
+    copiedObject.value = JSON.parse(JSON.stringify(object))
+
+    pasteSvgObjectToCenter()
+  }
+
+  /**
    * Bring the selected SVG object to front
    */
   const bringSelectedSvgObjectToFront = (t) => {
@@ -300,7 +390,10 @@ export function useSvgObjects(imageStore, historyStore, viewportStore, editorSto
    * @param {MouseEvent} event - Click event
    */
   const OnClickImageSvg = (event) => {
-    console.log('OnClickImageSvg, editorStore.selectedToolKey:', editorStore.selectedToolKey)
+    if (didDrag.value) {
+      // Prevent click after drag
+      return
+    }
 
     // Selecting objects
     if (editorStore.selectedToolKey === 'select') {
@@ -328,6 +421,7 @@ export function useSvgObjects(imageStore, historyStore, viewportStore, editorSto
 
       // Clicked on empty area – deselect all
       if (!event.shiftKey) {
+        console.log('Deselect all SVG objects')
         imageStore.selectedSvgObjectIds = []
       }
     }
@@ -345,7 +439,8 @@ export function useSvgObjects(imageStore, historyStore, viewportStore, editorSto
   }
 
   const onMouseDownImageSvg = (event) => {
-    console.log('onMouseDownImageSvg')
+    didDrag.value = false // reset at start
+
     // Selecting objects
     if (editorStore.selectedToolKey === 'select') {
       const rect = viewportStore.viewportContentRect
@@ -488,6 +583,12 @@ export function useSvgObjects(imageStore, historyStore, viewportStore, editorSto
       )
       const y = round((event.clientY - rect.top - viewportStore.panY) / viewportStore.realZoomLevel)
 
+      const dx = Math.abs(x - drawingStart.value.x)
+      const dy = Math.abs(y - drawingStart.value.y)
+      if (dx > 3 || dy > 3) {
+        didDrag.value = true
+      }
+
       const x1 = Math.min(drawingStart.value.x, x)
       const y1 = Math.min(drawingStart.value.y, y)
       const x2 = Math.max(drawingStart.value.x, x)
@@ -599,7 +700,7 @@ export function useSvgObjects(imageStore, historyStore, viewportStore, editorSto
     }
   }
 
-  const onMouseUpImageSvg = () => {
+  const onMouseUpImageSvg = (event) => {
     // Selecting objects
     if (editorStore.selectedToolKey === 'select' && selectBox.value) {
       const { x, y, width, height } = selectBox.value
@@ -608,23 +709,29 @@ export function useSvgObjects(imageStore, historyStore, viewportStore, editorSto
       const x2 = x + width
       const y2 = y + height
 
-      const { getTransformedBoundingBox } = useSvgFunctions(imageStore)
+      const { getObjectCenter } = useSvgFunctions(imageStore)
 
-      const selectedIds = []
+      let selectedIds = imageStore.selectedSvgObjectIds
+
+      // Reset selection if not holding SHIFT
+      if (!event.shiftKey) {
+        selectedIds = []
+      }
+
       for (const obj of imageStore.svgObjects) {
-        const box = getTransformedBoundingBox(obj)
-        if (!box) continue
+        const { cx, cy } = getObjectCenter(obj)
 
-        const isInside = box.left >= x1 && box.right <= x2 && box.top >= y1 && box.bottom <= y2
+        const isInside = cx >= x1 && cx <= x2 && cy >= y1 && cy <= y2
 
         if (isInside) {
           selectedIds.push(obj.id)
+          console.log('ids: ', selectedIds)
         }
       }
 
-      if (selectedIds.length > 0) {
-        imageStore.selectedSvgObjectIds = selectedIds
-      }
+      imageStore.selectedSvgObjectIds = selectedIds
+
+      console.log('imageStore.selectedSvgObjectIds: ', imageStore.selectedSvgObjectIds)
 
       selectBox.value = null
       isDrawing.value = false
@@ -709,6 +816,8 @@ export function useSvgObjects(imageStore, historyStore, viewportStore, editorSto
     selectBox,
     selectAllSvgObjects,
     deselectAllSvgObjects,
-    // onMouseUpImageSvg,
+    copySelectedSvgObject,
+    pasteSvgObjectToCenter,
+    duplicateSelectedSvgObject,
   }
 }

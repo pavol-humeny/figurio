@@ -241,4 +241,21 @@ export const keyboardShortcuts = [
     action: 'moveObjectDownLocal',
     description: 'Move selected SVG object down by 10px',
   },
+  // Copy and paste SVG object
+  {
+    keys: ['ctrl', 'c'],
+    action: 'copySelectedSvgObject',
+    description: 'Copy selected SVG object',
+  },
+  {
+    keys: ['ctrl', 'v'],
+    action: 'pasteSvgObjectToCenter',
+    description: 'Paste copied SVG object to center',
+  },
+  // Duplicate selected SVG object
+  {
+    keys: ['ctrl', 'd'],
+    action: 'duplicateSelectedSvgObject',
+    description: 'Duplicate selected SVG object',
+  },
 ]

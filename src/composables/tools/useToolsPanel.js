@@ -84,8 +84,9 @@ export function useToolsPanel(editorStore, imageStore, uiStore, t) {
         editorStore.selectSubTool('')
       }
 
+      imageStore.selectedSvgObjectIds = [] // Reset multi-selection on tool change
+      
       if (newVal.tool !== 'shape') {
-        imageStore.selectedSvgObjectIds = [] // Reset multi-selection on tool change
         imageStore.selectedSvgObjectId = null // Reset just created object ID
       }
     },

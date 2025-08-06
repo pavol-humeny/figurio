@@ -55,8 +55,14 @@ const {
   moveObjectRightGlobal,
   moveObjectUpGlobal,
   moveObjectDownGlobal,
-  deleteSelectedSvgObjects, moveSelectedSvgObjectForward, moveSelectedSvgObjectBackward,
-  selectedObjectInfo } = useSvgObjects(useImageStore(), useHistoryStore(), useViewportStore(), useEditorStore(), t)
+  deleteSelectedSvgObjects,
+  moveSelectedSvgObjectForward,
+  moveSelectedSvgObjectBackward,
+  selectedObjectInfo,
+  copySelectedSvgObject,
+  pasteSvgObjectToCenter,
+  duplicateSelectedSvgObject,
+} = useSvgObjects(useImageStore(), useHistoryStore(), useViewportStore(), useEditorStore(), t)
 
 const imageStore = useImageStore()
 
@@ -69,9 +75,12 @@ useKeyboardShortcuts({
   moveObjectLeftGlobal,
   moveObjectRightGlobal,
   moveObjectUpGlobal,
-  moveObjectDownGlobal
+  moveObjectDownGlobal,
+  copySelectedSvgObject,
+  pasteSvgObjectToCenter,
+  duplicateSelectedSvgObject,
 }, useUiStore(), useImageStore());
-// === ===
+// ======
 
 // Start tutorial if opening the editor for the first time
 onMounted(() => {
