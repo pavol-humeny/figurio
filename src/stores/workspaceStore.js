@@ -21,7 +21,7 @@ export const useWorkspaceStore = defineStore('workspaceStore', {
      * Add a new tab with current state snapshots.
      * @param {string} name - Name of the tab (default: 'Untitled')
      */
-    addNewTab(name = 'Untitled', t) {
+    addNewTab(name = 'Untitled', fileExtension, t) {
       const imageStore = useImageStore()
       const historyStore = useHistoryStore()
       const viewportStore = useViewportStore()
@@ -37,6 +37,7 @@ export const useWorkspaceStore = defineStore('workspaceStore', {
       this.tabs.push({
         id,
         name,
+        fileExtension,
         imageSnapshot,
         historySnapshot,
         viewportSnapshot,

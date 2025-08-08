@@ -556,7 +556,7 @@ export const useImageStore = defineStore('imageStore', {
             this.previewUrl = canvas.toDataURL() // Fallback for export
 
             // Add new tab in workspace
-            workspaceStore.addNewTab(this.fileName, t)
+            workspaceStore.addNewTab(this.fileName, this.fileFormat, t)
 
             uiStore.isLoading = false
 
@@ -646,7 +646,7 @@ export const useImageStore = defineStore('imageStore', {
             this.previewUrl = canvas.toDataURL()
 
             // Add new tab in workspace
-            workspaceStore.addNewTab(this.fileName, t)
+            workspaceStore.addNewTab(this.fileName, this.fileFormat, t)
 
             uiStore.isLoading = false
 
