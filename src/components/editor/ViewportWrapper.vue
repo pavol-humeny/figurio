@@ -118,6 +118,13 @@ watch(
 const hideContextMenu = computed(() => {
   return editorStore.selectedToolKey !== 'shape' && editorStore.selectedToolKey !== 'text' && editorStore.selectedToolKey !== 'select' && editorStore.selectedToolKey !== 'blur' && editorStore.selectedToolKey !== 'magnifyArea'
 })
+
+/**
+ * Whether to disable the context menu
+ */
+const disableContextMenu = computed(() => {
+  return imageStore.selectedSvgObjectId === null || editorStore.selectedToolKey === 'magnifyArea'
+})
 </script>
 
 <template>
@@ -139,25 +146,25 @@ const hideContextMenu = computed(() => {
         {
           label: $t('contextMenu.copy'),
           action: copySelectedSvgObject,
-          disabled: imageStore.selectedSvgObjectId === null,
+          disabled: disableContextMenu,
           hide: hideContextMenu,
         },
         {
           label: $t('contextMenu.cut'),
           action: cutSelectedSvgObject,
-          disabled: imageStore.selectedSvgObjectId === null,
+          disabled: disableContextMenu,
           hide: hideContextMenu,
         },
         {
           label: $t('contextMenu.duplicate'),
           action: duplicateSelectedSvgObject,
-          disabled: imageStore.selectedSvgObjectId === null,
+          disabled: disableContextMenu,
           hide: hideContextMenu,
         },
         {
           label: $t('contextMenu.delete'),
           action: () => deleteSelectedSvgObjects(t),
-          disabled: imageStore.selectedSvgObjectId === null && imageStore.selectedSvgObjectIds.length === 0,
+          disabled: disableContextMenu && imageStore.selectedSvgObjectIds.length === 0,
           hide: hideContextMenu,
         },
       ]">
@@ -253,7 +260,7 @@ const hideContextMenu = computed(() => {
         </div>
         <div v-if="mouseX !== null" class="ruler-cursor-mark horizontal" :style="{ left: mouseX + 'px' }">
           <span class="ruler-cursor-label horizontal" :class="{ 'active': cursorPosXSameAsImageWidth }">{{ cursorPosX
-          }}</span>
+            }}</span>
         </div>
 
       </div>
@@ -266,7 +273,7 @@ const hideContextMenu = computed(() => {
         </div>
         <div v-if="mouseY !== null" class="ruler-cursor-mark vertical" :style="{ top: mouseY + 'px' }">
           <span class="ruler-cursor-label vertical" :class="{ 'active': cursorPosYSameAsImageHeight }">{{ cursorPosY
-          }}</span>
+            }}</span>
         </div>
       </div>
     </div>
