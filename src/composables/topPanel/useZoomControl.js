@@ -1,5 +1,6 @@
 import { ref, computed, watch } from 'vue'
 import { viewportConfig } from '@/config/viewportConfig'
+import { useMath } from '../common/useMath'
 
 /**
  * Logic for the zoom control functionality in the viewport
@@ -13,14 +14,20 @@ import { viewportConfig } from '@/config/viewportConfig'
  *   resetZoom: () => void,
  *   canZoomIn: import('vue').ComputedRef<boolean>,
  *   canZoomOut: import('vue').ComputedRef<boolean>,
- *   startDragging: (e: MouseEvent) => void
  * }}
  */
 export function useZoomControl(viewportStore) {
+  const { clamp } = useMath()
+
   /**
    * Zoom level in percent (0–100+), used for display and manual adjustment
    */
   const zoomLevelInput = ref(Math.round(viewportStore.zoomLevel * 100))
+
+  /**
+   * Backing value for the zoom level input
+   */
+  const lastSyncedZoomInput = ref(zoomLevelInput.value)
 
   /**
    * Sync zoom input with store
@@ -28,7 +35,9 @@ export function useZoomControl(viewportStore) {
   watch(
     () => viewportStore.zoomLevel,
     (newZoom) => {
-      zoomLevelInput.value = Math.round(newZoom * 100)
+      const value = Math.round(newZoom * 100)
+      zoomLevelInput.value = value
+      lastSyncedZoomInput.value = value
     },
   )
 
@@ -42,25 +51,19 @@ export function useZoomControl(viewportStore) {
   const canZoomOut = computed(() => viewportStore.zoomLevel > viewportStore.minZoomLevel)
 
   /**
-   * Indicates whether the zoom slider is being dragged
+   * Increase zoom level
+   *
+   * @param {number} zoomDiff - Amount to increase zoom by
    */
-  const isDragging = ref(false)
-
-  /**
-   * Initial X coordinate when dragging starts
-   */
-  const startX = ref(0)
-
-  /**
-   * Increase zoom level by 10%
-   */
-  const zoomIn = (zoomDiff = viewportConfig.defaultZoomOut) => {
+  const zoomIn = (zoomDiff = viewportConfig.defaultZoomIn) => {
     if (!canZoomIn.value) return
     viewportStore.setZoomLevel(viewportStore.zoomLevel + zoomDiff)
   }
 
   /**
-   * Decrease zoom level by 10%
+   * Decrease zoom level
+   *
+   * @param {number} zoomDiff - Amount to decrease zoom by
    */
   const zoomOut = (zoomDiff = viewportConfig.defaultZoomOut) => {
     if (!canZoomOut.value) return
@@ -82,11 +85,55 @@ export function useZoomControl(viewportStore) {
    * @param {WheelEvent} event - The wheel event
    */
   const wheelZoom = (event) => {
-    if (event.deltaY < 0) {
-      zoomIn(0.01)
-    } else if (event.deltaY > 0) {
-      zoomOut(0.01)
+    let zoomDiff = 0.01
+    if (event.ctrlKey || event.metaKey) {
+      zoomDiff = 0.1
     }
+
+    if (event.deltaY < 0) {
+      zoomIn(zoomDiff)
+    } else if (event.deltaY > 0) {
+      zoomOut(zoomDiff)
+    }
+  }
+
+  /**
+   * Just fill input but not apply
+   */
+  const onZoomInput = (event) => {
+    const inputValue = event.target.value
+
+    if (inputValue === '' || inputValue === '-') {
+      zoomLevelInput.value = inputValue
+      return
+    }
+    const newZoom = Number(inputValue)
+    if (!Number.isNaN(newZoom)) zoomLevelInput.value = Math.round(newZoom)
+  }
+
+  /**
+   * Apply zoom level (Enter/blur)
+   */
+  const applyZoomFromInput = () => {
+    let newZoom = Number(zoomLevelInput.value)
+    if (Number.isNaN(newZoom)) {
+      // ak nezmysel, vráť pôvodné
+      zoomLevelInput.value = lastSyncedZoomInput.value
+      return
+    }
+
+    newZoom = clamp(newZoom, viewportStore.minZoomLevel * 100, viewportStore.maxZoomLevel * 100)
+
+    zoomLevelInput.value = newZoom
+    lastSyncedZoomInput.value = newZoom
+    viewportStore.setZoomLevel(newZoom / 100)
+  }
+
+  /**
+   * Revert zoom input to last synced value
+   */
+  const revertZoomInput = () => {
+    zoomLevelInput.value = lastSyncedZoomInput.value
   }
 
   return {
@@ -97,5 +144,8 @@ export function useZoomControl(viewportStore) {
     resetZoom,
     canZoomIn,
     canZoomOut,
+    onZoomInput,
+    applyZoomFromInput,
+    revertZoomInput,
   }
 }

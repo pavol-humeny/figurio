@@ -42,16 +42,6 @@ export function useSvgObjects(imageStore, historyStore, viewportStore, editorSto
   const currentDrawingObject = ref(null)
 
   /**
-   * Which cursor to use when hovering over the SVG area
-   * @returns {string} - CSS cursor style
-   */
-  const cursorOnSvgArea = computed(() => {
-    return editorStore.selectedToolKey === 'text' && !editorStore.isSvgObjectSelected
-      ? 'url(/cursors/textCursor.png) 10 10, auto'
-      : 'default'
-  })
-
-  /**
    * Move the selected object by a specified offset in global coordinates (ignores rotation)
    * @param {number} dx - Offset in X direction
    * @param {number} dy - Offset in Y direction
@@ -917,7 +907,6 @@ export function useSvgObjects(imageStore, historyStore, viewportStore, editorSto
     bringSelectedSvgObjectToFront,
     selectedObjectInfo,
     OnClickImageSvg,
-    cursorOnSvgArea,
     onMouseDownImageSvg,
     onMouseMoveImageSvg,
     isDrawing,

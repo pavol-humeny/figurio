@@ -6,6 +6,7 @@ import { useImageStore } from '@/stores/imageStore'
 import ItemTip from '@/components/common/ItemTip.vue'
 
 const imageStore = useImageStore()
+const viewportStore = useViewportStore()
 
 /**
  * Logic for the zoom control.
@@ -18,6 +19,9 @@ const {
   resetZoom,
   canZoomIn,
   canZoomOut,
+  onZoomInput,
+  applyZoomFromInput,
+  revertZoomInput,
 } = useZoomControl(useViewportStore())
 </script>
 
@@ -32,10 +36,30 @@ const {
     </ItemTip>
 
     <!-- Reset zoom -->
-    <ItemTip :text="$t('topPanel.zoomControl.tip.setZoom')" position="bottom">
+    <!-- <ItemTip :text="$t('topPanel.zoomControl.tip.setZoom')" position="bottom">
       <div class="zoom-level-wrapper">
         <p class="zoom-level" :textContent="zoomLevel" @wheel.passive="wheelZoom" @dblclick="resetZoom">
         </p>
+      </div>
+    </ItemTip> -->
+    <!-- nahrádza <p class="zoom-level">... -->
+    <ItemTip :text="$t('topPanel.zoomControl.tip.setZoom')" position="bottom">
+      <div class="zoom-level-wrapper">
+        <input
+          class="zoom-level"
+          type="number"
+          :value="zoomLevel"
+          :min="viewportStore.minZoomLevel * 100"
+          :max="viewportStore.maxZoomLevel * 100"
+          step="1"
+          @input="onZoomInput($event)"
+          @blur="applyZoomFromInput()"
+          @keydown.enter.prevent="applyZoomFromInput()"
+          @keydown.esc.prevent="revertZoomInput()"
+          @wheel.passive="wheelZoom"
+          :disabled="imageStore.file === null"
+          @dblclick="resetZoom"
+        />
       </div>
     </ItemTip>
 
@@ -78,8 +102,8 @@ const {
   height: 100%;
 }
 
-p.zoom-level {
-  padding-right: 20px;
+.zoom-level {
+  padding: 0 20px 0 5px;
   width: 60px;
   height: 40px;
   background: var(--secondary-c);
@@ -88,8 +112,15 @@ p.zoom-level {
   display: flex;
   align-items: center;
   justify-content: center;
-  cursor: pointer;
-  user-select: none;
+  border: none;
+}
+
+.zoom-level:focus {
+  outline: none;
+}
+
+.zoom-level::selection {
+  background: var(--primary-c);
 }
 
 .zoom-level-wrapper::after {

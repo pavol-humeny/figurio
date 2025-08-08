@@ -245,6 +245,7 @@ export function useMagnifyAreaTool(imageStore, historyStore, editorStore, t) {
 
         activeObject.value = source
       } else {
+        activeObject.value = null
         hidePositionAndDimensions.value = true
       }
     },
@@ -271,6 +272,8 @@ export function useMagnifyAreaTool(imageStore, historyStore, editorStore, t) {
    * Apply changes to both objects
    */
   const applyLocalMagnifyAreaSettings = () => {
+    if (!activeObject.value) return
+
     const settings = localMagnifyAreaSettings.value
     const source = activeObject.value
     if (!source) return

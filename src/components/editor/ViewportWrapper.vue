@@ -72,7 +72,6 @@ const {
 
 const {
   OnClickImageSvg,
-  cursorOnSvgArea,
   onMouseDownImageSvg,
   onMouseMoveImageSvg,
   selectBox,
@@ -178,7 +177,7 @@ const disableContextMenu = computed(() => {
 
           <svg ref="svgRef" class="image-svg" xmlns="http://www.w3.org/2000/svg"
             :width="imageStore.fileDimensions.width" :height="imageStore.fileDimensions.height"
-            @mousedown="onMouseDownImageSvg" @click="OnClickImageSvg" :style="{ cursor: cursorOnSvgArea }">
+            @mousedown="onMouseDownImageSvg" @click="OnClickImageSvg">
             <!-- DEFS -->
             <!-- // UPDATE svg string -->
             <defs>
