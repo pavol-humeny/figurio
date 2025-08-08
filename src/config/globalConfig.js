@@ -12,7 +12,7 @@ export const globalConfig = {
   supportedLanguages: ['en', 'sk', 'cz'],
 
   // Default tool to start with
-  startTool: 'move',
+  startTool: 'magnifyArea',
 
   // Feature flags
   // UPDATE new tool

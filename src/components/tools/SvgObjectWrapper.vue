@@ -49,8 +49,6 @@ const {
 </script>
 
 <template>
-
-
   <g @mousedown="onMouseDown" @mousedown.right.prevent.stop>
     <!-- SVG object except text -->
     <g v-if="isSelected" @mousedown="onMouseDownDrag" @dblclick="onObjectDoubleClick"
@@ -69,7 +67,6 @@ const {
       </text>
     </g>
 
-
     <g v-if="(isSelected && boundingBox) || isInMultiSelection" :transform="object?.attrs?.transform">
       <!-- Bounding box -->
       <rect :x="boundingBox.x" :y="boundingBox.y" :width="boundingBox.width" :height="boundingBox.height" fill="none"
@@ -78,7 +75,7 @@ const {
         :stroke-dasharray="[boundingBoxStrokeWidth * 4, boundingBoxStrokeWidth * 2]" pointer-events="none" />
 
       <!-- Icon to turn on resize -->
-      <foreignObject v-if="object.tag !== 'text' && !isInMultiSelection"
+      <foreignObject v-if="object.tag !== 'text' && object.class !== 'magnifyArea' && !isInMultiSelection"
         :x="boundingBox.x + boundingBox.width / 2 - controlIconSize * 0.5" :y="boundingBox.y - controlIconSize"
         :width="controlIconSize" :height="controlIconSize" @mousedown.stop.prevent="showResizers = !showResizers"
         style="cursor: pointer">
@@ -89,16 +86,16 @@ const {
       </foreignObject>
 
       <!-- Resizers -->
-      <template v-if="showResizers && object.tag !== 'text'">
+      <template v-if="showResizers && object.tag !== 'text' && object.class !== 'magnifyArea'">
         <circle v-for="(pos, i) in getResizerPositions()" :key="i" :cx="pos.x" :cy="pos.y" :r="resizerSize / 2"
           fill="var(--text-c)" stroke="var(--editor-highlight-c)" :style="{ cursor: pos.cursor }"
           @mousedown.stop.prevent="onMouseDownResizer($event, i)" />
       </template>
 
       <!-- Rotate icon  -->
-      <foreignObject v-if="!showResizers && !isRotating && !isInMultiSelection" :x="boundingBox.x + boundingBox.width"
-        :y="boundingBox.y + boundingBox.height / 2 - controlIconSize / 2" :width="controlIconSize"
-        :height="controlIconSize" @mousedown.stop.prevent="onMouseDownRotate($event)"
+      <foreignObject v-if="!showResizers && !isRotating && !isInMultiSelection && object.class !== 'magnifyArea'"
+        :x="boundingBox.x + boundingBox.width" :y="boundingBox.y + boundingBox.height / 2 - controlIconSize / 2"
+        :width="controlIconSize" :height="controlIconSize" @mousedown.stop.prevent="onMouseDownRotate($event)"
         style="cursor: url(/cursors/rotateCursor.png) 10 10, grab">
         <BaseIcon :name="'IconRotate'" :tip="t('tools.svgObject.rotateObject.tip')" :size="controlIconSize"
           :color="'var(--primary-c)'" />

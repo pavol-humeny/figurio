@@ -3,6 +3,7 @@ import { useMath } from '../common/useMath'
 import { editorConfig } from '@/config/editorConfig'
 import { useSvgObjects } from './useSvgObjects'
 import { useSvgFunctions } from './useSvgFunctions'
+import { useMagnifyAreaTool } from './useMagnifyAreaTool'
 
 /**
  * Logic for interactive SVG object
@@ -30,6 +31,13 @@ export function useSvgObjectWrapper(
   const { clamp, pythagorean, round } = useMath()
   const { getObjectCenter, getTransformedBoundingBox, getSnapOffsetToEdges } =
     useSvgFunctions(imageStore)
+
+  const { generateMagnifyPattern } = useMagnifyAreaTool(
+    imageStore,
+    historyStore,
+    editorStore,
+    t,
+  )
 
   /**
    * Style of cursor when hovering over the SVG object
@@ -81,10 +89,6 @@ export function useSvgObjectWrapper(
    * Watch for changes in the selection state
    */
   watch(isSelected, (newValue) => {
-    console.log('SVG object selection state changed:', newValue, object.value.id)
-    // Do not set as active when drawing new object
-    // if (editorStore.isSvgObjectDrawing) return
-
     editorStore.setIsSvgObjectSelected(newValue)
   })
 
@@ -255,14 +259,15 @@ export function useSvgObjectWrapper(
   const onMouseDown = (event) => {
     if (!areSvgObjectOperationsEnabled.value) return
 
-    console.log('onMouseDown in svg wrapper', object.value.id)
-    console.log('selectedToolKey', editorStore.selectedToolKey, object.value.class)
-
     if (editorStore.selectedToolKey !== object.value.class) return
 
-    imageStore.selectedSvgObjectId = object.value.id
+    // If it is a magnify area result, select source object
+    if (object.value.class === 'magnifyArea' && object.value.subClass === 'magnify-result') {
+      imageStore.selectedSvgObjectId = object.value.linkedSourceId
+    } else {
+      imageStore.selectedSvgObjectId = object.value.id
+    }
 
-    console.log('selectedSvgObjectId', imageStore.selectedSvgObjectId)
     startX.value = event.clientX
     startY.value = event.clientY
     event.stopPropagation()
@@ -967,6 +972,26 @@ export function useSvgObjectWrapper(
   const onMouseUp = () => {
     const isActive = isDragging.value || activeResizerIndex.value !== null || isRotating.value
     if (!isActive) return
+
+    if (object.value.class === 'magnifyArea') {
+      if (object.value.subClass === 'magnify-source') {
+        const result = imageStore.getSvgObjectById(object.value.linkedZoomId)
+        if (!result) return
+
+        const patternId = `magnify-fill-${result.id}`
+
+        const pattern = generateMagnifyPattern(
+          patternId,
+          object.value.attrs.cx, // sourceX
+          object.value.attrs.cy, // sourceY
+          result.attrs.cx, // resultX
+          result.attrs.cy, // resultY
+        )
+
+        imageStore.addOrReplaceSvgDef(patternId, pattern)
+        result.attrs.fill = `url(#${patternId})`
+      }
+    }
 
     isDragging.value = false
     activeResizerIndex.value = null

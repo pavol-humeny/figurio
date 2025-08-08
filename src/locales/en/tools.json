@@ -387,24 +387,54 @@
     "tip": "Magnifies a specific area of the image",
     "tipDisabled": "",
     "shortcut": "M",
-    "subTools": {
-      "add": {
-        "label": "Add Magnify Area",
-        "tip": "Add a magnified area to the image",
-        "shortcut": ""
-      },
-      "modify": {
-        "label": "Modify Magnify Area",
-        "tip": "Modify the existing magnified area",
-        "shortcut": ""
-      }
-    },
     "settings": {
-      "add": {
-        "label": "Add Magnify Area"
-      },
-      "modify": {
-        "label": "Modify Magnify Area"
+      "general":{
+        "sourcePosition": {
+          "label": "Source position",
+          "x": "X",
+          "y": "Y"
+        },
+        "radius": {
+          "label": "Radius",
+          "tip": "Adjust the radius of the magnified area"
+        },
+        "zoom": {
+          "label": "Zoom",
+          "tip": "Adjust the zoom level of the magnified area"
+        },
+        "resultPosition": {
+          "label": "Result position",
+          "tip": "Select the position of the magnified area result",
+          "options": {
+            "top-left": "Top left",
+            "top-right": "Top right",
+            "bottom-left": "Bottom left",
+            "bottom-right": "Bottom right"
+          }
+        },
+        "outlineWidth": {
+          "label": "Outline width",
+          "tip": "Adjust the width of the outline around the magnified area"
+        },
+        "outlineColor": {
+          "label": "Outline color",
+          "tip": "Select the color of the outline around the magnified area"
+        },
+        "zIndex":{
+          "label": "Position in Z-axis",
+          "bringToFrontButton": {
+            "text": "Bring to front"
+          },
+          "sendToBackButton": {
+            "text": "Send to back"
+          },
+          "moveForwardButton": {
+            "text": "Move forward"
+          },
+          "moveBackwardButton": {
+            "text": "Move backward"
+          }
+        }
       }
     }
   },

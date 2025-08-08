@@ -85,16 +85,6 @@ export const toolsDefinitions = [
     key: 'magnifyArea',
     iconName: 'IconMagnifyAreaTool',
     settingsComponent: () => import('@/components/toolsSettings/MagnifyAreaToolSettings.vue'),
-    subTools: [
-      {
-        key: 'add',
-        iconName: 'IconPlus',
-      },
-      {
-        key: 'modify',
-        iconName: 'IconModify',
-      },
-    ],
   },
   {
     key: 'frame',

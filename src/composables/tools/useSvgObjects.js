@@ -5,6 +5,7 @@ import { useMath } from '../common/useMath'
 import { useSvgFunctions } from './useSvgFunctions'
 import { editorConfig } from '@/config/editorConfig'
 import { useBlurTool } from './useBlurTool'
+import { useMagnifyAreaTool } from './useMagnifyAreaTool'
 
 export function useSvgObjects(imageStore, historyStore, viewportStore, editorStore, t) {
   const { round } = useMath()
@@ -12,6 +13,7 @@ export function useSvgObjects(imageStore, historyStore, viewportStore, editorSto
   const shapeTool = useShapeTool(editorStore, imageStore, historyStore, t)
   const { getSnapOffsetToEdges } = useSvgFunctions(imageStore)
   const blurTool = useBlurTool(imageStore, historyStore, editorStore, t)
+  const magnifyAreaToll = useMagnifyAreaTool(imageStore, historyStore, editorStore, t)
 
   /**
    * Selection box rectangle (used when dragging with select tool)
@@ -164,24 +166,53 @@ export function useSvgObjects(imageStore, historyStore, viewportStore, editorSto
       return
     }
 
-    if (selectedIds.length === 0) {
-      const i = imageStore.getIndexOfSelectedSvgObject()
-      if (i !== -1) {
-        imageStore.svgObjects.splice(i, 1)
-        imageStore.selectedSvgObjectId = null
-      }
-    } else {
-      // Najprv zisti indexy a zotrieď ich od najväčšieho po najmenší
-      const indicesToDelete = selectedIds
-        .map((id) => imageStore.getIndexOfSvgObjectById(id))
-        .filter((i) => i !== -1)
-        .sort((a, b) => b - a)
+    editorStore.isSvgObjectSelected = false
 
-      for (const i of indicesToDelete) {
-        imageStore.svgObjects.splice(i, 1)
+    const idsToDelete = new Set()
+
+    // One selected object
+    if (selectedIds.length === 0) {
+      const selected = imageStore.getSelectedSvgObject()
+      if (!selected) return
+
+      idsToDelete.add(selected.id)
+
+      if (selected.class === 'magnifyArea') {
+        if (selected.subClass === 'magnify-source') {
+          idsToDelete.add(selected.linkedZoomId)
+        } else if (selected.subClass === 'magnify-result') {
+          idsToDelete.add(selected.linkedSourceId)
+        }
+      }
+
+      imageStore.selectedSvgObjectId = null
+    }
+
+    // Multiple selected objects
+    else {
+      for (const id of selectedIds) {
+        idsToDelete.add(id)
+        const obj = imageStore.getSvgObjectById(id)
+        if (obj && obj.class === 'magnifyArea') {
+          if (obj.subClass === 'magnify-source') {
+            idsToDelete.add(obj.linkedZoomId)
+          } else if (obj.subClass === 'magnify-result') {
+            idsToDelete.add(obj.linkedSourceId)
+          }
+        }
       }
 
       imageStore.selectedSvgObjectIds = []
+    }
+
+    // Delete objects from the store
+    const indicesToDelete = [...idsToDelete]
+      .map((id) => imageStore.getIndexOfSvgObjectById(id))
+      .filter((i) => i !== -1)
+      .sort((a, b) => b - a)
+
+    for (const i of indicesToDelete) {
+      imageStore.svgObjects.splice(i, 1)
     }
 
     historyStore.push(imageStore.getSnapshot(t))
@@ -191,7 +222,8 @@ export function useSvgObjects(imageStore, historyStore, viewportStore, editorSto
    * Copy the currently selected SVG object
    */
   const copySelectedSvgObject = () => {
-    if (imageStore.selectedSvgObjectId === null) return
+    if (imageStore.selectedSvgObjectId === null || editorStore.selectedToolKey === 'magnifyArea')
+      return
 
     const object = imageStore.getSvgObjectById(imageStore.selectedSvgObjectId)
     if (!object) return
@@ -207,6 +239,10 @@ export function useSvgObjects(imageStore, historyStore, viewportStore, editorSto
     if (!imageStore.clipboardSvgObject) return
 
     const newObject = JSON.parse(JSON.stringify(imageStore.clipboardSvgObject))
+
+    // Paste only objects in same tool as object class
+    if (newObject.class !== editorStore.selectedToolKey) return
+
     newObject.id = Date.now()
 
     const { width: imageWidth, height: imageHeight } = imageStore.fileDimensions
@@ -289,37 +325,87 @@ export function useSvgObjects(imageStore, historyStore, viewportStore, editorSto
   const bringSelectedSvgObjectToFront = (t) => {
     if (imageStore.selectedSvgObjectId === null) return
     const i = imageStore.getIndexOfSelectedSvgObject()
+    const object = imageStore.getSelectedSvgObject()
     if (i !== -1 && i < imageStore.svgObjects.length - 1) {
-      const obj = imageStore.svgObjects.splice(i, 1)[0]
-      imageStore.svgObjects.push(obj)
+      if (object.class === 'magnifyArea') {
+        const pair = imageStore.svgObjects.splice(i, 2)
+        imageStore.svgObjects.push(...pair)
+      } else {
+        const object = imageStore.svgObjects.splice(i, 1)[0]
+        imageStore.svgObjects.push(object)
+      }
+
       historyStore.push(imageStore.getSnapshot(t))
     }
   }
 
   /**
-   * Move the selected SVG object forward
+   * Move the selected SVG object forward by one
    */
   const moveSelectedSvgObjectForward = (t) => {
     if (imageStore.selectedSvgObjectId === null) return
     const i = imageStore.getIndexOfSelectedSvgObject()
+    const object = imageStore.getSelectedSvgObject()
     if (i !== -1 && i < imageStore.svgObjects.length - 1) {
       const temp = imageStore.svgObjects[i]
-      imageStore.svgObjects[i] = imageStore.svgObjects[i + 1]
-      imageStore.svgObjects[i + 1] = temp
+
+      if (object.class === 'magnifyArea') {
+        // Move magnify area object
+        const result = imageStore.svgObjects[i + 1]
+        imageStore.svgObjects[i] = imageStore.svgObjects[i + 2]
+        imageStore.svgObjects[i + 1] = temp
+        imageStore.svgObjects[i + 2] = result
+      } else {
+        // Move other object
+        const nextObject = imageStore.svgObjects[i + 1]
+        console.log('nextObject', nextObject)
+
+        if (nextObject && nextObject.class === 'magnifyArea') {
+          // Skip magnify area objects
+          imageStore.svgObjects[i] = imageStore.svgObjects[i + 1]
+          imageStore.svgObjects[i + 1] = imageStore.svgObjects[i + 2]
+          imageStore.svgObjects[i + 2] = temp
+        } else {
+          imageStore.svgObjects[i] = imageStore.svgObjects[i + 1]
+          imageStore.svgObjects[i + 1] = temp
+        }
+      }
+
       historyStore.push(imageStore.getSnapshot(t))
     }
   }
 
   /**
-   * Move the selected SVG object backward
+   * Move the selected SVG object backward by one
    */
   const moveSelectedSvgObjectBackward = (t) => {
     if (imageStore.selectedSvgObjectId === null) return
     const i = imageStore.getIndexOfSelectedSvgObject()
+    const object = imageStore.getSelectedSvgObject()
     if (i !== -1 && i > 0) {
       const temp = imageStore.svgObjects[i]
-      imageStore.svgObjects[i] = imageStore.svgObjects[i - 1]
-      imageStore.svgObjects[i - 1] = temp
+
+      if (object.class === 'magnifyArea') {
+        // Move magnify area object
+        const result = imageStore.svgObjects[i + 1]
+        imageStore.svgObjects[i + 1] = imageStore.svgObjects[i - 1]
+        imageStore.svgObjects[i - 1] = temp
+        imageStore.svgObjects[i] = result
+      } else {
+        // Move other object
+        const prevObject = imageStore.svgObjects[i - 1]
+
+        if (prevObject && prevObject.class === 'magnifyArea') {
+          // Skip magnify area objects
+          imageStore.svgObjects[i] = imageStore.svgObjects[i - 1]
+          imageStore.svgObjects[i - 1] = imageStore.svgObjects[i - 2]
+          imageStore.svgObjects[i - 2] = temp
+        } else {
+          imageStore.svgObjects[i] = imageStore.svgObjects[i - 1]
+          imageStore.svgObjects[i - 1] = temp
+        }
+      }
+
       historyStore.push(imageStore.getSnapshot(t))
     }
   }
@@ -330,9 +416,16 @@ export function useSvgObjects(imageStore, historyStore, viewportStore, editorSto
   const sendSelectedSvgObjectToBack = (t) => {
     if (imageStore.selectedSvgObjectId === null) return
     const i = imageStore.getIndexOfSelectedSvgObject()
+    const object = imageStore.getSelectedSvgObject()
     if (i !== -1 && i > 0) {
-      const obj = imageStore.svgObjects.splice(i, 1)[0]
-      imageStore.svgObjects.unshift(obj)
+      if (object.class === 'magnifyArea') {
+        const pair = imageStore.svgObjects.splice(i, 2)
+        imageStore.svgObjects.unshift(...pair)
+      } else {
+        const object = imageStore.svgObjects.splice(i, 1)[0]
+        imageStore.svgObjects.unshift(object)
+      }
+
       historyStore.push(imageStore.getSnapshot(t))
     }
   }
@@ -446,6 +539,15 @@ export function useSvgObjects(imageStore, historyStore, viewportStore, editorSto
       const y = round((event.clientY - rect.top) / viewportStore.realZoomLevel)
 
       textTool.addTextObject(x, y)
+    }
+
+    // Add magnify area
+    if (editorStore.selectedToolKey === 'magnifyArea' && !editorStore.isSvgObjectSelected) {
+      const rect = event.currentTarget.getBoundingClientRect()
+      const x = round((event.clientX - rect.left) / viewportStore.realZoomLevel)
+      const y = round((event.clientY - rect.top) / viewportStore.realZoomLevel)
+
+      magnifyAreaToll.addMagnifyArea(x, y)
     }
   }
 

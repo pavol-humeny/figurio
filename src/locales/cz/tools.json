@@ -387,24 +387,54 @@
     "tip": "Zvětší konkrétní oblast obrázku",
     "tipDisabled": "",
     "shortcut": "M",
-    "subTools": {
-      "add": {
-        "label": "Přidat zvětšení",
-        "tip": "Přidat zvětšenou oblast na obrázek",
-        "shortcut": ""
-      },
-      "modify": {
-        "label": "Upravit zvětšení",
-        "tip": "Upravit existující zvětšenou oblast",
-        "shortcut": ""
-      }
-    },
     "settings": {
-      "add": {
-        "label": "Přidat zvětšení"
-      },
-      "modify": {
-        "label": "Upravit zvětšení"
+      "general": {
+        "sourcePosition": {
+          "label": "Pozice zdroje",
+          "x": "X",
+          "y": "Y"
+        },
+        "radius": {
+          "label": "Poloměr",
+          "tip": "Upravuje poloměr zvětšené oblasti"
+        },
+        "zoom": {
+          "label": "Přiblížení",
+          "tip": "Upravuje úroveň přiblížení zvětšené oblasti"
+        },
+        "resultPosition": {
+          "label": "Pozice výsledku",
+          "tip": "Vybere pozici zobrazené zvětšené oblasti",
+          "options": {
+            "top-left": "Nahoře vlevo",
+            "top-right": "Nahoře vpravo",
+            "bottom-left": "Dole vlevo",
+            "bottom-right": "Dole vpravo"
+          }
+        },
+        "outlineWidth": {
+          "label": "Tloušťka obrysu",
+          "tip": "Upravuje tloušťku obrysu kolem zvětšené oblasti"
+        },
+        "outlineColor": {
+          "label": "Barva obrysu",
+          "tip": "Vybere barvu obrysu kolem zvětšené oblasti"
+        },
+        "zIndex": {
+          "label": "Pozice na Z-ose",
+          "bringToFrontButton": {
+            "text": "Přesunout do popředí"
+          },
+          "sendToBackButton": {
+            "text": "Přesunout do pozadí"
+          },
+          "moveForwardButton": {
+            "text": "Posunout dopředu"
+          },
+          "moveBackwardButton": {
+            "text": "Posunout dozadu"
+          }
+        }
       }
     }
   },

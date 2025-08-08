@@ -90,52 +90,7 @@ export const useImageStore = defineStore('imageStore', {
 
     /** Array of SVG objects to render on the image */
     // svgObjects: [], // UndoRedo
-    svgObjects: [
-      {
-        id: Date.now(),
-        class: 'blur',
-        tag: 'rect',
-        attrs: {
-          x: 50,
-          y: 40,
-          width: 200,
-          height: 100,
-          fill: '#ff0000',
-          rx: 12,
-          stroke: '#000000',
-          'stroke-width': 2,
-          // transform: 'rotate(45, 150, 90)'
-        },
-      },
-      {
-        id: Date.now() + 2,
-        class: 'shape',
-        tag: 'ellipse',
-        attrs: {
-          cx: 200, // x-ová pozícia stredu
-          cy: 150, // y-ová pozícia stredu
-          rx: 50, // polomer v smere osi x
-          ry: 50, // polomer v smere osi y
-          fill: '#ffff00',
-          transform: '',
-        },
-      },
-
-      {
-        id: Date.now() + 4,
-        class: 'shape',
-        tag: 'line',
-        attrs: {
-          x1: 400,
-          y1: 100,
-          x2: 600,
-          y2: 300,
-          stroke: '#0000ff',
-          'stroke-width': 4,
-          transform: '',
-        },
-      },
-    ],
+    svgObjects: [],
     /** ID of the currently selected SVG object */ selectedSvgObjectId: null,
     /** ID of the SVG object that was just created */
     justCreatedSvgObjectId: null,
@@ -761,9 +716,10 @@ export const useImageStore = defineStore('imageStore', {
             ? file.type.split('/')[1]
             : file.type
 
-        console.log(realType === detectedType)
+        console.log(realType === detectedType, 'realType:', realType, 'detectedType:', detectedType)
 
-        return realType === detectedType
+        //  TODO - obrazok vinice sa deteguje zle (ako unknown)
+        return realType === detectedType || detectedType === 'unknown'
       }
     },
 
@@ -1485,7 +1441,12 @@ export const useImageStore = defineStore('imageStore', {
     isMaxZIndexOfSelectedSvgObject() {
       const index = this.getIndexOfSelectedSvgObject()
       if (index !== null) {
-        return index === this.svgObjects.length - 1
+        const selectedObject = this.svgObjects[index]
+        if (selectedObject.class === 'magnifyArea') {
+          return index === this.svgObjects.length - 2
+        } else {
+          return index === this.svgObjects.length - 1
+        }
       }
       return false
     },

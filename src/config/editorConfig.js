@@ -12,7 +12,7 @@ export const editorConfig = {
   tipDelay: 700,
 
   // Context menu settings
-  contextMenuDelay: 50, 
+  contextMenuDelay: 50,
 
   // Max file dimensions
   // Resize and crop limits
@@ -40,4 +40,5 @@ export const editorConfig = {
   snapEdgeThresholdCoefficient: 0.01, // 1% of the smaller dimension of the image (higher = more sensitive)
   snapOnlyWhenOverlapping: true, // Snap only when the object is overlapping with the other object
   minimumObjectSize: 2, // Minimum size of the object to be drawn
+  magnifyAreaDefaultRadiusFromImage: 0.1, // 10% of smaller dimension
 }
