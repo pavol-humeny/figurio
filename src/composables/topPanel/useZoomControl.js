@@ -54,17 +54,17 @@ export function useZoomControl(viewportStore) {
   /**
    * Increase zoom level by 10%
    */
-  const zoomIn = () => {
+  const zoomIn = (zoomDiff = viewportConfig.defaultZoomOut) => {
     if (!canZoomIn.value) return
-    viewportStore.setZoomLevel(viewportStore.zoomLevel + viewportConfig.defaultZoomIn)
+    viewportStore.setZoomLevel(viewportStore.zoomLevel + zoomDiff)
   }
 
   /**
    * Decrease zoom level by 10%
    */
-  const zoomOut = () => {
+  const zoomOut = (zoomDiff = viewportConfig.defaultZoomOut) => {
     if (!canZoomOut.value) return
-    viewportStore.setZoomLevel(viewportStore.zoomLevel - viewportConfig.defaultZoomOut)
+    viewportStore.setZoomLevel(viewportStore.zoomLevel - zoomDiff)
   }
 
   /**
@@ -83,49 +83,10 @@ export function useZoomControl(viewportStore) {
    */
   const wheelZoom = (event) => {
     if (event.deltaY < 0) {
-      zoomIn(viewportConfig.defaultZoomIn)
+      zoomIn(0.01)
     } else if (event.deltaY > 0) {
-      zoomOut(viewportConfig.defaultZoomOut)
+      zoomOut(0.01)
     }
-  }
-
-  /**
-   * Handle mouse movement while dragging to adjust zoom
-   *
-   * @param {MouseEvent} event
-   */
-  const onMouseMove = (event) => {
-    const deltaX = event.clientX - startX.value
-    const step = Math.round(deltaX / 3) // 3px = 1%
-    const newLevel = Math.max(
-      viewportStore.minZoomLevel * 100,
-      Math.min(zoomLevelInput.value + step, viewportStore.maxZoomLevel * 100),
-    )
-    zoomLevelInput.value = newLevel
-    viewportStore.setZoomLevel(newLevel / 100)
-    startX.value = event.clientX
-  }
-
-  /**
-   * Handle mouse release after dragging
-   */
-  const onMouseUp = () => {
-    document.removeEventListener('mousemove', onMouseMove)
-    document.removeEventListener('mouseup', onMouseUp)
-    isDragging.value = false
-  }
-
-  /**
-   * Start dragging the zoom slider
-   *
-   * @param {MouseEvent} e
-   */
-  const startDragging = (event) => {
-    event.preventDefault()
-    isDragging.value = true
-    startX.value = event.clientX
-    document.addEventListener('mousemove', onMouseMove)
-    document.addEventListener('mouseup', onMouseUp)
   }
 
   return {
@@ -136,6 +97,5 @@ export function useZoomControl(viewportStore) {
     resetZoom,
     canZoomIn,
     canZoomOut,
-    startDragging,
   }
 }

@@ -18,7 +18,6 @@ const {
   resetZoom,
   canZoomIn,
   canZoomOut,
-  startDragging,
 } = useZoomControl(useViewportStore())
 </script>
 
@@ -26,7 +25,7 @@ const {
   <div class="zoom-control" :class="{ disabled: imageStore.file === null }">
     <!-- Zoom Out -->
     <ItemTip :text="$t('topPanel.zoomControl.tip.zoomOut')" position="bottom">
-      <div class="zoom-out-button button button-control button-circle" @click="zoomOut"
+      <div class="zoom-out-button button button-control button-circle" @click="zoomOut()"
         :class="{ 'disabled': !canZoomOut }">
         <BaseIcon name="IconMinus" size="24" />
       </div>
@@ -35,15 +34,14 @@ const {
     <!-- Reset zoom -->
     <ItemTip :text="$t('topPanel.zoomControl.tip.setZoom')" position="bottom">
       <div class="zoom-level-wrapper">
-        <p class="zoom-level" :textContent="zoomLevel" @wheel.passive="wheelZoom" @dblclick="resetZoom"
-          @mousedown="startDragging" ref="editableZoom">
+        <p class="zoom-level" :textContent="zoomLevel" @wheel.passive="wheelZoom" @dblclick="resetZoom">
         </p>
       </div>
     </ItemTip>
 
     <!-- Zoom In -->
     <ItemTip :text="$t('topPanel.zoomControl.tip.zoomIn')" position="bottom">
-      <div class="zoom-in-button button button-control button-circle" @click="zoomIn"
+      <div class="zoom-in-button button button-control button-circle" @click="zoomIn()"
         :class="{ 'disabled': !canZoomIn }">
         <BaseIcon name="IconPlus" size="24" />
       </div>
@@ -57,11 +55,6 @@ const {
   align-items: center;
   height: 40px;
 }
-
-/* .zoom-control.disabled{
-  opacity: 0.5;
-  pointer-events: none;
-} */
 
 .zoom-in-button,
 .zoom-out-button {
@@ -95,7 +88,7 @@ p.zoom-level {
   display: flex;
   align-items: center;
   justify-content: center;
-  cursor: ew-resize;
+  cursor: pointer;
   user-select: none;
 }
 
@@ -103,7 +96,7 @@ p.zoom-level {
   content: '%';
   position: absolute;
   right: 10px;
-  top: 50%;
+  top: 48%;
   transform: translateY(-50%);
   color: var(--text-c);
   pointer-events: none;
