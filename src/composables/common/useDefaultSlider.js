@@ -17,6 +17,11 @@ export function useSlider(props, emit) {
   const currentValue = ref(props.modelValue)
 
   /**
+   * Whether the slider is currently being adjusted
+   */
+  const isAdjusting = ref(false)
+
+  /**
    * Synchronize currentValue with the external modelValue prop
    */
   watch(
@@ -38,6 +43,26 @@ export function useSlider(props, emit) {
   }
 
   /**
+   * Handles pointer down event to start adjusting the slider
+   */
+  const onPointerDown = () => {
+    if (isAdjusting.value) return
+    isAdjusting.value = true
+
+    const onUp = () => {
+      isAdjusting.value = false
+      emit('commit', currentValue.value)
+      window.removeEventListener('pointerup', onUp, true)
+      window.removeEventListener('mouseup', onUp, true)
+      window.removeEventListener('touchend', onUp, true)
+    }
+
+    window.addEventListener('pointerup', onUp, true)
+    window.addEventListener('mouseup', onUp, true)
+    window.addEventListener('touchend', onUp, true)
+  }
+
+  /**
    * Emits reset action when double-clicked
    */
   const onDoubleClick = () => {
@@ -51,5 +76,6 @@ export function useSlider(props, emit) {
     currentValue,
     onInput,
     onDoubleClick,
+    onPointerDown,
   }
 }

@@ -159,7 +159,7 @@ const {
             </p>
           </div>
           <div class="content-wrapper">
-            <DefaultSlider v-model="localBlurSettings.patternSize" :min="2" :max="100" @update="applyLocalBlurSettings"
+            <DefaultSlider v-model="localBlurSettings.patternSize" :min="2" :max="100" @update="applyLocalBlurSettings(false)" @commit="applyLocalBlurSettings(true)"
               showValue :tip="$t('tools.blur.settings.general.patternSize.tip')" />
           </div>
         </div>
@@ -177,6 +177,7 @@ const {
           </div>
         </div>
 
+        <!-- Blur strength -->
         <div v-if="localBlurSettings.blurType === 'checked'" class="settings-content-wrapper">
           <div class="content-title">
             <p>
@@ -185,7 +186,7 @@ const {
           </div>
           <div class="content-wrapper">
             <DefaultSlider v-model="localBlurSettings.blurStrength" :min="0" :max="2" :step="0.1"
-              @update="applyLocalBlurSettings" showValue :tip="$t('tools.blur.settings.general.blurStrength.tip')" position="bottom-left" />
+              @update="applyLocalBlurSettings(false)" @commit="applyLocalBlurSettings(true)" showValue :tip="$t('tools.blur.settings.general.blurStrength.tip')" position="bottom-left" />
           </div>
         </div>
 

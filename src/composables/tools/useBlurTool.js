@@ -357,8 +357,9 @@ export function useBlurTool(imageStore, historyStore, editorStore, t) {
 
   /**
    * Apply local settings to the active SVG object
+   * @param {boolean} commit - When true, push to history store
    */
-  const applyLocalBlurSettings = () => {
+  const applyLocalBlurSettings = (commit = true) => {
     if (!editorStore.isSvgObjectSelected) return
     const object = activeObject.value
     if (!object) return
@@ -402,7 +403,12 @@ export function useBlurTool(imageStore, historyStore, editorStore, t) {
       }
     }
 
-    historyStore.push(imageStore.getSnapshot(t))
+    console.log('commit:', commit)
+
+    // Push to history only when explicitly requested
+    if (commit) {
+      historyStore.push(imageStore.getSnapshot(t))
+    }
   }
 
   /**

@@ -75,13 +75,15 @@ const props = defineProps({
  * @event update:modelValue - Emitted when the slider value changes (for v-model)
  * @event dblclick - Emitted when the slider is double-clicked (can be used to reset)
  * @event update - Custom update event with the same value
+ * @event commit - Emitted when the slider value is committed (on pointer up)
  */
-const emit = defineEmits(['update:modelValue', 'update'])
+const emit = defineEmits(['update:modelValue', 'update', 'commit'])
 
 const {
   currentValue,
   onInput,
-  onDoubleClick
+  onDoubleClick,
+  onPointerDown,
 } = useSlider(props, emit)
 </script>
 
@@ -96,7 +98,7 @@ const {
         <p v-if="props.valueUnit !== ''" class="slider-value-unit">{{ props.valueUnit }}</p>
       </div>
       <input type="range" :min="props.min" :max="props.max" :step="props.step" v-model="currentValue"
-        :disabled="props.disabled" @input="onInput" @dblclick="onDoubleClick"
+        :disabled="props.disabled" @input="onInput" @dblclick="onDoubleClick" @pointerdown="onPointerDown"
         :style="{ '--slider-bg': props.backgroundColor }" />
     </div>
   </ItemTip>
