@@ -139,8 +139,10 @@ export const useUiStore = defineStore('ui', {
     setRightPanelWidthIfTabsDoNotFit(width) {
       if (width > this.rightPanelWidth) {
         this.setRightPanelWidth(width)
+        this.rightPanelDefaultWidth = width
       } else {
         this.setRightPanelWidth(this.rightPanelDefaultWidth)
+        this.rightPanelDefaultWidth = uiConfig.rightPanelDefaultWidth
       }
     },
 
