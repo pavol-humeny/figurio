@@ -495,8 +495,6 @@ export const useImageStore = defineStore('imageStore', {
       const historyStore = useHistoryStore()
       const viewportStore = useViewportStore()
 
-      console.warn('ahjoj', file)
-
       // Reset state for new file (update current tab state)
       if (file !== null) {
         workspaceStore.updateCurrentTabState(t)

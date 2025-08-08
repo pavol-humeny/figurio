@@ -358,7 +358,6 @@ export function useSvgObjects(imageStore, historyStore, viewportStore, editorSto
       } else {
         // Move other object
         const nextObject = imageStore.svgObjects[i + 1]
-        console.log('nextObject', nextObject)
 
         if (nextObject && nextObject.class === 'magnifyArea') {
           // Skip magnify area objects
@@ -525,7 +524,6 @@ export function useSvgObjects(imageStore, historyStore, viewportStore, editorSto
 
       // Clicked on empty area – deselect all
       if (!event.shiftKey) {
-        console.log('Deselect all SVG objects')
         imageStore.selectedSvgObjectIds = []
       }
     }
@@ -838,13 +836,10 @@ export function useSvgObjects(imageStore, historyStore, viewportStore, editorSto
 
         if (isInside) {
           selectedIds.push(obj.id)
-          console.log('ids: ', selectedIds)
         }
       }
 
       imageStore.selectedSvgObjectIds = selectedIds
-
-      console.log('imageStore.selectedSvgObjectIds: ', imageStore.selectedSvgObjectIds)
 
       selectBox.value = null
       isDrawing.value = false

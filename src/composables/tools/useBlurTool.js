@@ -85,7 +85,7 @@ export function useBlurTool(imageStore, historyStore, editorStore, t) {
 
   /**
    * Generate a numeric seed from a hex color string
-   * @param {string} hex - Hex color 
+   * @param {string} hex - Hex color
    * @returns {number}
    */
   const getSeedFromColor = (hex) => {
@@ -142,8 +142,6 @@ export function useBlurTool(imageStore, historyStore, editorStore, t) {
     const shades = generateShadesFromColor(baseColor)
     const colors = shuffleArrayDeterministic(shades, baseColor)
 
-    console.log('colors', colors)
-
     const rects = colors
       .map((color, index) => {
         const x = (index % columns) * size
@@ -152,29 +150,16 @@ export function useBlurTool(imageStore, historyStore, editorStore, t) {
       })
       .join('\n')
 
-    console.log(
-      `
-    <pattern id="${id}" patternUnits="userSpaceOnUse" width="${size * columns}" height="${size * Math.ceil(colors.length / columns)}">
-      <g shape-rendering="crispEdges" data-default-color="${baseColor}">
-        ${rects}
-      </g>
-    </pattern>
-    <filter id="${id}-blur" x="-20%" y="-20%" width="140%" height="140%">
-      <feGaussianBlur in="SourceGraphic" stdDeviation="${blurStrength}" />
-    </filter>
-  `.trim(),
-    )
-
     return `
-    <pattern id="${id}" patternUnits="userSpaceOnUse" width="${size * columns}" height="${size * Math.ceil(colors.length / columns)}">
-      <g shape-rendering="crispEdges" data-default-color="${baseColor}">
-        ${rects}
-      </g>
-    </pattern>
-    <filter id="${id}-blur" x="-20%" y="-20%" width="140%" height="140%">
-      <feGaussianBlur in="SourceGraphic" stdDeviation="${blurStrength}" />
-    </filter>
-  `.trim()
+        <pattern id="${id}" patternUnits="userSpaceOnUse" width="${size * columns}" height="${size * Math.ceil(colors.length / columns)}">
+          <g shape-rendering="crispEdges" data-default-color="${baseColor}">
+            ${rects}
+          </g>
+        </pattern>
+        <filter id="${id}-blur" x="-20%" y="-20%" width="140%" height="140%">
+          <feGaussianBlur in="SourceGraphic" stdDeviation="${blurStrength}" />
+        </filter>
+      `.trim()
   }
 
   /**
@@ -447,7 +432,6 @@ export function useBlurTool(imageStore, historyStore, editorStore, t) {
 
       // Dimensions are linked
       if (isDimensionsLinked.value && originalHeight > 0) {
-        console.log('Updating height with aspect ratio')
         const aspectRatio = originalWidth / originalHeight
         localBlurSettings.value.height = clampedHeight
         localBlurSettings.value.width = Math.round(

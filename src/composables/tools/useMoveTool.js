@@ -55,8 +55,6 @@ export function useMoveTool(viewportStore) {
   const updateZoomSpeed = (newSpeed) => {
     if (typeof newSpeed === 'number' && newSpeed > 0) {
       viewportStore.zoomSpeed = round(newSpeed / zoomSpeedCorrectionFactor, 5)
-    } else {
-      console.warn('Invalid zoom speed. It must be a positive number.')
     }
   }
 
@@ -105,8 +103,6 @@ export function useMoveTool(viewportStore) {
   const updateMovementSpeed = (newSpeed) => {
     if (typeof newSpeed === 'number' && newSpeed > 0) {
       viewportStore.movementSpeed = round(newSpeed / movementSpeedCorrectionFactor, 5)
-    } else {
-      console.warn('Invalid movement speed. It must be a positive number.')
     }
   }
 

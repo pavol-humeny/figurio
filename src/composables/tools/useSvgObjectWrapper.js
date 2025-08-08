@@ -659,14 +659,6 @@ export function useSvgObjectWrapper(
             if (snap.dx !== 0) newRx = attrs.rx
             if (snap.dy !== 0) newRy = attrs.ry
 
-            console.log(
-              'cx, cy, rx, ry',
-              Math.trunc(newCx),
-              Math.trunc(newCy),
-              Math.trunc(newRx),
-              Math.trunc(newRy),
-            )
-
             showResizeGuideLine(snap, {
               left: newCx - newRx,
               right: newCx + newRx,
@@ -1162,7 +1154,6 @@ export function useSvgObjectWrapper(
         if (object.value.tag === 'text' && textRef.value) {
           // if empty text remove
           if (object.value.content.trim() === '') {
-            console.log('Removing empty text object')
             deleteSelectedSvgObjects(t)
             return
           }

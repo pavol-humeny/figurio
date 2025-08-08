@@ -89,10 +89,7 @@ export function useContextMenu() {
    * @param {MouseEvent} event - The click event
    */
   const onClickOutside = (event) => {
-    if (
-      !wrapperRef.value?.contains(event.target) &&
-      !document.querySelector('.context-menu-wrapper')?.contains(event.target)
-    ) {
+    if (!document.querySelector('.context-menu-wrapper')?.contains(event.target)) {
       closeMenu()
     }
   }

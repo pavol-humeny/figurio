@@ -166,7 +166,6 @@ export function useShapeTool(editorStore, imageStore, historyStore, t) {
    * @returns {string}
    */
   const getDashArrayFromLineType = (lineType, strokeWidth) => {
-    console.log('getDashArrayFromLineType', lineType, strokeWidth)
     const pattern = lineDashPatternMap[lineType]
     if (!pattern || pattern.length === 0) return ''
     return pattern.map((mult) => (mult * strokeWidth).toFixed(2)).join(',')

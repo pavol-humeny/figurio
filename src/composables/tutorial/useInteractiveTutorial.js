@@ -75,7 +75,6 @@ export function useInteractiveTutorial(uiStore, imageStore, router, t) {
     steps,
     (newSteps) => {
       if (newSteps.length !== numberOfSteps.value) {
-        console.log('Steps changed, resetting tutorial completed status')
         uiStore.setTutorialCompleted(false)
         uiStore.setTutorialStep(0)
       }
@@ -89,7 +88,6 @@ export function useInteractiveTutorial(uiStore, imageStore, router, t) {
   watch(
     () => imageStore.isImageLoaded,
     () => {
-      console.log('Image loaded, updating tutorial steps')
       steps.value = getTutorialSteps(router, t)
       numberOfSteps.value = steps.value.length
       currentStep.value = steps.value[uiStore.tutorialStep] || {}
@@ -140,7 +138,6 @@ export function useInteractiveTutorial(uiStore, imageStore, router, t) {
     // Get actual steps
     const newSteps = getTutorialSteps(router, t)
     if (newSteps.length !== steps.value.length) {
-      console.warn('Tutorial steps have changed, resetting to first step')
       activeStep.value = 0
     }
     steps.value = newSteps
@@ -214,7 +211,6 @@ export function useInteractiveTutorial(uiStore, imageStore, router, t) {
     const el = document.querySelector(selector)
     if (!el) {
       // Go to next step if element not found
-      console.warn(`Element not found for selector: ${selector}`)
       nextStep()
       return
     }

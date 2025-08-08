@@ -56,7 +56,7 @@ export function useKeyboardShortcuts(actions, uiStore, imageStore) {
         event.stopImmediatePropagation()
         const fn = actions[shortcut.action]
         if (typeof fn === 'function') {
-          console.log('fn:', fn.name, 'args:', shortcut.args)
+          // console.log('fn:', fn.name, 'args:', shortcut.args)
           if (uiStore.isTutorialRunning) {
             // If in tutorial mode, only allow specific actions
             if (
