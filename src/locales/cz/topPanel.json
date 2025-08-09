@@ -90,6 +90,9 @@
     "closeButton": {
       "text": "Zavřít",
       "tip": "Zavře panel nastavení"
+    },
+    "appVersion":{
+      "label": "Verze aplikace"
     }
   }
 }

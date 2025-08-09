@@ -7,6 +7,7 @@ import ToggleButton from '@/components/common/ToggleButton.vue';
 import { useSettingsPanel } from '@/composables/topPanel/useSettingsPanel';
 import { useUiStore } from '@/stores/uiStore';
 import { useClickOutside } from '@/composables/common/useClickOutside';
+import pkg from '../../../package.json';
 
 /**
  * Logic for the settings panel.
@@ -99,9 +100,10 @@ const { wrapperRef } = useClickOutside({
         @click="openPrivacyModal" />
     </div>
 
-    <!-- Close Settings -->
+    <!-- Close Settings and version -->
     <div class="close-button-wrapper">
       <DefaultButton text="Close" @click="closeSettingsPanel" />
+      <p class="version">{{ $t('topPanel.settingsPanel.appVersion.label') }}: {{ pkg.version }}</p>
     </div>
   </div>
 </template>
@@ -146,7 +148,13 @@ const { wrapperRef } = useClickOutside({
 .close-button-wrapper {
   width: 100%;
   display: flex;
-  justify-content: start;
+  justify-content: space-between;
+  align-items: center;
   margin-top: 35px;
+}
+
+.version {
+  font-size: var(--text-font-size);
+  color: var(--primary-c);
 }
 </style>

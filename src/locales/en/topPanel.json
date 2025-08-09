@@ -90,6 +90,9 @@
     "closeButton": {
       "text": "Close",
       "tip": "Closes the settings panel"
+    },
+    "appVersion":{
+      "label": "App Version"
     }
   }
 }
