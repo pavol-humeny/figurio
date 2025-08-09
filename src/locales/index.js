@@ -36,6 +36,10 @@ import enContextMenu from './en/contextMenu.json'
 import skContextMenu from './sk/contextMenu.json'
 import czContextMenu from './cz/contextMenu.json'
 
+import enRelease from './en/release.json'
+import skRelease from './sk/release.json'
+import czRelease from './cz/release.json'
+
 /**
  * Language-specific localization data for i18n
  */
@@ -50,6 +54,7 @@ const allLocales = {
     tutorialSteps: enTutorialSteps,
     maintenance: enMaintenance,
     contextMenu: enContextMenu,
+    release: enRelease,
   },
   sk: {
     topPanel: skTopPanel,
@@ -61,6 +66,7 @@ const allLocales = {
     tutorialSteps: skTutorialSteps,
     maintenance: skMaintenance,
     contextMenu: skContextMenu,
+    release: skRelease,
   },
   cz: {
     topPanel: czTopPanel,
@@ -72,6 +78,7 @@ const allLocales = {
     tutorialSteps: czTutorialSteps,
     maintenance: czMaintenance,
     contextMenu: czContextMenu,
+    release: czRelease,
   },
 }
 

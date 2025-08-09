@@ -14,6 +14,7 @@ import GeneralModal from './components/modals/GeneralModal.vue'
 import SelectPdfPageModal from './components/modals/SelectPdfPageModal.vue'
 import { useRouter, useRoute } from 'vue-router'
 import { globalConfig } from './config/globalConfig.js'
+import ReleaseModal from './components/modals/ReleaseModal.vue'
 
 const router = useRouter()
 const route = useRoute()
@@ -80,6 +81,7 @@ onBeforeUnmount(() => {
     </GeneralModal>
     <PrivacyAndDataModal />
     <HelpModal />
+    <ReleaseModal />
     <SettingsPanel />
     <ExportToolSettings />
     <InteractiveTutorial />

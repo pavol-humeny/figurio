@@ -370,7 +370,7 @@ const { isTutorialEnabled } = useInteractiveTutorial(
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: var(--z-index-privacy);
+  z-index: var(--z-index-help);
 }
 
 .modal-box {

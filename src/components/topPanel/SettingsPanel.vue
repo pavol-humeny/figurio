@@ -8,6 +8,7 @@ import { useSettingsPanel } from '@/composables/topPanel/useSettingsPanel';
 import { useUiStore } from '@/stores/uiStore';
 import { useClickOutside } from '@/composables/common/useClickOutside';
 import pkg from '../../../package.json';
+import { useReleaseModal } from '@/composables/modals/useReleaseModal';
 
 /**
  * Logic for the settings panel.
@@ -30,6 +31,13 @@ const { wrapperRef } = useClickOutside({
   condition: () => !privacyModalVisible.value,
   onOutsideClick: () => closeSettingsPanel()
 })
+
+/**
+ * Logic of the patch notes modal state and scrolling
+ */
+const {
+  openReleaseModal
+} = useReleaseModal();
 
 </script>
 
@@ -103,7 +111,8 @@ const { wrapperRef } = useClickOutside({
     <!-- Close Settings and version -->
     <div class="close-button-wrapper">
       <DefaultButton text="Close" @click="closeSettingsPanel" />
-      <p class="version">{{ $t('topPanel.settingsPanel.appVersion.label') }}: {{ pkg.version }}</p>
+      <p class="version" @click="openReleaseModal">{{ $t('topPanel.settingsPanel.appVersion.label') }}: {{
+        pkg.version }}</p>
     </div>
   </div>
 </template>
@@ -156,5 +165,10 @@ const { wrapperRef } = useClickOutside({
 .version {
   font-size: var(--text-font-size);
   color: var(--primary-c);
+}
+
+.version:hover {
+  cursor: pointer;
+  text-decoration: underline;
 }
 </style>

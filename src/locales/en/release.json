@@ -1,0 +1,51 @@
+{
+  "versions":{
+    "1.0.0":{
+      "newFeatures": {
+        "items": [
+          "Feature 1: Description",
+          "Feature 2: Description",
+          "Feature 3: Description"
+        ]
+      },
+      "improvements": {
+        "items": [
+          "Improvement 1: Description",
+          "Improvement 2: Description",
+          "Improvement 3: Description"
+        ]
+      },
+      "bugFixes": {
+        "items": [
+          "Bug Fix 1: Description",
+          "Bug Fix 2: Description",
+          "Bug Fix 3: Description"
+        ]
+      },
+      "knownIssues": {
+        "items": [
+          "Issue 1: Description",
+          "Issue 2: Description"
+        ]
+      }
+    }
+  },
+  "globalTexts":{
+    "newFeatures": {
+      "title": "New Features"
+    },
+    "improvements": {
+      "title": "Improvements"
+    },
+    "bugFixes": {
+      "title": "Bug Fixes"
+    },
+    "knownIssues": {
+      "title": "Known Issues"
+    } 
+  },
+  "closeButton": {
+    "text": "Close"
+  },
+  "title": "Release Notes"
+}
