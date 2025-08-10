@@ -35,4 +35,7 @@ export const globalConfig = {
     enableImageLoad: true,
     notEnabledMessage: 'This feature is currently not available.',
   },
+
+  // API
+  API_BASE: 'https://bp-api-ft1e.onrender.com',
 }

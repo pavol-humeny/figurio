@@ -45,21 +45,10 @@ const {
     <!-- nahrádza <p class="zoom-level">... -->
     <ItemTip :text="$t('topPanel.zoomControl.tip.setZoom')" position="bottom">
       <div class="zoom-level-wrapper">
-        <input
-          class="zoom-level"
-          type="number"
-          :value="zoomLevel"
-          :min="viewportStore.minZoomLevel * 100"
-          :max="viewportStore.maxZoomLevel * 100"
-          step="1"
-          @input="onZoomInput($event)"
-          @blur="applyZoomFromInput()"
-          @keydown.enter.prevent="applyZoomFromInput()"
-          @keydown.esc.prevent="revertZoomInput()"
-          @wheel.passive="wheelZoom"
-          :disabled="imageStore.file === null"
-          @dblclick="resetZoom"
-        />
+        <input class="zoom-level" type="number" :value="zoomLevel" :min="viewportStore.minZoomLevel * 100"
+          :max="viewportStore.maxZoomLevel * 100" step="1" @input="onZoomInput($event)" @blur="applyZoomFromInput()"
+          @keydown.enter.prevent="applyZoomFromInput()" @keydown.esc.prevent="revertZoomInput()"
+          @wheel.passive="wheelZoom" :disabled="imageStore.file === null" @dblclick="resetZoom" />
       </div>
     </ItemTip>
 
@@ -127,7 +116,7 @@ const {
   content: '%';
   position: absolute;
   right: 10px;
-  top: 48%;
+  top: 50%;
   transform: translateY(-50%);
   color: var(--text-c);
   pointer-events: none;

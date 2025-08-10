@@ -24,9 +24,6 @@ const imageStore = useImageStore()
 const uiStore = useUiStore()
 const userUuid = uiStore.userUuid
 
-// API base URL
-const API_BASE = 'https://bp-api-ft1e.onrender.com'
-
 /**
  * Prevents default behavior of ctrl + wheel scrolling.
  * Useful to block unintended browser zooming.
@@ -59,7 +56,7 @@ const handleBeforeUnload = (event) => {
  */
 const setUserLogin = async (userUuid) => {
   try {
-    const res = await fetch(`${API_BASE}/api/user-login`, {
+    const res = await fetch(`${globalConfig.API_BASE}/api/user-login`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ user_id: userUuid }),

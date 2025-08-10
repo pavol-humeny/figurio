@@ -10,8 +10,6 @@ import { useHelpModal } from '@/composables/modals/useHelpModal';
 import { useSettingsPanel } from '@/composables/topPanel/useSettingsPanel';
 import { useInteractiveTutorial } from '@/composables/tutorial/useInteractiveTutorial';
 
-const uiStore = useUiStore();
-
 const { t } = useI18n()
 
 const { uploadFile } = useUploadFileButton(useImageStore(), t, useRouter())
@@ -20,39 +18,6 @@ const { openSettingsPanel } = useSettingsPanel(useUiStore())
 const { prevStep, nextStep, finishTutorial, closeTutorial } = useInteractiveTutorial(useUiStore(), useImageStore(), useRouter(), t)
 
 useKeyboardShortcuts({ uploadFile, openHelpModal, openSettingsPanel, prevStep, nextStep, finishTutorial, closeTutorial }, useUiStore(), useImageStore());
-
-// TODO
-const test = async () => {
-  console.log('Test button clicked');
-
-  const userUuid = uiStore.userUuid;
-
-  try {
-    const response = await fetch('https://bp-api-ft1e.onrender.com/api/events', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        user_id: userUuid,
-        event_type: 'add_object',
-        tool: 'rectangle',
-        button_name: 'test',
-        event_data: { ahoj: 'test' },
-      }),
-    });
-
-    if (!response.ok) {
-      // Ak server vráti chybu, napríklad 400 alebo 500
-      const errorText = await response.text();
-      console.error('Server error:', errorText);
-      return;
-    }
-
-    const data = await response.json();
-    console.log('Server odpoveď:', data);
-  } catch (error) {
-    console.error('Chyba pri fetch:', error);
-  }
-}
 
 </script>
 

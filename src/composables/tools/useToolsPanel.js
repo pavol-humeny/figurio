@@ -5,6 +5,7 @@ import { useEditorStore } from '@/stores/editorStore'
 import { useHistoryStore } from '@/stores/historyStore'
 import { useCollapsiblePanel } from '../common/useCollapsiblePanel'
 import { globalConfig } from '@/config/globalConfig'
+import { useSendEvent } from '../common/sendEvent'
 
 /**
  * Logic for managing the left tools panel
@@ -85,7 +86,7 @@ export function useToolsPanel(editorStore, imageStore, uiStore, t) {
       }
 
       imageStore.selectedSvgObjectIds = [] // Reset multi-selection on tool change
-      
+
       if (newVal.tool !== 'shape') {
         imageStore.selectedSvgObjectId = null // Reset just created object ID
       }
@@ -131,6 +132,12 @@ export function useToolsPanel(editorStore, imageStore, uiStore, t) {
     }
 
     console.log('Toggle tool:', toolKey, 'Tab:', tabKey)
+
+    // Send event
+    useSendEvent().sendEvent('toggle_tool', null, null, {
+      tool: toolKey,
+      tab: tabKey,
+    })
 
     if (editorStore.selectedToolKey === toolKey && tabKey === null) {
       editorStore.selectTool('')
