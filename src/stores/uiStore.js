@@ -40,10 +40,38 @@ const getString = (key, fallback) => {
 }
 
 /**
+ * Generates a random UUID (Universally Unique Identifier) version 4.
+ * @returns {string} A UUID v4 string.
+ */
+const generateUuid = () => {
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
+    const r = (Math.random() * 16) | 0
+    const v = c === 'x' ? r : (r & 0x3) | 0x8
+    return v.toString(16)
+  })
+}
+
+/**
+ * Retrieves the user UUID from localStorage or generates a new one.
+ * @returns {string} A UUID string.
+ */
+const getUuid = () => {
+  let userUuid = localStorage.getItem('user_uuid')
+  console.log('User UUID:', userUuid) // Debugging line to check the UUID
+  if (!userUuid) {
+    userUuid = generateUuid()
+    localStorage.setItem('user_uuid', userUuid)
+  }
+  return userUuid
+}
+
+/**
  * Store managing UI settings and state
  */
 export const useUiStore = defineStore('ui', {
   state: () => ({
+    userUuid: getUuid(), // Unique identifier for the UI instance
+
     /** Active theme (dark | light) */
     theme: getString('theme', uiConfig.theme),
 
@@ -90,7 +118,7 @@ export const useUiStore = defineStore('ui', {
     },
 
     /**
-     * Initialize app settings (mainly theme class)
+     * Initialize app settings (theme class)
      */
     initApp() {
       // Init theme

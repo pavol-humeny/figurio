@@ -15,11 +15,17 @@ import SelectPdfPageModal from './components/modals/SelectPdfPageModal.vue'
 import { useRouter, useRoute } from 'vue-router'
 import { globalConfig } from './config/globalConfig.js'
 import ReleaseModal from './components/modals/ReleaseModal.vue'
+import { useUiStore } from './stores/uiStore'
 
 const router = useRouter()
 const route = useRoute()
 
 const imageStore = useImageStore()
+const uiStore = useUiStore()
+const userUuid = uiStore.userUuid
+
+// API base URL
+const API_BASE = 'https://bp-api-ft1e.onrender.com'
 
 /**
  * Prevents default behavior of ctrl + wheel scrolling.
@@ -47,6 +53,28 @@ const handleBeforeUnload = (event) => {
 }
 
 /**
+ * Sets the user login state.
+ * @param {string} userUuid - The unique identifier for the user.
+ *
+ */
+const setUserLogin = async (userUuid) => {
+  try {
+    const res = await fetch(`${API_BASE}/api/user-login`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ user_id: userUuid }),
+    })
+    if (!res.ok) {
+      console.warn('Error during user-login:', await res.text())
+    } else {
+      console.log('User login recorded')
+    }
+  } catch (e) {
+    console.error('Error fetching user-login:', e)
+  }
+}
+
+/**
  * Register unload warning on mount
  */
 onMounted(() => {
@@ -62,6 +90,8 @@ onMounted(() => {
   if (route.name !== 'home') {
     router.replace({ name: 'home' })
   }
+
+  setUserLogin(userUuid)
 })
 
 /**
