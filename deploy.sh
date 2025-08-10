@@ -4,7 +4,6 @@
 set -e
 
 # === CONFIGURATION ===
-VERSION_OVERRIDE=""         # Override version from package.json (optional)
 CUSTOM_MESSAGE=""           # Custom commit message (optional)
 
 # === BUILD ===
@@ -17,21 +16,25 @@ cd dist
 git init
 git add -A
 
-# Get data from parent folder (project root)
-VERSION=${VERSION_OVERRIDE:-$(node -p "require('../package.json').version")}
+# Get version and extract major number
+VERSION=$(node -p "require('../package.json').version")
+MAJOR_VERSION=$(echo "$VERSION" | cut -d. -f1)
+
+# Get parent repo data
 BRANCH=$(git -C .. rev-parse --abbrev-ref HEAD)
 HASH=$(git -C .. log -1 --format=%h)
 DATE=$(date '+%Y-%m-%d %H:%M:%S')
 
 # Compose commit message
 COMMIT_MSG="Deploy release v$VERSION from $BRANCH ($HASH) at $DATE"
+
 [ -n "$CUSTOM_MESSAGE" ] && COMMIT_MSG="$COMMIT_MSG — $CUSTOM_MESSAGE"
 
 # Commit without pushing
 git commit -m "$COMMIT_MSG"
 
 # Reminder to user
-echo "Build committed locally. Run the following to push:"
+echo "Build committed locally for gh-pages-$MAJOR_VERSION"
 
 # Go back
 cd -

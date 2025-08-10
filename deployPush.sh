@@ -6,10 +6,14 @@ set -e
 # Navigate to the build output directory
 cd dist
 
-# Push to GitHub Pages (assumes repo already initialized and committed)
-git push -f git@github.com:pavol-humeny/BP_Image_editor.git master:gh-pages
+# Get version and extract major number
+VERSION=$(node -p "require('../package.json').version")
+MAJOR_VERSION=$(echo "$VERSION" | cut -d. -f1)
+
+# Push to branch gh-pages-X
+git push -f git@github.com:pavol-humeny/BP_Image_editor.git master:gh-pages-"$MAJOR_VERSION"
 
 # Return to previous directory
 cd -
 
-echo "Pushed to gh-pages."
+echo "Pushed to gh-pages-$MAJOR_VERSION."
