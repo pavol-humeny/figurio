@@ -1,31 +1,49 @@
 {
   "versions":{
-    "1.0.0":{
+    "2.0.0":{
+      "label": "2.0.0-alfa",
       "newFeatures": {
         "items": [
-          "Feature 1: Description",
-          "Feature 2: Description",
-          "Feature 3: Description"
+          "Svg objects logic",
+          "Text tool",
+          "Shape tool",
+          "Select tool",
+          "Blur tool",
+          "Magnify area tool",
+          "Release note page",
+          "Page selection in pdf files"
+
         ]
       },
       "improvements": {
         "items": [
-          "Improvement 1: Description",
-          "Improvement 2: Description",
-          "Improvement 3: Description"
+          "Show file extension",
+          "Add zoom reset button",
+          "Enable zooming by 1%",
+          "Show supported formats on drag and drop page"
         ]
       },
       "bugFixes": {
         "items": [
-          "Bug Fix 1: Description",
-          "Bug Fix 2: Description",
-          "Bug Fix 3: Description"
+          "After reload redirect to drag and drop page"
         ]
       },
       "knownIssues": {
         "items": [
-          "Issue 1: Description",
-          "Issue 2: Description"
+          "Pdf file is processed as raster"
+        ]
+      }
+    },
+    "1.0.0":{
+      "label": "1.0.0",
+      "newFeatures": {
+        "items": [
+          "Move tool",
+          "Transform tool",
+          "Auto crop tool",
+          "Grayscale tool",
+          "Frame tool",
+          "Export tool"
         ]
       }
     }

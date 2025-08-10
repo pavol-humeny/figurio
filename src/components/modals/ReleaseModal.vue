@@ -58,7 +58,7 @@ const {
           <div class="release-content-wrapper" ref="releaseContentRef" @scroll="checkScroll">
             <div v-for="(releaseNotes, version) in releases" :key="version">
               <p class="release-content-title">
-                {{ version }}
+                {{ releaseNotes.label }}
               </p>
 
               <!-- New Features -->

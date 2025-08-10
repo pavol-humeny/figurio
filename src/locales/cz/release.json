@@ -1,1 +1,68 @@
-{}
+{
+  "versions": {
+    "2.0.0": {
+      "label": "2.0.0-alfa",
+      "newFeatures": {
+        "items": [
+          "Logika SVG objektů",
+          "Nástroj Text",
+          "Nástroj Tvar",
+          "Nástroj Výběr",
+          "Nástroj Rozmazání",
+          "Nástroj Přiblížení oblasti",
+          "Stránka s poznámkami k vydání",
+          "Výběr stránky v PDF souborech"
+        ]
+      },
+      "improvements": {
+        "items": [
+          "Zobrazit příponu souboru",
+          "Přidat tlačítko pro reset přiblížení",
+          "Povolit přiblížení o 1%",
+          "Zobrazit podporované formáty na stránce drag and drop"
+        ]
+      },
+      "bugFixes": {
+        "items": [
+          "Po obnovení přesměrovat na stránku drag and drop"
+        ]
+      },
+      "knownIssues": {
+        "items": [
+          "PDF soubor je zpracován jako raster"
+        ]
+      }
+    },
+    "1.0.0": {
+      "label": "1.0.0",
+      "newFeatures": {
+        "items": [
+          "Nástroj Posun",
+          "Nástroj Transformace",
+          "Nástroj Automatické oříznutí",
+          "Nástroj Stupně šedi",
+          "Nástroj Rám",
+          "Nástroj Export"
+        ]
+      }
+    }
+  },
+  "globalTexts": {
+    "newFeatures": {
+      "title": "Nové funkce"
+    },
+    "improvements": {
+      "title": "Vylepšení"
+    },
+    "bugFixes": {
+      "title": "Opravy chyb"
+    },
+    "knownIssues": {
+      "title": "Známé problémy"
+    }
+  },
+  "closeButton": {
+    "text": "Zavřít"
+  },
+  "title": "Poznámky k vydání"
+}
