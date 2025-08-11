@@ -48,18 +48,17 @@ export function useSlider(props, emit) {
   const onPointerDown = () => {
     if (isAdjusting.value) return
     isAdjusting.value = true
-
-    const onUp = () => {
-      isAdjusting.value = false
-      emit('commit', currentValue.value)
-      window.removeEventListener('pointerup', onUp, true)
-      window.removeEventListener('mouseup', onUp, true)
-      window.removeEventListener('touchend', onUp, true)
-    }
-
     window.addEventListener('pointerup', onUp, true)
-    window.addEventListener('mouseup', onUp, true)
-    window.addEventListener('touchend', onUp, true)
+  }
+
+  /**
+   * Handles slider release and emits commit
+   */
+  const onUp = () => {
+    if (!isAdjusting.value) return
+    isAdjusting.value = false
+    emit('commit', currentValue.value)
+    window.removeEventListener('pointerup', onUp, true)
   }
 
   /**

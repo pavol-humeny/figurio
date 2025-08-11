@@ -79,6 +79,22 @@ describe('DefaultSlider.vue', () => {
     expect(wrapper.emitted('update')[0]).toEqual([90])
   })
 
+  it('emits commit after pointer down and release', async () => {
+    const wrapper = mount(DefaultSlider, {
+      props: {
+        modelValue: 20,
+      },
+    })
+
+    const input = wrapper.find('input[type="range"]')
+    await input.trigger('pointerdown')
+
+    await window.dispatchEvent(new MouseEvent('pointerup'))
+
+    expect(wrapper.emitted('commit')).toBeTruthy()
+    expect(wrapper.emitted('commit')[0]).toEqual([20])
+  })
+
   it('emits dblclick when input is double-clicked', async () => {
     const wrapper = mount(DefaultSlider, {
       props: {
