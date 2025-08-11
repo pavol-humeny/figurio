@@ -5,7 +5,7 @@ import { useEditorStore } from '@/stores/editorStore'
 import { useHistoryStore } from '@/stores/historyStore'
 import { useCollapsiblePanel } from '../common/useCollapsiblePanel'
 import { globalConfig } from '@/config/globalConfig'
-import { useSendEvent } from '../common/sendEvent'
+import { useSendEvent } from '../common/useSendEvent'
 
 /**
  * Logic for managing the left tools panel
