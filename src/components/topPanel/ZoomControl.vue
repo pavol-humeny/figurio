@@ -35,20 +35,14 @@ const {
       </div>
     </ItemTip>
 
-    <!-- Reset zoom -->
-    <!-- <ItemTip :text="$t('topPanel.zoomControl.tip.setZoom')" position="bottom">
-      <div class="zoom-level-wrapper">
-        <p class="zoom-level" :textContent="zoomLevel" @wheel.passive="wheelZoom" @dblclick="resetZoom">
-        </p>
-      </div>
-    </ItemTip> -->
-    <!-- nahrádza <p class="zoom-level">... -->
+    <!-- Zoom value -->
     <ItemTip :text="$t('topPanel.zoomControl.tip.setZoom')" position="bottom">
       <div class="zoom-level-wrapper">
         <input class="zoom-level" type="number" :value="zoomLevel" :min="viewportStore.minZoomLevel * 100"
           :max="viewportStore.maxZoomLevel * 100" step="1" @input="onZoomInput($event)" @blur="applyZoomFromInput()"
           @keydown.enter.prevent="applyZoomFromInput()" @keydown.esc.prevent="revertZoomInput()"
           @wheel.passive="wheelZoom" :disabled="imageStore.file === null" @dblclick="resetZoom" />
+        <p class="zoom-level-percentage">%</p>
       </div>
     </ItemTip>
 
@@ -89,19 +83,24 @@ const {
 .zoom-level-wrapper {
   position: relative;
   height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: row;
 }
 
 .zoom-level {
-  padding: 0 20px 0 5px;
-  width: 60px;
+  padding: 0 5px 0 5px;
+  width: 35px;
   height: 40px;
   background: var(--secondary-c);
   color: var(--text-c);
   font-size: var(--text-font-size);
   display: flex;
-  align-items: center;
+  align-items: baseline;
   justify-content: center;
   border: none;
+  text-align: right;
 }
 
 .zoom-level:focus {
@@ -112,13 +111,14 @@ const {
   background: var(--primary-c);
 }
 
-.zoom-level-wrapper::after {
-  content: '%';
-  position: absolute;
-  right: 10px;
-  top: 50%;
-  transform: translateY(-50%);
+.zoom-level-wrapper .zoom-level-percentage {
+  background: var(--secondary-c);
   color: var(--text-c);
+  font-size: var(--text-font-size);
   pointer-events: none;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 </style>

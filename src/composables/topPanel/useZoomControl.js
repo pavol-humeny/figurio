@@ -57,7 +57,11 @@ export function useZoomControl(viewportStore) {
    */
   const zoomIn = (zoomDiff = viewportConfig.defaultZoomIn) => {
     if (!canZoomIn.value) return
-    viewportStore.setZoomLevel(viewportStore.zoomLevel + zoomDiff)
+
+    let newZoom = viewportStore.zoomLevel + zoomDiff
+    newZoom = clamp(newZoom, viewportStore.minZoomLevel, viewportStore.maxZoomLevel)
+
+    viewportStore.setZoomLevel(newZoom)
   }
 
   /**
@@ -67,7 +71,11 @@ export function useZoomControl(viewportStore) {
    */
   const zoomOut = (zoomDiff = viewportConfig.defaultZoomOut) => {
     if (!canZoomOut.value) return
-    viewportStore.setZoomLevel(viewportStore.zoomLevel - zoomDiff)
+
+    let newZoom = viewportStore.zoomLevel - zoomDiff
+    newZoom = clamp(newZoom, viewportStore.minZoomLevel, viewportStore.maxZoomLevel)
+
+    viewportStore.setZoomLevel(newZoom)
   }
 
   /**

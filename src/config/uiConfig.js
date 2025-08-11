@@ -16,7 +16,7 @@ export const uiConfig = {
   collapseButtonWidth: 30,
 
   // Rulers
-  rulersEnabled: true,
+  rulersEnabled: false,
 
   // Toast
   // Auto remove time
