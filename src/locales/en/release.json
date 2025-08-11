@@ -1,7 +1,15 @@
 {
   "versions":{
+    "2.0.1":{
+      "label": "2.0.1",
+      "bugFixes": {
+        "items": [
+          "Align zoom value with '%'"
+        ]
+      }
+    },
     "2.0.0":{
-      "label": "2.0.0-alfa",
+      "label": "2.0.0",
       "newFeatures": {
         "items": [
           "Svg objects logic",
