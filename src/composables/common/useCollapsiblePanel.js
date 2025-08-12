@@ -126,7 +126,9 @@ export function useCollapsiblePanel(uiStore) {
     rightSidePanelWidth,
     collapseButtonWidth,
     startResize,
+    stopResize,
     showPanel,
     hidePanel,
+    isResizing,
   }
 }

@@ -2,8 +2,10 @@ import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { mount } from '@vue/test-utils'
 import { createPinia, setActivePinia } from 'pinia'
 import CollapsiblePanel from '@/components/common/CollapsiblePanel.vue'
+import { useCollapsiblePanel } from '@/composables/common/useCollapsiblePanel'
 
 let mockUiStore
+let panel
 
 vi.mock('@/stores/uiStore', () => ({
   useUiStore: () => mockUiStore,
@@ -23,6 +25,8 @@ describe('CollapsiblePanel.vue', () => {
       toggleRightPanel: vi.fn(),
       setRightPanelWidth: vi.fn(),
     }
+
+    panel = useCollapsiblePanel(mockUiStore)
   })
 
   it('renders correctly and shows content by default', () => {
@@ -36,10 +40,53 @@ describe('CollapsiblePanel.vue', () => {
     expect(wrapper.find('.panel-content').classes()).not.toContain('hidden')
   })
 
-  it('calls toggleVisibility on click', async () => {
+  it('toggles visibility: open → close', async () => {
+    mockUiStore.rightPanelOpen = true
+    mockUiStore.rightPanelWidth = 250
     const wrapper = mount(CollapsiblePanel)
+
     await wrapper.find('.toggle-button').trigger('click')
+
+    expect(mockUiStore.toggleRightPanel).toHaveBeenCalledTimes(1)
+    expect(mockUiStore.setRightPanelWidth).toHaveBeenCalledWith(0)
+  })
+
+  it('toggles visibility: closed → open', async () => {
+    mockUiStore.rightPanelOpen = false
+    mockUiStore.rightPanelWidth = 0
+    mockUiStore.rightPanelDefaultWidth = 220
+    const wrapper = mount(CollapsiblePanel)
+
+    await wrapper.find('.toggle-button').trigger('click')
+
+    expect(mockUiStore.toggleRightPanel).toHaveBeenCalledTimes(1)
+    expect(mockUiStore.setRightPanelWidth).toHaveBeenCalledWith(220)
+  })
+
+  it('showPanel opens panel when hidden', () => {
+    mockUiStore.rightPanelOpen = false
+    panel.showPanel()
     expect(mockUiStore.toggleRightPanel).toHaveBeenCalled()
+    expect(mockUiStore.setRightPanelWidth).toHaveBeenCalledWith(200)
+  })
+
+  it('showPanel does nothing when visible', () => {
+    mockUiStore.rightPanelOpen = true
+    panel.showPanel()
+    expect(mockUiStore.toggleRightPanel).not.toHaveBeenCalled()
+  })
+
+  it('hidePanel closes when visible', () => {
+    mockUiStore.rightPanelOpen = true
+    panel.hidePanel()
+    expect(mockUiStore.toggleRightPanel).toHaveBeenCalled()
+    expect(mockUiStore.setRightPanelWidth).toHaveBeenCalledWith(0)
+  })
+
+  it('hidePanel does nothing when hidden', () => {
+    mockUiStore.rightPanelOpen = false
+    panel.hidePanel()
+    expect(mockUiStore.toggleRightPanel).not.toHaveBeenCalled()
   })
 
   it('hides content when panel is closed', () => {
@@ -78,5 +125,20 @@ describe('CollapsiblePanel.vue', () => {
 
     expect(mockUiStore.toggleRightPanel).toHaveBeenCalled()
     expect(mockUiStore.setRightPanelWidth).toHaveBeenCalledWith(0)
+  })
+
+  it('stopResize stops resizing and removes event listeners', () => {
+    const removeEventListenerSpy = vi.spyOn(document, 'removeEventListener')
+
+    panel.isVisible.value = true
+    panel.startResize({ clientX: 100 }) // Add event listeners
+    expect(removeEventListenerSpy).not.toHaveBeenCalled()
+
+    panel.stopResize()
+
+    expect(removeEventListenerSpy).toHaveBeenCalledWith('mousemove', expect.any(Function))
+    expect(removeEventListenerSpy).toHaveBeenCalledWith('mouseup', expect.any(Function))
+
+    expect(panel.isResizing.value).toBe(false)
   })
 })

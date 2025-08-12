@@ -115,4 +115,16 @@ describe('StepperInput.vue', () => {
 
     expect(wrapper.text()).toContain('42')
   })
+
+  it('updates displayed value when modelValue prop changes (watch)', async () => {
+    const wrapper = mount(StepperInput, {
+      props: { modelValue: 5 },
+    })
+
+    expect(wrapper.find('.value').text()).toBe('5')
+
+    await wrapper.setProps({ modelValue: 8 })
+
+    expect(wrapper.find('.value').text()).toBe('8')
+  })
 })

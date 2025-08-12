@@ -95,4 +95,15 @@ describe('TextInput.vue', () => {
 
     expect(focusSpy).toHaveBeenCalled()
   })
+
+  it('updates internal inputValue when modelValue prop changes (watch)', async () => {
+    const wrapper = mount(TextInput, { props: { modelValue: 'first' } })
+    const input = wrapper.find('input[type="text"]')
+    expect(input.element.value).toBe('first')
+
+    // Change prop
+    await wrapper.setProps({ modelValue: 'second' })
+
+    expect(input.element.value).toBe('second')
+  })
 })
