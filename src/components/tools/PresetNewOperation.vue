@@ -1,11 +1,11 @@
 <script setup>
-import DropdownSelect from './DropdownSelect.vue'
+import DropdownSelect from '@/components/common/DropdownSelect.vue'
 import { useI18n } from 'vue-i18n'
-import ColorPicker from './ColorPicker.vue'
-import NumberInput from './NumberInput.vue'
+import ColorPicker from '@/components/common/ColorPicker.vue'
+import NumberInput from '@/components/common/NumberInput.vue'
 import { useImageStore } from '@/stores/imageStore'
-import LinkValuesIcon from '../common/LinkValuesIcon.vue'
-import { usePresetNewOperation } from '@/composables/common/usePresetNewOperation'
+import LinkValuesIcon from '@/components/common/LinkValuesIcon.vue'
+import { usePresetNewOperation } from '@/composables/tools/usePresetNewOperation'
 import { editorConfig } from '@/config/editorConfig'
 
 const { t } = useI18n()

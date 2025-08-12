@@ -2,7 +2,7 @@
 import { ref, watch } from 'vue'
 import draggable from 'vuedraggable'
 import { useI18n } from 'vue-i18n'
-import BaseIcon from '../icons/BaseIcon.vue'
+import BaseIcon from '@/components/icons/BaseIcon.vue'
 import { useImageStore } from '@/stores/imageStore'
 
 const imageStore = useImageStore()

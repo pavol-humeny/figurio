@@ -12,10 +12,10 @@ import NumberInput from '../common/NumberInput.vue'
 import DropdownSelect from '../common/DropdownSelect.vue'
 import ToggleButton from '../common/ToggleButton.vue'
 import ColorPicker from '../common/ColorPicker.vue'
-import OperationsList from '../common/PresetOperationsList.vue'
-import PresetOperationDetails from '../common/PresetOperationDetails.vue'
+import OperationsList from '../tools/PresetOperationsList.vue'
+import PresetOperationDetails from '../tools/PresetOperationDetails.vue'
 import BaseIcon from '../icons/BaseIcon.vue'
-import PresetNewOperation from '../common/PresetNewOperation.vue'
+import PresetNewOperation from '../tools/PresetNewOperation.vue'
 import { useViewportStore } from '@/stores/viewportStore'
 import { editorConfig } from '@/config/editorConfig'
 import TimeInput from '../common/TimeInput.vue'
@@ -664,4 +664,8 @@ const tabs = ['myPresets', 'createPreset']
   </div>
 </template>
 
-<style scoped></style>
+<style scoped>
+.content-aligned.two-items p{
+  text-align: left;
+}
+</style>
