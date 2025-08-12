@@ -61,12 +61,26 @@ export function useNumberDropdownInput(props, emit) {
   }
 
   /**
+   * Validates if a string is a valid number representation
+   * @param {string} str - String to validate
+   * @returns {boolean} True if valid, false otherwise
+   */
+  const isValidNumberString = (str) => {
+    str = str.trim()
+
+    if (str === '') return false
+
+    return /^-?\d*(\.\d+)?$/.test(str)
+  }
+
+  /**
    * Called on blur or Enter – parses and clamps value
    */
   const onCommit = () => {
-    const num = Number(inputValue.value)
+    const value = inputValue.value
 
-    if (!isNaN(num)) {
+    if (isValidNumberString(value)) {
+      const num = Number(value)
       const clamped = clamp(num, props.min, props.max)
       inputValue.value = clamped.toString()
       emit('update:modelValue', clamped)

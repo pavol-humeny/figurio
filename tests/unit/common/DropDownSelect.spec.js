@@ -75,4 +75,12 @@ describe('DropdownSelectWithIcon.vue', () => {
     await wrapper.vm.setValue('second')
     expect(wrapper.find('select').element.value).toBe('second')
   })
+
+  it('updates selectedValue when modelValue prop changes (watch)', async () => {
+    const wrapper = factory({ modelValue: 'first' })
+    expect(wrapper.vm.selectedValue).toBe('first')
+
+    await wrapper.setProps({ modelValue: 'second' })
+    expect(wrapper.vm.selectedValue).toBe('second')
+  })
 })

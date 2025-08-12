@@ -142,4 +142,22 @@ describe('NumberInput.vue', () => {
     const input = wrapper.find('input[type="number"]')
     expect(input.element.value).toBe('42')
   })
+
+  it('updates inputValue when modelValue prop changes (watch test)', async () => {
+    const wrapper = mount(NumberInput, {
+      props: {
+        modelValue: 10,
+        min: 0,
+        max: 100,
+      },
+    })
+
+    expect(wrapper.vm.inputValue).toBe(10)
+
+    await wrapper.setProps({ modelValue: 55 })
+    expect(wrapper.vm.inputValue).toBe(55)
+
+    await wrapper.setProps({ modelValue: 0 })
+    expect(wrapper.vm.inputValue).toBe(0)
+  })
 })

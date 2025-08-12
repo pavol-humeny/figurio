@@ -1,6 +1,6 @@
 <script setup>
 import ItemTip from './ItemTip.vue'
-import { useSlider } from '@/composables/common/useDefaultSlider'
+import { useDefaultSlider } from '@/composables/common/useDefaultSlider'
 
 /**
  * @typedef {Object} SliderProps
@@ -84,7 +84,7 @@ const {
   onInput,
   onDoubleClick,
   onPointerDown,
-} = useSlider(props, emit)
+} = useDefaultSlider(props, emit)
 </script>
 
 <template>

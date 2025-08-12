@@ -10,7 +10,7 @@ import { ref, watch } from 'vue'
  *   onInput: (event: Event) => void
  * }}
  */
-export function useSlider(props, emit) {
+export function useDefaultSlider(props, emit) {
   /**
    * Internal reactive value representing the slider position
    */

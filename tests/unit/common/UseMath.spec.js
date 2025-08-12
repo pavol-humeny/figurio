@@ -51,4 +51,19 @@ describe('useMath', () => {
       expect(closest(-3, [-10, -5, -2, 0])).toBe(-2)
     })
   })
+
+  describe('pythagorean', () => {
+    it('calculates hypotenuse for positive legs', () => {
+      expect(useMath().pythagorean(3, 4)).toBe(5)
+    })
+
+    it('calculates hypotenuse with one leg zero', () => {
+      expect(useMath().pythagorean(0, 5)).toBe(5)
+      expect(useMath().pythagorean(5, 0)).toBe(5)
+    })
+
+    it('calculates hypotenuse with negative legs', () => {
+      expect(useMath().pythagorean(-3, -4)).toBe(5)
+    })
+  })
 })

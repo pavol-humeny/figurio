@@ -1,4 +1,4 @@
-import { describe, it, expect } from 'vitest'
+import { describe, it, expect, vi } from 'vitest'
 import { mount } from '@vue/test-utils'
 import DefaultSlider from '@/components/common/DefaultSlider.vue'
 
@@ -130,5 +130,50 @@ describe('DefaultSlider.vue', () => {
 
     const input = wrapper.find('input[type="range"]')
     expect(input.attributes('style')).toContain('--slider-bg: blue')
+  })
+
+  it('updates input value when modelValue prop changes (watch)', async () => {
+    const wrapper = mount(DefaultSlider, {
+      props: { modelValue: 25 },
+    })
+
+    const input = wrapper.find('input[type="range"]')
+    expect(input.element.value).toBe('25')
+
+    await wrapper.setProps({ modelValue: 75 })
+
+    expect(input.element.value).toBe('75')
+  })
+
+  it('calls onReset on double click when not disabled', async () => {
+    const onReset = vi.fn()
+    const wrapper = mount(DefaultSlider, {
+      props: {
+        modelValue: 50,
+        onReset,
+        disabled: false,
+      },
+    })
+
+    const input = wrapper.find('input[type="range"]')
+    await input.trigger('dblclick')
+
+    expect(onReset).toHaveBeenCalledTimes(1)
+  })
+
+  it('does not call onReset when disabled', async () => {
+    const onReset = vi.fn()
+    const wrapper = mount(DefaultSlider, {
+      props: {
+        modelValue: 50,
+        onReset,
+        disabled: true,
+      },
+    })
+
+    const input = wrapper.find('input[type="range"]')
+    await input.trigger('dblclick')
+
+    expect(onReset).not.toHaveBeenCalled()
   })
 })

@@ -1,4 +1,4 @@
-import { describe, it, expect } from 'vitest'
+import { describe, it, expect, vi } from 'vitest'
 import { mount } from '@vue/test-utils'
 import NumberDropdownInput from '@/components/common/NumberDropdownInput.vue'
 
@@ -94,5 +94,53 @@ describe('NumberDropdownInput.vue', () => {
 
     const input = wrapper.find('input[type="number"]')
     expect(input.element.value).toBe('42')
+  })
+
+  it('updates inputValue when modelValue prop changes', async () => {
+    const wrapper = factory()
+
+    expect(wrapper.vm.inputValue).toBe('10')
+
+    await wrapper.setProps({ modelValue: 42 })
+
+    expect(wrapper.vm.inputValue).toBe('42')
+
+    await wrapper.setProps({ modelValue: 7 })
+
+    expect(wrapper.vm.inputValue).toBe('7')
+  })
+
+  it('resets inputValue to modelValue when input is not a valid number on blur', async () => {
+    const wrapper = factory()
+    const input = wrapper.find('input[type="number"]')
+
+    await input.setValue('')
+    await input.trigger('blur')
+
+    expect(wrapper.vm.inputValue).toBe('10')
+
+    await input.setValue('-')
+    await input.trigger('blur')
+
+    expect(wrapper.vm.inputValue).toBe('10')
+
+    expect(wrapper.emitted('update:modelValue')).toBeUndefined()
+    expect(wrapper.emitted('update')).toBeUndefined()
+  })
+
+  it('removes mousedown event listener on unmount', () => {
+    const removeListenerSpy = vi.spyOn(document, 'removeEventListener')
+    const wrapper = mount(NumberDropdownInput, {
+      props: {
+        modelValue: 10,
+        options: [5, 10, 15, 20],
+      },
+    })
+
+    wrapper.unmount()
+
+    expect(removeListenerSpy).toHaveBeenCalledWith('mousedown', expect.any(Function))
+
+    removeListenerSpy.mockRestore()
   })
 })
