@@ -1,5 +1,13 @@
 {
   "versions": {
+    "2.1.0":{
+      "label": "2.1.0",
+      "improvements": {
+        "items": [
+          "Zaznamenávání informací pro statistiku"
+        ]
+      }
+    },
     "2.0.1":{
       "label": "2.0.1",
       "bugFixes": {
