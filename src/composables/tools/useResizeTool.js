@@ -1,6 +1,7 @@
 import { ref, nextTick, watch } from 'vue'
 import { useToastModal } from '../modals/useToastModal'
 import { editorConfig } from '@/config/editorConfig'
+import { useSendEvent } from '@/composables/common/useSendEvent'
 
 /**
  * Logic for the resize tool
@@ -136,6 +137,15 @@ export function useResizeTool(imageStore, historyStore, t) {
       resizeDimensions: {
         width: fileDimensionWidth.value,
         height: fileDimensionHeight.value,
+      },
+    })
+
+    useSendEvent().sendEvent('toolSettings', 'resize', null, {
+      settings: {
+        resizeDimensions: {
+          width: fileDimensionWidth.value,
+          height: fileDimensionHeight.value,
+        },
       },
     })
 

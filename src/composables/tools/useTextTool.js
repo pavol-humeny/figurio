@@ -1,5 +1,6 @@
 import { ref, watch, watchEffect, computed } from 'vue'
 import { useMath } from '../common/useMath'
+import { useSendEvent } from '@/composables/common/useSendEvent'
 
 /**
  * Local editable settings for text tool
@@ -229,6 +230,10 @@ export function useTextTool(imageStore, historyStore, editorStore, t) {
       letter-spacing: ${settings.letterSpacing}px;
     `
 
+    useSendEvent().sendEvent('toolSettings', 'text', 'update', {
+      settings: { ...localTextSettings.value },
+    })
+
     historyStore.push(imageStore.getSnapshot(t))
   }
 
@@ -271,6 +276,11 @@ export function useTextTool(imageStore, historyStore, editorStore, t) {
     })
 
     imageStore.selectedSvgObjectId = id
+
+    useSendEvent().sendEvent('toolSettings', 'text', 'create', {
+      settings: { ...localTextSettings.value },
+    })
+
     historyStore.push(imageStore.getSnapshot(t))
   }
 

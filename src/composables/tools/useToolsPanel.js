@@ -134,7 +134,7 @@ export function useToolsPanel(editorStore, imageStore, uiStore, t) {
     console.log('Toggle tool:', toolKey, 'Tab:', tabKey)
 
     // Send event
-    useSendEvent().sendEvent('toggle_tool', null, null, {
+    useSendEvent().sendEvent('toggleTool', null, null, {
       tool: toolKey,
       tab: tabKey,
     })

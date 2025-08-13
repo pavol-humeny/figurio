@@ -16,6 +16,7 @@ import { useViewportStore } from './viewportStore'
 import { useEditorStore } from './editorStore'
 import { globalConfig } from '@/config/globalConfig'
 import { useGeneralModal } from '@/composables/modals/useGeneralModal'
+import { useSendEvent } from '@/composables/common/useSendEvent'
 
 pdfjsLib.GlobalWorkerOptions.workerSrc = pdfjsWorker
 
@@ -665,6 +666,15 @@ export const useImageStore = defineStore('imageStore', {
         uiStore.isLoading = false
         console.error('Unsupported file type:', this.file.type)
       }
+
+      // Send event
+      useSendEvent().sendEvent('fileUpload', null, null, {
+        fileType: this.fileFormat,
+        fileName: this.fileName,
+        fileSize: this.fileSize,
+        fileWidth: this.fileDimensions.width,
+        fileHeight: this.fileDimensions.height,
+      })
     },
 
     /**

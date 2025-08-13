@@ -1,4 +1,5 @@
 import { computed } from 'vue'
+import { useSendEvent } from '@/composables/common/useSendEvent'
 
 /**
  * Logic for toggling between light and dark theme
@@ -19,6 +20,10 @@ export function useThemeSwitch(uiStore) {
    * Toggle between light and dark themes
    */
   const toggleTheme = () => {
+    useSendEvent().sendEvent('themeToggle', null, null, {
+      newTheme: theme.value === 'dark' ? 'light' : 'dark',
+    })
+
     uiStore.toggleTheme()
   }
 

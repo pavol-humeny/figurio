@@ -1,4 +1,5 @@
 import { useConfirmModal } from '../modals/useConfirmModal'
+import { useSendEvent } from '@/composables/common/useSendEvent'
 
 /**
  * Logic for flipping the image and associated SVG elements
@@ -27,6 +28,10 @@ export function useFlipTool(imageStore, historyStore, t) {
         direction: 'vertical',
       })
     }
+
+    useSendEvent().sendEvent('buttonClicked', null, 'flip', {
+      settings: { direction },
+    })
 
     applyFlipRender(direction)
 

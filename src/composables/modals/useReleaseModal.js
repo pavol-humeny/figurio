@@ -1,4 +1,5 @@
 import { ref, onMounted, nextTick, onBeforeUnmount } from 'vue'
+import { useSendEvent } from '@/composables/common/useSendEvent'
 
 /**
  * Whether the patch notes modal is currently visible
@@ -43,6 +44,9 @@ export function useReleaseModal() {
     if (isVisible.value) {
       return
     }
+
+    useSendEvent().sendEvent('modalEvent', null, null, { modal: 'release', event: 'open' })
+
     isVisible.value = true
   }
 
@@ -50,6 +54,8 @@ export function useReleaseModal() {
    * Close the patch notes modal
    */
   const closeReleaseModal = () => {
+    useSendEvent().sendEvent('modalEvent', null, null, { modal: 'release', event: 'close' })
+
     isVisible.value = false
   }
 

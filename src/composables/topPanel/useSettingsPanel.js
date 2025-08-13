@@ -1,5 +1,6 @@
 import { computed, ref, onMounted, onBeforeUnmount } from 'vue'
 import { usePrivacyAndDataModal } from '@/composables/modals/usePrivacyAndDataModal'
+import { useSendEvent } from '@/composables/common/useSendEvent'
 
 /**
  * Whether the settings panel is currently visible
@@ -57,6 +58,13 @@ export function useSettingsPanel(uiStore) {
     if (isVisible.value) {
       return
     }
+
+    // Send event
+    useSendEvent().sendEvent('modalEvent', null, 'settingsButton', {
+      modal: 'settingsPanel',
+      event: 'open',
+    })
+
     isVisible.value = true
   }
 
@@ -64,6 +72,12 @@ export function useSettingsPanel(uiStore) {
    * Close the settings panel
    */
   const closeSettingsPanel = () => {
+    // Send event
+    useSendEvent().sendEvent('modalEvent', null, null, {
+      modal: 'settingsPanel',
+      event: 'close',
+    })
+
     isVisible.value = false
   }
 

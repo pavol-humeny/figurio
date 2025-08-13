@@ -122,16 +122,17 @@ const {
               <p>
                 {{ $t('tools.text.settings.general.textSize.label') }}
               </p>
-              <NumberDropdownInput v-model="localTextSettings.size" :options="textSizeOptions" :min="1" :max="100"
-                @update="applyLocalTextSettings" :tip="$t('tools.text.settings.general.textSize.tip')"
-                position="bottom-left" />
+              <NumberDropdownInput v-model="localTextSettings.size" :options="textSizeOptions" :min="1"
+                :max="imageStore.fileDimensions.height" @update="applyLocalTextSettings"
+                :tip="$t('tools.text.settings.general.textSize.tip')" position="bottom-left" />
             </div>
             <div class="content-wrapper">
               <p>
                 {{ $t('tools.text.settings.general.letterSpacing.label') }}
               </p>
-              <NumberInput v-model="localTextSettings.letterSpacing" :min="-10" :max="10" :step="0.1"
-                @update="applyLocalTextSettings" icon="IconLetterSpacing" :color="'var(--primary-c)'" :size="20"
+              <NumberInput v-model="localTextSettings.letterSpacing" :min="Math.min(-localTextSettings.size, -10)"
+                :max="Math.max(localTextSettings.size, 10)" :step="0.1" @update="applyLocalTextSettings"
+                icon="IconLetterSpacing" :color="'var(--primary-c)'" :size="20"
                 :tip="$t('tools.text.settings.general.letterSpacing.tip')" position="bottom-left"
                 :onReset="resetLetterSpacing" />
             </div>

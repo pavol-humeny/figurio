@@ -9,6 +9,7 @@ import { useCropTool } from './useCropTool'
 import { editorConfig } from '@/config/editorConfig'
 import { useResizeTool } from './useResizeTool'
 import { useFrameTool } from './useFrameTool'
+import { useSendEvent } from '../common/useSendEvent'
 
 export function usePresetTool(
   imageStore,
@@ -238,6 +239,8 @@ export function usePresetTool(
     tmpLocalImageFrame.value = JSON.parse(JSON.stringify(localImageFrame.value))
     tmpLocalPresetName.value = localPresetName.value
     tmpLocalImageOperations.value = JSON.parse(JSON.stringify(localImageOperations.value))
+
+    useSendEvent().sendEvent('toolSettings', 'preset', 'modifyPreset', {})
   }
 
   /**
@@ -278,6 +281,8 @@ export function usePresetTool(
     )
 
     editorStore.selectSubTool('')
+
+    useSendEvent().sendEvent('toolSettings', 'preset', 'save', {})
   }
 
   /**
@@ -316,6 +321,8 @@ export function usePresetTool(
     tmpLocalImageFrame.value = {}
 
     editorStore.selectSubTool('')
+
+    useSendEvent().sendEvent('toolSettings', 'preset', 'close', {})
   }
 
   /**
@@ -352,6 +359,8 @@ export function usePresetTool(
     selectedOperation.value = null
     newOperation.value = null
     creatingNewOperation.value = false
+
+    useSendEvent().sendEvent('toolSettings', 'preset', 'delete', {})
   }
 
   /**
@@ -513,6 +522,8 @@ export function usePresetTool(
     // Save current operations to imageStore
     imageStore.imageOperations = JSON.parse(JSON.stringify(preset.imageOperations))
 
+    useSendEvent().sendEvent('toolSettings', 'preset', 'apply', {})
+
     historyStore.push(imageStore.getSnapshot(t))
   }
 
@@ -660,7 +671,7 @@ export function usePresetTool(
     (type) => {
       if (!useFrameTool(imageStore, historyStore, editorStore, t).isFrameWithOutline(type)) {
         newPreset.value.frame.outlineEnabled = false
-      } 
+      }
     },
   )
 
@@ -800,6 +811,8 @@ export function usePresetTool(
       t('tools.preset.settings.createPreset.presetSuccessfullyCreated.title'),
       t('tools.preset.settings.createPreset.presetSuccessfullyCreated.message'),
     )
+
+    useSendEvent().sendEvent('toolSettings', 'preset', 'create', {})
   }
 
   /**
@@ -884,6 +897,8 @@ export function usePresetTool(
         )
       }
     }, 2000)
+
+    useSendEvent().sendEvent('toolSettings', 'preset', 'useCurrentModifications', {})
   }
 
   return {

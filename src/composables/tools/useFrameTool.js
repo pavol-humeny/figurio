@@ -1,6 +1,7 @@
 import { ref, watch, computed, nextTick } from 'vue'
 import { useToastModal } from '../modals/useToastModal'
 import { editorConfig } from '@/config/editorConfig'
+import { useSendEvent } from '../common/useSendEvent'
 
 export function useFrameTool(imageStore, historyStore, editorStore, t) {
   const { showToastModal } = useToastModal()
@@ -353,6 +354,11 @@ export function useFrameTool(imageStore, historyStore, editorStore, t) {
       imageStore.frame.width = width
       imageStore.frame.height = width
     }
+
+    useSendEvent().sendEvent('toolSettings', 'frame', 'update', {
+      settings: { ...imageStore.frame },
+    })
+
     historyStore.push(imageStore.getSnapshot(t))
   }
 

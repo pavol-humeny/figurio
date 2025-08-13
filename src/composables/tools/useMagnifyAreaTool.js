@@ -1,5 +1,6 @@
 import { editorConfig } from '@/config/editorConfig'
 import { ref, computed, watch, watchEffect, onMounted } from 'vue'
+import { useSendEvent } from '../common/useSendEvent'
 
 const localMagnifyAreaSettings = ref({
   sourceX: 0,
@@ -348,6 +349,10 @@ export function useMagnifyAreaTool(imageStore, historyStore, editorStore, t) {
     // Source fill
     source.attrs.fill = settings.outlineColor
 
+    useSendEvent().sendEvent('toolSettings', 'magnifyArea', 'update', {
+      settings: { ...localMagnifyAreaSettings.value },
+    })
+
     historyStore.push(imageStore.getSnapshot(t))
   }
 
@@ -440,6 +445,11 @@ export function useMagnifyAreaTool(imageStore, historyStore, editorStore, t) {
     imageStore.svgObjects.push(result)
 
     imageStore.selectedSvgObjectId = resultId
+
+    useSendEvent().sendEvent('toolSettings', 'magnifyArea', 'create', {
+      settings: { ...localMagnifyAreaSettings.value },
+    })
+
     historyStore.push(imageStore.getSnapshot(t))
   }
 

@@ -1,4 +1,5 @@
 import { useI18n } from 'vue-i18n'
+import { useSendEvent } from '@/composables/common/useSendEvent'
 
 /**
  * Logic for switching and persisting application language
@@ -17,6 +18,8 @@ export function useLanguageSwitch() {
    * @param {string} newLanguage - Language code to switch to (e.g., 'en', 'sk')
    */
   const switchLanguage = (newLanguage) => {
+    useSendEvent().sendEvent('languageSwitch', null, null, { newLanguage: newLanguage })
+
     locale.value = newLanguage
     localStorage.setItem('language', newLanguage)
   }

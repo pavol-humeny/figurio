@@ -1,4 +1,5 @@
 import { useConfirmModal } from '../modals/useConfirmModal'
+import { useSendEvent } from '@/composables/common/useSendEvent'
 
 /**
  * Logic for the rotate tool including confirmation, operation registration, and canvas rendering
@@ -40,6 +41,12 @@ export function useRotateTool(imageStore, historyStore, t) {
     imageStore.addImageOperation({
       type: 'rotation',
       angle: angle,
+    })
+
+    useSendEvent().sendEvent('toolSettings', 'rotate', null, {
+      settings: {
+        angle: angle,
+      },
     })
 
     applyRotationRender(angle)

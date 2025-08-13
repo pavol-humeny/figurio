@@ -1,6 +1,7 @@
 import { computed, ref, watch, watchEffect, nextTick } from 'vue'
 import { useMath } from '../common/useMath'
 import { useSvgFunctions } from './useSvgFunctions'
+import { useSendEvent } from '../common/useSendEvent'
 
 /**
  * Local editable settings for shape tool
@@ -422,6 +423,10 @@ export function useShapeTool(editorStore, imageStore, historyStore, t) {
       attrs.fill = settings.strokeColor
     }
 
+    useSendEvent().sendEvent('toolSettings', 'shape', 'update', {
+      settings: { ...localObjectSettings.value },
+    })
+
     historyStore.push(imageStore.getSnapshot(t))
   }
 
@@ -438,6 +443,10 @@ export function useShapeTool(editorStore, imageStore, historyStore, t) {
       settings.lineArrowStart = markerMap[settings.lineArrowStart]
       settings.lineArrowEnd = markerMap[settings.lineArrowEnd]
     }
+
+    useSendEvent().sendEvent('toolSettings', 'shape', 'create', {
+      settings: { ...settings },
+    })
 
     return settings
   }

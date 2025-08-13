@@ -1,5 +1,6 @@
 import { computed } from 'vue'
 import { useMath } from '@/composables/common/useMath'
+import { useSendEvent } from '../common/useSendEvent'
 
 /**
  * Logic for movement and zoom speed settings of the Move tool
@@ -54,6 +55,10 @@ export function useMoveTool(viewportStore) {
    */
   const updateZoomSpeed = (newSpeed) => {
     if (typeof newSpeed === 'number' && newSpeed > 0) {
+      useSendEvent().sendEvent('toolSettings', 'move', null, {
+        settings: { zoomSpeed: round(newSpeed / zoomSpeedCorrectionFactor, 5) },
+      })
+
       viewportStore.zoomSpeed = round(newSpeed / zoomSpeedCorrectionFactor, 5)
     }
   }
@@ -102,6 +107,10 @@ export function useMoveTool(viewportStore) {
    */
   const updateMovementSpeed = (newSpeed) => {
     if (typeof newSpeed === 'number' && newSpeed > 0) {
+      useSendEvent().sendEvent('toolSettings', 'move', null, {
+        settings: { movementSpeed: round(newSpeed / movementSpeedCorrectionFactor, 5) },
+      })
+
       viewportStore.movementSpeed = round(newSpeed / movementSpeedCorrectionFactor, 5)
     }
   }

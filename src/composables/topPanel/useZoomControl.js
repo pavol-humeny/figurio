@@ -1,6 +1,7 @@
 import { ref, computed, watch } from 'vue'
 import { viewportConfig } from '@/config/viewportConfig'
 import { useMath } from '../common/useMath'
+import { useSendEvent } from '@/composables/common/useSendEvent'
 
 /**
  * Logic for the zoom control functionality in the viewport
@@ -58,6 +59,11 @@ export function useZoomControl(viewportStore) {
   const zoomIn = (zoomDiff = viewportConfig.defaultZoomIn) => {
     if (!canZoomIn.value) return
 
+    // Send event
+    useSendEvent().sendEvent('buttonClicked', null, 'zoomIn', {
+      zoomDiff: zoomDiff,
+    })
+
     let newZoom = viewportStore.zoomLevel + zoomDiff
     newZoom = clamp(newZoom, viewportStore.minZoomLevel, viewportStore.maxZoomLevel)
 
@@ -72,6 +78,11 @@ export function useZoomControl(viewportStore) {
   const zoomOut = (zoomDiff = viewportConfig.defaultZoomOut) => {
     if (!canZoomOut.value) return
 
+    // Send event
+    useSendEvent().sendEvent('buttonClicked', null, 'zoomOut', {
+      zoomDiff: zoomDiff,
+    })
+
     let newZoom = viewportStore.zoomLevel - zoomDiff
     newZoom = clamp(newZoom, viewportStore.minZoomLevel, viewportStore.maxZoomLevel)
 
@@ -82,6 +93,9 @@ export function useZoomControl(viewportStore) {
    * Reset zoom and pan to defaults
    */
   const resetZoom = () => {
+    // Send event
+    useSendEvent().sendEvent('buttonClicked', null, 'resetZoom', {})
+
     viewportStore.resetZoom()
     viewportStore.resetPan()
     viewportStore.shouldFitToScreen = true

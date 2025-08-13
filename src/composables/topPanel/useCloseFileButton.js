@@ -1,5 +1,6 @@
 import { computed } from 'vue'
 import { useConfirmModal } from '@/composables/modals/useConfirmModal'
+import { useSendEvent } from '@/composables/common/useSendEvent'
 
 /**
  * Logic for the Close File button in the top panel
@@ -25,6 +26,9 @@ export function useCloseFileButton(imageStore, workspaceStore, t) {
    */
   const closeFile = async () => {
     if (disabled.value) return
+
+    // Send event
+    useSendEvent().sendEvent('buttonClicked', null, 'closeFile', {})
 
     const confirmed = await showConfirmModal(
       t('topPanel.closeFileButton.confirm.title'),

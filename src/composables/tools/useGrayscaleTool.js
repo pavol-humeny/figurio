@@ -1,5 +1,6 @@
 import { useConfirmModal } from '../modals/useConfirmModal'
 import { computed } from 'vue'
+import { useSendEvent } from '@/composables/common/useSendEvent'
 
 /**
  * Logic for applying grayscale
@@ -41,6 +42,10 @@ export function useGrayscaleTool(imageStore, historyStore, t) {
     imageStore.addImageOperation({
       type: 'grayscale',
       enabled: true,
+    })
+
+    useSendEvent().sendEvent('toolSettings', 'grayscale', 'create', {
+      settings: { grayscale: true },
     })
 
     applyGrayscaleRender()

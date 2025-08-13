@@ -1,3 +1,5 @@
+import { useSendEvent } from '@/composables/common/useSendEvent'
+
 /**
  * Logic for the upload file button
  *
@@ -13,6 +15,9 @@ export function useUploadFileButton(imageStore, t, router) {
    * Open file dialog and load the selected file
    */
   const uploadFile = async () => {
+    // Send event
+    useSendEvent().sendEvent('buttonClicked', null, 'uploadFile', {})
+
     imageStore.loadFile(t, router)
   }
 

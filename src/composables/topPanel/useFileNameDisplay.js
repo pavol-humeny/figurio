@@ -1,4 +1,5 @@
 import { ref, nextTick, computed, watch } from 'vue'
+import { useSendEvent } from '@/composables/common/useSendEvent'
 
 /**
  * Reference to the input element for file name editing
@@ -66,6 +67,11 @@ export function useFileNameDisplay(imageStore, t) {
         inputRef.value?.blur()
       })
     }
+
+    // Send event
+    useSendEvent().sendEvent('fileNameChange', null, null, {
+      fileName: fileNameInput.value,
+    })
   }
 
   /**

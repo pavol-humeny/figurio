@@ -1,6 +1,7 @@
 import { ref, computed, watch, watchEffect, nextTick } from 'vue'
 import { useMath } from '../common/useMath'
 import { useSvgFunctions } from './useSvgFunctions'
+import { useSendEvent } from '@/composables/common/useSendEvent'
 
 /**
  * Local settings for the blur tool
@@ -408,6 +409,10 @@ export function useBlurTool(imageStore, historyStore, editorStore, t) {
     // Push to history only when explicitly requested
     if (commit) {
       historyStore.push(imageStore.getSnapshot(t))
+
+      useSendEvent().sendEvent('toolSettings', 'blur', 'update', {
+        settings: { ...localBlurSettings.value },
+      })
     }
   }
 
@@ -494,6 +499,10 @@ export function useBlurTool(imageStore, historyStore, editorStore, t) {
         settings.filter = null
       }
     }
+
+    useSendEvent().sendEvent('toolSettings', 'blur', 'create', {
+      settings: { ...settings },
+    })
 
     return settings
   }
