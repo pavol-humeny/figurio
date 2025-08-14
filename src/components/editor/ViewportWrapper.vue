@@ -325,8 +325,8 @@ const disableContextMenu = computed(() => {
   position: absolute;
   top: 0;
   right: 0;
-  width: 10px;
-  height: calc(100% - 16px);
+  width: var(--ruler-size);
+  height: calc(100% - var(--ruler-size));
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -336,10 +336,10 @@ const disableContextMenu = computed(() => {
 
 .horizontal-slider-wrapper {
   position: absolute;
-  left: 0;
+  left: calc(var(--ruler-size) * -1);
   bottom: 0;
-  width: calc(100% - 16px);
-  height: 10px;
+  width: 100%;
+  height: var(--ruler-size);
   overflow: hidden;
   display: flex;
   align-items: center;

@@ -360,12 +360,16 @@ export function useViewportWrapper(viewportStore, imageStore, editorStore, uiSto
     updateInitialDimensions()
     updateZoomDependentDimensions()
 
-    panX.value = wrapperWidth.value / 2 - (contentWidth.value * zoomLevel.value) / 2
-    panY.value = wrapperHeight.value / 2 - (contentHeight.value * zoomLevel.value) / 2
+    const slidersCorrection = uiStore.rulersEnabled ? 0 : 15
 
-    viewportStore.defaultPanX = wrapperWidth.value / 2 - (contentWidth.value * zoomLevel.value) / 2
+    panX.value =
+      wrapperWidth.value / 2 - (contentWidth.value * zoomLevel.value) / 2 - slidersCorrection
+    panY.value =
+      wrapperHeight.value / 2 - (contentHeight.value * zoomLevel.value) / 2 - slidersCorrection
+
+    viewportStore.defaultPanX = wrapperWidth.value / 2 - (contentWidth.value * zoomLevel.value) / 2 - slidersCorrection
     viewportStore.defaultPanY =
-      wrapperHeight.value / 2 - (contentHeight.value * zoomLevel.value) / 2
+      wrapperHeight.value / 2 - (contentHeight.value * zoomLevel.value) / 2 - slidersCorrection
   }
 
   /**
@@ -390,6 +394,26 @@ export function useViewportWrapper(viewportStore, imageStore, editorStore, uiSto
   /**
    * Fit the image to the screen based on current wrapper size
    */
+  // const fitToScreenZoomLevel = () => {
+  //   updateInitialDimensions()
+
+  //   const frameHeight = imageStore.frame?.enabled
+  //     ? imageStore.frame.height * 2 + imageStore.frame.headerSize + imageStore.frame.footerSize
+  //     : 0
+
+  //   const scaleX = wrapperWidth.value / contentWidth.value
+  //   const scaleY = wrapperHeight.value / contentHeight.value
+
+  //   const optimalZoom = Math.min(scaleX, scaleY)
+
+  //   const scaleAccordingToFrame = 1 + frameHeight / contentHeight.value
+
+  //   viewportStore.fitZoomLevel =
+  //     (viewportStore.zoomLevel / optimalZoom) * scaleAccordingToFrame * 1.1
+
+  //   updateZoomDependentDimensions()
+  // }
+
   const fitToScreenZoomLevel = () => {
     updateInitialDimensions()
 
@@ -397,15 +421,16 @@ export function useViewportWrapper(viewportStore, imageStore, editorStore, uiSto
       ? imageStore.frame.height * 2 + imageStore.frame.headerSize + imageStore.frame.footerSize
       : 0
 
-    const scaleX = wrapperWidth.value / contentWidth.value
-    const scaleY = wrapperHeight.value / contentHeight.value
+    const rulerCorrection = uiStore.rulersEnabled ? 30 : 0
+
+    const scaleX = (wrapperWidth.value - rulerCorrection) / contentWidth.value
+    const scaleY = (wrapperHeight.value - rulerCorrection) / contentHeight.value
 
     const optimalZoom = Math.min(scaleX, scaleY)
 
     const scaleAccordingToFrame = 1 + frameHeight / contentHeight.value
 
-    viewportStore.fitZoomLevel =
-      (viewportStore.zoomLevel / optimalZoom) * scaleAccordingToFrame * 1.1
+    viewportStore.fitZoomLevel = (viewportStore.zoomLevel / optimalZoom) * scaleAccordingToFrame
 
     updateZoomDependentDimensions()
   }

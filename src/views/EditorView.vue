@@ -172,6 +172,10 @@ onMounted(() => {
   z-index: var(--z-index-file-tabs);
 }
 
+.file-info-center{
+  padding-right: var(--ruler-size);
+}
+
 .file-info-right {
   position: absolute;
   right: 10px;
