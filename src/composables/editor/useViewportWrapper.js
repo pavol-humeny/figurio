@@ -360,14 +360,26 @@ export function useViewportWrapper(viewportStore, imageStore, editorStore, uiSto
     updateInitialDimensions()
     updateZoomDependentDimensions()
 
-    const slidersCorrection = uiStore.rulersEnabled ? 0 : 15
+    let frameHeight = imageStore.frame?.enabled ? imageStore.frame.height : 0
+    if (imageStore.frame?.headerSize > 0) {
+      frameHeight = imageStore.frame.headerSize
+    } else if (imageStore.frame?.footerSize > 0) {
+      frameHeight = imageStore.frame.height
+    }
+
+    console.log('Frame height:', frameHeight * zoomLevel.value)
+
+    frameHeight = frameHeight * zoomLevel.value
+
+    const slidersCorrection = uiStore.rulersEnabled ? 0 : 7.5
 
     panX.value =
       wrapperWidth.value / 2 - (contentWidth.value * zoomLevel.value) / 2 - slidersCorrection
     panY.value =
       wrapperHeight.value / 2 - (contentHeight.value * zoomLevel.value) / 2 - slidersCorrection
 
-    viewportStore.defaultPanX = wrapperWidth.value / 2 - (contentWidth.value * zoomLevel.value) / 2 - slidersCorrection
+    viewportStore.defaultPanX =
+      wrapperWidth.value / 2 - (contentWidth.value * zoomLevel.value) / 2 - slidersCorrection
     viewportStore.defaultPanY =
       wrapperHeight.value / 2 - (contentHeight.value * zoomLevel.value) / 2 - slidersCorrection
   }
@@ -417,20 +429,32 @@ export function useViewportWrapper(viewportStore, imageStore, editorStore, uiSto
   const fitToScreenZoomLevel = () => {
     updateInitialDimensions()
 
-    const frameHeight = imageStore.frame?.enabled
-      ? imageStore.frame.height * 2 + imageStore.frame.headerSize + imageStore.frame.footerSize
-      : 0
+    const frameWidth = imageStore.frame?.enabled ? imageStore.frame.width * 2 : 0
+    let frameHeight = imageStore.frame?.enabled ? imageStore.frame.height * 2 : 0
+    if (imageStore.frame?.headerSize > 0) {
+      frameHeight = imageStore.frame.headerSize + imageStore.frame.height
+    } else if (imageStore.frame?.footerSize > 0) {
+      frameHeight = imageStore.frame.footerSize + imageStore.frame.height
+    }
 
-    const rulerCorrection = uiStore.rulersEnabled ? 30 : 0
+    const rulerCorrection = uiStore.rulersEnabled ? 30 : 15
 
-    const scaleX = (wrapperWidth.value - rulerCorrection) / contentWidth.value
-    const scaleY = (wrapperHeight.value - rulerCorrection) / contentHeight.value
+    const mode = 1
 
-    const optimalZoom = Math.min(scaleX, scaleY)
+    if (mode === 0) {
+      const scaleX = (wrapperWidth.value - rulerCorrection) / (contentWidth.value + frameWidth)
+      const scaleY = (wrapperHeight.value - rulerCorrection) / (contentHeight.value + frameHeight)
 
-    const scaleAccordingToFrame = 1 + frameHeight / contentHeight.value
+      const optimalZoom = Math.min(scaleX, scaleY)
 
-    viewportStore.fitZoomLevel = (viewportStore.zoomLevel / optimalZoom) * scaleAccordingToFrame
+      viewportStore.fitZoomLevel = viewportStore.zoomLevel / optimalZoom
+    } else if (mode === 1) {
+      // overleaf fit
+      const scaleX =
+        ((wrapperWidth.value - rulerCorrection) * 0.6) / (contentHeight.value + frameHeight)
+
+      viewportStore.fitZoomLevel = viewportStore.zoomLevel / scaleX
+    }
 
     updateZoomDependentDimensions()
   }
