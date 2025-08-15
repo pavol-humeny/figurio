@@ -45,7 +45,13 @@ export const useViewportStore = defineStore('viewportStore', {
     /** Whether to fit the image on load */
     fitImageOnLoad: true,
 
+    /** Guide lines*/
     guideLine: null, // { centerX: number, centerY: number, angle: number } - Center point and angle of the guide line
+
+    /** Zoom mode */
+    zoomMode: 'classic', // 'classic', 'text'
+    /** Text size */
+    textWidth: 15.2, // cm
   }),
   getters: {
     /**
@@ -64,6 +70,27 @@ export const useViewportStore = defineStore('viewportStore', {
     setZoomLevel(level) {
       this.zoomLevel = round(level, 2)
     },
+
+    /**
+     * Set the current zoom level keeping the center of the image fixed in the viewport.
+     * @param {number} level
+     */
+    // setZoomLevel(level) {
+    //   const centerX = this.viewportContentRect.width / 2
+    //   const centerY = this.viewportContentRect.height / 2
+
+    //   // Middle point in image coordinates (before zoom change)
+    //   const imageCenterX = (centerX - this.panX) / this.zoomLevel
+    //   const imageCenterY = (centerY - this.panY) / this.zoomLevel
+
+    //   const clampedZoom = round(Math.min(Math.max(level, this.minZoomLevel), this.maxZoomLevel), 2)
+
+    //   // Adjust pan to keep the same image center
+    //   this.panX = centerX - imageCenterX * clampedZoom
+    //   this.panY = centerY - imageCenterY * clampedZoom
+
+    //   this.zoomLevel = clampedZoom
+    // },
 
     /**
      * Zoom in by increasing zoom level using zoomSpeed.

@@ -37,7 +37,21 @@
     "tip": {
       "zoomIn": "Přibližuje plátno",
       "zoomOut": "Oddaluje plátno",
-      "setZoom": "Dvojklikem obnoví úroveň přiblížení"
+      "setZoom": "Dvojklikem obnoví úroveň přiblížení na 100% a centruje obrázek",
+      "resetZoom": "Obnoví úroveň přiblížení na 100% a centruje obrázek",
+      "classicMode": {
+        "title": "Klasický režim přiblížení",
+        "text": "V tomto režimu znamená 100% přiblížení, že se celý obrázek vejde do viditelné oblasti bez ořezu.",
+        "shortcut": "Alt + C"
+      },
+      "textMode": {
+        "title": "Režim přiblížení na text",
+        "text": "V tomto režimu znamená 100% přiblížení, že šířka obrázku odpovídá celé šířce textové části strany, přičemž strana představuje celý aktuální viewport.",
+        "shortcut": "Alt + T"
+      },
+      "textWidth":{
+        "tip": "Nastav šířku textu nebo dvojklikem na ikonu obnov předvolenou"
+      }
     }
   },
   "helpButton": {

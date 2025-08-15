@@ -18,6 +18,20 @@ export const keyboardShortcuts = [
   },
   { keys: ['ctrl', '-'], action: 'zoomOut', description: 'Zoom out' },
   { keys: ['ctrl', '0'], action: 'resetZoom', description: 'Reset zoom' },
+  // Zoom modes
+  {
+    keys: ['alt', 'c'],
+    action: 'toggleZoomMode',
+    args: ['classic'],
+    description: 'Set zoom mode to classic',
+  },
+  {
+    keys: ['alt', 't'],
+    action: 'toggleZoomMode',
+    args: ['text'],
+    description: 'Set zoom mode to text',
+  },
+
   // File management shortcuts
   {
     keys: ['ctrl', 'o'],

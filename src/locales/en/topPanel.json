@@ -37,7 +37,21 @@
     "tip": {
       "zoomIn": "Zooms in on the canvas",
       "zoomOut": "Zooms out from the canvas",
-      "setZoom": "Double-click to reset zoom level"
+      "setZoom": "Double-click to reset zoom level to 100% and center image",
+      "resetZoom": "Resets the zoom level to 100% and center image",
+      "classicMode": {
+        "title": "Classic Zoom Mode",
+        "text": "In this mode, 100% zoom means the entire image fits within the visible area without cropping.",
+        "shortcut": "Alt + C"
+      },
+      "textMode": {
+        "title": "Text Zoom Mode",
+        "text": "In this mode, 100% zoom means the image width matches the full width of the text area relative to the page, where the page represents the entire viewport.",
+        "shortcut": "Alt + T"
+      },
+      "textWidth":{
+        "tip": "Set text width or double click to icon for reset"
+      }
     }
   },
   "helpButton": {

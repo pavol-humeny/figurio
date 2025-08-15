@@ -1,4 +1,5 @@
-import { ref, watch } from 'vue'
+import { ref, watch, computed } from 'vue'
+import { useMath } from './useMath'
 
 /**
  * Logic for the <NumberInput> component
@@ -23,6 +24,7 @@ import { ref, watch } from 'vue'
  * }}
  */
 export function useNumberInput(props, emit) {
+  const { round } = useMath()
   /**
    * Internal reactive value bound to the number input
    */
@@ -36,6 +38,14 @@ export function useNumberInput(props, emit) {
    * Whether the unit label should be shown
    */
   const showUnit = props.unit !== ''
+
+  /**
+   * Number of decimal places for rounding
+   */
+  const decimals = computed(() => {
+    if (props.step >= 1) return 0
+    return props.step.toString().split('.')[1]?.length || 0
+  })
 
   /**
    * Watch for external modelValue changes and update local value
@@ -52,6 +62,8 @@ export function useNumberInput(props, emit) {
    */
   const onBlurOrEnter = () => {
     let value = inputValue.value
+
+    value = round(value, decimals.value)
 
     if (value < props.min) {
       value = props.min
@@ -80,7 +92,7 @@ export function useNumberInput(props, emit) {
    * @param {number} newValue - New value to assign
    */
   const setValue = (newValue) => {
-    inputValue.value = newValue
+    inputValue.value = round(newValue)
   }
 
   return {

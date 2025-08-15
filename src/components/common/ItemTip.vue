@@ -83,8 +83,9 @@ const showTip = computed(() => props.text !== '')
   padding: 6px 10px;
   border-radius: 6px;
   font-size: var(--tip-font-size);
-  white-space: nowrap;
+  white-space: normal;
   box-shadow: var(--box-shadow-ui);
+  max-width: 300px;
 }
 
 .item-tip-bubble {
@@ -230,6 +231,6 @@ const showTip = computed(() => props.text !== '')
 .tip-description {
   color: var(--text-c);
   font-size: var(--tip-font-size);
-  white-space: nowrap;
+  /* white-space: nowrap; */
 }
 </style>

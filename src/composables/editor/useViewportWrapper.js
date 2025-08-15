@@ -353,23 +353,12 @@ export function useViewportWrapper(viewportStore, imageStore, editorStore, uiSto
    * Center the image in the viewport
    */
   const centerImage = () => {
-    console.log('----------------------- Centering image -----------------------')
+    console.log('------- Centering image ')
     if (!wrapperRef.value || !contentRef.value) return
     fitToScreenZoomLevel()
 
     updateInitialDimensions()
     updateZoomDependentDimensions()
-
-    let frameHeight = imageStore.frame?.enabled ? imageStore.frame.height : 0
-    if (imageStore.frame?.headerSize > 0) {
-      frameHeight = imageStore.frame.headerSize
-    } else if (imageStore.frame?.footerSize > 0) {
-      frameHeight = imageStore.frame.height
-    }
-
-    console.log('Frame height:', frameHeight * zoomLevel.value)
-
-    frameHeight = frameHeight * zoomLevel.value
 
     const slidersCorrection = uiStore.rulersEnabled ? 0 : 7.5
 
@@ -396,9 +385,12 @@ export function useViewportWrapper(viewportStore, imageStore, editorStore, uiSto
     updateInitialDimensions()
     updateZoomDependentDimensions()
 
-    viewportStore.defaultPanX = wrapperWidth.value / 2 - (contentWidth.value * zoomLevel.value) / 2
+    const slidersCorrection = uiStore.rulersEnabled ? 0 : 7.5
+
+    viewportStore.defaultPanX =
+      wrapperWidth.value / 2 - (contentWidth.value * zoomLevel.value) / 2 - slidersCorrection
     viewportStore.defaultPanY =
-      wrapperHeight.value / 2 - (contentHeight.value * zoomLevel.value) / 2
+      wrapperHeight.value / 2 - (contentHeight.value * zoomLevel.value) / 2 - slidersCorrection
 
     viewportStore.setZoomLevel(tmpZoomLevel)
   }
@@ -406,26 +398,6 @@ export function useViewportWrapper(viewportStore, imageStore, editorStore, uiSto
   /**
    * Fit the image to the screen based on current wrapper size
    */
-  // const fitToScreenZoomLevel = () => {
-  //   updateInitialDimensions()
-
-  //   const frameHeight = imageStore.frame?.enabled
-  //     ? imageStore.frame.height * 2 + imageStore.frame.headerSize + imageStore.frame.footerSize
-  //     : 0
-
-  //   const scaleX = wrapperWidth.value / contentWidth.value
-  //   const scaleY = wrapperHeight.value / contentHeight.value
-
-  //   const optimalZoom = Math.min(scaleX, scaleY)
-
-  //   const scaleAccordingToFrame = 1 + frameHeight / contentHeight.value
-
-  //   viewportStore.fitZoomLevel =
-  //     (viewportStore.zoomLevel / optimalZoom) * scaleAccordingToFrame * 1.1
-
-  //   updateZoomDependentDimensions()
-  // }
-
   const fitToScreenZoomLevel = () => {
     updateInitialDimensions()
 
@@ -437,21 +409,24 @@ export function useViewportWrapper(viewportStore, imageStore, editorStore, uiSto
       frameHeight = imageStore.frame.footerSize + imageStore.frame.height
     }
 
-    const rulerCorrection = uiStore.rulersEnabled ? 30 : 15
+    const rulerCorrection = uiStore.rulersEnabled ? 30 : 15 // 15 - ruler size
 
-    const mode = 1
+    const mode = viewportStore.zoomMode
 
-    if (mode === 0) {
+    if (mode === 'classic') {
+      // Classic fit
       const scaleX = (wrapperWidth.value - rulerCorrection) / (contentWidth.value + frameWidth)
       const scaleY = (wrapperHeight.value - rulerCorrection) / (contentHeight.value + frameHeight)
 
       const optimalZoom = Math.min(scaleX, scaleY)
 
-      viewportStore.fitZoomLevel = viewportStore.zoomLevel / optimalZoom
-    } else if (mode === 1) {
-      // overleaf fit
+      viewportStore.fitZoomLevel = (viewportStore.zoomLevel / optimalZoom) * 1.1
+    } else if (mode === 'text') {
+      // Text fit
+      const scale = viewportStore.textWidth / viewportConfig.a4paperWidth
+
       const scaleX =
-        ((wrapperWidth.value - rulerCorrection) * 0.6) / (contentHeight.value + frameHeight)
+        ((wrapperWidth.value - rulerCorrection) * scale) / (contentWidth.value + frameHeight)
 
       viewportStore.fitZoomLevel = viewportStore.zoomLevel / scaleX
     }
@@ -459,6 +434,9 @@ export function useViewportWrapper(viewportStore, imageStore, editorStore, uiSto
     updateZoomDependentDimensions()
   }
 
+  /**
+   * Center image if reset zoom was pressed
+   */
   watch(
     () => viewportStore.shouldFitToScreen,
     (shouldFit) => {
@@ -466,6 +444,21 @@ export function useViewportWrapper(viewportStore, imageStore, editorStore, uiSto
         centerImage()
         viewportStore.shouldFitToScreen = false
       }
+    },
+    { immediate: true },
+  )
+
+  /**
+   * Center image after zoom mode changing
+   */
+  watch(
+    [() => viewportStore.zoomMode, () => viewportStore.textWidth],
+    () => {
+      console.log('-------- Zoom MODE ')
+      centerImage()
+      viewportStore.resetZoom()
+      viewportStore.resetPan()
+      viewportStore.shouldFitToScreen = true
     },
     { immediate: true },
   )

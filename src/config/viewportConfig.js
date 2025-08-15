@@ -11,4 +11,8 @@ export const viewportConfig = {
 
   scrollHorizontalSpeed: 3, // Smaller = slower scrolling
   scrollVerticalSpeed: 3, // Smaller = slower scrolling
+
+  // Zoom - text
+  defaultTextWidth: 15.2, // cm
+  a4paperWidth: 21, // cm
 }

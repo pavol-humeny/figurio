@@ -106,7 +106,7 @@ defineExpose({ setValue })
     <div class="input-wrapper">
       <input type="number" class="value-input" :style="{
         paddingLeft: showIcon ? '30px' : '10px',
-        paddingRight: showUnit ? '25px' : '10px',
+        paddingRight: showUnit ? '30px' : '10px',
       }" v-model.number="inputValue" :min="props.min" :max="props.max" :step="props.step" :disabled="props.disabled"
         @blur="onBlurOrEnter" @keydown.enter="onBlurOrEnter" />
       <BaseIcon v-if="showIcon" :name="props.icon" class="input-icon" :size="props.size" :color="props.color"
@@ -129,7 +129,7 @@ input[type='number'] {
 }
 
 .value-input {
-  width: 12ch;
+  width: 13ch;
   padding: 7px 10px 7px 10px;
   border-radius: 10px;
   border: none;

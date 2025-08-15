@@ -15,6 +15,7 @@ import { useSendEvent } from '@/composables/common/useSendEvent'
  *   resetZoom: () => void,
  *   canZoomIn: import('vue').ComputedRef<boolean>,
  *   canZoomOut: import('vue').ComputedRef<boolean>,
+ *   toggleZoomMode: (mode: string) => void
  * }}
  */
 export function useZoomControl(viewportStore) {
@@ -50,6 +51,11 @@ export function useZoomControl(viewportStore) {
    * Whether zooming out is possible
    */
   const canZoomOut = computed(() => viewportStore.zoomLevel > viewportStore.minZoomLevel)
+
+  /**
+   * Current text width
+   */
+  const textWidth = ref(viewportStore.textWidth)
 
   /**
    * Increase zoom level
@@ -158,6 +164,26 @@ export function useZoomControl(viewportStore) {
     zoomLevelInput.value = lastSyncedZoomInput.value
   }
 
+  /**
+   * Toggle zoom mode
+   * @param {string} mode - The zoom mode to set
+   */
+  const toggleZoomMode = (mode) => {
+    if (mode === viewportStore.zoomMode) return
+
+    viewportStore.zoomMode = mode
+  }
+
+  const setNewTextWidth = (newWidth) => {
+    textWidth.value = newWidth
+    viewportStore.textWidth = newWidth
+  }
+
+  const resetTextWidth = () => {
+    viewportStore.textWidth = viewportConfig.defaultTextWidth
+    textWidth.value = viewportStore.textWidth
+  }
+
   return {
     zoomLevel: zoomLevelInput,
     zoomIn,
@@ -169,5 +195,9 @@ export function useZoomControl(viewportStore) {
     onZoomInput,
     applyZoomFromInput,
     revertZoomInput,
+    toggleZoomMode,
+    textWidth,
+    setNewTextWidth,
+    resetTextWidth,
   }
 }

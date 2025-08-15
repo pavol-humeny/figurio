@@ -35,7 +35,7 @@ import { useRouter } from 'vue-router'
 import { useSvgObjects } from '@/composables/tools/useSvgObjects';
 
 const { undo, redo } = useUndoRedo(useHistoryStore(), useImageStore())
-const { zoomIn, zoomOut, resetZoom } = useZoomControl(useViewportStore())
+const { zoomIn, zoomOut, resetZoom, toggleZoomMode } = useZoomControl(useViewportStore())
 const { closeFile } = useCloseFileButton(useImageStore(), useWorkspaceStore(), t)
 const { uploadFile } = useUploadFileButton(useImageStore(), t, useRouter())
 const { toggleTool } = useToolsPanel(useEditorStore(), useImageStore(), useUiStore(), t)
@@ -73,6 +73,7 @@ useKeyboardShortcuts({
   zoomIn,
   zoomOut,
   resetZoom,
+  toggleZoomMode,
   closeFile,
   uploadFile,
   toggleTool,
@@ -172,7 +173,7 @@ onMounted(() => {
   z-index: var(--z-index-file-tabs);
 }
 
-.file-info-center{
+.file-info-center {
   padding-right: var(--ruler-size);
 }
 
