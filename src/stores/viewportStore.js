@@ -67,30 +67,33 @@ export const useViewportStore = defineStore('viewportStore', {
      * Set the current zoom level, rounded to 2 decimal places.
      * @param {number} level
      */
-    setZoomLevel(level) {
-      this.zoomLevel = round(level, 2)
-    },
+    // setZoomLevel(level) {
+    //   this.zoomLevel = round(level, 2)
+    // },
 
     /**
      * Set the current zoom level keeping the center of the image fixed in the viewport.
      * @param {number} level
      */
-    // setZoomLevel(level) {
-    //   const centerX = this.viewportContentRect.width / 2
-    //   const centerY = this.viewportContentRect.height / 2
+    setZoomLevel(level) {
+      let canvasObject = document.querySelector('.image-canvas')
+      if (!canvasObject) {
+        console.warn('Canvas element not found!')
+        return
+      }
 
-    //   // Middle point in image coordinates (before zoom change)
-    //   const imageCenterX = (centerX - this.panX) / this.zoomLevel
-    //   const imageCenterY = (centerY - this.panY) / this.zoomLevel
+      const widthBefore = canvasObject.width * this.realZoomLevel
+      const heightBefore = canvasObject.height * this.realZoomLevel
+      this.zoomLevel = round(level, 2)
+      const widthAfter = canvasObject.width * this.realZoomLevel
+      const heightAfter = canvasObject.height * this.realZoomLevel
 
-    //   const clampedZoom = round(Math.min(Math.max(level, this.minZoomLevel), this.maxZoomLevel), 2)
+      const diffWidth = widthAfter - widthBefore
+      const diffHeight = heightAfter - heightBefore
 
-    //   // Adjust pan to keep the same image center
-    //   this.panX = centerX - imageCenterX * clampedZoom
-    //   this.panY = centerY - imageCenterY * clampedZoom
-
-    //   this.zoomLevel = clampedZoom
-    // },
+      this.panX -= diffWidth / 2
+      this.panY -= diffHeight / 2
+    },
 
     /**
      * Zoom in by increasing zoom level using zoomSpeed.

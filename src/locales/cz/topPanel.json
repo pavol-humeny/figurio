@@ -37,7 +37,7 @@
     "tip": {
       "zoomIn": "Přibližuje plátno",
       "zoomOut": "Oddaluje plátno",
-      "setZoom": "Dvojklikem obnoví úroveň přiblížení na 100% a centruje obrázek",
+      "setZoom": "Nastav úroveň přiblížení",
       "resetZoom": "Obnoví úroveň přiblížení na 100% a centruje obrázek",
       "classicMode": {
         "title": "Klasický režim přiblížení",
