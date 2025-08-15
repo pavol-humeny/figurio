@@ -1,5 +1,19 @@
 {
   "versions": {
+    "2.2.0": {
+      "label": "2.2.0",
+      "newFeatures": {
+        "items": [
+          "Režimy zoomu: Klasický (obrázok sa prispôsobí zobrazeniu) a Textový (obrázok sa prispôsobí šírke textu)",
+          "Tlačidlo na obnovenie úrovne priblíženia"
+        ]
+      },
+      "bugFixes": {
+        "items": [
+          "Priblíženie do stredu obrázku"
+        ]
+      }
+    },
     "2.1.0":{
       "label": "2.1.0",
       "improvements": {

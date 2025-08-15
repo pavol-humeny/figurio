@@ -1,5 +1,19 @@
 {
   "versions":{
+    "2.2.0":{
+      "label": "2.2.0",
+      "newFeatures": {
+        "items": [
+          "Zoom modes: Classic (fit image to the viewport) and Text (fit image to the text width)",
+          "Reset zoom level button" 
+        ]
+      },
+      "bugFixes": {
+        "items": [
+          "Zoom in to the center of the image"
+        ]
+      }
+    },
     "2.1.0":{
       "label": "2.1.0",
       "improvements": {

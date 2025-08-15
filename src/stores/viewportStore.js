@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia'
 import { viewportConfig } from '@/config/viewportConfig'
 import { useMath } from '@/composables/common/useMath'
+import { globalConfig } from '@/config/globalConfig'
 
 const { round } = useMath()
 
@@ -49,7 +50,7 @@ export const useViewportStore = defineStore('viewportStore', {
     guideLine: null, // { centerX: number, centerY: number, angle: number } - Center point and angle of the guide line
 
     /** Zoom mode */
-    zoomMode: 'classic', // 'classic', 'text'
+    zoomMode: globalConfig.zoomMode, // 'classic', 'text'
     /** Text size */
     textWidth: 15.2, // cm
   }),

@@ -45,7 +45,7 @@
         "shortcut": "Alt + C"
       },
       "textMode": {
-        "title": "Režim priblíženia na text",
+        "title": "Textový režim priblíženia",
         "text": "V tomto režime znamená 100 % priblíženie, že šírka obrázka zodpovedá celej šírke textovej časti strany, pričom strana predstavuje celý aktuálny viewport.",
         "shortcut": "Alt + T"
       },

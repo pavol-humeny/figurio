@@ -11,6 +11,9 @@ export const globalConfig = {
   // Supported languages
   supportedLanguages: ['en', 'sk', 'cz'],
 
+  // Default zoom mode
+  zoomMode: 'text', // 'classic', 'text'
+
   // Default tool to start with
   startTool: '',
 
