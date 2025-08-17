@@ -3,7 +3,7 @@ import messages from '@/locales'
 import { globalConfig } from '@/config/globalConfig'
 
 // Get saved language or fallback to default
-const rawSavedLanguage = localStorage.getItem('language') || globalConfig.defaultLanguage
+const rawSavedLanguage = localStorage.getItem(`${globalConfig.LOCAL_STORAGE_PREFIX}language`) || globalConfig.defaultLanguage
 
 // Validate against supported languages
 const isSupported = globalConfig.supportedLanguages.includes(rawSavedLanguage)

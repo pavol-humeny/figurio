@@ -1,5 +1,6 @@
 import { useI18n } from 'vue-i18n'
 import { useSendEvent } from '@/composables/common/useSendEvent'
+import { globalConfig } from '@/config/globalConfig'
 
 /**
  * Logic for switching and persisting application language
@@ -21,7 +22,7 @@ export function useLanguageSwitch() {
     useSendEvent().sendEvent('languageSwitch', null, null, { newLanguage: newLanguage })
 
     locale.value = newLanguage
-    localStorage.setItem('language', newLanguage)
+    localStorage.setItem(`${globalConfig.LOCAL_STORAGE_PREFIX}language`, newLanguage)
   }
 
   return {

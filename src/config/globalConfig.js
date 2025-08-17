@@ -41,4 +41,7 @@ export const globalConfig = {
 
   // API
   API_BASE: 'https://bp-api-ft1e.onrender.com',
+
+  // LocalStorage prefix
+  LOCAL_STORAGE_PREFIX: 'edit_4_doc_',
 }

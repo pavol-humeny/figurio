@@ -86,6 +86,7 @@ const showTip = computed(() => props.text !== '')
   white-space: normal;
   box-shadow: var(--box-shadow-ui);
   max-width: 300px;
+  min-width: 200px;
 }
 
 .item-tip-bubble {

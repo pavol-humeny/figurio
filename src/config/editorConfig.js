@@ -31,7 +31,7 @@ export const editorConfig = {
   stepHeaderFooterMultiplier: 0.1, // Step for header/footer height multiplier
 
   // Presets
-  localStoragePresetsKey: 'imageEditorPresets',
+  localStoragePresetsKey: `${globalConfig.LOCAL_STORAGE_PREFIX}imageEditorPresets`,
 
   // Svg object wrapper
   resizerMultiplier: 0.9, // 1 - default size

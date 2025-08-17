@@ -1,6 +1,7 @@
 import { ref, onMounted, onBeforeUnmount } from 'vue'
 import { useConfirmModal } from './useConfirmModal'
 import { useSendEvent } from '@/composables/common/useSendEvent'
+import { globalConfig } from '@/config/globalConfig'
 
 /**
  * Whether the privacy and data modal is currently visible
@@ -49,7 +50,14 @@ export function usePrivacyAndDataModal(t) {
   const clearLocalStorage = async () => {
     useSendEvent().sendEvent('buttonClicked', null, 'clearLocalStorage', {})
 
-    localStorage.clear()
+    const prefix = `${globalConfig.LOCAL_STORAGE_PREFIX}`
+
+    for (let i = localStorage.length - 1; i >= 0; i--) {
+      const key = localStorage.key(i)
+      if (key.startsWith(prefix)) {
+        localStorage.removeItem(key)
+      }
+    }
 
     const confirmed = await showConfirmModal(
       t('privacy.confirmResetLocalPreferences.title'),
