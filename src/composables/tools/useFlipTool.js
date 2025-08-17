@@ -29,7 +29,7 @@ export function useFlipTool(imageStore, historyStore, t) {
       })
     }
 
-    useSendEvent().sendEvent('buttonClicked', null, 'flip', {
+    useSendEvent().sendEvent('toolSettings', 'flip', null, {
       settings: { direction },
     })
 

@@ -3,7 +3,7 @@ import { useUiStore } from '@/stores/uiStore'
 
 export function useSendEvent() {
   /**
-   * Sends an event to the API.
+   * Sends an event to the API, unless running on localhost.
    *
    * @param {string} eventType - Type of the event (e.g., "add_object").
    * @param {string|null} tool - Tool used (optional).
@@ -12,6 +12,10 @@ export function useSendEvent() {
    * @returns {Promise<object|null>} API response or null on error.
    */
   const sendEvent = async (eventType, tool = null, buttonName = null, eventData = null) => {
+    if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+      console.log('Skipping event send on localhost:', eventType)
+      return null
+    }
     const uiStore = useUiStore()
 
     try {
