@@ -1,5 +1,5 @@
 import { useMath } from '@/composables/common/useMath'
-import { ref, watch, onMounted, onBeforeUnmount } from 'vue'
+import { ref, watch, onMounted, onBeforeUnmount, computed } from 'vue'
 
 /**
  * Logic for a number input with dropdown selection
@@ -21,7 +21,7 @@ import { ref, watch, onMounted, onBeforeUnmount } from 'vue'
  * }}
  */
 export function useNumberDropdownInput(props, emit) {
-  const { clamp } = useMath()
+  const { clamp, round } = useMath()
 
   /**
    * Reference to the wrapper element for click outside detection
@@ -42,6 +42,14 @@ export function useNumberDropdownInput(props, emit) {
    * Reference to the input element
    */
   const inputRef = ref(null)
+
+  /**
+   * Number of decimal places for rounding
+   */
+  const decimals = computed(() => {
+    if (props.step >= 1) return 0
+    return props.step.toString().split('.')[1]?.length || 0
+  })
 
   /**
    * Watch for external changes to modelValue and update internal state
@@ -80,11 +88,12 @@ export function useNumberDropdownInput(props, emit) {
     const value = inputValue.value
 
     if (isValidNumberString(value)) {
-      const num = Number(value)
-      const clamped = clamp(num, props.min, props.max)
-      inputValue.value = clamped.toString()
-      emit('update:modelValue', clamped)
-      emit('update', clamped)
+      let num = Number(value)
+      num = clamp(num, props.min, props.max)
+      num = round(num, decimals.value)
+      inputValue.value = num.toString()
+      emit('update:modelValue', num)
+      emit('update', num)
       showDropdown.value = false
     } else {
       // fallback: reset to last valid value
