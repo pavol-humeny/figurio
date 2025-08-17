@@ -92,7 +92,7 @@
 </script>
 
   <template>
-    <ItemTip :text="props.tip" :position="props.position">
+    <ItemTip :text="!showDropdown ? props.tip : ''" :position="props.position">
       <div class="number-dropdown-wrapper" ref="wrapperRef">
         <BaseIcon v-if="props.icon" :name="props.icon" :size="props.size" :color="props.color" class="input-icon" />
 
@@ -166,7 +166,7 @@
   overflow-y: auto;
   max-height: 140px;
   box-shadow: var(--box-shadow-ui);
-  z-index: 10;
+  z-index: 1;
 }
 
 .dropdown-options li {

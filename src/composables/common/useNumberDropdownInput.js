@@ -140,10 +140,10 @@ export function useNumberDropdownInput(props, emit) {
     }
   }
 
+  // Hide the dropdown when clicking outside the component
   onMounted(() => {
     document.addEventListener('mousedown', onClickOutside)
   })
-
   onBeforeUnmount(() => {
     document.removeEventListener('mousedown', onClickOutside)
   })

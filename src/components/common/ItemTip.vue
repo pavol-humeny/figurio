@@ -38,7 +38,13 @@ const props = defineProps({
 /**
  * Logic of the item tooltip
  */
-const { isVisible, wrapper, itemTipStyle, handleMouseEnter, handleMouseLeave } = useItemTip({
+const {
+  isVisible,
+  wrapperRef,
+  itemTipStyle,
+  handleMouseEnter,
+  handleMouseLeave,
+} = useItemTip({
   position: props.position,
   text: props.text,
 })
@@ -50,7 +56,7 @@ const showTip = computed(() => props.text !== '')
 </script>
 
 <template>
-  <div class="item-tip" ref="wrapper" @mouseenter="handleMouseEnter" @mouseleave="handleMouseLeave">
+  <div class="item-tip" ref="wrapperRef" @mouseenter="handleMouseEnter" @mouseleave="handleMouseLeave">
     <slot></slot>
 
     <teleport to="body">
@@ -86,7 +92,7 @@ const showTip = computed(() => props.text !== '')
   white-space: normal;
   box-shadow: var(--box-shadow-ui);
   max-width: 300px;
-  min-width: 200px;
+  /* min-width: 200px; */
 }
 
 .item-tip-bubble {

@@ -1,4 +1,6 @@
 :root {
+  --font-family: Helvetica;
+
   --primary-c-dark: #BFA473;
   --secondary-c-dark: #3C3C3C;
   --background-c-dark: #282828;
@@ -103,7 +105,7 @@
 
 body {
   color: var(--text-c);
-  font-family: Helvetica;
+  font-family: var(--font-family, sans-serif);
   --border-ui: 1px solid var(--border-c);
   --border-modal: 2px solid var(--primary-c);
   --border-input: 1px solid var(--primary-c);

@@ -68,11 +68,16 @@ const emit = defineEmits(['update:modelValue', 'update'])
  */
 const {
   selectedValue,
-  onChange,
   onIconDoubleClick,
   setValue,
   showIcon,
+  showDropdown,
+  onSelect,
+  toggleDropdown,
+  wrapperRef,
+  longestLabelWidth,
 } = useDropdownSelect(props, emit)
+
 
 /**
  * Expose methods for external use
@@ -82,19 +87,22 @@ defineExpose({ setValue })
 </script>
 
 <template>
-  <ItemTip :text="props.tip" :position="props.position">
-    <div class="select-wrapper">
-      <select class="select-input" v-model="selectedValue" :disabled="props.disabled"
-        :style="{ paddingLeft: showIcon ? '30px' : '10px', paddingRight: '25px' }" @change="onChange">
-        <option v-for="option in props.options" :key="option.value" :value="option.value">
-          {{ option.label }}
-        </option>
-      </select>
-
+  <ItemTip :text="!showDropdown ? props.tip : ''" :position="props.position">
+    <div class="select-wrapper" ref="wrapperRef" :style="{ minWidth: longestLabelWidth + 'px' }">
       <BaseIcon v-if="showIcon" :name="props.icon" class="input-icon-left" :size="props.size" :color="props.color"
         @dblclick="onIconDoubleClick" />
 
-      <BaseIcon name="IconDropDown" class="input-icon-right" size="12" color="var(--primary-c)" />
+      <div class="select-display" :style="{ paddingLeft: showIcon ? '30px' : '10px' }" @click="toggleDropdown">
+        {{props.options.find(o => o.value === selectedValue)?.label || ''}}
+        <BaseIcon name="IconDropDown" class="dropdown-icon" size="12" color="var(--primary-c)"
+          :style="{ transform: showDropdown ? 'rotate(180deg) translateY(-2px)' : 'rotate(0deg)' }" />
+      </div>
+
+      <ul v-if="showDropdown" class="dropdown-options">
+        <li v-for="option in props.options" :key="option.value" @mousedown.prevent="onSelect(option.value)">
+          {{ option.label }}
+        </li>
+      </ul>
     </div>
   </ItemTip>
 </template>
@@ -102,22 +110,21 @@ defineExpose({ setValue })
 <style scoped>
 .select-wrapper {
   position: relative;
-  /* width: 100%; */
+  width: 100%;
+  cursor: pointer;
 }
 
-.select-input {
-  width: 100%;
+.select-display {
   padding: 7px 10px;
   border-radius: 10px;
-  border: none;
   background: var(--secondary-c);
   color: var(--text-c);
-  appearance: none;
-}
-
-.select-input:disabled {
-  opacity: 0.5;
-  pointer-events: none;
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  font-size: var(--text-font-size);
 }
 
 .input-icon-left {
@@ -132,8 +139,33 @@ defineExpose({ setValue })
 .input-icon-right {
   position: absolute;
   right: 8px;
-  transform: translateY(0%);
-  top: 10%;
+  top: 50%;
+  transform: translateY(-50%);
   pointer-events: none;
+}
+
+.dropdown-options {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  margin: 4px 0 0 0;
+  padding: 0;
+  list-style: none;
+  background: var(--secondary-c);
+  border-radius: 10px;
+  max-height: 140px;
+  overflow-y: auto;
+  box-shadow: var(--box-shadow-ui);
+  z-index: 1;
+  font-size: var(--text-font-size);
+}
+
+.dropdown-options li {
+  padding: 6px 10px;
+}
+
+.dropdown-options li:hover {
+  color: var(--primary-c);
 }
 </style>

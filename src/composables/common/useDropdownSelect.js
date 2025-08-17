@@ -1,4 +1,4 @@
-import { ref, watch } from 'vue'
+import { ref, watch, onMounted, onBeforeUnmount, computed } from 'vue'
 
 /**
  * Logic for the <DropdownSelect> component
@@ -15,9 +15,24 @@ import { ref, watch } from 'vue'
  */
 export function useDropdownSelect(props, emit) {
   /**
+   * Reference to the wrapper element for click outside detection
+   */
+  const wrapperRef = ref(null)
+
+  /**
    * Currently selected value of the dropdown
    */
   const selectedValue = ref(props.modelValue)
+
+  /**
+   * Dropdown visibility state
+   */
+  const showDropdown = ref(false)
+
+  /**
+   * Whether the reset icon should be shown
+   */
+  const showIcon = props.icon !== ''
 
   /**
    * Watch for external changes and synchronize internal value
@@ -29,13 +44,31 @@ export function useDropdownSelect(props, emit) {
     },
   )
 
-  /**
-   * Emits updated value when user selects an option
-   */
-  const onChange = () => {
-    emit('update:modelValue', selectedValue.value)
-    emit('update', selectedValue.value)
-  }
+  const longestLabelWidth = computed(() => {
+    if (!props.options?.length) return 0
+
+    const canvas = document.createElement('canvas')
+    const ctx = canvas.getContext('2d')
+
+    let fontSize = '15px'
+    let fontFamily = 'sans-serif'
+    if (wrapperRef.value) {
+      const style = getComputedStyle(wrapperRef.value)
+      fontSize = style.fontSize
+      fontFamily = style.fontFamily
+    }
+
+    ctx.font = `${fontSize} ${fontFamily}`
+
+    let max = 0
+    for (const opt of props.options) {
+      const width = ctx.measureText(opt.label).width
+      if (width > max) max = width
+    }
+
+    // + padding (for icon)
+    return max + 50
+  })
 
   /**
    * Emits reset action when icon is double-clicked
@@ -44,6 +77,17 @@ export function useDropdownSelect(props, emit) {
     if (typeof props.onReset === 'function') {
       props.onReset()
     }
+  }
+
+  /**
+   * Handles selection from the dropdown
+   * @param {Number} value - Selected value
+   */
+  const onSelect = (value) => {
+    selectedValue.value = value
+    emit('update:modelValue', value)
+    emit('update', value)
+    showDropdown.value = false
   }
 
   /**
@@ -56,15 +100,40 @@ export function useDropdownSelect(props, emit) {
   }
 
   /**
-   * Whether the reset icon should be shown
+   * Toggles the dropdown visibility
    */
-  const showIcon = props.icon !== ''
+  const toggleDropdown = () => {
+    if (props.disabled) return
+    showDropdown.value = !showDropdown.value
+  }
+
+  /**
+   * Hide the dropdown when clicking outside the component
+   * @param {MouseEvent} event - Click event
+   */
+  const onClickOutside = (event) => {
+    if (wrapperRef.value && !wrapperRef.value.contains(event.target)) {
+      showDropdown.value = false
+    }
+  }
+
+  // Hide the dropdown when clicking outside the component
+  onMounted(() => {
+    document.addEventListener('mousedown', onClickOutside)
+  })
+  onBeforeUnmount(() => {
+    document.removeEventListener('mousedown', onClickOutside)
+  })
 
   return {
     selectedValue,
-    onChange,
     onIconDoubleClick,
     setValue,
     showIcon,
+    showDropdown,
+    onSelect,
+    toggleDropdown,
+    wrapperRef,
+    longestLabelWidth,
   }
 }

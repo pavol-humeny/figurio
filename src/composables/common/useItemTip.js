@@ -11,7 +11,7 @@ import { editorConfig } from '@/config/editorConfig'
  * }} [options={}] - Optional configuration for position, delay and offset
  * @returns {{
  *   isVisible: import('vue').Ref<boolean>,
- *   wrapper: import('vue').Ref<HTMLElement | null>,
+ *   wrapperRef: import('vue').Ref<HTMLElement | null>,
  *   itemTipStyle: import('vue').ComputedRef<Record<string, string>>,
  *   handleMouseEnter: () => void,
  *   handleMouseLeave: () => void,
@@ -32,7 +32,7 @@ export function useItemTip(options = {}) {
   /**
    * Reference to the DOM element the tooltip is attached to
    */
-  const wrapper = ref(null)
+  const wrapperRef = ref(null)
 
   /**
    * Timeout used to delay the tooltip appearance
@@ -62,12 +62,12 @@ export function useItemTip(options = {}) {
   })
 
   /**
-   * Updates tooltip coordinates based on wrapper element and position
+   * Updates tooltip coordinates based on wrapperRef element and position
    */
   const updatePosition = () => {
-    if (!wrapper.value) return
+    if (!wrapperRef.value) return
 
-    const rect = wrapper.value.getBoundingClientRect()
+    const rect = wrapperRef.value.getBoundingClientRect()
 
     switch (position) {
       case 'top':
@@ -139,15 +139,30 @@ export function useItemTip(options = {}) {
     isVisible.value = false
   }
 
+  /**
+   * Hide the tip when clicking
+   */
+  const onClick = () => {
+    isVisible.value = false
+  }
+
   // Update position after mount
   onMounted(() => nextTick(updatePosition))
 
   // Clear tooltip timeout before component unmounts
   onBeforeUnmount(() => clearTimeout(hoverTimeout.value))
 
+  // Hide the tip when clicking
+  onMounted(() => {
+    document.addEventListener('mousedown', onClick)
+  })
+  onBeforeUnmount(() => {
+    document.removeEventListener('mousedown', onClick)
+  })
+
   return {
     isVisible,
-    wrapper,
+    wrapperRef,
     itemTipStyle,
     handleMouseEnter,
     handleMouseLeave,
