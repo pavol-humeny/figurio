@@ -5,34 +5,6 @@ export const toolsDefinitions = [
     settingsComponent: () => import('@/components/toolsSettings/MoveToolSettings.vue'),
   },
   {
-    key: 'select',
-    iconName: 'IconSelectTool',
-    settingsComponent: () => import('@/components/toolsSettings/SelectToolSettings.vue'),
-  },
-  {
-    key: 'transform',
-    iconName: 'IconTransformTool',
-    settingsComponent: () => import('@/components/toolsSettings/TransformToolSettings.vue'),
-    subTools: [
-      {
-        key: 'rotate',
-        iconName: 'IconRotateTool',
-      },
-      {
-        key: 'flip',
-        iconName: 'IconFlipVertical',
-      },
-      {
-        key: 'crop',
-        iconName: 'IconCropTool',
-      },
-      {
-        key: 'resize',
-        iconName: 'IconResizeTool',
-      },
-    ],
-  },
-  {
     key: 'smartCrop',
     iconName: 'IconSmartCropTool',
     settingsComponent: () => import('@/components/toolsSettings/SmartCropToolSettings.vue'),
@@ -48,9 +20,19 @@ export const toolsDefinitions = [
     ],
   },
   {
+    key: 'frame',
+    iconName: 'IconFrameTool',
+    settingsComponent: () => import('@/components/toolsSettings/FrameToolSettings.vue'),
+  },
+  {
     key: 'grayscale',
     iconName: 'IconGrayscaleTool',
     settingsComponent: () => import('@/components/toolsSettings/GrayscaleToolSettings.vue'),
+  },
+  {
+    key: 'select',
+    iconName: 'IconSelectTool',
+    settingsComponent: () => import('@/components/toolsSettings/SelectToolSettings.vue'),
   },
   {
     key: 'blur',
@@ -87,9 +69,27 @@ export const toolsDefinitions = [
     settingsComponent: () => import('@/components/toolsSettings/MagnifyAreaToolSettings.vue'),
   },
   {
-    key: 'frame',
-    iconName: 'IconFrameTool',
-    settingsComponent: () => import('@/components/toolsSettings/FrameToolSettings.vue'),
+    key: 'transform',
+    iconName: 'IconTransformTool',
+    settingsComponent: () => import('@/components/toolsSettings/TransformToolSettings.vue'),
+    subTools: [
+      {
+        key: 'rotate',
+        iconName: 'IconRotateTool',
+      },
+      {
+        key: 'flip',
+        iconName: 'IconFlipVertical',
+      },
+      {
+        key: 'crop',
+        iconName: 'IconCropTool',
+      },
+      {
+        key: 'resize',
+        iconName: 'IconResizeTool',
+      },
+    ],
   },
   {
     key: 'preset',
