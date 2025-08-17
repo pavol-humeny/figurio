@@ -855,5 +855,10 @@
     "message": "Operácia, vyžaduje rasterizáciu obrázka, lebo obsahuje vektorové objekty. Rasterizácia prevedie vektorové objekty na pixely, čo môže zmeniť kvalitu obrázka.",
     "cancel": "Zrušiť",
     "confirm": "Rasterizovať"
+  },
+    "toolIsNotAvailable": {
+    "tip": "Tento nástroj nie je k dispozícii",
+    "title": "Nástroj nie je k dispozícii",
+    "message": ""
   }
 }

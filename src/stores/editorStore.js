@@ -1,4 +1,5 @@
 import { editorConfig } from '@/config/editorConfig'
+import { globalConfig } from '@/config/globalConfig'
 import { defineStore } from 'pinia'
 
 /**
@@ -26,6 +27,23 @@ export const useEditorStore = defineStore('editorStore', {
 
     /** Whether any SVG object is currently being drawn */
     isSvgObjectDrawing: false,
+
+    /** Whether tools are enabled */
+    // UPDATE new tool
+    enableTools: {
+      move: globalConfig.featureFlags.enableTools.move,
+      select: globalConfig.featureFlags.enableTools.select,
+      transform: globalConfig.featureFlags.enableTools.transform,
+      smartCrop: globalConfig.featureFlags.enableTools.smartCrop,
+      grayscale: globalConfig.featureFlags.enableTools.grayscale,
+      blur: globalConfig.featureFlags.enableTools.blur,
+      shape: globalConfig.featureFlags.enableTools.shape,
+      text: globalConfig.featureFlags.enableTools.text,
+      magnifyArea: globalConfig.featureFlags.enableTools.magnifyArea,
+      frame: globalConfig.featureFlags.enableTools.frame,
+      preset: globalConfig.featureFlags.enableTools.preset,
+      export: globalConfig.featureFlags.enableTools.export,
+    },
   }),
   actions: {
     /**

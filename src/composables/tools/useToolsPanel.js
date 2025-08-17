@@ -4,8 +4,8 @@ import { useImageStore } from '@/stores/imageStore'
 import { useEditorStore } from '@/stores/editorStore'
 import { useHistoryStore } from '@/stores/historyStore'
 import { useCollapsiblePanel } from '../common/useCollapsiblePanel'
-import { globalConfig } from '@/config/globalConfig'
 import { useSendEvent } from '../common/useSendEvent'
+import { useToastModal } from '../modals/useToastModal'
 
 /**
  * Logic for managing the left tools panel
@@ -28,6 +28,7 @@ import { useSendEvent } from '../common/useSendEvent'
  * }}
  */
 export function useToolsPanel(editorStore, imageStore, uiStore, t) {
+  const { showToastModal } = useToastModal()
   /**
    * Method to open the export tool settings modal
    */
@@ -126,8 +127,14 @@ export function useToolsPanel(editorStore, imageStore, uiStore, t) {
    */
   const toggleTool = (toolKey, tabKey) => {
     if (!imageStore.isImageLoaded) return
-    if (globalConfig.featureFlags.enableTools[toolKey] === false) {
+    if (editorStore.enableTools[toolKey] === false) {
       console.log('Tool is disabled:', toolKey)
+
+      showToastModal(
+        'info',
+        t('tools.toolIsNotAvailable.title'),
+        t('tools.toolIsNotAvailable.message'),
+      )
       return
     }
 

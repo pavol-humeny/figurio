@@ -24,7 +24,7 @@ export const globalConfig = {
       move: true,
       select: true,
       transform: true,
-      smartCrop: true,
+      smartCrop: false,
       grayscale: true,
       blur: true,
       shape: true,
