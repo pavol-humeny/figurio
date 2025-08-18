@@ -129,7 +129,9 @@ export function useFrameTool(imageStore, historyStore, editorStore, t) {
   watch(drawOutline, (newValue) => {
     if (newValue) {
       nextTick(() => {
-        setFrameWidth(imageStore.frame.width) // Reset width when outline visibility changes
+        frameWidth.value = calculateInitialFrameWidth()
+
+        applyFrame()
       })
     }
   })
@@ -213,10 +215,9 @@ export function useFrameTool(imageStore, historyStore, editorStore, t) {
   const handleFrameChange = (value) => {
     imageStore.frame.type = value
     nextTick(() => {
-      setFrameWidth(imageStore.frame.width) // Reset width when outline visibility changes
+      frameWidth.value = calculateInitialFrameWidth()
+      applyFrame()
     })
-
-    applyFrame()
   }
 
   /**
@@ -290,29 +291,36 @@ export function useFrameTool(imageStore, historyStore, editorStore, t) {
     applyFrame()
   }
 
+  const calculateInitialFrameWidth = () => {
+    let width
+    if (
+      // UPDATE new frame type
+      selectedFrameVariant.value === 'frameMacBrowser' ||
+      selectedFrameVariant.value === 'frameWindowsBrowser' ||
+      selectedFrameVariant.value === 'frameWindowsTaskBar' ||
+      selectedFrameVariant.value === 'frameVSCode'
+    ) {
+      width = Math.floor(
+        editorConfig.browserFrameDefaultSize *
+          Math.max(imageStore.fileDimensions.width, imageStore.fileDimensions.height),
+      )
+      frameWidthRef.value.setValue(width)
+    } else if (selectedFrameVariant.value === 'frameSolid') {
+      width = 1
+    } else {
+      width = 0
+    }
+    return width
+  }
+
   /**
    * Set frame width
    * @param {number} width - New frame width
    */
   const setFrameWidth = (width) => {
     if (width < 0) {
-      if (
-        // UPDATE new frame type
-        selectedFrameVariant.value === 'frameMacBrowser' ||
-        selectedFrameVariant.value === 'frameWindowsBrowser' ||
-        selectedFrameVariant.value === 'frameWindowsTaskBar' ||
-        selectedFrameVariant.value === 'frameVSCode'
-      ) {
-        width = Math.floor(
-          editorConfig.browserFrameDefaultSize *
-            Math.max(imageStore.fileDimensions.width, imageStore.fileDimensions.height),
-        )
-        frameWidthRef.value.setValue(width)
-      } else {
-        width = 0
-      }
+      frameWidth.value = calculateInitialFrameWidth()
     }
-    frameWidth.value = width
     applyFrame()
   }
 
@@ -451,8 +459,7 @@ export function useFrameTool(imageStore, historyStore, editorStore, t) {
     const header = imageStore.frame.headerSize
     const footer = imageStore.frame.footerSize
     const svgWidth = w + fw * 2
-    const svgHeight =
-      h + fh * 2 + (hasHeader ? header - fh : 0) + (footer > 0 ? footer - fh : 0)
+    const svgHeight = h + fh * 2 + (hasHeader ? header - fh : 0) + (footer > 0 ? footer - fh : 0)
     const phoneCornerRadius = Math.floor(Math.min(svgWidth, svgHeight) * 0.06)
 
     // Values for phone frames
