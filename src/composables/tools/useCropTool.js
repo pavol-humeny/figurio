@@ -112,13 +112,13 @@ export function useCropTool(imageStore, viewportStore, editorStore, historyStore
   const cropPositionX = computed({
     get: () => cropBox.value.x,
     set: (value) => {
-      cropBox.value.x = Math.round(clamp(value, 0, maxCropPositionX.value))
+      cropBox.value.x = round(clamp(value, 0, maxCropPositionX.value))
     },
   })
   const cropPositionY = computed({
     get: () => cropBox.value.y,
     set: (value) => {
-      cropBox.value.y = Math.round(clamp(value, 0, maxCropPositionY.value))
+      cropBox.value.y = round(clamp(value, 0, maxCropPositionY.value))
     },
   })
 
@@ -155,13 +155,13 @@ export function useCropTool(imageStore, viewportStore, editorStore, historyStore
   const cropWidth = computed({
     get: () => cropBox.value.width,
     set: (value) => {
-      cropBox.value.width = Math.round(clamp(value, 0, maxCropWidth.value))
+      cropBox.value.width = round(clamp(value, 0, maxCropWidth.value))
     },
   })
   const cropHeight = computed({
     get: () => cropBox.value.height,
     set: (value) => {
-      cropBox.value.height = Math.round(clamp(value, 0, maxCropHeight.value))
+      cropBox.value.height = round(clamp(value, 0, maxCropHeight.value))
     },
   })
 
@@ -197,26 +197,26 @@ export function useCropTool(imageStore, viewportStore, editorStore, historyStore
     const originalHeight = cropBox.value.height
 
     if (key === 'width') {
-      const clampedWidth = Math.round(clamp(value, 0, maxCropWidth.value))
+      const clampedWidth = round(clamp(value, 0, maxCropWidth.value))
 
       // Dimensions are linked
       if (isDimensionsLinked.value && originalWidth > 0) {
         const aspectRatio = originalHeight / originalWidth
         cropBox.value.width = clampedWidth
-        cropBox.value.height = Math.round(clamp(clampedWidth * aspectRatio, 0, maxCropHeight.value))
+        cropBox.value.height = round(clamp(clampedWidth * aspectRatio, 0, maxCropHeight.value))
       }
       // Free crop
       else {
         cropBox.value.width = clampedWidth
       }
     } else if (key === 'height') {
-      const clampedHeight = Math.round(clamp(value, 0, maxCropHeight.value))
+      const clampedHeight = round(clamp(value, 0, maxCropHeight.value))
 
       // Dimensions are linked
       if (isDimensionsLinked.value && originalHeight > 0) {
         const aspectRatio = originalWidth / originalHeight
         cropBox.value.height = clampedHeight
-        cropBox.value.width = Math.round(clamp(clampedHeight * aspectRatio, 0, maxCropWidth.value))
+        cropBox.value.width = round(clamp(clampedHeight * aspectRatio, 0, maxCropWidth.value))
       }
       // Free crop
       else {
@@ -238,9 +238,9 @@ export function useCropTool(imageStore, viewportStore, editorStore, historyStore
    */
   const updatePosition = (key, value) => {
     if (key === 'x') {
-      cropBox.value.x = Math.round(clamp(value, 0, maxCropPositionX.value))
+      cropBox.value.x = round(clamp(value, 0, maxCropPositionX.value))
     } else if (key === 'y') {
-      cropBox.value.y = Math.round(clamp(value, 0, maxCropPositionY.value))
+      cropBox.value.y = round(clamp(value, 0, maxCropPositionY.value))
     }
     nextTick(() => {
       positionXInputRef.value.setValue(cropPositionX.value)
@@ -262,14 +262,14 @@ export function useCropTool(imageStore, viewportStore, editorStore, historyStore
       const onMouseMove = (e) => {
         const dx = e.clientX - cropBox.value.startX
         const dy = e.clientY - cropBox.value.startY
-        cropBox.value.x = Math.round(
+        cropBox.value.x = round(
           clamp(
             cropBox.value.x + dx / viewportStore.realZoomLevel,
             0,
             imageStore.fileDimensions.width - cropBox.value.width,
           ),
         )
-        cropBox.value.y = Math.round(
+        cropBox.value.y = round(
           clamp(
             cropBox.value.y + dy / viewportStore.realZoomLevel,
             0,
@@ -362,8 +362,8 @@ export function useCropTool(imageStore, viewportStore, editorStore, historyStore
           newY = 0
         }
 
-        cropBox.value.y = Math.round(clamp(newY, 0, maxY))
-        cropBox.value.height = Math.round(
+        cropBox.value.y = round(clamp(newY, 0, maxY))
+        cropBox.value.height = round(
           clamp(newHeight, 0, imageStore.fileDimensions.height - cropBox.value.y),
         )
       }

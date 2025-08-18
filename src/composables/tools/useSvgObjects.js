@@ -437,26 +437,26 @@ export function useSvgObjects(imageStore, historyStore, viewportStore, editorSto
 
     if (tag === 'rect') {
       return {
-        width: Math.round(Number(attrs.width) || 0),
-        height: Math.round(Number(attrs.height) || 0),
+        width: round(Number(attrs.width) || 0),
+        height: round(Number(attrs.height) || 0),
         angle,
       }
     } else if (tag === 'ellipse') {
       return {
-        width: Math.round((Number(attrs.rx) || 0) * 2),
-        height: Math.round((Number(attrs.ry) || 0) * 2),
+        width: round((Number(attrs.rx) || 0) * 2),
+        height: round((Number(attrs.ry) || 0) * 2),
         angle,
       }
     } else if (tag === 'line') {
       return {
-        width: Math.round((Number(attrs.x2) || 0) - (Number(attrs.x1) || 0)),
-        height: Math.round((Number(attrs.y2) || 0) - (Number(attrs.y1) || 0)),
+        width: round((Number(attrs.x2) || 0) - (Number(attrs.x1) || 0)),
+        height: round((Number(attrs.y2) || 0) - (Number(attrs.y1) || 0)),
         angle,
       }
     } else if (tag === 'text' && textBBox) {
       return {
-        width: Math.round(textBBox.width),
-        height: Math.round(textBBox.height),
+        width: round(textBBox.width),
+        height: round(textBBox.height),
         angle,
       }
     }

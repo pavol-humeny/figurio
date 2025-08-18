@@ -2,6 +2,7 @@ import { ref, nextTick, watch } from 'vue'
 import { useToastModal } from '../modals/useToastModal'
 import { editorConfig } from '@/config/editorConfig'
 import { useSendEvent } from '@/composables/common/useSendEvent'
+import { useMath } from '../common/useMath'
 
 /**
  * Logic for the resize tool
@@ -13,6 +14,8 @@ import { useSendEvent } from '@/composables/common/useSendEvent'
  */
 export function useResizeTool(imageStore, historyStore, t) {
   const { showToastModal } = useToastModal()
+
+  const { round } = useMath()
 
   /**
    * Flag to prevent infinite loops during updates from the store
@@ -91,7 +94,7 @@ export function useResizeTool(imageStore, historyStore, t) {
 
       fileDimensionWidth.value = value
       if (isFileDimensionsLinked.value) {
-        const newHeight = Math.round(value / originalAspectRatio)
+        const newHeight = round(value / originalAspectRatio)
         if (newHeight < 1) {
           fileDimensionHeight.value = 1
         } else if (newHeight > maxFileDimensionHeight.value) {
@@ -109,7 +112,7 @@ export function useResizeTool(imageStore, historyStore, t) {
 
       fileDimensionHeight.value = value
       if (isFileDimensionsLinked.value) {
-        const newWidth = Math.round(value * originalAspectRatio)
+        const newWidth = round(value * originalAspectRatio)
         if (newWidth < 1) {
           fileDimensionWidth.value = 1
         } else if (newWidth > maxFileDimensionWidth.value) {

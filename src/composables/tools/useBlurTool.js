@@ -73,9 +73,9 @@ export function useBlurTool(imageStore, historyStore, editorStore, t) {
       const blendTarget = (r + g + b) / 3 > 128 ? 0 : 255
 
       const shade = {
-        r: Math.round(r + (blendTarget - r) * mix),
-        g: Math.round(g + (blendTarget - g) * mix),
-        b: Math.round(b + (blendTarget - b) * mix),
+        r: round(r + (blendTarget - r) * mix),
+        g: round(g + (blendTarget - g) * mix),
+        b: round(b + (blendTarget - b) * mix),
       }
 
       shades.push(rgbToHex(shade))
@@ -312,7 +312,7 @@ export function useBlurTool(imageStore, historyStore, editorStore, t) {
                 // Extract patternSize
                 const widthMatch = defString.match(/<pattern[^>]*width="(\d+)"/)
                 const patternWidth = parseInt(widthMatch?.[1] || '40', 10)
-                localBlurSettings.value.patternSize = Math.round(patternWidth / 4)
+                localBlurSettings.value.patternSize = round(patternWidth / 4)
 
                 // Extract fill color (first rect fill)
                 const defaultColorMatch = defString.match(/data-default-color="([^"]+)"/)
@@ -426,26 +426,26 @@ export function useBlurTool(imageStore, historyStore, editorStore, t) {
     const originalHeight = localBlurSettings.value.height
 
     if (key === 'width') {
-      const clampedWidth = Math.round(clamp(value, 0, maxBlurWidth.value))
+      const clampedWidth = round(clamp(value, 0, maxBlurWidth.value))
 
       // Dimensions are linked
       if (isDimensionsLinked.value && originalWidth > 0) {
         const aspectRatio = originalHeight / originalWidth
         localBlurSettings.value.width = clampedWidth
-        localBlurSettings.value.height = Math.round(
+        localBlurSettings.value.height = round(
           clamp(clampedWidth * aspectRatio, 0, maxBlurHeight.value),
         )
       } else {
         localBlurSettings.value.width = clampedWidth
       }
     } else if (key === 'height') {
-      const clampedHeight = Math.round(clamp(value, 0, maxBlurHeight.value))
+      const clampedHeight = round(clamp(value, 0, maxBlurHeight.value))
 
       // Dimensions are linked
       if (isDimensionsLinked.value && originalHeight > 0) {
         const aspectRatio = originalWidth / originalHeight
         localBlurSettings.value.height = clampedHeight
-        localBlurSettings.value.width = Math.round(
+        localBlurSettings.value.width = round(
           clamp(clampedHeight * aspectRatio, 0, maxBlurWidth.value),
         )
       } else {

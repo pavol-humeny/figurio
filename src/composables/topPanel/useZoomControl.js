@@ -19,12 +19,12 @@ import { useSendEvent } from '@/composables/common/useSendEvent'
  * }}
  */
 export function useZoomControl(viewportStore) {
-  const { clamp } = useMath()
+  const { clamp, round } = useMath()
 
   /**
    * Zoom level in percent (0–100+), used for display and manual adjustment
    */
-  const zoomLevelInput = ref(Math.round(viewportStore.zoomLevel * 100))
+  const zoomLevelInput = ref(round(viewportStore.zoomLevel * 100))
 
   /**
    * Backing value for the zoom level input
@@ -37,7 +37,7 @@ export function useZoomControl(viewportStore) {
   watch(
     () => viewportStore.zoomLevel,
     (newZoom) => {
-      const value = Math.round(newZoom * 100)
+      const value = round(newZoom * 100)
       zoomLevelInput.value = value
       lastSyncedZoomInput.value = value
     },
@@ -136,7 +136,7 @@ export function useZoomControl(viewportStore) {
       return
     }
     const newZoom = Number(inputValue)
-    if (!Number.isNaN(newZoom)) zoomLevelInput.value = Math.round(newZoom)
+    if (!Number.isNaN(newZoom)) zoomLevelInput.value = round(newZoom)
   }
 
   /**

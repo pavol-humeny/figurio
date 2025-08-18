@@ -12,7 +12,7 @@ import { useMath } from '@/composables/common/useMath'
  * @returns {Object}
  */
 export function usePresetOperationDetails(imageStore, editorStore, t, props, emit) {
-  const { clamp } = useMath()
+  const { clamp, round } = useMath()
 
   /**
    * Local reactive copy of the current operation
@@ -105,9 +105,9 @@ export function usePresetOperationDetails(imageStore, editorStore, t, props, emi
    */
   const updatePosition = (key, value) => {
     if (key === 'x') {
-      localOperation.value.cropBox.x = Math.round(clamp(value, 0, maxCropPositionX.value))
+      localOperation.value.cropBox.x = round(clamp(value, 0, maxCropPositionX.value))
     } else if (key === 'y') {
-      localOperation.value.cropBox.y = Math.round(clamp(value, 0, maxCropPositionY.value))
+      localOperation.value.cropBox.y = round(clamp(value, 0, maxCropPositionY.value))
     }
     nextTick(() => {
       cropPositionXInputRef.value?.setValue(localOperation.value.cropBox.x)
@@ -126,25 +126,25 @@ export function usePresetOperationDetails(imageStore, editorStore, t, props, emi
     const originalHeight = localOperation.value.cropBox.height
 
     if (key === 'width') {
-      const clampedWidth = Math.round(clamp(value, 0, maxCropWidth.value))
+      const clampedWidth = round(clamp(value, 0, maxCropWidth.value))
 
       if (isDimensionsLinked.value) {
         const aspectRatio = originalHeight / originalWidth || 1
         localOperation.value.cropBox.width = clampedWidth
-        localOperation.value.cropBox.height = Math.round(
+        localOperation.value.cropBox.height = round(
           clamp(clampedWidth * aspectRatio, 0, maxCropHeight.value),
         )
       } else {
         localOperation.value.cropBox.width = clampedWidth
       }
     } else if (key === 'height') {
-      const clampedHeight = Math.round(clamp(value, 0, maxCropHeight.value))
+      const clampedHeight = round(clamp(value, 0, maxCropHeight.value))
 
       if (isDimensionsLinked.value) {
         const aspectRatio = originalWidth / originalHeight || 1
 
         localOperation.value.cropBox.height = clampedHeight
-        localOperation.value.cropBox.width = Math.round(
+        localOperation.value.cropBox.width = round(
           clamp(clampedHeight * aspectRatio, 0, maxCropWidth.value),
         )
       } else {

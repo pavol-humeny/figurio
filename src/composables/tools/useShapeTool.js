@@ -38,7 +38,7 @@ const activeObject = ref(null)
  * @returns {Object} Composable methods and reactive properties for shape tool
  */
 export function useShapeTool(editorStore, imageStore, historyStore, t) {
-  const { clamp } = useMath()
+  const { clamp, round } = useMath()
   const { getObjectCenter } = useSvgFunctions(imageStore)
 
   /**
@@ -187,7 +187,7 @@ export function useShapeTool(editorStore, imageStore, historyStore, t) {
     if (parts.some(isNaN) || strokeWidth <= 0) return 'solid'
 
     // Normalize to ratio against strokeWidth
-    const ratios = parts.map((n) => Math.round(n / strokeWidth))
+    const ratios = parts.map((n) => round(n / strokeWidth))
 
     // Compare with known patterns
     const match = (a, b) => a.length === b.length && a.every((v, i) => v === b[i])
@@ -461,27 +461,27 @@ export function useShapeTool(editorStore, imageStore, historyStore, t) {
     const originalHeight = localObjectSettings.value.height
 
     if (key === 'width') {
-      const clampedWidth = Math.round(clamp(value, 0, maxShapeWidth.value))
+      const clampedWidth = round(clamp(value, 0, maxShapeWidth.value))
 
       // Dimensions are linked
       if (isDimensionsLinked.value && originalWidth > 0) {
         const aspectRatio = originalHeight / originalWidth
         localObjectSettings.value.width = clampedWidth
-        localObjectSettings.value.height = Math.round(
+        localObjectSettings.value.height = round(
           clamp(clampedWidth * aspectRatio, 0, maxShapeHeight.value),
         )
       } else {
         localObjectSettings.value.width = clampedWidth
       }
     } else if (key === 'height') {
-      const clampedHeight = Math.round(clamp(value, 0, maxShapeHeight.value))
+      const clampedHeight = round(clamp(value, 0, maxShapeHeight.value))
 
       // Dimensions are linked
       if (isDimensionsLinked.value && originalHeight > 0) {
         console.log('Updating height with aspect ratio')
         const aspectRatio = originalWidth / originalHeight
         localObjectSettings.value.height = clampedHeight
-        localObjectSettings.value.width = Math.round(
+        localObjectSettings.value.width = round(
           clamp(clampedHeight * aspectRatio, 0, maxShapeWidth.value),
         )
       } else {

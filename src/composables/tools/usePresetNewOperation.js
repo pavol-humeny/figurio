@@ -11,7 +11,7 @@ import { ref, computed, watch, reactive, nextTick } from 'vue'
  * @returns {Object}
  */
 export function usePresetNewOperation(imageStore, props, emit, t) {
-  const { clamp } = useMath()
+  const { clamp, round } = useMath()
 
   /**
    * Available rotation angle options
@@ -170,9 +170,9 @@ export function usePresetNewOperation(imageStore, props, emit, t) {
    */
   const updatePosition = (key, value) => {
     if (key === 'x') {
-      params.cropBox.x = Math.round(clamp(value, 0, maxCropPositionX.value))
+      params.cropBox.x = round(clamp(value, 0, maxCropPositionX.value))
     } else if (key === 'y') {
-      params.cropBox.y = Math.round(clamp(value, 0, maxCropPositionY.value))
+      params.cropBox.y = round(clamp(value, 0, maxCropPositionY.value))
     }
     nextTick(() => {
       cropPositionXInputRef.value?.setValue(params.cropBox.x)
@@ -191,22 +191,22 @@ export function usePresetNewOperation(imageStore, props, emit, t) {
     const originalHeight = params.cropBox.height
 
     if (key === 'width') {
-      const clampedWidth = Math.round(clamp(value, 0, maxCropWidth.value))
+      const clampedWidth = round(clamp(value, 0, maxCropWidth.value))
       if (isDimensionsLinked.value) {
         const aspectRatio = originalHeight / originalWidth || 1
         params.cropBox.width = clampedWidth
-        params.cropBox.height = Math.round(
+        params.cropBox.height = round(
           clamp(clampedWidth * aspectRatio, 0, maxCropHeight.value),
         )
       } else {
         params.cropBox.width = clampedWidth
       }
     } else if (key === 'height') {
-      const clampedHeight = Math.round(clamp(value, 0, maxCropHeight.value))
+      const clampedHeight = round(clamp(value, 0, maxCropHeight.value))
       if (isDimensionsLinked.value) {
         const aspectRatio = originalWidth / originalHeight || 1
         params.cropBox.height = clampedHeight
-        params.cropBox.width = Math.round(clamp(clampedHeight * aspectRatio, 0, maxCropWidth.value))
+        params.cropBox.width = round(clamp(clampedHeight * aspectRatio, 0, maxCropWidth.value))
       } else {
         params.cropBox.height = clampedHeight
       }

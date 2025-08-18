@@ -1,7 +1,7 @@
 import { useConfirmModal } from '../modals/useConfirmModal'
 import { computed } from 'vue'
 import { useSendEvent } from '@/composables/common/useSendEvent'
-
+import { useMath } from '../common/useMath'
 /**
  * Logic for applying grayscale
  *
@@ -12,6 +12,7 @@ import { useSendEvent } from '@/composables/common/useSendEvent'
  */
 export function useGrayscaleTool(imageStore, historyStore, t) {
   const { showConfirmModal } = useConfirmModal()
+  const { round } = useMath()
 
   /**
    * Check if grayscale operation is already applied
@@ -75,7 +76,7 @@ export function useGrayscaleTool(imageStore, historyStore, t) {
       const r = data[i]
       const g = data[i + 1]
       const b = data[i + 2]
-      const gray = Math.round(0.299 * r + 0.587 * g + 0.114 * b)
+      const gray = round(0.299 * r + 0.587 * g + 0.114 * b)
       data[i] = data[i + 1] = data[i + 2] = gray
     }
 

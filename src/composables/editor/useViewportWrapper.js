@@ -20,7 +20,7 @@ export function useViewportWrapper(
   contentRef,
   t,
 ) {
-  const { clamp } = useMath()
+  const { clamp, round } = useMath()
 
   /**
    * Ref to the outer wrapper element
@@ -575,8 +575,8 @@ export function useViewportWrapper(
   /**
    * Computed cursor position in image coordinates for displaying position of the mouse cursor on rulers
    */
-  const cursorPosX = computed(() => Math.round((mouseX.value - panX.value) / zoomLevel.value))
-  const cursorPosY = computed(() => Math.round((mouseY.value - panY.value) / zoomLevel.value))
+  const cursorPosX = computed(() => round((mouseX.value - panX.value) / zoomLevel.value))
+  const cursorPosY = computed(() => round((mouseY.value - panY.value) / zoomLevel.value))
 
   /**
    * Check if cursor position is at the edges of the image

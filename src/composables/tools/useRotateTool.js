@@ -1,5 +1,6 @@
 import { useConfirmModal } from '../modals/useConfirmModal'
 import { useSendEvent } from '@/composables/common/useSendEvent'
+import { useMath } from '../common/useMath'
 
 /**
  * Logic for the rotate tool including confirmation, operation registration, and canvas rendering
@@ -14,6 +15,8 @@ import { useSendEvent } from '@/composables/common/useSendEvent'
  */
 export function useRotateTool(imageStore, historyStore, t) {
   const { showConfirmModal } = useConfirmModal()
+
+  const { round } = useMath()
 
   /**
    * Apply rotation to the image
@@ -72,8 +75,8 @@ export function useRotateTool(imageStore, historyStore, t) {
     const sin = Math.abs(Math.sin(radians))
     const cos = Math.abs(Math.cos(radians))
 
-    const rotatedWidth = Math.round(oldWidth * cos + oldHeight * sin)
-    const rotatedHeight = Math.round(oldWidth * sin + oldHeight * cos)
+    const rotatedWidth = round(oldWidth * cos + oldHeight * sin)
+    const rotatedHeight = round(oldWidth * sin + oldHeight * cos)
 
     const canvas = document.createElement('canvas')
     canvas.width = rotatedWidth
