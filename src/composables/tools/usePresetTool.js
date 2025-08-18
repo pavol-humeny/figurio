@@ -3,7 +3,6 @@ import { useToastModal } from '../modals/useToastModal'
 import { useConfirmModal } from '../modals/useConfirmModal'
 import { useFlipTool } from './useFlipTool'
 import { useRotateTool } from './useRotateTool'
-import { useSmartCropTool } from './useSmartCropTool'
 import { useGrayscaleTool } from './useGrayscaleTool'
 import { useCropTool } from './useCropTool'
 import { editorConfig } from '@/config/editorConfig'
@@ -490,7 +489,9 @@ export function usePresetTool(
         } else if (operation.type === 'flip') {
           useFlipTool(imageStore, historyStore, t).applyFlipRender(operation.direction)
         } else if (operation.type === 'smartCrop') {
-          useSmartCropTool(imageStore, t).applyAutoSmartCropRender(operation.color)
+          useCropTool(imageStore, viewportStore, editorStore, historyStore, t).applyAutoCropPreset(
+            operation.color,
+          )
         } else if (operation.type === 'grayscale') {
           useGrayscaleTool(imageStore, historyStore).applyGrayscaleRender()
         } else if (operation.type === 'crop') {

@@ -5,8 +5,8 @@ export const editorConfig = {
   defaultToolKey: globalConfig.startTool,
 
   // Smart crop settings
-  smartCropDefaultColor: '#ffffff',
-  smartCropColorTolerance: 5,
+  autoCropDefaultColor: '#ffffff',
+  autoCropColorTolerance: 5,
 
   // Item tip settings
   tipDelay: 700,

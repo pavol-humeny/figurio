@@ -30,6 +30,9 @@ const cropBox = ref({
   startY: 0,
 })
 
+/**
+ * Manual indents for the crop box
+ */
 const manualIndents = ref({
   topIndent: 0,
   rightIndent: 0,
@@ -384,9 +387,9 @@ export function useCropTool(imageStore, viewportStore, editorStore, historyStore
   // Auto crop
   // -------------------------------
   /**
-   * Color selected for the smart crop
+   * Color selected for the auto crop
    */
-  const selectedColor = ref(editorConfig.smartCropDefaultColor)
+  const selectedColor = ref(editorConfig.autoCropDefaultColor)
 
   /**
    * Whether to apply auto crop from base image or current crop
@@ -436,7 +439,7 @@ export function useCropTool(imageStore, viewportStore, editorStore, historyStore
 
   /**
    * Calculate the crop box based on uniform color borders
-   * @param {string} color - The color to use for the smart crop
+   * @param {string} color - The color to use for the auto crop
    * @param {boolean} useBaseImage - If true, work on full base image, otherwise on current cropBox
    * @returns {Object} - The calculated crop box { x, y, width, height }
    */
@@ -456,6 +459,9 @@ export function useCropTool(imageStore, viewportStore, editorStore, historyStore
 
     const imageData = ctx.getImageData(0, 0, width, height).data
 
+    /**
+     * Parse a hex color string into an RGB object.
+     */
     const parseHex = (hex) => {
       const bigint = parseInt(hex.replace('#', ''), 16)
       return {
@@ -465,11 +471,17 @@ export function useCropTool(imageStore, viewportStore, editorStore, historyStore
       }
     }
 
+    /**
+     * Check if the color at the given index matches the target color.
+     * @param {number} index - The index of the color to check.
+     * @param {Object} target - The target color to match against.
+     * @returns {boolean} - True if the colors match, false otherwise.
+     */
     const isColorMatch = (index, target) => {
       const r = imageData[index]
       const g = imageData[index + 1]
       const b = imageData[index + 2]
-      const tolerance = editorConfig.smartCropColorTolerance
+      const tolerance = editorConfig.autoCropColorTolerance
       return (
         Math.abs(r - target.r) <= tolerance &&
         Math.abs(g - target.g) <= tolerance &&
@@ -563,6 +575,9 @@ export function useCropTool(imageStore, viewportStore, editorStore, historyStore
     return newCropBox
   }
 
+  /**
+   * Fit the crop box to the content
+   */
   const fitCrop = () => {
     const newCropBox = calculateFitCropBox(selectedColor.value, useBaseImage.value)
     if (newCropBox) {
@@ -574,6 +589,16 @@ export function useCropTool(imageStore, viewportStore, editorStore, historyStore
   // -------------------------------
   // Crop apply
   // -------------------------------
+  /**
+   * Apply the auto crop in preset
+   * @param {string} color - The target color to crop
+   */
+  const applyAutoCropPreset = async (color) => {
+    const newCropBox = calculateFitCropBox(color)
+
+    applyCropRender(newCropBox)
+  }
+
   /**
    * Apply the crop operation
    */
@@ -615,6 +640,9 @@ export function useCropTool(imageStore, viewportStore, editorStore, historyStore
     historyStore.push(imageStore.getSnapshot(t))
   }
 
+  /**
+   * Check if the crop box can be reset
+   */
   const cropCanBeReset = computed(() => {
     return (
       cropBox.value.x !== 0 ||
@@ -624,6 +652,9 @@ export function useCropTool(imageStore, viewportStore, editorStore, historyStore
     )
   })
 
+  /**
+   * Reset the crop box to its initial state
+   */
   const resetCrop = () => {
     cropBox.value = {
       x: 0,
@@ -736,5 +767,6 @@ export function useCropTool(imageStore, viewportStore, editorStore, historyStore
     manualIndents,
     recalculateCropBox,
     fitCropApplied,
+    applyAutoCropPreset,
   }
 }

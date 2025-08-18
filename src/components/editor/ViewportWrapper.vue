@@ -4,10 +4,9 @@ import { useViewportStore } from '@/stores/viewportStore'
 import { useImageRenderer } from '@/composables/editor/useImageRenderer'
 import { useImageStore } from '@/stores/imageStore'
 import { useEditorStore } from '@/stores/editorStore'
-import { computed, ref, watch } from 'vue'
+import { computed, ref } from 'vue'
 import CropTool from '@/components/tools/CropTool.vue'
 import PresetCropTool from '../tools/PresetCropTool.vue'
-import SmartCropTool from '../tools/SmartCropTool.vue'
 import { useHistoryStore } from '@/stores/historyStore'
 import { useI18n } from 'vue-i18n'
 import { useUiStore } from '@/stores/uiStore'
@@ -93,22 +92,6 @@ const { svgDefsString } = useBlurTool(
   useHistoryStore(),
   useEditorStore(),
   t,
-)
-
-/**
- * Whether to show SmartCropTool
- * @type {import('vue').Ref<boolean>}
- */
-const isCropShown = ref(false)
-/**
- * Watch selected sub-tool and toggle SmartCropTool visibility
- */
-watch(
-  () => editorStore.selectedSubToolKey,
-  (newVal) => {
-    isCropShown.value = newVal === 'isCropShown'
-  },
-  { immediate: true },
 )
 
 /**
@@ -223,10 +206,8 @@ const disableContextMenu = computed(() => {
 
 
           <CropTool v-if="editorStore.selectedToolKey === 'crop'" />
-          <SmartCropTool v-if="isCropShown" />
           <PresetCropTool v-if="
-            editorStore.selectedToolKey === 'preset' && editorStore.selectedSubToolKey === 'crop'
-          " />
+            editorStore.selectedToolKey === 'preset' && editorStore.selectedSubToolKey === 'crop'" />
         </div>
       </ContextMenu>
     </div>
