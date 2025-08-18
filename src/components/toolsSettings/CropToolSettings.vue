@@ -127,7 +127,7 @@ const {
             </p>
           </div>
           <div class="content-wrapper">
-            <div class="content-aligned two-items" style="align-items: center">
+            <div class="content-aligned two-items">
               <p style="text-align: start">
                 {{ $t('tools.crop.settings.general.autoCrop.autoCropColor.title') }}
               </p>
@@ -135,7 +135,7 @@ const {
             </div>
           </div>
           <div class="content-wrapper">
-            <div class="content-aligned two-items" style="align-items: center">
+            <div class="content-aligned two-items">
               <p style="text-align: start">
                 {{ $t('tools.crop.settings.general.autoCrop.useBaseImage.title') }}
               </p>

@@ -557,8 +557,8 @@
             "horizontalFlip": "Horizontal flip",
             "verticalFlip": "Vertical flip"
           },
-          "smartCrop": {
-            "label": "Smart crop",
+          "autoCrop": {
+            "label": "Auto crop",
             "enabled": "Enabled",
             "color": "Color"
           },
@@ -661,8 +661,8 @@
             "verticalFlip": "Vertical",
             "flip": "Flip"
           },
-          "smartCrop": {
-            "label": "Smart crop",
+          "autoCrop": {
+            "label": "Auto crop",
             "enabled": "Enabled",
             "color": "Color"
           },

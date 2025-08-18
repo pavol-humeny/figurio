@@ -557,8 +557,8 @@
             "horizontalFlip": "Horizontální otočení",
             "verticalFlip": "Vertikální otočení"
           },
-          "smartCrop": {
-            "label": "Chytré oříznutí",
+          "autoCrop": {
+            "label": "Automatické oříznutí",
             "enabled": "Povoleno",
             "color": "Barva"
           },
@@ -661,8 +661,8 @@
             "verticalFlip": "Vertikální",
             "flip": "Překlopení"
           },
-          "smartCrop": {
-            "label": "Chytré oříznutí",
+          "autoCrop": {
+            "label": "Automatické oříznutí",
             "enabled": "Povoleno",
             "color": "Barva"
           },

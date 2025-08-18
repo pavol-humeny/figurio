@@ -557,8 +557,8 @@
             "horizontalFlip": "Horizontálne otočenie",
             "verticalFlip": "Vertikálne otočenie"
           },
-          "smartCrop": {
-            "label": "Inteligentné orezanie",
+          "autoCrop": {
+            "label": "Automatické orezanie",
             "enabled": "Povolené",
             "color": "Farba"
           },
@@ -661,8 +661,8 @@
             "verticalFlip": "Vertikálne",
             "flip": "Prevrátenie"
           },
-          "smartCrop": {
-            "label": "Inteligentné orezanie",
+          "autoCrop": {
+            "label": "Automatické orezanie",
             "enabled": "Povolené",
             "color": "Farba"
           },

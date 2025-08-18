@@ -426,26 +426,26 @@ const tabs = ['myPresets', 'createPreset']
           </div>
         </div>
 
-        <!-- SmartCrop -->
+        <!-- AutoCrop -->
         <div v-if="isShowManualPresetSetting" class="settings-content-wrapper">
           <div class="content-wrapper">
             <div class="content-title">
               <p>
-                {{ t('tools.preset.settings.createPreset.presetValues.smartCrop.label') }}
+                {{ t('tools.preset.settings.createPreset.presetValues.autoCrop.label') }}
               </p>
             </div>
             <div class="content-aligned two-items">
               <p>
-                {{ t('tools.preset.settings.createPreset.presetValues.smartCrop.enabled') }}
+                {{ t('tools.preset.settings.createPreset.presetValues.autoCrop.enabled') }}
               </p>
-              <ToggleButton v-model="newPreset.smartCrop.enabled" :scale="0.6"
+              <ToggleButton v-model="newPreset.autoCrop.enabled" :scale="0.6"
                 :style="{ transform: 'translateX(16px)' }" />
             </div>
-            <div class="content-aligned two-items" :class="newPreset.smartCrop.enabled ? '' : 'disabled'">
+            <div class="content-aligned two-items" :class="newPreset.autoCrop.enabled ? '' : 'disabled'">
               <p>
-                {{ t('tools.preset.settings.createPreset.presetValues.smartCrop.color') }}
+                {{ t('tools.preset.settings.createPreset.presetValues.autoCrop.color') }}
               </p>
-              <ColorPicker v-model="newPreset.smartCrop.color" />
+              <ColorPicker v-model="newPreset.autoCrop.color" />
             </div>
           </div>
         </div>

@@ -26,7 +26,7 @@ export const globalConfig = {
       crop: true,
       select: true,
       transform: true,
-      smartCrop: true,
+      autoCrop: true,
       grayscale: true,
       blur: true,
       shape: true,

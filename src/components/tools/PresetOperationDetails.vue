@@ -107,11 +107,11 @@ const presetFlipOptions = [
       </div>
     </template>
 
-    <!-- SmartCrop -->
-    <template v-else-if="localOperation.type === 'smartCrop'">
+    <!-- AutoCrop -->
+    <template v-else-if="localOperation.type === 'autoCrop'">
       <div class="content-aligned two-items">
         <p>
-          {{ t('tools.preset.settings.myPresets.presetValues.smartCrop.label') }}
+          {{ t('tools.preset.settings.myPresets.presetValues.autoCrop.label') }}
         </p>
         <ColorPicker v-model="localOperation.color" @update="update" />
       </div>

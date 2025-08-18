@@ -488,7 +488,7 @@ export function usePresetTool(
           useRotateTool(imageStore, historyStore, t).applyRotationRender(operation.angle)
         } else if (operation.type === 'flip') {
           useFlipTool(imageStore, historyStore, t).applyFlipRender(operation.direction)
-        } else if (operation.type === 'smartCrop') {
+        } else if (operation.type === 'autoCrop') {
           useCropTool(imageStore, viewportStore, editorStore, historyStore, t).applyAutoCropPreset(
             operation.color,
           )
@@ -555,7 +555,7 @@ export function usePresetTool(
       horizontalFlip: false,
       verticalFlip: false,
     },
-    smartCrop: {
+    autoCrop: {
       enabled: false,
       color: '#000000',
     },
@@ -693,7 +693,7 @@ export function usePresetTool(
         horizontalFlip: false,
         verticalFlip: false,
       },
-      smartCrop: {
+      autoCrop: {
         enabled: false,
         color: '#000000',
       },
@@ -750,10 +750,10 @@ export function usePresetTool(
     if (newPreset.value.transformations.verticalFlip) {
       imageOperations.push({ type: 'flip', direction: 'vertical' })
     }
-    if (newPreset.value.smartCrop.enabled) {
+    if (newPreset.value.autoCrop.enabled) {
       imageOperations.push({
-        type: 'smartCrop',
-        color: newPreset.value.smartCrop.color,
+        type: 'autoCrop',
+        color: newPreset.value.autoCrop.color,
       })
     }
     if (newPreset.value.grayscale.enabled) {

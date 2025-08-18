@@ -35,7 +35,7 @@ export const useEditorStore = defineStore('editorStore', {
       crop: globalConfig.featureFlags.enableTools.crop,
       select: globalConfig.featureFlags.enableTools.select,
       transform: globalConfig.featureFlags.enableTools.transform,
-      smartCrop: globalConfig.featureFlags.enableTools.smartCrop,
+      autoCrop: globalConfig.featureFlags.enableTools.autoCrop,
       grayscale: globalConfig.featureFlags.enableTools.grayscale,
       blur: globalConfig.featureFlags.enableTools.blur,
       shape: globalConfig.featureFlags.enableTools.shape,

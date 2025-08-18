@@ -51,8 +51,8 @@ export function usePresetNewOperation(imageStore, props, emit, t) {
       value: 'flip',
     },
     {
-      label: t('tools.preset.settings.myPresets.presetValues.smartCrop.label'),
-      value: 'smartCrop',
+      label: t('tools.preset.settings.myPresets.presetValues.autoCrop.label'),
+      value: 'autoCrop',
     },
     {
       label: t('tools.preset.settings.myPresets.presetValues.grayscale.label'),
@@ -123,7 +123,7 @@ export function usePresetNewOperation(imageStore, props, emit, t) {
       op = { type, angle: 0 }
     } else if (type === 'flip') {
       op = { type, direction: 'horizontal' }
-    } else if (type === 'smartCrop') {
+    } else if (type === 'autoCrop') {
       op = { type, color: '#000000' }
     } else if (type === 'grayscale') {
       op = { type, enable: true }
@@ -147,7 +147,7 @@ export function usePresetNewOperation(imageStore, props, emit, t) {
       const op = { type: selectedType.value }
       if (selectedType.value === 'rotation') op.angle = params.angle
       if (selectedType.value === 'flip') op.direction = params.direction
-      if (selectedType.value === 'smartCrop') op.color = params.color
+      if (selectedType.value === 'autoCrop') op.color = params.color
       if (selectedType.value === 'grayscale') op.enable = true
       if (selectedType.value === 'crop') {
         op.cropBox = { ...params.cropBox }

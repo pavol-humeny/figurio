@@ -107,12 +107,6 @@ export const keyboardShortcuts = [
     description: 'Toggle transform - resize tool',
   },
   {
-    keys: ['shift', 'c'],
-    action: 'toggleTool',
-    args: ['smartCrop', null],
-    description: 'Toggle smart crop tool',
-  },
-  {
     keys: ['g'],
     action: 'toggleTool',
     args: ['grayscale', null],

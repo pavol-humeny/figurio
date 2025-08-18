@@ -4,7 +4,7 @@ export const editorConfig = {
   // Default tool key when the editor is opened
   defaultToolKey: globalConfig.startTool,
 
-  // Smart crop settings
+  // Auto crop settings
   autoCropDefaultColor: '#ffffff',
   autoCropColorTolerance: 5,
 

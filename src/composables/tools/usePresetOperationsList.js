@@ -118,8 +118,8 @@ export function usePresetOperationsList(imageStore, props, emit, t) {
         return t('tools.preset.settings.myPresets.presetValues.transformations.rotation')
       case 'flip':
         return t('tools.preset.settings.myPresets.presetValues.transformations.flip')
-      case 'smartCrop':
-        return t('tools.preset.settings.myPresets.presetValues.smartCrop.label')
+      case 'autoCrop':
+        return t('tools.preset.settings.myPresets.presetValues.autoCrop.label')
       case 'grayscale':
         return t('tools.preset.settings.myPresets.presetValues.grayscale.label')
       case 'crop':

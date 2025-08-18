@@ -65,8 +65,8 @@ const {
       <p v-else-if="selectedType === 'flip'">
         {{ t('tools.preset.settings.myPresets.presetValues.transformations.flip') }}
       </p>
-      <p v-else-if="selectedType === 'smartCrop'">
-        {{ t('tools.preset.settings.myPresets.presetValues.smartCrop.label') }}
+      <p v-else-if="selectedType === 'autoCrop'">
+        {{ t('tools.preset.settings.myPresets.presetValues.autoCrop.label') }}
       </p>
 
       <!-- Rotate -->
@@ -75,8 +75,8 @@ const {
       <!-- Flip -->
       <DropdownSelect v-if="selectedType === 'flip'" v-model="params.direction" :options="flipOptions" />
 
-      <!-- SmartCrop -->
-      <ColorPicker v-if="selectedType === 'smartCrop'" v-model="params.color" />
+      <!-- AutoCrop -->
+      <ColorPicker v-if="selectedType === 'autoCrop'" v-model="params.color" />
 
       <!-- Crop -->
       <div class="crop-inputs" v-if="selectedType === 'crop'">
