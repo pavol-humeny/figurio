@@ -97,8 +97,8 @@ export const keyboardShortcuts = [
   {
     keys: ['c'],
     action: 'toggleTool',
-    args: ['transform', 'crop'],
-    description: 'Toggle transform - crop tool',
+    args: ['crop', null],
+    description: 'Toggle crop tool',
   },
   {
     keys: ['shift', 'r'],

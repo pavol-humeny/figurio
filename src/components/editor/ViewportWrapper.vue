@@ -181,9 +181,6 @@ const disableContextMenu = computed(() => {
             <!-- DEFS -->
             <!-- // UPDATE svg string -->
             <defs>
-              <!-- /////////////// -->
-              <!-- Shape -->
-              <!-- /////////////// -->
               <!-- Arrows -->
               <marker id="arrow-end" markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto"
                 markerUnits="strokeWidth">
@@ -225,7 +222,7 @@ const disableContextMenu = computed(() => {
           </svg>
 
 
-          <CropTool v-if="editorStore.selectedTabPerTool[editorStore.selectedToolKey] === 'crop'" />
+          <CropTool v-if="editorStore.selectedToolKey === 'crop'" />
           <SmartCropTool v-if="isCropShown" />
           <PresetCropTool v-if="
             editorStore.selectedToolKey === 'preset' && editorStore.selectedSubToolKey === 'crop'

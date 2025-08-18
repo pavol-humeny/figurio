@@ -32,6 +32,7 @@ export const useEditorStore = defineStore('editorStore', {
     // UPDATE new tool
     enableTools: {
       move: globalConfig.featureFlags.enableTools.move,
+      crop: globalConfig.featureFlags.enableTools.crop,
       select: globalConfig.featureFlags.enableTools.select,
       transform: globalConfig.featureFlags.enableTools.transform,
       smartCrop: globalConfig.featureFlags.enableTools.smartCrop,

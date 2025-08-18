@@ -13,15 +13,17 @@ export const globalConfig = {
 
   // Default zoom mode
   zoomMode: 'text', // 'classic', 'text'
+  textWidth: 15.2, // cm
 
   // Default tool to start with
-  startTool: '',
+  startTool: 'crop',
 
   // Feature flags
   // UPDATE new tool
   featureFlags: {
     enableTools: {
       move: true,
+      crop: true,
       select: true,
       transform: true,
       smartCrop: true,

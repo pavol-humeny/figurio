@@ -5,6 +5,11 @@ export const toolsDefinitions = [
     settingsComponent: () => import('@/components/toolsSettings/MoveToolSettings.vue'),
   },
   {
+    key: 'crop',
+    iconName: 'IconCropTool',
+    settingsComponent: () => import('@/components/toolsSettings/CropToolSettings.vue'),
+  },
+  {
     key: 'smartCrop',
     iconName: 'IconSmartCropTool',
     settingsComponent: () => import('@/components/toolsSettings/SmartCropToolSettings.vue'),
@@ -80,10 +85,6 @@ export const toolsDefinitions = [
       {
         key: 'flip',
         iconName: 'IconFlipVertical',
-      },
-      {
-        key: 'crop',
-        iconName: 'IconCropTool',
       },
       {
         key: 'resize',

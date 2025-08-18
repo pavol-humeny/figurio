@@ -6,8 +6,6 @@ import BaseIcon from '../icons/BaseIcon.vue'
 import NumberInput from '../common/NumberInput.vue'
 import { useEditorStore } from '@/stores/editorStore'
 import { useImageStore } from '@/stores/imageStore'
-import { useViewportStore } from '@/stores/viewportStore'
-import { useCropTool } from '@/composables/tools/useCropTool'
 import { useFlipTool } from '@/composables/tools/useFlipTool'
 import { useRotateTool } from '@/composables/tools/useRotateTool'
 import { useHistoryStore } from '@/stores/historyStore'
@@ -17,30 +15,6 @@ import { useI18n } from 'vue-i18n'
 const { t } = useI18n()
 
 const editorStore = useEditorStore()
-
-/**
- * Logic of the crop tool
- */
-const {
-  maxCropHeight,
-  tmpCropHeight,
-  maxCropWidth,
-  tmpCropWidth,
-  updateDimension,
-  isDimensionsLinked,
-  heightInputRef,
-  widthInputRef,
-  cropPositionX,
-  cropPositionY,
-  maxCropPositionX,
-  maxCropPositionY,
-  updatePosition,
-  positionXInputRef,
-  positionYInputRef,
-  selectSubTool,
-  cropRatio,
-  applyCrop,
-} = useCropTool(useImageStore(), useViewportStore(), useEditorStore(), useHistoryStore(), t)
 
 /**
  * Logic of the flip tool
@@ -69,7 +43,7 @@ const {
 /**
  * Tabs for the transform tool settings
  */
-const tabs = ['rotate', 'flip', 'crop', 'resize']
+const tabs = ['rotate', 'flip', 'resize']
 </script>
 
 <template>
@@ -147,143 +121,6 @@ const tabs = ['rotate', 'flip', 'crop', 'resize']
             <div class="content-button">
               <DefaultButton :text="$t('tools.transform.settings.flip.applyFlipButton.text')"
                 @click="applyFlip('vertical')" />
-            </div>
-          </div>
-        </div>
-
-        <!-- Empty space -->
-        <div class="settings-content-wrapper" style="border: none">
-          <!-- Empty space -->
-        </div>
-      </div>
-
-      <!-- Crop -->
-      <div v-if="editorStore.selectedTabPerTool[editorStore.selectedToolKey] === 'crop'" class="specific-settings">
-        <!-- Crop position -->
-        <div class="settings-content-wrapper">
-          <div class="content-wrapper">
-            <div class="content-title">
-              <p>
-                {{ $t('tools.transform.settings.crop.cropPosition.title') }}
-              </p>
-            </div>
-            <div class="content-inputs">
-              <div class="content-input">
-                <label for="x-input">
-                  {{ $t('tools.transform.settings.crop.cropPosition.x') }}
-                </label>
-                <NumberInput ref="positionXInputRef" v-model="cropPositionX" :min="0" :max="maxCropPositionX"
-                  @update="(val) => updatePosition('x', val)" unit="px" />
-              </div>
-
-              <div class="content-between-inputs-icon-wrapper disabled"></div>
-
-              <div class="content-input">
-                <label for="y-input">
-                  {{ $t('tools.transform.settings.crop.cropPosition.y') }}
-                </label>
-                <NumberInput ref="positionYInputRef" v-model="cropPositionY" :min="0" :max="maxCropPositionY"
-                  @update="(val) => updatePosition('y', val)" unit="px" />
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Crop dimensions -->
-        <div class="settings-content-wrapper">
-          <div class="content-wrapper">
-            <div class="content-title">
-              <p>
-                {{ $t('tools.transform.settings.crop.cropDimensions.title') }}
-              </p>
-            </div>
-            <div class="content-inputs">
-              <div class="content-input">
-                <label for="width-input">
-                  {{ $t('tools.transform.settings.crop.cropDimensions.width') }}
-                </label>
-                <NumberInput ref="widthInputRef" v-model="tmpCropWidth" :min="0" :max="maxCropWidth"
-                  @update="(val) => updateDimension('width', val)" unit="px" />
-              </div>
-
-              <div class="content-between-inputs-icon-wrapper">
-                <LinkValuesIcon v-model="isDimensionsLinked"
-                  :tipLinked="$t('tools.transform.settings.crop.cropDimensions.tipLinked')"
-                  :tipUnlinked="$t('tools.transform.settings.crop.cropDimensions.tipUnlinked')" size="30"
-                  :disabled="cropRatio !== null" position="bottom-left" />
-              </div>
-
-              <div class="content-input">
-                <label for="height-input">
-                  {{ $t('tools.transform.settings.crop.cropDimensions.height') }}
-                </label>
-                <NumberInput ref="heightInputRef" v-model="tmpCropHeight" :min="0" :max="maxCropHeight"
-                  @update="(val) => updateDimension('height', val)" unit="px" />
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Crop variants -->
-        <div class="settings-content-wrapper">
-          <div class="content-wrapper">
-            <div class="content-title">
-              <p>
-                {{ $t('tools.transform.settings.crop.cropVariants.label') }}
-              </p>
-            </div>
-            <div class="crop-variants-wrapper">
-              <div class="crop-variant" :class="{ active: editorStore.selectedSubToolKey === 'cropFree' }"
-                @click="selectSubTool('cropFree')">
-                <BaseIcon name="IconCropFree" size="40" :color="'var(--primary-c)'" />
-                <p>
-                  {{ $t('tools.transform.settings.crop.cropVariants.cropFree') }}
-                </p>
-              </div>
-              <div class="crop-variant" :class="{ active: editorStore.selectedSubToolKey === 'crop11' }"
-                @click="selectSubTool('crop11')">
-                <BaseIcon name="IconCrop11" size="40" :color="'var(--primary-c)'" />
-                <p>
-                  {{ $t('tools.transform.settings.crop.cropVariants.crop11') }}
-                </p>
-              </div>
-              <div class="crop-variant" :class="{ active: editorStore.selectedSubToolKey === 'crop43' }"
-                @click="selectSubTool('crop43')">
-                <BaseIcon name="IconCrop43" size="40" :color="'var(--primary-c)'" />
-                <p>
-                  {{ $t('tools.transform.settings.crop.cropVariants.crop43') }}
-                </p>
-              </div>
-              <div class="crop-variant" :class="{ active: editorStore.selectedSubToolKey === 'crop34' }"
-                @click="selectSubTool('crop34')">
-                <BaseIcon name="IconCrop34" size="40" :color="'var(--primary-c)'" />
-                <p>
-                  {{ $t('tools.transform.settings.crop.cropVariants.crop34') }}
-                </p>
-              </div>
-              <div class="crop-variant" :class="{ active: editorStore.selectedSubToolKey === 'crop169' }"
-                @click="selectSubTool('crop169')">
-                <BaseIcon name="IconCrop169" size="40" :color="'var(--primary-c)'" />
-                <p>
-                  {{ $t('tools.transform.settings.crop.cropVariants.crop169') }}
-                </p>
-              </div>
-              <div class="crop-variant" :class="{ active: editorStore.selectedSubToolKey === 'crop916' }"
-                @click="selectSubTool('crop916')">
-                <BaseIcon name="IconCrop916" size="40" :color="'var(--primary-c)'" />
-                <p>
-                  {{ $t('tools.transform.settings.crop.cropVariants.crop916') }}
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Apply crop -->
-        <div class="settings-content-wrapper">
-          <div class="content-wrapper">
-            <div class="content-button">
-              <DefaultButton :text="$t('tools.transform.settings.crop.applyCropButton.text')" @click="applyCrop" />
             </div>
           </div>
         </div>

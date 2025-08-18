@@ -52,7 +52,7 @@ export const useViewportStore = defineStore('viewportStore', {
     /** Zoom mode */
     zoomMode: globalConfig.zoomMode, // 'classic', 'text'
     /** Text size */
-    textWidth: 15.2, // cm
+    textWidth: globalConfig.textWidth,
   }),
   getters: {
     /**
@@ -183,6 +183,9 @@ export const useViewportStore = defineStore('viewportStore', {
         defaultPanY: this.defaultPanY,
         shouldFitToScreen: this.shouldFitToScreen,
         fitImageOnLoad: this.fitImageOnLoad,
+        guideLine: this.guideLine,
+        zoomMode: this.zoomMode,
+        textWidth: this.textWidth,
       }
     },
 
@@ -206,6 +209,9 @@ export const useViewportStore = defineStore('viewportStore', {
       this.defaultPanY = snapshot.defaultPanY ?? 0
       this.shouldFitToScreen = snapshot.shouldFitToScreen ?? false
       this.fitImageOnLoad = snapshot.fitImageOnLoad ?? true
+      this.guideLine = snapshot.guideLine ?? false
+      this.zoomMode = snapshot.zoomMode ?? 'text'
+      this.textWidth = snapshot.textWidth ?? globalConfig.textWidth
     },
   },
 })
