@@ -193,7 +193,7 @@ const tabs = ['myPresets', 'createPreset']
                 }}
               </p>
             </div>
-            <PresetNewOperation v-model:operation="newOperation" />
+            <PresetNewOperation v-model:operation="newOperation" :localImageOperations="localImageOperations" />
             <DefaultButton v-if="newOperation.type !== ''"
               :text="t('tools.preset.settings.myPresets.addNewOperationButton.text')" @click="addNewOperation()" />
           </div>
@@ -244,8 +244,7 @@ const tabs = ['myPresets', 'createPreset']
                 :disabled="!isModifyingPreset || (localImageFrame.type !== 'frameSolid' && !localImageFrame.outlineEnabled)" />
             </div>
             <!-- Use outline -->
-            <div
-              v-if="localImageFrame.enabled && isFrameWithOutline(localImageFrame.type)"
+            <div v-if="localImageFrame.enabled && isFrameWithOutline(localImageFrame.type)"
               class="content-aligned two-items">
               <p :class="!isModifyingPreset ? 'disabled' : ''">
                 {{ t('tools.preset.settings.myPresets.presetValues.frame.useFrameOutline') }}
@@ -255,8 +254,8 @@ const tabs = ['myPresets', 'createPreset']
             </div>
             <!-- Phone header -->
             <!-- Enabled -->
-            <div v-if="localImageFrame.enabled && isPhoneFrame(localImageFrame.type)"
-              class="content-aligned two-items" :class="!isModifyingPreset ? 'disabled' : ''">
+            <div v-if="localImageFrame.enabled && isPhoneFrame(localImageFrame.type)" class="content-aligned two-items"
+              :class="!isModifyingPreset ? 'disabled' : ''">
               <p>
                 {{ t('tools.preset.settings.myPresets.presetValues.frame.phoneHeaderEnabled') }}
               </p>
@@ -264,7 +263,8 @@ const tabs = ['myPresets', 'createPreset']
                 :style="{ transform: 'translateX(16px)' }" />
             </div>
             <!-- Background color -->
-            <div v-if="localImageFrame.enabled && localImageFrame.phoneHeaderEnabled && isPhoneFrame(localImageFrame.type)"
+            <div
+              v-if="localImageFrame.enabled && localImageFrame.phoneHeaderEnabled && isPhoneFrame(localImageFrame.type)"
               class="content-aligned two-items" :class="!isModifyingPreset ? 'disabled' : ''">
               <p>
                 {{ t('tools.preset.settings.myPresets.presetValues.frame.phoneHeaderBackgroundColor') }}
@@ -272,7 +272,8 @@ const tabs = ['myPresets', 'createPreset']
               <ColorPicker v-model="localImageFrame.phoneHeaderBackgroundColor" />
             </div>
             <!-- Text color -->
-            <div v-if="localImageFrame.enabled && localImageFrame.phoneHeaderEnabled && isPhoneFrame(localImageFrame.type)"
+            <div
+              v-if="localImageFrame.enabled && localImageFrame.phoneHeaderEnabled && isPhoneFrame(localImageFrame.type)"
               class="content-aligned two-items" :class="!isModifyingPreset ? 'disabled' : ''">
               <p>
                 {{ t('tools.preset.settings.myPresets.presetValues.frame.phoneHeaderTextColor') }}
@@ -280,7 +281,8 @@ const tabs = ['myPresets', 'createPreset']
               <ColorPicker v-model="localImageFrame.phoneHeaderTextColor" />
             </div>
             <!-- Time -->
-            <div v-if="localImageFrame.enabled && localImageFrame.phoneHeaderEnabled && isPhoneFrame(localImageFrame.type)"
+            <div
+              v-if="localImageFrame.enabled && localImageFrame.phoneHeaderEnabled && isPhoneFrame(localImageFrame.type)"
               class="content-aligned two-items" :class="!isModifyingPreset ? 'disabled' : ''">
               <p>
                 {{ t('tools.preset.settings.myPresets.presetValues.frame.phoneHeaderTime') }}
@@ -293,8 +295,10 @@ const tabs = ['myPresets', 'createPreset']
               <p>
                 {{ t('tools.preset.settings.myPresets.presetValues.frame.headerFooterMultiplier') }}
               </p>
-              <DefaultSlider v-model="localImageFrame.headerFooterMultiplier" :min="editorConfig.minHeaderFooterMultiplier" :max="editorConfig.maxHeaderFooterMultiplier" :step="editorConfig.stepHeaderFooterMultiplier"
-              :onReset="() => { localImageFrame.headerFooterMultiplier = 1 }" showValue />
+              <DefaultSlider v-model="localImageFrame.headerFooterMultiplier"
+                :min="editorConfig.minHeaderFooterMultiplier" :max="editorConfig.maxHeaderFooterMultiplier"
+                :step="editorConfig.stepHeaderFooterMultiplier"
+                :onReset="() => { localImageFrame.headerFooterMultiplier = 1 }" showValue />
             </div>
           </div>
         </div>
@@ -562,21 +566,24 @@ const tabs = ['myPresets', 'createPreset']
               <ToggleButton v-model="newPreset.frame.enabled" :scale="0.6" :style="{ transform: 'translateX(16px)' }" />
             </div>
             <!-- Type -->
-            <div v-if="newPreset.frame.enabled" class="content-aligned two-items" :class="newPreset.frame.enabled ? '' : 'disabled'">
+            <div v-if="newPreset.frame.enabled" class="content-aligned two-items"
+              :class="newPreset.frame.enabled ? '' : 'disabled'">
               <p>
                 {{ t('tools.preset.settings.createPreset.presetValues.frame.type') }}
               </p>
               <DropdownSelect v-model="newPreset.frame.type" :options="presetFrameOptions" />
             </div>
             <!-- Color -->
-            <div v-if="newPreset.frame.enabled" class="content-aligned two-items" :class="newPreset.frame.enabled ? '' : 'disabled'">
+            <div v-if="newPreset.frame.enabled" class="content-aligned two-items"
+              :class="newPreset.frame.enabled ? '' : 'disabled'">
               <p>
                 {{ t('tools.preset.settings.createPreset.presetValues.frame.color') }}
               </p>
               <ColorPicker v-model="newPreset.frame.color" />
             </div>
             <!-- Width -->
-            <div v-if="(newPreset.frame.type === 'frameSolid' || newPreset.frame.outlineEnabled) && newPreset.frame.enabled"
+            <div
+              v-if="(newPreset.frame.type === 'frameSolid' || newPreset.frame.outlineEnabled) && newPreset.frame.enabled"
               class="content-aligned two-items">
               <p :class="newPreset.frame.enabled ? '' : 'disabled'">
                 {{ t('tools.preset.settings.createPreset.presetValues.frame.width') }}
@@ -586,8 +593,7 @@ const tabs = ['myPresets', 'createPreset']
                 :disabled="!newPreset.frame.enabled" />
             </div>
             <!-- Use outline -->
-            <div
-              v-if="isFrameWithOutline(newPreset.frame.type) && newPreset.frame.enabled"
+            <div v-if="isFrameWithOutline(newPreset.frame.type) && newPreset.frame.enabled"
               :class="newPreset.frame.enabled ? '' : 'disabled'" class="content-aligned two-items">
               <p>
                 {{ t('tools.preset.settings.createPreset.presetValues.frame.useFrameOutline') }}
@@ -597,8 +603,7 @@ const tabs = ['myPresets', 'createPreset']
             </div>
             <!-- Phone header -->
             <!-- Enabled -->
-            <div v-if="isPhoneFrame(newPreset.frame.type) && newPreset.frame.enabled"
-              class="content-aligned two-items"
+            <div v-if="isPhoneFrame(newPreset.frame.type) && newPreset.frame.enabled" class="content-aligned two-items"
               :class="newPreset.frame.enabled ? '' : 'disabled'">
               <p>
                 {{ t('tools.preset.settings.createPreset.presetValues.frame.phoneHeaderEnabled') }}
@@ -607,31 +612,31 @@ const tabs = ['myPresets', 'createPreset']
                 :style="{ transform: 'translateX(16px)' }" />
             </div>
             <!-- Background color -->
-            <div v-if="newPreset.frame.phoneHeaderEnabled && isPhoneFrame(newPreset.frame.type) && newPreset.frame.enabled"
-              class="content-aligned two-items"
-              :class="newPreset.frame.enabled ? '' : 'disabled'">
+            <div
+              v-if="newPreset.frame.phoneHeaderEnabled && isPhoneFrame(newPreset.frame.type) && newPreset.frame.enabled"
+              class="content-aligned two-items" :class="newPreset.frame.enabled ? '' : 'disabled'">
               <p>
                 {{ t('tools.preset.settings.createPreset.presetValues.frame.phoneHeaderBackgroundColor') }}
               </p>
               <ColorPicker v-model="newPreset.frame.phoneHeaderBackgroundColor" />
             </div>
             <!-- Text Color -->
-            <div v-if="newPreset.frame.phoneHeaderEnabled && isPhoneFrame(newPreset.frame.type) && newPreset.frame.enabled"
-              class="content-aligned two-items"
-              :class="newPreset.frame.enabled ? '' : 'disabled'">
+            <div
+              v-if="newPreset.frame.phoneHeaderEnabled && isPhoneFrame(newPreset.frame.type) && newPreset.frame.enabled"
+              class="content-aligned two-items" :class="newPreset.frame.enabled ? '' : 'disabled'">
               <p>
                 {{ t('tools.preset.settings.createPreset.presetValues.frame.phoneHeaderTextColor') }}
               </p>
               <ColorPicker v-model="newPreset.frame.phoneHeaderTextColor" />
             </div>
             <!-- Time -->
-            <div v-if="newPreset.frame.phoneHeaderEnabled && isPhoneFrame(newPreset.frame.type) && newPreset.frame.enabled"
-              class="content-aligned two-items"
-              :class="newPreset.frame.enabled ? '' : 'disabled'">
+            <div
+              v-if="newPreset.frame.phoneHeaderEnabled && isPhoneFrame(newPreset.frame.type) && newPreset.frame.enabled"
+              class="content-aligned two-items" :class="newPreset.frame.enabled ? '' : 'disabled'">
               <p>
                 {{ t('tools.preset.settings.createPreset.presetValues.frame.phoneHeaderTime') }}
               </p>
-              <TimeInput v-model="newPreset.frame.phoneHeaderTimeInMinutes"/>
+              <TimeInput v-model="newPreset.frame.phoneHeaderTimeInMinutes" />
             </div>
             <!-- Header and footer frames multiplier -->
             <div v-if="isFrameWithMultiplier(newPreset.frame.type) && newPreset.frame.enabled"
@@ -639,8 +644,10 @@ const tabs = ['myPresets', 'createPreset']
               <p>
                 {{ t('tools.preset.settings.createPreset.presetValues.frame.headerFooterMultiplier') }}
               </p>
-              <DefaultSlider v-model="newPreset.frame.headerFooterMultiplier" :min="editorConfig.minHeaderFooterMultiplier" :max="editorConfig.maxHeaderFooterMultiplier" :step="editorConfig.stepHeaderFooterMultiplier"
-              :onReset="() => { newPreset.frame.headerFooterMultiplier = 1 }" showValue />
+              <DefaultSlider v-model="newPreset.frame.headerFooterMultiplier"
+                :min="editorConfig.minHeaderFooterMultiplier" :max="editorConfig.maxHeaderFooterMultiplier"
+                :step="editorConfig.stepHeaderFooterMultiplier"
+                :onReset="() => { newPreset.frame.headerFooterMultiplier = 1 }" showValue />
             </div>
           </div>
         </div>
@@ -665,7 +672,7 @@ const tabs = ['myPresets', 'createPreset']
 </template>
 
 <style scoped>
-.content-aligned.two-items p{
+.content-aligned.two-items p {
   text-align: left;
 }
 </style>

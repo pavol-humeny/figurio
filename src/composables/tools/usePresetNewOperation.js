@@ -1,5 +1,5 @@
 import { useMath } from '@/composables/common/useMath'
-import { ref, computed, watch, reactive, nextTick } from 'vue'
+import { ref, computed, watch, reactive, nextTick, onMounted } from 'vue'
 
 /**
  * Logic for managing new preset operation creation
@@ -41,7 +41,7 @@ export function usePresetNewOperation(imageStore, props, emit, t) {
   /**
    * Available operation types for user to choose from
    */
-  const operationOptions = [
+  const baseOperationOptions = [
     {
       label: t('tools.preset.settings.myPresets.presetValues.transformations.rotation'),
       value: 'rotation',
@@ -68,6 +68,21 @@ export function usePresetNewOperation(imageStore, props, emit, t) {
     },
     // UPDATE new tool
   ]
+
+  /**
+   * Computed operation options based on existing image operations
+   * Do not return grayscale if it is already applied
+   */
+  const operationOptions = computed(() => {
+    const existingTypes = props.localImageOperations?.map((op) => op.type) || []
+    return baseOperationOptions.filter((opt) => {
+      // If grayscale already exists, don't return it
+      if (opt.value === 'grayscale' && existingTypes.includes('grayscale')) {
+        return false
+      }
+      return true
+    })
+  })
 
   /**
    * Currently selected operation type
@@ -195,9 +210,7 @@ export function usePresetNewOperation(imageStore, props, emit, t) {
       if (isDimensionsLinked.value) {
         const aspectRatio = originalHeight / originalWidth || 1
         params.cropBox.width = clampedWidth
-        params.cropBox.height = round(
-          clamp(clampedWidth * aspectRatio, 0, maxCropHeight.value),
-        )
+        params.cropBox.height = round(clamp(clampedWidth * aspectRatio, 0, maxCropHeight.value))
       } else {
         params.cropBox.width = clampedWidth
       }
@@ -216,6 +229,10 @@ export function usePresetNewOperation(imageStore, props, emit, t) {
       cropWidthInputRef.value?.setValue(params.cropBox.width)
     })
   }
+
+  onMounted(() => {
+    console.log(props.localImageOperations[0].type)
+  })
 
   return {
     rotationOptions,

@@ -21,6 +21,10 @@ const props = defineProps({
     type: Object,
     required: true,
   },
+  localImageOperations: {
+    type: Array,
+    required: true,
+  },
 })
 
 /**
