@@ -171,7 +171,11 @@ export function useZoomControl(viewportStore) {
   const toggleZoomMode = (mode) => {
     if (mode === viewportStore.zoomMode) return
 
-    viewportStore.zoomMode = mode
+    useSendEvent().sendEvent('buttonClicked', null, 'zoomMode', {
+      mode: mode,
+    })
+
+    viewportStore.setZoomMode(mode)
   }
 
   const setNewTextWidth = (newWidth) => {

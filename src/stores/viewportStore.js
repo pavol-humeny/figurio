@@ -6,6 +6,21 @@ import { globalConfig } from '@/config/globalConfig'
 const { round } = useMath()
 
 /**
+ * Retrieves a string from localStorage.
+ *
+ * @param {string} key - The localStorage key to read from.
+ * @param {string} fallback - The default value if the key is not found.
+ * @returns {string} The stored string or the fallback.
+ */
+const getString = (key, fallback) => {
+  const value = localStorage.getItem(key)
+  console.log(
+    `getString: key=${key}, value=${value}, fallback=${fallback}, return=${value !== null ? value : fallback}`,
+  )
+  return value !== null ? value : fallback
+}
+
+/**
  * Store managing the viewport settings
  */
 export const useViewportStore = defineStore('viewportStore', {
@@ -50,7 +65,8 @@ export const useViewportStore = defineStore('viewportStore', {
     guideLine: null, // { centerX: number, centerY: number, angle: number } - Center point and angle of the guide line
 
     /** Zoom mode */
-    zoomMode: globalConfig.zoomMode, // 'classic', 'text'
+    zoomMode: getString(`${globalConfig.LOCAL_STORAGE_PREFIX}zoomMode`, globalConfig.zoomMode),
+
     /** Text size */
     textWidth: globalConfig.textWidth,
   }),
@@ -151,6 +167,9 @@ export const useViewportStore = defineStore('viewportStore', {
       this.panY = this.defaultPanY
     },
 
+    /**
+     * Reset all viewport state to default values.
+     */
     reset() {
       this.zoomLevel = this.defaultZoomLevel
       this.fitZoomLevel = 1.0
@@ -160,6 +179,26 @@ export const useViewportStore = defineStore('viewportStore', {
       this.movementSpeed = this.defaultMovementSpeed
       this.shouldFitToScreen = false
       this.fitImageOnLoad = true
+      this.zoomMode = getString(
+        `${globalConfig.LOCAL_STORAGE_PREFIX}zoomMode`,
+        globalConfig.zoomMode,
+      )
+      this.textWidth = globalConfig.textWidth
+    },
+
+    /**
+     * Set the zoom mode.
+     * @param {string} mode New zoom mode
+     */
+    setZoomMode(mode) {
+      this.zoomMode = mode
+
+      localStorage.setItem(`${globalConfig.LOCAL_STORAGE_PREFIX}zoomMode`, this.zoomMode.toString())
+
+      console.log(
+        'Zoom mode set to:',
+        localStorage.getItem(`${globalConfig.LOCAL_STORAGE_PREFIX}zoomMode`),
+      )
     },
 
     /**
