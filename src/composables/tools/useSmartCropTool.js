@@ -1,235 +1,27 @@
-import { ref, watch } from 'vue'
 import { useConfirmModal } from '../modals/useConfirmModal'
-import { useMath } from '../common/useMath'
 import { editorConfig } from '@/config/editorConfig'
 import { useToastModal } from '../modals/useToastModal'
 
 /**
- * Whether the crop box is currently shown
- */
-const isCropShown = ref(false)
-
-/**
- * Color selected for the smart crop
- */
-const selectedColor = ref(editorConfig.smartCropDefaultColor)
-
-/**
- * Indents for the crop box
- */
-const topIndent = ref(0)
-const bottomIndent = ref(0)
-const leftIndent = ref(0)
-const rightIndent = ref(0)
-
-/**
- * Limits for the crop box indents
- */
-const topIndentMin = ref(0)
-const topIndentMax = ref(0)
-const rightIndentMin = ref(0)
-const rightIndentMax = ref(0)
-const bottomIndentMin = ref(0)
-const bottomIndentMax = ref(0)
-const leftIndentMin = ref(0)
-const leftIndentMax = ref(0)
-
-/**
- * Crop box object containing the indents and dimensions
- * @type {import('vue').Ref<{ topIndent: number, leftIndent: number, rightIndent: number, bottomIndent: number, width: number, height: number }>}
- */
-const cropBox = ref({
-  topIndent: 0,
-  leftIndent: 0,
-  rightIndent: 0,
-  bottomIndent: 0,
-  width: 0,
-  height: 0,
-})
-
-/**
- * Logic for the smart crop tool
+ * Logic for the auto crop tool for preset
  * @param {import('@/stores/imageStore').ImageStore} imageStore - The image store
  * @param {import('@/stores/historyStore').HistoryStore} historyStore - The history store
  * @param {import('@/stores/editorStore').EditorStore} editorStore - The editor store
  * @param {function} t - Translation function
  * @return {Object} - Composable methods and reactive properties
  */
-export function useSmartCropTool(imageStore, historyStore, editorStore, t) {
+export function useSmartCropTool(imageStore, t) {
   const { showConfirmModal } = useConfirmModal()
   const { showToastModal } = useToastModal()
-  const { clamp } = useMath()
-
-  /**
-   * Watch for changes in the rendered image and reset the crop box
-   */
-  watch(
-    () => imageStore.getRenderedImage({ t, renderCall: false }),
-    () => {
-      resetCropBox()
-    },
-  )
-
-  /**
-   * Watch for changes in the file dimensions and update the crop box limits
-   */
-  watch(
-    () => imageStore.fileDimensions,
-    (fileDimensions) => {
-      if (fileDimensions.width && fileDimensions.height) {
-        topIndentMax.value = fileDimensions.height - bottomIndent.value
-        rightIndentMax.value = fileDimensions.width - leftIndent.value
-        bottomIndentMax.value = fileDimensions.height - topIndent.value
-        leftIndentMax.value = fileDimensions.width - rightIndent.value
-      }
-    },
-    { immediate: true, deep: true },
-  )
-
-  /**
-   * Watch for changes in the crop box indents and update the crop box dimensions
-   */
-  watch(topIndent, (value) => {
-    cropBox.value.topIndent = clamp(value, topIndentMin.value, topIndentMax.value)
-    cropBox.value.height =
-      imageStore.fileDimensions.height - cropBox.value.topIndent - bottomIndent.value
-
-    bottomIndentMax.value = imageStore.fileDimensions.height - cropBox.value.topIndent
-  })
-  watch(bottomIndent, (value) => {
-    cropBox.value.bottomIndent = clamp(value, bottomIndentMin.value, bottomIndentMax.value)
-    cropBox.value.height =
-      imageStore.fileDimensions.height - topIndent.value - cropBox.value.bottomIndent
-
-    topIndentMax.value = imageStore.fileDimensions.height - cropBox.value.bottomIndent
-  })
-  watch(leftIndent, (value) => {
-    cropBox.value.leftIndent = clamp(value, leftIndentMin.value, leftIndentMax.value)
-    cropBox.value.width =
-      imageStore.fileDimensions.width - cropBox.value.leftIndent - rightIndent.value
-
-    rightIndentMax.value = imageStore.fileDimensions.width - cropBox.value.leftIndent
-  })
-  watch(rightIndent, (value) => {
-    cropBox.value.rightIndent = clamp(value, rightIndentMin.value, rightIndentMax.value)
-    cropBox.value.width =
-      imageStore.fileDimensions.width - leftIndent.value - cropBox.value.rightIndent
-
-    leftIndentMax.value = imageStore.fileDimensions.width - cropBox.value.rightIndent
-  })
-
-  /**
-   * Watch for changes in the selected color and reset the crop box
-   */
-  watch(selectedColor, (value) => {
-    resetCropBox()
-    selectedColor.value = value
-  })
-
-  /**
-   * Watch for changes in the selected tool and tab to show or hide the crop box
-   */
-  watch(
-    () => ({
-      tool: editorStore.selectedToolKey,
-      tab: editorStore.selectedTabPerTool[editorStore.selectedToolKey],
-    }),
-    (newVal) => {
-      if (newVal.tool === 'smartCrop' && newVal.tab === 'manual') {
-        editorStore.selectSubTool('isCropShown')
-        isCropShown.value = true
-      }
-
-      if (newVal.tool === 'smartCrop' && newVal.tab === 'auto') {
-        editorStore.selectSubTool('')
-        isCropShown.value = false
-      }
-    },
-  )
-
-  /**
-   * Reset the crop box to default values
-   */
-  const resetCropBox = () => {
-    selectedColor.value = editorConfig.smartCropDefaultColor
-
-    isCropShown.value = false
-
-    topIndent.value = 0
-    bottomIndent.value = 0
-    leftIndent.value = 0
-    rightIndent.value = 0
-
-    cropBox.value.topIndent = 0
-    cropBox.value.leftIndent = 0
-    cropBox.value.rightIndent = 0
-    cropBox.value.bottomIndent = 0
-    cropBox.value.width = imageStore.fileDimensions.width
-    cropBox.value.height = imageStore.fileDimensions.height
-
-    editorStore.selectSubTool('')
-  }
-
-  /**
-   * Apply the auto smart crop based on the selected color
-   */
-  const applyAutoSmartCrop = async () => {
-    imageStore.addImageOperation({
-      type: 'smartCrop',
-      color: structuredClone(selectedColor.value),
-      cropBox: JSON.parse(JSON.stringify(cropBox.value)),
-    })
-
-    applyAutoSmartCropRender()
-
-    historyStore.push(imageStore.getSnapshot(t))
-  }
 
   /**
    * Apply the auto smart crop render with the specified color
    * @param {string} color - The color to use for the smart crop
    */
   const applyAutoSmartCropRender = async (color) => {
-    const newCropBox = calculateIndents(color || selectedColor.value)
+    const newCropBox = calculateIndents(color)
 
     await applyCrop(newCropBox)
-  }
-
-  /**
-   * Show or hide the auto smart crop tool
-   */
-  const showAutoSmartCrop = async () => {
-    if (imageStore.svgObjects.length > 0) {
-      const confirmed = await showConfirmModal(
-        t('tools.confirmNeedRasterization.title'),
-        t('tools.confirmNeedRasterization.message'),
-        t('tools.confirmNeedRasterization.cancel'),
-        t('tools.confirmNeedRasterization.confirm'),
-      )
-      if (confirmed) {
-        await imageStore.rasterize(t)
-      } else {
-        return
-      }
-    }
-
-    calculateIndents(selectedColor.value)
-    isCropShown.value = !isCropShown.value
-
-    if (isCropShown.value) {
-      editorStore.selectSubTool('isCropShown')
-    } else {
-      editorStore.selectSubTool('')
-    }
-  }
-
-  /**
-   * Apply the manual smart crop with the current crop box values
-   */
-  const applyManualSmartCrop = async () => {
-    await applyCrop(cropBox.value)
-
-    historyStore.push(imageStore.getSnapshot(t))
   }
 
   /**
@@ -346,15 +138,6 @@ export function useSmartCropTool(imageStore, historyStore, editorStore, t) {
       height: height - top - (height - bottom - 1), // height: height - top - cropBox2.bottomIndent,
     }
 
-    // Set cropBox values for display
-    topIndent.value = top
-    bottomIndent.value = height - bottom - 1
-    leftIndent.value = left
-    rightIndent.value = width - right - 1
-
-    cropBox.value.width = imageStore.fileDimensions.width - leftIndent.value - rightIndent.value
-    cropBox.value.height = imageStore.fileDimensions.height - topIndent.value - bottomIndent.value
-
     return cropBox2
   }
 
@@ -389,8 +172,6 @@ export function useSmartCropTool(imageStore, historyStore, editorStore, t) {
         t('tools.smartCrop.settings.noCropApplied.title'),
         t('tools.smartCrop.settings.noCropApplied.message'),
       )
-
-      resetCropBox()
       return
     }
 
@@ -438,30 +219,10 @@ export function useSmartCropTool(imageStore, historyStore, editorStore, t) {
     imageStore.fileDimensions.fileAspectRatio = width / height || 1
 
     imageStore.newFileDimensions = { ...imageStore.fileDimensions }
-
-    resetCropBox()
   }
 
   return {
-    isCropShown,
-    selectedColor,
-    topIndentMin,
-    topIndentMax,
-    rightIndentMin,
-    rightIndentMax,
-    bottomIndentMin,
-    bottomIndentMax,
-    leftIndentMin,
-    leftIndentMax,
-    topIndent,
-    bottomIndent,
-    leftIndent,
-    rightIndent,
-    cropBox,
-    showAutoSmartCrop,
-    applyAutoSmartCrop,
     applyAutoSmartCropRender,
-    applyManualSmartCrop,
     calculateIndents,
   }
 }

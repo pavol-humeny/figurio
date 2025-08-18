@@ -10,21 +10,6 @@ export const toolsDefinitions = [
     settingsComponent: () => import('@/components/toolsSettings/CropToolSettings.vue'),
   },
   {
-    key: 'smartCrop',
-    iconName: 'IconSmartCropTool',
-    settingsComponent: () => import('@/components/toolsSettings/SmartCropToolSettings.vue'),
-    subTools: [
-      {
-        key: 'auto',
-        iconName: 'IconAutoSmartCropTool',
-      },
-      {
-        key: 'manual',
-        iconName: 'IconManualSmartCropTool',
-      },
-    ],
-  },
-  {
     key: 'frame',
     iconName: 'IconFrameTool',
     settingsComponent: () => import('@/components/toolsSettings/FrameToolSettings.vue'),

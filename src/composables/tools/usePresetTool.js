@@ -490,9 +490,7 @@ export function usePresetTool(
         } else if (operation.type === 'flip') {
           useFlipTool(imageStore, historyStore, t).applyFlipRender(operation.direction)
         } else if (operation.type === 'smartCrop') {
-          useSmartCropTool(imageStore, historyStore, editorStore, t).applyAutoSmartCropRender(
-            operation.color,
-          )
+          useSmartCropTool(imageStore, t).applyAutoSmartCropRender(operation.color)
         } else if (operation.type === 'grayscale') {
           useGrayscaleTool(imageStore, historyStore).applyGrayscaleRender()
         } else if (operation.type === 'crop') {
