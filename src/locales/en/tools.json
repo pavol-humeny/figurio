@@ -39,7 +39,7 @@
   },
   "transform": {
     "label": "Transform",
-    "tip": "Applies rotation, flipping, cropping or resizing to the image",
+    "tip": "Applies rotation, flipping or resizing to the image",
     "tipDisabled": "",
     "shortcut": "",
     "subTools": {
@@ -52,11 +52,6 @@
         "label": "Flip",
         "tip": "Applies horizontal or vertical flipping to the image",
         "shortcut": "F"
-      },
-      "crop": {
-        "label": "Crop",
-        "tip": "Applies cropping to the selected area of the image",
-        "shortcut": "C"
       },
       "resize": {
         "label": "Resize",
@@ -86,41 +81,6 @@
           "text": "Apply flip"
         }
       },
-      "crop": {
-        "label": "Crop",
-        "cropPosition": {
-          "title": "Crop position",
-          "x": "X",
-          "y": "Y"
-        },
-        "cropDimensions": {
-          "title": "Crop dimensions",
-          "width": "Width",
-          "height": "Height",
-          "tipLinked": "Unlink width and height",
-          "tipUnlinked": "Link width and height"
-        },
-        "cropVariants": {
-          "label": "Crop variants",
-          "cropFree": "Custom",
-          "crop11": "1:1",
-          "crop43": "4:3",
-          "crop34": "3:4",
-          "crop169": "16:9",
-          "crop916": "9:16"
-        },
-        "applyCropButton": {
-          "text": "Apply crop"
-        },
-        "invalidCropBox": {
-          "title": "Invalid crop",
-          "message": "Crop dimensions or position are invalid. It must be within the image dimensions and have positive width and height."
-        },
-        "cropBoxIsSameAsOriginalImage": {
-          "title": "Crop box is same as original image",
-          "message": "Crop box is same as original image. No crop was applied."
-        }
-      },
       "resize": {
         "label": "Resize",
         "resizeDimensions": {
@@ -137,55 +97,61 @@
       }
     }
   },
-  "smartCrop": {
-    "label": "Smart Crop",
-    "tip": "Automatically crop empty borders from the image",
+  "crop": {
+    "label": "Crop",
+    "tip": "Crops the image manualy or use auto crop",
     "tipDisabled": "",
-    "shortcut": "Shift + C",
-    "subTools": {
-      "auto": {
-        "label": "Auto",
-        "tip": "Automatically crop the image based on the selected color.",
-        "shortcut": ""
-      },
-      "manual": {
-        "label": "Manual",
-        "tip": "Manually adjust the crop box.",
-        "shortcut": ""
-      }
-    },
+    "shortcut": "C",
     "settings": {
-      "auto": {
-        "label": "Auto",
-        "selectColor": {
-          "title": "Select color to crop"
+      "general": {
+        "cropPosition": {
+          "title": "Crop position",
+          "x": "X",
+          "y": "Y"
         },
-        "applySmartCropAutoButton": {
-          "text": "Apply crop"
+        "cropDimensions": {
+          "title": "Crop dimensions",
+          "width": "Width",
+          "height": "Height",
+          "tipLinked": "Unlink width and height",
+          "tipUnlinked": "Link width and height"
         },
-        "showSmartCropAutoButton": {
-          "text": {
-            "show": "Show crop",
-            "hide": "Hide crop"
+        "autoCrop":{
+          "title": "Auto crop",
+          "autoCropColor":{
+            "title": "Auto crop color",
+            "tip": "Select the color for the auto crop"
+          },
+          "useBaseImage":{
+            "title": "Use base image",
+            "tip": "Enable or disable the use of the base image for calculating auto crop"
+          },
+          "fitCropButton": {
+            "text": "Fit crop"
+          },
+          "manualAdjustments":{
+            "title": "Manual adjustments",
+            "top": "Top indent",
+            "bottom": "Bottom indent",
+            "left": "Left indent",
+            "right": "Right indent"
           }
-        }
-      },
-      "manual": {
-        "label": "Manual",
-        "adjustment": {
-          "title": "Manual adjustment",
-          "top": "Top indent",
-          "bottom": "Bottom indent",
-          "left": "Left indent",
-          "right": "Right indent"
         },
-        "applySmartCropManualButton": {
+        "resetCropButton":{
+          "text": "Reset crop",
+          "tip": "Reset the crop area to the original image"
+        },
+        "applyCropButton": {
           "text": "Apply crop"
+        },
+        "invalidCropBox": {
+          "title": "Invalid crop",
+          "message": "Crop dimensions or position are invalid. It must be within the image dimensions and have positive width and height."
+        },
+        "cropBoxIsSameAsOriginalImage": {
+          "title": "Crop box is same as original image",
+          "message": "Crop box is same as original image. No crop was applied."
         }
-      },
-      "noCropApplied": {
-        "title": "No crop applied",
-        "message": "No crop was applied. Crop box is same as original image."
       }
     }
   },

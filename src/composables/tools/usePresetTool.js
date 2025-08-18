@@ -471,8 +471,8 @@ export function usePresetTool(
       ) {
         showToastModal(
           'error',
-          t('tools.transform.settings.crop.invalidCropBox.title'),
-          t('tools.transform.settings.crop.invalidCropBox.message'),
+          t('tools.crop.settings.general.invalidCropBox.title'),
+          t('tools.crop.settings.general.invalidCropBox.message'),
         )
         return
       }

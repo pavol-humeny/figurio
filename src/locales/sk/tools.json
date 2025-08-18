@@ -39,7 +39,7 @@
   },
   "transform": {
     "label": "Úpravy",
-    "tip": "Aplikuje rotáciu, zrkadlenie, orezanie alebo zmenu veľkosti obrázka",
+    "tip": "Aplikuje rotáciu, zrkadlenie alebo zmenu veľkosti obrázka",
     "tipDisabled": "",
     "shortcut": "",
     "subTools": {
@@ -52,11 +52,6 @@
         "label": "Preklopiť",
         "tip": "Aplikuje horizontálne alebo vertikálne preklopenie obrázka",
         "shortcut": "F"
-      },
-      "crop": {
-        "label": "Orezať",
-        "tip": "Oreže vybranú oblasť obrázka",
-        "shortcut": "C"
       },
       "resize": {
         "label": "Zmeniť veľkosť",
@@ -86,41 +81,6 @@
           "text": "Použiť zrkadlenie"
         }
       },
-      "crop": {
-        "label": "Orezanie",
-        "cropPosition": {
-          "title": "Pozícia orezania",
-          "x": "X",
-          "y": "Y"
-        },
-        "cropDimensions": {
-          "title": "Rozmery orezania",
-          "width": "Šírka",
-          "height": "Výška",
-          "tipLinked": "Odpojiť šírku a výšku",
-          "tipUnlinked": "Prepojiť šírku a výšku"
-        },
-        "cropVariants": {
-          "label": "Varianty orezania",
-          "cropFree": "Vlastné",
-          "crop11": "1:1",
-          "crop43": "4:3",
-          "crop34": "3:4",
-          "crop169": "16:9",
-          "crop916": "9:16"
-        },
-        "applyCropButton": {
-          "text": "Použiť orezanie"
-        },
-        "invalidCropBox": {
-          "title": "Neplatné orezanie",
-          "message": "Rozmery alebo pozícia orezania sú neplatné. Musí byť v rámci rozmerov obrázka a mať kladnú šírku a výšku."
-        },
-        "cropBoxIsSameAsOriginalImage": {
-          "title": "Orezanie je rovnaké ako pôvodný obrázok",
-          "message": "Orezanie je rovnaké ako pôvodný obrázok. Orezanie nebolo použité."
-        }
-      },
       "resize": {
         "label": "Zmena veľkosti",
         "resizeDimensions": {
@@ -137,55 +97,61 @@
       }
     }
   },
-  "smartCrop": {
-    "label": "Smart orezanie",
-    "tip": "Automaticky oreže prázdne okraje obrázka",
+  "crop": {
+    "label": "Orezanie",
+    "tip": "Orezanie obrázku manuálne alebo automaticky",
     "tipDisabled": "",
-    "shortcut": "Shift + C",
-    "subTools": {
-      "auto": {
-        "label": "Automatické",
-        "tip": "Automatické orezanie obrázka na základe vybranej farby.",
-        "shortcut": ""
-      },
-      "manual": {
-        "label": "Manuálne",
-        "tip": "Manuálne uprav orezávací rámec.",
-        "shortcut": ""
-      }
-    },
+    "shortcut": "C",
     "settings": {
-      "auto": {
-        "label": "Automatické",
-        "selectColor": {
-          "title": "Vyber farbu na orezanie"
+      "general": {
+        "cropPosition": {
+          "title": "Pozícia orezania",
+          "x": "X",
+          "y": "Y"
         },
-        "applySmartCropAutoButton": {
-          "text": "Použiť orezanie"
+        "cropDimensions": {
+          "title": "Rozmery orezania",
+          "width": "Šírka",
+          "height": "Výška",
+          "tipLinked": "Odpojiť šírku a výšku",
+          "tipUnlinked": "Spojiť šírku a výšku"
         },
-        "showSmartCropAutoButton": {
-          "text": {
-            "show": "Zobraziť orezanie",
-            "hide": "Skryť orezanie"
+        "autoCrop": {
+          "title": "Automatické orezanie",
+          "autoCropColor": {
+            "title": "Farba automatického orezania",
+            "tip": "Vyber farbu pre automatické orezanie"
+          },
+          "useBaseImage": {
+            "title": "Použiť pôvodný obrázok",
+            "tip": "Povoliť alebo zakázať použitie pôvodného obrázka pre výpočet automatického orezania"
+          },
+          "fitCropButton": {
+            "text": "Orezať na tesno"
+          },
+          "manualAdjustments": {
+            "title": "Manuálne úpravy",
+            "top": "Horné odsadenie",
+            "bottom": "Dolné odsadenie",
+            "left": "Ľavé odsadenie",
+            "right": "Pravé odsadenie"
           }
-        }
-      },
-      "manual": {
-        "label": "Manuálne",
-        "adjustment": {
-          "title": "Manuálna úprava",
-          "top": "Horné odsadenie",
-          "bottom": "Dolné odsadenie",
-          "left": "Ľavé odsadenie",
-          "right": "Pravé odsadenie"
         },
-        "applySmartCropManualButton": {
+        "resetCropButton": {
+          "text": "Obnoviť orezanie",
+          "tip": "Obnoví oblasť orezania na pôvodný obrázok"
+        },
+        "applyCropButton": {
           "text": "Použiť orezanie"
+        },
+        "invalidCropBox": {
+          "title": "Neplatné orezanie",
+          "message": "Rozmery alebo pozícia orezania sú neplatné. Musí byť v rámci rozmerov obrázka a mať kladnú šírku a výšku."
+        },
+        "cropBoxIsSameAsOriginalImage": {
+          "title": "Orezanie je rovnaké ako pôvodný obrázok",
+          "message": "Orezanie je rovnaké ako pôvodný obrázok. Orezanie nebolo použité."
         }
-      },
-      "noCropApplied": {
-        "title": "Žiadne orezanie",
-        "message": "Žiadne orezanie nebolo použité. Orezanie je rovnaké ako pôvodný obrázok."
       }
     }
   },

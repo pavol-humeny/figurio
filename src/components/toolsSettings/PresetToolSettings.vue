@@ -479,7 +479,7 @@ const tabs = ['myPresets', 'createPreset']
             <div class="content-inputs">
               <div class="content-input" :class="newPreset.cropBox.x === 0 ? 'no-value' : ''">
                 <label for="x-input">
-                  {{ $t('tools.transform.settings.crop.cropPosition.x') }}
+                  {{ $t('tools.crop.settings.general.cropPosition.x') }}
                 </label>
                 <NumberInput ref="cropPositionXInputRef" v-model="newPreset.cropBox.x" :min="0"
                   :max="maxCropBoxPositionX" unit="px" />
@@ -487,7 +487,7 @@ const tabs = ['myPresets', 'createPreset']
               <div class="content-between-inputs-icon-wrapper disabled"></div>
               <div class="content-input" :class="newPreset.cropBox.y === 0 ? 'no-value' : ''">
                 <label for="y-input">
-                  {{ $t('tools.transform.settings.crop.cropPosition.y') }}
+                  {{ $t('tools.crop.settings.general.cropPosition.y') }}
                 </label>
                 <NumberInput ref="cropPositionYInputRef" v-model="newPreset.cropBox.y" :min="0"
                   :max="maxCropBoxPositionY" unit="px" />
@@ -496,7 +496,7 @@ const tabs = ['myPresets', 'createPreset']
             <div class="content-inputs" :style="{ marginTop: '10px' }">
               <div class="content-input" :class="newPreset.cropBox.width === 0 ? 'no-value' : ''">
                 <label for="width-input">
-                  {{ $t('tools.transform.settings.crop.cropDimensions.width') }}
+                  {{ $t('tools.crop.settings.general.cropDimensions.width') }}
                 </label>
                 <NumberInput ref="cropWidthInputRef" v-model="newPreset.cropBox.width" :min="0" :max="maxCropBoxWidth"
                   unit="px" />
@@ -506,7 +506,7 @@ const tabs = ['myPresets', 'createPreset']
 
               <div class="content-input" :class="newPreset.cropBox.height === 0 ? 'no-value' : ''">
                 <label for="height-input">
-                  {{ $t('tools.transform.settings.crop.cropDimensions.height') }}
+                  {{ $t('tools.crop.settings.general.cropDimensions.height') }}
                 </label>
                 <NumberInput ref="cropHeightInputRef" v-model="newPreset.cropBox.height" :min="0"
                   :max="maxCropBoxHeight" unit="px" />

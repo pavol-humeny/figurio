@@ -59,13 +59,13 @@ const {
           <div class="content-wrapper">
             <div class="content-title">
               <p>
-                {{ $t('tools.transform.settings.crop.cropPosition.title') }}
+                {{ $t('tools.crop.settings.general.cropPosition.title') }}
               </p>
             </div>
             <div class="content-inputs">
               <div class="content-input">
                 <label for="x-input">
-                  {{ $t('tools.transform.settings.crop.cropPosition.x') }}
+                  {{ $t('tools.crop.settings.general.cropPosition.x') }}
                 </label>
                 <NumberInput ref="positionXInputRef" v-model="cropPositionX" :min="0" :max="maxCropPositionX"
                   @update="(val) => updatePosition('x', val)" unit="px" />
@@ -75,7 +75,7 @@ const {
 
               <div class="content-input">
                 <label for="y-input">
-                  {{ $t('tools.transform.settings.crop.cropPosition.y') }}
+                  {{ $t('tools.crop.settings.general.cropPosition.y') }}
                 </label>
                 <NumberInput ref="positionYInputRef" v-model="cropPositionY" :min="0" :max="maxCropPositionY"
                   @update="(val) => updatePosition('y', val)" unit="px" />
@@ -89,13 +89,13 @@ const {
           <div class="content-wrapper">
             <div class="content-title">
               <p>
-                {{ $t('tools.transform.settings.crop.cropDimensions.title') }}
+                {{ $t('tools.crop.settings.general.cropDimensions.title') }}
               </p>
             </div>
             <div class="content-inputs">
               <div class="content-input">
                 <label for="width-input">
-                  {{ $t('tools.transform.settings.crop.cropDimensions.width') }}
+                  {{ $t('tools.crop.settings.general.cropDimensions.width') }}
                 </label>
                 <NumberInput ref="widthInputRef" v-model="tmpCropWidth" :min="0" :max="maxCropWidth"
                   @update="(val) => updateDimension('width', val)" unit="px" />
@@ -103,14 +103,14 @@ const {
 
               <div class="content-between-inputs-icon-wrapper">
                 <LinkValuesIcon v-model="isDimensionsLinked"
-                  :tipLinked="$t('tools.transform.settings.crop.cropDimensions.tipLinked')"
-                  :tipUnlinked="$t('tools.transform.settings.crop.cropDimensions.tipUnlinked')" size="30"
+                  :tipLinked="$t('tools.crop.settings.general.cropDimensions.tipLinked')"
+                  :tipUnlinked="$t('tools.crop.settings.general.cropDimensions.tipUnlinked')" size="30"
                   position="bottom-left" />
               </div>
 
               <div class="content-input">
                 <label for="height-input">
-                  {{ $t('tools.transform.settings.crop.cropDimensions.height') }}
+                  {{ $t('tools.crop.settings.general.cropDimensions.height') }}
                 </label>
                 <NumberInput ref="heightInputRef" v-model="tmpCropHeight" :min="0" :max="maxCropHeight"
                   @update="(val) => updateDimension('height', val)" unit="px" />
@@ -119,27 +119,33 @@ const {
           </div>
         </div>
 
-        <!-- Auto crop color -->
+        <!-- Auto crop -->
         <div class="settings-content-wrapper">
           <div class="content-title">
-            <p>Auto crop</p>
+            <p>
+              {{ $t('tools.crop.settings.general.autoCrop.title') }}
+            </p>
           </div>
           <div class="content-wrapper">
             <div class="content-aligned two-items" style="align-items: center">
-              <p style="text-align: start">Crop color</p>
-              <ColorPicker v-model="selectedColor" />
+              <p style="text-align: start">
+                {{ $t('tools.crop.settings.general.autoCrop.autoCropColor.title') }}
+              </p>
+              <ColorPicker v-model="selectedColor" :tip="$t('tools.crop.settings.general.autoCrop.autoCropColor.tip')" position="bottom-left"/>
             </div>
           </div>
           <div class="content-wrapper">
             <div class="content-aligned two-items" style="align-items: center">
-              <p style="text-align: start">Use base image</p>
+              <p style="text-align: start">
+                {{ $t('tools.crop.settings.general.autoCrop.useBaseImage.title') }}
+              </p>
               <ToggleButton v-model="useBaseImage" :scale="0.6"
-                :style="{ transform: 'translateX(16px)' }"  />
+                :style="{ transform: 'translateX(16px)' }" :tip="$t('tools.crop.settings.general.autoCrop.useBaseImage.tip')" position="bottom-left"/>
             </div>
           </div>
           <!-- Fit crop -->
           <div class="content-wrapper">
-            <DefaultButton text="Fit crop" @click="fitCrop" />
+            <DefaultButton :text="$t('tools.crop.settings.general.autoCrop.fitCropButton.text')" @click="fitCrop" />
           </div>
         </div>
 
@@ -147,22 +153,24 @@ const {
         <div v-if="fitCropApplied" class="settings-content-wrapper">
           <div class="content-wrapper">
             <div class="content title">
-              <p>{{ $t('tools.smartCrop.settings.manual.adjustment.title') }}</p>
+              <p>
+                {{ $t('tools.crop.settings.general.autoCrop.manualAdjustments.title') }}
+              </p>
             </div>
             <div class="content-title">
-              <p>{{ $t('tools.smartCrop.settings.manual.adjustment.top') }}</p>
+              <p>{{ $t('tools.crop.settings.general.autoCrop.manualAdjustments.top') }}</p>
             </div>
             <StepperInput v-model="manualIndents.topIndent" :min="manualIndents.topIndentMin" :max="manualIndents.topIndentMax" :step="1" @update="recalculateCropBox" />
             <div class="content-title">
-              <p>{{ $t('tools.smartCrop.settings.manual.adjustment.right') }}</p>
+              <p>{{ $t('tools.crop.settings.general.autoCrop.manualAdjustments.right') }}</p>
             </div>
             <StepperInput v-model="manualIndents.rightIndent" :min="manualIndents.rightIndentMin" :max="manualIndents.rightIndentMax" :step="1" @update="recalculateCropBox" />
             <div class="content-title">
-              <p>{{ $t('tools.smartCrop.settings.manual.adjustment.bottom') }}</p>
+              <p>{{ $t('tools.crop.settings.general.autoCrop.manualAdjustments.bottom') }}</p>
             </div>
             <StepperInput v-model="manualIndents.bottomIndent" :min="manualIndents.bottomIndentMin" :max="manualIndents.bottomIndentMax" :step="1" @update="recalculateCropBox" />
             <div class="content-title">
-              <p>{{ $t('tools.smartCrop.settings.manual.adjustment.left') }}</p>
+              <p>{{ $t('tools.crop.settings.general.autoCrop.manualAdjustments.left') }}</p>
             </div>
             <StepperInput v-model="manualIndents.leftIndent" :min="manualIndents.leftIndentMin" :max="manualIndents.leftIndentMax" :step="1" @update="recalculateCropBox" />
           </div>
@@ -172,7 +180,7 @@ const {
         <div class="settings-content-wrapper">
           <div class="content-wrapper">
             <div class="content-button">
-              <DefaultButton text="Reset crop" @click="resetCrop" :disabled=!cropCanBeReset />
+              <DefaultButton :text="$t('tools.crop.settings.general.resetCropButton.text')" @click="resetCrop" :disabled=!cropCanBeReset :tip="$t('tools.crop.settings.general.resetCropButton.tip')" position="bottom-left"/>
             </div>
           </div>
         </div>
@@ -181,7 +189,7 @@ const {
         <div class="settings-content-wrapper">
           <div class="content-wrapper">
             <div class="content-button">
-              <DefaultButton :text="$t('tools.transform.settings.crop.applyCropButton.text')" @click="applyCrop" />
+              <DefaultButton :text="$t('tools.crop.settings.general.applyCropButton.text')" @click="applyCrop" />
             </div>
           </div>
         </div>

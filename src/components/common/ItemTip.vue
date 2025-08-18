@@ -80,7 +80,7 @@ const showTip = computed(() => props.text !== '')
 
 <style scoped>
 .item-tip {
-  width: fit-content;
+  /* width: fit-content; */
 }
 
 .item-tip-bubble {
@@ -89,10 +89,11 @@ const showTip = computed(() => props.text !== '')
   padding: 6px 10px;
   border-radius: 6px;
   font-size: var(--tip-font-size);
-  white-space: normal;
+  /* white-space: normal; */
   box-shadow: var(--box-shadow-ui);
-  max-width: 300px;
+  /* max-width: 300px; */
   /* min-width: 200px; */
+  /* width: fit-content; */
 }
 
 .item-tip-bubble {

@@ -612,8 +612,8 @@ export function useCropTool(imageStore, viewportStore, editorStore, historyStore
     ) {
       showToastModal(
         'info',
-        t('tools.transform.settings.crop.cropBoxIsSameAsOriginalImage.title'),
-        t('tools.transform.settings.crop.cropBoxIsSameAsOriginalImage.message'),
+        t('tools.crop.settings.general.cropBoxIsSameAsOriginalImage.title'),
+        t('tools.crop.settings.general.cropBoxIsSameAsOriginalImage.message'),
       )
       return
     }
@@ -683,8 +683,8 @@ export function useCropTool(imageStore, viewportStore, editorStore, historyStore
     ) {
       showToastModal(
         'info',
-        t('tools.transform.settings.crop.cropBoxIsSameAsOriginalImage.title'),
-        t('tools.transform.settings.crop.cropBoxIsSameAsOriginalImage.message'),
+        t('tools.crop.settings.general.cropBoxIsSameAsOriginalImage.title'),
+        t('tools.crop.settings.general.cropBoxIsSameAsOriginalImage.message'),
       )
       return
     }
@@ -700,8 +700,8 @@ export function useCropTool(imageStore, viewportStore, editorStore, historyStore
     ) {
       showToastModal(
         'warning',
-        t('tools.transform.settings.crop.invalidCropBox.title'),
-        t('tools.transform.settings.crop.invalidCropBox.message'),
+        t('tools.crop.settings.general.invalidCropBox.title'),
+        t('tools.crop.settings.general.invalidCropBox.message'),
       )
       return
     }

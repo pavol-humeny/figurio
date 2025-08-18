@@ -145,22 +145,6 @@ const { isTutorialEnabled } = useInteractiveTutorial(
                   </li>
                 </ul>
               </div>
-              <!-- Transform - Crop -->
-              <div class="tool-description">
-                <div>
-                  <p class="title">
-                    {{ $t('tools.transform.subTools.crop.label') }}
-                  </p>
-                  <p class="shortcut">
-                    {{ $t('tools.transform.subTools.crop.shortcut') }}
-                  </p>
-                </div>
-                <ul class="description dot-paragraph">
-                  <li>
-                    {{ $t('tools.transform.subTools.crop.tip') }}
-                  </li>
-                </ul>
-              </div>
               <!-- Transform - Resize -->
               <div class="tool-description">
                 <div>
@@ -177,19 +161,19 @@ const { isTutorialEnabled } = useInteractiveTutorial(
                   </li>
                 </ul>
               </div>
-              <!-- SmartCrop -->
+              <!-- Crop -->
               <div class="tool-description">
                 <div>
                   <p class="title">
-                    {{ $t('tools.smartCrop.label') }}
+                    {{ $t('tools.crop.label') }}
                   </p>
                   <p class="shortcut">
-                    {{ $t('tools.smartCrop.shortcut') }}
+                    {{ $t('tools.crop.shortcut') }}
                   </p>
                 </div>
                 <ul class="description dot-paragraph">
                   <li>
-                    {{ $t('tools.smartCrop.tip') }}
+                    {{ $t('tools.crop.tip') }}
                   </li>
                 </ul>
               </div>

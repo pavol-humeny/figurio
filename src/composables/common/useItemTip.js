@@ -22,7 +22,7 @@ export function useItemTip(options = {}) {
   /**
    * Tooltip position (defaults to 'top')
    */
-  const { position = 'top', delay = editorConfig.tipDelay, offset = 8 } = options
+  const { position = 'top', delay = editorConfig.tipDelay, offset = 8, text = '' } = options
 
   /**
    * Whether the tooltip is currently visible
@@ -47,12 +47,34 @@ export function useItemTip(options = {}) {
   /**
    * Computed CSS style for positioning the tooltip
    */
-  const itemTipStyle = computed(() => ({
-    position: 'absolute',
-    top: `${coords.value.top}px`,
-    left: `${coords.value.left}px`,
-    zIndex: 'var(--z-index-tip)',
-  }))
+
+  const itemTipStyle = computed(() => {
+    const baseStyle = {
+      position: 'absolute',
+      top: `${coords.value.top}px`,
+      left: `${coords.value.left}px`,
+      zIndex: 'var(--z-index-tip)',
+    }
+
+    const canvas = document.createElement('canvas')
+    const ctx = canvas.getContext('2d')
+
+    const fontSize = '13px'
+    const fontFamily = 'sans-serif'
+
+    ctx.font = `${fontSize} ${fontFamily}`
+
+    // Calculate width of text
+    const textWidth = ctx.measureText(text).width + 20
+    const minWidth = Math.min(Math.min(textWidth, 200), 300) 
+
+    return {
+      ...baseStyle,
+      minWidth: `${minWidth}px`,
+      maxWidth: '300px',
+      whiteSpace: 'normal',
+    }
+  })
 
   /**
    * Watches the visibility state and updates position when it changes
