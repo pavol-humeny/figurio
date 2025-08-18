@@ -12,14 +12,7 @@ import { useThrottleFn } from '@vueuse/core'
  * @param {import('vue').Ref<HTMLElement>} contentRef - Ref to the .viewport-content element
  * @returns {Object}
  */
-export function useViewportWrapper(
-  viewportStore,
-  imageStore,
-  editorStore,
-  uiStore,
-  contentRef,
-  t,
-) {
+export function useViewportWrapper(viewportStore, imageStore, editorStore, uiStore, contentRef, t) {
   const { clamp, round } = useMath()
 
   /**
@@ -461,7 +454,6 @@ export function useViewportWrapper(
   watch(
     [() => viewportStore.zoomMode, () => viewportStore.textWidth],
     () => {
-      console.log('-------- Zoom MODE ')
       centerImage()
       viewportStore.resetZoom()
       viewportStore.resetPan()

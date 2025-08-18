@@ -2,6 +2,7 @@
 import { useFileTabs } from '@/composables/editor/useFileTabs'
 import { useUiStore } from '@/stores/uiStore'
 import { useI18n } from 'vue-i18n'
+import { useViewportStore } from '@/stores/viewportStore'
 
 const { t } = useI18n()
 
@@ -22,7 +23,7 @@ const {
   onTabDragStart,
   onTabDrop,
   wrapperRef,
-} = useFileTabs(useUiStore(), t)
+} = useFileTabs(useUiStore(), useViewportStore(), t)
 
 </script>
 

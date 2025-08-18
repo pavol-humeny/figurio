@@ -10,7 +10,7 @@ import { useConfirmModal } from '../modals/useConfirmModal'
  * @param {(key: string) => string} t - Translation function
  * @returns {Object}
  */
-export function useFileTabs(uiStore, t) {
+export function useFileTabs(uiStore, viewportStore, t) {
   const { showConfirmModal } = useConfirmModal()
 
   /**
@@ -48,6 +48,10 @@ export function useFileTabs(uiStore, t) {
 
       await new Promise((resolve) => setTimeout(resolve, 1))
       uiStore.isLoading = false
+
+      viewportStore.resetZoom()
+      viewportStore.resetPan()
+      viewportStore.shouldFitToScreen = true
     }
   }
 

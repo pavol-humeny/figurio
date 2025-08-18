@@ -14,9 +14,6 @@ const { round } = useMath()
  */
 const getString = (key, fallback) => {
   const value = localStorage.getItem(key)
-  console.log(
-    `getString: key=${key}, value=${value}, fallback=${fallback}, return=${value !== null ? value : fallback}`,
-  )
   return value !== null ? value : fallback
 }
 
