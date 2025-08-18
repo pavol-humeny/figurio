@@ -9,6 +9,10 @@ import { useI18n } from 'vue-i18n'
 import NumberInput from '../common/NumberInput.vue'
 import LinkValuesIcon from '../common/LinkValuesIcon.vue'
 import DefaultButton from '../common/DefaultButton.vue'
+import ColorPicker from '../common/ColorPicker.vue'
+import ToggleButton from '../common/ToggleButton.vue'
+import StepperInput from '../common/StepperInput.vue'
+
 
 const { t } = useI18n()
 
@@ -32,6 +36,15 @@ const {
   positionXInputRef,
   positionYInputRef,
   applyCrop,
+  resetCrop,
+  cropCanBeReset,
+  // Auto crop
+  selectedColor,
+  useBaseImage,
+  fitCrop,
+  manualIndents,
+  recalculateCropBox,
+  fitCropApplied
 } = useCropTool(useImageStore(), useViewportStore(), useEditorStore(), useHistoryStore(), t)
 
 </script>
@@ -102,6 +115,64 @@ const {
                 <NumberInput ref="heightInputRef" v-model="tmpCropHeight" :min="0" :max="maxCropHeight"
                   @update="(val) => updateDimension('height', val)" unit="px" />
               </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Auto crop color -->
+        <div class="settings-content-wrapper">
+          <div class="content-title">
+            <p>Auto crop</p>
+          </div>
+          <div class="content-wrapper">
+            <div class="content-aligned two-items" style="align-items: center">
+              <p style="text-align: start">Crop color</p>
+              <ColorPicker v-model="selectedColor" />
+            </div>
+          </div>
+          <div class="content-wrapper">
+            <div class="content-aligned two-items" style="align-items: center">
+              <p style="text-align: start">Use base image</p>
+              <ToggleButton v-model="useBaseImage" :scale="0.6"
+                :style="{ transform: 'translateX(16px)' }"  />
+            </div>
+          </div>
+          <!-- Fit crop -->
+          <div class="content-wrapper">
+            <DefaultButton text="Fit crop" @click="fitCrop" />
+          </div>
+        </div>
+
+        <!-- Manual adjustment -->
+        <div v-if="fitCropApplied" class="settings-content-wrapper">
+          <div class="content-wrapper">
+            <div class="content title">
+              <p>{{ $t('tools.smartCrop.settings.manual.adjustment.title') }}</p>
+            </div>
+            <div class="content-title">
+              <p>{{ $t('tools.smartCrop.settings.manual.adjustment.top') }}</p>
+            </div>
+            <StepperInput v-model="manualIndents.topIndent" :min="manualIndents.topIndentMin" :max="manualIndents.topIndentMax" :step="1" @update="recalculateCropBox" />
+            <div class="content-title">
+              <p>{{ $t('tools.smartCrop.settings.manual.adjustment.right') }}</p>
+            </div>
+            <StepperInput v-model="manualIndents.rightIndent" :min="manualIndents.rightIndentMin" :max="manualIndents.rightIndentMax" :step="1" @update="recalculateCropBox" />
+            <div class="content-title">
+              <p>{{ $t('tools.smartCrop.settings.manual.adjustment.bottom') }}</p>
+            </div>
+            <StepperInput v-model="manualIndents.bottomIndent" :min="manualIndents.bottomIndentMin" :max="manualIndents.bottomIndentMax" :step="1" @update="recalculateCropBox" />
+            <div class="content-title">
+              <p>{{ $t('tools.smartCrop.settings.manual.adjustment.left') }}</p>
+            </div>
+            <StepperInput v-model="manualIndents.leftIndent" :min="manualIndents.leftIndentMin" :max="manualIndents.leftIndentMax" :step="1" @update="recalculateCropBox" />
+          </div>
+        </div>
+
+        <!-- Reset crop -->
+        <div class="settings-content-wrapper">
+          <div class="content-wrapper">
+            <div class="content-button">
+              <DefaultButton text="Reset crop" @click="resetCrop" :disabled=!cropCanBeReset />
             </div>
           </div>
         </div>

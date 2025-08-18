@@ -80,7 +80,8 @@ const resizerStyle = computed(() => {
 .crop-box {
   position: absolute;
   border: var(--border-crop);
-  background-color: var(--crop-c);
+  /* background-color: var(--crop-c); */
+  background: transparent;
   pointer-events: auto;
   cursor: move;
 }
