@@ -1,6 +1,6 @@
-// DropdownSelect.spec.js – comprehensive unit tests for DropdownSelectWithIcon component
+// DropdownSelect.spec.js – unit tests for new DropdownSelect component
 import { describe, it, expect, vi } from 'vitest'
-import { mount } from '@vue/test-utils'
+import { mount, flushPromises } from '@vue/test-utils'
 import DropdownSelect from '@/components/common/DropdownSelect.vue'
 
 const defaultOptions = [
@@ -18,23 +18,18 @@ const factory = (props = {}) => {
   })
 }
 
-describe('DropdownSelectWithIcon.vue', () => {
-  it('renders options properly', () => {
-    const wrapper = factory()
-    const options = wrapper.findAll('option')
-    expect(options.length).toBe(2)
-    expect(options[0].text()).toBe('First')
-    expect(options[1].text()).toBe('Second')
-  })
-
-  it('binds initial modelValue correctly', () => {
+describe('DropdownSelect.vue', () => {
+  it('renders current selected label correctly', () => {
     const wrapper = factory({ modelValue: 'second' })
-    expect(wrapper.find('select').element.value).toBe('second')
+    expect(wrapper.text()).toContain('Second')
   })
 
-  it('emits update:modelValue and update on change', async () => {
+  it('emits update:modelValue and update when option is clicked', async () => {
     const wrapper = factory()
-    await wrapper.find('select').setValue('second')
+    // open dropdown
+    await wrapper.find('.select-display').trigger('click')
+    const option = wrapper.findAll('.dropdown-options li')[1] // 'Second'
+    await option.trigger('mousedown.prevent')
 
     expect(wrapper.emitted('update:modelValue')).toBeTruthy()
     expect(wrapper.emitted('update:modelValue')[0]).toEqual(['second'])
@@ -45,8 +40,8 @@ describe('DropdownSelectWithIcon.vue', () => {
   it('calls onReset function on icon double click', async () => {
     const onResetMock = vi.fn()
     const wrapper = factory({ icon: 'IconTest', onReset: onResetMock })
-
-    await wrapper.find('.input-icon-left').trigger('dblclick')
+    const icon = wrapper.find('.input-icon-left')
+    await icon.trigger('dblclick')
     expect(onResetMock).toHaveBeenCalled()
   })
 
@@ -60,20 +55,33 @@ describe('DropdownSelectWithIcon.vue', () => {
     expect(wrapper.find('.input-icon-left').exists()).toBe(true)
   })
 
-  it('renders dropdown arrow icon on the right', () => {
+  it('toggles dropdown when display is clicked', async () => {
     const wrapper = factory()
-    expect(wrapper.find('.input-icon-right').exists()).toBe(true)
+    const display = wrapper.find('.select-display')
+    expect(wrapper.vm.showDropdown).toBe(false)
+
+    await display.trigger('click')
+    expect(wrapper.vm.showDropdown).toBe(true)
+
+    await display.trigger('click')
+    expect(wrapper.vm.showDropdown).toBe(false)
   })
 
-  it('disables the select input when disabled is true', () => {
-    const wrapper = factory({ disabled: true })
-    expect(wrapper.find('select').attributes('disabled')).toBeDefined()
+  it('closes dropdown when clicking outside', async () => {
+    const wrapper = factory()
+    await wrapper.find('.select-display').trigger('click')
+    expect(wrapper.vm.showDropdown).toBe(true)
+
+    // simulate click outside as mousedown
+    document.dispatchEvent(new MouseEvent('mousedown', { bubbles: true }))
+    await flushPromises()
+    expect(wrapper.vm.showDropdown).toBe(false)
   })
 
   it('calls setValue exposed method correctly', async () => {
     const wrapper = factory()
     await wrapper.vm.setValue('second')
-    expect(wrapper.find('select').element.value).toBe('second')
+    expect(wrapper.vm.selectedValue).toBe('second')
   })
 
   it('updates selectedValue when modelValue prop changes (watch)', async () => {
@@ -82,5 +90,15 @@ describe('DropdownSelectWithIcon.vue', () => {
 
     await wrapper.setProps({ modelValue: 'second' })
     expect(wrapper.vm.selectedValue).toBe('second')
+  })
+
+  it('removes mousedown listener on unmount', () => {
+    const wrapper = factory()
+    const spy = vi.spyOn(document, 'removeEventListener')
+
+    wrapper.unmount()
+
+    expect(spy).toHaveBeenCalledWith('mousedown', expect.any(Function))
+    spy.mockRestore()
   })
 })

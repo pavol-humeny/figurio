@@ -110,7 +110,7 @@ describe('ItemTip.vue', () => {
 describe('useItemTip composable', () => {
   it('shows and hides tooltip via composable', async () => {
     const tip = useItemTip({ delay: 50 })
-    tip.wrapper.value = { getBoundingClientRect: () => mockRect }
+    tip.wrapperRef.value = { getBoundingClientRect: () => mockRect }
 
     vi.useFakeTimers()
     tip.handleMouseEnter()
@@ -136,7 +136,8 @@ describe('useItemTip composable', () => {
 
     for (const [pos, expected] of Object.entries(positions)) {
       const tip = useItemTip({ position: pos, offset: 8 })
-      tip.wrapper.value = { getBoundingClientRect: () => mockRect }
+      tip.wrapperRef.value = { getBoundingClientRect: () => mockRect }
+
       tip.updatePosition()
 
       expect(tip.itemTipStyle.value.top).toBe(`${expected.top}px`)

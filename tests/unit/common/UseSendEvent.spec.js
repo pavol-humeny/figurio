@@ -10,7 +10,12 @@ vi.mock('@/stores/uiStore', () => ({
 describe('useSendEvent', () => {
   let mockFetch
 
+  const originalLocation = window.location
+
   beforeEach(() => {
+    delete window.location
+    window.location = { hostname: 'test.com' }
+
     vi.clearAllMocks()
 
     // fake userUuid z uiStore
@@ -23,6 +28,7 @@ describe('useSendEvent', () => {
 
   afterEach(() => {
     vi.resetAllMocks()
+    window.location = originalLocation
   })
 
   it('sends event with correct payload and returns JSON on success', async () => {
@@ -75,5 +81,15 @@ describe('useSendEvent', () => {
 
     expect(result).toBeNull()
     expect(consoleSpy).toHaveBeenCalledWith('Error sending event:', expect.any(Error))
+  })
+
+  it('skips sending event on localhost', async () => {
+    delete window.location
+    window.location = { hostname: 'localhost' }
+
+    const { sendEvent } = useSendEvent()
+    const result = await sendEvent('add_object')
+
+    expect(result).toBeNull()
   })
 })
