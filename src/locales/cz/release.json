@@ -1,5 +1,26 @@
 {
   "versions": {
+    "2.3.0": {
+      "label": "2.3.0",
+      "newFeatures": {
+        "items": [
+          "Sloučení nástrojů SmartCrop a Crop",
+          "Zobrazení artefaktů obrázku při ořezu",
+          "Nastavení citlivosti automatického ořezu a detekce artefaktů"
+        ]
+      },
+      "bugFixes": {
+        "items": [
+          "Nástroj rám vytvářel 2 záznamy historie místo jednoho"
+        ]
+      },
+      "improvements": {
+        "items": [
+          "Změna pořadí nástrojů v levém panelu",
+          "Uložení vybraného režimu přiblížení do preferencí"
+        ]
+      }
+    },
     "2.2.0": {
       "label": "2.2.0",
       "newFeatures": {
@@ -10,7 +31,7 @@
       },
       "bugFixes": {
         "items": [
-          "Přiblížení na střed obrázku"
+          "Přiblížení na střed obrázku při přiblížení pomocí tlačidel"
         ]
       }
     },

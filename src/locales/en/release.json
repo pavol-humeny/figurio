@@ -31,7 +31,7 @@
       },
       "bugFixes": {
         "items": [
-          "Zoom in to the center of the image"
+          "Zoom in to the center of the image when zooming with buttons"
         ]
       }
     },
