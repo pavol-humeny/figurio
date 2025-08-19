@@ -160,4 +160,48 @@ describe('NumberInput.vue', () => {
     await wrapper.setProps({ modelValue: 0 })
     expect(wrapper.vm.inputValue).toBe(0)
   })
+
+  it('rounds value according to step/decimals', async () => {
+    const wrapper = mount(NumberInput, {
+      props: {
+        modelValue: 0,
+        min: 0,
+        max: 10,
+        step: 0.25,
+      },
+    })
+
+    const input = wrapper.find('input[type="number"]')
+    await input.setValue(1.234)
+    await wrapper.vm.onBlurOrEnter()
+
+    expect(wrapper.vm.inputValue).toBe(1.23)
+    expect(wrapper.emitted('update:modelValue')[0]).toEqual([1.23])
+  })
+
+  it('rounds input value correctly according to step decimals', async () => {
+    // step >= 1 → 0 decimals
+    let wrapper = mount(NumberInput, { props: { modelValue: 0, min: 0, max: 10, step: 1 } })
+    wrapper.vm.inputValue = 1.234
+    await wrapper.vm.onBlurOrEnter()
+    expect(wrapper.vm.inputValue).toBe(1)
+
+    // step < 1 → 2 decimals
+    wrapper = mount(NumberInput, { props: { modelValue: 0, min: 0, max: 10, step: 0.25 } })
+    wrapper.vm.inputValue = 1.234
+    await wrapper.vm.onBlurOrEnter()
+    expect(wrapper.vm.inputValue).toBe(1.23)
+
+    // step < 1 → 3 decimals
+    wrapper = mount(NumberInput, { props: { modelValue: 0, min: 0, max: 10, step: 0.005 } })
+    wrapper.vm.inputValue = 1.23456
+    await wrapper.vm.onBlurOrEnter()
+    expect(wrapper.vm.inputValue).toBe(1.235)
+
+    // invalid step
+    wrapper = mount(NumberInput, { props: { modelValue: 0, min: 0, max: 10, step: 'a' } })
+    wrapper.vm.inputValue = 1.234
+    await wrapper.vm.onBlurOrEnter()
+    expect(wrapper.vm.inputValue).toBe(1)
+  })
 })

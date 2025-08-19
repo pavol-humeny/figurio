@@ -71,12 +71,12 @@ export function useDefaultSlider(props, emit) {
     }
   }
 
-
   return {
     currentValue,
     onInput,
     onDoubleClick,
     onPointerDown,
     isAdjusting,
+    onUp,
   }
 }

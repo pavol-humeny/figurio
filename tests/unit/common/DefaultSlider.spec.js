@@ -1,6 +1,7 @@
-import { describe, it, expect, vi } from 'vitest'
+import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { mount } from '@vue/test-utils'
 import DefaultSlider from '@/components/common/DefaultSlider.vue'
+import { useDefaultSlider } from '@/composables/common/useDefaultSlider'
 
 describe('DefaultSlider.vue', () => {
   it('renders the input range with correct default attributes', () => {
@@ -175,5 +176,79 @@ describe('DefaultSlider.vue', () => {
     await input.trigger('dblclick')
 
     expect(onReset).not.toHaveBeenCalled()
+  })
+})
+
+describe('useDefaultSlider composable', () => {
+  let emitMock, slider
+
+  beforeEach(() => {
+    emitMock = vi.fn()
+    slider = useDefaultSlider({ modelValue: 50, disabled: false, onReset: vi.fn() }, emitMock)
+  })
+
+  it('onPointerDown sets isAdjusting to true and adds pointerup listener', () => {
+    const addSpy = vi.spyOn(window, 'addEventListener')
+    slider.isAdjusting.value = false
+
+    slider.onPointerDown()
+
+    expect(slider.isAdjusting.value).toBe(true)
+    expect(addSpy).toHaveBeenCalledWith('pointerup', slider.onUp, true)
+    addSpy.mockRestore()
+  })
+
+  it('onPointerDown does nothing if already adjusting', () => {
+    const addSpy = vi.spyOn(window, 'addEventListener')
+    slider.isAdjusting.value = true
+
+    slider.onPointerDown()
+
+    expect(slider.isAdjusting.value).toBe(true)
+    expect(addSpy).not.toHaveBeenCalled()
+    addSpy.mockRestore()
+  })
+
+  it('onUp emits commit and removes pointerup listener if adjusting', () => {
+    const removeSpy = vi.spyOn(window, 'removeEventListener')
+    slider.isAdjusting.value = true
+    slider.currentValue.value = 75
+
+    slider.onUp()
+
+    expect(slider.isAdjusting.value).toBe(false)
+    expect(emitMock).toHaveBeenCalledWith('commit', 75)
+    expect(removeSpy).toHaveBeenCalledWith('pointerup', slider.onUp, true)
+    removeSpy.mockRestore()
+  })
+
+  it('onUp does nothing if not adjusting', () => {
+    const removeSpy = vi.spyOn(window, 'removeEventListener')
+    slider.isAdjusting.value = false
+
+    slider.onUp()
+
+    expect(slider.isAdjusting.value).toBe(false)
+    expect(emitMock).not.toHaveBeenCalled()
+    expect(removeSpy).not.toHaveBeenCalled()
+    removeSpy.mockRestore()
+  })
+
+  it('onDoubleClick calls onReset when not disabled', () => {
+    const onResetMock = vi.fn()
+    slider = useDefaultSlider({ modelValue: 50, disabled: false, onReset: onResetMock }, emitMock)
+
+    slider.onDoubleClick()
+
+    expect(onResetMock).toHaveBeenCalledTimes(1)
+  })
+
+  it('onDoubleClick does nothing when disabled', () => {
+    const onResetMock = vi.fn()
+    slider = useDefaultSlider({ modelValue: 50, disabled: true, onReset: onResetMock }, emitMock)
+
+    slider.onDoubleClick()
+
+    expect(onResetMock).not.toHaveBeenCalled()
   })
 })

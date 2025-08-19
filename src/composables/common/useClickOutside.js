@@ -8,7 +8,7 @@ import { ref, onMounted, onBeforeUnmount } from 'vue'
  * Object with a condition function to control when to trigger and a callback for outside clicks
  * @returns {{ wrapperRef: import('vue').Ref<HTMLElement | null> }}
  */
-export function useClickOutside({ condition = () => true, onOutsideClick }) {
+export function useClickOutside({ condition, onOutsideClick }) {
   const wrapperRef = ref(null)
 
   /**

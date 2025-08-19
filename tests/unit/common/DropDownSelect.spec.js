@@ -101,4 +101,33 @@ describe('DropdownSelect.vue', () => {
     expect(spy).toHaveBeenCalledWith('mousedown', expect.any(Function))
     spy.mockRestore()
   })
+
+  it('toggleDropdown does nothing when disabled and toggles when enabled', async () => {
+    // disabled → should return early
+    let wrapper = factory({ disabled: true })
+    wrapper.vm.showDropdown = false
+    wrapper.vm.toggleDropdown()
+    expect(wrapper.vm.showDropdown).toBe(false)
+
+    // enabled → toggles correctly
+    wrapper = factory({ disabled: false })
+    wrapper.vm.showDropdown = false
+    wrapper.vm.toggleDropdown()
+    expect(wrapper.vm.showDropdown).toBe(true)
+
+    wrapper.vm.toggleDropdown()
+    expect(wrapper.vm.showDropdown).toBe(false)
+  })
+
+  it('returns empty label when options is empty', () => {
+    const wrapper = mount(DropdownSelect, {
+      props: {
+        modelValue: 'any',
+        options: [], // prázdne pole
+      },
+    })
+
+    const display = wrapper.find('.select-display')
+    expect(display.text()).toBe('') // fallback
+  })
 })

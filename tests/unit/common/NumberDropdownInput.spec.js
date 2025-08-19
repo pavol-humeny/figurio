@@ -143,4 +143,63 @@ describe('NumberDropdownInput.vue', () => {
 
     removeListenerSpy.mockRestore()
   })
+
+  it('rounds input value correctly according to step/decimals', async () => {
+    // step >= 1 → 0 decimals
+    let wrapper = mount(NumberDropdownInput, {
+      props: { modelValue: 0, min: 0, max: 10, step: 1, options: [0, 1, 2] },
+    })
+    wrapper.vm.inputValue = '1.234'
+    await wrapper.vm.onCommit()
+    expect(wrapper.vm.inputValue).toBe('1')
+    expect(wrapper.emitted('update:modelValue')[0]).toEqual([1])
+
+    // step < 1 → 2 decimals
+    wrapper = mount(NumberDropdownInput, {
+      props: { modelValue: 0, min: 0, max: 10, step: 0.25, options: [0, 0.25, 0.5] },
+    })
+    wrapper.vm.inputValue = '1.234'
+    await wrapper.vm.onCommit()
+    expect(wrapper.vm.inputValue).toBe('1.23')
+    expect(wrapper.emitted('update:modelValue')[0]).toEqual([1.23])
+
+    // step < 1 → 3 decimals
+    wrapper = mount(NumberDropdownInput, {
+      props: { modelValue: 0, min: 0, max: 10, step: 0.005, options: [0, 0.005, 0.01] },
+    })
+    wrapper.vm.inputValue = '1.23456'
+    await wrapper.vm.onCommit()
+    expect(wrapper.vm.inputValue).toBe('1.235')
+    expect(wrapper.emitted('update:modelValue')[0]).toEqual([1.235])
+
+    // invalid step
+    wrapper = mount(NumberDropdownInput, {
+      props: { modelValue: 0, min: 0, max: 10, step: 'a', options: [0, 1, 2] },
+    })
+    wrapper.vm.inputValue = '1.234'
+    await wrapper.vm.onCommit()
+    expect(wrapper.vm.inputValue).toBe('1')
+    expect(wrapper.emitted('update:modelValue')[0]).toEqual([1])
+  })
+
+  it('toggleDropdown does nothing when disabled and toggles when enabled', async () => {
+    // disabled → should return early
+    let wrapper = mount(NumberDropdownInput, {
+      props: { modelValue: 0, options: [0, 1], disabled: true },
+    })
+    wrapper.vm.showDropdown = false
+    wrapper.vm.toggleDropdown()
+    expect(wrapper.vm.showDropdown).toBe(false) // stays false
+
+    // enabled → toggles correctly
+    wrapper = mount(NumberDropdownInput, {
+      props: { modelValue: 0, options: [0, 1], disabled: false },
+    })
+    wrapper.vm.showDropdown = false
+    wrapper.vm.toggleDropdown()
+    expect(wrapper.vm.showDropdown).toBe(true)
+
+    wrapper.vm.toggleDropdown()
+    expect(wrapper.vm.showDropdown).toBe(false)
+  })
 })

@@ -141,4 +141,15 @@ describe('CollapsiblePanel.vue', () => {
 
     expect(panel.isResizing.value).toBe(false)
   })
+
+  it('handleResize does nothing if not resizing', () => {
+    panel.isResizing.value = false
+    panel.startX.value = 100
+    panel.startWidth.value = 300
+
+    const event = { clientX: 150 }
+    panel.handleResize(event)
+
+    expect(mockUiStore.setRightPanelWidth).not.toHaveBeenCalled()
+  })
 })
