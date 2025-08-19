@@ -392,10 +392,16 @@ export function useCropTool(imageStore, viewportStore, editorStore, historyStore
 
   const autoCropThreshold = ref(editorConfig.autoCropThreshold)
 
-  watch(autoCropThreshold, () => {
-    if (isArtifactsVisible.value) {
-      hideArtifacts()
-      showArtifacts()
+  watch(autoCropThreshold, (newValue) => {
+    if (newValue > 0) {
+      if (isArtifactsVisible.value) {
+        hideArtifacts()
+        showArtifacts()
+      }
+    } else {
+      if (isArtifactsVisible.value) {
+        hideArtifacts()
+      }
     }
   })
 
@@ -918,7 +924,7 @@ export function useCropTool(imageStore, viewportStore, editorStore, historyStore
   const hideArtifacts = () => {
     const overlay = document.querySelector('.overlay-canvas')
     if (overlay) {
-      const oCtx = overlay.getContext('2d', { willReadFrequently: true })
+      const oCtx = overlay.getContext('2d')
       oCtx.clearRect(0, 0, overlay.width, overlay.height)
     }
     imageStore.isArtifactsVisible = false

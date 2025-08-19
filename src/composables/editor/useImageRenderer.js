@@ -85,23 +85,16 @@ export function useImageRenderer(
       const header = frame?.headerSize || 0
       const footer = frame?.footerSize || 0
 
-      const hasHeader = useFrameTool(
-        imageStore,
-        historyStore,
-        editorStore,
-        t,
-      ).isFrameWithHeader(frame.type)
+      const hasHeader = useFrameTool(imageStore, historyStore, editorStore, t).isFrameWithHeader(
+        frame.type,
+      )
 
-      const hasFooter = useFrameTool(
-        imageStore,
-        historyStore,
-        editorStore,
-        t,
-      ).isFrameWithFooter(frame.type)
+      const hasFooter = useFrameTool(imageStore, historyStore, editorStore, t).isFrameWithFooter(
+        frame.type,
+      )
 
       const frameWidth = width + fw * 2
-      const frameHeight =
-        height + fh * 2 + (hasHeader ? header - fh : 0) + (hasFooter ? footer : 0)
+      const frameHeight = height + fh * 2 + (hasHeader ? header - fh : 0) + (hasFooter ? footer : 0)
 
       frameSvgRef.value.setAttribute('width', frameWidth)
       frameSvgRef.value.setAttribute('height', frameHeight)
@@ -121,11 +114,19 @@ export function useImageRenderer(
     const ctx = canvasRef.value.getContext('2d')
     const width = imageStore.fileDimensions.width
     const height = imageStore.fileDimensions.height
+    const dpr = window.devicePixelRatio || 1
 
-    canvasRef.value.width = width
-    canvasRef.value.height = height
-    canvasRef.value.style.width = `${width}px`
-    canvasRef.value.style.height = `${height}px`
+    if (canvasRef.value.width !== width * dpr || canvasRef.value.height !== height * dpr) {
+      canvasRef.value.width = width * dpr
+      canvasRef.value.height = height * dpr
+      canvasRef.value.style.width = `${width}px`
+      canvasRef.value.style.height = `${height}px`
+    }
+
+    ctx.setTransform(1, 0, 0, 1, 0, 0)
+    ctx.scale(dpr, dpr)
+    ctx.imageSmoothingEnabled = true
+    ctx.imageSmoothingQuality = 'high'
 
     ctx.clearRect(0, 0, width, height)
     ctx.drawImage(imageStore.getRenderedImage({ t, renderCall: true }), 0, 0)
