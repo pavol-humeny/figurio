@@ -30,7 +30,7 @@ const contentRef = ref(null)
 /**
  * Logic of the image renderer (canvas, SVG, frame)
  */
-const { canvasRef, svgRef, frameSvgRef } = useImageRenderer(
+const { imageRef, svgRef, frameSvgRef } = useImageRenderer(
   useImageStore(),
   useHistoryStore(),
   useEditorStore(),
@@ -153,9 +153,8 @@ const disableContextMenu = computed(() => {
         <div :class="{ 'hide': uiStore.isLoading }" class="viewport-content" ref="contentRef" :style="{
           transform: `translate(${panX}px, ${panY}px) scale(${zoomLevel})`,
         }">
-          <canvas ref="canvasRef" class="image-canvas"></canvas>
+          <img ref="imageRef" class="image-canvas" />
           <canvas v-if="editorStore.selectedToolKey === 'crop'" ref="overlayCanvasRef" class="overlay-canvas"></canvas>
-          <!-- <svg ref="svgRef" class="image-svg"></svg> -->
 
           <svg ref="frameSvgRef" class="frame-svg"></svg>
 
@@ -238,7 +237,7 @@ const disableContextMenu = computed(() => {
         </div>
         <div v-if="mouseX !== null" class="ruler-cursor-mark horizontal" :style="{ left: mouseX + 'px' }">
           <span class="ruler-cursor-label horizontal" :class="{ 'active': cursorPosXSameAsImageWidth }">{{ cursorPosX
-          }}</span>
+            }}</span>
         </div>
 
       </div>
@@ -251,7 +250,7 @@ const disableContextMenu = computed(() => {
         </div>
         <div v-if="mouseY !== null" class="ruler-cursor-mark vertical" :style="{ top: mouseY + 'px' }">
           <span class="ruler-cursor-label vertical" :class="{ 'active': cursorPosYSameAsImageHeight }">{{ cursorPosY
-          }}</span>
+            }}</span>
         </div>
       </div>
     </div>

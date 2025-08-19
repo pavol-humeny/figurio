@@ -2,7 +2,7 @@ import { onMounted, watch, ref, nextTick } from 'vue'
 import { useFrameTool } from '../tools/useFrameTool'
 
 /**
- * Logic for rendering image layers (canvas, SVG, frame) in the editor viewport
+ * Logic for rendering image layers (img, SVG, frame) in the editor viewport
  *
  * @param {ReturnType<typeof import('@/stores/imageStore').useImageStore>} imageStore - Image store
  * @param {ReturnType<typeof import('@/stores/historyStore').useHistoryStore>} historyStore - History store
@@ -11,7 +11,7 @@ import { useFrameTool } from '../tools/useFrameTool'
  * @param {import('vue').Ref<HTMLElement>} contentRef - Reference to the .viewport-content element
  * @param {(key: string) => string} t - Translation function
  * @returns {{
- *   canvasRef: import('vue').Ref<HTMLCanvasElement | null>,
+ *   imageRef: import('vue').Ref<HTMLCanvasElement | null>,
  *   svgRef: import('vue').Ref<SVGSVGElement | null>,
  *   frameSvgRef: import('vue').Ref<SVGSVGElement | null>
  * }}
@@ -25,9 +25,9 @@ export function useImageRenderer(
   t,
 ) {
   /**
-   * Reference to the base canvas layer
+   * Reference to the base image layer
    */
-  const canvasRef = ref(null)
+  const imageRef = ref(null)
 
   /**
    * Reference to the SVG layer for vector elements
@@ -58,12 +58,12 @@ export function useImageRenderer(
       contentRef.value.style.height = `${height}px`
     }
 
-    // Set canvas dimensions
-    if (canvasRef.value) {
-      canvasRef.value.width = width
-      canvasRef.value.height = height
-      canvasRef.value.style.width = `${width}px`
-      canvasRef.value.style.height = `${height}px`
+    // Set image dimensions
+    if (imageRef.value) {
+      imageRef.value.width = width
+      imageRef.value.height = height
+      imageRef.value.style.width = `${width}px`
+      imageRef.value.style.height = `${height}px`
     }
 
     // Set SVG dimensions
@@ -104,39 +104,25 @@ export function useImageRenderer(
   }
 
   /**
-   * Render base canvas from rasterized image
+   * Render base image
    */
   const renderCanvas = () => {
-    if (!canvasRef.value || !imageStore.getRenderedImage({ t, renderCall: false })) return
+    if (!imageRef.value || !imageStore.getRenderedImage({ t, renderCall: false })) return
+    console.log('Rendering image (image only)...')
 
-    console.log('Rendering canvas (image only)...')
-
-    const ctx = canvasRef.value.getContext('2d')
-    const width = imageStore.fileDimensions.width
-    const height = imageStore.fileDimensions.height
-    const dpr = window.devicePixelRatio || 1
-
-    if (canvasRef.value.width !== width * dpr || canvasRef.value.height !== height * dpr) {
-      canvasRef.value.width = width * dpr
-      canvasRef.value.height = height * dpr
-      canvasRef.value.style.width = `${width}px`
-      canvasRef.value.style.height = `${height}px`
+    const img = imageStore.getRenderedImage({ t, renderCall: true })
+    if (img instanceof HTMLCanvasElement) {
+      imageRef.value.src = img.toDataURL()
+    } else if (img instanceof HTMLImageElement) {
+      imageRef.value.src = img.src
     }
-
-    ctx.setTransform(1, 0, 0, 1, 0, 0)
-    ctx.scale(dpr, dpr)
-    ctx.imageSmoothingEnabled = true
-    ctx.imageSmoothingQuality = 'high'
-
-    ctx.clearRect(0, 0, width, height)
-    ctx.drawImage(imageStore.getRenderedImage({ t, renderCall: true }), 0, 0)
 
     // Save initial state to history if empty
     if (historyStore.history.length === 0) {
       historyStore.push(imageStore.getSnapshot(t))
     }
 
-    imageStore.previewUrl = canvasRef.value.toDataURL()
+    imageStore.previewUrl = imageRef.value.src
   }
 
   /**
@@ -215,7 +201,7 @@ export function useImageRenderer(
   })
 
   return {
-    canvasRef,
+    imageRef,
     svgRef,
     frameSvgRef,
   }

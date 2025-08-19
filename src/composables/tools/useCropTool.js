@@ -456,7 +456,6 @@ export function useCropTool(imageStore, viewportStore, editorStore, historyStore
    * Watch indents and recalculate cropBox
    */
   const recalculateCropBox = () => {
-    console.log(manualIndents.value)
     cropBox.value.x = manualIndents.value.leftIndent
     cropBox.value.y = manualIndents.value.topIndent
     cropBox.value.width =
@@ -491,6 +490,7 @@ export function useCropTool(imageStore, viewportStore, editorStore, historyStore
     const img = imageStore.getRenderedImage({ t, renderCall: false })
     if (!img) return
 
+    // Create temporary canvas
     const canvas = document.createElement('canvas')
     const ctx = canvas.getContext('2d')
 
@@ -499,7 +499,12 @@ export function useCropTool(imageStore, viewportStore, editorStore, historyStore
 
     canvas.width = width
     canvas.height = height
-    ctx.drawImage(img, 0, 0)
+
+    if (img instanceof HTMLCanvasElement) {
+      ctx.drawImage(img, 0, 0)
+    } else if (img instanceof HTMLImageElement) {
+      ctx.drawImage(img, 0, 0, width, height)
+    }
 
     const imageData = ctx.getImageData(0, 0, width, height).data
 
@@ -536,8 +541,6 @@ export function useCropTool(imageStore, viewportStore, editorStore, historyStore
 
     const bins = computeHistogram(parseHex(selectedColor.value))
     const dynamicThreshold = getThresholdFromHistogram(bins, autoCropThreshold.value)
-
-    console.log('Dynamic threshold:', dynamicThreshold)
 
     // Top
     let top = startY
@@ -807,11 +810,26 @@ export function useCropTool(imageStore, viewportStore, editorStore, historyStore
    * @returns {number[]} - Histogram bins
    */
   const computeHistogram = (bgColor = { r: 255, g: 255, b: 255 }) => {
-    const canvas = document.querySelector('.image-canvas')
-    if (!canvas) return null
+    const img = imageStore.getRenderedImage({ t, renderCall: false })
+    if (!img) return null
 
+    // Create temporary canvas
+    const canvas = document.createElement('canvas')
     const ctx = canvas.getContext('2d', { willReadFrequently: true })
-    const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height)
+
+    const width = img.width
+    const height = img.height
+
+    canvas.width = width
+    canvas.height = height
+
+    if (img instanceof HTMLCanvasElement) {
+      ctx.drawImage(img, 0, 0)
+    } else if (img instanceof HTMLImageElement) {
+      ctx.drawImage(img, 0, 0, width, height)
+    }
+
+    const imageData = ctx.getImageData(0, 0, width, height)
     const data = imageData.data
 
     // Max distance = 441 (sqrt(255**2 * 3))
@@ -864,11 +882,26 @@ export function useCropTool(imageStore, viewportStore, editorStore, historyStore
    * Compute artifacts in the image
    */
   const computeArtifacts = (threshold, bgColor = { r: 255, g: 255, b: 255 }) => {
-    const canvas = document.querySelector('.image-canvas')
-    if (!canvas) return null
+    const img = imageStore.getRenderedImage({ t, renderCall: false })
+    if (!img) return null
 
+    // Create temporary canvas
+    const canvas = document.createElement('canvas')
     const ctx = canvas.getContext('2d', { willReadFrequently: true })
-    const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height)
+
+    const width = img.width
+    const height = img.height
+
+    canvas.width = width
+    canvas.height = height
+
+    if (img instanceof HTMLCanvasElement) {
+      ctx.drawImage(img, 0, 0)
+    } else if (img instanceof HTMLImageElement) {
+      ctx.drawImage(img, 0, 0, width, height)
+    }
+
+    const imageData = ctx.getImageData(0, 0, width, height)
     const data = imageData.data
 
     const overlayData = new ImageData(canvas.width, canvas.height)
