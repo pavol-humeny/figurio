@@ -50,8 +50,6 @@ const {
   hideArtifacts,
   isArtifactsVisible,
   autoCropThreshold,
-  minThreshold,
-  maxThreshold,
   resetThreshold,
 } = useCropTool(useImageStore(), useViewportStore(), useEditorStore(), useHistoryStore(), t)
 
@@ -158,7 +156,7 @@ const {
               <div class="content-title">
                 {{ $t('tools.crop.settings.general.autoCrop.sensitivity.title') }}
               </div>
-              <DefaultSlider v-model="autoCropThreshold" :min="minThreshold" :max="maxThreshold" :step="0.01" showValue
+              <DefaultSlider v-model="autoCropThreshold" :min="0" :max="1" :step="0.01" showValue
                 :tip="$t('tools.crop.settings.general.autoCrop.sensitivity.tip')" position="bottom-left"
                 :onReset="resetThreshold" />
             </div>

@@ -387,17 +387,20 @@ export function useCropTool(imageStore, viewportStore, editorStore, historyStore
   // Auto crop
   // -------------------------------
 
-  const minThreshold = 0
-  const maxThreshold = 1
-
+  /**
+   * Threshold for auto cropping
+   */
   const autoCropThreshold = ref(editorConfig.autoCropThreshold)
 
+  /**
+   * Watch the auto crop threshold and update artifacts visibility
+   */
   watch(autoCropThreshold, (newValue) => {
     if (newValue > 0) {
       if (isArtifactsVisible.value) {
         hideArtifacts()
-        showArtifacts()
       }
+      showArtifacts()
     } else {
       if (isArtifactsVisible.value) {
         hideArtifacts()
@@ -983,8 +986,6 @@ export function useCropTool(imageStore, viewportStore, editorStore, historyStore
     hideArtifacts,
     isArtifactsVisible,
     autoCropThreshold,
-    minThreshold,
-    maxThreshold,
     resetThreshold,
   }
 }
