@@ -135,7 +135,19 @@
             "bottom": "Bottom indent",
             "left": "Left indent",
             "right": "Right indent"
+          },
+          "sensitivity": {
+            "title": "Sensitivity",
+            "tip": "Adjust the sensitivity of the auto crop. Higher sensitivity will treat more pixels as background-like and include them in the crop calculation, lower sensitivity is more conservative. This threshold works together with the artifact preview."
           }
+        },
+        "showArtifactsButton":{
+          "text": "Show artifacts",
+          "tip": "Preview pixels that are similar to the background but are not part of the actual background. This helps visualize which areas might be affected by the current sensitivity setting."
+        },
+        "hideArtifactsButton":{
+          "text": "Hide artifacts",
+          "tip": "Hide the preview of background-like pixels in the crop area."
         },
         "resetCropButton":{
           "text": "Reset crop",

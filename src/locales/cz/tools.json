@@ -135,7 +135,19 @@
             "bottom": "Dolní odsazení",
             "left": "Levé odsazení",
             "right": "Pravé odsazení"
+          },
+          "sensitivity": {
+            "title": "Citlivost",
+            "tip": "Nastavte citlivost automatického ořezu. Vyšší citlivost označí více pixelů, ktoré sú podobní pozadí a zahrne je do výpočtu ořezu, nižší citlivost zahrne méně pixelů."
           }
+        },
+        "showArtifactsButton":{
+          "text": "Zobrazit artefakty",
+          "tip": "Zobrazí pixely podobné pozadí, které však nejsou součástí samotného pozadí. Pomáhá vizualizovat, které oblasti mohou být ovlivněny nastavenou citlivostí."
+        },
+        "hideArtifactsButton":{
+          "text": "Skrýt artefakty",
+          "tip": "Skryje náhled pixelů podobných pozadí v oblasti ořezu."
         },
         "resetCropButton": {
           "text": "Obnovit ořezání",

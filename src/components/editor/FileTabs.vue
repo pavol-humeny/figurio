@@ -3,6 +3,7 @@ import { useFileTabs } from '@/composables/editor/useFileTabs'
 import { useUiStore } from '@/stores/uiStore'
 import { useI18n } from 'vue-i18n'
 import { useViewportStore } from '@/stores/viewportStore'
+import { useImageStore } from '@/stores/imageStore'
 
 const { t } = useI18n()
 
@@ -23,7 +24,7 @@ const {
   onTabDragStart,
   onTabDrop,
   wrapperRef,
-} = useFileTabs(useUiStore(), useViewportStore(), t)
+} = useFileTabs(useUiStore(), useViewportStore(), useImageStore(), t)
 
 </script>
 
@@ -34,7 +35,7 @@ const {
         <div v-for="(tab, i) in tabs" :key="tab.id" class="tab" draggable="true" @dragstart="onTabDragStart(i)"
           @drop.prevent="onTabDrop(i)" @dragover.prevent :class="{ active: i === activeTabIndex }"
           @click="setActiveTab(i)">
-          <p>{{ tab.name }}.{{tab.fileExtension}}</p>
+          <p>{{ tab.name }}.{{ tab.fileExtension }}</p>
           <span class="tab-close" @click.stop="closeTab(i)">✕</span>
         </div>
       </div>

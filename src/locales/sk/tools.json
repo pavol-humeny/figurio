@@ -135,7 +135,19 @@
             "bottom": "Dolné odsadenie",
             "left": "Ľavé odsadenie",
             "right": "Pravé odsadenie"
+          },
+          "sensitivity": {
+            "title": "Citlivost",
+            "tip": "Nastavte citlivosť automatického orezania. Vyššia citlivosť označí viac pixelov, ktoré sú podobné pozadiu a zahrnie ich do výpočtu orezania, nižšia citlivosť zahrnie menej pixelov."
           }
+        },
+        "showArtifactsButton":{
+          "text": "Zobraziť artefakty",
+          "tip": "Zobrazí pixely podobné pozadiu, ktoré však nie sú súčasťou samotného pozadia. Pomáha vizualizovať, ktoré oblasti môžu byť ovplyvnené nastavenou citlivosťou."
+        },
+        "hideArtifactsButton":{
+          "text": "Skrýt artefakty",
+          "tip": "Skryje náhľad pixelov podobných pozadiu."
         },
         "resetCropButton": {
           "text": "Obnoviť orezanie",

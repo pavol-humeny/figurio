@@ -1,5 +1,5 @@
 import { useMath } from '@/composables/common/useMath'
-import { computed, ref, nextTick, watch } from 'vue'
+import { computed, ref, nextTick, watch, onBeforeUnmount } from 'vue'
 import { useConfirmModal } from '../modals/useConfirmModal'
 import { useToastModal } from '../modals/useToastModal'
 import { editorConfig } from '@/config/editorConfig'
@@ -386,10 +386,33 @@ export function useCropTool(imageStore, viewportStore, editorStore, historyStore
   // -------------------------------
   // Auto crop
   // -------------------------------
+
+  const minThreshold = 0
+  const maxThreshold = 1
+
+  const autoCropThreshold = ref(editorConfig.autoCropThreshold)
+
+  watch(autoCropThreshold, () => {
+    if (isArtifactsVisible.value) {
+      hideArtifacts()
+      showArtifacts()
+    }
+  })
+
   /**
    * Color selected for the auto crop
    */
   const selectedColor = ref(editorConfig.autoCropDefaultColor)
+
+  /**
+   * Watch the selected color and update artifacts visibility
+   */
+  watch(selectedColor, () => {
+    if (isArtifactsVisible.value) {
+      hideArtifacts()
+      showArtifacts()
+    }
+  })
 
   /**
    * Whether to apply auto crop from base image or current crop
@@ -438,6 +461,18 @@ export function useCropTool(imageStore, viewportStore, editorStore, historyStore
   }
 
   /**
+   * Parse a hex color string into an RGB object.
+   */
+  const parseHex = (hex) => {
+    const bigint = parseInt(hex.replace('#', ''), 16)
+    return {
+      r: (bigint >> 16) & 255,
+      g: (bigint >> 8) & 255,
+      b: bigint & 255,
+    }
+  }
+
+  /**
    * Calculate the crop box based on uniform color borders
    * @param {string} color - The color to use for the auto crop
    * @param {boolean} useBaseImage - If true, work on full base image, otherwise on current cropBox
@@ -460,33 +495,19 @@ export function useCropTool(imageStore, viewportStore, editorStore, historyStore
     const imageData = ctx.getImageData(0, 0, width, height).data
 
     /**
-     * Parse a hex color string into an RGB object.
-     */
-    const parseHex = (hex) => {
-      const bigint = parseInt(hex.replace('#', ''), 16)
-      return {
-        r: (bigint >> 16) & 255,
-        g: (bigint >> 8) & 255,
-        b: bigint & 255,
-      }
-    }
-
-    /**
      * Check if the color at the given index matches the target color.
      * @param {number} index - The index of the color to check.
      * @param {Object} target - The target color to match against.
      * @returns {boolean} - True if the colors match, false otherwise.
      */
-    const isColorMatch = (index, target) => {
+    const isColorMatch = (index, target, threshold) => {
       const r = imageData[index]
       const g = imageData[index + 1]
       const b = imageData[index + 2]
-      const tolerance = editorConfig.autoCropColorTolerance
-      return (
-        Math.abs(r - target.r) <= tolerance &&
-        Math.abs(g - target.g) <= tolerance &&
-        Math.abs(b - target.b) <= tolerance
-      )
+
+      const dist = Math.sqrt((r - target.r) ** 2 + (g - target.g) ** 2 + (b - target.b) ** 2)
+
+      return dist >= 0 && dist <= threshold
     }
 
     const targetColor = parseHex(color)
@@ -504,13 +525,18 @@ export function useCropTool(imageStore, viewportStore, editorStore, historyStore
       endY = cropBox.value.y + cropBox.value.height - 1
     }
 
+    const bins = computeHistogram(parseHex(selectedColor.value))
+    const dynamicThreshold = getThresholdFromHistogram(bins, autoCropThreshold.value)
+
+    console.log('Dynamic threshold:', dynamicThreshold)
+
     // Top
     let top = startY
     while (top <= endY) {
       let match = true
       for (let x = startX; x <= endX; x++) {
         const i = (top * width + x) * 4
-        if (!isColorMatch(i, targetColor)) {
+        if (!isColorMatch(i, targetColor, dynamicThreshold)) {
           match = false
           break
         }
@@ -525,7 +551,7 @@ export function useCropTool(imageStore, viewportStore, editorStore, historyStore
       let match = true
       for (let x = startX; x <= endX; x++) {
         const i = (bottom * width + x) * 4
-        if (!isColorMatch(i, targetColor)) {
+        if (!isColorMatch(i, targetColor, dynamicThreshold)) {
           match = false
           break
         }
@@ -540,7 +566,7 @@ export function useCropTool(imageStore, viewportStore, editorStore, historyStore
       let match = true
       for (let y = top; y <= bottom; y++) {
         const i = (y * width + left) * 4
-        if (!isColorMatch(i, targetColor)) {
+        if (!isColorMatch(i, targetColor, dynamicThreshold)) {
           match = false
           break
         }
@@ -555,7 +581,7 @@ export function useCropTool(imageStore, viewportStore, editorStore, historyStore
       let match = true
       for (let y = top; y <= bottom; y++) {
         const i = (y * width + right) * 4
-        if (!isColorMatch(i, targetColor)) {
+        if (!isColorMatch(i, targetColor, dynamicThreshold)) {
           match = false
           break
         }
@@ -564,15 +590,21 @@ export function useCropTool(imageStore, viewportStore, editorStore, historyStore
       right--
     }
 
-    // Final crop box
-    const newCropBox = {
-      x: left,
-      y: top,
-      width: right - left + 1,
-      height: bottom - top + 1,
+    const newWidth = right - left + 1
+    const newHeight = bottom - top + 1
+
+    // Check if the new dimensions are valid
+    if (newWidth <= 0 || newHeight <= 0) {
+      return cropBox.value
     }
 
-    return newCropBox
+    // Final crop box
+    return {
+      x: left,
+      y: top,
+      width: newWidth,
+      height: newHeight,
+    }
   }
 
   /**
@@ -638,31 +670,6 @@ export function useCropTool(imageStore, viewportStore, editorStore, historyStore
     applyCropRender(cropBox.value)
 
     historyStore.push(imageStore.getSnapshot(t))
-  }
-
-  /**
-   * Check if the crop box can be reset
-   */
-  const cropCanBeReset = computed(() => {
-    return (
-      cropBox.value.x !== 0 ||
-      cropBox.value.y !== 0 ||
-      cropBox.value.width !== imageStore.fileDimensions.width ||
-      cropBox.value.height !== imageStore.fileDimensions.height
-    )
-  })
-
-  /**
-   * Reset the crop box to its initial state
-   */
-  const resetCrop = () => {
-    cropBox.value = {
-      x: 0,
-      y: 0,
-      width: imageStore.fileDimensions.width,
-      height: imageStore.fileDimensions.height,
-    }
-    fitCropApplied.value = false
   }
 
   /**
@@ -733,7 +740,205 @@ export function useCropTool(imageStore, viewportStore, editorStore, historyStore
     imageStore.fileDimensions.fileAspectRatio = width / height || 1
 
     imageStore.newFileDimensions = { ...imageStore.fileDimensions }
+
+    hideArtifacts()
   }
+
+  //----------------------------------
+  // Reset
+  //----------------------------------
+
+  /**
+   * Check if the crop box can be reset
+   */
+  const cropCanBeReset = computed(() => {
+    return (
+      cropBox.value.x !== 0 ||
+      cropBox.value.y !== 0 ||
+      cropBox.value.width !== imageStore.fileDimensions.width ||
+      cropBox.value.height !== imageStore.fileDimensions.height
+    )
+  })
+
+  /**
+   * Reset the crop box to its initial state
+   */
+  const resetCrop = () => {
+    cropBox.value = {
+      x: 0,
+      y: 0,
+      width: imageStore.fileDimensions.width,
+      height: imageStore.fileDimensions.height,
+    }
+    fitCropApplied.value = false
+  }
+
+  /**
+   * Reset the auto crop threshold to its initial state
+   */
+  const resetThreshold = () => {
+    autoCropThreshold.value = editorConfig.autoCropThreshold
+    if (isArtifactsVisible.value) {
+      hideArtifacts()
+      showArtifacts()
+    }
+  }
+
+  //------------------------------------
+  // Artifacts, color histogram
+  //------------------------------------
+  /**
+   * Artifacts
+   */
+  const cachedArtifacts = ref(null)
+
+  /**
+   * Compute histogram of the image
+   * @param {Object} bgColor - Background color
+   * @returns {number[]} - Histogram bins
+   */
+  const computeHistogram = (bgColor = { r: 255, g: 255, b: 255 }) => {
+    const canvas = document.querySelector('.image-canvas')
+    if (!canvas) return null
+
+    const ctx = canvas.getContext('2d', { willReadFrequently: true })
+    const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height)
+    const data = imageData.data
+
+    // Max distance = 441 (sqrt(255**2 * 3))
+    const maxDist = Math.sqrt(255 ** 2 * 3)
+    const bins = new Array(256).fill(0)
+
+    for (let i = 0; i < data.length; i += 4) {
+      const r = data[i]
+      const g = data[i + 1]
+      const b = data[i + 2]
+      const dist = Math.sqrt((r - bgColor.r) ** 2 + (g - bgColor.g) ** 2 + (b - bgColor.b) ** 2)
+
+      if (dist > 0) {
+        // Normalize to 0..255
+        const binIndex = Math.floor((dist / maxDist) * 255)
+        bins[binIndex]++
+      }
+    }
+
+    return bins
+  }
+
+  /**
+   * Get threshold value from histogram bins
+   * @param {number[]} bins - Histogram bins
+   * @param {number} percentile - Percentile to use for threshold (0..1)
+   * @returns {number} - Computed threshold value
+   */
+  const getThresholdFromHistogram = (bins, percentile) => {
+    if (percentile <= 0) return 0 // neoznač nič
+    if (percentile > 1) percentile = 1
+
+    const total = bins.reduce((a, b) => a + b, 0)
+    let cumulative = 0
+
+    for (let i = 0; i < bins.length; i++) {
+      cumulative += bins[i]
+      if (cumulative / total >= percentile) {
+        const maxDist = Math.sqrt(255 ** 2 * 3)
+        const threshold = (i / 255) * maxDist
+        return threshold
+      }
+    }
+
+    // fallback
+    return 10
+  }
+
+  /**
+   * Compute artifacts in the image
+   */
+  const computeArtifacts = (threshold, bgColor = { r: 255, g: 255, b: 255 }) => {
+    const canvas = document.querySelector('.image-canvas')
+    if (!canvas) return null
+
+    const ctx = canvas.getContext('2d', { willReadFrequently: true })
+    const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height)
+    const data = imageData.data
+
+    const overlayData = new ImageData(canvas.width, canvas.height)
+    const odata = overlayData.data
+
+    for (let i = 0; i < data.length; i += 4) {
+      const r = data[i]
+      const g = data[i + 1]
+      const b = data[i + 2]
+      const dist = Math.sqrt((r - bgColor.r) ** 2 + (g - bgColor.g) ** 2 + (b - bgColor.b) ** 2)
+
+      if (dist > 0 && dist <= threshold) {
+        // Highlight pixel on overlay with red
+        odata[i] = 255
+        odata[i + 1] = 0
+        odata[i + 2] = 0
+        odata[i + 3] = 80 // Opacity
+      } else {
+        odata[i + 3] = 0 // Transparent pixels
+      }
+    }
+
+    cachedArtifacts.value = overlayData
+    return overlayData
+  }
+
+  /**
+   * Whether artifacts are visible
+   */
+  const isArtifactsVisible = computed(() => imageStore.isArtifactsVisible)
+
+  /**
+   * Show artifacts in the image
+   */
+  const showArtifacts = () => {
+    const bins = computeHistogram(parseHex(selectedColor.value))
+    const dynamicThreshold = getThresholdFromHistogram(bins, autoCropThreshold.value)
+    computeArtifacts(dynamicThreshold, parseHex(selectedColor.value))
+
+    const canvas = document.querySelector('.image-canvas')
+    const overlay = document.querySelector('.overlay-canvas')
+    if (!canvas || !overlay || !cachedArtifacts.value) return
+
+    overlay.width = canvas.width
+    overlay.height = canvas.height
+
+    const oCtx = overlay.getContext('2d')
+    oCtx.putImageData(cachedArtifacts.value, 0, 0)
+
+    imageStore.isArtifactsVisible = true
+  }
+
+  /**
+   * Hide artifacts in the image
+   */
+  const hideArtifacts = () => {
+    const overlay = document.querySelector('.overlay-canvas')
+    if (overlay) {
+      const oCtx = overlay.getContext('2d', { willReadFrequently: true })
+      oCtx.clearRect(0, 0, overlay.width, overlay.height)
+    }
+    imageStore.isArtifactsVisible = false
+  }
+
+  /**
+   * Cleanup artifacts on component unmount
+   */
+  onBeforeUnmount(() => {
+    hideArtifacts()
+  })
+
+  /**
+   * Watch for changes in isArtifactsVisible and hide it
+   */
+  watch(isArtifactsVisible, (newValue) => {
+    if (!newValue) {
+      hideArtifacts()
+    }
+  })
 
   return {
     startPan,
@@ -768,5 +973,12 @@ export function useCropTool(imageStore, viewportStore, editorStore, historyStore
     recalculateCropBox,
     fitCropApplied,
     applyAutoCropPreset,
+    showArtifacts,
+    hideArtifacts,
+    isArtifactsVisible,
+    autoCropThreshold,
+    minThreshold,
+    maxThreshold,
+    resetThreshold,
   }
 }

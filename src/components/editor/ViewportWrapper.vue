@@ -154,6 +154,7 @@ const disableContextMenu = computed(() => {
           transform: `translate(${panX}px, ${panY}px) scale(${zoomLevel})`,
         }">
           <canvas ref="canvasRef" class="image-canvas"></canvas>
+          <canvas v-if="editorStore.selectedToolKey === 'crop'" ref="overlayCanvasRef" class="overlay-canvas"></canvas>
           <!-- <svg ref="svgRef" class="image-svg"></svg> -->
 
           <svg ref="frameSvgRef" class="frame-svg"></svg>
@@ -291,7 +292,8 @@ const disableContextMenu = computed(() => {
 
 .image-canvas,
 .image-svg,
-.frame-svg {
+.frame-svg,
+.overlay-canvas {
   position: absolute;
   top: 0;
   left: 0;

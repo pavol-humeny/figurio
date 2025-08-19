@@ -130,6 +130,9 @@ export const useImageStore = defineStore('imageStore', {
 
     /** Flag to prevent showing multiple phone buttons can not be drawn toast */
     phoneButtonsCanNotBeDrawnToastFlag: false,
+
+    /** Whether any artifacts are visible */
+    isArtifactsVisible: false,
   }),
   getters: {
     /**
@@ -378,6 +381,8 @@ export const useImageStore = defineStore('imageStore', {
 
       this.phoneButtonsCanNotBeDrawnToastFlag = false
 
+      this.isArtifactsVisible = false
+
       // Also reset rendered images
       this.setRenderedImage(null)
     },
@@ -423,12 +428,12 @@ export const useImageStore = defineStore('imageStore', {
       this.newRenderedImage = null
 
       // TODO - uncomment
-      // this.svgObjects = []
-      // this.selectedSvgObjectId = null
-      // this.justCreatedSvgObjectId = null
-      // this.selectedSvgObjectIds = []
-      // this.svgDefs = []
-      // this.clipboardSvgObject = null
+      this.svgObjects = []
+      this.selectedSvgObjectId = null
+      this.justCreatedSvgObjectId = null
+      this.selectedSvgObjectIds = []
+      this.svgDefs = []
+      this.clipboardSvgObject = null
 
       this.resetImageStoreForNewFile()
     },
@@ -1515,6 +1520,7 @@ export const useImageStore = defineStore('imageStore', {
       this.imageOperations = JSON.parse(JSON.stringify(snapshot.imageOperations))
       this.frame = JSON.parse(JSON.stringify(snapshot.frame))
       this.svgDefs = JSON.parse(JSON.stringify(snapshot.svgDefs))
+      this.isArtifactsVisible = false
 
       if (snapshot.renderedImage) {
         const img = new Image()
@@ -1573,6 +1579,8 @@ export const useImageStore = defineStore('imageStore', {
         frameSvg: this.frameSvg,
 
         phoneButtonsCanNotBeDrawnToastFlag: this.phoneButtonsCanNotBeDrawnToastFlag,
+
+        isArtifactsVisible: this.isArtifactsVisible,
       }
     },
 

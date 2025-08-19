@@ -10,7 +10,7 @@ import { useConfirmModal } from '../modals/useConfirmModal'
  * @param {(key: string) => string} t - Translation function
  * @returns {Object}
  */
-export function useFileTabs(uiStore, viewportStore, t) {
+export function useFileTabs(uiStore, viewportStore, imageStore, t) {
   const { showConfirmModal } = useConfirmModal()
 
   /**
@@ -49,9 +49,14 @@ export function useFileTabs(uiStore, viewportStore, t) {
       await new Promise((resolve) => setTimeout(resolve, 1))
       uiStore.isLoading = false
 
+      // Reset when switching tabs
+      // To reset rulers position
       viewportStore.resetZoom()
       viewportStore.resetPan()
       viewportStore.shouldFitToScreen = true
+
+      // To hide artifacts
+      imageStore.isArtifactsVisible = false
     }
   }
 

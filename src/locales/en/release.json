@@ -1,5 +1,26 @@
 {
   "versions":{
+    "2.3.0":{
+      "label": "2.3.0",
+      "newFeatures": {
+        "items": [
+          "Join SmartCrop tool and Crop tool",
+          "Show image artifacts during image crop",
+          "Set auto crop and image artifacts detection sensitivity"
+        ]
+      },
+      "bugFixes": {
+        "items": [
+          "Frame too was creating 2 history snapshots"
+        ]
+      },
+      "improvements": {
+        "items": [
+          "Reorder tools in left panel",
+          "Save selected zoom mode to preferences"
+        ]
+      }
+    },
     "2.2.0":{
       "label": "2.2.0",
       "newFeatures": {

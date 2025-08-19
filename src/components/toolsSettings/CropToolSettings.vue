@@ -12,6 +12,7 @@ import DefaultButton from '../common/DefaultButton.vue'
 import ColorPicker from '../common/ColorPicker.vue'
 import ToggleButton from '../common/ToggleButton.vue'
 import StepperInput from '../common/StepperInput.vue'
+import DefaultSlider from '../common/DefaultSlider.vue'
 
 
 const { t } = useI18n()
@@ -44,7 +45,14 @@ const {
   fitCrop,
   manualIndents,
   recalculateCropBox,
-  fitCropApplied
+  fitCropApplied,
+  showArtifacts,
+  hideArtifacts,
+  isArtifactsVisible,
+  autoCropThreshold,
+  minThreshold,
+  maxThreshold,
+  resetThreshold,
 } = useCropTool(useImageStore(), useViewportStore(), useEditorStore(), useHistoryStore(), t)
 
 </script>
@@ -131,7 +139,8 @@ const {
               <p style="text-align: start">
                 {{ $t('tools.crop.settings.general.autoCrop.autoCropColor.title') }}
               </p>
-              <ColorPicker v-model="selectedColor" :tip="$t('tools.crop.settings.general.autoCrop.autoCropColor.tip')" position="bottom-left"/>
+              <ColorPicker v-model="selectedColor" :tip="$t('tools.crop.settings.general.autoCrop.autoCropColor.tip')"
+                position="bottom-left" />
             </div>
           </div>
           <div class="content-wrapper">
@@ -139,10 +148,22 @@ const {
               <p style="text-align: start">
                 {{ $t('tools.crop.settings.general.autoCrop.useBaseImage.title') }}
               </p>
-              <ToggleButton v-model="useBaseImage" :scale="0.6"
-                :style="{ transform: 'translateX(16px)' }" :tip="$t('tools.crop.settings.general.autoCrop.useBaseImage.tip')" position="bottom-left"/>
+              <ToggleButton v-model="useBaseImage" :scale="0.6" :style="{ transform: 'translateX(16px)' }"
+                :tip="$t('tools.crop.settings.general.autoCrop.useBaseImage.tip')" position="bottom-left" />
             </div>
           </div>
+          <div class="content-wrapper" style="margin-bottom: 10px;">
+            <div class="content-aligned two-items">
+
+              <div class="content-title">
+                {{ $t('tools.crop.settings.general.autoCrop.sensitivity.title') }}
+              </div>
+              <DefaultSlider v-model="autoCropThreshold" :min="minThreshold" :max="maxThreshold" :step="0.01" showValue
+                :tip="$t('tools.crop.settings.general.autoCrop.sensitivity.tip')" position="bottom-left"
+                :onReset="resetThreshold" />
+            </div>
+          </div>
+
           <!-- Fit crop -->
           <div class="content-wrapper">
             <DefaultButton :text="$t('tools.crop.settings.general.autoCrop.fitCropButton.text')" @click="fitCrop" />
@@ -160,19 +181,36 @@ const {
             <div class="content-title">
               <p>{{ $t('tools.crop.settings.general.autoCrop.manualAdjustments.top') }}</p>
             </div>
-            <StepperInput v-model="manualIndents.topIndent" :min="manualIndents.topIndentMin" :max="manualIndents.topIndentMax" :step="1" @update="recalculateCropBox" />
+            <StepperInput v-model="manualIndents.topIndent" :min="manualIndents.topIndentMin"
+              :max="manualIndents.topIndentMax" :step="1" @update="recalculateCropBox" />
             <div class="content-title">
               <p>{{ $t('tools.crop.settings.general.autoCrop.manualAdjustments.right') }}</p>
             </div>
-            <StepperInput v-model="manualIndents.rightIndent" :min="manualIndents.rightIndentMin" :max="manualIndents.rightIndentMax" :step="1" @update="recalculateCropBox" />
+            <StepperInput v-model="manualIndents.rightIndent" :min="manualIndents.rightIndentMin"
+              :max="manualIndents.rightIndentMax" :step="1" @update="recalculateCropBox" />
             <div class="content-title">
               <p>{{ $t('tools.crop.settings.general.autoCrop.manualAdjustments.bottom') }}</p>
             </div>
-            <StepperInput v-model="manualIndents.bottomIndent" :min="manualIndents.bottomIndentMin" :max="manualIndents.bottomIndentMax" :step="1" @update="recalculateCropBox" />
+            <StepperInput v-model="manualIndents.bottomIndent" :min="manualIndents.bottomIndentMin"
+              :max="manualIndents.bottomIndentMax" :step="1" @update="recalculateCropBox" />
             <div class="content-title">
               <p>{{ $t('tools.crop.settings.general.autoCrop.manualAdjustments.left') }}</p>
             </div>
-            <StepperInput v-model="manualIndents.leftIndent" :min="manualIndents.leftIndentMin" :max="manualIndents.leftIndentMax" :step="1" @update="recalculateCropBox" />
+            <StepperInput v-model="manualIndents.leftIndent" :min="manualIndents.leftIndentMin"
+              :max="manualIndents.leftIndentMax" :step="1" @update="recalculateCropBox" />
+          </div>
+        </div>
+
+        <!-- Show/hide artifacts -->
+        <div class="settings-content-wrapper">
+          <div class="content-wrapper">
+            <div class="content-button">
+              <DefaultButton
+                :text="isArtifactsVisible ? $t('tools.crop.settings.general.hideArtifactsButton.text') : $t('tools.crop.settings.general.showArtifactsButton.text')"
+                @click="isArtifactsVisible ? hideArtifacts() : showArtifacts()"
+                :tip="isArtifactsVisible ? $t('tools.crop.settings.general.hideArtifactsButton.tip') : $t('tools.crop.settings.general.showArtifactsButton.tip')"
+                position="bottom-left" />
+            </div>
           </div>
         </div>
 
@@ -180,7 +218,9 @@ const {
         <div class="settings-content-wrapper">
           <div class="content-wrapper">
             <div class="content-button">
-              <DefaultButton :text="$t('tools.crop.settings.general.resetCropButton.text')" @click="resetCrop" :disabled=!cropCanBeReset :tip="$t('tools.crop.settings.general.resetCropButton.tip')" position="bottom-left"/>
+              <DefaultButton :text="$t('tools.crop.settings.general.resetCropButton.text')" @click="resetCrop"
+                :disabled=!cropCanBeReset :tip="$t('tools.crop.settings.general.resetCropButton.tip')"
+                position="bottom-left" />
             </div>
           </div>
         </div>
@@ -203,5 +243,4 @@ const {
   </div>
 </template>
 
-<style scoped>
-</style>
+<style scoped></style>
