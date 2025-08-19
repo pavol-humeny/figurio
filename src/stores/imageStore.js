@@ -255,6 +255,18 @@ export const useImageStore = defineStore('imageStore', {
     },
 
     /**
+     * Resets the SVG objects and their selection state
+     */
+    resetSvgObject() {
+      this.svgObjects = []
+      this.selectedSvgObjectId = null
+      this.justCreatedSvgObjectId = null
+      this.selectedSvgObjectIds = []
+      this.svgDefs = []
+      this.clipboardSvgObject = null
+    },
+
+    /**
      * Resets the image frame configuration to default values
      */
     resetFrame() {
@@ -383,6 +395,8 @@ export const useImageStore = defineStore('imageStore', {
 
       this.isArtifactsVisible = false
 
+      this.resetSvgObject()
+
       // Also reset rendered images
       this.setRenderedImage(null)
     },
@@ -427,13 +441,7 @@ export const useImageStore = defineStore('imageStore', {
 
       this.newRenderedImage = null
 
-      // TODO - uncomment
-      this.svgObjects = []
-      this.selectedSvgObjectId = null
-      this.justCreatedSvgObjectId = null
-      this.selectedSvgObjectIds = []
-      this.svgDefs = []
-      this.clipboardSvgObject = null
+      this.resetSvgObject()
 
       this.resetImageStoreForNewFile()
     },
