@@ -90,9 +90,9 @@ export const useImageStore = defineStore('imageStore', {
     newRenderedImage: null,
 
     /** Array of SVG objects to render on the image */
-    // svgObjects: [], // UndoRedo
     svgObjects: [],
-    /** ID of the currently selected SVG object */ selectedSvgObjectId: null,
+    /** ID of the currently selected SVG object */
+    selectedSvgObjectId: null,
     /** ID of the SVG object that was just created */
     justCreatedSvgObjectId: null,
     /** Array of selected SVG object IDs for multi-selection */
