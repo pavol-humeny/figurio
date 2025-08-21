@@ -90,17 +90,21 @@ export const useViewportStore = defineStore('viewportStore', {
      * @param {number} level
      */
     setZoomLevel(level) {
-      let canvasObject = document.querySelector('.image-canvas')
+      let canvasObject = document.querySelector('.viewport-content')
       if (!canvasObject) {
-        console.warn('Canvas element not found!')
+        console.warn('viewport-content element not found!')
         return
       }
 
-      const widthBefore = canvasObject.width * this.realZoomLevel
-      const heightBefore = canvasObject.height * this.realZoomLevel
+      const rectBefore = canvasObject.getBoundingClientRect()
+      const widthBefore = rectBefore.width * this.realZoomLevel
+      const heightBefore = rectBefore.height * this.realZoomLevel
+
       this.zoomLevel = round(level, 2)
-      const widthAfter = canvasObject.width * this.realZoomLevel
-      const heightAfter = canvasObject.height * this.realZoomLevel
+
+      const rectAfter = canvasObject.getBoundingClientRect()
+      const widthAfter = rectAfter.width * this.realZoomLevel
+      const heightAfter = rectAfter.height * this.realZoomLevel
 
       const diffWidth = widthAfter - widthBefore
       const diffHeight = heightAfter - heightBefore

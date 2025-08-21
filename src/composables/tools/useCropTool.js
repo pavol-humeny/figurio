@@ -4,6 +4,8 @@ import { useConfirmModal } from '../modals/useConfirmModal'
 import { useToastModal } from '../modals/useToastModal'
 import { editorConfig } from '@/config/editorConfig'
 
+import { PDFDocument } from 'pdf-lib'
+
 /**
  * Reactive state of the crop box used for user interactions
  * @type {import('vue').Ref<{
@@ -688,7 +690,7 @@ export function useCropTool(imageStore, viewportStore, editorStore, historyStore
    * Apply the crop operation to the rendered image
    * @param {Object} cropBox - Crop box dimensions
    */
-  const applyCropRender = (cropBox) => {
+  const applyCropRender = async (cropBox) => {
     if (!imageStore.getRenderedImage({ t, renderCall: false }) || !cropBox) return
 
     const { x, y, width, height } = cropBox
@@ -723,6 +725,43 @@ export function useCropTool(imageStore, viewportStore, editorStore, historyStore
         t('tools.crop.settings.general.invalidCropBox.message'),
       )
       return
+    }
+
+    if (imageStore.fileType === 'pdf' && imageStore.pdfPageBytes) {
+      const prevCrop = imageStore.totalPdfCropBox || {
+        x: 0,
+        y: 0,
+      }
+
+      try {
+        const existingPdf = await PDFDocument.load(imageStore.pdfPageBytes)
+        const newPdf = await PDFDocument.create()
+        const [copiedPage] = await newPdf.copyPages(existingPdf, [0])
+
+        const pageHeight = copiedPage.getHeight()
+
+        // Recalculate new coordinates relative to previous crop
+        const x = prevCrop.x + cropBox.x
+        const y = cropBox.y
+        const width = cropBox.width
+        const height = cropBox.height
+        console.log('x, y: ', { x, y })
+
+        const pdfY = pageHeight - (y + height) + prevCrop.y
+
+        console.log('PDF Y:', pdfY)
+
+        copiedPage.setMediaBox(x, pdfY, width, height)
+        newPdf.addPage(copiedPage)
+
+        const pdfBytes = await newPdf.save()
+        imageStore.pdfPageBytes = pdfBytes
+
+        // Save new crop
+        imageStore.totalPdfCropBox = { x, y: pdfY }
+      } catch (e) {
+        console.error('Error cropping PDF:', e)
+      }
     }
 
     const canvas = document.createElement('canvas')

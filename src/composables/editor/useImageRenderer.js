@@ -1,6 +1,12 @@
 import { onMounted, watch, ref, nextTick } from 'vue'
 import { useFrameTool } from '../tools/useFrameTool'
 
+import * as pdfjsLib from 'pdfjs-dist/legacy/build/pdf'
+import { SVGGraphics } from 'pdfjs-dist/legacy/build/pdf'
+
+pdfjsLib.GlobalWorkerOptions.workerSrc =
+  'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js'
+
 /**
  * Logic for rendering image layers (img, SVG, frame) in the editor viewport
  *
@@ -39,6 +45,8 @@ export function useImageRenderer(
    */
   const frameSvgRef = ref(null)
 
+  const pdfContainerRef = ref(null)
+
   /**
    * Internal flag to avoid overlapping frame render calls
    */
@@ -64,6 +72,11 @@ export function useImageRenderer(
       imageRef.value.height = height
       imageRef.value.style.width = `${width}px`
       imageRef.value.style.height = `${height}px`
+    }
+
+    if (pdfContainerRef.value) {
+      pdfContainerRef.value.style.width = `${width}px`
+      pdfContainerRef.value.style.height = `${height}px`
     }
 
     // Set SVG dimensions
@@ -106,23 +119,52 @@ export function useImageRenderer(
   /**
    * Render base image
    */
-  const renderCanvas = () => {
-    if (!imageRef.value || !imageStore.getRenderedImage({ t, renderCall: false })) return
-    console.log('Rendering image (image only)...')
+  const renderCanvas = async () => {
+    if (imageStore.fileType === 'pdf') {
+      console.log('Rendering PDF page...')
+      const pdfPageBytes = imageStore.pdfPageBytes
 
-    const img = imageStore.getRenderedImage({ t, renderCall: true })
-    if (img instanceof HTMLCanvasElement) {
-      imageRef.value.src = img.toDataURL()
-    } else if (img instanceof HTMLImageElement) {
-      imageRef.value.src = img.src
+      const pdf = await pdfjsLib.getDocument({ data: pdfPageBytes }).promise
+      const page = await pdf.getPage(1)
+
+      const viewportPdf = page.getViewport({ scale: 1 })
+      const opList = await page.getOperatorList()
+      const svgGfx = new SVGGraphics(page.commonObjs, page.objs)
+      const svg = await svgGfx.getSVG(opList, viewportPdf)
+
+      // White rectangle
+      const rect = document.createElementNS('http://www.w3.org/2000/svg', 'rect')
+      rect.setAttribute('x', 0)
+      rect.setAttribute('y', 0)
+      rect.setAttribute('width', imageStore.fileDimensions.width)
+      rect.setAttribute('height', imageStore.fileDimensions.height)
+      rect.setAttribute('fill', 'white')
+      svg.insertBefore(rect, svg.firstChild)
+
+      pdfContainerRef.value.innerHTML = ''
+      pdfContainerRef.value.appendChild(svg)
+
+      // Preview URL môžeme nastaviť na blob URL
+      // imageStore.previewUrl = pdfUrl
+    } else if (imageStore.fileType === 'image') {
+      if (!imageRef.value || !imageStore.getRenderedImage({ t, renderCall: false })) return
+
+      console.log('Rendering IMAGE (IMAGE only)...')
+
+      const img = imageStore.getRenderedImage({ t, renderCall: true })
+      if (img instanceof HTMLCanvasElement) {
+        imageRef.value.src = img.toDataURL()
+      } else if (img instanceof HTMLImageElement) {
+        imageRef.value.src = img.src
+      }
+
+      imageStore.previewUrl = imageRef.value.src
     }
 
     // Save initial state to history if empty
     if (historyStore.history.length === 0) {
       historyStore.push(imageStore.getSnapshot(t))
     }
-
-    imageStore.previewUrl = imageRef.value.src
   }
 
   /**
@@ -167,10 +209,10 @@ export function useImageRenderer(
    * Watch for changes in image dimensions and re-render all layers
    */
   watch(
-    () => imageStore.getRenderedImage({ t, renderCall: false }),
-    (newImage) => {
-      if (newImage) {
-        console.log('#################### Image rendered changed, re-rendering all...')
+    [() => imageStore.getRenderedImage({ t, renderCall: false }), () => imageStore.pdfPageBytes],
+    ([newImage, newPdfBytes]) => {
+      if (newImage || newPdfBytes) {
+        console.log('#################### Image or PDF changed, re-rendering all...')
         renderAll()
       }
     },
@@ -204,5 +246,6 @@ export function useImageRenderer(
     imageRef,
     svgRef,
     frameSvgRef,
+    pdfContainerRef,
   }
 }

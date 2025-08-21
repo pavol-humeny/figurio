@@ -295,10 +295,11 @@ export function useFrameTool(imageStore, historyStore, editorStore, t) {
     let width
     if (
       // UPDATE new frame type
-      selectedFrameVariant.value === 'frameMacBrowser' ||
-      selectedFrameVariant.value === 'frameWindowsBrowser' ||
-      selectedFrameVariant.value === 'frameWindowsTaskBar' ||
-      selectedFrameVariant.value === 'frameVSCode'
+      (selectedFrameVariant.value === 'frameMacBrowser' ||
+        selectedFrameVariant.value === 'frameWindowsBrowser' ||
+        selectedFrameVariant.value === 'frameWindowsTaskBar' ||
+        selectedFrameVariant.value === 'frameVSCode') &&
+      drawOutline.value
     ) {
       width = Math.floor(
         editorConfig.browserFrameDefaultSize *
@@ -785,6 +786,8 @@ export function useFrameTool(imageStore, historyStore, editorStore, t) {
       line.setAttribute('y1', centerY + 1)
       line.setAttribute('x2', startX + size)
       line.setAttribute('y2', centerY + 1)
+      line.setAttribute('stroke', contrastColor)
+      line.setAttribute('stroke-width', strokeWidth)
       iconGroup.appendChild(line)
 
       // Maximize
@@ -795,6 +798,8 @@ export function useFrameTool(imageStore, historyStore, editorStore, t) {
       rect.setAttribute('width', size - size * maximizeScale * 2)
       rect.setAttribute('height', size - size * maximizeScale * 2)
       rect.setAttribute('fill', color)
+      rect.setAttribute('stroke', contrastColor)
+      rect.setAttribute('stroke-width', strokeWidth)
       iconGroup.appendChild(rect)
 
       // Close
@@ -806,6 +811,8 @@ export function useFrameTool(imageStore, historyStore, editorStore, t) {
           centerY - size / 2
         } L ${x},${centerY + size / 2}`,
       )
+      cross.setAttribute('stroke', contrastColor)
+      cross.setAttribute('stroke-width', strokeWidth)
       iconGroup.appendChild(cross)
 
       el.appendChild(iconGroup)
@@ -836,24 +843,43 @@ export function useFrameTool(imageStore, historyStore, editorStore, t) {
       const strokeWidth = Math.max(1, Math.floor(header * 0.07))
 
       // VS Code logo
-      const logoSvg = document.createElementNS(ns, 'svg')
-      logoSvg.setAttribute('xmlns', ns)
-      logoSvg.setAttribute('viewBox', '0 0 16 16')
-      logoSvg.setAttribute('width', header * 0.7) // 70 % of header size
-      logoSvg.setAttribute('height', header * 0.7)
-      logoSvg.setAttribute('x', fw + header / 3) // horizontal offset
-      logoSvg.setAttribute('y', header * 0.15) // vertical offset
+      // const logoSvg = document.createElementNS(ns, 'svg')
+      // logoSvg.setAttribute('xmlns', ns)
+      // logoSvg.setAttribute('viewBox', '0 0 16 16')
+      // logoSvg.setAttribute('width', header * 0.7) // 70 % of header size
+      // logoSvg.setAttribute('height', header * 0.7)
+      // logoSvg.setAttribute('x', fw + header / 3) // horizontal offset
+      // logoSvg.setAttribute('y', header * 0.15) // vertical offset
 
-      // Path with logo
+      // // Path with logo
+      // const logoPath = document.createElementNS(ns, 'path')
+      // logoPath.setAttribute(
+      //   'd',
+      //   'M11.782799999999998 0.15999999999999998 5.698933333333334 6.251666666666666 1.8573333333333333 3.2254666666666663 0.17959999999999998 4.08v7.84l1.6856 0.8545333333333334 3.865133333333333 -3.0183999999999997 6.068133333333333 6.083866666666666 4.021933333333333 -1.6228666666666665V1.728L11.782799999999998 0.15999999999999998ZM1.9984666666666666 9.8032V6.1575999999999995l1.9129999999999998 1.9051333333333331 -1.9129999999999998 1.7404666666666666Zm9.666733333333333 1.0113333333333332L8.0196 8l3.6456 -2.8145333333333333v5.629066666666667Z',
+      // )
+      // logoPath.setAttribute('fill', contrastColor)
+
+      // logoSvg.appendChild(logoPath)
+      // el.appendChild(logoSvg)
+
+      //////////////////////
+
       const logoPath = document.createElementNS(ns, 'path')
+      const logoScale = (header * 0.7) / 16 // viewBox 16x16
+      const logoOffsetX = fw + header / 3
+      const logoOffsetY = header * 0.15
+
+      // použijeme transform pre posun a scale
       logoPath.setAttribute(
         'd',
         'M11.782799999999998 0.15999999999999998 5.698933333333334 6.251666666666666 1.8573333333333333 3.2254666666666663 0.17959999999999998 4.08v7.84l1.6856 0.8545333333333334 3.865133333333333 -3.0183999999999997 6.068133333333333 6.083866666666666 4.021933333333333 -1.6228666666666665V1.728L11.782799999999998 0.15999999999999998ZM1.9984666666666666 9.8032V6.1575999999999995l1.9129999999999998 1.9051333333333331 -1.9129999999999998 1.7404666666666666Zm9.666733333333333 1.0113333333333332L8.0196 8l3.6456 -2.8145333333333333v5.629066666666667Z',
+      ) // full path
+      logoPath.setAttribute(
+        'transform',
+        `translate(${logoOffsetX}, ${logoOffsetY}) scale(${logoScale})`,
       )
       logoPath.setAttribute('fill', contrastColor)
-
-      logoSvg.appendChild(logoPath)
-      el.appendChild(logoSvg)
+      el.appendChild(logoPath)
 
       // Window icons (right side)
       const iconGroup = document.createElementNS(ns, 'g')
@@ -871,6 +897,8 @@ export function useFrameTool(imageStore, historyStore, editorStore, t) {
       line.setAttribute('y1', centerY + 1)
       line.setAttribute('x2', startX + size)
       line.setAttribute('y2', centerY + 1)
+      line.setAttribute('stroke', contrastColor)
+      line.setAttribute('stroke-width', strokeWidth)
       iconGroup.appendChild(line)
 
       // Maximize
@@ -881,6 +909,8 @@ export function useFrameTool(imageStore, historyStore, editorStore, t) {
       rect.setAttribute('width', size - size * maximizeScale * 2)
       rect.setAttribute('height', size - size * maximizeScale * 2)
       rect.setAttribute('fill', color)
+      rect.setAttribute('stroke', contrastColor)
+      rect.setAttribute('stroke-width', strokeWidth)
       iconGroup.appendChild(rect)
 
       // Close
@@ -890,6 +920,8 @@ export function useFrameTool(imageStore, historyStore, editorStore, t) {
         'd',
         `M ${x},${centerY - size / 2} L ${x + size},${centerY + size / 2} M ${x + size},${centerY - size / 2} L ${x},${centerY + size / 2}`,
       )
+      cross.setAttribute('stroke', contrastColor)
+      cross.setAttribute('stroke-width', strokeWidth)
       iconGroup.appendChild(cross)
 
       el.appendChild(iconGroup)
@@ -1291,8 +1323,8 @@ export function useFrameTool(imageStore, historyStore, editorStore, t) {
         searchBar.setAttribute('y', searchY)
         searchBar.setAttribute('width', searchWidth)
         searchBar.setAttribute('height', searchHeight)
-        searchBar.setAttribute('rx', footer * 0.1)
-        searchBar.setAttribute('fill', '#ffffff33') // semi-transparent white
+        searchBar.setAttribute('fill', '#ffffff')
+        searchBar.setAttribute('opacity', '0.7')
         el.appendChild(searchBar)
       }
 

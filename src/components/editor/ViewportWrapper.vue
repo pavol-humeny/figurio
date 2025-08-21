@@ -30,7 +30,7 @@ const contentRef = ref(null)
 /**
  * Logic of the image renderer (canvas, SVG, frame)
  */
-const { imageRef, svgRef, frameSvgRef } = useImageRenderer(
+const { imageRef, svgRef, frameSvgRef, pdfContainerRef } = useImageRenderer(
   useImageStore(),
   useHistoryStore(),
   useEditorStore(),
@@ -153,7 +153,10 @@ const disableContextMenu = computed(() => {
         <div :class="{ 'hide': uiStore.isLoading }" class="viewport-content" ref="contentRef" :style="{
           transform: `translate(${panX}px, ${panY}px) scale(${zoomLevel})`,
         }">
-          <img ref="imageRef" class="image-canvas" />
+          <img v-if="imageStore.fileType === 'image'" ref="imageRef" class="image-canvas" />
+          <div v-else-if="imageStore.fileType === 'pdf'" ref="pdfContainerRef" class="pdf-viewer"></div>
+
+
           <canvas v-if="editorStore.selectedToolKey === 'crop'" ref="overlayCanvasRef" class="overlay-canvas"></canvas>
 
           <svg ref="frameSvgRef" class="frame-svg"></svg>
@@ -237,7 +240,7 @@ const disableContextMenu = computed(() => {
         </div>
         <div v-if="mouseX !== null" class="ruler-cursor-mark horizontal" :style="{ left: mouseX + 'px' }">
           <span class="ruler-cursor-label horizontal" :class="{ 'active': cursorPosXSameAsImageWidth }">{{ cursorPosX
-            }}</span>
+          }}</span>
         </div>
 
       </div>
@@ -250,7 +253,7 @@ const disableContextMenu = computed(() => {
         </div>
         <div v-if="mouseY !== null" class="ruler-cursor-mark vertical" :style="{ top: mouseY + 'px' }">
           <span class="ruler-cursor-label vertical" :class="{ 'active': cursorPosYSameAsImageHeight }">{{ cursorPosY
-            }}</span>
+          }}</span>
         </div>
       </div>
     </div>
@@ -292,7 +295,8 @@ const disableContextMenu = computed(() => {
 .image-canvas,
 .image-svg,
 .frame-svg,
-.overlay-canvas {
+.overlay-canvas,
+.pdf-viewer {
   position: absolute;
   top: 0;
   left: 0;
