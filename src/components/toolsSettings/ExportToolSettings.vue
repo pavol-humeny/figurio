@@ -53,7 +53,6 @@ const {
               <option value="jpg">JPG</option>
               <option value="pdf">PDF</option>
               <option value="webp">WebP</option>
-              <option value="svg">SVG</option>
             </select>
           </div>
 

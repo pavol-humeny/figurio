@@ -904,25 +904,9 @@ export const useImageStore = defineStore('imageStore', {
 
       const { width, height, quality } = this.newFileDimensions
       const isPdf = this.newFileFormat === 'pdf'
-      const isSvg = this.newFileFormat === 'svg'
 
-      // Pre SVG a PDF nespúšťame raster preview
-      await this.generatePreview(editorStore, historyStore, t, !isPdf && !isSvg)
-
-      // Export as SVG
-      if (isSvg) {
-        await this.exportAsSvg(width, height, t)
-
-        showToastModal(
-          'success',
-          t('imageStore.toast.successFileExported.title'),
-          t('imageStore.toast.successFileExported.message', {
-            fileName: this.newFileName,
-          }),
-        )
-
-        return true
-      }
+      // For pdf do not use raster preview
+      await this.generatePreview(editorStore, historyStore, t, !isPdf)
 
       // Export as PDF
       if (isPdf) {
@@ -1005,8 +989,17 @@ export const useImageStore = defineStore('imageStore', {
       )
     },
 
+    /**
+     * Convert svg object (objects and frame) into pdf
+     *
+     * @param {Object} pdfSvg - jsPDF instance
+     * @param {number} width - Width of the PDF
+     * @param {number} height - Height of the PDF
+     * @param {number} offsetX - X offset for the SVG content
+     * @param {number} offsetY - Y offset for the SVG content
+     */
     async createSvgPdf(pdfSvg, width, height, offsetX = 0, offsetY = 0) {
-      // 1. Statické a dynamické defs
+      // Defs
       const staticDefs = `
         <marker id="arrow-end" markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto" markerUnits="strokeWidth">
           <path d="M0,0 L0,6 L6,3 z" fill="context-stroke" />
@@ -1037,7 +1030,7 @@ export const useImageStore = defineStore('imageStore', {
           </defs>
         `.trim()
 
-      // 2. Vygeneruj SVG string
+      // Generate svg string
       if (this.svgObjects.length > 0) {
         const svgString = `
           <svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}">
@@ -1059,6 +1052,7 @@ export const useImageStore = defineStore('imageStore', {
           </svg>
         `.trim()
 
+        // Parse SVG string
         try {
           const svgElement = new DOMParser().parseFromString(
             svgString,
@@ -1074,7 +1068,7 @@ export const useImageStore = defineStore('imageStore', {
         }
       }
 
-      // 4. Frame, ak existuje
+      // 4. Frame
       if (this.frame.enabled && this.frameSvg) {
         try {
           const parser = new DOMParser()
@@ -1118,6 +1112,7 @@ export const useImageStore = defineStore('imageStore', {
         offsetY = this.frame.headerSize
       }
 
+      // Export pdf as vector
       if (this.fileType === 'pdf' && this.pdfPageBytes) {
         /**
          * Convert hex color to rgb object with values 0–1 (for pdf-lib)
@@ -1427,7 +1422,9 @@ export const useImageStore = defineStore('imageStore', {
         link.href = URL.createObjectURL(blob)
         link.download = `${this.newFileName}.pdf`
         link.click()
-      } else {
+      }
+      // Export pdf as raster (with jsPDF)
+      else {
         // Create pdf
         const pdf = new jsPDF({
           orientation: finalWidth > finalHeight ? 'landscape' : 'portrait',
@@ -1444,76 +1441,6 @@ export const useImageStore = defineStore('imageStore', {
         // Save
         pdf.save(`${this.newFileName}.pdf`)
       }
-    },
-
-    /**
-     * Exports the composed image (base image + SVG overlays + frame) as SVG
-     * @param {number} width - Width of the SVG canvas
-     * @param {number} height - Height of the SVG canvas
-     * @param {Function} t - i18n translation function
-     * @returns {Promise<void>}
-     * TODO - if source is pdf
-     */
-    async exportAsSvg(width, height, t) {
-      const imageStore = this
-      const historyStore = useHistoryStore()
-      const editorStore = useEditorStore()
-
-      const offsetX = this.frame.enabled ? this.frame.width : 0
-      let offsetY = this.frame.enabled ? this.frame.height : 0
-
-      const hasHeader = useFrameTool(imageStore, historyStore, editorStore, t).isFrameWithHeader(
-        this.frame.type,
-      )
-
-      if (hasHeader) {
-        offsetY = this.frame.headerSize
-      }
-
-      const renderedImage = this.getRenderedImage({ t, renderCall: true })
-      if (!renderedImage) {
-        console.warn('No image to export as SVG')
-        return
-      }
-
-      const imageDataUrl = renderedImage.toDataURL()
-      const imageTag = `<image href="${imageDataUrl}" x="${offsetX}" y="${offsetY}" width="${renderedImage.width}" height="${renderedImage.height}" />`
-
-      const svgObjectsTag = this.svgObjects
-        .map((obj) => {
-          const attrs = Object.entries(obj.attrs || {})
-            .map(([k, v]) => `${k}="${v}"`)
-            .join(' ')
-          if (obj.tag === 'text') {
-            const content = obj.content || ''
-            return `<text ${attrs}>${content}</text>`
-          }
-          return `<${obj.tag} ${attrs} />`
-        })
-        .join('\n')
-
-      let cleanedFrameSvg = (this.frameSvg || '')
-        .replace(/<\/svg>/g, '')
-        .replace(/<svg[^>]*>/g, '')
-        .trim()
-
-      const svgContent = `
-        <svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}">
-          ${imageTag}
-          <g transform="translate(${offsetX}, ${offsetY})">
-            ${svgObjectsTag}
-          </g>
-          ${cleanedFrameSvg}
-        </svg>
-      `.trim()
-
-      const blob = new Blob([svgContent], { type: 'image/svg+xml' })
-      const url = URL.createObjectURL(blob)
-      const link = document.createElement('a')
-      link.href = url
-      link.download = `${this.newFileName}.svg`
-      link.click()
-      URL.revokeObjectURL(url)
     },
 
     /**
