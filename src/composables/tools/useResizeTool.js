@@ -3,6 +3,7 @@ import { useToastModal } from '../modals/useToastModal'
 import { editorConfig } from '@/config/editorConfig'
 import { useSendEvent } from '@/composables/common/useSendEvent'
 import { useMath } from '../common/useMath'
+import { PDFDocument } from 'pdf-lib'
 
 /**
  * Logic for the resize tool
@@ -134,7 +135,7 @@ export function useResizeTool(imageStore, historyStore, t) {
   /**
    * Apply the resize operation to the operation history and canvas
    */
-  const applyResize = () => {
+  const applyResize = async () => {
     imageStore.addImageOperation({
       type: 'resize',
       resizeDimensions: {
@@ -152,7 +153,7 @@ export function useResizeTool(imageStore, historyStore, t) {
       },
     })
 
-    applyResizeRender(fileDimensionWidth.value, fileDimensionHeight.value)
+    await applyResizeRender(fileDimensionWidth.value, fileDimensionHeight.value)
 
     historyStore.push(imageStore.getSnapshot(t))
   }
@@ -163,7 +164,7 @@ export function useResizeTool(imageStore, historyStore, t) {
    * @param {number} width - Target width
    * @param {number} height - Target height
    */
-  const applyResizeRender = (width, height) => {
+  const applyResizeRender = async (width, height) => {
     if (width <= 0 || height <= 0) {
       showToastModal(
         'error',
@@ -175,6 +176,34 @@ export function useResizeTool(imageStore, historyStore, t) {
 
     const oldImage = imageStore.getRenderedImage({ t, renderCall: false })
     if (!oldImage) return
+
+    if (imageStore.fileType === 'pdf' && imageStore.pdfPageBytes) {
+      try {
+        const existingPdf = await PDFDocument.load(imageStore.pdfPageBytes)
+        const oldPage = existingPdf.getPage(0)
+
+        // Create new pdf
+        const newPdf = await PDFDocument.create()
+        const newPage = newPdf.addPage([width, height])
+
+        const [embeddedPage] = await newPdf.embedPages([oldPage])
+
+        // Draw the embedded page onto the new page
+        newPage.drawPage(embeddedPage, {
+          x: 0,
+          y: 0,
+          width,
+          height,
+        })
+
+        const pdfBytes = await newPdf.save()
+        imageStore.pdfPageBytes = pdfBytes
+
+        console.log(`PDF resized physically to ${width}x${height}`)
+      } catch (e) {
+        console.error('Error resizing PDF:', e)
+      }
+    }
 
     const canvas = document.createElement('canvas')
     const ctx = canvas.getContext('2d')
