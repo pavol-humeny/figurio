@@ -728,34 +728,31 @@ export function useCropTool(imageStore, viewportStore, editorStore, historyStore
     }
 
     if (imageStore.fileType === 'pdf' && imageStore.pdfPageBytes) {
-      const prevCrop = imageStore.totalPdfCropBox || {
-        x: 0,
-        y: 0,
-      }
-
       try {
-        const existingPdf = await PDFDocument.load(imageStore.pdfPageBytes)
+        const currentPdf = await PDFDocument.load(imageStore.pdfPageBytes)
+        // Create new page
         const newPdf = await PDFDocument.create()
-        const [copiedPage] = await newPdf.copyPages(existingPdf, [0])
 
-        const pageHeight = copiedPage.getHeight()
+        // Embed old page
+        const [embeddedPage] = await newPdf.embedPages([currentPdf.getPage(0)])
 
-        // Recalculate new coordinates relative to previous crop
-        const x = prevCrop.x + cropBox.x
-        const y = cropBox.y
-        const width = cropBox.width
-        const height = cropBox.height
+        const { x, y, width, height } = cropBox
+        const pageHeight = embeddedPage.height
+        const pdfY = pageHeight - (y + height)
 
-        const pdfY = pageHeight - (y + height) + prevCrop.y
-
-        copiedPage.setMediaBox(x, pdfY, width, height)
-        newPdf.addPage(copiedPage)
+        // Add cropped page
+        const page = newPdf.addPage([width, height])
+        page.drawPage(embeddedPage, {
+          x: -x, // Move according to crop box
+          y: -pdfY,
+          width: embeddedPage.width,
+          height: embeddedPage.height,
+        })
 
         const pdfBytes = await newPdf.save()
         imageStore.pdfPageBytes = pdfBytes
 
-        // Save new crop
-        imageStore.totalPdfCropBox = { x, y: pdfY }
+        console.log('PDF successfully cropped.')
       } catch (e) {
         console.error('Error cropping PDF:', e)
       }

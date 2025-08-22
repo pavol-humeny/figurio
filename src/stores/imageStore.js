@@ -1316,7 +1316,7 @@ export const useImageStore = defineStore('imageStore', {
               else if (isItalic) baseFont = StandardFonts.CourierOblique
             }
 
-            const font = await pdf.embedFont(baseFont)
+            const font = await finalPdf.embedFont(baseFont)
 
             // Draw text with optional letter spacing
             if (letterSpacing) {
@@ -1382,34 +1382,29 @@ export const useImageStore = defineStore('imageStore', {
         }
 
         // 1. Base image
-        const existingPdf = await PDFDocument.load(this.pdfPageBytes)
-        const pdf = await PDFDocument.create()
+        const existingPdf = await PDFDocument.load(imageStore.pdfPageBytes)
+        const finalPdf = await PDFDocument.create()
 
-        const cropX = imageStore.totalPdfCropBox.x || 0
-        const cropY = imageStore.totalPdfCropBox.y || 0
-        const cropWidth = existingPdf.getPage(0).getWidth()
-        const cropHeight = existingPdf.getPage(0).getHeight()
+        const originalPage = existingPdf.getPage(0)
+        const width = originalPage.getWidth()
+        const height = originalPage.getHeight()
 
-        // Embed the first page as PDFEmbeddedPage
-        const [embeddedPage] = await pdf.embedPages(
-          [existingPdf.getPage(0)],
-          [{ left: cropX, bottom: cropY, right: cropX + cropWidth, top: cropY + cropHeight }],
-        )
+        // Embed page
+        const [embeddedPage] = await finalPdf.embedPages([originalPage])
 
-        const page = pdf.addPage([finalWidth, finalHeight])
-
-        page.drawPage(embeddedPage, {
-          x: offsetX,
-          y: finalHeight - offsetY - embeddedPage.height, // Recalculate Y position to bottom left corner
-          width: cropWidth,
-          height: cropHeight,
+        const finalPage = finalPdf.addPage([width, height])
+        finalPage.drawPage(embeddedPage, {
+          x: 0,
+          y: 0,
+          width,
+          height,
         })
 
         // 2. SVG objects
         for (const obj of this.svgObjects) {
           // Add text to attributes
           obj.attrs.textContent = obj.content || ''
-          drawSvgElement(page, obj.tag, obj.attrs, finalHeight, offsetX, offsetY)
+          drawSvgElement(finalPage, obj.tag, obj.attrs, finalHeight, offsetX, offsetY)
         }
 
         // 3. Frame
@@ -1421,12 +1416,12 @@ export const useImageStore = defineStore('imageStore', {
             const tag = el.tagName
             const attrs = Object.fromEntries([...el.attributes].map((a) => [a.name, a.value]))
             attrs.textContent = el.textContent
-            drawSvgElement(page, tag, attrs, finalHeight, 0, 0)
+            drawSvgElement(finalPage, tag, attrs, finalHeight, 0, 0)
           })
         }
 
         // 4. Save
-        const pdfBytes = await pdf.save()
+        const pdfBytes = await finalPdf.save()
         const blob = new Blob([pdfBytes], { type: 'application/pdf' })
         const link = document.createElement('a')
         link.href = URL.createObjectURL(blob)
@@ -1530,7 +1525,7 @@ export const useImageStore = defineStore('imageStore', {
     },
 
     /**
-     * Renders all SVG objects over the base image and rasterizes the result into a canvas.
+     * Renders all SVG objects over the base image and rasterize the result into a canvas.
      * Used to prepare the image for export as raster or PDF.
      * @param {number|null} width - Optional width to rasterize to
      * @param {number|null} height - Optional height to rasterize to

@@ -483,23 +483,23 @@ export function usePresetTool(
     }
 
     if (preset.imageOperations.length !== 0) {
-      preset.imageOperations.forEach((operation) => {
+      preset.imageOperations.forEach(async (operation) => {
         if (operation.type === 'rotation') {
-          useRotateTool(imageStore, historyStore, t).applyRotationRender(operation.angle)
+          await useRotateTool(imageStore, historyStore, t).applyRotationRender(operation.angle)
         } else if (operation.type === 'flip') {
-          useFlipTool(imageStore, historyStore, t).applyFlipRender(operation.direction)
+          await useFlipTool(imageStore, historyStore, t).applyFlipRender(operation.direction)
         } else if (operation.type === 'autoCrop') {
-          useCropTool(imageStore, viewportStore, editorStore, historyStore, t).applyAutoCropPreset(
+          await useCropTool(imageStore, viewportStore, editorStore, historyStore, t).applyAutoCropPreset(
             operation.color,
           )
         } else if (operation.type === 'grayscale') {
-          useGrayscaleTool(imageStore, historyStore).applyGrayscaleRender()
+          await useGrayscaleTool(imageStore, historyStore).applyGrayscaleRender()
         } else if (operation.type === 'crop') {
-          useCropTool(imageStore, viewportStore, editorStore, historyStore, t).applyCropRender(
+          await useCropTool(imageStore, viewportStore, editorStore, historyStore, t).applyCropRender(
             operation.cropBox,
           )
         } else if (operation.type === 'resize') {
-          useResizeTool(imageStore, historyStore, t).applyResizeRender(
+          await useResizeTool(imageStore, historyStore, t).applyResizeRender(
             operation.resizeDimensions.width,
             operation.resizeDimensions.height,
           )
