@@ -1311,7 +1311,7 @@ export const useImageStore = defineStore('imageStore', {
               else if (isItalic) baseFont = StandardFonts.CourierOblique
             }
 
-            const font = await finalPdf.embedFont(baseFont)
+            const font = await pdf.embedFont(baseFont)
 
             // Draw text with optional letter spacing
             if (letterSpacing) {
@@ -1356,7 +1356,7 @@ export const useImageStore = defineStore('imageStore', {
             }
           }
 
-          // TODO
+          // TODO - cross and VSCode logo
           if (tag === 'path') {
             const fillColor =
               attrs.fill && attrs.fill !== 'none'
@@ -1378,19 +1378,19 @@ export const useImageStore = defineStore('imageStore', {
 
         // 1. Base image
         const existingPdf = await PDFDocument.load(imageStore.pdfPageBytes)
-        const finalPdf = await PDFDocument.create()
+        const pdf = await PDFDocument.create()
 
         const originalPage = existingPdf.getPage(0)
         const width = originalPage.getWidth()
         const height = originalPage.getHeight()
 
         // Embed page
-        const [embeddedPage] = await finalPdf.embedPages([originalPage])
+        const [embeddedPage] = await pdf.embedPages([originalPage])
 
-        const finalPage = finalPdf.addPage([width, height])
+        const finalPage = pdf.addPage([finalWidth, finalHeight])
         finalPage.drawPage(embeddedPage, {
-          x: 0,
-          y: 0,
+          x: offsetX,
+          y: finalHeight - offsetY - embeddedPage.height,
           width,
           height,
         })
@@ -1399,7 +1399,7 @@ export const useImageStore = defineStore('imageStore', {
         for (const obj of this.svgObjects) {
           // Add text to attributes
           obj.attrs.textContent = obj.content || ''
-          drawSvgElement(finalPage, obj.tag, obj.attrs, finalHeight, offsetX, offsetY)
+          await drawSvgElement(finalPage, obj.tag, obj.attrs, finalHeight, offsetX, offsetY)
         }
 
         // 3. Frame
@@ -1407,16 +1407,16 @@ export const useImageStore = defineStore('imageStore', {
           const parser = new DOMParser()
           const svgEl = parser.parseFromString(this.frameSvg, 'image/svg+xml').documentElement
 
-          svgEl.querySelectorAll('rect,circle,path,line,text').forEach((el) => {
+          svgEl.querySelectorAll('rect,circle,path,line,text').forEach(async (el) => {
             const tag = el.tagName
             const attrs = Object.fromEntries([...el.attributes].map((a) => [a.name, a.value]))
             attrs.textContent = el.textContent
-            drawSvgElement(finalPage, tag, attrs, finalHeight, 0, 0)
+            await drawSvgElement(finalPage, tag, attrs, finalHeight, 0, 0)
           })
         }
 
         // 4. Save
-        const pdfBytes = await finalPdf.save()
+        const pdfBytes = await pdf.save()
         const blob = new Blob([pdfBytes], { type: 'application/pdf' })
         const link = document.createElement('a')
         link.href = URL.createObjectURL(blob)
