@@ -46,6 +46,18 @@ export function useFlipTool(imageStore, historyStore, t) {
   const applyFlipRender = async (direction) => {
     if (!imageStore.getRenderedImage({ t, renderCall: false })) return
 
+    if (imageStore.fileType === 'pdf') {
+      const confirmed = await showConfirmModal(
+        t('tools.confirmNeedBaseImageRasterization.title'),
+        t('tools.confirmNeedBaseImageRasterization.message'),
+        t('tools.confirmNeedBaseImageRasterization.cancel'),
+        t('tools.confirmNeedBaseImageRasterization.confirm'),
+      )
+      if (!confirmed) return
+
+      await imageStore.rasterizeBaseImage(t)
+    }
+
     if (imageStore.svgObjects.length > 0) {
       const confirmed = await showConfirmModal(
         t('tools.confirmNeedRasterization.title'),
