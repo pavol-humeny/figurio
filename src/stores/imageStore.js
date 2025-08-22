@@ -1524,7 +1524,7 @@ export const useImageStore = defineStore('imageStore', {
     /**
      * Function to use rasterize background image (only in pdf)
      */
-    rasterizeBackground() {
+    rasterizeBaseImage() {
       console.log('Rasterizing background image...')
       this.fileType = 'image'
     },
@@ -1884,6 +1884,7 @@ export const useImageStore = defineStore('imageStore', {
     getSnapshot(t) {
       const snapshot = {
         fileName: this.fileName,
+        fileType: this.fileType,
         fileDimensions: JSON.parse(JSON.stringify(this.fileDimensions)),
         // originalFileDimensions: JSON.parse(JSON.stringify(this.originalFileDimensions)),
         previewUrl: this.previewUrl,
@@ -1910,6 +1911,7 @@ export const useImageStore = defineStore('imageStore', {
      */
     applySnapshot(snapshot) {
       this.fileName = snapshot.fileName
+      this.fileType = snapshot.fileType
       this.fileDimensions = JSON.parse(JSON.stringify(snapshot.fileDimensions))
       this.previewUrl = snapshot.previewUrl
       this.svgObjects = JSON.parse(JSON.stringify(snapshot.svgObjects))
@@ -1923,7 +1925,7 @@ export const useImageStore = defineStore('imageStore', {
         if (snapshot.pdfPageBytes instanceof Uint8Array) {
           this.pdfPageBytes = new Uint8Array(snapshot.pdfPageBytes)
         } else if (typeof snapshot.pdfPageBytes === 'object') {
-          // prevod objektu {0: 37, 1: 80, ...} na Uint8Array
+          // Conversion of {0: 37, 1: 80, ...} to Uint8Array
           const keys = Object.keys(snapshot.pdfPageBytes).sort((a, b) => a - b)
           const arr = keys.map((k) => snapshot.pdfPageBytes[k])
           this.pdfPageBytes = new Uint8Array(arr)
@@ -1981,7 +1983,7 @@ export const useImageStore = defineStore('imageStore', {
         tmpRenderedImage: this.tmpRenderedImage?.toDataURL() || null,
         newRenderedImage: this.newRenderedImage?.toDataURL() || null,
 
-        pdfPageBytes: this.pdfPageBytes.slice(),
+        pdfPageBytes: this.pdfPageBytes ? new Uint8Array(this.pdfPageBytes) : undefined,
         totalPdfCropBox: JSON.parse(JSON.stringify(this.totalPdfCropBox)),
 
         svgObjects: JSON.parse(JSON.stringify(this.svgObjects)),
@@ -2034,7 +2036,21 @@ export const useImageStore = defineStore('imageStore', {
       this.frame = JSON.parse(JSON.stringify(snapshot.frame))
       this.frameSvg = snapshot.frameSvg
 
-      this.pdfPageBytes = snapshot.pdfPageBytes.slice()
+      if (snapshot.pdfPageBytes) {
+        if (snapshot.pdfPageBytes instanceof Uint8Array) {
+          this.pdfPageBytes = new Uint8Array(snapshot.pdfPageBytes)
+        } else if (typeof snapshot.pdfPageBytes === 'object') {
+          // Conversion of {0: 37, 1: 80, ...} to Uint8Array
+          const keys = Object.keys(snapshot.pdfPageBytes).sort((a, b) => a - b)
+          const arr = keys.map((k) => snapshot.pdfPageBytes[k])
+          this.pdfPageBytes = new Uint8Array(arr)
+        } else {
+          this.pdfPageBytes = undefined
+        }
+      } else {
+        this.pdfPageBytes = undefined
+      }
+
       this.totalPdfCropBox = JSON.parse(JSON.stringify(snapshot.totalPdfCropBox))
 
       this.phoneButtonsCanNotBeDrawnToastFlag = snapshot.phoneButtonsCanNotBeDrawnToastFlag

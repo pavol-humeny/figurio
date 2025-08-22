@@ -834,6 +834,12 @@
     "cancel": "Cancel",
     "confirm": "Rasterize"
   },
+  "confirmNeedBaseImageRasterization": {
+    "title": "Base Image Rasterization Required",
+    "message": "This operation requires rasterization of the base image because it contains vector objects. Rasterization will convert vector objects to pixels, which may result in loss of quality.",
+    "cancel": "Cancel",
+    "confirm": "Rasterize"
+  },
   "toolIsNotAvailable": {
     "tip": "This tool is not available",
     "title": "Tool is not available",

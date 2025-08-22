@@ -829,12 +829,18 @@
     "label": "Žiadny vybraný nástroj"
   },
   "confirmNeedRasterization": {
-    "title": "Vyžaduje sa rasterizácia",
-    "message": "Operácia, vyžaduje rasterizáciu obrázka, lebo obsahuje vektorové objekty. Rasterizácia prevedie vektorové objekty na pixely, čo môže zmeniť kvalitu obrázka.",
+    "title": "Vyžaduje sa rastrovanie obrázka",
+    "message": "Operácia, vyžaduje rastrovanie obrázka, lebo obsahuje vektorové objekty. Rastrovanie prevedie vektorové objekty na pixely, čo môže zmeniť kvalitu obrázka.",
     "cancel": "Zrušiť",
-    "confirm": "Rasterizovať"
+    "confirm": "Rastrovať"
   },
-    "toolIsNotAvailable": {
+  "confirmNeedBaseImageRasterization": {
+    "title": "Vyžaduje sa rastrovanie základného obrázka",
+    "message": "Táto operácia vyžaduje rastrovanie základného obrázka, pretože obsahuje vektorové objekty. Rastrovanie prevedie vektorové objekty na pixely, čo môže spôsobiť stratu kvality.",
+    "cancel": "Zrušiť",
+    "confirm": "Rastrovať"
+  },
+  "toolIsNotAvailable": {
     "tip": "Tento nástroj nie je k dispozícii",
     "title": "Nástroj nie je k dispozícii",
     "message": ""

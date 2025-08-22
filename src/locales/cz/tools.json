@@ -834,6 +834,12 @@
     "cancel": "Zrušit",
     "confirm": "Rasterizovat"
   },
+  "confirmNeedBaseImageRasterization": {
+    "title": "Vyžaduje se rastrování základního obrázku",
+    "message": "Tato operace vyžaduje rastrování základního obrázku, protože obsahuje vektorové objekty. Rastrování převede vektorové objekty na pixely, což může vést ke ztrátě kvality.",
+    "cancel": "Zrušit",
+    "confirm": "Rastrování"
+  },
   "toolIsNotAvailable": {
     "tip": "Tento nástroj není k dispozici.",
     "title": "Nástroj není k dispozici",

@@ -2,9 +2,11 @@ import { ref, watch, computed, nextTick } from 'vue'
 import { useToastModal } from '../modals/useToastModal'
 import { editorConfig } from '@/config/editorConfig'
 import { useSendEvent } from '../common/useSendEvent'
+import { useConfirmModal } from '../modals/useConfirmModal'
 
 export function useFrameTool(imageStore, historyStore, editorStore, t) {
   const { showToastModal } = useToastModal()
+  const { showConfirmModal } = useConfirmModal()
 
   /**
    * Frame color
@@ -212,7 +214,19 @@ export function useFrameTool(imageStore, historyStore, editorStore, t) {
    * Handle frame variant change
    * @param {string} value - Selected frame variant
    */
-  const handleFrameChange = (value) => {
+  const handleFrameChange = async (value) => {
+    if (isPhoneFrame(value) && imageStore.fileType === 'pdf') {
+      const confirmed = await showConfirmModal(
+        t('tools.confirmNeedBaseImageRasterization.title'),
+        t('tools.confirmNeedBaseImageRasterization.message'),
+        t('tools.confirmNeedBaseImageRasterization.cancel'),
+        t('tools.confirmNeedBaseImageRasterization.confirm'),
+      )
+      if (!confirmed) return
+
+      await imageStore.rasterizeBaseImage(t)
+    }
+
     imageStore.frame.type = value
     nextTick(() => {
       frameWidth.value = calculateInitialFrameWidth()

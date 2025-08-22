@@ -17,6 +17,8 @@ import DefaultSlider from '../common/DefaultSlider.vue'
 
 const { t } = useI18n()
 
+const imageStore = useImageStore()
+
 /**
  * Logic of the crop tool
  */
@@ -200,7 +202,7 @@ const {
         </div>
 
         <!-- Show/hide artifacts -->
-        <div class="settings-content-wrapper">
+        <div v-if="imageStore.fileType === 'image'" class="settings-content-wrapper">
           <div class="content-wrapper">
             <div class="content-button">
               <DefaultButton
