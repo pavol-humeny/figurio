@@ -209,10 +209,14 @@ export function useImageRenderer(
    * Watch for changes in image dimensions and re-render all layers
    */
   watch(
-    [() => imageStore.getRenderedImage({ t, renderCall: false }), () => imageStore.pdfPageBytes],
-    ([newImage, newPdfBytes]) => {
-      if (newImage || newPdfBytes) {
-        console.log('#################### Image or PDF changed, re-rendering all...')
+    [
+      () => imageStore.getRenderedImage({ t, renderCall: false }),
+      () => imageStore.pdfPageBytes,
+      () => imageStore.fileType,
+    ],
+    ([newImage, newPdfBytes, newFileType]) => {
+      if (newImage || newPdfBytes || newFileType) {
+        console.log('#################### Image or PDF or file Type changed, re-rendering all...')
         renderAll()
       }
     },

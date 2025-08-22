@@ -1,6 +1,7 @@
 import { ref, watch, watchEffect, computed } from 'vue'
 import { useMath } from '../common/useMath'
 import { useSendEvent } from '@/composables/common/useSendEvent'
+import { editorConfig } from '@/config/editorConfig'
 
 /**
  * Local editable settings for text tool
@@ -11,7 +12,7 @@ const localTextSettings = ref({
   text: '',
   size: 16,
   color: '#000000',
-  fontFamily: 'Arial',
+  fontFamily: 'Helvetica',
   rotation: 0,
   opacity: 1,
   letterSpacing: 0,
@@ -49,25 +50,7 @@ export function useTextTool(imageStore, historyStore, editorStore, t) {
   /**
    * Font family options for the text tool settings
    */
-  const textFontOptions = [
-    { label: 'Arial', value: 'Arial' },
-    { label: 'Courier New', value: 'Courier New' },
-    { label: 'Georgia', value: 'Georgia' },
-    { label: 'Times New Roman', value: 'Times New Roman' },
-    { label: 'Verdana', value: 'Verdana' },
-    { label: 'Tahoma', value: 'Tahoma' },
-    { label: 'Impact', value: 'Impact' },
-    { label: 'Comic Sans MS', value: 'Comic Sans MS' },
-
-    { label: 'Trebuchet MS', value: 'Trebuchet MS' },
-    { label: 'Palatino Linotype', value: 'Palatino Linotype' },
-    { label: 'Lucida Console', value: 'Lucida Console' },
-    { label: 'Lucida Sans Unicode', value: 'Lucida Sans Unicode' },
-    { label: 'Segoe UI', value: 'Segoe UI' },
-    { label: 'Gill Sans', value: 'Gill Sans' },
-    { label: 'Calibri', value: 'Calibri' },
-    { label: 'Cambria', value: 'Cambria' },
-  ]
+  const textFontOptions = editorConfig.textFontOptions
 
   /**
    * Calculate maximum and minimal position for text
@@ -94,7 +77,7 @@ export function useTextTool(imageStore, historyStore, editorStore, t) {
     localTextSettings.value.text = ''
     localTextSettings.value.size = 16
     localTextSettings.value.color = '#000000'
-    localTextSettings.value.fontFamily = 'Arial'
+    localTextSettings.value.fontFamily = 'Helvetica'
     localTextSettings.value.rotation = 0
     localTextSettings.value.opacity = 1
     localTextSettings.value.letterSpacing = 0

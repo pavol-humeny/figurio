@@ -18,7 +18,7 @@ import { globalConfig } from '@/config/globalConfig'
 import { useGeneralModal } from '@/composables/modals/useGeneralModal'
 import { useSendEvent } from '@/composables/common/useSendEvent'
 
-import { PDFDocument, rgb, degrees } from 'pdf-lib'
+import { PDFDocument, rgb, degrees, StandardFonts } from 'pdf-lib'
 
 // import { SVGGraphics } from 'pdfjs-dist/legacy/build/pdf'
 
@@ -295,7 +295,6 @@ export const useImageStore = defineStore('imageStore', {
      * Resets the SVG objects and their selection state
      */
     resetSvgObject() {
-      return
       this.svgObjects = []
       this.selectedSvgObjectId = null
       this.justCreatedSvgObjectId = null
@@ -1006,281 +1005,9 @@ export const useImageStore = defineStore('imageStore', {
       )
     },
 
-    /**
-     * Exports the rendered image and optional SVG objects/frame as a PDF
-     * using jsPDF and svg2pdf.
-     * @param {HTMLImageElement} image - Base image to include in PDF
-     * @param {number} width - Width of the PDF page
-     * @param {number} height - Height of the PDF page
-     * @returns {Promise<void>}
-     */
-    async exportAsPdf(image, width, height, t) {
-      /**
-       * Convert hex color to rgb object with values 0–1 (for pdf-lib)
-       * @param {string} hex - e.g. "#FF00CC" or "#F0C"
-       * @returns {{ r: number, g: number, b: number }}
-       */
-      const hexToRgb = (hex) => {
-        // Support shorthand "#F0C"
-        if (hex.length === 4) {
-          hex = '#' + hex[1] + hex[1] + hex[2] + hex[2] + hex[3] + hex[3]
-        }
-
-        const r = parseInt(hex.slice(1, 3), 16) / 255
-        const g = parseInt(hex.slice(3, 5), 16) / 255
-        const b = parseInt(hex.slice(5, 7), 16) / 255
-
-        return { r, g, b }
-      }
-
-      const parseNum = (val, fallback = 0) => {
-        const n = Number(val)
-        return isNaN(n) ? fallback : n
-      }
-
-      /**
-       * Extract rotation angle and center from SVG transform string
-       * @param {string} transform - e.g. "rotate(-23, 327, 261)"
-       * @param {number} defaultX - fallback X center
-       * @param {number} defaultY - fallback Y center
-       * @returns {{ angle: number, cx: number, cy: number }}
-       */
-      const getRotationFromTransform = (transform = '') => {
-        const match = transform.match(/rotate\((-?\d+\.?\d*),\s*([-\d.]+),\s*([-\d.]+)\)/)
-        return match ? parseFloat(match[1]) : 0
-      }
-
-      const rotatePoint = (x, y, cx, cy, angle) => {
-        const rad = (angle * Math.PI) / 180
-        const cos = Math.cos(rad)
-        const sin = Math.sin(rad)
-        const nx = cos * (x - cx) - sin * (y - cy) + cx
-        const ny = sin * (x - cx) + cos * (y - cy) + cy
-        return { x: nx, y: ny }
-      }
-
-      const imageStore = this
-      const historyStore = useHistoryStore()
-      const editorStore = useEditorStore()
-
-      const offsetX = this.frame.enabled ? this.frame.width : 0
-      let offsetY = this.frame.enabled ? this.frame.height : 0
-
-      const finalWidth = width
-      const finalHeight = height
-
-      const hasHeader = useFrameTool(imageStore, historyStore, editorStore, t).isFrameWithHeader(
-        this.frame.type,
-      )
-
-      if (hasHeader) {
-        offsetY = this.frame.headerSize
-      }
-
-      let pdfDoc
-
-      let pdfImg
-
-      if (this.fileType === 'pdf' && this.pdfPageBytes) {
-        // 1. Base image
-        const existingPdf = await PDFDocument.load(this.pdfPageBytes)
-        pdfDoc = await PDFDocument.create()
-
-        // Embed the first page as PDFEmbeddedPage
-        const [embeddedPage] = await pdfDoc.embedPages([existingPdf.getPage(0)])
-
-        const page = pdfDoc.addPage([finalWidth, finalHeight])
-
-        const { width: srcW, height: srcH } = embeddedPage.size
-
-        page.drawPage(embeddedPage, {
-          x: offsetX,
-          y: finalHeight - offsetY - embeddedPage.height, // Recalculate Y position to bottom left corner
-          width: srcW,
-          height: srcH,
-        })
-
-        // 2. SVG objects
-        // page = pdfDoc.getPage(0)
-
-        for (const obj of this.svgObjects) {
-          const attrs = obj.attrs || {}
-          const strokeColor = attrs.stroke
-            ? rgb(...Object.values(hexToRgb(attrs.stroke)))
-            : undefined
-          const fillColor = attrs.fill ? rgb(...Object.values(hexToRgb(attrs.fill))) : undefined
-
-          if (obj.tag === 'rect') {
-            const x = parseNum(attrs.x, 0) + offsetX
-            const y = finalHeight - parseNum(attrs.y, 0) - offsetY - parseNum(attrs.height, 0)
-            const width = parseNum(attrs.width, 0)
-            const height = parseNum(attrs.height, 0)
-
-            const strokeWidth = parseNum(attrs['stroke-width'], 1)
-            const opacity = parseNum(attrs['opacity'], 1)
-            const cornerRadius = parseNum(attrs.rx || attrs.ry, 0)
-
-            const angle = getRotationFromTransform(attrs.transform)
-
-            const cx = x + width / 2
-            const cy = y + height / 2
-
-            // Posuň x/y podľa rotácie okolo stredu
-            const topLeft = rotatePoint(x, y, cx, cy, -angle)
-
-            page.drawRectangle({
-              x: topLeft.x,
-              y: topLeft.y,
-              width,
-              height,
-              borderColor: strokeColor,
-              color: fillColor,
-              borderWidth: strokeWidth,
-              opacity,
-              borderOpacity: opacity,
-              rotate: degrees(-angle),
-              borderRadius: cornerRadius || 0,
-            })
-          }
-        }
-
-        // 3. Frame
-        if (this.frame.enabled && this.frameSvg) {
-          const parser = new DOMParser()
-          const svgEl = parser.parseFromString(this.frameSvg, 'image/svg+xml').documentElement
-
-          svgEl.querySelectorAll('rect,circle,path,line,text').forEach((el) => {
-            const tag = el.tagName
-            const attrs = Object.fromEntries([...el.attributes].map((a) => [a.name, a.value]))
-
-            if (tag === 'rect') {
-              const x = parseNum(attrs.x, 0)
-              const y = finalHeight - parseNum(attrs.y, 0) - parseNum(attrs.height, 0)
-              const width = parseNum(attrs.width, 0)
-              const height = parseNum(attrs.height, 0)
-
-              const fillColor =
-                attrs.fill && attrs.fill !== 'none'
-                  ? rgb(...Object.values(hexToRgb(attrs.fill)))
-                  : undefined
-              const strokeColor = attrs.stroke
-                ? rgb(...Object.values(hexToRgb(attrs.stroke)))
-                : undefined
-              const strokeWidth = parseNum(attrs['stroke-width'], 0)
-
-              const opacity = parseNum(attrs['opacity'], 1)
-
-              page.drawRectangle({
-                x,
-                y,
-                width,
-                height,
-                color: fillColor,
-                borderColor: strokeColor,
-                borderWidth: strokeWidth,
-                opacity,
-              })
-            }
-
-            if (tag === 'circle') {
-              const cx = parseNum(attrs.cx, 0)
-              const cy = finalHeight - parseNum(attrs.cy, 0)
-              const r = parseNum(attrs.r, 0)
-              const fillColor =
-                attrs.fill && attrs.fill !== 'none'
-                  ? rgb(...Object.values(hexToRgb(attrs.fill)))
-                  : undefined
-
-              page.drawCircle({
-                x: cx,
-                y: cy,
-                size: r,
-                color: fillColor,
-              })
-            }
-
-            if (tag === 'line') {
-              const x1 = parseNum(attrs.x1, 0)
-              const y1 = finalHeight - parseNum(attrs.y1, 0)
-              const x2 = parseNum(attrs.x2, 0)
-              const y2 = finalHeight - parseNum(attrs.y2, 0)
-              const strokeWidth = parseNum(attrs['stroke-width'], 1)
-              const strokeColor = attrs.stroke
-                ? rgb(...Object.values(hexToRgb(attrs.stroke)))
-                : undefined
-
-              console.log('EXPORT   line values: ', x1, y1, x2, y2, strokeWidth, strokeColor)
-
-              page.drawLine({
-                start: { x: x1, y: y1 },
-                end: { x: x2, y: y2 },
-                thickness: strokeWidth,
-                color: strokeColor,
-              })
-            }
-
-            if (tag === 'text') {
-              const textValue = el.textContent || ''
-              const fontSize = parseNum(attrs['font-size'], 12)
-
-              const x = parseNum(attrs.x, 0)
-              const y = parseNum(attrs.y, 0)
-              const fillColor =
-                attrs.fill && attrs.fill !== 'none'
-                  ? rgb(...Object.values(hexToRgb(attrs.fill)))
-                  : rgb(0, 0, 0)
-
-              const pdfY = finalHeight - y
-
-              page.drawText(textValue, {
-                x,
-                y: pdfY - fontSize / 2, // Vertical centering
-                size: fontSize,
-                color: fillColor,
-              })
-            }
-            if (tag === 'path') {
-              const fillColor =
-                attrs.fill && attrs.fill !== 'none'
-                  ? rgb(...Object.values(hexToRgb(attrs.fill)))
-                  : undefined
-              const strokeColor = attrs.stroke
-                ? rgb(...Object.values(hexToRgb(attrs.stroke)))
-                : undefined
-              const strokeWidth = parseNum(attrs['stroke-width'], 1)
-              const d = attrs.d
-
-              // vykresli fill aj stroke priamo cez drawSvgPath
-              page.drawSvgPath(d, {
-                color: fillColor,
-                borderColor: strokeColor,
-                borderWidth: strokeWidth,
-              })
-            }
-          })
-        }
-
-        // 4. Save
-        const pdfBytes = await pdfDoc.save()
-        const blob = new Blob([pdfBytes], { type: 'application/pdf' })
-        const link = document.createElement('a')
-        link.href = URL.createObjectURL(blob)
-        link.download = `${this.newFileName}.pdf`
-        link.click()
-      } else {
-        // 1. Base image
-        pdfImg = new jsPDF({
-          orientation: finalWidth > finalHeight ? 'landscape' : 'portrait',
-          unit: 'px', // používame px kvôli SVG pozíciám
-          format: [finalWidth, finalHeight],
-        })
-
-        pdfImg.addImage(image, 'PNG', offsetX, offsetY, image.width, image.height)
-
-        // 2. SVG objects
-        // SVG <defs> for markers (arrows, circles, squares)
-        // UPDATE svg string
-        const staticDefs = `
+    async createSvgPdf(pdfSvg, width, height, offsetX = 0, offsetY = 0) {
+      // 1. Statické a dynamické defs
+      const staticDefs = `
         <marker id="arrow-end" markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto" markerUnits="strokeWidth">
           <path d="M0,0 L0,6 L6,3 z" fill="context-stroke" />
         </marker>
@@ -1301,18 +1028,19 @@ export const useImageStore = defineStore('imageStore', {
         </marker>
         `.trim()
 
-        const dynamicDefs = Object.values(this.svgDefs || {}).join('\n')
+      const dynamicDefs = Object.values(this.svgDefs || {}).join('\n')
 
-        const svgDefsString = `
+      const svgDefsString = `
           <defs>
             ${staticDefs}
             ${dynamicDefs}
           </defs>
         `.trim()
 
-        if (this.svgObjects.length > 0) {
-          const svgString = `
-          <svg xmlns="http://www.w3.org/2000/svg" width="${finalWidth}" height="${finalHeight}">
+      // 2. Vygeneruj SVG string
+      if (this.svgObjects.length > 0) {
+        const svgString = `
+          <svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}">
           ${svgDefsString}
             <g transform="translate(${offsetX}, ${offsetY})">
               ${this.svgObjects
@@ -1331,67 +1059,396 @@ export const useImageStore = defineStore('imageStore', {
           </svg>
         `.trim()
 
-          try {
-            const svgElement = new DOMParser().parseFromString(
-              svgString,
-              'image/svg+xml',
-            ).documentElement
-            await svg2pdf(svgElement, pdfImg, {
-              xOffset: 0,
-              yOffset: 0,
-              scale: 1,
-            })
-          } catch (e) {
-            console.error('Error during svgObjects export to PDF:', e)
+        try {
+          const svgElement = new DOMParser().parseFromString(
+            svgString,
+            'image/svg+xml',
+          ).documentElement
+          await svg2pdf(svgElement, pdfSvg, {
+            xOffset: 0,
+            yOffset: 0,
+            scale: 1,
+          })
+        } catch (e) {
+          console.error('Error during svgObjects export to PDF:', e)
+        }
+      }
+
+      // 4. Frame, ak existuje
+      if (this.frame.enabled && this.frameSvg) {
+        try {
+          const parser = new DOMParser()
+          const svgElement = parser.parseFromString(this.frameSvg, 'image/svg+xml').documentElement
+
+          await svg2pdf(svgElement, pdfSvg, {
+            xOffset: 0,
+            yOffset: 0,
+            scale: 1,
+          })
+        } catch (e) {
+          console.error('Error during frame SVG export to PDF:', e)
+        }
+      }
+    },
+
+    /**
+     * Exports the rendered image and optional SVG objects/frame as a PDF
+     * using jsPDF and svg2pdf.
+     * @param {HTMLImageElement} image - Base image to include in PDF
+     * @param {number} width - Width of the PDF page
+     * @param {number} height - Height of the PDF page
+     * @returns {Promise<void>}
+     */
+    async exportAsPdf(image, width, height, t) {
+      const imageStore = this
+      const historyStore = useHistoryStore()
+      const editorStore = useEditorStore()
+
+      const offsetX = this.frame.enabled ? this.frame.width : 0
+      let offsetY = this.frame.enabled ? this.frame.height : 0
+
+      const finalWidth = width
+      const finalHeight = height
+
+      const hasHeader = useFrameTool(imageStore, historyStore, editorStore, t).isFrameWithHeader(
+        this.frame.type,
+      )
+
+      if (hasHeader) {
+        offsetY = this.frame.headerSize
+      }
+
+      if (this.fileType === 'pdf' && this.pdfPageBytes) {
+        /**
+         * Convert hex color to rgb object with values 0–1 (for pdf-lib)
+         * @param {string} hex - color
+         * @returns {{ r: number, g: number, b: number }}
+         */
+        const hexToRgb = (hex) => {
+          // Support shorthand
+          if (hex.length === 4) {
+            hex = '#' + hex[1] + hex[1] + hex[2] + hex[2] + hex[3] + hex[3]
           }
+
+          const r = parseInt(hex.slice(1, 3), 16) / 255
+          const g = parseInt(hex.slice(3, 5), 16) / 255
+          const b = parseInt(hex.slice(5, 7), 16) / 255
+
+          return { r, g, b }
+        }
+
+        /**
+         * Parses a numeric value, returning a fallback value if the parsing fails.
+         * @param {string|number} val - The value to parse.
+         * @param {number} fallback - The fallback value to return if parsing fails.
+         * @returns {number} - The parsed number or the fallback value.
+         */
+        const parseNum = (val, fallback = 0) => {
+          const n = Number(val)
+          return isNaN(n) ? fallback : n
+        }
+
+        /**
+         * Extract rotation angle and center from SVG transform string
+         * @param {string} transform - e.g. "rotate(-23, 327, 261)"
+         * @param {number} defaultX - fallback X center
+         * @param {number} defaultY - fallback Y center
+         * @returns {{ angle: number, cx: number, cy: number }}
+         */
+        const getRotationFromTransform = (transform = '') => {
+          const match = transform.match(/rotate\((-?\d+\.?\d*),\s*([-\d.]+),\s*([-\d.]+)\)/)
+          return match ? parseFloat(match[1]) : 0
+        }
+
+        /**
+         * Rotates a point around a center point by a given angle.
+         * @param {number} x - The x coordinate of the point to rotate.
+         * @param {number} y - The y coordinate of the point to rotate.
+         * @param {number} cx - The x coordinate of the center point.
+         * @param {number} cy - The y coordinate of the center point.
+         * @param {number} angle - The angle to rotate the point by (in degrees).
+         * @returns {{ x: number, y: number }} - The rotated point coordinates.
+         */
+        const rotatePoint = (x, y, cx, cy, angle) => {
+          const rad = (angle * Math.PI) / 180
+          const cos = Math.cos(rad)
+          const sin = Math.sin(rad)
+          const nx = cos * (x - cx) - sin * (y - cy) + cx
+          const ny = sin * (x - cx) + cos * (y - cy) + cy
+          return { x: nx, y: ny }
+        }
+
+        /**
+         * Draw a single SVG element into a pdf-lib page
+         * @param {PDFPage} page - pdf-lib page
+         * @param {string} tag - svg tag name (rect, circle, line, text, path)
+         * @param {Object} attrs - svg attributes as object
+         * @param {number} finalHeight - total pdf page height
+         * @param {number} offsetX - x offset
+         * @param {number} offsetY - y offset
+         */
+        const drawSvgElement = async (page, tag, attrs, finalHeight, offsetX = 0, offsetY = 0) => {
+          const strokeColor = attrs.stroke
+            ? rgb(...Object.values(hexToRgb(attrs.stroke)))
+            : undefined
+          const fillColor =
+            attrs.fill && attrs.fill !== 'none'
+              ? rgb(...Object.values(hexToRgb(attrs.fill)))
+              : undefined
+          const strokeWidth = parseNum(attrs['stroke-width'], 0)
+          const opacity = parseNum(attrs['opacity'], 1)
+          const angle = getRotationFromTransform(attrs.transform)
+
+          if (tag === 'rect') {
+            const x = parseNum(attrs.x, 0) + offsetX
+            const y = finalHeight - parseNum(attrs.y, 0) - offsetY - parseNum(attrs.height, 0)
+            const width = parseNum(attrs.width, 0)
+            const height = parseNum(attrs.height, 0)
+            const cx = x + width / 2
+            const cy = y + height / 2
+            const topLeft = rotatePoint(x, y, cx, cy, -angle)
+
+            page.drawRectangle({
+              x: topLeft.x,
+              y: topLeft.y,
+              width,
+              height,
+              borderColor: strokeColor,
+              color: fillColor,
+              borderWidth: strokeWidth,
+              opacity,
+              borderOpacity: opacity,
+              rotate: degrees(-angle),
+            })
+          }
+
+          if (tag === 'circle') {
+            const cx = parseNum(attrs.cx, 0) + offsetX
+            const cy = finalHeight - parseNum(attrs.cy, 0) - offsetY
+            const r = parseNum(attrs.r, 0)
+            page.drawCircle({
+              x: cx,
+              y: cy,
+              size: r,
+              color: fillColor,
+              borderColor: strokeColor,
+              borderWidth: strokeWidth,
+              opacity,
+              rotate: degrees(-angle),
+            })
+          }
+
+          if (tag === 'ellipse') {
+            const cx = parseNum(attrs.cx, 0) + offsetX
+            const cy = finalHeight - parseNum(attrs.cy, 0) - offsetY
+            const rx = parseNum(attrs.rx, 0)
+            const ry = parseNum(attrs.ry, 0)
+
+            page.drawEllipse({
+              x: cx,
+              y: cy,
+              xScale: rx,
+              yScale: ry,
+              color: fillColor,
+              borderColor: strokeColor,
+              borderWidth: strokeWidth,
+              opacity,
+              rotate: degrees(-angle),
+            })
+          }
+
+          if (tag === 'line') {
+            const x1 = parseNum(attrs.x1, 0) + offsetX
+            const y1 = finalHeight - parseNum(attrs.y1, 0) - offsetY
+            const x2 = parseNum(attrs.x2, 0) + offsetX
+            const y2 = finalHeight - parseNum(attrs.y2, 0) - offsetY
+            page.drawLine({
+              start: { x: x1, y: y1 },
+              end: { x: x2, y: y2 },
+              thickness: strokeWidth,
+              color: strokeColor,
+              opacity,
+              rotate: degrees(-angle),
+            })
+          }
+
+          if (tag === 'text') {
+            const textValue = attrs.textContent || ''
+
+            const fontSize = parseNum(attrs['font-size'].replace('px', ''), 12)
+            const x = parseNum(attrs.x, 0) + offsetX
+            const y = parseNum(attrs.y, 0) + offsetY
+            const pdfY = finalHeight - y
+
+            const svgFontFamily = attrs['font-family'] || ''
+            const isBold = attrs['font-weight'] === 'bold'
+            const isItalic = attrs['font-style'] === 'italic'
+            const isUnderline = attrs['text-decoration'] === 'underline'
+            const letterSpacing = attrs['letter-spacing']
+              ? parseFloat(attrs['letter-spacing'].replace('px', ''))
+              : 0
+            const angle = attrs.transform
+              ? parseFloat(attrs.transform.match(/rotate\(([^)]+)\)/)?.[1]) || 0
+              : 0
+
+            const fillColor =
+              attrs.fill && attrs.fill !== 'none'
+                ? rgb(...Object.values(hexToRgb(attrs.fill)))
+                : rgb(0, 0, 0)
+
+            // Map SVG font family to standard PDF fonts
+            let baseFont = StandardFonts.TimesRoman
+            if (svgFontFamily.includes('Helvetica')) baseFont = StandardFonts.Helvetica
+            else if (svgFontFamily.includes('Courier')) baseFont = StandardFonts.Courier
+
+            // Bold/italic variants
+            if (baseFont === StandardFonts.TimesRoman) {
+              if (isBold && isItalic) baseFont = StandardFonts.TimesBoldItalic
+              else if (isBold) baseFont = StandardFonts.TimesBold
+              else if (isItalic) baseFont = StandardFonts.TimesItalic
+            } else if (baseFont === StandardFonts.Helvetica) {
+              if (isBold && isItalic) baseFont = StandardFonts.HelveticaBoldOblique
+              else if (isBold) baseFont = StandardFonts.HelveticaBold
+              else if (isItalic) baseFont = StandardFonts.HelveticaOblique
+            } else if (baseFont === StandardFonts.Courier) {
+              if (isBold && isItalic) baseFont = StandardFonts.CourierBoldOblique
+              else if (isBold) baseFont = StandardFonts.CourierBold
+              else if (isItalic) baseFont = StandardFonts.CourierOblique
+            }
+
+            const font = await pdf.embedFont(baseFont)
+
+            // Draw text with optional letter spacing
+            if (letterSpacing) {
+              let cursorX = x
+              for (const char of textValue) {
+                page.drawText(char, {
+                  x: cursorX,
+                  y: pdfY,
+                  size: fontSize,
+                  font,
+                  color: fillColor,
+                  rotate: degrees(-angle),
+                  opacity,
+                })
+                cursorX += font.widthOfTextAtSize(char, fontSize) + letterSpacing
+              }
+            } else {
+              page.drawText(textValue, {
+                x,
+                y: pdfY,
+                size: fontSize,
+                font,
+                color: fillColor,
+                rotate: degrees(-angle),
+                opacity,
+              })
+            }
+
+            // Underline as one line under text
+            if (isUnderline) {
+              const textWidth =
+                font.widthOfTextAtSize(textValue, fontSize) +
+                (letterSpacing || 0) * (textValue.length - 1)
+              const underlineY = pdfY - fontSize * 0.1
+              page.drawLine({
+                start: { x, y: underlineY },
+                end: { x: x + textWidth, y: underlineY },
+                thickness: Math.max(1, fontSize * 0.08),
+                color: fillColor,
+                opacity,
+              })
+            }
+          }
+
+          // TODO
+          if (tag === 'path') {
+            const fillColor =
+              attrs.fill && attrs.fill !== 'none'
+                ? rgb(...Object.values(hexToRgb(attrs.fill)))
+                : undefined
+            const strokeColor = attrs.stroke
+              ? rgb(...Object.values(hexToRgb(attrs.stroke)))
+              : undefined
+            const strokeWidth = parseNum(attrs['stroke-width'], 1)
+            const d = attrs.d
+
+            page.drawSvgPath(d, {
+              color: fillColor,
+              borderColor: strokeColor,
+              borderWidth: strokeWidth,
+            })
+          }
+        }
+
+        // 1. Base image
+        const existingPdf = await PDFDocument.load(this.pdfPageBytes)
+        const pdf = await PDFDocument.create()
+
+        const cropX = imageStore.totalPdfCropBox.x || 0
+        const cropY = imageStore.totalPdfCropBox.y || 0
+        const cropWidth = existingPdf.getPage(0).getWidth()
+        const cropHeight = existingPdf.getPage(0).getHeight()
+
+        // Embed the first page as PDFEmbeddedPage
+        const [embeddedPage] = await pdf.embedPages(
+          [existingPdf.getPage(0)],
+          [{ left: cropX, bottom: cropY, right: cropX + cropWidth, top: cropY + cropHeight }],
+        )
+
+        const page = pdf.addPage([finalWidth, finalHeight])
+
+        page.drawPage(embeddedPage, {
+          x: offsetX,
+          y: finalHeight - offsetY - embeddedPage.height, // Recalculate Y position to bottom left corner
+          width: cropWidth,
+          height: cropHeight,
+        })
+
+        // 2. SVG objects
+        for (const obj of this.svgObjects) {
+          // Add text to attributes
+          obj.attrs.textContent = obj.content || ''
+          drawSvgElement(page, obj.tag, obj.attrs, finalHeight, offsetX, offsetY)
         }
 
         // 3. Frame
         if (this.frame.enabled && this.frameSvg) {
-          try {
-            const parser = new DOMParser()
-            const svgElement = parser.parseFromString(
-              this.frameSvg,
-              'image/svg+xml',
-            ).documentElement
+          const parser = new DOMParser()
+          const svgEl = parser.parseFromString(this.frameSvg, 'image/svg+xml').documentElement
 
-            await svg2pdf(svgElement, pdfImg, {
-              xOffset: 0,
-              yOffset: 0,
-              scale: 1,
-            })
-          } catch (e) {
-            console.error('Error during frame SVG export to PDF:', e)
-          }
+          svgEl.querySelectorAll('rect,circle,path,line,text').forEach((el) => {
+            const tag = el.tagName
+            const attrs = Object.fromEntries([...el.attributes].map((a) => [a.name, a.value]))
+            attrs.textContent = el.textContent
+            drawSvgElement(page, tag, attrs, finalHeight, 0, 0)
+          })
         }
 
         // 4. Save
-        pdfImg.save(`${this.newFileName}.pdf`)
+        const pdfBytes = await pdf.save()
+        const blob = new Blob([pdfBytes], { type: 'application/pdf' })
+        const link = document.createElement('a')
+        link.href = URL.createObjectURL(blob)
+        link.download = `${this.newFileName}.pdf`
+        link.click()
+      } else {
+        // Create pdf
+        const pdf = new jsPDF({
+          orientation: finalWidth > finalHeight ? 'landscape' : 'portrait',
+          unit: 'px',
+          format: [finalWidth, finalHeight],
+        })
+
+        // Add base image
+        pdf.addImage(image, 'PNG', offsetX, offsetY, image.width, image.height)
+
+        // Add svgObjects and frame
+        await this.createSvgPdf(pdf, finalWidth, finalHeight, offsetX, offsetY)
+
+        // Save
+        pdf.save(`${this.newFileName}.pdf`)
       }
-
-      // 4) vykresli rám (ak je SVG string)
-      // if (this.frame.enabled && this.frameSvg) {
-      //   const parser = new DOMParser()
-      //   const svgEl = parser.parseFromString(this.frameSvg, 'image/svg+xml').documentElement
-
-      //   svgEl.querySelectorAll('rect,circle,path,text').forEach((el) => {
-      //     const tag = el.tagName
-      //     const attrs = Object.fromEntries([...el.attributes].map((a) => [a.name, a.value]))
-      //     // ⚡ tu vieš použiť rovnakú logiku ako pre svgObjects (môžeš extrahovať do funkcie)
-      //     if (tag === 'rect') {
-      //       page.drawRectangle({
-      //         x: Number(attrs.x || 0),
-      //         y: finalHeight - (Number(attrs.y || 0) + Number(attrs.height || 0)),
-      //         width: Number(attrs.width || 0),
-      //         height: Number(attrs.height || 0),
-      //         borderColor: rgb(0, 0, 0),
-      //         borderWidth: 1,
-      //       })
-      //     }
-      //   })
-      // }
-
-      // 5) ulož PDF
     },
 
     /**
@@ -1400,6 +1457,7 @@ export const useImageStore = defineStore('imageStore', {
      * @param {number} height - Height of the SVG canvas
      * @param {Function} t - i18n translation function
      * @returns {Promise<void>}
+     * TODO - if source is pdf
      */
     async exportAsSvg(width, height, t) {
       const imageStore = this
@@ -1822,7 +1880,7 @@ export const useImageStore = defineStore('imageStore', {
         // originalFileDimensions: JSON.parse(JSON.stringify(this.originalFileDimensions)),
         previewUrl: this.previewUrl,
         renderedImage: this.getRenderedImage({ t, renderCall: true })?.toDataURL() || null,
-        pdfPageBytes: JSON.parse(JSON.stringify(this.pdfPageBytes)),
+        pdfPageBytes: this.pdfPageBytes ? new Uint8Array(this.pdfPageBytes) : undefined,
         totalPdfCropBox: JSON.parse(JSON.stringify(this.totalPdfCropBox)),
         // originalImage: this.originalImage?.toDataURL() || null,
         svgObjects: JSON.parse(JSON.stringify(this.svgObjects)),
@@ -1852,7 +1910,22 @@ export const useImageStore = defineStore('imageStore', {
       this.frame = JSON.parse(JSON.stringify(snapshot.frame))
       this.svgDefs = JSON.parse(JSON.stringify(snapshot.svgDefs))
       this.isArtifactsVisible = false
-      this.pdfPageBytes = JSON.parse(JSON.stringify(snapshot.pdfPageBytes))
+
+      if (snapshot.pdfPageBytes) {
+        if (snapshot.pdfPageBytes instanceof Uint8Array) {
+          this.pdfPageBytes = new Uint8Array(snapshot.pdfPageBytes)
+        } else if (typeof snapshot.pdfPageBytes === 'object') {
+          // prevod objektu {0: 37, 1: 80, ...} na Uint8Array
+          const keys = Object.keys(snapshot.pdfPageBytes).sort((a, b) => a - b)
+          const arr = keys.map((k) => snapshot.pdfPageBytes[k])
+          this.pdfPageBytes = new Uint8Array(arr)
+        } else {
+          this.pdfPageBytes = undefined
+        }
+      } else {
+        this.pdfPageBytes = undefined
+      }
+
       this.totalPdfCropBox = JSON.parse(JSON.stringify(snapshot.totalPdfCropBox))
 
       if (snapshot.renderedImage) {
@@ -1900,7 +1973,7 @@ export const useImageStore = defineStore('imageStore', {
         tmpRenderedImage: this.tmpRenderedImage?.toDataURL() || null,
         newRenderedImage: this.newRenderedImage?.toDataURL() || null,
 
-        pdfPageBytes: JSON.parse(JSON.stringify(this.pdfPageBytes)),
+        pdfPageBytes: this.pdfPageBytes.slice(),
         totalPdfCropBox: JSON.parse(JSON.stringify(this.totalPdfCropBox)),
 
         svgObjects: JSON.parse(JSON.stringify(this.svgObjects)),
@@ -1953,7 +2026,7 @@ export const useImageStore = defineStore('imageStore', {
       this.frame = JSON.parse(JSON.stringify(snapshot.frame))
       this.frameSvg = snapshot.frameSvg
 
-      this.pdfPageBytes = JSON.parse(JSON.stringify(snapshot.pdfPageBytes))
+      this.pdfPageBytes = snapshot.pdfPageBytes.slice()
       this.totalPdfCropBox = JSON.parse(JSON.stringify(snapshot.totalPdfCropBox))
 
       this.phoneButtonsCanNotBeDrawnToastFlag = snapshot.phoneButtonsCanNotBeDrawnToastFlag

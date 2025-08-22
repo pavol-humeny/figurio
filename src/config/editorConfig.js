@@ -41,4 +41,26 @@ export const editorConfig = {
   snapOnlyWhenOverlapping: true, // Snap only when the object is overlapping with the other object
   minimumObjectSize: 2, // Minimum size of the object to be drawn
   magnifyAreaDefaultRadiusFromImage: 0.1, // 10% of smaller dimension
+
+  // Text fonts
+  textFontOptions: [
+    { label: 'Courier New', value: 'Courier New' },
+    { label: 'Times New Roman', value: 'Times New Roman' },
+    { label: 'Helvetica', value: 'Helvetica' },
+    // { label: 'Arial', value: 'Arial' },
+    // { label: 'Georgia', value: 'Georgia' },
+    // { label: 'Verdana', value: 'Verdana' },
+    // { label: 'Tahoma', value: 'Tahoma' },
+    // { label: 'Impact', value: 'Impact' },
+    // { label: 'Comic Sans MS', value: 'Comic Sans MS' },
+
+    // { label: 'Trebuchet MS', value: 'Trebuchet MS' },
+    // { label: 'Palatino Linotype', value: 'Palatino Linotype' },
+    // { label: 'Lucida Console', value: 'Lucida Console' },
+    // { label: 'Lucida Sans Unicode', value: 'Lucida Sans Unicode' },
+    // { label: 'Segoe UI', value: 'Segoe UI' },
+    // { label: 'Gill Sans', value: 'Gill Sans' },
+    // { label: 'Calibri', value: 'Calibri' },
+    // { label: 'Cambria', value: 'Cambria' },
+  ],
 }

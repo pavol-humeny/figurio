@@ -681,7 +681,7 @@ export function useCropTool(imageStore, viewportStore, editorStore, historyStore
       cropBox: { ...cropBox.value },
     })
 
-    applyCropRender(cropBox.value)
+    await applyCropRender(cropBox.value)
 
     historyStore.push(imageStore.getSnapshot(t))
   }
@@ -745,11 +745,8 @@ export function useCropTool(imageStore, viewportStore, editorStore, historyStore
         const y = cropBox.y
         const width = cropBox.width
         const height = cropBox.height
-        console.log('x, y: ', { x, y })
 
         const pdfY = pageHeight - (y + height) + prevCrop.y
-
-        console.log('PDF Y:', pdfY)
 
         copiedPage.setMediaBox(x, pdfY, width, height)
         newPdf.addPage(copiedPage)

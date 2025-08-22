@@ -16,7 +16,7 @@ export const globalConfig = {
   textWidth: 15.2, // cm
 
   // Default tool to start with
-  startTool: 'crop',
+  startTool: 'frame',
 
   // Feature flags
   // UPDATE new tool

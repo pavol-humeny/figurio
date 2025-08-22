@@ -238,13 +238,13 @@ const {
         <div class="settings-content-wrapper">
           <div class="content-wrapper">
             <div class="content-title">
-              <p :class="{ disabled: localObjectSettings.strokeWidth === 0 }">
+              <p>
                 {{ $t('tools.shape.settings.opacity.label') }}
               </p>
             </div>
             <NumberInput v-model="localObjectSettings.opacity" :min="0.1" :max="1" :step="0.1"
               @update="applyLocalSettings" icon="IconOpacity" :color="'var(--primary-c)'" :size="20"
-              :onReset="resetOpacity" :disabled="!localObjectSettings.fillEnabled"
+              :onReset="resetOpacity"
               :tip="$t('tools.shape.settings.opacity.tip')" position="bottom-left" />
           </div>
         </div>
