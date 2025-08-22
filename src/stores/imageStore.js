@@ -1522,6 +1522,14 @@ export const useImageStore = defineStore('imageStore', {
     },
 
     /**
+     * Function to use rasterize background image (only in pdf)
+     */
+    rasterizeBackground() {
+      console.log('Rasterizing background image...')
+      this.fileType = 'image'
+    },
+
+    /**
      * Renders all SVG objects over the base image and rasterizes the result into a canvas.
      * Used to prepare the image for export as raster or PDF.
      * @param {number|null} width - Optional width to rasterize to

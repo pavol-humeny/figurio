@@ -120,6 +120,9 @@ export function useImageRenderer(
    * Render base image
    */
   const renderCanvas = async () => {
+    // Wait one tick (needed for background rasterization)
+    await nextTick()
+
     if (imageStore.fileType === 'pdf') {
       console.log('Rendering PDF page...')
       const pdfPageBytes = imageStore.pdfPageBytes
