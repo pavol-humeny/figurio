@@ -10,7 +10,7 @@ const {
 } = useToolsSettingsPanel(useEditorStore());
 
 </script>
-
+<!--
 <template>
   <div class="tools-settings-panel">
     <Suspense>
@@ -26,6 +26,15 @@ const {
         </p>
       </template>
     </Suspense>
+  </div>
+</template> -->
+
+<template>
+  <div class="tools-settings-panel">
+    <component :is="settingsComponent" v-if="settingsComponent" />
+    <p v-else class="no-settings no-value">
+      {{ $t('tools.noToolSelected.label') }}
+    </p>
   </div>
 </template>
 
