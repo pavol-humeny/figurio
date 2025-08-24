@@ -133,6 +133,22 @@ export function useResizeTool(imageStore, historyStore, t) {
   }
 
   /**
+   * Reset resize dimensions to original image dimensions
+   */
+  const resetResize = () => {
+    fileDimensionWidth.value = imageStore.originalFileDimensions.width
+    fileDimensionHeight.value = imageStore.originalFileDimensions.height
+    isFileDimensionsLinked.value = true
+
+    nextTick(() => {
+      FileDimensionWidthInputRef.value?.setValue(fileDimensionWidth.value)
+      FileDimensionHeightInputRef.value?.setValue(fileDimensionHeight.value)
+    })
+
+    applyResize()
+  }
+
+  /**
    * Apply the resize operation to the operation history and canvas
    */
   const applyResize = async () => {
@@ -233,5 +249,6 @@ export function useResizeTool(imageStore, historyStore, t) {
     updateFileDimension,
     applyResize,
     applyResizeRender,
+    resetResize,
   }
 }

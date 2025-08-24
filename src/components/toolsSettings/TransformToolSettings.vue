@@ -38,6 +38,7 @@ const {
   FileDimensionWidthInputRef,
   FileDimensionHeightInputRef,
   isFileDimensionsLinked,
+  resetResize,
 } = useResizeTool(useImageStore(), useHistoryStore(), t)
 
 /**
@@ -165,6 +166,14 @@ const tabs = ['rotate', 'flip', 'resize']
                   :max="maxFileDimensionHeight" @update="(val) => updateFileDimension('height', val)" unit="px" />
               </div>
             </div>
+          </div>
+        </div>
+        <div class="settings-content-wrapper">
+          <div class="content-wrapper">
+            <DefaultButton :text="$t('tools.transform.settings.resize.resetResizeButton.text')"
+              :tip="$t('tools.transform.settings.resize.resetResizeButton.tip')" position="bottom-left"
+              @click="resetResize" />
+
           </div>
         </div>
 

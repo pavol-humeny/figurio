@@ -93,6 +93,10 @@
         "invalidResizeDimensions": {
           "title": "Neplatné rozměry pro změnu velikosti",
           "message": "Rozměry pro změnu velikosti musí být větší než 0"
+        },
+        "resetResizeButton":{
+          "text": "Resetovat změnu velikosti",
+          "tip": "Resetuje rozměry změny velikosti na původní rozměry obrázku"
         }
       }
     }

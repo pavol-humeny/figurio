@@ -539,17 +539,17 @@ export const useImageStore = defineStore('imageStore', {
     },
 
     async extractPdfPageBytes(pdfBytes, pageNumber) {
-      // Načítaj pôvodný PDF dokument
+      // Read pdf file
       const srcPdf = await PDFDocument.load(pdfBytes)
 
-      // Vytvor nový PDF dokument
+      // Create new PDF document
       const newPdf = await PDFDocument.create()
 
-      // Skopíruj konkrétnu stránku do nového dokumentu
+      // Copy specific page to new document
       const [copiedPage] = await newPdf.copyPages(srcPdf, [pageNumber - 1])
       newPdf.addPage(copiedPage)
 
-      // Vygeneruj byty nového PDF
+      // Generate bytes for new PDF
       const newPdfBytes = await newPdf.save()
       return newPdfBytes
     },
@@ -685,21 +685,9 @@ export const useImageStore = defineStore('imageStore', {
 
             const page = await pdf.getPage(pdfPageNumber)
 
-            // Confirm modal for image scale
-            // uiStore.blockClicks = false
-            // const confirmed = await showConfirmModal(
-            //   t('imageStore.modal.scalePdfForBetterResolution.title'),
-            //   t('imageStore.modal.scalePdfForBetterResolution.message'),
-            //   t('imageStore.modal.scalePdfForBetterResolution.cancel'),
-            //   t('imageStore.modal.scalePdfForBetterResolution.confirm'),
-            // )
-            // if (confirmed) {
-            //   scaleLevel = 4 // Higher scale for better quality
-            // }
-            // uiStore.blockClicks = true
-
             const viewport = page.getViewport({ scale: 1 })
 
+            // Create a canvas to render the PDF page
             const canvas = document.createElement('canvas')
             canvas.width = pageWidth
             canvas.height = pageHeight
@@ -713,6 +701,7 @@ export const useImageStore = defineStore('imageStore', {
               return
             }
 
+            // Store file dimensions
             this.fileDimensions.width = canvas.width
             this.fileDimensions.height = canvas.height
             this.fileDimensions.fileAspectRatio = canvas.width / canvas.height || 1
