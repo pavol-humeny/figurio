@@ -64,6 +64,8 @@ export function useDragAndDropArea(imageStore, t, router) {
    * @param {ClipboardEvent} event - Paste event
    */
   const handlePaste = (event) => {
+    if (imageStore.isImageLoaded) return
+
     const items = event.clipboardData?.items
     if (!items || items.length === 0) return
 

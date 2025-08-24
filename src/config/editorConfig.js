@@ -19,6 +19,9 @@ export const editorConfig = {
   maxFileDimensionWidth: 4000,
   maxFileDimensionHeight: 4000,
 
+  // File name restrictions
+  maxFileNameLength: 50,
+
   // Max file size for uploads
   maxFileSize: 7, // in MB
 

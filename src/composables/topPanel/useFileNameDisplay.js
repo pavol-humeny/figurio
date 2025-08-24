@@ -1,5 +1,6 @@
 import { ref, nextTick, computed, watch } from 'vue'
 import { useSendEvent } from '@/composables/common/useSendEvent'
+import { editorConfig } from '@/config/editorConfig'
 
 /**
  * Reference to the input element for file name editing
@@ -52,6 +53,9 @@ export function useFileNameDisplay(imageStore, t) {
    */
   const saveNewFileName = () => {
     editEnabled.value = false
+
+    // Cut new name to maximum limit
+    fileNameInput.value = fileNameInput.value.slice(0, editorConfig.maxFileNameLength)
 
     // If file name hasn't changed, just blur the input
     if (imageStore.fileName === fileNameInput.value) {

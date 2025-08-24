@@ -1,5 +1,6 @@
 import { ref, computed, nextTick, watch, onMounted, onBeforeUnmount } from 'vue'
 import { useMath } from '../common/useMath'
+import { editorConfig } from '@/config/editorConfig'
 
 /**
  * Visibility state of the export panel
@@ -95,6 +96,9 @@ export function useExportToolSettings(imageStore, editorStore, historyStore, t) 
    * Save updated file name to store (without changing existing file)
    */
   const saveNewFileName = () => {
+    // Cut new name to maximum limit
+    fileName.value = fileName.value.slice(0, editorConfig.maxFileNameLength)
+
     const success = imageStore.setFileName({ name: fileName.value, t, setOnlyNewFileName: true })
 
     if (success) {

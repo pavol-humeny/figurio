@@ -343,6 +343,9 @@ export const useImageStore = defineStore('imageStore', {
     }) {
       let trimmedName = name.trim()
 
+      // Cut new name to maximum limit
+      trimmedName = trimmedName.slice(0, editorConfig.maxFileNameLength)
+
       // Empty name
       if (trimmedName === '') {
         if (this.file !== null) {
@@ -801,7 +804,7 @@ export const useImageStore = defineStore('imageStore', {
         console.log(realType === detectedType, 'realType:', realType, 'detectedType:', detectedType)
 
         //  TODO - obrazok vinice sa deteguje zle (ako unknown)
-        return realType === detectedType 
+        return realType === detectedType
       }
     },
 
