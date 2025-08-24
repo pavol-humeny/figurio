@@ -1183,6 +1183,7 @@ export const useImageStore = defineStore('imageStore', {
          * @param {number} offsetY - y offset
          */
         const drawSvgElement = async (page, tag, attrs, finalHeight, offsetX = 0, offsetY = 0) => {
+          // TODO - svg defs
           const strokeColor = attrs.stroke
             ? rgb(...Object.values(hexToRgb(attrs.stroke)))
             : undefined

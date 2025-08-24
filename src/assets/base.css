@@ -1,5 +1,7 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter&display=swap');
+
 :root {
-  --font-family: Helvetica;
+  --font-family: 'Inter', sans-serif;
 
   --primary-c-dark: #BFA473;
   --secondary-c-dark: #3C3C3C;
