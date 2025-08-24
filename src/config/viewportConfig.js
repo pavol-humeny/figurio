@@ -12,7 +12,12 @@ export const viewportConfig = {
   scrollHorizontalSpeed: 3, // Smaller = slower scrolling
   scrollVerticalSpeed: 3, // Smaller = slower scrolling
 
-  // Zoom - text
+  // Zoom mode - text
   defaultTextWidth: 15.2, // cm
   a4paperWidth: 21, // cm
+
+  // Crop
+  cropHandleSize: 20,
+  cropHandleBorderMultiplier: 1 / 9,
+  cropBorderMultiplier: 1 / 6
 }

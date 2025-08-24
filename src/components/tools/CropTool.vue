@@ -7,9 +7,10 @@ import { useI18n } from 'vue-i18n'
 import { useHistoryStore } from '@/stores/historyStore'
 import { onMounted } from 'vue'
 import { computed } from 'vue'
+import { viewportConfig } from '@/config/viewportConfig'
 
 const editorStore = useEditorStore()
-const imageStore = useImageStore()
+const viewportStore = useViewportStore()
 const { t } = useI18n()
 
 /**
@@ -31,21 +32,19 @@ onMounted(() => {
 })
 
 /**
- * Computed size of resizer handles based on image width
+ * Resizer size
  */
 const resizerSize = computed(() => {
-  const base = imageStore.fileDimensions.width
-  const size = base / 55
-  return Math.max(4, size)
+  return viewportConfig.cropHandleSize / viewportStore.realZoomLevel
 })
 
 /**
  * Style object for resizer handles
  */
 const resizerStyle = computed(() => {
-  const size = resizerSize.value
+  const size = Math.max(resizerSize.value, 6)
   const offset = size / 2
-  const border = Math.max(1, size / 6)
+  const border = Math.max(size * viewportConfig.cropHandleBorderMultiplier, 1)
 
   return {
     width: `${size}px`,
@@ -53,6 +52,10 @@ const resizerStyle = computed(() => {
     '--offset': `${offset}px`,
     '--border-width': `${border}px`,
   }
+})
+
+const borderWidth = computed(() => {
+  return Math.max(resizerSize.value * viewportConfig.cropBorderMultiplier, 1)
 })
 </script>
 
@@ -63,6 +66,7 @@ const resizerStyle = computed(() => {
       top: cropBox.y + 'px',
       width: cropBox.width + 'px',
       height: cropBox.height + 'px',
+      borderWidth: borderWidth + 'px',
     }" @mousedown="startPan">
 
       <div v-for="dir in ['top-left', 'top-right', 'bottom-left', 'bottom-right']" :key="dir" class="resizer"
@@ -79,7 +83,7 @@ const resizerStyle = computed(() => {
 
 .crop-box {
   position: absolute;
-  border: var(--border-crop);
+  border: 1px dashed var(--editor-highlight-c);
   /* background-color: var(--crop-c); */
   background: transparent;
   pointer-events: auto;

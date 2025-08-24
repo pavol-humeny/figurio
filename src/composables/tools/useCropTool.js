@@ -264,26 +264,29 @@ export function useCropTool(imageStore, viewportStore, editorStore, historyStore
       const onMouseMove = (e) => {
         const dx = e.clientX - cropBox.value.startX
         const dy = e.clientY - cropBox.value.startY
-        cropBox.value.x = round(
-          clamp(
-            cropBox.value.x + dx / viewportStore.realZoomLevel,
-            0,
-            imageStore.fileDimensions.width - cropBox.value.width,
-          ),
+        cropBox.value.x = clamp(
+          cropBox.value.x + dx / viewportStore.realZoomLevel,
+          0,
+          imageStore.fileDimensions.width - cropBox.value.width,
         )
-        cropBox.value.y = round(
-          clamp(
-            cropBox.value.y + dy / viewportStore.realZoomLevel,
-            0,
-            imageStore.fileDimensions.height - cropBox.value.height,
-          ),
+
+        cropBox.value.y = clamp(
+          cropBox.value.y + dy / viewportStore.realZoomLevel,
+          0,
+          imageStore.fileDimensions.height - cropBox.value.height,
         )
+
         cropBox.value.startX = e.clientX
         cropBox.value.startY = e.clientY
       }
 
       const onMouseUp = () => {
         cropBox.value.dragging = false
+
+        // Round crop box
+        cropBox.value.x = round(cropBox.value.x)
+        cropBox.value.y = round(cropBox.value.y)
+
         document.removeEventListener('mousemove', onMouseMove)
         document.removeEventListener('mouseup', onMouseUp)
       }
@@ -321,7 +324,7 @@ export function useCropTool(imageStore, viewportStore, editorStore, historyStore
           newWidth = imageStore.fileDimensions.width - newX
         }
 
-        cropBox.value.width = round(clamp(newWidth, 0, imageStore.fileDimensions.width - newX))
+        cropBox.value.width = clamp(newWidth, 0, imageStore.fileDimensions.width - newX)
       }
 
       if (direction.includes('left')) {
@@ -335,10 +338,8 @@ export function useCropTool(imageStore, viewportStore, editorStore, historyStore
           newX = 0
         }
 
-        cropBox.value.x = round(clamp(newX, 0, maxX))
-        cropBox.value.width = round(
-          clamp(newWidth, 0, imageStore.fileDimensions.width - cropBox.value.x),
-        )
+        cropBox.value.x = clamp(newX, 0, maxX)
+        cropBox.value.width = clamp(newWidth, 0, imageStore.fileDimensions.width - cropBox.value.x)
       }
 
       if (direction.includes('bottom')) {
@@ -350,7 +351,7 @@ export function useCropTool(imageStore, viewportStore, editorStore, historyStore
           newHeight = imageStore.fileDimensions.height - newY
         }
 
-        cropBox.value.height = round(clamp(newHeight, 0, imageStore.fileDimensions.height - newY))
+        cropBox.value.height = clamp(newHeight, 0, imageStore.fileDimensions.height - newY)
       }
 
       if (direction.includes('top')) {
@@ -364,9 +365,11 @@ export function useCropTool(imageStore, viewportStore, editorStore, historyStore
           newY = 0
         }
 
-        cropBox.value.y = round(clamp(newY, 0, maxY))
-        cropBox.value.height = round(
-          clamp(newHeight, 0, imageStore.fileDimensions.height - cropBox.value.y),
+        cropBox.value.y = clamp(newY, 0, maxY)
+        cropBox.value.height = clamp(
+          newHeight,
+          0,
+          imageStore.fileDimensions.height - cropBox.value.y,
         )
       }
 
@@ -377,6 +380,13 @@ export function useCropTool(imageStore, viewportStore, editorStore, historyStore
     const onMouseUp = () => {
       cropBox.value.resizing = false
       cropBox.value.resizeDir = ''
+
+      // Round crop box
+      cropBox.value.x = round(cropBox.value.x)
+      cropBox.value.y = round(cropBox.value.y)
+      cropBox.value.width = round(cropBox.value.width)
+      cropBox.value.height = round(cropBox.value.height)
+
       document.removeEventListener('mousemove', onMouseMove)
       document.removeEventListener('mouseup', onMouseUp)
     }

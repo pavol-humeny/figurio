@@ -53,7 +53,7 @@ export function useNumberInput(props, emit) {
   watch(
     () => props.modelValue,
     (newVal) => {
-      inputValue.value = newVal
+      inputValue.value = round(newVal)
     },
   )
 
