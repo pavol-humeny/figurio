@@ -82,23 +82,27 @@ export function useNumberDropdownInput(props, emit) {
   }
 
   /**
+   * Normalize numeric value with clamping and rounding
+   */
+  const normalizeValue = (val) => {
+    if (!isValidNumberString(val)) {
+      // fallback
+      return props.modelValue
+    }
+    let num = Number(val)
+    num = clamp(num, props.min, props.max)
+    return round(num, decimals.value)
+  }
+
+  /**
    * Called on blur or Enter – parses and clamps value
    */
   const onCommit = () => {
-    const value = inputValue.value
-
-    if (isValidNumberString(value)) {
-      let num = Number(value)
-      num = clamp(num, props.min, props.max)
-      num = round(num, decimals.value)
-      inputValue.value = num.toString()
-      emit('update:modelValue', num)
-      emit('update', num)
-      showDropdown.value = false
-    } else {
-      // fallback: reset to last valid value
-      inputValue.value = props.modelValue.toString()
-    }
+    const num = normalizeValue(inputValue.value)
+    inputValue.value = num.toString()
+    emit('update:modelValue', num)
+    emit('update', num)
+    showDropdown.value = false
   }
 
   /**

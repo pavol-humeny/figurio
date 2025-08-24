@@ -58,19 +58,32 @@ export function useNumberInput(props, emit) {
   )
 
   /**
+   * Validate and normalize input value
+   */
+  const normalizeValue = (val) => {
+    let num = Number(val)
+
+    if (isNaN(num)) {
+      // fallback
+      return props.modelValue
+    }
+
+    num = round(num, decimals.value)
+
+    if (num < props.min) {
+      num = props.min
+    } else if (num > props.max) {
+      num = props.max
+    }
+
+    return num
+  }
+
+  /**
    * Handles blur or enter event, clamps value between min and max, emits update
    */
   const onBlurOrEnter = () => {
-    let value = inputValue.value
-
-    value = round(value, decimals.value)
-
-    if (value < props.min) {
-      value = props.min
-    } else if (value > props.max) {
-      value = props.max
-    }
-
+    const value = normalizeValue(inputValue.value)
     inputValue.value = value
     emit('update:modelValue', value)
     emit('update', value)
@@ -92,7 +105,7 @@ export function useNumberInput(props, emit) {
    * @param {number} newValue - New value to assign
    */
   const setValue = (newValue) => {
-    inputValue.value = round(newValue)
+    inputValue.value = normalizeValue(newValue)
   }
 
   return {

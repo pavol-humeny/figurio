@@ -19,7 +19,8 @@
         "items": [
           "Improved input file format checking",
           "Center image pan and zoom after crop operation",
-          "Maximum file name length limitation"
+          "Maximum file name length limitation",
+          "Validate number in number inputs"
         ]
       },
       "knownIssues": {
