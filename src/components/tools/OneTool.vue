@@ -75,6 +75,7 @@ const { wrapperRef, subToolPos, onRightClick, onClickTab, onClickTool } = useOne
         @click.left="onClickTool">
         <BaseIcon :name="props.tool.iconName" :size="27" :color="'var(--primary-c)'" />
       </div>
+      <p class="tool-label">{{ props.tool.label }}</p>
     </div>
 
     <Teleport to="body" v-if="editorStore.toolWithOpenSubToolsKey === props.tool.key && props.tool.subTools">
@@ -103,6 +104,9 @@ const { wrapperRef, subToolPos, onRightClick, onClickTab, onClickTool } = useOne
 .tool-wrapper {
   position: relative;
   width: 40px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .tool {
@@ -133,6 +137,13 @@ const { wrapperRef, subToolPos, onRightClick, onClickTab, onClickTool } = useOne
 .tool.disabled {
   opacity: 0.5;
   pointer-events: none;
+}
+
+.tool-label{
+  text-align: center;
+  color: var(--primary-c);
+  margin-top: 5px;
+  font-size: var(--tool-text-font-size);
 }
 
 .subTools-popup {

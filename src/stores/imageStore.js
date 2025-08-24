@@ -801,7 +801,7 @@ export const useImageStore = defineStore('imageStore', {
         console.log(realType === detectedType, 'realType:', realType, 'detectedType:', detectedType)
 
         //  TODO - obrazok vinice sa deteguje zle (ako unknown)
-        return realType === detectedType || detectedType === 'unknown'
+        return realType === detectedType 
       }
     },
 

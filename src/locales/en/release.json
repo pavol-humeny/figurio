@@ -1,5 +1,30 @@
 {
   "versions":{
+    "3.0.0":{
+      "label": "3.0.0",
+      "newFeatures": {
+        "items": [
+          "Vector PDF files are processed as vector",
+          "PDF files are displayed as vector"
+
+        ]
+      },
+      "improvements": {
+        "items": [
+          "Added labels to all tools in the tool panel for easier identification"
+        ]
+      },
+      "bugFixes": {
+        "items": [
+          "Improved input file format checking"
+        ]
+      },
+      "knownIssues": {
+        "items": [
+          "Blur area tool is disabled"
+        ]
+      }
+    },
     "2.3.0":{
       "label": "2.3.0",
       "newFeatures": {
@@ -11,7 +36,7 @@
       },
       "bugFixes": {
         "items": [
-          "Frame too was creating 2 history snapshots"
+          "Frame tool was creating 2 history snapshots"
         ]
       },
       "improvements": {
