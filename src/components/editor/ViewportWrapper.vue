@@ -15,6 +15,8 @@ import SvgObjectWrapper from '../tools/SvgObjectWrapper.vue'
 import { useSvgObjects } from '@/composables/tools/useSvgObjects'
 import { useBlurTool } from '@/composables/tools/useBlurTool'
 import ContextMenu from '../common/ContextMenu.vue'
+import { useDragAndDropArea } from '@/composables/editor/useDragAndDropArea'
+import router from '@/router'
 
 const { t } = useI18n()
 const uiStore = useUiStore()
@@ -69,6 +71,9 @@ const {
   guideLine
 } = useViewportWrapper(useViewportStore(), useImageStore(), useEditorStore(), useUiStore(), contentRef, t)
 
+/**
+ * Logic for svg objects
+ */
 const {
   OnClickImageSvg,
   onMouseDownImageSvg,
@@ -87,12 +92,22 @@ const {
   t
 )
 
+
 const { svgDefsString } = useBlurTool(
   useImageStore(),
   useHistoryStore(),
   useEditorStore(),
   t,
 )
+
+/**
+ * Logic of the drag-and-drop area
+ */
+const {
+  handleDragOver,
+  handleDragLeave,
+  handleDrop,
+} = useDragAndDropArea(useImageStore(), t, router)
 
 /**
  * Whether to show the context menu
@@ -110,7 +125,8 @@ const disableContextMenu = computed(() => {
 </script>
 
 <template>
-  <div class="viewport-wrapper" id="viewport" @mousemove="onMouseMoveImageSvg">
+  <div class="viewport-wrapper" id="viewport" @mousemove="onMouseMoveImageSvg" @dragover="handleDragOver"
+    @dragleave="handleDragLeave" @drop="handleDrop">
     <LoadingSpinner />
 
     <div class="viewport-content-wrapper" ref="wrapperRef" @wheel.passive="setZoomAndScroll" @mousedown="startPan"
@@ -240,7 +256,7 @@ const disableContextMenu = computed(() => {
         </div>
         <div v-if="mouseX !== null" class="ruler-cursor-mark horizontal" :style="{ left: mouseX + 'px' }">
           <span class="ruler-cursor-label horizontal" :class="{ 'active': cursorPosXSameAsImageWidth }">{{ cursorPosX
-          }}</span>
+            }}</span>
         </div>
 
       </div>
@@ -253,7 +269,7 @@ const disableContextMenu = computed(() => {
         </div>
         <div v-if="mouseY !== null" class="ruler-cursor-mark vertical" :style="{ top: mouseY + 'px' }">
           <span class="ruler-cursor-label vertical" :class="{ 'active': cursorPosYSameAsImageHeight }">{{ cursorPosY
-          }}</span>
+            }}</span>
         </div>
       </div>
     </div>
