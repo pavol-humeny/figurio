@@ -54,6 +54,9 @@ const resizerStyle = computed(() => {
   }
 })
 
+/**
+ * Border width of the crop box
+ */
 const borderWidth = computed(() => {
   return Math.max(resizerSize.value * viewportConfig.cropBorderMultiplier, 1)
 })

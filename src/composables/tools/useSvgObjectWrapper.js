@@ -4,6 +4,7 @@ import { editorConfig } from '@/config/editorConfig'
 import { useSvgObjects } from './useSvgObjects'
 import { useSvgFunctions } from './useSvgFunctions'
 import { useMagnifyAreaTool } from './useMagnifyAreaTool'
+import { viewportConfig } from '@/config/viewportConfig'
 
 /**
  * Logic for interactive SVG object
@@ -32,12 +33,7 @@ export function useSvgObjectWrapper(
   const { getObjectCenter, getTransformedBoundingBox, getSnapOffsetToEdges } =
     useSvgFunctions(imageStore)
 
-  const { generateMagnifyPattern } = useMagnifyAreaTool(
-    imageStore,
-    historyStore,
-    editorStore,
-    t,
-  )
+  const { generateMagnifyPattern } = useMagnifyAreaTool(imageStore, historyStore, editorStore, t)
 
   /**
    * Style of cursor when hovering over the SVG object
@@ -104,28 +100,28 @@ export function useSvgObjectWrapper(
    * Size of the resizer handles
    */
   const resizerSize = computed(() => {
-    // Base logical resizer size in screen pixels
-    const baseSize = 10
-    const zoomAdjusted = baseSize / viewportStore.realZoomLevel
+    return Math.max(viewportConfig.cropHandleSize / viewportStore.realZoomLevel, 6)
+  })
 
-    const max = imageStore.getSmallerImageDimension() * 0.05 // 5% of the smaller dimension
+  /**
+   * Size of the border for the resizer handles
+   */
+  const resizerBorderSize = computed(() => {
+    return Math.max(resizerSize.value * viewportConfig.cropHandleBorderMultiplier, 1)
+  })
 
-    // Clamp between min and max screen size
-    return 2 * clamp(zoomAdjusted, 4, max) * editorConfig.resizerMultiplier
+  /**
+   * Border width of the bounding box
+   */
+  const boundingBoxStrokeWidth = computed(() => {
+    return Math.max(resizerSize.value * viewportConfig.cropBorderMultiplier, 1)
   })
 
   /**
    * Size of the control icon for enabling/disabling resizers
    */
   const controlIconSize = computed(() => {
-    return Math.max(round(resizerSize.value * 1.5), 20)
-  })
-
-  /**
-   * Width of the bounding box stroke
-   */
-  const boundingBoxStrokeWidth = computed(() => {
-    return clamp(round(resizerSize.value / 10), 1, 5)
+    return Math.max(viewportConfig.cropHandleSize / viewportStore.realZoomLevel, 6) * 2
   })
 
   // ---------------------------
@@ -1209,6 +1205,7 @@ export function useSvgObjectWrapper(
     getResizerPositions,
     boundingBox,
     resizerSize,
+    resizerBorderSize,
     areSvgObjectOperationsEnabled,
     object,
     isSymmetricalObject,

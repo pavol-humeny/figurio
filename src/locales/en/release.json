@@ -13,7 +13,8 @@
         "items": [
           "Added labels to all tools in the tool panel for easier identification",
           "Show subtools on hover in tool panel",
-          "Added the ability to drag and drop an image while editing another image"
+          "Added the ability to drag and drop an image while editing another image",
+          "Smoother crop box pan and resize"
         ]
       },
       "bugFixes": {

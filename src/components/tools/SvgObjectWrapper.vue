@@ -34,6 +34,7 @@ const {
   getResizerPositions,
   boundingBox,
   resizerSize,
+  resizerBorderSize,
   object,
   isSymmetricalObject,
   showResizers,
@@ -88,8 +89,8 @@ const {
       <!-- Resizers -->
       <template v-if="showResizers && object.tag !== 'text' && object.class !== 'magnifyArea'">
         <circle v-for="(pos, i) in getResizerPositions()" :key="i" :cx="pos.x" :cy="pos.y" :r="resizerSize / 2"
-          fill="var(--text-c)" stroke="var(--editor-highlight-c)" :style="{ cursor: pos.cursor }"
-          @mousedown.stop.prevent="onMouseDownResizer($event, i)" />
+          fill="var(--text-c)" stroke="var(--editor-highlight-c)" :stroke-width="resizerBorderSize"
+          :style="{ cursor: pos.cursor }" @mousedown.stop.prevent="onMouseDownResizer($event, i)" />
       </template>
 
       <!-- Rotate icon  -->
