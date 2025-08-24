@@ -844,5 +844,6 @@
     "tip": "Tento nástroj není k dispozici.",
     "title": "Nástroj není k dispozici",
     "message": ""
-  }
+  },
+  "loadingToolSettings": "Načítání..."
 }

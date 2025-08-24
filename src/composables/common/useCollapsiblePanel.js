@@ -130,7 +130,7 @@ export function useCollapsiblePanel(uiStore) {
     showPanel,
     hidePanel,
     isResizing,
-    startX, 
+    startX,
     startWidth,
     handleResize,
   }

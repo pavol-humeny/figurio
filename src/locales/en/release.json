@@ -11,7 +11,8 @@
       },
       "improvements": {
         "items": [
-          "Added labels to all tools in the tool panel for easier identification"
+          "Added labels to all tools in the tool panel for easier identification",
+          "Show subtools on hover in tool panel"
         ]
       },
       "bugFixes": {

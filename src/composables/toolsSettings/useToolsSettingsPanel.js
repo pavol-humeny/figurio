@@ -17,14 +17,14 @@ export function useToolsSettingsPanel(editorStore) {
     toolsDefinitions.find((t) => t.key === editorStore.selectedToolKey),
   )
 
+  const hasSettings = computed(() => !!toolDefinition.value?.settingsComponent)
+
   /**
    * Dynamically import the settings component (lazy load the settings component)
    */
   const settingsComponent = computed(() => {
-    if (!toolDefinition.value) return null
-    return toolDefinition.value.settingsComponent
-      ? defineAsyncComponent(toolDefinition.value.settingsComponent)
-      : null
+    if (!hasSettings.value) return null
+    return defineAsyncComponent(toolDefinition.value.settingsComponent)
   })
 
   return {

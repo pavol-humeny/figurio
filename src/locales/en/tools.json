@@ -844,5 +844,6 @@
     "tip": "This tool is not available",
     "title": "Tool is not available",
     "message": ""
-  }
+  },
+  "loadingToolSettings": "Loading..."
 }

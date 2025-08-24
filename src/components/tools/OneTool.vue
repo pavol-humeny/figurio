@@ -75,7 +75,9 @@ const { wrapperRef, subToolPos, onMouseEnter, onMouseLeave, onClickTab, onClickT
         @click.left="onClickTool">
         <BaseIcon :name="props.tool.iconName" :size="27" :color="'var(--primary-c)'" />
       </div>
-      <p class="tool-label">{{ props.tool.label }}</p>
+      <p class="tool-label"
+        :class="{ disabled: props.disabled || editorStore.enableTools[props.tool.key] === false }">
+        {{ props.tool.label }}</p>
     </div>
 
     <Teleport to="body" v-if="editorStore.toolWithOpenSubToolsKey === props.tool.key && props.tool.subTools.length > 0">

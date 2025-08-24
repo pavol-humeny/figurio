@@ -16,19 +16,18 @@ export const globalConfig = {
   textWidth: 15.2, // cm
 
   // Default tool to start with
-  startTool: 'frame',
+  startTool: 'crop',
 
   // Feature flags
   // UPDATE new tool
   featureFlags: {
     enableTools: {
-      move: true,
       crop: true,
       select: true,
       transform: true,
       autoCrop: true,
       grayscale: true,
-      blur: true,
+      blur: false,
       shape: true,
       text: true,
       magnifyArea: true,

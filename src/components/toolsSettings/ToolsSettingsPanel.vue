@@ -13,10 +13,19 @@ const {
 
 <template>
   <div class="tools-settings-panel">
-    <component :is="settingsComponent" v-if="settingsComponent" />
-    <p v-else class="no-settings no-value">
-      {{ $t('tools.noToolSelected.label') }}
-    </p>
+    <Suspense>
+      <template #default>
+        <component v-if="settingsComponent" :is="settingsComponent" />
+        <p v-else class="no-settings no-value">
+          {{ $t('tools.noToolSelected.label') }}
+        </p>
+      </template>
+      <template #fallback>
+        <p class="no-settings no-value">
+          {{ $t('tools.loadingToolSettings') }}
+        </p>
+      </template>
+    </Suspense>
   </div>
 </template>
 
@@ -36,5 +45,3 @@ const {
   padding: 20px 0;
 }
 </style>
-
-

@@ -1,9 +1,9 @@
 export const toolsDefinitions = [
-  {
-    key: 'move',
-    iconName: 'IconMoveTool',
-    settingsComponent: () => import('@/components/toolsSettings/MoveToolSettings.vue'),
-  },
+  // {
+  //   key: 'move',
+  //   iconName: 'IconMoveTool',
+  //   settingsComponent: () => import('@/components/toolsSettings/MoveToolSettings.vue'),
+  // },
   {
     key: 'crop',
     iconName: 'IconCropTool',

@@ -10,6 +10,7 @@ import { useImageStore } from '@/stores/imageStore'
 import { useKeyboardShortcuts } from '@/composables/editor/useKeyboardShortcuts';
 import { useHistoryStore } from '@/stores/historyStore';
 import { useI18n } from 'vue-i18n'
+import { useCollapsiblePanel } from '@/composables/common/useCollapsiblePanel';
 
 const { t } = useI18n()
 
@@ -66,6 +67,7 @@ const {
 } = useSvgObjects(useImageStore(), useHistoryStore(), useViewportStore(), useEditorStore(), t)
 
 const imageStore = useImageStore()
+const editorStore = useEditorStore()
 
 useKeyboardShortcuts({
   undo,
@@ -109,6 +111,11 @@ onMounted(() => {
   const uiStore = useUiStore()
   if (uiStore.tutorialStep === -1) {
     startTutorial()
+  }
+
+  // Close right panel if there is no selected tool
+  if (editorStore.selectedToolKey === '') {
+    useCollapsiblePanel(uiStore).hidePanel()
   }
 })
 </script>
