@@ -20,28 +20,53 @@ export function useOneTool(editorStore, imageStore, props, emit) {
   const subToolPos = ref({ top: 0, left: 0 })
 
   /**
-   * Handle right-click to toggle sub-tool popup
-   *
-   * @param {MouseEvent} event - Right click event
+   * Reference to the timeout for closing the sub-tool popup
    */
-  const onRightClick = async (event) => {
-    event.preventDefault()
-    if (!props.tool.subTools || !imageStore.isImageLoaded) return
+  const closeTimeout = ref(null)
 
-    // Toggle off if already open
-    if (editorStore.toolWithOpenSubToolsKey === props.tool.key) {
-      editorStore.setToolWithOpenSubTools('')
-      return
+  /**
+   * Handle mouse enter event to open subtools popup
+   */
+  const onMouseEnter = async () => {
+    if (closeTimeout.value) {
+      clearTimeout(closeTimeout.value)
+      closeTimeout.value = null
     }
+
+    if (!props.tool.subTools || !imageStore.isImageLoaded) return
 
     await nextTick()
     const rect = wrapperRef.value.getBoundingClientRect()
     subToolPos.value = {
-      top: rect.top,
-      left: rect.right + 10,
+      top: rect.top - 10,
+      left: rect.right + 20,
     }
     editorStore.setToolWithOpenSubTools(props.tool.key)
   }
+
+  /**
+   * Check if mouse is outside tool and popup
+   */
+  const closeIfOutside = () => {
+    closeTimeout.value = setTimeout(() => {
+      const popupEl = document.querySelector('.subTools-popup')
+      const toolEl = wrapperRef.value
+
+      if (!popupEl || !toolEl) return
+
+      const active = editorStore.toolWithOpenSubToolsKey === props.tool.key
+
+      // Close if mouse is not over tool or popup
+      if (active && !toolEl.matches(':hover') && !popupEl.matches(':hover')) {
+        editorStore.setToolWithOpenSubTools('')
+      }
+    }, 250) // Delay for mouse movement to subtools
+  }
+
+  /**
+   * Close sub-tool popup on mouse leave
+   */
+  const onMouseLeave = () => closeIfOutside()
 
   /**
    * Handle sub-tool click and emit the tab key
@@ -92,7 +117,8 @@ export function useOneTool(editorStore, imageStore, props, emit) {
   return {
     wrapperRef,
     subToolPos,
-    onRightClick,
+    onMouseEnter,
+    onMouseLeave,
     onClickTab,
     onClickTool,
   }

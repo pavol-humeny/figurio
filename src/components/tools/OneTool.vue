@@ -49,7 +49,7 @@ const emit = defineEmits(['click'])
 /**
  * Logic of the single tool and subtools popup
  */
-const { wrapperRef, subToolPos, onRightClick, onClickTab, onClickTool } = useOneTool(
+const { wrapperRef, subToolPos, onMouseEnter, onMouseLeave, onClickTab, onClickTool } = useOneTool(
   useEditorStore(),
   useImageStore(),
   props,
@@ -68,7 +68,7 @@ const { wrapperRef, subToolPos, onRightClick, onClickTab, onClickTool } = useOne
     text: props.tip,
     position: 'top-right',
   }">
-    <div class="tool-wrapper" ref="wrapperRef" @contextmenu="onRightClick"
+    <div class="tool-wrapper" ref="wrapperRef" @mouseenter="onMouseEnter" @mouseleave="onMouseLeave"
       :id="props.tool.key === 'export' ? 'export-tool' : undefined">
       <div class="tool"
         :class="{ active: props.active && imageStore.isImageLoaded, disabled: props.disabled || editorStore.enableTools[props.tool.key] === false }"
@@ -78,7 +78,7 @@ const { wrapperRef, subToolPos, onRightClick, onClickTab, onClickTool } = useOne
       <p class="tool-label">{{ props.tool.label }}</p>
     </div>
 
-    <Teleport to="body" v-if="editorStore.toolWithOpenSubToolsKey === props.tool.key && props.tool.subTools">
+    <Teleport to="body" v-if="editorStore.toolWithOpenSubToolsKey === props.tool.key && props.tool.subTools.length > 0">
       <div class="subTools-popup" :style="{
         position: 'absolute',
         top: subToolPos.top + 'px',
@@ -91,8 +91,11 @@ const { wrapperRef, subToolPos, onRightClick, onClickTab, onClickTool } = useOne
           advance: true,
           position: 'right',
         }">
-          <div class="subTool" @click.stop="onClickTab(sub.key)">
-            <BaseIcon :name="sub.iconName" :size="27" :color="'var(--primary-c)'" />
+          <div class="subTool-wrapper" @mouseleave="onMouseLeave">
+            <div class="subTool" @click.stop="onClickTab(sub.key)">
+              <BaseIcon :name="sub.iconName" :size="27" :color="'var(--primary-c)'" />
+            </div>
+            <p class="tool-label"> {{ sub.label }}</p>
           </div>
         </ItemTip>
       </div>
@@ -139,7 +142,7 @@ const { wrapperRef, subToolPos, onRightClick, onClickTab, onClickTool } = useOne
   pointer-events: none;
 }
 
-.tool-label{
+.tool-label {
   text-align: center;
   color: var(--primary-c);
   margin-top: 5px;
@@ -150,7 +153,12 @@ const { wrapperRef, subToolPos, onRightClick, onClickTab, onClickTool } = useOne
   z-index: 650;
   display: flex;
   flex-direction: column;
+  align-items: center;
   gap: 10px;
+  background: var(--background-c);
+  border: var(--border-ui);
+  border-radius: 10px;
+  padding: 10px;
 }
 
 .subTool {
@@ -179,5 +187,11 @@ const { wrapperRef, subToolPos, onRightClick, onClickTab, onClickTool } = useOne
 .subTool.disabled {
   opacity: 0.5;
   pointer-events: none;
+}
+
+.subTool-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 </style>
