@@ -499,7 +499,7 @@ export function usePresetTool(
             operation.cropBox,
           )
         } else if (operation.type === 'resize') {
-          await useResizeTool(imageStore, historyStore, t).applyResizeRender(
+          await useResizeTool(imageStore, historyStore, viewportStore, t).applyResizeRender(
             operation.resizeDimensions.width,
             operation.resizeDimensions.height,
           )

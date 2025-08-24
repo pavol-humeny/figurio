@@ -11,6 +11,7 @@ import { useRotateTool } from '@/composables/tools/useRotateTool'
 import { useHistoryStore } from '@/stores/historyStore'
 import { useResizeTool } from '@/composables/tools/useResizeTool'
 import { useI18n } from 'vue-i18n'
+import { useViewportStore } from '@/stores/viewportStore'
 
 const { t } = useI18n()
 
@@ -39,7 +40,7 @@ const {
   FileDimensionHeightInputRef,
   isFileDimensionsLinked,
   resetResize,
-} = useResizeTool(useImageStore(), useHistoryStore(), t)
+} = useResizeTool(useImageStore(), useHistoryStore(), useViewportStore(), t)
 
 /**
  * Tabs for the transform tool settings

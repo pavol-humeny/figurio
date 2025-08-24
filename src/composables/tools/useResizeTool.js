@@ -13,7 +13,7 @@ import { PDFDocument } from 'pdf-lib'
  * @param {Function} t - Translation function
  * @returns {object} Resize tool bindings and methods
  */
-export function useResizeTool(imageStore, historyStore, t) {
+export function useResizeTool(imageStore, historyStore, viewportStore, t) {
   const { showToastModal } = useToastModal()
 
   const { round } = useMath()
@@ -237,6 +237,9 @@ export function useResizeTool(imageStore, historyStore, t) {
       height,
       fileAspectRatio: width / height || 1,
     }
+
+    // Center image
+    viewportStore.shouldFitToScreen = true
   }
 
   return {
