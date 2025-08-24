@@ -190,7 +190,8 @@ export function useResizeTool(imageStore, historyStore, t) {
       return
     }
 
-    const oldImage = imageStore.getRenderedImage({ t, renderCall: false })
+    // const oldImage = imageStore.getRenderedImage({ t, renderCall: false })
+    const oldImage = imageStore.originalImage
     if (!oldImage) return
 
     if (imageStore.fileType === 'pdf' && imageStore.pdfPageBytes) {

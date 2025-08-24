@@ -5,7 +5,8 @@
       "newFeatures": {
         "items": [
           "Vector PDF files are processed as vector",
-          "PDF files are displayed as vector"
+          "PDF files are displayed as vector",
+          "Resize tool: Button to use original image dimensions"
         ]
       },
       "improvements": {
@@ -20,7 +21,8 @@
           "Improved input file format checking",
           "Center image pan and zoom after crop operation",
           "Maximum file name length limitation",
-          "Validate number in number inputs"
+          "Validate number in number inputs",
+          "Prevent image deforming in resize tool"
         ]
       },
       "knownIssues": {
