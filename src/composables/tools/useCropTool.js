@@ -787,6 +787,9 @@ export function useCropTool(imageStore, viewportStore, editorStore, historyStore
     imageStore.newFileDimensions = { ...imageStore.fileDimensions }
 
     hideArtifacts()
+
+    // Center image
+    viewportStore.shouldFitToScreen = true
   }
 
   //----------------------------------

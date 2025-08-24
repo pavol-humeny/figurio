@@ -6,18 +6,19 @@
         "items": [
           "Vector PDF files are processed as vector",
           "PDF files are displayed as vector"
-
         ]
       },
       "improvements": {
         "items": [
           "Added labels to all tools in the tool panel for easier identification",
-          "Show subtools on hover in tool panel"
+          "Show subtools on hover in tool panel",
+          "Added the ability to drag and drop an image while editing another image"
         ]
       },
       "bugFixes": {
         "items": [
-          "Improved input file format checking"
+          "Improved input file format checking",
+          "Center image pan and zoom after crop operation"
         ]
       },
       "knownIssues": {
