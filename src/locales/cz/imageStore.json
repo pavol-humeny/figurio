@@ -8,9 +8,9 @@
       "title": "Soubor je příliš velký",
       "message": "Soubor {fileName} překračuje maximální povolenou velikost {maxSize} MB. Nahrajte prosím menší soubor."
     },
-    "errorFileTooLargeDimensions": {
-      "title": "Soubor je příliš velký",
-      "message": "Soubor {fileName} překračuje maximální povolené rozměry {maxWidth}x{maxHeight} pixelů. Nahrajte prosím menší soubor."
+    "errorInvalidFileDimensions": {
+      "title": "Soubor má neplatné rozměry",
+      "message": "Soubor {fileName} má neplatné rozměry. Nahrajte prosím soubor s rozměry od {minWidth}x{minHeight} do {maxWidth}x{maxHeight} pixelů."
     },
     "errorMultipleFiles": {
       "title": "Vybráno více souborů",

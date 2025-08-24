@@ -42,7 +42,7 @@ const resizerSize = computed(() => {
  * Style object for resizer handles
  */
 const resizerStyle = computed(() => {
-  const size = Math.max(resizerSize.value, 6)
+  const size = Math.max(resizerSize.value, 5)
   const offset = size / 2
   const border = Math.max(size * viewportConfig.cropHandleBorderMultiplier, 1)
 
@@ -58,7 +58,7 @@ const resizerStyle = computed(() => {
  * Border width of the crop box
  */
 const borderWidth = computed(() => {
-  return Math.max(resizerSize.value * viewportConfig.cropBorderMultiplier, 1)
+  return 1
 })
 </script>
 
@@ -103,20 +103,20 @@ const borderWidth = computed(() => {
 }
 
 .resizer.top-left {
-  top: calc(0px - var(--offset));
-  left: calc(0px - var(--offset));
+  top: calc(0px - var(--offset) - 1px);
+  left: calc(0px - var(--offset) - 1px);
   cursor: nwse-resize;
 }
 
 .resizer.top-right {
-  top: calc(0px - var(--offset));
+  top: calc(0px - var(--offset) - 1px);
   right: calc(0px - var(--offset));
   cursor: nesw-resize;
 }
 
 .resizer.bottom-left {
   bottom: calc(0px - var(--offset));
-  left: calc(0px - var(--offset));
+  left: calc(0px - var(--offset) - 1px);
   cursor: nesw-resize;
 }
 

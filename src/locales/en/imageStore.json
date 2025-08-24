@@ -8,9 +8,9 @@
       "title": "File too large",
       "message": "The file {fileName} exceeds the maximum allowed size of {maxSize} MB. Please upload a smaller file."
     },
-    "errorFileTooLargeDimensions": {
-      "title": "File too large",
-      "message": "The file {fileName} exceeds the maximum allowed dimensions of {maxWidth}x{maxHeight} pixels. Please upload a smaller file."
+    "errorInvalidFileDimensions": {
+      "title": "File has invalid dimensions",
+      "message": "The file {fileName} has invalid dimensions. Please upload a file with dimensions from {minWidth}x{minHeight} to {maxWidth}x{maxHeight} pixels."
     },
     "errorMultipleFiles": {
       "title": "Multiple files selected",

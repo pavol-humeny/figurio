@@ -195,30 +195,35 @@ export function useCropTool(imageStore, viewportStore, editorStore, historyStore
    * @param {number} value - New dimension value
    */
   const updateDimension = (key, value) => {
+    const minCropSize = editorConfig.minCropSize
     const originalWidth = cropBox.value.width
     const originalHeight = cropBox.value.height
 
     if (key === 'width') {
-      const clampedWidth = round(clamp(value, 0, maxCropWidth.value))
+      const clampedWidth = round(clamp(value, minCropSize, maxCropWidth.value))
 
       // Dimensions are linked
       if (isDimensionsLinked.value && originalWidth > 0) {
         const aspectRatio = originalHeight / originalWidth
         cropBox.value.width = clampedWidth
-        cropBox.value.height = round(clamp(clampedWidth * aspectRatio, 0, maxCropHeight.value))
+        cropBox.value.height = round(
+          clamp(clampedWidth * aspectRatio, minCropSize, maxCropHeight.value),
+        )
       }
       // Free crop
       else {
         cropBox.value.width = clampedWidth
       }
     } else if (key === 'height') {
-      const clampedHeight = round(clamp(value, 0, maxCropHeight.value))
+      const clampedHeight = round(clamp(value, minCropSize, maxCropHeight.value))
 
       // Dimensions are linked
       if (isDimensionsLinked.value && originalHeight > 0) {
         const aspectRatio = originalWidth / originalHeight
         cropBox.value.height = clampedHeight
-        cropBox.value.width = round(clamp(clampedHeight * aspectRatio, 0, maxCropWidth.value))
+        cropBox.value.width = round(
+          clamp(clampedHeight * aspectRatio, minCropSize, maxCropWidth.value),
+        )
       }
       // Free crop
       else {
@@ -315,6 +320,8 @@ export function useCropTool(imageStore, viewportStore, editorStore, historyStore
       const dxNorm = dx / viewportStore.realZoomLevel
       const dyNorm = dy / viewportStore.realZoomLevel
 
+      const minValue = editorConfig.minCropSize
+
       if (direction.includes('right')) {
         let newWidth = cropBox.value.width + dxNorm
         let newX = cropBox.value.x
@@ -324,7 +331,7 @@ export function useCropTool(imageStore, viewportStore, editorStore, historyStore
           newWidth = imageStore.fileDimensions.width - newX
         }
 
-        cropBox.value.width = clamp(newWidth, 0, imageStore.fileDimensions.width - newX)
+        cropBox.value.width = clamp(newWidth, minValue, imageStore.fileDimensions.width - newX)
       }
 
       if (direction.includes('left')) {
@@ -338,8 +345,18 @@ export function useCropTool(imageStore, viewportStore, editorStore, historyStore
           newX = 0
         }
 
+        // If minimum width is reached
+        if (newWidth <= minValue) {
+          newX = maxX - minValue
+          newWidth = minValue
+        }
+
         cropBox.value.x = clamp(newX, 0, maxX)
-        cropBox.value.width = clamp(newWidth, 0, imageStore.fileDimensions.width - cropBox.value.x)
+        cropBox.value.width = clamp(
+          newWidth,
+          minValue,
+          imageStore.fileDimensions.width - cropBox.value.x,
+        )
       }
 
       if (direction.includes('bottom')) {
@@ -351,7 +368,7 @@ export function useCropTool(imageStore, viewportStore, editorStore, historyStore
           newHeight = imageStore.fileDimensions.height - newY
         }
 
-        cropBox.value.height = clamp(newHeight, 0, imageStore.fileDimensions.height - newY)
+        cropBox.value.height = clamp(newHeight, minValue, imageStore.fileDimensions.height - newY)
       }
 
       if (direction.includes('top')) {
@@ -365,10 +382,16 @@ export function useCropTool(imageStore, viewportStore, editorStore, historyStore
           newY = 0
         }
 
+        // If minimum height is reached
+        if (newHeight <= minValue) {
+          newY = maxY - minValue
+          newHeight = minValue
+        }
+
         cropBox.value.y = clamp(newY, 0, maxY)
         cropBox.value.height = clamp(
           newHeight,
-          0,
+          minValue,
           imageStore.fileDimensions.height - cropBox.value.y,
         )
       }

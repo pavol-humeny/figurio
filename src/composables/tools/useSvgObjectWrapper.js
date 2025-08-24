@@ -100,7 +100,7 @@ export function useSvgObjectWrapper(
    * Size of the resizer handles
    */
   const resizerSize = computed(() => {
-    return Math.max(viewportConfig.cropHandleSize / viewportStore.realZoomLevel, 6)
+    return Math.max(viewportConfig.cropHandleSize / viewportStore.realZoomLevel, 5)
   })
 
   /**
@@ -363,7 +363,7 @@ export function useSvgObjectWrapper(
   }
 
   /**
-   * Mouse move handler for dragging the SVG object
+   * Mouse move handler for dragging, resizing and rotating the SVG object
    * @param {MouseEvent} event - Mouse event
    */
   const onMouseMove = (event) => {

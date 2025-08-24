@@ -521,15 +521,19 @@ export const useImageStore = defineStore('imageStore', {
     checkFileDimensions(width, height, fileName, t) {
       const MAX_WIDTH = editorConfig.maxFileDimensionWidth
       const MAX_HEIGHT = editorConfig.maxFileDimensionHeight
+      const MIN_WIDTH = editorConfig.minFileDimensionWidth
+      const MIN_HEIGHT = editorConfig.minFileDimensionHeight
 
-      if (width > MAX_WIDTH || height > MAX_HEIGHT) {
+      if (width > MAX_WIDTH || height > MAX_HEIGHT || width < MIN_WIDTH || height < MIN_HEIGHT) {
         showToastModal(
           'error',
-          t('imageStore.toast.errorFileTooLargeDimensions.title'),
-          t('imageStore.toast.errorFileTooLargeDimensions.message', {
+          t('imageStore.toast.errorInvalidFileDimensions.title'),
+          t('imageStore.toast.errorInvalidFileDimensions.message', {
             fileName,
             maxWidth: MAX_WIDTH,
             maxHeight: MAX_HEIGHT,
+            minWidth: MIN_WIDTH,
+            minHeight: MIN_HEIGHT,
           }),
         )
         this.file = null
