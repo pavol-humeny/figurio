@@ -1304,6 +1304,89 @@ export const useImageStore = defineStore('imageStore', {
                 draw = !draw
               }
             }
+
+            if (attrs['marker-end']) {
+              const arrowSize = 6 * strokeWidth
+              const dxArrow = x2 - x1
+              const dyArrow = y2 - y1
+              const lineAngle = Math.atan2(dyArrow, dxArrow)
+
+              // Posunutie šípky dopredu o polovicu arrowSize
+              const offsetXArrow = Math.cos(lineAngle) * (arrowSize / 2)
+              const offsetYArrow = Math.sin(lineAngle) * (arrowSize / 2)
+
+              // Body šípky v lokálnych súradniciach (trojuholník)
+              const tip = { x: 0, y: 0 } // špička šípky
+              const left = { x: -arrowSize, y: arrowSize / 2 }
+              const right = { x: -arrowSize, y: -arrowSize / 2 }
+
+              const rotatePoint = (pt, angle) => ({
+                x: pt.x * Math.cos(angle) - pt.y * Math.sin(angle),
+                y: pt.x * Math.sin(angle) + pt.y * Math.cos(angle),
+              })
+
+              const tipGlobal = {
+                x: tip.x + x2 + offsetXArrow,
+                y: tip.y + y2 + offsetYArrow,
+              }
+              const leftGlobal = {
+                x: rotatePoint(left, lineAngle).x + x2 + offsetXArrow,
+                y: rotatePoint(left, lineAngle).y + y2 + offsetYArrow,
+              }
+              const rightGlobal = {
+                x: rotatePoint(right, lineAngle).x + x2 + offsetXArrow,
+                y: rotatePoint(right, lineAngle).y + y2 + offsetYArrow,
+              }
+
+              // Nakresli obvod šípky
+              page.drawLine({
+                start: tipGlobal,
+                end: leftGlobal,
+                thickness: strokeWidth,
+                color: strokeColor,
+                opacity,
+              })
+              page.drawLine({
+                start: tipGlobal,
+                end: rightGlobal,
+                thickness: strokeWidth,
+                color: strokeColor,
+                opacity,
+              })
+              page.drawLine({
+                start: leftGlobal,
+                end: rightGlobal,
+                thickness: strokeWidth,
+                color: strokeColor,
+                opacity,
+              })
+
+              // Rozdel základňu šípky na malé body a nakresli vnútorné čiarové ventilátory
+              const segments = Math.max(2, Math.ceil(arrowSize / (strokeWidth / 1.5)))
+              for (let i = 0; i <= segments; i++) {
+                const t = i / segments
+                const baseX = leftGlobal.x + (rightGlobal.x - leftGlobal.x) * t
+                const baseY = leftGlobal.y + (rightGlobal.y - leftGlobal.y) * t
+                page.drawLine({
+                  start: { x: baseX, y: baseY },
+                  end: { x: tipGlobal.x, y: tipGlobal.y },
+                  thickness: strokeWidth / 1.5,
+                  color: strokeColor,
+                  opacity,
+                })
+              }
+
+              // Nakresli malé kruhy v rohoch
+              ;[tipGlobal, leftGlobal, rightGlobal].forEach((pt) => {
+                page.drawCircle({
+                  x: pt.x,
+                  y: pt.y,
+                  size: strokeWidth / 2,
+                  color: strokeColor,
+                  opacity,
+                })
+              })
+            }
           }
 
           if (tag === 'text') {
