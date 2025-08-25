@@ -1,5 +1,45 @@
 {
   "versions": {
+    "3.0.0": {
+      "label": "3.0.0",
+      "newFeatures": {
+        "items": [
+          "Vektorové PDF soubory se zpracovávají jako vektor",
+          "PDF soubory se zobrazují jako vektor",
+          "Nástroj pro změnu velikosti: Tlačítko pro použití původních rozměrů obrázku",
+          "Nástroj pro výběr: Zobrazení detailů objektu po jeho označení"
+        ]
+      },
+      "improvements": {
+        "items": [
+          "Do panelu nástrojů byly přidány popisky pro snazší orientaci",
+          "Zobrazení podnástrojů při najetí myší v panelu nástrojů",
+          "Možnost vložit obrázek během úprav jiného obrázku přesunutím",
+          "Plynulejší posouvání a změna velikosti ořezového rámečku",
+          "Výběr objektu lze začít i mimo obrázek",
+          "Objekt lze manipulovat podržením označené oblasti, nejen samotného objektu",
+          "Tlačítko „Použít“ má odlišný styl od ostatních tlačítek"
+        ]
+      },
+      "bugFixes": {
+        "items": [
+          "Vylepšená kontrola vstupního formátu souborů",
+          "Centrovaní obrázku po oříznutí",
+          "Centrovaní obrázku po změně velikosti",
+          "Omezení maximální délky názvu souboru",
+          "Validace čísel ve vstupních polích",
+          "Zabránění deformaci obrázku v nástroji pro změnu velikosti",
+          "Možnost vytvářet horizontální i vertikální čáry",
+          "Nový objekt lze vytvořit také na jiném objektu"
+        ]
+      },
+      "knownIssues": {
+        "items": [
+          "Nástroj Rozmazání oblasti je vypnutý",
+          "Tlačítko zavřít a logo VSCode v rámečcích se nezobrazují při exportu PDF do PDF"
+        ]
+      }
+    },
     "2.3.0": {
       "label": "2.3.0",
       "newFeatures": {

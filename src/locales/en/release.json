@@ -24,8 +24,8 @@
       "bugFixes": {
         "items": [
           "Improved input file format checking",
-          "Center image pan and zoom after crop operation",
-          "Center image pan and zoom after resize operation",
+          "Center image after crop operation",
+          "Center image after resize operation",
           "Maximum file name length limitation",
           "Validate number in number inputs",
           "Prevent image deforming in resize tool",
