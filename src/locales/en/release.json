@@ -1,5 +1,19 @@
 {
   "versions":{
+    "3.1.0":{
+      "label": "3.1.0",
+      "improvements": {
+        "items": [
+          "Change toggle button design to be more intuitive"
+        ]
+      },
+      "bugFixes": {
+        "items": [
+          "Round indent values in auto crop",
+          "Redirect to home view on reload"
+        ]
+      }
+    },
     "3.0.0":{
       "label": "3.0.0",
       "newFeatures": {

@@ -1,5 +1,19 @@
 {
   "versions": {
+    "3.1.0": {
+      "label": "3.1.0",
+      "improvements": {
+        "items": [
+          "Zmena dizajnu prepínacieho tlačidla pre lepšiu intuitívnosť"
+        ]
+      },
+      "bugFixes": {
+        "items": [
+          "Zaokrúhlenie hodnôt odsadenia pri automatickom orezaní",
+          "Presmerovanie na úvodnú obrazovku pri obnovení stránky"
+        ]
+      }
+    },
     "3.0.0": {
       "label": "3.0.0",
       "newFeatures": {

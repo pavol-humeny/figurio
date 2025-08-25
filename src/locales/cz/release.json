@@ -1,5 +1,19 @@
 {
   "versions": {
+    "3.1.0": {
+      "label": "3.1.0",
+      "improvements": {
+        "items": [
+          "Změna designu přepínacího tlačítka pro lepší intuitivnost"
+        ]
+      },
+      "bugFixes": {
+        "items": [
+          "Zaokrouhlení hodnot odsazení při automatickém ořezu",
+          "Přesměrování na úvodní obrazovku při obnovení stránky"
+        ]
+      }
+    },
     "3.0.0": {
       "label": "3.0.0",
       "newFeatures": {
