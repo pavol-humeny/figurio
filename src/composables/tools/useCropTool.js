@@ -469,12 +469,12 @@ export function useCropTool(imageStore, viewportStore, editorStore, historyStore
   watch(
     cropBox,
     (newCropBox) => {
-      manualIndents.value.topIndent = newCropBox.y
+      manualIndents.value.topIndent = round(newCropBox.y)
       manualIndents.value.rightIndent =
-        imageStore.fileDimensions.width - (newCropBox.x + newCropBox.width)
+        imageStore.fileDimensions.width - round(newCropBox.x + newCropBox.width)
       manualIndents.value.bottomIndent =
-        imageStore.fileDimensions.height - (newCropBox.y + newCropBox.height)
-      manualIndents.value.leftIndent = newCropBox.x
+        imageStore.fileDimensions.height - round(newCropBox.y + newCropBox.height)
+      manualIndents.value.leftIndent = round(newCropBox.x)
 
       // Change max indents
       manualIndents.value.topIndentMax = newCropBox.y + newCropBox.height
