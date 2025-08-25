@@ -136,8 +136,8 @@ export function useShapeTool(editorStore, imageStore, historyStore, t) {
   const lineArrowOptions = computed(() => [
     { value: 'none', label: t('tools.shape.settings.lineArrow.options.none') },
     { value: 'arrow', label: t('tools.shape.settings.lineArrow.options.arrow') },
-    { value: 'square', label: t('tools.shape.settings.lineArrow.options.square') },
-    { value: 'circle', label: t('tools.shape.settings.lineArrow.options.circle') },
+    // { value: 'square', label: t('tools.shape.settings.lineArrow.options.square') },
+    // { value: 'circle', label: t('tools.shape.settings.lineArrow.options.circle') },
   ])
 
   /**

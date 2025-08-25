@@ -1000,21 +1000,7 @@ export const useImageStore = defineStore('imageStore', {
         <marker id="arrow-end" markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto" markerUnits="strokeWidth">
           <path d="M0,0 L0,6 L6,3 z" fill="context-stroke" />
         </marker>
-        <marker id="arrow-start" markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto-start-reverse" markerUnits="strokeWidth">
-          <path d="M0,0 L0,6 L6,3 z" fill="context-stroke" />
-        </marker>
-        <marker id="circle-end" markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto" markerUnits="strokeWidth">
-          <circle cx="3" cy="3" r="2" fill="context-stroke" />
-        </marker>
-        <marker id="circle-start" markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto" markerUnits="strokeWidth">
-          <circle cx="3" cy="3" r="2" fill="context-stroke" />
-        </marker>
-        <marker id="square-end" markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto" markerUnits="strokeWidth">
-          <rect x="1.5" y="1.5" width="3" height="3" fill="context-stroke" />
-        </marker>
-        <marker id="square-start" markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto" markerUnits="strokeWidth">
-          <rect x="1.5" y="1.5" width="3" height="3" fill="context-stroke" />
-        </marker>
+
         `.trim()
 
       const dynamicDefs = Object.values(this.svgDefs || {}).join('\n')
@@ -1254,14 +1240,70 @@ export const useImageStore = defineStore('imageStore', {
             const y1 = finalHeight - parseNum(attrs.y1, 0) - offsetY
             const x2 = parseNum(attrs.x2, 0) + offsetX
             const y2 = finalHeight - parseNum(attrs.y2, 0) - offsetY
-            page.drawLine({
-              start: { x: x1, y: y1 },
-              end: { x: x2, y: y2 },
-              thickness: strokeWidth,
-              color: strokeColor,
-              opacity,
-              rotate: degrees(-angle),
-            })
+
+            // Line length
+            const dx = x2 - x1
+            const dy = y2 - y1
+            const lineLength = Math.sqrt(dx * dx + dy * dy)
+
+            // Normalized vector
+            const ux = dx / lineLength
+            const uy = dy / lineLength
+
+            // Get line type
+            let dashArray = []
+            if (attrs['stroke-dasharray']) {
+              dashArray = attrs['stroke-dasharray']
+                .split(',')
+                .map((d) => parseFloat(d.trim()))
+                .filter((n) => !isNaN(n) && n > 0)
+            }
+
+            if (dashArray.length === 0) {
+              // Solid
+              page.drawLine({
+                start: { x: x1, y: y1 },
+                end: { x: x2, y: y2 },
+                thickness: strokeWidth,
+                color: strokeColor,
+                opacity,
+                rotate: degrees(-angle),
+              })
+            } else {
+              // Special line
+              let pos = 0
+              let draw = true
+              let dashIndex = 0
+              let curX = x1
+              let curY = y1
+
+              while (pos < lineLength) {
+                // Get segment length
+                const segmentLength = dashArray[dashIndex % dashArray.length]
+
+                const nextPos = Math.min(pos + segmentLength, lineLength)
+
+                const nx = x1 + ux * nextPos
+                const ny = y1 + uy * nextPos
+
+                if (draw) {
+                  page.drawLine({
+                    start: { x: curX, y: curY },
+                    end: { x: nx, y: ny },
+                    thickness: strokeWidth,
+                    color: strokeColor,
+                    opacity,
+                    rotate: degrees(-angle),
+                  })
+                }
+
+                curX = nx
+                curY = ny
+                pos = nextPos
+                dashIndex++
+                draw = !draw
+              }
+            }
           }
 
           if (tag === 'text') {

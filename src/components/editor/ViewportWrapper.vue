@@ -190,30 +190,30 @@ const disableContextMenu = computed(() => {
                 markerUnits="strokeWidth">
                 <path d="M0,0 L0,6 L6,3 z" fill="context-stroke" />
               </marker>
-              <marker id="arrow-start" markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto-start-reverse"
+              <!-- <marker id="arrow-start" markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto-start-reverse"
                 markerUnits="strokeWidth">
                 <path d="M0,0 L0,6 L6,3 Z" fill="context-stroke" />
-              </marker>
+              </marker> -->
 
               <!-- Circle -->
-              <marker id="circle-end" markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto"
+              <!-- <marker id="circle-end" markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto"
                 markerUnits="strokeWidth">
                 <circle cx="3" cy="3" r="2" fill="context-stroke" />
-              </marker>
-              <marker id="circle-start" markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto-start-reverse"
+              </marker> -->
+              <!-- <marker id="circle-start" markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto-start-reverse"
                 markerUnits="strokeWidth">
                 <circle cx="3" cy="3" r="2" fill="context-stroke" />
-              </marker>
+              </marker> -->
 
               <!-- Square -->
-              <marker id="square-end" markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto"
+              <!-- <marker id="square-end" markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto"
                 markerUnits="strokeWidth">
                 <rect x="1.5" y="1.5" width="3" height="3" fill="context-stroke" />
-              </marker>
-              <marker id="square-start" markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto-start-reverse"
+              </marker> -->
+              <!-- <marker id="square-start" markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto-start-reverse"
                 markerUnits="strokeWidth">
                 <rect x="1.5" y="1.5" width="3" height="3" fill="context-stroke" />
-              </marker>
+              </marker> -->
             </defs>
 
             <!-- Dynamic SVG Definitions -->
@@ -258,7 +258,7 @@ const disableContextMenu = computed(() => {
         </div>
         <div v-if="mouseX !== null" class="ruler-cursor-mark horizontal" :style="{ left: mouseX + 'px' }">
           <span class="ruler-cursor-label horizontal" :class="{ 'active': cursorPosXSameAsImageWidth }">{{ cursorPosX
-            }}</span>
+          }}</span>
         </div>
 
       </div>
@@ -271,7 +271,7 @@ const disableContextMenu = computed(() => {
         </div>
         <div v-if="mouseY !== null" class="ruler-cursor-mark vertical" :style="{ top: mouseY + 'px' }">
           <span class="ruler-cursor-label vertical" :class="{ 'active': cursorPosYSameAsImageHeight }">{{ cursorPosY
-            }}</span>
+          }}</span>
         </div>
       </div>
     </div>

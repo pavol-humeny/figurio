@@ -337,7 +337,7 @@
           "tip": "Enable or disable start arrow for the line"
         },
         "end": {
-          "label": "End arrow",
+          "label": "Line end",
           "tip": "Enable or disable end arrow for the line"
         },
         "options": {

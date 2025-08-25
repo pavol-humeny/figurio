@@ -132,7 +132,9 @@ const {
         </div>
 
         <!-- Rotation -->
-        <div v-if="!hidePositionAndDimensions && !editorStore.isSvgObjectResizing" class="settings-content-wrapper">
+        <div
+          v-if="!hidePositionAndDimensions && !editorStore.isSvgObjectResizing && localObjectSettings.type !== 'line'"
+          class="settings-content-wrapper">
           <div class="content-wrapper">
             <div class="content-title">
               <p>
@@ -245,8 +247,7 @@ const {
             </div>
             <NumberInput v-model="localObjectSettings.opacity" :min="0.1" :max="1" :step="0.1"
               @update="applyLocalSettings" icon="IconOpacity" :color="'var(--primary-c)'" :size="20"
-              :onReset="resetOpacity"
-              :tip="$t('tools.shape.settings.opacity.tip')" position="bottom-left" />
+              :onReset="resetOpacity" :tip="$t('tools.shape.settings.opacity.tip')" position="bottom-left" />
           </div>
         </div>
 
@@ -280,7 +281,16 @@ const {
 
         <!-- Line arrow -->
         <div v-if="localObjectSettings.type === 'line' && !hidePositionAndDimensions" class=" settings-content-wrapper">
-          <div class="content-aligned two-items">
+          <div class="content-wrapper">
+            <div class="content-title">
+              <p :class="{ disabled: localObjectSettings.strokeWidth === 0 }">
+                {{ $t('tools.shape.settings.lineArrow.end.label') }}
+              </p>
+            </div>
+            <DropdownSelect v-model="localObjectSettings.lineArrowEnd" :options="lineArrowOptions"
+              @update="applyLocalSettings" :tip="$t('tools.shape.settings.lineArrow.end.tip')" position="bottom-left" />
+          </div>
+          <!-- <div class="content-aligned two-items">
             <div class="content-wrapper">
               <div class="content-title">
                 <p :class="{ disabled: localObjectSettings.strokeWidth === 0 }">
@@ -301,7 +311,7 @@ const {
                 @update="applyLocalSettings" :tip="$t('tools.shape.settings.lineArrow.end.tip')"
                 position="bottom-left" />
             </div>
-          </div>
+          </div> -->
         </div>
 
 
