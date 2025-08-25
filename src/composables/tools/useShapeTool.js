@@ -207,13 +207,17 @@ export function useShapeTool(editorStore, imageStore, historyStore, t) {
     (newTab) => {
       if (newTab === localObjectSettings.value.type) return
 
-      localObjectSettings.value.type = newTab
-      imageStore.selectedSvgObjectId = null // Reset selection when tab changes
-      editorStore.isSvgObjectSelected = false // Reset selection state
+      // Reset only when not coming from select tool
+      if (editorStore.previousToolKey !== 'select') {
+        console.log('Shape tab changed, resetting settings: ', newTab)
+        localObjectSettings.value.type = newTab
+        imageStore.selectedSvgObjectId = null // Reset selection when tab changes
+        imageStore.selectedSvgObjectIds = [] // Reset multi-selection
+        editorStore.isSvgObjectSelected = false // Reset selection state
 
-      resetObjectSettings()
+        resetObjectSettings()
+      }
     },
-    { immediate: true },
   )
 
   /**
@@ -375,8 +379,8 @@ export function useShapeTool(editorStore, imageStore, historyStore, t) {
       attrs.width = settings.width
       attrs.height = settings.height
     } else if (tag === 'ellipse') {
-      // attrs.rx = settings.width / 2
-      // attrs.ry = settings.height / 2
+      attrs.rx = settings.width / 2
+      attrs.ry = settings.height / 2
       attrs.cx = settings.x + attrs.rx
       attrs.cy = settings.y + attrs.ry
     } else if (tag === 'line') {
@@ -436,7 +440,7 @@ export function useShapeTool(editorStore, imageStore, historyStore, t) {
   const getShapeAttributes = () => {
     const settings = { ...localObjectSettings.value }
 
-    // Ak ide o čiaru, premapuj lineType na konkrétnu hodnotu stroke-dasharray
+    // If it is line remap line type
     if (settings.type === 'line') {
       settings.lineType = getDashArrayFromLineType(settings.lineType, settings.strokeWidth)
 

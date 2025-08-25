@@ -1,4 +1,4 @@
-import { computed, ref, onMounted, onBeforeUnmount, nextTick } from 'vue'
+import { computed, ref, onMounted, onBeforeUnmount, nextTick, watch } from 'vue'
 import { useTextTool } from './useTextTool'
 import { useShapeTool } from './useShapeTool'
 import { useMath } from '../common/useMath'
@@ -6,14 +6,16 @@ import { useSvgFunctions } from './useSvgFunctions'
 import { editorConfig } from '@/config/editorConfig'
 import { useBlurTool } from './useBlurTool'
 import { useMagnifyAreaTool } from './useMagnifyAreaTool'
+import { useToolsPanel } from './useToolsPanel'
 
-export function useSvgObjects(imageStore, historyStore, viewportStore, editorStore, t) {
-  const { round } = useMath()
+export function useSvgObjects(imageStore, historyStore, viewportStore, editorStore, uiStore, t) {
+  const { round, distance } = useMath()
   const textTool = useTextTool(imageStore, historyStore, editorStore, t)
   const shapeTool = useShapeTool(editorStore, imageStore, historyStore, t)
   const { getSnapOffsetToEdges } = useSvgFunctions(imageStore)
   const blurTool = useBlurTool(imageStore, historyStore, editorStore, t)
-  const magnifyAreaToll = useMagnifyAreaTool(imageStore, historyStore, editorStore, t)
+  const magnifyAreaTool = useMagnifyAreaTool(imageStore, historyStore, editorStore, t)
+  const { toggleTool } = useToolsPanel(editorStore, imageStore, uiStore, t)
 
   /**
    * Selection box rectangle (used when dragging with select tool)
@@ -469,6 +471,7 @@ export function useSvgObjects(imageStore, historyStore, viewportStore, editorSto
    */
   const selectAllSvgObjects = () => {
     imageStore.selectedSvgObjectIds = imageStore.svgObjects.map((obj) => obj.id)
+    imageStore.selectedSvgObjectId = null
   }
 
   /**
@@ -476,47 +479,113 @@ export function useSvgObjects(imageStore, historyStore, viewportStore, editorSto
    */
   const deselectAllSvgObjects = () => {
     imageStore.selectedSvgObjectIds = []
+    imageStore.selectedSvgObjectId = null
   }
+
+  /**
+   * Watch for changes in the selected SVG object IDs
+   * If length is 1 select this object as single selection
+   */
+  watch(
+    () => imageStore.selectedSvgObjectIds.length,
+    (newLen) => {
+      if (newLen === 1) {
+        imageStore.selectedSvgObjectId = imageStore.selectedSvgObjectIds[0]
+      }
+    },
+  )
+
+  /**
+   * Watch for changes in the selected SVG object ID
+   * If a new ID is selected, update the editor tool accordingly
+   */
+  watch(
+    () => imageStore.selectedSvgObjectId,
+    (newId) => {
+      if (newId !== null) {
+        if (editorStore.selectedToolKey !== 'select') return
+
+        const selectedObject = imageStore.getSvgObjectById(newId)
+        if (selectedObject) {
+          const tool = selectedObject.class
+          let tab = null
+
+          if (tool === 'shape') {
+            tab = selectedObject.tag
+            if (tab === 'rect') tab = 'rectangle'
+          }
+
+          editorStore.previousToolKey = editorStore.selectedToolKey
+
+          editorStore.blockGlobalClickAfterAreaSelection = true
+
+          console.log('tool before toggle: ', editorStore.selectedToolKey)
+          toggleTool(tool, tab)
+          console.log('tool after toggle: ', editorStore.selectedToolKey)
+        }
+      } else {
+        if (editorStore.previousToolKey === 'select' && editorStore.selectedToolKey !== 'select') {
+          toggleTool('select', null)
+          editorStore.previousToolKey = ''
+        }
+      }
+    },
+  )
 
   /**
    * Handle click on the SVG area to select objects or add text
    * @param {MouseEvent} event - Click event
    */
-  const OnClickImageSvg = (event) => {
+  const onClickImageSvg = (event) => {
     if (didDrag.value) {
       // Prevent click after drag
       return
     }
 
+    // --------------------------------------
     // Selecting objects
-    if (editorStore.selectedToolKey === 'select') {
-      // Check if clicked on SVG object with data-id
-      const elWithId = event.target.closest('[data-id]')
-      const clickedId = elWithId ? Number(elWithId.getAttribute('data-id')) : null
+    // --------------------------------------
+    // Check if clicked on SVG object with data-id
+    const elWithId = event.target.closest('[data-id]')
+    const clickedId = elWithId ? Number(elWithId.getAttribute('data-id')) : null
 
-      if (clickedId !== null) {
-        const clickedObject = imageStore.getSvgObjectById(clickedId)
-        if (clickedObject) {
-          if (event.shiftKey) {
-            const index = imageStore.selectedSvgObjectIds.indexOf(clickedId)
-            if (index !== -1) {
-              imageStore.selectedSvgObjectIds.splice(index, 1)
-            } else {
-              imageStore.selectedSvgObjectIds.push(clickedId)
-            }
+    if (clickedId !== null) {
+      const clickedObject = imageStore.getSvgObjectById(clickedId)
+      if (clickedObject) {
+        if (event.shiftKey) {
+          // Toggle object in multi-select
+          const index = imageStore.selectedSvgObjectIds.indexOf(clickedId)
+
+          console.warn('multi selection')
+          if (index !== -1) {
+            imageStore.selectedSvgObjectIds.splice(index, 1)
           } else {
-            imageStore.selectedSvgObjectIds = [clickedId]
+            imageStore.selectedSvgObjectIds.push(clickedId)
           }
 
-          return
+          // If it is first object in multi selection select it also as single object
+          if (imageStore.selectedSvgObjectIds.length === 1) {
+            imageStore.selectedSvgObjectId = imageStore.selectedSvgObjectIds[0]
+          } else {
+            imageStore.selectedSvgObjectId = null
+          }
+        } else {
+          // Single object selection (without shift) if in select tool
+          if (editorStore.selectedToolKey === 'select') {
+            imageStore.selectedSvgObjectId = clickedId
+            imageStore.selectedSvgObjectIds = [clickedId]
+          }
         }
-      }
 
-      // Clicked on empty area – deselect all
-      if (!event.shiftKey) {
-        imageStore.selectedSvgObjectIds = []
+        return
       }
     }
+
+    // Clicked on empty area – deselect all
+    if (!event.shiftKey) {
+      imageStore.selectedSvgObjectIds = []
+    }
+    // -------------------------------------
 
     // Add text object
     if (editorStore.selectedToolKey === 'text' && !editorStore.isSvgObjectSelected) {
@@ -535,13 +604,15 @@ export function useSvgObjects(imageStore, historyStore, viewportStore, editorSto
       const x = round((event.clientX - rect.left) / viewportStore.realZoomLevel)
       const y = round((event.clientY - rect.top) / viewportStore.realZoomLevel)
 
-      magnifyAreaToll.addMagnifyArea(x, y)
+      magnifyAreaTool.addMagnifyArea(x, y)
     }
   }
 
-  const onMouseDownImageSvg = (event) => {
-    didDrag.value = false // reset at start
-
+  /**
+   * Mouse down event handler for selecting SVG objects area
+   * @param {MouseEvent} event
+   */
+  const onMouseDownSelect = (event) => {
     // Selecting objects
     if (editorStore.selectedToolKey === 'select') {
       const rect = viewportStore.viewportContentRect
@@ -555,6 +626,14 @@ export function useSvgObjects(imageStore, historyStore, viewportStore, editorSto
       isDrawing.value = true
       return
     }
+  }
+
+  /**
+   * Mouse down event handler for the SVG image (creating new objects)
+   * @param {MouseEvent} event
+   */
+  const onMouseDownImageSvg = (event) => {
+    didDrag.value = false // reset at start
 
     // Drawing objects
     if (!['blur', 'shape'].includes(editorStore.selectedToolKey)) return
@@ -675,6 +754,10 @@ export function useSvgObjects(imageStore, historyStore, viewportStore, editorSto
     imageStore.svgObjects.push(base)
   }
 
+  /**
+   * Drawing object
+   * @param {MouseEvent} event
+   */
   const onMouseMoveImageSvg = (event) => {
     // Selecting objects
     if (isDrawing.value && editorStore.selectedToolKey === 'select' && selectBox.value) {
@@ -801,6 +884,10 @@ export function useSvgObjects(imageStore, historyStore, viewportStore, editorSto
     }
   }
 
+  /**
+   * Finalize drawing the SVG object
+   * @param {MouseEvent} event
+   */
   const onMouseUpImageSvg = (event) => {
     // Selecting objects
     if (editorStore.selectedToolKey === 'select' && selectBox.value) {
@@ -830,6 +917,11 @@ export function useSvgObjects(imageStore, historyStore, viewportStore, editorSto
       }
 
       imageStore.selectedSvgObjectIds = selectedIds
+      if (selectedIds.length === 1) {
+        imageStore.selectedSvgObjectId = selectedIds[0]
+      } else {
+        imageStore.selectedSvgObjectId = null
+      }
 
       selectBox.value = null
       isDrawing.value = false
@@ -843,19 +935,24 @@ export function useSvgObjects(imageStore, historyStore, viewportStore, editorSto
 
     const MIN_SIZE = editorConfig.minimumObjectSize
 
+    let lineLength = null
+    if ('x1' in attrs && 'y1' in attrs && 'x2' in attrs && 'y2' in attrs) {
+      lineLength = distance(attrs.x1 ?? 0, attrs.y1 ?? 0, attrs.x2 ?? 0, attrs.y2 ?? 0)
+    }
+
+    // Check if it is not too small object
     if (
       (attrs.width && attrs.width <= MIN_SIZE) ||
       (attrs.height && attrs.height <= MIN_SIZE) ||
       (attrs.rx && attrs.rx <= MIN_SIZE) ||
       (attrs.ry && attrs.ry <= MIN_SIZE) ||
-      (attrs.x2 && attrs.x2 - attrs.x1 <= MIN_SIZE) ||
-      (attrs.y2 && attrs.y2 - attrs.y1 <= MIN_SIZE)
+      (lineLength !== null && lineLength <= MIN_SIZE)
     ) {
       isDrawing.value = false
       currentDrawingObject.value = null
       viewportStore.guideLine = null
 
-      // Remove the last object
+      // Remove the last object if object is too small
       imageStore.svgObjects.pop()
       return
     }
@@ -883,12 +980,55 @@ export function useSvgObjects(imageStore, historyStore, viewportStore, editorSto
     })
   }
 
+  /**
+   * Global click handler to deselect the SVG object
+   * Only triggers if the click was inside the viewport content
+   * @param {MouseEvent} e - Mouse event
+   */
+  const onGlobalClick = (e) => {
+    if (imageStore.justCreatedSvgObjectId === imageStore.selectedSvgObjectId) return
+
+    if (editorStore.blockGlobalClickAfterAreaSelection) {
+      editorStore.blockGlobalClickAfterAreaSelection = false
+      return
+    }
+
+    const viewportContent = document.getElementById('viewport')
+    if (!viewportContent) return
+
+    const clickedInside = viewportContent.contains(e.target)
+    if (!clickedInside) return
+
+    const clickedObjectId = Number(e.target.getAttribute('data-id'))
+    const clickedObject = imageStore.getSvgObjectById(clickedObjectId)
+
+    const selectedObject = imageStore.getSvgObjectById(imageStore.selectedSvgObjectId)
+
+    // Deselect if clicked outside the selected object or on a different class
+    const sameClass =
+      clickedObject && selectedObject && clickedObject.class === selectedObject.class
+
+    console.log('tool in global click: ', editorStore.selectedToolKey)
+
+    // Deselect objects
+    if (!sameClass) {
+      imageStore.selectedSvgObjectId = null
+      imageStore.selectedSvgObjectIds = []
+      // showResizers.value = false
+    }
+  }
+
   onMounted(() => {
     window.addEventListener('mouseup', onMouseUpImageSvg)
+    if (!editorStore.isGlobalClickRegistered) {
+      window.addEventListener('click', onGlobalClick)
+      editorStore.isGlobalClickRegistered = true
+    }
   })
 
   onBeforeUnmount(() => {
     window.removeEventListener('mouseup', onMouseUpImageSvg)
+    window.removeEventListener('click', onGlobalClick)
   })
 
   return {
@@ -906,8 +1046,10 @@ export function useSvgObjects(imageStore, historyStore, viewportStore, editorSto
     sendSelectedSvgObjectToBack,
     bringSelectedSvgObjectToFront,
     selectedObjectInfo,
-    OnClickImageSvg,
+    onClickImageSvg,
     onMouseDownImageSvg,
+    onMouseDownSelect,
+    // onMouseUpImageSvg,
     onMouseMoveImageSvg,
     isDrawing,
     selectBox,

@@ -13,7 +13,7 @@ export function useSendEvent() {
    */
   const sendEvent = async (eventType, tool = null, buttonName = null, eventData = null) => {
     if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
-      console.log('Skipping event send on localhost:', eventType)
+      // console.log('Skipping event send on localhost:', eventType)
       return null
     }
     const uiStore = useUiStore()

@@ -4,7 +4,8 @@
  *   round: (value: number, positions: number) => number,
  *   clamp: (value: number, min: number, max: number) => number,
  *   closest: (target: number, values: number[]) => number | null,
- *   pythagorean: (a: number, b: number) => number
+ *   pythagorean: (a: number, b: number) => number,
+ *   distance: (x1: number, y1: number, x2: number, y2: number) => number
  * }}
  */
 export function useMath() {
@@ -52,10 +53,23 @@ export function useMath() {
     return Math.sqrt(a * a + b * b)
   }
 
+  /**
+   * Calculates distance between two points
+   * @param {number} x1 - X coordinate of the first point
+   * @param {number} y1 - Y coordinate of the first point
+   * @param {number} x2 - X coordinate of the second point
+   * @param {number} y2 - Y coordinate of the second point
+   * @returns {number} - Distance between the two points
+   */
+  const distance = (x1, y1, x2, y2) => {
+    return pythagorean(x2 - x1, y2 - y1)
+  }
+
   return {
     round,
     clamp,
     closest,
     pythagorean,
+    distance,
   }
 }

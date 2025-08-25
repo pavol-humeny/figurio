@@ -14,6 +14,7 @@ import IconButton from '../common/IconButton.vue';
 import { useSvgObjects } from '@/composables/tools/useSvgObjects';
 import { useViewportStore } from '@/stores/viewportStore';
 import DefaultButton from '../common/DefaultButton.vue';
+import { useUiStore } from '@/stores/uiStore';
 
 const editorStore = useEditorStore();
 const imageStore = useImageStore();
@@ -47,7 +48,7 @@ const {
   moveSelectedSvgObjectBackward,
   sendSelectedSvgObjectToBack,
   bringSelectedSvgObjectToFront,
-} = useSvgObjects(useImageStore(), useHistoryStore(), useViewportStore(), useEditorStore(), t);
+} = useSvgObjects(useImageStore(), useHistoryStore(), useViewportStore(), useEditorStore(), useUiStore(), t);
 </script>
 
 <template>

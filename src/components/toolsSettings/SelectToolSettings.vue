@@ -7,6 +7,7 @@ import { useI18n } from 'vue-i18n';
 import { useHistoryStore } from '@/stores/historyStore';
 import { useViewportStore } from '@/stores/viewportStore';
 import { useEditorStore } from '@/stores/editorStore';
+import { useUiStore } from '@/stores/uiStore';
 
 const { t } = useI18n()
 const imageStore = useImageStore()
@@ -18,7 +19,7 @@ const {
   selectAllSvgObjects,
   deselectAllSvgObjects,
   deleteSelectedSvgObjects
-} = useSvgObjects(useImageStore(), useHistoryStore(), useViewportStore(), useEditorStore(), t);
+} = useSvgObjects(useImageStore(), useHistoryStore(), useViewportStore(), useEditorStore(), useUiStore(), t);
 
 
 </script>

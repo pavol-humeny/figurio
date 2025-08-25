@@ -20,6 +20,7 @@ export function useSvgObjectWrapper(
   viewportStore,
   editorStore,
   historyStore,
+  uiStore,
   t,
 ) {
   const { deleteSelectedSvgObjects } = useSvgObjects(
@@ -27,6 +28,7 @@ export function useSvgObjectWrapper(
     historyStore,
     viewportStore,
     editorStore,
+    uiStore,
     t,
   )
   const { clamp, pythagorean, round } = useMath()
@@ -39,12 +41,10 @@ export function useSvgObjectWrapper(
    * Style of cursor when hovering over the SVG object
    */
   const cursorOnSvgObject = computed(() => {
-    if (isSelected.value) {
-      return 'move'
-    }
-
-    if (editorStore.selectedToolKey === object.value.class) {
+    if (editorStore.selectedToolKey === 'select') {
       return 'pointer'
+    } else if (isSelected.value) {
+      return 'move'
     } else {
       return 'default'
     }
@@ -64,7 +64,7 @@ export function useSvgObjectWrapper(
 
   /**
    * Whether SVG object operations are allowed
-   * Can be toggled globally (e.g. from tools)
+   * Can be toggled globally
    */
   const areSvgObjectOperationsEnabled = computed(() => {
     return editorStore.selectedToolKey === object.value.class
@@ -73,12 +73,13 @@ export function useSvgObjectWrapper(
   /**
    * Whether the SVG object is currently selected
    */
-  const isSelected = computed(
-    () => imageStore.selectedSvgObjectId === object.value.id && areSvgObjectOperationsEnabled.value,
-  )
+  const isSelected = computed(() => imageStore.selectedSvgObjectId === object.value.id)
 
   const isInMultiSelection = computed(() => {
-    return imageStore.selectedSvgObjectIds.includes(object.value.id)
+    return (
+      imageStore.selectedSvgObjectIds.includes(object.value.id) &&
+      imageStore.selectedSvgObjectId === null
+    )
   })
 
   /**
@@ -121,7 +122,18 @@ export function useSvgObjectWrapper(
    * Size of the control icon for enabling/disabling resizers
    */
   const controlIconSize = computed(() => {
-    return Math.max(viewportConfig.cropHandleSize / viewportStore.realZoomLevel, 6) * 2
+    // Base logical resizer size in screen pixels
+    const baseSize = 10
+    const zoomAdjusted = baseSize / viewportStore.realZoomLevel
+
+    const max = imageStore.getSmallerImageDimension() * 0.05 // 5% of the smaller dimension
+
+    return Math.max(
+      round(2 * clamp(zoomAdjusted, 4, max) * editorConfig.resizerMultiplier * 1.5),
+      20,
+    )
+
+    // return Math.max(viewportConfig.cropHandleSize / viewportStore.realZoomLevel, 6) * 2
   })
 
   // ---------------------------
@@ -165,6 +177,29 @@ export function useSvgObjectWrapper(
    * Variable to track if resizers should be shown
    */
   const showResizers = ref(false)
+
+  /**
+   * Hide resizers when tool is switched
+   */
+  watch(
+    () => editorStore.selectedToolKey,
+    () => {
+      showResizers.value = false
+    },
+  )
+
+  /**
+   * Hide resizers when object is deselected
+   */
+  watch(
+    () => imageStore.selectedSvgObjectId,
+    (newId) => {
+      if (newId === null) {
+        showResizers.value = false
+      }
+    },
+  )
+
   /**
    * Temporary variable to store rotation angle while resizing
    */
@@ -228,48 +263,19 @@ export function useSvgObjectWrapper(
   )
 
   /**
-   * Watch for changes in the selected tool and reset the selected SVG object when the tool changes
-   */
-  watch(
-    () => editorStore.selectedToolKey,
-    () => {
-      imageStore.selectedSvgObjectId = null
-    },
-  )
-
-  /**
    * Toggle resizers on double-click (if not text)
    * @returns {boolean} - Whether the SVG object should be resizable
    */
   const onObjectDoubleClick = () => {
-    if (object.value.tag === 'text') {
-      return
-    }
-    showResizers.value = !showResizers.value
-  }
-
-  /**
-   * Mouse event handlers for the SVG object
-   * @param {MouseEvent} event - Mouse event
-   */
-  const onMouseDown = (event) => {
-    if (!areSvgObjectOperationsEnabled.value) return
-
-    if (editorStore.selectedToolKey !== object.value.class) return
-
-    // If it is a magnify area result, select source object
-    if (object.value.class === 'magnifyArea' && object.value.subClass === 'magnify-result') {
-      imageStore.selectedSvgObjectId = object.value.linkedSourceId
+    if (isSelected.value) {
+      if (object.value.tag === 'text') {
+        return
+      }
+      showResizers.value = !showResizers.value
     } else {
       imageStore.selectedSvgObjectId = object.value.id
+      editorStore.previousToolKey = ''
     }
-
-    startX.value = event.clientX
-    startY.value = event.clientY
-    event.stopPropagation()
-
-    remainingDx.value = 0
-    remainingDy.value = 0
   }
 
   /**
@@ -1024,36 +1030,6 @@ export function useSvgObjectWrapper(
   }
 
   /**
-   * Global click handler to deselect the SVG object
-   * Only triggers if the click was inside the viewport content
-   * @param {MouseEvent} e - Mouse event
-   */
-  const onGlobalClick = (e) => {
-    if (!areSvgObjectOperationsEnabled.value) return
-
-    if (imageStore.justCreatedSvgObjectId === imageStore.selectedSvgObjectId) return
-
-    const viewportContent = document.getElementById('viewport')
-    if (!viewportContent) return
-
-    const clickedInside = viewportContent.contains(e.target)
-    if (!clickedInside) return
-
-    const clickedObjectId = Number(e.target.getAttribute('data-id'))
-    const clickedObject = imageStore.getSvgObjectById(clickedObjectId)
-
-    const selectedObject = imageStore.getSvgObjectById(imageStore.selectedSvgObjectId)
-
-    // Deselect if clicked outside the selected object or on a different class
-    const sameClass =
-      clickedObject && selectedObject && clickedObject.class === selectedObject.class
-
-    if (!sameClass) {
-      imageStore.selectedSvgObjectId = null
-      showResizers.value = false
-    }
-  }
-  /**
    * Get positions of resizers for the SVG object
    * Returns an array of objects with x, y coordinates and cursor style
    * @returns {Array} Array of resizer positions
@@ -1182,7 +1158,6 @@ export function useSvgObjectWrapper(
       }
     }
 
-    window.addEventListener('click', onGlobalClick)
     window.addEventListener('mousemove', onMouseMove)
     window.addEventListener('mouseup', onMouseUp)
   })
@@ -1191,7 +1166,6 @@ export function useSvgObjectWrapper(
    * Remove global event listeners when the component is unmounted
    */
   onBeforeUnmount(() => {
-    window.removeEventListener('click', onGlobalClick)
     window.removeEventListener('mousemove', onMouseMove)
     window.removeEventListener('mouseup', onMouseUp)
   })
@@ -1199,7 +1173,6 @@ export function useSvgObjectWrapper(
   return {
     textRef,
     isSelected,
-    onMouseDown,
     onMouseDownResizer,
     onMouseDownDrag,
     getResizerPositions,

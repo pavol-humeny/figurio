@@ -14,6 +14,7 @@ import DefaultButton from '../common/DefaultButton.vue';
 import { useSvgObjects } from '@/composables/tools/useSvgObjects';
 import { useViewportStore } from '@/stores/viewportStore';
 import DropdownSelect from '../common/DropdownSelect.vue';
+import { useUiStore } from '@/stores/uiStore';
 
 const { t } = useI18n()
 const editorStore = useEditorStore();
@@ -56,7 +57,7 @@ const {
   moveSelectedSvgObjectBackward,
   sendSelectedSvgObjectToBack,
   bringSelectedSvgObjectToFront,
-} = useSvgObjects(useImageStore(), useHistoryStore(), useViewportStore(), useEditorStore(), t);
+} = useSvgObjects(useImageStore(), useHistoryStore(), useViewportStore(), useEditorStore(), useUiStore(), t);
 </script>
 
 <template>

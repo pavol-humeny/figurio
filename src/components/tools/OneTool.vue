@@ -75,8 +75,7 @@ const { wrapperRef, subToolPos, onMouseEnter, onMouseLeave, onClickTab, onClickT
         @click.left="onClickTool">
         <BaseIcon :name="props.tool.iconName" :size="27" :color="'var(--primary-c)'" />
       </div>
-      <p class="tool-label"
-        :class="{ disabled: props.disabled || editorStore.enableTools[props.tool.key] === false }">
+      <p class="tool-label" :class="{ disabled: props.disabled || editorStore.enableTools[props.tool.key] === false }">
         {{ props.tool.label }}</p>
     </div>
 

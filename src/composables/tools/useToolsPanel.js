@@ -69,7 +69,7 @@ export function useToolsPanel(editorStore, imageStore, uiStore, t) {
       tool: editorStore.selectedToolKey,
       tab: editorStore.selectedTabPerTool[editorStore.selectedToolKey],
     }),
-    (newVal) => {
+    (newVal, oldValue) => {
       if (
         // UPDATE new tool
         newVal.tool === 'move' ||
@@ -86,10 +86,20 @@ export function useToolsPanel(editorStore, imageStore, uiStore, t) {
         editorStore.selectSubTool('')
       }
 
-      imageStore.selectedSvgObjectIds = [] // Reset multi-selection on tool change
-
-      if (newVal.tool !== 'shape') {
+      if (
+        newVal.tool !== 'shape' &&
+        newVal.tool !== 'blur' &&
+        newVal.tool !== 'magnifyArea' &&
+        newVal.tool !== 'text' &&
+        newVal.tool !== 'select'
+      ) {
+        imageStore.selectedSvgObjectIds = [] // Reset multi-selection on tool change
         imageStore.selectedSvgObjectId = null // Reset just created object ID
+      }
+
+      // Clear previous tool key if switching between shape tool tabs
+      if (newVal?.tool === 'shape' && oldValue?.tool === 'shape') {
+        editorStore.previousToolKey = ''
       }
     },
     { immediate: true, deep: false },

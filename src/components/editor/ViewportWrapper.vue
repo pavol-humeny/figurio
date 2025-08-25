@@ -75,8 +75,9 @@ const {
  * Logic for svg objects
  */
 const {
-  OnClickImageSvg,
+  onClickImageSvg,
   onMouseDownImageSvg,
+  onMouseDownSelect,
   onMouseMoveImageSvg,
   selectBox,
   copySelectedSvgObject,
@@ -89,6 +90,7 @@ const {
   useHistoryStore(),
   useViewportStore(),
   useEditorStore(),
+  useUiStore(),
   t
 )
 
@@ -125,8 +127,8 @@ const disableContextMenu = computed(() => {
 </script>
 
 <template>
-  <div class="viewport-wrapper" id="viewport" @mousemove="onMouseMoveImageSvg" @dragover="handleDragOver"
-    @dragleave="handleDragLeave" @drop="handleDrop">
+  <div class="viewport-wrapper" id="viewport" @mousedown="onMouseDownSelect" @mousemove="onMouseMoveImageSvg"
+    @dragover="handleDragOver" @dragleave="handleDragLeave" @drop="handleDrop">
     <LoadingSpinner />
 
     <div class="viewport-content-wrapper" ref="wrapperRef" @wheel.passive="setZoomAndScroll" @mousedown="startPan"
@@ -179,7 +181,7 @@ const disableContextMenu = computed(() => {
 
           <svg ref="svgRef" class="image-svg" xmlns="http://www.w3.org/2000/svg"
             :width="imageStore.fileDimensions.width" :height="imageStore.fileDimensions.height"
-            @mousedown="onMouseDownImageSvg" @click="OnClickImageSvg">
+            @mousedown="onMouseDownImageSvg" @click="onClickImageSvg">
             <!-- DEFS -->
             <!-- // UPDATE svg string -->
             <defs>

@@ -6,6 +6,7 @@ import { useImageStore } from '@/stores/imageStore';
 import { useViewportStore } from '@/stores/viewportStore';
 import { useI18n } from 'vue-i18n'
 import BaseIcon from '@/components/icons/BaseIcon.vue'
+import { useUiStore } from '@/stores/uiStore';
 
 const { t } = useI18n()
 
@@ -28,7 +29,6 @@ const props = defineProps({
 const {
   textRef,
   isSelected,
-  onMouseDown,
   onMouseDownResizer,
   onMouseDownDrag,
   getResizerPositions,
@@ -45,15 +45,14 @@ const {
   isRotating,
   cursorOnSvgObject,
   isInMultiSelection
-} = useSvgObjectWrapper(props.objectId, useImageStore(), useViewportStore(), useEditorStore(), useHistoryStore(), t)
+} = useSvgObjectWrapper(props.objectId, useImageStore(), useViewportStore(), useEditorStore(), useHistoryStore(), useUiStore(), t)
 
 </script>
 
 <template>
-  <g @mousedown="onMouseDown" @mousedown.right.prevent.stop>
+  <g @dblclick="onObjectDoubleClick" @mousedown.right.prevent.stop>
     <!-- SVG object except text -->
-    <g v-if="isSelected" @mousedown="onMouseDownDrag" @dblclick="onObjectDoubleClick"
-      :style="{ cursor: cursorOnSvgObject }">
+    <g v-if="isSelected" @mousedown="onMouseDownDrag" :style="{ cursor: cursorOnSvgObject }">
       <component v-if="object.tag !== 'text'" :is="object.tag" v-bind="object.attrs" :data-id="object.id" />
       <text v-else v-bind="object.attrs" style="user-select: none" ref="textRef" :data-id="object.id">
         {{ object.content || '' }}
@@ -70,10 +69,11 @@ const {
 
     <g v-if="(isSelected && boundingBox) || isInMultiSelection" :transform="object?.attrs?.transform">
       <!-- Bounding box -->
-      <rect :x="boundingBox.x" :y="boundingBox.y" :width="boundingBox.width" :height="boundingBox.height" fill="none"
+      <rect :x="boundingBox.x" :y="boundingBox.y" :width="boundingBox.width" :height="boundingBox.height"
+        :data-id="object.id" fill="#00000001" :style="{ cursor: cursorOnSvgObject }" @mousedown="onMouseDownDrag"
         :stroke="isSymmetricalObject ? 'var(--editor-highlight-align-c)' : 'var(--editor-highlight-c)'"
         :stroke-width="boundingBoxStrokeWidth"
-        :stroke-dasharray="[boundingBoxStrokeWidth * 4, boundingBoxStrokeWidth * 2]" pointer-events="none" />
+        :stroke-dasharray="[boundingBoxStrokeWidth * 4, boundingBoxStrokeWidth * 2]" />
 
       <!-- Icon to turn on resize -->
       <foreignObject v-if="object.tag !== 'text' && object.class !== 'magnifyArea' && !isInMultiSelection"

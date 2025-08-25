@@ -13,6 +13,7 @@ import DefaultButton from '../common/DefaultButton.vue';
 import DropdownSelect from '../common/DropdownSelect.vue';
 import DefaultSlider from '../common/DefaultSlider.vue';
 import ColorPicker from '../common/ColorPicker.vue';
+import { useUiStore } from '@/stores/uiStore';
 
 const { t } = useI18n();
 const imageStore = useImageStore();
@@ -48,7 +49,7 @@ const {
   moveSelectedSvgObjectBackward,
   sendSelectedSvgObjectToBack,
   bringSelectedSvgObjectToFront,
-} = useSvgObjects(useImageStore(), useHistoryStore(), useViewportStore(), useEditorStore(), t);
+} = useSvgObjects(useImageStore(), useHistoryStore(), useViewportStore(), useEditorStore(), useUiStore(), t);
 </script>
 
 <template>

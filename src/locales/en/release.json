@@ -6,7 +6,8 @@
         "items": [
           "Vector PDF files are processed as vector",
           "PDF files are displayed as vector",
-          "Resize tool: Button to use original image dimensions"
+          "Resize tool: Button to use original image dimensions",
+          "Select tool: Show object details after selecting object"
         ]
       },
       "improvements": {
@@ -14,7 +15,9 @@
           "Added labels to all tools in the tool panel for easier identification",
           "Show subtools on hover in tool panel",
           "Added the ability to drag and drop an image while editing another image",
-          "Smoother crop box pan and resize"
+          "Smoother crop box pan and resize",
+          "Select tool can start selection also from outside of image",
+          "The Object can be manipulated by holding the selected area and not just the object."
         ]
       },
       "bugFixes": {
@@ -24,7 +27,9 @@
           "Center image pan and zoom after resize operation",
           "Maximum file name length limitation",
           "Validate number in number inputs",
-          "Prevent image deforming in resize tool"
+          "Prevent image deforming in resize tool",
+          "Horizontal and vertical line can be created",
+          "New object can be created also on another object"
         ]
       },
       "knownIssues": {

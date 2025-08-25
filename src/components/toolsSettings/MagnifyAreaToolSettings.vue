@@ -12,6 +12,7 @@ import { useMagnifyAreaTool } from '@/composables/tools/useMagnifyAreaTool';
 import NumberDropdownInput from '../common/NumberDropdownInput.vue';
 import { useViewportStore } from '@/stores/viewportStore';
 import DefaultButton from '../common/DefaultButton.vue';
+import { useUiStore } from '@/stores/uiStore';
 
 const { t } = useI18n();
 
@@ -38,7 +39,7 @@ const {
   moveSelectedSvgObjectBackward,
   sendSelectedSvgObjectToBack,
   bringSelectedSvgObjectToFront,
-} = useSvgObjects(useImageStore(), useHistoryStore(), useViewportStore(), useEditorStore(), t);
+} = useSvgObjects(useImageStore(), useHistoryStore(), useViewportStore(), useEditorStore(), useUiStore(), t);
 
 </script>
 
