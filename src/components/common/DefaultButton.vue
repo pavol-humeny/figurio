@@ -32,6 +32,10 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
+  main: {
+    type: Boolean,
+    default: false,
+  }
 })
 
 /**
@@ -48,11 +52,11 @@ const emit = defineEmits(['click'])
       'button-text': props.onlyText,
       'button-default': !props.onlyText,
       'disabled': props.disabled,
+      'button-main': props.main,
     }">
       {{ props.text }}
     </button>
   </ItemTip>
 </template>
 
-<style scoped>
-</style>
+<style scoped></style>

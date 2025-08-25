@@ -27,7 +27,7 @@ const { applyGrayscale, isGrayscaleApplied } = useGrayscaleTool(
         <div class="settings-content-wrapper">
           <div class="content-wrapper">
             <DefaultButton :text="$t('tools.grayscale.settings.convertToGrayscaleButton.text')" @click="applyGrayscale"
-              :disabled="isGrayscaleApplied" />
+              :disabled="isGrayscaleApplied" main />
           </div>
         </div>
 

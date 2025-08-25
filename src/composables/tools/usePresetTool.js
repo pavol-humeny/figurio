@@ -208,20 +208,14 @@ export function usePresetTool(
     (enabled) => {
       isPresetModified.value = true
       if (enabled) {
-        // Set default values for frame if not already set
-        if (
-          !localImageFrame.value.type ||
-          !localImageFrame.value.color ||
-          localImageFrame.value.width == null
-        ) {
-          localImageFrame.value.type = 'frameSolid'
-          localImageFrame.value.color = '#000000'
-          localImageFrame.value.width = 0
-          localImageFrame.value.phoneHeaderTimeInMinutes = 610
-          localImageFrame.value.phoneHeaderTextColor = '#000000'
-          localImageFrame.value.phoneHeaderBackgroundColor = '#ffffff'
-          localImageFrame.value.headerFooterMultiplier = 1
-        }
+        // Set default values for frame after enable
+        localImageFrame.value.type = 'frameSolid'
+        localImageFrame.value.color = '#000000'
+        localImageFrame.value.width = 1
+        localImageFrame.value.phoneHeaderTimeInMinutes = 610
+        localImageFrame.value.phoneHeaderTextColor = '#000000'
+        localImageFrame.value.phoneHeaderBackgroundColor = '#ffffff'
+        localImageFrame.value.headerFooterMultiplier = 1
       }
     },
   )
@@ -489,15 +483,23 @@ export function usePresetTool(
         } else if (operation.type === 'flip') {
           await useFlipTool(imageStore, historyStore, t).applyFlipRender(operation.direction)
         } else if (operation.type === 'autoCrop') {
-          await useCropTool(imageStore, viewportStore, editorStore, historyStore, t).applyAutoCropPreset(
-            operation.color,
-          )
+          await useCropTool(
+            imageStore,
+            viewportStore,
+            editorStore,
+            historyStore,
+            t,
+          ).applyAutoCropPreset(operation.color)
         } else if (operation.type === 'grayscale') {
           await useGrayscaleTool(imageStore, historyStore).applyGrayscaleRender()
         } else if (operation.type === 'crop') {
-          await useCropTool(imageStore, viewportStore, editorStore, historyStore, t).applyCropRender(
-            operation.cropBox,
-          )
+          await useCropTool(
+            imageStore,
+            viewportStore,
+            editorStore,
+            historyStore,
+            t,
+          ).applyCropRender(operation.cropBox)
         } else if (operation.type === 'resize') {
           await useResizeTool(imageStore, historyStore, viewportStore, t).applyResizeRender(
             operation.resizeDimensions.width,

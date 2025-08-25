@@ -85,6 +85,18 @@
   transition: var(--default-transition);
 }
 
+.button-main{
+  background:  var(--primary-c);
+  color: var(--secondary-c);
+}
+
+.button-main:hover {
+  background: var(--secondary-c);
+  color: var(--primary-c);
+  border-color: var(--primary-c );
+}
+
+
 /* Animation window shake styles */
 @keyframes shake {
   0% {

@@ -229,7 +229,7 @@ const {
         <div class="settings-content-wrapper">
           <div class="content-wrapper">
             <div class="content-button">
-              <DefaultButton :text="$t('tools.crop.settings.general.applyCropButton.text')" @click="applyCrop" />
+              <DefaultButton :text="$t('tools.crop.settings.general.applyCropButton.text')" @click="applyCrop" main />
             </div>
           </div>
         </div>

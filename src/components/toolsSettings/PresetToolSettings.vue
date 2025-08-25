@@ -136,7 +136,7 @@ const tabs = ['myPresets', 'createPreset']
             <div class="content-title">
               <div class="content-button">
                 <DefaultButton :text="$t('tools.preset.settings.myPresets.applyPresetButton.text')"
-                  @click="applyPreset()" />
+                  @click="applyPreset()" main />
               </div>
             </div>
           </div>
@@ -327,7 +327,7 @@ const tabs = ['myPresets', 'createPreset']
         <div class="settings-content-wrapper" v-if="presetsOptions.length > 0 && selectedPresetName !== ''">
           <div class="content-wrapper">
             <DefaultButton v-if="isModifyingPreset && isPresetModified"
-              :text="t('tools.preset.settings.myPresets.savePresetButton.text')" @click="savePresetChanges()" />
+              :text="t('tools.preset.settings.myPresets.savePresetButton.text')" @click="savePresetChanges()" main />
             <DefaultButton v-if="isModifyingPreset"
               :text="t('tools.preset.settings.myPresets.closeModifyingButton.text')" @click="closeModifyPreset()" />
             <DefaultButton v-else-if="!isModifyingPreset"
@@ -388,7 +388,7 @@ const tabs = ['myPresets', 'createPreset']
             <div class="content-button">
               <DefaultButton :text="t('tools.preset.settings.createPreset.useCurrentModifications.text')"
                 :tip="t('tools.preset.settings.createPreset.useCurrentModifications.tip')"
-                @click="useCurrentValues()" />
+                @click="useCurrentModifications()" />
             </div>
           </div>
         </div>

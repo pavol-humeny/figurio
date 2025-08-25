@@ -584,6 +584,7 @@ export const useImageStore = defineStore('imageStore', {
         // Reset image store for new file
         this.resetImageStoreForNewFile()
 
+        // Deselect object
         editorStore.isSvgObjectSelected = false
       }
 

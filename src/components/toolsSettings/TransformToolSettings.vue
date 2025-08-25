@@ -66,7 +66,7 @@ const tabs = ['rotate', 'flip', 'resize']
             </div>
             <div class="content-button">
               <DefaultButton :text="$t('tools.transform.settings.rotate.applyRotationButton.text')"
-                @click="applyRotation(-90)" />
+                @click="applyRotation(-90)" main />
             </div>
           </div>
         </div>
@@ -82,7 +82,7 @@ const tabs = ['rotate', 'flip', 'resize']
             </div>
             <div class="content-button">
               <DefaultButton :text="$t('tools.transform.settings.rotate.applyRotationButton.text')"
-                @click="applyRotation(90)" />
+                @click="applyRotation(90)" main />
             </div>
           </div>
         </div>
@@ -106,7 +106,7 @@ const tabs = ['rotate', 'flip', 'resize']
             </div>
             <div class="content-button">
               <DefaultButton :text="$t('tools.transform.settings.flip.applyFlipButton.text')"
-                @click="applyFlip('horizontal')" />
+                @click="applyFlip('horizontal')" main />
             </div>
           </div>
         </div>
@@ -122,7 +122,7 @@ const tabs = ['rotate', 'flip', 'resize']
             </div>
             <div class="content-button">
               <DefaultButton :text="$t('tools.transform.settings.flip.applyFlipButton.text')"
-                @click="applyFlip('vertical')" />
+                @click="applyFlip('vertical')" main />
             </div>
           </div>
         </div>
