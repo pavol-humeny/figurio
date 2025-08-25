@@ -439,6 +439,7 @@ export const useImageStore = defineStore('imageStore', {
 
       // Also reset rendered images
       this.setRenderedImage(null)
+      this.newRenderedImage = null
     },
 
     /**
@@ -568,6 +569,7 @@ export const useImageStore = defineStore('imageStore', {
       const uiStore = useUiStore()
       const historyStore = useHistoryStore()
       const viewportStore = useViewportStore()
+      const editorStore = useEditorStore()
 
       // Reset state for new file (update current tab state)
       if (file !== null) {
@@ -581,6 +583,8 @@ export const useImageStore = defineStore('imageStore', {
 
         // Reset image store for new file
         this.resetImageStoreForNewFile()
+
+        editorStore.isSvgObjectSelected = false
       }
 
       this.file = file
@@ -1305,18 +1309,19 @@ export const useImageStore = defineStore('imageStore', {
               }
             }
 
+            // Line end
             if (attrs['marker-end']) {
               const arrowSize = 6 * strokeWidth
               const dxArrow = x2 - x1
               const dyArrow = y2 - y1
               const lineAngle = Math.atan2(dyArrow, dxArrow)
 
-              // Posunutie šípky dopredu o polovicu arrowSize
+              // Move arrow by half its size
               const offsetXArrow = Math.cos(lineAngle) * (arrowSize / 2)
               const offsetYArrow = Math.sin(lineAngle) * (arrowSize / 2)
 
-              // Body šípky v lokálnych súradniciach (trojuholník)
-              const tip = { x: 0, y: 0 } // špička šípky
+              // Arrow body in local coordinates (triangle)
+              const tip = { x: 0, y: 0 }
               const left = { x: -arrowSize, y: arrowSize / 2 }
               const right = { x: -arrowSize, y: -arrowSize / 2 }
 
@@ -1338,7 +1343,7 @@ export const useImageStore = defineStore('imageStore', {
                 y: rotatePoint(right, lineAngle).y + y2 + offsetYArrow,
               }
 
-              // Nakresli obvod šípky
+              // Draw arrow outline
               page.drawLine({
                 start: tipGlobal,
                 end: leftGlobal,
@@ -1361,7 +1366,7 @@ export const useImageStore = defineStore('imageStore', {
                 opacity,
               })
 
-              // Rozdel základňu šípky na malé body a nakresli vnútorné čiarové ventilátory
+              // Draw fill of arrow
               const segments = Math.max(2, Math.ceil(arrowSize / (strokeWidth / 1.5)))
               for (let i = 0; i <= segments; i++) {
                 const t = i / segments
@@ -1376,7 +1381,7 @@ export const useImageStore = defineStore('imageStore', {
                 })
               }
 
-              // Nakresli malé kruhy v rohoch
+              // Draw small circles at the corners
               ;[tipGlobal, leftGlobal, rightGlobal].forEach((pt) => {
                 page.drawCircle({
                   x: pt.x,
