@@ -194,5 +194,6 @@ const { wrapperRef, subToolPos, onMouseEnter, onMouseLeave, onClickTab, onClickT
   display: flex;
   flex-direction: column;
   align-items: center;
+  width: 45px;
 }
 </style>

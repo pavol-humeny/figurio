@@ -37,8 +37,9 @@ export function useOneTool(editorStore, imageStore, props, emit) {
 
     await nextTick()
     const rect = wrapperRef.value.getBoundingClientRect()
+
     subToolPos.value = {
-      top: rect.top - 10,
+      top: rect.top - props.tool.subTools.length * 50,
       left: rect.right + 20,
     }
     editorStore.setToolWithOpenSubTools(props.tool.key)

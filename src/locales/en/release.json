@@ -17,7 +17,8 @@
           "Added the ability to drag and drop an image while editing another image",
           "Smoother crop box pan and resize",
           "Select tool can start selection also from outside of image",
-          "The Object can be manipulated by holding the selected area and not just the object."
+          "The Object can be manipulated by holding the selected area and not just the object.",
+          "Different style of apply button from other buttons"
         ]
       },
       "bugFixes": {
@@ -34,7 +35,8 @@
       },
       "knownIssues": {
         "items": [
-          "Blur area tool is disabled"
+          "Blur area tool is disabled",
+          "Close button and VSCode logo in frames are not shown when exporting PDF file to PDF"
         ]
       }
     },
