@@ -1777,7 +1777,6 @@ export const useImageStore = defineStore('imageStore', {
 
         this.frameSvg = cleanedSvg
 
-        console.log('Vector export only, stored SVG frame:', this.frameSvg)
         return
       }
 

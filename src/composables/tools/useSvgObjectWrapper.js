@@ -213,9 +213,10 @@ export function useSvgObjectWrapper(
    */
   const isRotating = ref(false)
   /**
-   * Absolute starting angle of mouse and center when rotation begins
+   * Starting mouse position when rotation begins
    */
-  const startAngle = ref(0)
+  const startMouseX = ref(0)
+  const startMouseY = ref(0)
   /**
    * Original angle of the object before rotation starts
    */
@@ -326,12 +327,11 @@ export function useSvgObjectWrapper(
 
     const { attrs } = object.value
 
-    const { cx, cy } = getObjectCenter(object.value)
+    // Save start mouse position
+    startMouseX.value = mouseX
+    startMouseY.value = mouseY
 
-    const dx = mouseX - cx
-    const dy = mouseY - cy
-    startAngle.value = Math.atan2(dy, dx) * (180 / Math.PI)
-
+    // Save original object angle
     const match = attrs.transform?.match(/rotate\((-?\d+\.?\d*)/)
     originalAngle.value = match ? parseFloat(match[1]) : 0
 
@@ -362,10 +362,11 @@ export function useSvgObjectWrapper(
    * @returns {number}
    */
   const normalizeAngle = (angle) => {
-    let a = angle % 360
-    if (a > 180) a -= 360
-    if (a < -180) a += 360
-    return a
+    let newAngle = angle % 360
+    if (newAngle > 180) newAngle -= 360
+    if (newAngle < -180) newAngle += 360
+
+    return newAngle
   }
 
   /**
@@ -410,17 +411,24 @@ export function useSvgObjectWrapper(
 
       const { cx, cy } = getObjectCenter(object.value)
 
-      const dx = mouseX - cx
-      const dy = mouseY - cy
-      const currentAngle = Math.atan2(dy, dx) * (180 / Math.PI)
+      // Vector from center to start mouse position
+      const startVectorX = startMouseX.value - cx
+      const startVectorY = startMouseY.value - cy
+      const startVectorAngle = Math.atan2(startVectorY, startVectorX)
 
-      let angleDelta = currentAngle - startAngle.value
+      // Vector from center to current mouse position
+      const currentVectorX = mouseX - cx
+      const currentVectorY = mouseY - cy
+      const currentVectorAngle = Math.atan2(currentVectorY, currentVectorX)
 
-      // Normalize delta to [-180, 180]
+      // Delta angle between start and current vector
+      let angleDelta = (currentVectorAngle - startVectorAngle) * (180 / Math.PI)
+
       if (angleDelta > 180) angleDelta -= 360
       if (angleDelta < -180) angleDelta += 360
 
-      let finalAngle = round(originalAngle.value + angleDelta * rotationSensitivity.value, 1)
+      // Apply sensitivity and original angle
+      let finalAngle = round(originalAngle.value + angleDelta * rotationSensitivity.value)
       finalAngle = normalizeAngle(finalAngle)
 
       // Snap to closest multiple of 45° if Ctrl/Meta is held
@@ -871,51 +879,6 @@ export function useSvgObjectWrapper(
     if (isDragging.value) {
       let offsetX = dx
       let offsetY = dy
-
-      // TODO - toto je bez riesenia prichytavania ak je objekt otoceny (okrem obdlznika tam to uze je)
-      // if (isCtrlKey) {
-      //   if ('x' in attrs && 'y' in attrs && tag !== 'text') {
-      //     const bbox = getTransformedBoundingBox(object.value)
-      //     if (bbox) {
-      //       const snap = getSnapOffsetToEdges(
-      //         bbox.left + dx,
-      //         bbox.right + dx,
-      //         bbox.top + dy,
-      //         bbox.bottom + dy,
-      //       )
-      //       offsetX += snap.dx
-      //       offsetY += snap.dy
-      //     }
-      //   } else if (tag === 'text' && object.value.textBBox) {
-      //     const bbox = object.value.textBBox
-      //     const snap = getSnapOffsetToEdges(
-      //       bbox.x + dx,
-      //       bbox.x + bbox.width + dx,
-      //       bbox.y + dy,
-      //       bbox.y + bbox.height + dy,
-      //     )
-      //     offsetX += snap.dx
-      //     offsetY += snap.dy
-      //   } else if ('cx' in attrs && 'cy' in attrs && 'rx' in attrs && 'ry' in attrs) {
-      //     const snap = getSnapOffsetToEdges(
-      //       attrs.cx - attrs.rx + dx,
-      //       attrs.cx + attrs.rx + dx,
-      //       attrs.cy - attrs.ry + dy,
-      //       attrs.cy + attrs.ry + dy,
-      //     )
-      //     offsetX += snap.dx
-      //     offsetY += snap.dy
-      //   } else if ('x1' in attrs && 'x2' in attrs && 'y1' in attrs && 'y2' in attrs) {
-      //     const xMin = Math.min(attrs.x1, attrs.x2)
-      //     const xMax = Math.max(attrs.x1, attrs.x2)
-      //     const yMin = Math.min(attrs.y1, attrs.y2)
-      //     const yMax = Math.max(attrs.y1, attrs.y2)
-
-      //     const snap = getSnapOffsetToEdges(xMin + dx, xMax + dx, yMin + dy, yMax + dy)
-      //     offsetX += snap.dx
-      //     offsetY += snap.dy
-      //   }
-      // }
 
       if (isCtrlKey && onlyOneKeyPressed) {
         const bbox = getTransformedBoundingBox(object.value)
