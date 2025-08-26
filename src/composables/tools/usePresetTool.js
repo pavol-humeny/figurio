@@ -489,7 +489,7 @@ export function usePresetTool(
             editorStore,
             historyStore,
             t,
-          ).applyAutoCropPreset(operation.color)
+          ).applyAutoCropPreset()
         } else if (operation.type === 'grayscale') {
           await useGrayscaleTool(imageStore, historyStore).applyGrayscaleRender()
         } else if (operation.type === 'crop') {
@@ -559,7 +559,6 @@ export function usePresetTool(
     },
     autoCrop: {
       enabled: false,
-      color: '#000000',
     },
     grayscale: {
       enabled: false,
@@ -697,7 +696,6 @@ export function usePresetTool(
       },
       autoCrop: {
         enabled: false,
-        color: '#000000',
       },
       grayscale: {
         enabled: false,
@@ -755,7 +753,6 @@ export function usePresetTool(
     if (newPreset.value.autoCrop.enabled) {
       imageOperations.push({
         type: 'autoCrop',
-        color: newPreset.value.autoCrop.color,
       })
     }
     if (newPreset.value.grayscale.enabled) {

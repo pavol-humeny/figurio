@@ -1,6 +1,5 @@
 <script setup>
 import DropdownSelect from '@/components/common/DropdownSelect.vue'
-import ColorPicker from '@/components/common/ColorPicker.vue'
 import { useI18n } from 'vue-i18n'
 import NumberInput from '@/components/common/NumberInput.vue'
 import { useImageStore } from '@/stores/imageStore'
@@ -80,7 +79,7 @@ const presetFlipOptions = [
 </script>
 
 <template>
-  <div class="operation-details" v-if="localOperation.type !== 'grayscale'">
+  <div class="operation-details" v-if="localOperation.type !== 'grayscale' && localOperation.type !== 'autoCrop'">
     <div class="content-title" :style="{ padding: '10px 0' }">
       <p>
         {{ t('tools.preset.settings.myPresets.modifyOperation') }}
@@ -104,16 +103,6 @@ const presetFlipOptions = [
           {{ t('tools.preset.settings.myPresets.presetValues.transformations.flip') }}
         </p>
         <DropdownSelect v-model="localOperation.direction" :options="presetFlipOptions" @update="update" />
-      </div>
-    </template>
-
-    <!-- AutoCrop -->
-    <template v-else-if="localOperation.type === 'autoCrop'">
-      <div class="content-aligned two-items">
-        <p>
-          {{ t('tools.preset.settings.myPresets.presetValues.autoCrop.label') }}
-        </p>
-        <ColorPicker v-model="localOperation.color" @update="update" />
       </div>
     </template>
 

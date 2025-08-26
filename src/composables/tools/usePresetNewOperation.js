@@ -71,13 +71,16 @@ export function usePresetNewOperation(imageStore, props, emit, t) {
 
   /**
    * Computed operation options based on existing image operations
-   * Do not return grayscale if it is already applied
+   * Do not return grayscale or autoCrop if it is already applied
    */
   const operationOptions = computed(() => {
     const existingTypes = props.localImageOperations?.map((op) => op.type) || []
     return baseOperationOptions.filter((opt) => {
       // If grayscale already exists, don't return it
       if (opt.value === 'grayscale' && existingTypes.includes('grayscale')) {
+        return false
+      }
+      if (opt.value === 'autoCrop' && existingTypes.includes('autoCrop')) {
         return false
       }
       return true
@@ -95,7 +98,6 @@ export function usePresetNewOperation(imageStore, props, emit, t) {
   const params = reactive({
     angle: 0,
     direction: 'horizontal',
-    color: '#000000',
     cropBox: { x: 0, y: 0, width: 0, height: 0 },
     resizeDimensions: { width: 0, height: 0 },
     // UPDATE new tool
@@ -139,7 +141,7 @@ export function usePresetNewOperation(imageStore, props, emit, t) {
     } else if (type === 'flip') {
       op = { type, direction: 'horizontal' }
     } else if (type === 'autoCrop') {
-      op = { type, color: '#000000' }
+      op = { type }
     } else if (type === 'grayscale') {
       op = { type, enable: true }
     } else if (type === 'crop') {
@@ -156,13 +158,13 @@ export function usePresetNewOperation(imageStore, props, emit, t) {
    * Emits updated operation whenever parameters change
    */
   watch(
-    () => [params.angle, params.direction, params.color, params.cropBox],
+    () => [params.angle, params.direction, params.cropBox],
     () => {
       if (!selectedType.value) return
       const op = { type: selectedType.value }
       if (selectedType.value === 'rotation') op.angle = params.angle
       if (selectedType.value === 'flip') op.direction = params.direction
-      if (selectedType.value === 'autoCrop') op.color = params.color
+      // if (selectedType.value === 'autoCrop') op.color = params.color --- IGNORE ---
       if (selectedType.value === 'grayscale') op.enable = true
       if (selectedType.value === 'crop') {
         op.cropBox = { ...params.cropBox }
@@ -230,9 +232,9 @@ export function usePresetNewOperation(imageStore, props, emit, t) {
     })
   }
 
-  onMounted(() => {
-    console.log(props.localImageOperations[0].type)
-  })
+  // onMounted(() => {
+  //   console.log(props.localImageOperations[0].type)
+  // })
 
   return {
     rotationOptions,

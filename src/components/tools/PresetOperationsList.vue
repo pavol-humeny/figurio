@@ -173,9 +173,6 @@ const imageCanBeResize = (resizeDimensions) => {
               }}
             </p>
           </div>
-          <div v-else-if="element.type === 'autoCrop'">
-            <div class="color-circle" :style="{ backgroundColor: element.color }"></div>
-          </div>
           <div v-else-if="element.type === 'crop'">
             <p>
               ({{ element.cropBox.x }}, {{ element.cropBox.y }}, {{ element.cropBox.width }},

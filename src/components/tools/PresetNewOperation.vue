@@ -1,7 +1,6 @@
 <script setup>
 import DropdownSelect from '@/components/common/DropdownSelect.vue'
 import { useI18n } from 'vue-i18n'
-import ColorPicker from '@/components/common/ColorPicker.vue'
 import NumberInput from '@/components/common/NumberInput.vue'
 import { useImageStore } from '@/stores/imageStore'
 import LinkValuesIcon from '@/components/common/LinkValuesIcon.vue'
@@ -69,18 +68,15 @@ const {
       <p v-else-if="selectedType === 'flip'">
         {{ t('tools.preset.settings.myPresets.presetValues.transformations.flip') }}
       </p>
-      <p v-else-if="selectedType === 'autoCrop'">
+      <!-- <p v-else-if="selectedType === 'autoCrop'">
         {{ t('tools.preset.settings.myPresets.presetValues.autoCrop.label') }}
-      </p>
+      </p> -->
 
       <!-- Rotate -->
       <DropdownSelect v-if="selectedType === 'rotation'" v-model="params.angle" :options="rotationOptions" />
 
       <!-- Flip -->
       <DropdownSelect v-if="selectedType === 'flip'" v-model="params.direction" :options="flipOptions" />
-
-      <!-- AutoCrop -->
-      <ColorPicker v-if="selectedType === 'autoCrop'" v-model="params.color" />
 
       <!-- Crop -->
       <div class="crop-inputs" v-if="selectedType === 'crop'">

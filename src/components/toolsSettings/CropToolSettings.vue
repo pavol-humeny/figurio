@@ -9,11 +9,10 @@ import { useI18n } from 'vue-i18n'
 import NumberInput from '../common/NumberInput.vue'
 import LinkValuesIcon from '../common/LinkValuesIcon.vue'
 import DefaultButton from '../common/DefaultButton.vue'
-import ColorPicker from '../common/ColorPicker.vue'
 import ToggleButton from '../common/ToggleButton.vue'
 import StepperInput from '../common/StepperInput.vue'
 import DefaultSlider from '../common/DefaultSlider.vue'
-
+import NumberDropdownInput from '../common/NumberDropdownInput.vue'
 
 const { t } = useI18n()
 
@@ -42,7 +41,6 @@ const {
   resetCrop,
   cropCanBeReset,
   // Auto crop
-  selectedColor,
   useBaseImage,
   fitCrop,
   manualIndents,
@@ -52,6 +50,7 @@ const {
   hideArtifacts,
   isArtifactsVisible,
   autoCropThreshold,
+  autoCropThresholdOptions,
   resetThreshold,
 } = useCropTool(useImageStore(), useViewportStore(), useEditorStore(), useHistoryStore(), t)
 
@@ -137,15 +136,6 @@ const {
           <div class="content-wrapper">
             <div class="content-aligned two-items">
               <p style="text-align: start">
-                {{ $t('tools.crop.settings.general.autoCrop.autoCropColor.title') }}
-              </p>
-              <ColorPicker v-model="selectedColor" :tip="$t('tools.crop.settings.general.autoCrop.autoCropColor.tip')"
-                position="bottom-left" />
-            </div>
-          </div>
-          <div class="content-wrapper">
-            <div class="content-aligned two-items">
-              <p style="text-align: start">
                 {{ $t('tools.crop.settings.general.autoCrop.useBaseImage.title') }}
               </p>
               <ToggleButton v-model="useBaseImage" :scale="0.6" :style="{ transform: 'translateX(16px)' }"
@@ -158,9 +148,12 @@ const {
               <div class="content-title">
                 {{ $t('tools.crop.settings.general.autoCrop.sensitivity.title') }}
               </div>
-              <DefaultSlider v-model="autoCropThreshold" :min="0" :max="1" :step="0.01" showValue
+              <!-- <DefaultSlider v-model="autoCropThreshold" :min="0" :max="1" :step="0.01" showValue
                 :tip="$t('tools.crop.settings.general.autoCrop.sensitivity.tip')" position="bottom-left"
-                :onReset="resetThreshold" />
+                :onReset="resetThreshold" /> -->
+              <NumberDropdownInput v-model="autoCropThreshold" :min="0" :max="0.9" :step="0.01"
+                :options="autoCropThresholdOptions" :tip="$t('tools.crop.settings.general.autoCrop.sensitivity.tip')"
+                position="bottom-left" />
             </div>
           </div>
 

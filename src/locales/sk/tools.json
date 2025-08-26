@@ -128,7 +128,7 @@
           },
           "useBaseImage": {
             "title": "Použiť pôvodný obrázok",
-            "tip": "Povoliť alebo zakázať použitie pôvodného obrázka pre výpočet automatického orezania"
+            "tip": "Použiť pôvodný obrázok na výpočet orezania alebo vypočítať z aktuálneho orezania"
           },
           "fitCropButton": {
             "text": "Orezať na tesno"

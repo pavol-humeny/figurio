@@ -136,7 +136,8 @@ const tabs = ['myPresets', 'createPreset']
             <div class="content-title">
               <div class="content-button">
                 <DefaultButton :text="$t('tools.preset.settings.myPresets.applyPresetButton.text')"
-                  @click="applyPreset()" main />
+                  @click="applyPreset()" main
+                  :disabled="localImageOperations.length === 0 && !localImageFrame.enabled" />
               </div>
             </div>
           </div>
@@ -444,12 +445,6 @@ const tabs = ['myPresets', 'createPreset']
               </p>
               <ToggleButton v-model="newPreset.autoCrop.enabled" :scale="0.6"
                 :style="{ transform: 'translateX(16px)' }" />
-            </div>
-            <div class="content-aligned two-items" :class="newPreset.autoCrop.enabled ? '' : 'disabled'">
-              <p>
-                {{ t('tools.preset.settings.createPreset.presetValues.autoCrop.color') }}
-              </p>
-              <ColorPicker v-model="newPreset.autoCrop.color" />
             </div>
           </div>
         </div>

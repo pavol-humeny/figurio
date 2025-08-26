@@ -128,7 +128,7 @@
           },
           "useBaseImage":{
             "title": "Use base image",
-            "tip": "Enable or disable the use of the base image for calculating auto crop"
+            "tip": "Use base image to calculate crop or calculate from current crop box"
           },
           "fitCropButton": {
             "text": "Fit crop"

@@ -128,7 +128,7 @@
           },
           "useBaseImage": {
             "title": "Použít původní obrázek",
-            "tip": "Povolit nebo zakázat použití původního obrázku pro výpočet automatického ořezání"
+            "tip": "Použít původní obrázek na výpočet ořezání nebo vypočítat z aktuálního ořezání"
           },
           "fitCropButton": {
             "text": "Ořezat na těsno"
