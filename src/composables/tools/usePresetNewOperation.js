@@ -1,5 +1,5 @@
 import { useMath } from '@/composables/common/useMath'
-import { ref, computed, watch, reactive, nextTick, onMounted } from 'vue'
+import { ref, computed, watch, reactive, nextTick } from 'vue'
 
 /**
  * Logic for managing new preset operation creation
@@ -231,10 +231,6 @@ export function usePresetNewOperation(imageStore, props, emit, t) {
       cropWidthInputRef.value?.setValue(params.cropBox.width)
     })
   }
-
-  // onMounted(() => {
-  //   console.log(props.localImageOperations[0].type)
-  // })
 
   return {
     rotationOptions,

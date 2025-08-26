@@ -357,6 +357,15 @@ export function useViewportWrapper(viewportStore, imageStore, editorStore, uiSto
     if (!wrapperRef.value || !contentRef.value) return
     fitToScreenZoomLevel()
 
+    centerImagePosition()
+  }
+
+  /**
+   * Center the image position in the viewport
+   */
+  const centerImagePosition = () => {
+    if (!wrapperRef.value || !contentRef.value) return
+
     updateInitialDimensions()
     updateZoomDependentDimensions()
 
@@ -444,6 +453,19 @@ export function useViewportWrapper(viewportStore, imageStore, editorStore, uiSto
         centerImage()
         viewportStore.shouldFitToScreen = false
       }
+    },
+    { immediate: true },
+  )
+
+  /**
+   * Center image position when close or open right panel
+   */
+  watch(
+    () => uiStore.rightPanelOpen,
+    () => {
+      nextTick(() => {
+        centerImagePosition()
+      })
     },
     { immediate: true },
   )
