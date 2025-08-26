@@ -9,7 +9,8 @@
       },
       "bugFixes": {
         "items": [
-          "Auto crop can detect transparent background"
+          "Auto crop can detect transparent background",
+          "Close button and VSCode logo in frames are shown when exporting PDF file to PDF"
         ]
       }
     },

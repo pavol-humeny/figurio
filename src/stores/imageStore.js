@@ -1170,7 +1170,6 @@ export const useImageStore = defineStore('imageStore', {
          * @param {number} offsetY - y offset
          */
         const drawSvgElement = async (page, tag, attrs, finalHeight, offsetX = 0, offsetY = 0) => {
-          // TODO - svg defs
           const strokeColor = attrs.stroke
             ? rgb(...Object.values(hexToRgb(attrs.stroke)))
             : undefined
@@ -1484,7 +1483,6 @@ export const useImageStore = defineStore('imageStore', {
             }
           }
 
-          // TODO - cross and VSCode logo
           if (tag === 'path') {
             const fillColor =
               attrs.fill && attrs.fill !== 'none'
@@ -1493,10 +1491,35 @@ export const useImageStore = defineStore('imageStore', {
             const strokeColor = attrs.stroke
               ? rgb(...Object.values(hexToRgb(attrs.stroke)))
               : undefined
-            const strokeWidth = parseNum(attrs['stroke-width'], 1)
-            const d = attrs.d
+            const strokeWidth = parseNum(attrs['stroke-width'], 0)
+            let d = attrs.d
+
+            let offsetX = 0
+            let offsetY = 0
+            let scale = 1
+
+            // Parse transform attributes
+            if (attrs.transform) {
+              const translateMatch = attrs.transform.match(/translate\(([^)]+)\)/)
+              if (translateMatch) {
+                const offsets = translateMatch[1]
+                  .split(/[, ]+/)
+                  .map((n) => n.trim())
+                  .filter((n) => n !== '')
+                  .map(Number)
+                offsetX = offsets[0] || 0
+                offsetY = offsets[1] || 0
+              }
+              const scaleMatch = attrs.transform.match(/scale\(([^)]+)\)/)
+              if (scaleMatch) {
+                scale = parseFloat(scaleMatch[1])
+              }
+            }
 
             page.drawSvgPath(d, {
+              x: offsetX,
+              y: finalHeight - offsetY,
+              scale,
               color: fillColor,
               borderColor: strokeColor,
               borderWidth: strokeWidth,
@@ -1602,21 +1625,6 @@ export const useImageStore = defineStore('imageStore', {
       const staticDefs = `
         <marker id="arrow-end" markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto" markerUnits="strokeWidth">
           <path d="M0,0 L0,6 L6,3 z" fill="context-stroke" />
-        </marker>
-        <marker id="arrow-start" markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto-start-reverse" markerUnits="strokeWidth">
-          <path d="M0,0 L0,6 L6,3 z" fill="context-stroke" />
-        </marker>
-        <marker id="circle-end" markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto" markerUnits="strokeWidth">
-          <circle cx="3" cy="3" r="2" fill="context-stroke" />
-        </marker>
-        <marker id="circle-start" markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto" markerUnits="strokeWidth">
-          <circle cx="3" cy="3" r="2" fill="context-stroke" />
-        </marker>
-        <marker id="square-end" markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto" markerUnits="strokeWidth">
-          <rect x="1.5" y="1.5" width="3" height="3" fill="context-stroke" />
-        </marker>
-        <marker id="square-start" markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto" markerUnits="strokeWidth">
-          <rect x="1.5" y="1.5" width="3" height="3" fill="context-stroke" />
         </marker>
         `.trim()
 
