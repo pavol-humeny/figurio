@@ -16,6 +16,13 @@ const releases = computed(() => {
 });
 
 /**
+ * Computed property for currently in progress items
+ */
+const currentlyInProgress = computed(() => {
+  return messages.value[locale.value]?.release?.inProgressGlobal?.items || [];
+});
+
+/**
  * Logic of the shake animation for modal
  */
 const {
@@ -44,7 +51,7 @@ const {
     <div v-if="isVisible" class="release-modal-overlay" @click.self="triggerShake">
       <div class="modal-box" :class="{ shake: isShaking }">
         <div class="title-wrapper">
-          <BaseIcon name="IconReleaseNotes" size="28" color="var(--primary-c)"/>
+          <BaseIcon name="IconReleaseNotes" size="28" color="var(--primary-c)" />
           <p>{{ $t('release.title') }}</p>
         </div>
 
@@ -52,6 +59,15 @@ const {
           <!-- Arrow up -->
           <div v-if="!atTop" class="arrow-up" @click="scrollUp">
             <BaseIcon name="IconArrowUp" size="24" color="var(--primary-c)" />
+          </div>
+
+          <div class="release-block">
+            <p class="release-global-texts">
+              {{ $t('release.inProgressGlobal.currentlyInProgressText') }}
+            </p>
+            <ul class="dot-paragraph">
+              <li v-for="(item, i) in currentlyInProgress" :key="i">{{ item }}</li>
+            </ul>
           </div>
 
           <!-- Patch notes content -->

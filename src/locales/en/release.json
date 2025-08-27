@@ -1,4 +1,11 @@
 {
+  "inProgressGlobal": {
+    "currentlyInProgressText": "Currently in progress improvements",
+    "items": [
+      "Magnify area tool improvements", 
+      "SVG objects export enhancements"
+    ]
+  },
   "versions":{
     "3.2.0":{
       "label": "3.2.0",

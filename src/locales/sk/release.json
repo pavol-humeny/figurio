@@ -1,4 +1,11 @@
 {
+  "inProgressGlobal": {
+    "currentlyInProgressText": "Aktuálne prebiehajúce vylepšenia",
+    "items": [
+      "Vylepšenie nástroja zväčšená oblasť",
+      "Vylepšenie exportu SVG objektov"
+    ]
+  },
   "versions": {
     "3.2.0": {
       "label": "3.2.0",
