@@ -10,9 +10,7 @@ import { useViewportStore } from '@/stores/viewportStore';
 import NumberInput from '../common/NumberInput.vue';
 import LinkValuesIcon from '../common/LinkValuesIcon.vue';
 import DefaultButton from '../common/DefaultButton.vue';
-import DropdownSelect from '../common/DropdownSelect.vue';
 import DefaultSlider from '../common/DefaultSlider.vue';
-import ColorPicker from '../common/ColorPicker.vue';
 import { useUiStore } from '@/stores/uiStore';
 
 const { t } = useI18n();
@@ -146,7 +144,7 @@ const {
             </p>
           </div>
           <div class="content-wrapper">
-            <DefaultSlider v-model="localBlurSettings.blurStrength" :min="0" :max="10" :step="1"
+            <DefaultSlider v-model="localBlurSettings.blurStrength" :min="1" :max="10" :step="1"
               @update="applyLocalBlurSettings(false)" @commit="applyLocalBlurSettings(true)" showValue
               :tip="$t('tools.blur.settings.general.blurStrength.tip')" position="bottom-left" />
           </div>
@@ -161,16 +159,18 @@ const {
               </p>
             </div>
             <DefaultButton :text="$t('tools.blur.settings.general.zIndex.bringToFrontButton.text')"
-              @click="bringSelectedSvgObjectToFront" :disabled="imageStore.isMaxZIndexOfSelectedSvgObject()" />
+              @click="bringSelectedSvgObjectToFront(t, true)"
+              :disabled="imageStore.isMaxZIndexOfSelectedBlurObject()" />
 
             <DefaultButton :text="$t('tools.blur.settings.general.zIndex.moveForwardButton.text')"
-              @click="moveSelectedSvgObjectForward" :disabled="imageStore.isMaxZIndexOfSelectedSvgObject()" />
+              @click="moveSelectedSvgObjectForward(t, true)" :disabled="imageStore.isMaxZIndexOfSelectedBlurObject()" />
 
             <DefaultButton :text="$t('tools.blur.settings.general.zIndex.moveBackwardButton.text')"
-              @click="moveSelectedSvgObjectBackward" :disabled="imageStore.isMinZIndexOfSelectedSvgObject()" />
+              @click="moveSelectedSvgObjectBackward(t, true)"
+              :disabled="imageStore.isMinZIndexOfSelectedBlurObject()" />
 
             <DefaultButton :text="$t('tools.blur.settings.general.zIndex.sendToBackButton.text')"
-              @click="sendSelectedSvgObjectToBack" :disabled="imageStore.isMinZIndexOfSelectedSvgObject()" />
+              @click="sendSelectedSvgObjectToBack(t, true)" :disabled="imageStore.isMinZIndexOfSelectedBlurObject()" />
           </div>
         </div>
 

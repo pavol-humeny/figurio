@@ -58,7 +58,7 @@ export function useFlipTool(imageStore, historyStore, t) {
       await imageStore.rasterizeBaseImage(t)
     }
 
-    if (imageStore.svgObjects.length > 0) {
+    if (imageStore.svgObjects.length > 0 || imageStore.blurObjects.length > 0) {
       const confirmed = await showConfirmModal(
         t('tools.confirmNeedRasterization.title'),
         t('tools.confirmNeedRasterization.message'),

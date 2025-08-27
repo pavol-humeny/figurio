@@ -141,7 +141,7 @@ export function useSvgFunctions(imageStore) {
    * @returns {Array<{left: number, right: number, top: number, bottom: number}>}
    */
   const getSnapEdgeTargets = (object) => {
-    const targets = imageStore.svgObjects
+    const targets = [...(imageStore.svgObjects || []), ...(imageStore.blurObjects || [])]
       .filter((o) => o.id !== object.id)
       .map((o) => getTransformedBoundingBox(o))
       .filter(Boolean)

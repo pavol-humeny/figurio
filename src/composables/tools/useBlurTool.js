@@ -13,7 +13,6 @@ const localBlurSettings = ref({
   height: 0,
   rotation: 0,
   blurStrength: 5,
-  filter: null,
 })
 
 /**
@@ -105,10 +104,17 @@ export function useBlurTool(imageStore, historyStore, editorStore, t) {
   const isDimensionsLinked = ref(true)
 
   // --------------------------------
-  // Filter
+  // Defs
   // --------------------------------
   /**
-   * Vytvorí alebo prepíše clipPath pre blur objekt
+   * Adds or replaces a clipPath definition for the blur object
+   * @param {string} id - The ID of the blur object
+   * @param {Object} params - The parameters for the clipPath
+   * @param {number} params.x - The x position of the clipPath
+   * @param {number} params.y - The y position of the clipPath
+   * @param {number} params.width - The width of the clipPath
+   * @param {number} params.height - The height of the clipPath
+   * @param {number} params.rotation - The rotation of the clipPath
    */
   const addOrReplaceClipDef = (id, { x, y, width, height, rotation }) => {
     const cx = x + width / 2
@@ -124,7 +130,9 @@ export function useBlurTool(imageStore, historyStore, editorStore, t) {
   }
 
   /**
-   * Vytvorí alebo prepíše filter pre blur objekt
+   * Adds or replaces a filter definition for the blur object
+   * @param {string} id - The ID of the blur object
+   * @param {number} blurStrength - The strength of the blur
    */
   const addOrReplaceFilterDef = (id, blurStrength) => {
     const def = `
@@ -138,8 +146,8 @@ export function useBlurTool(imageStore, historyStore, editorStore, t) {
   }
 
   /**
-   * Pridá <image> element pre blur objekt do poľa blurImages
-   * @param {Object} obj - Blur objekt so všetkými atribútmi (id, clipPath, filter)
+   * Adds a <image> element for the blur object to the blurImages array
+   * @param {string} id - The ID of the blur object
    */
   const addBlurImage = (id) => {
     const imageString = `
@@ -168,7 +176,6 @@ export function useBlurTool(imageStore, historyStore, editorStore, t) {
     localBlurSettings.value.height = 0
     localBlurSettings.value.rotation = 0
     localBlurSettings.value.blurStrength = 5
-    localBlurSettings.value.filter = null
 
     activeObject.value = null
   }
@@ -200,7 +207,7 @@ export function useBlurTool(imageStore, historyStore, editorStore, t) {
             ? parseFloat(attrs.transform.match(/rotate\(([^)]+)\)/)?.[1]) || 0
             : 0
 
-          // Blur settings
+          // Blur strength
           localBlurSettings.value.blurStrength = parseFloat(attrs['data-blur-strength']) || 5
         }
       } else {
@@ -231,7 +238,7 @@ export function useBlurTool(imageStore, historyStore, editorStore, t) {
       ? parseFloat(attrs.transform.match(/rotate\(([^)]+)\)/)?.[1]) || 0
       : 0
 
-    // Clip path
+    // Update clip path
     addOrReplaceClipDef(object.id, {
       x: attrs.x,
       y: attrs.y,
@@ -252,8 +259,6 @@ export function useBlurTool(imageStore, historyStore, editorStore, t) {
     const object = activeObject.value
     if (!object) return
 
-    console.log('Applying local blur settings:')
-
     const { id } = activeObject.value
     const settings = localBlurSettings.value
     const { attrs } = object
@@ -270,6 +275,7 @@ export function useBlurTool(imageStore, historyStore, editorStore, t) {
     const { cx, cy } = getObjectCenter(object)
     attrs.transform = `rotate(${settings.rotation}, ${cx}, ${cy})`
 
+    // Defs
     addOrReplaceClipDef(id, {
       x: settings.x,
       y: settings.y,
@@ -280,6 +286,7 @@ export function useBlurTool(imageStore, historyStore, editorStore, t) {
 
     addOrReplaceFilterDef(id, settings.blurStrength)
 
+    // Set blur strength
     attrs['data-blur-strength'] = settings.blurStrength
 
     // Push to history only when explicitly requested
@@ -351,8 +358,7 @@ export function useBlurTool(imageStore, historyStore, editorStore, t) {
   const getBlurAttributes = (id) => {
     const settings = { ...localBlurSettings.value }
 
-    console.log('Getting blur attributes:')
-
+    // Create new defs for new object
     addOrReplaceClipDef(id, {
       x: settings.x,
       y: settings.y,

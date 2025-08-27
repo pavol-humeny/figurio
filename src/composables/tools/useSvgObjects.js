@@ -161,6 +161,7 @@ export function useSvgObjects(imageStore, historyStore, viewportStore, editorSto
     editorStore.isSvgObjectSelected = false
 
     const idsToDelete = new Set()
+    const blurIdsToDelete = new Set()
 
     // One selected object
     if (selectedIds.length === 0) {
@@ -182,6 +183,10 @@ export function useSvgObjects(imageStore, historyStore, viewportStore, editorSto
         imageStore.deleteBlurClipById(selected.id)
         imageStore.deleteBlurFilterById(selected.id)
         imageStore.deleteBlurImageById(selected.id)
+
+        blurIdsToDelete.add(selected.id)
+      } else {
+        idsToDelete.add(selected.id)
       }
 
       imageStore.selectedSvgObjectId = null
@@ -190,8 +195,8 @@ export function useSvgObjects(imageStore, historyStore, viewportStore, editorSto
     // Multiple selected objects
     else {
       for (const id of selectedIds) {
-        idsToDelete.add(id)
         const obj = imageStore.getSvgObjectById(id)
+
         if (obj && obj.class === 'magnifyArea') {
           if (obj.subClass === 'magnify-source') {
             idsToDelete.add(obj.linkedZoomId)
@@ -204,6 +209,10 @@ export function useSvgObjects(imageStore, historyStore, viewportStore, editorSto
           imageStore.deleteBlurClipById(obj.id)
           imageStore.deleteBlurFilterById(obj.id)
           imageStore.deleteBlurImageById(obj.id)
+
+          blurIdsToDelete.add(obj.id)
+        } else {
+          idsToDelete.add(id)
         }
       }
 
@@ -216,8 +225,17 @@ export function useSvgObjects(imageStore, historyStore, viewportStore, editorSto
       .filter((i) => i !== -1)
       .sort((a, b) => b - a)
 
+    const blurIndicesToDelete = [...blurIdsToDelete]
+      .map((id) => imageStore.getIndexOfBlurObjectById(id))
+      .filter((i) => i !== -1)
+      .sort((a, b) => b - a)
+
     for (const i of indicesToDelete) {
       imageStore.svgObjects.splice(i, 1)
+    }
+
+    for (const i of blurIndicesToDelete) {
+      imageStore.blurObjects.splice(i, 1)
     }
 
     historyStore.push(imageStore.getSnapshot(t))
@@ -339,14 +357,20 @@ export function useSvgObjects(imageStore, historyStore, viewportStore, editorSto
   /**
    * Bring the selected SVG object to front
    */
-  const bringSelectedSvgObjectToFront = (t) => {
+  const bringSelectedSvgObjectToFront = (t, isBlurObject = false) => {
     if (imageStore.selectedSvgObjectId === null) return
-    const i = imageStore.getIndexOfSelectedSvgObject()
+    const i = isBlurObject
+      ? imageStore.getIndexOfSelectedBlurObject()
+      : imageStore.getIndexOfSelectedSvgObject()
+
     const object = imageStore.getSelectedSvgObject()
     if (i !== -1 && i < imageStore.svgObjects.length - 1) {
       if (object.class === 'magnifyArea') {
         const pair = imageStore.svgObjects.splice(i, 2)
         imageStore.svgObjects.push(...pair)
+      } else if (object.class === 'blur') {
+        const object = imageStore.blurObjects.splice(i, 1)[0]
+        imageStore.blurObjects.push(object)
       } else {
         const object = imageStore.svgObjects.splice(i, 1)[0]
         imageStore.svgObjects.push(object)
@@ -359,12 +383,14 @@ export function useSvgObjects(imageStore, historyStore, viewportStore, editorSto
   /**
    * Move the selected SVG object forward by one
    */
-  const moveSelectedSvgObjectForward = (t) => {
+  const moveSelectedSvgObjectForward = (t, isBlurObject = false) => {
     if (imageStore.selectedSvgObjectId === null) return
-    const i = imageStore.getIndexOfSelectedSvgObject()
+    const i = isBlurObject
+      ? imageStore.getIndexOfSelectedBlurObject()
+      : imageStore.getIndexOfSelectedSvgObject()
     const object = imageStore.getSelectedSvgObject()
     if (i !== -1 && i < imageStore.svgObjects.length - 1) {
-      const temp = imageStore.svgObjects[i]
+      const temp = isBlurObject ? imageStore.blurObjects[i] : imageStore.svgObjects[i]
 
       if (object.class === 'magnifyArea') {
         // Move magnify area object
@@ -372,6 +398,11 @@ export function useSvgObjects(imageStore, historyStore, viewportStore, editorSto
         imageStore.svgObjects[i] = imageStore.svgObjects[i + 2]
         imageStore.svgObjects[i + 1] = temp
         imageStore.svgObjects[i + 2] = result
+      } else if (object.class === 'blur') {
+        const result = imageStore.blurObjects[i + 1]
+        imageStore.blurObjects[i] = imageStore.blurObjects[i + 2]
+        imageStore.blurObjects[i + 1] = temp
+        imageStore.blurObjects[i + 2] = result
       } else {
         // Move other object
         const nextObject = imageStore.svgObjects[i + 1]
@@ -394,12 +425,14 @@ export function useSvgObjects(imageStore, historyStore, viewportStore, editorSto
   /**
    * Move the selected SVG object backward by one
    */
-  const moveSelectedSvgObjectBackward = (t) => {
+  const moveSelectedSvgObjectBackward = (t, isBlurObject = false) => {
     if (imageStore.selectedSvgObjectId === null) return
-    const i = imageStore.getIndexOfSelectedSvgObject()
+    const i = isBlurObject
+      ? imageStore.getIndexOfSelectedBlurObject()
+      : imageStore.getIndexOfSelectedSvgObject()
     const object = imageStore.getSelectedSvgObject()
     if (i !== -1 && i > 0) {
-      const temp = imageStore.svgObjects[i]
+      const temp = isBlurObject ? imageStore.blurObjects[i] : imageStore.svgObjects[i]
 
       if (object.class === 'magnifyArea') {
         // Move magnify area object
@@ -407,6 +440,11 @@ export function useSvgObjects(imageStore, historyStore, viewportStore, editorSto
         imageStore.svgObjects[i + 1] = imageStore.svgObjects[i - 1]
         imageStore.svgObjects[i - 1] = temp
         imageStore.svgObjects[i] = result
+      } else if (object.class === 'blur') {
+        const result = imageStore.blurObjects[i + 1]
+        imageStore.blurObjects[i + 1] = imageStore.blurObjects[i - 1]
+        imageStore.blurObjects[i - 1] = temp
+        imageStore.blurObjects[i] = result
       } else {
         // Move other object
         const prevObject = imageStore.svgObjects[i - 1]
@@ -429,14 +467,19 @@ export function useSvgObjects(imageStore, historyStore, viewportStore, editorSto
   /**
    * Send the selected SVG object to back
    */
-  const sendSelectedSvgObjectToBack = (t) => {
+  const sendSelectedSvgObjectToBack = (t, isBlurObject = false) => {
     if (imageStore.selectedSvgObjectId === null) return
-    const i = imageStore.getIndexOfSelectedSvgObject()
+    const i = isBlurObject
+      ? imageStore.getIndexOfSelectedBlurObject()
+      : imageStore.getIndexOfSelectedSvgObject()
     const object = imageStore.getSelectedSvgObject()
     if (i !== -1 && i > 0) {
       if (object.class === 'magnifyArea') {
         const pair = imageStore.svgObjects.splice(i, 2)
         imageStore.svgObjects.unshift(...pair)
+      } else if (object.class === 'blur') {
+        const pair = imageStore.blurObjects.splice(i, 2)
+        imageStore.blurObjects.unshift(...pair)
       } else {
         const object = imageStore.svgObjects.splice(i, 1)[0]
         imageStore.svgObjects.unshift(object)
@@ -495,7 +538,8 @@ export function useSvgObjects(imageStore, historyStore, viewportStore, editorSto
    * Select all SVG objects
    */
   const selectAllSvgObjects = () => {
-    imageStore.selectedSvgObjectIds = imageStore.svgObjects.map((obj) => obj.id)
+    const allObjects = [...(imageStore.svgObjects || []), ...(imageStore.blurObjects || [])]
+    imageStore.selectedSvgObjectIds = allObjects.map((obj) => obj.id)
     imageStore.selectedSvgObjectId = null
   }
 
@@ -696,8 +740,6 @@ export function useSvgObjects(imageStore, historyStore, viewportStore, editorSto
     let objectCornerRadius = 0
     let objectLineType = 'solid'
     let objectBlurStrength
-    // let objectLineArrowStart = 'none'
-    // let objectLineArrowEnd = 'none'
 
     if (objectClass === 'shape') {
       const {
@@ -708,8 +750,6 @@ export function useSvgObjects(imageStore, historyStore, viewportStore, editorSto
         opacity,
         cornerRadius,
         lineType,
-        // lineArrowStart,
-        // lineArrowEnd,
       } = shapeTool.getShapeAttributes()
 
       if (fillEnabled) {
@@ -720,15 +760,12 @@ export function useSvgObjects(imageStore, historyStore, viewportStore, editorSto
       objectOpacity = opacity
       objectCornerRadius = cornerRadius
       objectLineType = lineType
-
-      // objectLineArrowStart = lineArrowStart
-      // objectLineArrowEnd = lineArrowEnd
     } else if (objectClass === 'blur') {
       const { blurStrength } = blurTool.getBlurAttributes(id)
 
       objectBlurStrength = blurStrength
 
-      objectFillColor = '#00000010'
+      objectFillColor = '#00000005'
     }
 
     if (objectType === 'rect') {
@@ -742,6 +779,7 @@ export function useSvgObjects(imageStore, historyStore, viewportStore, editorSto
 
       base.attrs.opacity = objectOpacity
 
+      // Set blur strength
       if (objectClass === 'blur') {
         base.attrs['data-blur-strength'] = objectBlurStrength
       }
@@ -764,16 +802,15 @@ export function useSvgObjects(imageStore, historyStore, viewportStore, editorSto
       base.attrs.stroke = objectStrokeColor
       base.attrs.opacity = objectOpacity
       base.attrs['stroke-dasharray'] = objectLineType
-      // if (objectLineArrowStart !== 'none') {
-      //   base.attrs['marker-start'] = objectLineArrowStart
-      // }
-      // if (objectLineArrowEnd !== 'none') {
-      //   base.attrs['marker-end'] = objectLineArrowEnd
-      // }
     }
 
     currentDrawingObject.value = base
-    imageStore.svgObjects.push(base)
+
+    if (objectClass === 'blur') {
+      imageStore.blurObjects.push(base)
+    } else {
+      imageStore.svgObjects.push(base)
+    }
   }
 
   /**
@@ -941,7 +978,9 @@ export function useSvgObjects(imageStore, historyStore, viewportStore, editorSto
         selectedIds = []
       }
 
-      for (const obj of imageStore.svgObjects) {
+      const allObjects = [...(imageStore.svgObjects || []), ...(imageStore.blurObjects || [])]
+
+      for (const obj of allObjects) {
         const { cx, cy } = getObjectCenter(obj)
 
         const isInside = cx >= x1 && cx <= x2 && cy >= y1 && cy <= y2
@@ -988,11 +1027,15 @@ export function useSvgObjects(imageStore, historyStore, viewportStore, editorSto
       viewportStore.guideLine = null
 
       // Remove the last object if object is too small
-      imageStore.svgObjects.pop()
       if (editorStore.selectedToolKey === 'blur') {
+        // In blur also remove defs
         imageStore.svgDefs.pop()
         imageStore.svgDefs.pop()
         imageStore.blurImages.pop()
+
+        imageStore.blurObjects.pop()
+      } else {
+        imageStore.svgObjects.pop()
       }
       return
     }
@@ -1052,7 +1095,6 @@ export function useSvgObjects(imageStore, historyStore, viewportStore, editorSto
     if (!sameClass) {
       imageStore.selectedSvgObjectId = null
       imageStore.selectedSvgObjectIds = []
-      // showResizers.value = false
     }
   }
 

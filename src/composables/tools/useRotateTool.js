@@ -27,7 +27,7 @@ export function useRotateTool(imageStore, historyStore, t) {
    */
   const applyRotation = async (angle) => {
     // Show confirmation if SVG objects need to be rasterized first
-    if (imageStore.svgObjects.length > 0) {
+    if (imageStore.svgObjects.length > 0 || imageStore.blurObjects.length > 0) {
       const confirmed = await showConfirmModal(
         t('tools.confirmNeedRasterization.title'),
         t('tools.confirmNeedRasterization.message'),

@@ -58,7 +58,6 @@ const generateUuid = () => {
  */
 const getUuid = () => {
   let userUuid = localStorage.getItem(`${globalConfig.LOCAL_STORAGE_PREFIX}user_uuid`)
-  console.log('User UUID:', userUuid) // Debugging line to check the UUID
   if (!userUuid) {
     userUuid = generateUuid()
     localStorage.setItem(`${globalConfig.LOCAL_STORAGE_PREFIX}user_uuid`, userUuid)

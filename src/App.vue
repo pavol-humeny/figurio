@@ -56,7 +56,6 @@ const handleBeforeUnload = (event) => {
  */
 const setUserLogin = async (userUuid) => {
   if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
-    console.log('Skipping user login on localhost')
     return null
   }
 

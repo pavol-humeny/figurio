@@ -154,7 +154,7 @@ export function useResizeTool(imageStore, historyStore, viewportStore, t) {
    * Apply the resize operation to the operation history and canvas
    */
   const applyResize = async () => {
-    if (imageStore.svgObjects.length > 0) {
+    if (imageStore.svgObjects.length > 0 || imageStore.blurObjects.length > 0) {
       const confirmed = await showConfirmModal(
         t('tools.confirmNeedRasterization.title'),
         t('tools.confirmNeedRasterization.message'),
@@ -163,7 +163,7 @@ export function useResizeTool(imageStore, historyStore, viewportStore, t) {
       )
       if (confirmed) {
         await imageStore.rasterize(t)
-        
+
       } else {
         return
       }

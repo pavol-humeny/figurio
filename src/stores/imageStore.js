@@ -50,7 +50,7 @@ export const useImageStore = defineStore('imageStore', {
     fileType: '', // 'image' or 'pdf'
 
     /** Name of the loaded file */
-    fileName: '', // UndoRedo
+    fileName: '',
     /** Format of the loaded file */
     fileFormat: '', // 'png', 'jpg', 'jpeg', 'pdf'
     /** Dimensions of the loaded file */
@@ -59,7 +59,7 @@ export const useImageStore = defineStore('imageStore', {
       width: 0,
       height: 0,
       quality: 100,
-    }, // UndoRedo
+    },
 
     /** New file name for export */
     newFileName: '',
@@ -74,7 +74,7 @@ export const useImageStore = defineStore('imageStore', {
     },
 
     /** Preview URL for the image */
-    previewUrl: '', // UndoRedo
+    previewUrl: '',
 
     /** Original image */
     originalImage: null,
@@ -89,7 +89,7 @@ export const useImageStore = defineStore('imageStore', {
 
     // Value for raster image rendering
     /** Rendered image - showed image in canvas */
-    renderedImage: null, // UndoRedo
+    renderedImage: null,
     /** Temporary rendered image - used for saving canvas if frame with rounded corners is applied */
     tmpRenderedImage: null,
 
@@ -115,6 +115,8 @@ export const useImageStore = defineStore('imageStore', {
       //   },
       // },
     ],
+    /** Array of blur objects */
+    blurObjects: [],
 
     /** ID of the currently selected SVG object */
     selectedSvgObjectId: null,
@@ -163,7 +165,6 @@ export const useImageStore = defineStore('imageStore', {
 
     // PDF
     pdfPage: null,
-
     pdfFile: null,
 
     /** PDF page bytes */
@@ -300,6 +301,7 @@ export const useImageStore = defineStore('imageStore', {
      */
     resetSvgObject() {
       this.svgObjects = []
+      this.blurObjects = []
       this.blurImages = []
       this.selectedSvgObjectId = null
       this.justCreatedSvgObjectId = null
@@ -428,9 +430,6 @@ export const useImageStore = defineStore('imageStore', {
      * Resets the image store to a clean state for a new file
      */
     resetImageStoreForNewFile() {
-      // this.svgObjects = []
-      // this.selectedSvgObjectId = null
-
       this.resetImageOperations()
 
       this.resetFrame()
@@ -1026,12 +1025,17 @@ export const useImageStore = defineStore('imageStore', {
       ////////
 
       // Generate svg string
-      if (this.svgObjects.length > 0) {
+      if (
+        (this.svgObjects && this.svgObjects.length > 0) ||
+        (this.blurObjects && this.blurObjects.length > 0)
+      ) {
+        const allObjects = [...(this.blurObjects || []), ...(this.svgObjects || [])]
+
         const svgString = `
           <svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}">
           ${svgDefsString}
             <g transform="translate(${offsetX}, ${offsetY})">
-              ${this.svgObjects
+              ${allObjects
                 .map((obj) => {
                   const attrs = Object.entries(obj.attrs || {})
                     .map(([key, val]) => `${key}="${val}"`)
@@ -1557,7 +1561,9 @@ export const useImageStore = defineStore('imageStore', {
         })
 
         // 2. SVG objects
-        for (const obj of this.svgObjects) {
+        const allObjects = [...(this.blurObjects || []), ...(this.svgObjects || [])]
+
+        for (const obj of allObjects) {
           // Add text to attributes
           obj.attrs.textContent = obj.content || ''
           await drawSvgElement(finalPage, obj.tag, obj.attrs, finalHeight, offsetX, offsetY)
@@ -1621,7 +1627,7 @@ export const useImageStore = defineStore('imageStore', {
      * @returns {Promise<void>}
      */
     async rasterize(t, width = null, height = null, storeAsNew = false) {
-      if (this.svgObjects.length === 0) return
+      if (this.svgObjects.length === 0 && this.blurObjects.length === 0) return
 
       console.log('Rasterizing image with SVG objects...')
 
@@ -1631,7 +1637,6 @@ export const useImageStore = defineStore('imageStore', {
 
       // SVG <defs> for markers (arrows, circles, squares)
       // UPDATE svg string
-
       const staticDefs = `
         <marker id="arrow-end" markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto" markerUnits="strokeWidth">
           <path d="M0,0 L0,6 L6,3 z" fill="context-stroke" />
@@ -1648,7 +1653,9 @@ export const useImageStore = defineStore('imageStore', {
       `.trim()
 
       // Combine normal SVG objects
-      const svgObjectsString = this.svgObjects
+      const objectsToRender = [...(this.blurObjects || []), ...(this.svgObjects || [])]
+
+      const svgObjectsString = objectsToRender
         .map((obj) => {
           const attrs = Object.entries(obj.attrs || {})
             .map(([key, val]) => `${key}="${val}"`)
@@ -1709,11 +1716,13 @@ export const useImageStore = defineStore('imageStore', {
 
         // Clear svg values
         this.svgObjects = []
-        this.blurImages = []
         this.selectedSvgObjectId = null
 
         this.originalImage = canvas
         this.blurPreviewUrl = canvas.toDataURL()
+
+        this.blurObjects = []
+        this.blurImages = []
       }
     },
 
@@ -1890,7 +1899,10 @@ export const useImageStore = defineStore('imageStore', {
      * @returns {Object|null} - The currently selected SVG object or null if none is selected
      */
     getSelectedSvgObject() {
-      return this.svgObjects.find((obj) => obj.id === this.selectedSvgObjectId)
+      return (
+        this.svgObjects.find((obj) => obj.id === this.selectedSvgObjectId) ||
+        this.blurObjects.find((obj) => obj.id === this.selectedSvgObjectId)
+      )
     },
 
     /**
@@ -1899,7 +1911,10 @@ export const useImageStore = defineStore('imageStore', {
      * @returns {Object|null} - The SVG object or null if not found
      */
     getSvgObjectById(id) {
-      return this.svgObjects.find((obj) => obj.id === id)
+      return (
+        this.svgObjects.find((obj) => obj.id === id) ||
+        this.blurObjects.find((obj) => obj.id === id)
+      )
     },
 
     /**
@@ -1911,12 +1926,29 @@ export const useImageStore = defineStore('imageStore', {
     },
 
     /**
+     * Returns the index of the currently selected blur object
+     * @returns {number} - The index of the currently selected blur object, or -1 if none is selected
+     */
+    getIndexOfSelectedBlurObject() {
+      return this.blurObjects.findIndex((obj) => obj.id === this.selectedSvgObjectId)
+    },
+
+    /**
      * Returns the index of an SVG object by its ID
      * @param {*} id - The ID of the SVG object
      * @returns {number} - The index of the SVG object, or -1 if not found
      */
     getIndexOfSvgObjectById(id) {
       return this.svgObjects.findIndex((obj) => obj.id === id)
+    },
+
+    /**
+     * Returns the index of a blur object by its ID
+     * @param {*} id - The ID of the blur object
+     * @returns {number} - The index of the blur object, or -1 if not found
+     */
+    getIndexOfBlurObjectById(id) {
+      return this.blurObjects.findIndex((obj) => obj.id === id)
     },
 
     deleteSvgDefsById(id) {
@@ -1946,7 +1978,7 @@ export const useImageStore = defineStore('imageStore', {
      */
     isMaxZIndexOfSelectedSvgObject() {
       const index = this.getIndexOfSelectedSvgObject()
-      if (index !== null) {
+      if (index >= 0 && this.svgObjects[index]) {
         const selectedObject = this.svgObjects[index]
         if (selectedObject.class === 'magnifyArea') {
           return index === this.svgObjects.length - 2
@@ -1958,15 +1990,38 @@ export const useImageStore = defineStore('imageStore', {
     },
 
     /**
+     * Checks if the currently selected blur object has the highest z-index
+     * @returns {boolean} - True if the selected blur object is the one with the highest z-index
+     */
+    isMaxZIndexOfSelectedBlurObject() {
+      const index = this.getIndexOfSelectedBlurObject()
+      if (index >= 0 && this.blurObjects[index]) {
+        const selectedObject = this.blurObjects[index]
+        if (selectedObject.class === 'magnifyArea') {
+          return index === this.blurObjects.length - 2
+        } else {
+          return index === this.blurObjects.length - 1
+        }
+      }
+      return false
+    },
+
+    /**
      * Checks if the currently selected SVG object has the lowest z-index
      * @returns {boolean} - True if the selected SVG object is the one with the lowest z-index
      */
     isMinZIndexOfSelectedSvgObject() {
       const index = this.getIndexOfSelectedSvgObject()
-      if (index !== null) {
-        return index === 0
-      }
-      return false
+      return index === 0
+    },
+
+    /**
+     * Checks if the currently selected blur object has the lowest z-index
+     * @returns {boolean} - True if the selected blur object is the one with the lowest z-index
+     */
+    isMinZIndexOfSelectedBlurObject() {
+      const index = this.getIndexOfSelectedBlurObject()
+      return index === 0
     },
 
     // --------------------------------
@@ -1991,6 +2046,7 @@ export const useImageStore = defineStore('imageStore', {
         totalPdfCropBox: JSON.parse(JSON.stringify(this.totalPdfCropBox)),
         // originalImage: this.originalImage?.toDataURL() || null,
         svgObjects: JSON.parse(JSON.stringify(this.svgObjects)),
+        blurObjects: JSON.parse(JSON.stringify(this.blurObjects)),
         svgDefs: JSON.parse(JSON.stringify(this.svgDefs)),
         blurImages: JSON.parse(JSON.stringify(this.blurImages)),
         imageOperations: JSON.parse(JSON.stringify(this.imageOperations)),
@@ -2014,6 +2070,7 @@ export const useImageStore = defineStore('imageStore', {
       this.fileDimensions = JSON.parse(JSON.stringify(snapshot.fileDimensions))
       this.previewUrl = snapshot.previewUrl
       this.svgObjects = JSON.parse(JSON.stringify(snapshot.svgObjects))
+      this.blurObjects = JSON.parse(JSON.stringify(snapshot.blurObjects))
       this.selectedSvgObjectId = null // Reset selected SVG object after applying snapshot
       this.imageOperations = JSON.parse(JSON.stringify(snapshot.imageOperations))
       this.frame = JSON.parse(JSON.stringify(snapshot.frame))
@@ -2089,6 +2146,7 @@ export const useImageStore = defineStore('imageStore', {
         svgObjects: JSON.parse(JSON.stringify(this.svgObjects)),
         selectedSvgObjectId: this.selectedSvgObjectId,
         blurImages: JSON.parse(JSON.stringify(this.blurImages)),
+        blurObjects: JSON.parse(JSON.stringify(this.blurObjects)),
 
         // justCreatedSvgObjectId: this.justCreatedSvgObjectId,
         // selectedSvgObjectIds: this.selectedSvgObjectIds,
@@ -2130,6 +2188,7 @@ export const useImageStore = defineStore('imageStore', {
       this.svgObjects = JSON.parse(JSON.stringify(snapshot.svgObjects))
       this.selectedSvgObjectId = null
       this.blurImages = JSON.parse(JSON.stringify(snapshot.blurImages))
+      this.blurObjects = JSON.parse(JSON.stringify(snapshot.blurObjects))
       // this.justCreatedSvgObjectId = null
       // this.selectedSvgObjectIds = []
       // this.svgDefs = JSON.parse(JSON.stringify(snapshot.svgDefs))

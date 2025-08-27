@@ -1035,7 +1035,7 @@ export function useCropTool(imageStore, viewportStore, editorStore, historyStore
       return
     }
 
-    if (imageStore.svgObjects.length > 0) {
+    if (imageStore.svgObjects.length > 0 || imageStore.blurObjects.length > 0) {
       const confirmed = await showConfirmModal(
         t('tools.confirmNeedRasterization.title'),
         t('tools.confirmNeedRasterization.message'),
