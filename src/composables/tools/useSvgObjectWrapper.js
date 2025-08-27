@@ -274,8 +274,10 @@ export function useSvgObjectWrapper(
       }
       showResizers.value = !showResizers.value
     } else {
-      imageStore.selectedSvgObjectId = object.value.id
-      editorStore.previousToolKey = ''
+      if (editorStore.selectedToolKey === object.value.class) {
+        imageStore.selectedSvgObjectId = object.value.id
+        editorStore.previousToolKey = ''
+      }
     }
   }
 

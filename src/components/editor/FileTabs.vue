@@ -4,6 +4,7 @@ import { useUiStore } from '@/stores/uiStore'
 import { useI18n } from 'vue-i18n'
 import { useViewportStore } from '@/stores/viewportStore'
 import { useImageStore } from '@/stores/imageStore'
+import { useEditorStore } from '@/stores/editorStore'
 
 const { t } = useI18n()
 
@@ -24,7 +25,7 @@ const {
   onTabDragStart,
   onTabDrop,
   wrapperRef,
-} = useFileTabs(useUiStore(), useViewportStore(), useImageStore(), t)
+} = useFileTabs(useUiStore(), useViewportStore(), useImageStore(), useEditorStore(), t)
 
 </script>
 

@@ -4,6 +4,7 @@ import { editorConfig } from '@/config/editorConfig'
 import { useSendEvent } from '@/composables/common/useSendEvent'
 import { useMath } from '../common/useMath'
 import { PDFDocument } from 'pdf-lib'
+import { useConfirmModal } from '../modals/useConfirmModal'
 
 /**
  * Logic for the resize tool
@@ -15,6 +16,7 @@ import { PDFDocument } from 'pdf-lib'
  */
 export function useResizeTool(imageStore, historyStore, viewportStore, t) {
   const { showToastModal } = useToastModal()
+  const { showConfirmModal } = useConfirmModal()
 
   const { round } = useMath()
 
@@ -152,6 +154,21 @@ export function useResizeTool(imageStore, historyStore, viewportStore, t) {
    * Apply the resize operation to the operation history and canvas
    */
   const applyResize = async () => {
+    if (imageStore.svgObjects.length > 0) {
+      const confirmed = await showConfirmModal(
+        t('tools.confirmNeedRasterization.title'),
+        t('tools.confirmNeedRasterization.message'),
+        t('tools.confirmNeedRasterization.cancel'),
+        t('tools.confirmNeedRasterization.confirm'),
+      )
+      if (confirmed) {
+        await imageStore.rasterize(t)
+        
+      } else {
+        return
+      }
+    }
+
     imageStore.addImageOperation({
       type: 'resize',
       resizeDimensions: {

@@ -177,6 +177,13 @@ export function useSvgObjects(imageStore, historyStore, viewportStore, editorSto
         }
       }
 
+      // If blur also delete filter, clip and image
+      if (selected.class === 'blur') {
+        imageStore.deleteBlurClipById(selected.id)
+        imageStore.deleteBlurFilterById(selected.id)
+        imageStore.deleteBlurImageById(selected.id)
+      }
+
       imageStore.selectedSvgObjectId = null
     }
 
@@ -191,6 +198,12 @@ export function useSvgObjects(imageStore, historyStore, viewportStore, editorSto
           } else if (obj.subClass === 'magnify-result') {
             idsToDelete.add(obj.linkedSourceId)
           }
+        }
+
+        if (obj.class === 'blur') {
+          imageStore.deleteBlurClipById(obj.id)
+          imageStore.deleteBlurFilterById(obj.id)
+          imageStore.deleteBlurImageById(obj.id)
         }
       }
 
@@ -275,6 +288,18 @@ export function useSvgObjects(imageStore, historyStore, viewportStore, editorSto
         const angle = parseFloat(angleMatch[1])
         attrs.transform = `rotate(${angle}, ${centerX}, ${centerY})`
       }
+    }
+
+    // If it is blur add clip, filter and image
+    if (newObject.class === 'blur') {
+      blurTool.addOrReplaceClipDef(newObject.id, {
+        x: attrs.x,
+        y: attrs.y,
+        width: attrs.width,
+        height: attrs.height,
+      })
+      blurTool.addOrReplaceFilterDef(newObject.id, attrs['data-blur-strength'])
+      blurTool.addBlurImage(newObject.id)
     }
 
     imageStore.svgObjects.push(newObject)
@@ -670,7 +695,7 @@ export function useSvgObjects(imageStore, historyStore, viewportStore, editorSto
     let objectOpacity = 1
     let objectCornerRadius = 0
     let objectLineType = 'solid'
-    let objectFilter = null
+    let objectBlurStrength
     // let objectLineArrowStart = 'none'
     // let objectLineArrowEnd = 'none'
 
@@ -699,13 +724,11 @@ export function useSvgObjects(imageStore, historyStore, viewportStore, editorSto
       // objectLineArrowStart = lineArrowStart
       // objectLineArrowEnd = lineArrowEnd
     } else if (objectClass === 'blur') {
-      const { fillColor, filter } = blurTool.getBlurAttributes(id)
+      const { blurStrength } = blurTool.getBlurAttributes(id)
 
-      objectFillColor = fillColor
+      objectBlurStrength = blurStrength
 
-      if (filter) {
-        objectFilter = filter
-      }
+      objectFillColor = '#00000010'
     }
 
     if (objectType === 'rect') {
@@ -719,9 +742,8 @@ export function useSvgObjects(imageStore, historyStore, viewportStore, editorSto
 
       base.attrs.opacity = objectOpacity
 
-      // Blur filter
-      if (objectFilter) {
-        base.attrs.filter = objectFilter
+      if (objectClass === 'blur') {
+        base.attrs['data-blur-strength'] = objectBlurStrength
       }
 
       // Corner radius
@@ -882,6 +904,19 @@ export function useSvgObjects(imageStore, historyStore, viewportStore, editorSto
       attrs.x2 = round(x)
       attrs.y2 = round(y)
     }
+
+    // If it is blur tool update clip path
+    if (editorStore.selectedToolKey === 'blur') {
+      blurTool.addOrReplaceClipDef(currentDrawingObject.value.id, {
+        x: attrs.x,
+        y: attrs.y,
+        width: attrs.width,
+        height: attrs.height,
+        rotation: attrs.transform
+          ? parseFloat(attrs.transform.match(/rotate\(([^)]+)\)/)?.[1]) || 0
+          : 0,
+      })
+    }
   }
 
   /**
@@ -954,6 +989,11 @@ export function useSvgObjects(imageStore, historyStore, viewportStore, editorSto
 
       // Remove the last object if object is too small
       imageStore.svgObjects.pop()
+      if (editorStore.selectedToolKey === 'blur') {
+        imageStore.svgDefs.pop()
+        imageStore.svgDefs.pop()
+        imageStore.blurImages.pop()
+      }
       return
     }
 
@@ -1007,8 +1047,6 @@ export function useSvgObjects(imageStore, historyStore, viewportStore, editorSto
     // Deselect if clicked outside the selected object or on a different class
     const sameClass =
       clickedObject && selectedObject && clickedObject.class === selectedObject.class
-
-    console.log('tool in global click: ', editorStore.selectedToolKey)
 
     // Deselect objects
     if (!sameClass) {

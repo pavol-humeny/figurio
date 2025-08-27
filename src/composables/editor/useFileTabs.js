@@ -10,7 +10,7 @@ import { useConfirmModal } from '../modals/useConfirmModal'
  * @param {(key: string) => string} t - Translation function
  * @returns {Object}
  */
-export function useFileTabs(uiStore, viewportStore, imageStore, t) {
+export function useFileTabs(uiStore, viewportStore, imageStore, editorStore, t) {
   const { showConfirmModal } = useConfirmModal()
 
   /**
@@ -57,6 +57,9 @@ export function useFileTabs(uiStore, viewportStore, imageStore, t) {
 
       // To hide artifacts
       imageStore.isArtifactsVisible = false
+
+      // Deselect svg object
+      editorStore.isSvgObjectSelected = false
     }
   }
 

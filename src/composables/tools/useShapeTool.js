@@ -67,6 +67,13 @@ export function useShapeTool(editorStore, imageStore, historyStore, t) {
     activeObject.value = null
   }
 
+  watch(
+    () => imageStore.file,
+    () => {
+      localObjectSettings.value.cornerRadius = 0
+    },
+  )
+
   /**
    * Calculate maximum and minimal position for shape objects
    */

@@ -27,7 +27,7 @@ export const globalConfig = {
       transform: true,
       autoCrop: true,
       grayscale: true,
-      blur: false,
+      blur: true,
       shape: true,
       text: true,
       magnifyArea: true,

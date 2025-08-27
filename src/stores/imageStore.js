@@ -85,6 +85,8 @@ export const useImageStore = defineStore('imageStore', {
       quality: 100,
     },
 
+    blurPreviewUrl: '',
+
     // Value for raster image rendering
     /** Rendered image - showed image in canvas */
     renderedImage: null, // UndoRedo
@@ -122,6 +124,8 @@ export const useImageStore = defineStore('imageStore', {
     selectedSvgObjectIds: [],
     /** Dynamic SVG definitions */
     svgDefs: [],
+    /** Array of blur image elements */
+    blurImages: [],
     /** SVG object copied to clipboard */
     clipboardSvgObject: null,
 
@@ -296,6 +300,7 @@ export const useImageStore = defineStore('imageStore', {
      */
     resetSvgObject() {
       this.svgObjects = []
+      this.blurImages = []
       this.selectedSvgObjectId = null
       this.justCreatedSvgObjectId = null
       this.selectedSvgObjectIds = []
@@ -632,7 +637,8 @@ export const useImageStore = defineStore('imageStore', {
 
             this.setRenderedImage(canvas)
             this.originalImage = canvas
-            this.previewUrl = canvas.toDataURL() // Fallback for export
+            this.previewUrl = canvas.toDataURL()
+            this.blurPreviewUrl = canvas.toDataURL()
 
             // Add new tab in workspace
             workspaceStore.addNewTab(this.fileName, this.fileFormat, t)
@@ -1017,6 +1023,8 @@ export const useImageStore = defineStore('imageStore', {
           </defs>
         `.trim()
 
+      ////////
+
       // Generate svg string
       if (this.svgObjects.length > 0) {
         const svgString = `
@@ -1038,6 +1046,8 @@ export const useImageStore = defineStore('imageStore', {
             </g>
           </svg>
         `.trim()
+
+        ////
 
         // Parse SVG string
         try {
@@ -1637,22 +1647,28 @@ export const useImageStore = defineStore('imageStore', {
         </defs>
       `.trim()
 
-      // Create SVG markup from svgObjects
+      // Combine normal SVG objects
+      const svgObjectsString = this.svgObjects
+        .map((obj) => {
+          const attrs = Object.entries(obj.attrs || {})
+            .map(([key, val]) => `${key}="${val}"`)
+            .join(' ')
+          if (obj.tag === 'text') {
+            return `<text ${attrs}>${obj.content || ''}</text>`
+          }
+          return `<${obj.tag} ${attrs} />`
+        })
+        .join('\n')
+
+      // Add blur images (already have clip-path and filter applied)
+      const blurImagesString = (this.blurImages || []).join('\n')
+
+      // Full SVG
       const svgString = `
         <svg xmlns="http://www.w3.org/2000/svg" width="${usedWidth}" height="${usedHeight}">
-        ${svgDefsString}
-          ${this.svgObjects
-            .map((obj) => {
-              const attrs = Object.entries(obj.attrs || {})
-                .map(([key, val]) => `${key}="${val}"`)
-                .join(' ')
-              if (obj.tag === 'text') {
-                const content = obj.content || ''
-                return `<text ${attrs}>${content}</text>`
-              }
-              return `<${obj.tag} ${attrs} />`
-            })
-            .join('\n')}
+          ${svgDefsString}
+          ${blurImagesString}
+          ${svgObjectsString}
         </svg>
       `.trim()
 
@@ -1693,7 +1709,11 @@ export const useImageStore = defineStore('imageStore', {
 
         // Clear svg values
         this.svgObjects = []
+        this.blurImages = []
         this.selectedSvgObjectId = null
+
+        this.originalImage = canvas
+        this.blurPreviewUrl = canvas.toDataURL()
       }
     },
 
@@ -1899,6 +1919,27 @@ export const useImageStore = defineStore('imageStore', {
       return this.svgObjects.findIndex((obj) => obj.id === id)
     },
 
+    deleteSvgDefsById(id) {
+      this.svgDefs = this.svgDefs.filter((def) => {
+        return !def.includes(`id="${id}"`)
+      })
+    },
+
+    deleteBlurClipById(id) {
+      this.deleteSvgDefsById(`clip-${id}`)
+    },
+
+    // Odstráni filter podľa id
+    deleteBlurFilterById(id) {
+      this.deleteSvgDefsById(`blur-filter-${id}`)
+    },
+
+    deleteBlurImageById(id) {
+      this.blurImages = this.blurImages.filter((imgStr) => {
+        return !imgStr.includes(`id="blur-image-${id}"`)
+      })
+    },
+
     /**
      * Checks if the currently selected SVG object has the highest z-index
      * @returns {boolean} - True if the selected SVG object is the one with the highest z-index
@@ -1951,6 +1992,7 @@ export const useImageStore = defineStore('imageStore', {
         // originalImage: this.originalImage?.toDataURL() || null,
         svgObjects: JSON.parse(JSON.stringify(this.svgObjects)),
         svgDefs: JSON.parse(JSON.stringify(this.svgDefs)),
+        blurImages: JSON.parse(JSON.stringify(this.blurImages)),
         imageOperations: JSON.parse(JSON.stringify(this.imageOperations)),
         frame: JSON.parse(JSON.stringify(this.frame)),
       }
@@ -1976,6 +2018,7 @@ export const useImageStore = defineStore('imageStore', {
       this.imageOperations = JSON.parse(JSON.stringify(snapshot.imageOperations))
       this.frame = JSON.parse(JSON.stringify(snapshot.frame))
       this.svgDefs = JSON.parse(JSON.stringify(snapshot.svgDefs))
+      this.blurImages = JSON.parse(JSON.stringify(snapshot.blurImages))
       this.isArtifactsVisible = false
 
       if (snapshot.pdfPageBytes) {
@@ -2045,6 +2088,8 @@ export const useImageStore = defineStore('imageStore', {
 
         svgObjects: JSON.parse(JSON.stringify(this.svgObjects)),
         selectedSvgObjectId: this.selectedSvgObjectId,
+        blurImages: JSON.parse(JSON.stringify(this.blurImages)),
+
         // justCreatedSvgObjectId: this.justCreatedSvgObjectId,
         // selectedSvgObjectIds: this.selectedSvgObjectIds,
         // svgDefs: JSON.parse(JSON.stringify(this.svgDefs)),
@@ -2084,6 +2129,7 @@ export const useImageStore = defineStore('imageStore', {
 
       this.svgObjects = JSON.parse(JSON.stringify(snapshot.svgObjects))
       this.selectedSvgObjectId = null
+      this.blurImages = JSON.parse(JSON.stringify(snapshot.blurImages))
       // this.justCreatedSvgObjectId = null
       // this.selectedSvgObjectIds = []
       // this.svgDefs = JSON.parse(JSON.stringify(snapshot.svgDefs))

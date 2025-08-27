@@ -252,7 +252,8 @@ const {
         </div>
 
         <!-- Corner radius -->
-        <div v-if="localObjectSettings.type === 'rectangle' || localObjectSettings.type === 'rect'"
+        <div
+          v-if="(localObjectSettings.type === 'rectangle' || localObjectSettings.type === 'rect') && imageStore.fileType === 'image'"
           class="settings-content-wrapper">
           <div class="content-wrapper">
             <div class="content-title">

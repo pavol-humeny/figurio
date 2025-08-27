@@ -164,6 +164,14 @@ export function useImageRenderer(
       imageStore.previewUrl = imageRef.value.src
     }
 
+    // Value for blur preview
+    const img = imageStore.getRenderedImage({ t, renderCall: true })
+    if (img instanceof HTMLCanvasElement) {
+      imageStore.blurPreviewUrl = img.toDataURL()
+    } else if (img instanceof HTMLImageElement) {
+      imageStore.blurPreviewUrl = img.src
+    }
+
     // Save initial state to history if empty
     if (historyStore.history.length === 0) {
       historyStore.push(imageStore.getSnapshot(t))
