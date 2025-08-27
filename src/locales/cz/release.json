@@ -1,5 +1,25 @@
 {
   "versions": {
+    "3.2.0": {
+      "label": "3.2.0",
+      "newFeatures": {
+        "items": [
+          "Nástroj pro rozmazání oblasti"
+        ]
+      },
+      "improvements": {
+        "items": [
+          "Odstránení barvy z automatického ořezu a přidání automatické detekce",
+          "Centrovaní obrázku po otevření nebo zavření bočního panelu"
+        ]
+      },
+      "bugFixes": {
+        "items": [
+          "Automatický ořez dokáže detekovat průhledné pozadí",
+          "Tlačítko zavřít a logo VSCode v rámečcích se zobrazují při exportu PDF souboru do PDF"
+        ]
+      }
+    },
     "3.1.0": {
       "label": "3.1.0",
       "improvements": {

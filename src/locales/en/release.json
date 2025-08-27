@@ -9,7 +9,7 @@
       },
       "improvements": {
         "items": [
-          "Remove color from auto crop and add auto detection",
+          "Color selection from auto crop was replaced with auto detection",
           "Center image after side panel is open or close"
         ]
       },

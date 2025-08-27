@@ -1,5 +1,25 @@
 {
   "versions": {
+    "3.2.0": {
+      "label": "3.2.0",
+      "newFeatures": {
+        "items": [
+          "Nástroj na rozmazanie oblasti"
+        ]
+      },
+      "improvements": {
+        "items": [
+          "Výber farby z automatického orezania bol nahradený automatickou detekciou",
+          "Zarovnanie obrázka do stredu po otvorení alebo zatvorení bočného panela"
+        ]
+      },
+      "bugFixes": {
+        "items": [
+          "Automatické orezanie dokáže rozlíšiť priehľadné pozadie",
+          "Tlačidlo zavrieť a logo VSCode v rámikoch sa zobrazujú pri exporte PDF súboru do PDF"
+        ]
+      }
+    },
     "3.1.0": {
       "label": "3.1.0",
       "improvements": {
