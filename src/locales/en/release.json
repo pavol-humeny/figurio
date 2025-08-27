@@ -2,9 +2,15 @@
   "versions":{
     "3.2.0":{
       "label": "3.2.0",
+      "newFeatures": {
+        "items": [
+          "Blur area tool"
+        ]
+      },
       "improvements": {
         "items": [
-          "Remove color from auto crop and add auto detection"
+          "Remove color from auto crop and add auto detection",
+          "Center image after side panel is open or close"
         ]
       },
       "bugFixes": {

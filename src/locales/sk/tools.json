@@ -183,7 +183,7 @@
     }
   },
   "blur": {
-    "label": "Rozmazanie",
+    "label": "Rozmazanie oblasti",
     "tip": "Aplikuje efekt rozmazania na obrázok",
     "tipDisabled": "",
     "shortcut": "B",

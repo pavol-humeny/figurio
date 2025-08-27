@@ -183,7 +183,7 @@
     }
   },
   "blur": {
-    "label": "Blur",
+    "label": "Blur area",
     "tip": "Applies a blur effect to the image",
     "tipDisabled": "",
     "shortcut": "B",

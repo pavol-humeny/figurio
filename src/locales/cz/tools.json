@@ -183,7 +183,7 @@
     }
   },
   "blur": {
-    "label": "Rozmazání",
+    "label": "Rozmazání oblasti",
     "tip": "Aplikuje efekt rozmazání na obrázek",
     "tipDisabled": "",
     "shortcut": "B",
