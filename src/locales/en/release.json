@@ -7,11 +7,25 @@
     ]
   },
   "versions":{
+    "3.2.2":{
+      "label": "3.2.2",
+      "bugFixes": {
+        "items": [
+          "Export blur object to pdf file",
+          "Saving applied blur objects when switching between files"
+        ]
+      },
+      "knownIssues": {
+        "items": [
+          "When exporting an arrow to pdf, the shape is corrupted"
+        ]
+      }
+    },
     "3.2.1":{
       "label": "3.2.1",
       "bugFixes": {
         "items": [
-          "Object could not be edited after copy and paste."
+          "Object could not be edited after copy and paste"
         ]
       }
     },

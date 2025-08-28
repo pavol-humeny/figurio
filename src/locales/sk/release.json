@@ -7,11 +7,25 @@
     ]
   },
   "versions": {
+    "3.2.2":{
+      "label": "3.2.2",
+      "bugFixes": {
+        "items": [
+          "Export objektu rozmazania do PDF súboru",
+          "Ukladanie aplikovaných objektov rozmazania pri prepínaní medzi súbormi"
+        ]
+      },
+      "knownIssues": {
+        "items": [
+          "Pri exporte šípky do PDF je tvar poškodený"
+        ]
+      }
+    },
     "3.2.1":{
       "label": "3.2.1",
       "bugFixes": {
         "items": [
-          "Objekt nemohol byť upravený po skopírovaní a vložení."
+          "Objekt nemohol byť upravený po skopírovaní a vložení"
         ]
       }
     },

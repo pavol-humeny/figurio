@@ -7,11 +7,25 @@
     ]
   },
   "versions": {
+    "3.2.2":{
+      "label": "3.2.2",
+      "bugFixes": {
+        "items": [
+          "Export objektu rozmazání do PDF souboru",
+          "Ukládání aplikovaných objektů rozmazání při přepínání mezi soubory"
+        ]
+      },
+      "knownIssues": {
+        "items": [
+          "Při exportu šipky do PDF je tvar poškozen."
+        ]
+      }
+    },
     "3.2.1":{
       "label": "3.2.1",
       "bugFixes": {
         "items": [
-          "Objekt nemohl být upraven po zkopírování a vložení."
+          "Objekt nemohl být upraven po zkopírování a vložení"
         ]
       }
     },
