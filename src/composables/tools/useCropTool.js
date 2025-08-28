@@ -7,6 +7,21 @@ import { editorConfig } from '@/config/editorConfig'
 import { PDFDocument } from 'pdf-lib'
 
 /**
+ * Detected background color
+ */
+const detectedBgColor = ref(null)
+
+/**
+ * Cached histogram
+ */
+const cachedHistogram = ref(null)
+
+/**
+ * Cached threshold
+ */
+const cachedThreshold = ref(null)
+
+/**
  * Reactive state of the crop box used for user interactions
  * @type {import('vue').Ref<{
  *   x: number,
@@ -58,10 +73,18 @@ const manualIndents = ref({
  * @param {object} viewportStore - Store managing viewport state
  * @param {object} editorStore - Store for currently selected tool/tab
  * @param {object} historyStore - Store for undo/redo history
+ * @param {object} workspaceStore - Store for workspace state
  * @param {function} t - Translation function (vue-i18n)
  * @returns {object} Crop tool logic and reactive state
  */
-export function useCropTool(imageStore, viewportStore, editorStore, historyStore, t) {
+export function useCropTool(
+  imageStore,
+  viewportStore,
+  editorStore,
+  historyStore,
+  workspaceStore,
+  t,
+) {
   const { showConfirmModal } = useConfirmModal()
   const { showToastModal } = useToastModal()
   const { clamp, round } = useMath()
@@ -685,26 +708,11 @@ export function useCropTool(imageStore, viewportStore, editorStore, historyStore
   //------------------------------------
 
   /**
-   * Detected background color
-   */
-  const detectedBgColor = ref({})
-
-  /**
-   * Cached histogram
-   */
-  const cachedHistogram = ref(null)
-
-  /**
-   * Cached threshold
-   */
-  const cachedThreshold = ref(null)
-
-  /**
    * Get or calculate background color
    * @param {boolean} useBaseImage - whether to use the full image or current crop box
    */
   const getOrDetectBgColor = (useBaseImage = true) => {
-    if (Object.keys(detectedBgColor.value).length > 0) {
+    if (detectedBgColor.value !== null) {
       return detectedBgColor.value
     }
 
@@ -766,10 +774,12 @@ export function useCropTool(imageStore, viewportStore, editorStore, historyStore
    * Reset background color
    */
   const resetCache = () => {
-    detectedBgColor.value = {}
+    detectedBgColor.value = null
     cachedHistogram.value = null
     cachedThreshold.value = null
   }
+
+  watch(() => workspaceStore.activeTabIndex, resetCache, { immediate: true })
 
   /**
    * Compute histogram of the image
@@ -1204,5 +1214,6 @@ export function useCropTool(imageStore, viewportStore, editorStore, historyStore
     autoCropThreshold,
     autoCropThresholdOptions,
     resetThreshold,
+    resetCache,
   }
 }

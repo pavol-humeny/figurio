@@ -7,6 +7,7 @@ import { useI18n } from 'vue-i18n'
 import { useHistoryStore } from '@/stores/historyStore'
 import { computed } from 'vue'
 import { viewportConfig } from '@/config/viewportConfig'
+import { useWorkspaceStore } from '@/stores/workspaceStore'
 
 const viewportStore = useViewportStore()
 const { t } = useI18n()
@@ -19,6 +20,7 @@ const { startPan, startResize, cropBox } = useCropTool(
   useViewportStore(),
   useEditorStore(),
   useHistoryStore(),
+  useWorkspaceStore(),
   t,
 )
 

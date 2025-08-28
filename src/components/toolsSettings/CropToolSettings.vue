@@ -11,8 +11,8 @@ import LinkValuesIcon from '../common/LinkValuesIcon.vue'
 import DefaultButton from '../common/DefaultButton.vue'
 import ToggleButton from '../common/ToggleButton.vue'
 import StepperInput from '../common/StepperInput.vue'
-import DefaultSlider from '../common/DefaultSlider.vue'
 import NumberDropdownInput from '../common/NumberDropdownInput.vue'
+import { useWorkspaceStore } from '@/stores/workspaceStore'
 
 const { t } = useI18n()
 
@@ -51,8 +51,7 @@ const {
   isArtifactsVisible,
   autoCropThreshold,
   autoCropThresholdOptions,
-  resetThreshold,
-} = useCropTool(useImageStore(), useViewportStore(), useEditorStore(), useHistoryStore(), t)
+} = useCropTool(useImageStore(), useViewportStore(), useEditorStore(), useHistoryStore(), useWorkspaceStore(), t)
 
 </script>
 

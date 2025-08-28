@@ -16,6 +16,7 @@ export function usePresetTool(
   editorStore,
   presetsStore,
   viewportStore,
+  workspaceStore,
   t,
 ) {
   const { showToastModal } = useToastModal()
@@ -488,6 +489,7 @@ export function usePresetTool(
             viewportStore,
             editorStore,
             historyStore,
+            workspaceStore,
             t,
           ).applyAutoCropPreset()
         } else if (operation.type === 'grayscale') {
@@ -498,6 +500,7 @@ export function usePresetTool(
             viewportStore,
             editorStore,
             historyStore,
+            workspaceStore,
             t,
           ).applyCropRender(operation.cropBox)
         } else if (operation.type === 'resize') {

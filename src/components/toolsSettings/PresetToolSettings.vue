@@ -21,6 +21,7 @@ import { editorConfig } from '@/config/editorConfig'
 import TimeInput from '../common/TimeInput.vue'
 import DefaultSlider from '../common/DefaultSlider.vue'
 import { useFrameTool } from '@/composables/tools/useFrameTool'
+import { useWorkspaceStore } from '@/stores/workspaceStore'
 
 const { t } = useI18n()
 
@@ -68,6 +69,7 @@ const {
   useEditorStore(),
   usePresetsStore(),
   useViewportStore(),
+  useWorkspaceStore(),
   t,
 )
 
