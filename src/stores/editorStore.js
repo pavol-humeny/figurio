@@ -19,9 +19,6 @@ export const useEditorStore = defineStore('editorStore', {
     /** Key of the tool that has open subtools */
     toolWithOpenSubToolsKey: '',
 
-    /** Whether any SVG object is selected */
-    isSvgObjectSelected: false,
-
     /** Whether any SVG object is currently being resized */
     isSvgObjectResizing: false,
 
@@ -87,14 +84,6 @@ export const useEditorStore = defineStore('editorStore', {
      */
     setToolWithOpenSubTools(toolKey) {
       this.toolWithOpenSubToolsKey = toolKey
-    },
-
-    /**
-     * Set whether any SVG object is selected
-     * @param {boolean} isSelected - True if an SVG object is selected, false otherwise
-     */
-    setIsSvgObjectSelected(isSelected) {
-      this.isSvgObjectSelected = isSelected
     },
   },
 })

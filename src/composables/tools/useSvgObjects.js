@@ -158,8 +158,6 @@ export function useSvgObjects(imageStore, historyStore, viewportStore, editorSto
       return
     }
 
-    editorStore.isSvgObjectSelected = false
-
     const idsToDelete = new Set()
     const blurIdsToDelete = new Set()
 
@@ -606,6 +604,8 @@ export function useSvgObjects(imageStore, historyStore, viewportStore, editorSto
    * @param {MouseEvent} event - Click event
    */
   const onClickImageSvg = (event) => {
+    if (event.button !== 0) return // Only left mouse button
+
     if (didDrag.value) {
       // Prevent click after drag
       return
@@ -657,7 +657,7 @@ export function useSvgObjects(imageStore, historyStore, viewportStore, editorSto
     // -------------------------------------
 
     // Add text object
-    if (editorStore.selectedToolKey === 'text' && !editorStore.isSvgObjectSelected) {
+    if (editorStore.selectedToolKey === 'text' && imageStore.selectedSvgObjectId === null) {
       if (event.target.closest('g') || event.target.closest('text')) return
 
       const rect = event.currentTarget.getBoundingClientRect()
@@ -668,7 +668,7 @@ export function useSvgObjects(imageStore, historyStore, viewportStore, editorSto
     }
 
     // Add magnify area
-    if (editorStore.selectedToolKey === 'magnifyArea' && !editorStore.isSvgObjectSelected) {
+    if (editorStore.selectedToolKey === 'magnifyArea' && imageStore.selectedSvgObjectId === null) {
       const rect = event.currentTarget.getBoundingClientRect()
       const x = round((event.clientX - rect.left) / viewportStore.realZoomLevel)
       const y = round((event.clientY - rect.top) / viewportStore.realZoomLevel)
@@ -682,6 +682,8 @@ export function useSvgObjects(imageStore, historyStore, viewportStore, editorSto
    * @param {MouseEvent} event
    */
   const onMouseDownSelect = (event) => {
+    if (event.button !== 0) return // Only left mouse button
+
     // Selecting objects
     if (editorStore.selectedToolKey === 'select') {
       const rect = viewportStore.viewportContentRect
@@ -702,12 +704,14 @@ export function useSvgObjects(imageStore, historyStore, viewportStore, editorSto
    * @param {MouseEvent} event
    */
   const onMouseDownImageSvg = (event) => {
-    didDrag.value = false // reset at start
+    if (event.button !== 0) return // Only left mouse button
+
+    didDrag.value = false // Reset at start
 
     // Drawing objects
     if (!['blur', 'shape'].includes(editorStore.selectedToolKey)) return
 
-    if (editorStore.isSvgObjectSelected) return
+    if (imageStore.selectedSvgObjectId !== null) return
 
     const objectClass = editorStore.selectedToolKey
     let objectType = editorStore.selectedTabPerTool[objectClass]
@@ -742,15 +746,8 @@ export function useSvgObjects(imageStore, historyStore, viewportStore, editorSto
     let objectBlurStrength
 
     if (objectClass === 'shape') {
-      const {
-        fillEnabled,
-        fillColor,
-        strokeWidth,
-        strokeColor,
-        opacity,
-        cornerRadius,
-        lineType,
-      } = shapeTool.getShapeAttributes()
+      const { fillEnabled, fillColor, strokeWidth, strokeColor, opacity, cornerRadius, lineType } =
+        shapeTool.getShapeAttributes()
 
       if (fillEnabled) {
         objectFillColor = fillColor

@@ -57,9 +57,6 @@ export function useFileTabs(uiStore, viewportStore, imageStore, editorStore, t) 
 
       // To hide artifacts
       imageStore.isArtifactsVisible = false
-
-      // Deselect svg object
-      editorStore.isSvgObjectSelected = false
     }
   }
 

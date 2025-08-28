@@ -573,7 +573,6 @@ export const useImageStore = defineStore('imageStore', {
       const uiStore = useUiStore()
       const historyStore = useHistoryStore()
       const viewportStore = useViewportStore()
-      const editorStore = useEditorStore()
 
       // Reset state for new file (update current tab state)
       if (file !== null) {
@@ -587,9 +586,6 @@ export const useImageStore = defineStore('imageStore', {
 
         // Reset image store for new file
         this.resetImageStoreForNewFile()
-
-        // Deselect object
-        editorStore.isSvgObjectSelected = false
       }
 
       this.file = file

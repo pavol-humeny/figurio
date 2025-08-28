@@ -83,13 +83,6 @@ export function useSvgObjectWrapper(
   })
 
   /**
-   * Watch for changes in the selection state
-   */
-  watch(isSelected, (newValue) => {
-    editorStore.setIsSvgObjectSelected(newValue)
-  })
-
-  /**
    * Reactive variable to track if the SVG object is highlighted
    */
   const isSymmetricalObject = ref(false)

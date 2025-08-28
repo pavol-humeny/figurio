@@ -176,7 +176,7 @@ export function useShapeTool(editorStore, imageStore, historyStore, t) {
   const getDashArrayFromLineType = (lineType, strokeWidth) => {
     const pattern = lineDashPatternMap[lineType]
     if (!pattern || pattern.length === 0) return ''
-    return pattern.map((mult) => (mult * strokeWidth).toFixed(2)).join(',')
+    return pattern.map((multiple) => (multiple * strokeWidth).toFixed(2)).join(',')
   }
 
   /**
@@ -220,7 +220,7 @@ export function useShapeTool(editorStore, imageStore, historyStore, t) {
         localObjectSettings.value.type = newTab
         imageStore.selectedSvgObjectId = null // Reset selection when tab changes
         imageStore.selectedSvgObjectIds = [] // Reset multi-selection
-        editorStore.isSvgObjectSelected = false // Reset selection state
+        console.log('-----------------2')
 
         resetObjectSettings()
       }
@@ -372,7 +372,8 @@ export function useShapeTool(editorStore, imageStore, historyStore, t) {
    * Apply local settings to the active SVG object
    */
   const applyLocalSettings = () => {
-    if (!editorStore.isSvgObjectSelected) return
+    if (imageStore.selectedSvgObjectId === null) return
+
     const object = activeObject.value
     if (!object) return
 

@@ -255,7 +255,8 @@ export function useBlurTool(imageStore, historyStore, editorStore, t) {
    * @param {boolean} commit - When true, push to history store
    */
   const applyLocalBlurSettings = (commit = true) => {
-    if (!editorStore.isSvgObjectSelected) return
+    if (imageStore.selectedSvgObjectId === null) return
+
     const object = activeObject.value
     if (!object) return
 
