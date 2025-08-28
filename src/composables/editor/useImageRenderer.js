@@ -35,6 +35,8 @@ export function useImageRenderer(
    */
   const imageRef = ref(null)
 
+  const overlayImageRef = ref(null)
+
   /**
    * Reference to the SVG layer for vector elements
    */
@@ -72,6 +74,13 @@ export function useImageRenderer(
       imageRef.value.height = height
       imageRef.value.style.width = `${width}px`
       imageRef.value.style.height = `${height}px`
+    }
+
+    if (overlayImageRef.value) {
+      overlayImageRef.value.width = width
+      overlayImageRef.value.height = height
+      overlayImageRef.value.style.width = `${width}px`
+      overlayImageRef.value.style.height = `${height}px`
     }
 
     if (pdfContainerRef.value) {
@@ -172,6 +181,11 @@ export function useImageRenderer(
       imageStore.blurPreviewUrl = img.src
     }
 
+    // Save to overlay ref imageStore.overlayImage
+    if (overlayImageRef.value) {
+      overlayImageRef.value.src = imageStore.overlayImage.toDataURL()
+    }
+
     // Save initial state to history if empty
     if (historyStore.history.length === 0) {
       historyStore.push(imageStore.getSnapshot(t))
@@ -262,5 +276,6 @@ export function useImageRenderer(
     svgRef,
     frameSvgRef,
     pdfContainerRef,
+    overlayImageRef,
   }
 }

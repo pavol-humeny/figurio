@@ -91,6 +91,8 @@ export const useImageStore = defineStore('imageStore', {
     /** New rendered image - used for rasterizing SVG objects before export */
     newRenderedImage: null,
 
+    overlayImage: null,
+
     /** Array of SVG objects to render on the image */
     svgObjects: [
       // {
@@ -439,6 +441,7 @@ export const useImageStore = defineStore('imageStore', {
       // Also reset rendered images
       this.setRenderedImage(null)
       this.newRenderedImage = null
+      this.overlayImage = null
     },
 
     /**
@@ -1175,9 +1178,10 @@ export const useImageStore = defineStore('imageStore', {
          * @param {number} offsetY - y offset
          */
         const drawSvgElement = async (page, tag, attrs, finalHeight, offsetX = 0, offsetY = 0) => {
-          const strokeColor = attrs.stroke
-            ? rgb(...Object.values(hexToRgb(attrs.stroke)))
-            : undefined
+          const strokeColor =
+            attrs.stroke && attrs.stroke !== 'none'
+              ? rgb(...Object.values(hexToRgb(attrs.stroke)))
+              : undefined
           const fillColor =
             attrs.fill && attrs.fill !== 'none'
               ? rgb(...Object.values(hexToRgb(attrs.fill)))
@@ -1560,6 +1564,27 @@ export const useImageStore = defineStore('imageStore', {
           await drawSvgElement(finalPage, obj.tag, obj.attrs, finalHeight, offsetX, offsetY)
         }
 
+        // 2.5. Overlay image if present (bitmap)
+        if (this.overlayImage) {
+          const overlayCanvas = this.overlayImage
+
+          // Convert to PNG dataUrl
+          const overlayDataUrl = overlayCanvas.toDataURL('image/png')
+          const overlayBytes = Uint8Array.from(atob(overlayDataUrl.split(',')[1]), (c) =>
+            c.charCodeAt(0),
+          )
+
+          // Embed do PDF
+          const overlayImage = await pdf.embedPng(overlayBytes)
+
+          finalPage.drawImage(overlayImage, {
+            x: 0,
+            y: 0,
+            width: overlayCanvas.width,
+            height: overlayCanvas.height,
+          })
+        }
+
         // 3. Frame
         if (this.frame.enabled && this.frameSvg) {
           const parser = new DOMParser()
@@ -1697,6 +1722,30 @@ export const useImageStore = defineStore('imageStore', {
         }
         img.src = svgUrl
       })
+
+      // Create overlay if it is pdf image
+      if (this.fileType === 'pdf') {
+        const overlayCanvas = document.createElement('canvas')
+        overlayCanvas.width = usedWidth
+        overlayCanvas.height = usedHeight
+        const overlayCtx = overlayCanvas.getContext('2d')
+
+        const svgBlob2 = new Blob([svgString], { type: 'image/svg+xml' })
+        const svgUrl2 = URL.createObjectURL(svgBlob2)
+
+        await new Promise((resolve, reject) => {
+          const overlayImg = new Image()
+          overlayImg.onload = () => {
+            overlayCtx.drawImage(overlayImg, 0, 0)
+            URL.revokeObjectURL(svgUrl2)
+            resolve()
+          }
+          overlayImg.onerror = reject
+          overlayImg.src = svgUrl2
+        })
+
+        this.overlayImage = overlayCanvas
+      }
 
       // Store result either as renderedImage or newRenderedImage
       if (storeAsNew) {
@@ -2032,7 +2081,9 @@ export const useImageStore = defineStore('imageStore', {
         fileDimensions: JSON.parse(JSON.stringify(this.fileDimensions)),
         // originalFileDimensions: JSON.parse(JSON.stringify(this.originalFileDimensions)),
         previewUrl: this.previewUrl,
+        // blurPreviewUrl: JSON.parse(JSON.stringify(this.blurPreviewUrl)),
         renderedImage: this.getRenderedImage({ t, renderCall: true })?.toDataURL() || null,
+        overlayImage: this.overlayImage ? this.overlayImage.toDataURL() : null,
         pdfPageBytes: this.pdfPageBytes ? new Uint8Array(this.pdfPageBytes) : undefined,
         totalPdfCropBox: JSON.parse(JSON.stringify(this.totalPdfCropBox)),
         // originalImage: this.originalImage?.toDataURL() || null,
@@ -2060,6 +2111,7 @@ export const useImageStore = defineStore('imageStore', {
       this.fileType = snapshot.fileType
       this.fileDimensions = JSON.parse(JSON.stringify(snapshot.fileDimensions))
       this.previewUrl = snapshot.previewUrl
+      // this.blurPreviewUrl = JSON.parse(JSON.stringify(snapshot.blurPreviewUrl))
       this.svgObjects = JSON.parse(JSON.stringify(snapshot.svgObjects))
       this.blurObjects = JSON.parse(JSON.stringify(snapshot.blurObjects))
       this.selectedSvgObjectId = null // Reset selected SVG object after applying snapshot
@@ -2101,6 +2153,22 @@ export const useImageStore = defineStore('imageStore', {
         this.setRenderedImage(null)
       }
 
+      // Overlay image
+      if (snapshot.overlayImage) {
+        const img = new Image()
+        img.onload = () => {
+          const canvas = document.createElement('canvas')
+          canvas.width = img.width
+          canvas.height = img.height
+          const ctx = canvas.getContext('2d')
+          ctx.drawImage(img, 0, 0)
+          this.overlayImage = canvas
+        }
+        img.src = snapshot.overlayImage
+      } else {
+        this.overlayImage = null
+      }
+
       console.log('[applySnapshot] imageOperations (after apply):', this.imageOperations)
     },
 
@@ -2123,6 +2191,7 @@ export const useImageStore = defineStore('imageStore', {
         newFileDimensions: JSON.parse(JSON.stringify(this.newFileDimensions)),
 
         previewUrl: this.previewUrl,
+        // blurPreviewUrl: JSON.parse(JSON.stringify(this.blurPreviewUrl)),
 
         originalImage: this.originalImage?.toDataURL() || null,
         originalFileDimensions: JSON.parse(JSON.stringify(this.originalFileDimensions)),
@@ -2130,6 +2199,7 @@ export const useImageStore = defineStore('imageStore', {
         renderedImage: this.getRenderedImage({ t, renderCall: true })?.toDataURL() || null,
         tmpRenderedImage: this.tmpRenderedImage?.toDataURL() || null,
         newRenderedImage: this.newRenderedImage?.toDataURL() || null,
+        overlayImage: this.overlayImage?.toDataURL() || null,
 
         pdfPageBytes: this.pdfPageBytes ? new Uint8Array(this.pdfPageBytes) : undefined,
         totalPdfCropBox: JSON.parse(JSON.stringify(this.totalPdfCropBox)),
@@ -2141,7 +2211,7 @@ export const useImageStore = defineStore('imageStore', {
 
         // justCreatedSvgObjectId: this.justCreatedSvgObjectId,
         // selectedSvgObjectIds: this.selectedSvgObjectIds,
-        // svgDefs: JSON.parse(JSON.stringify(this.svgDefs)),
+        svgDefs: JSON.parse(JSON.stringify(this.svgDefs)),
 
         imageOperations: JSON.parse(JSON.stringify(this.imageOperations)),
 
@@ -2173,6 +2243,7 @@ export const useImageStore = defineStore('imageStore', {
       this.newFileDimensions = JSON.parse(JSON.stringify(snapshot.newFileDimensions))
 
       this.previewUrl = snapshot.previewUrl
+      // this.blurPreviewUrl = JSON.parse(JSON.stringify(snapshot.blurPreviewUrl))
 
       this.originalFileDimensions = JSON.parse(JSON.stringify(snapshot.originalFileDimensions))
 
@@ -2182,7 +2253,7 @@ export const useImageStore = defineStore('imageStore', {
       this.blurObjects = JSON.parse(JSON.stringify(snapshot.blurObjects))
       // this.justCreatedSvgObjectId = null
       // this.selectedSvgObjectIds = []
-      // this.svgDefs = JSON.parse(JSON.stringify(snapshot.svgDefs))
+      this.svgDefs = JSON.parse(JSON.stringify(snapshot.svgDefs))
 
       this.imageOperations = JSON.parse(JSON.stringify(snapshot.imageOperations))
 
@@ -2270,6 +2341,22 @@ export const useImageStore = defineStore('imageStore', {
         img.src = snapshot.newRenderedImage
       } else {
         this.newRenderedImage = null
+      }
+
+      // OverlayImage
+      if (snapshot.overlayImage) {
+        const img = new Image()
+        img.onload = () => {
+          const canvas = document.createElement('canvas')
+          canvas.width = img.width
+          canvas.height = img.height
+          const ctx = canvas.getContext('2d')
+          ctx.drawImage(img, 0, 0)
+          this.overlayImage = canvas
+        }
+        img.src = snapshot.overlayImage
+      } else {
+        this.overlayImage = null
       }
     },
   },

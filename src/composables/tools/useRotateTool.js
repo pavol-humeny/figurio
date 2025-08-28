@@ -160,6 +160,21 @@ export function useRotateTool(imageStore, historyStore, t) {
     imageStore.fileDimensions.height = rotatedHeight
     imageStore.fileDimensions.fileAspectRatio = rotatedWidth / rotatedHeight || 1
     imageStore.newFileDimensions = { ...imageStore.fileDimensions }
+
+    // Rotate overlay svg objects on pdf
+    if (imageStore.overlayImage) {
+      const oldOverlay = imageStore.overlayImage
+      const overlayCanvas = document.createElement('canvas')
+      overlayCanvas.width = rotatedWidth
+      overlayCanvas.height = rotatedHeight
+      const overlayCtx = overlayCanvas.getContext('2d')
+
+      overlayCtx.translate(rotatedWidth / 2, rotatedHeight / 2)
+      overlayCtx.rotate(radians)
+      overlayCtx.drawImage(oldOverlay, -oldOverlay.width / 2, -oldOverlay.height / 2)
+
+      imageStore.overlayImage = overlayCanvas
+    }
   }
 
   return {

@@ -32,7 +32,7 @@ const contentRef = ref(null)
 /**
  * Logic of the image renderer (canvas, SVG, frame)
  */
-const { imageRef, svgRef, frameSvgRef, pdfContainerRef } = useImageRenderer(
+const { imageRef, svgRef, frameSvgRef, pdfContainerRef, overlayImageRef } = useImageRenderer(
   useImageStore(),
   useHistoryStore(),
   useEditorStore(),
@@ -174,6 +174,7 @@ const disableContextMenu = computed(() => {
           <img v-if="imageStore.fileType === 'image'" ref="imageRef" class="image-canvas" />
           <div v-else-if="imageStore.fileType === 'pdf'" ref="pdfContainerRef" class="pdf-viewer"></div>
 
+          <img v-if="imageStore.overlayImage !== null" ref="overlayImageRef" class="overlay-image-canvas" />
 
           <canvas v-if="editorStore.selectedToolKey === 'crop'" ref="overlayCanvasRef" class="overlay-canvas"></canvas>
 
@@ -201,8 +202,7 @@ const disableContextMenu = computed(() => {
 
             <SvgObjectWrapper v-for="object in imageStore.svgObjects" :key="object.id" :objectId="object.id" />
 
-            <SvgObjectWrapper v-for="object in imageStore.blurObjects" :key="object.id"
-              :objectId="object.id" />
+            <SvgObjectWrapper v-for="object in imageStore.blurObjects" :key="object.id" :objectId="object.id" />
 
             <rect v-if="selectBox" :x="selectBox.x" :y="selectBox.y" :width="selectBox.width" :height="selectBox.height"
               fill="var(--editor-highlight-with-opacity-c)" />
@@ -241,7 +241,7 @@ const disableContextMenu = computed(() => {
         </div>
         <div v-if="mouseX !== null" class="ruler-cursor-mark horizontal" :style="{ left: mouseX + 'px' }">
           <span class="ruler-cursor-label horizontal" :class="{ 'active': cursorPosXSameAsImageWidth }">{{ cursorPosX
-          }}</span>
+            }}</span>
         </div>
 
       </div>
@@ -254,7 +254,7 @@ const disableContextMenu = computed(() => {
         </div>
         <div v-if="mouseY !== null" class="ruler-cursor-mark vertical" :style="{ top: mouseY + 'px' }">
           <span class="ruler-cursor-label vertical" :class="{ 'active': cursorPosYSameAsImageHeight }">{{ cursorPosY
-          }}</span>
+            }}</span>
         </div>
       </div>
     </div>
@@ -297,7 +297,8 @@ const disableContextMenu = computed(() => {
 .image-svg,
 .frame-svg,
 .overlay-canvas,
-.pdf-viewer {
+.pdf-viewer,
+.overlay-image-canvas {
   position: absolute;
   top: 0;
   left: 0;
