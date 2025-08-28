@@ -1,5 +1,8 @@
 import jsPDF from 'jspdf'
 import { svg2pdf } from 'svg2pdf.js'
+import * as pdfjsLib from 'pdfjs-dist/legacy/build/pdf'
+import { PDFDocument, rgb, degrees, StandardFonts } from 'pdf-lib'
+
 import { defineStore } from 'pinia'
 import { useToastModal } from '@/composables/modals/useToastModal'
 import { nextTick } from 'vue'
@@ -8,25 +11,17 @@ import { useFrameTool } from '@/composables/tools/useFrameTool'
 import { useWorkspaceStore } from './workspaceStore'
 import { useUiStore } from './uiStore'
 import { editorConfig } from '@/config/editorConfig'
-// import { useConfirmModal } from '@/composables/modals/useConfirmModal'
 
-import * as pdfjsLib from 'pdfjs-dist/legacy/build/pdf'
-// import pdfjsWorker from 'pdfjs-dist/legacy/build/pdf.worker?url'
 import { useViewportStore } from './viewportStore'
 import { useEditorStore } from './editorStore'
 import { globalConfig } from '@/config/globalConfig'
 import { useGeneralModal } from '@/composables/modals/useGeneralModal'
 import { useSendEvent } from '@/composables/common/useSendEvent'
 
-import { PDFDocument, rgb, degrees, StandardFonts } from 'pdf-lib'
-
-// import { SVGGraphics } from 'pdfjs-dist/legacy/build/pdf'
-
 pdfjsLib.GlobalWorkerOptions.workerSrc =
   'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js'
 
 const { showToastModal } = useToastModal()
-// const { showConfirmModal } = useConfirmModal()
 const { showGeneralModal } = useGeneralModal()
 
 /**

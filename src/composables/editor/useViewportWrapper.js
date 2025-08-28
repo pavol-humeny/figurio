@@ -561,11 +561,16 @@ export function useViewportWrapper(viewportStore, imageStore, editorStore, uiSto
    * This will update the marks at approximately 30 FPS
    */
   const throttledUpdateRulers = useThrottleFn(() => {
-    updateHorizontalRulerMarks()
-    updateVerticalRulerMarks()
-  }, 32) // cca 30 FPS
+    setTimeout(() => {
+      // Needed because when side panel was opened/closed it calculate marks without waiting for wrapper size change
+      updateHorizontalRulerMarks()
+      updateVerticalRulerMarks()
+    }, 0)
+  }, 50) // Run one time each 50 ms
 
-  watch([panX, panY, zoomLevel], throttledUpdateRulers, { immediate: true })
+  watch([panX, panY, zoomLevel, () => uiStore.rightPanelOpen], throttledUpdateRulers, {
+    immediate: true,
+  })
 
   /**
    * Mouse position relative to the viewport
