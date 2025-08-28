@@ -7,6 +7,14 @@
     ]
   },
   "versions":{
+    "3.2.1":{
+      "label": "3.2.1",
+      "bugFixes": {
+        "items": [
+          "Object could not be edited after copy and paste."
+        ]
+      }
+    },
     "3.2.0":{
       "label": "3.2.0",
       "newFeatures": {

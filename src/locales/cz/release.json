@@ -7,6 +7,14 @@
     ]
   },
   "versions": {
+    "3.2.1":{
+      "label": "3.2.1",
+      "bugFixes": {
+        "items": [
+          "Objekt nemohl být upraven po zkopírování a vložení."
+        ]
+      }
+    },
     "3.2.0": {
       "label": "3.2.0",
       "newFeatures": {
