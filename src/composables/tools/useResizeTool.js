@@ -162,8 +162,7 @@ export function useResizeTool(imageStore, historyStore, viewportStore, t) {
         t('tools.confirmNeedRasterization.confirm'),
       )
       if (confirmed) {
-        await imageStore.rasterize(t)
-
+        await imageStore.rasterize(t, true)
       } else {
         return
       }
@@ -253,6 +252,19 @@ export function useResizeTool(imageStore, historyStore, viewportStore, t) {
       width,
       height,
       fileAspectRatio: width / height || 1,
+    }
+
+    // Resize overlay svg objects
+    if (imageStore.overlayImage) {
+      const oldOverlay = imageStore.overlayImage
+      const overlayCanvas = document.createElement('canvas')
+      overlayCanvas.width = width
+      overlayCanvas.height = height
+
+      const overlayCtx = overlayCanvas.getContext('2d')
+      overlayCtx.drawImage(oldOverlay, 0, 0, width, height)
+
+      imageStore.overlayImage = overlayCanvas
     }
 
     // Center image

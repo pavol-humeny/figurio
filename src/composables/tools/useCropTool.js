@@ -1054,7 +1054,7 @@ export function useCropTool(
       )
       if (!confirmed) return
 
-      await imageStore.rasterize(t)
+      await imageStore.rasterize(t, true)
     }
 
     imageStore.addImageOperation({
@@ -1159,6 +1159,29 @@ export function useCropTool(
 
     // Update rendered image and preview URL
     imageStore.setRenderedImage(canvas)
+
+    // Crop overlay svg objects
+    if (imageStore.overlayImage) {
+      const oldOverlay = imageStore.overlayImage
+      const overlayCanvas = document.createElement('canvas')
+      const overlayCtx = overlayCanvas.getContext('2d')
+      overlayCanvas.width = width
+      overlayCanvas.height = height
+
+      overlayCtx.drawImage(
+        oldOverlay,
+        x,
+        y,
+        width,
+        height, // Source crop region
+        0,
+        0,
+        width,
+        height, // Destination
+      )
+
+      imageStore.overlayImage = overlayCanvas
+    }
 
     // Update file dimensions
     imageStore.fileDimensions.width = width

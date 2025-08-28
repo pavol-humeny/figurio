@@ -482,6 +482,8 @@ export const useImageStore = defineStore('imageStore', {
       this.renderedImage = null
       this.tmpRenderedImage = null
 
+      this.overlayImage = null
+
       this.newRenderedImage = null
 
       this.resetSvgObject()
@@ -1565,7 +1567,7 @@ export const useImageStore = defineStore('imageStore', {
         }
 
         // 2.5. Overlay image if present (bitmap)
-        if (this.overlayImage) {
+        if (this.overlayImage !== null) {
           const overlayCanvas = this.overlayImage
 
           // Convert to PNG dataUrl
@@ -1642,7 +1644,7 @@ export const useImageStore = defineStore('imageStore', {
      * @param {boolean} storeAsNew - Whether to store the result in `newRenderedImage` or update current `renderedImage`
      * @returns {Promise<void>}
      */
-    async rasterize(t, width = null, height = null, storeAsNew = false) {
+    async rasterize(t, generateOverlay = false, width = null, height = null, storeAsNew = false) {
       if (this.svgObjects.length === 0 && this.blurObjects.length === 0) return
 
       console.log('Rasterizing image with SVG objects...')
@@ -1724,7 +1726,7 @@ export const useImageStore = defineStore('imageStore', {
       })
 
       // Create overlay if it is pdf image
-      if (this.fileType === 'pdf') {
+      if (this.fileType === 'pdf' && generateOverlay) {
         const overlayCanvas = document.createElement('canvas')
         overlayCanvas.width = usedWidth
         overlayCanvas.height = usedHeight
@@ -1804,7 +1806,7 @@ export const useImageStore = defineStore('imageStore', {
       }
 
       // Rasterize base image + SVG objects at export size
-      await this.rasterize(t, targetWidth, targetHeight, true)
+      await this.rasterize(t, false, targetWidth, targetHeight, true)
 
       const baseImage = this.newRenderedImage || this.getRenderedImage({ t, renderCall: true })
       if (!baseImage) {

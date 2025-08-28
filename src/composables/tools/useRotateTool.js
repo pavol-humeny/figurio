@@ -35,7 +35,7 @@ export function useRotateTool(imageStore, historyStore, t) {
         t('tools.confirmNeedRasterization.confirm'),
       )
       if (confirmed) {
-        await imageStore.rasterize(t)
+        await imageStore.rasterize(t, true) // Generate pdf overlay
       } else {
         return
       }
@@ -161,8 +161,8 @@ export function useRotateTool(imageStore, historyStore, t) {
     imageStore.fileDimensions.fileAspectRatio = rotatedWidth / rotatedHeight || 1
     imageStore.newFileDimensions = { ...imageStore.fileDimensions }
 
-    // Rotate overlay svg objects on pdf
-    if (imageStore.overlayImage) {
+    // Rotate overlay svg objects 
+    if (imageStore.overlayImage !== null) {
       const oldOverlay = imageStore.overlayImage
       const overlayCanvas = document.createElement('canvas')
       overlayCanvas.width = rotatedWidth

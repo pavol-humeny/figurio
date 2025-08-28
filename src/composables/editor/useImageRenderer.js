@@ -183,7 +183,9 @@ export function useImageRenderer(
 
     // Save to overlay ref imageStore.overlayImage
     if (overlayImageRef.value) {
-      overlayImageRef.value.src = imageStore.overlayImage.toDataURL()
+      if (imageStore.overlayImage !== null) {
+        overlayImageRef.value.src = imageStore.overlayImage.toDataURL()
+      }
     }
 
     // Save initial state to history if empty
