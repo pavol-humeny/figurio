@@ -11,66 +11,52 @@
     "shortcuts": {
       "title": "Klávesové zkratky",
       "text": "Pomocí klávesových zkratek můžete rychle přistupovat k různým nástrojům a funkcím editoru. Níže najdete seznam dostupných zkratek.",
-      "shortcutsList": [
+      "categories": [
         {
-          "description": "Zpět (undo)",
-          "shortcut": "Ctrl + Z"
+          "name": "Obecné",
+          "list": [
+            { "description": "Vrátit poslední akci", "shortcut": "Ctrl + Z" },
+            { "description": "Znovu provést poslední vrácenou akci", "shortcut": "Ctrl + Y" },
+            { "description": "Nahrát soubor", "shortcut": "Ctrl + O" },
+            { "description": "Uložit soubor", "shortcut": "Ctrl + S" },
+            { "description": "Zavřít soubor", "shortcut": "Ctrl + K" },
+            { "description": "Přejmenovat soubor", "shortcut": "F2" },
+            { "description": "Přepnout na další otevřený soubor", "shortcut": "Alt + PageDown" },
+            { "description": "Přepnout na předchozí otevřený soubor", "shortcut": "Alt + PageUp" }
+          ]
         },
         {
-          "description": "Znovu (redo)",
-          "shortcut": "Ctrl + Y"
+          "name": "Lupa",
+          "list": [
+            { "description": "Přiblížit", "shortcut": "Ctrl + =" },
+            { "description": "Oddálit", "shortcut": "Ctrl + -" },
+            { "description": "Obnovit původní přiblížení", "shortcut": "Ctrl + 0" },
+            { "description": "Klasický režim lupy", "shortcut": "Alt + C" },
+            { "description": "Režim lupy pro text", "shortcut": "Alt + T" }
+          ]
         },
         {
-          "description": "Přiblížit",
-          "shortcut": "Ctrl + ="
+          "name": "Dialogy",
+          "list": [
+            { "description": "Zobrazit nápovědu", "shortcut": "F1" },
+            { "description": "Zobrazit nastavení", "shortcut": "Ctrl + ," },
+            { "description": "Zobrazit dialog soukromí a dat", "shortcut": "Ctrl + I" },
+            { "description": "Zavřít otevřený dialog", "shortcut": "Esc" }
+          ]
         },
         {
-          "description": "Oddálit",
-          "shortcut": "Ctrl + -"
-        },
-        {
-          "description": "Obnovit měřítko",
-          "shortcut": "Ctrl + 0"
-        },
-        {
-          "description": "Načíst soubor",
-          "shortcut": "Ctrl + O"
-        },
-        {
-          "description": "Uložit soubor",
-          "shortcut": "Ctrl + S"
-        },
-        {
-          "description": "Zavřít soubor",
-          "shortcut": "Ctrl + X"
-        },
-        {
-          "description": "Přejmenovat soubor",
-          "shortcut": "F2"
-        },
-        {
-          "description": "Zobrazit nápovědu",
-          "shortcut": "F1"
-        },
-        {
-          "description": "Zobrazit nastavení",
-          "shortcut": "Ctrl + ,"
-        },
-        {
-          "description": "Zobrazit zásady ochrany soukromí",
-          "shortcut": "Ctrl + I"
-        },
-        {
-          "description": "Přepnout na další soubor",
-          "shortcut": "Alt + PageDown"
-        },
-        {
-          "description": "Přepnout na předchozí soubor",
-          "shortcut": "Alt + PageUp"
-        },
-        {
-          "description": "Zavřít otevřené okno",
-          "shortcut": "Esc"
+          "name": "Objekty",
+          "list": [
+            { "description": "Smazat vybraný objekt", "shortcut": "Delete" },
+            { "description": "Posunout vybraný objekt dopředu", "shortcut": "Shift + Šipka nahoru" },
+            { "description": "Posunout vybraný objekt dozadu", "shortcut": "Shift + Šipka dolů" },
+            { "description": "Posunout vybraný objekt globálně", "shortcut": "Šipky" },
+            { "description": "Posunout vybraný objekt lokálně", "shortcut": "Alt + Šipky" },
+            { "description": "Kopírovat vybraný objekt", "shortcut": "Ctrl + C" },
+            { "description": "Vložit objekt do středu", "shortcut": "Ctrl + V" },
+            { "description": "Duplikovat vybraný objekt", "shortcut": "Ctrl + D" },
+            { "description": "Vyjmout vybraný objekt", "shortcut": "Ctrl + X" }
+          ]
         }
       ]
     },

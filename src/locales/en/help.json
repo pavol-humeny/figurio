@@ -11,66 +11,52 @@
     "shortcuts": {
       "title": "Keyboard Shortcuts",
       "text": "You can use keyboard shortcuts to quickly access various tools and features in the editor. Below is a list of available shortcuts.",
-      "shortcutsList": [
+      "categories": [
         {
-          "description": "Undo last action",
-          "shortcut": "Ctrl + Z"
+          "name": "General",
+          "list": [
+            { "description": "Undo last action", "shortcut": "Ctrl + Z" },
+            { "description": "Redo last undone action", "shortcut": "Ctrl + Y" },
+            { "description": "Upload file", "shortcut": "Ctrl + O" },
+            { "description": "Save file", "shortcut": "Ctrl + S" },
+            { "description": "Close file", "shortcut": "Ctrl + K" },
+            { "description": "Rename file", "shortcut": "F2" },
+            { "description": "Switch to next open file", "shortcut": "Alt + PageDown" },
+            { "description": "Switch to previous open file", "shortcut": "Alt + PageUp" }
+          ]
         },
         {
-          "description": "Redo last undone action",
-          "shortcut": "Ctrl + Y"
+          "name": "Zoom",
+          "list": [
+            { "description": "Zoom in", "shortcut": "Ctrl + =" },
+            { "description": "Zoom out", "shortcut": "Ctrl + -" },
+            { "description": "Reset zoom", "shortcut": "Ctrl + 0" },
+            { "description": "Classic zoom mode", "shortcut": "Alt + C" },
+            { "description": "Text zoom mode", "shortcut": "Alt + T" }
+          ]
         },
         {
-          "description": "Zoom in",
-          "shortcut": "Ctrl + ="
+          "name": "Modals",
+          "list": [
+            { "description": "Show help modal", "shortcut": "F1" },
+            { "description": "Show settings modal", "shortcut": "Ctrl + ," },
+            { "description": "Show privacy and data modal", "shortcut": "Ctrl + I" },
+            { "description": "Close opened modal", "shortcut": "Esc" }
+          ]
         },
         {
-          "description": "Zoom out",
-          "shortcut": "Ctrl + -"
-        },
-        {
-          "description": "Reset zoom",
-          "shortcut": "Ctrl + 0"
-        },
-        {
-          "description": "Upload file",
-          "shortcut": "Ctrl + O"
-        },
-        {
-          "description": "Save file",
-          "shortcut": "Ctrl + S"
-        },
-        {
-          "description": "Close file",
-          "shortcut": "Ctrl + X"
-        },
-        {
-          "description": "Rename file",
-          "shortcut": "F2"
-        },
-        {
-          "description": "Show help modal",
-          "shortcut": "F1"
-        },
-        {
-          "description": "Show settings modal",
-          "shortcut": "Ctrl + ,"
-        },
-        {
-          "description": "Show privacy and data modal",
-          "shortcut": "Ctrl + I"
-        },
-        {
-          "description": "Switch to next tab",
-          "shortcut": "Alt + PageDown"
-        },
-        {
-          "description": "Switch to previous tab",
-          "shortcut": "Alt + PageUp"
-        },
-        {
-          "description": "Close opened modal",
-          "shortcut": "Esc"
+          "name": "Objects",
+          "list": [
+            { "description": "Delete selected object", "shortcut": "Delete" },
+            { "description": "Move selected object forward", "shortcut": "Shift + Arrow up" },
+            { "description": "Move selected object backward", "shortcut": "Shift + Arrow down" },
+            { "description": "Move selected object globally", "shortcut": "Arrows" },
+            { "description": "Move selected object locally", "shortcut": "Alt + Arrows" },
+            { "description": "Copy selected object", "shortcut": "Ctrl + C" },
+            { "description": "Paste copied object to center", "shortcut": "Ctrl + V" },
+            { "description": "Duplicate selected object", "shortcut": "Ctrl + D" },
+            { "description": "Cut selected object", "shortcut": "Ctrl + X" }
+          ]
         }
       ]
     },

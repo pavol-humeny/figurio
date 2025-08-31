@@ -540,18 +540,18 @@
   },
   "preset": {
     "label": "Šablóny",
-    "tip": "Aplikuje predvoľbu na obrázok",
+    "tip": "Aplikuje šablónu na obrázok",
     "tipDisabled": "",
     "shortcut": "",
     "subTools": {
       "myPresets": {
-        "label": "Moje predvoľby",
-        "tip": "Spravuje tvoje predvoľby",
+        "label": "Moje šablóny",
+        "tip": "Spravuje šablóny",
         "shortcut": "P"
       },
       "createPreset": {
-        "label": "Vytvoriť predvoľbu",
-        "tip": "Vytvorí novú predvoľbu",
+        "label": "Vytvoriť šablónu",
+        "tip": "Vytvorí novú šablónu",
         "shortcut": "Shift + P"
       }
     },

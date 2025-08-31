@@ -21,7 +21,9 @@ const { tutorialStep, tutorialCompleted } = storeToRefs(uiStore)
  * List of shortcuts as array of objects
  */
 const keyboardShortcuts = computed(() => {
-  return messages.value[locale.value]?.help?.helpContent?.shortcuts?.shortcutsList || []
+  return (
+    messages.value[locale.value]?.help?.helpContent?.shortcuts?.categories || []
+  )
 })
 
 /**
@@ -97,19 +99,131 @@ const { isTutorialEnabled } = useInteractiveTutorial(
               <p class="help-content-title">
                 {{ $t('help.helpContent.tools.title') }}
               </p>
-              <!-- Move -->
+              <!-- Crop -->
               <div class="tool-description">
                 <div>
                   <p class="title">
-                    {{ $t('tools.move.label') }}
+                    {{ $t('tools.crop.label') }}
                   </p>
                   <p class="shortcut">
-                    {{ $t('tools.move.shortcut') }}
+                    {{ $t('tools.crop.shortcut') }}
                   </p>
                 </div>
                 <ul class="description dot-paragraph">
                   <li>
-                    {{ $t('tools.move.tip') }}
+                    {{ $t('tools.crop.tip') }}
+                  </li>
+                </ul>
+              </div>
+              <!-- Frame -->
+              <div class="tool-description">
+                <div>
+                  <p class="title">
+                    {{ $t('tools.frame.label') }}
+                  </p>
+                  <p class="shortcut">
+                    {{ $t('tools.frame.shortcut') }}
+                  </p>
+                </div>
+                <ul class="description dot-paragraph">
+                  <li>
+                    {{ $t('tools.frame.tip') }}
+                  </li>
+                </ul>
+              </div>
+              <!-- GrayScale -->
+              <div class="tool-description">
+                <div>
+                  <p class="title">
+                    {{ $t('tools.grayscale.label') }}
+                  </p>
+                  <p class="shortcut">
+                    {{ $t('tools.grayscale.shortcut') }}
+                  </p>
+                </div>
+                <ul class="description dot-paragraph">
+                  <li>
+                    {{ $t('tools.grayscale.tip') }}
+                  </li>
+                </ul>
+              </div>
+              <!-- Select -->
+              <div class="tool-description">
+                <div>
+                  <p class="title">
+                    {{ $t('tools.select.label') }}
+                  </p>
+                  <p class="shortcut">
+                    {{ $t('tools.select.shortcut') }}
+                  </p>
+                </div>
+                <ul class="description dot-paragraph">
+                  <li>
+                    {{ $t('tools.select.tip') }}
+                  </li>
+                </ul>
+              </div>
+              <!-- Blur -->
+              <div class="tool-description">
+                <div>
+                  <p class="title">
+                    {{ $t('tools.blur.label') }}
+                  </p>
+                  <p class="shortcut">
+                    {{ $t('tools.blur.shortcut') }}
+                  </p>
+                </div>
+                <ul class="description dot-paragraph">
+                  <li>
+                    {{ $t('tools.blur.tip') }}
+                  </li>
+                </ul>
+              </div>
+              <!-- Shape -->
+              <div class="tool-description">
+                <div>
+                  <p class="title">
+                    {{ $t('tools.shape.label') }}
+                  </p>
+                  <p class="shortcut">
+                    {{ $t('tools.shape.shortcut') }}
+                  </p>
+                </div>
+                <ul class="description dot-paragraph">
+                  <li>
+                    {{ $t('tools.shape.tip') }}
+                  </li>
+                </ul>
+              </div>
+              <!-- Text -->
+              <div class="tool-description">
+                <div>
+                  <p class="title">
+                    {{ $t('tools.text.label') }}
+                  </p>
+                  <p class="shortcut">
+                    {{ $t('tools.text.shortcut') }}
+                  </p>
+                </div>
+                <ul class="description dot-paragraph">
+                  <li>
+                    {{ $t('tools.text.tip') }}
+                  </li>
+                </ul>
+              </div>
+              <!-- Magnify area -->
+              <div class="tool-description">
+                <div>
+                  <p class="title">
+                    {{ $t('tools.magnifyArea.label') }}
+                  </p>
+                  <p class="shortcut">
+                    {{ $t('tools.magnifyArea.shortcut') }}
+                  </p>
+                </div>
+                <ul class="description dot-paragraph">
+                  <li>
+                    {{ $t('tools.magnifyArea.tip') }}
                   </li>
                 </ul>
               </div>
@@ -158,54 +272,6 @@ const { isTutorialEnabled } = useInteractiveTutorial(
                 <ul class="description dot-paragraph">
                   <li>
                     {{ $t('tools.transform.subTools.resize.tip') }}
-                  </li>
-                </ul>
-              </div>
-              <!-- Crop -->
-              <div class="tool-description">
-                <div>
-                  <p class="title">
-                    {{ $t('tools.crop.label') }}
-                  </p>
-                  <p class="shortcut">
-                    {{ $t('tools.crop.shortcut') }}
-                  </p>
-                </div>
-                <ul class="description dot-paragraph">
-                  <li>
-                    {{ $t('tools.crop.tip') }}
-                  </li>
-                </ul>
-              </div>
-              <!-- GrayScale -->
-              <div class="tool-description">
-                <div>
-                  <p class="title">
-                    {{ $t('tools.grayscale.label') }}
-                  </p>
-                  <p class="shortcut">
-                    {{ $t('tools.grayscale.shortcut') }}
-                  </p>
-                </div>
-                <ul class="description dot-paragraph">
-                  <li>
-                    {{ $t('tools.grayscale.tip') }}
-                  </li>
-                </ul>
-              </div>
-              <!-- Frame -->
-              <div class="tool-description">
-                <div>
-                  <p class="title">
-                    {{ $t('tools.frame.label') }}
-                  </p>
-                  <p class="shortcut">
-                    {{ $t('tools.frame.shortcut') }}
-                  </p>
-                </div>
-                <ul class="description dot-paragraph">
-                  <li>
-                    {{ $t('tools.frame.tip') }}
                   </li>
                 </ul>
               </div>
@@ -270,11 +336,15 @@ const { isTutorialEnabled } = useInteractiveTutorial(
                 </li>
               </ul>
               <br>
-              <div v-for="(item, index) in keyboardShortcuts" :key="index" class="shortcuts-description">
-                <ul class="description dot-paragraph">
-                  <li>{{ item.description }}</li>
-                </ul>
-                <p class="shortcut">{{ item.shortcut }}</p>
+              <div v-for="(category, cIndex) in keyboardShortcuts" :key="cIndex" class="shortcut-category">
+                <h4 class="category-title">{{ category.name }}</h4>
+
+                <div v-for="(item, index) in category.list" :key="index" class="shortcuts-description">
+                  <ul class="description dot-paragraph">
+                    <li>{{ item.description }}</li>
+                  </ul>
+                  <p class="shortcut">{{ item.shortcut }}</p>
+                </div>
               </div>
             </div>
 
@@ -494,6 +564,10 @@ const { isTutorialEnabled } = useInteractiveTutorial(
   gap: 5px;
   padding: 5px 0;
 }
+
+.shortcut-category {}
+
+.category-title {}
 
 .tool-description>div {
   display: flex;
