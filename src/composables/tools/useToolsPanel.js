@@ -1,8 +1,4 @@
 import { ref, onMounted, nextTick, computed, watch } from 'vue'
-import { useExportToolSettings } from '@/composables/toolsSettings/useExportToolSettings'
-import { useImageStore } from '@/stores/imageStore'
-import { useEditorStore } from '@/stores/editorStore'
-import { useHistoryStore } from '@/stores/historyStore'
 import { useCollapsiblePanel } from '../common/useCollapsiblePanel'
 import { useSendEvent } from '../common/useSendEvent'
 import { useToastModal } from '../modals/useToastModal'
@@ -22,22 +18,12 @@ import { useToastModal } from '../modals/useToastModal'
  *   scrollDown: () => void,
  *   checkScroll: () => void,
  *   toggleTool: (toolKey: string, tabKey?: string | null) => void,
- *   exportTool: () => void,
  *   selectTool: (toolKey: string, tabKey?: string | null) => void,
  *   isToolDisabled: import('vue').ComputedRef<boolean>,
  * }}
  */
 export function useToolsPanel(editorStore, imageStore, uiStore, t) {
   const { showToastModal } = useToastModal()
-  /**
-   * Method to open the export tool settings modal
-   */
-  const { openExportToolSettings } = useExportToolSettings(
-    useImageStore(),
-    useEditorStore(),
-    useHistoryStore(),
-    t,
-  )
 
   /**
    * Reference to the scrollable tools panel element
@@ -173,14 +159,6 @@ export function useToolsPanel(editorStore, imageStore, uiStore, t) {
   }
 
   /**
-   * Open export modal via export tool
-   */
-  const exportTool = () => {
-    console.log('Export tool')
-    openExportToolSettings()
-  }
-
-  /**
    * Select tool or open export tool
    *
    * @param {string} toolKey - Tool key to select
@@ -188,13 +166,6 @@ export function useToolsPanel(editorStore, imageStore, uiStore, t) {
    */
   const selectTool = (toolKey, tabKey) => {
     if (isToolDisabled.value) return
-
-    // Export tool
-    if (toolKey === 'export') {
-      exportTool()
-      return
-    }
-
     toggleTool(toolKey, tabKey)
   }
 
@@ -212,7 +183,6 @@ export function useToolsPanel(editorStore, imageStore, uiStore, t) {
     scrollDown,
     checkScroll,
     toggleTool,
-    exportTool,
     selectTool,
     isToolDisabled,
   }

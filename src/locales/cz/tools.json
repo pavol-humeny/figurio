@@ -770,7 +770,7 @@
     }
   },
   "export": {
-    "label": "Export",
+    "label": "Exportovat",
     "tip": "Exportuje obrázek a umožňuje nastavení výstupního formátu",
     "tipDisabled": "Není k dispozici žádný obrázek k exportu.",
     "shortcut": "CTRL + S",

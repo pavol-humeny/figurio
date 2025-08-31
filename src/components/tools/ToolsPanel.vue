@@ -30,7 +30,7 @@ const {
  * Computed tool list with localized labels, tips and shortcuts
  */
 const tools = computed(() =>
-  toolsDefinitions.map((tool) => ({
+  toolsDefinitions.filter((tool) => tool.key !== 'export').map((tool) => ({
     ...tool,
     label: t(`tools.${tool.key}.label`),
     tip: t(`tools.${tool.key}.tip`),

@@ -770,7 +770,7 @@
     }
   },
   "export": {
-    "label": "Export",
+    "label": "Exportovať",
     "tip": "Exportuje obrázok a umožňuje nastavenie výstupného formátu",
     "tipDisabled": "",
     "shortcut": "CTRL + S",

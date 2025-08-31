@@ -62,7 +62,7 @@ export function getTutorialSteps(router, t) {
       selector: '#export-tool',
       title: t('tutorialSteps.tutorial.exportTool.title'),
       text: t('tutorialSteps.tutorial.exportTool.text'),
-      position: 'right',
+      position: 'bottom',
     },
   ]
 

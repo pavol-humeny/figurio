@@ -68,8 +68,7 @@ const { wrapperRef, subToolPos, onMouseEnter, onMouseLeave, onClickTab, onClickT
     text: props.tip,
     position: 'top-right',
   }">
-    <div class="tool-wrapper" ref="wrapperRef" @mouseenter="onMouseEnter" @mouseleave="onMouseLeave"
-      :id="props.tool.key === 'export' ? 'export-tool' : undefined">
+    <div class="tool-wrapper" ref="wrapperRef" @mouseenter="onMouseEnter" @mouseleave="onMouseLeave">
       <div class="tool"
         :class="{ active: props.active && imageStore.isImageLoaded, disabled: props.disabled || editorStore.enableTools[props.tool.key] === false }"
         @click.left="onClickTool">
