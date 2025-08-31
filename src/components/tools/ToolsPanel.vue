@@ -82,7 +82,7 @@ const tools = computed(() =>
   position: relative;
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 15px;
   overflow-y: auto;
   scrollbar-width: none;
   padding: 30px 20px;
