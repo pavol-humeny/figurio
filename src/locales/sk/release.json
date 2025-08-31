@@ -7,6 +7,15 @@
     ]
   },
   "versions": {
+    "3.3.0":{
+      "label": "3.3.0",
+      "improvements": {
+        "items": [
+          "Aktualizované texty nápovedy",
+          "Tlačidlo exportu presunuté do horného panelu pre lepšiu prístupnosť"
+        ]
+      }
+    },
     "3.2.2":{
       "label": "3.2.2",
       "bugFixes": {

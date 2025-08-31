@@ -11,7 +11,8 @@
       "label": "3.3.0",
       "improvements": {
         "items": [
-          "Updated help texts"
+          "Updated help texts",
+          "Moved the export button to the top panel for better accessibility"
         ]
       }
     },
