@@ -83,12 +83,24 @@ const APP_VERSION = import.meta.env.VITE_APP_VERSION
 onMounted(() => {
   window.addEventListener('beforeunload', handleBeforeUnload)
 
-  // Reset localStorage if app version has changed and in global config is set reset
-
+  // Reset localStorage (preferences) if app version has changed and in global config is set reset
   if (globalConfig.resetPreferencesOnVersionChange) {
     const savedVersion = localStorage.getItem(`${globalConfig.LOCAL_STORAGE_PREFIX}appVersion`)
     if (savedVersion !== APP_VERSION) {
-      localStorage.clear()
+      // Reset localStorage
+      if (globalConfig.resetTutorialOnVersionChange) {
+        localStorage.clear()
+      } else {
+        const tutorialStep = localStorage.getItem(`${globalConfig.LOCAL_STORAGE_PREFIX}tutorialStep`) || -1
+        const tutorialCompleted = localStorage.getItem(`${globalConfig.LOCAL_STORAGE_PREFIX}tutorialCompleted`) === 'true'
+
+        // Reset
+        localStorage.clear()
+
+        // Restore tutorial
+        localStorage.setItem(`${globalConfig.LOCAL_STORAGE_PREFIX}tutorialStep`, tutorialStep)
+        localStorage.setItem(`${globalConfig.LOCAL_STORAGE_PREFIX}tutorialCompleted`, tutorialCompleted)
+      }
 
       localStorage.setItem(`${globalConfig.LOCAL_STORAGE_PREFIX}appVersion`, APP_VERSION)
       location.reload()

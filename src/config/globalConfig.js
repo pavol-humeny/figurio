@@ -2,8 +2,11 @@ export const globalConfig = {
   // If app is running
   isRunning: true,
 
-  // Reset global preferences on new version
+  // Reset preferences on new version
   resetPreferencesOnVersionChange: true,
+
+  // Reset tutorial progress on new version
+  resetTutorialOnVersionChange: false,
 
   // Default language for the editor
   defaultLanguage: 'en',
