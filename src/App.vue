@@ -75,11 +75,25 @@ const setUserLogin = async (userUuid) => {
   }
 }
 
+const APP_VERSION = import.meta.env.VITE_APP_VERSION
+
 /**
  * Register unload warning on mount
  */
 onMounted(() => {
   window.addEventListener('beforeunload', handleBeforeUnload)
+
+  // Reset localStorage if app version has changed and in global config is set reset
+
+  if (globalConfig.resetPreferencesOnVersionChange) {
+    const savedVersion = localStorage.getItem(`${globalConfig.LOCAL_STORAGE_PREFIX}appVersion`)
+    if (savedVersion !== APP_VERSION) {
+      localStorage.clear()
+
+      localStorage.setItem(`${globalConfig.LOCAL_STORAGE_PREFIX}appVersion`, APP_VERSION)
+      location.reload()
+    }
+  }
 
   // If the app is not running show MaintenanceView
   if (!globalConfig.isRunning) {

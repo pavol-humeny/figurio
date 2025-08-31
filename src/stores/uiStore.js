@@ -113,7 +113,7 @@ export const useUiStore = defineStore('ui', {
     blockClicks: true,
 
     /** Tutorial step */
-    tutorialStep: getNumber(`${globalConfig.LOCAL_STORAGE_PREFIX}tutorialStep`, -1),
+    tutorialStep: getNumber(`${globalConfig.LOCAL_STORAGE_PREFIX}tutorialStep`, -1), // -1 = tutorial not started yet
     /** Whether the interactive tutorial is running */
     isTutorialRunning: false,
     /** Whether the interactive tutorial is completed */
@@ -143,7 +143,10 @@ export const useUiStore = defineStore('ui', {
      */
     setKeyShortcuts(value) {
       this.keyShortcutsEnabled = value
-      localStorage.setItem(`${globalConfig.LOCAL_STORAGE_PREFIX}keyShortcutsEnabled`, this.keyShortcutsEnabled.toString())
+      localStorage.setItem(
+        `${globalConfig.LOCAL_STORAGE_PREFIX}keyShortcutsEnabled`,
+        this.keyShortcutsEnabled.toString(),
+      )
     },
 
     /**
@@ -152,7 +155,10 @@ export const useUiStore = defineStore('ui', {
      */
     setRulers(value) {
       this.rulersEnabled = value
-      localStorage.setItem(`${globalConfig.LOCAL_STORAGE_PREFIX}rulersEnabled`, this.rulersEnabled.toString())
+      localStorage.setItem(
+        `${globalConfig.LOCAL_STORAGE_PREFIX}rulersEnabled`,
+        this.rulersEnabled.toString(),
+      )
     },
 
     /**
@@ -160,7 +166,10 @@ export const useUiStore = defineStore('ui', {
      */
     toggleRightPanel() {
       this.rightPanelOpen = !this.rightPanelOpen
-      localStorage.setItem(`${globalConfig.LOCAL_STORAGE_PREFIX}rightPanelOpen`, this.rightPanelOpen.toString())
+      localStorage.setItem(
+        `${globalConfig.LOCAL_STORAGE_PREFIX}rightPanelOpen`,
+        this.rightPanelOpen.toString(),
+      )
     },
 
     /**
@@ -169,7 +178,10 @@ export const useUiStore = defineStore('ui', {
      */
     setRightPanelWidth(width) {
       this.rightPanelWidth = width
-      localStorage.setItem(`${globalConfig.LOCAL_STORAGE_PREFIX}rightPanelWidth`, this.rightPanelWidth.toString())
+      localStorage.setItem(
+        `${globalConfig.LOCAL_STORAGE_PREFIX}rightPanelWidth`,
+        this.rightPanelWidth.toString(),
+      )
     },
 
     /**
@@ -191,7 +203,10 @@ export const useUiStore = defineStore('ui', {
      */
     resetRightPanelWidth() {
       this.rightPanelWidth = this.rightPanelDefaultWidth
-      localStorage.setItem(`${globalConfig.LOCAL_STORAGE_PREFIX}rightPanelWidth`, this.rightPanelWidth.toString())
+      localStorage.setItem(
+        `${globalConfig.LOCAL_STORAGE_PREFIX}rightPanelWidth`,
+        this.rightPanelWidth.toString(),
+      )
     },
 
     /**
@@ -200,7 +215,10 @@ export const useUiStore = defineStore('ui', {
      */
     setTutorialStep(step) {
       this.tutorialStep = step
-      localStorage.setItem(`${globalConfig.LOCAL_STORAGE_PREFIX}tutorialStep`, this.tutorialStep.toString())
+      localStorage.setItem(
+        `${globalConfig.LOCAL_STORAGE_PREFIX}tutorialStep`,
+        this.tutorialStep.toString(),
+      )
     },
 
     /**
@@ -209,7 +227,10 @@ export const useUiStore = defineStore('ui', {
      */
     setTutorialCompleted(value) {
       this.tutorialCompleted = value
-      localStorage.setItem(`${globalConfig.LOCAL_STORAGE_PREFIX}tutorialCompleted`, this.tutorialCompleted.toString())
+      localStorage.setItem(
+        `${globalConfig.LOCAL_STORAGE_PREFIX}tutorialCompleted`,
+        this.tutorialCompleted.toString(),
+      )
     },
   },
 })

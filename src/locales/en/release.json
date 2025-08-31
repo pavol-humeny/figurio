@@ -7,6 +7,14 @@
     ]
   },
   "versions":{
+    "3.3.0":{
+      "label": "3.3.0",
+      "improvements": {
+        "items": [
+          "Updated help texts"
+        ]
+      }
+    },
     "3.2.2":{
       "label": "3.2.2",
       "bugFixes": {
