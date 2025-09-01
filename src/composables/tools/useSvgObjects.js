@@ -584,11 +584,7 @@ export function useSvgObjects(imageStore, historyStore, viewportStore, editorSto
 
           editorStore.previousToolKey = editorStore.selectedToolKey
 
-          editorStore.blockGlobalClickAfterAreaSelection = true
-
-          console.log('tool before toggle: ', editorStore.selectedToolKey)
           toggleTool(tool, tab)
-          console.log('tool after toggle: ', editorStore.selectedToolKey)
         }
       } else {
         if (editorStore.previousToolKey === 'select' && editorStore.selectedToolKey !== 'select') {
@@ -625,7 +621,6 @@ export function useSvgObjects(imageStore, historyStore, viewportStore, editorSto
           // Toggle object in multi-select
           const index = imageStore.selectedSvgObjectIds.indexOf(clickedId)
 
-          console.warn('multi selection')
           if (index !== -1) {
             imageStore.selectedSvgObjectIds.splice(index, 1)
           } else {
@@ -1012,11 +1007,19 @@ export function useSvgObjects(imageStore, historyStore, viewportStore, editorSto
     }
 
     // Check if it is not too small object
-    if (
-      (attrs.width && attrs.width <= MIN_SIZE && attrs.height && attrs.height <= MIN_SIZE) ||
-      (attrs.rx && attrs.rx <= MIN_SIZE && attrs.ry && attrs.ry <= MIN_SIZE) ||
-      (lineLength !== null && lineLength <= MIN_SIZE)
-    ) {
+    const tooSmallRect =
+      attrs.width !== undefined &&
+      attrs.height !== undefined &&
+      (attrs.width <= MIN_SIZE || attrs.height <= MIN_SIZE)
+
+    const tooSmallEllipse =
+      attrs.rx !== undefined &&
+      attrs.ry !== undefined &&
+      (attrs.rx <= MIN_SIZE || attrs.ry <= MIN_SIZE)
+
+    const tooSmallLine = lineLength !== null && lineLength <= MIN_SIZE
+
+    if (tooSmallRect || tooSmallEllipse || tooSmallLine) {
       isDrawing.value = false
       currentDrawingObject.value = null
       viewportStore.guideLine = null
@@ -1066,13 +1069,6 @@ export function useSvgObjects(imageStore, historyStore, viewportStore, editorSto
   const onGlobalClick = (e) => {
     if (imageStore.justCreatedSvgObjectId === imageStore.selectedSvgObjectId) return
 
-    if (editorStore.blockGlobalClickAfterAreaSelection) {
-      editorStore.blockGlobalClickAfterAreaSelection = false
-      return
-    }
-
-    if (editorStore.isSvgObjectResizing) return
-
     const viewportContent = document.getElementById('viewport')
     if (!viewportContent) return
 
@@ -1100,14 +1096,14 @@ export function useSvgObjects(imageStore, historyStore, viewportStore, editorSto
   onMounted(() => {
     window.addEventListener('mouseup', onMouseUpImageSvg)
     if (!editorStore.isGlobalClickRegistered) {
-      window.addEventListener('click', onGlobalClick)
+      window.addEventListener('dblclick', onGlobalClick)
       editorStore.isGlobalClickRegistered = true
     }
   })
 
   onBeforeUnmount(() => {
     window.removeEventListener('mouseup', onMouseUpImageSvg)
-    window.removeEventListener('click', onGlobalClick)
+    window.removeEventListener('dblclick', onGlobalClick)
   })
 
   return {

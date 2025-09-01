@@ -104,21 +104,21 @@ export function useShapeTool(editorStore, imageStore, historyStore, t) {
   /**
    * Temporary refs to store shape width and height for syncing with external components
    */
-  const tmpShapeWidth = ref(localObjectSettings.value.width)
-  const tmpShapeHeight = ref(localObjectSettings.value.height)
+  const tmpShapeWidth = ref(Math.abs(localObjectSettings.value.width))
+  const tmpShapeHeight = ref(Math.abs(localObjectSettings.value.height))
   /**
    * Watch for changes in shape width and height to update temporary refs
    */
   watch(
     () => localObjectSettings.value.width,
     (value) => {
-      tmpShapeWidth.value = value
+      tmpShapeWidth.value = Math.abs(value)
     },
   )
   watch(
     () => localObjectSettings.value.height,
     (value) => {
-      tmpShapeHeight.value = value
+      tmpShapeHeight.value = Math.abs(value)
     },
   )
 

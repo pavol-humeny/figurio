@@ -45,9 +45,6 @@ export const useEditorStore = defineStore('editorStore', {
     /** Key of the previously selected tool - use for transition between select tool and svg object tools */
     previousToolKey: '',
 
-    /** Whether to block global click events after area selection */
-    blockGlobalClickAfterAreaSelection: false,
-
     /** Whether a global click event is registered */
     isGlobalClickRegistered: false,
 
