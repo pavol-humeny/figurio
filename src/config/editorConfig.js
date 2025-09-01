@@ -46,7 +46,7 @@ export const editorConfig = {
   rotationSensitivity: 1, // Higher = rotates faster, lower = slower
   snapEdgeThresholdCoefficient: 0.01, // 1% of the smaller dimension of the image (higher = more sensitive)
   snapOnlyWhenOverlapping: true, // Snap only when the object is overlapping with the other object
-  minimumObjectSize: 2, // Minimum size of the object to be drawn
+  minimumObjectSize: 5, // Minimum size of the object to be drawn
   magnifyAreaDefaultRadiusFromImage: 0.1, // 10% of smaller dimension
 
   // Text fonts

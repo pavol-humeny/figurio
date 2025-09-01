@@ -711,7 +711,7 @@ export function useSvgObjects(imageStore, historyStore, viewportStore, editorSto
     // Drawing objects
     if (!['blur', 'shape'].includes(editorStore.selectedToolKey)) return
 
-    if (imageStore.selectedSvgObjectId !== null) return
+    // if (imageStore.selectedSvgObjectId !== null) return // Disable drawing objects when another is selected
 
     const objectClass = editorStore.selectedToolKey
     let objectType = editorStore.selectedTabPerTool[objectClass]

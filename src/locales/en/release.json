@@ -13,7 +13,8 @@
       "improvements": {
         "items": [
           "Modal windows can be closed by clicking outside of window",
-          "Released versions are displayed with the release date"
+          "Released versions are displayed with the release date",
+          "New object can be created also when previous object is selected"
         ]
       }, 
       "bugFixes":{
