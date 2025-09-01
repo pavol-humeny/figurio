@@ -1,5 +1,5 @@
 <script setup>
-import { onMounted } from 'vue'
+import { onMounted, watch } from 'vue'
 
 import ToolsPanel from '@/components/tools/ToolsPanel.vue';
 import CollapsiblePanel from '@/components/common/CollapsiblePanel.vue';
@@ -68,6 +68,7 @@ const {
 
 const imageStore = useImageStore()
 const editorStore = useEditorStore()
+const uiStore = useUiStore()
 
 useKeyboardShortcuts({
   undo,
@@ -107,11 +108,16 @@ useKeyboardShortcuts({
 // ======
 
 // Start tutorial if opening the editor for the first time
-onMounted(() => {
-  const uiStore = useUiStore()
-  if (uiStore.tutorialStep === -1) {
+watch(() => uiStore.tutorialShouldBeStartedForFirstTime, (newVal) => {
+  console.warn('tutorialShouldBeStartedForFirstTime changed: ', newVal)
+  if (newVal) {
+    uiStore.tutorialShouldBeStartedForFirstTime = false
     startTutorial()
   }
+})
+
+onMounted(() => {
+
 
   // Close right panel if there is no selected tool
   if (editorStore.selectedToolKey === '') {

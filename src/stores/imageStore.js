@@ -640,6 +640,11 @@ export const useImageStore = defineStore('imageStore', {
 
             uiStore.isLoading = false
 
+            // Run tutorial if it is first open of editor after image is loaded
+            if (uiStore.tutorialStep === -1) {
+              uiStore.tutorialShouldBeStartedForFirstTime = true
+            }
+
             showToastModal(
               'success',
               t('imageStore.toast.successFileUploaded.title'),
@@ -726,6 +731,11 @@ export const useImageStore = defineStore('imageStore', {
             workspaceStore.addNewTab(this.fileName, this.fileFormat, t)
 
             uiStore.isLoading = false
+
+            // Run tutorial if it is first open of editor after image is loaded
+            if (uiStore.tutorialStep === -1) {
+              uiStore.tutorialShouldBeStartedForFirstTime = true
+            }
 
             showToastModal(
               'success',

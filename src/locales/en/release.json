@@ -30,7 +30,8 @@
           "Decimal numbers in the drop-down menu are displayed with a decimal point instead of a period",
           "Tools can not be changed while exporting file",
           "Object selection is not deselected during resizing",
-          "Disable drawing invisible objects"
+          "Disable drawing invisible objects",
+          "Run the tutorial for the first time only after the image is loaded"
         ]
       }
     },

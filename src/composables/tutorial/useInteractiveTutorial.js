@@ -92,8 +92,8 @@ export function useInteractiveTutorial(uiStore, imageStore, router, t) {
       numberOfSteps.value = steps.value.length
       currentStep.value = steps.value[uiStore.tutorialStep] || {}
 
-      uiStore.setTutorialCompleted(false)
-      uiStore.setTutorialStep(0)
+      // uiStore.setTutorialCompleted(false)
+      // uiStore.setTutorialStep(0)
     },
   )
   /**

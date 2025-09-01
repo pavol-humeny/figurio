@@ -118,6 +118,8 @@ export const useUiStore = defineStore('ui', {
     isTutorialRunning: false,
     /** Whether the interactive tutorial is completed */
     tutorialCompleted: getBoolean(`${globalConfig.LOCAL_STORAGE_PREFIX}tutorialCompleted`, false),
+
+    tutorialShouldBeStartedForFirstTime: false,
   }),
   actions: {
     /**
