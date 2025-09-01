@@ -604,6 +604,7 @@ export function useSvgObjects(imageStore, historyStore, viewportStore, editorSto
 
     if (didDrag.value) {
       // Prevent click after drag
+      // Prevent selecting object after move
       return
     }
 
@@ -615,6 +616,11 @@ export function useSvgObjects(imageStore, historyStore, viewportStore, editorSto
     const clickedId = elWithId ? Number(elWithId.getAttribute('data-id')) : null
 
     if (clickedId !== null) {
+      if (isMovingMultipleObjects.value) {
+        // HERE
+        return
+      }
+
       const clickedObject = imageStore.getSvgObjectById(clickedId)
       if (clickedObject) {
         if (event.shiftKey) {
@@ -681,6 +687,10 @@ export function useSvgObjects(imageStore, historyStore, viewportStore, editorSto
 
     // Selecting objects
     if (editorStore.selectedToolKey === 'select') {
+      if (isMovingMultipleObjects.value) {
+        return
+      }
+
       const rect = viewportStore.viewportContentRect
       const x = round(
         (event.clientX - rect.left - viewportStore.panX) / viewportStore.realZoomLevel,
@@ -694,6 +704,8 @@ export function useSvgObjects(imageStore, historyStore, viewportStore, editorSto
     }
   }
 
+  const isMovingMultipleObjects = ref(false)
+
   /**
    * Mouse down event handler for the SVG image (creating new objects)
    * @param {MouseEvent} event
@@ -702,6 +714,20 @@ export function useSvgObjects(imageStore, historyStore, viewportStore, editorSto
     if (event.button !== 0) return // Only left mouse button
 
     didDrag.value = false // Reset at start
+
+    // Multi object move (start)
+    if (editorStore.selectedToolKey === 'select' && imageStore.selectedSvgObjectIds.length > 1) {
+      const elWithId = event.target.closest('[data-id]')
+      const clickedId = elWithId ? Number(elWithId.getAttribute('data-id')) : null
+
+      if (clickedId !== null && imageStore.selectedSvgObjectIds.includes(clickedId)) {
+        isMovingMultipleObjects.value = true
+        didDrag.value = false
+        startX.value = event.clientX
+        startY.value = event.clientY
+        return
+      }
+    }
 
     // Drawing objects
     if (!['blur', 'shape'].includes(editorStore.selectedToolKey)) return
@@ -806,6 +832,18 @@ export function useSvgObjects(imageStore, historyStore, viewportStore, editorSto
   }
 
   /**
+   * Start values for multi object move
+   */
+  const startX = ref(0)
+  const startY = ref(0)
+
+  /**
+   * Values for smooth multi object move
+   */
+  const remainingDx = ref(0)
+  const remainingDy = ref(0)
+
+  /**
    * Drawing object
    * @param {MouseEvent} event
    */
@@ -835,6 +873,56 @@ export function useSvgObjects(imageStore, historyStore, viewportStore, editorSto
         width: x2 - x1,
         height: y2 - y1,
       }
+
+      return
+    }
+
+    if (isMovingMultipleObjects.value) {
+      // Mouse was moved
+      didDrag.value = true
+
+      // Calculate deltas
+      let rawDx = (event.clientX - startX.value) / viewportStore.realZoomLevel + remainingDx.value
+      let rawDy = (event.clientY - startY.value) / viewportStore.realZoomLevel + remainingDy.value
+
+      // Round to whole pixels
+      const dx = Math.round(rawDx)
+      const dy = Math.round(rawDy)
+
+      // Store remaining deltas for smooth movement
+      remainingDx.value = rawDx - dx
+      remainingDy.value = rawDy - dy
+
+      // Move all selected objects
+      imageStore.selectedSvgObjectIds.forEach((id) => {
+        const object = imageStore.getSvgObjectById(id)
+        const { tag, attrs } = object
+
+        let offsetX = dx
+        let offsetY = dy
+
+        // Apply updated offset
+        if ('x' in attrs && 'y' in attrs) {
+          attrs.x += offsetX
+          attrs.y += offsetY
+
+          if (tag === 'text') {
+            object.value.textBBox.x += offsetX
+            object.value.textBBox.y += offsetY
+          }
+        } else if ('cx' in attrs && 'cy' in attrs) {
+          attrs.cx += offsetX
+          attrs.cy += offsetY
+        } else if ('x1' in attrs && 'y1' in attrs && 'x2' in attrs && 'y2' in attrs) {
+          attrs.x1 += offsetX
+          attrs.y1 += offsetY
+          attrs.x2 += offsetX
+          attrs.y2 += offsetY
+        }
+      })
+
+      startX.value = event.clientX
+      startY.value = event.clientY
 
       return
     }
@@ -953,6 +1041,13 @@ export function useSvgObjects(imageStore, historyStore, viewportStore, editorSto
    * @param {MouseEvent} event
    */
   const onMouseUpImageSvg = (event) => {
+    // End multi object move
+    if (isMovingMultipleObjects.value) {
+      isMovingMultipleObjects.value = false
+      didDrag.value = true
+      return
+    }
+
     // Selecting objects
     if (editorStore.selectedToolKey === 'select' && selectBox.value) {
       const { x, y, width, height } = selectBox.value

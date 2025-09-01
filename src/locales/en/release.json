@@ -13,7 +13,8 @@
       "newFeatures": {
         "items": [
           "Side handles for resizing the objects",
-          "Side handles for resizing the crop box"
+          "Side handles for resizing the crop box",
+          "Objects can be moved when they are in multiple object selection"
         ]
       },
       "improvements": {
