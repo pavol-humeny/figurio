@@ -12,6 +12,7 @@ import { useHistoryStore } from '@/stores/historyStore'
 import { useResizeTool } from '@/composables/tools/useResizeTool'
 import { useI18n } from 'vue-i18n'
 import { useViewportStore } from '@/stores/viewportStore'
+import ExplainItem from '../common/ExplainItem.vue'
 
 const { t } = useI18n()
 
@@ -57,6 +58,8 @@ const tabs = ['rotate', 'flip', 'resize']
       <div v-if="editorStore.selectedTabPerTool[editorStore.selectedToolKey] === 'rotate'" class="specific-settings">
         <!-- Rotate left -->
         <div class="settings-content-wrapper">
+          <ExplainItem :text="$t('tools.transform.subTools.rotate.explain')"
+            :title="$t('tools.transform.subTools.rotate.label')" position="left" />
           <div class="content-wrapper">
             <div class="content-title">
               <BaseIcon name="IconRotateLeft" size="25" :color="'var(--primary-c)'" />
@@ -97,6 +100,8 @@ const tabs = ['rotate', 'flip', 'resize']
       <div v-if="editorStore.selectedTabPerTool[editorStore.selectedToolKey] === 'flip'" class="specific-settings">
         <!-- Flip horizontal -->
         <div class="settings-content-wrapper">
+          <ExplainItem :text="$t('tools.transform.subTools.flip.explain')"
+            :title="$t('tools.transform.subTools.flip.label')" position="left" />
           <div class="content-wrapper">
             <div class="content-title">
               <BaseIcon name="IconFlipHorizontal" size="30" :color="'var(--primary-c)'" />
@@ -137,6 +142,8 @@ const tabs = ['rotate', 'flip', 'resize']
       <div v-if="editorStore.selectedTabPerTool[editorStore.selectedToolKey] === 'resize'" class="specific-settings">
         <!-- Resize dimensions -->
         <div class="settings-content-wrapper">
+          <ExplainItem :text="$t('tools.transform.subTools.resize.explain')"
+            :title="$t('tools.transform.subTools.resize.label')" position="left" />
           <div class="content-wrapper">
             <div class="content-title">
               <p>

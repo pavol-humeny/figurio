@@ -22,6 +22,7 @@
     "label": "Select",
     "tip": "Selects objects on the image",
     "tipDisabled": "",
+    "explain": "The Select tool allows you to pick one or multiple objects on the image. Click on an object to select it. Hold Shift to add more objects to your selection, or drag a rectangle around multiple objects. After selecting, you can move, or delete the objects. Use the 'Select all' button to select everything, 'Deselect all' to clear your selection, and 'Delete selected objects' to remove the selected items from the canvas.",
     "shortcut": "V",
     "settings": {
       "general": {
@@ -46,16 +47,19 @@
       "rotate": {
         "label": "Rotate",
         "tip": "Applies rotation to the image",
+        "explain": "The Rotate tool allows you to rotate the image in 90° steps. Use the left and right rotate buttons to rotate the image clockwise or counterclockwise.",
         "shortcut": "R"
       },
       "flip": {
         "label": "Flip",
         "tip": "Applies horizontal or vertical flipping to the image",
+        "explain": "The Flip tool allows you to apply a horizontal or vertical flip to the image. Use the Apply buttons to apply the flip.",
         "shortcut": "F"
       },
       "resize": {
         "label": "Resize",
         "tip": "Changes the dimensions of the image",
+        "explain": "The Resize tool lets you change the image dimensions. You can maintain the aspect ratio or reset the dimensions to the original size.",
         "shortcut": "Shift + R"
       }
     },

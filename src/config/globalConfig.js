@@ -6,7 +6,7 @@ export const globalConfig = {
   resetPreferencesOnVersionChange: true,
 
   // Reset tutorial progress on new version
-  resetTutorialOnVersionChange: true,
+  resetTutorialOnVersionChange: false,
 
   // Default language for the editor
   defaultLanguage: 'en',

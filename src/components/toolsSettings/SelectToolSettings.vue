@@ -8,6 +8,7 @@ import { useHistoryStore } from '@/stores/historyStore';
 import { useViewportStore } from '@/stores/viewportStore';
 import { useEditorStore } from '@/stores/editorStore';
 import { useUiStore } from '@/stores/uiStore';
+import ExplainItem from '../common/ExplainItem.vue';
 
 const { t } = useI18n()
 const imageStore = useImageStore()
@@ -31,6 +32,7 @@ const {
       <div class="specific-settings">
         <!-- Select all -->
         <div class="settings-content-wrapper">
+          <ExplainItem :text="$t('tools.select.explain')" :title="$t('tools.select.label')" position="left" />
           <div class="content-wrapper">
             <DefaultButton :text="$t('tools.select.settings.general.selectAllButton.text')" @click="selectAllSvgObjects"
               :disabled="imageStore.selectedSvgObjectIds.length === imageStore.svgObjects.length + imageStore.blurObjects.length" />

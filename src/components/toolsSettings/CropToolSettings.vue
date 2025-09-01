@@ -13,6 +13,7 @@ import ToggleButton from '../common/ToggleButton.vue'
 import StepperInput from '../common/StepperInput.vue'
 import NumberDropdownInput from '../common/NumberDropdownInput.vue'
 import { useWorkspaceStore } from '@/stores/workspaceStore'
+import ExplainItem from '../common/ExplainItem.vue'
 
 const { t } = useI18n()
 
@@ -127,6 +128,7 @@ const {
 
         <!-- Auto crop -->
         <div class="settings-content-wrapper">
+          <ExplainItem text="Ahoj ako sa mas" title="ahoj" position="left"/>
           <div class="content-title">
             <p>
               {{ $t('tools.crop.settings.general.autoCrop.title') }}

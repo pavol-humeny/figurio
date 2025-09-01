@@ -73,7 +73,7 @@ export const useUiStore = defineStore('ui', {
     userUuid: getUuid(), // Unique identifier for the UI instance
 
     /** Active theme (dark | light) */
-    theme: getString('theme', uiConfig.theme),
+    theme: getString(`${globalConfig.LOCAL_STORAGE_PREFIX}theme`, uiConfig.theme),
 
     /** Whether keyboard shortcuts are enabled */
     keyShortcutsEnabled: getBoolean(

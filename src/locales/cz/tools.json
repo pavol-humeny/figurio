@@ -22,6 +22,7 @@
     "label": "Výběr",
     "tip": "Vybere objekty na obrázku",
     "tipDisabled": "",
+    "explain": "Nástroj Výběr umožňuje vybrat jeden nebo více objektů na obrázku. Klikněte na objekt, abyste ho vybrali. Podržte Shift, abyste přidali další objekty do výběru, nebo táhněte obdélník kolem více objektů. Po výběru můžete objekty přesunout nebo smazat. Použijte tlačítko 'Vybrat vše' pro výběr všeho, 'Zrušit výběr' pro zrušení výběru a 'Smazat vybrané objekty' pro odstranění vybraných položek z plátna.",
     "shortcut": "V",
     "settings": {
       "general": {
@@ -46,16 +47,19 @@
       "rotate": {
         "label": "Otočit",
         "tip": "Aplikuje otáčení na obrázek",
+        "explain": "Nástroj Rotace umožňuje otáčet obrázek po 90° krocích. Použijte tlačítka pro rotaci vlevo nebo vpravo pro otáčení obrázku po nebo proti směru hodinových ručiček.",
         "shortcut": "R"
       },
       "flip": {
         "label": "Překlopit",
         "tip": "Aplikuje horizontální nebo vertikální překlopení obrázku",
+        "explain": "Nástroj Překlopit umožňuje aplikovat horizontální nebo vertikální flip na obrázek. Použijte tlačítka Použít k provedení překlopení.",
         "shortcut": "F"
       },
       "resize": {
         "label": "Změnit velikost",
         "tip": "Změní rozměry obrázku",
+        "explain": "Nástroj Resize umožňuje měnit rozměry obrázku. Je možné zachovat poměr stran nebo resetovat rozměry na původní velikost.",
         "shortcut": "Shift + R"
       }
     },

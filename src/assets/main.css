@@ -183,6 +183,7 @@ input[type='number'] {
   align-items: center;
 }
 .settings-content-wrapper {
+  position: relative;
   width: 100%;
   display: flex;
   flex-direction: column;
