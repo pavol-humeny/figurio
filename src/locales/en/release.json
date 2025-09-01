@@ -7,21 +7,38 @@
     ]
   },
   "versions":{
-    "3.3.0":{
-      "label": "3.3.0",
+    "3.4.0":{
+      "label": "3.4.0",
+      "date":"1.9. 2025",
       "improvements": {
         "items": [
-          "Updated help texts",
-          "Moved the export button to the top panel for better accessibility"
+          "Modal windows can be closed by clicking outside of window",
+          "Released versions are displayed with the release date"
+        ]
+      }, 
+      "bugFixes":{
+        "items":[
+          "Decimal numbers in the drop-down menu are displayed with a decimal point instead of a period"
+        ]
+      }
+    },
+    "3.3.0":{
+      "label": "3.3.0",
+      "date":"31.8. 2025",
+      "improvements": {
+        "items": [
+          "Updated modal help texts",
+          "The export button was moved to the top panel for better accessibility"
         ]
       }
     },
     "3.2.2":{
       "label": "3.2.2",
+      "date":"28.8. 2025",
       "bugFixes": {
         "items": [
-          "Export blur object to pdf file",
-          "Saving applied blur objects when switching between files"
+          "Export blur object to a pdf file",
+          "Save used blurred objects when switching between files"
         ]
       },
       "knownIssues": {
@@ -32,6 +49,7 @@
     },
     "3.2.1":{
       "label": "3.2.1",
+      "date":"28.8. 2025",
       "bugFixes": {
         "items": [
           "Object could not be edited after copy and paste"
@@ -40,6 +58,7 @@
     },
     "3.2.0":{
       "label": "3.2.0",
+      "date":"26.8. 2025",
       "newFeatures": {
         "items": [
           "Blur area tool"
@@ -60,20 +79,22 @@
     },
     "3.1.0":{
       "label": "3.1.0",
+      "date":"25.8. 2025",
       "improvements": {
         "items": [
-          "Change toggle button design to be more intuitive"
+          "The toggle button design was changed to be more intuitive."
         ]
       },
       "bugFixes": {
         "items": [
-          "Round indent values in auto crop",
+          "Indent values are rounded in auto crop",
           "Redirect to home view on reload"
         ]
       }
     },
     "3.0.0":{
       "label": "3.0.0",
+      "date":"24.8. 2025",
       "newFeatures": {
         "items": [
           "Vector PDF files are processed as vector",
@@ -84,13 +105,13 @@
       },
       "improvements": {
         "items": [
-          "Added labels to all tools in the tool panel for easier identification",
-          "Show subtools on hover in tool panel",
-          "Added the ability to drag and drop an image while editing another image",
-          "Smoother crop box pan and resize",
-          "Select tool can start selection also from outside of image",
-          "The Object can be manipulated by holding the selected area and not just the object.",
-          "Different style of apply button from other buttons"
+          "Labels for all tools in the tool panel for easier identification",
+          "Hovering over the toolbar shows subtools",
+          "Drag and drop a new image while editing another image",
+          "Smoother panning and resizing of the crop box",
+          "Select tool can now start a selection from outside the image",
+          "Object can be manipulated by holding down the selected area, not just the object",
+          "Apply button style is different from other buttons"
         ]
       },
       "bugFixes": {
@@ -98,11 +119,11 @@
           "Improved input file format checking",
           "Center image after crop operation",
           "Center image after resize operation",
-          "Maximum file name length limitation",
+          "Maximum file name length limit",
           "Validate number in number inputs",
           "Prevent image deforming in resize tool",
-          "Horizontal and vertical line can be created",
-          "New object can be created also on another object"
+          "Horizontal and vertical lines can be created",
+          "New object can also be created on another object"
         ]
       },
       "knownIssues": {
@@ -114,11 +135,12 @@
     },
     "2.3.0":{
       "label": "2.3.0",
+      "date":"19.8. 2025",
       "newFeatures": {
         "items": [
-          "Join SmartCrop tool and Crop tool",
-          "Show image artifacts during image crop",
-          "Set auto crop and image artifacts detection sensitivity"
+          "Join SmartCrop and Crop tools",
+          "Show image artifacts while cropping an image",
+          "Sensitivity of auto-crop and image artifact detection"
         ]
       },
       "bugFixes": {
@@ -128,13 +150,14 @@
       },
       "improvements": {
         "items": [
-          "Reorder tools in left panel",
+          "Sort tools by importance",
           "Save selected zoom mode to preferences"
         ]
       }
     },
     "2.2.0":{
       "label": "2.2.0",
+      "date":"15.8. 2025",
       "newFeatures": {
         "items": [
           "Zoom modes: Classic (fit image to the viewport) and Text (fit image to the text width)",
@@ -149,6 +172,7 @@
     },
     "2.1.0":{
       "label": "2.1.0",
+      "date":"13.8. 2025",
       "improvements": {
         "items": [
           "Recording information for statistics"
@@ -157,6 +181,7 @@
     },
     "2.0.1":{
       "label": "2.0.1",
+      "date":"11.8. 2025",
       "bugFixes": {
         "items": [
           "Align zoom value with '%'"
@@ -165,6 +190,7 @@
     },
     "2.0.0":{
       "label": "2.0.0",
+      "date":"10.8. 2025",
       "newFeatures": {
         "items": [
           "Svg objects logic",
@@ -199,6 +225,7 @@
     },
     "1.0.0":{
       "label": "1.0.0",
+      "date":"25.7. 2025",
       "newFeatures": {
         "items": [
           "Move tool",

@@ -64,9 +64,15 @@ const {
           <!-- Patch notes content -->
           <div class="release-content-wrapper" ref="releaseContentRef" @scroll="checkScroll">
             <div v-for="(releaseNotes, version) in releases" :key="version">
-              <p class="release-content-title">
-                {{ releaseNotes.label }}
-              </p>
+              <div class="label-date-wrapper">
+
+                <p class="release-content-title">
+                  {{ releaseNotes.label }}
+                </p>
+                <p class="release-content-date">
+                  ({{ releaseNotes.date }})
+                </p>
+              </div>
 
               <!-- New Features -->
               <div v-if="releaseNotes.newFeatures?.items?.length" class="release-block">
@@ -205,9 +211,22 @@ const {
   bottom: 0;
 }
 
+.label-date-wrapper {
+  display: flex;
+  align-items: baseline;
+  flex-direction: row;
+  gap: 8px;
+}
+
 .release-content-title {
   font-size: var(--release-subtitle-font-size);
   font-weight: var(--release-subtitle-font-weight);
+  color: var(--primary-c);
+}
+
+.release-content-date {
+  font-size: var(--release-date-font-size);
+  font-weight: var(--release-date-font-weight);
   color: var(--primary-c);
 }
 

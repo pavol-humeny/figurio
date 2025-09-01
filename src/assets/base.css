@@ -156,6 +156,9 @@ body {
   --release-subtitle-font-size: 20px;
   --release-subtitle-font-weight: 700;
 
+  --release-date-font-size: 12px;
+  --release-date-font-weight: 500;
+
   --text-font-size: 15px;
   --tool-text-font-size: 12px;
 

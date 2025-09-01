@@ -111,8 +111,12 @@ export function useNumberDropdownInput(props, emit) {
    */
   const onSelect = (value) => {
     inputValue.value = value.toString()
-    emit('update:modelValue', Number(value))
-    emit('update', Number(value))
+
+    // Replace comma with period
+    const normalized = parseFloat(String(value).replace(',', '.'))
+
+    emit('update:modelValue', normalized)
+    emit('update', normalized)
     showDropdown.value = false
   }
 

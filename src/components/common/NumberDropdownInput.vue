@@ -128,6 +128,7 @@
   border: none;
   color: var(--text-c);
   text-align: center;
+  font-family: var(--font-family);
 }
 
 .text-input:disabled {

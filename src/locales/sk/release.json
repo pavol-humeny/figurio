@@ -9,6 +9,7 @@
   "versions": {
     "3.3.0":{
       "label": "3.3.0",
+      "date":"31.8. 2025",
       "improvements": {
         "items": [
           "Aktualizované texty nápovedy",
@@ -18,6 +19,7 @@
     },
     "3.2.2":{
       "label": "3.2.2",
+      "date":"28.8. 2025",
       "bugFixes": {
         "items": [
           "Export objektu rozmazania do PDF súboru",
@@ -32,6 +34,7 @@
     },
     "3.2.1":{
       "label": "3.2.1",
+      "date":"28.8. 2025",
       "bugFixes": {
         "items": [
           "Objekt nemohol byť upravený po skopírovaní a vložení"
@@ -40,6 +43,7 @@
     },
     "3.2.0": {
       "label": "3.2.0",
+      "date":"26.8. 2025",
       "newFeatures": {
         "items": [
           "Nástroj na rozmazanie oblasti"
@@ -60,6 +64,7 @@
     },
     "3.1.0": {
       "label": "3.1.0",
+      "date":"25.8. 2025",
       "improvements": {
         "items": [
           "Zmena dizajnu prepínacieho tlačidla pre lepšiu intuitívnosť"
@@ -74,6 +79,7 @@
     },
     "3.0.0": {
       "label": "3.0.0",
+      "date":"24.8. 2025",
       "newFeatures": {
         "items": [
           "Vektorové PDF súbory sa spracovávajú ako vektor",
@@ -114,6 +120,7 @@
     },
     "2.3.0": {
       "label": "2.3.0",
+      "date":"19.8. 2025",
       "newFeatures": {
         "items": [
           "Spojenie nástrojov SmartCrop a Crop",
@@ -135,6 +142,7 @@
     },
     "2.2.0": {
       "label": "2.2.0",
+      "date":"15.8. 2025",
       "newFeatures": {
         "items": [
           "Režimy zoomu: Klasický (obrázok sa prispôsobí zobrazeniu) a Textový (obrázok sa prispôsobí šírke textu)",
@@ -149,6 +157,7 @@
     },
     "2.1.0":{
       "label": "2.1.0",
+      "date":"13.8. 2025",
       "improvements": {
         "items": [
           "Zaznamenávanie informácií pre štatistiku"
@@ -157,6 +166,7 @@
     },
     "2.0.1":{
       "label": "2.0.1",
+      "date":"11.8. 2025",
       "bugFixes": {
         "items": [
           "Zarovnanie hodnoty priblíženia s '%'"
@@ -164,7 +174,8 @@
       }
     },
     "2.0.0": {
-      "label": "2.0.0-alfa",
+      "label": "2.0.0",
+      "date":"10.8. 2025",
       "newFeatures": {
         "items": [
           "Logika SVG objektov",
@@ -198,6 +209,7 @@
     },
     "1.0.0": {
       "label": "1.0.0",
+      "date":"25.7. 2025",
       "newFeatures": {
         "items": [
           "Nástroj Presun",

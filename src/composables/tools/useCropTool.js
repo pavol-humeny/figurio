@@ -457,7 +457,18 @@ export function useCropTool(
   /**
    * Options for the auto crop threshold dropdown
    */
-  const autoCropThresholdOptions = [0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]
+  const autoCropThresholdOptions = [
+    '0',
+    '0,1',
+    '0,2',
+    '0,3',
+    '0,4',
+    '0,5',
+    '0,6',
+    '0,7',
+    '0,8',
+    '0,9',
+  ]
 
   /**
    * Watch the auto crop threshold and update artifacts visibility
@@ -467,8 +478,8 @@ export function useCropTool(
     if (newValue > 0) {
       if (isArtifactsVisible.value) {
         hideArtifacts()
+        showArtifacts()
       }
-      showArtifacts()
     } else {
       if (isArtifactsVisible.value) {
         hideArtifacts()
@@ -779,6 +790,9 @@ export function useCropTool(
     cachedThreshold.value = null
   }
 
+  /**
+   * Watch for active tab changes and reset cache
+   */
   watch(() => workspaceStore.activeTabIndex, resetCache, { immediate: true })
 
   /**
