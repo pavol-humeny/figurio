@@ -1,15 +1,6 @@
 <script setup>
 import { useConfirmModal } from '@/composables/modals/useConfirmModal';
 import DefaultButton from '@/components/common/DefaultButton.vue';
-import { useShaking } from '@/composables/common/useShaking';
-
-/**
- * Logic of the shake animation for modal
- */
-const {
-  isShaking,
-  triggerShake
-} = useShaking();
 
 /**
  * Logic of the confirm modal state and handlers
@@ -27,8 +18,8 @@ const {
 
 <template>
   <Teleport to="body">
-    <div v-if="isVisible" class="confirm-modal-overlay" @click.self="triggerShake">
-      <div class="modal-box" :class="{ shake: isShaking }">
+    <div v-if="isVisible" class="confirm-modal-overlay" @click.self="cancel">
+      <div class="modal-box">
         <div class="title-wrapper">
           <p>{{ title }}</p>
         </div>

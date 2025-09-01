@@ -1,7 +1,6 @@
 <script setup>
 import BaseIcon from '@/components/icons/BaseIcon.vue';
 import DefaultButton from '@/components/common/DefaultButton.vue';
-import { useShaking } from '@/composables/common/useShaking';
 import { useReleaseModal } from '@/composables/modals/useReleaseModal';
 import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
@@ -23,14 +22,6 @@ const currentlyInProgress = computed(() => {
 });
 
 /**
- * Logic of the shake animation for modal
- */
-const {
-  isShaking,
-  triggerShake
-} = useShaking();
-
-/**
  * Logic of the patch notes modal state and scrolling
  */
 const {
@@ -48,8 +39,8 @@ const {
 
 <template>
   <Teleport to="body">
-    <div v-if="isVisible" class="release-modal-overlay" @click.self="triggerShake">
-      <div class="modal-box" :class="{ shake: isShaking }">
+    <div v-if="isVisible" class="release-modal-overlay" @click.self="closeReleaseModal">
+      <div class="modal-box">
         <div class="title-wrapper">
           <BaseIcon name="IconReleaseNotes" size="28" color="var(--primary-c)" />
           <p>{{ $t('release.title') }}</p>

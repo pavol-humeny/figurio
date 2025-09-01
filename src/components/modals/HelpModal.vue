@@ -2,7 +2,6 @@
 import { storeToRefs } from 'pinia';
 import BaseIcon from '@/components/icons/BaseIcon.vue';
 import DefaultButton from '@/components/common/DefaultButton.vue';
-import { useShaking } from '@/composables/common/useShaking';
 import { useHelpModal } from '@/composables/modals/useHelpModal';
 import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
@@ -34,14 +33,6 @@ const technicalLimitations = computed(() => {
 })
 
 /**
- * Logic of the shake animation for modal
- */
-const {
-  isShaking,
-  triggerShake
-} = useShaking();
-
-/**
  * Logic of the help modal state and scrolling
  */
 const {
@@ -67,8 +58,8 @@ const { isTutorialEnabled } = useInteractiveTutorial(
 
 <template>
   <Teleport to="body">
-    <div v-if="isVisible" class="help-modal-overlay" @click.self="triggerShake">
-      <div class="modal-box" :class="{ shake: isShaking }">
+    <div v-if="isVisible" class="help-modal-overlay" @click.self="closeHelpModal">
+      <div class="modal-box">
         <div class="title-wrapper">
           <BaseIcon name="IconQuestionMark" size="22" color="var(--secondary-c)" class="help-question-mark" />
           <p>{{ $t('help.title') }}</p>
@@ -564,10 +555,6 @@ const { isTutorialEnabled } = useInteractiveTutorial(
   gap: 5px;
   padding: 5px 0;
 }
-
-.shortcut-category {}
-
-.category-title {}
 
 .tool-description>div {
   display: flex;

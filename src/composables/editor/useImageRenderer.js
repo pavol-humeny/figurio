@@ -229,7 +229,6 @@ export function useImageRenderer(
     } else {
       renderCanvas()
     }
-    // renderSvg()
   }
 
   /**

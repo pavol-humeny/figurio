@@ -5,7 +5,6 @@ import DefaultButton from '@/components/common/DefaultButton.vue';
 
 import { useI18n } from 'vue-i18n'
 import { computed } from 'vue'
-import { useShaking } from '@/composables/common/useShaking';
 
 const { locale, messages, t } = useI18n()
 
@@ -14,13 +13,6 @@ const { locale, messages, t } = useI18n()
  */
 const sections = computed(() => messages.value[locale.value]?.privacy?.sections || [])
 
-/**
- * Logic of the shake animation for modal
- */
-const {
-  isShaking,
-  triggerShake
-} = useShaking();
 
 /**
  * Logic of the privacy and data modal state
@@ -34,8 +26,8 @@ const {
 
 <template>
   <Teleport to="body">
-    <div v-if="isVisible" class="privacy-modal-overlay" @click.self="triggerShake">
-      <div class="modal-box" :class="{ shake: isShaking }">
+    <div v-if="isVisible" class="privacy-modal-overlay" @click.self="closePrivacyAndDataModal">
+      <div class="modal-box">
         <div class="title-wrapper">
           <BaseIcon name="IconPrivacy" size="28" color="var(--text-c)" />
           <p>{{ $t('privacy.title') }}</p>
