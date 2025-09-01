@@ -49,6 +49,8 @@ export const editorConfig = {
   minimumObjectSize: 5, // Minimum size of the object to be drawn
   magnifyAreaDefaultRadiusFromImage: 0.1, // 10% of smaller dimension
 
+  needObjectOverlapToSnap: true, // Need the object to overlap to snap to edges
+
   // Text fonts
   textFontOptions: [
     { label: 'Courier New', value: 'Courier New' },

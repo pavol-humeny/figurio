@@ -471,7 +471,7 @@ export function useSvgObjectWrapper(
 
     // RESIZE
     if (activeResizerIndex.value !== null) {
-      const minSize = 1
+      const minSize = 2
       const keepRatio = isShiftKey && onlyOneKeyPressed
       const maxW = imageStore.fileDimensions.width
       const maxH = imageStore.fileDimensions.height
@@ -1055,49 +1055,147 @@ export function useSvgObjectWrapper(
       }
       // Line
       if (tag === 'line') {
-        const minLength = 2
-        const maxX = imageStore.fileDimensions.width
-        const maxY = imageStore.fileDimensions.height
-
         const applyLine = (keyX, keyY, newX, newY) => {
           const otherX = keyX === 'x1' ? attrs.x2 : attrs.x1
           const otherY = keyY === 'y1' ? attrs.y2 : attrs.y1
           const len = pythagorean(newX - otherX, newY - otherY)
 
-          if (len >= minLength) {
+          if (len >= minSize) {
             attrs[keyX] = newX
             attrs[keyY] = newY
           }
         }
 
-        if (activeResizerIndex.value === 0 || activeResizerIndex.value === 1) {
-          const keyX = activeResizerIndex.value === 0 ? 'x1' : 'x2'
-          const keyY = activeResizerIndex.value === 0 ? 'y1' : 'y2'
+        switch (activeResizerIndex.value) {
+          // Corner resizers
+          case 0: // top-left
+          case 1: // bottom-right
+          case 2: // bottom-left
+          case 3: // top-right
+            {
+              const keyX =
+                activeResizerIndex.value === 0 || activeResizerIndex.value === 2 ? 'x1' : 'x2'
+              const keyY =
+                activeResizerIndex.value === 0 || activeResizerIndex.value === 3 ? 'y1' : 'y2'
 
-          let newX = clamp(attrs[keyX] + dx, 0, maxX)
-          let newY = clamp(attrs[keyY] + dy, 0, maxY)
+              let newX = clamp(attrs[keyX] + dx, 0, maxW)
+              let newY = clamp(attrs[keyY] + dy, 0, maxH)
 
-          if (isCtrlKey && onlyOneKeyPressed) {
-            const snap = getSnapOffsetToEdges(object.value, newX, newX, newY, newY)
+              const otherX = keyX === 'x1' ? attrs.x2 : attrs.x1
+              const otherY = keyY === 'y1' ? attrs.y2 : attrs.y1
 
-            // Snap only position
-            newX += snap.dx
-            newY += snap.dy
+              if (keepRatio) {
+                console.log('keep ratio line')
+                // Opposite point (pivot)
+                const dx = newX - otherX
+                const dy = newY - otherY
 
-            showResizeGuideLine(snap, {
-              left: newX,
-              right: newX,
-              top: newY,
-              bottom: newY,
-            })
-          }
+                // Original length
+                const origLen = pythagorean(attrs.x2 - attrs.x1, attrs.y2 - attrs.y1)
 
-          applyLine(keyX, keyY, newX, newY)
+                // New length
+                const newLen = pythagorean(dx, dy)
+
+                // Scale factor
+                const scale = newLen / origLen
+
+                // New coordinates – pivot + (scale * original vector)
+                const vx = (keyX === 'x1' ? attrs.x1 : attrs.x2) - otherX
+                const vy = (keyY === 'y1' ? attrs.y1 : attrs.y2) - otherY
+
+                newX = otherX + vx * scale
+                newY = otherY + vy * scale
+              }
+
+              // Snap
+              if (isCtrlKey && onlyOneKeyPressed) {
+                let left = newX >= otherX ? otherX : newX
+                let right = newX < otherX ? otherX : newX
+                let top = newY >= otherY ? otherY : newY
+                let bottom = newY < otherY ? otherY : newY
+
+                const snap = getSnapOffsetToEdges(object.value, left, right, top, bottom)
+                newX += snap.dx
+                newY += snap.dy
+                showResizeGuideLine(snap, { left, right, top, bottom })
+              }
+
+              applyLine(keyX, keyY, newX, newY)
+            }
+            break
+
+          // Side resizers
+          case 4: // Top
+            {
+              let newY = clamp(attrs.y1 + dy, 0, maxH)
+
+              if (isCtrlKey && onlyOneKeyPressed) {
+                const snap = getSnapOffsetToEdges(object.value, attrs.x1, attrs.x2, newY, newY)
+                newY += snap.dy
+                showResizeGuideLine(snap, {
+                  left: attrs.x1,
+                  right: attrs.x2,
+                  top: newY,
+                  bottom: newY,
+                })
+              }
+
+              applyLine('x1', 'y1', attrs.x1, newY)
+            }
+            break
+          case 5: // Bottom
+            {
+              let newY = clamp(attrs.y2 + dy, 0, maxH)
+              if (isCtrlKey && onlyOneKeyPressed) {
+                const snap = getSnapOffsetToEdges(object.value, attrs.x1, attrs.x2, newY, newY)
+                newY += snap.dy
+                showResizeGuideLine(snap, {
+                  left: attrs.x1,
+                  right: attrs.x2,
+                  top: newY,
+                  bottom: newY,
+                })
+              }
+              applyLine('x2', 'y2', attrs.x2, newY)
+            }
+            break
+          case 6: // Left
+            {
+              let newX = clamp(attrs.x1 + dx, 0, maxW)
+              if (isCtrlKey && onlyOneKeyPressed) {
+                const snap = getSnapOffsetToEdges(object.value, newX, newX, attrs.y1, attrs.y2)
+                newX += snap.dx
+                showResizeGuideLine(snap, {
+                  left: newX,
+                  right: newX,
+                  top: attrs.y1,
+                  bottom: attrs.y2,
+                })
+              }
+              applyLine('x1', 'y1', newX, attrs.y1)
+            }
+            break
+          case 7: // right-middle -> x only
+            {
+              let newX = clamp(attrs.x2 + dx, 0, maxW)
+              if (isCtrlKey && onlyOneKeyPressed) {
+                const snap = getSnapOffsetToEdges(object.value, newX, newX, attrs.y1, attrs.y2)
+                newX += snap.dx
+                showResizeGuideLine(snap, {
+                  left: newX,
+                  right: newX,
+                  top: attrs.y1,
+                  bottom: attrs.y2,
+                })
+              }
+              applyLine('x2', 'y2', newX, attrs.y2)
+            }
+            break
         }
 
         isSymmetricalObject.value =
           (attrs.x1 === attrs.x2 || attrs.y1 === attrs.y2) &&
-          pythagorean(attrs.x1 - attrs.x2, attrs.y1 - attrs.y2) > minLength
+          pythagorean(attrs.x1 - attrs.x2, attrs.y1 - attrs.y2) > minSize
       }
     }
 
@@ -1225,6 +1323,7 @@ export function useSvgObjectWrapper(
    */
   const getResizerPositions = () => {
     const { tag, attrs } = object.value
+    const minSideSize = resizerSize.value * 2
 
     // Rectangle
     if (tag === 'rect') {
@@ -1235,12 +1334,11 @@ export function useSvgObjectWrapper(
 
       return [
         // Corners - circle
-        { type: 'circle', x, y, cursor: 'nwse-resize' },
-        { type: 'circle', x: x + w, y, cursor: 'nesw-resize' },
-        { type: 'circle', x, y: y + h, cursor: 'nesw-resize' },
-        { type: 'circle', x: x + w, y: y + h, cursor: 'nwse-resize' },
+        { type: 'circle', x, y, cursor: 'nwse-resize', visible: true },
+        { type: 'circle', x: x + w, y, cursor: 'nesw-resize', visible: true },
+        { type: 'circle', x, y: y + h, cursor: 'nesw-resize', visible: true },
+        { type: 'circle', x: x + w, y: y + h, cursor: 'nwse-resize', visible: true },
 
-        // Sides - rectangle
         // Top
         {
           type: 'rect',
@@ -1249,6 +1347,7 @@ export function useSvgObjectWrapper(
           cursor: 'ns-resize',
           width: resizerSize.value,
           height: resizerSize.value / 2,
+          visible: w > minSideSize,
         },
         // Bottom
         {
@@ -1258,6 +1357,7 @@ export function useSvgObjectWrapper(
           cursor: 'ns-resize',
           width: resizerSize.value,
           height: resizerSize.value / 2,
+          visible: w > minSideSize,
         },
         // Left
         {
@@ -1267,6 +1367,7 @@ export function useSvgObjectWrapper(
           cursor: 'ew-resize',
           width: resizerSize.value / 2,
           height: resizerSize.value,
+          visible: h > minSideSize,
         },
         // Right
         {
@@ -1276,6 +1377,7 @@ export function useSvgObjectWrapper(
           cursor: 'ew-resize',
           width: resizerSize.value / 2,
           height: resizerSize.value,
+          visible: h > minSideSize,
         },
       ]
     }
@@ -1286,14 +1388,14 @@ export function useSvgObjectWrapper(
         cy = attrs.cy || 0,
         rx = attrs.rx || 0,
         ry = attrs.ry || 0
+
       return [
         // Corners - circle
-        { type: 'circle', x: cx - rx, y: cy - ry, cursor: 'nwse-resize' }, // top-left
-        { type: 'circle', x: cx + rx, y: cy - ry, cursor: 'nesw-resize' }, // top-right
-        { type: 'circle', x: cx + rx, y: cy + ry, cursor: 'nwse-resize' }, // bottom-right
-        { type: 'circle', x: cx - rx, y: cy + ry, cursor: 'nesw-resize' }, // bottom-left
+        { type: 'circle', x: cx - rx, y: cy - ry, cursor: 'nwse-resize', visible: true },
+        { type: 'circle', x: cx + rx, y: cy - ry, cursor: 'nesw-resize', visible: true },
+        { type: 'circle', x: cx + rx, y: cy + ry, cursor: 'nwse-resize', visible: true },
+        { type: 'circle', x: cx - rx, y: cy + ry, cursor: 'nesw-resize', visible: true },
 
-        // Sides - rectangle
         // Top
         {
           type: 'rect',
@@ -1302,6 +1404,7 @@ export function useSvgObjectWrapper(
           cursor: 'ns-resize',
           width: resizerSize.value,
           height: resizerSize.value / 2,
+          visible: rx * 2 > minSideSize,
         },
         // Bottom
         {
@@ -1311,6 +1414,7 @@ export function useSvgObjectWrapper(
           cursor: 'ns-resize',
           width: resizerSize.value,
           height: resizerSize.value / 2,
+          visible: rx * 2 > minSideSize,
         },
         // Left
         {
@@ -1320,6 +1424,7 @@ export function useSvgObjectWrapper(
           cursor: 'ew-resize',
           width: resizerSize.value / 2,
           height: resizerSize.value,
+          visible: ry * 2 > minSideSize,
         },
         // Right
         {
@@ -1329,6 +1434,7 @@ export function useSvgObjectWrapper(
           cursor: 'ew-resize',
           width: resizerSize.value / 2,
           height: resizerSize.value,
+          visible: ry * 2 > minSideSize,
         },
       ]
     }
@@ -1337,19 +1443,68 @@ export function useSvgObjectWrapper(
     if (tag === 'text' && object.value.textBBox) {
       const { x, y, width, height } = object.value.textBBox
       return [
-        { x, y, cursor: 'move' },
-        { x: x + width, y, cursor: 'move' },
-        { x, y: y + height, cursor: 'move' },
-        { x: x + width, y: y + height, cursor: 'move' },
+        { x, y, cursor: 'move', visible: true },
+        { x: x + width, y, cursor: 'move', visible: true },
+        { x, y: y + height, cursor: 'move', visible: true },
+        { x: x + width, y: y + height, cursor: 'move', visible: true },
       ]
     }
 
     // Line
     if (tag === 'line') {
       const { x1, y1, x2, y2 } = attrs
+      const midX = (x1 + x2) / 2
+      const midY = (y1 + y2) / 2
+      const dx = Math.abs(x2 - x1)
+      const dy = Math.abs(y2 - y1)
+
       return [
-        { x: x1, y: y1, cursor: 'move' },
-        { x: x2, y: y2, cursor: 'move' },
+        // Corners - circle
+        { type: 'circle', x: x1, y: y1, cursor: 'nwse-resize', visible: true },
+        { type: 'circle', x: x2, y: y2, cursor: 'nwse-resize', visible: true },
+        { type: 'circle', x: x1, y: y2, cursor: 'nesw-resize', visible: true },
+        { type: 'circle', x: x2, y: y1, cursor: 'nesw-resize', visible: true },
+
+        // Top
+        {
+          type: 'rect',
+          x: midX,
+          y: y1,
+          cursor: 'ns-resize',
+          width: resizerSize.value,
+          height: resizerSize.value / 2,
+          visible: dx > minSideSize,
+        },
+        // Bottom
+        {
+          type: 'rect',
+          x: midX,
+          y: y2,
+          cursor: 'ns-resize',
+          width: resizerSize.value,
+          height: resizerSize.value / 2,
+          visible: dx > minSideSize,
+        },
+        // Left
+        {
+          type: 'rect',
+          x: x1,
+          y: midY,
+          cursor: 'ew-resize',
+          width: resizerSize.value / 2,
+          height: resizerSize.value,
+          visible: dy > minSideSize,
+        },
+        // Right
+        {
+          type: 'rect',
+          x: x2,
+          y: midY,
+          cursor: 'ew-resize',
+          width: resizerSize.value / 2,
+          height: resizerSize.value,
+          visible: dy > minSideSize,
+        },
       ]
     }
 

@@ -92,13 +92,15 @@ const {
         <template v-for="(pos, i) in getResizerPositions()" :key="i">
           <!-- Circle -->
           <circle v-if="pos.type === 'circle'" :cx="pos.x" :cy="pos.y" :r="resizerSize / 2" fill="var(--text-c)"
-            stroke="var(--editor-highlight-c)" :stroke-width="resizerBorderSize" :style="{ cursor: pos.cursor }"
+            stroke="var(--editor-highlight-c)" :stroke-width="resizerBorderSize"
+            :style="{ cursor: pos.cursor, display: pos.visible ? 'block' : 'none' }"
             @mousedown.stop.prevent="onMouseDownResizer($event, i)" />
 
           <!-- Rectangle -->
           <rect v-else :x="pos.x - pos.width / 2" :y="pos.y - pos.height / 2" :width="pos.width" :height="pos.height"
             fill="var(--text-c)" stroke="var(--editor-highlight-c)" :stroke-width="resizerBorderSize"
-            :style="{ cursor: pos.cursor }" @mousedown.stop.prevent="onMouseDownResizer($event, i)" />
+            :style="{ cursor: pos.cursor, display: pos.visible ? 'block' : 'none' }"
+            @mousedown.stop.prevent="onMouseDownResizer($event, i)" />
         </template>
       </template>
 

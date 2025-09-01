@@ -183,33 +183,39 @@ export function useSvgFunctions(imageStore) {
       const verticalOverlap = !(bottom < t.top || top > t.bottom)
       const horizontalOverlap = !(right < t.left || left > t.right)
 
-      if (verticalOverlap && editorConfig.snapOnlyWhenOverlapping) {
-        if (Math.abs(left - t.left) < threshold) {
+      if (
+        (verticalOverlap || !editorConfig.needObjectOverlapToSnap) &&
+        editorConfig.snapOnlyWhenOverlapping
+      ) {
+        if (Math.abs(left - t.left) <= threshold) {
           dx = t.left - left
           snappedEdgeX = 'left'
-        } else if (Math.abs(left - t.right) < threshold) {
+        } else if (Math.abs(left - t.right) <= threshold) {
           dx = t.right - left
           snappedEdgeX = 'left'
-        } else if (Math.abs(right - t.left) < threshold) {
+        } else if (Math.abs(right - t.left) <= threshold) {
           dx = t.left - right
           snappedEdgeX = 'right'
-        } else if (Math.abs(right - t.right) < threshold) {
+        } else if (Math.abs(right - t.right) <= threshold) {
           dx = t.right - right
           snappedEdgeX = 'right'
         }
       }
 
-      if (horizontalOverlap && editorConfig.snapOnlyWhenOverlapping) {
-        if (Math.abs(top - t.top) < threshold) {
+      if (
+        (horizontalOverlap || !editorConfig.needObjectOverlapToSnap) &&
+        editorConfig.snapOnlyWhenOverlapping
+      ) {
+        if (Math.abs(top - t.top) <= threshold) {
           dy = t.top - top
           snappedEdgeY = 'top'
-        } else if (Math.abs(top - t.bottom) < threshold) {
+        } else if (Math.abs(top - t.bottom) <= threshold) {
           dy = t.bottom - top
           snappedEdgeY = 'top'
-        } else if (Math.abs(bottom - t.top) < threshold) {
+        } else if (Math.abs(bottom - t.top) <= threshold) {
           dy = t.top - bottom
           snappedEdgeY = 'bottom'
-        } else if (Math.abs(bottom - t.bottom) < threshold) {
+        } else if (Math.abs(bottom - t.bottom) <= threshold) {
           dy = t.bottom - bottom
           snappedEdgeY = 'bottom'
         }

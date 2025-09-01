@@ -141,7 +141,6 @@ export function useBlurTool(imageStore, historyStore, editorStore, t) {
       </filter>
     `
 
-    console.log('Adding/replacing filter def:', def)
     imageStore.addOrReplaceSvgDef(`blur-filter-${id}`, def)
   }
 

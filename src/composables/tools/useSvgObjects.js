@@ -1013,10 +1013,8 @@ export function useSvgObjects(imageStore, historyStore, viewportStore, editorSto
 
     // Check if it is not too small object
     if (
-      (attrs.width && attrs.width <= MIN_SIZE) ||
-      (attrs.height && attrs.height <= MIN_SIZE) ||
-      (attrs.rx && attrs.rx <= MIN_SIZE) ||
-      (attrs.ry && attrs.ry <= MIN_SIZE) ||
+      (attrs.width && attrs.width <= MIN_SIZE && attrs.height && attrs.height <= MIN_SIZE) ||
+      (attrs.rx && attrs.rx <= MIN_SIZE && attrs.ry && attrs.ry <= MIN_SIZE) ||
       (lineLength !== null && lineLength <= MIN_SIZE)
     ) {
       isDrawing.value = false
@@ -1073,7 +1071,7 @@ export function useSvgObjects(imageStore, historyStore, viewportStore, editorSto
       return
     }
 
-    if (editorStore.isSvgObjectResizing) return 
+    if (editorStore.isSvgObjectResizing) return
 
     const viewportContent = document.getElementById('viewport')
     if (!viewportContent) return
