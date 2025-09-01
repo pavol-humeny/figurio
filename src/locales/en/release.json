@@ -10,6 +10,12 @@
     "3.4.0":{
       "label": "3.4.0",
       "date":"1.9. 2025",
+      "newFeatures": {
+        "items": [
+          "Side handles for resizing the objects",
+          "Side handles for resizing the crop box"
+        ]
+      },
       "improvements": {
         "items": [
           "Modal windows can be closed by clicking outside of window",
@@ -22,7 +28,8 @@
         "items":[
           "Decimal numbers in the drop-down menu are displayed with a decimal point instead of a period",
           "Tools can not be changed while exporting file",
-          "Object selection is not deselected during resizing"
+          "Object selection is not deselected during resizing",
+          "Disable drawing invisible objects"
         ]
       }
     },
