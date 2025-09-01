@@ -1073,11 +1073,15 @@ export function useSvgObjects(imageStore, historyStore, viewportStore, editorSto
       return
     }
 
+    if (editorStore.isSvgObjectResizing) return 
+
     const viewportContent = document.getElementById('viewport')
     if (!viewportContent) return
 
     const clickedInside = viewportContent.contains(e.target)
     if (!clickedInside) return
+
+    console.log('global click')
 
     const clickedObjectId = Number(e.target.getAttribute('data-id'))
     const clickedObject = imageStore.getSvgObjectById(clickedObjectId)

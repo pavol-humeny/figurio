@@ -14,13 +14,15 @@
         "items": [
           "Modal windows can be closed by clicking outside of window",
           "Released versions are displayed with the release date",
-          "New object can be created also when previous object is selected"
+          "New object can be created also when previous object is selected",
+          "Object resize and rotate icons move inside the object when outside the image boundaries"
         ]
       }, 
       "bugFixes":{
         "items":[
           "Decimal numbers in the drop-down menu are displayed with a decimal point instead of a period",
-          "Tools can not be changed while exporting file"
+          "Tools can not be changed while exporting file",
+          "Object selection is not deselected during resizing"
         ]
       }
     },
