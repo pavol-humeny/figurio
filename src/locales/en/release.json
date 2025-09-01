@@ -18,7 +18,8 @@
       }, 
       "bugFixes":{
         "items":[
-          "Decimal numbers in the drop-down menu are displayed with a decimal point instead of a period"
+          "Decimal numbers in the drop-down menu are displayed with a decimal point instead of a period",
+          "Tools can not be changed while exporting file"
         ]
       }
     },

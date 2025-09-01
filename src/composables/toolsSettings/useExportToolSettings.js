@@ -112,6 +112,8 @@ export function useExportToolSettings(imageStore, editorStore, historyStore, t) 
    * Open export settings and prepare preview dimensions, format and file name
    */
   const openExportToolSettings = async () => {
+    editorStore.isExportModalOpen = true
+
     imageStore.newFileDimensions = { ...imageStore.fileDimensions }
     imageStore.newFileFormat = imageStore.fileFormat
     imageStore.newFileName = imageStore.fileName
@@ -143,6 +145,7 @@ export function useExportToolSettings(imageStore, editorStore, historyStore, t) 
    * Close the export settings panel
    */
   const closeExportToolSettings = () => {
+    editorStore.isExportModalOpen = false
     isVisible.value = false
   }
 

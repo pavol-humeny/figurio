@@ -50,6 +50,9 @@ export const useEditorStore = defineStore('editorStore', {
 
     /** Whether a global click event is registered */
     isGlobalClickRegistered: false,
+
+    /** Whether a export modal is open  */
+    isExportModalOpen: false,
   }),
   actions: {
     /**

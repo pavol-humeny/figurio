@@ -122,7 +122,7 @@ export function useToolsPanel(editorStore, imageStore, uiStore, t) {
    * @param {string | null} [tabKey] - Optional tab key to activate
    */
   const toggleTool = (toolKey, tabKey) => {
-    if (!imageStore.isImageLoaded) return
+    if (!imageStore.isImageLoaded || editorStore.isExportModalOpen) return
     if (editorStore.enableTools[toolKey] === false) {
       console.log('Tool is disabled:', toolKey)
 
@@ -142,12 +142,12 @@ export function useToolsPanel(editorStore, imageStore, uiStore, t) {
       tab: tabKey,
     })
 
-    if (editorStore.selectedToolKey === toolKey && tabKey === null) {
-      editorStore.selectTool('')
-      // If the panel is open, hide it
-      useCollapsiblePanel(uiStore).hidePanel()
-      return
-    }
+    // if (editorStore.selectedToolKey === toolKey && tabKey === null) {
+    //   // editorStore.selectTool('')
+    //   // If the panel is open, hide it
+    //   // useCollapsiblePanel(uiStore).hidePanel()
+    //   return
+    // }
     editorStore.selectTool(toolKey)
 
     // If the panel is closed, show it
