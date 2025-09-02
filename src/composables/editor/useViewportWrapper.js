@@ -450,11 +450,12 @@ export function useViewportWrapper(viewportStore, imageStore, editorStore, uiSto
     () => viewportStore.shouldFitToScreen,
     (shouldFit) => {
       if (shouldFit) {
+        console.log('should fit to screen')
         centerImage()
         viewportStore.shouldFitToScreen = false
       }
     },
-    { immediate: true },
+    // { immediate: true },
   )
 
   /**
@@ -476,12 +477,13 @@ export function useViewportWrapper(viewportStore, imageStore, editorStore, uiSto
   watch(
     [() => viewportStore.zoomMode, () => viewportStore.textWidth],
     () => {
+      console.log('Zoom mode or text width changed')
       centerImage()
       viewportStore.resetZoom()
       viewportStore.resetPan()
       viewportStore.shouldFitToScreen = true
     },
-    { immediate: true },
+    // { immediate: true },
   )
 
   // ------------------------------
@@ -632,6 +634,7 @@ export function useViewportWrapper(viewportStore, imageStore, editorStore, uiSto
     viewportStore.viewportContentRect = contentRef.value?.getBoundingClientRect() || {}
 
     nextTick(() => {
+      console.log('Mounted viewport wrapper')
       centerImage()
 
       // Center the image after resizing the wrapper
@@ -674,6 +677,7 @@ export function useViewportWrapper(viewportStore, imageStore, editorStore, uiSto
       nextTick(() => {
         if (viewportStore.fitImageOnLoad && !uiStore.isLoading) {
           viewportStore.resetZoom()
+          console.log('Render image')
           centerImage()
 
           viewportStore.fitImageOnLoad = false

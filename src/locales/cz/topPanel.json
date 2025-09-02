@@ -46,7 +46,7 @@
       },
       "textMode": {
         "title": "Textový režim přiblížení",
-        "text": "V tomto režimu znamená 100% přiblížení, že šířka obrázku odpovídá celé šířce textové části strany, přičemž strana představuje celý aktuální viewport.",
+        "text": "V tomto režimu znamená 100% přiblížení, že šířka obrázku odpovídá celé šířce textové části, přičemž strana představuje celý aktuální viewport.",
         "shortcut": "Alt + T"
       },
       "textWidth":{

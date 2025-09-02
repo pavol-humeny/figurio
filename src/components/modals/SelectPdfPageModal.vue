@@ -1,5 +1,5 @@
 <script setup>
-import { ref, watchEffect, computed } from 'vue'
+import { ref, watch, computed } from 'vue'
 import { useGeneralModal } from '@/composables/modals/useGeneralModal'
 import { useI18n } from 'vue-i18n'
 import NumberDropdownInput from '@/components/common/NumberDropdownInput.vue'
@@ -15,11 +15,13 @@ const selectedPage = ref(1)
 /**
  * Set default to 1 when modal is shown
  */
-watchEffect(() => {
-  if (payload.value?.numberOfPages) {
-    selectedPage.value = 1
-  }
-})
+watch(
+  () => payload.value?.numberOfPages,
+  (newVal) => {
+    if (newVal) selectedPage.value = 1
+  },
+  { immediate: true }
+)
 
 /**
  * Generates page options (1 to numberOfPages)
@@ -30,10 +32,11 @@ const pageOptions = computed(() => {
 })
 
 /**
- * Emits selected page when modal is confirmed
+ * Syncs selected page with modal payload
  */
-defineExpose({
-  selectedPage
+watch(selectedPage, (value) => {
+  if (payload.value) payload.value = { ...payload.value, selectedPage: value },
+    { immediate: true }
 })
 </script>
 

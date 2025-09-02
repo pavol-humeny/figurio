@@ -667,6 +667,8 @@ export const useImageStore = defineStore('imageStore', {
           try {
             const pdf = await pdfjsLib.getDocument({ data: typedArray }).promise
 
+            console.log('PDF loaded with', pdf.numPages, 'pages')
+
             // Select page
             let pdfPageNumber = 1
             if (pdf.numPages > 1) {
@@ -676,19 +678,23 @@ export const useImageStore = defineStore('imageStore', {
                 t('imageStore.modal.selectPdfPage.title'),
                 t('imageStore.modal.selectPdfPage.cancel'),
                 t('imageStore.modal.selectPdfPage.confirm'),
-                { numberOfPages: pdf.numPages }, // payload
+                { numberOfPages: pdf.numPages, selectedPage: 1 }, // payload
               )
 
-              if (!result || !result.selectedPage) {
+              if (!result?.selectedPage) {
+                console.log('User cancelled PDF page selection: ', result)
                 uiStore.isLoading = false
-                this.closeFile() // Reset image store if user cancels
+                const workspaceStore = useWorkspaceStore()
+                workspaceStore.switchToTab(workspaceStore.activeTabIndex)
                 return
               }
 
-              pdfPageNumber = result.selectedPage.value
+              pdfPageNumber = result.selectedPage
 
               uiStore.blockClicks = true
             }
+
+            console.log('Selected PDF page number:', pdfPageNumber)
 
             // Save pdf page bytes
             const pageBytes = await this.extractPdfPageBytes(typedArray, pdfPageNumber)

@@ -52,17 +52,16 @@ const {
             <BaseIcon name="IconArrowUp" size="24" color="var(--primary-c)" />
           </div>
 
-          <div class="release-block">
-            <p class="release-global-texts">
-              {{ $t('release.inProgressGlobal.currentlyInProgressText') }}
-            </p>
-            <ul class="dot-paragraph">
-              <li v-for="(item, i) in currentlyInProgress" :key="i">{{ item }}</li>
-            </ul>
-          </div>
-
           <!-- Patch notes content -->
           <div class="release-content-wrapper" ref="releaseContentRef" @scroll="checkScroll">
+            <div class="release-block">
+              <p class="release-global-texts">
+                {{ $t('release.inProgressGlobal.currentlyInProgressText') }}
+              </p>
+              <ul class="dot-paragraph">
+                <li v-for="(item, i) in currentlyInProgress" :key="i">{{ item }}</li>
+              </ul>
+            </div>
             <div v-for="(releaseNotes, version) in releases" :key="version">
               <div class="label-date-wrapper">
 

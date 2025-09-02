@@ -13,6 +13,7 @@ const {
   confirmText,
   confirm,
   cancel,
+  payload,
 } = useGeneralModal()
 
 /**
@@ -27,14 +28,7 @@ const {
  * Emits confirm event with selected page number
  */
 const emitConfirm = () => {
-  const modalElement = document.querySelector('.select-pdf-page-modal')
-  const exposed = modalElement?.__vueParentComponent?.exposed
-
-  if (exposed?.selectedPage) {
-    confirm({ selectedPage: exposed.selectedPage })
-  } else {
-    confirm(false)
-  }
+  confirm(payload.value)
 }
 </script>
 

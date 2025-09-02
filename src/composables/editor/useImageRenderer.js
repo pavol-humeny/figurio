@@ -260,7 +260,7 @@ export function useImageRenderer(
         renderFrameSvg()
       }
     },
-    { immediate: true, deep: true },
+    { deep: true },
   )
 
   // Initial rendering on mount

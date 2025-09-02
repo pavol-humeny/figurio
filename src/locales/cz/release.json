@@ -7,6 +7,15 @@
     ]
   },
   "versions": {
+    "3.4.1":{
+      "label": "3.4.1",
+      "date":"2.9. 2025",
+      "bugFixes":{
+        "items":[
+          "Výběr stránky PDF souboru"
+        ]
+      }
+    },
     "3.4.0": {
       "label": "3.4.0",
       "date": "2.9. 2025",
