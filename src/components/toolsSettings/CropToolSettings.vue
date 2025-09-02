@@ -63,6 +63,8 @@ const {
       <div class="specific-settings">
         <!-- Crop position -->
         <div class="settings-content-wrapper">
+          <ExplainItem :text="$t('tools.crop.explain')" :title="$t('tools.crop.label')"
+            position="left" />
           <div class="content-wrapper">
             <div class="content-title">
               <p>
@@ -128,7 +130,8 @@ const {
 
         <!-- Auto crop -->
         <div class="settings-content-wrapper">
-          <ExplainItem text="Ahoj ako sa mas" title="ahoj" position="left"/>
+          <ExplainItem :text="$t('tools.crop.explain2')" :title="$t('tools.crop.settings.general.autoCrop.title')"
+            position="left" />
           <div class="content-title">
             <p>
               {{ $t('tools.crop.settings.general.autoCrop.title') }}
@@ -149,9 +152,6 @@ const {
               <div class="content-title">
                 {{ $t('tools.crop.settings.general.autoCrop.sensitivity.title') }}
               </div>
-              <!-- <DefaultSlider v-model="autoCropThreshold" :min="0" :max="1" :step="0.01" showValue
-                :tip="$t('tools.crop.settings.general.autoCrop.sensitivity.tip')" position="bottom-left"
-                :onReset="resetThreshold" /> -->
               <NumberDropdownInput v-model="autoCropThreshold" :min="0" :max="0.9" :step="0.01"
                 :options="autoCropThresholdOptions" :tip="$t('tools.crop.settings.general.autoCrop.sensitivity.tip')"
                 position="bottom-left" />

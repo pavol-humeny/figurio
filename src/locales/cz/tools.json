@@ -22,7 +22,7 @@
     "label": "Výběr",
     "tip": "Vybere objekty na obrázku",
     "tipDisabled": "",
-    "explain": "Nástroj Výběr umožňuje vybrat jeden nebo více objektů na obrázku. Klikněte na objekt, abyste ho vybrali. Podržte Shift, abyste přidali další objekty do výběru, nebo táhněte obdélník kolem více objektů. Po výběru můžete objekty přesunout nebo smazat. Použijte tlačítko 'Vybrat vše' pro výběr všeho, 'Zrušit výběr' pro zrušení výběru a 'Smazat vybrané objekty' pro odstranění vybraných položek z plátna.",
+    "explain": "Nástroj Výběr umožňuje vybrat jeden nebo více objektů na obrázku. Kliknutím na objekt dojde k jeho výběru. Podržením klávesy Shift lze přidat další objekty do výběru nebo táhnout obdélník kolem více objektů. Po výběru je možné objekty přesunout nebo smazat. Tlačítko 'Vybrat vše' vybere všechny objekty, 'Zrušit výběr' zruší aktuální výběr a 'Smazat vybrané objekty' odstraní vybrané položky z plátna.",
     "shortcut": "V",
     "settings": {
       "general": {
@@ -47,19 +47,19 @@
       "rotate": {
         "label": "Otočit",
         "tip": "Aplikuje otáčení na obrázek",
-        "explain": "Nástroj Rotace umožňuje otáčet obrázek po 90° krocích. Použijte tlačítka pro rotaci vlevo nebo vpravo pro otáčení obrázku po nebo proti směru hodinových ručiček.",
+        "explain": "Nástroj Rotace umožňuje otáčení obrázku po 90° krocích. Tlačítka pro rotaci vlevo nebo vpravo otáčejí obrázek po nebo proti směru hodinových ručiček.",
         "shortcut": "R"
       },
       "flip": {
         "label": "Překlopit",
         "tip": "Aplikuje horizontální nebo vertikální překlopení obrázku",
-        "explain": "Nástroj Překlopit umožňuje aplikovat horizontální nebo vertikální flip na obrázek. Použijte tlačítka Použít k provedení překlopení.",
+        "explain": "Nástroj Překlopit umožňuje aplikovat horizontální nebo vertikální překlopení obrázku. Tlačítka Použít potvrzují překlopení.",
         "shortcut": "F"
       },
       "resize": {
         "label": "Změnit velikost",
         "tip": "Změní rozměry obrázku",
-        "explain": "Nástroj Resize umožňuje měnit rozměry obrázku. Je možné zachovat poměr stran nebo resetovat rozměry na původní velikost.",
+        "explain": "Nástroj Změnit velikost umožňuje měnit rozměry obrázku. Lze zachovat poměr stran nebo resetovat rozměry na původní velikost.",
         "shortcut": "Shift + R"
       }
     },
@@ -109,6 +109,8 @@
     "label": "Ořezání",
     "tip": "Ořezání obrázku manuálně nebo automaticky",
     "tipDisabled": "",
+    "explain": "Nástroj Ořezání umožňuje, aby byl obrázek oříznut definováním obdélníkového ořezového rámečku. Rámeček je možné posouvat myší nebo zadat přesné hodnoty pro pozici a rozměry. Při změně velikosti je možné uzamknout poměr stran. Tlačítko Obnovit vrátí ořezový rámeček na původní rozměry a Použít potvrdí aktuální ořez.",
+    "explain2": "Možnost Automatický ořez automaticky detekuje a odstraní oblasti podobné pozadí z okrajů obrázku. Citlivost je možné upravit pro kontrolu, kolik pozadí bude zahrnuto do ořezu. Náhled artefaktů pomáhá zobrazit, které pixely budou považovány za pozadí.",
     "shortcut": "C",
     "settings": {
       "general": {
@@ -179,6 +181,7 @@
     "label": "Odstíny šedi",
     "tip": "Převede obrázek na odstíny šedi",
     "tipDisabled": "",
+    "explain": "Nástroj Odstíny šedi převede obrázek do odstínů šedi a odstraní všechny barevné informace. Je užitečný pro vytváření monochromatických verzí obrázků nebo pro zaměření pouze na světlo a stín bez rušení barvami.",
     "shortcut": "G",
     "settings": {
       "convertToGrayscaleButton": {
@@ -190,6 +193,7 @@
     "label": "Rozmazání oblasti",
     "tip": "Aplikuje efekt rozmazání na obrázek",
     "tipDisabled": "",
+    "explain": "Nástroj Rozmazání oblasti aplikuje efekt rozmazání na vybranou obdélníkovou oblast obrázku. Velikost, pozici a rotaci rozmazávacího boxu lze nastavit ručně nebo zadáním přesných hodnot. Síla rozmazání se nastavuje posuvníkem.",
     "shortcut": "B",
     "settings": {
       "general": {
@@ -209,25 +213,9 @@
           "label": "Rotace",
           "tip": "Nastav úhel rotace nebo dvojklikem resetuj"
         },
-        "blurTypes": {
-          "label": "Typy rozmazání",
-          "tip": "Vyber typ efektu rozmazání",
-          "options": {
-            "black": "Černé",
-            "checked": "Šachovnicové"
-          }
-        },
-        "blurColor": {
-          "label": "Barva rozmazání",
-          "tip": "Vyber barvu efektu rozmazání"
-        },
         "blurStrength": {
           "label": "Intenzita rozmazání",
           "tip": "Nastav sílu rozmazání"
-        },
-        "patternSize": {
-          "label": "Velikost vzoru",
-          "tip": "Vyber velikost vzoru rozmazání"
         },
         "zIndex": {
           "label": "Z-index",
@@ -251,6 +239,7 @@
     "label": "Tvar",
     "tip": "Přidává vektorové tvary",
     "tipDisabled": "",
+    "explain": "Nástroj Tvar umožňuje přidávat do obrázku vektorové tvary. Tvary lze umístit, měnit jejich velikost, otáčet a upravovat pomocí výplně, obrysu, průhlednosti a stylů čáry. Lze je také uspořádat pomocí Z-indexu.",
     "shortcut": "S",
     "subTools": {
       "rectangle": {
@@ -372,6 +361,7 @@
     "label": "Zvětšená oblast",
     "tip": "Zvětší konkrétní oblast obrázku",
     "tipDisabled": "",
+    "explain": "Nástroj Zvětšená oblast zvýrazní vybranou část obrázku jejím zvětšením. Lze upravit úroveň přiblížení, poloměr, pozici, obrys i Z-index pro nastavení zobrazení zvětšené oblasti.",
     "shortcut": "M",
     "settings": {
       "general": {
@@ -428,6 +418,7 @@
     "label": "Text",
     "tip": "Přidá text do obrázku",
     "tipDisabled": "",
+    "explain": "Nástroj Text umožňuje přidávat do obrázku text. Lze nastavit písmo, velikost, barvu, průhlednost, styl, rotaci a pozici. Text může být vrstven nad ostatními prvky pomocí Z-indexu.",
     "shortcut": "T",
     "settings": {
       "general": {
@@ -492,6 +483,7 @@
     "label": "Rám",
     "tip": "Přidává různé typy rámů jako plný, prohlížeč nebo telefon",
     "tipDisabled": "",
+    "explain": "Nástroj Rám přidává vizuální rámeček kolem obrázku. K dispozici jsou různé typy rámů, například plný, prohlížeč nebo telefon. Barvu, šířku, obrys nebo záhlaví, lze přizpůsobit.",
     "shortcut": "Shift + F",
     "settings": {
       "general": {
@@ -546,6 +538,8 @@
     "label": "Šablony",
     "tip": "Aplikuje šablonu na obrázek",
     "tipDisabled": "",
+    "explain": "Nástroj Šablony uloží sadu úprav obrázku jako šablonu. Podporované operace zahrnují otočení, překlopení, ořez, změnu velikosti, odstíny šedi, rámeček. Lze uložit aktuální úpravy nebo operace vybrat ručně.",
+    "explain2": "Nástroj Šablony aplikuje uloženou předvolbu na obrázek. Předvolby lze upravit, přidat nové operace a změnit pořadí nebo hodnoty existujících operací před aplikací.",
     "shortcut": "",
     "subTools": {
       "myPresets": {

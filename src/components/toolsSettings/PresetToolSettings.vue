@@ -22,6 +22,7 @@ import TimeInput from '../common/TimeInput.vue'
 import DefaultSlider from '../common/DefaultSlider.vue'
 import { useFrameTool } from '@/composables/tools/useFrameTool'
 import { useWorkspaceStore } from '@/stores/workspaceStore'
+import ExplainItem from '../common/ExplainItem.vue'
 
 const { t } = useI18n()
 
@@ -101,6 +102,7 @@ const tabs = ['myPresets', 'createPreset']
       <div v-if="editorStore.selectedTabPerTool[editorStore.selectedToolKey] === 'myPresets'" class="specific-settings">
         <!-- Select preset -->
         <div class="settings-content-wrapper" v-if="!isModifyingPreset">
+          <ExplainItem :text="$t('tools.preset.explain2')" :title="$t('tools.preset.subTools.myPresets.label')" />
           <div v-if="presetsOptions.length > 0" class="content-wrapper">
             <div class="content-title">
               <p>
@@ -349,6 +351,7 @@ const tabs = ['myPresets', 'createPreset']
         class="specific-settings">
         <!-- Preset name create and create buttons -->
         <div class="settings-content-wrapper" v-if="!isShowManualPresetSetting">
+          <ExplainItem :text="$t('tools.preset.explain')" :title="$t('tools.preset.subTools.createPreset.label')" />
           <div class="content-wrapper">
             <div class="content-title">
               <p>
@@ -372,6 +375,7 @@ const tabs = ['myPresets', 'createPreset']
 
         <!-- Preset name update -->
         <div v-if="isShowManualPresetSetting" class="settings-content-wrapper">
+          <ExplainItem :text="$t('tools.preset.explain')" :title="$t('tools.preset.subTools.createPreset.label')" />
           <div class="content-wrapper">
             <div class="content-title">
               <p>

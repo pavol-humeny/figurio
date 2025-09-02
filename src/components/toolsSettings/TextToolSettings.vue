@@ -15,6 +15,7 @@ import { useSvgObjects } from '@/composables/tools/useSvgObjects';
 import { useViewportStore } from '@/stores/viewportStore';
 import DefaultButton from '../common/DefaultButton.vue';
 import { useUiStore } from '@/stores/uiStore';
+import ExplainItem from '../common/ExplainItem.vue';
 
 const editorStore = useEditorStore();
 const imageStore = useImageStore();
@@ -58,6 +59,7 @@ const {
       <div class="specific-settings">
         <!-- Text -->
         <div class="settings-content-wrapper">
+          <ExplainItem :text="$t('tools.text.explain')" :title="$t('tools.text.label')" />
           <div class="content-title">
             <p>
               {{ $t('tools.text.settings.general.textContent.label') }}

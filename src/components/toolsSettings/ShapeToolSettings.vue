@@ -15,6 +15,7 @@ import { useSvgObjects } from '@/composables/tools/useSvgObjects';
 import { useViewportStore } from '@/stores/viewportStore';
 import DropdownSelect from '../common/DropdownSelect.vue';
 import { useUiStore } from '@/stores/uiStore';
+import ExplainItem from '../common/ExplainItem.vue';
 
 const { t } = useI18n()
 const editorStore = useEditorStore();
@@ -69,6 +70,7 @@ const {
       <div class="specific-settings">
         <!-- Position -->
         <div v-if="!hidePositionAndDimensions" class="settings-content-wrapper">
+          <ExplainItem :text="$t('tools.shape.explain')" :title="$t('tools.shape.label')" />
           <div class="content-wrapper">
             <div class="content-title">
               <p>
@@ -151,6 +153,8 @@ const {
 
         <!-- Fill color -->
         <div v-if="localObjectSettings.type !== 'line'" class="settings-content-wrapper">
+          <ExplainItem v-if="hidePositionAndDimensions" :text="$t('tools.shape.explain')"
+            :title="$t('tools.shape.label')" />
           <div class="content-aligned two-items">
             <div class="content-wrapper">
               <p :class="{ disabled: localObjectSettings.strokeWidth === 0 }">
@@ -178,6 +182,8 @@ const {
 
         <!-- Line fill color (fill color is stroke color) -->
         <div v-if="localObjectSettings.type === 'line'" class="settings-content-wrapper">
+          <ExplainItem v-if="hidePositionAndDimensions" :text="$t('tools.shape.explain')"
+            :title="$t('tools.shape.label')" />
           <div class="content-aligned two-items">
             <div class="content-wrapper">
               <div class="content-title">
@@ -291,28 +297,6 @@ const {
             <DropdownSelect v-model="localObjectSettings.lineArrowEnd" :options="lineArrowOptions"
               @update="applyLocalSettings" :tip="$t('tools.shape.settings.lineArrow.end.tip')" position="bottom-left" />
           </div>
-          <!-- <div class="content-aligned two-items">
-            <div class="content-wrapper">
-              <div class="content-title">
-                <p :class="{ disabled: localObjectSettings.strokeWidth === 0 }">
-                  {{ $t('tools.shape.settings.lineArrow.start.label') }}
-                </p>
-              </div>
-              <DropdownSelect v-model="localObjectSettings.lineArrowStart" :options="lineArrowOptions"
-                @update="applyLocalSettings" :tip="$t('tools.shape.settings.lineArrow.start.tip')"
-                position="bottom-left" />
-            </div>
-            <div class="content-wrapper">
-              <div class="content-title">
-                <p :class="{ disabled: localObjectSettings.strokeWidth === 0 }">
-                  {{ $t('tools.shape.settings.lineArrow.end.label') }}
-                </p>
-              </div>
-              <DropdownSelect v-model="localObjectSettings.lineArrowEnd" :options="lineArrowOptions"
-                @update="applyLocalSettings" :tip="$t('tools.shape.settings.lineArrow.end.tip')"
-                position="bottom-left" />
-            </div>
-          </div> -->
         </div>
 
 

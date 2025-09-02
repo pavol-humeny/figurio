@@ -22,7 +22,7 @@
     "label": "Select",
     "tip": "Selects objects on the image",
     "tipDisabled": "",
-    "explain": "The Select tool allows you to pick one or multiple objects on the image. Click on an object to select it. Hold Shift to add more objects to your selection, or drag a rectangle around multiple objects. After selecting, you can move, or delete the objects. Use the 'Select all' button to select everything, 'Deselect all' to clear your selection, and 'Delete selected objects' to remove the selected items from the canvas.",
+    "explain": "The Select tool allows picking one or multiple objects on the image. Click on an object to select it. Hold Shift to add more objects to the selection, or drag a rectangle around multiple objects. After selecting, objects can be moved or deleted. Use the 'Select all' button to select everything, 'Deselect all' to clear the selection, and 'Delete selected objects' to remove the selected items from the canvas.",
     "shortcut": "V",
     "settings": {
       "general": {
@@ -47,19 +47,19 @@
       "rotate": {
         "label": "Rotate",
         "tip": "Applies rotation to the image",
-        "explain": "The Rotate tool allows you to rotate the image in 90° steps. Use the left and right rotate buttons to rotate the image clockwise or counterclockwise.",
+        "explain": "The Rotate tool allows rotation of the image in 90° steps. The left and right rotate buttons rotate the image clockwise or counterclockwise.",
         "shortcut": "R"
       },
       "flip": {
         "label": "Flip",
         "tip": "Applies horizontal or vertical flipping to the image",
-        "explain": "The Flip tool allows you to apply a horizontal or vertical flip to the image. Use the Apply buttons to apply the flip.",
+        "explain": "The Flip tool allows applying a horizontal or vertical flip to the image. The Apply buttons confirm the flip.",
         "shortcut": "F"
       },
       "resize": {
         "label": "Resize",
         "tip": "Changes the dimensions of the image",
-        "explain": "The Resize tool lets you change the image dimensions. You can maintain the aspect ratio or reset the dimensions to the original size.",
+        "explain": "The Resize tool changes the image dimensions. The aspect ratio can be maintained, or the dimensions reset to the original size.",
         "shortcut": "Shift + R"
       }
     },
@@ -109,6 +109,8 @@
     "label": "Crop",
     "tip": "Crops the image manualy or use auto crop",
     "tipDisabled": "",
+    "explain": "The Crop tool allows the image to be cropped by defining a rectangular crop box. The box can be moved with the mouse or exact values for position and size can be entered. The aspect ratio can be locked when resizing. The Reset button restores the original crop box, and Apply confirms the crop.",
+    "explain2": "The Auto Crop option automatically detects and removes background-like areas from the edges of the image. The sensitivity can be adjusted to control how much of the background is included in the crop. The artifacts preview helps visualize which pixels will be treated as background.",
     "shortcut": "C",
     "settings": {
       "general": {
@@ -179,6 +181,7 @@
     "label": "Grayscale",
     "tip": "Converts the image to grayscale",
     "tipDisabled": "",
+    "explain": "The Grayscale tool converts the image to shades of gray, removing all color information. This is useful for creating monochrome versions of images or focusing only on light and shadow without color distraction.",
     "shortcut": "G",
     "settings": {
       "convertToGrayscaleButton": {
@@ -190,6 +193,7 @@
     "label": "Blur area",
     "tip": "Applies a blur effect to the image",
     "tipDisabled": "",
+    "explain": "The Blur area tool applies a blur effect to a selected rectangular area of the image. The size, position, and rotation of the blur box can be adjusted manually or by entering exact values. The blur strength slider controls how strong the effect is.",
     "shortcut": "B",
     "settings": {
       "general": {
@@ -209,25 +213,9 @@
           "label": "Rotation",
           "tip": "Adjust the rotation angle or double click icon to reset rotation"
         },
-        "blurTypes": {
-          "label": "Blur types",
-          "tip": "Select the type of blur effect",
-          "options": {
-            "black": "Black",
-            "checked": "Checked"
-          }
-        },
-        "blurColor": {
-          "label": "Blur color",
-          "tip": "Select the color for the blur effect"
-        },
         "blurStrength": {
           "label": "Blur strength",
           "tip": "Adjust the strength of the blur effect"
-        },
-        "patternSize": {
-          "label": "Pattern size",
-          "tip": "Select the size for the blur pattern"
         },
         "zIndex": {
           "label": "Z-index",
@@ -251,6 +239,7 @@
     "label": "Shape",
     "tip": "Adds vector shapes",
     "tipDisabled": "",
+    "explain": "The Shape tool allows adding vector shapes to the image. Shapes can be positioned, resized, rotated, and styled with fill, stroke, opacity, and line options. Shapes can also be reordered using Z-index controls.",
     "shortcut": "S",
     "subTools": {
       "rectangle": {
@@ -372,6 +361,7 @@
     "label": "Magnify Area",
     "tip": "Magnifies a specific area of the image",
     "tipDisabled": "",
+    "explain": "The Magnify Area tool highlights a chosen part of the image by enlarging it. The zoom level, radius, position, outline, and Z-index can be customized to control how the magnified section is displayed.",
     "shortcut": "M",
     "settings": {
       "general":{
@@ -428,6 +418,7 @@
     "label": "Text",
     "tip": "Adds text to the image",
     "tipDisabled": "",
+    "explain": "The Text tool allows adding text to the image. The font, size, color, opacity, style, rotation, and position can be customized. Text can also be layered with other elements using Z-index controls.",
     "shortcut": "T",
     "settings": {
       "general": {
@@ -492,6 +483,7 @@
     "label": "Frame",
     "tip": "Adds various types of frames such as solid, browser or phone",
     "tipDisabled": "",
+    "explain": "The Frame tool adds a visual frame around the image. Different frame types such as solid, browser, or phone frames are available. Frame color, width, outlines or headers can be customized.",
     "shortcut": "Shift + F",
     "settings": {
       "general": {
@@ -546,6 +538,8 @@
     "label": "Presets",
     "tip": "Applies a preset to the image",
     "tipDisabled": "",
+    "explain": "The Create Preset tool saves a set of image operations as a preset. Supported operations include rotate, flip, crop, resize, grayscale, frame. Current modifications can be saved as preset or operations can be manually selected.",
+    "explain2": "The Apply Preset tool applies a saved preset to the image. Presets can be modified, new operations can be added, and the order or values of existing operations can be adjusted before applying.",
     "shortcut": "",
     "subTools": {
       "myPresets": {

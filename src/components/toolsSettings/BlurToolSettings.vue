@@ -12,6 +12,7 @@ import LinkValuesIcon from '../common/LinkValuesIcon.vue';
 import DefaultButton from '../common/DefaultButton.vue';
 import DefaultSlider from '../common/DefaultSlider.vue';
 import { useUiStore } from '@/stores/uiStore';
+import ExplainItem from '../common/ExplainItem.vue';
 
 const { t } = useI18n();
 const imageStore = useImageStore();
@@ -57,6 +58,7 @@ const {
       <div class="specific-settings">
         <!-- Position -->
         <div v-if="!hidePositionAndDimensions" class="settings-content-wrapper">
+          <ExplainItem :text="$t('tools.blur.explain')" :title="$t('tools.blur.label')" />
           <div class="content-wrapper">
             <div class="content-title">
               <p>
@@ -138,6 +140,8 @@ const {
 
         <!-- Blur strength -->
         <div class="settings-content-wrapper">
+          <ExplainItem v-if="hidePositionAndDimensions" :text="$t('tools.blur.explain')"
+            :title="$t('tools.blur.label')" />
           <div class="content-title">
             <p>
               {{ $t('tools.blur.settings.general.blurStrength.label') }}

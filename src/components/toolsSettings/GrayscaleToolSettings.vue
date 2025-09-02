@@ -5,6 +5,7 @@ import { useGrayscaleTool } from '@/composables/tools/useGrayscaleTool'
 import { useImageStore } from '@/stores/imageStore'
 import { useHistoryStore } from '@/stores/historyStore'
 import { useI18n } from 'vue-i18n'
+import ExplainItem from '../common/ExplainItem.vue'
 
 const { t } = useI18n()
 
@@ -25,6 +26,7 @@ const { applyGrayscale, isGrayscaleApplied } = useGrayscaleTool(
       <div class="specific-settings">
         <!-- Grayscale conversion button -->
         <div class="settings-content-wrapper">
+          <ExplainItem :text="$t('tools.grayscale.explain')" :title="$t('tools.grayscale.label')" position="left" />
           <div class="content-wrapper">
             <DefaultButton :text="$t('tools.grayscale.settings.convertToGrayscaleButton.text')" @click="applyGrayscale"
               :disabled="isGrayscaleApplied" main />

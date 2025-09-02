@@ -12,6 +12,7 @@ import ToggleButton from '../common/ToggleButton.vue'
 import TimeInput from '../common/TimeInput.vue'
 import DefaultSlider from '../common/DefaultSlider.vue'
 import { editorConfig } from '@/config/editorConfig'
+import ExplainItem from '../common/ExplainItem.vue'
 
 const { t } = useI18n()
 
@@ -53,6 +54,7 @@ const {
       <div class="specific-settings">
         <!-- Frame variants -->
         <div class="settings-content-wrapper">
+          <ExplainItem :text="$t('tools.frame.explain')" :title="$t('tools.frame.label')" />
           <div class="content-wrapper">
             <div class="content-title">
               <p>

@@ -13,6 +13,7 @@ import NumberDropdownInput from '../common/NumberDropdownInput.vue';
 import { useViewportStore } from '@/stores/viewportStore';
 import DefaultButton from '../common/DefaultButton.vue';
 import { useUiStore } from '@/stores/uiStore';
+import ExplainItem from '../common/ExplainItem.vue';
 
 const { t } = useI18n();
 
@@ -51,6 +52,7 @@ const {
       <div class="specific-settings">
         <!-- Position -->
         <div v-if="!hidePositionAndDimensions" class="settings-content-wrapper">
+          <ExplainItem :text="$t('tools.magnifyArea.explain')" :title="$t('tools.magnifyArea.label')" />
           <div class="content-wrapper">
             <div class="content-title">
               <p>
@@ -83,6 +85,8 @@ const {
 
         <!-- Radius -->
         <div class="settings-content-wrapper">
+          <ExplainItem v-if="hidePositionAndDimensions" :text="$t('tools.magnifyArea.explain')"
+            :title="$t('tools.magnifyArea.label')" />
           <div class="content-wrapper">
             <div class="content-title">
               <p>
