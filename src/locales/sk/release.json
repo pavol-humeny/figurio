@@ -7,6 +7,35 @@
     ]
   },
   "versions": {
+    "3.4.0": {
+      "label": "3.4.0",
+      "date": "2.9. 2025",
+      "newFeatures": {
+        "items": [
+          "Bočné úchyty pre zmenu veľkosti objektov",
+          "Bočné úchyty pre zmenu veľkosti crop boxu",
+          "Objekty sa dajú presúvať aj pri výbere viacerých objektov naraz",
+          "Vysvetlenie funkčnosti nástrojov"
+        ]
+      },
+      "improvements": {
+        "items": [
+          "Modálne okná je možné zavrieť kliknutím mimo okna",
+          "Popis verzií sa zobrazuje spolu s dátumom vydania",
+          "Nový objekt sa dá vytvoriť aj keď je predchádzajúci objekt vybraný",
+          "Ikony pre zmenu veľkosti a rotáciu objektu sa posúvajú dovnútra objektu, ak sú mimo hraníc obrázka"
+        ]
+      },
+      "bugFixes": {
+        "items": [
+          "Desatinné čísla v rozbaľovacom menu sa zobrazujú s desatinnou čiarkou namiesto bodky",
+          "Nástroje sa nedajú meniť počas exportu súboru",
+          "Výber objektu sa neodznačí počas zmeny veľkosti",
+          "Zakázanie kreslenia neviditeľných objektov",
+          "Tutoriál sa spustí prvýkrát až po načítaní obrázka"
+        ]
+      }
+    },
     "3.3.0":{
       "label": "3.3.0",
       "date":"31.8. 2025",

@@ -1,6 +1,6 @@
 {
   "inProgressGlobal": {
-    "currentlyInProgressText": "Currently in progress improvements",
+    "currentlyInProgressText": "Currently in progress",
     "items": [
       "Magnify area tool improvements", 
       "SVG objects export enhancements"
@@ -9,12 +9,13 @@
   "versions":{
     "3.4.0":{
       "label": "3.4.0",
-      "date":"1.9. 2025",
+      "date":"2.9. 2025",
       "newFeatures": {
         "items": [
           "Side handles for resizing the objects",
           "Side handles for resizing the crop box",
-          "Objects can be moved when they are in multiple object selection"
+          "Objects can be moved when they are in multiple object selection",
+          "Tool functionality explanation"
         ]
       },
       "improvements": {
@@ -22,7 +23,7 @@
           "Modal windows can be closed by clicking outside of window",
           "Released versions are displayed with the release date",
           "New object can be created also when previous object is selected",
-          "Object resize and rotate icons move inside the object when outside the image boundaries"
+          "Object resize and rotate icons move inside the object when they are outside the image boundaries"
         ]
       }, 
       "bugFixes":{
