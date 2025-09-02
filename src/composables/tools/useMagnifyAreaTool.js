@@ -444,7 +444,7 @@ export function useMagnifyAreaTool(imageStore, historyStore, editorStore, t) {
     imageStore.svgObjects.push(source)
     imageStore.svgObjects.push(result)
 
-    imageStore.selectedSvgObjectId = resultId
+    imageStore.selectedSvgObjectId = sourceId
 
     useSendEvent().sendEvent('toolSettings', 'magnifyArea', 'create', {
       settings: { ...localMagnifyAreaSettings.value },

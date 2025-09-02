@@ -287,7 +287,17 @@ export function useSvgObjectWrapper(
       showResizers.value = !showResizers.value
     } else {
       if (editorStore.selectedToolKey === object.value.class) {
-        imageStore.selectedSvgObjectId = object.value.id
+        if (object.value.class === 'magnifyArea') {
+          // Always select source
+          console.log(object.value)
+          if (object.value.subClass === 'magnify-source') {
+            imageStore.selectedSvgObjectId = object.value.id
+          } else {
+            imageStore.selectedSvgObjectId = object.value.linkedSourceId
+          }
+        } else {
+          imageStore.selectedSvgObjectId = object.value.id
+        }
         editorStore.previousToolKey = ''
       }
     }
