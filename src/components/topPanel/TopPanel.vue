@@ -7,20 +7,40 @@ import ZoomControl from './ZoomControl.vue';
 import UploadFileButton from './UploadFileButton.vue';
 import CloseFileButton from './CloseFileButton.vue';
 import ExportFileButton from './ExportFileButton.vue';
-
+import { useUiStore } from '@/stores/uiStore';
 import { useRoute } from 'vue-router'
 import { computed } from 'vue'
+import EdimageLogoDark from '@/assets/EdimageLogoDark.png'
+import EdimageLogoLight from '@/assets/EdimageLogoLight.png'
+
+const uiStore = useUiStore()
 
 /**
  * Checks if the current view is 'home' to conditionally render parts of the top panel
  */
 const route = useRoute()
 const isHomeView = computed(() => route.name === 'home')
+
+/**
+ * Computes the logo source based on the current theme.
+ */
+const logoSrc = computed(() => {
+  return uiStore.theme === 'dark' ? EdimageLogoDark : EdimageLogoLight
+})
+
+/**
+ * Navigates to the home view.
+ */
+const goHome = () => {
+  window.location.reload()
+}
+
 </script>
 
 <template>
   <div class="top-panel">
     <div class="top-panel-left" v-if="!isHomeView" id="top-panel-left">
+      <img @click="goHome" :src="logoSrc" alt="Edimage logo">
       <FileNameDisplay />
       <UploadFileButton />
       <CloseFileButton />
@@ -62,6 +82,18 @@ const isHomeView = computed(() => route.name === 'home')
 .top-panel-left {
   justify-content: flex-start;
   gap: 10px;
+}
+
+.top-panel-left img {
+  height: 40px;
+  margin-right: 10px;
+  transition: var(--default-transition);
+  cursor: pointer;
+}
+
+.top-panel-left img:hover {
+  transition: var(--default-transition);
+  filter: drop-shadow(var(--box-shadow-hover));
 }
 
 .top-panel-center {
