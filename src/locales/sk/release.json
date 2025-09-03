@@ -7,6 +7,15 @@
     ]
   },
   "versions": {
+    "3.5.0":{
+      "label": "3.5.0",
+      "date":"3.9. 2025",
+      "newFeatures": {
+        "items": [
+          "Nová vstupná stránka"
+        ]
+      }
+    },
     "3.4.1":{
       "label": "3.4.1",
       "date":"2.9. 2025",
