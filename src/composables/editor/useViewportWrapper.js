@@ -355,6 +355,8 @@ export function useViewportWrapper(viewportStore, imageStore, editorStore, uiSto
   const centerImage = () => {
     console.log('------- Centering image ')
     if (!wrapperRef.value || !contentRef.value) return
+    viewportStore.resetZoom()
+
     fitToScreenZoomLevel()
 
     centerImagePosition()
@@ -389,7 +391,7 @@ export function useViewportWrapper(viewportStore, imageStore, editorStore, uiSto
     if (!wrapperRef.value || !contentRef.value) return
     // Reset zoom
     const tmpZoomLevel = viewportStore.zoomLevel
-    // viewportStore.resetZoom() // TODO - delete if everything works (closing right panel with different zoom than 100 was moving image)
+    viewportStore.resetZoom() // TODO - delete if everything works (closing right panel with different zoom than 100 was moving image)
 
     updateInitialDimensions()
     updateZoomDependentDimensions()

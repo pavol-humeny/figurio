@@ -11,6 +11,20 @@ const { t } = useI18n()
 const router = useRouter()
 
 /**
+ * @typedef {Object} DragAndDropProps
+ * @property {boolean} isHomePage - Whether it is a drag and drop on home page (do not show button)
+ */
+
+
+/** @type {DragAndDropProps} */
+const props = defineProps({
+  isHomePage: {
+    type: Boolean,
+    default: false,
+  }
+})
+
+/**
  * Logic of the drag-and-drop area
  */
 const {
@@ -37,11 +51,11 @@ const {
       <p>{{ $t('dragAndDropArea.supportedFormats') }}</p>
     </div>
     <div class="subtitle-wrapper">
-      <p>{{ $t('dragAndDropArea.subtitle') }}</p>
-      <p class="small">{{ $t('dragAndDropArea.pasteHint') }}</p>
+      <p v-if="!props.isHomePage">{{ $t('dragAndDropArea.subtitle') }}</p>
+      <!-- <p class="small">{{ $t('dragAndDropArea.pasteHint') }}</p> -->
 
     </div>
-    <div class="button-wrapper">
+    <div v-if="!props.isHomePage" class="button-wrapper">
       <DefaultButton :text="$t('dragAndDropArea.button.text')" @click="selectFile" />
     </div>
   </div>
@@ -59,6 +73,7 @@ const {
   border-radius: 20px;
   border: var(--border-drag-and-drop);
   background: var(--secondary-c);
+  box-shadow: var(--box-shadow-ui);
 }
 
 .drag-and-drop-area.dragging {

@@ -4,7 +4,7 @@
   --font-family: 'Inter', sans-serif;
 
   --primary-c-dark: #BFA473;
-  --secondary-c-dark: #3C3C3C;
+  --secondary-c-dark: #3c3c3c;
   --background-c-dark: #282828;
   --text-c-dark: #F5F1E9;
   --text-placeholder-c-dark: #F5F1E9;
@@ -141,8 +141,19 @@ body {
   --z-index-guide-lines: 510;
   --z-index-viewport: 500;
 
+  --z-index-home-page-background: 100;
+  --z-index-home-page-content: 200;
+
   --box-shadow-ui: 1px 3px 6px rgba(0, 0, 0, 0.4);
   --box-shadow-hover: 2px 2px 6px rgba(0, 0, 0, 0.2);
+
+  --landing-page-app-name-font-size: 28px;
+  --landing-page-app-name-font-weight: 600;
+  --landing-page-title-font-size: 37px;
+  --landing-page-title-font-weight: 700;
+  --landing-page-text-font-size: 18px;
+  --landing-page-text-font-weight: 300;
+  --landing-page-logo-size: 60px;
 
   --title-font-size: 23px;
   --title-font-weight: 700;

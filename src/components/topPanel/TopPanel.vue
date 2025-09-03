@@ -20,17 +20,17 @@ const isHomeView = computed(() => route.name === 'home')
 
 <template>
   <div class="top-panel">
-    <div class="top-panel__left" v-if="!isHomeView" id="top-panel-left">
+    <div class="top-panel-left" v-if="!isHomeView" id="top-panel-left">
       <FileNameDisplay />
       <UploadFileButton />
       <CloseFileButton />
       <ExportFileButton />
     </div>
-    <div class="top-panel__center" v-if="!isHomeView" id="top-panel-center">
+    <div class="top-panel-center" v-if="!isHomeView" id="top-panel-center">
       <UndoRedo />
       <ZoomControl />
     </div>
-    <div class="top-panel__right" id="top-panel-right">
+    <div class="top-panel-right" id="top-panel-right">
       <HelpButton />
       <SettingsButton />
     </div>
@@ -47,27 +47,29 @@ const isHomeView = computed(() => route.name === 'home')
   background: var(--background-c);
   border: var(--border-ui);
   padding: 0 20px;
+  z-index: var(--z-index-top-panel);
+  position: relative;
 }
 
-.top-panel__left,
-.top-panel__center,
-.top-panel__right {
+.top-panel-left,
+.top-panel-center,
+.top-panel-right {
   flex: 1;
   display: flex;
   align-items: center;
 }
 
-.top-panel__left {
+.top-panel-left {
   justify-content: flex-start;
   gap: 10px;
 }
 
-.top-panel__center {
+.top-panel-center {
   justify-content: center;
   gap: 10px;
 }
 
-.top-panel__right {
+.top-panel-right {
   justify-content: flex-end;
   gap: 10px;
 }

@@ -40,6 +40,10 @@ import enRelease from './en/release.json'
 import skRelease from './sk/release.json'
 import czRelease from './cz/release.json'
 
+import enHome from './en/home.json'
+import skHome from './sk/home.json'
+import czHome from './cz/home.json'
+
 /**
  * Language-specific localization data for i18n
  */
@@ -55,6 +59,7 @@ const allLocales = {
     maintenance: enMaintenance,
     contextMenu: enContextMenu,
     release: enRelease,
+    home: enHome,
   },
   sk: {
     topPanel: skTopPanel,
@@ -67,6 +72,7 @@ const allLocales = {
     maintenance: skMaintenance,
     contextMenu: skContextMenu,
     release: skRelease,
+    home: skHome,
   },
   cz: {
     topPanel: czTopPanel,
@@ -79,6 +85,7 @@ const allLocales = {
     maintenance: czMaintenance,
     contextMenu: czContextMenu,
     release: czRelease,
+    home: czHome,
   },
 }
 
