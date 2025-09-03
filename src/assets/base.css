@@ -1,7 +1,15 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter&display=swap');
 
+@font-face {
+  font-family: 'RC'; /* vlastný názov fontu */
+  src: url('/R&C-Demo.otf') format('opentype');
+  font-weight: normal;
+  font-style: normal;
+}
+
 :root {
   --font-family: 'Inter', sans-serif;
+  --font-family-rc: 'RC';
 
   --primary-c-dark: #BFA473;
   --secondary-c-dark: #3c3c3c;

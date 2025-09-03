@@ -119,8 +119,10 @@ const {
 
 .app-name .highlight-e {
   color: var(--primary-c);
-  font-size: calc(var(--landing-page-app-name-font-size) * 1.2);
+  font-size: calc(var(--landing-page-app-name-font-size) * 1.4);
   font-weight: var(--landing-page-app-name-font-weight);
+  font-family: var(--font-family-rc);
+  margin-right: -3px;
 }
 
 .title {
