@@ -600,6 +600,8 @@ export function useCropTool(
    * @param {Object} bgColor - The background color as an RGB object
    */
   const calculateAutoCropBox = (useBaseImage, threshold, bgColor) => {
+    const scale = 2 // To improve accuracy
+
     const img = imageStore.getRenderedImage({ t, renderCall: false })
     if (!img) return null
 
@@ -607,22 +609,24 @@ export function useCropTool(
     const ctx = canvas.getContext('2d', { willReadFrequently: true })
     const width = img.width
     const height = img.height
-    canvas.width = width
-    canvas.height = height
-    ctx.drawImage(img, 0, 0, width, height)
+    canvas.width = width * scale
+    canvas.height = height * scale
+    console.log('size: ', width, height)
+    console.log('size: ', canvas.width, canvas.height)
+    ctx.drawImage(img, 0, 0, canvas.width, canvas.height)
 
-    const { data } = ctx.getImageData(0, 0, width, height)
+    const { data } = ctx.getImageData(0, 0, canvas.width, canvas.height)
 
     // Define search area
     let startX = 0,
       startY = 0,
-      endX = width - 1,
-      endY = height - 1
+      endX = canvas.width - 1, // Indexed from 0 (width - 1 = last pixel)
+      endY = canvas.height - 1
     if (!useBaseImage) {
-      startX = cropBox.value.x
-      startY = cropBox.value.y
-      endX = cropBox.value.x + cropBox.value.width - 1
-      endY = cropBox.value.y + cropBox.value.height - 1
+      startX = cropBox.value.x * scale
+      startY = cropBox.value.y * scale
+      endX = (cropBox.value.x + cropBox.value.width) * scale - 1
+      endY = (cropBox.value.y + cropBox.value.height) * scale - 1
     }
 
     // TOP
@@ -630,7 +634,7 @@ export function useCropTool(
     while (top <= endY) {
       let match = true
       for (let x = startX; x <= endX; x++) {
-        const i = (top * width + x) * 4
+        const i = (top * canvas.width + x) * 4
         if (!isColorMatch(i, bgColor, threshold, data)) {
           match = false
           break
@@ -645,7 +649,7 @@ export function useCropTool(
     while (bottom >= startY) {
       let match = true
       for (let x = startX; x <= endX; x++) {
-        const i = (bottom * width + x) * 4
+        const i = (bottom * canvas.width + x) * 4
         if (!isColorMatch(i, bgColor, threshold, data)) {
           match = false
           break
@@ -660,7 +664,7 @@ export function useCropTool(
     while (left <= endX) {
       let match = true
       for (let y = top; y <= bottom; y++) {
-        const i = (y * width + left) * 4
+        const i = (y * canvas.width + left) * 4
         if (!isColorMatch(i, bgColor, threshold, data)) {
           match = false
           break
@@ -675,7 +679,7 @@ export function useCropTool(
     while (right >= startX) {
       let match = true
       for (let y = top; y <= bottom; y++) {
-        const i = (y * width + right) * 4
+        const i = (y * canvas.width + right) * 4
         if (!isColorMatch(i, bgColor, threshold, data)) {
           match = false
           break
@@ -693,10 +697,10 @@ export function useCropTool(
     }
 
     return {
-      x: left,
-      y: top,
-      width: newWidth,
-      height: newHeight,
+      x: Math.floor(left / scale),
+      y: Math.floor(top / scale),
+      width: Math.ceil(newWidth / scale),
+      height: Math.ceil(newHeight / scale),
     }
   }
 

@@ -6,7 +6,7 @@ export const editorConfig = {
 
   // Auto crop settings
   autoCropDefaultColor: '#ffffff',
-  autoCropThreshold: 0.1,
+  autoCropThreshold: 0,
 
   // Item tip settings
   tipDelay: 700,
