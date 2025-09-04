@@ -7,6 +7,15 @@
     ]
   },
   "versions":{
+    "3.5.2":{
+      "label": "3.5.2",
+      "date":"4.9. 2025",
+      "bugFixes": {
+        "items": [
+          "Centering an image after zooming in and out"        
+        ]
+      }
+    },
     "3.5.1":{
       "label": "3.5.1",
       "date":"4.9. 2025",

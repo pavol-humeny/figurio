@@ -2,6 +2,8 @@ import { defineStore } from 'pinia'
 import { viewportConfig } from '@/config/viewportConfig'
 import { useMath } from '@/composables/common/useMath'
 import { globalConfig } from '@/config/globalConfig'
+import { nextTick } from 'vue'
+import { useUiStore } from '@/stores/uiStore'
 
 const { round } = useMath()
 
@@ -90,27 +92,29 @@ export const useViewportStore = defineStore('viewportStore', {
      * @param {number} level
      */
     setZoomLevel(level) {
-      let canvasObject = document.querySelector('.viewport-content')
-      if (!canvasObject) {
-        console.warn('viewport-content element not found!')
+      let wrapper = document.querySelector('.viewport-content-wrapper')
+      let content = document.querySelector('.viewport-content')
+      if (!content || !wrapper) {
+        console.warn('viewport-content or viewport-content-wrapper element not found!')
         return
       }
 
-      const rectBefore = canvasObject.getBoundingClientRect()
-      const widthBefore = rectBefore.width * this.realZoomLevel
-      const heightBefore = rectBefore.height * this.realZoomLevel
-
       this.zoomLevel = round(level, 2)
 
-      const rectAfter = canvasObject.getBoundingClientRect()
-      const widthAfter = rectAfter.width * this.realZoomLevel
-      const heightAfter = rectAfter.height * this.realZoomLevel
+      nextTick(() => {
+        const wrapperRect = wrapper.getBoundingClientRect()
+        const wrapperWidth = wrapperRect.width
+        const wrapperHeight = wrapperRect.height
 
-      const diffWidth = widthAfter - widthBefore
-      const diffHeight = heightAfter - heightBefore
+        const rectAfter = content.getBoundingClientRect()
+        const contentWidth = rectAfter.width
+        const contentHeight = rectAfter.height
 
-      this.panX -= diffWidth / 2
-      this.panY -= diffHeight / 2
+        const uiStore = useUiStore()
+        const slidersCorrection = uiStore.rulersEnabled ? 0 : 7.5
+        this.panX = wrapperWidth / 2 - contentWidth / 2
+        this.panY = wrapperHeight / 2 - contentHeight / 2 - slidersCorrection
+      })
     },
 
     /**

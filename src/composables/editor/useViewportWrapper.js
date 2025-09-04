@@ -307,30 +307,22 @@ export function useViewportWrapper(viewportStore, imageStore, editorStore, uiSto
 
     const onMouseMove = (e) => {
       const delta = (axis === 'y' ? e.clientY : e.clientX) - startClient
+      const speed = clamp(zoomLevel.value, dragSpeedMin, dragSpeedMax)
+
       if (axis === 'y') {
         isDraggingVertical.value = true
-        if (
-          viewportStore.panY >= scrollVerticalMin.value &&
-          viewportStore.panY <= scrollVerticalMax.value
-        ) {
-          viewportStore.panY = clamp(
-            startPan - delta * clamp(zoomLevel.value, dragSpeedMin, dragSpeedMax),
-            scrollVerticalMin.value,
-            scrollVerticalMax.value,
-          )
-        }
+        viewportStore.panY = clamp(
+          startPan - delta * speed,
+          scrollVerticalMin.value,
+          scrollVerticalMax.value,
+        )
       } else {
         isDraggingHorizontal.value = true
-        if (
-          viewportStore.panX >= scrollHorizontalMin.value &&
-          viewportStore.panX <= scrollHorizontalMax.value
-        ) {
-          viewportStore.panX = clamp(
-            startPan - delta * clamp(zoomLevel.value, dragSpeedMin, dragSpeedMax),
-            scrollHorizontalMin.value,
-            scrollHorizontalMax.value,
-          )
-        }
+        viewportStore.panX = clamp(
+          startPan - delta * speed,
+          scrollHorizontalMin.value,
+          scrollHorizontalMax.value,
+        )
       }
     }
 
@@ -374,12 +366,12 @@ export function useViewportWrapper(viewportStore, imageStore, editorStore, uiSto
     const slidersCorrection = uiStore.rulersEnabled ? 0 : 7.5
 
     panX.value =
-      wrapperWidth.value / 2 - (contentWidth.value * zoomLevel.value) / 2 - slidersCorrection
+      wrapperWidth.value / 2 - (contentWidth.value * zoomLevel.value) / 2
     panY.value =
       wrapperHeight.value / 2 - (contentHeight.value * zoomLevel.value) / 2 - slidersCorrection
 
     viewportStore.defaultPanX =
-      wrapperWidth.value / 2 - (contentWidth.value * zoomLevel.value) / 2 - slidersCorrection
+      wrapperWidth.value / 2 - (contentWidth.value * zoomLevel.value) / 2
     viewportStore.defaultPanY =
       wrapperHeight.value / 2 - (contentHeight.value * zoomLevel.value) / 2 - slidersCorrection
   }
@@ -399,7 +391,7 @@ export function useViewportWrapper(viewportStore, imageStore, editorStore, uiSto
     const slidersCorrection = uiStore.rulersEnabled ? 0 : 7.5
 
     viewportStore.defaultPanX =
-      wrapperWidth.value / 2 - (contentWidth.value * zoomLevel.value) / 2 - slidersCorrection
+      wrapperWidth.value / 2 - (contentWidth.value * zoomLevel.value) / 2 
     viewportStore.defaultPanY =
       wrapperHeight.value / 2 - (contentHeight.value * zoomLevel.value) / 2 - slidersCorrection
 
