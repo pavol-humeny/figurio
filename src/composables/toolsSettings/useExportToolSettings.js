@@ -158,7 +158,7 @@ export function useExportToolSettings(imageStore, editorStore, historyStore, t) 
       console.error('Failed to export file')
       return
     }
-    isVisible.value = false
+    closeExportToolSettings()
   }
 
   /**

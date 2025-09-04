@@ -7,6 +7,15 @@
     ]
   },
   "versions": {
+    "3.5.1":{
+      "label": "3.5.1",
+      "date":"4.9. 2025",
+      "bugFixes": {
+        "items": [
+          "Nástroje lze přepínat po exportu souboru"
+        ]
+      }
+    },
     "3.5.0":{
       "label": "3.5.0",
       "date":"3.9. 2025",
