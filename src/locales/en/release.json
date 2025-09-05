@@ -7,6 +7,15 @@
     ]
   },
   "versions":{
+    "3.6.3":{
+      "label": "3.6.3",
+      "date":"5.9. 2025",
+      "bugFixes": {
+        "items": [
+          "Set minimum window size to prevent layout issues"
+        ]
+      }
+    },
     "3.6.2":{
       "label": "3.6.2",
       "date":"5.9. 2025",

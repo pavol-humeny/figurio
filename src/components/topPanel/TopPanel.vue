@@ -99,6 +99,7 @@ const goHome = () => {
 .top-panel-center {
   justify-content: center;
   gap: 10px;
+  padding: 0 10px;
 }
 
 .top-panel-right {

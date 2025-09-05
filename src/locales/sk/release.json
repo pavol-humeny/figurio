@@ -7,6 +7,15 @@
     ]
   },
   "versions": {
+    "3.6.3":{
+      "label": "3.6.3",
+      "date":"5.9. 2025",
+      "bugFixes": {
+        "items": [
+          "Nastavenie minimálnej veľkosti okna, aby sa predišlo problémom s rozložením"
+        ]
+      }
+    },
     "3.6.2":{
       "label": "3.6.2",
       "date":"5.9. 2025",
