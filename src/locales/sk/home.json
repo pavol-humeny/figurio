@@ -2,6 +2,15 @@
   "appName": "Figurio",
   "appNameHighlight": "F",
   "appNameBasic": "igurio",
-  "title": "Editor pre obrázky do odborných textov a dokumentov",
-  "text":"obsahuje nástroje určené na úpravu obrázkov pre odborné texty, dokumenty a LaTeX výstupy. Je jednoduchý na používanie, dostupný online a navrhnutý s dôrazom na efektívnu prácu v jednoduchom prostredí."
+  "title": "Pozdvihnite svoje projekty s obrázkami na vyššiu úroveň",
+  "text":"je online editor navrhnutý špeciálne pre obrázky používané v odborných textoch, dokumentoch a LaTeX výstupoch. Poskytuje nástroje navrhnuté na mieru pre vizuálne úpravy v prehľadnom prostredí",
+  "features": [
+    { "name": "PDF", "description": "- vektorové spracovanie súborov" },
+    { "name": "Orezanie obrázka", "description": "- manuálne aj automaticky (orezanie natesno)" },
+    { "name": "Rámiky", "description": "- prehliadač alebo mobilný telefón" },
+    { "name": "Anotácie", "description": "- texty a grafické objekty" },
+    { "name": "Rozmazanie oblasti", "description": "- ochrana citlivých údajov" },
+    { "name": "Priblíženie oblasti", "description": "- zvýraznenie dôležitých detailov" },
+    { "name": "Ďalšie nástroje", "description": "" }
+  ]
 }

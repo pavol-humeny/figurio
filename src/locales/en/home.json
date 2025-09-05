@@ -2,6 +2,15 @@
   "appName": "Figurio",
   "appNameHighlight": "F",
   "appNameBasic": "igurio",
-  "title": "Editor for images in technical texts and documents",
-  "text":"provides tools designed for editing images used in technical texts, documents, and LaTeX outputs. It is easy to use, available online, and built for efficient work in a clean and focused environment."
+  "title": "Boost your projects with figures",
+  "text":"is an online editor designed specifically for images used in academic texts, documents, and LaTeX outputs. It provides custom-tailored tools for visual editing in a clean and organized environment.",
+  "features": [
+    { "name": "PDF", "description": "- vector file processing" },
+    { "name": "Image Cropping", "description": "- manual and automatic (fit crop)" },
+    { "name": "Frames", "description": "- browser or mobile view" },
+    { "name": "Annotations", "description": "- text and graphic objects" },
+    { "name": "Blur Area", "description": "- protect sensitive information" },
+    { "name": "Zoom Area", "description": "- highlight important details" },
+    { "name": "Additional Tools", "description": "" }
+  ]
 }

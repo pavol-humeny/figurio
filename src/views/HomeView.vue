@@ -17,7 +17,7 @@ import { useDragAndDropArea } from '@/composables/editor/useDragAndDropArea';
 import { useToastModal } from '@/composables/modals/useToastModal'
 import { onMounted, onUnmounted } from 'vue'
 
-const { t } = useI18n()
+const { t, messages, locale } = useI18n()
 const router = useRouter()
 const uiStore = useUiStore()
 const imageStore = useImageStore()
@@ -36,6 +36,10 @@ useKeyboardShortcuts({ uploadFile, openHelpModal, openSettingsPanel, prevStep, n
  */
 const logoSrc = computed(() => {
   return uiStore.theme === 'dark' ? FigurioLogoDark : FigurioLogoLight
+})
+
+const features = computed(() => {
+  return messages.value[locale.value]?.home?.features || [];
 })
 
 /**
@@ -101,7 +105,12 @@ onUnmounted(() => {
         <b>{{ $t('home.appName') }}</b> {{ $t('home.text') }}
       </p>
 
-      <DefaultButton @click="selectFile" :text="$t('dragAndDropArea.button.text')" :style="{ 'user-select': 'none' }" />
+      <div class="feature" v-for="feature in features" :key="feature.name">
+        <p class="feature-title">{{ feature.name }}</p>
+        <p class="feature-description">{{ feature.description }}</p>
+      </div>
+
+      <DefaultButton @click="selectFile" :text="$t('dragAndDropArea.button.text')" :style="{ 'user-select': 'none', 'padding-top': '30px' }" />
     </div>
     <div class="right-side">
       <DragAndDropArea isHomePage />
@@ -198,5 +207,23 @@ onUnmounted(() => {
   background: var(--primary-c);
   z-index: var(--z-index-home-page-background);
   clip-path: polygon(30% 0, 100% 0, 100% 100%, 10% 100%);
+}
+
+.feature {
+  display: flex;
+  gap: 10px;
+  flex-direction: row;
+  padding: 2px 0px;
+}
+
+.feature-title {
+  font-size: var(--text-font-size);
+  color: var(--primary-c);
+}
+
+.feature-description {
+  font-size: var(--text-font-size);
+  font-weight: var(--text-font-weight);
+  color: var(--text-c);
 }
 </style>
