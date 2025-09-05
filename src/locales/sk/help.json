@@ -72,8 +72,7 @@
     "technicalLimitations": {
       "title": "Technické obmedzenia",
       "limitations": [
-        "Zobrazí sa len prvá strana PDF súboru.",
-        "Export do PDF podporuje vektorové vrstvy.",
+        "Pdf súbory s komplexnou štruktúrou nemusia byť vykreslené dokonale.",
         "Veľmi veľké obrázky môžu spomaliť výkon podľa výkonu zariadenia.",
         "Animované obrázky (napr. GIF) nie sú podporované.",
         "História krokov späť/vpred je obmedzená na aktuálnu reláciu.",

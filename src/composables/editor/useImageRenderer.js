@@ -1,4 +1,4 @@
-import { onMounted, watch, ref, nextTick } from 'vue'
+import { watch, ref, nextTick } from 'vue'
 import { useFrameTool } from '../tools/useFrameTool'
 
 import * as pdfjsLib from 'pdfjs-dist/legacy/build/pdf'
@@ -142,6 +142,23 @@ export function useImageRenderer(
       const viewportPdf = page.getViewport({ scale: 1 })
       const opList = await page.getOperatorList()
       const svgGfx = new SVGGraphics(page.commonObjs, page.objs)
+
+      // Zoznam známych nepodporovaných operátorov
+      const { OPS } = pdfjsLib
+      const unimplementedOps = [
+        OPS.setBlendMode, // BM
+        OPS.setSoftMask, // SMask
+        OPS.endGroup, // endGroup
+      ]
+
+      // Skontroluj, či sa v operator list nachádza aspoň jeden nepodporovaný
+      const hasUnimplemented = opList.fnArray.some((fnId) => unimplementedOps.includes(fnId))
+      if (hasUnimplemented) {
+        console.warn(
+          'PDF obsahuje nepodporované grafické operátory – niektoré efekty nemusia byť presne zobrazené.',
+        )
+      }
+
       const svg = await svgGfx.getSVG(opList, viewportPdf)
 
       // White rectangle
@@ -264,13 +281,13 @@ export function useImageRenderer(
   )
 
   // Initial rendering on mount
-  onMounted(() => {
-    nextTick(() => {
-      if (imageStore.getRenderedImage({ t, renderCall: false })) {
-        renderAll()
-      }
-    })
-  })
+  // onMounted(() => {
+  //   nextTick(() => {
+  //     if (imageStore.getRenderedImage({ t, renderCall: false })) {
+  //       renderAll()
+  //     }
+  //   })
+  // })
 
   return {
     imageRef,

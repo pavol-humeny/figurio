@@ -72,8 +72,7 @@
     "technicalLimitations": {
       "title": "Technical Limitations",
       "limitations": [
-        "Only the first page of a PDF file is loaded and displayed.",
-        "PDF export supports vector layers.",
+        "Pdf files with complex structures may not render perfectly.",
         "Very large image files may result in slower performance depending on your device capabilities.",
         "Animated images (e.g., GIFs) are not supported.",
         "Undo/redo history is limited.",
