@@ -1,6 +1,6 @@
 {
   "title": "Drag and drop your file here",
-  "supportedFormats": "(jpg, jpeg, png, pdf)",
+  "supportedFormats": "(jpg, jpeg, png, webp, pdf)",
   "subtitle": "or click to select file",
   "pasteHint": "or press Ctrl+V to paste an image from clipboard.",
   "button": {

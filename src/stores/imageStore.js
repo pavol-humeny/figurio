@@ -781,7 +781,7 @@ export const useImageStore = defineStore('imageStore', {
      * @returns {Promise<string>} - Detected file type, e.g. 'jpeg', 'png', 'pdf', or 'unknown'
      */
     async detectFileType(file) {
-      const buffer = await file.slice(0, 4).arrayBuffer()
+      const buffer = await file.slice(0, 12).arrayBuffer()
       const bytes = new Uint8Array(buffer)
 
       // JPEG: FF D8 FF
@@ -792,6 +792,20 @@ export const useImageStore = defineStore('imageStore', {
       // PNG: 89 50 4E 47
       if (bytes[0] === 0x89 && bytes[1] === 0x50 && bytes[2] === 0x4e && bytes[3] === 0x47) {
         return 'png'
+      }
+
+      // WEBP: RIFF .... WEBP
+      if (
+        bytes[0] === 0x52 &&
+        bytes[1] === 0x49 &&
+        bytes[2] === 0x46 &&
+        bytes[3] === 0x46 && // "RIFF"
+        bytes[8] === 0x57 &&
+        bytes[9] === 0x45 &&
+        bytes[10] === 0x42 &&
+        bytes[11] === 0x50 // "WEBP"
+      ) {
+        return 'webp'
       }
 
       // PDF: 25 50 44 46
@@ -808,7 +822,7 @@ export const useImageStore = defineStore('imageStore', {
      * @returns {boolean} - True if supported, false otherwise
      */
     async checkFile(file) {
-      const supportedTypes = ['image/jpeg', 'image/png', 'image/jpg', 'application/pdf']
+      const supportedTypes = ['image/jpeg', 'image/png', 'image/jpg', 'application/pdf', 'image/webp']
 
       if (!supportedTypes.includes(file.type)) {
         return false
@@ -825,7 +839,11 @@ export const useImageStore = defineStore('imageStore', {
         console.log(realType === detectedType, 'realType:', realType, 'detectedType:', detectedType)
 
         //  TODO - obrazok vinice sa deteguje zle (ako unknown)
-        return realType === detectedType
+        return (
+          realType === detectedType ||
+          ((realType === 'png' || realType === 'jpeg' || realType === 'jpg') &&
+            detectedType === 'webp') // Allow webp if image is png or jpeg
+        )
       }
     },
 
@@ -877,7 +895,7 @@ export const useImageStore = defineStore('imageStore', {
     loadFile(t, router) {
       const input = document.createElement('input')
       input.type = 'file'
-      input.accept = '.png, .jpg, .jpeg, .pdf'
+      input.accept = '.png, .jpg, .jpeg, .pdf, .webp'
       input.style.display = 'none'
 
       input.addEventListener('change', () => {

@@ -7,6 +7,15 @@
     ]
   },
   "versions":{
+    "3.6.2":{
+      "label": "3.6.2",
+      "date":"5.9. 2025",
+      "bugFixes": {
+        "items": [
+          "Fix WebP file support"
+        ]
+      }
+    },
     "3.6.1":{
       "label": "3.6.1",
       "date":"5.9. 2025",
