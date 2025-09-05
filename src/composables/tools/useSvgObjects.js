@@ -600,6 +600,7 @@ export function useSvgObjects(imageStore, historyStore, viewportStore, editorSto
    * @param {MouseEvent} event - Click event
    */
   const onClickImageSvg = (event) => {
+    console.log('click svg')
     if (event.button !== 0) return // Only left mouse button
 
     if (didDrag.value) {
@@ -684,6 +685,7 @@ export function useSvgObjects(imageStore, historyStore, viewportStore, editorSto
    */
   const onMouseDownSelect = (event) => {
     if (event.button !== 0) return // Only left mouse button
+    console.log('mousedown select')
 
     // Selecting objects
     if (editorStore.selectedToolKey === 'select') {
@@ -704,7 +706,12 @@ export function useSvgObjects(imageStore, historyStore, viewportStore, editorSto
     }
   }
 
+  /**
+   * Whether multiple objects are being moved
+   */
   const isMovingMultipleObjects = ref(false)
+
+  const savedClickedId = ref(null)
 
   /**
    * Mouse down event handler for the SVG image (creating new objects)
@@ -712,6 +719,7 @@ export function useSvgObjects(imageStore, historyStore, viewportStore, editorSto
    */
   const onMouseDownImageSvg = (event) => {
     if (event.button !== 0) return // Only left mouse button
+    console.log('mousedown svg')
 
     didDrag.value = false // Reset at start
 
@@ -829,6 +837,9 @@ export function useSvgObjects(imageStore, historyStore, viewportStore, editorSto
     } else {
       imageStore.svgObjects.push(base)
     }
+
+    const elWithId = event.target.closest('[data-id]')
+    savedClickedId.value = elWithId ? Number(elWithId.getAttribute('data-id')) : null
   }
 
   /**
@@ -1034,6 +1045,12 @@ export function useSvgObjects(imageStore, historyStore, viewportStore, editorSto
           : 0,
       })
     }
+
+    // Check if it is not too small object
+
+    if (!checkSizeOfObject(currentDrawingObject.value)) {
+      imageStore.selectedSvgObjectId = currentDrawingObject.value.id
+    }
   }
 
   /**
@@ -1092,29 +1109,9 @@ export function useSvgObjects(imageStore, historyStore, viewportStore, editorSto
     // Drawing objects
     // If it has zero width or height, remove it
     if (!currentDrawingObject.value) return
-    const attrs = currentDrawingObject.value.attrs
-
-    const MIN_SIZE = editorConfig.minimumObjectSize
-
-    let lineLength = null
-    if ('x1' in attrs && 'y1' in attrs && 'x2' in attrs && 'y2' in attrs) {
-      lineLength = distance(attrs.x1 ?? 0, attrs.y1 ?? 0, attrs.x2 ?? 0, attrs.y2 ?? 0)
-    }
 
     // Check if it is not too small object
-    const tooSmallRect =
-      attrs.width !== undefined &&
-      attrs.height !== undefined &&
-      (attrs.width <= MIN_SIZE || attrs.height <= MIN_SIZE)
-
-    const tooSmallEllipse =
-      attrs.rx !== undefined &&
-      attrs.ry !== undefined &&
-      (attrs.rx <= MIN_SIZE || attrs.ry <= MIN_SIZE)
-
-    const tooSmallLine = lineLength !== null && lineLength <= MIN_SIZE
-
-    if (tooSmallRect || tooSmallEllipse || tooSmallLine) {
+    if (checkSizeOfObject(currentDrawingObject.value)) {
       isDrawing.value = false
       currentDrawingObject.value = null
       viewportStore.guideLine = null
@@ -1130,6 +1127,12 @@ export function useSvgObjects(imageStore, historyStore, viewportStore, editorSto
       } else {
         imageStore.svgObjects.pop()
       }
+
+      // Select object below if there was one
+      if (savedClickedId.value !== null) {
+        imageStore.selectedSvgObjectId = savedClickedId.value
+      }
+
       return
     }
 
@@ -1154,6 +1157,35 @@ export function useSvgObjects(imageStore, historyStore, viewportStore, editorSto
     nextTick(() => {
       editorStore.isSvgObjectDrawing = false
     })
+  }
+
+  /**
+   * Check if the object is smaller than the minimum size
+   * @param {Object} object - SVG object to check
+   * @returns {boolean} - True if the object is too small, false otherwise
+   */
+  const checkSizeOfObject = (object) => {
+    const attrs = object.attrs
+
+    const MIN_SIZE = editorConfig.minimumObjectSize
+
+    let lineLength = null
+    if ('x1' in attrs && 'y1' in attrs && 'x2' in attrs && 'y2' in attrs) {
+      lineLength = distance(attrs.x1 ?? 0, attrs.y1 ?? 0, attrs.x2 ?? 0, attrs.y2 ?? 0)
+    }
+
+    const tooSmallRect =
+      attrs.width !== undefined &&
+      attrs.height !== undefined &&
+      (attrs.width <= MIN_SIZE || attrs.height <= MIN_SIZE)
+
+    const tooSmallEllipse =
+      attrs.rx !== undefined &&
+      attrs.ry !== undefined &&
+      (attrs.rx <= MIN_SIZE || attrs.ry <= MIN_SIZE)
+
+    const tooSmallLine = lineLength !== null && lineLength <= MIN_SIZE
+    return tooSmallRect || tooSmallEllipse || tooSmallLine
   }
 
   /**

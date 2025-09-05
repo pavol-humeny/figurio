@@ -7,6 +7,15 @@
     ]
   },
   "versions":{
+    "3.6.4":{
+      "label": "3.6.4",
+      "date":"5.9. 2025",
+      "bugFixes": {
+        "items": [
+          "Fix issues with object selection and manipulation"
+        ]
+      }
+    },
     "3.6.3":{
       "label": "3.6.3",
       "date":"5.9. 2025",

@@ -41,12 +41,10 @@ export function useSvgObjectWrapper(
    * Style of cursor when hovering over the SVG object
    */
   const cursorOnSvgObject = computed(() => {
-    if (editorStore.selectedToolKey === 'select') {
-      return 'pointer'
-    } else if (isSelected.value) {
+    if (isSelected.value) {
       return 'move'
     } else {
-      return 'default'
+      return 'pointer'
     }
   })
 
@@ -279,13 +277,10 @@ export function useSvgObjectWrapper(
    * Toggle resizers on double-click (if not text)
    * @returns {boolean} - Whether the SVG object should be resizable
    */
-  const onObjectDoubleClick = () => {
-    if (isSelected.value) {
-      if (object.value.tag === 'text') {
-        return
-      }
-      showResizers.value = !showResizers.value
-    } else {
+  const onObjectMouseUp = () => {
+    console.log('mouseup')
+    if (!isSelected.value) {
+      console.log('selecting:', object.value.id, editorStore.selectedToolKey, object.value.class)
       if (editorStore.selectedToolKey === object.value.class) {
         if (object.value.class === 'magnifyArea') {
           // Always select source
@@ -310,6 +305,7 @@ export function useSvgObjectWrapper(
    * This will set the active resizer index
    */
   const onMouseDownResizer = (event, index) => {
+    console.log('mousedown resizer')
     if (!areSvgObjectOperationsEnabled.value || !isSelected.value) return
     activeResizerIndex.value = index
     startX.value = event.clientX
@@ -330,6 +326,7 @@ export function useSvgObjectWrapper(
    * @param {MouseEvent} event - Mouse event
    */
   const onMouseDownDrag = (event) => {
+    console.log('mousedown drag')
     if (!areSvgObjectOperationsEnabled.value || !isSelected.value) return
 
     isDragging.value = true
@@ -343,6 +340,7 @@ export function useSvgObjectWrapper(
    * @param {MouseEvent} event - Mouse event
    */
   const onMouseDownRotate = (event) => {
+    console.log('mousedown rotate')
     if (!areSvgObjectOperationsEnabled.value || !isSelected.value) return
 
     const rect = viewportStore.viewportContentRect
@@ -400,6 +398,9 @@ export function useSvgObjectWrapper(
   const onMouseMove = (event) => {
     const isActive = isDragging.value || activeResizerIndex.value !== null || isRotating.value
     if (!isActive) return
+
+    // Only left mouse button
+    if (event.buttons !== 1) return
 
     mouseWasMoved.value = true
 
@@ -1621,10 +1622,10 @@ export function useSvgObjectWrapper(
     controlIconSize,
     boundingBoxStrokeWidth,
     onMouseDownRotate,
-    onObjectDoubleClick,
     isRotating,
     cursorOnSvgObject,
     isInMultiSelection,
     isControlIconInside,
+    onObjectMouseUp,
   }
 }

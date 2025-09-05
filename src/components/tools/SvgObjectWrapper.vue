@@ -41,17 +41,17 @@ const {
   controlIconSize,
   boundingBoxStrokeWidth,
   onMouseDownRotate,
-  onObjectDoubleClick,
   isRotating,
   cursorOnSvgObject,
   isInMultiSelection,
   isControlIconInside,
+  onObjectMouseUp,
 } = useSvgObjectWrapper(props.objectId, useImageStore(), useViewportStore(), useEditorStore(), useHistoryStore(), useUiStore(), t)
 
 </script>
 
 <template>
-  <g @dblclick="onObjectDoubleClick" @mousedown.right.prevent.stop>
+  <g @mouseup="onObjectMouseUp" @mousedown.right.prevent.stop>
     <!-- SVG object except text -->
     <g v-if="isSelected" @mousedown="onMouseDownDrag" :style="{ cursor: cursorOnSvgObject }">
       <component v-if="object.tag !== 'text'" :is="object.tag" v-bind="object.attrs" :data-id="object.id" />

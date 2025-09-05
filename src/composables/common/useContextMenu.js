@@ -66,7 +66,7 @@ export function useContextMenu() {
     event.preventDefault()
     const x = event.clientX
     const y = event.clientY
-    menuCoords.value = { x, y }
+    menuCoords.value = { x: x - 5, y: y - 5 } // Slight offset to always activate onMouseLeave
     isVisible.value = true
 
     nextTick(() => {
@@ -89,6 +89,7 @@ export function useContextMenu() {
    * @param {MouseEvent} event - The click event
    */
   const onClickOutside = (event) => {
+    console.log('click outside')
     if (!document.querySelector('.context-menu-wrapper')?.contains(event.target)) {
       closeMenu()
     }
