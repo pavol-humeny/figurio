@@ -686,7 +686,12 @@ export const useImageStore = defineStore('imageStore', {
                 console.log('User cancelled PDF page selection: ', result)
                 uiStore.isLoading = false
                 const workspaceStore = useWorkspaceStore()
-                workspaceStore.switchToTab(workspaceStore.activeTabIndex)
+
+                if (workspaceStore.activeTabIndex === -1) {
+                  this.closeFile()
+                } else {
+                  workspaceStore.switchToTab(workspaceStore.activeTabIndex)
+                }
                 return
               }
 

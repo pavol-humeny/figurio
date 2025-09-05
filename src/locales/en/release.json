@@ -12,7 +12,8 @@
       "date":"5.9. 2025",
       "bugFixes": {
         "items": [
-          "Render SVG element (arrow) correctly when exporting to PDF"        
+          "Render SVG element (arrow) correctly when exporting to PDF",
+          "Fix image paste from clipboard on landing page"
         ]
       }
     },

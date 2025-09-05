@@ -12,7 +12,8 @@
       "date": "5.9. 2025",
       "bugFixes": {
         "items": [
-          "Správné vykreslení SVG prvku (šipky) při exportu do PDF"
+          "Správné vykreslení SVG prvku (šipky) při exportu do PDF",
+          "Oprava vložení obrázku ze schránky na úvodní stránce"
         ]
       }
     },
