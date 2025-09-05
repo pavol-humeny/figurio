@@ -755,6 +755,12 @@ export function useSvgObjects(imageStore, historyStore, viewportStore, editorSto
     const x = round((event.clientX - rect.left - viewportStore.panX) / viewportStore.realZoomLevel)
     const y = round((event.clientY - rect.top - viewportStore.panY) / viewportStore.realZoomLevel)
 
+    console.log('event: ', event.clientX, event.clientY)
+    console.log('content rect', rect)
+    console.log('pan', viewportStore.panX, viewportStore.panY)
+    console.log('zoom', viewportStore.realZoomLevel)
+    console.log('start drawing x, y: ', x, y)
+
     drawingStart.value = { x, y }
     isDrawing.value = true
 
