@@ -7,6 +7,24 @@
     ]
   },
   "versions":{
+    "3.6.1":{
+      "label": "3.6.1",
+      "date":"5.9. 2025",
+      "bugFixes": {
+        "items": [
+          "Render SVG element (arrow) correctly when exporting to PDF"        
+        ]
+      }
+    },
+    "3.6.0":{
+      "label": "3.6.0",
+      "date":"5.9. 2025",
+      "improvements": {
+        "items": [
+          "New app name and logo"        
+        ]
+      }
+    },
     "3.5.2":{
       "label": "3.5.2",
       "date":"4.9. 2025",

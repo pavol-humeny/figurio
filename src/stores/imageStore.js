@@ -43,6 +43,7 @@ export const useImageStore = defineStore('imageStore', {
     file: null,
     /** Type of the loaded file */
     fileType: '', // 'image' or 'pdf'
+    showImageInsteadOfPdf: false,
 
     /** Name of the loaded file */
     fileName: '',
@@ -1019,7 +1020,7 @@ export const useImageStore = defineStore('imageStore', {
     async createSvgPdf(pdfSvg, width, height, offsetX = 0, offsetY = 0) {
       // Defs
       const staticDefs = `
-        <marker id="arrow-end" markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto" markerUnits="strokeWidth">
+        <marker id="arrow-end" markerWidth="10" markerHeight="10" refX="3" refY="3" orient="auto" markerUnits="strokeWidth">
           <path d="M0,0 L0,6 L6,3 z" fill="context-stroke" />
         </marker>
 
@@ -1672,7 +1673,7 @@ export const useImageStore = defineStore('imageStore', {
       // SVG <defs> for markers (arrows, circles, squares)
       // UPDATE svg string
       const staticDefs = `
-        <marker id="arrow-end" markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto" markerUnits="strokeWidth">
+        <marker id="arrow-end" markerWidth="10" markerHeight="10" refX="3" refY="3" orient="auto" markerUnits="strokeWidth">
           <path d="M0,0 L0,6 L6,3 z" fill="context-stroke" />
         </marker>
         `.trim()

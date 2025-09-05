@@ -7,6 +7,33 @@
     ]
   },
   "versions": {
+    "3.6.1": {
+      "label": "3.6.1",
+      "date": "5.9. 2025",
+      "bugFixes": {
+        "items": [
+          "Správne vykreslenie SVG prvku (šípky) pri exporte do PDF"
+        ]
+      }
+    },
+    "3.6.0": {
+      "label": "3.6.0",
+      "date": "5.9. 2025",
+      "improvements": {
+        "items": [
+          "Nový názov aplikácie a logo"
+        ]
+      }
+    },
+    "3.5.2": {
+      "label": "3.5.2",
+      "date": "4.9. 2025",
+      "bugFixes": {
+        "items": [
+          "Oprava centrovania obrázka po priblížení a oddialení"
+        ]
+      }
+    },
     "3.5.1":{
       "label": "3.5.1",
       "date":"4.9. 2025",

@@ -171,7 +171,8 @@ const disableContextMenu = computed(() => {
         <div :class="{ 'hide': uiStore.isLoading }" class="viewport-content" ref="contentRef" :style="{
           transform: `translate(${panX}px, ${panY}px) scale(${zoomLevel})`,
         }">
-          <img v-if="imageStore.fileType === 'image'" ref="imageRef" class="image-canvas" />
+          <img v-if="imageStore.fileType === 'image' || imageStore.showImageInsteadOfPdf" ref="imageRef"
+            class="image-canvas" />
           <div v-else-if="imageStore.fileType === 'pdf'" ref="pdfContainerRef" class="pdf-viewer"></div>
 
           <img v-if="imageStore.overlayImage !== null" ref="overlayImageRef" class="overlay-image-canvas" />
@@ -188,7 +189,7 @@ const disableContextMenu = computed(() => {
             <!-- // UPDATE svg string -->
             <defs>
               <!-- Arrows -->
-              <marker id="arrow-end" markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto"
+              <marker id="arrow-end" markerWidth="10" markerHeight="10" refX="3" refY="3" orient="auto"
                 markerUnits="strokeWidth">
                 <path d="M0,0 L0,6 L6,3 z" fill="context-stroke" />
               </marker>
