@@ -11,8 +11,8 @@ import { useSettingsPanel } from '@/composables/topPanel/useSettingsPanel';
 import { useInteractiveTutorial } from '@/composables/tutorial/useInteractiveTutorial';
 import DefaultButton from '@/components/common/DefaultButton.vue';
 import { computed } from 'vue'
-import EdimageLogoDark from '@/assets/EdimageLogoDark.png'
-import EdimageLogoLight from '@/assets/EdimageLogoLight.png'
+import FigurioLogoDark from '@/assets/FigurioLogoDark.png'
+import FigurioLogoLight from '@/assets/FigurioLogoLight.png'
 import { useDragAndDropArea } from '@/composables/editor/useDragAndDropArea';
 
 const { t } = useI18n()
@@ -32,7 +32,7 @@ useKeyboardShortcuts({ uploadFile, openHelpModal, openSettingsPanel, prevStep, n
  * Computes the logo source based on the current theme.
  */
 const logoSrc = computed(() => {
-  return uiStore.theme === 'dark' ? EdimageLogoDark : EdimageLogoLight
+  return uiStore.theme === 'dark' ? FigurioLogoDark : FigurioLogoLight
 })
 
 /**
@@ -50,7 +50,7 @@ const {
 
     <div class="left-side">
       <div class="app-name">
-        <img :src="logoSrc" alt="Edimage logo">
+        <img :src="logoSrc" alt="Figurio logo">
         <h2><span class="highlight-e">{{ $t('home.appNameHighlight') }}</span>{{ $t('home.appNameBasic') }}
         </h2>
       </div>

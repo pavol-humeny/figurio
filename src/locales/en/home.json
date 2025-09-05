@@ -1,7 +1,7 @@
 {
-  "appName": "Edimage",
-  "appNameHighlight": "E",
-  "appNameBasic": "dimage",
+  "appName": "Figurio",
+  "appNameHighlight": "F",
+  "appNameBasic": "igurio",
   "title": "Editor for images in technical texts and documents",
   "text":"provides tools designed for editing images used in technical texts, documents, and LaTeX outputs. It is easy to use, available online, and built for efficient work in a clean and focused environment."
 }

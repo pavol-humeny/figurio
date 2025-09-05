@@ -10,8 +10,8 @@ import ExportFileButton from './ExportFileButton.vue';
 import { useUiStore } from '@/stores/uiStore';
 import { useRoute } from 'vue-router'
 import { computed } from 'vue'
-import EdimageLogoDark from '@/assets/EdimageLogoDark.png'
-import EdimageLogoLight from '@/assets/EdimageLogoLight.png'
+import FigurioLogoDark from '@/assets/FigurioLogoDark.png'
+import FigurioLogoLight from '@/assets/FigurioLogoLight.png'
 
 const uiStore = useUiStore()
 
@@ -25,7 +25,7 @@ const isHomeView = computed(() => route.name === 'home')
  * Computes the logo source based on the current theme.
  */
 const logoSrc = computed(() => {
-  return uiStore.theme === 'dark' ? EdimageLogoDark : EdimageLogoLight
+  return uiStore.theme === 'dark' ? FigurioLogoDark : FigurioLogoLight
 })
 
 /**
@@ -40,7 +40,7 @@ const goHome = () => {
 <template>
   <div class="top-panel">
     <div class="top-panel-left" v-if="!isHomeView" id="top-panel-left">
-      <img @click="goHome" :src="logoSrc" alt="Edimage logo">
+      <img @click="goHome" :src="logoSrc" alt="Figurio logo">
       <FileNameDisplay />
       <UploadFileButton />
       <CloseFileButton />

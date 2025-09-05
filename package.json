@@ -1,6 +1,6 @@
 {
-  "name": "bp-image-editor",
-  "version": "3.5.1",
+  "name": "figurio",
+  "version": "3.5.2",
   "private": true,
   "type": "module",
   "scripts": {
