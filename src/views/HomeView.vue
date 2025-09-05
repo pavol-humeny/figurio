@@ -14,10 +14,15 @@ import { computed } from 'vue'
 import FigurioLogoDark from '@/assets/FigurioLogoDark.png'
 import FigurioLogoLight from '@/assets/FigurioLogoLight.png'
 import { useDragAndDropArea } from '@/composables/editor/useDragAndDropArea';
+import { useToastModal } from '@/composables/modals/useToastModal'
+import { onMounted, onUnmounted } from 'vue'
 
 const { t } = useI18n()
 const router = useRouter()
 const uiStore = useUiStore()
+const imageStore = useImageStore()
+
+const { showToastModal } = useToastModal()
 
 const { uploadFile } = useUploadFileButton(useImageStore(), t, useRouter())
 const { openHelpModal } = useHelpModal(useUiStore(), useImageStore(), useRouter(), t)
@@ -25,8 +30,6 @@ const { openSettingsPanel } = useSettingsPanel(useUiStore())
 const { prevStep, nextStep, finishTutorial, closeTutorial } = useInteractiveTutorial(useUiStore(), useImageStore(), useRouter(), t)
 
 useKeyboardShortcuts({ uploadFile, openHelpModal, openSettingsPanel, prevStep, nextStep, finishTutorial, closeTutorial }, useUiStore(), useImageStore());
-
-
 
 /**
  * Computes the logo source based on the current theme.
@@ -42,15 +45,52 @@ const {
   selectFile
 } = useDragAndDropArea(useImageStore(), t, router)
 
+/**
+ * Handles paste event and extracts image file from clipboard if available
+ *
+ * @param {ClipboardEvent} event - Paste event
+ */
+const handlePaste = (event) => {
+  console.log('Paste event detected')
+  if (imageStore.isImageLoaded) return
+
+  const items = event.clipboardData?.items
+  if (!items || items.length === 0) return
+
+  const firstItem = items[0]
+  const file = firstItem.getAsFile()
+
+  if (file) {
+    imageStore.saveToImageStore([file], t, router)
+  } else {
+    showToastModal(
+      'warning',
+      t('dragAndDropArea.toast.warningPasteNotImage.title'),
+      t('dragAndDropArea.toast.warningPasteNotImage.message'),
+    )
+  }
+}
+
+
+// Register paste event listener when component is mounted
+onMounted(() => {
+  document.addEventListener('paste', handlePaste)
+})
+
+// Clean up paste event listener on unmount
+onUnmounted(() => {
+  document.removeEventListener('paste', handlePaste)
+})
+
 </script>
 
 <template>
-  <div class="home-view">
+  <div class="home-view" @paste="handlePaste">
     <div class="background"></div>
 
     <div class="left-side">
       <div class="app-name">
-        <img :src="logoSrc" alt="Figurio logo">
+        <img :src="logoSrc" alt="Figurio logo" :style="{ 'user-select': 'none' }">
         <h2><span class="highlight-e">{{ $t('home.appNameHighlight') }}</span>{{ $t('home.appNameBasic') }}
         </h2>
       </div>
@@ -61,7 +101,7 @@ const {
         <b>{{ $t('home.appName') }}</b> {{ $t('home.text') }}
       </p>
 
-      <DefaultButton @click="selectFile" :text="$t('dragAndDropArea.button.text')" />
+      <DefaultButton @click="selectFile" :text="$t('dragAndDropArea.button.text')" :style="{ 'user-select': 'none' }" />
     </div>
     <div class="right-side">
       <DragAndDropArea isHomePage />
@@ -82,6 +122,7 @@ const {
   background: var(--background-c);
   padding: 0 10%;
   overflow: hidden;
+  user-select: text;
 }
 
 .left-side {

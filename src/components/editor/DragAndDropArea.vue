@@ -52,7 +52,7 @@ const {
     </div>
     <div class="subtitle-wrapper">
       <p v-if="!props.isHomePage">{{ $t('dragAndDropArea.subtitle') }}</p>
-      <!-- <p class="small">{{ $t('dragAndDropArea.pasteHint') }}</p> -->
+      <p v-if="props.isHomePage" class="small">{{ $t('dragAndDropArea.pasteHint') }}</p>
 
     </div>
     <div v-if="!props.isHomePage" class="button-wrapper">
@@ -74,6 +74,7 @@ const {
   border: var(--border-drag-and-drop);
   background: var(--secondary-c);
   box-shadow: var(--box-shadow-ui);
+  user-select: none;
 }
 
 .drag-and-drop-area.dragging {

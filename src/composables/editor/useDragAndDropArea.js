@@ -1,5 +1,5 @@
-import { ref, onMounted, onUnmounted } from 'vue'
-import { useToastModal } from '../modals/useToastModal'
+import { ref } from 'vue'
+// import { useToastModal } from '../modals/useToastModal'
 
 /**
  * Logic for handling drag & drop and paste interactions for file input
@@ -16,7 +16,7 @@ import { useToastModal } from '../modals/useToastModal'
  * }}
  */
 export function useDragAndDropArea(imageStore, t, router) {
-  const { showToastModal } = useToastModal()
+  // const { showToastModal } = useToastModal()
 
   /**
    * Whether a file is currently being dragged over the drop area
@@ -59,46 +59,11 @@ export function useDragAndDropArea(imageStore, t, router) {
   }
 
   /**
-   * Handles paste event and extracts image file from clipboard if available
-   *
-   * @param {ClipboardEvent} event - Paste event
-   */
-  const handlePaste = (event) => {
-    if (imageStore.isImageLoaded) return
-
-    const items = event.clipboardData?.items
-    if (!items || items.length === 0) return
-
-    const firstItem = items[0]
-    const file = firstItem.getAsFile()
-
-    if (file) {
-      imageStore.saveToImageStore([file], t, router)
-    } else {
-      showToastModal(
-        'warning',
-        t('dragAndDropArea.toast.warningPasteNotImage.title'),
-        t('dragAndDropArea.toast.warningPasteNotImage.message'),
-      )
-    }
-  }
-
-  /**
    * Triggers file selection dialog for manual upload
    */
   const selectFile = () => {
     imageStore.loadFile(t, router)
   }
-
-  // Register paste event listener when component is mounted
-  onMounted(() => {
-    window.addEventListener('paste', handlePaste)
-  })
-
-  // Clean up paste event listener on unmount
-  onUnmounted(() => {
-    window.removeEventListener('paste', handlePaste)
-  })
 
   return {
     isDragging,

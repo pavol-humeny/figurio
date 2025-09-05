@@ -44,7 +44,12 @@ export function useKeyboardShortcuts(actions, uiStore, imageStore) {
     const el = document.activeElement
     const isTyping =
       el && (el.isContentEditable || ['INPUT', 'TEXTAREA', 'SELECT'].includes(el.tagName))
-    if (isTyping) return
+    const isImagePaste =
+      event.key.toLowerCase() === 'v' &&
+      (event.ctrlKey || event.metaKey) &&
+      !imageStore.isImageLoaded
+
+    if (isTyping || isImagePaste) return
 
     const pressed = normalizeKey(event)
 
