@@ -6,6 +6,8 @@ import { editorConfig } from '@/config/editorConfig'
 
 import { PDFDocument } from 'pdf-lib'
 
+import { useSendEvent } from '@/composables/common/useSendEvent'
+
 /**
  * Detected background color
  */
@@ -1078,6 +1080,10 @@ export function useCropTool(
     imageStore.addImageOperation({
       type: 'crop',
       cropBox: { ...cropBox.value },
+    })
+
+    useSendEvent().sendEvent('toolSettings', 'crop', null, {
+      settings: { cropBox: { ...cropBox.value } },
     })
 
     await applyCropRender(cropBox.value)
