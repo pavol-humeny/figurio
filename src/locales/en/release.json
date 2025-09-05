@@ -12,7 +12,8 @@
       "date":"5.9. 2025",
       "bugFixes": {
         "items": [
-          "Set minimum window size to prevent layout issues"
+          "Set minimum window size to prevent layout issues",
+          "Recalculate toast positions if it goes out of the screen"
         ]
       }
     },

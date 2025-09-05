@@ -23,6 +23,11 @@ const toasts = ref([])
  */
 export function useToastModal() {
   /**
+   * Position of toasts on the screen
+   */
+  const toastPositions = ref({})
+
+  /**
    * Show a toast modal with specified type, title and message
    *
    * @param {string} type - The type of toast (e.g., 'success', 'error', 'warning')
@@ -48,9 +53,38 @@ export function useToastModal() {
     toasts.value = toasts.value.filter((t) => t.id !== id)
   }
 
+  /**
+   * Get the style for positioning the toast on the screen
+   * @param {{ id: number }} toast - The toast object
+   * @param {number} index - The index of the toast in the list
+   * @returns {{ bottom: string }} - The style object with bottom position
+   */
+  const getToastStyle = (toast, index) => {
+    const screenHeight = window.innerHeight
+
+    if (!toastPositions.value[toast.id]) {
+      toastPositions.value[toast.id] = {
+        bottom: index * 10 + 40,
+      }
+    }
+
+    const pos = toastPositions.value[toast.id]
+
+    // If the position is on the top of the screen
+    if (pos.bottom > screenHeight - 150) {
+      // Random position
+      pos.bottom = Math.random() * (screenHeight - 150) + 40
+    }
+
+    return {
+      bottom: pos.bottom + 'px',
+    }
+  }
+
   return {
     toasts,
     showToastModal,
     removeToastModal,
+    getToastStyle,
   }
 }

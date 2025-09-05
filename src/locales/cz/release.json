@@ -12,7 +12,8 @@
       "date":"5.9. 2025",
       "bugFixes": {
         "items": [
-          "Nastavení minimální velikost okna, aby se předešlo problémům s rozložením"
+          "Nastavení minimální velikost okna, aby se předešlo problémům s rozložením",
+          "Přepočítání pozic toastů, pokud vyjdou z obrazovky"
         ]
       }
     },

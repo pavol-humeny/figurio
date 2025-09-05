@@ -4,14 +4,14 @@ import { useToastModal } from '@/composables/modals/useToastModal'
 /**
  * Logic of the toast modal system
  */
-const { toasts, removeToastModal } = useToastModal()
+const { toasts, removeToastModal, getToastStyle } = useToastModal()
 </script>
 
 <template>
   <Teleport to="body">
     <div class="toast-wrapper">
       <div v-for="(toast, index) in toasts" :key="toast.id" class="toast" :class="toast.type"
-        :style="{ bottom: `${index * 10 + 40}px` }">
+        :style="getToastStyle(toast, index)">
         <button class="close-button" @click="removeToastModal(toast.id)">✕</button>
 
         <p class="title">{{ toast.title }}</p>
