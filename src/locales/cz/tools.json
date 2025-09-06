@@ -365,6 +365,14 @@
     "shortcut": "M",
     "settings": {
       "general": {
+        "type": {
+          "label": "Typ zvětšené oblasti",
+          "tip": "Vyberte typ zvětšené oblasti",
+          "options": {
+            "center": "Střed",
+            "corner": "Roh"
+          }
+        },
         "sourcePosition": {
           "label": "Pozice zdroje",
           "x": "X",

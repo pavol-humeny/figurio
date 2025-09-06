@@ -2,11 +2,30 @@
   "inProgressGlobal": {
     "currentlyInProgressText": "Currently in progress",
     "items": [
-      "Magnify area tool improvements", 
-      "SVG objects export enhancements"
+      "SVG objects export enhancements",
+      "Magnify area tool support for pdf files"
     ]
   },
   "versions":{
+    "3.7.0":{
+      "label": "3.7.0",
+      "date":"6.9. 2025",
+      "newFeatures": {
+        "items": [
+          "Magnify area tool - ability to select from different types (center, corner)"
+        ]
+      },
+      "bugFixes": {
+        "items": [
+          "Objects of specific classes can be selected only with the corresponding tool"
+        ]
+      },
+      "knownIssues": {
+        "items": [
+          "Magnify area tool does not work with pdf files"
+        ]
+      }
+    },
     "3.6.4":{
       "label": "3.6.4",
       "date":"5.9. 2025",

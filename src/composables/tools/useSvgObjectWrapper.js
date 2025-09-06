@@ -44,7 +44,11 @@ export function useSvgObjectWrapper(
     if (isSelected.value) {
       return 'move'
     } else {
-      return 'pointer'
+      if (editorStore.selectedToolKey === object.value.class) {
+        return 'pointer'
+      } else {
+        return 'default'
+      }
     }
   })
 
@@ -73,6 +77,24 @@ export function useSvgObjectWrapper(
    */
   const isSelected = computed(() => imageStore.selectedSvgObjectId === object.value.id)
 
+  /**
+   * Watch for deselection to reset state of magnify area objects
+   */
+  watch(
+    () => isSelected.value,
+    (newVal) => {
+      if (!newVal) {
+        if (object.value.class === 'magnifyArea' && object.value.subClass === 'magnify-source') {
+          const result = imageStore.getSvgObjectById(object.value.linkedResultId)
+          result.attrs.visibility = 'visible'
+        }
+      }
+    },
+  )
+
+  /**
+   * Whether the SVG object is part of a multi-selection
+   */
   const isInMultiSelection = computed(() => {
     return (
       imageStore.selectedSvgObjectIds.includes(object.value.id) &&
@@ -130,7 +152,8 @@ export function useSvgObjectWrapper(
   /**
    * Whether icon should be inside of element
    */
-  const isControlIconInside = ref(false)
+  const isResizerIconInside = ref(false)
+  const isRotateIconInside = ref(false)
 
   /**
    * Move icon inside object when they are outside image boundaries
@@ -138,12 +161,14 @@ export function useSvgObjectWrapper(
   watch(
     () => object.value,
     () => {
-      const { top, left } = getTransformedBoundingBox(object.value)
+      const { top, right } = getTransformedBoundingBox(object.value)
 
-      isControlIconInside.value =
-        top - controlIconSize.value < 0 || left - controlIconSize.value < 0
+      console.log('top, right: ', top, right, 'icon size:', controlIconSize.value)
+
+      isResizerIconInside.value = top - controlIconSize.value > 0
+      isRotateIconInside.value = right + controlIconSize.value < imageStore.fileDimensions.width
     },
-    { deep: true },
+    { deep: true, immediate: true },
   )
 
   // ---------------------------
@@ -248,7 +273,23 @@ export function useSvgObjectWrapper(
   watch(
     () => showResizers.value,
     (newValue) => {
-      editorStore.isSvgObjectResizing = showResizers.value
+      // When it is not magnify area or resizing started (it is magnify area, but resizing started)
+      if (object.value.class !== 'magnifyArea' || newValue === true) {
+        editorStore.isSvgObjectResizing = newValue
+      }
+
+      // If it is magnify area, hide result when resizing
+      if (object.value.class === 'magnifyArea') {
+        if (object.value.subClass === 'magnify-source' && newValue === true) {
+          const result = imageStore.getSvgObjectById(object.value.linkedResultId)
+          showResizers.value = false
+          result.attrs.visibility = 'visible'
+        } else if (object.value.subClass === 'magnify-result' && newValue === true) {
+          showResizers.value = false
+          object.value.attrs.visibility = 'hidden'
+        }
+        return
+      }
 
       const { attrs } = object.value
       if (object.value.tag !== 'line') {
@@ -274,17 +315,15 @@ export function useSvgObjectWrapper(
   )
 
   /**
-   * Toggle resizers on double-click (if not text)
-   * @returns {boolean} - Whether the SVG object should be resizable
+   * Mouse up handler for the SVG object selection
    */
   const onObjectMouseUp = () => {
-    console.log('mouseup')
-    if (!isSelected.value) {
-      console.log('selecting:', object.value.id, editorStore.selectedToolKey, object.value.class)
+    console.log('mouseup object select')
+    if (!isSelected.value && !editorStore.isSvgObjectResizing) {
+      console.log('tool: ', editorStore.selectedToolKey, 'class:', object.value.class)
       if (editorStore.selectedToolKey === object.value.class) {
         if (object.value.class === 'magnifyArea') {
           // Always select source
-          console.log(object.value)
           if (object.value.subClass === 'magnify-source') {
             imageStore.selectedSvgObjectId = object.value.id
           } else {
@@ -1233,23 +1272,28 @@ export function useSvgObjectWrapper(
         }
       }
 
-      // Apply updated offset
-      if ('x' in attrs && 'y' in attrs) {
-        attrs.x += offsetX
-        attrs.y += offsetY
+      if (object.value.class === 'magnifyArea') {
+        attrs.cx = clamp(attrs.cx + offsetX, attrs.rx, imageStore.fileDimensions.width - attrs.rx)
+        attrs.cy = clamp(attrs.cy + offsetY, attrs.ry, imageStore.fileDimensions.height - attrs.ry)
+      } else {
+        // Apply updated offset
+        if ('x' in attrs && 'y' in attrs) {
+          attrs.x += offsetX
+          attrs.y += offsetY
 
-        if (tag === 'text') {
-          object.value.textBBox.x += offsetX
-          object.value.textBBox.y += offsetY
+          if (tag === 'text') {
+            object.value.textBBox.x += offsetX
+            object.value.textBBox.y += offsetY
+          }
+        } else if ('cx' in attrs && 'cy' in attrs) {
+          attrs.cx += offsetX
+          attrs.cy += offsetY
+        } else if ('x1' in attrs && 'y1' in attrs && 'x2' in attrs && 'y2' in attrs) {
+          attrs.x1 += offsetX
+          attrs.y1 += offsetY
+          attrs.x2 += offsetX
+          attrs.y2 += offsetY
         }
-      } else if ('cx' in attrs && 'cy' in attrs) {
-        attrs.cx += offsetX
-        attrs.cy += offsetY
-      } else if ('x1' in attrs && 'y1' in attrs && 'x2' in attrs && 'y2' in attrs) {
-        attrs.x1 += offsetX
-        attrs.y1 += offsetY
-        attrs.x2 += offsetX
-        attrs.y2 += offsetY
       }
     }
 
@@ -1267,10 +1311,16 @@ export function useSvgObjectWrapper(
 
     if (object.value.class === 'magnifyArea') {
       if (object.value.subClass === 'magnify-source') {
-        const result = imageStore.getSvgObjectById(object.value.linkedZoomId)
+        const result = imageStore.getSvgObjectById(object.value.linkedResultId)
         if (!result) return
 
         const patternId = `magnify-fill-${result.id}`
+
+        // Move result if it was a center-type source
+        if (object.value.attrs.type === 'center') {
+          result.attrs.cx = object.value.attrs.cx
+          result.attrs.cy = object.value.attrs.cy
+        }
 
         const pattern = generateMagnifyPattern(
           patternId,
@@ -1282,6 +1332,8 @@ export function useSvgObjectWrapper(
 
         imageStore.addOrReplaceSvgDef(patternId, pattern)
         result.attrs.fill = `url(#${patternId})`
+
+        result.attrs.visibility = 'visible'
       }
     }
 
@@ -1304,22 +1356,22 @@ export function useSvgObjectWrapper(
   /**
    * Show resize guide line based on snap offsets
    * @param {Object} snap - Snap offsets
-   * @param {Object} bbox - Bounding box of the SVG object
+   * @param {Object} bBox - Bounding box of the SVG object
    */
-  const showResizeGuideLine = (snap, bbox) => {
+  const showResizeGuideLine = (snap, bBox) => {
     if (snap.dx !== 0 || snap.dy !== 0) {
       let gx = null,
         gy = null,
         angle = null
 
       if (snap.snappedEdgeX) {
-        gx = snap.snappedEdgeX === 'left' ? bbox.left : bbox.right
-        gy = (bbox.top + bbox.bottom) / 2
+        gx = snap.snappedEdgeX === 'left' ? bBox.left : bBox.right
+        gy = (bBox.top + bBox.bottom) / 2
         angle = 90
       }
       if (snap.snappedEdgeY) {
-        gy = snap.snappedEdgeY === 'top' ? bbox.top : bbox.bottom
-        gx = (bbox.left + bbox.right) / 2
+        gy = snap.snappedEdgeY === 'top' ? bBox.top : bBox.bottom
+        gx = (bBox.left + bBox.right) / 2
         angle = 0
       }
 
@@ -1625,7 +1677,8 @@ export function useSvgObjectWrapper(
     isRotating,
     cursorOnSvgObject,
     isInMultiSelection,
-    isControlIconInside,
+    isResizerIconInside,
+    isRotateIconInside,
     onObjectMouseUp,
   }
 }

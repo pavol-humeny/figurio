@@ -170,7 +170,7 @@ export function useSvgObjects(imageStore, historyStore, viewportStore, editorSto
 
       if (selected.class === 'magnifyArea') {
         if (selected.subClass === 'magnify-source') {
-          idsToDelete.add(selected.linkedZoomId)
+          idsToDelete.add(selected.linkedResultId)
         } else if (selected.subClass === 'magnify-result') {
           idsToDelete.add(selected.linkedSourceId)
         }
@@ -197,7 +197,7 @@ export function useSvgObjects(imageStore, historyStore, viewportStore, editorSto
 
         if (obj && obj.class === 'magnifyArea') {
           if (obj.subClass === 'magnify-source') {
-            idsToDelete.add(obj.linkedZoomId)
+            idsToDelete.add(obj.linkedResultId)
           } else if (obj.subClass === 'magnify-result') {
             idsToDelete.add(obj.linkedSourceId)
           }
@@ -612,52 +612,70 @@ export function useSvgObjects(imageStore, historyStore, viewportStore, editorSto
     // --------------------------------------
     // Selecting objects
     // --------------------------------------
-    // Check if clicked on SVG object with data-id
-    const elWithId = event.target.closest('[data-id]')
-    const clickedId = elWithId ? Number(elWithId.getAttribute('data-id')) : null
+    if (editorStore.selectedToolKey === 'select') {
+      // Check if clicked on SVG object with data-id
+      const elWithId = event.target.closest('[data-id]')
+      const clickedId = elWithId ? Number(elWithId.getAttribute('data-id')) : null
 
-    if (clickedId !== null) {
-      if (isMovingMultipleObjects.value) {
-        // HERE
-        return
-      }
-
-      const clickedObject = imageStore.getSvgObjectById(clickedId)
-      if (clickedObject) {
-        if (event.shiftKey) {
-          // Toggle object in multi-select
-          const index = imageStore.selectedSvgObjectIds.indexOf(clickedId)
-
-          if (index !== -1) {
-            imageStore.selectedSvgObjectIds.splice(index, 1)
-          } else {
-            imageStore.selectedSvgObjectIds.push(clickedId)
-          }
-
-          // If it is first object in multi selection select it also as single object
-          if (imageStore.selectedSvgObjectIds.length === 1) {
-            imageStore.selectedSvgObjectId = imageStore.selectedSvgObjectIds[0]
-          } else {
-            imageStore.selectedSvgObjectId = null
-          }
-        } else {
-          // Single object selection (without shift) if in select tool
-          if (editorStore.selectedToolKey === 'select') {
-            imageStore.selectedSvgObjectId = clickedId
-            imageStore.selectedSvgObjectIds = [clickedId]
-          }
+      if (clickedId !== null) {
+        if (isMovingMultipleObjects.value) {
+          return
         }
 
-        return
+        const clickedObject = imageStore.getSvgObjectById(clickedId)
+        if (clickedObject) {
+          if (event.shiftKey) {
+            if (clickedObject.class === 'magnifyArea') {
+              console.log('no multi select magnify area')
+              return // Do not allow multi-select of magnify area objects
+            }
+
+            // Toggle object in multi-select
+            const index = imageStore.selectedSvgObjectIds.indexOf(clickedId)
+
+            if (index !== -1) {
+              imageStore.selectedSvgObjectIds.splice(index, 1)
+            } else {
+              imageStore.selectedSvgObjectIds.push(clickedId)
+            }
+
+            // If it is first object in multi selection select it also as single object
+            if (imageStore.selectedSvgObjectIds.length === 1) {
+              imageStore.selectedSvgObjectId = imageStore.selectedSvgObjectIds[0]
+            } else {
+              imageStore.selectedSvgObjectId = null
+            }
+          } else {
+            // Single object selection (without shift) if in select tool
+            if (editorStore.selectedToolKey === 'select') {
+              if (
+                clickedObject.class === 'magnifyArea' &&
+                clickedObject.subClass === 'magnify-result'
+              ) {
+                console.log('clicked magnify result')
+                // If clicked on magnify result, select the source instead
+                imageStore.selectedSvgObjectId = clickedObject.linkedSourceId
+                imageStore.selectedSvgObjectIds = [clickedObject.linkedSourceId]
+              } else {
+                imageStore.selectedSvgObjectId = clickedId
+                imageStore.selectedSvgObjectIds = [clickedId]
+              }
+            }
+          }
+
+          return
+        }
+      }
+
+      // Clicked on empty area – deselect all
+      if (!event.shiftKey) {
+        imageStore.selectedSvgObjectIds = []
       }
     }
 
-    // Clicked on empty area – deselect all
-    if (!event.shiftKey) {
-      imageStore.selectedSvgObjectIds = []
-    }
     // -------------------------------------
-
+    // Adding new objects
+    // -------------------------------------
     // Add text object
     if (editorStore.selectedToolKey === 'text' && imageStore.selectedSvgObjectId === null) {
       if (event.target.closest('g') || event.target.closest('text')) return
@@ -685,6 +703,7 @@ export function useSvgObjects(imageStore, historyStore, viewportStore, editorSto
    */
   const onMouseDownSelect = (event) => {
     if (event.button !== 0) return // Only left mouse button
+    console.log('mousedown select area')
 
     // Selecting objects
     if (editorStore.selectedToolKey === 'select') {
@@ -755,6 +774,7 @@ export function useSvgObjects(imageStore, historyStore, viewportStore, editorSto
     const x = round((event.clientX - rect.left - viewportStore.panX) / viewportStore.realZoomLevel)
     const y = round((event.clientY - rect.top - viewportStore.panY) / viewportStore.realZoomLevel)
 
+    // TODO - remove - debug prints for detection of mouse position issues during drawing
     console.log('event: ', event.clientX, event.clientY)
     console.log('content rect', rect)
     console.log('pan', viewportStore.panX, viewportStore.panY)
@@ -1053,9 +1073,10 @@ export function useSvgObjects(imageStore, historyStore, viewportStore, editorSto
     }
 
     // Check if it is not too small object
-
     if (!checkSizeOfObject(currentDrawingObject.value)) {
       imageStore.selectedSvgObjectId = currentDrawingObject.value.id
+    } else {
+      imageStore.selectedSvgObjectId = null
     }
   }
 
@@ -1090,13 +1111,34 @@ export function useSvgObjects(imageStore, historyStore, viewportStore, editorSto
 
       const allObjects = [...(imageStore.svgObjects || []), ...(imageStore.blurObjects || [])]
 
-      for (const obj of allObjects) {
-        const { cx, cy } = getObjectCenter(obj)
+      let hasMagnifyArea = false
+
+      for (const object of allObjects) {
+        if (object.class === 'magnifyArea') {
+          // Skip magnify area objects
+          if (object.subClass === 'magnify-result') {
+            continue
+          }
+          hasMagnifyArea = true
+        }
+
+        const { cx, cy } = getObjectCenter(object)
 
         const isInside = cx >= x1 && cx <= x2 && cy >= y1 && cy <= y2
 
         if (isInside) {
-          selectedIds.push(obj.id)
+          selectedIds.push(object.id)
+        }
+      }
+
+      // Select magnify area only if it is the only object selected
+      if (hasMagnifyArea) {
+        if (selectedIds.length > 1) {
+          // Remove magnify area from multi-selection
+          selectedIds = selectedIds.filter((id) => {
+            const obj = imageStore.getSvgObjectById(id)
+            return obj.class !== 'magnifyArea'
+          })
         }
       }
 
@@ -1134,9 +1176,14 @@ export function useSvgObjects(imageStore, historyStore, viewportStore, editorSto
         imageStore.svgObjects.pop()
       }
 
+      imageStore.selectedSvgObjectId = null
+
       // Select object below if there was one
       if (savedClickedId.value !== null) {
-        imageStore.selectedSvgObjectId = savedClickedId.value
+        const object = imageStore.getSvgObjectById(savedClickedId.value)
+        if (object.class === editorStore.selectedToolKey) {
+          imageStore.selectedSvgObjectId = savedClickedId.value
+        }
       }
 
       return

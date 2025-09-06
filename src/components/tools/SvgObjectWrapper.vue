@@ -9,6 +9,7 @@ import BaseIcon from '@/components/icons/BaseIcon.vue'
 import { useUiStore } from '@/stores/uiStore';
 
 const { t } = useI18n()
+const imageStore = useImageStore()
 
 /**
  * @typedef {Object} SvgObjectWrapperProps
@@ -44,7 +45,8 @@ const {
   isRotating,
   cursorOnSvgObject,
   isInMultiSelection,
-  isControlIconInside,
+  isResizerIconInside,
+  isRotateIconInside,
   onObjectMouseUp,
 } = useSvgObjectWrapper(props.objectId, useImageStore(), useViewportStore(), useEditorStore(), useHistoryStore(), useUiStore(), t)
 
@@ -54,7 +56,8 @@ const {
   <g @mouseup="onObjectMouseUp" @mousedown.right.prevent.stop>
     <!-- SVG object except text -->
     <g v-if="isSelected" @mousedown="onMouseDownDrag" :style="{ cursor: cursorOnSvgObject }">
-      <component v-if="object.tag !== 'text'" :is="object.tag" v-bind="object.attrs" :data-id="object.id" />
+      <component v-if="object.tag !== 'text'" :is="object.tag" v-bind="object.attrs" :data-id="object.id"
+        :style="{ visibility: object.attrs.visibility }" />
       <text v-else v-bind="object.attrs" style="user-select: none" ref="textRef" :data-id="object.id">
         {{ object.content || '' }}
       </text>
@@ -62,13 +65,15 @@ const {
 
     <!-- SVG text object -->
     <g v-else :style="{ cursor: cursorOnSvgObject }">
-      <component v-if="object.tag !== 'text'" :is="object.tag" v-bind="object.attrs" :data-id="object.id" />
+      <component v-if="object.tag !== 'text'" :is="object.tag" v-bind="object.attrs" :data-id="object.id"
+        :style="{ visibility: object.attrs.visibility }" />
       <text v-else v-bind="object.attrs" style="user-select: none" :data-id="object.id">
         {{ object.content || '' }}
       </text>
     </g>
 
-    <g v-if="(isSelected && boundingBox) || isInMultiSelection" :transform="object?.attrs?.transform">
+    <g v-if="(isSelected && boundingBox) || isInMultiSelection || (imageStore.selectedSvgObjectId === object.linkedSourceId && object.attrs.visibility === 'visible' && object.attrs.type === 'center')"
+      :transform="object?.attrs?.transform">
       <!-- Bounding box -->
       <rect :x="boundingBox.x" :y="boundingBox.y" :width="boundingBox.width" :height="boundingBox.height"
         :data-id="object.id" fill="#00000001" :style="{ cursor: cursorOnSvgObject }" @mousedown="onMouseDownDrag"
@@ -77,10 +82,12 @@ const {
         :stroke-dasharray="[boundingBoxStrokeWidth * 4, boundingBoxStrokeWidth * 2]" />
 
       <!-- Icon to turn on resize -->
-      <foreignObject v-if="object.tag !== 'text' && object.class !== 'magnifyArea' && !isInMultiSelection"
+      <foreignObject
+        v-if="(object.tag !== 'text' && !isInMultiSelection) || (object.class === 'magnifyArea' && object.attrs.type === 'center')"
         :x="boundingBox.x + boundingBox.width / 2 - controlIconSize * 0.5"
-        :y="isControlIconInside ? boundingBox.y : boundingBox.y - controlIconSize" :width="controlIconSize"
-        :height="controlIconSize" @mousedown.stop.prevent="showResizers = !showResizers" style="cursor: pointer">
+        :y="isResizerIconInside ? boundingBox.y - controlIconSize : boundingBox.y + boundingBox.height"
+        :width="controlIconSize" :height="controlIconSize" @mousedown.stop.prevent="showResizers = !showResizers"
+        style="cursor: pointer">
         <BaseIcon v-if="showResizers" :name="'IconCross'" :tip="t('tools.svgObject.resizeObject.tipStopResize')"
           :size="controlIconSize" :color="'var(--primary-c)'" />
         <BaseIcon v-else :name="'IconResizeObject'" :tip="t('tools.svgObject.resizeObject.tipStartResize')"
@@ -107,7 +114,7 @@ const {
       <!-- Rotate icon  -->
       <foreignObject
         v-if="!showResizers && !isRotating && !isInMultiSelection && object.tag !== 'line' && object.class !== 'magnifyArea'"
-        :x="isControlIconInside ? boundingBox.x + boundingBox.width - controlIconSize : boundingBox.x + boundingBox.width"
+        :x="isRotateIconInside ? boundingBox.x + boundingBox.width : boundingBox.x - controlIconSize"
         :y="boundingBox.y + boundingBox.height / 2 - controlIconSize / 2" :width="controlIconSize"
         :height="controlIconSize" @mousedown.stop.prevent="onMouseDownRotate($event)" style="cursor: grab">
         <BaseIcon :name="'IconRotate'" :tip="t('tools.svgObject.rotateObject.tip')" :size="controlIconSize"

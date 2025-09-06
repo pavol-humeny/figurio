@@ -365,6 +365,14 @@
     "shortcut": "M",
     "settings": {
       "general":{
+        "type": {
+          "label": "Type of magnify area",
+          "tip": "Select the type of magnify area",
+          "options": {
+            "center": "Center",
+            "corner": "Corner"
+          }
+        },
         "sourcePosition": {
           "label": "Source position",
           "x": "X",

@@ -2,11 +2,30 @@
   "inProgressGlobal": {
     "currentlyInProgressText": "Aktuálne prebiehajúce vylepšenia",
     "items": [
-      "Vylepšenie nástroja zväčšená oblasť",
-      "Vylepšenie exportu SVG objektov"
+      "Vylepšenie exportu SVG objektov",
+      "Podpora nástroja Přiblížení oblasti pre pdf súbory"
     ]
   },
   "versions": {
+    "3.7.0":{
+      "label": "3.7.0",
+      "date":"6.9. 2025",
+      "newFeatures": {
+        "items": [
+          "Nástroj Přiblížení oblasti - možnost výběru z různých typů (střed, roh)"
+        ]
+      },
+      "bugFixes": {
+        "items": [
+          "Objekty specifických tříd lze vybrat pouze odpovídajícím nástrojem"
+        ]
+      },
+      "knownIssues": {
+        "items": [
+          "Nástroj Přiblížení oblasti nefunguje pre pdf súbory"
+        ]
+      }
+    },
     "3.6.4":{
       "label": "3.6.4",
       "date":"5.9. 2025",

@@ -30,6 +30,7 @@ const {
   magnifyAreaZoomOptions,
   resultPositionOptions,
   maxOutlineWidth,
+  magnifyAreaTypeOptions,
 } = useMagnifyAreaTool(useImageStore(), useHistoryStore(), useEditorStore(), t);
 
 /**
@@ -50,9 +51,23 @@ const {
 
     <div class="settings-wrapper">
       <div class="specific-settings">
+        <!-- Type -->
+        <div class="settings-content-wrapper">
+          <ExplainItem :text="$t('tools.magnifyArea.explain')" :title="$t('tools.magnifyArea.label')" />
+          <div class="content-wrapper">
+            <div class="content-title">
+              <p>
+                {{ $t('tools.magnifyArea.settings.general.type.label') }}
+              </p>
+            </div>
+            <DropdownSelect v-model="localMagnifyAreaSettings.type" @update="applyLocalMagnifyAreaSettings"
+              :options="magnifyAreaTypeOptions" :tip="$t('tools.magnifyArea.settings.general.type.tip')"
+              position="bottom-left" />
+          </div>
+        </div>
+
         <!-- Position -->
         <div v-if="!hidePositionAndDimensions" class="settings-content-wrapper">
-          <ExplainItem :text="$t('tools.magnifyArea.explain')" :title="$t('tools.magnifyArea.label')" />
           <div class="content-wrapper">
             <div class="content-title">
               <p>
@@ -85,8 +100,6 @@ const {
 
         <!-- Radius -->
         <div class="settings-content-wrapper">
-          <ExplainItem v-if="hidePositionAndDimensions" :text="$t('tools.magnifyArea.explain')"
-            :title="$t('tools.magnifyArea.label')" />
           <div class="content-wrapper">
             <div class="content-title">
               <p>
@@ -114,7 +127,7 @@ const {
         </div>
 
         <!-- Result position -->
-        <div class="settings-content-wrapper">
+        <div v-if="localMagnifyAreaSettings.type === 'corner'" class="settings-content-wrapper">
           <div class="content-wrapper">
             <div class="content-title">
               <p>

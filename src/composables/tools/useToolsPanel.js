@@ -73,12 +73,14 @@ export function useToolsPanel(editorStore, imageStore, uiStore, t) {
       }
 
       if (
-        newVal.tool !== 'shape' &&
-        newVal.tool !== 'blur' &&
-        newVal.tool !== 'magnifyArea' &&
-        newVal.tool !== 'text' &&
-        newVal.tool !== 'select'
+        (newVal.tool !== 'shape' &&
+          newVal.tool !== 'blur' &&
+          newVal.tool !== 'magnifyArea' &&
+          newVal.tool !== 'text' &&
+          newVal.tool !== 'select') ||
+        editorStore.previousToolKey !== 'select'
       ) {
+        // Do not reset selection if coming from select tool
         imageStore.selectedSvgObjectIds = [] // Reset multi-selection on tool change
         imageStore.selectedSvgObjectId = null // Reset just created object ID
       }

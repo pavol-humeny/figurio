@@ -3,12 +3,13 @@ import { ref, computed, watch, watchEffect, onMounted } from 'vue'
 import { useSendEvent } from '../common/useSendEvent'
 
 const localMagnifyAreaSettings = ref({
+  type: 'center', // center, corner
   sourceX: 0,
   sourceY: 0,
   resultX: 0,
   resultY: 0,
   resultPosition: 'top-right', // top-left, top-right, bottom-left, bottom-right
-  radius: 60, // TODO - make it dynamic based on image size
+  radius: 0,
   zoom: 2,
   outlineWidth: 1,
   outlineColor: '#000000',
@@ -31,7 +32,9 @@ export function useMagnifyAreaTool(imageStore, historyStore, editorStore, t) {
   /**
    * Computed source image data URL for magnification
    */
-  const magnifyImageSrc = computed(() => imageStore.renderedImage?.toDataURL() ?? '')
+  const magnifyImageSrc = computed(
+    () => imageStore.getRenderedImage({ t, renderCall: false }).toDataURL() ?? '',
+  )
 
   // ------------------------------
   // Position
@@ -129,15 +132,30 @@ export function useMagnifyAreaTool(imageStore, historyStore, editorStore, t) {
   ]
 
   /**
+   * Options for the magnify area type (center or corner)
+   */
+  const magnifyAreaTypeOptions = [
+    {
+      label: t('tools.magnifyArea.settings.general.type.options.center'),
+      value: 'center',
+    },
+    {
+      label: t('tools.magnifyArea.settings.general.type.options.corner'),
+      value: 'corner',
+    },
+  ]
+
+  /**
    * Reset magnify area settings to default values
    */
   const resetMagnifyAreaSettings = () => {
+    localMagnifyAreaSettings.value.type = 'center'
     localMagnifyAreaSettings.value.sourceX = 0
     localMagnifyAreaSettings.value.sourceY = 0
     localMagnifyAreaSettings.value.resultX = 0
     localMagnifyAreaSettings.value.resultY = 0
     localMagnifyAreaSettings.value.resultPosition = 'top-right' // Reset to default position
-    localMagnifyAreaSettings.value.radius = 60 // TODO - make it dynamic based on image size
+    localMagnifyAreaSettings.value.radius = 0
     localMagnifyAreaSettings.value.zoom = 2
     localMagnifyAreaSettings.value.outlineWidth = 1
     localMagnifyAreaSettings.value.outlineColor = '#000000'
@@ -193,9 +211,16 @@ export function useMagnifyAreaTool(imageStore, historyStore, editorStore, t) {
         const result =
           object.subClass === 'magnify-result'
             ? object
-            : imageStore.getSvgObjectById(object.linkedZoomId)
+            : imageStore.getSvgObjectById(object.linkedResultId)
 
         if (!source || !result) return
+
+        // Set type
+        if (source.attrs.cx === result.attrs.cx && source.attrs.cy === result.attrs.cy) {
+          localMagnifyAreaSettings.value.type = 'center'
+        } else {
+          localMagnifyAreaSettings.value.type = 'corner'
+        }
 
         // Source position
         localMagnifyAreaSettings.value.sourceX = source.attrs.cx
@@ -213,10 +238,11 @@ export function useMagnifyAreaTool(imageStore, historyStore, editorStore, t) {
         const zoom = result.attrs.rx / radius
         localMagnifyAreaSettings.value.zoom = zoom
 
+        // Compute result radius
         const resultRadius = radius * zoom
         const { width, height } = imageStore.fileDimensions
 
-        // Infer resultPosition from coordinates
+        // Get resultPosition from coordinates
         let resultPosition = 'bottom-right'
         const posX = result.attrs.cx
         const posY = result.attrs.cy
@@ -279,7 +305,7 @@ export function useMagnifyAreaTool(imageStore, historyStore, editorStore, t) {
     const source = activeObject.value
     if (!source) return
 
-    const result = imageStore.getSvgObjectById(source.linkedZoomId)
+    const result = imageStore.getSvgObjectById(source.linkedResultId)
     if (!result) return
 
     const radius = settings.radius
@@ -294,25 +320,37 @@ export function useMagnifyAreaTool(imageStore, historyStore, editorStore, t) {
     let resultX = 0
     let resultY = 0
 
-    switch (settings.resultPosition) {
-      case 'top-left':
-        resultX = padding + resultRadius
-        resultY = padding + resultRadius
-        break
-      case 'top-right':
-        resultX = imageWidth - padding - resultRadius
-        resultY = padding + resultRadius
-        break
-      case 'bottom-left':
-        resultX = padding + resultRadius
-        resultY = imageHeight - padding - resultRadius
-        break
-      case 'bottom-right':
-      default:
-        resultX = imageWidth - padding - resultRadius
-        resultY = imageHeight - padding - resultRadius
-        break
+    if (settings.type === 'center') {
+      resultX = settings.sourceX
+      resultY = settings.sourceY
+      source.attrs.type = 'center'
+      result.attrs.type = 'center'
+    } else {
+      source.attrs.type = 'corner'
+      result.attrs.type = 'corner'
+      result.attrs.visibility = 'visible'
+      switch (settings.resultPosition) {
+        case 'top-left':
+          resultX = padding + resultRadius
+          resultY = padding + resultRadius
+          break
+        case 'top-right':
+          resultX = imageWidth - padding - resultRadius
+          resultY = padding + resultRadius
+          break
+        case 'bottom-left':
+          resultX = padding + resultRadius
+          resultY = imageHeight - padding - resultRadius
+          break
+        case 'bottom-right':
+        default:
+          resultX = imageWidth - padding - resultRadius
+          resultY = imageHeight - padding - resultRadius
+          break
+      }
     }
+
+    console.log('Apply magnify area settings', settings, source, result)
 
     // Update source object
     source.attrs.cx = settings.sourceX
@@ -377,24 +415,29 @@ export function useMagnifyAreaTool(imageStore, historyStore, editorStore, t) {
     let outputX = 0
     let outputY = 0
 
-    switch (localMagnifyAreaSettings.value.resultPosition) {
-      case 'top-left':
-        outputX = padding + resultRadius
-        outputY = padding + resultRadius
-        break
-      case 'top-right':
-        outputX = imageWidth - padding - resultRadius
-        outputY = padding + resultRadius
-        break
-      case 'bottom-left':
-        outputX = padding + resultRadius
-        outputY = imageHeight - padding - resultRadius
-        break
-      case 'bottom-right':
-      default:
-        outputX = imageWidth - padding - resultRadius
-        outputY = imageHeight - padding - resultRadius
-        break
+    if (localMagnifyAreaSettings.value.type === 'center') {
+      outputX = x
+      outputY = y
+    } else {
+      switch (localMagnifyAreaSettings.value.resultPosition) {
+        case 'top-left':
+          outputX = padding + resultRadius
+          outputY = padding + resultRadius
+          break
+        case 'top-right':
+          outputX = imageWidth - padding - resultRadius
+          outputY = padding + resultRadius
+          break
+        case 'bottom-left':
+          outputX = padding + resultRadius
+          outputY = imageHeight - padding - resultRadius
+          break
+        case 'bottom-right':
+        default:
+          outputX = imageWidth - padding - resultRadius
+          outputY = imageHeight - padding - resultRadius
+          break
+      }
     }
 
     // Pattern
@@ -410,6 +453,7 @@ export function useMagnifyAreaTool(imageStore, historyStore, editorStore, t) {
       class: 'magnifyArea',
       subClass: 'magnify-source',
       attrs: {
+        type: localMagnifyAreaSettings.value.type,
         cx: x,
         cy: y,
         rx: radius,
@@ -419,7 +463,7 @@ export function useMagnifyAreaTool(imageStore, historyStore, editorStore, t) {
         fill: localMagnifyAreaSettings.value.outlineColor,
         'fill-opacity': 0.1,
       },
-      linkedZoomId: resultId,
+      linkedResultId: resultId,
     }
 
     // Set result
@@ -429,6 +473,7 @@ export function useMagnifyAreaTool(imageStore, historyStore, editorStore, t) {
       class: 'magnifyArea',
       subClass: 'magnify-result',
       attrs: {
+        type: localMagnifyAreaSettings.value.type,
         cx: outputX,
         cy: outputY,
         rx: resultRadius,
@@ -436,6 +481,7 @@ export function useMagnifyAreaTool(imageStore, historyStore, editorStore, t) {
         stroke: localMagnifyAreaSettings.value.outlineColor,
         'stroke-width': localMagnifyAreaSettings.value.outlineWidth,
         fill: `url(#${patternId})`,
+        visibility: 'visible',
       },
       linkedSourceId: sourceId,
     }
@@ -475,5 +521,6 @@ export function useMagnifyAreaTool(imageStore, historyStore, editorStore, t) {
     magnifyAreaZoomOptions,
     resultPositionOptions,
     maxOutlineWidth,
+    magnifyAreaTypeOptions,
   }
 }
