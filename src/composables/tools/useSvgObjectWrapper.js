@@ -204,7 +204,7 @@ export function useSvgObjectWrapper(
   watch(
     () => imageStore.selectedSvgObjectId,
     (newId) => {
-      if (newId === null) {
+      if (newId !== object.value.id) {
         showResizers.value = false
       }
     },

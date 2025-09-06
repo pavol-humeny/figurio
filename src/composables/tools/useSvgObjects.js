@@ -685,10 +685,10 @@ export function useSvgObjects(imageStore, historyStore, viewportStore, editorSto
    */
   const onMouseDownSelect = (event) => {
     if (event.button !== 0) return // Only left mouse button
-    console.log('mousedown select')
 
     // Selecting objects
     if (editorStore.selectedToolKey === 'select') {
+      console.log('mousedown select')
       if (isMovingMultipleObjects.value) {
         return
       }
