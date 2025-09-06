@@ -87,6 +87,7 @@ export function useSvgObjectWrapper(
         if (object.value.class === 'magnifyArea' && object.value.subClass === 'magnify-source') {
           const result = imageStore.getSvgObjectById(object.value.linkedResultId)
           result.attrs.visibility = 'visible'
+          editorStore.isSvgObjectResizing = false
         }
       }
     },
@@ -284,6 +285,7 @@ export function useSvgObjectWrapper(
           const result = imageStore.getSvgObjectById(object.value.linkedResultId)
           showResizers.value = false
           result.attrs.visibility = 'visible'
+          editorStore.isSvgObjectResizing = false
         } else if (object.value.subClass === 'magnify-result' && newValue === true) {
           showResizers.value = false
           object.value.attrs.visibility = 'hidden'
@@ -1334,6 +1336,7 @@ export function useSvgObjectWrapper(
         result.attrs.fill = `url(#${patternId})`
 
         result.attrs.visibility = 'visible'
+        editorStore.isSvgObjectResizing = false
       }
     }
 
