@@ -133,9 +133,7 @@ const {
         </div>
 
         <!-- Rotation -->
-        <div
-          v-if="!hidePositionAndDimensions && localObjectSettings.type !== 'line'"
-          class="settings-content-wrapper">
+        <div v-if="!hidePositionAndDimensions && localObjectSettings.type !== 'line'" class="settings-content-wrapper">
           <div class="content-wrapper">
             <div class="content-title">
               <p>
@@ -286,7 +284,7 @@ const {
         </div>
 
         <!-- Line arrow -->
-        <div v-if="localObjectSettings.type === 'line' && !hidePositionAndDimensions" class=" settings-content-wrapper">
+        <div v-if="localObjectSettings.type === 'line'" class=" settings-content-wrapper">
           <div class="content-wrapper">
             <div class="content-title">
               <p :class="{ disabled: localObjectSettings.strokeWidth === 0 }">

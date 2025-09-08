@@ -844,10 +844,19 @@ export function useSvgObjects(imageStore, historyStore, viewportStore, editorSto
     let objectCornerRadius = 0
     let objectLineType = 'solid'
     let objectBlurStrength
+    let lineEnd
 
     if (objectClass === 'shape') {
-      const { fillEnabled, fillColor, strokeWidth, strokeColor, opacity, cornerRadius, lineType } =
-        shapeTool.getShapeAttributes()
+      const {
+        fillEnabled,
+        fillColor,
+        strokeWidth,
+        strokeColor,
+        opacity,
+        cornerRadius,
+        lineType,
+        lineArrowEnd,
+      } = shapeTool.getShapeAttributes()
 
       if (fillEnabled) {
         objectFillColor = fillColor
@@ -857,6 +866,10 @@ export function useSvgObjects(imageStore, historyStore, viewportStore, editorSto
       objectOpacity = opacity
       objectCornerRadius = cornerRadius
       objectLineType = lineType
+      if (objectType === 'line') {
+        lineEnd = lineArrowEnd
+      }
+      console.log('line end: ', lineEnd)
     } else if (objectClass === 'blur') {
       const { blurStrength } = blurTool.getBlurAttributes(id)
 
@@ -899,6 +912,10 @@ export function useSvgObjects(imageStore, historyStore, viewportStore, editorSto
       base.attrs.stroke = objectStrokeColor
       base.attrs.opacity = objectOpacity
       base.attrs['stroke-dasharray'] = objectLineType
+
+      if (lineEnd) {
+        base.attrs['marker-end'] = lineEnd
+      }
     }
 
     currentDrawingObject.value = base

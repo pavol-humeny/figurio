@@ -20,7 +20,8 @@
         "items": [
           "Improved manipulation of the magnify area objects",
           "Deselect objects when clicking outside the image",
-          "Replace drop down menu with slider for magnify area radius setting"
+          "Replace drop down menu with slider for magnify area radius setting",
+          "Enable line end setting during drawing line"
         ]
       },
       "bugFixes": {

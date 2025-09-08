@@ -20,7 +20,6 @@ const localObjectSettings = ref({
   opacity: 1,
   cornerRadius: 0,
   lineType: 'solid',
-  lineArrowStart: 'none',
   lineArrowEnd: 'none',
 })
 
@@ -62,7 +61,6 @@ export function useShapeTool(editorStore, imageStore, historyStore, t) {
     localObjectSettings.value.opacity = 1
     localObjectSettings.value.cornerRadius = 0
     localObjectSettings.value.lineType = 'solid'
-    localObjectSettings.value.lineArrowStart = 'none'
     localObjectSettings.value.lineArrowEnd = 'none'
     activeObject.value = null
   }
@@ -310,15 +308,6 @@ export function useShapeTool(editorStore, imageStore, historyStore, t) {
 
           // Line arrow types for line shapes
           if (tag === 'line') {
-            localObjectSettings.value.lineArrowStart =
-              attrs['marker-start'] && attrs['marker-start'].includes('arrow')
-                ? 'arrow'
-                : attrs['marker-start'] && attrs['marker-start'].includes('circle')
-                  ? 'circle'
-                  : attrs['marker-start'] && attrs['marker-start'].includes('square')
-                    ? 'square'
-                    : 'none'
-
             localObjectSettings.value.lineArrowEnd =
               attrs['marker-end'] && attrs['marker-end'].includes('arrow')
                 ? 'arrow'
@@ -431,7 +420,6 @@ export function useShapeTool(editorStore, imageStore, historyStore, t) {
       attrs['stroke-dasharray'] = getDashArrayFromLineType(settings.lineType, settings.strokeWidth)
 
       // Line arrow types
-      attrs['marker-start'] = markerMap[settings.lineArrowStart]
       attrs['marker-end'] = markerMap[settings.lineArrowEnd]
       attrs.fill = settings.strokeColor
     }
@@ -453,7 +441,6 @@ export function useShapeTool(editorStore, imageStore, historyStore, t) {
     if (settings.type === 'line') {
       settings.lineType = getDashArrayFromLineType(settings.lineType, settings.strokeWidth)
 
-      settings.lineArrowStart = markerMap[settings.lineArrowStart]
       settings.lineArrowEnd = markerMap[settings.lineArrowEnd]
     }
 
