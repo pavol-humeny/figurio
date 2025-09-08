@@ -164,8 +164,6 @@ export function useSvgObjectWrapper(
     () => {
       const { top, right } = getTransformedBoundingBox(object.value)
 
-      console.log('top, right: ', top, right, 'icon size:', controlIconSize.value)
-
       isResizerIconInside.value = top - controlIconSize.value > 0
       isRotateIconInside.value = right + controlIconSize.value < imageStore.fileDimensions.width
     },
@@ -236,11 +234,6 @@ export function useSvgObjectWrapper(
     },
   )
 
-  /**
-   * Temporary variable to store rotation angle while resizing
-   */
-  const tmpAngle = ref(0)
-
   // ---------------------------
   // Rotation
   // ---------------------------
@@ -293,25 +286,10 @@ export function useSvgObjectWrapper(
         return
       }
 
-      const { attrs } = object.value
-      if (object.value.tag !== 'line') {
-        if (newValue) {
-          // Save and reset rotate
-          const transform = attrs.transform || ''
-          const match = transform.match(/rotate\(([-\d.]+),\s*([-\d.]+),\s*([-\d.]+)\)/)
-          tmpAngle.value = match ? parseFloat(match[1]) : 0
-
-          const { cx, cy } = getObjectCenter(object.value)
-
-          object.value.attrs.transform = `rotate(${0}, ${cx}, ${cy})`
-        } else {
-          // Restore rotation
-          if (tmpAngle.value !== 0) {
-            const { cx, cy } = getObjectCenter(object.value)
-
-            attrs.transform = `rotate(${tmpAngle.value}, ${cx}, ${cy})`
-          }
-        }
+      // Update rotation origin after resizing to keep it centered
+      // TODO - it move object when it is applied
+      if (!newValue) {
+        updateRotationTransform()
       }
     },
   )
@@ -342,7 +320,7 @@ export function useSvgObjectWrapper(
   /**
    * Mouse down handler for resizer handles
    * @param {MouseEvent} event - Mouse event
-   * @param {number} index - Index of the resizer handle (0-3 for rectangle, 0-1 for line)
+   * @param {number} index - Index of the resizer handle
    * This will set the active resizer index
    */
   const onMouseDownResizer = (event, index) => {
@@ -359,6 +337,14 @@ export function useSvgObjectWrapper(
       ratio.value = object.value.attrs.rx / object.value.attrs.ry
     } else {
       ratio.value = 1
+    }
+
+    // Save original angle for correct resizing with rotated objects
+    const transform = object.value.attrs.transform || ''
+    const rotationMatch = transform.match(/rotate\(([-\d.]+),/)
+    if (rotationMatch) {
+      originalAngle.value = parseFloat(rotationMatch[1])
+      originalAngle.value = 0
     }
   }
 
@@ -447,7 +433,6 @@ export function useSvgObjectWrapper(
 
     const isCtrlKey = event.ctrlKey || event.metaKey
     const isShiftKey = event.shiftKey
-
     const onlyOneKeyPressed = isCtrlKey !== isShiftKey
 
     if (!isCtrlKey) {
@@ -515,6 +500,8 @@ export function useSvgObjectWrapper(
       }
 
       attrs.transform = `rotate(${finalAngle}, ${cx}, ${cy})`
+
+      // updateRotationTransform()
     }
 
     // Last cursor position
@@ -527,6 +514,15 @@ export function useSvgObjectWrapper(
       const keepRatio = isShiftKey && onlyOneKeyPressed
       const maxW = imageStore.fileDimensions.width
       const maxH = imageStore.fileDimensions.height
+
+      // Recalculate dx and dy to local rotated coordinate system
+      const angleRad = (originalAngle.value * Math.PI) / 180
+      const cos = Math.cos(-angleRad)
+      const sin = Math.sin(-angleRad)
+      const localDx = dx * cos - dy * sin
+      const localDy = dx * sin + dy * cos
+      dx = localDx
+      dy = localDy
 
       // Rectangle
       if (tag === 'rect') {
@@ -543,6 +539,7 @@ export function useSvgObjectWrapper(
         }
 
         if (activeResizerIndex.value === 0) {
+          console.log('resize top-left')
           // Top-left
           let newW = attrs.width - dx
           let newH = keepRatio ? newW / ratio.value : attrs.height - dy
@@ -580,6 +577,7 @@ export function useSvgObjectWrapper(
 
           applyRect(newX, newY, newW, newH)
         } else if (activeResizerIndex.value === 1) {
+          console.log('resize top-right')
           // Top-right
           let newW = attrs.width + dx
           let newH = keepRatio ? newW / ratio.value : attrs.height - dy
@@ -611,6 +609,7 @@ export function useSvgObjectWrapper(
 
           applyRect(newX, newY, newW, bottom - newY)
         } else if (activeResizerIndex.value === 2) {
+          console.log('resize bottom-left')
           // Bottom-left
           let newW = attrs.width - dx
           let newH = keepRatio ? newW / ratio.value : attrs.height + dy
@@ -641,6 +640,7 @@ export function useSvgObjectWrapper(
 
           applyRect(newX, newY, right - newX, newH)
         } else if (activeResizerIndex.value === 3) {
+          console.log('resize bottom-right')
           // Bottom-right
           let newW = attrs.width + dx
           let newH = keepRatio ? newW / ratio.value : attrs.height + dy
@@ -675,6 +675,7 @@ export function useSvgObjectWrapper(
 
           applyRect(newX, newY, newW, newH)
         } else if (activeResizerIndex.value === 4) {
+          console.log('resize top-middle')
           // Top (middle)
           let newH = attrs.height - dy
           let newY = bottom - newH
@@ -696,6 +697,7 @@ export function useSvgObjectWrapper(
 
           applyRect(left, newY, right - left, newH)
         } else if (activeResizerIndex.value === 5) {
+          console.log('resize bottom-middle')
           // Bottom (middle)
           let newH = attrs.height + dy
 
@@ -711,6 +713,7 @@ export function useSvgObjectWrapper(
 
           applyRect(left, top, right - left, newH)
         } else if (activeResizerIndex.value === 6) {
+          console.log('resize left-middle')
           // Left (middle)
           let newW = attrs.width - dx
           let newX = right - newW
@@ -732,6 +735,7 @@ export function useSvgObjectWrapper(
 
           applyRect(newX, top, newW, bottom - top)
         } else if (activeResizerIndex.value === 7) {
+          console.log('resize right-middle')
           // Right (middle)
           let newW = attrs.width + dx
 
@@ -1257,24 +1261,25 @@ export function useSvgObjectWrapper(
       let offsetY = dy
 
       if (isCtrlKey && onlyOneKeyPressed) {
-        const bbox = getTransformedBoundingBox(object.value)
+        const bBox = getTransformedBoundingBox(object.value)
 
-        if (bbox) {
+        if (bBox) {
           const snap = getSnapOffsetToEdges(
             object.value,
-            bbox.left + dx,
-            bbox.right + dx,
-            bbox.top + dy,
-            bbox.bottom + dy,
+            bBox.left + dx,
+            bBox.right + dx,
+            bBox.top + dy,
+            bBox.bottom + dy,
           )
           offsetX += snap.dx
           offsetY += snap.dy
 
-          showResizeGuideLine(snap, bbox)
+          showResizeGuideLine(snap, bBox)
         }
       }
 
       if (object.value.class === 'magnifyArea') {
+        // Magnify area can not be dragged outside the image
         attrs.cx = clamp(attrs.cx + offsetX, attrs.rx, imageStore.fileDimensions.width - attrs.rx)
         attrs.cy = clamp(attrs.cy + offsetY, attrs.ry, imageStore.fileDimensions.height - attrs.ry)
       } else {
@@ -1297,11 +1302,10 @@ export function useSvgObjectWrapper(
           attrs.y2 += offsetY
         }
       }
+      updateRotationTransform()
     }
 
     object.value.attrs = { ...attrs }
-
-    updateRotationTransform()
   }
 
   /**

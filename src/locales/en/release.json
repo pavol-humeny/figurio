@@ -7,6 +7,25 @@
     ]
   },
   "versions":{
+    "3.8.0":{
+      "label": "3.8.0",
+      "date":"8.9. 2025",
+      "newFeatures": {
+        "items": [
+          "Objects can be resized also when they are rotated"
+        ]
+      },
+      "bugFixes": {
+        "items": [
+          ""
+        ]
+      },
+      "knownIssues": {
+        "items": [
+          ""
+        ]
+      }
+    },
     "3.7.0":{
       "label": "3.7.0",
       "date":"6.9. 2025",
