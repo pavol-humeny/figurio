@@ -146,6 +146,8 @@ export function useSvgObjectWrapper(
   watch(
     () => object.value,
     () => {
+      if (object.value.tag === 'text') return // TODO - handle text bounding box to calculate icons position
+
       const { top, right } = getTransformedBoundingBox(object.value)
 
       isResizerIconInside.value = top - controlIconSize.value > 0

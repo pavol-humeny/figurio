@@ -694,8 +694,19 @@ export function useSvgObjects(imageStore, historyStore, viewportStore, editorSto
     // Adding new objects
     // -------------------------------------
     // Add text object
-    if (editorStore.selectedToolKey === 'text' && imageStore.selectedSvgObjectId === null) {
-      if (event.target.closest('g') || event.target.closest('text')) return
+    if (editorStore.selectedToolKey === 'text') {
+      const elWithId = event.target.closest('[data-id]')
+      const selectedId = elWithId ? Number(elWithId.getAttribute('data-id')) : null
+
+      // Deselect on click outside of magnify area if one is selected
+      if (imageStore.selectedSvgObjectId !== null) {
+        if (selectedId) {
+          return
+        } else {
+          imageStore.selectedSvgObjectId = null
+          return
+        }
+      }
 
       const rect = event.currentTarget.getBoundingClientRect()
       const x = round((event.clientX - rect.left) / viewportStore.realZoomLevel)

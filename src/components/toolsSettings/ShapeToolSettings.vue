@@ -18,7 +18,6 @@ import { useUiStore } from '@/stores/uiStore';
 import ExplainItem from '../common/ExplainItem.vue';
 
 const { t } = useI18n()
-const editorStore = useEditorStore();
 const imageStore = useImageStore();
 
 /**
@@ -135,7 +134,7 @@ const {
 
         <!-- Rotation -->
         <div
-          v-if="!hidePositionAndDimensions && !editorStore.isSvgObjectResizing && localObjectSettings.type !== 'line'"
+          v-if="!hidePositionAndDimensions && localObjectSettings.type !== 'line'"
           class="settings-content-wrapper">
           <div class="content-wrapper">
             <div class="content-title">

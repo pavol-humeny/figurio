@@ -18,8 +18,8 @@
       },
       "improvements": {
         "items": [
-          "Improved manipulation of the magnify area objects"
-
+          "Improved manipulation of the magnify area objects",
+          "Deselect objects when clicking outside the image"
         ]
       },
       "bugFixes": {
