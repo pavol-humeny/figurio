@@ -16,6 +16,11 @@
           "Magnify area objects can be moved in multiple object selection"
         ]
       },
+      "improvements": {
+        "items": [
+          "Improved manipulation of the magnify area objects"       
+        ]
+      },
       "bugFixes": {
         "items": [
           "TODO / Do not add if clicked on existing object",

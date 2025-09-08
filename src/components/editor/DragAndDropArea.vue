@@ -75,10 +75,14 @@ const {
   background: var(--secondary-c);
   box-shadow: var(--box-shadow-ui);
   user-select: none;
+  transition: var(--default-transition);
 }
 
 .drag-and-drop-area.dragging {
-  background: var(--drag-over-c, rgba(0, 0, 0, 0.05));
+  /* background: var(--drag-over-c, rgba(0, 0, 0, 0.05)); */
+  transform: scale(1.01);
+  transition: var(--default-transition);
+  opacity: 0.95;
 }
 
 .icon-wrap {
