@@ -705,10 +705,19 @@ export function useSvgObjects(imageStore, historyStore, viewportStore, editorSto
     }
 
     // Add magnify area
-    if (editorStore.selectedToolKey === 'magnifyArea' && imageStore.selectedSvgObjectId === null) {
+    if (editorStore.selectedToolKey === 'magnifyArea') {
       const elWithId = event.target.closest('[data-id]')
+      const selectedId = elWithId ? Number(elWithId.getAttribute('data-id')) : null
 
-      if (elWithId) return // Do not add if clicked on existing object
+      // Deselect on click outside of magnify area if one is selected
+      if (imageStore.selectedSvgObjectId !== null) {
+        if (selectedId) {
+          return
+        } else {
+          imageStore.selectedSvgObjectId = null
+          return
+        }
+      }
 
       const rect = event.currentTarget.getBoundingClientRect()
       const x = round((event.clientX - rect.left) / viewportStore.realZoomLevel)
@@ -744,6 +753,9 @@ export function useSvgObjects(imageStore, historyStore, viewportStore, editorSto
       selectBox.value = { x, y, width: 0, height: 0 }
       isDrawing.value = true
       return
+    } else {
+      // Deselect all when clicking outside content
+      onWrapperClickDeselect(event)
     }
   }
 
@@ -1339,7 +1351,7 @@ export function useSvgObjects(imageStore, historyStore, viewportStore, editorSto
    * Only triggers if the click was inside the viewport content
    * @param {MouseEvent} e - Mouse event
    */
-  const onGlobalClick = (e) => {
+  const onGlobalDoubleClick = (e) => {
     if (imageStore.justCreatedSvgObjectId === imageStore.selectedSvgObjectId) return
 
     const viewportContent = document.getElementById('viewport')
@@ -1348,7 +1360,7 @@ export function useSvgObjects(imageStore, historyStore, viewportStore, editorSto
     const clickedInside = viewportContent.contains(e.target)
     if (!clickedInside) return
 
-    console.log('global click')
+    console.log('global double click')
 
     const clickedObjectId = Number(e.target.getAttribute('data-id'))
     const clickedObject = imageStore.getSvgObjectById(clickedObjectId)
@@ -1367,17 +1379,38 @@ export function useSvgObjects(imageStore, historyStore, viewportStore, editorSto
     }
   }
 
+  /**
+   * Deselect on single click inside wrapper but outside content
+   * @param {MouseEvent} event
+   */
+  const onWrapperClickDeselect = (event) => {
+    const viewport = document.getElementById('viewport')
+    const content = document.getElementById('viewport-content')
+    if (!viewport || !content) return
+
+    const clickedInsideViewport = viewport.contains(event.target)
+    const clickedInsideContent = content.contains(event.target)
+
+    // Deselect if clicked inside viewport but outside content
+    if (clickedInsideViewport && !clickedInsideContent) {
+      console.log('Deselect triggered')
+      imageStore.selectedSvgObjectId = null
+      imageStore.selectedSvgObjectIds = []
+    }
+  }
+
   onMounted(() => {
     window.addEventListener('mouseup', onMouseUpImageSvg)
     if (!editorStore.isGlobalClickRegistered) {
-      window.addEventListener('dblclick', onGlobalClick)
+      window.addEventListener('dblclick', onGlobalDoubleClick)
+
       editorStore.isGlobalClickRegistered = true
     }
   })
 
   onBeforeUnmount(() => {
     window.removeEventListener('mouseup', onMouseUpImageSvg)
-    window.removeEventListener('dblclick', onGlobalClick)
+    window.removeEventListener('dblclick', onGlobalDoubleClick)
   })
 
   return {

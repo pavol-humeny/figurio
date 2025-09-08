@@ -168,9 +168,10 @@ const disableContextMenu = computed(() => {
           hide: hideContextMenu,
         },
       ]">
-        <div :class="{ 'hide': uiStore.isLoading }" class="viewport-content" ref="contentRef" :style="{
-          transform: `translate(${panX}px, ${panY}px) scale(${zoomLevel})`,
-        }">
+        <div id="viewport-content" :class="{ 'hide': uiStore.isLoading }" class="viewport-content" ref="contentRef"
+          :style="{
+            transform: `translate(${panX}px, ${panY}px) scale(${zoomLevel})`,
+          }">
           <img v-if="imageStore.fileType === 'image' || imageStore.showImageInsteadOfPdf" ref="imageRef"
             class="image-canvas" />
           <div v-else-if="imageStore.fileType === 'pdf'" ref="pdfContainerRef" class="pdf-viewer"></div>
