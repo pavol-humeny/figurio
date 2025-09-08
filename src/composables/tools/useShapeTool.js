@@ -1,4 +1,4 @@
-import { computed, ref, watch, watchEffect, nextTick } from 'vue'
+import { computed, ref, watch, watchEffect, nextTick, onMounted } from 'vue'
 import { useMath } from '../common/useMath'
 import { useSvgFunctions } from './useSvgFunctions'
 import { useSendEvent } from '../common/useSendEvent'
@@ -49,20 +49,23 @@ export function useShapeTool(editorStore, imageStore, historyStore, t) {
    * Reset the local object settings to default values
    */
   const resetObjectSettings = () => {
-    localObjectSettings.value.fillEnabled = true
-    localObjectSettings.value.fillColor = '#000000'
-    localObjectSettings.value.strokeColor = '#000000'
-    localObjectSettings.value.strokeWidth = localObjectSettings.value.type === 'line' ? 1 : 0
-    localObjectSettings.value.width = 0
-    localObjectSettings.value.height = 0
-    localObjectSettings.value.x = 0
-    localObjectSettings.value.y = 0
-    localObjectSettings.value.rotation = 0
-    localObjectSettings.value.opacity = 1
-    localObjectSettings.value.cornerRadius = 0
-    localObjectSettings.value.lineType = 'solid'
-    localObjectSettings.value.lineArrowEnd = 'none'
-    activeObject.value = null
+    // activeObject.value = null
+
+    // if line set stroke color to fill color
+    if (localObjectSettings.value.type === 'line') {
+      localObjectSettings.value.strokeWidth = 1
+      localObjectSettings.value.strokeColor = editorStore.toolsConfig.shape.fillColor
+    } else {
+      localObjectSettings.value.strokeWidth = 0
+      localObjectSettings.value.strokeColor = editorStore.toolsConfig.shape.strokeColor
+    }
+
+    localObjectSettings.value.fillEnabled = editorStore.toolsConfig.shape.fillEnabled
+    localObjectSettings.value.fillColor = editorStore.toolsConfig.shape.fillColor
+    localObjectSettings.value.opacity = editorStore.toolsConfig.shape.opacity
+    localObjectSettings.value.cornerRadius = editorStore.toolsConfig.shape.cornerRadius
+    localObjectSettings.value.lineType = editorStore.toolsConfig.shape.lineType
+    localObjectSettings.value.lineArrowEnd = editorStore.toolsConfig.shape.lineArrowStart
   }
 
   watch(
@@ -141,8 +144,6 @@ export function useShapeTool(editorStore, imageStore, historyStore, t) {
   const lineArrowOptions = computed(() => [
     { value: 'none', label: t('tools.shape.settings.lineArrow.options.none') },
     { value: 'arrow', label: t('tools.shape.settings.lineArrow.options.arrow') },
-    // { value: 'square', label: t('tools.shape.settings.lineArrow.options.square') },
-    // { value: 'circle', label: t('tools.shape.settings.lineArrow.options.circle') },
   ])
 
   /**
@@ -163,6 +164,27 @@ export function useShapeTool(editorStore, imageStore, historyStore, t) {
     arrow: 'url(#arrow-end)',
     circle: 'url(#circle-end)',
     square: 'url(#square-end)',
+  }
+
+  /**
+   * Save current config to editor store
+   */
+  const saveConfigToEditorStore = () => {
+    const strokeColorBefore = editorStore.toolsConfig.shape.strokeColor
+
+    for (const key in localObjectSettings.value) {
+      if (key in editorStore.toolsConfig.shape) {
+        editorStore.toolsConfig.shape[key] = localObjectSettings.value[key]
+      }
+    }
+
+    // If line set fill color to stroke color
+    if (localObjectSettings.value.type === 'line') {
+      editorStore.toolsConfig.shape.fillColor = localObjectSettings.value.strokeColor
+      editorStore.toolsConfig.shape.strokeColor = strokeColorBefore
+    } else {
+      editorStore.toolsConfig.shape.strokeColor = localObjectSettings.value.strokeColor
+    }
   }
 
   /**
@@ -428,6 +450,8 @@ export function useShapeTool(editorStore, imageStore, historyStore, t) {
       settings: { ...localObjectSettings.value },
     })
 
+    saveConfigToEditorStore()
+
     historyStore.push(imageStore.getSnapshot(t))
   }
 
@@ -447,6 +471,8 @@ export function useShapeTool(editorStore, imageStore, historyStore, t) {
     useSendEvent().sendEvent('toolSettings', 'shape', 'create', {
       settings: { ...settings },
     })
+
+    saveConfigToEditorStore()
 
     return settings
   }
@@ -519,6 +545,10 @@ export function useShapeTool(editorStore, imageStore, historyStore, t) {
     localObjectSettings.value.cornerRadius = 0
     applyLocalSettings()
   }
+
+  onMounted(() => {
+    resetObjectSettings()
+  })
 
   return {
     localObjectSettings,

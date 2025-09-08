@@ -52,6 +52,16 @@ export const useEditorStore = defineStore('editorStore', {
     isExportModalOpen: false,
 
     toolsConfig: {
+      shape: {
+        fillEnabled: true,
+        fillColor: '#0e11b6',
+        strokeWidth: 0,
+        strokeColor: '#000000',
+        opacity: 1,
+        cornerRadius: 0,
+        lineType: 'solid',
+        lineArrowStart: 'none',
+      },
       magnifyArea: {
         type: 'center',
         radius: 0,
