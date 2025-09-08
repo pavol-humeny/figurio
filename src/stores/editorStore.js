@@ -79,6 +79,9 @@ export const useEditorStore = defineStore('editorStore', {
         outlineWidth: 1,
         outlineColor: '#000000',
       },
+      blur: {
+        blurStrength: 2,
+      },
     },
   }),
   actions: {

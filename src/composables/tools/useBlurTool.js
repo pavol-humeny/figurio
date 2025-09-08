@@ -1,4 +1,4 @@
-import { ref, computed, watch, watchEffect, nextTick } from 'vue'
+import { ref, computed, watch, watchEffect, nextTick, onMounted } from 'vue'
 import { useMath } from '../common/useMath'
 import { useSvgFunctions } from './useSvgFunctions'
 import { useSendEvent } from '@/composables/common/useSendEvent'
@@ -166,17 +166,26 @@ export function useBlurTool(imageStore, historyStore, editorStore, t) {
   }
 
   /**
+   * Save current config to editor store
+   */
+  const saveConfigToEditorStore = () => {
+    editorStore.toolsConfig.blur.blurStrength = localBlurSettings.value.blurStrength
+  }
+
+  /**
    * Reset local blur settings to default values
    */
   const resetBlurSettings = () => {
-    localBlurSettings.value.x = 0
-    localBlurSettings.value.y = 0
-    localBlurSettings.value.width = 0
-    localBlurSettings.value.height = 0
-    localBlurSettings.value.rotation = 0
-    localBlurSettings.value.blurStrength = 5
+    // localBlurSettings.value.x = 0
+    // localBlurSettings.value.y = 0
+    // localBlurSettings.value.width = 0
+    // localBlurSettings.value.height = 0
+    // localBlurSettings.value.rotation = 0
+    // localBlurSettings.value.blurStrength = 5
 
-    activeObject.value = null
+    // activeObject.value = null
+
+    localBlurSettings.value.blurStrength = editorStore.toolsConfig.blur.blurStrength
   }
 
   /**
@@ -291,6 +300,8 @@ export function useBlurTool(imageStore, historyStore, editorStore, t) {
 
     // Push to history only when explicitly requested
     if (commit) {
+      saveConfigToEditorStore()
+
       historyStore.push(imageStore.getSnapshot(t))
 
       useSendEvent().sendEvent('toolSettings', 'blur', 'update', {
@@ -374,8 +385,14 @@ export function useBlurTool(imageStore, historyStore, editorStore, t) {
       settings: { ...settings },
     })
 
+    saveConfigToEditorStore()
+
     return settings
   }
+
+  onMounted(() => {
+    resetBlurSettings()
+  })
 
   return {
     localBlurSettings,
