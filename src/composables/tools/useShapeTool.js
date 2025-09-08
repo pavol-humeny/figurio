@@ -218,6 +218,7 @@ export function useShapeTool(editorStore, imageStore, historyStore, t) {
       if (editorStore.previousToolKey !== 'select') {
         console.log('Shape tab changed, resetting settings: ', newTab)
         localObjectSettings.value.type = newTab
+        console.log('10')
         imageStore.selectedSvgObjectId = null // Reset selection when tab changes
         imageStore.selectedSvgObjectIds = [] // Reset multi-selection
         console.log('-----------------2')

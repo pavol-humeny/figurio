@@ -328,7 +328,6 @@ export function useMagnifyAreaTool(imageStore, historyStore, editorStore, t) {
     } else {
       source.attrs.type = 'corner'
       result.attrs.type = 'corner'
-      result.attrs.visibility = 'visible'
       switch (settings.resultPosition) {
         case 'top-left':
           resultX = padding + resultRadius
@@ -358,6 +357,9 @@ export function useMagnifyAreaTool(imageStore, historyStore, editorStore, t) {
     source.attrs.rx = radius
     source.attrs.ry = radius
 
+    source.attrs.visibility =
+      localMagnifyAreaSettings.value.type === 'center' ? 'hidden' : 'visible'
+
     // Update result object
     result.attrs.cx = resultX
     result.attrs.cy = resultY
@@ -386,6 +388,12 @@ export function useMagnifyAreaTool(imageStore, historyStore, editorStore, t) {
 
     // Source fill
     source.attrs.fill = settings.outlineColor
+
+    if (settings.type === 'corner') {
+      imageStore.selectedSvgObjectId = source.id
+    } else {
+      imageStore.selectedSvgObjectId = result.id
+    }
 
     useSendEvent().sendEvent('toolSettings', 'magnifyArea', 'update', {
       settings: { ...localMagnifyAreaSettings.value },
@@ -462,6 +470,7 @@ export function useMagnifyAreaTool(imageStore, historyStore, editorStore, t) {
         'stroke-width': localMagnifyAreaSettings.value.outlineWidth,
         fill: localMagnifyAreaSettings.value.outlineColor,
         'fill-opacity': 0.1,
+        visibility: localMagnifyAreaSettings.value.type === 'center' ? 'hidden' : 'visible',
       },
       linkedResultId: resultId,
     }
@@ -481,7 +490,6 @@ export function useMagnifyAreaTool(imageStore, historyStore, editorStore, t) {
         stroke: localMagnifyAreaSettings.value.outlineColor,
         'stroke-width': localMagnifyAreaSettings.value.outlineWidth,
         fill: `url(#${patternId})`,
-        visibility: 'visible',
       },
       linkedSourceId: sourceId,
     }
@@ -490,7 +498,13 @@ export function useMagnifyAreaTool(imageStore, historyStore, editorStore, t) {
     imageStore.svgObjects.push(source)
     imageStore.svgObjects.push(result)
 
-    imageStore.selectedSvgObjectId = sourceId
+    if (localMagnifyAreaSettings.value.type === 'center') {
+      imageStore.selectedSvgObjectId = resultId
+    } else {
+      imageStore.selectedSvgObjectId = sourceId
+    }
+
+    console.log('selected', imageStore.selectedSvgObjectId)
 
     useSendEvent().sendEvent('toolSettings', 'magnifyArea', 'create', {
       settings: { ...localMagnifyAreaSettings.value },

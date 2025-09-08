@@ -78,22 +78,6 @@ export function useSvgObjectWrapper(
   const isSelected = computed(() => imageStore.selectedSvgObjectId === object.value.id)
 
   /**
-   * Watch for deselection to reset state of magnify area objects
-   */
-  watch(
-    () => isSelected.value,
-    (newVal) => {
-      if (!newVal) {
-        if (object.value.class === 'magnifyArea' && object.value.subClass === 'magnify-source') {
-          const result = imageStore.getSvgObjectById(object.value.linkedResultId)
-          result.attrs.visibility = 'visible'
-          editorStore.isSvgObjectResizing = false
-        }
-      }
-    },
-  )
-
-  /**
    * Whether the SVG object is part of a multi-selection
    */
   const isInMultiSelection = computed(() => {
@@ -268,23 +252,7 @@ export function useSvgObjectWrapper(
     () => showResizers.value,
     (newValue) => {
       // When it is not magnify area or resizing started (it is magnify area, but resizing started)
-      if (object.value.class !== 'magnifyArea' || newValue === true) {
-        editorStore.isSvgObjectResizing = newValue
-      }
-
-      // If it is magnify area, hide result when resizing
-      if (object.value.class === 'magnifyArea') {
-        if (object.value.subClass === 'magnify-source' && newValue === true) {
-          const result = imageStore.getSvgObjectById(object.value.linkedResultId)
-          showResizers.value = false
-          result.attrs.visibility = 'visible'
-          editorStore.isSvgObjectResizing = false
-        } else if (object.value.subClass === 'magnify-result' && newValue === true) {
-          showResizers.value = false
-          object.value.attrs.visibility = 'hidden'
-        }
-        return
-      }
+      editorStore.isSvgObjectResizing = newValue
 
       // Update rotation origin after resizing to keep it centered
       // TODO - it move object when it is applied
@@ -302,8 +270,8 @@ export function useSvgObjectWrapper(
     if (!isSelected.value && !editorStore.isSvgObjectResizing) {
       console.log('tool: ', editorStore.selectedToolKey, 'class:', object.value.class)
       if (editorStore.selectedToolKey === object.value.class) {
-        if (object.value.class === 'magnifyArea') {
-          // Always select source
+        if (object.value.class === 'magnifyArea' && object.value.attrs.type === 'corner') {
+          // If it is corner type, select source
           if (object.value.subClass === 'magnify-source') {
             imageStore.selectedSvgObjectId = object.value.id
           } else {
@@ -1279,9 +1247,49 @@ export function useSvgObjectWrapper(
       }
 
       if (object.value.class === 'magnifyArea') {
-        // Magnify area can not be dragged outside the image
-        attrs.cx = clamp(attrs.cx + offsetX, attrs.rx, imageStore.fileDimensions.width - attrs.rx)
-        attrs.cy = clamp(attrs.cy + offsetY, attrs.ry, imageStore.fileDimensions.height - attrs.ry)
+        if (object.value.subClass === 'magnify-result') {
+          const source = imageStore.getSvgObjectById(object.value.linkedSourceId)
+
+          // Move source and also result
+          const sAttrs = source.attrs
+          sAttrs.cx = clamp(
+            sAttrs.cx + offsetX,
+            sAttrs.rx,
+            imageStore.fileDimensions.width - sAttrs.rx,
+          )
+          sAttrs.cy = clamp(
+            sAttrs.cy + offsetY,
+            sAttrs.ry,
+            imageStore.fileDimensions.height - sAttrs.ry,
+          )
+          source.attrs = { ...sAttrs }
+
+          // Move result
+          const patternId = `magnify-fill-${object.value.id}`
+
+          // Move result if it was a center-type source
+          object.value.attrs.cx = sAttrs.cx
+          object.value.attrs.cy = sAttrs.cy
+
+          const pattern = generateMagnifyPattern(
+            patternId,
+            sAttrs.cx, // sourceX
+            sAttrs.cy, // sourceY
+            object.value.attrs.cx, // resultX
+            object.value.attrs.cy, // resultY
+          )
+
+          imageStore.addOrReplaceSvgDef(patternId, pattern)
+          object.value.attrs.fill = `url(#${patternId})`
+        } else {
+          // Magnify area can not be dragged outside the image
+          attrs.cx = clamp(attrs.cx + offsetX, attrs.rx, imageStore.fileDimensions.width - attrs.rx)
+          attrs.cy = clamp(
+            attrs.cy + offsetY,
+            attrs.ry,
+            imageStore.fileDimensions.height - attrs.ry,
+          )
+        }
       } else {
         // Apply updated offset
         if ('x' in attrs && 'y' in attrs) {
@@ -1338,9 +1346,6 @@ export function useSvgObjectWrapper(
 
         imageStore.addOrReplaceSvgDef(patternId, pattern)
         result.attrs.fill = `url(#${patternId})`
-
-        result.attrs.visibility = 'visible'
-        editorStore.isSvgObjectResizing = false
       }
     }
 

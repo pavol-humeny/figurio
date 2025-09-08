@@ -56,6 +56,8 @@ export function useToolsPanel(editorStore, imageStore, uiStore, t) {
       tab: editorStore.selectedTabPerTool[editorStore.selectedToolKey],
     }),
     (newVal, oldValue) => {
+      if (oldValue === undefined) return // Needed, because it was deselecting magnify area object on add
+
       if (
         // UPDATE new tool
         newVal.tool === 'move' ||
