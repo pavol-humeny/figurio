@@ -66,17 +66,6 @@ export function useMagnifyAreaTool(imageStore, historyStore, editorStore, t) {
     return Math.floor(smallerDimension / localMagnifyAreaSettings.value.zoom / 2)
   })
 
-  /**
-   * Options for the magnify area radius
-   */
-  const magnifyAreaRadiusOptions = computed(() => {
-    const options = []
-    const maxRadius = maxMagnifyAreaRadius.value
-    for (let i = 1; i <= maxRadius; i = i + 5) {
-      options.push(i)
-    }
-    return options
-  })
 
   // ------------------------------
   // Zoom
@@ -146,20 +135,14 @@ export function useMagnifyAreaTool(imageStore, historyStore, editorStore, t) {
   ]
 
   /**
-   * Reset magnify area settings to default values
+   * Save current config to editor store
    */
-  const resetMagnifyAreaSettings = () => {
-    localMagnifyAreaSettings.value.type = 'center'
-    localMagnifyAreaSettings.value.sourceX = 0
-    localMagnifyAreaSettings.value.sourceY = 0
-    localMagnifyAreaSettings.value.resultX = 0
-    localMagnifyAreaSettings.value.resultY = 0
-    localMagnifyAreaSettings.value.resultPosition = 'top-right' // Reset to default position
-    localMagnifyAreaSettings.value.radius = 0
-    localMagnifyAreaSettings.value.zoom = 2
-    localMagnifyAreaSettings.value.outlineWidth = 1
-    localMagnifyAreaSettings.value.outlineColor = '#000000'
-    activeObject.value = null
+  const saveConfigToEditorStore = () => {
+    for (const key in editorStore.toolsConfig.magnifyArea) {
+      if (key in localMagnifyAreaSettings.value) {
+        editorStore.toolsConfig.magnifyArea[key] = localMagnifyAreaSettings.value[key]
+      }
+    }
   }
 
   /**
@@ -399,6 +382,8 @@ export function useMagnifyAreaTool(imageStore, historyStore, editorStore, t) {
       settings: { ...localMagnifyAreaSettings.value },
     })
 
+    saveConfigToEditorStore()
+
     historyStore.push(imageStore.getSnapshot(t))
   }
 
@@ -510,24 +495,34 @@ export function useMagnifyAreaTool(imageStore, historyStore, editorStore, t) {
       settings: { ...localMagnifyAreaSettings.value },
     })
 
+    saveConfigToEditorStore()
+
     historyStore.push(imageStore.getSnapshot(t))
   }
 
   onMounted(() => {
-    // Set default radius to 10 percent of smaller dimension of image
-    const defaultRadius = Math.floor(
-      imageStore.getSmallerImageDimension() * editorConfig.magnifyAreaDefaultRadiusFromImage,
-    )
-    localMagnifyAreaSettings.value.radius = defaultRadius
+    localMagnifyAreaSettings.value.type = editorStore.toolsConfig.magnifyArea.type
+    localMagnifyAreaSettings.value.zoom = editorStore.toolsConfig.magnifyArea.zoom
+    localMagnifyAreaSettings.value.outlineWidth = editorStore.toolsConfig.magnifyArea.outlineWidth
+    localMagnifyAreaSettings.value.outlineColor = editorStore.toolsConfig.magnifyArea.outlineColor
+
+    if (editorStore.toolsConfig.magnifyArea.radius !== 0) {
+      localMagnifyAreaSettings.value.radius = editorStore.toolsConfig.magnifyArea.radius
+    } else {
+      localMagnifyAreaSettings.value.radius = Math.floor(
+        // Set default radius to 10 percent of smaller dimension of image
+        imageStore.getSmallerImageDimension() * editorConfig.magnifyAreaDefaultRadiusFromImage,
+      )
+
+      editorStore.toolsConfig.magnifyArea.radius = localMagnifyAreaSettings.value.radius
+    }
   })
 
   return {
     applyLocalMagnifyAreaSettings,
     localMagnifyAreaSettings,
     maxMagnifyAreaRadius,
-    magnifyAreaRadiusOptions,
     hidePositionAndDimensions,
-    resetMagnifyAreaSettings,
     addMagnifyArea,
     maxMagnifyAreaSourcePositionX,
     maxMagnifyAreaSourcePositionY,

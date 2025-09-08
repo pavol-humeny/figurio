@@ -9,11 +9,11 @@ import { useEditorStore } from '@/stores/editorStore';
 import { useSvgObjects } from '@/composables/tools/useSvgObjects';
 import { useImageStore } from '@/stores/imageStore';
 import { useMagnifyAreaTool } from '@/composables/tools/useMagnifyAreaTool';
-import NumberDropdownInput from '../common/NumberDropdownInput.vue';
 import { useViewportStore } from '@/stores/viewportStore';
 import DefaultButton from '../common/DefaultButton.vue';
 import { useUiStore } from '@/stores/uiStore';
 import ExplainItem from '../common/ExplainItem.vue';
+import DefaultSlider from '../common/DefaultSlider.vue';
 
 const { t } = useI18n();
 
@@ -23,7 +23,6 @@ const {
   applyLocalMagnifyAreaSettings,
   localMagnifyAreaSettings,
   maxMagnifyAreaRadius,
-  magnifyAreaRadiusOptions,
   hidePositionAndDimensions,
   maxMagnifyAreaSourcePositionX,
   maxMagnifyAreaSourcePositionY,
@@ -106,8 +105,8 @@ const {
                 {{ $t('tools.magnifyArea.settings.general.radius.label') }}
               </p>
             </div>
-            <NumberDropdownInput v-model="localMagnifyAreaSettings.radius" :min="1" :max="maxMagnifyAreaRadius"
-              :step="1" @update="applyLocalMagnifyAreaSettings" :options="magnifyAreaRadiusOptions"
+            <DefaultSlider :min="10" :max="maxMagnifyAreaRadius" :step="1" v-model="localMagnifyAreaSettings.radius"
+              showValue valueUnit="px" @update="applyLocalMagnifyAreaSettings"
               :tip="$t('tools.magnifyArea.settings.general.radius.tip')" position="bottom-left" />
           </div>
         </div>

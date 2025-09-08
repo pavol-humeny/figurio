@@ -50,6 +50,16 @@ export const useEditorStore = defineStore('editorStore', {
 
     /** Whether a export modal is open  */
     isExportModalOpen: false,
+
+    toolsConfig: {
+      magnifyArea: {
+        type: 'center',
+        radius: 0,
+        zoom: 2,
+        outlineWidth: 1,
+        outlineColor: '#000000',
+      },
+    },
   }),
   actions: {
     /**
