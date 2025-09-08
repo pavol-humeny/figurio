@@ -11,6 +11,6 @@
     { "name": "Anotácie", "description": "- texty a grafické objekty" },
     { "name": "Rozmazanie oblasti", "description": "- ochrana citlivých údajov" },
     { "name": "Priblíženie oblasti", "description": "- zvýraznenie dôležitých detailov" },
-    { "name": "Ďalšie nástroje", "description": "" }
+    { "name": "...", "description": "" }
   ]
 }

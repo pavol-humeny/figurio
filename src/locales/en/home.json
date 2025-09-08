@@ -11,6 +11,6 @@
     { "name": "Annotations", "description": "- text and graphic objects" },
     { "name": "Blur Area", "description": "- protect sensitive information" },
     { "name": "Zoom Area", "description": "- highlight important details" },
-    { "name": "Additional Tools", "description": "" }
+    { "name": "...", "description": "" }
   ]
 }

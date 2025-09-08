@@ -51,7 +51,7 @@ const wrapperStyle = computed(() => {
 <template>
   <div class="explain-item-wrapper" :style="wrapperStyle">
     <ItemTip :title="props.title" :shortcut="props.shortcut" advance :text="props.text" :position="props.textPosition">
-      <BaseIcon name="IconExplain" :size="18" color="var(--text-c)" />
+      <BaseIcon class="icon-explain" name="IconExplain" :size="18" color="var(--text-c)" />
     </ItemTip>
   </div>
 
@@ -61,6 +61,9 @@ const wrapperStyle = computed(() => {
 .explain-item-wrapper {
   position: absolute;
   padding: 5px 7px;
+}
+
+.icon-explain {
   cursor: help;
 }
 </style>
