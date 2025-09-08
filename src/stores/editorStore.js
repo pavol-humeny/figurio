@@ -62,6 +62,16 @@ export const useEditorStore = defineStore('editorStore', {
         lineType: 'solid',
         lineArrowStart: 'none',
       },
+      text: {
+        size: 16,
+        color: '#ff0000ff',
+        fontFamily: 'Helvetica',
+        opacity: 1,
+        letterSpacing: 0,
+        bold: false,
+        italic: false,
+        underline: false,
+      },
       magnifyArea: {
         type: 'center',
         radius: 0,

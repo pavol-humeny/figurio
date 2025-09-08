@@ -66,6 +66,8 @@ export function useShapeTool(editorStore, imageStore, historyStore, t) {
     localObjectSettings.value.cornerRadius = editorStore.toolsConfig.shape.cornerRadius
     localObjectSettings.value.lineType = editorStore.toolsConfig.shape.lineType
     localObjectSettings.value.lineArrowEnd = editorStore.toolsConfig.shape.lineArrowStart
+
+    localObjectSettings.value.rotation = 0
   }
 
   watch(

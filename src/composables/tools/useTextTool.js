@@ -1,4 +1,4 @@
-import { ref, watch, watchEffect, computed } from 'vue'
+import { ref, watch, watchEffect, computed, onMounted } from 'vue'
 import { useMath } from '../common/useMath'
 import { useSendEvent } from '@/composables/common/useSendEvent'
 import { editorConfig } from '@/config/editorConfig'
@@ -71,21 +71,33 @@ export function useTextTool(imageStore, historyStore, editorStore, t) {
   })
 
   /**
+   * Save current config to editor store
+   */
+  const saveConfigToEditorStore = () => {
+    for (const key in localTextSettings.value) {
+      if (key in editorStore.toolsConfig.shape) {
+        editorStore.toolsConfig.shape[key] = localTextSettings.value[key]
+      }
+    }
+  }
+
+  /**
    * Reset local settings to defaults
    */
   const resetTextSettings = () => {
-    localTextSettings.value.text = ''
-    localTextSettings.value.size = 16
-    localTextSettings.value.color = '#000000'
-    localTextSettings.value.fontFamily = 'Helvetica'
-    localTextSettings.value.rotation = 0
-    localTextSettings.value.opacity = 1
-    localTextSettings.value.letterSpacing = 0
-    localTextSettings.value.bold = false
-    localTextSettings.value.italic = false
-    localTextSettings.value.underline = false
+    // activeObject.value = null
 
-    activeObject.value = null
+    localTextSettings.value.size = editorStore.toolsConfig.text.size
+    localTextSettings.value.color = editorStore.toolsConfig.text.color
+    localTextSettings.value.fontFamily = editorStore.toolsConfig.text.fontFamily
+    localTextSettings.value.opacity = editorStore.toolsConfig.text.opacity
+    localTextSettings.value.letterSpacing = editorStore.toolsConfig.text.letterSpacing
+    localTextSettings.value.bold = editorStore.toolsConfig.text.bold
+    localTextSettings.value.italic = editorStore.toolsConfig.text.italic
+    localTextSettings.value.underline = editorStore.toolsConfig.text.underline
+
+    localTextSettings.value.rotation = 0
+    localTextSettings.value.text = ''
   }
 
   /**
@@ -217,6 +229,8 @@ export function useTextTool(imageStore, historyStore, editorStore, t) {
       settings: { ...localTextSettings.value },
     })
 
+    saveConfigToEditorStore()
+
     historyStore.push(imageStore.getSnapshot(t))
   }
 
@@ -263,6 +277,8 @@ export function useTextTool(imageStore, historyStore, editorStore, t) {
     useSendEvent().sendEvent('toolSettings', 'text', 'create', {
       settings: { ...localTextSettings.value },
     })
+
+    saveConfigToEditorStore()
 
     historyStore.push(imageStore.getSnapshot(t))
   }
@@ -314,6 +330,10 @@ export function useTextTool(imageStore, historyStore, editorStore, t) {
     localTextSettings.value.underline = !localTextSettings.value.underline
     applyLocalTextSettings()
   }
+
+  onMounted(() => {
+    resetTextSettings()
+  })
 
   return {
     localTextSettings,
