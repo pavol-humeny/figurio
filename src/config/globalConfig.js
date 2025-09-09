@@ -50,5 +50,5 @@ export const globalConfig = {
   API_BASE: 'https://bp-api-ft1e.onrender.com',
 
   // LocalStorage prefix
-  LOCAL_STORAGE_PREFIX: 'edit_4_doc_',
+  LOCAL_STORAGE_PREFIX: 'figurio_',
 }
