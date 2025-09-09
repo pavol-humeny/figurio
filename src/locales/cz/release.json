@@ -2,7 +2,6 @@
   "inProgressGlobal": {
     "currentlyInProgressText": "Aktuálne prebiehajúce vylepšenia",
     "items": [
-      "Vylepšení exportu SVG objektů",
       "Podpora nástroje Přiblížení oblasti pro pdf soubory"
     ]
   },

@@ -2,14 +2,13 @@
   "inProgressGlobal": {
     "currentlyInProgressText": "Currently in progress",
     "items": [
-      "SVG objects export enhancements",
       "Magnify area tool support for pdf files"
     ]
   },
   "versions":{
     "3.8.0":{
       "label": "3.8.0",
-      "date":"8.9. 2025",
+      "date":"9.9. 2025",
       "newFeatures": {
         "items": [
           "Objects can be resized also when they are rotated",
