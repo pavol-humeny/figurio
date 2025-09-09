@@ -48,6 +48,7 @@ export const editorConfig = {
   snapOnlyWhenOverlapping: true, // Snap only when the object is overlapping with the other object
   minimumObjectSize: 2, // Minimum size of the object to be drawn
   magnifyAreaDefaultRadiusFromImage: 0.1, // 10% of smaller dimension
+  objectResizingOverflow: true, // Allow resizing objects outside the image area
 
   needObjectOverlapToSnap: true, // Need the object to overlap to snap to edges
 

@@ -502,10 +502,17 @@ export function useSvgObjectWrapper(
         const top = attrs.y
 
         const applyRect = (newX, newY, newW, newH) => {
-          attrs.x = clamp(newX, 0, maxW)
-          attrs.y = clamp(newY, 0, maxH)
-          attrs.width = clamp(newW, minSize, maxW - attrs.x)
-          attrs.height = clamp(newH, minSize, maxH - attrs.y)
+          if (editorConfig.objectResizingOverflow) {
+            attrs.x = newX
+            attrs.y = newY
+            attrs.width = newW
+            attrs.height = newH
+          } else {
+            attrs.x = clamp(newX, 0, maxW)
+            attrs.y = clamp(newY, 0, maxH)
+            attrs.width = clamp(newW, minSize, maxW - attrs.x)
+            attrs.height = clamp(newH, minSize, maxH - attrs.y)
+          }
         }
 
         if (activeResizerIndex.value === 0) {
@@ -516,8 +523,11 @@ export function useSvgObjectWrapper(
 
           // Prevent resizing when resizer is on the top/left edge
           if (keepRatio && (attrs.x <= 0 || attrs.y <= 0)) return
-          if (attrs.x <= 0 && dx < 0) newW = attrs.width
-          if (attrs.y <= 0 && dy < 0) newH = attrs.height
+
+          if (!editorConfig.objectResizingOverflow) {
+            if (attrs.x <= 0 && dx < 0) newW = attrs.width
+            if (attrs.y <= 0 && dy < 0) newH = attrs.height
+          }
 
           let newX = right - newW
           let newY = bottom - newH
@@ -554,8 +564,10 @@ export function useSvgObjectWrapper(
 
           // Prevent resizing when resizer is on the top/right edge
           if (keepRatio && (attrs.y <= 0 || attrs.x + attrs.width >= maxW)) return
-          if (attrs.y <= 0 && dy < 0) newH = attrs.height
-          if (attrs.x >= maxW && dx > 0) newW = attrs.width
+          if (!editorConfig.objectResizingOverflow) {
+            if (attrs.y <= 0 && dy < 0) newH = attrs.height
+            if (attrs.x >= maxW && dx > 0) newW = attrs.width
+          }
 
           const newX = left
           let newY = bottom - newH
@@ -586,8 +598,10 @@ export function useSvgObjectWrapper(
 
           // Prevent resizing when resizer is on the left/bottom edge
           if (keepRatio && (attrs.x <= 0 || attrs.y + attrs.height >= maxH)) return
-          if (attrs.x <= 0 && dx < 0) newW = attrs.width
-          if (attrs.y >= maxH && dy > 0) newH = attrs.height
+          if (!editorConfig.objectResizingOverflow) {
+            if (attrs.x <= 0 && dx < 0) newW = attrs.width
+            if (attrs.y >= maxH && dy > 0) newH = attrs.height
+          }
 
           let newX = right - newW
           const newY = top
@@ -651,7 +665,9 @@ export function useSvgObjectWrapper(
           let newY = bottom - newH
 
           // Prevent resizing when resizer is on the top edge
-          if (attrs.y <= 0 && dy < 0) newH = attrs.height
+          if (!editorConfig.objectResizingOverflow) {
+            if (attrs.y <= 0 && dy < 0) newH = attrs.height
+          }
 
           if (newY > bottom - minSize) {
             newY = bottom - minSize
@@ -671,8 +687,10 @@ export function useSvgObjectWrapper(
           // Bottom (middle)
           let newH = attrs.height + dy
 
-          if (attrs.y + newH > maxH) {
-            newH = maxH - attrs.y
+          if (!editorConfig.objectResizingOverflow) {
+            if (attrs.y + newH > maxH) {
+              newH = maxH - attrs.y
+            }
           }
 
           if (isCtrlKey && onlyOneKeyPressed) {
@@ -689,7 +707,9 @@ export function useSvgObjectWrapper(
           let newX = right - newW
 
           // Prevent resizing when resizer is on the left edge
-          if (attrs.x <= 0 && dx < 0) newW = attrs.width
+          if (!editorConfig.objectResizingOverflow) {
+            if (attrs.x <= 0 && dx < 0) newW = attrs.width
+          }
 
           if (newX > right - minSize) {
             newX = right - minSize
@@ -709,8 +729,10 @@ export function useSvgObjectWrapper(
           // Right (middle)
           let newW = attrs.width + dx
 
-          if (attrs.x + newW > maxW) {
-            newW = maxW - attrs.x
+          if (!editorConfig.objectResizingOverflow) {
+            if (attrs.x + newW > maxW) {
+              newW = maxW - attrs.x
+            }
           }
 
           if (isCtrlKey && onlyOneKeyPressed) {
@@ -729,12 +751,19 @@ export function useSvgObjectWrapper(
         dx /= 2
         dy /= 2
         const applyEllipse = (newCx, newCy, newRx, newRy) => {
-          newRx = clamp(newRx, minSize, Math.min(newCx, maxW - newCx))
-          newRy = clamp(newRy, minSize, Math.min(newCy, maxH - newCy))
-          attrs.cx = clamp(newCx, newRx, maxW - newRx)
-          attrs.cy = clamp(newCy, newRy, maxH - newRy)
-          attrs.rx = newRx
-          attrs.ry = newRy
+          if (editorConfig.objectResizingOverflow) {
+            attrs.cx = newCx
+            attrs.cy = newCy
+            attrs.rx = newRx
+            attrs.ry = newRy
+          } else {
+            newRx = clamp(newRx, minSize, Math.min(newCx, maxW - newCx))
+            newRy = clamp(newRy, minSize, Math.min(newCy, maxH - newCy))
+            attrs.cx = clamp(newCx, newRx, maxW - newRx)
+            attrs.cy = clamp(newCy, newRy, maxH - newRy)
+            attrs.rx = newRx
+            attrs.ry = newRy
+          }
         }
 
         if (activeResizerIndex.value === 0) {
@@ -746,8 +775,10 @@ export function useSvgObjectWrapper(
 
           // Prevent resizing when resizer is on the top/left edge
           if (keepRatio && (attrs.cy - attrs.ry <= 0 || attrs.cx - attrs.rx <= 0)) return
-          if (attrs.cx - attrs.rx <= 0 && dx < 0) newRx = attrs.rx
-          if (attrs.cy - attrs.ry <= 0 && dy < 0) newRy = attrs.ry
+          if (!editorConfig.objectResizingOverflow) {
+            if (attrs.cx - attrs.rx <= 0 && dx < 0) newRx = attrs.rx
+            if (attrs.cy - attrs.ry <= 0 && dy < 0) newRy = attrs.ry
+          }
 
           let newCx = right - newRx
           let newCy = bottom - newRy
@@ -799,8 +830,10 @@ export function useSvgObjectWrapper(
 
           // Prevent resizing when resizer is on the top/right edge
           if (keepRatio && (attrs.cy - attrs.ry <= 0 || attrs.cx + attrs.rx >= maxW)) return
-          if (attrs.cx + attrs.rx >= maxW && dx > 0) newRx = attrs.rx
-          if (attrs.cy - attrs.ry <= 0 && dy < 0) newRy = attrs.ry
+          if (!editorConfig.objectResizingOverflow) {
+            if (attrs.cx + attrs.rx >= maxW && dx > 0) newRx = attrs.rx
+            if (attrs.cy - attrs.ry <= 0 && dy < 0) newRy = attrs.ry
+          }
 
           let newCx = left + newRx
           let newCy = bottom - newRy
@@ -847,8 +880,10 @@ export function useSvgObjectWrapper(
           let newRy = keepRatio ? newRx / ratio.value : attrs.ry + dy
 
           if (keepRatio && (attrs.cy + attrs.ry >= maxH || attrs.cx + attrs.rx >= maxW)) return
-          if (attrs.cx + attrs.rx >= maxW && dx > 0) newRx = attrs.rx
-          if (attrs.cy + attrs.ry >= maxH && dy > 0) newRy = attrs.ry
+          if (!editorConfig.objectResizingOverflow) {
+            if (attrs.cx + attrs.rx >= maxW && dx > 0) newRx = attrs.rx
+            if (attrs.cy + attrs.ry >= maxH && dy > 0) newRy = attrs.ry
+          }
 
           let newCx = left + newRx
           let newCy = top + newRy
@@ -895,8 +930,10 @@ export function useSvgObjectWrapper(
           let newRy = keepRatio ? newRx / ratio.value : attrs.ry + dy
 
           if (keepRatio && (attrs.cy + attrs.ry >= maxH || attrs.cx - attrs.rx <= 0)) return
-          if (attrs.cx - attrs.rx <= 0 && dx < 0) newRx = attrs.rx
-          if (attrs.cy + attrs.ry >= maxH && dy > 0) newRy = attrs.ry
+          if (!editorConfig.objectResizingOverflow) {
+            if (attrs.cx - attrs.rx <= 0 && dx < 0) newRx = attrs.rx
+            if (attrs.cy + attrs.ry >= maxH && dy > 0) newRy = attrs.ry
+          }
 
           let newCx = right - newRx
           let newCy = top + newRy
@@ -941,9 +978,11 @@ export function useSvgObjectWrapper(
           let newCy = attrs.cy + dy
 
           // Prevent resizing when resizer is on the top edge
-          if (attrs.cy - attrs.ry <= 0 && dy < 0) {
-            newRy = attrs.ry
-            newCy = attrs.cy
+          if (!editorConfig.objectResizingOverflow) {
+            if (attrs.cy - attrs.ry <= 0 && dy < 0) {
+              newRy = attrs.ry
+              newCy = attrs.cy
+            }
           }
 
           if (newRy <= minSize) {
@@ -976,9 +1015,11 @@ export function useSvgObjectWrapper(
           let newCy = attrs.cy + dy
 
           // Prevent resizing when resizer is on the bottom edge
-          if (attrs.cy + attrs.ry >= maxH && dy > 0) {
-            newRy = attrs.ry
-            newCy = attrs.cy
+          if (!editorConfig.objectResizingOverflow) {
+            if (attrs.cy + attrs.ry >= maxH && dy > 0) {
+              newRy = attrs.ry
+              newCy = attrs.cy
+            }
           }
 
           if (newRy <= minSize) {
@@ -1011,9 +1052,11 @@ export function useSvgObjectWrapper(
           let newCx = attrs.cx + dx
 
           // Prevent resizing when resizer is on the left edge
-          if (attrs.cx - attrs.rx <= 0 && dx < 0) {
-            newRx = attrs.rx
-            newCx = attrs.cx
+          if (!editorConfig.objectResizingOverflow) {
+            if (attrs.cx - attrs.rx <= 0 && dx < 0) {
+              newRx = attrs.rx
+              newCx = attrs.cx
+            }
           }
 
           if (newRx <= minSize) {
@@ -1046,9 +1089,11 @@ export function useSvgObjectWrapper(
           let newCx = attrs.cx + dx
 
           // Prevent resizing when resizer is on the right edge
-          if (attrs.cx + attrs.rx >= maxW && dx > 0) {
-            newRx = attrs.rx
-            newCx = attrs.cx
+          if (!editorConfig.objectResizingOverflow) {
+            if (attrs.cx + attrs.rx >= maxW && dx > 0) {
+              newRx = attrs.rx
+              newCx = attrs.cx
+            }
           }
 
           if (newRx <= minSize) {
@@ -1104,8 +1149,15 @@ export function useSvgObjectWrapper(
               const keyY =
                 activeResizerIndex.value === 0 || activeResizerIndex.value === 3 ? 'y1' : 'y2'
 
-              let newX = clamp(attrs[keyX] + dx, 0, maxW)
-              let newY = clamp(attrs[keyY] + dy, 0, maxH)
+              let newX, newY
+
+              if (editorConfig.objectResizingOverflow) {
+                newX = attrs[keyX] + dx
+                newY = attrs[keyY] + dy
+              } else {
+                newX = clamp(attrs[keyX] + dx, 0, maxW)
+                newY = clamp(attrs[keyY] + dy, 0, maxH)
+              }
 
               const otherX = keyX === 'x1' ? attrs.x2 : attrs.x1
               const otherY = keyY === 'y1' ? attrs.y2 : attrs.y1
@@ -1153,7 +1205,12 @@ export function useSvgObjectWrapper(
           // Side resizers
           case 4: // Top
             {
-              let newY = clamp(attrs.y1 + dy, 0, maxH)
+              let newY
+              if (editorConfig.objectResizingOverflow) {
+                newY = attrs.y1 + dy
+              } else {
+                newY = clamp(attrs.y1 + dy, 0, maxH)
+              }
 
               if (isCtrlKey && onlyOneKeyPressed) {
                 const snap = getSnapOffsetToEdges(object.value, attrs.x1, attrs.x2, newY, newY)
@@ -1171,7 +1228,13 @@ export function useSvgObjectWrapper(
             break
           case 5: // Bottom
             {
-              let newY = clamp(attrs.y2 + dy, 0, maxH)
+              let newY
+              if (editorConfig.objectResizingOverflow) {
+                newY = attrs.y2 + dy
+              } else {
+                newY = clamp(attrs.y2 + dy, 0, maxH)
+              }
+
               if (isCtrlKey && onlyOneKeyPressed) {
                 const snap = getSnapOffsetToEdges(object.value, attrs.x1, attrs.x2, newY, newY)
                 newY += snap.dy
@@ -1187,7 +1250,13 @@ export function useSvgObjectWrapper(
             break
           case 6: // Left
             {
-              let newX = clamp(attrs.x1 + dx, 0, maxW)
+              let newX
+              if (editorConfig.objectResizingOverflow) {
+                newX = attrs.x1 + dx
+              } else {
+                newX = clamp(attrs.x1 + dx, 0, maxW)
+              }
+
               if (isCtrlKey && onlyOneKeyPressed) {
                 const snap = getSnapOffsetToEdges(object.value, newX, newX, attrs.y1, attrs.y2)
                 newX += snap.dx
@@ -1203,7 +1272,12 @@ export function useSvgObjectWrapper(
             break
           case 7: // right-middle -> x only
             {
-              let newX = clamp(attrs.x2 + dx, 0, maxW)
+              let newX
+              if (editorConfig.objectResizingOverflow) {
+                newX = attrs.x2 + dx
+              } else {
+                newX = clamp(attrs.x2 + dx, 0, maxW)
+              }
               if (isCtrlKey && onlyOneKeyPressed) {
                 const snap = getSnapOffsetToEdges(object.value, newX, newX, attrs.y1, attrs.y2)
                 newX += snap.dx
