@@ -104,13 +104,17 @@ onUnmounted(() => {
       <p class="text">
         <b>{{ $t('home.appName') }}</b> {{ $t('home.text') }}
       </p>
+      <p class="text" style="margin-bottom: 30px;">
+        {{ $t('home.text2') }}
+      </p>
 
       <div class="feature" v-for="feature in features" :key="feature.name">
         <p class="feature-title">{{ feature.name }}</p>
         <p class="feature-description">{{ feature.description }}</p>
       </div>
 
-      <DefaultButton @click="selectFile" :text="$t('dragAndDropArea.button.text')" :style="{ 'user-select': 'none', 'padding-top': '30px' }" />
+      <DefaultButton @click="selectFile" :text="$t('dragAndDropArea.button.text')"
+        :style="{ 'user-select': 'none', 'padding-top': '30px' }" />
     </div>
     <div class="right-side">
       <DragAndDropArea isHomePage />
@@ -186,7 +190,7 @@ onUnmounted(() => {
   font-size: var(--landing-page-text-font-size);
   font-weight: var(--landing-page-text-font-weight);
   color: var(--text-c);
-  margin: 0 0 30px 0;
+  margin: 0 0 10px 0;
 
 }
 

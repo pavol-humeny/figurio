@@ -4,6 +4,7 @@
   "appNameBasic": "igurio",
   "title": "Boost your projects with figures",
   "text":"is an online editor designed specifically for images used in academic texts, documents, and LaTeX outputs. It provides custom-tailored tools for visual editing in a clean and organized environment.",
+  "text2": "Your images are not uploaded anywhere, they stay in your browser.",
   "features": [
     { "name": "PDF", "description": "- vector file processing" },
     { "name": "Image Cropping", "description": "- manual and automatic (fit crop)" },

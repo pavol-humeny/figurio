@@ -4,6 +4,7 @@
   "appNameBasic": "igurio",
   "title": "Pozdvihnite svoje projekty s obrázkami na vyššiu úroveň",
   "text":"je online editor navrhnutý špeciálne pre obrázky používané v odborných textoch, dokumentoch a LaTeX výstupoch. Poskytuje nástroje navrhnuté na mieru pre vizuálne úpravy v prehľadnom prostredí",
+  "text2": "Vaše obrázky nie sú nikam nahrávané, zostávajú vo vašom prehliadači.",
   "features": [
     { "name": "PDF", "description": "- vektorové spracovanie súborov" },
     { "name": "Orezanie obrázka", "description": "- manuálne aj automaticky (orezanie natesno)" },
