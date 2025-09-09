@@ -6,11 +6,12 @@
     ]
   },
   "versions":{
-    "3.8.0":{
-      "label": "3.8.0",
+    "4.0.0":{
+      "label": "4.0.0",
       "date":"9.9. 2025",
       "newFeatures": {
         "items": [
+          "New app name and logo",
           "Objects can be resized also when they are rotated",
           "Magnify area objects can be moved in multiple object selection",
           "New color picker component",

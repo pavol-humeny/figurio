@@ -6,11 +6,12 @@
     ]
   },
   "versions": {
-    "3.8.0": {
-      "label": "3.8.0",
+    "4.0.0": {
+      "label": "4.0.0",
       "date": "9.9. 2025",
       "newFeatures": {
         "items": [
+          "Nový název aplikace a logo",
           "Objekty lze měnit na velikost i když jsou otočené",
           "Objekty zvětšovací oblasti lze přesouvat při výběru více objektů",
           "Nová komponenta výběru barev",
