@@ -153,7 +153,8 @@
         },
         "showArtifactsButton":{
           "text": "Show artifacts",
-          "tip": "Preview pixels that are similar to the background but are not part of the actual background. This helps visualize which areas might be affected by the current sensitivity setting."
+          "tip": "Preview pixels that are similar to the background but are not part of the actual background. This helps visualize which areas might be affected by the current sensitivity setting.",
+          "tipDisabled": "Artifacts preview is not available when sensitivity is set to 0"
         },
         "hideArtifactsButton":{
           "text": "Hide artifacts",

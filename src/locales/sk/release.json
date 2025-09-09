@@ -6,6 +6,39 @@
     ]
   },
   "versions": {
+    "3.8.0": {
+      "label": "3.8.0",
+      "date": "9.9. 2025",
+      "newFeatures": {
+        "items": [
+          "Veľkosť objektov je možné meniť aj keď sú otočené",
+          "Objekty zväčšenej oblasti je možné presúvať pri výbere viacerých objektov",
+          "Nová komponenta výberu farieb",
+          "Nahrávanie nového súboru: otvorenie modálneho okna s možnosťou drag & drop"
+        ]
+      },
+      "improvements": {
+        "items": [
+          "Vylepšená manipulácia s objektami zväčšenej oblasti",
+          "Zrušenie výberu objektov po kliknutí mimo obrázka",
+          "Nahradenie rozbaľovacieho menu posúvačom pre nastavenie polomeru zväčšenej oblasti",
+          "Možnosť nastavenia konca čiary počas kreslenia čiary",
+          "Okamžitá aktualizácia farby objektu po výbere farby",
+          "Uloženie predchádzajúcej farby vo výbere farieb"
+        ]
+      },
+      "bugFixes": {
+        "items": [
+          "Pridanie snapshotu histórie po presune viacerých objektov",
+          "Oprava pohybu otočených objektov pri presune viacerých objektov"
+        ]
+      },
+      "knownIssues": {
+        "items": [
+          ""
+        ]
+      }
+    },
     "3.7.0":{
       "label": "3.7.0",
       "date":"6.9. 2025",

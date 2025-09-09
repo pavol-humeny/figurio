@@ -14,7 +14,7 @@
           "Objects can be resized also when they are rotated",
           "Magnify area objects can be moved in multiple object selection",
           "New color picker component",
-          "Icon upload new file open drag and drop modal"
+          "Upload new file open drag and drop modal"
         ]
       },
       "improvements": {
@@ -31,11 +31,6 @@
         "items": [
           "Add history snapshot after moving multiple objects",
           "Fix the movement of rotated objects when moving multiple objects"
-        ]
-      },
-      "knownIssues": {
-        "items": [
-          ""
         ]
       }
     },

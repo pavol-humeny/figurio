@@ -153,7 +153,8 @@
         },
         "showArtifactsButton":{
           "text": "Zobrazit artefakty",
-          "tip": "Zobrazí pixely podobné pozadí, které však nejsou součástí samotného pozadí. Pomáhá vizualizovat, které oblasti mohou být ovlivněny nastavenou citlivostí."
+          "tip": "Zobrazí pixely podobné pozadí, které však nejsou součástí samotného pozadí. Pomáhá vizualizovat, které oblasti mohou být ovlivněny nastavenou citlivostí.",
+          "tipDisabled": "Náhled artefaktů není dostupný, když je citlivost nastavena na 0"
         },
         "hideArtifactsButton":{
           "text": "Skrýt artefakty",

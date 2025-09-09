@@ -63,8 +63,7 @@ const {
       <div class="specific-settings">
         <!-- Crop position -->
         <div class="settings-content-wrapper">
-          <ExplainItem :text="$t('tools.crop.explain')" :title="$t('tools.crop.label')"
-            position="left" />
+          <ExplainItem :text="$t('tools.crop.explain')" :title="$t('tools.crop.label')" position="left" />
           <div class="content-wrapper">
             <div class="content-title">
               <p>
@@ -202,8 +201,8 @@ const {
               <DefaultButton
                 :text="isArtifactsVisible ? $t('tools.crop.settings.general.hideArtifactsButton.text') : $t('tools.crop.settings.general.showArtifactsButton.text')"
                 @click="isArtifactsVisible ? hideArtifacts() : showArtifacts()"
-                :tip="isArtifactsVisible ? $t('tools.crop.settings.general.hideArtifactsButton.tip') : $t('tools.crop.settings.general.showArtifactsButton.tip')"
-                position="bottom-left" />
+                :tip="isArtifactsVisible ? $t('tools.crop.settings.general.hideArtifactsButton.tip') : autoCropThreshold === 0 ? $t('tools.crop.settings.general.showArtifactsButton.tipDisabled') : $t('tools.crop.settings.general.showArtifactsButton.tip')"
+                position="bottom-left" :disabled="autoCropThreshold === 0" />
             </div>
           </div>
         </div>

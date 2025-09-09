@@ -494,6 +494,10 @@ export function useCropTool(
    */
   const useBaseImage = ref(false)
 
+  watch(useBaseImage, () => {
+    resetCache()
+  })
+
   /**
    * Watch crop box and recalculate indents
    */
