@@ -12,7 +12,7 @@ export function useSvgObjects(imageStore, historyStore, viewportStore, editorSto
   const { round, distance, clamp } = useMath()
   const textTool = useTextTool(imageStore, historyStore, editorStore, t)
   const shapeTool = useShapeTool(editorStore, imageStore, historyStore, t)
-  const { getSnapOffsetToEdges } = useSvgFunctions(imageStore)
+  const { getSnapOffsetToEdges, getObjectCenter } = useSvgFunctions(imageStore)
   const blurTool = useBlurTool(imageStore, historyStore, editorStore, t)
   const magnifyAreaTool = useMagnifyAreaTool(imageStore, historyStore, editorStore, t)
   const { toggleTool } = useToolsPanel(editorStore, imageStore, uiStore, t)
@@ -1091,6 +1091,16 @@ export function useSvgObjects(imageStore, historyStore, viewportStore, editorSto
             attrs.y2 += offsetY
           }
         }
+
+        /**
+         * Update the rotation transform of the SVG object
+         * This is called after dragging to ensure the rotation is centered correctly
+         */
+        const match = attrs.transform?.match(/rotate\((-?\d+\.?\d*),?([^)]*)\)/)
+        if (!match) return
+        const currentAngle = parseFloat(match[1])
+        const { cx, cy } = getObjectCenter(object)
+        attrs.transform = `rotate(${currentAngle}, ${cx}, ${cy})`
       })
 
       startX.value = event.clientX
@@ -1239,8 +1249,6 @@ export function useSvgObjects(imageStore, historyStore, viewportStore, editorSto
       const y1 = y
       const x2 = x + width
       const y2 = y + height
-
-      const { getObjectCenter } = useSvgFunctions(imageStore)
 
       let selectedIds = imageStore.selectedSvgObjectIds
 

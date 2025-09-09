@@ -400,7 +400,6 @@ export function useColorPicker(props, emit) {
   const pickSV = (event) => {
     if (!pickingSV.value || !svCanvasRef.value) return
     const rect = svCanvasRef.value.getBoundingClientRect()
-    console.log(rect)
 
     const margin = 0
     const x = Math.min(Math.max(margin, event.clientX - rect.left), rect.width - margin)

@@ -13,7 +13,8 @@
       "newFeatures": {
         "items": [
           "Objects can be resized also when they are rotated",
-          "Magnify area objects can be moved in multiple object selection"
+          "Magnify area objects can be moved in multiple object selection",
+          "New color picker component"
         ]
       },
       "improvements": {
@@ -21,12 +22,15 @@
           "Improved manipulation of the magnify area objects",
           "Deselect objects when clicking outside the image",
           "Replace drop down menu with slider for magnify area radius setting",
-          "Enable line end setting during drawing line"
+          "Enable line end setting during drawing line",
+          "Update object color immediately after color selection",
+          "Save previous color in color picker"
         ]
       },
       "bugFixes": {
         "items": [
-          "Add history snapshot after moving multiple objects"
+          "Add history snapshot after moving multiple objects",
+          "Fix the movement of rotated objects when moving multiple objects"
         ]
       },
       "knownIssues": {
