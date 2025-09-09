@@ -66,7 +66,6 @@ export function useMagnifyAreaTool(imageStore, historyStore, editorStore, t) {
     return Math.floor(smallerDimension / localMagnifyAreaSettings.value.zoom / 2)
   })
 
-
   // ------------------------------
   // Zoom
   // ------------------------------
@@ -280,8 +279,10 @@ export function useMagnifyAreaTool(imageStore, historyStore, editorStore, t) {
 
   /**
    * Apply changes to both objects
+   * @param {boolean} commit - When true, push to history store
+s
    */
-  const applyLocalMagnifyAreaSettings = () => {
+  const applyLocalMagnifyAreaSettings = (commit = true) => {
     if (!activeObject.value) return
 
     const settings = localMagnifyAreaSettings.value
@@ -378,13 +379,16 @@ export function useMagnifyAreaTool(imageStore, historyStore, editorStore, t) {
       imageStore.selectedSvgObjectId = result.id
     }
 
-    useSendEvent().sendEvent('toolSettings', 'magnifyArea', 'update', {
-      settings: { ...localMagnifyAreaSettings.value },
-    })
+    // Push to history only when explicitly requested
+    if (commit) {
+      useSendEvent().sendEvent('toolSettings', 'magnifyArea', 'update', {
+        settings: { ...localMagnifyAreaSettings.value },
+      })
 
-    saveConfigToEditorStore()
+      saveConfigToEditorStore()
 
-    historyStore.push(imageStore.getSnapshot(t))
+      historyStore.push(imageStore.getSnapshot(t))
+    }
   }
 
   /**

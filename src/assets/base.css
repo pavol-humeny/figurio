@@ -138,6 +138,7 @@ body {
   --z-index-help: 1000;
   --z-index-release: 1000;
   --z-index-export: 900;
+  --z-index-color-picker: 850;
   --z-index-settings: 800;
   --z-index-top-panel: 700;
   --z-index-tools-settings-panel: 600;

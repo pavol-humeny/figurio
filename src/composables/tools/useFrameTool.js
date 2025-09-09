@@ -237,10 +237,11 @@ export function useFrameTool(imageStore, historyStore, editorStore, t) {
   /**
    * Set frame color
    * @param {string} color - New frame color
+   * @param {boolean} commit - When true, push to history store
    */
-  const setFrameColor = (color) => {
+  const setFrameColor = (color, commit = true) => {
     frameColor.value = color
-    applyFrame()
+    applyFrame(commit)
   }
 
   /**
@@ -341,8 +342,9 @@ export function useFrameTool(imageStore, historyStore, editorStore, t) {
 
   /**
    * Apply the selected frame settings to the image
+   * @param {boolean} commit - When true, push to history store
    */
-  const applyFrame = () => {
+  const applyFrame = (commit = true) => {
     // Deep copy to avoid reference issues
     const width = JSON.parse(JSON.stringify(frameWidth.value))
 
@@ -378,11 +380,13 @@ export function useFrameTool(imageStore, historyStore, editorStore, t) {
       imageStore.frame.height = width
     }
 
-    useSendEvent().sendEvent('toolSettings', 'frame', 'update', {
-      settings: { ...imageStore.frame },
-    })
+    if (commit) {
+      useSendEvent().sendEvent('toolSettings', 'frame', 'update', {
+        settings: { ...imageStore.frame },
+      })
 
-    historyStore.push(imageStore.getSnapshot(t))
+      historyStore.push(imageStore.getSnapshot(t))
+    }
   }
 
   /**

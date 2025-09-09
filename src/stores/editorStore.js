@@ -51,10 +51,14 @@ export const useEditorStore = defineStore('editorStore', {
     /** Whether a export modal is open  */
     isExportModalOpen: false,
 
+    /** Currently selected color in the editor (global value) */
+    // selectedColor: '#000000',
+
+    /** Tools config values */
     toolsConfig: {
       shape: {
         fillEnabled: true,
-        fillColor: '#0e11b6',
+        fillColor: '#000000',
         strokeWidth: 0,
         strokeColor: '#000000',
         opacity: 1,
@@ -64,7 +68,7 @@ export const useEditorStore = defineStore('editorStore', {
       },
       text: {
         size: 16,
-        color: '#ff0000ff',
+        color: '#000000',
         fontFamily: 'Helvetica',
         opacity: 1,
         letterSpacing: 0,

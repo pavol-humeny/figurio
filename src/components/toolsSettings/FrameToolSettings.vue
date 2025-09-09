@@ -73,7 +73,8 @@ const {
                 {{ t('tools.frame.settings.general.frameColor.label') }}
               </p>
             </div>
-            <ColorPicker v-model="frameColor" @update="setFrameColor(frameColor)" />
+            <ColorPicker v-model="frameColor" @update="setFrameColor(frameColor, false)"
+              @commit="setFrameColor(frameColor, true)" />
           </div>
         </div>
 

@@ -169,9 +169,9 @@ const {
                 </p>
               </div>
               <div class="content-inputs">
-                <ColorPicker v-model="localObjectSettings.fillColor" @update="applyLocalSettings"
-                  :disabled="!localObjectSettings.fillEnabled" :tip="$t('tools.shape.settings.fillColor.tip')"
-                  position="bottom-left" />
+                <ColorPicker v-model="localObjectSettings.fillColor" @update="applyLocalSettings(false)"
+                  @commit="applyLocalSettings(true)" :disabled="!localObjectSettings.fillEnabled"
+                  :tip="$t('tools.shape.settings.fillColor.tip')" position="bottom-left" />
               </div>
             </div>
           </div>
@@ -189,8 +189,9 @@ const {
                 </p>
               </div>
               <div class="content-inputs">
-                <ColorPicker v-model="localObjectSettings.strokeColor" @update="applyLocalSettings"
-                  :tip="$t('tools.shape.settings.fillColor.tip')" position="bottom-left" />
+                <ColorPicker v-model="localObjectSettings.strokeColor" @update="applyLocalSettings(false)"
+                  @commit="applyLocalSettings(true)" :tip="$t('tools.shape.settings.fillColor.tip')"
+                  position="bottom-left" />
               </div>
             </div>
             <div class="content-wrapper">
@@ -213,14 +214,14 @@ const {
           <div class="content-aligned two-items">
             <div class="content-wrapper">
               <div class="content-title">
-                <p>
+                <p :class="{ disabled: localObjectSettings.strokeWidth === 0 }">
                   {{ $t('tools.shape.settings.strokeColor.label') }}
                 </p>
               </div>
               <div class="content-inputs">
-                <ColorPicker v-model="localObjectSettings.strokeColor" @update="applyLocalSettings"
-                  :disabled="localObjectSettings.strokeWidth === 0" :tip="$t('tools.shape.settings.strokeColor.tip')"
-                  position="bottom-left" />
+                <ColorPicker v-model="localObjectSettings.strokeColor" @update="applyLocalSettings(false)"
+                  @commit="applyLocalSettings(true)" :disabled="localObjectSettings.strokeWidth === 0"
+                  :tip="$t('tools.shape.settings.strokeColor.tip')" position="bottom-left" />
               </div>
             </div>
             <div class="content-wrapper">

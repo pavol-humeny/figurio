@@ -79,6 +79,9 @@ const props = defineProps({
  */
 const emit = defineEmits(['update:modelValue', 'update', 'commit'])
 
+/**
+ * Logic for default slider
+ */
 const {
   currentValue,
   onInput,

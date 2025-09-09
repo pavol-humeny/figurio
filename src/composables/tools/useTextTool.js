@@ -179,8 +179,9 @@ export function useTextTool(imageStore, historyStore, editorStore, t) {
 
   /**
    * Apply current local settings to the selected text object
+   * @param {boolean} commit - When true, push to history store
    */
-  const applyLocalTextSettings = () => {
+  const applyLocalTextSettings = (commit = true) => {
     const object = activeObject.value
 
     if (!object || object.tag !== 'text') return
@@ -225,13 +226,15 @@ export function useTextTool(imageStore, historyStore, editorStore, t) {
       letter-spacing: ${settings.letterSpacing}px;
     `
 
-    useSendEvent().sendEvent('toolSettings', 'text', 'update', {
-      settings: { ...localTextSettings.value },
-    })
+    if (commit) {
+      useSendEvent().sendEvent('toolSettings', 'text', 'update', {
+        settings: { ...localTextSettings.value },
+      })
 
-    saveConfigToEditorStore()
+      saveConfigToEditorStore()
 
-    historyStore.push(imageStore.getSnapshot(t))
+      historyStore.push(imageStore.getSnapshot(t))
+    }
   }
 
   /**

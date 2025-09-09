@@ -384,8 +384,9 @@ export function useShapeTool(editorStore, imageStore, historyStore, t) {
 
   /**
    * Apply local settings to the active SVG object
+   * @param {boolean} commit - When true, push to history store
    */
-  const applyLocalSettings = () => {
+  const applyLocalSettings = (commit = true) => {
     if (imageStore.selectedSvgObjectId === null) return
 
     const object = activeObject.value
@@ -448,13 +449,16 @@ export function useShapeTool(editorStore, imageStore, historyStore, t) {
       attrs.fill = settings.strokeColor
     }
 
-    useSendEvent().sendEvent('toolSettings', 'shape', 'update', {
-      settings: { ...localObjectSettings.value },
-    })
+    // Push to history only when explicitly requested
+    if (commit) {
+      useSendEvent().sendEvent('toolSettings', 'shape', 'update', {
+        settings: { ...localObjectSettings.value },
+      })
 
-    saveConfigToEditorStore()
+      saveConfigToEditorStore()
 
-    historyStore.push(imageStore.getSnapshot(t))
+      historyStore.push(imageStore.getSnapshot(t))
+    }
   }
 
   /**

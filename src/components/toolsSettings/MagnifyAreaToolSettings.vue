@@ -154,7 +154,8 @@ const {
               <p>
                 {{ $t('tools.magnifyArea.settings.general.outlineColor.label') }}
               </p>
-              <ColorPicker v-model="localMagnifyAreaSettings.outlineColor" @update="applyLocalMagnifyAreaSettings"
+              <ColorPicker v-model="localMagnifyAreaSettings.outlineColor"
+                @update="applyLocalMagnifyAreaSettings(false)" @commit="applyLocalMagnifyAreaSettings(true)"
                 :tip="$t('tools.magnifyArea.settings.general.outlineColor.tip')" position="bottom-left" />
             </div>
           </div>

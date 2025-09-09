@@ -1,69 +1,69 @@
-<script setup>
-import { storeToRefs } from 'pinia';
-import BaseIcon from '@/components/icons/BaseIcon.vue';
-import DefaultButton from '@/components/common/DefaultButton.vue';
-import { useHelpModal } from '@/composables/modals/useHelpModal';
-import { computed } from 'vue'
-import { useI18n } from 'vue-i18n'
-import { useUiStore } from '@/stores/uiStore';
-import { useRouter } from 'vue-router';
-import { useImageStore } from '@/stores/imageStore';
-import { useInteractiveTutorial } from '@/composables/tutorial/useInteractiveTutorial';
-import { globalConfig } from '@/config/globalConfig';
+  <script setup>
+  import { storeToRefs } from 'pinia';
+  import BaseIcon from '@/components/icons/BaseIcon.vue';
+  import DefaultButton from '@/components/common/DefaultButton.vue';
+  import { useHelpModal } from '@/composables/modals/useHelpModal';
+  import { computed } from 'vue'
+  import { useI18n } from 'vue-i18n'
+  import { useUiStore } from '@/stores/uiStore';
+  import { useRouter } from 'vue-router';
+  import { useImageStore } from '@/stores/imageStore';
+  import { useInteractiveTutorial } from '@/composables/tutorial/useInteractiveTutorial';
+  import { globalConfig } from '@/config/globalConfig';
 
-const { messages, locale, t } = useI18n()
+  const { messages, locale, t } = useI18n()
 
-const uiStore = useUiStore()
-const { tutorialStep, tutorialCompleted } = storeToRefs(uiStore)
+  const uiStore = useUiStore()
+  const { tutorialStep, tutorialCompleted } = storeToRefs(uiStore)
 
-/**
- * List of shortcuts as array of objects
- */
-const keyboardShortcuts = computed(() => {
-  return (
-    messages.value[locale.value]?.help?.helpContent?.shortcuts?.categories || []
+  /**
+   * List of shortcuts as array of objects
+   */
+  const keyboardShortcuts = computed(() => {
+    return (
+      messages.value[locale.value]?.help?.helpContent?.shortcuts?.categories || []
+    )
+  })
+
+  /**
+   * List of technical limitations as array
+   */
+  const technicalLimitations = computed(() => {
+    return messages.value[locale.value]?.help?.helpContent?.technicalLimitations?.limitations || []
+  })
+
+  /**
+   * Logic of the help modal state and scrolling
+   */
+  const {
+    atTop,
+    atBottom,
+    scrollUp,
+    scrollDown,
+    checkScroll,
+    isVisible,
+    helpContentRef,
+    closeHelpModal,
+    startInteractiveTutorial,
+    continueInteractiveTutorial,
+  } = useHelpModal(useUiStore(), useImageStore(), useRouter(), t);
+
+  const { isTutorialEnabled } = useInteractiveTutorial(
+    useUiStore(),
+    useImageStore(),
+    useRouter(),
+    t
   )
-})
+  </script>
 
-/**
- * List of technical limitations as array
- */
-const technicalLimitations = computed(() => {
-  return messages.value[locale.value]?.help?.helpContent?.technicalLimitations?.limitations || []
-})
-
-/**
- * Logic of the help modal state and scrolling
- */
-const {
-  atTop,
-  atBottom,
-  scrollUp,
-  scrollDown,
-  checkScroll,
-  isVisible,
-  helpContentRef,
-  closeHelpModal,
-  startInteractiveTutorial,
-  continueInteractiveTutorial,
-} = useHelpModal(useUiStore(), useImageStore(), useRouter(), t);
-
-const { isTutorialEnabled } = useInteractiveTutorial(
-  useUiStore(),
-  useImageStore(),
-  useRouter(),
-  t
-)
-</script>
-
-<template>
-  <Teleport to="body">
-    <div v-if="isVisible" class="help-modal-overlay" @click.self="closeHelpModal">
-      <div class="modal-box">
-        <div class="title-wrapper">
-          <BaseIcon name="IconQuestionMark" size="22" color="var(--secondary-c)" class="help-question-mark" />
-          <p>{{ $t('help.title') }}</p>
-        </div>
+  <template>
+    <Teleport to="body">
+      <div v-if="isVisible" class="help-modal-overlay" @click.self="closeHelpModal">
+        <div class="modal-box">
+          <div class="title-wrapper">
+            <BaseIcon name="IconQuestionMark" size="22" color="var(--secondary-c)" class="help-question-mark" />
+            <p>{{ $t('help.title') }}</p>
+          </div>
 
         <div class="help-content-panel">
           <!-- Arrow up -->

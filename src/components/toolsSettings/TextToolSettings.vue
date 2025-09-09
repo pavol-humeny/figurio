@@ -163,8 +163,9 @@ const {
               <p>
                 {{ $t('tools.text.settings.general.textColor.label') }}
               </p>
-              <ColorPicker v-model="localTextSettings.color" @update="applyLocalTextSettings"
-                :tip="$t('tools.text.settings.general.textColor.tip')" position="bottom-left" />
+              <ColorPicker v-model="localTextSettings.color" @update="applyLocalTextSettings(false)"
+                @commit="applyLocalTextSettings(true)" :tip="$t('tools.text.settings.general.textColor.tip')"
+                position="bottom-left" />
             </div>
             <div class="content-wrapper">
               <p>
