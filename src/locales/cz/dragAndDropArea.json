@@ -12,5 +12,8 @@
       "title": "Obsah schránky není obrázek",
       "message": "Prosím, vložte obrázek."
     }
+  },
+  "closeButton": {
+    "text": "Zavřít"
   }
 }

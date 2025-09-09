@@ -1,4 +1,6 @@
 import { useSendEvent } from '@/composables/common/useSendEvent'
+import { useImportModal } from '../modals/useImportModal'
+import { watch } from 'vue'
 
 /**
  * Logic for the upload file button
@@ -11,6 +13,8 @@ import { useSendEvent } from '@/composables/common/useSendEvent'
  * }} Object containing the upload file handler
  */
 export function useUploadFileButton(imageStore, t, router) {
+  const { openImportModal, closeImportModal } = useImportModal()
+
   /**
    * Open file dialog and load the selected file
    */
@@ -21,7 +25,32 @@ export function useUploadFileButton(imageStore, t, router) {
     imageStore.loadFile(t, router)
   }
 
+  /**
+   * Open drag and drop modal
+   */
+  const openDragAndDropModal = async () => {
+    // Send event
+    useSendEvent().sendEvent('buttonClicked', null, 'uploadFileDragAndDrop', {})
+
+    // Open the import modal
+    openImportModal()
+  }
+
+  /**
+   * Watch for file load to close the import modal
+   */
+  watch(
+    () => imageStore.file,
+    (newValue) => {
+      if (newValue) {
+        // If there was an error loading the file, open the import modal
+        closeImportModal()
+      }
+    },
+  )
+
   return {
     uploadFile,
+    openDragAndDropModal,
   }
 }

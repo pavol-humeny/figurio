@@ -12,5 +12,8 @@
       "title": "Obsah schránky nie je obrázok",
       "message": "Prosím, vložte obrázok."
     }
+  },
+  "closeButton": {
+    "text": "Zavrieť"
   }
 }

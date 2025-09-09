@@ -6,6 +6,7 @@ import ToastModal from './components/modals/ToastModal.vue'
 import ConfirmModal from './components/modals/ConfirmModal.vue'
 import SettingsPanel from './components/topPanel/SettingsPanel.vue'
 import PrivacyAndDataModal from './components/modals/PrivacyAndDataModal.vue'
+import ImportModal from './components/modals/ImportModal.vue'
 import ExportToolSettings from './components/toolsSettings/ExportToolSettings.vue'
 import HelpModal from './components/modals/HelpModal.vue'
 import { useImageStore } from './stores/imageStore'
@@ -137,6 +138,7 @@ onBeforeUnmount(() => {
       <SelectPdfPageModal />
     </GeneralModal>
     <PrivacyAndDataModal />
+    <ImportModal />
     <HelpModal />
     <ReleaseModal />
     <SettingsPanel />

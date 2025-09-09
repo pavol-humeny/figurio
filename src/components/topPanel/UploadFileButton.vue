@@ -12,12 +12,12 @@ const router = useRouter()
 /**
  * Logic for the upload file button.
  */
-const { uploadFile } = useUploadFileButton(useImageStore(), t, router)
+const { openDragAndDropModal } = useUploadFileButton(useImageStore(), t, router)
 </script>
 
 <template>
   <ItemTip :text="$t('topPanel.uploadFileButton.tip')" position="bottom">
-    <button class="button button-circle button-control" @click="uploadFile">
+    <button class="button button-circle button-control" @click="openDragAndDropModal">
       <BaseIcon name="IconImport" :size="26" />
     </button>
   </ItemTip>

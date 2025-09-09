@@ -137,6 +137,7 @@ body {
   --z-index-privacy: 1000;
   --z-index-help: 1000;
   --z-index-release: 1000;
+  --z-index-import: 1000;
   --z-index-export: 900;
   --z-index-color-picker: 850;
   --z-index-settings: 800;

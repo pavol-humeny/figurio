@@ -12,5 +12,8 @@
       "title": "Clipboard content is not an image",
       "message": "Please paste an image."
     }
+  },
+  "closeButton": {
+    "text": "Close"
   }
 }
