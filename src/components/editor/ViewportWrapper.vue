@@ -127,7 +127,7 @@ const disableContextMenu = computed(() => {
 </script>
 
 <template>
-  <div class="viewport-wrapper" id="viewport" @mousedown="onMouseDownSelect" @mousemove="onMouseMoveImageSvg"
+  <div class="viewport-wrapper" id="viewport" @mousedown="onMouseDownSelect" 
     @dragover="handleDragOver" @dragleave="handleDragLeave" @drop="handleDrop">
     <LoadingSpinner />
 
