@@ -41,6 +41,8 @@ const {
   applyCrop,
   resetCrop,
   cropCanBeReset,
+  showCropBox,
+  hideCropBox,
   // Auto crop
   useBaseImage,
   fitCrop,
@@ -213,6 +215,17 @@ const {
             <div class="content-button">
               <DefaultButton :text="$t('tools.crop.settings.general.resetCropButton.text')" @click="resetCrop"
                 :disabled=!cropCanBeReset :tip="$t('tools.crop.settings.general.resetCropButton.tip')"
+                position="bottom-left" />
+            </div>
+          </div>
+        </div>
+
+        <!-- Hide crop box -->
+        <div class="settings-content-wrapper">
+          <div class="content-wrapper">
+            <div class="content-button">
+              <DefaultButton :text="$t('tools.crop.settings.general.hideCropBoxButton.text')" @mousedown="hideCropBox"
+                @mouseup="showCropBox" :tip="$t('tools.crop.settings.general.hideCropBoxButton.tip')"
                 position="bottom-left" />
             </div>
           </div>

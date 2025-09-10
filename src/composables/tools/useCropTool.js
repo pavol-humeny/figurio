@@ -617,8 +617,6 @@ export function useCropTool(
     const height = img.height
     canvas.width = width * scale
     canvas.height = height * scale
-    console.log('size: ', width, height)
-    console.log('size: ', canvas.width, canvas.height)
     ctx.drawImage(img, 0, 0, canvas.width, canvas.height)
 
     const { data } = ctx.getImageData(0, 0, canvas.width, canvas.height)
@@ -718,6 +716,20 @@ export function useCropTool(
     const threshold = getOrComputeThreshold(bgColor)
 
     const newCropBox = calculateAutoCropBox(useBaseImage.value, threshold, bgColor)
+
+    if (
+      cropBox.value.x === newCropBox.x &&
+      cropBox.value.y === newCropBox.y &&
+      cropBox.value.width === newCropBox.width &&
+      cropBox.value.height === newCropBox.height
+    ) {
+      showToastModal(
+        'info',
+        t('tools.crop.settings.general.sameCropBoxAfterFit.title'),
+        t('tools.crop.settings.general.sameCropBoxAfterFit.message'),
+      )
+    }
+
     if (newCropBox) {
       cropBox.value = newCropBox
       fitCropApplied.value = true
@@ -1227,6 +1239,20 @@ export function useCropTool(
     resetCache()
   }
 
+  /**
+   * Show crop box
+   */
+  const showCropBox = () => {
+    editorStore.toolsConfig.crop.isVisibleCropBox = true
+  }
+
+  /**
+   * Hide crop box
+   */
+  const hideCropBox = () => {
+    editorStore.toolsConfig.crop.isVisibleCropBox = false
+  }
+
   return {
     startPan,
     startResize,
@@ -1252,6 +1278,8 @@ export function useCropTool(
     applyCropRender,
     resetCrop,
     cropCanBeReset,
+    showCropBox,
+    hideCropBox,
     // Auto crop
     useBaseImage,
     fitCrop,

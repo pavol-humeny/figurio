@@ -6,6 +6,15 @@
     ]
   },
   "versions":{
+    "4.1.0":{
+      "label": "4.1.0",
+      "date":"X.9. 2025",
+      "newFeatures": {
+        "items": [
+          "Button to hide/show crop box in crop tool settings"
+        ]
+      }
+    },
     "4.0.1":{
       "label": "4.0.1",
       "date":"X.9. 2025",

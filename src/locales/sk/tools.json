@@ -164,6 +164,10 @@
           "text": "Obnoviť orezanie",
           "tip": "Obnoví oblasť orezania na pôvodný obrázok"
         },
+        "hideCropBoxButton":{
+          "text": "Skrýt ořezový rámeček",
+          "tip": "Držte pro skrytí ořezového rámečku a zobrazení celého obrázku"
+        },
         "applyCropButton": {
           "text": "Použiť orezanie"
         },
@@ -174,6 +178,10 @@
         "cropBoxIsSameAsOriginalImage": {
           "title": "Orezanie je rovnaké ako pôvodný obrázok",
           "message": "Orezanie je rovnaké ako pôvodný obrázok. Orezanie nebolo použité."
+        },
+        "sameCropBoxAfterFit": {
+          "title": "Orez zostal nezmenený",
+          "message": "Orez nebol po použití funkcie Orezať na tesno zmenený. Skúste zvýšiť citlivosť alebo sa uistite, že pozadie je jednotné."
         }
       }
     }

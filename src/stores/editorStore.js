@@ -56,6 +56,9 @@ export const useEditorStore = defineStore('editorStore', {
 
     /** Tools config values */
     toolsConfig: {
+      crop: {
+        isVisibleCropBox: true,
+      },
       shape: {
         fillEnabled: true,
         fillColor: '#000000',

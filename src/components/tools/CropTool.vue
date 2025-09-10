@@ -11,6 +11,7 @@ import { useWorkspaceStore } from '@/stores/workspaceStore'
 
 const viewportStore = useViewportStore()
 const { t } = useI18n()
+const editorStore = useEditorStore()
 
 /**
  * Logic of the crop tool
@@ -83,7 +84,7 @@ const visibleSideDirs = computed(() => {
       width: cropBox.width + 'px',
       height: cropBox.height + 'px',
       borderWidth: borderWidth + 'px',
-    }" @mousedown="startPan">
+    }" @mousedown="startPan" v-if="editorStore.toolsConfig.crop.isVisibleCropBox">
 
       <!-- Corners -->
       <div v-for="dir in ['top-left', 'top-right', 'bottom-left', 'bottom-right']" :key="dir" class="resizer"

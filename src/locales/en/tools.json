@@ -164,6 +164,10 @@
           "text": "Reset crop",
           "tip": "Reset the crop area to the original image"
         },
+        "hideCropBoxButton":{
+          "text": "Hide crop box",
+          "tip": "Hold to hide crop box and see full image"
+        },
         "applyCropButton": {
           "text": "Apply crop"
         },
@@ -174,6 +178,10 @@
         "cropBoxIsSameAsOriginalImage": {
           "title": "Crop box is same as original image",
           "message": "Crop box is same as original image. No crop was applied."
+        },
+        "sameCropBoxAfterFit": {
+          "title": "Crop box unchanged",
+          "message": "Crop box was not changed after applying Fit Crop. Try increasing sensitivity, or ensure the background is uniform."
         }
       }
     }
