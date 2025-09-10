@@ -815,15 +815,23 @@ export function useSvgObjects(imageStore, historyStore, viewportStore, editorSto
 
     if (objectType === 'rectangle') objectType = 'rect'
 
-    const rect = viewportStore.viewportContentRect
-    const x = round((event.clientX - rect.left - viewportStore.panX) / viewportStore.realZoomLevel)
-    const y = round((event.clientY - rect.top - viewportStore.panY) / viewportStore.realZoomLevel)
+    const svgImage = document.getElementById('image-svg')
+    const svgRect = svgImage.getBoundingClientRect()
+
+    const x = round((event.clientX - svgRect.left) / viewportStore.realZoomLevel)
+    const y = round((event.clientY - svgRect.top) / viewportStore.realZoomLevel)
 
     // TODO - remove - debug prints for detection of mouse position issues during drawing
     console.log('event: ', event.clientX, event.clientY)
-    console.log('content rect', rect)
+    console.log('content rect', svgRect.left, svgRect.top)
     console.log('pan', viewportStore.panX, viewportStore.panY)
     console.log('zoom', viewportStore.realZoomLevel)
+
+    console.log('event.clientX - svgRect.left: ', event.clientX - svgRect.left)
+    console.log('event.clientY - svgRect.top: ', event.clientY - svgRect.top)
+    console.log('x / zoom: ', (event.clientX - svgRect.left) / viewportStore.realZoomLevel)
+    console.log('y / zoom: ', (event.clientY - svgRect.top) / viewportStore.realZoomLevel)
+
     console.log('start drawing x, y: ', x, y)
 
     drawingStart.value = { x, y }

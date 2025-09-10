@@ -55,6 +55,9 @@
   --editor-highlight-c: #1B70B6;
   --editor-highlight-with-opacity-c: rgba(27, 112, 182, 0.4);
   --editor-highlight-align-c: #b61b94;
+
+  --box-shadow-content-light: 0 0 2px rgba(0, 0, 0, 0.2);
+  --box-shadow-content-dark: 0 0 5px rgba(0, 0, 0, 0.3);
 }
 
 :root {
@@ -79,6 +82,8 @@
   --tutorial-overlay-c: var(--tutorial-overlay-c-light);
 
   --crop-c: var(--crop-c-light);
+
+  --box-shadow-content: var(--box-shadow-content-light);
 }
 
 .dark{
@@ -103,6 +108,8 @@
   --tutorial-overlay-c: var(--tutorial-overlay-c-dark);
 
   --crop-c: var(--crop-c-dark);
+
+  --box-shadow-content: var(--box-shadow-content-dark);
 }
 
 *,
@@ -156,7 +163,6 @@ body {
 
   --box-shadow-ui: 1px 3px 6px rgba(0, 0, 0, 0.4);
   --box-shadow-hover: 2px 2px 6px rgba(0, 0, 0, 0.2);
-  --box-shadow-content: 0 0 5px rgba(0, 0, 0, 0.3);
 
   --landing-page-app-name-font-size: 28px;
   --landing-page-app-name-font-weight: 600;
