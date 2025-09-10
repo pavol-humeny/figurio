@@ -6,6 +6,21 @@
     ]
   },
   "versions":{
+    "4.0.1":{
+      "label": "4.0.1",
+      "date":"X.9. 2025",
+      "improvements": {
+        "items": [
+          "Add shadow to the content area for better visibility"
+        ]
+      },
+      "bugFixes": {
+        "items": [
+          "Fix issue with drawing start position calculation",
+          "Recent colors in color picker are global for all color pickers"
+        ]
+      }
+    },
     "4.0.0":{
       "label": "4.0.0",
       "date":"9.9. 2025",

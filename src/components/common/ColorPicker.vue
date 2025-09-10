@@ -189,13 +189,14 @@ defineExpose({ setValue })
 }
 
 .hex-input {
-  width: 10ch;
+  width: 11ch;
   padding: 7px 10px;
   font-size: 14px;
   border-radius: 4px;
   background: var(--secondary-c);
   border: none;
   color: var(--text-c);
+  text-align: center;
 }
 
 .recent-colors {

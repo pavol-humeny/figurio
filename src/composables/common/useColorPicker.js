@@ -1,6 +1,11 @@
 import { ref, nextTick, onBeforeUnmount, watch, computed } from 'vue'
 
 /**
+ * Array for recent colors (max 7)
+ */
+const recentColors = ref(Array(7).fill(null))
+
+/**
  * Composable for color picker functionality
  * @param {Object} props - Component props
  * @param {Function} emit - Emit function to send events to parent
@@ -11,11 +16,6 @@ export function useColorPicker(props, emit) {
    * Reactive color value bound to the input
    */
   const colorValue = ref(props.modelValue)
-
-  /**
-   * Array for recent colors (max 7)
-   */
-  const recentColors = ref(Array(7).fill(null))
 
   /**
    * Watch for external modelValue changes and update local value

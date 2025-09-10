@@ -37,11 +37,21 @@ export function useOneTool(editorStore, imageStore, props, emit) {
 
     await nextTick()
     const rect = wrapperRef.value.getBoundingClientRect()
+    const popupHeight = props.tool.subTools.length * 60 // each subtool is 60px high
+    let top = rect.top - popupHeight
+    const left = rect.right + 20
 
-    subToolPos.value = {
-      top: rect.top - props.tool.subTools.length * 50,
-      left: rect.right + 20,
+    // Check if popup goes beyond bottom of the viewport
+    if (top + popupHeight > window.innerHeight) {
+      top = window.innerHeight - popupHeight - 10 // 10px margin from bottom
     }
+
+    // Check if popup goes above the viewport (e.g. when tool is at the very top)
+    if (top < 0) {
+      top = 10
+    }
+
+    subToolPos.value = { top, left }
     editorStore.setToolWithOpenSubTools(props.tool.key)
   }
 
