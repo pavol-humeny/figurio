@@ -171,6 +171,7 @@ const disableContextMenu = computed(() => {
         <div id="viewport-content" :class="{ 'hide': uiStore.isLoading }" class="viewport-content" ref="contentRef"
           :style="{
             transform: `translate(${panX}px, ${panY}px) scale(${zoomLevel})`,
+            boxShadow: 'var(--box-shadow-content)',
           }">
           <img v-if="imageStore.fileType === 'image' || imageStore.showImageInsteadOfPdf" ref="imageRef"
             class="image-canvas" />
