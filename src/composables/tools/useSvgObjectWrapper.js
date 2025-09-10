@@ -399,6 +399,43 @@ export function useSvgObjectWrapper(
     // Only left mouse button
     if (event.buttons !== 1) return
 
+    // Move viewport when mouse is near the edge
+    const viewportWrapper = document.getElementsByClassName('viewport-content-wrapper')
+    const svgImage = document.getElementById('image-svg')
+
+    if (viewportWrapper.length === 0) return
+
+    const rectWrapper = viewportWrapper[0].getBoundingClientRect()
+    const rectSvg = svgImage.getBoundingClientRect()
+
+    const horizontalMargin = imageStore.fileDimensions.width * viewportStore.realZoomLevel * 0.1
+    const verticalMargin = imageStore.fileDimensions.height * viewportStore.realZoomLevel * 0.1
+
+    // Auto panning when drawing and mouse is near the edge of the viewport
+    // Bottom edge
+    if (
+      event.clientY > rectWrapper.bottom &&
+      rectSvg.bottom + verticalMargin > rectWrapper.bottom
+    ) {
+      viewportStore.panY -= 1 * viewportStore.realZoomLevel
+    }
+
+    // Top edge
+    if (event.clientY < rectWrapper.top && rectSvg.top - verticalMargin < rectWrapper.top) {
+      viewportStore.panY += 1 * viewportStore.realZoomLevel
+    }
+
+    // Right edge
+    if (event.clientX > rectWrapper.right && rectSvg.right + horizontalMargin > rectWrapper.right) {
+      viewportStore.panX -= 1 * viewportStore.realZoomLevel
+    }
+
+    // Left edge
+    if (event.clientX < rectWrapper.left && rectSvg.left - horizontalMargin < rectWrapper.left) {
+      viewportStore.panX += 1 * viewportStore.realZoomLevel
+    }
+
+    // Mouse was moved
     mouseWasMoved.value = true
 
     const isCtrlKey = event.ctrlKey || event.metaKey
