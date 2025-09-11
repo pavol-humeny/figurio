@@ -542,8 +542,8 @@ export function useSvgObjectWrapper(
           if (editorConfig.objectResizingOverflow) {
             attrs.x = newX
             attrs.y = newY
-            attrs.width = newW
-            attrs.height = newH
+            attrs.width = clamp(newW, minSize, newW)
+            attrs.height = clamp(newH, minSize, newH)
           } else {
             attrs.x = clamp(newX, 0, maxW)
             attrs.y = clamp(newY, 0, maxH)
@@ -789,6 +789,8 @@ export function useSvgObjectWrapper(
         dy /= 2
         const applyEllipse = (newCx, newCy, newRx, newRy) => {
           if (editorConfig.objectResizingOverflow) {
+            newRx = clamp(newRx, minSize, newRx)
+            newRy = clamp(newRy, minSize, newRy)
             attrs.cx = newCx
             attrs.cy = newCy
             attrs.rx = newRx
