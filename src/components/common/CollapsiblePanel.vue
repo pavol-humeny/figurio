@@ -31,6 +31,7 @@ const { isVisible, toggleVisibility, rightSidePanelWidth, collapseButtonWidth, s
   position: relative;
   height: 100%;
   background: var(--background-c);
+  z-index: var(--z-index-tools-settings-panel);
 }
 
 .toggle-button {
@@ -42,6 +43,7 @@ const { isVisible, toggleVisibility, rightSidePanelWidth, collapseButtonWidth, s
   cursor: pointer;
   border-left: var(--border-ui);
   border-right: var(--border-ui);
+  background: var(--background-c);
 }
 
 .panel-content {

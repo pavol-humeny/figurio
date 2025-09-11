@@ -80,7 +80,7 @@ const {
         :stroke-dasharray="[boundingBoxStrokeWidth * 4, boundingBoxStrokeWidth * 2]" />
 
       <!-- Icon to turn on resize -->
-      <foreignObject v-if="object.tag !== 'text' && !isInMultiSelection && object.class !== 'magnifyArea'"
+      <!-- <foreignObject v-if="object.tag !== 'text' && !isInMultiSelection && object.class !== 'magnifyArea'"
         :x="boundingBox.x + boundingBox.width / 2 - controlIconSize * 0.5"
         :y="isResizerIconInside ? boundingBox.y - controlIconSize : boundingBox.y + boundingBox.height"
         :width="controlIconSize" :height="controlIconSize" @mousedown.stop.prevent="showResizers = !showResizers"
@@ -89,7 +89,7 @@ const {
           :size="controlIconSize" :color="'var(--primary-c)'" />
         <BaseIcon v-else :name="'IconResizeObject'" :tip="t('tools.svgObject.resizeObject.tipStartResize')"
           :size="controlIconSize" :color="'var(--primary-c)'" />
-      </foreignObject>
+      </foreignObject> -->
 
       <!-- Resizers -->
       <template v-if="showResizers && object.tag !== 'text' && object.class !== 'magnifyArea'">
@@ -109,28 +109,18 @@ const {
       </template>
 
       <!-- Rotate icon  -->
-      <foreignObject
+      <!-- <foreignObject
         v-if="!showResizers && !isRotating && !isInMultiSelection && object.tag !== 'line' && object.class !== 'magnifyArea'"
         :x="isRotateIconInside ? boundingBox.x + boundingBox.width : boundingBox.x - controlIconSize"
         :y="boundingBox.y + boundingBox.height / 2 - controlIconSize / 2" :width="controlIconSize"
         :height="controlIconSize" @mousedown.stop.prevent="onMouseDownRotate($event)" style="cursor: grab">
         <BaseIcon :name="'IconRotate'" :tip="t('tools.svgObject.rotateObject.tip')" :size="controlIconSize"
           :color="'var(--primary-c)'" />
-      </foreignObject>
+      </foreignObject> -->
     </g>
   </g>
 
 
 </template>
 
-<style scoped>
-.svg-object-info {
-  font-size: 50px;
-  font-family: sans-serif;
-  background: var(--overlay-c);
-  color: var(--text-c);
-  padding: 2px 6px;
-  border-radius: 4px;
-  width: fit-content;
-}
-</style>
+<style scoped></style>

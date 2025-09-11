@@ -44,6 +44,7 @@ const {
   flex-direction: column;
   width: 100%;
   height: 100%;
+  background: var(--background-c);
   z-index: var(--z-index-tools-settings-panel);
 }
 

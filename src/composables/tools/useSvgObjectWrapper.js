@@ -7,6 +7,11 @@ import { useMagnifyAreaTool } from './useMagnifyAreaTool'
 import { viewportConfig } from '@/config/viewportConfig'
 
 /**
+ * Variable to track if resizers should be shown
+ */
+const showResizers = ref(false)
+
+/**
  * Logic for interactive SVG object
  * @param {Object} object - SVG object (with id, tag, attrs)
  * @param {Object} imageStore - Store for image data
@@ -193,10 +198,6 @@ export function useSvgObjectWrapper(
    * Reactive variable to track the index of the active resizer
    */
   const activeResizerIndex = ref(null)
-  /**
-   * Variable to track if resizers should be shown
-   */
-  const showResizers = ref(false)
 
   /**
    * Hide resizers when tool is switched

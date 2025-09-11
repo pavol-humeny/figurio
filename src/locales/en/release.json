@@ -6,6 +6,15 @@
     ]
   },
   "versions":{
+    "4.1.1":{
+      "label": "4.1.1",
+      "date":"X.9. 2025",
+      "bugFixes": {
+        "items": [
+          "Fix issue with creating invisible objects"
+        ]
+      }
+    },
     "4.1.0":{
       "label": "4.1.0",
       "date":"X.9. 2025",

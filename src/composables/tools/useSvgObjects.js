@@ -1482,6 +1482,7 @@ export function useSvgObjects(imageStore, historyStore, viewportStore, editorSto
 
     // Deselect if clicked inside viewport but outside content
     if (clickedInsideViewport && !clickedInsideContent) {
+      return
       console.log('Deselect triggered')
       imageStore.selectedSvgObjectId = null
       imageStore.selectedSvgObjectIds = []

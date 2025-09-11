@@ -17,6 +17,7 @@ import { useBlurTool } from '@/composables/tools/useBlurTool'
 import ContextMenu from '../common/ContextMenu.vue'
 import { useDragAndDropArea } from '@/composables/editor/useDragAndDropArea'
 import router from '@/router'
+import SvgObjectControl from '../tools/SvgObjectControl.vue'
 
 const { t } = useI18n()
 const uiStore = useUiStore()
@@ -78,7 +79,6 @@ const {
   onClickImageSvg,
   onMouseDownImageSvg,
   onMouseDownSelect,
-  onMouseMoveImageSvg,
   selectBox,
   copySelectedSvgObject,
   pasteSvgObjectToCenter,
@@ -127,9 +127,11 @@ const disableContextMenu = computed(() => {
 </script>
 
 <template>
-  <div class="viewport-wrapper" id="viewport" @mousedown="onMouseDownSelect" 
-    @dragover="handleDragOver" @dragleave="handleDragLeave" @drop="handleDrop">
+  <div class="viewport-wrapper" id="viewport" @mousedown="onMouseDownSelect" @dragover="handleDragOver"
+    @dragleave="handleDragLeave" @drop="handleDrop">
     <LoadingSpinner />
+
+
 
     <div class="viewport-content-wrapper" ref="wrapperRef" @wheel.passive="setZoomAndScroll" @mousedown="startPan"
       @mousemove="onMouseMove" :class="{
@@ -184,6 +186,8 @@ const disableContextMenu = computed(() => {
 
           <svg ref="frameSvgRef" class="frame-svg"></svg>
 
+
+
           <svg ref="svgRef" class="image-svg" id="image-svg" xmlns="http://www.w3.org/2000/svg"
             :width="imageStore.fileDimensions.width" :height="imageStore.fileDimensions.height"
             @mousedown="onMouseDownImageSvg" @click="onClickImageSvg">
@@ -212,6 +216,7 @@ const disableContextMenu = computed(() => {
               fill="var(--editor-highlight-with-opacity-c)" />
           </svg>
 
+          <SvgObjectControl v-for="object in imageStore.svgObjects" :key="object.id" :objectId="object.id" />
 
           <CropTool v-if="editorStore.selectedToolKey === 'crop'" />
           <PresetCropTool v-if="

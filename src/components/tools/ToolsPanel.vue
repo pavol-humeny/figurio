@@ -75,6 +75,7 @@ const tools = computed(() =>
   height: 100%;
   padding: 30px 0;
   border-right: var(--border-ui);
+  background: var(--background-c);
   z-index: var(--z-index-tools-panel);
 }
 

@@ -157,6 +157,7 @@ body {
   --z-index-file-tabs: 520;
   --z-index-guide-lines: 510;
   --z-index-viewport: 500;
+  --z-index-svg-control: 510;
 
   --z-index-home-page-background: 100;
   --z-index-home-page-content: 200;
