@@ -64,6 +64,8 @@ const {
   disableIncrease,
   disableDecrease,
   changeValue,
+  startHold,
+  stopHold,
 } = useStepperInput(props, emit)
 
 /**
@@ -76,11 +78,11 @@ defineExpose({ setValue })
 <template>
   <ItemTip :text="tip" position="bottom">
     <div class="stepper">
-      <BaseIcon name="IconMinus" :color="'var(--primary-c)'" :size="16" @click="decrease" :disabled="disableDecrease()"
-        class="increase-decrease-icon" />
+      <BaseIcon name="IconMinus" :color="'var(--primary-c)'" :size="16" @mousedown="startHold(decrease)"
+        @mouseup="stopHold" @mouseleave="stopHold" :disabled="disableDecrease()" class="increase-decrease-icon" />
       <span class="value" @dblclick="handleReset" @wheel="changeValue">{{ inputValue }}</span>
-      <BaseIcon name="IconPlus" :color="'var(--primary-c)'" :size="16" @click="increase" :disabled="disableIncrease()"
-        class="increase-decrease-icon" />
+      <BaseIcon name="IconPlus" :color="'var(--primary-c)'" :size="16" @mousedown="startHold(increase)"
+        @mouseup="stopHold" @mouseleave="stopHold" :disabled="disableIncrease()" class="increase-decrease-icon" />
     </div>
   </ItemTip>
 </template>

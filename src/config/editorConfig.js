@@ -4,9 +4,9 @@ export const editorConfig = {
   // Default tool key when the editor is opened
   defaultToolKey: globalConfig.startTool,
 
-  // Auto crop settings
-  autoCropDefaultColor: '#ffffff',
+  // Crop settings
   autoCropThreshold: 0,
+  minCropSize: 20,
 
   // Item tip settings
   tipDelay: 700,
@@ -21,7 +21,6 @@ export const editorConfig = {
   minFileDimensionWidth: 20,
   minFileDimensionHeight: 20,
 
-  minCropSize: 20,
 
   // File name restrictions
   maxFileNameLength: 50,
@@ -49,7 +48,6 @@ export const editorConfig = {
   minimumObjectSize: 2, // Minimum size of the object to be drawn
   magnifyAreaDefaultRadiusFromImage: 0.1, // 10% of smaller dimension
   objectResizingOverflow: true, // Allow resizing objects outside the image area
-
   needObjectOverlapToSnap: true, // Need the object to overlap to snap to edges
 
   // Text fonts
@@ -73,4 +71,8 @@ export const editorConfig = {
     // { label: 'Calibri', value: 'Calibri' },
     // { label: 'Cambria', value: 'Cambria' },
   ],
+
+  // Stepper input
+  stepperHoldTimeout: 400, // ms before starting to hold
+  stepperHoldInterval: 50, // ms between each step when holding
 }

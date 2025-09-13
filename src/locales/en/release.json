@@ -6,6 +6,15 @@
     ]
   },
   "versions":{
+    "4.2.0":{
+      "label": "4.2.0",
+      "date":"X.9. 2025",
+      "improvements": {
+        "items": [
+          "Indents after auto crop can be adjusted with holding down the mouse button"
+        ]
+      }
+    },
     "4.1.0":{
       "label": "4.1.0",
       "date":"X.9. 2025",
