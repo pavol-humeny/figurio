@@ -3,10 +3,10 @@
 #app {
   width: 100%;
   /* Min window width */
-  min-width: 1118px;
+  min-width: var(--min-window-width);
   height: 100vh;
   /* Min window height */
-  min-height: 700px;
+  min-height: var(--min-window-height);
   margin: 0 auto;
   user-select: none;
   transform-origin: top left;

@@ -204,7 +204,9 @@ onUnmounted(() => {
 
 .background {
   position: fixed;
+  min-width: var(--min-window-width);
   width: 100%;
+  min-height: var(--min-window-height);
   height: 100%;
   top: 0;
   left: 50%;

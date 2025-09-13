@@ -10,6 +10,8 @@
 :root {
   --font-family: 'Inter', sans-serif;
   --font-family-rc: 'RC';
+  --min-window-width: 1118px;
+  --min-window-height: 700px;
 
   --primary-c-dark: #BFA473;
   --secondary-c-dark: #3c3c3c;
