@@ -389,6 +389,78 @@ export function useSvgObjectWrapper(
   }
 
   /**
+   * Auto-pan when mouse is outside of viewport
+   */
+  const autoPanActive = ref(false)
+  let autoPanFrame = null
+  let lastMouseEvent = null
+
+  /**
+   * Start auto-pan
+   */
+  const startAutoPan = () => {
+    if (autoPanFrame) return
+    const loop = () => {
+      if (
+        autoPanActive.value &&
+        (isDragging.value || activeResizerIndex.value !== null || isRotating.value)
+      ) {
+        performAutoPan(lastMouseEvent)
+        autoPanFrame = requestAnimationFrame(loop)
+      } else {
+        autoPanFrame = null
+      }
+    }
+    autoPanFrame = requestAnimationFrame(loop)
+  }
+
+  /**
+   * Stop auto-pan
+   */
+  const stopAutoPan = () => {
+    autoPanActive.value = false
+    if (autoPanFrame) {
+      cancelAnimationFrame(autoPanFrame)
+      autoPanFrame = null
+    }
+  }
+
+  /**
+   * Auto-pan the viewport when mouse is outside
+   *
+   * @param {MouseEvent} event
+   */
+  const performAutoPan = (event) => {
+    if (!event) return
+    const viewportWrapper = document.getElementsByClassName('viewport-content-wrapper')
+    const svgImage = document.getElementById('image-svg')
+    if (viewportWrapper.length === 0) return
+
+    const rectWrapper = viewportWrapper[0].getBoundingClientRect()
+    const rectSvg = svgImage.getBoundingClientRect()
+
+    const horizontalMargin = imageStore.fileDimensions.width * viewportStore.realZoomLevel * 0.1
+    const verticalMargin = imageStore.fileDimensions.height * viewportStore.realZoomLevel * 0.1
+
+    // Move viewport if mouse is outside
+    if (
+      event.clientY > rectWrapper.bottom &&
+      rectSvg.bottom + verticalMargin > rectWrapper.bottom
+    ) {
+      viewportStore.panY -= 1 * viewportStore.realZoomLevel
+    }
+    if (event.clientY < rectWrapper.top && rectSvg.top - verticalMargin < rectWrapper.top) {
+      viewportStore.panY += 1 * viewportStore.realZoomLevel
+    }
+    if (event.clientX > rectWrapper.right && rectSvg.right + horizontalMargin > rectWrapper.right) {
+      viewportStore.panX -= 1 * viewportStore.realZoomLevel
+    }
+    if (event.clientX < rectWrapper.left && rectSvg.left - horizontalMargin < rectWrapper.left) {
+      viewportStore.panX += 1 * viewportStore.realZoomLevel
+    }
+  }
+
+  /**
    * Mouse move handler for dragging, resizing and rotating the SVG object
    * @param {MouseEvent} event - Mouse event
    */
@@ -399,41 +471,25 @@ export function useSvgObjectWrapper(
     // Only left mouse button
     if (event.buttons !== 1) return
 
-    // Move viewport when mouse is near the edge
+    // Move viewport when mouse is outside of content
     const viewportWrapper = document.getElementsByClassName('viewport-content-wrapper')
-    const svgImage = document.getElementById('image-svg')
 
     if (viewportWrapper.length === 0) return
-
     const rectWrapper = viewportWrapper[0].getBoundingClientRect()
-    const rectSvg = svgImage.getBoundingClientRect()
 
-    const horizontalMargin = imageStore.fileDimensions.width * viewportStore.realZoomLevel * 0.1
-    const verticalMargin = imageStore.fileDimensions.height * viewportStore.realZoomLevel * 0.1
-
-    // Auto panning when drawing and mouse is near the edge of the viewport
-    // Bottom edge
     if (
-      event.clientY > rectWrapper.bottom &&
-      rectSvg.bottom + verticalMargin > rectWrapper.bottom
+      event.clientX < rectWrapper.left ||
+      event.clientX > rectWrapper.right ||
+      event.clientY < rectWrapper.top ||
+      event.clientY > rectWrapper.bottom
     ) {
-      viewportStore.panY -= 1 * viewportStore.realZoomLevel
+      autoPanActive.value = true
+      lastMouseEvent = event
+      startAutoPan()
+    } else {
+      autoPanActive.value = false
     }
-
-    // Top edge
-    if (event.clientY < rectWrapper.top && rectSvg.top - verticalMargin < rectWrapper.top) {
-      viewportStore.panY += 1 * viewportStore.realZoomLevel
-    }
-
-    // Right edge
-    if (event.clientX > rectWrapper.right && rectSvg.right + horizontalMargin > rectWrapper.right) {
-      viewportStore.panX -= 1 * viewportStore.realZoomLevel
-    }
-
-    // Left edge
-    if (event.clientX < rectWrapper.left && rectSvg.left - horizontalMargin < rectWrapper.left) {
-      viewportStore.panX += 1 * viewportStore.realZoomLevel
-    }
+    // --------
 
     // Mouse was moved
     mouseWasMoved.value = true
@@ -1435,6 +1491,9 @@ export function useSvgObjectWrapper(
    * Mouse up handler for stopping the drag operation
    */
   const onMouseUp = () => {
+    // Stop auto-pan
+    stopAutoPan()
+
     const isActive = isDragging.value || activeResizerIndex.value !== null || isRotating.value
     if (!isActive) return
 

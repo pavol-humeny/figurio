@@ -775,6 +775,9 @@ export function useSvgObjects(imageStore, historyStore, viewportStore, editorSto
    */
   const isMovingMultipleObjects = ref(false)
 
+  /**
+   * Object id on which the mouse was pressed down during drawing on selection
+   */
   const savedClickedId = ref(null)
 
   /**
@@ -957,17 +960,51 @@ export function useSvgObjects(imageStore, historyStore, viewportStore, editorSto
     window.removeEventListener('mousemove', onMouseMoveImageSvg)
   })
 
+  ////////////////////////////////////////////////////////////////////////////////
+
   /**
-   * Drawing object
+   * Auto-pan when mouse is outside of viewport
+   */
+  const autoPanActive = ref(false)
+  let autoPanFrame = null
+  let lastMouseEvent = null
+
+  /**
+   * Start auto-pan
+   */
+  const startAutoPan = () => {
+    if (autoPanFrame) return
+    const loop = () => {
+      if (autoPanActive.value && (isDrawing.value || isMovingMultipleObjects.value)) {
+        performAutoPan(lastMouseEvent)
+        autoPanFrame = requestAnimationFrame(loop)
+      } else {
+        autoPanFrame = null
+      }
+    }
+    autoPanFrame = requestAnimationFrame(loop)
+  }
+
+  /**
+   * Stop auto-pan
+   */
+  const stopAutoPan = () => {
+    autoPanActive.value = false
+    if (autoPanFrame) {
+      cancelAnimationFrame(autoPanFrame)
+      autoPanFrame = null
+    }
+  }
+
+  /**
+   * Auto-pan the viewport when mouse is outside
+   *
    * @param {MouseEvent} event
    */
-  const onMouseMoveImageSvg = (event) => {
-    if (!isDrawing.value && !isMovingMultipleObjects.value) return
-
-    // Move viewport when mouse is near the edge
+  const performAutoPan = (event) => {
+    if (!event) return
     const viewportWrapper = document.getElementsByClassName('viewport-content-wrapper')
     const svgImage = document.getElementById('image-svg')
-
     if (viewportWrapper.length === 0) return
 
     const rectWrapper = viewportWrapper[0].getBoundingClientRect()
@@ -976,29 +1013,52 @@ export function useSvgObjects(imageStore, historyStore, viewportStore, editorSto
     const horizontalMargin = imageStore.fileDimensions.width * viewportStore.realZoomLevel * 0.1
     const verticalMargin = imageStore.fileDimensions.height * viewportStore.realZoomLevel * 0.1
 
-    // Auto panning when drawing and mouse is near the edge of the viewport
-    // Bottom edge
+    // Move viewport if mouse is outside
     if (
       event.clientY > rectWrapper.bottom &&
       rectSvg.bottom + verticalMargin > rectWrapper.bottom
     ) {
       viewportStore.panY -= 1 * viewportStore.realZoomLevel
     }
-
-    // Top edge
     if (event.clientY < rectWrapper.top && rectSvg.top - verticalMargin < rectWrapper.top) {
       viewportStore.panY += 1 * viewportStore.realZoomLevel
     }
-
-    // Right edge
     if (event.clientX > rectWrapper.right && rectSvg.right + horizontalMargin > rectWrapper.right) {
       viewportStore.panX -= 1 * viewportStore.realZoomLevel
     }
-
-    // Left edge
     if (event.clientX < rectWrapper.left && rectSvg.left - horizontalMargin < rectWrapper.left) {
       viewportStore.panX += 1 * viewportStore.realZoomLevel
     }
+  }
+
+  /////////////////////////////////////////////////////////////////////////////////
+
+  /**
+   * Drawing object
+   * @param {MouseEvent} event
+   */
+  const onMouseMoveImageSvg = (event) => {
+    if (!isDrawing.value && !isMovingMultipleObjects.value) return
+
+    // Move viewport when mouse is outside of content
+    const viewportWrapper = document.getElementsByClassName('viewport-content-wrapper')
+
+    if (viewportWrapper.length === 0) return
+    const rectWrapper = viewportWrapper[0].getBoundingClientRect()
+
+    if (
+      event.clientX < rectWrapper.left ||
+      event.clientX > rectWrapper.right ||
+      event.clientY < rectWrapper.top ||
+      event.clientY > rectWrapper.bottom
+    ) {
+      autoPanActive.value = true
+      lastMouseEvent = event
+      startAutoPan()
+    } else {
+      autoPanActive.value = false
+    }
+    // --------
 
     // Selecting objects
     if (isDrawing.value && editorStore.selectedToolKey === 'select' && selectBox.value) {
@@ -1284,6 +1344,9 @@ export function useSvgObjects(imageStore, historyStore, viewportStore, editorSto
    * @param {MouseEvent} event
    */
   const onMouseUpImageSvg = (event) => {
+    // Stop auto-pan
+    stopAutoPan()
+
     // End multi object move
     if (isMovingMultipleObjects.value) {
       isMovingMultipleObjects.value = false
