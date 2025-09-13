@@ -16,6 +16,7 @@ import { useViewportStore } from '@/stores/viewportStore';
 import DefaultButton from '../common/DefaultButton.vue';
 import { useUiStore } from '@/stores/uiStore';
 import ExplainItem from '../common/ExplainItem.vue';
+import { editorConfig } from '@/config/editorConfig'
 
 const editorStore = useEditorStore();
 const imageStore = useImageStore();
@@ -85,8 +86,10 @@ const {
                 <label for="x-input">
                   {{ $t('tools.text.settings.general.position.x') }}
                 </label>
-                <NumberInput ref="positionXInputRef" v-model="localTextSettings.x" :min="0" :max="maxTextPositionX"
-                  :step="1" @update="applyLocalTextSettings" unit="px" />
+                <NumberInput ref="positionXInputRef" v-model="localTextSettings.x"
+                  :min="editorConfig.objectResizingOverflow ? -Infinity : 0"
+                  :max="editorConfig.objectResizingOverflow ? Infinity : maxTextPositionX" :step="1"
+                  @update="applyLocalTextSettings" unit="px" />
               </div>
 
               <div class="content-between-inputs-icon-wrapper disabled"></div>
@@ -95,8 +98,10 @@ const {
                 <label for="y-input">
                   {{ $t('tools.text.settings.general.position.y') }}
                 </label>
-                <NumberInput ref="positionYInputRef" v-model="localTextSettings.y" :min="minTextPositionY"
-                  :max="maxTextPositionY" :step="1" @update="applyLocalTextSettings" unit="px" />
+                <NumberInput ref="positionYInputRef" v-model="localTextSettings.y"
+                  :min="editorConfig.objectResizingOverflow ? -Infinity : minTextPositionY"
+                  :max="editorConfig.objectResizingOverflow ? Infinity : maxTextPositionY" :step="1"
+                  @update="applyLocalTextSettings" unit="px" />
               </div>
             </div>
           </div>

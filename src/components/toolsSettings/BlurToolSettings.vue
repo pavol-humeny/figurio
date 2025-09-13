@@ -13,6 +13,7 @@ import DefaultButton from '../common/DefaultButton.vue';
 import DefaultSlider from '../common/DefaultSlider.vue';
 import { useUiStore } from '@/stores/uiStore';
 import ExplainItem from '../common/ExplainItem.vue';
+import { editorConfig } from '@/config/editorConfig'
 
 const { t } = useI18n();
 const imageStore = useImageStore();
@@ -70,8 +71,10 @@ const {
                 <label for="x-input">
                   {{ $t('tools.blur.settings.general.position.x') }}
                 </label>
-                <NumberInput ref="positionXInputRef" v-model="localBlurSettings.x" :min="0" :max="maxBlurPositionX"
-                  :step="1" @update="applyLocalBlurSettings" unit="px" />
+                <NumberInput ref="positionXInputRef" v-model="localBlurSettings.x"
+                  :min="editorConfig.objectResizingOverflow ? -Infinity : 0"
+                  :max="editorConfig.objectResizingOverflow ? Infinity : maxBlurPositionX" :step="1"
+                  @update="applyLocalBlurSettings" unit="px" />
               </div>
 
               <div class="content-between-inputs-icon-wrapper disabled"></div>
@@ -80,8 +83,10 @@ const {
                 <label for="y-input">
                   {{ $t('tools.blur.settings.general.position.y') }}
                 </label>
-                <NumberInput ref="positionYInputRef" v-model="localBlurSettings.y" :min="0" :max="maxBlurPositionY"
-                  :step="1" @update="applyLocalBlurSettings" unit="px" />
+                <NumberInput ref="positionYInputRef" v-model="localBlurSettings.y"
+                  :min="editorConfig.objectResizingOverflow ? -Infinity : 0"
+                  :max="editorConfig.objectResizingOverflow ? Infinity : maxBlurPositionY" :step="1"
+                  @update="applyLocalBlurSettings" unit="px" />
               </div>
             </div>
           </div>
@@ -100,7 +105,8 @@ const {
                 <label for="width-input">
                   {{ $t('tools.blur.settings.general.dimensions.width') }}
                 </label>
-                <NumberInput ref="widthInputRef" v-model="tmpBlurWidth" :min="1" :max="maxBlurWidth"
+                <NumberInput ref="widthInputRef" v-model="tmpBlurWidth" :min="1"
+                  :max="editorConfig.objectResizingOverflow ? Infinity : maxBlurWidth"
                   @update="(val) => updateDimension('width', val)" unit="px" />
               </div>
 
@@ -115,7 +121,8 @@ const {
                 <label for="height-input">
                   {{ $t('tools.blur.settings.general.dimensions.height') }}
                 </label>
-                <NumberInput ref="heightInputRef" v-model="tmpBlurHeight" :min="1" :max="maxBlurHeight"
+                <NumberInput ref="heightInputRef" v-model="tmpBlurHeight" :min="1"
+                  :max="editorConfig.objectResizingOverflow ? Infinity : maxBlurHeight"
                   @update="(val) => updateDimension('height', val)" unit="px" />
               </div>
             </div>

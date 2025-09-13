@@ -16,6 +16,7 @@ import { useViewportStore } from '@/stores/viewportStore';
 import DropdownSelect from '../common/DropdownSelect.vue';
 import { useUiStore } from '@/stores/uiStore';
 import ExplainItem from '../common/ExplainItem.vue';
+import { editorConfig } from '@/config/editorConfig'
 
 const { t } = useI18n()
 const imageStore = useImageStore();
@@ -81,8 +82,10 @@ const {
                 <label for="x-input">
                   {{ $t('tools.shape.settings.general.position.x') }}
                 </label>
-                <NumberInput ref="positionXInputRef" v-model="localObjectSettings.x" :min="0" :max="maxShapePositionX"
-                  @update="applyLocalSettings" unit="px" />
+                <NumberInput ref="positionXInputRef" v-model="localObjectSettings.x"
+                  :min="editorConfig.objectResizingOverflow ? -Infinity : 0"
+                  :max="editorConfig.objectResizingOverflow ? Infinity : maxShapePositionX" @update="applyLocalSettings"
+                  unit="px" />
               </div>
 
               <div class="content-between-inputs-icon-wrapper disabled"></div>
@@ -91,8 +94,10 @@ const {
                 <label for="y-input">
                   {{ $t('tools.shape.settings.general.position.y') }}
                 </label>
-                <NumberInput ref="positionYInputRef" v-model="localObjectSettings.y" :min="0" :max="maxShapePositionY"
-                  @update="applyLocalSettings" unit="px" />
+                <NumberInput ref="positionYInputRef" v-model="localObjectSettings.y"
+                  :min="editorConfig.objectResizingOverflow ? -Infinity : 0"
+                  :max="editorConfig.objectResizingOverflow ? Infinity : maxShapePositionY" @update="applyLocalSettings"
+                  unit="px" />
               </div>
             </div>
           </div>
@@ -111,7 +116,8 @@ const {
                 <label for="width-input">
                   {{ $t('tools.shape.settings.dimensions.width') }}
                 </label>
-                <NumberInput ref="widthInputRef" v-model="tmpShapeWidth" :min="1" :max="maxShapeWidth"
+                <NumberInput ref="widthInputRef" v-model="tmpShapeWidth" :min="1"
+                  :max="editorConfig.objectResizingOverflow ? Infinity : maxShapeWidth"
                   @update="(val) => updateDimension('width', val)" unit="px" />
               </div>
 
@@ -125,7 +131,8 @@ const {
                 <label for="height-input">
                   {{ $t('tools.shape.settings.dimensions.height') }}
                 </label>
-                <NumberInput ref="heightInputRef" v-model="tmpShapeHeight" :min="1" :max="maxShapeHeight"
+                <NumberInput ref="heightInputRef" v-model="tmpShapeHeight" :min="1"
+                  :max="editorConfig.objectResizingOverflow ? Infinity : maxShapeHeight"
                   @update="(val) => updateDimension('height', val)" unit="px" />
               </div>
             </div>

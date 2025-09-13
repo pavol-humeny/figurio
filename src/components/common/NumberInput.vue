@@ -28,7 +28,7 @@ const props = defineProps({
   },
   min: {
     type: Number,
-    default: 0,
+    default: -Infinity,
   },
   max: {
     type: Number,
