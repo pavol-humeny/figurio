@@ -63,7 +63,14 @@ export function useMagnifyAreaTool(imageStore, historyStore, editorStore, t) {
   const maxMagnifyAreaRadius = computed(() => {
     const smallerDimension = imageStore.getSmallerImageDimension()
 
-    return Math.floor(smallerDimension / localMagnifyAreaSettings.value.zoom / 2)
+    let radius = Math.floor(smallerDimension / localMagnifyAreaSettings.value.zoom / 2)
+
+    // if type center, also multiply by zoom to get displayed size
+    if (localMagnifyAreaSettings.value.type === 'center') {
+      radius = Math.floor(radius * localMagnifyAreaSettings.value.zoom)
+    }
+
+    return radius
   })
 
   // ------------------------------
@@ -213,12 +220,17 @@ export function useMagnifyAreaTool(imageStore, historyStore, editorStore, t) {
         localMagnifyAreaSettings.value.resultY = result.attrs.cy
 
         // Radius
-        const radius = source.attrs.rx
-        localMagnifyAreaSettings.value.radius = radius
+        let radius = source.attrs.rx
 
         // Zoom
         const zoom = result.attrs.rx / radius
         localMagnifyAreaSettings.value.zoom = zoom
+
+        // Displayed radius (if type is center, show radius of result area)
+        if (localMagnifyAreaSettings.value.type === 'center') {
+          radius *= zoom
+        }
+        localMagnifyAreaSettings.value.radius = radius
 
         // Compute result radius
         const resultRadius = radius * zoom
@@ -292,7 +304,12 @@ s
     const result = imageStore.getSvgObjectById(source.linkedResultId)
     if (!result) return
 
-    const radius = settings.radius
+    let radius = settings.radius
+    // If type is center, adjust radius to match displayed size
+    if (settings.type === 'center') {
+      radius /= settings.zoom
+    }
+
     const zoom = settings.zoom
     const resultRadius = radius * zoom
     const padding = resultPadding.value
@@ -400,7 +417,12 @@ s
     const sourceId = Date.now()
     const resultId = sourceId + 1
 
-    const radius = localMagnifyAreaSettings.value.radius
+    let radius = localMagnifyAreaSettings.value.radius
+    // If type is center, adjust radius to match displayed size
+    if (localMagnifyAreaSettings.value.type === 'center') {
+      radius /= localMagnifyAreaSettings.value.zoom
+    }
+
     const zoom = localMagnifyAreaSettings.value.zoom
     const resultRadius = radius * zoom
     const padding = resultPadding.value
