@@ -106,8 +106,9 @@ const {
               </p>
             </div>
             <DefaultSlider :min="10" :max="maxMagnifyAreaRadius" :step="1" v-model="localMagnifyAreaSettings.radius"
-              showValue valueUnit="px" @update="applyLocalMagnifyAreaSettings"
-              :tip="$t('tools.magnifyArea.settings.general.radius.tip')" position="bottom-left" />
+              showValue valueUnit="px" @update="applyLocalMagnifyAreaSettings(false)"
+              @commit="applyLocalMagnifyAreaSettings(true)" :tip="$t('tools.magnifyArea.settings.general.radius.tip')"
+              position="bottom-left" />
           </div>
         </div>
 

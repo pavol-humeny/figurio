@@ -13,6 +13,12 @@
         "items": [
           "Indents after auto crop can be adjusted with holding down the mouse button"
         ]
+      },
+      "bugFixes": {
+        "items": [
+          "Fix magnify area radius calculation when type is center",
+          "Add history snapshot after magnify area radius change only after mouse up"
+        ]
       }
     },
     "4.1.0":{
