@@ -9,6 +9,7 @@ import { computed } from 'vue'
  * @property {boolean} [advance=false] - Whether to use advanced layout with title and shortcut
  * @property {string} [title=''] - Optional title for advanced tooltip
  * @property {string} [shortcut=''] - Optional keyboard shortcut to show in advanced tooltip
+ * @property {number} [delay] - Optional delay (ms) before showing tip
  */
 
 /** @type {ItemTipProps} */
@@ -33,6 +34,10 @@ const props = defineProps({
     type: String,
     default: '',
   },
+  delay: {
+    type: Number,
+    default: undefined,
+  },
 })
 
 /**
@@ -47,6 +52,7 @@ const {
 } = useItemTip({
   position: props.position,
   text: props.text,
+  delay: props.delay,
 })
 
 /**
@@ -60,29 +66,27 @@ const showTip = computed(() => props.text !== '')
     <slot></slot>
 
     <teleport to="body">
-      <div v-if="isVisible && showTip" :style="itemTipStyle" :class="['item-tip-bubble', props.position]">
-        <template v-if="props.advance">
-          <div class="item-tip-title-row">
-            <span class="tip-title">{{ props.title }}</span>
-            <span v-if="props.shortcut" class="tip-shortcut">{{ props.shortcut }}</span>
-          </div>
-          <div class="tip-description">{{ props.text }}</div>
-        </template>
+      <Transition name="fade">
+        <div v-if="isVisible && showTip" :style="itemTipStyle" :class="['item-tip-bubble', props.position]">
+          <template v-if="props.advance">
+            <div class="item-tip-title-row">
+              <span class="tip-title">{{ props.title }}</span>
+              <span v-if="props.shortcut" class="tip-shortcut">{{ props.shortcut }}</span>
+            </div>
+            <div class="tip-description">{{ props.text }}</div>
+          </template>
 
-        <template v-else>
-          {{ props.text }}
-        </template>
-        <div class="item-tip-arrow" :class="props.position"></div>
-      </div>
+          <template v-else>
+            {{ props.text }}
+          </template>
+          <div class="item-tip-arrow" :class="props.position"></div>
+        </div>
+      </Transition>
     </teleport>
   </div>
 </template>
 
 <style scoped>
-.item-tip {
-  /* width: fit-content; */
-}
-
 .item-tip-bubble {
   background: var(--secondary-c);
   color: var(--text-c);
@@ -240,5 +244,15 @@ const showTip = computed(() => props.text !== '')
   color: var(--text-c);
   font-size: var(--tip-font-size);
   /* white-space: nowrap; */
+}
+
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.2s ease;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
 }
 </style>

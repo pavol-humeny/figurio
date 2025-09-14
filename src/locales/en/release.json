@@ -11,7 +11,8 @@
       "date":"X.9. 2025",
       "improvements": {
         "items": [
-          "Indents after auto crop can be adjusted with holding down the mouse button"
+          "Indents after auto crop can be adjusted with holding down the mouse button",
+          "Improved item tip component behavior"
         ]
       },
       "bugFixes": {

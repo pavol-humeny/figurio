@@ -66,7 +66,7 @@ export function useItemTip(options = {}) {
 
     // Calculate width of text
     const textWidth = ctx.measureText(text).width + 20
-    const minWidth = Math.min(Math.min(textWidth, 200), 300) 
+    const minWidth = Math.min(Math.min(textWidth, 200), 300)
 
     return {
       ...baseStyle,
@@ -162,12 +162,16 @@ export function useItemTip(options = {}) {
   }
 
   /**
-   * Hide the tip when clicking
+   * Hide the tip when mouse moves outside trigger element
    */
-  const onClick = () => {
-    isVisible.value = false
-  }
+  const onMouseMove = (e) => {
+    if (!wrapperRef.value) return
 
+    // ak myš nie je nad trigger elementom → skryť
+    if (!wrapperRef.value.contains(e.target)) {
+      isVisible.value = false
+    }
+  }
   // Update position after mount
   onMounted(() => nextTick(updatePosition))
 
@@ -176,10 +180,10 @@ export function useItemTip(options = {}) {
 
   // Hide the tip when clicking
   onMounted(() => {
-    document.addEventListener('mousedown', onClick)
+    document.addEventListener('mousemove', onMouseMove)
   })
   onBeforeUnmount(() => {
-    document.removeEventListener('mousedown', onClick)
+    document.removeEventListener('mousemove', onMouseMove)
   })
 
   return {
