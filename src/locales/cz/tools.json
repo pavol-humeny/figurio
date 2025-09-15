@@ -18,6 +18,28 @@
       }
     }
   },
+  "backgroundRemoval": {
+    "label": "Odstranění pozadí",
+    "tip": "Odstraní z obrázku vybranou barvu pozadí",
+    "tipDisabled": "",
+    "explain": "Tento nástroj odstraní pixely, které odpovídají vybrané barvě. Vyberte barvu a nastavte citlivost: nízké hodnoty odstraní pouze přesné shody, vysoké hodnoty i podobné odstíny.",
+    "shortcut": "Shift + M",
+    "settings": {
+      "general": {
+        "backgroundColor": {
+          "label": "Barva k odstranění",
+          "tip": "Vyber referenční barvu, která se má z obrázku odstranit."
+        },
+        "removalSensitivity": {
+          "label": "Citlivost",
+          "tip": "Určuje, jak moc se musí barva pixelu podobat vybrané barvě, aby byla odstraněna. Nízká pro pouze přesné shody, vysoká i pro podobné odstíny."
+        },
+        "removeBackgroundButton": {
+          "text": "Odstranit barvu"
+        }
+      }
+    }
+  },
   "select": {
     "label": "Výběr",
     "tip": "Vybere objekty na obrázku",

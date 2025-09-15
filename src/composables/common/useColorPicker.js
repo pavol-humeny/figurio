@@ -307,6 +307,7 @@ export function useColorPicker(props, emit) {
     drawHueCanvas()
     drawSVCanvas()
     updateIndicators()
+    commitChanges()
   }
 
   /**
@@ -498,6 +499,9 @@ export function useColorPicker(props, emit) {
    */
   const commitChanges = () => {
     addRecentColor(colorValue.value)
+
+    // Also set value to v model
+    emit('update:modelValue', colorValue.value)
 
     emit('commit', colorValue.value)
   }

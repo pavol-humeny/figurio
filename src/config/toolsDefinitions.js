@@ -20,6 +20,11 @@ export const toolsDefinitions = [
     settingsComponent: () => import('@/components/toolsSettings/GrayscaleToolSettings.vue'),
   },
   {
+    key: 'backgroundRemoval',
+    iconName: 'IconBackgroundRemovalTool',
+    settingsComponent: () => import('@/components/toolsSettings/BackgroundRemovalToolSettings.vue'),
+  },
+  {
     key: 'select',
     iconName: 'IconSelectTool',
     settingsComponent: () => import('@/components/toolsSettings/SelectToolSettings.vue'),

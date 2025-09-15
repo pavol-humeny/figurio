@@ -155,6 +155,12 @@ export const keyboardShortcuts = [
     args: ['shape', null],
     description: 'Toggle shape tool',
   },
+  {
+    keys: ['shift', 'm'],
+    action: 'toggleTool',
+    args: ['backgroundRemoval', null],
+    description: 'Toggle background removal tool',
+  },
 
   // Multi-file management shortcuts
   // switch to next/previous file

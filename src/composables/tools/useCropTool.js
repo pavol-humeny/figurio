@@ -872,7 +872,7 @@ export function useCropTool(
    * @returns {number} - Computed threshold value
    */
   const getThresholdFromHistogram = (bins, percentile) => {
-    if (percentile <= 0) return 0 // neoznač nič
+    if (percentile <= 0) return 0
     if (percentile > 1) percentile = 1
 
     const total = bins.reduce((a, b) => a + b, 0)
@@ -1052,6 +1052,7 @@ export function useCropTool(
    * Apply the auto crop in preset
    */
   const applyAutoCropPreset = async () => {
+    // TODO - asi by sa mal predat threshold
     const useBaseImage = true
     const bgColor = getOrDetectBgColor(useBaseImage)
     const bins = computeHistogram(bgColor)

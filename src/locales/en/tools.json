@@ -18,6 +18,28 @@
       }
     }
   },
+  "backgroundRemoval":{
+    "label": "Background removal",
+    "tip": "Removes a specific color from the image",
+    "tipDisabled": "",
+    "explain": "This tool removes pixels matching the selected color. Pick a color and adjust the sensitivity value: low values remove only exact matches, high values also remove similar shades.",
+    "shortcut": "Shift + M",
+    "settings": {
+      "general": {
+        "backgroundColor": {
+          "label": "Color to remove",
+          "tip": "Pick the reference color to remove from the image."
+        },
+        "removalSensitivity": {
+          "label": "Sensitivity",
+          "tip": "Adjust how similar a pixel's color must be to the selected color to be removed. Low for only exact matches, high for also similar shades."
+        },
+        "removeBackgroundButton": {
+          "text": "Remove color"
+        }
+      }
+    }
+  },
   "select": {
     "label": "Select",
     "tip": "Selects objects on the image",

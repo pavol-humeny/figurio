@@ -8,6 +8,10 @@ export const editorConfig = {
   autoCropThreshold: 0,
   minCropSize: 20,
 
+  // Background removal settings
+  defaultBackgroundColor: '#ffffff',
+  defaultThreshold: 0.0,
+
   // Item tip settings
   tipDelay: 700,
 
@@ -20,7 +24,6 @@ export const editorConfig = {
   maxFileDimensionHeight: 4000,
   minFileDimensionWidth: 20,
   minFileDimensionHeight: 20,
-
 
   // File name restrictions
   maxFileNameLength: 50,
