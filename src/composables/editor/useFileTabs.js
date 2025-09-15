@@ -41,12 +41,12 @@ export function useFileTabs(uiStore, viewportStore, imageStore, editorStore, t) 
   const setActiveTab = async (index) => {
     if (index !== activeTabIndex.value) {
       uiStore.isLoading = true
-      await new Promise((resolve) => setTimeout(resolve, 1))
+      // await new Promise((resolve) => setTimeout(resolve, 1))
 
       workspaceStore.updateCurrentTabState(t)
       workspaceStore.switchToTab(index)
 
-      await new Promise((resolve) => setTimeout(resolve, 1))
+      // await new Promise((resolve) => setTimeout(resolve, 1))
       uiStore.isLoading = false
 
       // Reset when switching tabs
@@ -74,12 +74,12 @@ export function useFileTabs(uiStore, viewportStore, imageStore, editorStore, t) 
     )
     if (confirmed) {
       uiStore.isLoading = true
-      await new Promise((resolve) => setTimeout(resolve, 1))
+      // await new Promise((resolve) => setTimeout(resolve, 1))
 
       workspaceStore.updateCurrentTabState(t)
       workspaceStore.closeTab(index)
 
-      await new Promise((resolve) => setTimeout(resolve, 1))
+      // await new Promise((resolve) => setTimeout(resolve, 1))
       uiStore.isLoading = false
     }
   }
@@ -119,11 +119,11 @@ export function useFileTabs(uiStore, viewportStore, imageStore, editorStore, t) 
    */
   const switchToNextTab = async () => {
     uiStore.isLoading = true
-    await new Promise((resolve) => setTimeout(resolve, 1))
+    // await new Promise((resolve) => setTimeout(resolve, 1))
 
     workspaceStore.switchToNextTab(t)
 
-    await new Promise((resolve) => setTimeout(resolve, 1))
+    // await new Promise((resolve) => setTimeout(resolve, 1))
     uiStore.isLoading = false
   }
 
@@ -132,11 +132,11 @@ export function useFileTabs(uiStore, viewportStore, imageStore, editorStore, t) 
    */
   const switchToPreviousTab = async () => {
     uiStore.isLoading = true
-    await new Promise((resolve) => setTimeout(resolve, 1))
+    // await new Promise((resolve) => setTimeout(resolve, 1))
 
     workspaceStore.switchToPreviousTab(t)
 
-    await new Promise((resolve) => setTimeout(resolve, 1))
+    // await new Promise((resolve) => setTimeout(resolve, 1))
     uiStore.isLoading = false
   }
 
