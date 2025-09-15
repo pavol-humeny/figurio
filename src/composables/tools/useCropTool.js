@@ -1052,11 +1052,10 @@ export function useCropTool(
    * Apply the auto crop in preset
    */
   const applyAutoCropPreset = async () => {
-    // TODO - asi by sa mal predat threshold
     const useBaseImage = true
     const bgColor = getOrDetectBgColor(useBaseImage)
     const bins = computeHistogram(bgColor)
-    const threshold = getThresholdFromHistogram(bins, autoCropThreshold.value)
+    const threshold = getThresholdFromHistogram(bins, 0)
 
     const newCropBox = calculateAutoCropBox(useBaseImage, threshold, bgColor)
 

@@ -17,11 +17,9 @@ export function usePresetNewOperation(imageStore, props, emit, t) {
    * Available rotation angle options
    */
   const rotationOptions = [
+    { label: '90°', value: 90 },
     { label: '180°', value: 180 },
-    { label: '270°', value: 270 },
-    { label: '0°', value: 0 },
     { label: '-90°', value: -90 },
-    { label: '-180°', value: -180 },
   ]
 
   /**
