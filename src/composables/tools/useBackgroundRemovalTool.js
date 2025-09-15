@@ -23,7 +23,7 @@ const manualSelectedTool = ref('brush') // 'brush' | 'eraser'
  */
 const manualToolSize = ref(editorConfig.defaultManualToolSize)
 
-export function useBackgroundRemovalTool(imageStore, historyStore, workspaceStore, t) {
+export function useBackgroundRemovalTool(imageStore, historyStore, workspaceStore, editorStore, t) {
   const { showConfirmModal } = useConfirmModal()
 
   // ----------------------------------
@@ -184,10 +184,29 @@ export function useBackgroundRemovalTool(imageStore, historyStore, workspaceStor
   }
 
   // ----------------------------------
-  // Manual
+  // Manual and Object Detection
   // ----------------------------------
 
-  const manualUseBaseImage = ref(false)
+  /**
+   * Whether to use original image as base for manual removal
+   */
+  const useBaseImage = ref(false)
+
+  /**
+   * Whether to replace current selection with object detection result
+   */
+  const replaceSelectionWithObjectDetection = ref(false)
+
+  /**
+   * Highlight color for selection
+   */
+  const highlightColor = computed(() => {
+    return editorStore.toolsConfig.backgroundRemoval.highlightColor
+  })
+
+  const setHighlightColor = () => {
+    editorStore.toolsConfig.backgroundRemoval.highlightColor = highlightColor.value
+  }
 
   /**
    * Maximum size of the manual tool (10% of smaller image dimension, min 10px)
@@ -208,7 +227,7 @@ export function useBackgroundRemovalTool(imageStore, historyStore, workspaceStor
   /**
    * Clear all manual selections
    */
-  const clearAllManualSelections = () => {
+  const clearAllSelections = () => {
     const canvas = document.getElementById('manualRemovalCanvas')
     if (!canvas) return
     const ctx = canvas.getContext('2d')
@@ -218,7 +237,7 @@ export function useBackgroundRemovalTool(imageStore, historyStore, workspaceStor
   /**
    * Invert manual selection
    */
-  const invertManualSelection = () => {
+  const invertSelection = () => {
     const canvas = document.getElementById('manualRemovalCanvas')
     if (!canvas) return
     const ctx = canvas.getContext('2d')
@@ -248,6 +267,141 @@ export function useBackgroundRemovalTool(imageStore, historyStore, workspaceStor
     if (size > manualMaxToolSize.value) size = manualMaxToolSize.value
     manualToolSize.value = size
   }
+
+  //////////////////////////////////////////////////////////////////////////
+  const detectObjects = () => {
+    const img = imageStore.originalImage
+    if (!img) return
+
+    const canvas = document.createElement('canvas')
+    canvas.width = img.width
+    canvas.height = img.height
+    const ctx = canvas.getContext('2d', { willReadFrequently: true })
+    ctx.drawImage(img, 0, 0, img.width, img.height)
+
+    const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height)
+    return imageData
+  }
+
+  const detectEdges = (imageData) => {
+    const { width, height, data } = imageData
+    const gray = new Uint8ClampedArray(width * height)
+
+    // prevod na grayscale
+    for (let i = 0; i < data.length; i += 4) {
+      gray[i / 4] = 0.299 * data[i] + 0.587 * data[i + 1] + 0.114 * data[i + 2]
+    }
+
+    const edges = new Uint8ClampedArray(width * height)
+
+    const sobel = (x, y) => {
+      // const idx = y * width + x
+      if (x === 0 || y === 0 || x === width - 1 || y === height - 1) return 0
+
+      const gx =
+        -1 * gray[(y - 1) * width + (x - 1)] +
+        1 * gray[(y - 1) * width + (x + 1)] +
+        -2 * gray[y * width + (x - 1)] +
+        2 * gray[y * width + (x + 1)] +
+        -1 * gray[(y + 1) * width + (x - 1)] +
+        1 * gray[(y + 1) * width + (x + 1)]
+
+      const gy =
+        -1 * gray[(y - 1) * width + (x - 1)] +
+        -2 * gray[(y - 1) * width + x] +
+        -1 * gray[(y - 1) * width + (x + 1)] +
+        1 * gray[(y + 1) * width + (x - 1)] +
+        2 * gray[(y + 1) * width + x] +
+        1 * gray[(y + 1) * width + (x + 1)]
+
+      return Math.sqrt(gx * gx + gy * gy)
+    }
+
+    for (let y = 0; y < height; y++) {
+      for (let x = 0; x < width; x++) {
+        edges[y * width + x] = sobel(x, y)
+      }
+    }
+
+    console.log('edges:', edges)
+    return edges
+  }
+
+  const getBoundingBoxes = (edges, width, height, threshold = 50) => {
+    const visited = new Uint8Array(width * height)
+    const boxes = []
+
+    const neighbors = (x, y) => [
+      [x - 1, y],
+      [x + 1, y],
+      [x, y - 1],
+      [x, y + 1],
+    ]
+
+    const floodFill = (x0, y0) => {
+      const stack = [[x0, y0]]
+      let minX = x0,
+        maxX = x0,
+        minY = y0,
+        maxY = y0
+
+      while (stack.length) {
+        const [x, y] = stack.pop()
+        const idx = y * width + x
+        if (x < 0 || x >= width || y < 0 || y >= height) continue
+        if (visited[idx]) continue
+        if (edges[idx] < threshold) continue
+
+        visited[idx] = 1
+        minX = Math.min(minX, x)
+        maxX = Math.max(maxX, x)
+        minY = Math.min(minY, y)
+        maxY = Math.max(maxY, y)
+
+        neighbors(x, y).forEach(([nx, ny]) => stack.push([nx, ny]))
+      }
+
+      return { x: minX, y: minY, width: maxX - minX, height: maxY - minY }
+    }
+
+    for (let y = 0; y < height; y++) {
+      for (let x = 0; x < width; x++) {
+        const idx = y * width + x
+        if (!visited[idx] && edges[idx] >= threshold) {
+          const box = floodFill(x, y)
+          if (box.width > 5 && box.height > 5) boxes.push(box)
+        }
+      }
+    }
+
+    return boxes
+  }
+
+  const drawBoundingBoxes = (boxes) => {
+    console.log('Drawing boxes:', boxes)
+    const canvas = document.getElementById('manualRemovalCanvas')
+    if (!canvas) return
+    const ctx = canvas.getContext('2d')
+
+    if (replaceSelectionWithObjectDetection.value) {
+      // Clear existing selection
+      ctx.clearRect(0, 0, canvas.width, canvas.height)
+    }
+
+    ctx.fillStyle = editorConfig.removalHighlightColor
+
+    boxes.forEach((box) => {
+      ctx.fillRect(box.x, box.y, box.width, box.height)
+    })
+  }
+
+  const detectObjectsClick = () => {
+    const imageData = detectObjects()
+    const edges = detectEdges(imageData)
+    const boxes = getBoundingBoxes(edges, imageData.width, imageData.height)
+    drawBoundingBoxes(boxes)
+  }
+  //////////////////////////////////////////////////////////////////////////
 
   // ----------------------------------
   // Apply
@@ -322,7 +476,7 @@ export function useBackgroundRemovalTool(imageStore, historyStore, workspaceStor
     } else if (removalType === 'manual') {
       applyManualRemovalRender()
     } else if (removalType === 'objectDetection') {
-      applyObjectDetectionRemovalRender()
+      applyManualRemovalRender()
     }
   }
 
@@ -376,12 +530,12 @@ export function useBackgroundRemovalTool(imageStore, historyStore, workspaceStor
     const maskData = ctxMask.getImageData(0, 0, manualCanvas.width, manualCanvas.height)
     const maskPixels = maskData.data
 
-    const renderedImage = manualUseBaseImage.value
+    const renderedImage = useBaseImage.value
       ? imageStore.originalImage
       : imageStore.getRenderedImage({ t, renderCall: false })
     if (!renderedImage) return
 
-    // Vytvoríme nový canvas pre úpravu obrazu
+    // Create a temporary canvas to manipulate the rendered image
     const canvas = document.createElement('canvas')
     canvas.width = renderedImage.width
     canvas.height = renderedImage.height
@@ -391,26 +545,22 @@ export function useBackgroundRemovalTool(imageStore, historyStore, workspaceStor
     const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height)
     const data = imageData.data
 
-    // Prejdeme cez všetky pixely masky a odstránime červené pixely
+    // Apply mask: make pixels transparent where mask is red
     for (let i = 0; i < data.length; i += 4) {
       const maskR = maskPixels[i]
       const maskG = maskPixels[i + 1]
       const maskB = maskPixels[i + 2]
       const maskA = maskPixels[i + 3]
 
-      // Ak je pixel červený (maskovací)
+      // If the pixel is red (masking)
       if (maskA > 0 && maskR === 255 && maskG === 0 && maskB === 0) {
-        data[i + 3] = 0 // Urobíme transparentný
+        data[i + 3] = 0 // Transparent
       }
     }
 
     ctx.putImageData(imageData, 0, 0)
     imageStore.setRenderedImage(canvas)
-
-    // Clear canvas
-    // clearAllManualSelections()
   }
-  const applyObjectDetectionRemovalRender = () => {}
 
   return {
     colorRemovalThreshold,
@@ -421,9 +571,13 @@ export function useBackgroundRemovalTool(imageStore, historyStore, workspaceStor
     manualToolSize,
     manualSelectTool,
     manualMaxToolSize,
-    clearAllManualSelections,
-    invertManualSelection,
-    manualUseBaseImage,
+    clearAllSelections,
+    invertSelection,
+    useBaseImage,
     changeManualToolSize,
+    detectObjectsClick,
+    replaceSelectionWithObjectDetection,
+    highlightColor,
+    setHighlightColor,
   }
 }

@@ -30,9 +30,11 @@ const {
   manualToolSize,
   manualSelectTool,
   manualMaxToolSize,
-  clearAllManualSelections,
-  invertManualSelection,
-  manualUseBaseImage,
+  clearAllSelections,
+  invertSelection,
+  useBaseImage,
+  detectObjectsClick,
+  replaceSelectionWithObjectDetection,
 } = useBackgroundRemovalTool(
   useImageStore(),
   useHistoryStore(),
@@ -145,27 +147,27 @@ const tabs = ['color', 'manual', 'objectDetection']
           <div class="content-wrapper">
             <DefaultButton :text="$t('tools.backgroundRemoval.settings.manual.clearAllButton.text')"
               :tip="$t('tools.backgroundRemoval.settings.manual.clearAllButton.tip')" position="bottom-left"
-              @click="clearAllManualSelections" />
+              @click="clearAllSelections" />
           </div>
         </div>
-
 
         <!-- Invert selection button -->
         <div class="settings-content-wrapper">
           <div class="content-wrapper">
             <DefaultButton :text="$t('tools.backgroundRemoval.settings.manual.invertSelectionButton.text')"
               :tip="$t('tools.backgroundRemoval.settings.manual.invertSelectionButton.tip')" position="bottom-left"
-              @click="invertManualSelection" />
+              @click="invertSelection" />
           </div>
         </div>
 
+        <!-- Use base image -->
         <div class="settings-content-wrapper">
           <div class="content-wrapper">
             <div class="content-aligned two-items">
               <p style="text-align: start">
                 {{ $t('tools.backgroundRemoval.settings.manual.useBaseImage.label') }}
               </p>
-              <ToggleButton v-model="manualUseBaseImage" :scale="0.6" :style="{ transform: 'translateX(16px)' }"
+              <ToggleButton v-model="useBaseImage" :scale="0.6" :style="{ transform: 'translateX(16px)' }"
                 :tip="$t('tools.backgroundRemoval.settings.manual.useBaseImage.tip')" position="bottom-left" />
             </div>
           </div>
@@ -188,17 +190,47 @@ const tabs = ['color', 'manual', 'objectDetection']
       <!-- Object detection removal -->
       <div v-if="editorStore.selectedTabPerTool[editorStore.selectedToolKey] === 'objectDetection'"
         class="specific-settings">
-        <!-- -->
+        <!-- Add selection or replace -->
         <div class="settings-content-wrapper">
           <ExplainItem :text="$t('tools.backgroundRemoval.subTools.objectDetection.explain')"
             :title="$t('tools.backgroundRemoval.subTools.objectDetection.label')" position="left" />
           <div class="content-wrapper">
-            <div class="content-title">
-              <p>
-                {{ $t('tools.backgroundRemoval.settings.color.backgroundColor.label') }}
+            <div class="content-aligned two-items">
+              <p style="text-align: start">
+                {{ $t('tools.backgroundRemoval.settings.objectDetection.replaceSelection.label') }}
               </p>
+              <ToggleButton v-model="replaceSelectionWithObjectDetection" :scale="0.6"
+                :style="{ transform: 'translateX(16px)' }"
+                :tip="$t('tools.backgroundRemoval.settings.objectDetection.replaceSelection.tip')"
+                position="bottom-left" />
             </div>
-            <!--  -->
+          </div>
+        </div>
+
+        <!-- Detect objects -->
+        <div class="settings-content-wrapper">
+          <div class="content-wrapper">
+            <DefaultButton :text="$t('tools.backgroundRemoval.settings.objectDetection.detectButton.text')"
+              :tip="$t('tools.backgroundRemoval.settings.objectDetection.detectButton.tip')" position="bottom-left"
+              @click="detectObjectsClick" />
+          </div>
+        </div>
+
+        <!-- Clear all button -->
+        <div class="settings-content-wrapper">
+          <div class="content-wrapper">
+            <DefaultButton :text="$t('tools.backgroundRemoval.settings.objectDetection.clearAllButton.text')"
+              :tip="$t('tools.backgroundRemoval.settings.objectDetection.clearAllButton.tip')" position="bottom-left"
+              @click="clearAllSelections" />
+          </div>
+        </div>
+
+        <!-- Invert selection button -->
+        <div class="settings-content-wrapper">
+          <div class="content-wrapper">
+            <DefaultButton :text="$t('tools.backgroundRemoval.settings.manual.invertSelectionButton.text')"
+              :tip="$t('tools.backgroundRemoval.settings.objectDetection.invertSelectionButton.tip')"
+              position="bottom-left" @click="invertSelection" />
           </div>
         </div>
 

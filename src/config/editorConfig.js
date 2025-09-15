@@ -17,6 +17,7 @@ export const editorConfig = {
   manualSelectCursorEraserColor: 'rgba(0, 0, 0, 1)',
   manualSelectCursorEraserBackgroundColor: 'rgba(0, 0, 0, 0.4)',
   manualSelectCursorResizingSensitivity: 2, // Higher = slower resizing, lower = faster
+  removalHighlightColor: 'rgba(255, 0, 0, 1)',
 
   // Item tip settings
   tipDelay: 700,

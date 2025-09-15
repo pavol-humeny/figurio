@@ -17,7 +17,7 @@ import { useBlurTool } from '@/composables/tools/useBlurTool'
 import ContextMenu from '../common/ContextMenu.vue'
 import { useDragAndDropArea } from '@/composables/editor/useDragAndDropArea'
 import router from '@/router'
-import ManualBackgroundRemoval from '../tools/ManualBackgroundRemoval.vue'
+import BackgroundRemovalCanvas from '../tools/BackgroundRemovalCanvas.vue'
 
 const { t } = useI18n()
 const uiStore = useUiStore()
@@ -217,8 +217,8 @@ const disableContextMenu = computed(() => {
           <PresetCropTool v-if="
             editorStore.selectedToolKey === 'preset' && editorStore.selectedSubToolKey === 'crop'" />
 
-          <ManualBackgroundRemoval
-            v-if="editorStore.selectedToolKey === 'backgroundRemoval' && editorStore.selectedTabPerTool['backgroundRemoval'] === 'manual'" />
+          <BackgroundRemovalCanvas
+            v-if="editorStore.selectedToolKey === 'backgroundRemoval' && (editorStore.selectedTabPerTool['backgroundRemoval'] === 'manual' || editorStore.selectedTabPerTool['backgroundRemoval'] === 'objectDetection')" />
         </div>
       </ContextMenu>
     </div>
@@ -248,7 +248,7 @@ const disableContextMenu = computed(() => {
         </div>
         <div v-if="mouseX !== null" class="ruler-cursor-mark horizontal" :style="{ left: mouseX + 'px' }">
           <span class="ruler-cursor-label horizontal" :class="{ 'active': cursorPosXSameAsImageWidth }">{{ cursorPosX
-          }}</span>
+            }}</span>
         </div>
 
       </div>
@@ -261,7 +261,7 @@ const disableContextMenu = computed(() => {
         </div>
         <div v-if="mouseY !== null" class="ruler-cursor-mark vertical" :style="{ top: mouseY + 'px' }">
           <span class="ruler-cursor-label vertical" :class="{ 'active': cursorPosYSameAsImageHeight }">{{ cursorPosY
-          }}</span>
+            }}</span>
         </div>
       </div>
     </div>

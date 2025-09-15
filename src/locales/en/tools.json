@@ -91,6 +91,26 @@
       },
       "objectDetection": {
         "label": "Object Detection",
+        "replaceSelection":{
+          "label": "Replace selection",
+          "tip": "Replace current selection with detected objects"
+        },
+        "clearAllButton": {
+          "text": "Clear all",
+          "tip": "Clear selected area"
+        },
+        "invertSelectionButton": {
+          "text": "Invert selection",
+          "tip": "Invert the current selection"
+        },
+        "useBaseImage":{
+          "label": "Use base image",
+          "tip": "Remove selection from the original base image or from the current modified image"
+        },
+        "detectButton": {
+          "text": "Detect objects",
+          "tip": "Detect objects in the image"
+        },
         "removeButton": {
           "text": "Remove background"
         }

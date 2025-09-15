@@ -60,7 +60,7 @@ const {
           <div class="export-settings-item" v-if="fileFormat === 'jpg' || fileFormat === 'webp'">
             <label for="file-quality">{{
               $t('tools.export.settings.general.fileQuality.label')
-            }}</label>
+              }}</label>
             <p>{{ fileDimensions.quality }} %</p>
             <DefaultSlider v-model="fileDimensions.quality" :min="0" :max="100" :step="1"
               @update:modelValue="(value) => updateQuality(value)" :backgroundColor="'var(--background-c)'" />
@@ -78,7 +78,7 @@ const {
           <div class="export-settings-item">
             <label>{{
               $t('tools.export.settings.general.fileDimensions.label')
-              }}</label>
+            }}</label>
             <div class="export-settings-item-value">
               <div class="width disabled">
                 <p>
@@ -127,6 +127,7 @@ const {
         <div class="export-preview">
           <img v-if="previewUrl" :src="previewUrl" alt="Export Preview" class="export-preview-img" :style="{
             aspectRatio: fileDimensions.width + ' / ' + fileDimensions.height,
+            boxShadow: 'var(--box-shadow-content)'
           }" />
           <div v-else class="export-preview-placeholder">
             {{ $t('tools.export.settings.general.preview.previewUnavailable') }}
@@ -275,6 +276,7 @@ const {
   display: flex;
   justify-content: center;
   align-items: center;
+  padding: 5px;
   background: rgb(255, 255, 255);
 }
 

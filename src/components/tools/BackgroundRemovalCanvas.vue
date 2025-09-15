@@ -7,11 +7,13 @@ import { useWorkspaceStore } from '@/stores/workspaceStore'
 import { useI18n } from 'vue-i18n'
 import { useViewportStore } from '@/stores/viewportStore'
 import { editorConfig } from '@/config/editorConfig.js'
+import { useEditorStore } from '@/stores/editorStore'
 
 const { t } = useI18n()
 
 const imageStore = useImageStore()
 const viewportStore = useViewportStore()
+const editorStore = useEditorStore()
 
 const { manualSelectedTool, manualToolSize, changeManualToolSize } = useBackgroundRemovalTool(
   useImageStore(),
@@ -102,7 +104,7 @@ const drawLine = (from, to, tool) => {
   } else {
     // Brush
     ctx.globalCompositeOperation = 'source-over'
-    ctx.strokeStyle = 'rgba(255,0,0,1)'
+    ctx.strokeStyle = editorConfig.removalHighlightColor
   }
 
   ctx.beginPath()
@@ -130,6 +132,8 @@ const getMousePos = (event) => {
  * @param event Mouse event
  */
 const onMouseDown = (event) => {
+  if (editorStore.selectedTabPerTool['backgroundRemoval'] !== 'manual') return
+
   // Resizing tool size with Alt + Right mouse button
   if (event.altKey && event.button === 2) {
     isAltResizing.value = true
@@ -264,16 +268,18 @@ onBeforeUnmount(() => {
 <template>
   <div class="manual-removal-wrapper">
     <canvas id="manualRemovalCanvas" ref="manualCanvasRef" class="manual-removal-canvas" :width="imageWidth"
-      :height="imageHeight" @mousedown="onMouseDown" @mousemove="onMouseMove" @mouseleave="onMouseLeave"></canvas>
+      :height="imageHeight" @mousedown="onMouseDown" @mousemove="onMouseMove" @mouseleave="onMouseLeave"
+      :style="{ cursor: editorStore.selectedTabPerTool['backgroundRemoval'] === 'objectDetection' ? 'default' : 'none' }"></canvas>
 
     <!-- Cursor -->
-    <div v-if="showCursor" class="custom-cursor" :style="{
-      ...cursorStyleVars,
-      width: manualToolSize + 'px',
-      height: manualToolSize + 'px',
-      left: cursorPos.x + 'px',
-      top: cursorPos.y + 'px'
-    }" :class="{
+    <div v-if="showCursor && editorStore.selectedTabPerTool['backgroundRemoval'] === 'manual'" class="custom-cursor"
+      :style="{
+        ...cursorStyleVars,
+        width: manualToolSize + 'px',
+        height: manualToolSize + 'px',
+        left: cursorPos.x + 'px',
+        top: cursorPos.y + 'px'
+      }" :class="{
       brush: manualSelectedTool === 'brush',
       eraser: manualSelectedTool === 'eraser' || isErasingDuringDraw,
       isAltResizing: isAltResizing
@@ -293,8 +299,6 @@ onBeforeUnmount(() => {
   left: 0;
   pointer-events: auto;
   opacity: 0.5;
-  cursor: none;
-  /* skryť natívny kurzor */
 }
 
 .custom-cursor {
