@@ -78,7 +78,6 @@ const {
   onClickImageSvg,
   onMouseDownImageSvg,
   onMouseDownSelect,
-  onMouseMoveImageSvg,
   selectBox,
   copySelectedSvgObject,
   pasteSvgObjectToCenter,
@@ -127,8 +126,8 @@ const disableContextMenu = computed(() => {
 </script>
 
 <template>
-  <div class="viewport-wrapper" id="viewport" @mousedown="onMouseDownSelect" 
-    @dragover="handleDragOver" @dragleave="handleDragLeave" @drop="handleDrop">
+  <div class="viewport-wrapper" id="viewport" @mousedown="onMouseDownSelect" @dragover="handleDragOver"
+    @dragleave="handleDragLeave" @drop="handleDrop">
     <LoadingSpinner />
 
     <div class="viewport-content-wrapper" ref="wrapperRef" @wheel.passive="setZoomAndScroll" @mousedown="startPan"
@@ -245,7 +244,7 @@ const disableContextMenu = computed(() => {
         </div>
         <div v-if="mouseX !== null" class="ruler-cursor-mark horizontal" :style="{ left: mouseX + 'px' }">
           <span class="ruler-cursor-label horizontal" :class="{ 'active': cursorPosXSameAsImageWidth }">{{ cursorPosX
-          }}</span>
+            }}</span>
         </div>
 
       </div>
@@ -258,7 +257,7 @@ const disableContextMenu = computed(() => {
         </div>
         <div v-if="mouseY !== null" class="ruler-cursor-mark vertical" :style="{ top: mouseY + 'px' }">
           <span class="ruler-cursor-label vertical" :class="{ 'active': cursorPosYSameAsImageHeight }">{{ cursorPosY
-          }}</span>
+            }}</span>
         </div>
       </div>
     </div>
@@ -293,8 +292,12 @@ const disableContextMenu = computed(() => {
 .viewport-content {
   position: relative;
   transform-origin: top left;
-  /* display: inline-block; */
   display: block;
+
+  /* Background - Checkerboard */
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='20' height='20'><rect width='10' height='10' fill='%23ccc'/><rect x='10' width='10' height='10' fill='%23fff'/><rect y='10' width='10' height='10' fill='%23fff'/><rect x='10' y='10' width='10' height='10' fill='%23ccc'/></svg>");
+  background-repeat: repeat;
+  background-size: 20px 20px;
 }
 
 .image-canvas,

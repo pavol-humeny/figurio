@@ -179,6 +179,10 @@ export const useUiStore = defineStore('ui', {
      * @param {number} width
      */
     setRightPanelWidth(width) {
+      if (width >= this.rightPanelMaxWidth) {
+        width = this.rightPanelMaxWidth
+      }
+
       this.rightPanelWidth = width
       localStorage.setItem(
         `${globalConfig.LOCAL_STORAGE_PREFIX}rightPanelWidth`,

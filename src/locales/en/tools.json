@@ -22,10 +22,35 @@
     "label": "Background removal",
     "tip": "Removes a specific color from the image",
     "tipDisabled": "",
-    "explain": "This tool removes pixels matching the selected color. Pick a color and adjust the sensitivity value: low values remove only exact matches, high values also remove similar shades.",
     "shortcut": "Shift + M",
+    "subTools": {
+      "color": {
+        "label": "Color",
+        "tip": "Removes a specific color from the image",
+        "explain": "The Color tool allows removing a specific color from the image. Pick a color and adjust the sensitivity value. Low values remove only exact matches, high values also remove similar shades.",
+        "shortcut": ""
+      },
+      "manual": {
+        "label": "Manual",
+        "tip": "Remove manually selected parts of the image",
+        "explain": "The Manual tool allows removing parts of the image by drawing over them. Adjust the brush size to control the area being removed.",
+        "shortcut": ""
+      },
+      "objectDetection": {
+        "label": "Object Detection",
+        "tip": "Detect objects in the image and remove the background",
+        "explain": "The Object Detection tool identifies and removes the background from objects in the image.",
+        "shortcut": ""
+      }
+    },
     "settings": {
-      "general": {
+      "general":{
+        "removeBackgroundButton": {
+          "text": "Remove color"
+        }
+      },
+      "color": {
+        "label": "Color",
         "backgroundColor": {
           "label": "Color to remove",
           "tip": "Pick the reference color to remove from the image."
@@ -33,10 +58,13 @@
         "removalSensitivity": {
           "label": "Sensitivity",
           "tip": "Adjust how similar a pixel's color must be to the selected color to be removed. Low for only exact matches, high for also similar shades."
-        },
-        "removeBackgroundButton": {
-          "text": "Remove color"
         }
+      },
+      "manual": {
+        "label": "Manual"
+      },
+      "objectDetection": {
+        "label": "Object Detection"
       }
     }
   },
