@@ -1,4 +1,4 @@
-import { ref, watch } from 'vue'
+import { computed, ref, watch } from 'vue'
 import { useConfirmModal } from '../modals/useConfirmModal'
 import { useSendEvent } from '@/composables/common/useSendEvent'
 import { editorConfig } from '@/config/editorConfig'
@@ -13,23 +13,36 @@ const cachedHistogram = ref(null)
  */
 const cachedThreshold = ref(null)
 
+/**
+ * Selected manual tool ('brush' | 'eraser')
+ */
+const manualSelectedTool = ref('brush') // 'brush' | 'eraser'
+
+/**
+ * Size of the manual tool
+ */
+const manualToolSize = ref(editorConfig.defaultManualToolSize)
+
 export function useBackgroundRemovalTool(imageStore, historyStore, workspaceStore, t) {
   const { showConfirmModal } = useConfirmModal()
 
+  // ----------------------------------
+  // Color
+  // ----------------------------------
   /**
    * Background color for removal
    */
-  const backgroundColor = ref(editorConfig.defaultBackgroundColor)
+  const colorBackgroundColor = ref(editorConfig.defaultBackgroundColor)
 
   /**
    * Removal threshold for background removal
    */
-  const removalThreshold = ref(editorConfig.defaultThreshold)
+  const colorRemovalThreshold = ref(editorConfig.defaultThreshold)
 
   /**
    * Available options for removal threshold
    */
-  const removalThresholdOptions = [
+  const colorRemovalThresholdOptions = [
     '0',
     '0,1',
     '0,2',
@@ -86,11 +99,13 @@ export function useBackgroundRemovalTool(imageStore, historyStore, workspaceStor
    */
   watch(() => workspaceStore.activeTabIndex, resetCache, { immediate: true })
 
-  watch(removalThreshold, () => {
+  /** Watch for color removal threshold changes */
+  watch(colorRemovalThreshold, () => {
     resetCache()
   })
 
-  watch(backgroundColor, () => {
+  /** Watch for background color changes */
+  watch(colorBackgroundColor, () => {
     resetCache()
   })
 
@@ -168,34 +183,112 @@ export function useBackgroundRemovalTool(imageStore, historyStore, workspaceStor
     return 10
   }
 
+  // ----------------------------------
+  // Manual
+  // ----------------------------------
+
+  const manualUseBaseImage = ref(false)
+
+  /**
+   * Maximum size of the manual tool (10% of smaller image dimension, min 10px)
+   */
+  const manualMaxToolSize = computed(() => {
+    const smallerDimension = imageStore.getSmallerImageDimension()
+    return Math.max(10, Math.floor(smallerDimension * editorConfig.maxManualToolSizeCoefficient))
+  })
+
+  /**
+   * Select manual tool
+   * @param {string} tool - Tool to select ('brush' | 'eraser')
+   */
+  const manualSelectTool = (tool) => {
+    manualSelectedTool.value = tool
+  }
+
+  /**
+   * Clear all manual selections
+   */
+  const clearAllManualSelections = () => {
+    const canvas = document.getElementById('manualRemovalCanvas')
+    if (!canvas) return
+    const ctx = canvas.getContext('2d')
+    ctx.clearRect(0, 0, canvas.width, canvas.height)
+  }
+
+  /**
+   * Invert manual selection
+   */
+  const invertManualSelection = () => {
+    const canvas = document.getElementById('manualRemovalCanvas')
+    if (!canvas) return
+    const ctx = canvas.getContext('2d')
+    const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height)
+    const data = imageData.data
+
+    for (let i = 0; i < data.length; i += 4) {
+      const alpha = data[i + 3]
+
+      if (alpha > 0) {
+        // Red to transparent
+        data[i + 3] = 0
+      } else {
+        // Transparent to red
+        data[i] = 255 // R
+        data[i + 1] = 0 // G
+        data[i + 2] = 0 // B
+        data[i + 3] = 255
+      }
+    }
+
+    ctx.putImageData(imageData, 0, 0)
+  }
+
+  const changeManualToolSize = (size) => {
+    if (size < 1) size = 1
+    if (size > manualMaxToolSize.value) size = manualMaxToolSize.value
+    manualToolSize.value = size
+  }
+
+  // ----------------------------------
+  // Apply
+  // ----------------------------------
+
   /**
    * Apply background removal
+   *
+   * @param {string} removalType - Type of removal ('color', 'manual', 'objectDetection')
    */
-  const applyBackgroundRemoval = async () => {
+  const applyBackgroundRemoval = async (removalType) => {
+    const params = {
+      removalType,
+      colorBackgroundColor: colorBackgroundColor.value,
+      colorThreshold: colorRemovalThreshold.value,
+    }
+
     imageStore.addImageOperation({
       type: 'backgroundRemoval',
-      backgroundColor: backgroundColor.value,
-      threshold: removalThreshold.value,
+      params,
     })
 
     useSendEvent().sendEvent('toolSettings', 'backgroundRemoval', null, {
       settings: {
-        backgroundColor: backgroundColor.value,
-        removalThreshold: removalThreshold.value,
+        removalType,
+        colorBackgroundColor: colorBackgroundColor.value,
+        colorRemovalThreshold: colorRemovalThreshold.value,
       },
     })
 
-    await applyBackgroundRemovalRender(backgroundColor.value, removalThreshold.value)
+    await applyBackgroundRemovalRender(removalType, params)
 
     historyStore.push(imageStore.getSnapshot(t))
   }
 
   /**
    * Apply background removal rendering
-   * @param {*} backgroundColor Color to remove
-   * @param {*} threshold Removal threshold
+   * @param {string} removalType - Type of removal ('color', 'manual', 'objectDetection')
+   * @param {Object} params - Parameters for removal
    */
-  const applyBackgroundRemovalRender = async (backgroundColor, threshold) => {
+  const applyBackgroundRemovalRender = async (removalType, params) => {
     if (!imageStore.getRenderedImage({ t, renderCall: false })) return
 
     if (imageStore.fileType === 'pdf') {
@@ -224,6 +317,21 @@ export function useBackgroundRemovalTool(imageStore, historyStore, workspaceStor
       }
     }
 
+    if (removalType === 'color') {
+      applyColorRemovalRender(params.colorBackgroundColor, params.colorThreshold)
+    } else if (removalType === 'manual') {
+      applyManualRemovalRender()
+    } else if (removalType === 'objectDetection') {
+      applyObjectDetectionRemovalRender()
+    }
+  }
+
+  /**
+   * Apply color-based background removal rendering
+   * @param {string} backgroundColor - Background color in HEX
+   * @param {number} threshold - Threshold value (0..1)
+   */
+  const applyColorRemovalRender = (backgroundColor, threshold) => {
     // Get RGB values from HEX
     const bgColor = hexToRgb(backgroundColor)
 
@@ -259,10 +367,63 @@ export function useBackgroundRemovalTool(imageStore, historyStore, workspaceStor
 
     imageStore.setRenderedImage(canvas)
   }
+
+  const applyManualRemovalRender = () => {
+    const manualCanvas = document.getElementById('manualRemovalCanvas')
+    if (!manualCanvas) return
+
+    const ctxMask = manualCanvas.getContext('2d')
+    const maskData = ctxMask.getImageData(0, 0, manualCanvas.width, manualCanvas.height)
+    const maskPixels = maskData.data
+
+    const renderedImage = manualUseBaseImage.value
+      ? imageStore.originalImage
+      : imageStore.getRenderedImage({ t, renderCall: false })
+    if (!renderedImage) return
+
+    // Vytvoríme nový canvas pre úpravu obrazu
+    const canvas = document.createElement('canvas')
+    canvas.width = renderedImage.width
+    canvas.height = renderedImage.height
+    const ctx = canvas.getContext('2d', { willReadFrequently: true })
+    ctx.drawImage(renderedImage, 0, 0)
+
+    const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height)
+    const data = imageData.data
+
+    // Prejdeme cez všetky pixely masky a odstránime červené pixely
+    for (let i = 0; i < data.length; i += 4) {
+      const maskR = maskPixels[i]
+      const maskG = maskPixels[i + 1]
+      const maskB = maskPixels[i + 2]
+      const maskA = maskPixels[i + 3]
+
+      // Ak je pixel červený (maskovací)
+      if (maskA > 0 && maskR === 255 && maskG === 0 && maskB === 0) {
+        data[i + 3] = 0 // Urobíme transparentný
+      }
+    }
+
+    ctx.putImageData(imageData, 0, 0)
+    imageStore.setRenderedImage(canvas)
+
+    // Clear canvas
+    // clearAllManualSelections()
+  }
+  const applyObjectDetectionRemovalRender = () => {}
+
   return {
-    removalThreshold,
-    removalThresholdOptions,
+    colorRemovalThreshold,
+    colorRemovalThresholdOptions,
     applyBackgroundRemoval,
-    backgroundColor,
+    colorBackgroundColor,
+    manualSelectedTool,
+    manualToolSize,
+    manualSelectTool,
+    manualMaxToolSize,
+    clearAllManualSelections,
+    invertManualSelection,
+    manualUseBaseImage,
+    changeManualToolSize,
   }
 }

@@ -44,11 +44,6 @@
       }
     },
     "settings": {
-      "general":{
-        "removeBackgroundButton": {
-          "text": "Remove color"
-        }
-      },
       "color": {
         "label": "Color",
         "backgroundColor": {
@@ -58,13 +53,47 @@
         "removalSensitivity": {
           "label": "Sensitivity",
           "tip": "Adjust how similar a pixel's color must be to the selected color to be removed. Low for only exact matches, high for also similar shades."
+        },
+        "removeButton": {
+          "text": "Remove color"
         }
       },
       "manual": {
-        "label": "Manual"
+        "label": "Manual",
+        "selectedTool": {
+          "label": "Selected tool",
+          "options": {
+            "brush": "Brush",
+            "tipBrush": "Brush",
+            "eraser": "Eraser",
+            "tipEraser": "Eraser"
+          }
+        },
+        "toolSize": {
+          "label": "Tool size",
+          "tip": "Adjust the size of the selected tool or double click icon to reset size"
+        },
+        "clearAllButton": {
+          "text": "Clear all",
+          "tip": "Clear selected area"
+        },
+        "invertSelectionButton": {
+          "text": "Invert selection",
+          "tip": "Invert the current selection"
+        },
+        "useBaseImage":{
+          "label": "Use base image",
+          "tip": "Remove selection from the original base image or from the current modified image"
+        },
+        "removeButton": {
+          "text": "Remove selection"
+        }
       },
       "objectDetection": {
-        "label": "Object Detection"
+        "label": "Object Detection",
+        "removeButton": {
+          "text": "Remove background"
+        }
       }
     }
   },

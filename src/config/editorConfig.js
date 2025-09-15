@@ -11,6 +11,12 @@ export const editorConfig = {
   // Background removal settings
   defaultBackgroundColor: '#ffffff',
   defaultThreshold: 0.0,
+  defaultManualToolSize: 10, // in pixels
+  maxManualToolSizeCoefficient: 0.4, // 10% of the smaller image dimension
+  manualSelectCursorBrushColor: 'rgba(0, 0, 0, 1)',
+  manualSelectCursorEraserColor: 'rgba(0, 0, 0, 1)',
+  manualSelectCursorEraserBackgroundColor: 'rgba(0, 0, 0, 0.4)',
+  manualSelectCursorResizingSensitivity: 2, // Higher = slower resizing, lower = faster
 
   // Item tip settings
   tipDelay: 700,

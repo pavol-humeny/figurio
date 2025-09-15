@@ -173,6 +173,9 @@ export const useImageStore = defineStore('imageStore', {
       x: 0,
       y: 0,
     },
+
+    /** Manual background removal canvas */
+    manualRemovalCanvas: null,
   }),
   getters: {
     /**
@@ -443,6 +446,7 @@ export const useImageStore = defineStore('imageStore', {
       this.setRenderedImage(null)
       this.newRenderedImage = null
       this.overlayImage = null
+      this.manualRemovalCanvas = null
     },
 
     /**
@@ -822,7 +826,13 @@ export const useImageStore = defineStore('imageStore', {
      * @returns {boolean} - True if supported, false otherwise
      */
     async checkFile(file) {
-      const supportedTypes = ['image/jpeg', 'image/png', 'image/jpg', 'application/pdf', 'image/webp']
+      const supportedTypes = [
+        'image/jpeg',
+        'image/png',
+        'image/jpg',
+        'application/pdf',
+        'image/webp',
+      ]
 
       if (!supportedTypes.includes(file.type)) {
         return false
@@ -2220,6 +2230,7 @@ export const useImageStore = defineStore('imageStore', {
      * @returns {object} A deep clone of the full image store state.
      */
     getFullSnapshot(t) {
+      console.log('[getFullSnapshot] imageOperations:', this.imageOperations)
       return {
         file: this.file,
         fileType: this.fileType,
@@ -2263,6 +2274,8 @@ export const useImageStore = defineStore('imageStore', {
         phoneButtonsCanNotBeDrawnToastFlag: this.phoneButtonsCanNotBeDrawnToastFlag,
 
         isArtifactsVisible: this.isArtifactsVisible,
+
+        manualRemovalCanvas: this.manualRemovalCanvas?.toDataURL() || null,
       }
     },
 
@@ -2400,6 +2413,24 @@ export const useImageStore = defineStore('imageStore', {
       } else {
         this.overlayImage = null
       }
+
+      // Manual removal canvas
+      if (snapshot.manualRemovalCanvas) {
+        const img = new Image()
+        img.onload = () => {
+          const canvas = document.createElement('canvas')
+          canvas.width = img.width
+          canvas.height = img.height
+          const ctx = canvas.getContext('2d')
+          ctx.drawImage(img, 0, 0)
+          this.manualRemovalCanvas = canvas
+        }
+        img.src = snapshot.manualRemovalCanvas
+      } else {
+        this.manualRemovalCanvas = null
+      }
+
+      console.log('[applyFullSnapshot] imageOperations (after apply):', this.imageOperations)
     },
   },
 })

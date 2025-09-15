@@ -199,9 +199,4 @@ const {
   color: var(--secondary-c);
 
 }
-
-.button-control {
-  border-style: solid;
-  border-color: var(--secondary-c);
-}
 </style>
