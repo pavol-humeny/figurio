@@ -87,6 +87,23 @@ export function useToolsPanel(editorStore, imageStore, uiStore, t) {
         imageStore.selectedSvgObjectId = null // Reset just created object ID
       }
 
+      // Show or hide SVG objects list based on selected tool
+      if (
+        newVal.tool === 'shape' ||
+        newVal.tool === 'blur' ||
+        newVal.tool === 'magnifyArea' ||
+        newVal.tool === 'text' ||
+        newVal.tool === 'select'
+      ) {
+        if (imageStore.svgObjects.length > 0) {
+          uiStore.svgObjectsListDisplayed = true
+        } else {
+          uiStore.svgObjectsListDisplayed = false
+        }
+      } else {
+        uiStore.svgObjectsListDisplayed = false
+      }
+
       // Clear previous tool key if switching between shape tool tabs
       if (newVal?.tool === 'shape' && oldValue?.tool === 'shape') {
         editorStore.previousToolKey = ''

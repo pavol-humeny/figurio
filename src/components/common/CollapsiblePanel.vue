@@ -51,6 +51,7 @@ const { isVisible, toggleVisibility, rightSidePanelWidth, collapseButtonWidth, s
   justify-content: center;
   align-items: center;
   overflow: hidden;
+  flex-direction: column;
 }
 
 .panel-content.hidden {

@@ -88,10 +88,10 @@
       }
     },
     "resetSidebarWidth": {
-      "label": "Obnoviť šírku bočného panela",
+      "label": "Obnoviť bočný panel",
       "button": {
         "text": "Obnoviť",
-        "tip": "Obnoví predvolenú šírku bočného panela"
+        "tip": "Obnoví predvolené rozmery bočného panela"
       }
     },
     "openPrivacyAndData": {

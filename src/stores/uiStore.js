@@ -100,6 +100,20 @@ export const useUiStore = defineStore('ui', {
     /** Width of collapse button for layout calculations */
     collapseButtonWidth: uiConfig.collapseButtonWidth,
 
+    /** Whether the SVG objects list panel is displayed */
+    svgObjectsListDisplayed: true,
+    /** Height of the SVG objects list panel (in percentage of the right panel height) */
+    svgObjectsListHeight: getNumber(
+      `${globalConfig.LOCAL_STORAGE_PREFIX}svgObjectsListHeight`,
+      uiConfig.svgObjectsListHeight,
+    ),
+    /** Default height of the SVG objects list panel */
+    svgObjectsListDefaultHeight: uiConfig.svgObjectsListDefaultHeight,
+    /** Minimum height of the SVG objects list panel */
+    svgObjectsListMinHeight: uiConfig.svgObjectsListMinHeight,
+    /** Maximum height of the SVG objects list panel */
+    svgObjectsListMaxHeight: uiConfig.svgObjectsListMaxHeight,
+
     /** Whether rulers are shown in viewport */
     rulersEnabled: getBoolean(
       `${globalConfig.LOCAL_STORAGE_PREFIX}rulersEnabled`,
@@ -212,6 +226,35 @@ export const useUiStore = defineStore('ui', {
       localStorage.setItem(
         `${globalConfig.LOCAL_STORAGE_PREFIX}rightPanelWidth`,
         this.rightPanelWidth.toString(),
+      )
+    },
+
+    /**
+     * Set height of the SVG objects list panel and persist it
+     * @param {number} height - Height in percentage
+     */
+    setSvgObjectsListHeight(height) {
+      if (height >= this.svgObjectsListMaxHeight) {
+        height = this.svgObjectsListMaxHeight
+      } else if (height <= this.svgObjectsListMinHeight) {
+        height = this.svgObjectsListMinHeight
+      }
+
+      this.svgObjectsListHeight = height
+      localStorage.setItem(
+        `${globalConfig.LOCAL_STORAGE_PREFIX}svgObjectsListHeight`,
+        this.svgObjectsListHeight.toString(),
+      )
+    },
+
+    /**
+     * Reset the height of the SVG objects list panel to the default value
+     */
+    resetSvgObjectsListHeight() {
+      this.svgObjectsListHeight = this.svgObjectsListDefaultHeight
+      localStorage.setItem(
+        `${globalConfig.LOCAL_STORAGE_PREFIX}svgObjectsListHeight`,
+        this.svgObjectsListHeight.toString(),
       )
     },
 

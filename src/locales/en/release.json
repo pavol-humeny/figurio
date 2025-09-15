@@ -15,6 +15,11 @@
           "Color removal - remove specific color from the image",
           "Manual background removal - manually remove or restore parts of the image background"
         ]
+      },
+      "improvements": {
+        "items": [
+          "Add checkerboard background for images with transparency"
+        ]
       }
     },
     "4.2.0":{

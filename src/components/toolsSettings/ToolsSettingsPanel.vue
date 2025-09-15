@@ -1,6 +1,10 @@
 <script setup>
+import { computed } from 'vue'
 import { useToolsSettingsPanel } from '@/composables/toolsSettings/useToolsSettingsPanel';
 import { useEditorStore } from '@/stores/editorStore';
+import { useUiStore } from '@/stores/uiStore'
+
+const uiStore = useUiStore()
 
 /**
  * Logic of the tools settings panel
@@ -9,28 +13,18 @@ const {
   settingsComponent
 } = useToolsSettingsPanel(useEditorStore());
 
-</script>
-<!--
-<template>
-  <div class="tools-settings-panel">
-    <Suspense>
-      <template #default>
-        <component v-if="settingsComponent" :is="settingsComponent" />
-        <p v-else class="no-settings no-value">
-          {{ $t('tools.noToolSelected.label') }}
-        </p>
-      </template>
-      <template #fallback>
-        <p class="no-settings no-value">
-          {{ $t('tools.loadingToolSettings') }}
-        </p>
-      </template>
-    </Suspense>
-  </div>
-</template> -->
+/**
+ * CSS variables for the panel styling
+ */
+const panelVars = computed(() => {
+  return {
+    '--panel-height-opposite': uiStore.svgObjectsListDisplayed ? `${uiStore.svgObjectsListHeight}%` : '0%'
+  }
+})
 
+</script>
 <template>
-  <div class="tools-settings-panel">
+  <div class="tools-settings-panel" :style="panelVars">
     <component :is="settingsComponent" v-if="settingsComponent" />
     <p v-else class="no-settings no-value">
       {{ $t('tools.noToolSelected.label') }}
@@ -43,7 +37,7 @@ const {
   display: flex;
   flex-direction: column;
   width: 100%;
-  height: 100%;
+  height: calc(100% - var(--panel-height-opposite));
   z-index: var(--z-index-tools-settings-panel);
 }
 

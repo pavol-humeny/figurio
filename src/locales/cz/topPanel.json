@@ -88,10 +88,10 @@
       }
     },
     "resetSidebarWidth": {
-      "label": "Obnovit šířku postranního panelu",
+      "label": "Obnovit postranní panel",
       "button": {
         "text": "Obnovit",
-        "tip": "Obnoví výchozí šířku postranního panelu"
+        "tip": "Obnoví výchozí rozměry postranního panelu"
       }
     },
     "openPrivacyAndData": {

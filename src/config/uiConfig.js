@@ -15,6 +15,12 @@ export const uiConfig = {
   rightPanelMaxWidth: 600,
   collapseButtonWidth: 30,
 
+  // SVG Objects List
+  svgObjectsListHeight: 30, // %
+  svgObjectsListDefaultHeight: 30, // %
+  svgObjectsListMinHeight: 10, // %
+  svgObjectsListMaxHeight: 70, // %
+
   // Rulers
   rulersEnabled: false,
 

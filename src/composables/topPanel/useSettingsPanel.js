@@ -47,7 +47,9 @@ export function useSettingsPanel(uiStore) {
    */
   const resetPanelWidthDisabled = computed(() => {
     return (
-      uiStore.rightPanelWidth === uiStore.rightPanelDefaultWidth || uiStore.rightPanelOpen === false
+      (uiStore.rightPanelWidth === uiStore.rightPanelDefaultWidth &&
+        uiStore.svgObjectsListHeight === uiStore.svgObjectsListDefaultHeight) ||
+      uiStore.rightPanelOpen === false
     )
   })
 
@@ -88,9 +90,9 @@ export function useSettingsPanel(uiStore) {
     if (resetPanelWidthDisabled.value) {
       return
     }
-    if (uiStore.rightPanelWidth !== uiStore.rightPanelDefaultWidth) {
-      uiStore.resetRightPanelWidth()
-    }
+
+    uiStore.resetRightPanelWidth()
+    uiStore.resetSvgObjectsListHeight()
   }
 
   /**

@@ -88,10 +88,10 @@
       }
     },
     "resetSidebarWidth": {
-      "label": "Reset side panel width",
+      "label": "Reset side panel",
       "button": {
         "text": "Reset",
-        "tip": "Restores default sidebar width"
+        "tip": "Restores default side panel"
       }
     },
     "openPrivacyAndData": {

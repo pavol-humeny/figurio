@@ -11,6 +11,7 @@ import { useKeyboardShortcuts } from '@/composables/editor/useKeyboardShortcuts'
 import { useHistoryStore } from '@/stores/historyStore';
 import { useI18n } from 'vue-i18n'
 import { useCollapsiblePanel } from '@/composables/common/useCollapsiblePanel';
+import SvgObjectsList from '@/components/toolsSettings/SvgObjectsList.vue';
 
 const { t } = useI18n()
 
@@ -152,6 +153,7 @@ onMounted(() => {
     <div class="right-panel">
       <CollapsiblePanel v-if="imageStore.isImageLoaded" id="tool-settings">
         <ToolsSettingsPanel />
+        <SvgObjectsList />
       </CollapsiblePanel>
     </div>
   </div>
