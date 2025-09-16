@@ -146,7 +146,18 @@ const onMouseDown = (event) => {
   // Drawing with Left mouse button
   if (event.button === 0) {
     isDrawing.value = true
-    lastPos.value = getMousePos(event)
+    const pos = getMousePos(event)
+    lastPos.value = pos
+
+
+    // Draw a point if the user just clicks without moving
+    let tool = manualSelectedTool.value
+    if (manualSelectedTool.value === 'brush' && event.altKey) {
+      tool = 'eraser'
+    }
+
+    // Draw a point
+    drawLine(pos, pos, tool)
   }
 }
 
@@ -280,10 +291,10 @@ onBeforeUnmount(() => {
         left: cursorPos.x + 'px',
         top: cursorPos.y + 'px'
       }" :class="{
-      brush: manualSelectedTool === 'brush',
-      eraser: manualSelectedTool === 'eraser' || isErasingDuringDraw,
-      isAltResizing: isAltResizing
-    }"></div>
+        brush: manualSelectedTool === 'brush',
+        eraser: manualSelectedTool === 'eraser' || isErasingDuringDraw,
+        isAltResizing: isAltResizing
+      }"></div>
   </div>
 </template>
 
@@ -315,7 +326,7 @@ onBeforeUnmount(() => {
 
 .custom-cursor.eraser {
   border-color: var(--cursor-eraser-border);
-  background: var(--cursor-eraser-background);
+  /* background: var(--cursor-eraser-background); */
 }
 
 .isAltResizing {
