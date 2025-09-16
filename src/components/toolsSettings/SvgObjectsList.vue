@@ -79,7 +79,7 @@ const {
   top: 0;
   bottom: 0;
   left: 0;
-  border-top: var(--border-ui);
+  border-top: var(--border-ui-2);
 }
 
 .resize-handle:hover {

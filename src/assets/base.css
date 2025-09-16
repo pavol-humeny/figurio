@@ -126,6 +126,7 @@ body {
   color: var(--text-c);
   font-family: var(--font-family, sans-serif);
   --border-ui: 1px solid var(--border-c);
+  --border-ui-2: 3px solid var(--border-c);
   --border-modal: 2px solid var(--primary-c);
   --border-input: 1px solid var(--primary-c);
   --border-button: 2px solid var(--primary-c);
