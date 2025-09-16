@@ -19,7 +19,8 @@ const { manualSelectedTool, manualToolSize, changeManualToolSize } = useBackgrou
   useImageStore(),
   useHistoryStore(),
   useWorkspaceStore(),
-  t
+  useEditorStore(),
+  t,
 )
 
 /**

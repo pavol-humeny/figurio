@@ -39,6 +39,7 @@ const {
   useImageStore(),
   useHistoryStore(),
   useWorkspaceStore(),
+  useEditorStore(),
   t,
 )
 
