@@ -85,7 +85,7 @@ export function useTextTool(imageStore, historyStore, editorStore, t) {
    * Reset local settings to defaults
    */
   const resetTextSettings = () => {
-    // activeObject.value = null
+    activeObject.value = null
 
     localTextSettings.value.size = editorStore.toolsConfig.text.size
     localTextSettings.value.color = editorStore.toolsConfig.text.color

@@ -49,7 +49,7 @@ export function useShapeTool(editorStore, imageStore, historyStore, t) {
    * Reset the local object settings to default values
    */
   const resetObjectSettings = () => {
-    // activeObject.value = null
+    activeObject.value = null
 
     // if line set stroke color to fill color
     if (localObjectSettings.value.type === 'line') {

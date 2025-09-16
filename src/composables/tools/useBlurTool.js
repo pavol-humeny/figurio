@@ -183,7 +183,7 @@ export function useBlurTool(imageStore, historyStore, editorStore, t) {
     // localBlurSettings.value.rotation = 0
     // localBlurSettings.value.blurStrength = 5
 
-    // activeObject.value = null
+    activeObject.value = null
 
     localBlurSettings.value.blurStrength = editorStore.toolsConfig.blur.blurStrength
   }
