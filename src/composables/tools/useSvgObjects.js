@@ -848,6 +848,7 @@ export function useSvgObjects(imageStore, historyStore, viewportStore, editorSto
       attrs: {},
     }
 
+    let objectName = ''
     let objectFillColor = 'none'
     let objectStrokeColor = 'none'
     let objectStrokeWidth = 0
@@ -867,7 +868,10 @@ export function useSvgObjects(imageStore, historyStore, viewportStore, editorSto
         cornerRadius,
         lineType,
         lineArrowEnd,
+        name,
       } = shapeTool.getShapeAttributes()
+
+      objectName = name
 
       if (fillEnabled) {
         objectFillColor = fillColor
@@ -882,7 +886,9 @@ export function useSvgObjects(imageStore, historyStore, viewportStore, editorSto
       }
       console.log('line end: ', lineEnd)
     } else if (objectClass === 'blur') {
-      const { blurStrength } = blurTool.getBlurAttributes(id)
+      const { blurStrength, name } = blurTool.getBlurAttributes(id)
+
+      objectName = name
 
       objectBlurStrength = blurStrength
 
@@ -928,6 +934,9 @@ export function useSvgObjects(imageStore, historyStore, viewportStore, editorSto
         base.attrs['marker-end'] = lineEnd
       }
     }
+
+    // Set object name
+    base.name = objectName
 
     currentDrawingObject.value = base
 

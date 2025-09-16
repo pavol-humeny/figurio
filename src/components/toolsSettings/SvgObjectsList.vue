@@ -1,87 +1,58 @@
 <script setup>
-import { ref, computed, watch } from 'vue'
-import { useUiStore } from '@/stores/uiStore'
 import { useImageStore } from '@/stores/imageStore'
+import draggable from 'vuedraggable'
+import { useI18n } from 'vue-i18n'
+import { useSvgObjectsList } from '@/composables/toolsSettings/useSvgObjectsList'
+import { useHistoryStore } from '@/stores/historyStore'
+import { useViewportStore } from '@/stores/viewportStore'
+import { useEditorStore } from '@/stores/editorStore'
+import { useUiStore } from '@/stores/uiStore'
 
-const uiStore = useUiStore()
+const { t } = useI18n()
+
 const imageStore = useImageStore()
 
 /**
- * Whether resize is currently active
+ * Logic for managing SVG objects list
  */
-const isResizing = ref(false)
-/**
- * Initial mouse X position when resizing starts
- */
-const startY = ref(0)
-/**
- * Initial panel width before resizing
- */
-const startHeight = ref(0)
-
-
-watch(() => imageStore.svgObjects.length, (newVal) => {
-  console.warn('imageStore.svgObjects changed: ', newVal)
-  if (newVal === 0) {
-    uiStore.svgObjectsListDisplayed = false
-  } else {
-    uiStore.svgObjectsListDisplayed = true
-  }
-}, { immediate: true })
-
-/**
-   * Initiates the panel resizing operation.
-   *
-   * @param {MouseEvent} event - Mouse down event on resize handle
-   */
-const startResize = (event) => {
-  isResizing.value = true
-  startY.value = event.clientY
-  startHeight.value = uiStore.svgObjectsListHeight
-  document.addEventListener('mousemove', handleResize)
-  document.addEventListener('mouseup', stopResize)
-}
-
-/**
- * Dynamically updates the panel width during mouse movement.
- *
- * @param {MouseEvent} event - Mouse move event during resize
- */
-const handleResize = (event) => {
-  if (!isResizing.value) return
-
-  const container = document.querySelector('.svg-objects-list-panel')?.parentElement
-  if (!container) return
-
-  const containerHeight = container.clientHeight
-  const deltaY = event.clientY - startY.value
-
-  let newHeightPercent = startHeight.value - (deltaY / containerHeight) * 100
-
-  uiStore.setSvgObjectsListHeight(newHeightPercent)
-}
-
-/**
- * Ends the resize operation and removes mouse event listeners.
- */
-const stopResize = () => {
-  isResizing.value = false
-  document.removeEventListener('mousemove', handleResize)
-  document.removeEventListener('mouseup', stopResize)
-}
-
-/**
- * CSS variables for the panel styling
- */
-const panelVars = computed(() => {
-  return {
-    '--panel-height': uiStore.svgObjectsListDisplayed ? `${uiStore.svgObjectsListHeight}%` : '0%'
-  }
-})
+const {
+  mappedObjects,
+  panelVars,
+  startResize,
+  selectObject,
+  deleteObject,
+  renameObject,
+  editingId,
+  startEditing,
+  editingInputRef,
+} = useSvgObjectsList(useImageStore(), useHistoryStore(), useViewportStore(), useEditorStore(), useUiStore(), t)
 </script>
+
 <template>
   <div class="svg-objects-list-panel" :style="panelVars">
-    <p>No SVG objects found</p>
+    <div class="svg-objects-list-wrapper">
+      <p>Objects</p>
+      <draggable v-model="mappedObjects" tag="div" item-key="id" handle=".drag-handle" animation="200"
+        ghost-class="drag-ghost" class="svg-objects-list"
+        :move="({ element }) => element ? element.draggable !== false : true">
+        <template #item="{ element }">
+          <div class="svg-object-item" :class="{ selected: imageStore.selectedSvgObjectId === element.id }"
+            @click="selectObject(element.id)">
+            <span class="drag-handle" :style="{ opacity: element.draggable ? 1 : 0 }">☰</span>
+
+            <input v-if="editingId === element.id" ref="editingInputRef" class="rename-input" type="text"
+              v-model="element.name" @keyup.enter="renameObject(element.id, element.name)"
+              @blur="renameObject(element.id, element.name)" autofocus />
+            <span v-else class="object-name" @dblclick="startEditing(element.id)">
+              {{ element.name }}
+            </span>
+
+            <div v-if="imageStore.selectedSvgObjectId === element.id" class="delete-button" @click.stop="deleteObject">✕
+            </div>
+          </div>
+        </template>
+      </draggable>
+    </div>
     <div class="resize-handle" @mousedown="startResize"></div>
   </div>
 
@@ -96,6 +67,7 @@ const panelVars = computed(() => {
   height: var(--panel-height);
   background: var(--background-c);
   z-index: var(--z-index-tools-settings-panel);
+  overflow: hidden;
 }
 
 .resize-handle {
@@ -112,5 +84,83 @@ const panelVars = computed(() => {
 
 .resize-handle:hover {
   border-top: var(--border-modal);
+}
+
+.svg-objects-list-wrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: start;
+  align-items: center;
+  height: 100%;
+  width: 100%;
+  overflow: auto;
+  padding: 20px 30px;
+  overflow-y: auto;
+}
+
+.svg-objects-list {
+  height: fit-content;
+  width: 100%;
+  max-width: 100%;
+  min-width: 80%;
+  overflow-y: auto;
+  border-radius: 10px;
+  margin-top: 10px;
+  background: var(--secondary-c);
+  border: solid 1px var(--secondary-c);
+}
+
+.svg-object-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  border-bottom: 1px solid var(--background-c);
+  padding: 6px 10px;
+  transition: 0.25s ease;
+  width: 100%;
+}
+
+.svg-object-item.selected {
+  background-color: var(--background-c);
+}
+
+.drag-handle {
+  cursor: grab;
+  color: var(--text-c);
+  user-select: none;
+  padding-right: 6px;
+}
+
+.drag-handle:active {
+  cursor: grabbing;
+}
+
+.delete-button {
+  cursor: pointer;
+  color: var(--primary-c);
+  font-weight: bold;
+  padding-left: 8px;
+}
+
+.object-name {
+  width: 100%;
+  text-align: left;
+  cursor: pointer;
+}
+
+.rename-input {
+  flex: 1;
+  min-width: 0;
+  padding: 2px 2px;
+  border-radius: 4px;
+  color: var(--text-c);
+  outline: none;
+  background: var(--background-c);
+  border: none;
+}
+
+.rename-input:focus {
+  border-color: var(--primary-c);
 }
 </style>

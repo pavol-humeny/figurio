@@ -18,7 +18,7 @@ export const uiConfig = {
   // SVG Objects List
   svgObjectsListHeight: 30, // %
   svgObjectsListDefaultHeight: 30, // %
-  svgObjectsListMinHeight: 10, // %
+  svgObjectsListMinHeight: 20, // %
   svgObjectsListMaxHeight: 70, // %
 
   // Rulers

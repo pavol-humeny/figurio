@@ -226,6 +226,7 @@
     "tipDisabled": "",
     "explain": "Nástroj Rozmazanie oblasti aplikuje efekt rozmazania na vybranú obdĺžnikovú oblasť obrázka. Veľkosť, pozíciu a rotáciu rozmazávacieho boxu je možné nastaviť manuálne alebo zadaním presných hodnôt. Sila rozmazania sa nastavuje posuvníkom.",
     "shortcut": "B",
+    "objectNames" : "Rozmazaná oblasť",
     "settings": {
       "general": {
         "position": {
@@ -272,6 +273,11 @@
     "tipDisabled": "",
     "explain": "Nástroj Tvar umožňuje pridávať do obrázka vektorové tvary. Tvary je možné umiestniť, meniť ich veľkosť, otáčať a prispôsobovať pomocou výplne, obrysu, priehľadnosti a štýlov čiar. Dajú sa usporadúvať pomocou Z-indexu.",
     "shortcut": "S",
+    "objectNames" : {
+      "rectangle": "Obdĺžnik",
+      "ellipse": "Elipsa",
+      "line": "Čiara"
+    },
     "subTools": {
       "rectangle": {
         "label": "Obdĺžnik",
@@ -394,6 +400,7 @@
     "tipDisabled": "",
     "explain": "Nástroj Zväčšená oblasť zvýrazní vybranú časť obrázka jej zväčšením. Možno upraviť úroveň priblíženia, polomer, pozíciu, obrys aj Z-index pre kontrolu zobrazenia zväčšenej oblasti.",
     "shortcut": "M",
+    "objectNames" : "Zväčšená oblasť",
     "settings": {
       "general": {
         "type": {
@@ -459,6 +466,7 @@
     "tipDisabled": "",
     "explain": "Nástroj Text umožňuje pridávať do obrázka text. Dá sa nastaviť písmo, veľkosť, farba, priehľadnosť, štýl, rotácia a pozícia. Text môže byť vrstvený nad ostatnými prvkami pomocou Z-indexu.",
     "shortcut": "T",
+    "objectNames" : "Text",
     "settings": {
       "general": {
         "textContent": {

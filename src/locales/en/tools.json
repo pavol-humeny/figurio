@@ -303,6 +303,7 @@
     "tipDisabled": "",
     "explain": "The Blur area tool applies a blur effect to a selected rectangular area of the image. The size, position, and rotation of the blur box can be adjusted manually or by entering exact values. The blur strength slider controls how strong the effect is.",
     "shortcut": "B",
+    "objectNames" : "Blur area",
     "settings": {
       "general": {
         "position": {
@@ -349,6 +350,11 @@
     "tipDisabled": "",
     "explain": "The Shape tool allows adding vector shapes to the image. Shapes can be positioned, resized, rotated, and styled with fill, stroke, opacity, and line options. Shapes can also be reordered using Z-index controls.",
     "shortcut": "S",
+    "objectNames" : {
+      "rectangle": "Rectangle",
+      "ellipse": "Ellipse",
+      "line": "Line"
+    },
     "subTools": {
       "rectangle": {
         "label": "Rectangle",
@@ -471,6 +477,7 @@
     "tipDisabled": "",
     "explain": "The Magnify Area tool highlights a chosen part of the image by enlarging it. The zoom level, radius, position, outline, and Z-index can be customized to control how the magnified section is displayed.",
     "shortcut": "M",
+    "objectNames" : "Magnify area",
     "settings": {
       "general":{
         "type": {
@@ -536,6 +543,7 @@
     "tipDisabled": "",
     "explain": "The Text tool allows adding text to the image. The font, size, color, opacity, style, rotation, and position can be customized. Text can also be layered with other elements using Z-index controls.",
     "shortcut": "T",
+    "objectNames" : "Text",
     "settings": {
       "general": {
         "textContent": {

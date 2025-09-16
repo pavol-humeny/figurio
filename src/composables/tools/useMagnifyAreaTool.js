@@ -468,6 +468,7 @@ s
     // Set source
     const source = {
       id: sourceId,
+      name: imageStore.getNextObjectName('magnifyArea', null, t),
       tag: 'ellipse',
       class: 'magnifyArea',
       subClass: 'magnify-source',
@@ -489,6 +490,7 @@ s
     // Set result
     const result = {
       id: resultId,
+      name: imageStore.getNextObjectName('magnifyArea', null, t),
       tag: 'ellipse',
       class: 'magnifyArea',
       subClass: 'magnify-result',

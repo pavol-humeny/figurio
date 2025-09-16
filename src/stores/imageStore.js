@@ -2009,6 +2009,8 @@ export const useImageStore = defineStore('imageStore', {
       )
     },
 
+
+
     /**
      * Returns the index of the currently selected SVG object
      * @returns {number} - The index of the currently selected SVG object, or -1 if none is selected
@@ -2043,25 +2045,99 @@ export const useImageStore = defineStore('imageStore', {
       return this.blurObjects.findIndex((obj) => obj.id === id)
     },
 
+    /**
+     * Deletes SVG definitions, clip paths, filters, and blur images by ID.
+     * @param {string} id - The ID to delete
+     */
     deleteSvgDefsById(id) {
       this.svgDefs = this.svgDefs.filter((def) => {
         return !def.includes(`id="${id}"`)
       })
     },
 
+    /**
+     * Deletes clip path by ID
+     * @param {string} id - The ID to delete
+     */
     deleteBlurClipById(id) {
       this.deleteSvgDefsById(`clip-${id}`)
     },
 
-    // Odstráni filter podľa id
+    /**
+     * Deletes blur filter by ID
+     * @param {string} id - The ID to delete
+     */
     deleteBlurFilterById(id) {
       this.deleteSvgDefsById(`blur-filter-${id}`)
     },
 
+    /**
+     * Deletes blur image by ID
+     * @param {string} id - The ID to delete
+     */
     deleteBlurImageById(id) {
       this.blurImages = this.blurImages.filter((imgStr) => {
         return !imgStr.includes(`id="blur-image-${id}"`)
       })
+    },
+
+    /**
+     * Counts the number of SVG or blur objects of a specific type
+     * @param {string} objectClass - The class of the object ('svg' or 'blur')
+     * @param {string} objectType - The type/tag of the object (e.g., 'rectangle', 'circle', etc.)
+     * @returns {number} - The count of objects matching the specified class and type
+     */
+    // getObjectCount(objectClass, objectType) {
+    //   if (objectClass === 'blur') {
+    //     return this.blurObjects.filter((obj) => obj.class === objectClass).length
+    //   } else {
+    //     if (objectClass === 'magnifyArea') {
+    //       // One magnify area object consists of 2 parts: source and origin
+    //       return this.svgObjects.filter((obj) => obj.class === objectClass).length / 2
+    //     } else {
+    //       return this.svgObjects.filter(
+    //         (obj) => obj.class === objectClass && obj.tag === objectType,
+    //       ).length
+    //     }
+    //   }
+    // },
+
+    /**
+     * Generates the next default name for a new SVG or blur object
+     * @param {string} objectClass - The class of the object ('svg', 'blur', or 'magnifyArea')
+     * @param {string} objectType - The type/tag of the object (e.g., 'rectangle', 'circle', etc.)
+     * @param {Function} t - Translation function (vue-i18n)
+     * @returns {string} - The next default name for the new object
+     */
+    getNextObjectName(objectClass, objectType, t) {
+      let baseName = ''
+
+      if (objectClass === 'blur') {
+        baseName = t('tools.blur.objectNames')
+        return `${baseName}`
+      } else {
+        if (objectClass === 'magnifyArea') {
+          baseName = t('tools.magnifyArea.objectNames')
+          return `${baseName}`
+        } else {
+          switch (objectType) {
+            case 'rectangle':
+            case 'rect':
+              baseName = t('tools.shape.objectNames.rectangle')
+              break
+            case 'ellipse':
+              baseName = t('tools.shape.objectNames.ellipse')
+              break
+            case 'line':
+              baseName = t('tools.shape.objectNames.line')
+              break
+            case 'text':
+              baseName = t('tools.text.objectNames')
+              break
+          }
+            return `${baseName}`
+        }
+      }
     },
 
     /**
