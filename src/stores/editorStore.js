@@ -56,6 +56,10 @@ export const useEditorStore = defineStore('editorStore', {
 
     /** Tools config values */
     toolsConfig: {
+      backgroundRemoval: {
+        replaceWithBackgroundColor: false,
+        backgroundColor: '#ffffff',
+      },
       crop: {
         isVisibleCropBox: true,
       },

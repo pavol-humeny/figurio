@@ -16,6 +16,35 @@ const manualToolSize = ref(editorConfig.defaultManualToolSize)
 export function useBackgroundRemovalTool(imageStore, historyStore, workspaceStore, editorStore, t) {
   const { showConfirmModal } = useConfirmModal()
 
+  // backgroundReplacementColor,
+  // replaceBackgroundColor,
+
+  const backgroundReplacementColor = computed({
+    get: () => {
+      return editorStore.toolsConfig.backgroundRemoval.backgroundColor
+    },
+    set: (value) => {
+      editorStore.toolsConfig.backgroundRemoval.backgroundColor = value
+    },
+  })
+
+  // const replaceWithBackgroundColorFunction = () => {
+  //   if (replaceWithBackgroundColor.value) {
+  //     editorStore.toolsConfig.backgroundRemoval.backgroundColor = backgroundReplacementColor.value
+  //   } else {
+  //     editorStore.toolsConfig.backgroundRemoval.backgroundColor = 'transparent'
+  //   }
+  // }
+
+  const replaceWithBackgroundColor = computed({
+    get: () => {
+      return editorStore.toolsConfig.backgroundRemoval.replaceWithBackgroundColor
+    },
+    set: (value) => {
+      editorStore.toolsConfig.backgroundRemoval.replaceWithBackgroundColor = value
+    },
+  })
+
   // ----------------------------------
   // Color
   // ----------------------------------
@@ -66,6 +95,34 @@ export function useBackgroundRemovalTool(imageStore, historyStore, workspaceStor
       fillA = rgbaMatch[4] ? Math.round(parseFloat(rgbaMatch[4]) * 255) : 255
     }
     return { fillR, fillG, fillB, fillA }
+  }
+
+  /**
+   * Get background replacement color RGBA from
+   */
+  const getBackgroundColorRGBA = (replaceWithBackgroundColor) => {
+    if (replaceWithBackgroundColor) {
+      const bgColor = editorStore.toolsConfig.backgroundRemoval.backgroundColor
+      if (bgColor.startsWith('rgba')) {
+        const rgbaMatch = bgColor.match(/rgba?\((\d+),\s*(\d+),\s*(\d+),?\s*([0-9.]*)?\)/)
+        if (rgbaMatch) {
+          const r = parseInt(rgbaMatch[1])
+          const g = parseInt(rgbaMatch[2])
+          const b = parseInt(rgbaMatch[3])
+          const a = rgbaMatch[4] ? Math.round(parseFloat(rgbaMatch[4]) * 255) : 255
+          return { r, g, b, a }
+        }
+      } else if (bgColor.startsWith('#')) {
+        const { r, g, b } = hexToRgb(bgColor)
+        return { r, g, b, a: 255 }
+      } else {
+        // Transparent
+        return { r: 0, g: 0, b: 0, a: 0 }
+      }
+    } else {
+      // Transparent
+      return { r: 0, g: 0, b: 0, a: 0 }
+    }
   }
 
   /**
@@ -515,6 +572,14 @@ export function useBackgroundRemovalTool(imageStore, historyStore, workspaceStor
     const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height)
     const data = imageData.data
 
+    // Get background replacement color
+    const {
+      r: bgR,
+      g: bgG,
+      b: bgB,
+      a: bgA,
+    } = getBackgroundColorRGBA(replaceWithBackgroundColor.value)
+
     // Apply mask: make pixels transparent where mask is red
     for (let i = 0; i < data.length; i += 4) {
       const maskR = maskPixels[i]
@@ -525,12 +590,18 @@ export function useBackgroundRemovalTool(imageStore, historyStore, workspaceStor
       // If the pixel is mask
       const { fillR, fillG, fillB } = getHighlightColorRGBA()
       if (maskA > 0 && maskR === fillR && maskG === fillG && maskB === fillB) {
-        data[i + 3] = 0
+        data[i] = bgR
+        data[i + 1] = bgG
+        data[i + 2] = bgB
+        data[i + 3] = bgA
       }
     }
 
     ctx.putImageData(imageData, 0, 0)
     imageStore.setRenderedImage(canvas)
+
+    // Clear manual selection
+    clearAllSelections()
   }
 
   return {
@@ -552,5 +623,7 @@ export function useBackgroundRemovalTool(imageStore, historyStore, workspaceStor
     highlightColor,
     selectColorClick,
     highlightRemovedPixels,
+    backgroundReplacementColor,
+    replaceWithBackgroundColor,
   }
 }

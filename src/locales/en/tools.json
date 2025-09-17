@@ -97,6 +97,14 @@
           "label": "Use base image",
           "tip": "Remove selection from the original base image or from the current modified image"
         },
+        "replaceBackgroundColor": {
+          "label": "Replace background with color",
+          "tip": "Replace background with selected color instead of making it transparent"
+        },
+        "backgroundReplacementColor": {
+          "label": "Background color",
+          "tip": "Select the color to replace the removed background"
+        },
         "removeButton": {
           "text": "Remove selection"
         }
@@ -106,10 +114,6 @@
         "replaceSelection":{
           "label": "Replace selection",
           "tip": "Replace current selection with new selection"
-        },
-        "useBaseImage":{
-          "label": "Use base image",
-          "tip": "Remove selection from the original base image or from the current modified image"
         },
         "detectButton": {
           "text": "Detect objects",

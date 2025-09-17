@@ -38,6 +38,8 @@ const {
   replaceSelection,
   selectColorClick,
   highlightRemovedPixels,
+  backgroundReplacementColor,
+  replaceWithBackgroundColor,
 } = useBackgroundRemovalTool(
   useImageStore(),
   useHistoryStore(),
@@ -150,6 +152,30 @@ const tabs = ['color', 'manual', 'objectDetection']
           </div>
         </div>
 
+        <!-- Replace background with color -->
+        <div class="settings-content-wrapper">
+          <div class="content-wrapper">
+            <div class="content-aligned two-items">
+              <p style="text-align: start">
+                {{ $t('tools.backgroundRemoval.settings.manual.replaceBackgroundColor.label') }}
+              </p>
+              <ToggleButton v-model="replaceWithBackgroundColor" :scale="0.6" :style="{ transform: 'translateX(16px)' }"
+                :tip="$t('tools.backgroundRemoval.settings.manual.replaceBackgroundColor.tip')"
+                position="bottom-left" />
+            </div>
+
+            <!-- Replacement color -->
+            <div v-if="replaceWithBackgroundColor" class="content-aligned two-items">
+              <p style="text-align: start">
+                {{ $t('tools.backgroundRemoval.settings.manual.backgroundReplacementColor.label') }}
+              </p>
+              <ColorPicker v-model="backgroundReplacementColor"
+                :tip="$t('tools.backgroundRemoval.settings.manual.backgroundReplacementColor.tip')"
+                position="bottom-left" />
+            </div>
+          </div>
+        </div>
+
         <!-- Remove background button -->
         <div class="settings-content-wrapper">
           <div class="content-wrapper">
@@ -249,6 +275,30 @@ const tabs = ['color', 'manual', 'objectDetection']
           </div>
         </div>
 
+        <!-- Replace background with color -->
+        <div class="settings-content-wrapper">
+          <div class="content-wrapper">
+            <div class="content-aligned two-items">
+              <p style="text-align: start">
+                {{ $t('tools.backgroundRemoval.settings.manual.replaceBackgroundColor.label') }}
+              </p>
+              <ToggleButton v-model="replaceWithBackgroundColor" :scale="0.6" :style="{ transform: 'translateX(16px)' }"
+                :tip="$t('tools.backgroundRemoval.settings.manual.replaceBackgroundColor.tip')"
+                position="bottom-left" />
+            </div>
+
+            <!-- Replacement color -->
+            <div v-if="replaceWithBackgroundColor" class="content-aligned two-items">
+              <p style="text-align: start">
+                {{ $t('tools.backgroundRemoval.settings.manual.backgroundReplacementColor.label') }}
+              </p>
+              <ColorPicker v-model="backgroundReplacementColor"
+                :tip="$t('tools.backgroundRemoval.settings.manual.backgroundReplacementColor.tip')"
+                position="bottom-left" />
+            </div>
+          </div>
+        </div>
+
         <!-- Remove background button -->
         <div class="settings-content-wrapper">
           <div class="content-wrapper">
@@ -327,6 +377,30 @@ const tabs = ['color', 'manual', 'objectDetection']
               </p>
               <ToggleButton v-model="useBaseImage" :scale="0.6" :style="{ transform: 'translateX(16px)' }"
                 :tip="$t('tools.backgroundRemoval.settings.manual.useBaseImage.tip')" position="bottom-left" />
+            </div>
+          </div>
+        </div>
+
+        <!-- Replace background with color -->
+        <div class="settings-content-wrapper">
+          <div class="content-wrapper">
+            <div class="content-aligned two-items">
+              <p style="text-align: start">
+                {{ $t('tools.backgroundRemoval.settings.manual.replaceBackgroundColor.label') }}
+              </p>
+              <ToggleButton v-model="replaceWithBackgroundColor" :scale="0.6" :style="{ transform: 'translateX(16px)' }"
+                :tip="$t('tools.backgroundRemoval.settings.manual.replaceBackgroundColor.tip')"
+                position="bottom-left" />
+            </div>
+
+            <!-- Replacement color -->
+            <div v-if="replaceWithBackgroundColor" class="content-aligned two-items">
+              <p style="text-align: start">
+                {{ $t('tools.backgroundRemoval.settings.manual.backgroundReplacementColor.label') }}
+              </p>
+              <ColorPicker v-model="backgroundReplacementColor"
+                :tip="$t('tools.backgroundRemoval.settings.manual.backgroundReplacementColor.tip')"
+                position="bottom-left" />
             </div>
           </div>
         </div>

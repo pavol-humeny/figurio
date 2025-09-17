@@ -97,6 +97,14 @@
           "label": "Použít původní obrázek",
           "tip": "Odstraní výběr z původního obrázku nebo z aktuálně upraveného obrázku"
         },
+        "replaceBackgroundColor": {
+          "label": "Nahradit pozadí barvou",
+          "tip": "Nahradí pozadí vybranou barvou místo toho, aby bylo průhledné"
+        },
+        "backgroundReplacementColor": {
+          "label": "Barva pozadí",
+          "tip": "Vyberte barvu, kterou chcete nahradit odstraněné pozadí"
+        },
         "removeButton": {
           "text": "Odstranit výběr"
         }
@@ -106,10 +114,6 @@
         "replaceSelection": {
           "label": "Nahradit výběr",
           "tip": "Nahradí aktuální výběr detekovanými objekty"
-        },
-        "useBaseImage": {
-          "label": "Použít původní obrázek",
-          "tip": "Odstraní výběr z původního obrázku nebo z aktuálně upraveného obrázku"
         },
         "detectButton": {
           "text": "Detekovat objekty",

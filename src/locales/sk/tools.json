@@ -97,6 +97,14 @@
           "label": "Použiť pôvodný obrázok",
           "tip": "Odstráni výber z pôvodného obrázka alebo z aktuálne upraveného obrázka"
         },
+        "replaceBackgroundColor": {
+          "label": "Nahradiť pozadie farbou",
+          "tip": "Nahradí pozadie vybranou farbou namiesto toho, aby bolo priehľadné"
+        },
+        "backgroundReplacementColor": {
+          "label": "Farba pozadia",
+          "tip": "Vyberte farbu, ktorou chcete nahradiť odstránené pozadie"
+        },
         "removeButton": {
           "text": "Odstrániť výber"
         }
@@ -106,10 +114,6 @@
         "replaceSelection": {
           "label": "Nahradiť výber",
           "tip": "Zruší aktuálny výber a nahradí ho novým výberom"
-        },
-        "useBaseImage": {
-          "label": "Použiť pôvodný obrázok",
-          "tip": "Odstráni výber z pôvodného obrázka alebo z aktuálne upraveného obrázka"
         },
         "detectButton": {
           "text": "Detegovať objekty",
