@@ -184,7 +184,7 @@ export function useBackgroundRemovalTool(imageStore, historyStore, workspaceStor
    * Clear all manual selections
    */
   const clearAllSelections = () => {
-    const canvas = document.getElementById('manualRemovalCanvas')
+    const canvas = document.getElementById('removalCanvas')
     if (!canvas) return
     const ctx = canvas.getContext('2d')
     ctx.clearRect(0, 0, canvas.width, canvas.height)
@@ -194,7 +194,7 @@ export function useBackgroundRemovalTool(imageStore, historyStore, workspaceStor
    * Invert manual selection
    */
   const invertSelection = () => {
-    const canvas = document.getElementById('manualRemovalCanvas')
+    const canvas = document.getElementById('removalCanvas')
     if (!canvas) return
     const ctx = canvas.getContext('2d')
     const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height)
@@ -235,7 +235,7 @@ export function useBackgroundRemovalTool(imageStore, historyStore, workspaceStor
    * Highlight removed pixels on canvas
    */
   const highlightRemovedPixels = () => {
-    const canvas = document.getElementById('manualRemovalCanvas')
+    const canvas = document.getElementById('removalCanvas')
     if (!canvas) return
     const ctx = canvas.getContext('2d')
 
@@ -392,7 +392,7 @@ export function useBackgroundRemovalTool(imageStore, historyStore, workspaceStor
 
   const drawBoundingBoxes = (boxes) => {
     console.log('Drawing boxes:', boxes)
-    const canvas = document.getElementById('manualRemovalCanvas')
+    const canvas = document.getElementById('removalCanvas')
     if (!canvas) return
     const ctx = canvas.getContext('2d')
 
@@ -420,7 +420,7 @@ export function useBackgroundRemovalTool(imageStore, historyStore, workspaceStor
    * Mark background color on canvas
    */
   const selectColorClick = () => {
-    const canvas = document.getElementById('manualRemovalCanvas')
+    const canvas = document.getElementById('removalCanvas')
     if (!canvas) return
     const ctx = canvas.getContext('2d')
 
@@ -550,7 +550,7 @@ export function useBackgroundRemovalTool(imageStore, historyStore, workspaceStor
    * Apply removal rendering based on canvas mask
    */
   const applyRemovalRender = () => {
-    const manualCanvas = document.getElementById('manualRemovalCanvas')
+    const manualCanvas = document.getElementById('removalCanvas')
     if (!manualCanvas) return
 
     const ctxMask = manualCanvas.getContext('2d')

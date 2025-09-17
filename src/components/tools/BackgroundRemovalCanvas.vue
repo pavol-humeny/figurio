@@ -14,6 +14,7 @@ const { t } = useI18n()
 const imageStore = useImageStore()
 const viewportStore = useViewportStore()
 const editorStore = useEditorStore()
+const historyStore = useHistoryStore()
 
 const { manualSelectedTool, manualToolSize, changeManualToolSize } = useBackgroundRemovalTool(
   useImageStore(),
@@ -223,8 +224,10 @@ const onMouseUpGlobal = () => {
     storedCanvas.width = manualCanvasRef.value.width
     storedCanvas.height = manualCanvasRef.value.height
     storedCanvas.getContext('2d').drawImage(manualCanvasRef.value, 0, 0)
-    imageStore.manualRemovalCanvas = storedCanvas
+    imageStore.removalCanvas = storedCanvas
+    historyStore.push(imageStore.getSnapshot(t))
   }
+
 }
 
 /**
@@ -249,7 +252,7 @@ onMounted(() => {
  * Watch for changes in the stored manual canvas and update the displayed canvas accordingly
  */
 watch(
-  () => imageStore.manualRemovalCanvas,
+  () => imageStore.removalCanvas,
   async () => {
     await nextTick()
 
@@ -261,9 +264,9 @@ watch(
     ctx = manualCanvas.getContext('2d', { willReadFrequently: true })
 
     // Use the stored manual canvas if it exists
-    if (imageStore.manualRemovalCanvas) {
+    if (imageStore.removalCanvas) {
       ctx.clearRect(0, 0, manualCanvas.width, manualCanvas.height)
-      ctx.drawImage(imageStore.manualRemovalCanvas, 0, 0)
+      ctx.drawImage(imageStore.removalCanvas, 0, 0)
     }
   },
   { immediate: true }
@@ -279,7 +282,7 @@ onBeforeUnmount(() => {
 
 <template>
   <div class="manual-removal-wrapper">
-    <canvas id="manualRemovalCanvas" ref="manualCanvasRef" class="manual-removal-canvas" :width="imageWidth"
+    <canvas id="removalCanvas" ref="manualCanvasRef" class="manual-removal-canvas" :width="imageWidth"
       :height="imageHeight" @mousedown="onMouseDown" @mousemove="onMouseMove" @mouseleave="onMouseLeave"
       :style="{ cursor: editorStore.selectedTabPerTool['backgroundRemoval'] === 'manual' ? 'none' : 'default' }"></canvas>
 

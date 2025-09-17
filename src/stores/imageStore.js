@@ -175,7 +175,7 @@ export const useImageStore = defineStore('imageStore', {
     },
 
     /** Manual background removal canvas */
-    manualRemovalCanvas: null,
+    removalCanvas: null,
   }),
   getters: {
     /**
@@ -446,7 +446,7 @@ export const useImageStore = defineStore('imageStore', {
       this.setRenderedImage(null)
       this.newRenderedImage = null
       this.overlayImage = null
-      this.manualRemovalCanvas = null
+      this.removalCanvas = null
     },
 
     /**
@@ -2200,6 +2200,7 @@ export const useImageStore = defineStore('imageStore', {
         blurImages: JSON.parse(JSON.stringify(this.blurImages)),
         imageOperations: JSON.parse(JSON.stringify(this.imageOperations)),
         frame: JSON.parse(JSON.stringify(this.frame)),
+        removalCanvas: this.removalCanvas?.toDataURL() || null,
       }
 
       console.log('[getSnapshot] imageOperations:', snapshot.imageOperations)
@@ -2276,6 +2277,22 @@ export const useImageStore = defineStore('imageStore', {
         this.overlayImage = null
       }
 
+      // Removal canvas
+      if (snapshot.removalCanvas) {
+        const img = new Image()
+        img.onload = () => {
+          const canvas = document.createElement('canvas')
+          canvas.width = img.width
+          canvas.height = img.height
+          const ctx = canvas.getContext('2d')
+          ctx.drawImage(img, 0, 0)
+          this.removalCanvas = canvas
+        }
+        img.src = snapshot.removalCanvas
+      } else {
+        this.removalCanvas = null
+      }
+
       console.log('[applySnapshot] imageOperations (after apply):', this.imageOperations)
     },
 
@@ -2330,7 +2347,7 @@ export const useImageStore = defineStore('imageStore', {
 
         isArtifactsVisible: this.isArtifactsVisible,
 
-        manualRemovalCanvas: this.manualRemovalCanvas?.toDataURL() || null,
+        removalCanvas: this.removalCanvas?.toDataURL() || null,
       }
     },
 
@@ -2469,8 +2486,8 @@ export const useImageStore = defineStore('imageStore', {
         this.overlayImage = null
       }
 
-      // Manual removal canvas
-      if (snapshot.manualRemovalCanvas) {
+      // Removal canvas
+      if (snapshot.removalCanvas) {
         const img = new Image()
         img.onload = () => {
           const canvas = document.createElement('canvas')
@@ -2478,11 +2495,11 @@ export const useImageStore = defineStore('imageStore', {
           canvas.height = img.height
           const ctx = canvas.getContext('2d')
           ctx.drawImage(img, 0, 0)
-          this.manualRemovalCanvas = canvas
+          this.removalCanvas = canvas
         }
-        img.src = snapshot.manualRemovalCanvas
+        img.src = snapshot.removalCanvas
       } else {
-        this.manualRemovalCanvas = null
+        this.removalCanvas = null
       }
 
       console.log('[applyFullSnapshot] imageOperations (after apply):', this.imageOperations)
