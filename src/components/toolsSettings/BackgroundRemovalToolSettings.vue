@@ -30,11 +30,13 @@ const {
   manualToolSize,
   manualSelectTool,
   manualMaxToolSize,
+  manualMinToolSize,
   clearAllSelections,
   invertSelection,
   useBaseImage,
   detectObjectsClick,
-  replaceSelectionWithObjectDetection,
+  replaceSelection,
+  selectColorClick,
 } = useBackgroundRemovalTool(
   useImageStore(),
   useHistoryStore(),
@@ -55,10 +57,24 @@ const tabs = ['color', 'manual', 'objectDetection']
     <div class="settings-wrapper">
       <!-- Color removal -->
       <div v-if="editorStore.selectedTabPerTool[editorStore.selectedToolKey] === 'color'" class="specific-settings">
-        <!-- Color-->
+        <!-- Add selection or replace -->
         <div class="settings-content-wrapper">
           <ExplainItem :text="$t('tools.backgroundRemoval.subTools.color.explain')"
             :title="$t('tools.backgroundRemoval.subTools.color.label')" position="left" />
+          <div class="content-wrapper">
+            <div class="content-aligned two-items">
+              <p style="text-align: start">
+                {{ $t('tools.backgroundRemoval.settings.color.replaceSelection.label') }}
+              </p>
+              <ToggleButton v-model="replaceSelection" :scale="0.6" :style="{ transform: 'translateX(16px)' }"
+                :tip="$t('tools.backgroundRemoval.settings.objectDetection.replaceSelection.tip')"
+                position="bottom-left" />
+            </div>
+          </div>
+        </div>
+
+        <!-- Color-->
+        <div class="settings-content-wrapper">
           <div class="content-wrapper">
             <div class="content-title">
               <p>
@@ -81,6 +97,46 @@ const tabs = ['color', 'manual', 'objectDetection']
             <NumberDropdownInput v-model="colorRemovalThreshold" :min="0" :max="0.9" :step="0.01"
               :options="colorRemovalThresholdOptions"
               :tip="$t('tools.backgroundRemoval.settings.color.removalSensitivity.tip')" position="bottom-left" />
+          </div>
+        </div>
+
+
+        <!-- Select color -->
+        <div class="settings-content-wrapper">
+          <div class="content-wrapper">
+            <DefaultButton :text="$t('tools.backgroundRemoval.settings.color.selectColorButton.text')"
+              @click="selectColorClick()" main />
+          </div>
+        </div>
+
+        <!-- Clear all button -->
+        <div class="settings-content-wrapper">
+          <div class="content-wrapper">
+            <DefaultButton :text="$t('tools.backgroundRemoval.settings.manual.clearAllButton.text')"
+              :tip="$t('tools.backgroundRemoval.settings.manual.clearAllButton.tip')" position="bottom-left"
+              @click="clearAllSelections" />
+          </div>
+        </div>
+
+        <!-- Invert selection button -->
+        <div class="settings-content-wrapper">
+          <div class="content-wrapper">
+            <DefaultButton :text="$t('tools.backgroundRemoval.settings.manual.invertSelectionButton.text')"
+              :tip="$t('tools.backgroundRemoval.settings.manual.invertSelectionButton.tip')" position="bottom-left"
+              @click="invertSelection" />
+          </div>
+        </div>
+
+        <!-- Use base image -->
+        <div class="settings-content-wrapper">
+          <div class="content-wrapper">
+            <div class="content-aligned two-items">
+              <p style="text-align: start">
+                {{ $t('tools.backgroundRemoval.settings.manual.useBaseImage.label') }}
+              </p>
+              <ToggleButton v-model="useBaseImage" :scale="0.6" :style="{ transform: 'translateX(16px)' }"
+                :tip="$t('tools.backgroundRemoval.settings.manual.useBaseImage.tip')" position="bottom-left" />
+            </div>
           </div>
         </div>
 
@@ -138,7 +194,7 @@ const tabs = ['color', 'manual', 'objectDetection']
                 {{ $t('tools.backgroundRemoval.settings.manual.toolSize.label') }}
               </p>
             </div>
-            <NumberInput v-model="manualToolSize" :min="1" :max="manualMaxToolSize" :step="1" unit="px"
+            <NumberInput v-model="manualToolSize" :min="manualMinToolSize" :max="manualMaxToolSize" :step="1" unit="px"
               :tip="$t('tools.backgroundRemoval.settings.manual.toolSize.tip')" position="bottom-left" />
           </div>
         </div>
@@ -200,8 +256,7 @@ const tabs = ['color', 'manual', 'objectDetection']
               <p style="text-align: start">
                 {{ $t('tools.backgroundRemoval.settings.objectDetection.replaceSelection.label') }}
               </p>
-              <ToggleButton v-model="replaceSelectionWithObjectDetection" :scale="0.6"
-                :style="{ transform: 'translateX(16px)' }"
+              <ToggleButton v-model="replaceSelection" :scale="0.6" :style="{ transform: 'translateX(16px)' }"
                 :tip="$t('tools.backgroundRemoval.settings.objectDetection.replaceSelection.tip')"
                 position="bottom-left" />
             </div>
@@ -213,15 +268,15 @@ const tabs = ['color', 'manual', 'objectDetection']
           <div class="content-wrapper">
             <DefaultButton :text="$t('tools.backgroundRemoval.settings.objectDetection.detectButton.text')"
               :tip="$t('tools.backgroundRemoval.settings.objectDetection.detectButton.tip')" position="bottom-left"
-              @click="detectObjectsClick" />
+              @click="detectObjectsClick" main />
           </div>
         </div>
 
         <!-- Clear all button -->
         <div class="settings-content-wrapper">
           <div class="content-wrapper">
-            <DefaultButton :text="$t('tools.backgroundRemoval.settings.objectDetection.clearAllButton.text')"
-              :tip="$t('tools.backgroundRemoval.settings.objectDetection.clearAllButton.tip')" position="bottom-left"
+            <DefaultButton :text="$t('tools.backgroundRemoval.settings.manual.clearAllButton.text')"
+              :tip="$t('tools.backgroundRemoval.settings.manual.clearAllButton.tip')" position="bottom-left"
               @click="clearAllSelections" />
           </div>
         </div>
@@ -230,8 +285,21 @@ const tabs = ['color', 'manual', 'objectDetection']
         <div class="settings-content-wrapper">
           <div class="content-wrapper">
             <DefaultButton :text="$t('tools.backgroundRemoval.settings.manual.invertSelectionButton.text')"
-              :tip="$t('tools.backgroundRemoval.settings.objectDetection.invertSelectionButton.tip')"
-              position="bottom-left" @click="invertSelection" />
+              :tip="$t('tools.backgroundRemoval.settings.manual.invertSelectionButton.tip')" position="bottom-left"
+              @click="invertSelection" />
+          </div>
+        </div>
+
+        <!-- Use base image -->
+        <div class="settings-content-wrapper">
+          <div class="content-wrapper">
+            <div class="content-aligned two-items">
+              <p style="text-align: start">
+                {{ $t('tools.backgroundRemoval.settings.manual.useBaseImage.label') }}
+              </p>
+              <ToggleButton v-model="useBaseImage" :scale="0.6" :style="{ transform: 'translateX(16px)' }"
+                :tip="$t('tools.backgroundRemoval.settings.manual.useBaseImage.tip')" position="bottom-left" />
+            </div>
           </div>
         </div>
 

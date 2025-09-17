@@ -57,6 +57,28 @@ export function useBackgroundRemovalTool(imageStore, historyStore, workspaceStor
   ]
 
   /**
+   * Get highlight color RGBA from config
+   * @returns {Object} - Highlight color RGBA ({fillR, fillG, fillB, fillA})
+   */
+  const getHighlightColorRGBA = () => {
+    const rgbaMatch = editorConfig.removalHighlightColor.match(
+      /rgba?\((\d+),\s*(\d+),\s*(\d+),?\s*([0-9.]*)?\)/,
+    )
+
+    let fillR = 255,
+      fillG = 0,
+      fillB = 0,
+      fillA = 255
+    if (rgbaMatch) {
+      fillR = parseInt(rgbaMatch[1])
+      fillG = parseInt(rgbaMatch[2])
+      fillB = parseInt(rgbaMatch[3])
+      fillA = rgbaMatch[4] ? Math.round(parseFloat(rgbaMatch[4]) * 255) : 255
+    }
+    return { fillR, fillG, fillB, fillA }
+  }
+
+  /**
    * Convert HEX color to RGB
    * @param {string} hex - HEX color string
    * @returns {{r: number, g: number, b: number}} - RGB values (0-255)
@@ -71,6 +93,9 @@ export function useBackgroundRemovalTool(imageStore, historyStore, workspaceStor
 
   /**
    * Get or calculate threshold (computes histogram if needed)
+   * @param {Object} bgColor - Background color ({r, g, b})
+   * @param {number} threshold - Threshold value (0..1)
+   * @returns {number} - Computed threshold value
    */
   const getOrComputeThreshold = (bgColor, threshold) => {
     if (cachedThreshold.value !== null) {
@@ -195,7 +220,7 @@ export function useBackgroundRemovalTool(imageStore, historyStore, workspaceStor
   /**
    * Whether to replace current selection with object detection result
    */
-  const replaceSelectionWithObjectDetection = ref(false)
+  const replaceSelection = ref(false)
 
   /**
    * Highlight color for selection
@@ -204,10 +229,6 @@ export function useBackgroundRemovalTool(imageStore, historyStore, workspaceStor
     return editorStore.toolsConfig.backgroundRemoval.highlightColor
   })
 
-  const setHighlightColor = () => {
-    editorStore.toolsConfig.backgroundRemoval.highlightColor = highlightColor.value
-  }
-
   /**
    * Maximum size of the manual tool (10% of smaller image dimension, min 10px)
    */
@@ -215,6 +236,11 @@ export function useBackgroundRemovalTool(imageStore, historyStore, workspaceStor
     const smallerDimension = imageStore.getSmallerImageDimension()
     return Math.max(10, Math.floor(smallerDimension * editorConfig.maxManualToolSizeCoefficient))
   })
+
+  /**
+   * Minimum size of the manual tool (2px)
+   */
+  const manualMinToolSize = 2
 
   /**
    * Select manual tool
@@ -244,26 +270,33 @@ export function useBackgroundRemovalTool(imageStore, historyStore, workspaceStor
     const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height)
     const data = imageData.data
 
+    // Get highlight color RGBA
+    const { fillR, fillG, fillB, fillA } = getHighlightColorRGBA()
+
     for (let i = 0; i < data.length; i += 4) {
       const alpha = data[i + 3]
 
       if (alpha > 0) {
-        // Red to transparent
+        // Selected area set to transparent
         data[i + 3] = 0
       } else {
-        // Transparent to red
-        data[i] = 255 // R
-        data[i + 1] = 0 // G
-        data[i + 2] = 0 // B
-        data[i + 3] = 255
+        // Unselected area set to highlight color
+        data[i] = fillR
+        data[i + 1] = fillG
+        data[i + 2] = fillB
+        data[i + 3] = fillA
       }
     }
 
     ctx.putImageData(imageData, 0, 0)
   }
 
+  /**
+   * Change size of the manual tool
+   * @param {number} size - New size in pixels
+   */
   const changeManualToolSize = (size) => {
-    if (size < 1) size = 1
+    if (size < manualMinToolSize) size = manualMinToolSize
     if (size > manualMaxToolSize.value) size = manualMaxToolSize.value
     manualToolSize.value = size
   }
@@ -383,7 +416,7 @@ export function useBackgroundRemovalTool(imageStore, historyStore, workspaceStor
     if (!canvas) return
     const ctx = canvas.getContext('2d')
 
-    if (replaceSelectionWithObjectDetection.value) {
+    if (replaceSelection.value) {
       // Clear existing selection
       ctx.clearRect(0, 0, canvas.width, canvas.height)
     }
@@ -413,36 +446,26 @@ export function useBackgroundRemovalTool(imageStore, historyStore, workspaceStor
    * @param {string} removalType - Type of removal ('color', 'manual', 'objectDetection')
    */
   const applyBackgroundRemoval = async (removalType) => {
-    const params = {
-      removalType,
-      colorBackgroundColor: colorBackgroundColor.value,
-      colorThreshold: colorRemovalThreshold.value,
-    }
-
     imageStore.addImageOperation({
       type: 'backgroundRemoval',
-      params,
+      removalType,
     })
 
     useSendEvent().sendEvent('toolSettings', 'backgroundRemoval', null, {
       settings: {
         removalType,
-        colorBackgroundColor: colorBackgroundColor.value,
-        colorRemovalThreshold: colorRemovalThreshold.value,
       },
     })
 
-    await applyBackgroundRemovalRender(removalType, params)
+    await applyBackgroundRemovalRender()
 
     historyStore.push(imageStore.getSnapshot(t))
   }
 
   /**
    * Apply background removal rendering
-   * @param {string} removalType - Type of removal ('color', 'manual', 'objectDetection')
-   * @param {Object} params - Parameters for removal
    */
-  const applyBackgroundRemovalRender = async (removalType, params) => {
+  const applyBackgroundRemovalRender = async () => {
     if (!imageStore.getRenderedImage({ t, renderCall: false })) return
 
     if (imageStore.fileType === 'pdf') {
@@ -471,39 +494,55 @@ export function useBackgroundRemovalTool(imageStore, historyStore, workspaceStor
       }
     }
 
-    if (removalType === 'color') {
-      applyColorRemovalRender(params.colorBackgroundColor, params.colorThreshold)
-    } else if (removalType === 'manual') {
-      applyManualRemovalRender()
-    } else if (removalType === 'objectDetection') {
-      applyManualRemovalRender()
-    }
+    // if (removalType === 'color') {
+    //   // applyColorRemovalRender(colorBackgroundColor.value, colorRemovalThreshold.value)
+    //   applyRemovalRender()
+    // } else if (removalType === 'manual') {
+    //   applyRemovalRender()
+    // } else if (removalType === 'objectDetection') {
+    // }
+    applyRemovalRender()
   }
 
   /**
-   * Apply color-based background removal rendering
-   * @param {string} backgroundColor - Background color in HEX
-   * @param {number} threshold - Threshold value (0..1)
+   * Mark background color on canvas
    */
-  const applyColorRemovalRender = (backgroundColor, threshold) => {
-    // Get RGB values from HEX
-    const bgColor = hexToRgb(backgroundColor)
+  const selectColorClick = () => {
+    const canvas = document.getElementById('manualRemovalCanvas')
+    if (!canvas) return
+    const ctx = canvas.getContext('2d')
 
-    const img = imageStore.originalImage
+    if (replaceSelection.value) {
+      // Clear existing selection
+      ctx.clearRect(0, 0, canvas.width, canvas.height)
+    }
+
+    // Get rendered image
+    const img = imageStore.getRenderedImage({ t, renderCall: false })
     if (!img) return
 
-    const canvas = document.createElement('canvas')
-    const ctx = canvas.getContext('2d', { willReadFrequently: true })
-    canvas.width = img.width
-    canvas.height = img.height
-    ctx.drawImage(img, 0, 0)
+    const width = canvas.width
+    const height = canvas.height
 
-    const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height)
+    // Get background color and threshold
+    const bgColor = hexToRgb(colorBackgroundColor.value)
+    const threshold = getOrComputeThreshold(bgColor, colorRemovalThreshold.value)
+
+    // Get image data from rendered image
+    const tempCanvas = document.createElement('canvas')
+    tempCanvas.width = width
+    tempCanvas.height = height
+    const tempCtx = tempCanvas.getContext('2d')
+    tempCtx.drawImage(img, 0, 0, width, height)
+    const imageData = tempCtx.getImageData(0, 0, width, height)
     const data = imageData.data
 
-    // Remove background
-    const absThreshold = getOrComputeThreshold(bgColor, threshold)
-    console.log('absThreshold (from histogram): ', absThreshold)
+    // Get highlight color RGBA
+    const { fillR, fillG, fillB, fillA } = getHighlightColorRGBA()
+
+    // Apply selection
+    const manualImageData = ctx.getImageData(0, 0, width, height)
+    const manualData = manualImageData.data
 
     for (let i = 0; i < data.length; i += 4) {
       const r = data[i]
@@ -511,18 +550,21 @@ export function useBackgroundRemovalTool(imageStore, historyStore, workspaceStor
       const b = data[i + 2]
 
       const dist = Math.sqrt((r - bgColor.r) ** 2 + (g - bgColor.g) ** 2 + (b - bgColor.b) ** 2)
-
-      if (dist <= absThreshold) {
-        data[i + 3] = 0 // Transparent pixel
+      if (dist <= threshold) {
+        manualData[i] = fillR
+        manualData[i + 1] = fillG
+        manualData[i + 2] = fillB
+        manualData[i + 3] = fillA
       }
     }
 
-    ctx.putImageData(imageData, 0, 0)
-
-    imageStore.setRenderedImage(canvas)
+    ctx.putImageData(manualImageData, 0, 0)
   }
 
-  const applyManualRemovalRender = () => {
+  /**
+   * Apply removal rendering based on canvas mask
+   */
+  const applyRemovalRender = () => {
     const manualCanvas = document.getElementById('manualRemovalCanvas')
     if (!manualCanvas) return
 
@@ -571,13 +613,14 @@ export function useBackgroundRemovalTool(imageStore, historyStore, workspaceStor
     manualToolSize,
     manualSelectTool,
     manualMaxToolSize,
+    manualMinToolSize,
     clearAllSelections,
     invertSelection,
     useBaseImage,
     changeManualToolSize,
     detectObjectsClick,
-    replaceSelectionWithObjectDetection,
+    replaceSelection,
     highlightColor,
-    setHighlightColor,
+    selectColorClick,
   }
 }

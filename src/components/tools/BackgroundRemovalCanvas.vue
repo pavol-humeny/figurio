@@ -281,7 +281,7 @@ onBeforeUnmount(() => {
   <div class="manual-removal-wrapper">
     <canvas id="manualRemovalCanvas" ref="manualCanvasRef" class="manual-removal-canvas" :width="imageWidth"
       :height="imageHeight" @mousedown="onMouseDown" @mousemove="onMouseMove" @mouseleave="onMouseLeave"
-      :style="{ cursor: editorStore.selectedTabPerTool['backgroundRemoval'] === 'objectDetection' ? 'default' : 'none' }"></canvas>
+      :style="{ cursor: editorStore.selectedTabPerTool['backgroundRemoval'] === 'manual' ? 'none' : 'default' }"></canvas>
 
     <!-- Cursor -->
     <div v-if="showCursor && editorStore.selectedTabPerTool['backgroundRemoval'] === 'manual'" class="custom-cursor"

@@ -46,6 +46,10 @@
     "settings": {
       "color": {
         "label": "Color",
+        "replaceSelection":{
+          "label": "Replace selection",
+          "tip": "Replace current selection with detected objects"
+        },
         "backgroundColor": {
           "label": "Color to remove",
           "tip": "Pick the reference color to remove from the image."
@@ -54,8 +58,12 @@
           "label": "Sensitivity",
           "tip": "Adjust how similar a pixel's color must be to the selected color to be removed. Low for only exact matches, high for also similar shades."
         },
+        "selectColorButton": {
+          "text": "Select color",
+          "tip": "Select selected color from image"
+        },
         "removeButton": {
-          "text": "Remove color"
+          "text": "Remove selection"
         }
       },
       "manual": {
@@ -95,14 +103,6 @@
           "label": "Replace selection",
           "tip": "Replace current selection with detected objects"
         },
-        "clearAllButton": {
-          "text": "Clear all",
-          "tip": "Clear selected area"
-        },
-        "invertSelectionButton": {
-          "text": "Invert selection",
-          "tip": "Invert the current selection"
-        },
         "useBaseImage":{
           "label": "Use base image",
           "tip": "Remove selection from the original base image or from the current modified image"
@@ -112,7 +112,7 @@
           "tip": "Detect objects in the image"
         },
         "removeButton": {
-          "text": "Remove background"
+          "text": "Remove selection"
         }
       }
     }
