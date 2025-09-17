@@ -381,7 +381,7 @@ export function useBlurTool(imageStore, historyStore, editorStore, t) {
 
     addBlurImage(id)
 
-    settings.name = imageStore.getNextObjectName('blur', null, t)
+    settings.name = imageStore.getNextObjectName('blur', null)
 
     useSendEvent().sendEvent('toolSettings', 'blur', 'create', {
       settings: { ...settings },

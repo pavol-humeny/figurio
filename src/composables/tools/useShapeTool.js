@@ -474,7 +474,7 @@ export function useShapeTool(editorStore, imageStore, historyStore, t) {
       settings.lineArrowEnd = markerMap[settings.lineArrowEnd]
     }
 
-    settings.name = imageStore.getNextObjectName('shape', settings.type, t)
+    settings.name = imageStore.getNextObjectName('shape', settings.type)
 
     useSendEvent().sendEvent('toolSettings', 'shape', 'create', {
       settings: { ...settings },

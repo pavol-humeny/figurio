@@ -237,6 +237,8 @@ export function useSvgObjectsList(
    * @param {string} newName - The new name for the SVG object
    */
   const renameObject = (id, newName) => {
+    console.log('Renaming', id, 'to', newName)
+
     const obj = imageStore.svgObjects.find((o) => o.id === id)
     if (!obj) return
     const oldName = obj.name
@@ -266,6 +268,8 @@ export function useSvgObjectsList(
   const selectObject = (id) => {
     const object = imageStore.getSvgObjectById(id)
     if (!object) return
+
+    if (editingId.value !== null) return // Not in editing mode
 
     // Switch tool if needed
     if (
@@ -297,6 +301,38 @@ export function useSvgObjectsList(
   }
 
   /**
+   * Gets a name for display, using translations for default names
+   *
+   * @param {string} name - The original name of the SVG object
+   * @returns {string} - The display name
+   */
+  const getElementName = (name) => {
+    if (name.length > 20) {
+      // Use translations for default object names
+      // Remove first 20 chars (padding)
+      const shortName = name.slice(20)
+
+      // Map short names to translations
+      if (shortName.startsWith('blur')) {
+        return t('tools.blur.objectNames')
+      } else if (shortName.startsWith('magnifyArea')) {
+        return t('tools.magnifyArea.objectNames')
+      } else if (shortName.startsWith('rectangle')) {
+        return t('tools.shape.objectNames.rectangle')
+      } else if (shortName.startsWith('ellipse')) {
+        return t('tools.shape.objectNames.ellipse')
+      } else if (shortName.startsWith('line')) {
+        return t('tools.shape.objectNames.line')
+      } else if (shortName.startsWith('text')) {
+        return t('tools.text.objectNames')
+      }
+    } else {
+      // Use user defined name
+      return name
+    }
+  }
+
+  /**
    * Cleanup on component unmount
    */
   onBeforeUnmount(() => {
@@ -315,5 +351,6 @@ export function useSvgObjectsList(
     editingId,
     startEditing,
     editingInputRef,
+    getElementName,
   }
 }

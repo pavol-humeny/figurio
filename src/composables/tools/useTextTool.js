@@ -250,7 +250,7 @@ export function useTextTool(imageStore, historyStore, editorStore, t) {
 
     imageStore.svgObjects.push({
       id,
-      name: imageStore.getNextObjectName('text', 'text', t),
+      name: imageStore.getNextObjectName('text', 'text'),
       tag: 'text',
       class: 'text',
       content: localTextSettings.value.text,

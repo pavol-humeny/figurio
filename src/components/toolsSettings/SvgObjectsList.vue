@@ -25,6 +25,7 @@ const {
   editingId,
   startEditing,
   editingInputRef,
+  getElementName,
 } = useSvgObjectsList(useImageStore(), useHistoryStore(), useViewportStore(), useEditorStore(), useUiStore(), t)
 </script>
 
@@ -41,10 +42,11 @@ const {
             <span class="drag-handle" :style="{ opacity: element.draggable ? 1 : 0 }">☰</span>
 
             <input v-if="editingId === element.id" ref="editingInputRef" class="rename-input" type="text"
-              v-model="element.name" @keyup.enter="renameObject(element.id, element.name)"
-              @blur="renameObject(element.id, element.name)" autofocus />
+              :value="getElementName(element.name)" @input="element.name = $event.target.value"
+              @keyup.enter="renameObject(element.id, element.name)" @blur="renameObject(element.id, element.name)"
+              autofocus maxlength="20" />
             <span v-else class="object-name" @dblclick="startEditing(element.id)">
-              {{ element.name }}
+              {{ getElementName(element.name) }}
             </span>
 
             <div v-if="imageStore.selectedSvgObjectId === element.id" class="delete-button" @click.stop="deleteObject">✕
