@@ -20,22 +20,103 @@
   },
   "backgroundRemoval": {
     "label": "Odstránenie pozadia",
-    "tip": "Odstráni z obrázka zvolenú farbu pozadia",
+    "tip": "Odstráni pozadie z obrázka",
     "tipDisabled": "",
-    "explain": "Tento nástroj odstráni pixely, ktoré sa zhodujú so zvolenou farbou. Vyber farbu a nastav citlivosť: nízke hodnoty odstránia iba presné zhody, vysoké hodnoty aj podobné odtiene.",
     "shortcut": "Shift + M",
+    "subTools": {
+      "color": {
+        "label": "Farba",
+        "tip": "Odstráni špecifickú farbu z obrázka",
+        "explain": "Nástroj Farba umožňuje odstrániť špecifickú farbu z obrázka. Vyberte farbu a nastavte hodnotu citlivosti. Nízke hodnoty odstránia len presné zhody, vysoké aj podobné odtiene.",
+        "shortcut": ""
+      },
+      "manual": {
+        "label": "Manuálne",
+        "tip": "Odstráni ručne vybrané časti obrázka",
+        "explain": "Nástroj Manuálne umožňuje odstrániť časti obrázka kreslením. Nastavte veľkosť štetca pre kontrolu oblasti, ktorá sa odstráni.",
+        "shortcut": ""
+      },
+      "objectDetection": {
+        "label": "Detekcia objektov",
+        "tip": "Detekuje objekty na obrázku a odstráni pozadie",
+        "explain": "Nástroj Detekcia objektov identifikuje a odstráni pozadie objektov na obrázku.",
+        "shortcut": ""
+      }
+    },
     "settings": {
-      "general": {
+      "color": {
+        "label": "Farba",
+        "replaceSelection": {
+          "label": "Nahradiť výber",
+          "tip": "Zruší aktuálny výber a nahradí ho novým výberom"
+        },
         "backgroundColor": {
           "label": "Farba na odstránenie",
-          "tip": "Vyber referenčnú farbu, ktorá sa má z obrázka odstrániť."
+          "tip": "Vyberte referenčnú farbu, ktorú chcete odstrániť z obrázka."
         },
         "removalSensitivity": {
           "label": "Citlivosť",
-          "tip": "Určuje, ako veľmi sa musí farba pixelu podobať na vybranú farbu, aby bola odstránená. Nízka odstráni iba presné zhody, vysoká odstráni aj podobné odtiene."
+          "tip": "Nastavte, ako podobná musí byť farba pixelu vybratej farbe, aby sa odstránila. Nízke pre presné zhody, vysoké aj pre podobné odtiene."
         },
-        "removeBackgroundButton": {
-          "text": "Odstrániť farbu"
+        "selectColorButton": {
+          "text": "Vybrať farbu",
+          "tip": "Vyberie farbu z obrázka"
+        },
+        "removeButton": {
+          "text": "Odstrániť výber"
+        }
+      },
+      "manual": {
+        "label": "Manuálne",
+        "selectedTool": {
+          "label": "Vybraný nástroj",
+          "options": {
+            "brush": "Štetec",
+            "tipBrush": "Štetec",
+            "eraser": "Guma",
+            "tipEraser": "Guma"
+          }
+        },
+        "toolSize": {
+          "label": "Veľkosť nástroja",
+          "tip": "Nastavte veľkosť vybraného nástroja"
+        },
+        "clearAllButton": {
+          "text": "Vymazať výber",
+          "tip": "Vymaže vybranú oblasť"
+        },
+        "invertSelectionButton": {
+          "text": "Invertovať výber",
+          "tip": "Invertuje aktuálny výber"
+        },
+        "selectRemovedButton": {
+          "text": "Vybrať odstránené",
+          "tip": "Vyberie odstránenú časť obrázka"
+        },
+        "useBaseImage": {
+          "label": "Použiť pôvodný obrázok",
+          "tip": "Odstráni výber z pôvodného obrázka alebo z aktuálne upraveného obrázka"
+        },
+        "removeButton": {
+          "text": "Odstrániť výber"
+        }
+      },
+      "objectDetection": {
+        "label": "Detekcia objektov",
+        "replaceSelection": {
+          "label": "Nahradiť výber",
+          "tip": "Zruší aktuálny výber a nahradí ho novým výberom"
+        },
+        "useBaseImage": {
+          "label": "Použiť pôvodný obrázok",
+          "tip": "Odstráni výber z pôvodného obrázka alebo z aktuálne upraveného obrázka"
+        },
+        "detectButton": {
+          "text": "Detegovať objekty",
+          "tip": "Deteguje objekty na obrázku"
+        },
+        "removeButton": {
+          "text": "Odstrániť výber"
         }
       }
     }

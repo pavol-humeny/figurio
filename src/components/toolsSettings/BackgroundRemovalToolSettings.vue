@@ -37,6 +37,7 @@ const {
   detectObjectsClick,
   replaceSelection,
   selectColorClick,
+  highlightRemovedPixels,
 } = useBackgroundRemovalTool(
   useImageStore(),
   useHistoryStore(),
@@ -124,6 +125,15 @@ const tabs = ['color', 'manual', 'objectDetection']
             <DefaultButton :text="$t('tools.backgroundRemoval.settings.manual.invertSelectionButton.text')"
               :tip="$t('tools.backgroundRemoval.settings.manual.invertSelectionButton.tip')" position="bottom-left"
               @click="invertSelection" />
+          </div>
+        </div>
+
+        <!-- Select removed part -->
+        <div class="settings-content-wrapper">
+          <div class="content-wrapper">
+            <DefaultButton :text="$t('tools.backgroundRemoval.settings.manual.selectRemovedButton.text')"
+              :tip="$t('tools.backgroundRemoval.settings.manual.selectRemovedButton.tip')" position="bottom-left"
+              @click="highlightRemovedPixels" />
           </div>
         </div>
 
@@ -217,6 +227,15 @@ const tabs = ['color', 'manual', 'objectDetection']
           </div>
         </div>
 
+        <!-- Select removed part -->
+        <div class="settings-content-wrapper">
+          <div class="content-wrapper">
+            <DefaultButton :text="$t('tools.backgroundRemoval.settings.manual.selectRemovedButton.text')"
+              :tip="$t('tools.backgroundRemoval.settings.manual.selectRemovedButton.tip')" position="bottom-left"
+              @click="highlightRemovedPixels" />
+          </div>
+        </div>
+
         <!-- Use base image -->
         <div class="settings-content-wrapper">
           <div class="content-wrapper">
@@ -287,6 +306,15 @@ const tabs = ['color', 'manual', 'objectDetection']
             <DefaultButton :text="$t('tools.backgroundRemoval.settings.manual.invertSelectionButton.text')"
               :tip="$t('tools.backgroundRemoval.settings.manual.invertSelectionButton.tip')" position="bottom-left"
               @click="invertSelection" />
+          </div>
+        </div>
+
+        <!-- Select removed part -->
+        <div class="settings-content-wrapper">
+          <div class="content-wrapper">
+            <DefaultButton :text="$t('tools.backgroundRemoval.settings.manual.selectRemovedButton.text')"
+              :tip="$t('tools.backgroundRemoval.settings.manual.selectRemovedButton.tip')" position="bottom-left"
+              @click="highlightRemovedPixels" />
           </div>
         </div>
 

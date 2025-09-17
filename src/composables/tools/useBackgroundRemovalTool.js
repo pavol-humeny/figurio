@@ -1,17 +1,7 @@
-import { computed, ref, watch } from 'vue'
+import { computed, ref } from 'vue'
 import { useConfirmModal } from '../modals/useConfirmModal'
 import { useSendEvent } from '@/composables/common/useSendEvent'
 import { editorConfig } from '@/config/editorConfig'
-
-/**
- * Cached histogram
- */
-const cachedHistogram = ref(null)
-
-/**
- * Cached threshold
- */
-const cachedThreshold = ref(null)
 
 /**
  * Selected manual tool ('brush' | 'eraser')
@@ -89,123 +79,6 @@ export function useBackgroundRemovalTool(imageStore, historyStore, workspaceStor
     const g = (bigint >> 8) & 255
     const b = bigint & 255
     return { r, g, b }
-  }
-
-  /**
-   * Get or calculate threshold (computes histogram if needed)
-   * @param {Object} bgColor - Background color ({r, g, b})
-   * @param {number} threshold - Threshold value (0..1)
-   * @returns {number} - Computed threshold value
-   */
-  const getOrComputeThreshold = (bgColor, threshold) => {
-    if (cachedThreshold.value !== null) {
-      return cachedThreshold.value
-    }
-
-    // Calculate histogram
-    if (cachedHistogram.value === null) {
-      cachedHistogram.value = computeHistogram(bgColor)
-    }
-
-    cachedThreshold.value = getThresholdFromHistogram(cachedHistogram.value, threshold)
-    return cachedThreshold.value
-  }
-
-  /**
-   * Reset cached values
-   */
-  const resetCache = () => {
-    cachedHistogram.value = null
-    cachedThreshold.value = null
-  }
-
-  /**
-   * Watch for active tab changes and reset cache
-   */
-  watch(() => workspaceStore.activeTabIndex, resetCache, { immediate: true })
-
-  /** Watch for color removal threshold changes */
-  watch(colorRemovalThreshold, () => {
-    resetCache()
-  })
-
-  /** Watch for background color changes */
-  watch(colorBackgroundColor, () => {
-    resetCache()
-  })
-
-  /**
-   * Compute histogram of the image
-   * @param {Object} bgColor - Background color
-   * @returns {number[]} - Histogram bins
-   */
-  const computeHistogram = (bgColor = { r: 255, g: 255, b: 255 }) => {
-    const img = imageStore.originalImage
-    if (!img) return null
-
-    // Create temporary canvas
-    const canvas = document.createElement('canvas')
-    const ctx = canvas.getContext('2d', { willReadFrequently: true })
-
-    const width = img.width
-    const height = img.height
-
-    canvas.width = width
-    canvas.height = height
-
-    if (img instanceof HTMLCanvasElement) {
-      ctx.drawImage(img, 0, 0)
-    } else if (img instanceof HTMLImageElement) {
-      ctx.drawImage(img, 0, 0, width, height)
-    }
-
-    const imageData = ctx.getImageData(0, 0, width, height)
-    const data = imageData.data
-
-    // Max distance = 441 (sqrt(255**2 * 3))
-    const maxDist = Math.sqrt(255 ** 2 * 3)
-    const bins = new Array(256).fill(0)
-
-    for (let i = 0; i < data.length; i += 4) {
-      const r = data[i]
-      const g = data[i + 1]
-      const b = data[i + 2]
-      const dist = Math.sqrt((r - bgColor.r) ** 2 + (g - bgColor.g) ** 2 + (b - bgColor.b) ** 2)
-
-      if (dist > 0) {
-        // Normalize to 0..255
-        const binIndex = Math.floor((dist / maxDist) * 255)
-        bins[binIndex]++
-      }
-    }
-
-    return bins
-  }
-
-  /**
-   * Get threshold value from histogram bins
-   * @param {number[]} bins - Histogram bins
-   * @param {number} percentile - Percentile to use for threshold (0..1)
-   * @returns {number} - Computed threshold value
-   */
-  const getThresholdFromHistogram = (bins, percentile) => {
-    if (percentile <= 0) return 0
-    if (percentile > 1) percentile = 1
-
-    const total = bins.reduce((a, b) => a + b, 0)
-    let cumulative = 0
-
-    for (let i = 0; i < bins.length; i++) {
-      cumulative += bins[i]
-      if (cumulative / total >= percentile) {
-        const maxDist = Math.sqrt(255 ** 2 * 3)
-        const threshold = (i / 255) * maxDist
-        return threshold
-      }
-    }
-
-    // fallback
-    return 10
   }
 
   // ----------------------------------
@@ -299,6 +172,56 @@ export function useBackgroundRemovalTool(imageStore, historyStore, workspaceStor
     if (size < manualMinToolSize) size = manualMinToolSize
     if (size > manualMaxToolSize.value) size = manualMaxToolSize.value
     manualToolSize.value = size
+  }
+
+  /**
+   * Highlight removed pixels on canvas
+   */
+  const highlightRemovedPixels = () => {
+    const canvas = document.getElementById('manualRemovalCanvas')
+    if (!canvas) return
+    const ctx = canvas.getContext('2d')
+
+    // Clear previous selection
+    ctx.clearRect(0, 0, canvas.width, canvas.height)
+
+    // Get the current rendered image
+    const img = imageStore.getRenderedImage({ t, renderCall: false })
+    if (!img) return
+
+    const width = canvas.width
+    const height = canvas.height
+
+    // Draw image on temporary canvas to read pixel data
+    const tempCanvas = document.createElement('canvas')
+    tempCanvas.width = width
+    tempCanvas.height = height
+    const tempCtx = tempCanvas.getContext('2d')
+    tempCtx.drawImage(img, 0, 0, width, height)
+    const imageData = tempCtx.getImageData(0, 0, width, height)
+    const data = imageData.data
+
+    // Get highlight color RGBA
+    const { fillR, fillG, fillB, fillA } = getHighlightColorRGBA()
+
+    // Prepare canvas for manual selection overlay
+    const manualImageData = ctx.getImageData(0, 0, width, height)
+    const manualData = manualImageData.data
+
+    for (let i = 0; i < data.length; i += 4) {
+      const alpha = data[i + 3] // opacity of current pixel
+
+      // If pixel is fully transparent, mark it
+      if (alpha === 0) {
+        manualData[i] = fillR
+        manualData[i + 1] = fillG
+        manualData[i + 2] = fillB
+        manualData[i + 3] = fillA
+      }
+    }
+
+    // Apply overlay to canvas
+    ctx.putImageData(manualImageData, 0, 0)
   }
 
   //////////////////////////////////////////////////////////////////////////
@@ -436,6 +359,68 @@ export function useBackgroundRemovalTool(imageStore, historyStore, workspaceStor
   }
   //////////////////////////////////////////////////////////////////////////
 
+  /**
+   * Mark background color on canvas
+   */
+  const selectColorClick = () => {
+    const canvas = document.getElementById('manualRemovalCanvas')
+    if (!canvas) return
+    const ctx = canvas.getContext('2d')
+
+    if (replaceSelection.value) {
+      // Clear existing selection
+      ctx.clearRect(0, 0, canvas.width, canvas.height)
+    }
+
+    // Get rendered image
+    const img = imageStore.getRenderedImage({ t, renderCall: false })
+    if (!img) return
+
+    const width = canvas.width
+    const height = canvas.height
+
+    // Get background color and threshold
+    const bgColor = hexToRgb(colorBackgroundColor.value)
+
+    // Compute threshold as fraction of max possible distance
+    const maxDist = Math.sqrt(255 ** 2 + 255 ** 2 + 255 ** 2) // ~441.67
+    const threshold = maxDist * colorRemovalThreshold.value
+
+    console.log('Using background color:', bgColor, 'with threshold:', threshold)
+
+    // Get image data from rendered image
+    const tempCanvas = document.createElement('canvas')
+    tempCanvas.width = width
+    tempCanvas.height = height
+    const tempCtx = tempCanvas.getContext('2d')
+    tempCtx.drawImage(img, 0, 0, width, height)
+    const imageData = tempCtx.getImageData(0, 0, width, height)
+    const data = imageData.data
+
+    // Get highlight color RGBA
+    const { fillR, fillG, fillB, fillA } = getHighlightColorRGBA()
+
+    // Apply selection
+    const manualImageData = ctx.getImageData(0, 0, width, height)
+    const manualData = manualImageData.data
+
+    for (let i = 0; i < data.length; i += 4) {
+      const r = data[i]
+      const g = data[i + 1]
+      const b = data[i + 2]
+
+      const dist = Math.sqrt((r - bgColor.r) ** 2 + (g - bgColor.g) ** 2 + (b - bgColor.b) ** 2)
+      if (dist <= threshold) {
+        manualData[i] = fillR
+        manualData[i + 1] = fillG
+        manualData[i + 2] = fillB
+        manualData[i + 3] = fillA
+      }
+    }
+
+    ctx.putImageData(manualImageData, 0, 0)
+  }
+
   // ----------------------------------
   // Apply
   // ----------------------------------
@@ -505,63 +490,6 @@ export function useBackgroundRemovalTool(imageStore, historyStore, workspaceStor
   }
 
   /**
-   * Mark background color on canvas
-   */
-  const selectColorClick = () => {
-    const canvas = document.getElementById('manualRemovalCanvas')
-    if (!canvas) return
-    const ctx = canvas.getContext('2d')
-
-    if (replaceSelection.value) {
-      // Clear existing selection
-      ctx.clearRect(0, 0, canvas.width, canvas.height)
-    }
-
-    // Get rendered image
-    const img = imageStore.getRenderedImage({ t, renderCall: false })
-    if (!img) return
-
-    const width = canvas.width
-    const height = canvas.height
-
-    // Get background color and threshold
-    const bgColor = hexToRgb(colorBackgroundColor.value)
-    const threshold = getOrComputeThreshold(bgColor, colorRemovalThreshold.value)
-
-    // Get image data from rendered image
-    const tempCanvas = document.createElement('canvas')
-    tempCanvas.width = width
-    tempCanvas.height = height
-    const tempCtx = tempCanvas.getContext('2d')
-    tempCtx.drawImage(img, 0, 0, width, height)
-    const imageData = tempCtx.getImageData(0, 0, width, height)
-    const data = imageData.data
-
-    // Get highlight color RGBA
-    const { fillR, fillG, fillB, fillA } = getHighlightColorRGBA()
-
-    // Apply selection
-    const manualImageData = ctx.getImageData(0, 0, width, height)
-    const manualData = manualImageData.data
-
-    for (let i = 0; i < data.length; i += 4) {
-      const r = data[i]
-      const g = data[i + 1]
-      const b = data[i + 2]
-
-      const dist = Math.sqrt((r - bgColor.r) ** 2 + (g - bgColor.g) ** 2 + (b - bgColor.b) ** 2)
-      if (dist <= threshold) {
-        manualData[i] = fillR
-        manualData[i + 1] = fillG
-        manualData[i + 2] = fillB
-        manualData[i + 3] = fillA
-      }
-    }
-
-    ctx.putImageData(manualImageData, 0, 0)
-  }
-
-  /**
    * Apply removal rendering based on canvas mask
    */
   const applyRemovalRender = () => {
@@ -594,9 +522,10 @@ export function useBackgroundRemovalTool(imageStore, historyStore, workspaceStor
       const maskB = maskPixels[i + 2]
       const maskA = maskPixels[i + 3]
 
-      // If the pixel is red (masking)
-      if (maskA > 0 && maskR === 255 && maskG === 0 && maskB === 0) {
-        data[i + 3] = 0 // Transparent
+      // If the pixel is mask
+      const { fillR, fillG, fillB } = getHighlightColorRGBA()
+      if (maskA > 0 && maskR === fillR && maskG === fillG && maskB === fillB) {
+        data[i + 3] = 0
       }
     }
 
@@ -622,5 +551,6 @@ export function useBackgroundRemovalTool(imageStore, historyStore, workspaceStor
     replaceSelection,
     highlightColor,
     selectColorClick,
+    highlightRemovedPixels,
   }
 }

@@ -20,7 +20,7 @@
   },
   "backgroundRemoval":{
     "label": "Background removal",
-    "tip": "Removes a specific color from the image",
+    "tip": "Removes the background from the image",
     "tipDisabled": "",
     "shortcut": "Shift + M",
     "subTools": {
@@ -48,7 +48,7 @@
         "label": "Color",
         "replaceSelection":{
           "label": "Replace selection",
-          "tip": "Replace current selection with detected objects"
+          "tip": "Replace current selection with new selection"
         },
         "backgroundColor": {
           "label": "Color to remove",
@@ -79,15 +79,19 @@
         },
         "toolSize": {
           "label": "Tool size",
-          "tip": "Adjust the size of the selected tool or double click icon to reset size"
+          "tip": "Adjust the size of the selected tool"
         },
         "clearAllButton": {
-          "text": "Clear all",
+          "text": "Clear selection",
           "tip": "Clear selected area"
         },
         "invertSelectionButton": {
           "text": "Invert selection",
           "tip": "Invert the current selection"
+        },
+        "selectRemovedButton": {
+          "text": "Select removed",
+          "tip": "Select the removed part of the image"
         },
         "useBaseImage":{
           "label": "Use base image",
@@ -101,7 +105,7 @@
         "label": "Object Detection",
         "replaceSelection":{
           "label": "Replace selection",
-          "tip": "Replace current selection with detected objects"
+          "tip": "Replace current selection with new selection"
         },
         "useBaseImage":{
           "label": "Use base image",
