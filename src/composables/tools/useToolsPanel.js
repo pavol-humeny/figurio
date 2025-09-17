@@ -108,6 +108,9 @@ export function useToolsPanel(editorStore, imageStore, uiStore, t) {
       if (newVal?.tool === 'shape' && oldValue?.tool === 'shape') {
         editorStore.previousToolKey = ''
       }
+
+      // Clear removal canvas when switching between tools
+      imageStore.removalCanvas = null
     },
     { immediate: true, deep: false },
   )
