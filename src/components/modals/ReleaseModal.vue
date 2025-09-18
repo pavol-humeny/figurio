@@ -54,7 +54,7 @@ const {
 
           <!-- Patch notes content -->
           <div class="release-content-wrapper" ref="releaseContentRef" @scroll="checkScroll">
-            <div class="release-block">
+            <div v-if="currentlyInProgress.length > 0" class="release-block">
               <p class="release-global-texts">
                 {{ $t('release.inProgressGlobal.currentlyInProgressText') }}
               </p>

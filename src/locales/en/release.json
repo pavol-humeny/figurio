@@ -4,6 +4,15 @@
     "items": []
   },
   "versions":{
+    "4.4.0":{
+      "label": "4.4.0",
+      "date":"X.9. 2025",
+      "newFeatures": {
+        "items": [
+          "Magnify area tool - magnify object can be exported to pdf files"
+        ]
+      }
+    },
     "4.3.0":{
       "label": "4.3.0",
       "date":"X.9. 2025",
