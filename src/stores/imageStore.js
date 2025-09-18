@@ -92,7 +92,11 @@ export const useImageStore = defineStore('imageStore', {
     /** New rendered image - used for rasterizing SVG objects before export */
     newRenderedImage: null,
 
+    /** Overlay image - used for displaying svg objects after rasterization in pdf file */
     overlayImage: null,
+
+    /** Overlay image for magnify area svg objects - used for displaying magnified areas in pdf export */
+    magnifyOverlayImage: null,
 
     /** Array of SVG objects to render on the image */
     svgObjects: [
@@ -1077,11 +1081,13 @@ export const useImageStore = defineStore('imageStore', {
       ) {
         const allObjects = [...(this.blurObjects || []), ...(this.svgObjects || [])]
 
+        const filteredObjects = allObjects.filter((obj) => obj.class !== 'magnifyArea')
+
         const svgString = `
           <svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}">
           ${svgDefsString}
             <g transform="translate(${offsetX}, ${offsetY})">
-              ${allObjects
+              ${filteredObjects
                 .map((obj) => {
                   const attrs = Object.entries(obj.attrs || {})
                     .map(([key, val]) => `${key}="${val}"`)
@@ -1611,9 +1617,34 @@ export const useImageStore = defineStore('imageStore', {
         const allObjects = [...(this.blurObjects || []), ...(this.svgObjects || [])]
 
         for (const obj of allObjects) {
+          // Filter out magnify area
+          if (obj.class === 'magnifyArea') continue
+
           // Add text to attributes
           obj.attrs.textContent = obj.content || ''
           await drawSvgElement(finalPage, obj.tag, obj.attrs, finalHeight, offsetX, offsetY)
+        }
+
+        // 2.25 . Magnify overlay if present (bitmap)
+        if (this.svgObjects.some((obj) => obj.class === 'magnifyArea')) {
+          console.warn('Rasterizing magnify area for PDF export')
+          await this.rasterize(t, false, null, null, false, true)
+
+          // Convert to PNG dataUrl
+          const overlayDataUrl = this.magnifyOverlayImage.toDataURL('image/png')
+          const overlayBytes = Uint8Array.from(atob(overlayDataUrl.split(',')[1]), (c) =>
+            c.charCodeAt(0),
+          )
+
+          // Embed do PDF
+          const overlayImage = await pdf.embedPng(overlayBytes)
+
+          finalPage.drawImage(overlayImage, {
+            x: 0,
+            y: 0,
+            width: this.magnifyOverlayImage.width,
+            height: this.magnifyOverlayImage.height,
+          })
         }
 
         // 2.5. Overlay image if present (bitmap)
@@ -1673,6 +1704,14 @@ export const useImageStore = defineStore('imageStore', {
         // Add svgObjects and frame
         await this.createSvgPdf(pdf, finalWidth, finalHeight, offsetX, offsetY)
 
+        // Add magnify overlay image as extra layer
+        if (this.svgObjects.some((obj) => obj.class === 'magnifyArea')) {
+          await this.rasterize(t, false, null, null, false, true)
+
+          const magnifyDataUrl = this.magnifyOverlayImage.toDataURL('image/png')
+          pdf.addImage(magnifyDataUrl, 'PNG', offsetX, offsetY, image.width, image.height)
+        }
+
         // Save
         pdf.save(`${this.newFileName}.pdf`)
       }
@@ -1694,7 +1733,14 @@ export const useImageStore = defineStore('imageStore', {
      * @param {boolean} storeAsNew - Whether to store the result in `newRenderedImage` or update current `renderedImage`
      * @returns {Promise<void>}
      */
-    async rasterize(t, generateOverlay = false, width = null, height = null, storeAsNew = false) {
+    async rasterize(
+      t,
+      generateOverlay = false,
+      width = null,
+      height = null,
+      storeAsNew = false,
+      generateMagnifyAreaOverlay = false,
+    ) {
       if (this.svgObjects.length === 0 && this.blurObjects.length === 0) return
 
       console.log('Rasterizing image with SVG objects...')
@@ -1797,6 +1843,54 @@ export const useImageStore = defineStore('imageStore', {
         })
 
         this.overlayImage = overlayCanvas
+      }
+
+      // Create magnify area overlay if it is pdf export
+      if (generateMagnifyAreaOverlay) {
+        const magnifyObjects = objectsToRender.filter((obj) => obj.class === 'magnifyArea')
+
+        if (magnifyObjects.length > 0) {
+          const magnifyObjectsString = magnifyObjects
+            .map((obj) => {
+              const attrs = Object.entries(obj.attrs || {})
+                .map(([key, val]) => `${key}="${val}"`)
+                .join(' ')
+              if (obj.tag === 'text') {
+                return `<text ${attrs}>${obj.content || ''}</text>`
+              }
+              return `<${obj.tag} ${attrs} />`
+            })
+            .join('\n')
+
+          const magnifySvgString = `
+            <svg xmlns="http://www.w3.org/2000/svg" width="${usedWidth}" height="${usedHeight}">
+              ${svgDefsString}
+              ${magnifyObjectsString}
+            </svg>
+          `.trim()
+
+          const magnifyCanvas = document.createElement('canvas')
+          magnifyCanvas.width = usedWidth
+          magnifyCanvas.height = usedHeight
+          const magnifyCtx = magnifyCanvas.getContext('2d')
+
+          const magnifyBlob = new Blob([magnifySvgString], { type: 'image/svg+xml' })
+          const magnifyUrl = URL.createObjectURL(magnifyBlob)
+
+          await new Promise((resolve, reject) => {
+            const magnifyImg = new Image()
+            magnifyImg.onload = () => {
+              magnifyCtx.drawImage(magnifyImg, 0, 0)
+              URL.revokeObjectURL(magnifyUrl)
+              resolve()
+            }
+            magnifyImg.onerror = reject
+            magnifyImg.src = magnifyUrl
+          })
+
+          this.magnifyOverlayImage = magnifyCanvas
+        }
+        return
       }
 
       // Store result either as renderedImage or newRenderedImage

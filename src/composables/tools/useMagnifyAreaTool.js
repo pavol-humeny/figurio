@@ -350,8 +350,6 @@ s
       }
     }
 
-    console.log('Apply magnify area settings', settings, source, result)
-
     // Update source object
     source.attrs.cx = settings.sourceX
     source.attrs.cy = settings.sourceY
@@ -413,7 +411,7 @@ s
    * @param {number} x - X coordinate of the source magnify area
    * @param {number} y - Y coordinate of the source magnify area
    */
-  const addMagnifyArea = (x, y) => {
+  const addMagnifyArea = async (x, y) => {
     const sourceId = Date.now()
     const resultId = sourceId + 1
 

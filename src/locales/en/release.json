@@ -1,9 +1,7 @@
 {
   "inProgressGlobal": {
     "currentlyInProgressText": "Currently in progress",
-    "items": [
-      "Magnify area tool support for pdf files"
-    ]
+    "items": []
   },
   "versions":{
     "4.3.0":{

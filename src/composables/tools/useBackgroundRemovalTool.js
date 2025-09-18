@@ -16,9 +16,9 @@ const manualToolSize = ref(editorConfig.defaultManualToolSize)
 export function useBackgroundRemovalTool(imageStore, historyStore, workspaceStore, editorStore, t) {
   const { showConfirmModal } = useConfirmModal()
 
-  // backgroundReplacementColor,
-  // replaceBackgroundColor,
-
+  /**
+   * Background color for replacement (if enabled)
+   */
   const backgroundReplacementColor = computed({
     get: () => {
       return editorStore.toolsConfig.backgroundRemoval.backgroundColor
@@ -28,14 +28,9 @@ export function useBackgroundRemovalTool(imageStore, historyStore, workspaceStor
     },
   })
 
-  // const replaceWithBackgroundColorFunction = () => {
-  //   if (replaceWithBackgroundColor.value) {
-  //     editorStore.toolsConfig.backgroundRemoval.backgroundColor = backgroundReplacementColor.value
-  //   } else {
-  //     editorStore.toolsConfig.backgroundRemoval.backgroundColor = 'transparent'
-  //   }
-  // }
-
+  /**
+   * Whether to replace removed background with color (otherwise transparent)
+   */
   const replaceWithBackgroundColor = computed({
     get: () => {
       return editorStore.toolsConfig.backgroundRemoval.replaceWithBackgroundColor
