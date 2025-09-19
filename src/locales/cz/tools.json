@@ -256,6 +256,10 @@
           "sensitivity": {
             "title": "Citlivost",
             "tip": "Nastavte citlivost automatického ořezu. Vyšší citlivost označí více pixelů, ktoré sú podobní pozadí a zahrne je do výpočtu ořezu, nižší citlivost zahrne méně pixelů."
+          }, 
+          "smallAutoCropInfo":{
+            "title": "Automatické ořezání je příliš malé",
+            "message": "Automatické ořezání bylo menší než minimální povolená velikost ořezu a bylo upraveno na minimální velikost."
           }
         },
         "showArtifactsButton":{

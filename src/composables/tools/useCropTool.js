@@ -693,11 +693,42 @@ export function useCropTool(
       right--
     }
 
-    const newWidth = right - left + 1
-    const newHeight = bottom - top + 1
+    let newWidth = right - left + 1
+    let newHeight = bottom - top + 1
 
     if (newWidth <= 0 || newHeight <= 0) {
       return cropBox.value // fallback
+    }
+
+    const MIN_CROP_SIZE = editorConfig.minCropSize
+
+    if (newWidth / scale < MIN_CROP_SIZE) {
+      showToastModal(
+        'info',
+        t('tools.crop.settings.general.autoCrop.smallAutoCropInfo.title'),
+        t('tools.crop.settings.general.autoCrop.smallAutoCropInfo.message'),
+      )
+
+      if (left + MIN_CROP_SIZE <= imageStore.fileDimensions.width) {
+        newWidth = MIN_CROP_SIZE * scale
+      } else {
+        left = (imageStore.fileDimensions.width - MIN_CROP_SIZE) * scale
+        newWidth = MIN_CROP_SIZE * scale
+      }
+    }
+
+    if (newHeight / scale < MIN_CROP_SIZE) {
+      showToastModal(
+        'info',
+        t('tools.crop.settings.general.autoCrop.smallAutoCropInfo.title'),
+        t('tools.crop.settings.general.autoCrop.smallAutoCropInfo.message'),
+      )
+      if (top + MIN_CROP_SIZE <= imageStore.fileDimensions.height) {
+        newHeight = MIN_CROP_SIZE * scale
+      } else {
+        top = (imageStore.fileDimensions.height - MIN_CROP_SIZE) * scale
+        newHeight = MIN_CROP_SIZE * scale
+      }
     }
 
     return {
