@@ -19,12 +19,11 @@ const isVisible = ref(false)
  *   resetPanelWidthDisabled: import('vue').ComputedRef<boolean>,
  *   resetPanelWidth: () => void,
  *   openPrivacyModal: () => void,
- *   privacyModalVisible: import('vue').Ref<boolean>,
  *   enableRulers: import('vue').ComputedRef<boolean>,
  * }}
  */
 export function useSettingsPanel(uiStore) {
-  const { isVisible: privacyModalVisible, openPrivacyAndDataModal } = usePrivacyAndDataModal()
+  const { openPrivacyAndDataModal } = usePrivacyAndDataModal()
 
   /**
    * Enable or disable keyboard shortcuts
@@ -114,14 +113,32 @@ export function useSettingsPanel(uiStore) {
     }
   }
 
+  /**
+   * Close panel when clicking outside of it
+   *
+   * @param {MouseEvent} event - The mouse event
+   */
+  const handleClickOutside = (event) => {
+    const target = event.target
+    const settingsPanel = document.getElementById('settings-panel')
+
+    if (settingsPanel && !settingsPanel.contains(target)) {
+      setTimeout(() => {
+        closeSettingsPanel()
+      }, 150)
+    }
+  }
+
   // Register global keydown listener to close settings panel
   onMounted(() => {
     window.addEventListener('keydown', handleKeydown)
+    document.addEventListener('mousedown', handleClickOutside)
   })
 
   // Cleanup listener on unmount
   onBeforeUnmount(() => {
     window.removeEventListener('keydown', handleKeydown)
+    document.removeEventListener('mousedown', handleClickOutside)
   })
 
   return {
@@ -132,7 +149,6 @@ export function useSettingsPanel(uiStore) {
     resetPanelWidthDisabled,
     resetPanelWidth,
     openPrivacyModal,
-    privacyModalVisible,
     enableRulers,
   }
 }

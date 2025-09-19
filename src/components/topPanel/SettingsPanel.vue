@@ -6,7 +6,6 @@ import DefaultButton from '@/components/common/DefaultButton.vue';
 import ToggleButton from '@/components/common/ToggleButton.vue';
 import { useSettingsPanel } from '@/composables/topPanel/useSettingsPanel';
 import { useUiStore } from '@/stores/uiStore';
-import { useClickOutside } from '@/composables/common/useClickOutside';
 import pkg from '../../../package.json';
 import { useReleaseModal } from '@/composables/modals/useReleaseModal';
 
@@ -20,17 +19,8 @@ const {
   resetPanelWidthDisabled,
   resetPanelWidth,
   openPrivacyModal,
-  privacyModalVisible,
   enableRulers
 } = useSettingsPanel(useUiStore());
-
-/**
- * Logic for handling clicks outside the settings panel.
- */
-const { wrapperRef } = useClickOutside({
-  condition: () => !privacyModalVisible.value,
-  onOutsideClick: () => closeSettingsPanel()
-})
 
 /**
  * Logic of the patch notes modal state and scrolling
@@ -42,7 +32,7 @@ const {
 </script>
 
 <template>
-  <div class="settings-panel" v-if="isVisible" ref="wrapperRef">
+  <div id="settings-panel" class="settings-panel" v-if="isVisible">
     <!-- Title -->
     <div class="settings-panel-label">
       <BaseIcon name="IconSettings" :size="28" :color="'var(--text-c)'" />
