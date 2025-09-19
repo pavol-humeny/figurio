@@ -5,6 +5,7 @@ import { useSvgObjects } from './useSvgObjects'
 import { useSvgFunctions } from './useSvgFunctions'
 import { useMagnifyAreaTool } from './useMagnifyAreaTool'
 import { viewportConfig } from '@/config/viewportConfig'
+import { useSettingsPanel } from '@/composables/topPanel/useSettingsPanel'
 
 /**
  * Logic for interactive SVG object
@@ -36,8 +37,15 @@ export function useSvgObjectWrapper(
   const { clamp, pythagorean, round } = useMath()
   const { getObjectCenter, getTransformedBoundingBox, getSnapOffsetToEdges } =
     useSvgFunctions(imageStore)
+  const { isVisible: isVisibleSettingsPanel, closeSettingsPanel } = useSettingsPanel(uiStore)
 
-  const { generateMagnifyPattern } = useMagnifyAreaTool(imageStore, historyStore, editorStore, workspaceStore, t)
+  const { generateMagnifyPattern } = useMagnifyAreaTool(
+    imageStore,
+    historyStore,
+    editorStore,
+    workspaceStore,
+    t,
+  )
 
   /**
    * Style of cursor when hovering over the SVG object
@@ -332,6 +340,13 @@ export function useSvgObjectWrapper(
     startX.value = event.clientX
     startY.value = event.clientY
     event.stopPropagation()
+
+    // Close settings panel if open because event propagation is stopped
+    if (isVisibleSettingsPanel.value) {
+      nextTick(() => {
+        closeSettingsPanel()
+      })
+    }
   }
 
   /**

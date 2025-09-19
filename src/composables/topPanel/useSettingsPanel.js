@@ -132,13 +132,13 @@ export function useSettingsPanel(uiStore) {
   // Register global keydown listener to close settings panel
   onMounted(() => {
     window.addEventListener('keydown', handleKeydown)
-    document.addEventListener('mousedown', handleClickOutside)
+    window.addEventListener('mousedown', handleClickOutside)
   })
 
   // Cleanup listener on unmount
   onBeforeUnmount(() => {
     window.removeEventListener('keydown', handleKeydown)
-    document.removeEventListener('mousedown', handleClickOutside)
+    window.removeEventListener('mousedown', handleClickOutside)
   })
 
   return {
