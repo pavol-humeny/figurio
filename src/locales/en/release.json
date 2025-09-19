@@ -14,7 +14,8 @@
       },
       "bugFixes": {
         "items": [
-          "Fix snap when it was close to more than one object"
+          "Fix snap when it was close to more than one object",
+          "Number input value can be changed with mouse wheel also when step is less than 1"
         ]
       }
     },

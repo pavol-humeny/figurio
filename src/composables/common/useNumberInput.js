@@ -53,7 +53,7 @@ export function useNumberInput(props, emit) {
   watch(
     () => props.modelValue,
     (newVal) => {
-      inputValue.value = round(newVal)
+      inputValue.value = round(newVal, decimals.value)
     },
   )
 
@@ -83,6 +83,7 @@ export function useNumberInput(props, emit) {
    * Handles blur or enter event, clamps value between min and max, emits update
    */
   const onBlurOrEnter = () => {
+    console.log('NumberInput - onBlurOrEnter: ', inputValue.value)
     const value = normalizeValue(inputValue.value)
     inputValue.value = value
     emit('update:modelValue', value)
