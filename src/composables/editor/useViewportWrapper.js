@@ -365,13 +365,11 @@ export function useViewportWrapper(viewportStore, imageStore, editorStore, uiSto
 
     const slidersCorrection = uiStore.rulersEnabled ? 0 : 7.5
 
-    panX.value =
-      wrapperWidth.value / 2 - (contentWidth.value * zoomLevel.value) / 2
+    panX.value = wrapperWidth.value / 2 - (contentWidth.value * zoomLevel.value) / 2
     panY.value =
       wrapperHeight.value / 2 - (contentHeight.value * zoomLevel.value) / 2 - slidersCorrection
 
-    viewportStore.defaultPanX =
-      wrapperWidth.value / 2 - (contentWidth.value * zoomLevel.value) / 2
+    viewportStore.defaultPanX = wrapperWidth.value / 2 - (contentWidth.value * zoomLevel.value) / 2
     viewportStore.defaultPanY =
       wrapperHeight.value / 2 - (contentHeight.value * zoomLevel.value) / 2 - slidersCorrection
   }
@@ -390,8 +388,7 @@ export function useViewportWrapper(viewportStore, imageStore, editorStore, uiSto
 
     const slidersCorrection = uiStore.rulersEnabled ? 0 : 7.5
 
-    viewportStore.defaultPanX =
-      wrapperWidth.value / 2 - (contentWidth.value * zoomLevel.value) / 2 
+    viewportStore.defaultPanX = wrapperWidth.value / 2 - (contentWidth.value * zoomLevel.value) / 2
     viewportStore.defaultPanY =
       wrapperHeight.value / 2 - (contentHeight.value * zoomLevel.value) / 2 - slidersCorrection
 
@@ -610,8 +607,8 @@ export function useViewportWrapper(viewportStore, imageStore, editorStore, uiSto
   /**
    * Guide line definition (center point + angle in degrees)
    */
-  const guideLine = computed(() => {
-    return viewportStore.guideLine
+  const guideLines = computed(() => {
+    return viewportStore.guideLines
   })
 
   // ------------------------------
@@ -707,6 +704,6 @@ export function useViewportWrapper(viewportStore, imageStore, editorStore, uiSto
     cursorPosY,
     cursorPosXSameAsImageWidth,
     cursorPosYSameAsImageHeight,
-    guideLine,
+    guideLines,
   }
 }

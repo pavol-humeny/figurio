@@ -1240,7 +1240,7 @@ export function useSvgObjects(imageStore, historyStore, viewportStore, editorSto
     const onlyOneKeyPressed = isCtrlKey !== isShiftKey
 
     if (!isCtrlKey) {
-      viewportStore.guideLine = null
+      viewportStore.guideLines = null
     }
 
     const rect = viewportStore.viewportContentRect
@@ -1303,12 +1303,12 @@ export function useSvgObjects(imageStore, historyStore, viewportStore, editorSto
           angle = 0
         }
 
-        viewportStore.guideLine = { x: gx, y: gy, angle }
+        viewportStore.guideLines = { x: gx, y: gy, angle }
       } else {
-        viewportStore.guideLine = null
+        viewportStore.guideLines = null
       }
     } else {
-      viewportStore.guideLine = null
+      viewportStore.guideLines = null
     }
 
     if (objectType === 'rect') {
@@ -1427,7 +1427,7 @@ export function useSvgObjects(imageStore, historyStore, viewportStore, editorSto
     if (checkSizeOfObject(currentDrawingObject.value)) {
       isDrawing.value = false
       currentDrawingObject.value = null
-      viewportStore.guideLine = null
+      viewportStore.guideLines = null
 
       // Remove the last object if object is too small
       if (editorStore.selectedToolKey === 'blur') {
@@ -1471,7 +1471,7 @@ export function useSvgObjects(imageStore, historyStore, viewportStore, editorSto
 
     isDrawing.value = false
     currentDrawingObject.value = null
-    viewportStore.guideLine = null
+    viewportStore.guideLines = null
 
     nextTick(() => {
       editorStore.isSvgObjectDrawing = false

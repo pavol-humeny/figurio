@@ -499,7 +499,7 @@ export function useSvgObjectWrapper(
     const onlyOneKeyPressed = isCtrlKey !== isShiftKey
 
     if (!isCtrlKey) {
-      viewportStore.guideLine = null
+      viewportStore.guideLines = null
     }
 
     let rawDx = (event.clientX - startX.value) / viewportStore.realZoomLevel + remainingDx.value
@@ -552,13 +552,15 @@ export function useSvgObjectWrapper(
           finalAngle = normalizeAngle(snapped)
 
           // Set guide line to the snapped angle
-          viewportStore.guideLine = {
-            x: cx,
-            y: cy,
-            angle: finalAngle,
-          }
+          viewportStore.guideLines = [
+            {
+              x: cx,
+              y: cy,
+              angle: finalAngle,
+            },
+          ]
         } else {
-          viewportStore.guideLine = null
+          viewportStore.guideLines = null
         }
       }
 
@@ -1528,7 +1530,7 @@ export function useSvgObjectWrapper(
     isSymmetricalObject.value = false
     isRotating.value = false
 
-    viewportStore.guideLine = null
+    viewportStore.guideLines = null
 
     remainingDx.value = 0
     remainingDy.value = 0
@@ -1545,24 +1547,25 @@ export function useSvgObjectWrapper(
    * @param {Object} bBox - Bounding box of the SVG object
    */
   const showResizeGuideLine = (snap, bBox) => {
-    if (snap.dx !== 0 || snap.dy !== 0) {
-      let gx = null,
-        gy = null,
-        angle = null
+    const lines = []
 
-      if (snap.snappedEdgeX) {
-        gx = snap.snappedEdgeX === 'left' ? bBox.left : bBox.right
-        gy = (bBox.top + bBox.bottom) / 2
-        angle = 90
-      }
-      if (snap.snappedEdgeY) {
-        gy = snap.snappedEdgeY === 'top' ? bBox.top : bBox.bottom
-        gx = (bBox.left + bBox.right) / 2
-        angle = 0
-      }
-
-      viewportStore.guideLine = { x: gx, y: gy, angle }
+    if (snap.snappedEdgeX) {
+      lines.push({
+        x: snap.snappedEdgeX === 'left' ? bBox.left : bBox.right,
+        y: (bBox.top + bBox.bottom) / 2,
+        angle: 90,
+      })
     }
+
+    if (snap.snappedEdgeY) {
+      lines.push({
+        y: snap.snappedEdgeY === 'top' ? bBox.top : bBox.bottom,
+        x: (bBox.left + bBox.right) / 2,
+        angle: 0,
+      })
+    }
+
+    viewportStore.guideLines = lines
   }
 
   /**

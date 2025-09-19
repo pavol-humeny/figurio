@@ -69,7 +69,7 @@ const {
   cursorPosY,
   cursorPosXSameAsImageWidth,
   cursorPosYSameAsImageHeight,
-  guideLine
+  guideLines
 } = useViewportWrapper(useViewportStore(), useImageStore(), useEditorStore(), useUiStore(), contentRef, t)
 
 /**
@@ -247,7 +247,7 @@ const disableContextMenu = computed(() => {
         </div>
         <div v-if="mouseX !== null" class="ruler-cursor-mark horizontal" :style="{ left: mouseX + 'px' }">
           <span class="ruler-cursor-label horizontal" :class="{ 'active': cursorPosXSameAsImageWidth }">{{ cursorPosX
-          }}</span>
+            }}</span>
         </div>
 
       </div>
@@ -260,16 +260,17 @@ const disableContextMenu = computed(() => {
         </div>
         <div v-if="mouseY !== null" class="ruler-cursor-mark vertical" :style="{ top: mouseY + 'px' }">
           <span class="ruler-cursor-label vertical" :class="{ 'active': cursorPosYSameAsImageHeight }">{{ cursorPosY
-          }}</span>
+            }}</span>
         </div>
       </div>
     </div>
     <div v-if="uiStore.rulersEnabled" class="ruler-padding"></div>
 
     <!-- Universal guide line rendered as a rotated div -->
-    <div v-if="guideLine" class="guide-line-rotated" :style="{
-      transform: `translate(${guideLine.x * zoomLevel + panX}px, ${guideLine.y * zoomLevel + panY}px) rotate(${guideLine.angle}deg)`,
-    }"></div>
+    <div v-for="(line, i) in guideLines" :key="i" class="guide-line-rotated" :style="{
+      transform: `translate(${line.x * zoomLevel + panX}px, ${line.y * zoomLevel + panY}px) rotate(${line.angle}deg)`,
+    }">
+    </div>
   </div>
 </template>
 

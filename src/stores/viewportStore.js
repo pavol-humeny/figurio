@@ -61,7 +61,8 @@ export const useViewportStore = defineStore('viewportStore', {
     fitImageOnLoad: true,
 
     /** Guide lines*/
-    guideLine: null, // { centerX: number, centerY: number, angle: number } - Center point and angle of the guide line
+    // guideLine: null, // { centerX: number, centerY: number, angle: number } - Center point and angle of the guide line
+    guideLines: [],
 
     /** Zoom mode */
     zoomMode: getString(`${globalConfig.LOCAL_STORAGE_PREFIX}zoomMode`, globalConfig.zoomMode),
