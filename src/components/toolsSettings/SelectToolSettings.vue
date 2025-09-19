@@ -9,6 +9,7 @@ import { useViewportStore } from '@/stores/viewportStore';
 import { useEditorStore } from '@/stores/editorStore';
 import { useUiStore } from '@/stores/uiStore';
 import ExplainItem from '../common/ExplainItem.vue';
+import { useWorkspaceStore } from '@/stores/workspaceStore';
 
 const { t } = useI18n()
 const imageStore = useImageStore()
@@ -20,7 +21,7 @@ const {
   selectAllSvgObjects,
   deselectAllSvgObjects,
   deleteSelectedSvgObjects
-} = useSvgObjects(useImageStore(), useHistoryStore(), useViewportStore(), useEditorStore(), useUiStore(), t);
+} = useSvgObjects(useImageStore(), useHistoryStore(), useViewportStore(), useEditorStore(), useUiStore(), useWorkspaceStore(), t);
 
 
 </script>

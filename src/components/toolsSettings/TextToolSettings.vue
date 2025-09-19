@@ -17,6 +17,7 @@ import DefaultButton from '../common/DefaultButton.vue';
 import { useUiStore } from '@/stores/uiStore';
 import ExplainItem from '../common/ExplainItem.vue';
 import { editorConfig } from '@/config/editorConfig'
+import { useWorkspaceStore } from '@/stores/workspaceStore';
 
 const editorStore = useEditorStore();
 const imageStore = useImageStore();
@@ -50,7 +51,7 @@ const {
   moveSelectedSvgObjectBackward,
   sendSelectedSvgObjectToBack,
   bringSelectedSvgObjectToFront,
-} = useSvgObjects(useImageStore(), useHistoryStore(), useViewportStore(), useEditorStore(), useUiStore(), t);
+} = useSvgObjects(useImageStore(), useHistoryStore(), useViewportStore(), useEditorStore(), useUiStore(), useWorkspaceStore(), t);
 </script>
 
 <template>

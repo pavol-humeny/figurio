@@ -15,7 +15,7 @@ const localMagnifyAreaSettings = ref({
   outlineColor: '#000000',
 })
 
-export function useMagnifyAreaTool(imageStore, historyStore, editorStore, t) {
+export function useMagnifyAreaTool(imageStore, historyStore, editorStore, workspaceStore, t) {
   /**
    * Active magnify area object being edited
    */
@@ -72,6 +72,19 @@ export function useMagnifyAreaTool(imageStore, historyStore, editorStore, t) {
 
     return radius
   })
+
+  /**
+   * Watch for active tab changes and reset radius
+   */
+  watch(
+    () => workspaceStore.activeTabIndex,
+    () => {
+      if (localMagnifyAreaSettings.value.radius > maxMagnifyAreaRadius.value) {
+        localMagnifyAreaSettings.value.radius = maxMagnifyAreaRadius.value
+      }
+    },
+    { immediate: true },
+  )
 
   // ------------------------------
   // Zoom

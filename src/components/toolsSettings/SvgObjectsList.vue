@@ -7,6 +7,7 @@ import { useHistoryStore } from '@/stores/historyStore'
 import { useViewportStore } from '@/stores/viewportStore'
 import { useEditorStore } from '@/stores/editorStore'
 import { useUiStore } from '@/stores/uiStore'
+import { useWorkspaceStore } from '@/stores/workspaceStore'
 
 const { t } = useI18n()
 
@@ -26,7 +27,7 @@ const {
   startEditing,
   editingInputRef,
   getElementName,
-} = useSvgObjectsList(useImageStore(), useHistoryStore(), useViewportStore(), useEditorStore(), useUiStore(), t)
+} = useSvgObjectsList(useImageStore(), useHistoryStore(), useViewportStore(), useEditorStore(), useUiStore(), useWorkspaceStore(), t)
 </script>
 
 <template>

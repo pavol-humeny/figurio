@@ -14,6 +14,7 @@ import DefaultButton from '../common/DefaultButton.vue';
 import { useUiStore } from '@/stores/uiStore';
 import ExplainItem from '../common/ExplainItem.vue';
 import DefaultSlider from '../common/DefaultSlider.vue';
+import { useWorkspaceStore } from '@/stores/workspaceStore';
 
 const { t } = useI18n();
 
@@ -30,7 +31,7 @@ const {
   resultPositionOptions,
   maxOutlineWidth,
   magnifyAreaTypeOptions,
-} = useMagnifyAreaTool(useImageStore(), useHistoryStore(), useEditorStore(), t);
+} = useMagnifyAreaTool(useImageStore(), useHistoryStore(), useEditorStore(), useWorkspaceStore(), t);
 
 /**
  * Logic for moving selected SVG objects
@@ -40,7 +41,7 @@ const {
   moveSelectedSvgObjectBackward,
   sendSelectedSvgObjectToBack,
   bringSelectedSvgObjectToFront,
-} = useSvgObjects(useImageStore(), useHistoryStore(), useViewportStore(), useEditorStore(), useUiStore(), t);
+} = useSvgObjects(useImageStore(), useHistoryStore(), useViewportStore(), useEditorStore(), useUiStore(), useWorkspaceStore(), t);
 
 </script>
 

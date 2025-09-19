@@ -21,6 +21,7 @@ export function useSvgObjectWrapper(
   editorStore,
   historyStore,
   uiStore,
+  workspaceStore,
   t,
 ) {
   const { deleteSelectedSvgObjects } = useSvgObjects(
@@ -29,13 +30,14 @@ export function useSvgObjectWrapper(
     viewportStore,
     editorStore,
     uiStore,
+    workspaceStore,
     t,
   )
   const { clamp, pythagorean, round } = useMath()
   const { getObjectCenter, getTransformedBoundingBox, getSnapOffsetToEdges } =
     useSvgFunctions(imageStore)
 
-  const { generateMagnifyPattern } = useMagnifyAreaTool(imageStore, historyStore, editorStore, t)
+  const { generateMagnifyPattern } = useMagnifyAreaTool(imageStore, historyStore, editorStore, workspaceStore, t)
 
   /**
    * Style of cursor when hovering over the SVG object

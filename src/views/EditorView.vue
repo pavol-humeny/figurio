@@ -65,7 +65,7 @@ const {
   pasteSvgObjectToCenter,
   duplicateSelectedSvgObject,
   cutSelectedSvgObject,
-} = useSvgObjects(useImageStore(), useHistoryStore(), useViewportStore(), useEditorStore(), useUiStore(), t)
+} = useSvgObjects(useImageStore(), useHistoryStore(), useViewportStore(), useEditorStore(), useUiStore(), useWorkspaceStore(), t)
 
 const imageStore = useImageStore()
 const editorStore = useEditorStore()

@@ -1,4 +1,4 @@
-import { computed, ref } from 'vue'
+import { computed, ref, watch } from 'vue'
 import { useConfirmModal } from '../modals/useConfirmModal'
 import { useSendEvent } from '@/composables/common/useSendEvent'
 import { editorConfig } from '@/config/editorConfig'
@@ -161,6 +161,19 @@ export function useBackgroundRemovalTool(imageStore, historyStore, workspaceStor
     const smallerDimension = imageStore.getSmallerImageDimension()
     return Math.max(10, Math.floor(smallerDimension * editorConfig.maxManualToolSizeCoefficient))
   })
+
+  /**
+   * Watch for active tab changes and reset manual tool size if it exceeds maximum to maximum
+   */
+  watch(
+    () => workspaceStore.activeTabIndex,
+    () => {
+      if (manualToolSize.value > manualMaxToolSize.value) {
+        manualToolSize.value = manualMaxToolSize.value
+      }
+    },
+    { immediate: true },
+  )
 
   /**
    * Minimum size of the manual tool (2px)

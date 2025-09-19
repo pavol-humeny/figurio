@@ -8,13 +8,27 @@ import { useBlurTool } from './useBlurTool'
 import { useMagnifyAreaTool } from './useMagnifyAreaTool'
 import { useToolsPanel } from './useToolsPanel'
 
-export function useSvgObjects(imageStore, historyStore, viewportStore, editorStore, uiStore, t) {
+export function useSvgObjects(
+  imageStore,
+  historyStore,
+  viewportStore,
+  editorStore,
+  uiStore,
+  workspaceStore,
+  t,
+) {
   const { round, distance, clamp } = useMath()
   const textTool = useTextTool(imageStore, historyStore, editorStore, t)
   const shapeTool = useShapeTool(editorStore, imageStore, historyStore, t)
   const { getSnapOffsetToEdges, getObjectCenter } = useSvgFunctions(imageStore)
   const blurTool = useBlurTool(imageStore, historyStore, editorStore, t)
-  const magnifyAreaTool = useMagnifyAreaTool(imageStore, historyStore, editorStore, t)
+  const magnifyAreaTool = useMagnifyAreaTool(
+    imageStore,
+    historyStore,
+    editorStore,
+    workspaceStore,
+    t,
+  )
   const { toggleTool } = useToolsPanel(editorStore, imageStore, uiStore, t)
 
   /**

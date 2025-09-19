@@ -29,6 +29,7 @@ export function useSvgObjectsList(
   viewportStore,
   editorStore,
   uiStore,
+  workspaceStore,
   t,
 ) {
   const { deleteSelectedSvgObjects } = useSvgObjects(
@@ -37,6 +38,7 @@ export function useSvgObjectsList(
     viewportStore,
     editorStore,
     uiStore,
+    workspaceStore,
     t,
   )
   const { toggleTool } = useToolsPanel(editorStore, imageStore, uiStore, t)

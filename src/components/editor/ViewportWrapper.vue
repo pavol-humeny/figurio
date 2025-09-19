@@ -18,6 +18,7 @@ import ContextMenu from '../common/ContextMenu.vue'
 import { useDragAndDropArea } from '@/composables/editor/useDragAndDropArea'
 import router from '@/router'
 import BackgroundRemovalCanvas from '../tools/BackgroundRemovalCanvas.vue'
+import { useWorkspaceStore } from '@/stores/workspaceStore'
 
 const { t } = useI18n()
 const uiStore = useUiStore()
@@ -91,6 +92,7 @@ const {
   useViewportStore(),
   useEditorStore(),
   useUiStore(),
+  useWorkspaceStore(),
   t
 )
 
