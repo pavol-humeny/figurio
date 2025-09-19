@@ -174,55 +174,62 @@ export function useSvgFunctions(imageStore) {
 
     const targets = getSnapEdgeTargets(object)
 
-    let dx = 0
-    let dy = 0
-    let snappedEdgeX = null
-    let snappedEdgeY = null
+    let bestDx = null
+    let bestDy = null
 
     for (const t of targets) {
       const verticalOverlap = !(bottom < t.top || top > t.bottom)
       const horizontalOverlap = !(right < t.left || left > t.right)
 
+      // X os
       if (
         (verticalOverlap || !editorConfig.needObjectOverlapToSnap) &&
         editorConfig.snapOnlyWhenOverlapping
       ) {
-        if (Math.abs(left - t.left) <= threshold) {
-          dx = t.left - left
-          snappedEdgeX = 'left'
-        } else if (Math.abs(left - t.right) <= threshold) {
-          dx = t.right - left
-          snappedEdgeX = 'left'
-        } else if (Math.abs(right - t.left) <= threshold) {
-          dx = t.left - right
-          snappedEdgeX = 'right'
-        } else if (Math.abs(right - t.right) <= threshold) {
-          dx = t.right - right
-          snappedEdgeX = 'right'
+        const candidatesX = [
+          { offset: t.left - left, edge: 'left' },
+          { offset: t.right - left, edge: 'left' },
+          { offset: t.left - right, edge: 'right' },
+          { offset: t.right - right, edge: 'right' },
+        ]
+        for (const c of candidatesX) {
+          if (
+            Math.abs(c.offset) <= threshold &&
+            (bestDx === null || Math.abs(c.offset) < Math.abs(bestDx.offset))
+          ) {
+            bestDx = c
+          }
         }
       }
 
+      // Y os
       if (
         (horizontalOverlap || !editorConfig.needObjectOverlapToSnap) &&
         editorConfig.snapOnlyWhenOverlapping
       ) {
-        if (Math.abs(top - t.top) <= threshold) {
-          dy = t.top - top
-          snappedEdgeY = 'top'
-        } else if (Math.abs(top - t.bottom) <= threshold) {
-          dy = t.bottom - top
-          snappedEdgeY = 'top'
-        } else if (Math.abs(bottom - t.top) <= threshold) {
-          dy = t.top - bottom
-          snappedEdgeY = 'bottom'
-        } else if (Math.abs(bottom - t.bottom) <= threshold) {
-          dy = t.bottom - bottom
-          snappedEdgeY = 'bottom'
+        const candidatesY = [
+          { offset: t.top - top, edge: 'top' },
+          { offset: t.bottom - top, edge: 'top' },
+          { offset: t.top - bottom, edge: 'bottom' },
+          { offset: t.bottom - bottom, edge: 'bottom' },
+        ]
+        for (const c of candidatesY) {
+          if (
+            Math.abs(c.offset) <= threshold &&
+            (bestDy === null || Math.abs(c.offset) < Math.abs(bestDy.offset))
+          ) {
+            bestDy = c
+          }
         }
       }
     }
 
-    return { dx, dy, snappedEdgeX, snappedEdgeY }
+    return {
+      dx: bestDx ? bestDx.offset : 0,
+      dy: bestDy ? bestDy.offset : 0,
+      snappedEdgeX: bestDx ? bestDx.edge : null,
+      snappedEdgeY: bestDy ? bestDy.edge : null,
+    }
   }
 
   return {
