@@ -176,13 +176,20 @@ export function useImageRenderer(
       // Preview URL môžeme nastaviť na blob URL
       // imageStore.previewUrl = pdfUrl
     } else if (imageStore.fileType === 'image') {
-      if (!imageRef.value || !imageStore.getRenderedImage({ t, renderCall: false })) return
+      const img = imageStore.getRenderedImage({ t, renderCall: true })
+
+      if (!imageRef.value || !img) return
 
       console.log('Rendering IMAGE (IMAGE only)...')
 
-      const img = imageStore.getRenderedImage({ t, renderCall: true })
       if (img instanceof HTMLCanvasElement) {
-        imageRef.value.src = img.toDataURL()
+        // imageRef.value.src = img.toDataURL()
+        // Use async toBlob instead of blocking toDataURL
+        img.toBlob((blob) => {
+          const url = URL.createObjectURL(blob)
+          imageRef.value.src = url
+          imageStore.previewUrl = url
+        })
       } else if (img instanceof HTMLImageElement) {
         imageRef.value.src = img.src
       }
@@ -270,7 +277,9 @@ export function useImageRenderer(
    */
   watch(
     () => imageStore.frame,
-    (newFrame) => {
+    (newFrame, oldFrame) => {
+      if (JSON.stringify(newFrame) === JSON.stringify(oldFrame)) return
+
       if (newFrame && !renderingFrameSvg.value) {
         console.log('#################### Frame operations changed, re-rendering frame svg')
         updateSizes()
