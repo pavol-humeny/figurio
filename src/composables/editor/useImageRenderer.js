@@ -277,9 +277,7 @@ export function useImageRenderer(
    */
   watch(
     () => imageStore.frame,
-    (newFrame, oldFrame) => {
-      if (JSON.stringify(newFrame) === JSON.stringify(oldFrame)) return
-
+    (newFrame) => {
       if (newFrame && !renderingFrameSvg.value) {
         console.log('#################### Frame operations changed, re-rendering frame svg')
         updateSizes()

@@ -4,6 +4,15 @@
     "items": []
   },
   "versions":{
+    "4.4.2":{
+      "label": "4.4.2",
+      "date":"X.9. 2025",
+      "bugFixes": {
+        "items": [
+          "Round corners for phone frames are rendered correctly"
+        ]
+      }
+    },
     "4.4.1":{
       "label": "4.4.1",
       "date":"X.9. 2025",

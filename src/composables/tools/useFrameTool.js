@@ -1409,7 +1409,6 @@ export function useFrameTool(imageStore, historyStore, editorStore, t) {
       ctx.restore()
 
       imageStore.setRenderedImage(canvas, true) // Set only original image, not tmpRenderedImage
-      imageStore.previewUrl = canvas.toDataURL()
     }
   }
 

@@ -4,7 +4,7 @@ import { useViewportStore } from '@/stores/viewportStore'
 import { useImageRenderer } from '@/composables/editor/useImageRenderer'
 import { useImageStore } from '@/stores/imageStore'
 import { useEditorStore } from '@/stores/editorStore'
-import { computed, ref } from 'vue'
+import { computed, ref, watch } from 'vue'
 import CropTool from '@/components/tools/CropTool.vue'
 import PresetCropTool from '../tools/PresetCropTool.vue'
 import { useHistoryStore } from '@/stores/historyStore'
@@ -19,6 +19,7 @@ import { useDragAndDropArea } from '@/composables/editor/useDragAndDropArea'
 import router from '@/router'
 import BackgroundRemovalCanvas from '../tools/BackgroundRemovalCanvas.vue'
 import { useWorkspaceStore } from '@/stores/workspaceStore'
+import { useFrameTool } from '@/composables/tools/useFrameTool'
 
 const { t } = useI18n()
 const uiStore = useUiStore()
@@ -96,7 +97,9 @@ const {
   t
 )
 
-
+/**
+ * Logic for the blur tool
+ */
 const { svgDefsString } = useBlurTool(
   useImageStore(),
   useHistoryStore(),
@@ -126,6 +129,30 @@ const hideContextMenu = computed(() => {
 const disableContextMenu = computed(() => {
   return imageStore.selectedSvgObjectId === null || editorStore.selectedToolKey === 'magnifyArea'
 })
+
+/**
+ * Border radius of background for phone frames
+ */
+const phoneFrameBorderRadius = ref(0)
+
+/**
+ * Watch for changes in the frame to determine if it's a phone frame
+ */
+watch(
+  () => imageStore.frame,
+  () => {
+    const isPhoneFrame = useFrameTool(imageStore, useHistoryStore(), editorStore, t).isPhoneFrame(
+      imageStore.frame.type,
+    )
+
+    if (isPhoneFrame) {
+      phoneFrameBorderRadius.value = Math.floor(Math.min(imageStore.fileDimensions.width, imageStore.fileDimensions.height) * 0.06) // 6% of the smaller dimension + a bit of padding (100% of frame height)
+    } else {
+      phoneFrameBorderRadius.value = 0
+    }
+  },
+  { immediate: true, deep: true }
+)
 </script>
 
 <template>
@@ -174,6 +201,7 @@ const disableContextMenu = computed(() => {
           :style="{
             transform: `translate(${panX}px, ${panY}px) scale(${zoomLevel})`,
             boxShadow: 'var(--box-shadow-content)',
+            '--phone-frame-border-radius': phoneFrameBorderRadius + 'px',
           }">
           <img v-if="imageStore.fileType === 'image' || imageStore.showImageInsteadOfPdf" ref="imageRef"
             class="image-canvas" />
@@ -299,6 +327,8 @@ const disableContextMenu = computed(() => {
   position: relative;
   transform-origin: top left;
   display: block;
+
+  border-radius: var(--phone-frame-border-radius);
 
   /* Background - Checkerboard */
   background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='20' height='20'><rect width='10' height='10' fill='%23ccc'/><rect x='10' width='10' height='10' fill='%23fff'/><rect y='10' width='10' height='10' fill='%23fff'/><rect x='10' y='10' width='10' height='10' fill='%23ccc'/></svg>");
