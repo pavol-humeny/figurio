@@ -605,138 +605,87 @@ export function useCropTool(
    * @param {number} threshold - The threshold for color matching
    * @param {Object} bgColor - The background color as an RGB object
    */
-  const calculateAutoCropBox = (useBaseImage, threshold, bgColor) => {
-    const scale = 2 // To improve accuracy
-
+  const calculateAutoCropBoxCanny = (useBaseImage, threshold) => {
+    const scale = 2
     const img = imageStore.getRenderedImage({ t, renderCall: false })
     if (!img) return null
 
     const canvas = document.createElement('canvas')
-    const ctx = canvas.getContext('2d', { willReadFrequently: true })
-    const width = img.width
-    const height = img.height
-    canvas.width = width * scale
-    canvas.height = height * scale
+    const ctx = canvas.getContext('2d')
+    canvas.width = img.width * scale
+    canvas.height = img.height * scale
     ctx.drawImage(img, 0, 0, canvas.width, canvas.height)
 
-    const { data } = ctx.getImageData(0, 0, canvas.width, canvas.height)
+    // Convert canvas to OpenCV Mat
+    const src = cv.imread(canvas)
+    let gray = new cv.Mat()
+    let edges = new cv.Mat()
 
-    // Define search area
-    let startX = 0,
-      startY = 0,
-      endX = canvas.width - 1, // Indexed from 0 (width - 1 = last pixel)
-      endY = canvas.height - 1
-    if (!useBaseImage) {
-      startX = cropBox.value.x * scale
-      startY = cropBox.value.y * scale
-      endX = (cropBox.value.x + cropBox.value.width) * scale - 1
-      endY = (cropBox.value.y + cropBox.value.height) * scale - 1
-    }
+    // Convert to grayscale
+    cv.cvtColor(src, gray, cv.COLOR_RGBA2GRAY, 0)
 
-    // TOP
-    let top = startY
-    while (top <= endY) {
-      let match = true
-      for (let x = startX; x <= endX; x++) {
-        const i = (top * canvas.width + x) * 4
-        if (!isColorMatch(i, bgColor, threshold, data)) {
-          match = false
-          break
-        }
-      }
-      if (!match) break
-      top++
-    }
+    // Apply Gaussian blur to reduce noise
+    const ksize = new cv.Size(5, 5)
+    cv.GaussianBlur(gray, gray, ksize, 0, 0, cv.BORDER_DEFAULT)
 
-    // BOTTOM
-    let bottom = endY
-    while (bottom >= startY) {
-      let match = true
-      for (let x = startX; x <= endX; x++) {
-        const i = (bottom * canvas.width + x) * 4
-        if (!isColorMatch(i, bgColor, threshold, data)) {
-          match = false
-          break
-        }
-      }
-      if (!match) break
-      bottom--
-    }
+    // Map threshold from 0-1 to 0-255
+    const upper = threshold * 255
+    const lower = upper * 0.5
 
-    // LEFT
-    let left = startX
-    while (left <= endX) {
-      let match = true
-      for (let y = top; y <= bottom; y++) {
-        const i = (y * canvas.width + left) * 4
-        if (!isColorMatch(i, bgColor, threshold, data)) {
-          match = false
-          break
-        }
-      }
-      if (!match) break
-      left++
-    }
+    // Canny edge detection
+    cv.Canny(gray, edges, lower, upper)
 
-    // RIGHT
-    let right = endX
-    while (right >= startX) {
-      let match = true
-      for (let y = top; y <= bottom; y++) {
-        const i = (y * canvas.width + right) * 4
-        if (!isColorMatch(i, bgColor, threshold, data)) {
-          match = false
-          break
-        }
-      }
-      if (!match) break
-      right--
-    }
-
-    let newWidth = right - left + 1
-    let newHeight = bottom - top + 1
-
-    if (newWidth <= 0 || newHeight <= 0) {
-      return cropBox.value // fallback
-    }
-
-    const MIN_CROP_SIZE = editorConfig.minCropSize
-
-    if (newWidth / scale < MIN_CROP_SIZE) {
-      showToastModal(
-        'info',
-        t('tools.crop.settings.general.autoCrop.smallAutoCropInfo.title'),
-        t('tools.crop.settings.general.autoCrop.smallAutoCropInfo.message'),
+    // Mask edges if not using base image
+    if (!useBaseImage && cropBox.value) {
+      const mask = new cv.Mat.zeros(edges.rows, edges.cols, edges.type())
+      const rect = new cv.Rect(
+        cropBox.value.x * scale,
+        cropBox.value.y * scale,
+        cropBox.value.width * scale,
+        cropBox.value.height * scale,
       )
+      const roi = mask.roi(rect)
+      roi.setTo(new cv.Scalar(255))
+      roi.delete()
+      cv.bitwise_and(edges, mask, edges)
+      mask.delete()
+    }
 
-      if (left + MIN_CROP_SIZE <= imageStore.fileDimensions.width) {
-        newWidth = MIN_CROP_SIZE * scale
-      } else {
-        left = (imageStore.fileDimensions.width - MIN_CROP_SIZE) * scale
-        newWidth = MIN_CROP_SIZE * scale
+    // Find contours
+    const contours = new cv.MatVector()
+    const hierarchy = new cv.Mat()
+    cv.findContours(edges, contours, hierarchy, cv.RETR_EXTERNAL, cv.CHAIN_APPROX_SIMPLE)
+
+    let cropRect = { x: 0, y: 0, width: img.width, height: img.height }
+
+    if (contours.size() > 0) {
+      let xMin = canvas.width,
+        yMin = canvas.height,
+        xMax = 0,
+        yMax = 0
+      for (let i = 0; i < contours.size(); i++) {
+        const rect = cv.boundingRect(contours.get(i))
+        xMin = Math.min(xMin, rect.x)
+        yMin = Math.min(yMin, rect.y)
+        xMax = Math.max(xMax, rect.x + rect.width)
+        yMax = Math.max(yMax, rect.y + rect.height)
+      }
+      cropRect = {
+        x: Math.floor(xMin / scale),
+        y: Math.floor(yMin / scale),
+        width: Math.ceil((xMax - xMin) / scale),
+        height: Math.ceil((yMax - yMin) / scale),
       }
     }
 
-    if (newHeight / scale < MIN_CROP_SIZE) {
-      showToastModal(
-        'info',
-        t('tools.crop.settings.general.autoCrop.smallAutoCropInfo.title'),
-        t('tools.crop.settings.general.autoCrop.smallAutoCropInfo.message'),
-      )
-      if (top + MIN_CROP_SIZE <= imageStore.fileDimensions.height) {
-        newHeight = MIN_CROP_SIZE * scale
-      } else {
-        top = (imageStore.fileDimensions.height - MIN_CROP_SIZE) * scale
-        newHeight = MIN_CROP_SIZE * scale
-      }
-    }
+    // Clean up
+    src.delete()
+    gray.delete()
+    edges.delete()
+    contours.delete()
+    hierarchy.delete()
 
-    return {
-      x: Math.floor(left / scale),
-      y: Math.floor(top / scale),
-      width: Math.ceil(newWidth / scale),
-      height: Math.ceil(newHeight / scale),
-    }
+    return cropRect
   }
 
   /**
@@ -746,7 +695,7 @@ export function useCropTool(
     const bgColor = getOrDetectBgColor(useBaseImage.value)
     const threshold = getOrComputeThreshold(bgColor)
 
-    const newCropBox = calculateAutoCropBox(useBaseImage.value, threshold, bgColor)
+    const newCropBox = calculateAutoCropBoxCanny(useBaseImage.value, autoCropThreshold.value)
 
     if (
       cropBox.value.x === newCropBox.x &&
