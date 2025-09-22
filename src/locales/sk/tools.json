@@ -939,7 +939,7 @@
         },
         "copyToClipboardButton": {
           "text": "Kopírovať do schránky",
-          "tip": "Kopírovať obrázok do schránky bez nutnosti exportu"
+          "tip": "Kopírovať obrázok do schránky bez nutnosti exportu (PNG formát)"
         },
         "cancelButton": {
           "text": "Zavrieť",

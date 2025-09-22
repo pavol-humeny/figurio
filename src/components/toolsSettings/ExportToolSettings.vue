@@ -60,7 +60,7 @@ const {
           <div class="export-settings-item" v-if="fileFormat === 'jpg' || fileFormat === 'webp'">
             <label for="file-quality">{{
               $t('tools.export.settings.general.fileQuality.label')
-              }}</label>
+            }}</label>
             <p>{{ fileDimensions.quality }} %</p>
             <DefaultSlider v-model="fileDimensions.quality" :min="0" :max="100" :step="1"
               @update:modelValue="(value) => updateQuality(value)" :backgroundColor="'var(--background-c)'" />
@@ -78,7 +78,7 @@ const {
           <div class="export-settings-item">
             <label>{{
               $t('tools.export.settings.general.fileDimensions.label')
-            }}</label>
+              }}</label>
             <div class="export-settings-item-value">
               <div class="width disabled">
                 <p>
@@ -110,7 +110,7 @@ const {
           </div>
 
           <!-- Copy to clipboard button for PNG format -->
-          <div v-if="fileFormat === 'png'" class="export-settings-item">
+          <div v-if="fileFormat !== 'pdf'" class="export-settings-item">
             <DefaultButton :text="$t('tools.export.settings.general.copyToClipboardButton.text')"
               :tip="$t('tools.export.settings.general.copyToClipboardButton.tip')" @click="copyImageToClipboard" />
           </div>

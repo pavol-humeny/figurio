@@ -942,11 +942,24 @@ export const useImageStore = defineStore('imageStore', {
       const dataUrl = this.previewUrl || ''
       if (!dataUrl) {
         console.warn('No preview available for clipboard export')
+        return
       }
 
-      const blob = await (await fetch(dataUrl)).blob()
+      const img = new Image()
+      img.src = dataUrl
+      await img.decode() // wait until image is loaded
 
-      await navigator.clipboard.write([new ClipboardItem({ [blob.type]: blob })])
+      // Draw image on canvas
+      const canvas = document.createElement('canvas')
+      canvas.width = img.width
+      canvas.height = img.height
+      const ctx = canvas.getContext('2d')
+      ctx.drawImage(img, 0, 0)
+
+      // Convert to PNG
+      const blob = await new Promise((resolve) => canvas.toBlob(resolve, 'image/png'))
+
+      await navigator.clipboard.write([new ClipboardItem({ 'image/png': blob })])
 
       showToastModal(
         'success',
