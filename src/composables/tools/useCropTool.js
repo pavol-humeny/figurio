@@ -584,21 +584,22 @@ export function useCropTool(
    * @param {Uint8ClampedArray} imageData - The image data array.
    * @returns {boolean} - True if the pixel color matches the target color, false otherwise.
    */
-  const isColorMatch = (index, target, threshold, imageData) => {
-    const r = imageData[index]
-    const g = imageData[index + 1]
-    const b = imageData[index + 2]
-    const a = imageData[index + 3]
+  // const isColorMatch = (index, target, threshold, imageData) => {
+  //   const r = imageData[index]
+  //   const g = imageData[index + 1]
+  //   const b = imageData[index + 2]
+  //   const a = imageData[index + 3]
 
-    // If background is transparent
-    if (target.a === 0) {
-      return a === 0
-    }
+  //   // If background is transparent
+  //   if (target.a === 0) {
+  //     return a === 0
+  //   }
 
-    const dist = Math.sqrt((r - target.r) ** 2 + (g - target.g) ** 2 + (b - target.b) ** 2)
-    return dist <= threshold
-  }
+  //   const dist = Math.sqrt((r - target.r) ** 2 + (g - target.g) ** 2 + (b - target.b) ** 2)
+  //   return dist <= threshold
+  // }
 
+  /* global cv */
   /**
    * Calculate the auto crop box based on the background color.
    * @param {boolean} useBaseImage - Whether to use the base image for cropping
@@ -692,8 +693,8 @@ export function useCropTool(
    * Fit the crop box to the content
    */
   const fitCrop = () => {
-    const bgColor = getOrDetectBgColor(useBaseImage.value)
-    const threshold = getOrComputeThreshold(bgColor)
+    // const bgColor = getOrDetectBgColor(useBaseImage.value)
+    // const threshold = getOrComputeThreshold(bgColor)
 
     const newCropBox = calculateAutoCropBoxCanny(useBaseImage.value, autoCropThreshold.value)
 
@@ -1032,12 +1033,12 @@ export function useCropTool(
    * Apply the auto crop in preset
    */
   const applyAutoCropPreset = async () => {
-    const useBaseImage = true
-    const bgColor = getOrDetectBgColor(useBaseImage)
-    const bins = computeHistogram(bgColor)
-    const threshold = getThresholdFromHistogram(bins, 0)
+    // const useBaseImage = true
+    // const bgColor = getOrDetectBgColor(useBaseImage)
+    // const bins = computeHistogram(bgColor)
+    // const threshold = getThresholdFromHistogram(bins, 0)
 
-    const newCropBox = calculateAutoCropBox(useBaseImage, threshold, bgColor)
+    const newCropBox = calculateAutoCropBoxCanny(useBaseImage, 0)
 
     applyCropRender(newCropBox)
   }
