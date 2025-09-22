@@ -4,6 +4,20 @@
     "items": []
   },
   "versions":{
+    "4.5.0":{
+      "label": "4.5.0",
+      "date":"X.9. 2025",
+      "improvements": {
+        "items": [
+          "Show object resizers when it is selected"
+        ]
+      },
+      "bugFixes": {
+        "items": [
+          "Negative angle value can be set in rotate input"
+        ]
+      }
+    },
     "4.4.2":{
       "label": "4.4.2",
       "date":"X.9. 2025",

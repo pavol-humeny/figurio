@@ -55,6 +55,7 @@ export function useNumberInput(props, emit) {
     (newVal) => {
       inputValue.value = round(newVal, decimals.value)
     },
+    { immediate: true },
   )
 
   /**
@@ -91,6 +92,20 @@ export function useNumberInput(props, emit) {
   }
 
   /**
+   * Handles input event, allows intermediate states like empty or '-'
+   * Emits update only on valid numbers
+   */
+  const onInput = () => {
+    // Allow empty or '-' input without emitting
+    if (inputValue.value === '' || inputValue.value === '-') return
+
+    const value = normalizeValue(inputValue.value)
+    inputValue.value = value
+    emit('update:modelValue', value)
+    emit('update', value)
+  }
+
+  /**
    * Emits reset action when icon is double-clicked
    */
   const onIconDoubleClick = () => {
@@ -112,6 +127,7 @@ export function useNumberInput(props, emit) {
   return {
     inputValue,
     onBlurOrEnter,
+    onInput,
     onIconDoubleClick,
     setValue,
     showIcon,

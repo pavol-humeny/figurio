@@ -88,6 +88,7 @@ const emit = defineEmits(['update:modelValue', 'update'])
 const {
   inputValue,
   onBlurOrEnter,
+  onInput,
   onIconDoubleClick,
   setValue,
   showIcon,
@@ -108,7 +109,7 @@ defineExpose({ setValue })
         paddingLeft: showIcon ? '30px' : '10px',
         paddingRight: showUnit ? '30px' : '10px',
       }" v-model.number="inputValue" :min="props.min" :max="props.max" :step="props.step" :disabled="props.disabled"
-        @blur="onBlurOrEnter" @input="onBlurOrEnter" @keydown.enter="onBlurOrEnter" />
+        @blur="onBlurOrEnter" @input="onInput" @keydown.enter="onBlurOrEnter" />
       <BaseIcon v-if="showIcon" :name="props.icon" class="input-icon" :size="props.size" :color="props.color"
         @dblclick="onIconDoubleClick" :class="{ 'not-allowed': props.disabled, disabled: props.disabled }"
         :style="{ top: props.iconTop + '%' }" />

@@ -206,29 +206,29 @@ export function useSvgObjectWrapper(
   /**
    * Variable to track if resizers should be shown
    */
-  const showResizers = ref(false)
+  // const showResizers = ref(false)
 
   /**
    * Hide resizers when tool is switched
    */
-  watch(
-    () => editorStore.selectedToolKey,
-    () => {
-      showResizers.value = false
-    },
-  )
+  // watch(
+  //   () => editorStore.selectedToolKey,
+  //   () => {
+  //     showResizers.value = false
+  //   },
+  // )
 
   /**
    * Hide resizers when object is deselected
    */
-  watch(
-    () => imageStore.selectedSvgObjectId,
-    (newId) => {
-      if (newId !== object.value.id) {
-        showResizers.value = false
-      }
-    },
-  )
+  // watch(
+  //   () => imageStore.selectedSvgObjectId,
+  //   (newId) => {
+  //     if (newId !== object.value.id) {
+  //       showResizers.value = false
+  //     }
+  //   },
+  // )
 
   // ---------------------------
   // Rotation
@@ -258,16 +258,17 @@ export function useSvgObjectWrapper(
   const rotationSensitivity = ref(editorConfig.rotationSensitivity)
 
   /**
-   * Watch for changes in the showResizers state and update the SVG object's transform accordingly
+   * Watch for changes in the isSelected state and update the SVG object's transform accordingly
    */
   watch(
-    () => showResizers.value,
+    () => isSelected.value,
     (newValue) => {
-      // When it is not magnify area or resizing started (it is magnify area, but resizing started)
       editorStore.isSvgObjectResizing = newValue
 
       // Update rotation origin after resizing to keep it centered
       // TODO - it move object when it is applied
+
+      console.warn('isSelected changed: ', newValue)
       if (!newValue) {
         updateRotationTransform()
       }
@@ -279,6 +280,8 @@ export function useSvgObjectWrapper(
    */
   const onObjectMouseUp = () => {
     console.log('mouseup object select')
+    console.log('condition: ', !isSelected.value, !editorStore.isSvgObjectResizing)
+
     if (!isSelected.value && !editorStore.isSvgObjectResizing) {
       console.log('tool: ', editorStore.selectedToolKey, 'class:', object.value.class)
       if (editorStore.selectedToolKey === object.value.class) {
@@ -387,7 +390,10 @@ export function useSvgObjectWrapper(
 
     const currentAngle = parseFloat(match[1])
 
+    console.log('Center from match: ', match[2])
+
     const { cx, cy } = getObjectCenter(object.value)
+    console.log('Center from getObjectCenter: ', cx, cy)
 
     attrs.transform = `rotate(${currentAngle}, ${cx}, ${cy})`
   }
@@ -592,13 +598,19 @@ export function useSvgObjectWrapper(
 
     // RESIZE
     if (activeResizerIndex.value !== null) {
-      const minSize = 2
+      // Check if angle is right angle for snapping
+      const transform = object.value.attrs.transform || ''
+      const rotationMatch = transform.match(/rotate\(([-\d.]+),/)
+      const angle = rotationMatch ? parseFloat(rotationMatch[1]) : 0
+      const isRightAngle = angle % 90 === 0
+
+      const minSize = 2 // Minimum size of the object in pixels
       const keepRatio = isShiftKey && onlyOneKeyPressed
       const maxW = imageStore.fileDimensions.width
       const maxH = imageStore.fileDimensions.height
 
       // Recalculate dx and dy to local rotated coordinate system
-      const angleRad = (originalAngle.value * Math.PI) / 180
+      const angleRad = (angle * Math.PI) / 180
       const cos = Math.cos(-angleRad)
       const sin = Math.sin(-angleRad)
       const localDx = dx * cos - dy * sin
@@ -656,7 +668,7 @@ export function useSvgObjectWrapper(
           }
 
           // Snap to edges if Ctrl key is pressed
-          if (isCtrlKey && onlyOneKeyPressed) {
+          if (isCtrlKey && onlyOneKeyPressed && isRightAngle) {
             const snap = getSnapOffsetToEdges(object.value, newX, right, newY, bottom)
 
             newX += snap.dx
@@ -691,7 +703,7 @@ export function useSvgObjectWrapper(
           }
 
           // Snap to edges if Ctrl key is pressed
-          if (isCtrlKey && onlyOneKeyPressed) {
+          if (isCtrlKey && onlyOneKeyPressed && isRightAngle) {
             const snap = getSnapOffsetToEdges(object.value, newX, newX + newW, newY, bottom)
 
             newW += snap.dx
@@ -725,7 +737,7 @@ export function useSvgObjectWrapper(
           }
 
           // Snap to edges if Ctrl key is pressed
-          if (isCtrlKey && onlyOneKeyPressed) {
+          if (isCtrlKey && onlyOneKeyPressed && isRightAngle) {
             const snap = getSnapOffsetToEdges(object.value, newX, right, newY, newY + newH)
 
             newX += snap.dx
@@ -748,7 +760,7 @@ export function useSvgObjectWrapper(
           const newY = top
 
           // Snap to edges if Ctrl key is pressed
-          if (isCtrlKey && onlyOneKeyPressed) {
+          if (isCtrlKey && onlyOneKeyPressed && isRightAngle) {
             const bottomBeforeSnap = newY + newH
 
             const snap = getSnapOffsetToEdges(object.value, newX, newX + newW, newY, newY + newH)
@@ -786,7 +798,7 @@ export function useSvgObjectWrapper(
             newH = bottom - newY
           }
 
-          if (isCtrlKey && onlyOneKeyPressed) {
+          if (isCtrlKey && onlyOneKeyPressed && isRightAngle) {
             const snap = getSnapOffsetToEdges(object.value, left, right, newY, bottom)
             newY += snap.dy
             newH = bottom - newY
@@ -805,7 +817,7 @@ export function useSvgObjectWrapper(
             }
           }
 
-          if (isCtrlKey && onlyOneKeyPressed) {
+          if (isCtrlKey && onlyOneKeyPressed && isRightAngle) {
             const snap = getSnapOffsetToEdges(object.value, left, right, top, top + newH)
             newH += snap.dy
             showResizeGuideLine(snap, { left, right, top, bottom: top + newH })
@@ -828,7 +840,7 @@ export function useSvgObjectWrapper(
             newW = right - newX
           }
 
-          if (isCtrlKey && onlyOneKeyPressed) {
+          if (isCtrlKey && onlyOneKeyPressed && isRightAngle) {
             const snap = getSnapOffsetToEdges(object.value, newX, right, top, bottom)
             newX += snap.dx
             newW = right - newX
@@ -847,7 +859,7 @@ export function useSvgObjectWrapper(
             }
           }
 
-          if (isCtrlKey && onlyOneKeyPressed) {
+          if (isCtrlKey && onlyOneKeyPressed && isRightAngle) {
             const snap = getSnapOffsetToEdges(object.value, left, left + newW, top, bottom)
             newW += snap.dx
             showResizeGuideLine(snap, { left, right: left + newW, top, bottom })
@@ -908,8 +920,8 @@ export function useSvgObjectWrapper(
             newCy = bottom - newRy
           }
 
-          if (isCtrlKey && onlyOneKeyPressed) {
-            // Predict new bbox before applying
+          if (isCtrlKey && onlyOneKeyPressed && isRightAngle) {
+            // Predict new box before applying
             const snap = getSnapOffsetToEdges(
               object.value,
               newCx - attrs.rx,
@@ -963,7 +975,7 @@ export function useSvgObjectWrapper(
             newCx = left + newRx
           }
 
-          if (isCtrlKey && onlyOneKeyPressed) {
+          if (isCtrlKey && onlyOneKeyPressed && isRightAngle) {
             const snap = getSnapOffsetToEdges(
               object.value,
               newCx - attrs.rx,
@@ -1013,7 +1025,7 @@ export function useSvgObjectWrapper(
             newCx = left + newRx
           }
 
-          if (isCtrlKey && onlyOneKeyPressed) {
+          if (isCtrlKey && onlyOneKeyPressed && isRightAngle) {
             const snap = getSnapOffsetToEdges(
               object.value,
               newCx - attrs.rx,
@@ -1063,7 +1075,7 @@ export function useSvgObjectWrapper(
             newCy = top + newRy
           }
 
-          if (isCtrlKey && onlyOneKeyPressed) {
+          if (isCtrlKey && onlyOneKeyPressed && isRightAngle) {
             const snap = getSnapOffsetToEdges(
               object.value,
               newCx - attrs.rx,
@@ -1104,7 +1116,7 @@ export function useSvgObjectWrapper(
             newCy = attrs.cy + (attrs.ry - newRy)
           }
 
-          if (isCtrlKey && onlyOneKeyPressed) {
+          if (isCtrlKey && onlyOneKeyPressed && isRightAngle) {
             const snap = getSnapOffsetToEdges(
               object.value,
               attrs.cx - newRy,
@@ -1141,7 +1153,7 @@ export function useSvgObjectWrapper(
             newCy = attrs.cy - (attrs.ry - newRy)
           }
 
-          if (isCtrlKey && onlyOneKeyPressed) {
+          if (isCtrlKey && onlyOneKeyPressed && isRightAngle) {
             const snap = getSnapOffsetToEdges(
               object.value,
               attrs.cx - attrs.rx,
@@ -1178,7 +1190,7 @@ export function useSvgObjectWrapper(
             newCx = attrs.cx + (attrs.rx - newRx)
           }
 
-          if (isCtrlKey && onlyOneKeyPressed) {
+          if (isCtrlKey && onlyOneKeyPressed && isRightAngle) {
             const snap = getSnapOffsetToEdges(
               object.value,
               newCx - newRx,
@@ -1215,7 +1227,7 @@ export function useSvgObjectWrapper(
             newCx = attrs.cx - (attrs.rx - newRx)
           }
 
-          if (isCtrlKey && onlyOneKeyPressed) {
+          if (isCtrlKey && onlyOneKeyPressed && isRightAngle) {
             const snap = getSnapOffsetToEdges(
               object.value,
               attrs.cx - attrs.rx,
@@ -1876,7 +1888,7 @@ export function useSvgObjectWrapper(
     isSymmetricalObject,
     activeResizerIndex,
     isDragging,
-    showResizers,
+    // showResizers,
     controlIconSize,
     boundingBoxStrokeWidth,
     onMouseDownRotate,

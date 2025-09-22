@@ -38,14 +38,14 @@ const {
   resizerBorderSize,
   object,
   isSymmetricalObject,
-  showResizers,
+  // showResizers,
   controlIconSize,
   boundingBoxStrokeWidth,
   onMouseDownRotate,
   isRotating,
   cursorOnSvgObject,
   isInMultiSelection,
-  isResizerIconInside,
+  // isResizerIconInside,
   isRotateIconInside,
   onObjectMouseUp,
 } = useSvgObjectWrapper(props.objectId, useImageStore(), useViewportStore(), useEditorStore(), useHistoryStore(), useUiStore(), useWorkspaceStore(), t)
@@ -81,6 +81,7 @@ const {
         :stroke-dasharray="[boundingBoxStrokeWidth * 4, boundingBoxStrokeWidth * 2]" />
 
       <!-- Icon to turn on resize -->
+      <!--
       <foreignObject v-if="object.tag !== 'text' && !isInMultiSelection && object.class !== 'magnifyArea'"
         :x="boundingBox.x + boundingBox.width / 2 - controlIconSize * 0.5"
         :y="isResizerIconInside ? boundingBox.y - controlIconSize : boundingBox.y + boundingBox.height"
@@ -91,9 +92,10 @@ const {
         <BaseIcon v-else :name="'IconResizeObject'" :tip="t('tools.svgObject.resizeObject.tipStartResize')"
           :size="controlIconSize" :color="'var(--primary-c)'" />
       </foreignObject>
+      -->
 
       <!-- Resizers -->
-      <template v-if="showResizers && object.tag !== 'text' && object.class !== 'magnifyArea'">
+      <template v-if="isSelected && object.tag !== 'text' && object.class !== 'magnifyArea'">
         <template v-for="(pos, i) in getResizerPositions()" :key="i">
           <!-- Circle -->
           <circle v-if="pos.type === 'circle'" :cx="pos.x" :cy="pos.y" :r="resizerSize / 2" fill="var(--text-c)"
@@ -111,7 +113,7 @@ const {
 
       <!-- Rotate icon  -->
       <foreignObject
-        v-if="!showResizers && !isRotating && !isInMultiSelection && object.tag !== 'line' && object.class !== 'magnifyArea'"
+        v-if="!isRotating && !isInMultiSelection && object.tag !== 'line' && object.class !== 'magnifyArea'"
         :x="isRotateIconInside ? boundingBox.x + boundingBox.width : boundingBox.x - controlIconSize"
         :y="boundingBox.y + boundingBox.height / 2 - controlIconSize / 2" :width="controlIconSize"
         :height="controlIconSize" @mousedown.stop.prevent="onMouseDownRotate($event)" style="cursor: grab">
