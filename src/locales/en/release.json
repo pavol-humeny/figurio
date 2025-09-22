@@ -9,7 +9,9 @@
       "date":"X.9. 2025",
       "improvements": {
         "items": [
-          "Show object resizers when it is selected"
+          "Show object resizers when it is selected",
+          "JPG and WEBP files can be copied to clipboard",
+          "Object detection in background removal tool detects object edges more precisely"
         ]
       },
       "bugFixes": {
