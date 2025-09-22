@@ -219,15 +219,19 @@ const onMouseUpGlobal = () => {
   if (isDrawing.value) {
     isDrawing.value = false
     isErasingDuringDraw.value = false
-    // Store the current manual canvas in the image store
-    const storedCanvas = document.createElement('canvas')
-    storedCanvas.width = manualCanvasRef.value.width
-    storedCanvas.height = manualCanvasRef.value.height
-    storedCanvas.getContext('2d').drawImage(manualCanvasRef.value, 0, 0)
-    imageStore.removalCanvas = storedCanvas
+
+    const manualCanvas = manualCanvasRef.value
+    if (!manualCanvas) return
+
+    const ctx = manualCanvas.getContext('2d')
+
+    // Store the current pixels of the manual canvas
+    const imageDataToSave = ctx.getImageData(0, 0, manualCanvas.width, manualCanvas.height)
+    imageStore.removalCanvas = imageDataToSave
+
+    // Push snapshot to history
     historyStore.push(imageStore.getSnapshot(t))
   }
-
 }
 
 /**
@@ -265,8 +269,7 @@ watch(
 
     // Use the stored manual canvas if it exists
     if (imageStore.removalCanvas) {
-      ctx.clearRect(0, 0, manualCanvas.width, manualCanvas.height)
-      ctx.drawImage(imageStore.removalCanvas, 0, 0)
+      ctx.putImageData(imageStore.removalCanvas, 0, 0)
     }
   },
   { immediate: true }

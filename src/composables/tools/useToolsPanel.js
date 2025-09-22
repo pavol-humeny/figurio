@@ -110,7 +110,9 @@ export function useToolsPanel(editorStore, imageStore, uiStore, t) {
       }
 
       // Clear removal canvas when switching between tools
-      imageStore.removalCanvas = null
+      if (newVal.tool !== oldValue.tool) {
+        imageStore.removalCanvas = null
+      }
     },
     { immediate: true, deep: false },
   )

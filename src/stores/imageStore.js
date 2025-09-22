@@ -451,6 +451,8 @@ export const useImageStore = defineStore('imageStore', {
       this.newRenderedImage = null
       this.overlayImage = null
       this.removalCanvas = null
+
+      console.warn('Image store reset for new file')
     },
 
     /**
@@ -595,6 +597,14 @@ export const useImageStore = defineStore('imageStore', {
 
         // Reset image store for new file
         this.resetImageStoreForNewFile()
+
+        // Clear removal canvas
+        const canvas = document.getElementById('removalCanvas')
+        if (canvas) {
+          console.warn('Clearing removal canvas...')
+          const ctx = canvas.getContext('2d')
+          ctx.clearRect(0, 0, canvas.width, canvas.height)
+        }
       }
 
       this.file = file
@@ -2294,7 +2304,7 @@ export const useImageStore = defineStore('imageStore', {
         blurImages: JSON.parse(JSON.stringify(this.blurImages)),
         imageOperations: JSON.parse(JSON.stringify(this.imageOperations)),
         frame: JSON.parse(JSON.stringify(this.frame)),
-        removalCanvas: this.removalCanvas?.toDataURL() || null,
+        removalCanvas: this.removalCanvas || null,
       }
 
       console.log('[getSnapshot] imageOperations:', snapshot.imageOperations)
@@ -2372,20 +2382,21 @@ export const useImageStore = defineStore('imageStore', {
       }
 
       // Removal canvas
-      if (snapshot.removalCanvas) {
-        const img = new Image()
-        img.onload = () => {
-          const canvas = document.createElement('canvas')
-          canvas.width = img.width
-          canvas.height = img.height
-          const ctx = canvas.getContext('2d')
-          ctx.drawImage(img, 0, 0)
-          this.removalCanvas = canvas
-        }
-        img.src = snapshot.removalCanvas
-      } else {
-        this.removalCanvas = null
-      }
+      // if (snapshot.removalCanvas) {
+      //   const img = new Image()
+      //   img.onload = () => {
+      //     const canvas = document.createElement('canvas')
+      //     canvas.width = img.width
+      //     canvas.height = img.height
+      //     const ctx = canvas.getContext('2d')
+      //     ctx.drawImage(img, 0, 0)
+      //     this.removalCanvas = canvas
+      //   }
+      //   img.src = snapshot.removalCanvas
+      // } else {
+      //   this.removalCanvas = null
+      // }
+      this.removalCanvas = snapshot.removalCanvas
 
       console.log('[applySnapshot] imageOperations (after apply):', this.imageOperations)
     },
@@ -2441,7 +2452,7 @@ export const useImageStore = defineStore('imageStore', {
 
         isArtifactsVisible: this.isArtifactsVisible,
 
-        removalCanvas: this.removalCanvas?.toDataURL() || null,
+        removalCanvas: this.removalCanvas || null,
       }
     },
 
@@ -2581,20 +2592,21 @@ export const useImageStore = defineStore('imageStore', {
       }
 
       // Removal canvas
-      if (snapshot.removalCanvas) {
-        const img = new Image()
-        img.onload = () => {
-          const canvas = document.createElement('canvas')
-          canvas.width = img.width
-          canvas.height = img.height
-          const ctx = canvas.getContext('2d')
-          ctx.drawImage(img, 0, 0)
-          this.removalCanvas = canvas
-        }
-        img.src = snapshot.removalCanvas
-      } else {
-        this.removalCanvas = null
-      }
+      // if (snapshot.removalCanvas) {
+      //   const img = new Image()
+      //   img.onload = () => {
+      //     const canvas = document.createElement('canvas')
+      //     canvas.width = img.width
+      //     canvas.height = img.height
+      //     const ctx = canvas.getContext('2d')
+      //     ctx.drawImage(img, 0, 0)
+      //     this.removalCanvas = canvas
+      //   }
+      //   img.src = snapshot.removalCanvas
+      // } else {
+      //   this.removalCanvas = null
+      // }
+      this.removalCanvas = snapshot.removalCanvas
 
       console.log('[applyFullSnapshot] imageOperations (after apply):', this.imageOperations)
     },

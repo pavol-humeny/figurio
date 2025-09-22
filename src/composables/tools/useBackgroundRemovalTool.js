@@ -196,6 +196,10 @@ export function useBackgroundRemovalTool(imageStore, historyStore, workspaceStor
     if (!canvas) return
     const ctx = canvas.getContext('2d')
     ctx.clearRect(0, 0, canvas.width, canvas.height)
+
+    // Save canvas to store
+    const imageDataToSave = ctx.getImageData(0, 0, canvas.width, canvas.height)
+    imageStore.removalCanvas = imageDataToSave
   }
 
   /**
@@ -227,6 +231,10 @@ export function useBackgroundRemovalTool(imageStore, historyStore, workspaceStor
     }
 
     ctx.putImageData(imageData, 0, 0)
+
+    // Save canvas to store
+    const imageDataToSave = ctx.getImageData(0, 0, canvas.width, canvas.height)
+    imageStore.removalCanvas = imageDataToSave
   }
 
   /**
@@ -287,6 +295,10 @@ export function useBackgroundRemovalTool(imageStore, historyStore, workspaceStor
 
     // Apply overlay to canvas
     ctx.putImageData(manualImageData, 0, 0)
+
+    // Save canvas to store
+    const imageDataToSave = ctx.getImageData(0, 0, canvas.width, canvas.height)
+    imageStore.removalCanvas = imageDataToSave
   }
 
   //////////////////////////////////////////////////////////////////////////
@@ -365,10 +377,15 @@ export function useBackgroundRemovalTool(imageStore, historyStore, workspaceStor
    * @param {number} threshold - Edge threshold for detection
    */
   const drawDetectedObjects = (edges, width, height, threshold = 50) => {
+    console.log('Drawing detected objects...')
     const canvas = document.getElementById('removalCanvas')
     if (!canvas) return
     const ctx = canvas.getContext('2d')
-    if (replaceSelection.value) ctx.clearRect(0, 0, canvas.width, canvas.height)
+
+    if (replaceSelection.value) {
+      // Clear existing selection
+      ctx.clearRect(0, 0, canvas.width, canvas.height)
+    }
 
     const visited = new Uint8Array(width * height)
 
@@ -408,7 +425,7 @@ export function useBackgroundRemovalTool(imageStore, historyStore, workspaceStor
 
     const components = []
 
-    // 1. Nájde všetky uzavreté komponenty
+    // Find connected components of edge pixels
     for (let y = 0; y < height; y++) {
       for (let x = 0; x < width; x++) {
         const idx = y * width + x
@@ -419,7 +436,7 @@ export function useBackgroundRemovalTool(imageStore, historyStore, workspaceStor
       }
     }
 
-    // 2. Vyplní vnútro každého komponentu scanline-fillom
+    // Fill all pixels in each component with scanline fill
     components.forEach((pixels) => {
       const yMap = {}
       pixels.forEach(([x, y]) => {
@@ -435,6 +452,10 @@ export function useBackgroundRemovalTool(imageStore, historyStore, workspaceStor
         for (let x = minX; x <= maxX; x++) ctx.fillRect(x, y, 1, 1)
       })
     })
+
+    // Save canvas to store
+    const imageDataToSave = ctx.getImageData(0, 0, canvas.width, canvas.height)
+    imageStore.removalCanvas = imageDataToSave
   }
 
   //////////////////////////////////////////////////////////////////////////
@@ -499,6 +520,10 @@ export function useBackgroundRemovalTool(imageStore, historyStore, workspaceStor
     }
 
     ctx.putImageData(manualImageData, 0, 0)
+
+    // Save canvas to store
+    const imageDataToSave = ctx.getImageData(0, 0, canvas.width, canvas.height)
+    imageStore.removalCanvas = imageDataToSave
   }
 
   // ----------------------------------
