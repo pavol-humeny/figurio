@@ -183,13 +183,13 @@ export function useImageRenderer(
       console.log('Rendering IMAGE (IMAGE only)...')
 
       if (img instanceof HTMLCanvasElement) {
-        // imageRef.value.src = img.toDataURL()
+        imageRef.value.src = img.toDataURL()
         // Use async toBlob instead of blocking toDataURL
-        img.toBlob((blob) => {
-          const url = URL.createObjectURL(blob)
-          imageRef.value.src = url
-          imageStore.previewUrl = url
-        })
+        // img.toBlob((blob) => {
+        //   const url = URL.createObjectURL(blob)
+        //   imageRef.value.src = url
+        //   imageStore.previewUrl = url
+        // })
       } else if (img instanceof HTMLImageElement) {
         imageRef.value.src = img.src
       }

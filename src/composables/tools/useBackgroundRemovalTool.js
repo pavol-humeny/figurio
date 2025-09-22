@@ -348,9 +348,29 @@ export function useBackgroundRemovalTool(imageStore, historyStore, workspaceStor
     return edges
   }
 
-  const getBoundingBoxes = (edges, width, height, threshold = 50) => {
+  // Object detection with precise shape highlighting
+  const detectObjectsClick = () => {
+    const imageData = detectObjects()
+    if (!imageData) return
+
+    const edges = detectEdges(imageData)
+    drawDetectedObjects(edges, imageData.width, imageData.height)
+  }
+
+  /**
+   * Draw detected objects pixel by pixel based on edges
+   * @param {Uint8ClampedArray} edges - Array of edge intensities
+   * @param {number} width - Image width
+   * @param {number} height - Image height
+   * @param {number} threshold - Edge threshold for detection
+   */
+  const drawDetectedObjects = (edges, width, height, threshold = 50) => {
+    const canvas = document.getElementById('removalCanvas')
+    if (!canvas) return
+    const ctx = canvas.getContext('2d')
+    if (replaceSelection.value) ctx.clearRect(0, 0, canvas.width, canvas.height)
+
     const visited = new Uint8Array(width * height)
-    const boxes = []
 
     const neighbors = (x, y) => [
       [x - 1, y],
@@ -359,69 +379,64 @@ export function useBackgroundRemovalTool(imageStore, historyStore, workspaceStor
       [x, y + 1],
     ]
 
-    const floodFill = (x0, y0) => {
+    const floodFillMask = (x0, y0) => {
       const stack = [[x0, y0]]
-      let minX = x0,
-        maxX = x0,
-        minY = y0,
-        maxY = y0
+      const pixels = []
+      let touchesEdge = false
 
       while (stack.length) {
         const [x, y] = stack.pop()
         const idx = y * width + x
-        if (x < 0 || x >= width || y < 0 || y >= height) continue
+        if (x < 0 || x >= width || y < 0 || y >= height) {
+          touchesEdge = true
+          continue
+        }
         if (visited[idx]) continue
         if (edges[idx] < threshold) continue
 
         visited[idx] = 1
-        minX = Math.min(minX, x)
-        maxX = Math.max(maxX, x)
-        minY = Math.min(minY, y)
-        maxY = Math.max(maxY, y)
-
+        pixels.push([x, y])
         neighbors(x, y).forEach(([nx, ny]) => stack.push([nx, ny]))
       }
 
-      return { x: minX, y: minY, width: maxX - minX, height: maxY - minY }
+      return touchesEdge ? null : pixels
     }
 
+    // Get highlight color RGBA
+    const { fillR, fillG, fillB, fillA } = getHighlightColorRGBA()
+    ctx.fillStyle = `rgba(${fillR},${fillG},${fillB},${fillA / 255})`
+
+    const components = []
+
+    // 1. Nájde všetky uzavreté komponenty
     for (let y = 0; y < height; y++) {
       for (let x = 0; x < width; x++) {
         const idx = y * width + x
         if (!visited[idx] && edges[idx] >= threshold) {
-          const box = floodFill(x, y)
-          if (box.width > 5 && box.height > 5) boxes.push(box)
+          const pixels = floodFillMask(x, y)
+          if (pixels) components.push(pixels)
         }
       }
     }
 
-    return boxes
-  }
+    // 2. Vyplní vnútro každého komponentu scanline-fillom
+    components.forEach((pixels) => {
+      const yMap = {}
+      pixels.forEach(([x, y]) => {
+        if (!yMap[y]) yMap[y] = []
+        yMap[y].push(x)
+      })
 
-  const drawBoundingBoxes = (boxes) => {
-    console.log('Drawing boxes:', boxes)
-    const canvas = document.getElementById('removalCanvas')
-    if (!canvas) return
-    const ctx = canvas.getContext('2d')
-
-    if (replaceSelection.value) {
-      // Clear existing selection
-      ctx.clearRect(0, 0, canvas.width, canvas.height)
-    }
-
-    ctx.fillStyle = editorConfig.removalHighlightColor
-
-    boxes.forEach((box) => {
-      ctx.fillRect(box.x, box.y, box.width, box.height)
+      Object.keys(yMap).forEach((yStr) => {
+        const y = parseInt(yStr)
+        const xs = yMap[y]
+        const minX = Math.min(...xs)
+        const maxX = Math.max(...xs)
+        for (let x = minX; x <= maxX; x++) ctx.fillRect(x, y, 1, 1)
+      })
     })
   }
 
-  const detectObjectsClick = () => {
-    const imageData = detectObjects()
-    const edges = detectEdges(imageData)
-    const boxes = getBoundingBoxes(edges, imageData.width, imageData.height)
-    drawBoundingBoxes(boxes)
-  }
   //////////////////////////////////////////////////////////////////////////
 
   /**
