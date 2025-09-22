@@ -367,6 +367,7 @@ export function useBackgroundRemovalTool(imageStore, historyStore, workspaceStor
 
     const edges = detectEdges(imageData)
     drawDetectedObjects(edges, imageData.width, imageData.height)
+    invertSelection()
   }
 
   /**
