@@ -48,7 +48,7 @@ const {
   fitCrop,
   manualIndents,
   recalculateCropBox,
-  fitCropApplied,
+  // fitCropApplied,
   showArtifacts,
   hideArtifacts,
   isArtifactsVisible,
@@ -166,7 +166,7 @@ const {
         </div>
 
         <!-- Manual adjustment -->
-        <div v-if="fitCropApplied" class="settings-content-wrapper">
+        <div class="settings-content-wrapper">
           <div class="content-wrapper">
             <div class="content title">
               <p>
