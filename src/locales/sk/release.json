@@ -6,6 +6,128 @@
     ]
   },
   "versions": {
+    "4.5.1": {
+      "label": "4.5.1",
+      "date": "23.9. 2025",
+      "improvements": {
+        "items": [
+          "Scrollbary sú lepšie viditeľné",
+          "Zobrazenie manuálnych úprav v nastaveniach nástroja orezania"
+        ]
+      },
+      "bugFixes": {
+        "items": [
+          "Pozícia orezávacieho rámu sa dá zmeniť aj keď má maximálnu šírku alebo výšku",
+          "Obrázok možno vložiť zo schránky aj v zobrazení editora"
+        ]
+      }
+    },
+    "4.5.0": {
+      "label": "4.5.0",
+      "date": "22.9. 2025",
+      "improvements": {
+        "items": [
+          "Zobrazenie úchytov na zmenu veľkosti, keď je objekt vybraný",
+          "Súbory JPG a WEBP možno kopírovať do schránky",
+          "Detekcia objektov v nástroji na odstránenie pozadia deteguje hrany presnejšie"
+        ]
+      },
+      "bugFixes": {
+        "items": [
+          "Do vstupu rotácie je možné zadať aj zápornú hodnotu uhla"
+        ]
+      }
+    },
+    "4.4.2": {
+      "label": "4.4.2",
+      "date": "20.9. 2025",
+      "bugFixes": {
+        "items": [
+          "Zaoblené rohy pre rámiky telefónov sa vykresľujú správne"
+        ]
+      }
+    },
+    "4.4.1": {
+      "label": "4.4.1",
+      "date": "18.9. 2025",
+      "improvements": {
+        "items": [
+          "Zobrazenie pomocných čiar v oboch osiach pri zarovnávaní"
+        ]
+      },
+      "bugFixes": {
+        "items": [
+          "Opravené zarovnanie, keď bolo blízko k viacerým objektom nefungovalo",
+          "Hodnota číselného vstupu sa dá meniť kolieskom myši aj keď krok je menší ako 1"
+        ]
+      }
+    },
+    "4.4.0": {
+      "label": "4.4.0",
+      "date": "16.9. 2025",
+      "newFeatures": {
+        "items": [
+          "Nástroj lupa - zväčšený objekt možno exportovať do PDF súborov"
+        ]
+      }
+    },
+    "4.3.0": {
+      "label": "4.3.0",
+      "date": "15.9. 2025",
+      "newFeatures": {
+        "items": [
+          "Nástroj na odstránenie pozadia",
+          "Odstránenie farby - odstráni konkrétnu farbu z obrázka",
+          "Manuálne odstránenie pozadia - ručne odstránenie alebo obnovenie častí pozadia obrázka",
+          "Zoznam objektov s možnosťou zmeniť poradie, vybrať, premenovať a odstrániť objekty"
+        ]
+      },
+      "improvements": {
+        "items": [
+          "Pridanie šachovnicového pozadia pre obrázky s priehľadnosťou"
+        ]
+      }
+    },
+    "4.2.0": {
+      "label": "4.2.0",
+      "date": "13.9. 2025",
+      "improvements": {
+        "items": [
+          "Odsadenia po automatickom oreze možno upraviť podržaním tlačidla myši nie len klikaním",
+          "Zlepšené správanie komponentu tipov pre položky"
+        ]
+      },
+      "bugFixes": {
+        "items": [
+          "Opravený výpočet polomeru nástroja zväčšená oblasť",
+          "Pridanie záznamu histórie po zmene polomeru objektu zväčšená oblasť až po pustení myši"
+        ]
+      }
+    },
+    "4.1.0": {
+      "label": "4.1.0",
+      "date": "12.9. 2025",
+      "newFeatures": {
+        "items": [
+          "Tlačidlo na skrytie/zobrazenie orezávacieho rámu v nastaveniach nástroja orezania"
+        ]
+      }
+    },
+    "4.0.1": {
+      "label": "4.0.1",
+      "date": "10.9. 2025",
+      "improvements": {
+        "items": [
+          "Pridanie tieňu do obsahovej oblasti pre lepšiu viditeľnosť obrázka na pozadí"
+        ]
+      },
+      "bugFixes": {
+        "items": [
+          "Opravený problém s výpočtom počiatočnej pozície kreslenia",
+          "Nedávne farby vo výbere farieb sú globálne pre všetky výbery farieb"
+        ]
+      }
+    },
     "4.0.0": {
       "label": "4.0.0",
       "date": "9.9. 2025",

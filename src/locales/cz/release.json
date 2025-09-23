@@ -6,6 +6,128 @@
     ]
   },
   "versions": {
+    "4.5.1": {
+      "label": "4.5.1",
+      "date": "23.9. 2025",
+      "improvements": {
+        "items": [
+          "Scrollbary jsou lépe viditelné",
+          "Zobrazení manuálních úprav v nastavení nástroje ořezu"
+        ]
+      },
+      "bugFixes": {
+        "items": [
+          "Pozici ořezového rámečku lze změnit i když má maximální šířku nebo výšku",
+          "Obrázek lze vložit ze schránky i v zobrazení editoru"
+        ]
+      }
+    },
+    "4.5.0": {
+      "label": "4.5.0",
+      "date": "22.9. 2025",
+      "improvements": {
+        "items": [
+          "Zobrazení úchytů pro změnu velikosti, když je objekt vybrán",
+          "Soubory JPG a WEBP lze kopírovat do schránky",
+          "Detekce objektů v nástroji pro odstranění pozadí detekuje hrany přesněji"
+        ]
+      },
+      "bugFixes": {
+        "items": [
+          "Do vstupu rotace lze zadat i zápornou hodnotu úhlu"
+        ]
+      }
+    },
+    "4.4.2": {
+      "label": "4.4.2",
+      "date": "20.9. 2025",
+      "bugFixes": {
+        "items": [
+          "Zaoblené rohy pro rámečky telefonů se vykreslují správně"
+        ]
+      }
+    },
+    "4.4.1": {
+      "label": "4.4.1",
+      "date": "18.9. 2025",
+      "improvements": {
+        "items": [
+          "Zobrazení vodicích čar v obou osách při zarovnávání"
+        ]
+      },
+      "bugFixes": {
+        "items": [
+          "Opraveno zarovnání, když bylo blízko k více objektům",
+          "Hodnotu číselného vstupu lze měnit kolečkem myši i když je krok menší než 1"
+        ]
+      }
+    },
+    "4.4.0": {
+      "label": "4.4.0",
+      "date": "16.9. 2025",
+      "newFeatures": {
+        "items": [
+          "Nástroj lupa - zvětšený objekt lze exportovat do PDF souborů"
+        ]
+      }
+    },
+    "4.3.0": {
+      "label": "4.3.0",
+      "date": "15.9. 2025",
+      "newFeatures": {
+        "items": [
+          "Nástroj pro odstranění pozadí",
+          "Odstranění barvy - odstraní konkrétní barvu z obrázku",
+          "Manuální odstranění pozadí - ruční odstranění nebo obnovení částí pozadí obrázku",
+          "Seznam objektů s možností změnit pořadí, vybrat, přejmenovat a odstranit objekty"
+        ]
+      },
+      "improvements": {
+        "items": [
+          "Přidání šachovnicového pozadí pro obrázky s průhledností"
+        ]
+      }
+    },
+    "4.2.0": {
+      "label": "4.2.0",
+      "date": "13.9. 2025",
+      "improvements": {
+        "items": [
+          "Odsazení po automatickém ořezu lze upravit podržením tlačítka myši, nejen klikáním",
+          "Vylepšené chování komponenty tipů pro položky"
+        ]
+      },
+      "bugFixes": {
+        "items": [
+          "Opraven výpočet poloměru nástroje zvětšená oblast",
+          "Přidání záznamu historie po změně poloměru objektu zvětšená oblast až po uvolnění myši"
+        ]
+      }
+    },
+    "4.1.0": {
+      "label": "4.1.0",
+      "date": "12.9. 2025",
+      "newFeatures": {
+        "items": [
+          "Tlačítko pro skrytí/zobrazení ořezového rámečku v nastavení nástroje ořezu"
+        ]
+      }
+    },
+    "4.0.1": {
+      "label": "4.0.1",
+      "date": "10.9. 2025",
+      "improvements": {
+        "items": [
+          "Přidání stínu do obsahové oblasti pro lepší viditelnost obrázku na pozadí"
+        ]
+      },
+      "bugFixes": {
+        "items": [
+          "Opraven problém s výpočtem počáteční pozice kreslení",
+          "Nedávné barvy ve výběru barev jsou globální pro všechny výběry barev"
+        ]
+      }
+    },
     "4.0.0": {
       "label": "4.0.0",
       "date": "9.9. 2025",

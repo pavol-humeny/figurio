@@ -4,9 +4,9 @@
     "items": []
   },
   "versions":{
-    "4.6.0":{
-      "label": "4.6.0",
-      "date":"X.9. 2025",
+    "4.5.1":{
+      "label": "4.5.1",
+      "date":"23.9. 2025",
       "improvements": {
         "items": [
           "Make scrollbars more visible",
@@ -22,7 +22,7 @@
     },
     "4.5.0":{
       "label": "4.5.0",
-      "date":"X.9. 2025",
+      "date":"22.9. 2025",
       "improvements": {
         "items": [
           "Show object resizers when it is selected",
@@ -38,7 +38,7 @@
     },
     "4.4.2":{
       "label": "4.4.2",
-      "date":"X.9. 2025",
+      "date":"20.9. 2025",
       "bugFixes": {
         "items": [
           "Round corners for phone frames are rendered correctly"
@@ -47,7 +47,7 @@
     },
     "4.4.1":{
       "label": "4.4.1",
-      "date":"X.9. 2025",
+      "date":"18.9. 2025",
       "improvements": {
         "items": [
           "Show guide lines in both axes when snapping"
@@ -62,7 +62,7 @@
     },
     "4.4.0":{
       "label": "4.4.0",
-      "date":"X.9. 2025",
+      "date":"16.9. 2025",
       "newFeatures": {
         "items": [
           "Magnify area tool - magnify object can be exported to pdf files"
@@ -71,7 +71,7 @@
     },
     "4.3.0":{
       "label": "4.3.0",
-      "date":"X.9. 2025",
+      "date":"15.9. 2025",
       "newFeatures": {
         "items": [
           "Background removal tool - remove background",
@@ -88,7 +88,7 @@
     },
     "4.2.0":{
       "label": "4.2.0",
-      "date":"X.9. 2025",
+      "date":"13.9. 2025",
       "improvements": {
         "items": [
           "Indents after auto crop can be adjusted with holding down the mouse button",
@@ -104,7 +104,7 @@
     },
     "4.1.0":{
       "label": "4.1.0",
-      "date":"X.9. 2025",
+      "date":"12.9. 2025",
       "newFeatures": {
         "items": [
           "Button to hide/show crop box in crop tool settings"
@@ -113,7 +113,7 @@
     },
     "4.0.1":{
       "label": "4.0.1",
-      "date":"X.9. 2025",
+      "date":"10.9. 2025",
       "improvements": {
         "items": [
           "Add shadow to the content area for better visibility"
