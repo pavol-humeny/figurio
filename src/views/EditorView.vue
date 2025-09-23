@@ -105,7 +105,7 @@ useKeyboardShortcuts({
   pasteSvgObjectToCenter,
   duplicateSelectedSvgObject,
   cutSelectedSvgObject,
-}, useUiStore(), useImageStore());
+}, useUiStore(), useEditorStore());
 // ======
 
 // Start tutorial if opening the editor for the first time

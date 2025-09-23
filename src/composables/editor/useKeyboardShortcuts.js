@@ -6,9 +6,9 @@ import { keyboardShortcuts } from '@/config/keyboardShortcutsConfig'
  *
  * @param {Record<string, (...args: any[]) => void>} actions - Action handlers mapped by shortcut name
  * @param {ReturnType<typeof import('@/stores/uiStore').useUiStore>} uiStore - UI store with shortcut settings
- * @param {ReturnType<typeof import('@/stores/imageStore').useImageStore>} imageStore - Image store
+ * @param {ReturnType<typeof import('@/stores/editorStore').useEditorStore>} editorStore - Editor store
  */
-export function useKeyboardShortcuts(actions, uiStore, imageStore) {
+export function useKeyboardShortcuts(actions, uiStore, editorStore) {
   /**
    * Normalize pressed keys into string format (e.g., "ctrl+shift+s")
    *
@@ -47,7 +47,7 @@ export function useKeyboardShortcuts(actions, uiStore, imageStore) {
     const isImagePaste =
       event.key.toLowerCase() === 'v' &&
       (event.ctrlKey || event.metaKey) &&
-      !imageStore.isImageLoaded
+      editorStore.imageCanBePasted
 
     if (isTyping || isImagePaste) return
 

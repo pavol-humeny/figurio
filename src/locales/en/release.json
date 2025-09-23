@@ -15,7 +15,8 @@
       },
       "bugFixes": {
         "items": [
-          "Position of crop box can be change also when crop box has maximum width or height"
+          "Position of crop box can be change also when crop box has maximum width or height",
+          "Image can be pasted from clipboard also in editor view"
         ]
       }
     },

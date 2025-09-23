@@ -451,8 +451,6 @@ export const useImageStore = defineStore('imageStore', {
       this.newRenderedImage = null
       this.overlayImage = null
       this.removalCanvas = null
-
-      console.warn('Image store reset for new file')
     },
 
     /**

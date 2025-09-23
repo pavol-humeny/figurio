@@ -25,10 +25,14 @@ export const useEditorStore = defineStore('editorStore', {
     /** Whether any SVG object is currently being drawn */
     isSvgObjectDrawing: false,
 
+    /** Whether an image can be pasted */
+    imageCanBePasted: false,
+
     /** Whether tools are enabled */
     // UPDATE new tool
     enableTools: {
       crop: globalConfig.featureFlags.enableTools.crop,
+      backgroundRemoval: globalConfig.featureFlags.enableTools.backgroundRemoval,
       select: globalConfig.featureFlags.enableTools.select,
       transform: globalConfig.featureFlags.enableTools.transform,
       autoCrop: globalConfig.featureFlags.enableTools.autoCrop,

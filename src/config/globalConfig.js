@@ -29,6 +29,7 @@ export const globalConfig = {
   featureFlags: {
     enableTools: {
       crop: true,
+      backgroundRemoval: true,
       select: true,
       transform: true,
       autoCrop: true,
