@@ -12,6 +12,11 @@
           "Make scrollbars more visible",
           "Show manual adjustments in crop tool settings"
         ]
+      },
+      "bugFixes": {
+        "items": [
+          "Position of crop box can be change also when crop box has maximum width or height"
+        ]
       }
     },
     "4.5.0":{

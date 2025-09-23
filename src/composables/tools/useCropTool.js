@@ -127,10 +127,10 @@ export function useCropTool(
    * Maximum allowed crop position based on image dimensions
    */
   const maxCropPositionX = computed(() => {
-    return imageStore.fileDimensions.width - cropBox.value.width
+    return imageStore.fileDimensions.width
   })
   const maxCropPositionY = computed(() => {
-    return imageStore.fileDimensions.height - cropBox.value.height
+    return imageStore.fileDimensions.height
   })
 
   /**
@@ -148,6 +148,28 @@ export function useCropTool(
       cropBox.value.y = round(clamp(value, 0, maxCropPositionY.value))
     },
   })
+
+  /**
+   * Temporary refs to store crop x and y for syncing with external components
+   */
+  const tmpCropX = ref(cropBox.value.x)
+  const tmpCropY = ref(cropBox.value.y)
+
+  /**
+   * Watch for changes in crop x and y to update temporary refs
+   */
+  watch(
+    () => cropBox.value.x,
+    (value) => {
+      tmpCropX.value = value
+    },
+  )
+  watch(
+    () => cropBox.value.y,
+    (value) => {
+      tmpCropY.value = value
+    },
+  )
 
   /**
    * Ref for crop width and height input field (used for syncing external components)
@@ -271,8 +293,14 @@ export function useCropTool(
   const updatePosition = (key, value) => {
     if (key === 'x') {
       cropBox.value.x = round(clamp(value, 0, maxCropPositionX.value))
+      if (cropBox.value.x + cropBox.value.width > imageStore.fileDimensions.width) {
+        cropBox.value.width = imageStore.fileDimensions.width - cropBox.value.x
+      }
     } else if (key === 'y') {
       cropBox.value.y = round(clamp(value, 0, maxCropPositionY.value))
+      if (cropBox.value.y + cropBox.value.height > imageStore.fileDimensions.height) {
+        cropBox.value.height = imageStore.fileDimensions.height - cropBox.value.y
+      }
     }
     nextTick(() => {
       positionXInputRef.value.setValue(cropPositionX.value)
@@ -1275,5 +1303,7 @@ export function useCropTool(
     autoCropThresholdOptions,
     resetThreshold,
     resetCache,
+    tmpCropX,
+    tmpCropY,
   }
 }

@@ -31,8 +31,8 @@ const {
   isDimensionsLinked,
   heightInputRef,
   widthInputRef,
-  cropPositionX,
-  cropPositionY,
+  // cropPositionX,
+  // cropPositionY,
   maxCropPositionX,
   maxCropPositionY,
   updatePosition,
@@ -54,6 +54,8 @@ const {
   isArtifactsVisible,
   autoCropThreshold,
   autoCropThresholdOptions,
+  tmpCropX,
+  tmpCropY,
 } = useCropTool(useImageStore(), useViewportStore(), useEditorStore(), useHistoryStore(), useWorkspaceStore(), t)
 
 </script>
@@ -77,7 +79,7 @@ const {
                 <label for="x-input">
                   {{ $t('tools.crop.settings.general.cropPosition.x') }}
                 </label>
-                <NumberInput ref="positionXInputRef" v-model="cropPositionX" :min="0" :max="maxCropPositionX"
+                <NumberInput ref="positionXInputRef" v-model="tmpCropX" :min="0" :max="maxCropPositionX"
                   @update="(val) => updatePosition('x', val)" unit="px" />
               </div>
 
@@ -87,7 +89,7 @@ const {
                 <label for="y-input">
                   {{ $t('tools.crop.settings.general.cropPosition.y') }}
                 </label>
-                <NumberInput ref="positionYInputRef" v-model="cropPositionY" :min="0" :max="maxCropPositionY"
+                <NumberInput ref="positionYInputRef" v-model="tmpCropY" :min="0" :max="maxCropPositionY"
                   @update="(val) => updatePosition('y', val)" unit="px" />
               </div>
             </div>
