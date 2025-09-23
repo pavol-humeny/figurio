@@ -7,7 +7,7 @@ import { version } from './package.json'
 
 // https://vite.dev/config/
 export default defineConfig({
-  base: '/Figurio/',
+  base: '/figurio/',
   plugins: [vue(), vueDevTools()],
   resolve: {
     alias: {

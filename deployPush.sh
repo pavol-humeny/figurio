@@ -11,7 +11,7 @@ VERSION=$(node -p "require('../package.json').version")
 MAJOR_VERSION=$(echo "$VERSION" | cut -d. -f1)
 
 # Push to branch gh-pages-X
-git push -f git@github.com:pavol-humeny/Figurio.git master:gh-pages-"$MAJOR_VERSION"
+git push -f git@github.com:pavol-humeny/figurio.git master:gh-pages-"$MAJOR_VERSION"
 
 # Return to previous directory
 cd -
