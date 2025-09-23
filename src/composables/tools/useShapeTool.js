@@ -255,8 +255,9 @@ export function useShapeTool(editorStore, imageStore, historyStore, t) {
    */
   watch(
     () => imageStore.selectedSvgObjectId,
-    (newId) => {
+    async (newId) => {
       if (newId !== null) {
+        await nextTick()
         const object = imageStore.getSvgObjectById(newId)
         if (object && editorStore.selectedToolKey === 'shape') {
           activeObject.value = object

@@ -267,8 +267,6 @@ export function useSvgObjectWrapper(
 
       // Update rotation origin after resizing to keep it centered
       // TODO - it move object when it is applied
-
-      console.warn('isSelected changed: ', newValue)
       if (!newValue) {
         updateRotationTransform()
       }

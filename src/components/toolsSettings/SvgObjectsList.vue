@@ -109,7 +109,7 @@ const {
   overflow-y: auto;
   border-radius: 10px;
   margin-top: 10px;
-  background: var(--secondary-c);
+  background: var(--background-c);
   border: solid 1px var(--secondary-c);
 }
 
@@ -125,7 +125,8 @@ const {
 }
 
 .svg-object-item.selected {
-  background-color: var(--background-c);
+  background-color: var(--secondary-c);
+  color: var(--primary-c);
 }
 
 .drag-handle {

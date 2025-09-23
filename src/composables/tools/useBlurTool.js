@@ -193,8 +193,9 @@ export function useBlurTool(imageStore, historyStore, editorStore, t) {
    */
   watch(
     () => imageStore.selectedSvgObjectId,
-    (newId) => {
+    async (newId) => {
       if (newId !== null) {
+        await nextTick()
         const object = imageStore.getSvgObjectById(newId)
         if (object && editorStore.selectedToolKey === 'blur') {
           activeObject.value = object

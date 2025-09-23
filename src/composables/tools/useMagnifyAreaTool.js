@@ -1,5 +1,5 @@
 import { editorConfig } from '@/config/editorConfig'
-import { ref, computed, watch, watchEffect, onMounted } from 'vue'
+import { ref, computed, watch, watchEffect, onMounted, nextTick } from 'vue'
 import { useSendEvent } from '../common/useSendEvent'
 
 const localMagnifyAreaSettings = ref({
@@ -196,8 +196,9 @@ export function useMagnifyAreaTool(imageStore, historyStore, editorStore, worksp
    */
   watch(
     () => imageStore.selectedSvgObjectId,
-    (newId) => {
+    async (newId) => {
       if (newId !== null) {
+        await nextTick()
         const object = imageStore.getSvgObjectById(newId)
         if (!object || object.class !== 'magnifyArea') return
 
