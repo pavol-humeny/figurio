@@ -4,6 +4,16 @@
     "items": []
   },
   "versions":{
+    "4.6.0":{
+      "label": "4.6.0",
+      "date":"X.9. 2025",
+      "improvements": {
+        "items": [
+          "Make scrollbars more visible",
+          "Show manual adjustments in crop tool settings"
+        ]
+      }
+    },
     "4.5.0":{
       "label": "4.5.0",
       "date":"X.9. 2025",

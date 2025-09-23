@@ -154,13 +154,19 @@ input[type='number'] {
   background: var(--background-c);
 }
 *::-webkit-scrollbar-track {
-  border-radius: 5px;
-  background-color: var(--background-c);
+  /* border-radius: 5px; */
+  background-color: var(--background);
+  border-left: solid 1px var(--scrollbar-c);
 }
 
 *::-webkit-scrollbar-thumb {
   border-radius: 5px;
-  background-color: var(--secondary-c);
+  background-color: var(--border-c);
+}
+
+*::-webkit-scrollbar-thumb:hover {
+  border: solid 1px var(--primary-c);
+  cursor: pointer;
 }
 
 /* Tools settings styles */

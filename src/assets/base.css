@@ -18,14 +18,14 @@
   --background-c-dark: #282828;
   --text-c-dark: #F5F1E9;
   --text-placeholder-c-dark: #F5F1E9;
-  --border-c-dark: #5454547a;
+  --border-c-dark: #545454c4;
 
   --primary-c-light: #695331;
   --secondary-c-light: #CFCFCF;
   --background-c-light: #EAEAEA;
   --text-c-light: #0F0B04;
   --text-placeholder-c-light: #0F0B04;
-  --border-c-light: #3d3d3d1f;
+  --border-c-light: #3d3d3d42;
 
   --notification-c-dark: #409AE3;
   --success-c-dark: #5CB85C;
@@ -86,6 +86,8 @@
   --crop-c: var(--crop-c-light);
 
   --box-shadow-content: var(--box-shadow-content-light);
+
+  --scrollbar-c: var(--border-c);
 }
 
 .dark{
@@ -112,6 +114,8 @@
   --crop-c: var(--crop-c-dark);
 
   --box-shadow-content: var(--box-shadow-content-dark);
+
+  --scrollbar-c: var(--border-c);
 }
 
 *,

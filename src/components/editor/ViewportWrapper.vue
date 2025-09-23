@@ -376,7 +376,7 @@ watch(
 
 .slider {
   position: absolute;
-  background: var(--secondary-c);
+  background: var(--scrollbar-c);
   border: solid 1px var(--border-c);
   border-radius: 10px;
 }
