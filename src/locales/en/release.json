@@ -4,6 +4,15 @@
     "items": []
   },
   "versions":{
+    "4.6.0":{
+      "label": "4.6.0",
+      "date":"24.9. 2025",
+      "newFeatures": {
+        "items": [
+          "Contrast and normal mode - switch between two different color schemes for better visibility"
+        ]
+      }
+    },
     "4.5.2":{
       "label": "4.5.2",
       "date":"24.9. 2025",

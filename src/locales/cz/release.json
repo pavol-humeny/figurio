@@ -6,6 +6,15 @@
     ]
   },
   "versions": {
+    "4.6.0":{
+      "label": "4.6.0",
+      "date":"24.9. 2025",
+      "newFeatures": {
+        "items": [
+          "Režim kontrastu a normální režim - přepínání mezi dvěma různými barevnými schématy pro lepší viditelnost"
+        ]
+      }
+    },
     "4.5.1": {
       "label": "4.5.1",
       "date": "23.9. 2025",

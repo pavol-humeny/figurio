@@ -6,6 +6,15 @@
     ]
   },
   "versions": {
+    "4.6.0":{
+      "label": "4.6.0",
+      "date":"24.9. 2025",
+      "newFeatures": {
+        "items": [
+          "Kontrastný režim a normálny režim - prepínanie medzi dvoma rôznymi farebnými schémami pre lepšiu viditeľnosť"
+        ]
+      }
+    },
     "4.5.1": {
       "label": "4.5.1",
       "date": "23.9. 2025",

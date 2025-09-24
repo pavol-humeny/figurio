@@ -983,6 +983,19 @@
     "title": "Nástroj nie je k dispozícii",
     "message": ""
   },
-  "loadingToolSettings": "Načítavanie..."
-
+  "loadingToolSettings": "Načítavanie...",
+  "viewportBackgroundMode":{
+    "normal":{
+      "tip":{
+        "title": "Normálny režim",
+        "text": "Nastaví farbu pozadia zobrazenia na farbu pozadia editora"
+      }
+    },
+    "contrast":{
+      "tip":{
+        "title": "Kontrastný režim",
+        "text": "Nastaví farbu pozadia zobrazenia na kontrastnú farbu"
+      }
+    }
+  }
 }

@@ -54,7 +54,7 @@ const {
           <input class="zoom-level" type="number" :value="zoomLevel" :min="viewportStore.minZoomLevel * 100"
             :max="viewportStore.maxZoomLevel * 100" step="1" @input="onZoomInput($event)" @blur="applyZoomFromInput()"
             @keydown.enter.prevent="applyZoomFromInput()" @keydown.esc.prevent="revertZoomInput()"
-            @wheel.passive="wheelZoom" :disabled="imageStore.file === null"/>
+            @wheel.passive="wheelZoom" :disabled="imageStore.file === null" />
           <p class="zoom-level-percentage">%</p>
         </div>
       </ItemTip>

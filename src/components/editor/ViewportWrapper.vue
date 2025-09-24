@@ -20,6 +20,9 @@ import router from '@/router'
 import BackgroundRemovalCanvas from '../tools/BackgroundRemovalCanvas.vue'
 import { useWorkspaceStore } from '@/stores/workspaceStore'
 import { useFrameTool } from '@/composables/tools/useFrameTool'
+import DefaultButton from '../common/DefaultButton.vue'
+import ItemTip from '../common/ItemTip.vue'
+import BaseIcon from '../icons/BaseIcon.vue'
 
 const { t } = useI18n()
 const uiStore = useUiStore()
@@ -136,6 +139,31 @@ const disableContextMenu = computed(() => {
 const phoneFrameBorderRadius = ref(0)
 
 /**
+ * Background of the viewport wrapper
+ */
+const viewportWrapperBackground = ref('var(--background-c)')
+const viewportWrapperBackgroundMode = ref('normal')
+const viewportWrapperBackgroundModePadding = computed(() => {
+  return uiStore.rulersEnabled ? '25px' : '10px'
+})
+
+const setViewportWrapperBackgroundMode = (mode) => {
+  if (mode === 'normal') {
+    viewportWrapperBackgroundMode.value = 'normal'
+  } else if (mode === 'contrast') {
+    viewportWrapperBackgroundMode.value = 'contrast'
+  }
+}
+
+watch(viewportWrapperBackgroundMode, (newMode) => {
+  if (newMode === 'normal') {
+    viewportWrapperBackground.value = 'var(--viewport-wrapper-background)'
+  } else if (newMode === 'contrast') {
+    viewportWrapperBackground.value = 'var(--viewport-wrapper-contrast-c)'
+  }
+}, { immediate: true })
+
+/**
  * Watch for changes in the frame to determine if it's a phone frame
  */
 watch(
@@ -164,6 +192,8 @@ watch(
       @mousemove="onMouseMove" :class="{
         'middle-dragging': isMiddleDragging,
         'move-tool-selected': editorStore.selectedToolKey === 'move',
+      }" :style="{
+        '--viewport-wrapper-background': viewportWrapperBackground,
       }">
       <ContextMenu :items="[
         {
@@ -200,7 +230,7 @@ watch(
         <div id="viewport-content" :class="{ 'hide': uiStore.isLoading }" class="viewport-content" ref="contentRef"
           :style="{
             transform: `translate(${panX}px, ${panY}px) scale(${zoomLevel})`,
-            boxShadow: 'var(--box-shadow-content)',
+            boxShadow: viewportWrapperBackgroundMode === 'normal' ? 'var(--box-shadow-content)' : 'none',
             '--phone-frame-border-radius': phoneFrameBorderRadius + 'px',
           }">
           <img v-if="imageStore.fileType === 'image' || imageStore.showImageInsteadOfPdf" ref="imageRef"
@@ -252,6 +282,24 @@ watch(
       </ContextMenu>
     </div>
 
+    <div class="contrast-mode-wrapper" :style="{
+      '--viewport-wrapper-background-top': viewportWrapperBackgroundModePadding,
+    }">
+      <ItemTip advance :text="t('tools.viewportBackgroundMode.normal.tip.text')"
+        :title="$t('tools.viewportBackgroundMode.normal.tip.title')" position="bottom-left" class="contrast-mode-button"
+        :class="{ 'selected': viewportWrapperBackgroundMode === 'normal' }"
+        @click="setViewportWrapperBackgroundMode('normal')">
+        <BaseIcon name="IconNormalMode" size="21" />
+      </ItemTip>
+      <ItemTip advance :text="t('tools.viewportBackgroundMode.contrast.tip.text')"
+        :title="$t('tools.viewportBackgroundMode.contrast.tip.title')" position="bottom-left"
+        class="contrast-mode-button" :class="{ 'selected': viewportWrapperBackgroundMode === 'contrast' }"
+        @click="setViewportWrapperBackgroundMode('contrast')">
+        <BaseIcon name="IconContrastMode" size="21" />
+      </ItemTip>
+
+
+    </div>
 
     <!-- Sliders -->
     <div class="vertical-slider-wrapper">
@@ -277,7 +325,7 @@ watch(
         </div>
         <div v-if="mouseX !== null" class="ruler-cursor-mark horizontal" :style="{ left: mouseX + 'px' }">
           <span class="ruler-cursor-label horizontal" :class="{ 'active': cursorPosXSameAsImageWidth }">{{ cursorPosX
-          }}</span>
+            }}</span>
         </div>
 
       </div>
@@ -290,7 +338,7 @@ watch(
         </div>
         <div v-if="mouseY !== null" class="ruler-cursor-mark vertical" :style="{ top: mouseY + 'px' }">
           <span class="ruler-cursor-label vertical" :class="{ 'active': cursorPosYSameAsImageHeight }">{{ cursorPosY
-          }}</span>
+            }}</span>
         </div>
       </div>
     </div>
@@ -321,6 +369,7 @@ watch(
   bottom: 0px;
   overflow: hidden;
   z-index: var(--z-index-viewport);
+  background: var(--viewport-wrapper-background);
 }
 
 .viewport-content {
@@ -346,6 +395,40 @@ watch(
   top: 0;
   left: 0;
   display: block;
+}
+
+/* Contrast Mode */
+.contrast-mode-wrapper {
+  position: absolute;
+  top: var(--viewport-wrapper-background-top);
+  right: 15px;
+  height: 35px;
+  width: 68px;
+  border-radius: 8px;
+  background: var(--secondary-c);
+  z-index: var(--z-index-sliders);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: row;
+  gap: 5px;
+  color: var(--primary-c);
+}
+
+
+.contrast-mode-button {
+  padding: 2px;
+  border-radius: 7px;
+  border: 1px solid transparent;
+}
+
+.contrast-mode-button:hover {
+  border: var(--border-ui);
+  cursor: pointer;
+}
+
+.contrast-mode-button.selected {
+  background-color: var(--background-c);
 }
 
 /* Sliders */

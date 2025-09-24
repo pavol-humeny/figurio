@@ -983,5 +983,19 @@
     "title": "Tool is not available",
     "message": ""
   },
-  "loadingToolSettings": "Loading..."
+  "loadingToolSettings": "Loading...",
+  "viewportBackgroundMode":{
+    "normal":{
+      "tip":{
+        "title": "Normal mode",
+        "text": "Set background color of the viewport to editor background color"
+      }
+    },
+    "contrast":{
+      "tip":{
+        "title": "Contrast mode",
+        "text": "Set background color of the viewport to a  contrast color"
+      }
+    }
+  }
 }
