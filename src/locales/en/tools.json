@@ -133,7 +133,7 @@
     "label": "Select",
     "tip": "Selects objects on the image",
     "tipDisabled": "",
-    "explain": "The Select tool allows picking one or multiple objects on the image. Click on an object to select it. Hold Shift to add more objects to the selection, or drag a rectangle around multiple objects. After selecting, objects can be moved or deleted. Use the 'Select all' button to select everything, 'Deselect all' to clear the selection, and 'Delete selected objects' to remove the selected items from the canvas.",
+    "explain": "The Select tool allows picking one or multiple objects that were added to image. Click on an object to select it. Hold Shift to add more objects to the selection, or drag a rectangle around multiple objects. After selecting, objects can be moved or deleted. Use the 'Select all' button to select everything, 'Deselect all' to clear the selection, and 'Delete selected objects' to remove the selected items from the canvas.",
     "shortcut": "V",
     "settings": {
       "general": {

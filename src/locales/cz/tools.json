@@ -133,7 +133,7 @@
     "label": "Výběr",
     "tip": "Vybere objekty na obrázku",
     "tipDisabled": "",
-    "explain": "Nástroj Výběr umožňuje vybrat jeden nebo více objektů na obrázku. Kliknutím na objekt dojde k jeho výběru. Podržením klávesy Shift lze přidat další objekty do výběru nebo táhnout obdélník kolem více objektů. Po výběru je možné objekty přesunout nebo smazat. Tlačítko 'Vybrat vše' vybere všechny objekty, 'Zrušit výběr' zruší aktuální výběr a 'Smazat vybrané objekty' odstraní vybrané položky z plátna.",
+    "explain": "Nástroj Výběr umožňuje vybrat jeden nebo více objektů, které byly přidány do obrázku. Kliknutím na objekt dojde k jeho výběru. Podržením klávesy Shift lze přidat další objekty do výběru nebo táhnout obdélník kolem více objektů. Po výběru je možné objekty přesunout nebo smazat. Tlačítko 'Vybrat vše' vybere všechny objekty, 'Zrušit výběr' zruší aktuální výběr a 'Smazat vybrané objekty' odstraní vybrané položky z plátna.",
     "shortcut": "V",
     "settings": {
       "general": {
