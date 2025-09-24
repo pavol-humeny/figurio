@@ -43,7 +43,7 @@ const features = computed(() => {
  */
 const {
   selectFile
-} = useDragAndDropArea(useImageStore(), t, router)
+} = useDragAndDropArea(useImageStore(), useEditorStore(), t, router)
 
 </script>
 

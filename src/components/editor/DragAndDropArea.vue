@@ -6,22 +6,17 @@ import { useDragAndDropArea } from '@/composables/editor/useDragAndDropArea'
 import { useI18n } from 'vue-i18n'
 import { useImageStore } from '@/stores/imageStore'
 import { useRouter } from 'vue-router'
-import { useToastModal } from '@/composables/modals/useToastModal'
-import { onMounted, onUnmounted } from 'vue'
 import { useEditorStore } from '@/stores/editorStore'
+import { onMounted, onUnmounted } from 'vue'
 
 const { t } = useI18n()
 const router = useRouter()
-const imageStore = useImageStore()
 const editorStore = useEditorStore()
-
-const { showToastModal } = useToastModal()
 
 /**
  * @typedef {Object} DragAndDropProps
  * @property {boolean} isHomePage - Whether it is a drag and drop on home page (do not show button)
  */
-
 
 /** @type {DragAndDropProps} */
 const props = defineProps({
@@ -39,42 +34,21 @@ const {
   handleDragOver,
   handleDragLeave,
   handleDrop,
-  selectFile
-} = useDragAndDropArea(useImageStore(), t, router)
+  selectFile,
+  handlePaste,
+} = useDragAndDropArea(useImageStore(), useEditorStore(), t, router)
 
 /**
- * Handles paste event and extracts image file from clipboard if available
- *
- * @param {ClipboardEvent} event - Paste event
+ * Enable paste event listener on mount
  */
-const handlePaste = (event) => {
-  if (!editorStore.imageCanBePasted) return
-
-  const items = event.clipboardData?.items
-  if (!items || items.length === 0) return
-
-  const firstItem = items[0]
-  const file = firstItem.getAsFile()
-
-  if (file) {
-    imageStore.saveToImageStore([file], t, router)
-  } else {
-    showToastModal(
-      'warning',
-      t('dragAndDropArea.toast.warningPasteNotImage.title'),
-      t('dragAndDropArea.toast.warningPasteNotImage.message'),
-    )
-  }
-}
-
-
-// Register paste event listener when component is mounted
 onMounted(() => {
   editorStore.imageCanBePasted = true
   document.addEventListener('paste', handlePaste)
 })
 
-// Clean up paste event listener on unmount
+/**
+ * Disable paste event listener on unmount
+ */
 onUnmounted(() => {
   editorStore.imageCanBePasted = false
   document.removeEventListener('paste', handlePaste)
@@ -124,7 +98,6 @@ onUnmounted(() => {
 }
 
 .drag-and-drop-area.dragging {
-  /* background: var(--drag-over-c, rgba(0, 0, 0, 0.05)); */
   transform: scale(1.01);
   transition: var(--default-transition);
   opacity: 0.95;

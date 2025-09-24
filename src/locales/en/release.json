@@ -4,6 +4,15 @@
     "items": []
   },
   "versions":{
+    "4.5.2":{
+      "label": "4.5.2",
+      "date":"24.9. 2025",
+      "bugFixes": {
+        "items": [
+          "Fix issue with pasting images from clipboard"
+        ]
+      }
+    },
     "4.5.1":{
       "label": "4.5.1",
       "date":"23.9. 2025",
