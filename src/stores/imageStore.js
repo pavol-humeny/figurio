@@ -178,8 +178,10 @@ export const useImageStore = defineStore('imageStore', {
       y: 0,
     },
 
-    /** Manual background removal canvas */
+    /** Background removal canvas with feather */
     removalCanvas: null,
+    /** Background removal canvas without feather */
+    removalCanvasOriginal: null,
   }),
   getters: {
     /**

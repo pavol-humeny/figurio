@@ -4,6 +4,15 @@
     "items": []
   },
   "versions":{
+    "4.7.0":{
+      "label": "4.7.0",
+      "date":"24.9. 2025",
+      "newFeatures": {
+        "items": [
+          "Add soft edges to the selection in background removal tool"
+        ]
+      }
+    },
     "4.6.0":{
       "label": "4.6.0",
       "date":"24.9. 2025",

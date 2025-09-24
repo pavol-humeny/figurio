@@ -54,6 +54,13 @@ export function useBackgroundRemovalTool(imageStore, historyStore, workspaceStor
   const colorRemovalThreshold = ref(editorConfig.defaultThreshold)
 
   /**
+   * Watch for removal threshold changes and re-apply color selection
+   */
+  watch(colorRemovalThreshold, () => {
+    selectColorClick()
+  })
+
+  /**
    * Available options for removal threshold
    */
   const colorRemovalThresholdOptions = [
@@ -145,7 +152,7 @@ export function useBackgroundRemovalTool(imageStore, historyStore, workspaceStor
   /**
    * Whether to replace current selection with object detection result
    */
-  const replaceSelection = ref(false)
+  const replaceSelection = ref(true)
 
   /**
    * Highlight color for selection
@@ -199,6 +206,7 @@ export function useBackgroundRemovalTool(imageStore, historyStore, workspaceStor
 
     // Save canvas to store
     const imageDataToSave = ctx.getImageData(0, 0, canvas.width, canvas.height)
+    imageStore.removalCanvasOriginal = imageDataToSave
     imageStore.removalCanvas = imageDataToSave
   }
 
@@ -234,7 +242,9 @@ export function useBackgroundRemovalTool(imageStore, historyStore, workspaceStor
 
     // Save canvas to store
     const imageDataToSave = ctx.getImageData(0, 0, canvas.width, canvas.height)
-    imageStore.removalCanvas = imageDataToSave
+    imageStore.removalCanvasOriginal = imageDataToSave
+
+    applyFeatherToMask(softEdgesRadius.value)
   }
 
   /**
@@ -298,7 +308,9 @@ export function useBackgroundRemovalTool(imageStore, historyStore, workspaceStor
 
     // Save canvas to store
     const imageDataToSave = ctx.getImageData(0, 0, canvas.width, canvas.height)
-    imageStore.removalCanvas = imageDataToSave
+    imageStore.removalCanvasOriginal = imageDataToSave
+
+    applyFeatherToMask(softEdgesRadius.value)
   }
 
   //////////////////////////////////////////////////////////////////////////
@@ -456,7 +468,9 @@ export function useBackgroundRemovalTool(imageStore, historyStore, workspaceStor
 
     // Save canvas to store
     const imageDataToSave = ctx.getImageData(0, 0, canvas.width, canvas.height)
-    imageStore.removalCanvas = imageDataToSave
+    imageStore.removalCanvasOriginal = imageDataToSave
+
+    applyFeatherToMask(softEdgesRadius.value)
   }
 
   //////////////////////////////////////////////////////////////////////////
@@ -469,28 +483,37 @@ export function useBackgroundRemovalTool(imageStore, historyStore, workspaceStor
     if (!canvas) return
     const ctx = canvas.getContext('2d')
 
+    const width = canvas.width
+    const height = canvas.height
+
+    // Start from stored original mask if it exists, otherwise create empty
+    let manualImageData
+    if (imageStore.removalCanvasOriginal) {
+      manualImageData = new ImageData(
+        new Uint8ClampedArray(imageStore.removalCanvasOriginal.data),
+        width,
+        height,
+      )
+    } else {
+      manualImageData = ctx.createImageData(width, height)
+    }
+    const manualData = manualImageData.data
+
     if (replaceSelection.value) {
-      // Clear existing selection
-      ctx.clearRect(0, 0, canvas.width, canvas.height)
+      // Completely reset mask
+      manualData.fill(0)
     }
 
     // Get rendered image
     const img = imageStore.getRenderedImage({ t, renderCall: false })
     if (!img) return
 
-    const width = canvas.width
-    const height = canvas.height
-
-    // Get background color and threshold
+    // Background color + threshold
     const bgColor = hexToRgb(colorBackgroundColor.value)
-
-    // Compute threshold as fraction of max possible distance
     const maxDist = Math.sqrt(255 ** 2 + 255 ** 2 + 255 ** 2) // ~441.67
     const threshold = maxDist * colorRemovalThreshold.value
 
-    console.log('Using background color:', bgColor, 'with threshold:', threshold)
-
-    // Get image data from rendered image
+    // Draw rendered image to temp canvas
     const tempCanvas = document.createElement('canvas')
     tempCanvas.width = width
     tempCanvas.height = height
@@ -502,10 +525,7 @@ export function useBackgroundRemovalTool(imageStore, historyStore, workspaceStor
     // Get highlight color RGBA
     const { fillR, fillG, fillB, fillA } = getHighlightColorRGBA()
 
-    // Apply selection
-    const manualImageData = ctx.getImageData(0, 0, width, height)
-    const manualData = manualImageData.data
-
+    // Apply new selection on top of stored original mask
     for (let i = 0; i < data.length; i += 4) {
       const r = data[i]
       const g = data[i + 1]
@@ -520,11 +540,106 @@ export function useBackgroundRemovalTool(imageStore, historyStore, workspaceStor
       }
     }
 
-    ctx.putImageData(manualImageData, 0, 0)
+    // Save original mask to store
+    imageStore.removalCanvasOriginal = manualImageData
 
-    // Save canvas to store
-    const imageDataToSave = ctx.getImageData(0, 0, canvas.width, canvas.height)
-    imageStore.removalCanvas = imageDataToSave
+    // Apply feathering to canvas for visual display
+    applyFeatherToMask(softEdgesRadius.value)
+  }
+  // ----------------------------------
+  // Soft edges
+  // ----------------------------------
+
+  const softEdgesRadius = ref(0)
+
+  /**
+   * Watch for soft edges radius changes and re-apply feathering
+   */
+  watch(softEdgesRadius, (newRadius) => {
+    applyFeatherToMask(newRadius)
+  })
+
+  /**
+   * Feather mask (blur edges of selection) with adjustable strength
+   * @param {ImageData} maskData
+   * @param {number} width
+   * @param {number} height
+   * @param {number} strength - 0 = no blur, 1 = full blur
+   * @param {number} radius - radius in pixels
+   */
+  const featherMask = (maskData, width, height, strength = 0, radius = 2) => {
+    if (radius <= 0 || strength <= 0) return maskData // No feathering
+
+    const data = maskData.data
+    const newData = new Uint8ClampedArray(data.length)
+
+    for (let y = 0; y < height; y++) {
+      for (let x = 0; x < width; x++) {
+        let rSum = 0,
+          gSum = 0,
+          bSum = 0,
+          aSum = 0,
+          count = 0
+
+        for (let dy = -radius; dy <= radius; dy++) {
+          for (let dx = -radius; dx <= radius; dx++) {
+            const nx = x + dx
+            const ny = y + dy
+            if (nx >= 0 && nx < width && ny >= 0 && ny < height) {
+              const idx = (ny * width + nx) * 4
+              rSum += data[idx]
+              gSum += data[idx + 1]
+              bSum += data[idx + 2]
+              aSum += data[idx + 3]
+              count++
+            }
+          }
+        }
+
+        const idx = (y * width + x) * 4
+        const rBlur = rSum / count
+        const gBlur = gSum / count
+        const bBlur = bSum / count
+        const aBlur = aSum / count
+
+        // Mix original value with blurred value according to strength
+        newData[idx] = data[idx] * (1 - strength) + rBlur * strength
+        newData[idx + 1] = data[idx + 1] * (1 - strength) + gBlur * strength
+        newData[idx + 2] = data[idx + 2] * (1 - strength) + bBlur * strength
+        newData[idx + 3] = data[idx + 3] * (1 - strength) + aBlur * strength
+      }
+    }
+
+    maskData.data.set(newData)
+    return maskData
+  }
+
+  /**
+   * Apply feathering (soft edges) on current removal mask from imageStore
+   * @param {number} radius - Feather radius in pixels
+   */
+  const applyFeatherToMask = (radius) => {
+    const canvas = document.getElementById('removalCanvas')
+    if (!canvas) return
+    const ctx = canvas.getContext('2d')
+
+    if (!imageStore.removalCanvasOriginal) return
+
+    // Copy the original mask so store is not modified
+    const maskData = new ImageData(
+      new Uint8ClampedArray(imageStore.removalCanvasOriginal.data),
+      canvas.width,
+      canvas.height,
+    )
+
+    // Apply feathering
+    const featheredData = featherMask(maskData, canvas.width, canvas.height, radius)
+
+    // Draw feathered mask to canvas
+    ctx.putImageData(featheredData, 0, 0)
+
+    // Save feathered result separately
+    imageStore.removalCanvas = featheredData
   }
 
   // ----------------------------------
@@ -585,13 +700,6 @@ export function useBackgroundRemovalTool(imageStore, historyStore, workspaceStor
       }
     }
 
-    // if (removalType === 'color') {
-    //   // applyColorRemovalRender(colorBackgroundColor.value, colorRemovalThreshold.value)
-    //   applyRemovalRender()
-    // } else if (removalType === 'manual') {
-    //   applyRemovalRender()
-    // } else if (removalType === 'objectDetection') {
-    // }
     applyRemovalRender()
   }
 
@@ -630,19 +738,35 @@ export function useBackgroundRemovalTool(imageStore, historyStore, workspaceStor
     } = getBackgroundColorRGBA(replaceWithBackgroundColor.value)
 
     // Apply mask: make pixels transparent where mask is red
-    for (let i = 0; i < data.length; i += 4) {
-      const maskR = maskPixels[i]
-      const maskG = maskPixels[i + 1]
-      const maskB = maskPixels[i + 2]
-      const maskA = maskPixels[i + 3]
+    // for (let i = 0; i < data.length; i += 4) {
+    //   const maskR = maskPixels[i]
+    //   const maskG = maskPixels[i + 1]
+    //   const maskB = maskPixels[i + 2]
+    //   const maskA = maskPixels[i + 3]
 
-      // If the pixel is mask
-      const { fillR, fillG, fillB } = getHighlightColorRGBA()
-      if (maskA > 0 && maskR === fillR && maskG === fillG && maskB === fillB) {
-        data[i] = bgR
-        data[i + 1] = bgG
-        data[i + 2] = bgB
-        data[i + 3] = bgA
+    //   // If the pixel is mask
+    //   const { fillR, fillG, fillB } = getHighlightColorRGBA()
+    //   if (maskA > 0 && maskR === fillR && maskG === fillG && maskB === fillB) {
+    //     data[i] = bgR
+    //     data[i + 1] = bgG
+    //     data[i + 2] = bgB
+    //     data[i + 3] = bgA
+    //   }
+    // }
+
+    // Apply mask: remove/replace based on mask alpha
+    for (let i = 0; i < data.length; i += 4) {
+      const maskA = maskPixels[i + 3] // alpha channel
+
+      if (maskA > 0) {
+        // Use alpha as blending factor
+        const alpha = maskA / 255
+
+        // Linear blend between background and original pixel
+        data[i] = data[i] * (1 - alpha) + bgR * alpha
+        data[i + 1] = data[i + 1] * (1 - alpha) + bgG * alpha
+        data[i + 2] = data[i + 2] * (1 - alpha) + bgB * alpha
+        data[i + 3] = data[i + 3] * (1 - alpha) + bgA * alpha
       }
     }
 
@@ -674,5 +798,6 @@ export function useBackgroundRemovalTool(imageStore, historyStore, workspaceStor
     highlightRemovedPixels,
     backgroundReplacementColor,
     replaceWithBackgroundColor,
+    softEdgesRadius,
   }
 }

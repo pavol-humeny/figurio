@@ -85,6 +85,10 @@
           "text": "Clear selection",
           "tip": "Clear selected area"
         },
+        "edgeSoftness": {
+          "label": "Soft edge radius",
+          "tip": "Adjust the radius of the soft edge to create a smoother transition between the removed and remaining areas. A higher value results in a more gradual fade effect."
+        },
         "invertSelectionButton": {
           "text": "Invert selection",
           "tip": "Invert the current selection"

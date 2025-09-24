@@ -6,6 +6,15 @@
     ]
   },
   "versions": {
+    "4.7.0":{
+      "label": "4.7.0",
+      "date":"24.9. 2025",
+      "newFeatures": {
+        "items": [
+          "Pridanie mäkkých okrajov k výberu v nástroji na odstránenie pozadia"
+        ]
+      }
+    },
     "4.6.0":{
       "label": "4.6.0",
       "date":"24.9. 2025",

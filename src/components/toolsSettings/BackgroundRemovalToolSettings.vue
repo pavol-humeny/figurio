@@ -40,6 +40,7 @@ const {
   highlightRemovedPixels,
   backgroundReplacementColor,
   replaceWithBackgroundColor,
+  softEdgesRadius,
 } = useBackgroundRemovalTool(
   useImageStore(),
   useHistoryStore(),
@@ -103,6 +104,17 @@ const tabs = ['color', 'manual', 'objectDetection']
           </div>
         </div>
 
+        <!-- Soft edge radius -->
+        <div class="settings-content-wrapper">
+          <div class="content-wrapper">
+            <div class="content-title">
+              {{ $t('tools.backgroundRemoval.settings.manual.edgeSoftness.label') }}
+            </div>
+            <NumberDropdownInput v-model="softEdgesRadius" :min="0" :max="1" :step="0.1"
+              :options="[0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1]"
+              :tip="$t('tools.backgroundRemoval.settings.manual.edgeSoftness.tip')" position="bottom-left" />
+          </div>
+        </div>
 
         <!-- Select color -->
         <div class="settings-content-wrapper">
@@ -111,6 +123,7 @@ const tabs = ['color', 'manual', 'objectDetection']
               @click="selectColorClick()" main />
           </div>
         </div>
+
 
         <!-- Clear all button -->
         <div class="settings-content-wrapper">
@@ -235,6 +248,18 @@ const tabs = ['color', 'manual', 'objectDetection']
           </div>
         </div>
 
+        <!-- Soft edge radius -->
+        <div class="settings-content-wrapper">
+          <div class="content-wrapper">
+            <div class="content-title">
+              {{ $t('tools.backgroundRemoval.settings.manual.edgeSoftness.label') }}
+            </div>
+            <NumberDropdownInput v-model="softEdgesRadius" :min="0" :max="1" :step="0.1"
+              :options="[0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1]"
+              :tip="$t('tools.backgroundRemoval.settings.manual.edgeSoftness.tip')" position="bottom-left" />
+          </div>
+        </div>
+
         <!-- Clear all button -->
         <div class="settings-content-wrapper">
           <div class="content-wrapper">
@@ -338,6 +363,18 @@ const tabs = ['color', 'manual', 'objectDetection']
             <DefaultButton :text="$t('tools.backgroundRemoval.settings.objectDetection.detectButton.text')"
               :tip="$t('tools.backgroundRemoval.settings.objectDetection.detectButton.tip')" position="bottom-left"
               @click="detectObjectsClick" main />
+          </div>
+        </div>
+
+        <!-- Soft edge radius -->
+        <div class="settings-content-wrapper">
+          <div class="content-wrapper">
+            <div class="content-title">
+              {{ $t('tools.backgroundRemoval.settings.manual.edgeSoftness.label') }}
+            </div>
+            <NumberDropdownInput v-model="softEdgesRadius" :min="0" :max="1" :step="0.1"
+              :options="[0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1]"
+              :tip="$t('tools.backgroundRemoval.settings.manual.edgeSoftness.tip')" position="bottom-left" />
           </div>
         </div>
 

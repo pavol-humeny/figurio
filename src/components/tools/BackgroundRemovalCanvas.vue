@@ -227,6 +227,7 @@ const onMouseUpGlobal = () => {
 
     // Store the current pixels of the manual canvas
     const imageDataToSave = ctx.getImageData(0, 0, manualCanvas.width, manualCanvas.height)
+    imageStore.removalCanvasOriginal = imageDataToSave
     imageStore.removalCanvas = imageDataToSave
 
     // Push snapshot to history

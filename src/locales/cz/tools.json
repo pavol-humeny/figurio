@@ -85,6 +85,10 @@
           "text": "Vymazat výběr",
           "tip": "Vymaže vybranou oblast"
         },
+        "edgeSoftness": {
+          "label": "Poloměr měkkého okraje",
+          "tip": "Upravte poloměr měkkého okraje pro vytvoření plynulejšího přechodu mezi odstraněnými a zbývajícími oblastmi. Vyšší hodnota vytváří postupnější efekt prolínání."
+        },
         "invertSelectionButton": {
           "text": "Invertovat výběr",
           "tip": "Invertuje aktuální výběr"
