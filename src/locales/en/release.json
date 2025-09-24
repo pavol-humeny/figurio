@@ -9,7 +9,8 @@
       "date":"24.9. 2025",
       "improvements": {
         "items": [
-          "Do not center image when switching between files and zoom mode is same"
+          "Do not center image when switching between files and zoom mode is same",
+          "Enable multiple file uploads"
         ]
       }
     },

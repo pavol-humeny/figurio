@@ -881,14 +881,14 @@ export const useImageStore = defineStore('imageStore', {
       if (globalConfig.featureFlags.enableImageLoad === false) return
       if (!files) return
 
-      if (files.length > 1) {
-        showToastModal(
-          'error',
-          t('imageStore.toast.errorMultipleFiles.title'),
-          t('imageStore.toast.errorMultipleFiles.message'),
-        )
-        return
-      }
+      // if (files.length > 1) {
+      //   showToastModal(
+      //     'error',
+      //     t('imageStore.toast.errorMultipleFiles.title'),
+      //     t('imageStore.toast.errorMultipleFiles.message'),
+      //   )
+      //   return
+      // }
 
       const result = await this.checkFile(files[0])
 
@@ -920,11 +920,41 @@ export const useImageStore = defineStore('imageStore', {
       const input = document.createElement('input')
       input.type = 'file'
       input.accept = '.png, .jpg, .jpeg, .pdf, .webp'
+      input.multiple = true
       input.style.display = 'none'
 
-      input.addEventListener('change', () => {
-        if (input.files && input.files.length > 0) {
-          this.saveToImageStore(input.files, t, router)
+      input.addEventListener('change', async () => {
+        if (!input.files || input.files.length === 0) return
+
+        const filesArray = Array.from(input.files)
+        const hasPdf = filesArray.some((file) => file.type === 'application/pdf')
+
+        // Only one PDF file allowed
+        if (hasPdf && filesArray.length > 1) {
+          showToastModal(
+            'error',
+            t('imageStore.toast.errorPdfMultipleFiles.title'),
+            t('imageStore.toast.errorPdfMultipleFiles.message'),
+          )
+          return
+        }
+
+        // Limit number of files if no PDF is present
+        if (!hasPdf && filesArray.length > globalConfig.maxNumberOfFilesToUploadSimultaneously) {
+          showToastModal(
+            'error',
+            t('imageStore.toast.errorMultipleFiles.title'),
+            t('imageStore.toast.errorMultipleFiles.message', {
+              maxFiles: globalConfig.maxNumberOfFilesToUploadSimultaneously,
+            }),
+          )
+          return
+        }
+
+        // Process files sequentially
+        for (const file of filesArray) {
+          await this.saveToImageStore([file], t, router)
+          await new Promise((resolve) => setTimeout(resolve, 200)) // Small delay to ensure UI updates
         }
       })
 

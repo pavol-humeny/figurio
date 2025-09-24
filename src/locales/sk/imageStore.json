@@ -14,7 +14,11 @@
     },
     "errorMultipleFiles": {
       "title": "Vybrané viacero súborov",
-      "message": "Prosím vyberte iba jeden súbor naraz."
+      "message": "Prosím vyberte iba {maxFiles} súborov naraz."
+    },
+    "errorPdfMultipleFiles":{
+      "title": "Viacero PDF súborov",
+      "message": "Prosím vyberte iba jeden PDF súbor naraz."
     },
     "successFileUploaded": {
       "title": "Súbor bol úspešne nahraný",

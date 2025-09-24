@@ -14,7 +14,11 @@
     },
     "errorMultipleFiles": {
       "title": "Multiple files selected",
-      "message": "Please select only one file at a time."
+      "message": "Please select only {maxFiles} files at a time."
+    },
+    "errorPdfMultipleFiles":{
+      "title": "Multiple PDF files",
+      "message": "Please select only one PDF file at a time."
     },
     "successFileUploaded": {
       "title": "File uploaded successfully",

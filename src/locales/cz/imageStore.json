@@ -14,7 +14,11 @@
     },
     "errorMultipleFiles": {
       "title": "Vybráno více souborů",
-      "message": "Prosím vyberte pouze jeden soubor najednou."
+      "message": "Prosím vyberte pouze {maxFiles} souborů najednou."
+    },
+    "errorPdfMultipleFiles":{
+      "title": "Více PDF souborů",
+      "message": "Prosím vyberte pouze jeden PDF soubor najednou."
     },
     "successFileUploaded": {
       "title": "Soubor úspěšně nahrán",

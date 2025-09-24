@@ -6,6 +6,16 @@
     ]
   },
   "versions": {
+    "4.7.2":{
+      "label": "4.7.2",
+      "date":"24.9. 2025",
+      "improvements": {
+        "items": [
+          "Nezarovnávat obrázek na střed při přepínání mezi soubory, pokud je režim přiblížení stejný",
+          "Povolení nahrávání více souborů najednou"
+        ]
+      }
+    },
     "4.7.1":{
       "label": "4.7.1",
       "date":"24.9. 2025",

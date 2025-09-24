@@ -47,6 +47,9 @@ export const globalConfig = {
     notEnabledMessage: 'This feature is currently not available.',
   },
 
+  // Max number of files to upload simultaneously
+  maxNumberOfFilesToUploadSimultaneously: 5,
+
   // API
   API_BASE: 'https://bp-api-ft1e.onrender.com',
 
