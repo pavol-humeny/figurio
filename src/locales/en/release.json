@@ -4,6 +4,15 @@
     "items": []
   },
   "versions":{
+    "4.7.1":{
+      "label": "4.7.1",
+      "date":"24.9. 2025",
+      "bugFixes": {
+        "items": [
+          "Use cropped image after cropping in other tools"
+        ]
+      }
+    },
     "4.7.0":{
       "label": "4.7.0",
       "date":"24.9. 2025",

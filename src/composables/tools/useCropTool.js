@@ -1208,6 +1208,10 @@ export function useCropTool(
 
     // Update rendered image and preview URL
     imageStore.setRenderedImage(canvas)
+    imageStore.originalImage = canvas
+    imageStore.originalFileDimensions.width = width
+    imageStore.originalFileDimensions.height = height
+    imageStore.originalFileDimensions.fileAspectRatio = width / height || 1
 
     // Crop overlay svg objects
     if (imageStore.overlayImage) {

@@ -6,6 +6,15 @@
     ]
   },
   "versions": {
+    "4.7.1":{
+      "label": "4.7.1",
+      "date":"24.9. 2025",
+      "bugFixes": {
+        "items": [
+          "Použitie orezaného obrázka po orezaní v iných nástrojoch"
+        ]
+      }
+    },
     "4.7.0":{
       "label": "4.7.0",
       "date":"24.9. 2025",
