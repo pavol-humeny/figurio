@@ -4,6 +4,15 @@
     "items": []
   },
   "versions":{
+    "4.7.2":{
+      "label": "4.7.2",
+      "date":"24.9. 2025",
+      "improvements": {
+        "items": [
+          "Do not center image when switching between files and zoom mode is same"
+        ]
+      }
+    },
     "4.7.1":{
       "label": "4.7.1",
       "date":"24.9. 2025",

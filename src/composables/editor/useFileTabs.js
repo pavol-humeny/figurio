@@ -51,9 +51,9 @@ export function useFileTabs(uiStore, viewportStore, imageStore, editorStore, t) 
 
       // Reset when switching tabs
       // To reset rulers position
-      viewportStore.resetZoom()
-      viewportStore.resetPan()
-      viewportStore.shouldFitToScreen = true
+      // viewportStore.resetZoom()
+      // viewportStore.resetPan()
+      // viewportStore.shouldFitToScreen = true
 
       // To hide artifacts
       imageStore.isArtifactsVisible = false
