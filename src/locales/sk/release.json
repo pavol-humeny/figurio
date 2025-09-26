@@ -6,6 +6,15 @@
     ]
   },
   "versions": {
+    "4.7.3":{
+      "label": "4.7.3",
+      "date":"24.9. 2025",
+      "improvements": {
+        "items": [
+          "Nástroj rám: Nastavenie histórie iba po uvoľnení myši pri zmene násobiteľa záhlavia/patičky"
+        ]
+      }
+    },
     "4.7.2":{
       "label": "4.7.2",
       "date":"24.9. 2025",

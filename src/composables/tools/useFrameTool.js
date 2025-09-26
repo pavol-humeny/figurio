@@ -40,6 +40,16 @@ export function useFrameTool(imageStore, historyStore, editorStore, t) {
   const headerFooterMultiplier = ref(imageStore.frame.headerFooterMultiplier)
 
   /**
+   * Watch for headerFooterMultiplier changes and update local ref
+   */
+  watch(
+    () => imageStore.frame.headerFooterMultiplier,
+    (newMultiplier) => {
+      headerFooterMultiplier.value = newMultiplier
+    },
+  )
+
+  /**
    * Frame width
    */
   const frameWidth = ref(imageStore.frame.width || 0)
@@ -275,9 +285,9 @@ export function useFrameTool(imageStore, historyStore, editorStore, t) {
    * Set header/footer size multiplier
    * @param {number} value - New header/footer size multiplier
    */
-  const setHeaderFooterMultiplier = (value) => {
+  const setHeaderFooterMultiplier = (value, commit = true) => {
     headerFooterMultiplier.value = value
-    applyFrame()
+    applyFrame(commit)
   }
 
   /**

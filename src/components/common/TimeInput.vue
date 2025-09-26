@@ -1,4 +1,4 @@
-<script setup>
+DefaultSlider<script setup>
 import ItemTip from './ItemTip.vue'
 import { useTimeInput } from '@/composables/common/useTimeInput'
 

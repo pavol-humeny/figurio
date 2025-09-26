@@ -155,7 +155,8 @@ const {
             </div>
             <DefaultSlider v-model="headerFooterMultiplier" :min="editorConfig.minHeaderFooterMultiplier"
               :max="editorConfig.maxHeaderFooterMultiplier" :step="editorConfig.stepHeaderFooterMultiplier"
-              @update="setHeaderFooterMultiplier(headerFooterMultiplier)" :onReset="resetHeaderFooterMultiplier"
+              @update="setHeaderFooterMultiplier(headerFooterMultiplier, false)"
+              @commit="setHeaderFooterMultiplier(headerFooterMultiplier, true)" :onReset="resetHeaderFooterMultiplier"
               showValue />
           </div>
         </div>
