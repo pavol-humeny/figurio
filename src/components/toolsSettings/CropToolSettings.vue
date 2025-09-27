@@ -175,26 +175,43 @@ const {
                 {{ $t('tools.crop.settings.general.autoCrop.manualAdjustments.title') }}
               </p>
             </div>
-            <div class="content-title">
-              <p>{{ $t('tools.crop.settings.general.autoCrop.manualAdjustments.top') }}</p>
+            <div class="manual-adjustment-wrapper">
+              <div class="grid-3-3">
+
+                <!-- Top -->
+                <div class="dpad top">
+                  <StepperInput v-model="manualIndents.topIndent" :min="manualIndents.topIndentMin"
+                    :max="manualIndents.topIndentMax" :step="1" @update="recalculateCropBox" type="block"
+                    :tip="$t('tools.crop.settings.general.autoCrop.manualAdjustments.top')"
+                    :onReset="() => manualIndents.topIndent = 0" />
+                </div>
+
+                <!-- Left -->
+                <div class="dpad left">
+
+                  <StepperInput v-model="manualIndents.leftIndent" :min="manualIndents.leftIndentMin"
+                    :max="manualIndents.leftIndentMax" :step="1" @update="recalculateCropBox" type="block"
+                    :tip="$t('tools.crop.settings.general.autoCrop.manualAdjustments.left')"
+                    :onReset="() => manualIndents.leftIndent = 0" />
+                </div>
+
+                <!-- Right -->
+                <div class="dpad right">
+                  <StepperInput v-model="manualIndents.rightIndent" :min="manualIndents.rightIndentMin"
+                    :max="manualIndents.rightIndentMax" :step="1" @update="recalculateCropBox" type="block"
+                    :tip="$t('tools.crop.settings.general.autoCrop.manualAdjustments.right')"
+                    :onReset="() => manualIndents.rightIndent = 0" />
+                </div>
+
+                <!-- Bottom -->
+                <div class="dpad bottom">
+                  <StepperInput v-model="manualIndents.bottomIndent" :min="manualIndents.bottomIndentMin"
+                    :max="manualIndents.bottomIndentMax" :step="1" @update="recalculateCropBox" type="block"
+                    :tip="$t('tools.crop.settings.general.autoCrop.manualAdjustments.bottom')"
+                    :onReset="() => manualIndents.bottomIndent = 0" />
+                </div>
+              </div>
             </div>
-            <StepperInput v-model="manualIndents.topIndent" :min="manualIndents.topIndentMin"
-              :max="manualIndents.topIndentMax" :step="1" @update="recalculateCropBox" />
-            <div class="content-title">
-              <p>{{ $t('tools.crop.settings.general.autoCrop.manualAdjustments.right') }}</p>
-            </div>
-            <StepperInput v-model="manualIndents.rightIndent" :min="manualIndents.rightIndentMin"
-              :max="manualIndents.rightIndentMax" :step="1" @update="recalculateCropBox" />
-            <div class="content-title">
-              <p>{{ $t('tools.crop.settings.general.autoCrop.manualAdjustments.bottom') }}</p>
-            </div>
-            <StepperInput v-model="manualIndents.bottomIndent" :min="manualIndents.bottomIndentMin"
-              :max="manualIndents.bottomIndentMax" :step="1" @update="recalculateCropBox" />
-            <div class="content-title">
-              <p>{{ $t('tools.crop.settings.general.autoCrop.manualAdjustments.left') }}</p>
-            </div>
-            <StepperInput v-model="manualIndents.leftIndent" :min="manualIndents.leftIndentMin"
-              :max="manualIndents.leftIndentMax" :step="1" @update="recalculateCropBox" />
           </div>
         </div>
 
@@ -251,4 +268,47 @@ const {
   </div>
 </template>
 
-<style scoped></style>
+<style scoped>
+.manual-adjustment-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.grid-3-3 {
+  display: grid;
+  gap: 5px;
+  position: relative;
+}
+
+.dpad {
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 6px;
+  color: var(--text-c);
+  font-weight: bold;
+}
+
+.top {
+  grid-column: 2;
+  grid-row: 1;
+}
+
+.left {
+  grid-column: 1;
+  grid-row: 2;
+}
+
+.right {
+  grid-column: 3;
+  grid-row: 2;
+}
+
+.bottom {
+  grid-column: 2;
+  grid-row: 3;
+}
+</style>

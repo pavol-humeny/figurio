@@ -151,6 +151,7 @@ export function useStepperInput(props, emit) {
     } else if (event.deltaY > 0) {
       decrease()
     }
+    event.preventDefault()
   }
 
   return {

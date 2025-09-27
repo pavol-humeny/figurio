@@ -4,10 +4,19 @@
     "items": []
   },
   "versions":{
+    "4.7.4":{
+      "label": "4.7.4",
+      "date":"24.9. 2025",
+      "improvements": {
+        "items": [
+          "New manual adjustments UI layout in crop tool"
+        ]
+      }
+    },
     "4.7.3":{
       "label": "4.7.3",
       "date":"24.9. 2025",
-      "improvements": {
+      "bugFixes": {
         "items": [
           "Frame tool set history snapshot only after mouse up when changing header/footer multiplier"
         ]

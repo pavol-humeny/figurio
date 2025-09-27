@@ -99,6 +99,23 @@ export function useCropTool(
   // -------------------------------
   // Manual crop
   // -------------------------------
+
+  /**
+   * Watch for changes in manualIndents and recalculate cropBox
+   */
+  watch(
+    manualIndents,
+    (newIndents) => {
+      cropBox.value.x = newIndents.leftIndent
+      cropBox.value.y = newIndents.topIndent
+      cropBox.value.width =
+        imageStore.fileDimensions.width - newIndents.rightIndent - newIndents.leftIndent
+      cropBox.value.height =
+        imageStore.fileDimensions.height - newIndents.bottomIndent - newIndents.topIndent
+    },
+    { deep: true },
+  )
+
   /**
    * Watch for changes in image dimensions and update crop box accordingly
    */

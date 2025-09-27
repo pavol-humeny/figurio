@@ -6,6 +6,15 @@
     ]
   },
   "versions": {
+    "4.7.4":{
+      "label": "4.7.4",
+      "date":"24.9. 2025",
+      "improvements": {
+        "items": [
+          "Nové rozložení uživatelského rozhraní pro manuální úpravy v nástroji ořezu"
+        ]
+      }
+    },
     "4.7.3":{
       "label": "4.7.3",
       "date":"24.9. 2025",
