@@ -22,6 +22,7 @@ import { useWorkspaceStore } from '@/stores/workspaceStore'
 import { useFrameTool } from '@/composables/tools/useFrameTool'
 import ItemTip from '../common/ItemTip.vue'
 import BaseIcon from '../icons/BaseIcon.vue'
+import BrushToolCanvas from '../tools/BrushToolCanvas.vue'
 
 const { t } = useI18n()
 const uiStore = useUiStore()
@@ -236,7 +237,7 @@ watch(
             class="image-canvas" />
           <div v-else-if="imageStore.fileType === 'pdf'" ref="pdfContainerRef" class="pdf-viewer"></div>
 
-          <img v-if="imageStore.overlayImage !== null" ref="overlayImageRef" class="overlay-image-canvas" />
+          <!-- <img v-if="imageStore.overlayImage !== null" ref="overlayImageRef" class="overlay-image-canvas" /> -->
 
           <!-- Canvas for artifacts -->
           <canvas v-if="editorStore.selectedToolKey === 'crop' && imageStore.fileType === 'image'"
@@ -278,6 +279,10 @@ watch(
             editorStore.selectedToolKey === 'preset' && editorStore.selectedSubToolKey === 'crop'" />
 
           <BackgroundRemovalCanvas v-if="editorStore.selectedToolKey === 'backgroundRemoval'" />
+
+          <BrushToolCanvas  :style="{
+            pointerEvents: editorStore.selectedToolKey === 'brush' ? 'auto' : 'none'
+          }" />
         </div>
       </ContextMenu>
     </div>

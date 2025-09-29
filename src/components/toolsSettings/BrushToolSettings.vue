@@ -1,14 +1,22 @@
 <script setup>
 import ToolsSettingsTabs from './ToolsSettingsTabs.vue'
 import DefaultButton from '../common/DefaultButton.vue'
-import { useGrayscaleTool } from '@/composables/tools/useGrayscaleTool'
 import { useImageStore } from '@/stores/imageStore'
 import { useHistoryStore } from '@/stores/historyStore'
 import { useI18n } from 'vue-i18n'
 import ExplainItem from '../common/ExplainItem.vue'
+import { useBrushTool } from '@/composables/tools/useBrushTool'
 
 const { t } = useI18n()
 
+const {
+  brushToolType,
+  brushToolSize,
+} = useBrushTool(
+  useImageStore(),
+  useHistoryStore(),
+  t,
+)
 
 </script>
 

@@ -212,7 +212,24 @@ export function useImageRenderer(
 
     if (overlayImageRef.value) {
       if (imageStore.overlayImage !== null) {
+        console.warn('Rendering OVERLAY image...')
         overlayImageRef.value.src = imageStore.overlayImage.toDataURL()
+      }
+    }
+
+    const canvas = document.getElementById('brushCanvas')
+
+    if (imageStore.overlayImage && canvas) {
+      // await new Promise((resolve) => setTimeout(resolve, 1))
+
+      const ctx = canvas.getContext('2d')
+      // ctx.clearRect(0, 0, canvas.width, canvas.height)
+      ctx.drawImage(imageStore.overlayImage, 0, 0, canvas.width, canvas.height)
+    } else {
+      if (canvas) {
+        console.warn('No overlay image, clearing brush canvas...')
+        const ctx = canvas.getContext('2d')
+        ctx.clearRect(0, 0, canvas.width, canvas.height)
       }
     }
 
@@ -267,9 +284,10 @@ export function useImageRenderer(
       () => imageStore.getRenderedImage({ t, renderCall: false }),
       () => imageStore.pdfPageBytes,
       () => imageStore.fileType,
+      () => imageStore.overlayImage,
     ],
-    ([newImage, newPdfBytes, newFileType]) => {
-      if (newImage || newPdfBytes || newFileType) {
+    ([newImage, newPdfBytes, newFileType, newOverlayImage]) => {
+      if (newImage || newPdfBytes || newFileType || newOverlayImage) {
         console.log('#################### Image or PDF or file Type changed, re-rendering all...')
         renderAll()
       }
