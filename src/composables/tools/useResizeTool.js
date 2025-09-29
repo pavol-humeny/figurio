@@ -265,6 +265,8 @@ export function useResizeTool(imageStore, historyStore, viewportStore, t) {
       overlayCtx.drawImage(oldOverlay, 0, 0, width, height)
 
       imageStore.overlayImage = overlayCanvas
+      imageStore.overlayImageExport = overlayCanvas
+      imageStore.overlayImagePreview = overlayCanvas
     }
 
     // Center image

@@ -1451,6 +1451,8 @@ export function useCropTool(
       )
 
       imageStore.overlayImage = overlayCanvas
+      imageStore.overlayImageExport = overlayCanvas
+      imageStore.overlayImagePreview = overlayCanvas
     }
 
     // Update file dimensions

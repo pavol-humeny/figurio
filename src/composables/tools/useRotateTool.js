@@ -161,7 +161,7 @@ export function useRotateTool(imageStore, historyStore, t) {
     imageStore.fileDimensions.fileAspectRatio = rotatedWidth / rotatedHeight || 1
     imageStore.newFileDimensions = { ...imageStore.fileDimensions }
 
-    // Rotate overlay svg objects 
+    // Rotate overlay svg objects
     if (imageStore.overlayImage !== null) {
       const oldOverlay = imageStore.overlayImage
       const overlayCanvas = document.createElement('canvas')
@@ -174,7 +174,12 @@ export function useRotateTool(imageStore, historyStore, t) {
       overlayCtx.drawImage(oldOverlay, -oldOverlay.width / 2, -oldOverlay.height / 2)
 
       imageStore.overlayImage = overlayCanvas
+      imageStore.overlayImageExport = overlayCanvas
+      imageStore.overlayImagePreview = overlayCanvas
     }
+
+    // wait for image to be set
+    await new Promise((resolve) => setTimeout(resolve, 1))
   }
 
   return {

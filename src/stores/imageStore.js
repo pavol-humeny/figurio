@@ -95,6 +95,12 @@ export const useImageStore = defineStore('imageStore', {
     /** Overlay image - used for displaying svg objects after rasterization in pdf file */
     overlayImage: null,
 
+    /** Overlay image for preview - contains objects that can be further modified */
+    overlayImagePreview: null,
+
+    /** Overlay image - contains objects that can not be further modified */
+    overlayImageExport: null,
+
     /** Overlay image for magnify area svg objects - used for displaying magnified areas in pdf export */
     magnifyOverlayImage: null,
 
@@ -452,6 +458,8 @@ export const useImageStore = defineStore('imageStore', {
       this.setRenderedImage(null)
       this.newRenderedImage = null
       this.overlayImage = null
+      this.overlayImageExport = null
+      this.overlayImagePreview = null
       this.removalCanvas = null
     },
 
@@ -494,6 +502,8 @@ export const useImageStore = defineStore('imageStore', {
       this.tmpRenderedImage = null
 
       this.overlayImage = null
+      this.overlayImageExport = null
+      this.overlayImagePreview = null
 
       this.newRenderedImage = null
 
@@ -1846,10 +1856,6 @@ export const useImageStore = defineStore('imageStore', {
         </svg>
       `.trim()
 
-      // Convert SVG string to image
-      const svgBlob = new Blob([svgString], { type: 'image/svg+xml' })
-      const svgUrl = URL.createObjectURL(svgBlob)
-
       // Prepare canvas and context
       const canvas = document.createElement('canvas')
       canvas.width = usedWidth
@@ -1860,41 +1866,47 @@ export const useImageStore = defineStore('imageStore', {
       ctx.drawImage(this.getRenderedImage({ t, renderCall: true }), 0, 0, usedWidth, usedHeight)
 
       // Draw SVG overlay on top of the image
+      // await new Promise((resolve, reject) => {
+      //   const img = new Image()
+      //   img.onload = () => {
+      //     ctx.drawImage(img, 0, 0)
+      //     URL.revokeObjectURL(svgUrl)
+      //     resolve()
+      //   }
+      //   img.onerror = (e) => {
+      //     console.error('Error loading SVG overlay image', e)
+      //     reject(e)
+      //   }
+      //   img.src = svgUrl
+      // })
+
+      // Create overlay image from SVG (without base image)
+      const overlayCanvas = document.createElement('canvas')
+      overlayCanvas.width = usedWidth
+      overlayCanvas.height = usedHeight
+      const overlayCtx = overlayCanvas.getContext('2d')
+
+      // If there is already an overlay image, draw it first
+      if (this.overlayImageExport) {
+        overlayCtx.drawImage(this.overlayImageExport, 0, 0, usedWidth, usedHeight)
+      }
+
+      const svgBlob = new Blob([svgString], { type: 'image/svg+xml' })
+      const svgUrl = URL.createObjectURL(svgBlob)
+
       await new Promise((resolve, reject) => {
-        const img = new Image()
-        img.onload = () => {
-          ctx.drawImage(img, 0, 0)
+        const overlayImg = new Image()
+        overlayImg.onload = () => {
+          overlayCtx.drawImage(overlayImg, 0, 0)
           URL.revokeObjectURL(svgUrl)
           resolve()
         }
-        img.onerror = (e) => {
-          console.error('Error loading SVG overlay image', e)
-          reject(e)
-        }
-        img.src = svgUrl
+        overlayImg.onerror = reject
+        overlayImg.src = svgUrl
       })
 
-      // Create overlay if it is pdf image
-      if (this.fileType === 'pdf' && generateOverlay) {
-        const overlayCanvas = document.createElement('canvas')
-        overlayCanvas.width = usedWidth
-        overlayCanvas.height = usedHeight
-        const overlayCtx = overlayCanvas.getContext('2d')
-
-        const svgBlob2 = new Blob([svgString], { type: 'image/svg+xml' })
-        const svgUrl2 = URL.createObjectURL(svgBlob2)
-
-        await new Promise((resolve, reject) => {
-          const overlayImg = new Image()
-          overlayImg.onload = () => {
-            overlayCtx.drawImage(overlayImg, 0, 0)
-            URL.revokeObjectURL(svgUrl2)
-            resolve()
-          }
-          overlayImg.onerror = reject
-          overlayImg.src = svgUrl2
-        })
-
+      if (generateOverlay) {
+        this.overlayImageExport = overlayCanvas
         this.overlayImage = overlayCanvas
       }
 
@@ -1949,6 +1961,7 @@ export const useImageStore = defineStore('imageStore', {
       // Store result either as renderedImage or newRenderedImage
       if (storeAsNew) {
         this.newRenderedImage = canvas
+        this.overlayImagePreview = overlayCanvas
       } else {
         this.setRenderedImage(canvas)
         this.newRenderedImage = null
@@ -2024,7 +2037,25 @@ export const useImageStore = defineStore('imageStore', {
 
         const quality = this.newFileDimensions.quality / 100
 
-        this.previewUrl = baseImage.toDataURL(mimeType, quality)
+        // this.previewUrl = baseImage.toDataURL(mimeType, quality)
+        if (renderAsRaster && this.overlayImagePreview) {
+          // Merge base image + overlay into a new canvas
+          const mergeCanvas = document.createElement('canvas')
+          mergeCanvas.width = baseImage.width
+          mergeCanvas.height = baseImage.height
+          const mergeCtx = mergeCanvas.getContext('2d')
+
+          // Draw base first
+          mergeCtx.drawImage(baseImage, 0, 0)
+
+          // Draw overlay on top
+          mergeCtx.drawImage(this.overlayImagePreview, 0, 0)
+
+          this.previewUrl = mergeCanvas.toDataURL(mimeType, quality)
+        } else {
+          // No overlay, use just base image
+          this.previewUrl = baseImage.toDataURL(mimeType, quality)
+        }
         return
       }
 
@@ -2092,6 +2123,23 @@ export const useImageStore = defineStore('imageStore', {
         targetWidth,
         targetHeight,
       )
+
+      console.warn('Drawing base image on preview')
+      if (this.overlayImagePreview) {
+        console.warn('Drawing overlay image on top of preview')
+        ctx.drawImage(
+          this.overlayImagePreview,
+          0,
+          0,
+          this.overlayImagePreview.width,
+          this.overlayImagePreview.height,
+          offsetX,
+          offsetY,
+          targetWidth,
+          targetHeight,
+        )
+      }
+
       ctx.drawImage(frameImg, 0, 0)
 
       const mimeType =
@@ -2338,6 +2386,8 @@ export const useImageStore = defineStore('imageStore', {
         // blurPreviewUrl: JSON.parse(JSON.stringify(this.blurPreviewUrl)),
         renderedImage: this.getRenderedImage({ t, renderCall: true })?.toDataURL() || null,
         overlayImage: this.overlayImage ? this.overlayImage.toDataURL() : null,
+        overlayImageExport: this.overlayImageExport ? this.overlayImageExport.toDataURL() : null,
+        overlayImagePreview: this.overlayImagePreview ? this.overlayImagePreview.toDataURL() : null,
         pdfPageBytes: this.pdfPageBytes ? new Uint8Array(this.pdfPageBytes) : undefined,
         totalPdfCropBox: JSON.parse(JSON.stringify(this.totalPdfCropBox)),
         // originalImage: this.originalImage?.toDataURL() || null,
@@ -2424,6 +2474,38 @@ export const useImageStore = defineStore('imageStore', {
         this.overlayImage = null
       }
 
+      // Overlay image for export
+      if (snapshot.overlayImageExport) {
+        const img = new Image()
+        img.onload = () => {
+          const canvas = document.createElement('canvas')
+          canvas.width = img.width
+          canvas.height = img.height
+          const ctx = canvas.getContext('2d')
+          ctx.drawImage(img, 0, 0)
+          this.overlayImageExport = canvas
+        }
+        img.src = snapshot.overlayImageExport
+      } else {
+        this.overlayImageExport = null
+      }
+
+      // Overlay image for preview
+      if (snapshot.overlayImagePreview) {
+        const img = new Image()
+        img.onload = () => {
+          const canvas = document.createElement('canvas')
+          canvas.width = img.width
+          canvas.height = img.height
+          const ctx = canvas.getContext('2d')
+          ctx.drawImage(img, 0, 0)
+          this.overlayImagePreview = canvas
+        }
+        img.src = snapshot.overlayImagePreview
+      } else {
+        this.overlayImagePreview = null
+      }
+
       // Removal canvas
       // if (snapshot.removalCanvas) {
       //   const img = new Image()
@@ -2473,6 +2555,8 @@ export const useImageStore = defineStore('imageStore', {
         tmpRenderedImage: this.tmpRenderedImage?.toDataURL() || null,
         newRenderedImage: this.newRenderedImage?.toDataURL() || null,
         overlayImage: this.overlayImage?.toDataURL() || null,
+        overlayImageExport: this.overlayImageExport?.toDataURL() || null,
+        overlayImagePreview: this.overlayImagePreview?.toDataURL() || null,
 
         pdfPageBytes: this.pdfPageBytes ? new Uint8Array(this.pdfPageBytes) : undefined,
         totalPdfCropBox: JSON.parse(JSON.stringify(this.totalPdfCropBox)),
@@ -2632,6 +2716,38 @@ export const useImageStore = defineStore('imageStore', {
         img.src = snapshot.overlayImage
       } else {
         this.overlayImage = null
+      }
+
+      // Overlay image for export
+      if (snapshot.overlayImageExport) {
+        const img = new Image()
+        img.onload = () => {
+          const canvas = document.createElement('canvas')
+          canvas.width = img.width
+          canvas.height = img.height
+          const ctx = canvas.getContext('2d')
+          ctx.drawImage(img, 0, 0)
+          this.overlayImageExport = canvas
+        }
+        img.src = snapshot.overlayImageExport
+      } else {
+        this.overlayImageExport = null
+      }
+
+      // Overlay image for preview
+      if (snapshot.overlayImagePreview) {
+        const img = new Image()
+        img.onload = () => {
+          const canvas = document.createElement('canvas')
+          canvas.width = img.width
+          canvas.height = img.height
+          const ctx = canvas.getContext('2d')
+          ctx.drawImage(img, 0, 0)
+          this.overlayImagePreview = canvas
+        }
+        img.src = snapshot.overlayImagePreview
+      } else {
+        this.overlayImagePreview = null
       }
 
       // Removal canvas

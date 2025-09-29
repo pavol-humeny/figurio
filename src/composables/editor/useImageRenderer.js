@@ -57,7 +57,7 @@ export function useImageRenderer(
   /**
    * Set dimensions of canvas, svg and frame layers based on image size and frame config
    */
-  const updateSizes = () => {
+  const updateSizes = async () => {
     console.log('Updating sizes for image renderer...')
     const width = imageStore.fileDimensions.width
     const height = imageStore.fileDimensions.height
@@ -206,6 +206,10 @@ export function useImageRenderer(
     }
 
     // Save to overlay ref imageStore.overlayImage
+
+    // wait 100 ms
+    await new Promise((resolve) => setTimeout(resolve, 1))
+
     if (overlayImageRef.value) {
       if (imageStore.overlayImage !== null) {
         overlayImageRef.value.src = imageStore.overlayImage.toDataURL()
