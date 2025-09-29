@@ -1,10 +1,9 @@
 <script setup>
-import { ref, computed, watch, onMounted, onBeforeUnmount } from 'vue'
+import { ref, computed, onMounted, onBeforeUnmount } from 'vue'
 import { useBrushTool } from '@/composables/tools/useBrushTool'
 import { useImageStore } from '@/stores/imageStore'
 import { useHistoryStore } from '@/stores/historyStore'
 import { useViewportStore } from '@/stores/viewportStore'
-import { editorConfig } from '@/config/editorConfig'
 import { useI18n } from 'vue-i18n'
 import { useEditorStore } from '@/stores/editorStore'
 
@@ -17,7 +16,6 @@ const editorStore = useEditorStore()
 const {
   brushColor,
   brushToolType,
-  brushToolSize,
 } = useBrushTool(imageStore, historyStore, t)
 
 /**
@@ -36,11 +34,6 @@ const imageHeight = computed(() => imageStore.fileDimensions.height)
  */
 const isDrawing = ref(false)
 const lastPos = ref({ x: 0, y: 0 })
-
-/**
- * Cursor
- */
-const cursorPos = ref({ x: 0, y: 0 })
 
 /**
  * Canvas context
@@ -63,7 +56,7 @@ const getMousePos = (event) => {
  */
 const drawLine = (from, to, tool) => {
   if (!ctx) return
-  ctx.lineWidth = brushToolSize.value
+  ctx.lineWidth = editorStore.cursorSize
   ctx.lineCap = 'round'
 
   if (tool === 'eraser') {
@@ -87,6 +80,8 @@ const drawLine = (from, to, tool) => {
  * Mouse events
  */
 const onMouseDown = (event) => {
+  if (editorStore.selectedToolKey !== 'brush') return
+
   if (event.button !== 0) return // only left mouse
   isDrawing.value = true
   const pos = getMousePos(event)
@@ -95,7 +90,7 @@ const onMouseDown = (event) => {
 }
 
 const onMouseMove = (event) => {
-  cursorPos.value = getMousePos(event)
+  if (editorStore.selectedToolKey !== 'brush') return
   if (!isDrawing.value) return
   const currentPos = getMousePos(event)
   drawLine(lastPos.value, currentPos, brushToolType.value)
@@ -103,6 +98,7 @@ const onMouseMove = (event) => {
 }
 
 const onMouseUpGlobal = () => {
+  if (editorStore.selectedToolKey !== 'brush') return
   if (!isDrawing.value) return
   isDrawing.value = false
 
@@ -111,21 +107,8 @@ const onMouseUpGlobal = () => {
   imageStore.overlayImageExport = canvasRef.value
   imageStore.overlayImagePreview = canvasRef.value
 
-
-
   historyStore.push(imageStore.getSnapshot(t))
 }
-
-/**
- * Cursor style
- */
-const cursorStyleVars = computed(() => {
-  return {
-    '--cursor-brush-border': editorConfig.manualSelectCursorBrushColor,
-    '--cursor-eraser-border': editorConfig.manualSelectCursorEraserColor,
-    '--cursor-eraser-background': editorConfig.manualSelectCursorEraserBackgroundColor,
-  }
-})
 
 /**
  * Init + cleanup
@@ -133,35 +116,24 @@ const cursorStyleVars = computed(() => {
 onMounted(() => {
   ctx = canvasRef.value.getContext('2d', { willReadFrequently: true })
   window.addEventListener('mouseup', onMouseUpGlobal)
+  window.addEventListener('mousemove', onMouseMove)
+  window.addEventListener('mousedown', onMouseDown)
 
   if (!imageStore.overlayImage || !canvasRef.value) return
-  console.warn('Overlay image changed, updating canvas...')
-
   ctx.clearRect(0, 0, canvasRef.value.width, canvasRef.value.height)
   ctx.drawImage(imageStore.overlayImage, 0, 0, canvasRef.value.width, canvasRef.value.height)
 })
 
 onBeforeUnmount(() => {
   window.removeEventListener('mouseup', onMouseUpGlobal)
+  window.removeEventListener('mousemove', onMouseMove)
+  window.removeEventListener('mousedown', onMouseDown)
 })
 </script>
 
 <template>
   <div class="brush-canvas-wrapper">
-    <canvas id="brushCanvas" ref="canvasRef" class="brush-canvas" :width="imageWidth" :height="imageHeight"
-      @mousedown="onMouseDown" @mousemove="onMouseMove"></canvas>
-
-    <!-- Cursor -->
-    <div v-if="editorStore.selectedToolKey === 'brush'" class="custom-cursor" :style="{
-      ...cursorStyleVars,
-      width: brushToolSize + 'px',
-      height: brushToolSize + 'px',
-      left: cursorPos.x + 'px',
-      top: cursorPos.y + 'px'
-    }" :class="{
-      brush: brushToolType === 'brush',
-      eraser: brushToolType === 'eraser'
-    }"></div>
+    <canvas id="brushCanvas" ref="canvasRef" class="brush-canvas" :width="imageWidth" :height="imageHeight"></canvas>
   </div>
 </template>
 
@@ -174,21 +146,6 @@ onBeforeUnmount(() => {
   position: absolute;
   top: 0;
   left: 0;
-}
-
-.custom-cursor {
-  position: absolute;
-  border: 1px solid transparent;
-  border-radius: 50%;
-  pointer-events: none;
-  transform: translate(-50%, -50%);
-}
-
-.custom-cursor.brush {
-  border-color: var(--cursor-brush-border);
-}
-
-.custom-cursor.eraser {
-  border-color: var(--cursor-eraser-border);
+  cursor: none;
 }
 </style>

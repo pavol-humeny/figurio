@@ -2,6 +2,7 @@ import { computed, ref, nextTick, onMounted, watch, onBeforeUnmount } from 'vue'
 import { viewportConfig } from '@/config/viewportConfig'
 import { useMath } from '@/composables/common/useMath'
 import { useThrottleFn } from '@vueuse/core'
+import { editorConfig } from '@/config/editorConfig'
 
 /**
  * Logic for managing zooming, panning, scrolling and viewport dimensions
@@ -50,6 +51,21 @@ export function useViewportWrapper(viewportStore, imageStore, editorStore, uiSto
    * @param {MouseEvent} event - Mouse event
    */
   const startPan = (event) => {
+    // Resizing tool size with Alt + Right mouse button
+    if (
+      (editorStore.selectedToolKey === 'brush' ||
+        (editorStore.selectedToolKey === 'backgroundRemoval' &&
+          editorStore.selectedTabPerTool['backgroundRemoval'] === 'manual')) &&
+      event.altKey &&
+      event.button === 2
+    ) {
+      editorStore.isCursorResizing = true
+      lastMouseX.value = event.clientX
+      fixedCursorPos.value = { x: mouseX.value, y: mouseY.value }
+      event.preventDefault()
+      return
+    }
+
     // Middle mouse button panning
     if (event.button === 1 || editorStore.selectedToolKey === 'move') {
       isMiddleDragging.value = true
@@ -77,7 +93,6 @@ export function useViewportWrapper(viewportStore, imageStore, editorStore, uiSto
       const onMouseUp = () => {
         document.removeEventListener('mousemove', onMouseMove)
         document.removeEventListener('mouseup', onMouseUp)
-        isMiddleDragging.value = false
       }
 
       document.addEventListener('mousemove', onMouseMove)
@@ -573,15 +588,60 @@ export function useViewportWrapper(viewportStore, imageStore, editorStore, uiSto
   const mouseY = ref(null)
 
   /**
+   * Last mouse X position during resizing
+   */
+  const lastMouseX = ref(0)
+
+  /**
+   * Last fixed cursor position when resizing
+   */
+  const fixedCursorPos = ref(null)
+
+  const onMouseDown = (event) => {
+    if (editorStore.selectedTabPerTool['backgroundRemoval'] !== 'manual') return
+
+    // Resizing tool size with Alt + Right mouse button
+    if (event.altKey && event.button === 2) {
+      editorStore.isCursorResizing = true
+      lastMouseX.value = event.clientX
+      fixedCursorPos.value = { x: mouseX.value, y: mouseY.value }
+      event.preventDefault()
+      return
+    }
+  }
+
+  const onMouseUpAltResize = () => {
+    if (editorStore.isCursorResizing) {
+      editorStore.isCursorResizing = false
+      fixedCursorPos.value = null
+    }
+  }
+
+  /**
    * Update mouse position relative to the wrapper element
    * @param {MouseEvent} event - Mouse event
    */
   const onMouseMove = (event) => {
+    if (editorStore.isCursorResizing) {
+      const deltaX = event.clientX - lastMouseX.value
+      if (deltaX !== 0) {
+        editorStore.cursorSize =
+          editorStore.cursorSize + deltaX / editorConfig.cursorResizingSensitivity
+
+        lastMouseX.value = event.clientX
+      }
+
+      cursorPos.value = fixedCursorPos.value
+      return
+    }
+
     const rect = wrapperRef.value?.getBoundingClientRect()
     if (!rect) return
 
     mouseX.value = event.clientX - rect.left
     mouseY.value = event.clientY - rect.top
+
+    cursorPos.value = { x: mouseX.value, y: mouseY.value }
   }
 
   /**
@@ -622,6 +682,8 @@ export function useViewportWrapper(viewportStore, imageStore, editorStore, uiSto
 
   //Set initial values for centering the image
   onMounted(() => {
+    window.addEventListener('mouseup', onMouseUpAltResize)
+
     viewportStore.viewportContentRect = contentRef.value?.getBoundingClientRect() || {}
 
     nextTick(() => {
@@ -647,6 +709,7 @@ export function useViewportWrapper(viewportStore, imageStore, editorStore, uiSto
 
   // Cleanup on unmount
   onBeforeUnmount(() => {
+    window.removeEventListener('mouseup', onMouseUpAltResize)
     if (resizeObserver && wrapperRef.value) {
       resizeObserver.unobserve(wrapperRef.value)
     }
@@ -677,6 +740,8 @@ export function useViewportWrapper(viewportStore, imageStore, editorStore, uiSto
     },
   )
 
+  const cursorPos = ref({ x: 0, y: 0 })
+
   return {
     zoomLevel,
     setZoomAndScroll,
@@ -698,6 +763,7 @@ export function useViewportWrapper(viewportStore, imageStore, editorStore, uiSto
     horizontalRulerMarks,
     verticalRulerMarks,
     onMouseMove,
+    onMouseDown,
     mouseX,
     mouseY,
     cursorPosX,
@@ -705,5 +771,6 @@ export function useViewportWrapper(viewportStore, imageStore, editorStore, uiSto
     cursorPosXSameAsImageWidth,
     cursorPosYSameAsImageHeight,
     guideLines,
+    cursorPos,
   }
 }

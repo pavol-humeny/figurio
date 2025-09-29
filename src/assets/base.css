@@ -165,6 +165,7 @@ body {
   --z-index-top-panel: 700;
   --z-index-tools-settings-panel: 600;
   --z-index-tools-panel: 600;
+  --z-index-cursors: 570;
   --z-index-sliders: 550;
   --z-index-rulers-padding: 530;
   --z-index-rulers: 525;

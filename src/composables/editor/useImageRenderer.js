@@ -227,7 +227,6 @@ export function useImageRenderer(
       ctx.drawImage(imageStore.overlayImage, 0, 0, canvas.width, canvas.height)
     } else {
       if (canvas) {
-        console.warn('No overlay image, clearing brush canvas...')
         const ctx = canvas.getContext('2d')
         ctx.clearRect(0, 0, canvas.width, canvas.height)
       }

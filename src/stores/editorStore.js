@@ -55,8 +55,11 @@ export const useEditorStore = defineStore('editorStore', {
     /** Whether a export modal is open  */
     isExportModalOpen: false,
 
-    /** Currently selected color in the editor (global value) */
-    // selectedColor: '#000000',
+    /** Whether the cursor is currently being resized */
+    isCursorResizing: false,
+
+    /** Size of the custom cursor (for brush/eraser) */
+    cursorSize: editorConfig.defaultManualToolSize,
 
     /** Tools config values */
     toolsConfig: {

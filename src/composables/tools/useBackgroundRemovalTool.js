@@ -11,10 +11,18 @@ const manualSelectedTool = ref('brush') // 'brush' | 'eraser'
 /**
  * Size of the manual tool
  */
-const manualToolSize = ref(editorConfig.defaultManualToolSize)
+const manualToolSize = ref(0)
 
 export function useBackgroundRemovalTool(imageStore, historyStore, workspaceStore, editorStore, t) {
   const { showConfirmModal } = useConfirmModal()
+
+  watch(
+    () => editorStore.cursorSize,
+    (newSize) => {
+      manualToolSize.value = newSize
+    },
+    { immediate: true },
+  )
 
   /**
    * Background color for replacement (if enabled)
@@ -252,9 +260,7 @@ export function useBackgroundRemovalTool(imageStore, historyStore, workspaceStor
    * @param {number} size - New size in pixels
    */
   const changeManualToolSize = (size) => {
-    if (size < manualMinToolSize) size = manualMinToolSize
-    if (size > manualMaxToolSize.value) size = manualMaxToolSize.value
-    manualToolSize.value = size
+    editorStore.cursorSize = size
   }
 
   /**

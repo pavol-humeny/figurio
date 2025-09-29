@@ -23,6 +23,7 @@ import { useFrameTool } from '@/composables/tools/useFrameTool'
 import ItemTip from '../common/ItemTip.vue'
 import BaseIcon from '../icons/BaseIcon.vue'
 import BrushToolCanvas from '../tools/BrushToolCanvas.vue'
+import { editorConfig } from '@/config/editorConfig'
 
 const { t } = useI18n()
 const uiStore = useUiStore()
@@ -74,7 +75,8 @@ const {
   cursorPosY,
   cursorPosXSameAsImageWidth,
   cursorPosYSameAsImageHeight,
-  guideLines
+  guideLines,
+  cursorPos,
 } = useViewportWrapper(useViewportStore(), useImageStore(), useEditorStore(), useUiStore(), contentRef, t)
 
 /**
@@ -181,11 +183,22 @@ watch(
   },
   { immediate: true, deep: true }
 )
+
+/**
+ * Cursor style
+ */
+const cursorStyleVars = computed(() => {
+  return {
+    '--cursor-border': editorConfig.cursorBorder,
+  }
+})
+
 </script>
 
 <template>
   <div class="viewport-wrapper" id="viewport" @mousedown="onMouseDownSelect" @dragover="handleDragOver"
-    @dragleave="handleDragLeave" @drop="handleDrop">
+    @dragleave="handleDragLeave" @drop="handleDrop"
+    :style="{ cursor: editorStore.selectedToolKey === 'brush' ? 'none' : 'default' }">
     <LoadingSpinner />
 
     <div class="viewport-content-wrapper" ref="wrapperRef" @wheel.passive="setZoomAndScroll" @mousedown="startPan"
@@ -278,10 +291,13 @@ watch(
           <PresetCropTool v-if="
             editorStore.selectedToolKey === 'preset' && editorStore.selectedSubToolKey === 'crop'" />
 
-          <BackgroundRemovalCanvas v-if="editorStore.selectedToolKey === 'backgroundRemoval'" />
 
-          <BrushToolCanvas  :style="{
+          <BrushToolCanvas :style="{
             pointerEvents: editorStore.selectedToolKey === 'brush' ? 'auto' : 'none'
+          }" />
+
+          <BackgroundRemovalCanvas v-if="editorStore.selectedToolKey === 'backgroundRemoval'" :style="{
+            pointerEvents: editorStore.selectedToolKey === 'backgroundRemoval' ? 'auto' : 'none'
           }" />
         </div>
       </ContextMenu>
@@ -305,6 +321,19 @@ watch(
 
 
     </div>
+
+    <!-- Cursor -->
+    <div
+      v-if="(editorStore.selectedToolKey === 'backgroundRemoval' && editorStore.selectedTabPerTool['backgroundRemoval'] === 'manual') || editorStore.selectedToolKey === 'brush'"
+      class="custom-cursor" :style="{
+        ...cursorStyleVars,
+        width: editorStore.cursorSize * zoomLevel + 'px',
+        height: editorStore.cursorSize * zoomLevel + 'px',
+        left: cursorPos.x + 'px',
+        top: cursorPos.y + 'px'
+      }" :class="{
+        isAltResizing: editorStore.isCursorResizing,
+      }"></div>
 
     <!-- Sliders -->
     <div class="vertical-slider-wrapper">
@@ -364,6 +393,7 @@ watch(
   height: calc(100% - 30px - 20px);
   display: flex;
   z-index: var(--z-index-viewport);
+  cursor: none;
 }
 
 .viewport-content-wrapper {
@@ -642,5 +672,19 @@ watch(
   top: 0;
   pointer-events: none;
   z-index: var(--z-index-guide-lines);
+}
+
+.custom-cursor {
+  position: absolute;
+  border: 1px solid transparent;
+  border-radius: 50%;
+  pointer-events: none;
+  transform: translate(-50%, -50%);
+  z-index: var(--z-index-cursors);
+  border-color: var(--cursor-border);
+}
+
+.isAltResizing {
+  background: red;
 }
 </style>

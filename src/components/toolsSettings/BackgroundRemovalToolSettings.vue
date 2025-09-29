@@ -28,6 +28,7 @@ const {
   colorBackgroundColor,
   manualSelectedTool,
   manualToolSize,
+  changeManualToolSize,
   manualSelectTool,
   manualMaxToolSize,
   manualMinToolSize,
@@ -244,6 +245,7 @@ const tabs = ['color', 'manual', 'objectDetection']
               </p>
             </div>
             <NumberInput v-model="manualToolSize" :min="manualMinToolSize" :max="manualMaxToolSize" :step="1" unit="px"
+              @update="changeManualToolSize(manualToolSize)"
               :tip="$t('tools.backgroundRemoval.settings.manual.toolSize.tip')" position="bottom-left" />
           </div>
         </div>

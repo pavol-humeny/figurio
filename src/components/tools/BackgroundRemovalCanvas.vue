@@ -16,7 +16,7 @@ const viewportStore = useViewportStore()
 const editorStore = useEditorStore()
 const historyStore = useHistoryStore()
 
-const { manualSelectedTool, manualToolSize, changeManualToolSize } = useBackgroundRemovalTool(
+const { manualSelectedTool } = useBackgroundRemovalTool(
   useImageStore(),
   useHistoryStore(),
   useWorkspaceStore(),
@@ -51,23 +51,9 @@ const imageHeight = computed(() => imageStore.fileDimensions.height)
 let ctx = null
 
 /**
- * Whether the user is resizing the tool size with Alt + Right mouse button
- */
-const isAltResizing = ref(false)
-/**
- * Last mouse X position during resizing
- */
-const lastMouseX = ref(0)
-
-/**
  * Whether the eraser is being used during drawing (when Alt is held)
  */
 const isErasingDuringDraw = ref(false)
-
-/**
- * Last fixed cursor position when resizing
- */
-const fixedCursorPos = ref(null)
 
 /**
  * Cursor position and visibility
@@ -96,7 +82,7 @@ watch([imageWidth, imageHeight], () => {
 const drawLine = (from, to, tool) => {
   if (!ctx) return
 
-  ctx.lineWidth = manualToolSize.value
+  ctx.lineWidth = editorStore.cursorSize
   ctx.lineCap = 'round'
 
   if (tool === 'eraser') {
@@ -134,16 +120,7 @@ const getMousePos = (event) => {
  * @param event Mouse event
  */
 const onMouseDown = (event) => {
-  if (editorStore.selectedTabPerTool['backgroundRemoval'] !== 'manual') return
-
-  // Resizing tool size with Alt + Right mouse button
-  if (event.altKey && event.button === 2) {
-    isAltResizing.value = true
-    lastMouseX.value = event.clientX
-    fixedCursorPos.value = getMousePos(event) // Fix cursor position during resizing
-    event.preventDefault()
-    return
-  }
+  if (editorStore.selectedToolKey !== 'backgroundRemoval' && editorStore.selectedTabPerTool['backgroundRemoval'] !== 'manual') return
 
   // Drawing with Left mouse button
   if (event.button === 0) {
@@ -168,20 +145,10 @@ const onMouseDown = (event) => {
  * @param event Mouse event
  */
 const onMouseMove = (event) => {
+  if (editorStore.selectedToolKey !== 'backgroundRemoval' && editorStore.selectedTabPerTool['backgroundRemoval'] !== 'manual') return
+
   cursorPos.value = getMousePos(event)
   showCursor.value = true
-
-  // Resize tool size
-  if (isAltResizing.value) {
-    const deltaX = event.clientX - lastMouseX.value
-    if (deltaX !== 0) {
-      changeManualToolSize(manualToolSize.value + deltaX / editorConfig.manualSelectCursorResizingSensitivity)
-      lastMouseX.value = event.clientX
-    }
-
-    cursorPos.value = fixedCursorPos.value
-    return
-  }
 
   // Drawing
   if (!isDrawing.value) return
@@ -200,22 +167,11 @@ const onMouseMove = (event) => {
 }
 
 /**
- * Mouse leave - hide cursor
- */
-const onMouseLeave = () => {
-  showCursor.value = false
-}
-
-/**
  * Global mouse up listener to stop drawing when mouse is released
  */
 const onMouseUpGlobal = () => {
-  // Stop resizing or drawing
-  if (isAltResizing.value) {
-    isAltResizing.value = false
-    fixedCursorPos.value = null
-    return
-  }
+  if (editorStore.selectedToolKey !== 'backgroundRemoval' && editorStore.selectedTabPerTool['backgroundRemoval'] !== 'manual') return
+
   if (isDrawing.value) {
     isDrawing.value = false
     isErasingDuringDraw.value = false
@@ -236,21 +192,12 @@ const onMouseUpGlobal = () => {
 }
 
 /**
- * Cursor style variables
- */
-const cursorStyleVars = computed(() => {
-  return {
-    '--cursor-brush-border': editorConfig.manualSelectCursorBrushColor,
-    '--cursor-eraser-border': editorConfig.manualSelectCursorEraserColor,
-    '--cursor-eraser-background': editorConfig.manualSelectCursorEraserBackgroundColor,
-  }
-})
-
-/**
  * Global mouse up listener to stop drawing when mouse is released outside the canvas
  */
 onMounted(() => {
   window.addEventListener('mouseup', onMouseUpGlobal)
+  window.addEventListener('mousemove', onMouseMove)
+  window.addEventListener('mousedown', onMouseDown)
 })
 
 /**
@@ -281,28 +228,15 @@ watch(
  */
 onBeforeUnmount(() => {
   window.removeEventListener('mouseup', onMouseUpGlobal)
+  window.removeEventListener('mousemove', onMouseMove)
+  window.removeEventListener('mousedown', onMouseDown)
 })
 </script>
 
 <template>
   <div class="manual-removal-wrapper">
     <canvas id="removalCanvas" ref="manualCanvasRef" class="manual-removal-canvas" :width="imageWidth"
-      :height="imageHeight" @mousedown="onMouseDown" @mousemove="onMouseMove" @mouseleave="onMouseLeave"
-      :style="{ cursor: editorStore.selectedTabPerTool['backgroundRemoval'] === 'manual' ? 'none' : 'default' }"></canvas>
-
-    <!-- Cursor -->
-    <div v-if="showCursor && editorStore.selectedTabPerTool['backgroundRemoval'] === 'manual'" class="custom-cursor"
-      :style="{
-        ...cursorStyleVars,
-        width: manualToolSize + 'px',
-        height: manualToolSize + 'px',
-        left: cursorPos.x + 'px',
-        top: cursorPos.y + 'px'
-      }" :class="{
-        brush: manualSelectedTool === 'brush',
-        eraser: manualSelectedTool === 'eraser' || isErasingDuringDraw,
-        isAltResizing: isAltResizing
-      }"></div>
+      :height="imageHeight"></canvas>
   </div>
 </template>
 
@@ -318,26 +252,5 @@ onBeforeUnmount(() => {
   left: 0;
   pointer-events: auto;
   opacity: 0.5;
-}
-
-.custom-cursor {
-  position: absolute;
-  border: 1px solid transparent;
-  border-radius: 50%;
-  pointer-events: none;
-  transform: translate(-50%, -50%);
-}
-
-.custom-cursor.brush {
-  border-color: var(--cursor-brush-border);
-}
-
-.custom-cursor.eraser {
-  border-color: var(--cursor-eraser-border);
-  /* background: var(--cursor-eraser-background); */
-}
-
-.isAltResizing {
-  background: red;
 }
 </style>

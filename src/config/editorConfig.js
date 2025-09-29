@@ -13,10 +13,8 @@ export const editorConfig = {
   defaultThreshold: 0.0,
   defaultManualToolSize: 10, // in pixels
   maxManualToolSizeCoefficient: 0.4, // 10% of the smaller image dimension
-  manualSelectCursorBrushColor: 'rgba(44, 44, 44, 1)',
-  manualSelectCursorEraserColor: 'rgba(44, 44, 44, 1)',
-  manualSelectCursorEraserBackgroundColor: 'rgba(44, 44, 44, 0.4)',
-  manualSelectCursorResizingSensitivity: 2, // Higher = slower resizing, lower = faster
+  cursorBorder: 'rgba(255, 0, 0, 1)',
+  cursorResizingSensitivity: 2, // Higher = slower resizing, lower = faster
   removalHighlightColor: 'rgba(255, 0, 0, 1)',
 
   // Item tip settings
