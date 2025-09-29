@@ -315,6 +315,15 @@
       }
     }
   },
+  "brush": {
+    "label": "Brush",
+    "tip": "Paints on the image with a brush tool",
+    "tipDisabled": "",
+    "explain": "The Brush tool allows you to paint on the image with a brush. You can adjust the brush size, hardness, and opacity to achieve different effects.",
+    "shortcut": "SHIFT + B",
+    "settings": {
+    }
+  },
   "blur": {
     "label": "Blur area",
     "tip": "Applies a blur effect to the image",

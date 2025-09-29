@@ -315,6 +315,15 @@
       }
     }
   },
+  "brush": {
+    "label": "Štetec",
+    "tip": "Malovanie na obrázok pomocou štetca",
+    "tipDisabled": "",
+    "explain": "Nástroj Štetec umožňuje maľovať na obrázok pomocou štetca. Môžete upraviť veľkosť štetca, tvrdosť a priehľadnosť pre dosiahnutie rôznych efektov.",
+    "shortcut": "SHIFT + B",
+    "settings": {
+    }
+  },
   "blur": {
     "label": "Rozmazanie oblasti",
     "tip": "Aplikuje efekt rozmazania na obrázok",

@@ -144,7 +144,7 @@ export const keyboardShortcuts = [
     description: 'Toggle magnify area tool',
   },
   {
-    keys: ['b'],
+    keys: ['shift', 'b'],
     action: 'toggleTool',
     args: ['blur', null],
     description: 'Toggle blur tool',
@@ -160,6 +160,12 @@ export const keyboardShortcuts = [
     action: 'toggleTool',
     args: ['backgroundRemoval', null],
     description: 'Toggle background removal tool',
+  },
+  {
+    keys: ['b'],
+    action: 'toggleTool',
+    args: ['brush', null],
+    description: 'Toggle brush tool',
   },
 
   // Multi-file management shortcuts

@@ -316,6 +316,15 @@
       }
     }
   },
+  "brush": {
+    "label": "Štětec",
+    "tip": "Malování na obrázek pomocí štětce",
+    "tipDisabled": "",
+    "explain": "Nástroj Štětec umožňuje malovat na obrázek pomocí štětce. Můžete upravit velikost štětce, tvrdost a průhlednost pro dosažení různých efektů.",
+    "shortcut": "SHIFT + B",
+    "settings": {
+    }
+  },
   "blur": {
     "label": "Rozmazání oblasti",
     "tip": "Aplikuje efekt rozmazání na obrázek",
