@@ -4,6 +4,15 @@
     "items": []
   },
   "versions":{
+    "4.7.5":{
+      "label": "4.7.5",
+      "date":"24.9. 2025",
+      "bugFixes": {
+        "items": [
+          "Fix fit crop precision issue"
+        ]
+      }
+    },
     "4.7.4":{
       "label": "4.7.4",
       "date":"24.9. 2025",

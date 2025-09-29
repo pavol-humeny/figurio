@@ -255,7 +255,9 @@
             "top": "Horní odsazení",
             "bottom": "Dolní odsazení",
             "left": "Levé odsazení",
-            "right": "Pravé odsazení"
+            "right": "Pravé odsazení",
+            "tipLinked": "Odpojit všechny strany",
+            "tipUnlinked": "Propojit všechny strany"
           },
           "sensitivity": {
             "title": "Citlivost",

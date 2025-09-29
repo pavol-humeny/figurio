@@ -255,7 +255,9 @@
             "top": "Horné odsadenie",
             "bottom": "Dolné odsadenie",
             "left": "Ľavé odsadenie",
-            "right": "Pravé odsadenie"
+            "right": "Pravé odsadenie",
+            "tipLinked": "Odpojiť všetky strany",
+            "tipUnlinked": "Prepojiť všetky strany"
           },
           "sensitivity": {
             "title": "Citlivost",

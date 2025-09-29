@@ -56,6 +56,8 @@ const {
   autoCropThresholdOptions,
   tmpCropX,
   tmpCropY,
+  isManualAdjustmentsLinked,
+  manualIndentsWereChangedManually,
 } = useCropTool(useImageStore(), useViewportStore(), useEditorStore(), useHistoryStore(), useWorkspaceStore(), t)
 
 </script>
@@ -181,7 +183,8 @@ const {
                 <!-- Top -->
                 <div class="dpad top">
                   <StepperInput v-model="manualIndents.topIndent" :min="manualIndents.topIndentMin"
-                    :max="manualIndents.topIndentMax" :step="1" @update="recalculateCropBox" type="block"
+                    :max="manualIndents.topIndentMax" :step="1"
+                    @update="recalculateCropBox; manualIndentsWereChangedManually() " type="block"
                     :tip="$t('tools.crop.settings.general.autoCrop.manualAdjustments.top')"
                     :onReset="() => manualIndents.topIndent = 0" />
                 </div>
@@ -190,7 +193,8 @@ const {
                 <div class="dpad left">
 
                   <StepperInput v-model="manualIndents.leftIndent" :min="manualIndents.leftIndentMin"
-                    :max="manualIndents.leftIndentMax" :step="1" @update="recalculateCropBox" type="block"
+                    :max="manualIndents.leftIndentMax" :step="1"
+                    @update="recalculateCropBox; manualIndentsWereChangedManually() " type="block"
                     :tip="$t('tools.crop.settings.general.autoCrop.manualAdjustments.left')"
                     :onReset="() => manualIndents.leftIndent = 0" />
                 </div>
@@ -198,7 +202,8 @@ const {
                 <!-- Right -->
                 <div class="dpad right">
                   <StepperInput v-model="manualIndents.rightIndent" :min="manualIndents.rightIndentMin"
-                    :max="manualIndents.rightIndentMax" :step="1" @update="recalculateCropBox" type="block"
+                    :max="manualIndents.rightIndentMax" :step="1"
+                    @update="recalculateCropBox; manualIndentsWereChangedManually() " type="block"
                     :tip="$t('tools.crop.settings.general.autoCrop.manualAdjustments.right')"
                     :onReset="() => manualIndents.rightIndent = 0" />
                 </div>
@@ -206,9 +211,18 @@ const {
                 <!-- Bottom -->
                 <div class="dpad bottom">
                   <StepperInput v-model="manualIndents.bottomIndent" :min="manualIndents.bottomIndentMin"
-                    :max="manualIndents.bottomIndentMax" :step="1" @update="recalculateCropBox" type="block"
+                    :max="manualIndents.bottomIndentMax" :step="1"
+                    @update="recalculateCropBox; manualIndentsWereChangedManually()" type="block"
                     :tip="$t('tools.crop.settings.general.autoCrop.manualAdjustments.bottom')"
                     :onReset="() => manualIndents.bottomIndent = 0" />
+                </div>
+
+                <!-- Link -->
+                <div class="dpad center">
+                  <LinkValuesIcon v-model="isManualAdjustmentsLinked"
+                    :tipLinked="$t('tools.crop.settings.general.autoCrop.manualAdjustments.tipLinked')"
+                    :tipUnlinked="$t('tools.crop.settings.general.autoCrop.manualAdjustments.tipUnlinked')" size="30"
+                    position="bottom-left" />
                 </div>
               </div>
             </div>
@@ -310,5 +324,10 @@ const {
 .bottom {
   grid-column: 2;
   grid-row: 3;
+}
+
+.center {
+  grid-column: 2;
+  grid-row: 2;
 }
 </style>

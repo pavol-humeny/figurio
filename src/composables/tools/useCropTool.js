@@ -101,6 +101,64 @@ export function useCropTool(
   // -------------------------------
 
   /**
+   * Whether the manual adjustments are linked (all sides change together)
+   */
+  const isManualAdjustmentsLinked = ref(false)
+
+  /**
+   * Old manual indents for comparison when one is changed
+   */
+  const oldManualIndents = ref({ ...manualIndents.value })
+
+  /**
+   * Update all indents if they are linked and one was changed
+   */
+  const manualIndentsWereChangedManually = () => {
+    // If is isManualAdjustmentsLinked, update all indents
+    if (isManualAdjustmentsLinked.value) {
+      // Find which indent was changed
+      let changedIndent = { name: null, value: 0 }
+      if (manualIndents.value.topIndent > oldManualIndents.value.topIndent) {
+        changedIndent = { name: 'topIndent', value: 1 }
+      } else if (manualIndents.value.topIndent < oldManualIndents.value.topIndent) {
+        changedIndent = { name: 'topIndent', value: -1 }
+      } else if (manualIndents.value.rightIndent > oldManualIndents.value.rightIndent) {
+        changedIndent = { name: 'rightIndent', value: 1 }
+      } else if (manualIndents.value.rightIndent < oldManualIndents.value.rightIndent) {
+        changedIndent = { name: 'rightIndent', value: -1 }
+      } else if (manualIndents.value.bottomIndent > oldManualIndents.value.bottomIndent) {
+        changedIndent = { name: 'bottomIndent', value: 1 }
+      } else if (manualIndents.value.bottomIndent < oldManualIndents.value.bottomIndent) {
+        changedIndent = { name: 'bottomIndent', value: -1 }
+      } else if (manualIndents.value.leftIndent > oldManualIndents.value.leftIndent) {
+        changedIndent = { name: 'leftIndent', value: 1 }
+      } else if (manualIndents.value.leftIndent < oldManualIndents.value.leftIndent) {
+        changedIndent = { name: 'leftIndent', value: -1 }
+      }
+
+      if (changedIndent.name === 'topIndent') {
+        manualIndents.value.rightIndent += changedIndent.value
+        manualIndents.value.bottomIndent += changedIndent.value
+        manualIndents.value.leftIndent += changedIndent.value
+      } else if (changedIndent.name === 'rightIndent') {
+        manualIndents.value.topIndent += changedIndent.value
+        manualIndents.value.bottomIndent += changedIndent.value
+        manualIndents.value.leftIndent += changedIndent.value
+      } else if (changedIndent.name === 'bottomIndent') {
+        manualIndents.value.topIndent += changedIndent.value
+        manualIndents.value.rightIndent += changedIndent.value
+        manualIndents.value.leftIndent += changedIndent.value
+      } else if (changedIndent.name === 'leftIndent') {
+        manualIndents.value.topIndent += changedIndent.value
+        manualIndents.value.rightIndent += changedIndent.value
+        manualIndents.value.bottomIndent += changedIndent.value
+      }
+
+      oldManualIndents.value = { ...manualIndents.value }
+    }
+  }
+
+  /**
    * Watch for changes in manualIndents and recalculate cropBox
    */
   watch(
@@ -650,7 +708,7 @@ export function useCropTool(
     if (!img) return null
 
     const canvas = document.createElement('canvas')
-    const ctx = canvas.getContext('2d')
+    const ctx = canvas.getContext('2d', { willReadFrequently: true })
     canvas.width = img.width * scale
     canvas.height = img.height * scale
     ctx.drawImage(img, 0, 0, canvas.width, canvas.height)
@@ -667,11 +725,11 @@ export function useCropTool(
     cv.cvtColor(src, gray, cv.COLOR_RGBA2GRAY, 0)
     cv.GaussianBlur(gray, gray, new cv.Size(5, 5), 0, 0, cv.BORDER_DEFAULT)
 
-    // Automatic Canny thresholds using sensitivity
-    // const median = cv.mean(gray)[0]
-    // const lower = Math.max(0, median * (0.5 - 0.5 * sensitivity * 10)) // lower decreases with higher sensitivity
-    // const upper = Math.min(255, median * (1.5 + 0.5 * sensitivity * 10)) // upper increases with higher sensitivity
-    cv.Canny(gray, edges, 0, 0)
+    // sensitivity: 0 = najcitlivejšie (detekuje takmer všetko), 1 = najmenej citlivé
+    const lower = 1 + sensitivity * 10 * 100 // dolný threshold od 1 do 101
+    const upper = 200 - sensitivity * 10 * 150 // horný threshold od 200 do 50
+
+    cv.Canny(gray, edges, lower, upper)
 
     // Mask edges if not using base image
     if (!useBaseImage && cropBox.value) {
@@ -1468,5 +1526,7 @@ export function useCropTool(
     resetCache,
     tmpCropX,
     tmpCropY,
+    isManualAdjustmentsLinked,
+    manualIndentsWereChangedManually,
   }
 }

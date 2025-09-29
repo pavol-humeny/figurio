@@ -255,7 +255,9 @@
             "top": "Top indent",
             "bottom": "Bottom indent",
             "left": "Left indent",
-            "right": "Right indent"
+            "right": "Right indent",
+            "tipLinked": "Unlink all sides",
+            "tipUnlinked": "Link all sides"
           },
           "sensitivity": {
             "title": "Sensitivity",
