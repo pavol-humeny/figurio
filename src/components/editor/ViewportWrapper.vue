@@ -238,6 +238,7 @@ watch(
 
           <img v-if="imageStore.overlayImage !== null" ref="overlayImageRef" class="overlay-image-canvas" />
 
+          <!-- Canvas for artifacts -->
           <canvas v-if="editorStore.selectedToolKey === 'crop' && imageStore.fileType === 'image'"
             ref="overlayCanvasRef" class="overlay-canvas"></canvas>
 
@@ -324,7 +325,7 @@ watch(
         </div>
         <div v-if="mouseX !== null" class="ruler-cursor-mark horizontal" :style="{ left: mouseX + 'px' }">
           <span class="ruler-cursor-label horizontal" :class="{ 'active': cursorPosXSameAsImageWidth }">{{ cursorPosX
-          }}</span>
+            }}</span>
         </div>
 
       </div>
@@ -337,7 +338,7 @@ watch(
         </div>
         <div v-if="mouseY !== null" class="ruler-cursor-mark vertical" :style="{ top: mouseY + 'px' }">
           <span class="ruler-cursor-label vertical" :class="{ 'active': cursorPosYSameAsImageHeight }">{{ cursorPosY
-          }}</span>
+            }}</span>
         </div>
       </div>
     </div>

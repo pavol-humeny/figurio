@@ -500,6 +500,11 @@ export function useCropTool(
    * Threshold for auto cropping
    */
   const autoCropThreshold = ref(editorConfig.autoCropThreshold)
+  const autoCropThresholdWasChanged = ref(false)
+
+  watch(autoCropThreshold, () => {
+    autoCropThresholdWasChanged.value = true
+  })
 
   /**
    * Options for the auto crop threshold dropdown
@@ -629,30 +634,18 @@ export function useCropTool(
    * @param {Uint8ClampedArray} imageData - The image data array.
    * @returns {boolean} - True if the pixel color matches the target color, false otherwise.
    */
-  // const isColorMatch = (index, target, threshold, imageData) => {
-  //   const r = imageData[index]
-  //   const g = imageData[index + 1]
-  //   const b = imageData[index + 2]
-  //   const a = imageData[index + 3]
-
-  //   // If background is transparent
-  //   if (target.a === 0) {
-  //     return a === 0
-  //   }
-
-  //   const dist = Math.sqrt((r - target.r) ** 2 + (g - target.g) ** 2 + (b - target.b) ** 2)
-  //   return dist <= threshold
-  // }
 
   /* global cv */
   /**
-   * Calculate the auto crop box based on the background color.
-   * @param {boolean} useBaseImage - Whether to use the base image for cropping
-   * @param {number} threshold - The threshold for color matching
-   * @param {Object} bgColor - The background color as an RGB object
+   * Calculate the auto crop box with edge smoothing to reduce noise at borders.
+   * Uses Canny + filled contours + adaptive edge trimming.
+   * @param {boolean} useBaseImage - Whether to mask with previous crop
+   * @param {number} sensitivity - higher = more aggressive trimming
+   * @returns {Object|null} cropRect {x, y, width, height} or null
    */
-  const calculateAutoCropBoxCanny = (useBaseImage, threshold) => {
-    const scale = 2
+  const calculateAutoCropBoxCanny = (useBaseImage, sensitivity) => {
+    sensitivity /= 10 // Make sensitivity more precise
+    const scale = 1
     const img = imageStore.getRenderedImage({ t, renderCall: false })
     if (!img) return null
 
@@ -662,24 +655,23 @@ export function useCropTool(
     canvas.height = img.height * scale
     ctx.drawImage(img, 0, 0, canvas.width, canvas.height)
 
+    const imgData = ctx.getImageData(0, 0, canvas.width, canvas.height)
+    const { data, width: imgWidth, height: imgHeight } = imgData
+
     // Convert canvas to OpenCV Mat
     const src = cv.imread(canvas)
     let gray = new cv.Mat()
     let edges = new cv.Mat()
 
-    // Convert to grayscale
+    // Grayscale + blur
     cv.cvtColor(src, gray, cv.COLOR_RGBA2GRAY, 0)
+    cv.GaussianBlur(gray, gray, new cv.Size(5, 5), 0, 0, cv.BORDER_DEFAULT)
 
-    // Apply Gaussian blur to reduce noise
-    const ksize = new cv.Size(5, 5)
-    cv.GaussianBlur(gray, gray, ksize, 0, 0, cv.BORDER_DEFAULT)
-
-    // Map threshold from 0-1 to 0-255
-    const upper = threshold * 255
-    const lower = upper * 0.5
-
-    // Canny edge detection
-    cv.Canny(gray, edges, lower, upper)
+    // Automatic Canny thresholds using sensitivity
+    // const median = cv.mean(gray)[0]
+    // const lower = Math.max(0, median * (0.5 - 0.5 * sensitivity * 10)) // lower decreases with higher sensitivity
+    // const upper = Math.min(255, median * (1.5 + 0.5 * sensitivity * 10)) // upper increases with higher sensitivity
+    cv.Canny(gray, edges, 0, 0)
 
     // Mask edges if not using base image
     if (!useBaseImage && cropBox.value) {
@@ -702,27 +694,176 @@ export function useCropTool(
     const hierarchy = new cv.Mat()
     cv.findContours(edges, contours, hierarchy, cv.RETR_EXTERNAL, cv.CHAIN_APPROX_SIMPLE)
 
-    let cropRect = { x: 0, y: 0, width: img.width, height: img.height }
+    // Create filled mask
+    let maskFilled = new cv.Mat.zeros(edges.rows, edges.cols, cv.CV_8UC1)
+    for (let i = 0; i < contours.size(); i++) {
+      cv.drawContours(maskFilled, contours, i, new cv.Scalar(255), -1)
+    }
 
-    if (contours.size() > 0) {
-      let xMin = canvas.width,
-        yMin = canvas.height,
-        xMax = 0,
-        yMax = 0
-      for (let i = 0; i < contours.size(); i++) {
-        const rect = cv.boundingRect(contours.get(i))
-        xMin = Math.min(xMin, rect.x)
-        yMin = Math.min(yMin, rect.y)
-        xMax = Math.max(xMax, rect.x + rect.width)
-        yMax = Math.max(yMax, rect.y + rect.height)
+    // Morphological opening to remove small noise
+    const kernel = cv.getStructuringElement(cv.MORPH_RECT, new cv.Size(1, 1))
+    cv.morphologyEx(maskFilled, maskFilled, cv.MORPH_OPEN, kernel)
+    kernel.delete()
+
+    // Initial bounding box
+    let xMin = maskFilled.cols,
+      yMin = maskFilled.rows,
+      xMax = 0,
+      yMax = 0
+    for (let y = 0; y < maskFilled.rows; y++) {
+      for (let x = 0; x < maskFilled.cols; x++) {
+        if (maskFilled.ucharPtr(y, x)[0] > 0) {
+          xMin = Math.min(xMin, x)
+          yMin = Math.min(yMin, y)
+          xMax = Math.max(xMax, x)
+          yMax = Math.max(yMax, y)
+        }
       }
+    }
+
+    let cropRect = { x: 0, y: 0, width: img.width, height: img.height }
+    if (xMax >= xMin && yMax >= yMin) {
       cropRect = {
         x: Math.floor(xMin / scale),
         y: Math.floor(yMin / scale),
-        width: Math.ceil((xMax - xMin) / scale),
-        height: Math.ceil((yMax - yMin) / scale),
+        width: Math.ceil((xMax - xMin + 1) / scale),
+        height: Math.ceil((yMax - yMin + 1) / scale),
       }
     }
+
+    // Function to get pixel color at (x, y)
+    const getPixel = (x, y) => {
+      if (x < 0 || x >= imgWidth || y < 0 || y >= imgHeight) return [0, 0, 0, 255]
+      const idx = (y * imgWidth + x) * 4
+      return [data[idx], data[idx + 1], data[idx + 2], data[idx + 3]]
+    }
+
+    /**
+     * Trim one edge adaptively based on color similarity
+     * @param {'left'|'right'|'top'|'bottom'} side - Side to trim
+     */
+    const trimEdgeAdaptive = (side) => {
+      /**
+       * Check if two colors match within a tolerance
+       * @param {number[]} a - First color [r, g, b, a]
+       * @param {number[]} b - Second color [r, g, b, a]
+       * @param {number} tolerance - Tolerance value
+       * @return {boolean} - True if colors match, false otherwise
+       */
+      const colorMatch = (a, b, tolerance = 10) => {
+        return (
+          Math.abs(a[0] - b[0]) <= tolerance &&
+          Math.abs(a[1] - b[1]) <= tolerance &&
+          Math.abs(a[2] - b[2]) <= tolerance
+        )
+      }
+
+      let total, match, pxRef, pxCompare
+
+      const sensitivityMultiplier = 0.98
+
+      switch (side) {
+        case 'left':
+          total = cropRect.height
+          match = 0
+          for (let i = 0; i < total; i++) {
+            pxRef = getPixel(cropRect.x, cropRect.y + i)
+            pxCompare = getPixel(cropRect.x - 1, cropRect.y + i)
+            if (colorMatch(pxRef, pxCompare)) match++
+          }
+          console.log(
+            'Left match:',
+            match / total,
+            'sensitivity:',
+            (1 - sensitivity) * sensitivityMultiplier,
+          )
+          if (match / total >= (1 - sensitivity) * sensitivityMultiplier) {
+            console.warn('LEFT')
+            cropRect.x += 1
+            cropRect.width -= 1
+          }
+          break
+
+        case 'right':
+          total = cropRect.height
+          match = 0
+          for (let i = 0; i < total; i++) {
+            pxRef = getPixel(cropRect.x + cropRect.width - 1, cropRect.y + i)
+            pxCompare = getPixel(cropRect.x + cropRect.width, cropRect.y + i)
+            if (colorMatch(pxRef, pxCompare)) match++
+          }
+          console.log(
+            'Right match:',
+            match / total,
+            'sensitivity:',
+            (1 - sensitivity) * sensitivityMultiplier,
+          )
+          if (match / total >= (1 - sensitivity) * sensitivityMultiplier) {
+            console.warn('RIGHT')
+            cropRect.width -= 1
+          }
+          break
+
+        case 'top':
+          total = cropRect.width
+          match = 0
+          for (let i = 0; i < total; i++) {
+            pxRef = getPixel(cropRect.x + i, cropRect.y)
+            pxCompare = getPixel(cropRect.x + i, cropRect.y - 1)
+            if (colorMatch(pxRef, pxCompare)) match++
+          }
+          console.log(
+            'Top match:',
+            match / total,
+            'sensitivity:',
+            (1 - sensitivity) * sensitivityMultiplier,
+          )
+          if (match / total >= (1 - sensitivity) * sensitivityMultiplier) {
+            console.warn('TOP')
+            cropRect.y += 1
+            cropRect.height -= 1
+          }
+          break
+
+        case 'bottom':
+          total = cropRect.width
+          match = 0
+          for (let i = 0; i < total; i++) {
+            pxRef = getPixel(cropRect.x + i, cropRect.y + cropRect.height - 1)
+            pxCompare = getPixel(cropRect.x + i, cropRect.y + cropRect.height)
+            if (colorMatch(pxRef, pxCompare)) match++
+          }
+          console.log(
+            'Bottom match:',
+            match / total,
+            'sensitivity:',
+            (1 - sensitivity) * sensitivityMultiplier,
+          )
+          if (match / total >= (1 - sensitivity) * sensitivityMultiplier) {
+            console.warn('BOTTOM')
+            cropRect.height -= 1
+          }
+          break
+      }
+    }
+
+    // Apply for all edges only if specific side changed or sensitivity was changed
+    if (cropBox.value.x !== cropRect.x || autoCropThresholdWasChanged.value)
+      trimEdgeAdaptive('left')
+
+    if (
+      cropBox.value.x + cropBox.value.width !== cropRect.x + cropRect.width ||
+      autoCropThresholdWasChanged.value
+    )
+      trimEdgeAdaptive('right')
+    if (cropBox.value.y !== cropRect.y || autoCropThresholdWasChanged.value) trimEdgeAdaptive('top')
+    if (
+      cropBox.value.y + cropBox.value.height !== cropRect.y + cropRect.height ||
+      autoCropThresholdWasChanged.value
+    )
+      trimEdgeAdaptive('bottom')
+
+    autoCropThresholdWasChanged.value = false
 
     // Clean up
     src.delete()
@@ -730,6 +871,7 @@ export function useCropTool(
     edges.delete()
     contours.delete()
     hierarchy.delete()
+    maskFilled.delete()
 
     return cropRect
   }
