@@ -105,6 +105,8 @@ export const useEditorStore = defineStore('editorStore', {
         color: '#000000',
       },
     },
+
+    isModalOpenFlag: false,
   }),
   actions: {
     /**

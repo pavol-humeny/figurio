@@ -1,4 +1,5 @@
 import { ref } from 'vue'
+import { useEditorStore } from '@/stores/editorStore'
 
 /**
  * Whether the modal is currently visible
@@ -43,6 +44,8 @@ let resolver = null
  * }}
  */
 export function useConfirmModal() {
+  const editorStore = useEditorStore()
+
   /**
    * Show the modal and return a Promise that resolves with the user’s choice
    *
@@ -63,6 +66,8 @@ export function useConfirmModal() {
     cancelText.value = modalCancelText
     confirmText.value = modalConfirmText
 
+    editorStore.isModalOpenFlag = true
+
     return new Promise((resolve) => {
       resolver = resolve
     })
@@ -73,6 +78,7 @@ export function useConfirmModal() {
    */
   const confirm = () => {
     isVisible.value = false
+    editorStore.isModalOpenFlag = false
     resolver?.(true)
   }
 
@@ -81,6 +87,7 @@ export function useConfirmModal() {
    */
   const cancel = () => {
     isVisible.value = false
+    editorStore.isModalOpenFlag = false
     resolver?.(false)
   }
 
