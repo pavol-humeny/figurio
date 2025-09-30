@@ -216,17 +216,25 @@ export function useImageRenderer(
     // }
 
     const canvas = document.getElementById('brushCanvas')
+    const ctx = canvas.getContext('2d')
 
     if (imageStore.overlayImage && canvas) {
-      await new Promise((resolve) => setTimeout(resolve, 100))
+      //wait
+      await new Promise((resolve) => setTimeout(resolve, 1))
       console.warn('Rendering OVERLAY image...')
-      const ctx = canvas.getContext('2d')
-      // ctx.clearRect(0, 0, canvas.width, canvas.height)
+
+      if (imageStore.historyWasChanged) {
+        console.warn('Clearing OVERLAY image due to history change...')
+        ctx.clearRect(0, 0, canvas.width, canvas.height)
+        imageStore.historyWasChanged = false
+      }
+
       ctx.drawImage(imageStore.overlayImage, 0, 0, canvas.width, canvas.height)
     } else {
       if (canvas) {
-        const ctx = canvas.getContext('2d')
+        console.warn('Clearing OVERLAY image...')
         ctx.clearRect(0, 0, canvas.width, canvas.height)
+        imageStore.historyWasChanged = false
       }
     }
 
@@ -274,7 +282,7 @@ export function useImageRenderer(
   }
 
   /**
-   * Watch for changes in image dimensions and re-render all layers
+   * Watch for changes in image store and re-render all layers
    */
   watch(
     [
@@ -290,7 +298,6 @@ export function useImageRenderer(
       }
     },
   )
-
   /**
    * Watch for changes in viewport dimensions and update sizes
    */

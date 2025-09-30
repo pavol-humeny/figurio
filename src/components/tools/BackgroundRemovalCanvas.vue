@@ -122,22 +122,25 @@ const getMousePos = (event) => {
 const onMouseDown = (event) => {
   if (editorStore.selectedToolKey !== 'backgroundRemoval' && editorStore.selectedTabPerTool['backgroundRemoval'] !== 'manual') return
 
+  if (event.button !== 0) return // only left mouse
+
+  const viewport = document.getElementById('viewport-content')
+  if (!viewport.contains(event.target)) return
+
   // Drawing with Left mouse button
-  if (event.button === 0) {
-    isDrawing.value = true
-    const pos = getMousePos(event)
-    lastPos.value = pos
+  isDrawing.value = true
+  const pos = getMousePos(event)
+  lastPos.value = pos
 
 
-    // Draw a point if the user just clicks without moving
-    let tool = manualSelectedTool.value
-    if (manualSelectedTool.value === 'brush' && event.altKey) {
-      tool = 'eraser'
-    }
-
-    // Draw a point
-    drawLine(pos, pos, tool)
+  // Draw a point if the user just clicks without moving
+  let tool = manualSelectedTool.value
+  if (manualSelectedTool.value === 'brush' && event.altKey) {
+    tool = 'eraser'
   }
+
+  // Draw a point
+  drawLine(pos, pos, tool)
 }
 
 /**
@@ -187,6 +190,7 @@ const onMouseUpGlobal = () => {
     imageStore.removalCanvas = imageDataToSave
 
     // Push snapshot to history
+    console.warn('1')
     historyStore.push(imageStore.getSnapshot(t))
   }
 }

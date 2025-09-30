@@ -28,6 +28,8 @@ const imageHeight = computed(() => imageStore.fileDimensions.height)
  */
 const isDrawing = ref(false)
 const lastPos = ref({ x: 0, y: 0 })
+const mouseMovedSinceDown = ref(false)
+
 
 /**
  * Canvas context
@@ -87,37 +89,49 @@ const drawLine = (from, to, tool) => {
 }
 
 /**
- * Mouse events
+ * Drawing logic
  */
 const onMouseDown = (event) => {
   if (editorStore.selectedToolKey !== 'brush') return
+  if (event.button !== 0) return
 
-  if (event.button !== 0) return // only left mouse
+  const viewport = document.getElementById('viewport-content')
+  if (!viewport.contains(event.target)) return
+
   isDrawing.value = true
-  const pos = getMousePos(event)
-  lastPos.value = pos
-  drawLine(pos, pos, editorStore.selectedTabPerTool[editorStore.selectedToolKey]) // dot in case of click without move
+  lastPos.value = getMousePos(event)
+  mouseMovedSinceDown.value = false
 }
 
 const onMouseMove = (event) => {
-  if (editorStore.selectedToolKey !== 'brush') return
-  if (!isDrawing.value) return
+  if (!isDrawing.value || editorStore.selectedToolKey !== 'brush') return
+  mouseMovedSinceDown.value = true
+
   const currentPos = getMousePos(event)
   drawLine(lastPos.value, currentPos, editorStore.selectedTabPerTool[editorStore.selectedToolKey])
   lastPos.value = currentPos
 }
 
 const onMouseUpGlobal = () => {
-  if (editorStore.selectedToolKey !== 'brush') return
-  if (!isDrawing.value) return
+  if (!isDrawing.value || editorStore.selectedToolKey !== 'brush') return
   isDrawing.value = false
 
-  // uložiť výsledok do imageStore
+  // Draw dot if click without move
+  if (lastPos.value && !mouseMovedSinceDown.value) {
+    drawLine(lastPos.value, lastPos.value, editorStore.selectedTabPerTool[editorStore.selectedToolKey])
+  }
+
+  if (!canvasRef.value) return
+
+  // Save overlay AFTER drawing
   imageStore.overlayImage = canvasRef.value
   imageStore.overlayImageExport = canvasRef.value
   imageStore.overlayImagePreview = canvasRef.value
 
+  // Push snapshot to history
   historyStore.push(imageStore.getSnapshot(t))
+
+  mouseMovedSinceDown.value = false
 }
 
 /**
@@ -129,9 +143,9 @@ onMounted(() => {
   window.addEventListener('mousemove', onMouseMove)
   window.addEventListener('mousedown', onMouseDown)
 
-  if (!imageStore.overlayImage || !canvasRef.value) return
-  ctx.clearRect(0, 0, canvasRef.value.width, canvasRef.value.height)
-  ctx.drawImage(imageStore.overlayImage, 0, 0, canvasRef.value.width, canvasRef.value.height)
+  // if (!imageStore.overlayImage || !canvasRef.value) return
+  // ctx.clearRect(0, 0, canvasRef.value.width, canvasRef.value.height)
+  // ctx.drawImage(imageStore.overlayImage, 0, 0, canvasRef.value.width, canvasRef.value.height)
 })
 
 onBeforeUnmount(() => {

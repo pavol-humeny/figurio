@@ -39,6 +39,7 @@ const isValidFileName = (name) => {
  */
 export const useImageStore = defineStore('imageStore', {
   state: () => ({
+    historyWasChanged: false,
     /** The currently loaded image file */
     file: null,
     /** Type of the loaded file */
@@ -1778,6 +1779,13 @@ export const useImageStore = defineStore('imageStore', {
         // Add svgObjects and frame
         await this.createSvgPdf(pdf, finalWidth, finalHeight, offsetX, offsetY)
 
+        // Add overlay image if present
+        if (this.overlayImage !== null) {
+          const overlayCanvas = this.overlayImage
+          const overlayDataUrl = overlayCanvas.toDataURL('image/png')
+          pdf.addImage(overlayDataUrl, 'PNG', 0, 0, overlayCanvas.width, overlayCanvas.height)
+        }
+
         // Add magnify overlay image as extra layer
         if (this.svgObjects.some((obj) => obj.class === 'magnifyArea')) {
           await this.rasterize(t, false, null, null, false, true)
@@ -2422,6 +2430,11 @@ export const useImageStore = defineStore('imageStore', {
      * @returns {object} Snapshot object
      */
     getSnapshot(t) {
+      const cloneCanvasToDataURL = (canvas) => {
+        if (!canvas) return null
+        return canvas.toDataURL() // store as string, avoids Vue Proxy issues
+      }
+
       const snapshot = {
         fileName: this.fileName,
         fileType: this.fileType,
@@ -2430,9 +2443,11 @@ export const useImageStore = defineStore('imageStore', {
         previewUrl: this.previewUrl,
         // blurPreviewUrl: JSON.parse(JSON.stringify(this.blurPreviewUrl)),
         renderedImage: this.getRenderedImage({ t, renderCall: true })?.toDataURL() || null,
-        overlayImage: this.overlayImage ? this.overlayImage.toDataURL() : null,
-        overlayImageExport: this.overlayImageExport ? this.overlayImageExport.toDataURL() : null,
-        overlayImagePreview: this.overlayImagePreview ? this.overlayImagePreview.toDataURL() : null,
+
+        overlayImage: cloneCanvasToDataURL(this.overlayImage),
+        overlayImageExport: cloneCanvasToDataURL(this.overlayImageExport),
+        overlayImagePreview: cloneCanvasToDataURL(this.overlayImagePreview),
+
         pdfPageBytes: this.pdfPageBytes ? new Uint8Array(this.pdfPageBytes) : undefined,
         totalPdfCropBox: JSON.parse(JSON.stringify(this.totalPdfCropBox)),
         // originalImage: this.originalImage?.toDataURL() || null,
@@ -2457,6 +2472,8 @@ export const useImageStore = defineStore('imageStore', {
      * @returns {void}
      */
     applySnapshot(snapshot) {
+      this.historyWasChanged = true
+
       this.fileName = snapshot.fileName
       this.fileType = snapshot.fileType
       this.fileDimensions = JSON.parse(JSON.stringify(snapshot.fileDimensions))
@@ -2503,53 +2520,22 @@ export const useImageStore = defineStore('imageStore', {
         this.setRenderedImage(null)
       }
 
-      // Overlay image
-      if (snapshot.overlayImage) {
+      const recreateCanvas = (dataURL) => {
+        if (!dataURL) return null
         const img = new Image()
+        const canvas = document.createElement('canvas')
         img.onload = () => {
-          const canvas = document.createElement('canvas')
           canvas.width = img.width
           canvas.height = img.height
-          const ctx = canvas.getContext('2d')
-          ctx.drawImage(img, 0, 0)
-          this.overlayImage = canvas
+          canvas.getContext('2d').drawImage(img, 0, 0)
         }
-        img.src = snapshot.overlayImage
-      } else {
-        this.overlayImage = null
+        img.src = dataURL
+        return canvas
       }
 
-      // Overlay image for export
-      if (snapshot.overlayImageExport) {
-        const img = new Image()
-        img.onload = () => {
-          const canvas = document.createElement('canvas')
-          canvas.width = img.width
-          canvas.height = img.height
-          const ctx = canvas.getContext('2d')
-          ctx.drawImage(img, 0, 0)
-          this.overlayImageExport = canvas
-        }
-        img.src = snapshot.overlayImageExport
-      } else {
-        this.overlayImageExport = null
-      }
-
-      // Overlay image for preview
-      if (snapshot.overlayImagePreview) {
-        const img = new Image()
-        img.onload = () => {
-          const canvas = document.createElement('canvas')
-          canvas.width = img.width
-          canvas.height = img.height
-          const ctx = canvas.getContext('2d')
-          ctx.drawImage(img, 0, 0)
-          this.overlayImagePreview = canvas
-        }
-        img.src = snapshot.overlayImagePreview
-      } else {
-        this.overlayImagePreview = null
-      }
+      this.overlayImage = recreateCanvas(snapshot.overlayImage)
+      this.overlayImageExport = recreateCanvas(snapshot.overlayImageExport)
+      this.overlayImagePreview = recreateCanvas(snapshot.overlayImagePreview)
 
       // Removal canvas
       // if (snapshot.removalCanvas) {
