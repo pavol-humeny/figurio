@@ -4,9 +4,18 @@
     "items": []
   },
   "versions":{
+    "4.8.0":{
+      "label": "4.8.0",
+      "date":"30.9. 2025",
+      "newFeatures": {
+        "items": [
+          "New tool - Brush tool for freehand drawing"
+        ]
+      }
+    },
     "4.7.5":{
       "label": "4.7.5",
-      "date":"24.9. 2025",
+      "date":"29.9. 2025",
       "bugFixes": {
         "items": [
           "Fix fit crop precision issue"
@@ -15,7 +24,7 @@
     },
     "4.7.4":{
       "label": "4.7.4",
-      "date":"24.9. 2025",
+      "date":"28.9. 2025",
       "improvements": {
         "items": [
           "New manual adjustments UI layout in crop tool"
@@ -24,7 +33,7 @@
     },
     "4.7.3":{
       "label": "4.7.3",
-      "date":"24.9. 2025",
+      "date":"28.9. 2025",
       "bugFixes": {
         "items": [
           "Frame tool set history snapshot only after mouse up when changing header/footer multiplier"
@@ -33,7 +42,7 @@
     },
     "4.7.2":{
       "label": "4.7.2",
-      "date":"24.9. 2025",
+      "date":"28.9. 2025",
       "improvements": {
         "items": [
           "Do not center image when switching between files and zoom mode is same",
@@ -43,7 +52,7 @@
     },
     "4.7.1":{
       "label": "4.7.1",
-      "date":"24.9. 2025",
+      "date":"27.9. 2025",
       "bugFixes": {
         "items": [
           "Use cropped image after cropping in other tools"
@@ -52,7 +61,7 @@
     },
     "4.7.0":{
       "label": "4.7.0",
-      "date":"24.9. 2025",
+      "date":"26.9. 2025",
       "newFeatures": {
         "items": [
           "Add soft edges to the selection in background removal tool"
@@ -61,7 +70,7 @@
     },
     "4.6.0":{
       "label": "4.6.0",
-      "date":"24.9. 2025",
+      "date":"25.9. 2025",
       "newFeatures": {
         "items": [
           "Contrast and normal mode - switch between two different color schemes for better visibility"
