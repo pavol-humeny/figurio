@@ -31,6 +31,7 @@ export const globalConfig = {
       crop: true,
       backgroundRemoval: true,
       select: true,
+      brush: true,
       transform: true,
       autoCrop: true,
       grayscale: true,

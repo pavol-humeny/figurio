@@ -2,6 +2,7 @@ import { ref, onMounted, nextTick, computed, watch } from 'vue'
 import { useCollapsiblePanel } from '../common/useCollapsiblePanel'
 import { useSendEvent } from '../common/useSendEvent'
 import { useToastModal } from '../modals/useToastModal'
+import { useConfirmModal } from '../modals/useConfirmModal'
 
 /**
  * Logic for managing the left tools panel
@@ -24,6 +25,7 @@ import { useToastModal } from '../modals/useToastModal'
  */
 export function useToolsPanel(editorStore, imageStore, uiStore, t) {
   const { showToastModal } = useToastModal()
+  const { showConfirmModal } = useConfirmModal()
 
   /**
    * Reference to the scrollable tools panel element
@@ -69,9 +71,12 @@ export function useToolsPanel(editorStore, imageStore, uiStore, t) {
         newVal.tool === 'blur' ||
         newVal.tool === 'text' ||
         newVal.tool === 'shape' ||
-        newVal.tool === 'magnifyArea'
+        newVal.tool === 'magnifyArea' ||
+        newVal.tool === 'brush' ||
+        newVal.tool === 'crop'
       ) {
         editorStore.selectSubTool('')
+        imageStore.removeGrayscaleOperation()
       }
 
       if (
@@ -147,7 +152,7 @@ export function useToolsPanel(editorStore, imageStore, uiStore, t) {
    * @param {string} toolKey - Tool key to toggle
    * @param {string | null} [tabKey] - Optional tab key to activate
    */
-  const toggleTool = (toolKey, tabKey) => {
+  const toggleTool = async (toolKey, tabKey) => {
     if (!imageStore.isImageLoaded || editorStore.isExportModalOpen) return
     if (editorStore.enableTools[toolKey] === false) {
       console.log('Tool is disabled:', toolKey)
@@ -158,6 +163,30 @@ export function useToolsPanel(editorStore, imageStore, uiStore, t) {
         t('tools.toolIsNotAvailable.message'),
       )
       return
+    }
+
+    if (imageStore.needMergeOverlay) {
+      if (
+        toolKey === 'crop' ||
+        toolKey === 'grayscale' ||
+        toolKey === 'blur' ||
+        toolKey === 'shape' ||
+        toolKey === 'text' ||
+        toolKey === 'magnifyArea' ||
+        toolKey === 'preset'
+      ) {
+        const confirmed = await showConfirmModal(
+          t('tools.confirmNeedOverlayMerge.title'),
+          t('tools.confirmNeedOverlayMerge.message'),
+          t('tools.confirmNeedOverlayMerge.cancel'),
+          t('tools.confirmNeedOverlayMerge.confirm'),
+        )
+        if (confirmed) {
+          imageStore.mergeOverlayIntoImage()
+        } else {
+          return
+        }
+      }
     }
 
     console.log('Toggle tool:', toolKey, 'Tab:', tabKey)

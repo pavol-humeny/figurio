@@ -290,6 +290,10 @@ export const useImageStore = defineStore('imageStore', {
       return this.imageOperations.some((op) => op.type === 'grayscale')
     },
 
+    removeGrayscaleOperation() {
+      this.imageOperations = this.imageOperations.filter((op) => op.type !== 'grayscale')
+    },
+
     /**
      * Adds a deep copy of a new image operation to the operations list
      * @param {Object} operation - The image operation to add

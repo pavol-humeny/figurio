@@ -92,7 +92,10 @@ const drawLine = (from, to, tool) => {
  * Drawing logic
  */
 const onMouseDown = (event) => {
+  if (imageStore.needRasterization) return
+
   if (editorStore.selectedToolKey !== 'brush') return
+  
   if (event.button !== 0) return
 
   const viewport = document.getElementById('viewport-content')

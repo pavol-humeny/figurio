@@ -362,7 +362,7 @@ const cursorStyleVars = computed(() => {
         </div>
         <div v-if="mouseX !== null" class="ruler-cursor-mark horizontal" :style="{ left: mouseX + 'px' }">
           <span class="ruler-cursor-label horizontal" :class="{ 'active': cursorPosXSameAsImageWidth }">{{ cursorPosX
-          }}</span>
+            }}</span>
         </div>
 
       </div>
@@ -375,7 +375,7 @@ const cursorStyleVars = computed(() => {
         </div>
         <div v-if="mouseY !== null" class="ruler-cursor-mark vertical" :style="{ top: mouseY + 'px' }">
           <span class="ruler-cursor-label vertical" :class="{ 'active': cursorPosYSameAsImageHeight }">{{ cursorPosY
-          }}</span>
+            }}</span>
         </div>
       </div>
     </div>
