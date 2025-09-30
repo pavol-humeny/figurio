@@ -154,7 +154,7 @@ export function useResizeTool(imageStore, historyStore, viewportStore, t) {
    * Apply the resize operation to the operation history and canvas
    */
   const applyResize = async () => {
-    if (imageStore.svgObjects.length > 0 || imageStore.blurObjects.length > 0) {
+    if (imageStore.needRasterization) {
       const confirmed = await showConfirmModal(
         t('tools.confirmNeedRasterization.title'),
         t('tools.confirmNeedRasterization.message'),
@@ -163,6 +163,20 @@ export function useResizeTool(imageStore, historyStore, viewportStore, t) {
       )
       if (confirmed) {
         await imageStore.rasterize(t, true)
+      } else {
+        return
+      }
+    }
+
+    if (imageStore.needMergeOverlay) {
+      const confirmed = await showConfirmModal(
+        t('tools.confirmNeedOverlayMerge.title'),
+        t('tools.confirmNeedOverlayMerge.message'),
+        t('tools.confirmNeedOverlayMerge.cancel'),
+        t('tools.confirmNeedOverlayMerge.confirm'),
+      )
+      if (confirmed) {
+        imageStore.mergeOverlayIntoImage()
       } else {
         return
       }

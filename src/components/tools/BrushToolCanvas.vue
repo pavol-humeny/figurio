@@ -1,6 +1,5 @@
 <script setup>
 import { ref, computed, onMounted, onBeforeUnmount } from 'vue'
-import { useBrushTool } from '@/composables/tools/useBrushTool'
 import { useImageStore } from '@/stores/imageStore'
 import { useHistoryStore } from '@/stores/historyStore'
 import { useViewportStore } from '@/stores/viewportStore'
@@ -12,11 +11,6 @@ const imageStore = useImageStore()
 const historyStore = useHistoryStore()
 const viewportStore = useViewportStore()
 const editorStore = useEditorStore()
-
-const {
-  brushColor,
-  brushToolType,
-} = useBrushTool(imageStore, historyStore, t)
 
 /**
  * Reference to the canvas
@@ -52,6 +46,20 @@ const getMousePos = (event) => {
 }
 
 /**
+ * Convert HEX color to RGB string
+ * @param {string} hex - HEX color string, e.g. "#d30f0f"
+ * @return {string} - RGB color string, e.g. "rgb(211,15,15)"
+ */
+function hexToRgb(hex) {
+  if (!hex) return 'rgb(0,0,0)' // fallback to black
+  const bigint = parseInt(hex.replace('#', ''), 16)
+  const r = (bigint >> 16) & 255
+  const g = (bigint >> 8) & 255
+  const b = bigint & 255
+  return `rgb(${r},${g},${b})`
+}
+
+/**
  * Draw line between points
  */
 const drawLine = (from, to, tool) => {
@@ -60,11 +68,13 @@ const drawLine = (from, to, tool) => {
   ctx.lineCap = 'round'
 
   if (tool === 'eraser') {
+    ctx.save()
     ctx.globalCompositeOperation = 'destination-out'
-    ctx.strokeStyle = 'rgba(0,0,0,1)'
+    ctx.strokeStyle = '#000000' // color doesn't matter for eraser
   } else {
+    ctx.save()
     ctx.globalCompositeOperation = 'source-over'
-    ctx.strokeStyle = brushColor.value || 'black'
+    ctx.strokeStyle = editorStore.toolsConfig.brush.color ? hexToRgb(editorStore.toolsConfig.brush.color) : 'rgb(0,0,0)'
   }
 
   ctx.beginPath()
@@ -73,7 +83,7 @@ const drawLine = (from, to, tool) => {
   ctx.stroke()
   ctx.closePath()
 
-  ctx.globalCompositeOperation = 'source-over'
+  ctx.restore()
 }
 
 /**
@@ -86,14 +96,14 @@ const onMouseDown = (event) => {
   isDrawing.value = true
   const pos = getMousePos(event)
   lastPos.value = pos
-  drawLine(pos, pos, brushToolType.value) // dot in case of click without move
+  drawLine(pos, pos, editorStore.selectedTabPerTool[editorStore.selectedToolKey]) // dot in case of click without move
 }
 
 const onMouseMove = (event) => {
   if (editorStore.selectedToolKey !== 'brush') return
   if (!isDrawing.value) return
   const currentPos = getMousePos(event)
-  drawLine(lastPos.value, currentPos, brushToolType.value)
+  drawLine(lastPos.value, currentPos, editorStore.selectedTabPerTool[editorStore.selectedToolKey])
   lastPos.value = currentPos
 }
 

@@ -206,22 +206,20 @@ export function useImageRenderer(
     }
 
     // Save to overlay ref imageStore.overlayImage
+    // await new Promise((resolve) => setTimeout(resolve, 1))
 
-    // wait 100 ms
-    await new Promise((resolve) => setTimeout(resolve, 1))
-
-    if (overlayImageRef.value) {
-      if (imageStore.overlayImage !== null) {
-        console.warn('Rendering OVERLAY image...')
-        overlayImageRef.value.src = imageStore.overlayImage.toDataURL()
-      }
-    }
+    // if (overlayImageRef.value) {
+    //   if (imageStore.overlayImage !== null) {
+    //     console.warn('Rendering OVERLAY image...')
+    //     overlayImageRef.value.src = imageStore.overlayImage.toDataURL()
+    //   }
+    // }
 
     const canvas = document.getElementById('brushCanvas')
 
     if (imageStore.overlayImage && canvas) {
-      // await new Promise((resolve) => setTimeout(resolve, 1))
-
+      await new Promise((resolve) => setTimeout(resolve, 100))
+      console.warn('Rendering OVERLAY image...')
       const ctx = canvas.getContext('2d')
       // ctx.clearRect(0, 0, canvas.width, canvas.height)
       ctx.drawImage(imageStore.overlayImage, 0, 0, canvas.width, canvas.height)

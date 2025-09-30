@@ -625,8 +625,19 @@ export function useViewportWrapper(viewportStore, imageStore, editorStore, uiSto
     if (editorStore.isCursorResizing) {
       const deltaX = event.clientX - lastMouseX.value
       if (deltaX !== 0) {
-        editorStore.cursorSize =
-          editorStore.cursorSize + deltaX / editorConfig.cursorResizingSensitivity
+        // Maximum size of the brush tool (10% of smaller image dimension, min 10px)
+        const smallerDimension = imageStore.getSmallerImageDimension()
+        const maxCursorSize = Math.max(
+          10,
+          Math.floor(smallerDimension * editorConfig.maxManualToolSizeCoefficient),
+        )
+
+        // Set new cursor size based on horizontal mouse movement
+        editorStore.cursorSize = clamp(
+          editorStore.cursorSize + deltaX / editorConfig.cursorResizingSensitivity,
+          2,
+          maxCursorSize,
+        )
 
         lastMouseX.value = event.clientX
       }
@@ -642,6 +653,20 @@ export function useViewportWrapper(viewportStore, imageStore, editorStore, uiSto
     mouseY.value = event.clientY - rect.top
 
     cursorPos.value = { x: mouseX.value, y: mouseY.value }
+  }
+
+  /**
+   * Hide cursor when leaving the wrapper
+   */
+  const onMouseLeave = () => {
+    showCursor.value = false
+  }
+
+  /**
+   * Show cursor when entering the wrapper
+   */
+  const onMouseEnter = () => {
+    showCursor.value = true
   }
 
   /**
@@ -715,6 +740,10 @@ export function useViewportWrapper(viewportStore, imageStore, editorStore, uiSto
     }
   })
 
+  // ------------------------------
+  // Cursor
+  // ------------------------------
+
   /**
    * Watch for changes of zoom level and update dimensions
    */
@@ -740,7 +769,15 @@ export function useViewportWrapper(viewportStore, imageStore, editorStore, uiSto
     },
   )
 
+  /**
+   * Position of the cursor for tools like brush or manual background removal
+   */
   const cursorPos = ref({ x: 0, y: 0 })
+
+  /**
+   * Whether to show the custom cursor
+   */
+  const showCursor = ref(false)
 
   return {
     zoomLevel,
@@ -772,5 +809,8 @@ export function useViewportWrapper(viewportStore, imageStore, editorStore, uiSto
     cursorPosYSameAsImageHeight,
     guideLines,
     cursorPos,
+    showCursor,
+    onMouseLeave,
+    onMouseEnter,
   }
 }

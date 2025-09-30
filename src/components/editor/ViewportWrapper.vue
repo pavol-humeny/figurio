@@ -77,6 +77,9 @@ const {
   cursorPosYSameAsImageHeight,
   guideLines,
   cursorPos,
+  showCursor,
+  onMouseLeave,
+  onMouseEnter,
 } = useViewportWrapper(useViewportStore(), useImageStore(), useEditorStore(), useUiStore(), contentRef, t)
 
 /**
@@ -197,7 +200,7 @@ const cursorStyleVars = computed(() => {
 
 <template>
   <div class="viewport-wrapper" id="viewport" @mousedown="onMouseDownSelect" @dragover="handleDragOver"
-    @dragleave="handleDragLeave" @drop="handleDrop"
+    @dragleave="handleDragLeave" @drop="handleDrop" @mouseleave="onMouseLeave" @mouseenter="onMouseEnter"
     :style="{ cursor: editorStore.selectedToolKey === 'brush' ? 'none' : 'default' }">
     <LoadingSpinner />
 
@@ -324,7 +327,7 @@ const cursorStyleVars = computed(() => {
 
     <!-- Cursor -->
     <div
-      v-if="(editorStore.selectedToolKey === 'backgroundRemoval' && editorStore.selectedTabPerTool['backgroundRemoval'] === 'manual') || editorStore.selectedToolKey === 'brush'"
+      v-if="showCursor && ((editorStore.selectedToolKey === 'backgroundRemoval' && editorStore.selectedTabPerTool['backgroundRemoval'] === 'manual') || editorStore.selectedToolKey === 'brush')"
       class="custom-cursor" :style="{
         ...cursorStyleVars,
         width: editorStore.cursorSize * zoomLevel + 'px',
@@ -359,7 +362,7 @@ const cursorStyleVars = computed(() => {
         </div>
         <div v-if="mouseX !== null" class="ruler-cursor-mark horizontal" :style="{ left: mouseX + 'px' }">
           <span class="ruler-cursor-label horizontal" :class="{ 'active': cursorPosXSameAsImageWidth }">{{ cursorPosX
-            }}</span>
+          }}</span>
         </div>
 
       </div>
@@ -372,7 +375,7 @@ const cursorStyleVars = computed(() => {
         </div>
         <div v-if="mouseY !== null" class="ruler-cursor-mark vertical" :style="{ top: mouseY + 'px' }">
           <span class="ruler-cursor-label vertical" :class="{ 'active': cursorPosYSameAsImageHeight }">{{ cursorPosY
-            }}</span>
+          }}</span>
         </div>
       </div>
     </div>

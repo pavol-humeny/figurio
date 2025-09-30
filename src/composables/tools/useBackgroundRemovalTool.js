@@ -16,6 +16,9 @@ const manualToolSize = ref(0)
 export function useBackgroundRemovalTool(imageStore, historyStore, workspaceStore, editorStore, t) {
   const { showConfirmModal } = useConfirmModal()
 
+  /**
+   * Watch for manual tool size changes in store and update local value
+   */
   watch(
     () => editorStore.cursorSize,
     (newSize) => {
@@ -692,7 +695,7 @@ export function useBackgroundRemovalTool(imageStore, historyStore, workspaceStor
       await imageStore.rasterizeBaseImage(t)
     }
 
-    if (imageStore.svgObjects.length > 0 || imageStore.blurObjects.length > 0) {
+    if (imageStore.needRasterization) {
       const confirmed = await showConfirmModal(
         t('tools.confirmNeedRasterization.title'),
         t('tools.confirmNeedRasterization.message'),
@@ -701,6 +704,20 @@ export function useBackgroundRemovalTool(imageStore, historyStore, workspaceStor
       )
       if (confirmed) {
         await imageStore.rasterize(t)
+      } else {
+        return
+      }
+    }
+
+    if (imageStore.needMergeOverlay) {
+      const confirmed = await showConfirmModal(
+        t('tools.confirmNeedOverlayMerge.title'),
+        t('tools.confirmNeedOverlayMerge.message'),
+        t('tools.confirmNeedOverlayMerge.cancel'),
+        t('tools.confirmNeedOverlayMerge.confirm'),
+      )
+      if (confirmed) {
+        imageStore.mergeOverlayIntoImage()
       } else {
         return
       }
@@ -742,23 +759,6 @@ export function useBackgroundRemovalTool(imageStore, historyStore, workspaceStor
       b: bgB,
       a: bgA,
     } = getBackgroundColorRGBA(replaceWithBackgroundColor.value)
-
-    // Apply mask: make pixels transparent where mask is red
-    // for (let i = 0; i < data.length; i += 4) {
-    //   const maskR = maskPixels[i]
-    //   const maskG = maskPixels[i + 1]
-    //   const maskB = maskPixels[i + 2]
-    //   const maskA = maskPixels[i + 3]
-
-    //   // If the pixel is mask
-    //   const { fillR, fillG, fillB } = getHighlightColorRGBA()
-    //   if (maskA > 0 && maskR === fillR && maskG === fillG && maskB === fillB) {
-    //     data[i] = bgR
-    //     data[i + 1] = bgG
-    //     data[i + 2] = bgB
-    //     data[i + 3] = bgA
-    //   }
-    // }
 
     // Apply mask: remove/replace based on mask alpha
     for (let i = 0; i < data.length; i += 4) {

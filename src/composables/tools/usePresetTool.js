@@ -386,7 +386,7 @@ export function usePresetTool(
    * Replace or add operations based on user confirmation
    */
   const applyPreset = async () => {
-    if (imageStore.svgObjects.length > 0 || imageStore.blurObjects.length > 0) {
+    if (imageStore.needRasterization) {
       const confirmed = await showConfirmModal(
         t('tools.confirmNeedRasterization.title'),
         t('tools.confirmNeedRasterization.message'),

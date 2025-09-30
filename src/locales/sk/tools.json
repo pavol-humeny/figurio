@@ -321,7 +321,47 @@
     "tipDisabled": "",
     "explain": "Nástroj Štetec umožňuje maľovať na obrázok pomocou štetca. Môžete upraviť veľkosť štetca, tvrdosť a priehľadnosť pre dosiahnutie rôznych efektov.",
     "shortcut": "SHIFT + B",
+    "subTools": {
+      "brush": {
+        "label": "Štetec",
+        "tip": "Malovanie na obrázok pomocou štetca",
+        "explain": "Nástroj Štetec umožňuje maľovať na obrázok pomocou štetca. Môžete upraviť veľkosť štetca, tvrdosť a priehľadnosť pre dosiahnutie rôznych efektov.",
+        "shortcut": ""
+      },
+      "eraser": {
+        "label": "Guma",
+        "tip": "Odstraňuje natreté oblasti z obrázka",
+        "explain": "Nástroj Guma umožňuje odstrániť natreté oblasti z obrázka. Môžete upraviť veľkosť gumy a tvrdosť, aby ste ovplyvnili, koľko z natretého územia sa odstráni.",
+        "shortcut": ""
+      }
+    },
     "settings": {
+      "brush": {
+        "label": "Štetec",
+        "toolSize": {
+          "label": "Veľkosť štetca",
+          "tip": "Upravte veľkosť štetca"
+        },
+        "brushColor": {
+          "label": "Farba štetca",
+          "tip": "Vyberte farbu štetca"
+        },
+        "rasterizeButton": {
+          "text": "Rasterizovať",
+          "tip": "Obrázok musí byť rasterizovaný pred použitím nástroja guma"
+        }
+      },
+      "eraser": {
+        "label": "Guma",
+        "toolSize": {
+          "label": "Veľkosť gumy",
+          "tip": "Upravte veľkosť gumy"
+        },
+        "rasterizeButton": {
+          "text": "Rasterizovať",
+          "tip": "Obrázok musí byť rasterizovaný pred použitím nástroja guma"
+        }
+      }
     }
   },
   "blur": {
@@ -992,6 +1032,12 @@
     "message": "Táto operácia vyžaduje rastrovanie základného obrázka, pretože obsahuje vektorové objekty. Rastrovanie prevedie vektorové objekty na pixely, čo môže spôsobiť stratu kvality.",
     "cancel": "Zrušiť",
     "confirm": "Rastrovať"
+  },
+  "confirmNeedOverlayMerge": {
+    "title": "Potvrdiť zlúčenie vrstvy",
+    "message": "Táto operácia zlúči rastrovú vrstvu s hlavným obrázkom. Všetok obsah, vrátane ťahov štetcom a iných rastrových objektov, sa stane súčasťou obrázka a nebude možné ho neskôr samostatne upravovať.",
+    "cancel": "Zrušiť",
+    "confirm": "Zlúčiť a pokračovať"
   },
   "toolIsNotAvailable": {
     "tip": "Tento nástroj nie je k dispozícii",

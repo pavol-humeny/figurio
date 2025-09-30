@@ -321,7 +321,47 @@
     "tipDisabled": "",
     "explain": "The Brush tool allows you to paint on the image with a brush. You can adjust the brush size, hardness, and opacity to achieve different effects.",
     "shortcut": "SHIFT + B",
+    "subTools": {
+      "brush": {
+        "label": "Brush",
+        "tip": "Paints on the image with a brush tool",
+        "explain": "The Brush tool allows you to paint on the image with a brush. You can adjust the brush size, hardness, and opacity to achieve different effects.",
+        "shortcut": ""
+      },
+      "eraser": {
+        "label": "Eraser",
+        "tip": "Removes painted areas from the image",
+        "explain": "The Eraser tool allows you to remove painted areas from the image. You can adjust the eraser size and hardness to control how much of the painted area is removed.",
+        "shortcut": ""
+      }
+    },
     "settings": {
+      "brush": {
+        "label": "Brush",
+        "toolSize": {
+          "label": "Brush size",
+          "tip": "Adjust the size of the brush"
+        },
+        "brushColor": {
+          "label": "Brush color",
+          "tip": "Select the color of the brush"
+        },
+        "rasterizeButton": {
+          "text": "Rasterize",
+          "tip": "Image need to be rasterized before using the brush tool"
+        }
+      },
+      "eraser": {
+        "label": "Eraser",
+        "toolSize": {
+          "label": "Eraser size",
+          "tip": "Adjust the size of the eraser"
+        },
+        "rasterizeButton": {
+          "text": "Rasterize",
+          "tip": "Image need to be rasterized before using the eraser tool"
+        }
+      }
     }
   },
   "blur": {
@@ -992,6 +1032,12 @@
     "message": "This operation requires rasterization of the base image because it contains vector objects. Rasterization will convert vector objects to pixels, which may result in loss of quality.",
     "cancel": "Cancel",
     "confirm": "Rasterize"
+  },
+  "confirmNeedOverlayMerge": {
+    "title": "Merge Raster Layer",
+    "message": "This operation will merge the raster layer with the main image. All content, including brush strokes and other rasterized objects, will become part of the image and cannot be edited separately afterwards.",
+    "cancel": "Cancel",
+    "confirm": "Merge and continue"
   },
   "toolIsNotAvailable": {
     "tip": "This tool is not available",

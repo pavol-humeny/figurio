@@ -42,6 +42,16 @@ export const toolsDefinitions = [
     key: 'brush',
     iconName: 'IconBrush',
     settingsComponent: () => import('@/components/toolsSettings/BrushToolSettings.vue'),
+    subTools: [
+      {
+        key: 'brush',
+        iconName: 'IconBrush',
+      },
+      {
+        key: 'eraser',
+        iconName: 'IconEraser',
+      },
+    ],
   },
   {
     key: 'select',
