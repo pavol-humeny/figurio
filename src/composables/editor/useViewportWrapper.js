@@ -635,7 +635,7 @@ export function useViewportWrapper(viewportStore, imageStore, editorStore, uiSto
         // Set new cursor size based on horizontal mouse movement
         editorStore.cursorSize = clamp(
           editorStore.cursorSize + deltaX / editorConfig.cursorResizingSensitivity,
-          2,
+          editorConfig.minManualToolSize,
           maxCursorSize,
         )
 

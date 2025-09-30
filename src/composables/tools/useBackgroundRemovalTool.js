@@ -196,7 +196,7 @@ export function useBackgroundRemovalTool(imageStore, historyStore, workspaceStor
   /**
    * Minimum size of the manual tool (2px)
    */
-  const manualMinToolSize = 2
+  const manualMinToolSize = editorConfig.minManualToolSize
 
   /**
    * Select manual tool

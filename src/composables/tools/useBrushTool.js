@@ -13,7 +13,12 @@ export function useBrushTool(imageStore, historyStore, editorStore, t) {
   /**
    * Color of the brush tool (initialized from store)
    */
-  const brushColor = ref(editorStore.toolsConfig.brush.color)
+  const brushColor = computed({
+    get: () => editorStore.toolsConfig.brush.color,
+    set: (value) => {
+      editorStore.toolsConfig.brush.color = value
+    },
+  })
 
   /**
    * Save selected color to store
@@ -25,7 +30,7 @@ export function useBrushTool(imageStore, historyStore, editorStore, t) {
   /**
    * Minimum size of the manual tool (2px)
    */
-  const brushMinToolSize = 2
+  const brushMinToolSize = editorConfig.minManualToolSize
 
   /**
    * Watch for brush tool size changes in store and update local value
