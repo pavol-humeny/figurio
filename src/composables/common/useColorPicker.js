@@ -274,7 +274,11 @@ export function useColorPicker(props, emit) {
     }
 
     // Validate
-    if (!/^#([0-9A-Fa-f]{6})$/.test(hex)) return
+    if (!/^#([0-9A-Fa-f]{6})$/.test(hex)) {
+      // Revert to last valid value
+      hexValue.value = colorValue.value
+      return
+    }
 
     // Set normalized value
     hexValue.value = hex.toLowerCase()
