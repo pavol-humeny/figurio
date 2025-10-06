@@ -61,6 +61,11 @@ export function useFrameTool(imageStore, historyStore, editorStore, t) {
   )
 
   /**
+   * Phone buttons visibility
+   */
+  const drawPhoneButtons = ref(true)
+
+  /**
    * Outline visibility
    */
   const drawOutline = ref(imageStore.frame.outlineEnabled)
@@ -147,6 +152,13 @@ export function useFrameTool(imageStore, historyStore, editorStore, t) {
       })
     }
   })
+
+  // /**
+  //  * Watch for drawPhoneButtons and update frame
+  //  */
+  // watch(drawPhoneButtons, () => {
+  //   applyFrame()
+  // })
 
   // ------------------------
   // Check frame type
@@ -242,6 +254,15 @@ export function useFrameTool(imageStore, historyStore, editorStore, t) {
       frameWidth.value = calculateInitialFrameWidth()
       applyFrame()
     })
+  }
+
+  /**
+   * Set phone buttons visibility
+   * @param {boolean} value - Whether to show phone buttons
+   */
+  const setPhoneButtons = (value) => {
+    drawPhoneButtons.value = value
+    applyFrame()
   }
 
   /**
@@ -363,6 +384,7 @@ export function useFrameTool(imageStore, historyStore, editorStore, t) {
     imageStore.frame.enabled = true
     imageStore.frame.outlineEnabled = JSON.parse(JSON.stringify(drawOutline.value))
     imageStore.frame.phoneHeaderEnabled = JSON.parse(JSON.stringify(drawPhoneHeader.value))
+    imageStore.frame.phoneHeaderButtonsEnabled = JSON.parse(JSON.stringify(drawPhoneButtons.value))
     imageStore.frame.phoneHeaderTextColor = JSON.parse(JSON.stringify(phoneHeaderTextColor.value))
     imageStore.frame.phoneHeaderBackgroundColor = JSON.parse(
       JSON.stringify(phoneHeaderBackgroundColor.value),
@@ -485,9 +507,11 @@ export function useFrameTool(imageStore, historyStore, editorStore, t) {
 
     const hasHeader = isFrameWithHeader(frame.type)
 
+    const adjustmentForPhoneButtons = !frame.phoneHeaderButtonsEnabled ? fw / 3 : 0
+
     const header = imageStore.frame.headerSize
     const footer = imageStore.frame.footerSize
-    const svgWidth = w + fw * 2
+    const svgWidth = w + fw * 2 - 2 * adjustmentForPhoneButtons
     const svgHeight = h + fh * 2 + (hasHeader ? header - fh : 0) + (footer > 0 ? footer - fh : 0)
     const phoneCornerRadius = Math.floor(Math.min(svgWidth, svgHeight) * 0.06)
 
@@ -497,20 +521,22 @@ export function useFrameTool(imageStore, historyStore, editorStore, t) {
 
     const headerSize = header - strokeWidth
 
+    const drawingAdjustmentForPhoneButtons = frame.phoneHeaderButtonsEnabled ? (fw / 3) * 2 : fw / 3
+
     const phoneFrameValues = {
       strokeWidth,
       radius: phoneCornerRadius,
       offset,
-      left: strokeWidth,
+      left: drawingAdjustmentForPhoneButtons,
       top: offset,
-      right: svgWidth - strokeWidth,
+      right: svgWidth - drawingAdjustmentForPhoneButtons,
       bottom: svgHeight - offset,
       headerSize: headerSize,
     }
 
     el.setAttribute('width', svgWidth)
     el.setAttribute('height', svgHeight)
-    el.style.left = `-${fw}px`
+    el.style.left = `-${fw - adjustmentForPhoneButtons}px`
     el.style.top = `-${hasHeader ? header : fh}px`
 
     /**
@@ -556,6 +582,8 @@ export function useFrameTool(imageStore, historyStore, editorStore, t) {
      * Draws the volume and power buttons for phone frames
      */
     const drawVolumeAndPowerButtons = () => {
+      if (!frame.phoneHeaderButtonsEnabled) return
+
       // Volume buttons (left side)
       const volumeButtonWidth = fw / 3 // 1/3 of frame width
       const volumeButtonHeight = volumeButtonWidth * 25
@@ -621,11 +649,11 @@ export function useFrameTool(imageStore, historyStore, editorStore, t) {
      * Draws the header rectangle for phone frames
      * @param {string} textColor - Color for the header text
      */
-    function drawPhoneHeader(
+    const drawPhoneHeader = (
       backgroundColor = '#ffffff',
       textColor = '#000000',
       timeInMinutes = 660,
-    ) {
+    ) => {
       if (hasHeader) {
         const x = phoneFrameValues.left + phoneFrameValues.offset
         const y = phoneFrameValues.top + phoneFrameValues.offset
@@ -797,7 +825,7 @@ export function useFrameTool(imageStore, historyStore, editorStore, t) {
       headerRect.setAttribute('fill', color)
       el.appendChild(headerRect)
 
-      const strokeWidth = Math.max(1, Math.floor(header * 0.07))
+      const strokeWidth = header * 0.07
 
       const iconGroup = document.createElementNS(ns, 'g')
       iconGroup.setAttribute('stroke', contrastColor)
@@ -806,14 +834,16 @@ export function useFrameTool(imageStore, historyStore, editorStore, t) {
       const size = header * 0.35
       const spacing = size * 3
       const startX = svgWidth - fw - spacing * 2 - size - 1 - size
-      const centerY = header / 2
+      const centerY = header / 2 - strokeWidth / 2
+
+      console.log({ startX, size, spacing, centerY, header, strokeWidth })
 
       // Minimize
       const line = document.createElementNS(ns, 'line')
       line.setAttribute('x1', startX)
-      line.setAttribute('y1', centerY + 1)
+      line.setAttribute('y1', centerY + strokeWidth / 2)
       line.setAttribute('x2', startX + size)
-      line.setAttribute('y2', centerY + 1)
+      line.setAttribute('y2', centerY + strokeWidth / 2)
       line.setAttribute('stroke', contrastColor)
       line.setAttribute('stroke-width', strokeWidth)
       iconGroup.appendChild(line)
@@ -1450,5 +1480,7 @@ export function useFrameTool(imageStore, historyStore, editorStore, t) {
     isPhoneFrame,
     isFrameWithOutline,
     isFrameWithMultiplier,
+    drawPhoneButtons,
+    setPhoneButtons,
   }
 }

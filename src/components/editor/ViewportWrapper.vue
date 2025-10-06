@@ -45,7 +45,6 @@ const { imageRef, svgRef, frameSvgRef, pdfContainerRef, overlayImageRef } = useI
   useEditorStore(),
   useViewportStore(),
   contentRef,
-  t,
 )
 
 /**

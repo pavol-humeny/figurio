@@ -43,7 +43,9 @@ const {
   resetHeaderFooterMultiplier,
   isPhoneFrame,
   isFrameWithOutline,
-  isFrameWithMultiplier
+  isFrameWithMultiplier,
+  drawPhoneButtons,
+  setPhoneButtons,
 } = useFrameTool(useImageStore(), useHistoryStore(), useEditorStore(), t)
 </script>
 
@@ -114,6 +116,15 @@ const {
                 {{ t('tools.frame.settings.general.usePhoneHeader.label') }}
               </p>
               <ToggleButton v-model="drawPhoneHeader" @update="setPhoneHeader(drawPhoneHeader)" :scale="0.6"
+                :style="{ transform: 'translateX(16px)' }" />
+            </div>
+          </div>
+          <div v-if="drawPhoneHeader" class="content-wrapper">
+            <div class="content-aligned two-items">
+              <p>
+                {{ t('tools.frame.settings.general.usePhoneHeader.label') }}
+              </p>
+              <ToggleButton v-model="drawPhoneButtons" @update="setPhoneButtons(drawPhoneButtons)" :scale="0.6"
                 :style="{ transform: 'translateX(16px)' }" />
             </div>
           </div>
