@@ -706,7 +706,7 @@ export function useFrameTool(imageStore, historyStore, editorStore, t) {
         const batteryY = y + (height - batteryHeight) / 2
         const batteryPadding = batteryWidth * 0.05
         const batteryOutlineWidth = batteryWidth * 0.02
-        const batteryCornerRadius = Math.max(batteryPadding, 1)
+        const batteryCornerRadius = batteryPadding
 
         const battery = document.createElementNS(ns, 'rect')
         battery.setAttribute('x', batteryX)
