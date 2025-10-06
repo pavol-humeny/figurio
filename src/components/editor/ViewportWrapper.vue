@@ -147,11 +147,28 @@ const phoneFrameBorderRadius = ref(0)
  * Background of the viewport wrapper
  */
 const viewportWrapperBackground = ref('var(--background-c)')
-const viewportWrapperBackgroundMode = ref('normal')
+
+/**
+ * Background mode for viewport wrapper (normal | contrast)
+ */
+const viewportWrapperBackgroundMode = computed({
+  get: () => uiStore.viewportWrapperBackgroundMode,
+  set: (value) => {
+    uiStore.setViewportWrapperBackgroundMode(value)
+  },
+})
+
+/**
+ * Padding for the background mode buttons
+ */
 const viewportWrapperBackgroundModePadding = computed(() => {
   return uiStore.rulersEnabled ? '25px' : '10px'
 })
 
+/**
+ * Set the background mode for the viewport wrapper
+ * @param {string} mode - The background mode to set ('normal' or 'contrast')
+ */
 const setViewportWrapperBackgroundMode = (mode) => {
   if (mode === 'normal') {
     viewportWrapperBackgroundMode.value = 'normal'
@@ -160,6 +177,9 @@ const setViewportWrapperBackgroundMode = (mode) => {
   }
 }
 
+/**
+ * Watch for changes in the background mode and update the background accordingly
+ */
 watch(viewportWrapperBackgroundMode, (newMode) => {
   if (newMode === 'normal') {
     viewportWrapperBackground.value = 'var(--viewport-wrapper-background)'

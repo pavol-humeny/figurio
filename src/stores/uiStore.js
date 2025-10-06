@@ -133,7 +133,14 @@ export const useUiStore = defineStore('ui', {
     /** Whether the interactive tutorial is completed */
     tutorialCompleted: getBoolean(`${globalConfig.LOCAL_STORAGE_PREFIX}tutorialCompleted`, false),
 
+    /** Whether the tutorial should be started for the first time only after image is loaded*/
     tutorialShouldBeStartedForFirstTime: false,
+
+    /** Background mode for viewport wrapper (normal | contrast) */
+    viewportWrapperBackgroundMode: getString(
+      `${globalConfig.LOCAL_STORAGE_PREFIX}viewportWrapperBackgroundMode`,
+      'normal',
+    ),
   }),
   actions: {
     /**
@@ -279,6 +286,18 @@ export const useUiStore = defineStore('ui', {
       localStorage.setItem(
         `${globalConfig.LOCAL_STORAGE_PREFIX}tutorialCompleted`,
         this.tutorialCompleted.toString(),
+      )
+    },
+
+    /**
+     * Set background mode for viewport wrapper (normal | contrast)
+     * @param {string} mode - Background mode
+     */
+    setViewportWrapperBackgroundMode(mode) {
+      this.viewportWrapperBackgroundMode = mode
+      localStorage.setItem(
+        `${globalConfig.LOCAL_STORAGE_PREFIX}viewportWrapperBackgroundMode`,
+        this.viewportWrapperBackgroundMode,
       )
     },
   },
