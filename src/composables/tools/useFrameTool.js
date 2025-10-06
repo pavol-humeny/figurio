@@ -510,14 +510,17 @@ export function useFrameTool(imageStore, historyStore, editorStore, t) {
   /**
    * Check if phone side buttons can be drawn within frame bounds.
    * @param {number} svgHeight - Total SVG (frame) height
+   * @param {number} svgWidth - Total SVG (frame) width
    * @param {number} fw - Frame width
    * @param {number} phoneCornerRadius - Corner radius of phone
    * @returns {boolean} True if buttons fit, false if they would overflow
    */
-  const canDrawPhoneButtons = (svgHeight, fw, phoneCornerRadius) => {
+  const canDrawPhoneButtons = (svgHeight, svgWidth, fw, phoneCornerRadius) => {
     const volumeButtonWidth = fw / 3
     const volumeButtonHeight = volumeButtonWidth * 25
-    const volumeUpY = svgHeight * 0.22
+    // const volumeUpY = svgHeight * 0.22
+    const volumeUpY = svgWidth * 0.4 // TODO - experimental - use svgWidth for calculation
+
     const volumeDownY = volumeUpY + volumeButtonHeight + volumeButtonWidth * 3
 
     // Set global ref for disabled state
@@ -567,14 +570,16 @@ export function useFrameTool(imageStore, historyStore, editorStore, t) {
       frame.type === 'framePhoneIOS2' ||
       frame.type === 'framePhoneSimple'
     ) {
-      fw = Math.max(Math.floor(editorConfig.phoneFrameDefaultSize * Math.max(w, h)), 2) * 1.5
+      fw = Math.max(Math.floor(editorConfig.phoneFrameDefaultSize * w), 2) * 1.5 * 2 // TODO - experimental - use only width for calculation
       fh = fw / 1.5
 
-      if (w >= h) {
-        imageStore.frame.headerSize = Math.max(Math.floor(0.05 * w), 5)
-      } else {
-        imageStore.frame.headerSize = Math.max(Math.floor(0.05 * h), 5)
-      }
+      // if (w >= h) {
+      // imageStore.frame.headerSize = Math.max(Math.floor(0.05 * w), 5)
+      // } else {
+      //   imageStore.frame.headerSize = Math.max(Math.floor(0.05 * h), 5)
+      // }
+
+      imageStore.frame.headerSize = Math.max(Math.floor(0.1 * w), 5) // TODO - experimental - use only width for calculation
 
       imageStore.frame.footerSize = 0
     } else if (frame.type === 'frameWindowsTaskBar') {
@@ -683,10 +688,11 @@ export function useFrameTool(imageStore, historyStore, editorStore, t) {
       const volumeButtonHeight = volumeButtonWidth * 25
       const volumeButtonRadius = volumeButtonWidth
       const volumeButtonX = 0
-      const volumeUpY = svgHeight * 0.22
+      // const volumeUpY = svgHeight * 0.22
+      const volumeUpY = svgWidth * 0.4 // TODO - experimental - use svgWidth for calculation
       const volumeDownY = volumeUpY + volumeButtonHeight + volumeButtonWidth * 3
 
-      if (!canDrawPhoneButtons(svgHeight, fw, phoneCornerRadius)) {
+      if (!canDrawPhoneButtons(svgHeight, svgWidth, fw, phoneCornerRadius)) {
         if (!imageStore.phoneButtonsCanNotBeDrawnToastFlag) {
           showToastModal(
             'warning',
@@ -725,7 +731,8 @@ export function useFrameTool(imageStore, historyStore, editorStore, t) {
       const powerButtonHeight = powerButtonWidth * 17
       const powerButtonRadius = powerButtonWidth
       const powerButtonX = svgWidth - powerButtonWidth
-      const powerButtonY = svgHeight * 0.35
+      // const powerButtonY = svgHeight * 0.35
+      const powerButtonY = svgWidth * 0.7 // TODO - experimental - use svgHeight for calculation
 
       el.appendChild(
         drawSideButton(

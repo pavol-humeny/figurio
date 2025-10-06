@@ -115,7 +115,7 @@ const {
 
         <!-- Phone buttons -->
         <div v-if="isPhoneFrame(selectedFrameVariant)" class="settings-content-wrapper">
-          <div v-if="drawPhoneHeader" class="content-wrapper">
+          <div class="content-wrapper">
             <div class="content-aligned two-items">
               <p>
                 {{ t('tools.frame.settings.general.usePhoneButtons.label') }}
@@ -128,7 +128,7 @@ const {
 
         <!-- Phone navigation -->
         <div v-if="isPhoneFrame(selectedFrameVariant)" class="settings-content-wrapper">
-          <div v-if="drawPhoneHeader" class="content-wrapper">
+          <div class="content-wrapper">
             <div class="content-aligned two-items">
               <p>
                 {{ t('tools.frame.settings.general.usePhoneHomeIndicator.label') }}
