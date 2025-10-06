@@ -10,7 +10,8 @@
       "newFeatures": {
         "items": [
           "Add option to remove phone buttons from phone frames",
-          "Add home indicator button to phone frames"
+          "Add home indicator button to phone frames",
+          "Phone frame header can be expanded beyond the image area or only overlap the image"
         ]
       }
     },

@@ -716,6 +716,9 @@
         "usePhoneHomeIndicator": {
           "label": "Home indicator"
         },
+        "useExpandedPhoneHeader": {
+          "label": "Expand header"
+        },
         "phoneHeaderTextColor": {
           "label": "Text color"
         },
@@ -790,6 +793,7 @@
             "useFrameOutline": "Use outline",
             "usePhoneButtons": "Phone buttons",
             "usePhoneHomeIndicator": "Home indicator",
+            "useExpandedPhoneHeader": "Expand header",
             "phoneHeaderEnabled": "Use phone header",
             "phoneHeaderTextColor": "Text color",
             "phoneHeaderBackgroundColor": "Background color",
@@ -896,6 +900,7 @@
             "useFrameOutline": "Use outline",
             "usePhoneButtons": "Phone buttons",
             "usePhoneHomeIndicator": "Home indicator",
+            "useExpandedPhoneHeader": "Expand header",
             "phoneHeaderEnabled": "Use phone header",
             "phoneHeaderTextColor": "Text color",
             "phoneHeaderBackgroundColor": "Background color",

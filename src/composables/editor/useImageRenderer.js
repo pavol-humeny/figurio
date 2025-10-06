@@ -115,10 +115,20 @@ export function useImageRenderer(
         frame.type,
       )
 
+      const hasPhoneFrame = useFrameTool(imageStore, historyStore, editorStore, t).isPhoneFrame(
+        frame.type,
+      )
+
       const noPhoneButtonsAdjustment = frame.phoneButtonsEnabled ? 0 : fw / 3
 
       const frameWidth = width + fw * 2 - noPhoneButtonsAdjustment
-      const frameHeight = height + fh * 2 + (hasHeader ? header - fh : 0) + (hasFooter ? footer : 0)
+      const frameHeight =
+        height +
+        fh * 2 +
+        ((hasHeader && !hasPhoneFrame) || (hasPhoneFrame && frame.phoneHeaderExpand)
+          ? header - fh
+          : 0) +
+        (hasFooter ? footer : 0)
 
       frameSvgRef.value.setAttribute('width', frameWidth)
       frameSvgRef.value.setAttribute('height', frameHeight)
@@ -207,16 +217,7 @@ export function useImageRenderer(
       imageStore.blurPreviewUrl = img.src
     }
 
-    // Save to overlay ref imageStore.overlayImage
-    // await new Promise((resolve) => setTimeout(resolve, 1))
-
-    // if (overlayImageRef.value) {
-    //   if (imageStore.overlayImage !== null) {
-    //     console.warn('Rendering OVERLAY image...')
-    //     overlayImageRef.value.src = imageStore.overlayImage.toDataURL()
-    //   }
-    // }
-
+    // Overlay image with drawing (brush) layer
     const canvas = document.getElementById('brushCanvas')
     const ctx = canvas.getContext('2d')
 
@@ -226,7 +227,7 @@ export function useImageRenderer(
       console.warn('Rendering OVERLAY image...')
 
       if (imageStore.historyWasChanged) {
-        console.warn('Clearing OVERLAY image due to history change...')
+        console.log('Clearing OVERLAY image due to history change...')
         ctx.clearRect(0, 0, canvas.width, canvas.height)
         imageStore.historyWasChanged = false
       }
@@ -234,7 +235,7 @@ export function useImageRenderer(
       ctx.drawImage(imageStore.overlayImage, 0, 0, canvas.width, canvas.height)
     } else {
       if (canvas) {
-        console.warn('Clearing OVERLAY image...')
+        console.log('Clearing OVERLAY image...')
         ctx.clearRect(0, 0, canvas.width, canvas.height)
         imageStore.historyWasChanged = false
       }
@@ -249,7 +250,7 @@ export function useImageRenderer(
   /**
    * Render the SVG frame layer and re-render canvas after frame update
    */
-  const renderFrameSvg = async () => {
+  const renderFrameSvg = () => {
     if (renderingFrameSvg.value) return
 
     console.log('Rendering frame SVG...')
@@ -293,7 +294,7 @@ export function useImageRenderer(
       () => imageStore.fileType,
       () => imageStore.overlayImage,
     ],
-    ([newImage, newPdfBytes, newFileType, newOverlayImage]) => {
+    async ([newImage, newPdfBytes, newFileType, newOverlayImage]) => {
       if (newImage || newPdfBytes || newFileType || newOverlayImage) {
         console.log('#################### Image or PDF or file Type changed, re-rendering all...')
         renderAll()

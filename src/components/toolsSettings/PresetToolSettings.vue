@@ -288,6 +288,16 @@ const tabs = ['myPresets', 'createPreset']
               <ToggleButton v-model="localImageFrame.phoneHeaderEnabled" :scale="0.6"
                 :style="{ transform: 'translateX(16px)' }" />
             </div>
+            <!-- Expanded header -->
+            <div
+              v-if="localImageFrame.enabled && localImageFrame.phoneHeaderEnabled && isPhoneFrame(localImageFrame.type)"
+              class="content-aligned two-items" :class="!isModifyingPreset ? 'disabled' : ''">
+              <p>
+                {{ t('tools.preset.settings.myPresets.presetValues.frame.useExpandedPhoneHeader') }}
+              </p>
+              <ToggleButton v-model="localImageFrame.phoneHeaderExpand" :scale="0.6"
+                :style="{ transform: 'translateX(16px)' }" />
+            </div>
             <!-- Background color -->
             <div
               v-if="localImageFrame.enabled && localImageFrame.phoneHeaderEnabled && isPhoneFrame(localImageFrame.type)"
@@ -652,6 +662,16 @@ const tabs = ['myPresets', 'createPreset']
                 {{ t('tools.preset.settings.createPreset.presetValues.frame.phoneHeaderEnabled') }}
               </p>
               <ToggleButton v-model="newPreset.frame.phoneHeaderEnabled" :scale="0.6"
+                :style="{ transform: 'translateX(16px)' }" />
+            </div>
+            <!-- Expanded header -->
+            <div
+              v-if="newPreset.frame.phoneHeaderEnabled && isPhoneFrame(newPreset.frame.type) && newPreset.frame.enabled"
+              class="content-aligned two-items" :class="!isModifyingPreset ? 'disabled' : ''">
+              <p>
+                {{ t('tools.preset.settings.createPreset.presetValues.frame.useExpandedPhoneHeader') }}
+              </p>
+              <ToggleButton v-model="newPreset.frame.phoneHeaderExpand" :scale="0.6"
                 :style="{ transform: 'translateX(16px)' }" />
             </div>
             <!-- Background color -->

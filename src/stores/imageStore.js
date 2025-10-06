@@ -158,6 +158,7 @@ export const useImageStore = defineStore('imageStore', {
       footerSize: 0, // Size of the footer for windows frame
       outlineEnabled: false, // Whether to draw an outline around the frame
       phoneHeaderEnabled: true, // Whether to draw a header for phone frames
+      phoneHeaderExpand: false, // Whether header expands beyond image
       phoneButtonsEnabled: true, // Whether to draw buttons for phone frames
       phoneNavigationEnabled: true, // Whether to draw navigation for phone frames
       phoneHeaderTimeInMinutes: 610, // Default time for phone header (10:10)
@@ -355,6 +356,7 @@ export const useImageStore = defineStore('imageStore', {
         footerSize: 0, // Size of the footer for windows frame
         outlineEnabled: false, // Whether to draw an outline around the frame
         phoneHeaderEnabled: true, // Whether to draw a header for phone frames
+        phoneHeaderExpand: false, // Whether header expands beyond image
         phoneButtonsEnabled: true, // Whether to draw buttons for phone frames
         phoneNavigationEnabled: true, // Whether to draw navigation for phone frames
         phoneHeaderTimeInMinutes: 610, // Default time for phone header (10:10)
@@ -2070,11 +2072,23 @@ export const useImageStore = defineStore('imageStore', {
         this.frame.type,
       )
 
+      const phoneFrameWithExpandedHeader = useFrameTool(
+        imageStore,
+        historyStore,
+        editorStore,
+        t,
+      ).isPhoneHeaderWithExpandedHeader(this.frame.type, this.frame.phoneHeaderExpand)
+
+      console.warn('Target dimensions for preview:', targetWidth, targetHeight)
+
       if (hasHeader) {
-        targetHeight = this.newFileDimensions.height - this.frame.headerSize - this.frame.height
+        if (phoneFrameWithExpandedHeader) {
+          targetHeight = this.newFileDimensions.height - this.frame.headerSize - this.frame.height
+        }
       } else if (hasFooter) {
         targetHeight = this.newFileDimensions.height - this.frame.footerSize - this.frame.height
       }
+      console.warn('--- Target dimensions for preview:', targetWidth, targetHeight)
 
       // Rasterize base image + SVG objects at export size
       await this.rasterize(t, false, targetWidth, targetHeight, true)
@@ -2164,7 +2178,9 @@ export const useImageStore = defineStore('imageStore', {
 
       // If frame has header, adjust offsetY accordingly
       if (hasHeader) {
-        offsetY = this.frame.headerSize
+        if (phoneFrameWithExpandedHeader) {
+          offsetY = this.frame.headerSize
+        }
       }
 
       // Create final canvas and render both layers
@@ -2466,6 +2482,8 @@ export const useImageStore = defineStore('imageStore', {
         imageOperations: JSON.parse(JSON.stringify(this.imageOperations)),
         frame: JSON.parse(JSON.stringify(this.frame)),
         removalCanvas: this.removalCanvas || null,
+
+        tmpRenderedImage: this.tmpRenderedImage?.toDataURL() || null,
       }
 
       console.log('[getSnapshot] imageOperations:', snapshot.imageOperations)
@@ -2544,6 +2562,22 @@ export const useImageStore = defineStore('imageStore', {
       this.overlayImage = recreateCanvas(snapshot.overlayImage)
       this.overlayImageExport = recreateCanvas(snapshot.overlayImageExport)
       this.overlayImagePreview = recreateCanvas(snapshot.overlayImagePreview)
+
+      // Tmp rendered image
+      if (snapshot.tmpRenderedImage) {
+        const img = new Image()
+        img.onload = () => {
+          const canvas = document.createElement('canvas')
+          canvas.width = img.width
+          canvas.height = img.height
+          const ctx = canvas.getContext('2d')
+          ctx.drawImage(img, 0, 0)
+          this.tmpRenderedImage = canvas
+        }
+        img.src = snapshot.tmpRenderedImage
+      } else {
+        this.tmpRenderedImage = null
+      }
 
       // Removal canvas
       // if (snapshot.removalCanvas) {

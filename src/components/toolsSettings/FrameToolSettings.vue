@@ -49,6 +49,8 @@ const {
   phoneButtonsCanBeDrawn,
   drawPhoneNavigation,
   setPhoneNavigation,
+  headerOverlap,
+  setHeaderOverlap,
 } = useFrameTool(useImageStore(), useHistoryStore(), useEditorStore(), t)
 </script>
 
@@ -151,10 +153,20 @@ const {
           <div v-if="drawPhoneHeader" class="content-wrapper">
             <div class="content-aligned two-items">
               <p>
+                {{ t('tools.frame.settings.general.useExpandedPhoneHeader.label') }}
+              </p>
+              <ToggleButton v-model="headerOverlap" @update="setHeaderOverlap(headerOverlap)" :scale="0.6"
+                :style="{ transform: 'translateX(16px)' }" />
+            </div>
+          </div>
+          <div v-if="drawPhoneHeader && headerOverlap" class="content-wrapper">
+            <div class="content-aligned two-items">
+              <p>
                 {{ t('tools.frame.settings.general.phoneHeaderBackgroundColor.label') }}
               </p>
               <ColorPicker v-model="phoneHeaderBackgroundColor"
-                @update="setPhoneHeaderBackgroundColor(phoneHeaderBackgroundColor)" />
+                @update="setPhoneHeaderBackgroundColor(phoneHeaderBackgroundColor, false)"
+                @commit="setPhoneHeaderBackgroundColor(phoneHeaderBackgroundColor, true)" />
             </div>
           </div>
           <div v-if="drawPhoneHeader" class="content-wrapper">
@@ -162,7 +174,8 @@ const {
               <p>
                 {{ t('tools.frame.settings.general.phoneHeaderTextColor.label') }}
               </p>
-              <ColorPicker v-model="phoneHeaderTextColor" @update="setPhoneHeaderTextColor(phoneHeaderTextColor)" />
+              <ColorPicker v-model="phoneHeaderTextColor" @update="setPhoneHeaderTextColor(phoneHeaderTextColor, false)"
+                @commit="setPhoneHeaderTextColor(phoneHeaderTextColor, true)" />
             </div>
           </div>
           <div v-if="drawPhoneHeader" class="content-wrapper">

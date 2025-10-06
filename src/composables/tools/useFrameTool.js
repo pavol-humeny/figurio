@@ -66,24 +66,54 @@ export function useFrameTool(imageStore, historyStore, editorStore, t) {
   )
 
   /**
+   * Header overlap
+   */
+  const headerOverlap = computed({
+    get: () => imageStore.frame.phoneHeaderExpand,
+    set: (value) => {
+      imageStore.frame.phoneHeaderExpand = value
+    },
+  })
+
+  /**
    * Phone navigation visibility
    */
-  const drawPhoneNavigation = ref(true)
+  const drawPhoneNavigation = computed({
+    get: () => imageStore.frame.phoneNavigationEnabled,
+    set: (value) => {
+      imageStore.frame.phoneNavigationEnabled = value
+    },
+  })
 
   /**
    * Phone buttons visibility
    */
-  const drawPhoneButtons = ref(true)
+  const drawPhoneButtons = computed({
+    get: () => imageStore.frame.phoneButtonsEnabled,
+    set: (value) => {
+      imageStore.frame.phoneButtonsEnabled = value
+    },
+  })
 
   /**
    * Outline visibility
    */
-  const drawOutline = ref(imageStore.frame.outlineEnabled)
+  const drawOutline = computed({
+    get: () => imageStore.frame.outlineEnabled,
+    set: (value) => {
+      imageStore.frame.outlineEnabled = value
+    },
+  })
 
   /**
    * Phone header visibility
    */
-  const drawPhoneHeader = ref(imageStore.frame.phoneHeaderEnabled)
+  const drawPhoneHeader = computed({
+    get: () => imageStore.frame.phoneHeaderEnabled,
+    set: (value) => {
+      imageStore.frame.phoneHeaderEnabled = value
+    },
+  })
 
   /**
    * Ref for frame width input
@@ -215,6 +245,13 @@ export function useFrameTool(imageStore, historyStore, editorStore, t) {
   }
 
   /**
+   * Whether the frame is phone frame with expanded header
+   */
+  const isPhoneHeaderWithExpandedHeader = (frameType, isExpanded) => {
+    return isPhoneFrame(frameType) && isExpanded
+  }
+
+  /**
    * Whether the frame is frame with outline
    * @param {string} frameType - Frame type
    */
@@ -267,6 +304,15 @@ export function useFrameTool(imageStore, historyStore, editorStore, t) {
   }
 
   /**
+   * Set header overlap
+   * @param {boolean} value - Whether header overlaps image
+   */
+  const setHeaderOverlap = (value) => {
+    headerOverlap.value = value
+    applyFrame()
+  }
+
+  /**
    * Set phone navigation visibility
    * @param {boolean} value - Whether to show phone navigation
    */
@@ -298,18 +344,18 @@ export function useFrameTool(imageStore, historyStore, editorStore, t) {
    * Set phone header text color
    * @param {string} color - New phone header text color
    */
-  const setPhoneHeaderTextColor = (color) => {
+  const setPhoneHeaderTextColor = (color, commit = true) => {
     phoneHeaderTextColor.value = color
-    applyFrame()
+    applyFrame(commit)
   }
 
   /**
    * Set phone header background color
    * @param {string} color - New phone header background color
    */
-  const setPhoneHeaderBackgroundColor = (color) => {
+  const setPhoneHeaderBackgroundColor = (color, commit = true) => {
     phoneHeaderBackgroundColor.value = color
-    applyFrame()
+    applyFrame(commit)
   }
 
   /**
@@ -403,6 +449,7 @@ export function useFrameTool(imageStore, historyStore, editorStore, t) {
     imageStore.frame.enabled = true
     imageStore.frame.outlineEnabled = JSON.parse(JSON.stringify(drawOutline.value))
     imageStore.frame.phoneHeaderEnabled = JSON.parse(JSON.stringify(drawPhoneHeader.value))
+    imageStore.frame.phoneHeaderExpand = JSON.parse(JSON.stringify(headerOverlap.value))
     imageStore.frame.phoneButtonsEnabled = JSON.parse(JSON.stringify(drawPhoneButtons.value))
     imageStore.frame.phoneNavigationEnabled = JSON.parse(JSON.stringify(drawPhoneNavigation.value))
     imageStore.frame.phoneHeaderTextColor = JSON.parse(JSON.stringify(phoneHeaderTextColor.value))
@@ -477,8 +524,6 @@ export function useFrameTool(imageStore, historyStore, editorStore, t) {
     phoneButtonsCanBeDrawn.value =
       volumeDownY + volumeButtonHeight + 50 + phoneCornerRadius <= svgHeight
 
-    console.warn('Phone buttons can be drawn:', phoneButtonsCanBeDrawn.value)
-
     // Check if bottom of volumeDown + margin + rounded corner exceeds frame height
     return volumeDownY + volumeButtonHeight + 50 + phoneCornerRadius <= svgHeight
   }
@@ -550,15 +595,21 @@ export function useFrameTool(imageStore, historyStore, editorStore, t) {
 
     const hasHeader = isFrameWithHeader(frame.type)
 
+    const hasPhoneFrame = isPhoneFrame(frame.type)
+
     const adjustmentForPhoneButtons = frame.phoneButtonsEnabled ? 0 : fw / 3
 
     const header = imageStore.frame.headerSize
     const footer = imageStore.frame.footerSize
     const svgWidth = w + fw * 2 - 2 * adjustmentForPhoneButtons
-    const svgHeight = h + fh * 2 + (hasHeader ? header - fh : 0) + (footer > 0 ? footer - fh : 0)
+    const svgHeight =
+      h +
+      fh * 2 +
+      ((hasHeader && !hasPhoneFrame) || (hasPhoneFrame && frame.phoneHeaderExpand)
+        ? header - fh
+        : 0) +
+      (footer > 0 ? footer - fh : 0)
     const phoneCornerRadius = Math.max(Math.floor(Math.min(svgWidth, svgHeight) * 0.06), 2)
-
-    console.warn('Phone corner radius:', phoneCornerRadius)
 
     // Values for phone frames
     const strokeWidth = (fw / 3) * 2 // 2/3 of frame width
@@ -580,7 +631,7 @@ export function useFrameTool(imageStore, historyStore, editorStore, t) {
     el.setAttribute('width', svgWidth)
     el.setAttribute('height', svgHeight)
     el.style.left = `-${fw - adjustmentForPhoneButtons}px`
-    el.style.top = `-${hasHeader ? header : fh}px`
+    el.style.top = `-${(hasHeader && !hasPhoneFrame) || (hasPhoneFrame && frame.phoneHeaderExpand) ? header : fh}px`
 
     /**
      * Draws a side button with rounded corners
@@ -704,22 +755,24 @@ export function useFrameTool(imageStore, historyStore, editorStore, t) {
         const height = phoneFrameValues.headerSize + 1
         const r = Math.min(height, phoneFrameValues.radius) - fw / 2 // -fw/2 because needed radius of inner arc of border
 
-        const d = [
-          `M ${x + r} ${y}`, // start after top-left corner
-          `H ${x + width - r}`, // move to before top-right corner
-          `A ${r} ${r} 0 0 1 ${x + width} ${y + r}`, // top-right corner
-          `V ${y + height}`, // down right edge
-          `H ${x}`, // move left on bottom edge
-          `V ${y + r}`, // up left edge
-          `A ${r} ${r} 0 0 1 ${x + r} ${y}`, // top-left corner
-          'Z',
-        ].join(' ')
+        if (hasPhoneFrame && frame.phoneHeaderExpand) {
+          const d = [
+            `M ${x + r} ${y}`, // start after top-left corner
+            `H ${x + width - r}`, // move to before top-right corner
+            `A ${r} ${r} 0 0 1 ${x + width} ${y + r}`, // top-right corner
+            `V ${y + height}`, // down right edge
+            `H ${x}`, // move left on bottom edge
+            `V ${y + r}`, // up left edge
+            `A ${r} ${r} 0 0 1 ${x + r} ${y}`, // top-left corner
+            'Z',
+          ].join(' ')
 
-        const path = document.createElementNS(ns, 'path')
-        path.setAttribute('d', d)
-        path.setAttribute('fill', backgroundColor)
+          const path = document.createElementNS(ns, 'path')
+          path.setAttribute('d', d)
+          path.setAttribute('fill', backgroundColor)
 
-        el.appendChild(path)
+          el.appendChild(path)
+        }
 
         // Left: Time (HH:MM)
         const timeText = document.createElementNS(ns, 'text')
@@ -813,15 +866,12 @@ export function useFrameTool(imageStore, historyStore, editorStore, t) {
     const drawPhoneNavigationButton = (color = '#505152ff') => {
       if (!frame.phoneNavigationEnabled) return
 
-      console.warn('Drawing home indicator')
       const indicatorWidth = svgWidth * 0.28 // relative width (typical iPhone style)
       const indicatorHeight = fh / 2 // thickness of the line
       const indicatorRadius = indicatorHeight * 0.5
 
       const x = svgWidth / 2 - indicatorWidth / 2
       const y = phoneFrameValues.bottom - indicatorHeight * 3
-
-      console.log({ indicatorWidth, indicatorHeight, x, y })
 
       const rect = document.createElementNS(ns, 'rect')
       rect.setAttribute('x', x)
@@ -906,8 +956,6 @@ export function useFrameTool(imageStore, historyStore, editorStore, t) {
       const spacing = size * 3
       const startX = svgWidth - fw - spacing * 2 - size - 1 - size
       const centerY = header / 2 - strokeWidth / 2
-
-      console.log({ startX, size, spacing, centerY, header, strokeWidth })
 
       // Minimize
       const line = document.createElementNS(ns, 'line')
@@ -1506,7 +1554,7 @@ export function useFrameTool(imageStore, historyStore, editorStore, t) {
       const path = new Path2D()
 
       // Create rounded rectangle path
-      if (imageStore.frame.phoneHeaderEnabled) {
+      if (imageStore.frame.phoneHeaderEnabled && frame.phoneHeaderExpand) {
         path.moveTo(0, 0) // top-left corner
         path.lineTo(w, 0) // top-right corner
         path.lineTo(w, h - radius) // right side down to curve start
@@ -1566,10 +1614,13 @@ export function useFrameTool(imageStore, historyStore, editorStore, t) {
     isPhoneFrame,
     isFrameWithOutline,
     isFrameWithMultiplier,
+    isPhoneHeaderWithExpandedHeader,
     drawPhoneButtons,
     setPhoneButtons,
     phoneButtonsCanBeDrawn,
     drawPhoneNavigation,
     setPhoneNavigation,
+    headerOverlap,
+    setHeaderOverlap,
   }
 }
