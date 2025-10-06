@@ -711,6 +711,9 @@
         "usePhoneHeader": {
           "label": "Použít záhlaví telefonu"
         },
+        "usePhoneButtons": {
+          "label": "Použít tlačítka telefonu"
+        },
         "phoneHeaderTextColor": {
           "label": "Barva textu"
         },

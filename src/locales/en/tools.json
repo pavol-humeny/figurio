@@ -710,6 +710,9 @@
         "usePhoneHeader": {
           "label": "Use phone header"
         },
+        "usePhoneButtons": {
+          "label": "Use phone buttons"
+        },
         "phoneHeaderTextColor": {
           "label": "Text color"
         },

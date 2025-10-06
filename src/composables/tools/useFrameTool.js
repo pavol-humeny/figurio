@@ -4,6 +4,11 @@ import { editorConfig } from '@/config/editorConfig'
 import { useSendEvent } from '../common/useSendEvent'
 import { useConfirmModal } from '../modals/useConfirmModal'
 
+/**
+ * Whether phone side buttons can be drawn because of dimensions
+ */
+const phoneButtonsCanBeDrawn = ref(true)
+
 export function useFrameTool(imageStore, historyStore, editorStore, t) {
   const { showToastModal } = useToastModal()
   const { showConfirmModal } = useConfirmModal()
@@ -452,6 +457,12 @@ export function useFrameTool(imageStore, historyStore, editorStore, t) {
     const volumeButtonHeight = volumeButtonWidth * 25
     const volumeUpY = svgHeight * 0.22
     const volumeDownY = volumeUpY + volumeButtonHeight + volumeButtonWidth * 3
+
+    // Set global ref for disabled state
+    phoneButtonsCanBeDrawn.value =
+      volumeDownY + volumeButtonHeight + 50 + phoneCornerRadius <= svgHeight
+
+    console.warn('Phone buttons can be drawn:', phoneButtonsCanBeDrawn.value)
 
     // Check if bottom of volumeDown + margin + rounded corner exceeds frame height
     return volumeDownY + volumeButtonHeight + 50 + phoneCornerRadius <= svgHeight
@@ -1499,5 +1510,6 @@ export function useFrameTool(imageStore, historyStore, editorStore, t) {
     isFrameWithMultiplier,
     drawPhoneButtons,
     setPhoneButtons,
+    phoneButtonsCanBeDrawn,
   }
 }

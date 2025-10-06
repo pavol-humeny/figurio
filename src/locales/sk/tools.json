@@ -710,6 +710,9 @@
         "usePhoneHeader": {
           "label": "Použiť záhlavie telefónu"
         },
+        "usePhoneButtons": {
+          "label": "Použiť tlačidlá telefónu"
+        },
         "phoneHeaderTextColor": {
           "label": "Farba textu"
         },

@@ -46,6 +46,7 @@ const {
   isFrameWithMultiplier,
   drawPhoneButtons,
   setPhoneButtons,
+  phoneButtonsCanBeDrawn,
 } = useFrameTool(useImageStore(), useHistoryStore(), useEditorStore(), t)
 </script>
 
@@ -108,6 +109,19 @@ const {
           </div>
         </div>
 
+        <!-- Phone buttons -->
+        <div v-if="isPhoneFrame(selectedFrameVariant)" class="settings-content-wrapper">
+          <div v-if="drawPhoneHeader" class="content-wrapper">
+            <div class="content-aligned two-items">
+              <p>
+                {{ t('tools.frame.settings.general.usePhoneButtons.label') }}
+              </p>
+              <ToggleButton v-model="drawPhoneButtons" @update="setPhoneButtons(drawPhoneButtons)" :scale="0.6"
+                :style="{ transform: 'translateX(16px)' }" :disabled="!phoneButtonsCanBeDrawn" />
+            </div>
+          </div>
+        </div>
+
         <!-- Phone header -->
         <div v-if="isPhoneFrame(selectedFrameVariant)" class="settings-content-wrapper">
           <div class="content-wrapper">
@@ -116,15 +130,6 @@ const {
                 {{ t('tools.frame.settings.general.usePhoneHeader.label') }}
               </p>
               <ToggleButton v-model="drawPhoneHeader" @update="setPhoneHeader(drawPhoneHeader)" :scale="0.6"
-                :style="{ transform: 'translateX(16px)' }" />
-            </div>
-          </div>
-          <div v-if="drawPhoneHeader" class="content-wrapper">
-            <div class="content-aligned two-items">
-              <p>
-                {{ t('tools.frame.settings.general.usePhoneHeader.label') }}
-              </p>
-              <ToggleButton v-model="drawPhoneButtons" @update="setPhoneButtons(drawPhoneButtons)" :scale="0.6"
                 :style="{ transform: 'translateX(16px)' }" />
             </div>
           </div>
