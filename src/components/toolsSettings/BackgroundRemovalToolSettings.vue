@@ -42,6 +42,7 @@ const {
   backgroundReplacementColor,
   replaceWithBackgroundColor,
   softEdgesRadius,
+  boundaryOffset,
 } = useBackgroundRemovalTool(
   useImageStore(),
   useHistoryStore(),
@@ -114,6 +115,18 @@ const tabs = ['color', 'manual', 'objectDetection']
             <NumberDropdownInput v-model="softEdgesRadius" :min="0" :max="1" :step="0.1"
               :options="[0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1]"
               :tip="$t('tools.backgroundRemoval.settings.manual.edgeSoftness.tip')" position="bottom-left" />
+          </div>
+        </div>
+
+        <!-- Mask boundary offset -->
+        <div class="settings-content-wrapper">
+          <div class="content-wrapper">
+            <div class="content-title">
+              {{ $t('tools.backgroundRemoval.settings.manual.boundaryOffset.label') }}
+            </div>
+            <NumberDropdownInput v-model="boundaryOffset" :min="-5" :max="5" :step="1"
+              :options="[-5, -4, -3, -2, -1, 0, 1, 2, 3, 4, 5]"
+              :tip="$t('tools.backgroundRemoval.settings.manual.boundaryOffset.tip')" position="bottom-left" />
           </div>
         </div>
 
@@ -262,6 +275,18 @@ const tabs = ['color', 'manual', 'objectDetection']
           </div>
         </div>
 
+        <!-- Mask boundary offset -->
+        <div class="settings-content-wrapper">
+          <div class="content-wrapper">
+            <div class="content-title">
+              {{ $t('tools.backgroundRemoval.settings.manual.boundaryOffset.label') }}
+            </div>
+            <NumberDropdownInput v-model="boundaryOffset" :min="-5" :max="5" :step="1"
+              :options="[-5, -4, -3, -2, -1, 0, 1, 2, 3, 4, 5]"
+              :tip="$t('tools.backgroundRemoval.settings.manual.boundaryOffset.tip')" position="bottom-left" />
+          </div>
+        </div>
+
         <!-- Clear all button -->
         <div class="settings-content-wrapper">
           <div class="content-wrapper">
@@ -377,6 +402,18 @@ const tabs = ['color', 'manual', 'objectDetection']
             <NumberDropdownInput v-model="softEdgesRadius" :min="0" :max="1" :step="0.1"
               :options="[0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1]"
               :tip="$t('tools.backgroundRemoval.settings.manual.edgeSoftness.tip')" position="bottom-left" />
+          </div>
+        </div>
+
+        <!-- Mask boundary offset -->
+        <div class="settings-content-wrapper">
+          <div class="content-wrapper">
+            <div class="content-title">
+              {{ $t('tools.backgroundRemoval.settings.manual.boundaryOffset.label') }}
+            </div>
+            <NumberDropdownInput v-model="boundaryOffset" :min="-5" :max="5" :step="1"
+              :options="[-5, -4, -3, -2, -1, 0, 1, 2, 3, 4, 5]"
+              :tip="$t('tools.backgroundRemoval.settings.manual.boundaryOffset.tip')" position="bottom-left" />
           </div>
         </div>
 

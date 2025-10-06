@@ -255,7 +255,7 @@ export function useBackgroundRemovalTool(imageStore, historyStore, workspaceStor
     const imageDataToSave = ctx.getImageData(0, 0, canvas.width, canvas.height)
     imageStore.removalCanvasOriginal = imageDataToSave
 
-    applyFeatherToMask(softEdgesRadius.value)
+    applyCombinedMaskAdjustments(boundaryOffset.value, softEdgesRadius.value)
   }
 
   /**
@@ -319,7 +319,7 @@ export function useBackgroundRemovalTool(imageStore, historyStore, workspaceStor
     const imageDataToSave = ctx.getImageData(0, 0, canvas.width, canvas.height)
     imageStore.removalCanvasOriginal = imageDataToSave
 
-    applyFeatherToMask(softEdgesRadius.value)
+    applyCombinedMaskAdjustments(boundaryOffset.value, softEdgesRadius.value)
   }
 
   //////////////////////////////////////////////////////////////////////////
@@ -479,7 +479,7 @@ export function useBackgroundRemovalTool(imageStore, historyStore, workspaceStor
     const imageDataToSave = ctx.getImageData(0, 0, canvas.width, canvas.height)
     imageStore.removalCanvasOriginal = imageDataToSave
 
-    applyFeatherToMask(softEdgesRadius.value)
+    applyCombinedMaskAdjustments(boundaryOffset.value, softEdgesRadius.value)
   }
 
   //////////////////////////////////////////////////////////////////////////
@@ -552,21 +552,52 @@ export function useBackgroundRemovalTool(imageStore, historyStore, workspaceStor
     // Save original mask to store
     imageStore.removalCanvasOriginal = manualImageData
 
-    // Apply feathering to canvas for visual display
-    applyFeatherToMask(softEdgesRadius.value)
+    applyCombinedMaskAdjustments(boundaryOffset.value, softEdgesRadius.value)
   }
-  // ----------------------------------
-  // Soft edges
-  // ----------------------------------
 
+  // ----------------------------------
+  // Soft edges and Boundary offset
+  // ----------------------------------
   const softEdgesRadius = ref(0)
+  const boundaryOffset = ref(0)
 
   /**
-   * Watch for soft edges radius changes and re-apply feathering
+   * Watch for changes in either soft edges or boundary offset
+   * and re-apply combined mask processing
    */
-  watch(softEdgesRadius, (newRadius) => {
-    applyFeatherToMask(newRadius)
+  watch([softEdgesRadius, boundaryOffset], ([newSoft, newOffset]) => {
+    applyCombinedMaskAdjustments(newOffset, newSoft)
   })
+
+  /**
+   * Apply boundary shift and feathering together, in the correct order
+   * @param {number} offset - Positive to expand, negative to shrink
+   * @param {number} featherRadius - Radius in pixels for feathering
+   */
+  const applyCombinedMaskAdjustments = (offset, featherRadius) => {
+    const canvas = document.getElementById('removalCanvas')
+    if (!canvas) return
+    const ctx = canvas.getContext('2d')
+
+    if (!imageStore.removalCanvasOriginal) return
+
+    // Start from original mask data
+    const baseMask = new ImageData(
+      new Uint8ClampedArray(imageStore.removalCanvasOriginal.data),
+      canvas.width,
+      canvas.height,
+    )
+
+    // Apply boundary offset first
+    const offsetMask = adjustMaskBoundary(baseMask, canvas.width, canvas.height, offset)
+
+    // Apply feathering on top of that
+    const featheredMask = featherMask(offsetMask, canvas.width, canvas.height, featherRadius) // FeatherRadius is strength here
+
+    // Draw and store
+    ctx.putImageData(featheredMask, 0, 0)
+    imageStore.removalCanvas = featheredMask
+  }
 
   /**
    * Feather mask (blur edges of selection) with adjustable strength
@@ -577,6 +608,7 @@ export function useBackgroundRemovalTool(imageStore, historyStore, workspaceStor
    * @param {number} radius - radius in pixels
    */
   const featherMask = (maskData, width, height, strength = 0, radius = 2) => {
+    console.log('Feathering mask with radius', radius, 'and strength', strength)
     if (radius <= 0 || strength <= 0) return maskData // No feathering
 
     const data = maskData.data
@@ -624,37 +656,82 @@ export function useBackgroundRemovalTool(imageStore, historyStore, workspaceStor
   }
 
   /**
-   * Apply feathering (soft edges) on current removal mask from imageStore
-   * @param {number} radius - Feather radius in pixels
+   * Expand or shrink mask boundaries by given pixel offset.
+   * Positive offset expands (adds pixels), negative shrinks (removes pixels).
+   * @param {ImageData} maskData - Binary/alpha mask (white = selected)
+   * @param {number} width
+   * @param {number} height
+   * @param {number} offset - pixels to expand (>0) or shrink (<0)
    */
-  const applyFeatherToMask = (radius) => {
-    const canvas = document.getElementById('removalCanvas')
-    if (!canvas) return
-    const ctx = canvas.getContext('2d')
+  const adjustMaskBoundary = (maskData, width, height, offset = 0) => {
+    if (offset === 0) return maskData
 
-    if (!imageStore.removalCanvasOriginal) return
+    const data = maskData.data
+    const newData = new Uint8ClampedArray(data.length)
+    const radius = Math.abs(offset)
 
-    // Copy the original mask so store is not modified
-    const maskData = new ImageData(
-      new Uint8ClampedArray(imageStore.removalCanvasOriginal.data),
-      canvas.width,
-      canvas.height,
-    )
+    // Helper to get alpha channel (selection)
+    const getAlpha = (x, y) => {
+      if (x < 0 || x >= width || y < 0 || y >= height) return 0
+      return data[(y * width + x) * 4 + 3]
+    }
 
-    // Apply feathering
-    const featheredData = featherMask(maskData, canvas.width, canvas.height, radius)
+    for (let y = 0; y < height; y++) {
+      for (let x = 0; x < width; x++) {
+        const idx = (y * width + x) * 4
 
-    // Draw feathered mask to canvas
-    ctx.putImageData(featheredData, 0, 0)
+        // Skip edge pixels to prevent modifying image border
+        if (x < radius || y < radius || x >= width - radius || y >= height - radius) {
+          // Keep original pixel unchanged
+          newData[idx] = data[idx]
+          newData[idx + 1] = data[idx + 1]
+          newData[idx + 2] = data[idx + 2]
+          newData[idx + 3] = data[idx + 3]
+          continue
+        }
+        let newAlpha
 
-    // Save feathered result separately
-    imageStore.removalCanvas = featheredData
+        if (offset > 0) {
+          // Dilation: expand selection
+          newAlpha = 0
+          for (let dy = -radius; dy <= radius; dy++) {
+            for (let dx = -radius; dx <= radius; dx++) {
+              if (getAlpha(x + dx, y + dy) > 128) {
+                newAlpha = 255
+                break
+              }
+            }
+            if (newAlpha === 255) break
+          }
+        } else {
+          // Erosion: shrink selection
+          newAlpha = 255
+          for (let dy = -radius; dy <= radius; dy++) {
+            for (let dx = -radius; dx <= radius; dx++) {
+              if (getAlpha(x + dx, y + dy) < 128) {
+                newAlpha = 0
+                break
+              }
+            }
+            if (newAlpha === 0) break
+          }
+        }
+
+        // Keep RGB same, only modify alpha
+        newData[idx] = data[idx]
+        newData[idx + 1] = data[idx + 1]
+        newData[idx + 2] = data[idx + 2]
+        newData[idx + 3] = newAlpha
+      }
+    }
+
+    maskData.data.set(newData)
+    return maskData
   }
 
   // ----------------------------------
   // Apply
   // ----------------------------------
-
   /**
    * Apply background removal
    *
@@ -805,5 +882,6 @@ export function useBackgroundRemovalTool(imageStore, historyStore, workspaceStor
     backgroundReplacementColor,
     replaceWithBackgroundColor,
     softEdgesRadius,
+    boundaryOffset,
   }
 }

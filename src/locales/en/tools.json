@@ -89,6 +89,10 @@
           "label": "Soft edge radius",
           "tip": "Adjust the radius of the soft edge to create a smoother transition between the removed and remaining areas. A higher value results in a more gradual fade effect."
         },
+        "boundaryOffset": {
+          "label": "Boundary shift",
+          "tip": "Expand or shrink the boundary of the removed area. Positive values expand the removed area outward, while negative values shrink it inward."
+        },
         "invertSelectionButton": {
           "text": "Invert selection",
           "tip": "Invert the current selection"

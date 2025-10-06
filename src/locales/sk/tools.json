@@ -89,6 +89,10 @@
           "label": "Polomer mäkkého okraja",
           "tip": "Upravte polomer mäkkého okraja pre vytvorenie plynulejšieho prechodu medzi odstránenými a zostávajúcimi oblasťami. Vyššia hodnota vytvára postupnejší efekt prelínania."
         },
+        "boundaryOffset": {
+          "label": "Posun hranice",
+          "tip": "Rozšírte alebo zmenšite hranicu odstránenej oblasti. Kladné hodnoty rozširujú odstránenú oblasť von, zatiaľ čo záporné hodnoty ju zmenšujú dovnútra."
+        },
         "invertSelectionButton": {
           "text": "Invertovať výber",
           "tip": "Invertuje aktuálny výber"
