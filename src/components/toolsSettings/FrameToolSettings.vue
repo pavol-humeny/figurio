@@ -47,6 +47,8 @@ const {
   drawPhoneButtons,
   setPhoneButtons,
   phoneButtonsCanBeDrawn,
+  drawPhoneNavigation,
+  setPhoneNavigation,
 } = useFrameTool(useImageStore(), useHistoryStore(), useEditorStore(), t)
 </script>
 
@@ -118,6 +120,19 @@ const {
               </p>
               <ToggleButton v-model="drawPhoneButtons" @update="setPhoneButtons(drawPhoneButtons)" :scale="0.6"
                 :style="{ transform: 'translateX(16px)' }" :disabled="!phoneButtonsCanBeDrawn" />
+            </div>
+          </div>
+        </div>
+
+        <!-- Phone navigation -->
+        <div v-if="isPhoneFrame(selectedFrameVariant)" class="settings-content-wrapper">
+          <div v-if="drawPhoneHeader" class="content-wrapper">
+            <div class="content-aligned two-items">
+              <p>
+                {{ t('tools.frame.settings.general.usePhoneHomeIndicator.label') }}
+              </p>
+              <ToggleButton v-model="drawPhoneNavigation" @update="setPhoneNavigation(drawPhoneNavigation)" :scale="0.6"
+                :style="{ transform: 'translateX(16px)' }" />
             </div>
           </div>
         </div>

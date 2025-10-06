@@ -711,7 +711,10 @@
           "label": "Use phone header"
         },
         "usePhoneButtons": {
-          "label": "Use phone buttons"
+          "label": "Phone buttons"
+        },
+        "usePhoneHomeIndicator": {
+          "label": "Home indicator"
         },
         "phoneHeaderTextColor": {
           "label": "Text color"
@@ -785,7 +788,8 @@
             "width": "Width",
             "type": "Type",
             "useFrameOutline": "Use outline",
-            "usePhoneButtons": "Use phone buttons",
+            "usePhoneButtons": "Phone buttons",
+            "usePhoneHomeIndicator": "Home indicator",
             "phoneHeaderEnabled": "Use phone header",
             "phoneHeaderTextColor": "Text color",
             "phoneHeaderBackgroundColor": "Background color",
@@ -890,7 +894,8 @@
             "width": "Width",
             "type": "Type",
             "useFrameOutline": "Use outline",
-            "usePhoneButtons": "Use phone buttons",
+            "usePhoneButtons": "Phone buttons",
+            "usePhoneHomeIndicator": "Home indicator",
             "phoneHeaderEnabled": "Use phone header",
             "phoneHeaderTextColor": "Text color",
             "phoneHeaderBackgroundColor": "Background color",

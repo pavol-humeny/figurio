@@ -4,9 +4,18 @@
     "items": []
   },
   "versions":{
+    "4.8.2":{
+      "label": "4.8.2",
+      "date":"6.10. 2025",
+      "newFeatures": {
+        "items": [
+          "Add option to remove phone buttons from phone frames"
+        ]
+      }
+    },
     "4.8.1":{
       "label": "4.8.1",
-      "date":"1.10. 2025",
+      "date":"6.10. 2025",
       "newFeatures": {
         "items": [
           "Background removal tool - selected area can be modified with offset and soft edges"

@@ -159,6 +159,7 @@ export const useImageStore = defineStore('imageStore', {
       outlineEnabled: false, // Whether to draw an outline around the frame
       phoneHeaderEnabled: true, // Whether to draw a header for phone frames
       phoneButtonsEnabled: true, // Whether to draw buttons for phone frames
+      phoneNavigationEnabled: true, // Whether to draw navigation for phone frames
       phoneHeaderTimeInMinutes: 610, // Default time for phone header (10:10)
       phoneHeaderTextColor: '#000000', // Default text color for phone header
       phoneHeaderBackgroundColor: '#ffffff', // Default background color for phone header
@@ -355,6 +356,7 @@ export const useImageStore = defineStore('imageStore', {
         outlineEnabled: false, // Whether to draw an outline around the frame
         phoneHeaderEnabled: true, // Whether to draw a header for phone frames
         phoneButtonsEnabled: true, // Whether to draw buttons for phone frames
+        phoneNavigationEnabled: true, // Whether to draw navigation for phone frames
         phoneHeaderTimeInMinutes: 610, // Default time for phone header (10:10)
         phoneHeaderTextColor: '#000000', // Default text color for phone header
         phoneHeaderBackgroundColor: '#ffffff', // Default background color for phone header

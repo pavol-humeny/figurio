@@ -66,6 +66,11 @@ export function useFrameTool(imageStore, historyStore, editorStore, t) {
   )
 
   /**
+   * Phone navigation visibility
+   */
+  const drawPhoneNavigation = ref(true)
+
+  /**
    * Phone buttons visibility
    */
   const drawPhoneButtons = ref(true)
@@ -262,6 +267,15 @@ export function useFrameTool(imageStore, historyStore, editorStore, t) {
   }
 
   /**
+   * Set phone navigation visibility
+   * @param {boolean} value - Whether to show phone navigation
+   */
+  const setPhoneNavigation = (value) => {
+    drawPhoneNavigation.value = value
+    applyFrame()
+  }
+
+  /**
    * Set phone buttons visibility
    * @param {boolean} value - Whether to show phone buttons
    */
@@ -390,6 +404,7 @@ export function useFrameTool(imageStore, historyStore, editorStore, t) {
     imageStore.frame.outlineEnabled = JSON.parse(JSON.stringify(drawOutline.value))
     imageStore.frame.phoneHeaderEnabled = JSON.parse(JSON.stringify(drawPhoneHeader.value))
     imageStore.frame.phoneButtonsEnabled = JSON.parse(JSON.stringify(drawPhoneButtons.value))
+    imageStore.frame.phoneNavigationEnabled = JSON.parse(JSON.stringify(drawPhoneNavigation.value))
     imageStore.frame.phoneHeaderTextColor = JSON.parse(JSON.stringify(phoneHeaderTextColor.value))
     imageStore.frame.phoneHeaderBackgroundColor = JSON.parse(
       JSON.stringify(phoneHeaderBackgroundColor.value),
@@ -791,6 +806,34 @@ export function useFrameTool(imageStore, historyStore, editorStore, t) {
       }
     }
 
+    /**
+     * Draws the iPhone-style home indicator line at the bottom of the screen
+     * @param {string} color - Color of the line
+     */
+    const drawPhoneNavigationButton = (color = '#505152ff') => {
+      if (!frame.phoneNavigationEnabled) return
+
+      console.warn('Drawing home indicator')
+      const indicatorWidth = svgWidth * 0.28 // relative width (typical iPhone style)
+      const indicatorHeight = fh / 2 // thickness of the line
+      const indicatorRadius = indicatorHeight * 0.5
+
+      const x = svgWidth / 2 - indicatorWidth / 2
+      const y = phoneFrameValues.bottom - indicatorHeight * 3
+
+      console.log({ indicatorWidth, indicatorHeight, x, y })
+
+      const rect = document.createElementNS(ns, 'rect')
+      rect.setAttribute('x', x)
+      rect.setAttribute('y', y)
+      rect.setAttribute('width', indicatorWidth)
+      rect.setAttribute('height', indicatorHeight)
+      rect.setAttribute('rx', indicatorRadius)
+      rect.setAttribute('ry', indicatorRadius)
+      rect.setAttribute('fill', color)
+      el.appendChild(rect)
+    }
+
     // UPDATE new frame type
     if (frame.type === 'frameSolid') {
       // 4 sides
@@ -1096,6 +1139,9 @@ export function useFrameTool(imageStore, historyStore, editorStore, t) {
 
       // Volume and power buttons
       drawVolumeAndPowerButtons()
+
+      // Navigation (home indicator)
+      drawPhoneNavigationButton()
     } else if (frame.type === 'framePhoneIOS2') {
       const outline = document.createElementNS(ns, 'path')
       outline.setAttribute('fill', 'none')
@@ -1191,6 +1237,9 @@ export function useFrameTool(imageStore, historyStore, editorStore, t) {
 
       // Volume and power buttons
       drawVolumeAndPowerButtons()
+
+      // Navigation (home indicator)
+      drawPhoneNavigationButton()
     } else if (frame.type === 'framePhoneAndroid') {
       const outline = document.createElementNS(ns, 'path')
       outline.setAttribute('fill', 'none')
@@ -1245,6 +1294,9 @@ export function useFrameTool(imageStore, historyStore, editorStore, t) {
 
       // Volume and power buttons
       drawVolumeAndPowerButtons()
+
+      // Navigation (home indicator)
+      drawPhoneNavigationButton()
     } else if (frame.type === 'framePhoneAndroid2') {
       const outline = document.createElementNS(ns, 'path')
       outline.setAttribute('fill', 'none')
@@ -1326,6 +1378,9 @@ export function useFrameTool(imageStore, historyStore, editorStore, t) {
 
       // Volume and power buttons
       drawVolumeAndPowerButtons()
+
+      // Navigation (home indicator)
+      drawPhoneNavigationButton()
     } else if (frame.type === 'framePhoneSimple') {
       const outline = document.createElementNS(ns, 'path')
       outline.setAttribute('fill', 'none')
@@ -1358,6 +1413,9 @@ export function useFrameTool(imageStore, historyStore, editorStore, t) {
 
       // Volume and power buttons
       drawVolumeAndPowerButtons()
+
+      // Navigation (home indicator)
+      drawPhoneNavigationButton()
     } else if (frame.type === 'frameWindowsTaskBar') {
       // Footer bar
       const footerRect = document.createElementNS(ns, 'rect')
@@ -1511,5 +1569,7 @@ export function useFrameTool(imageStore, historyStore, editorStore, t) {
     drawPhoneButtons,
     setPhoneButtons,
     phoneButtonsCanBeDrawn,
+    drawPhoneNavigation,
+    setPhoneNavigation,
   }
 }

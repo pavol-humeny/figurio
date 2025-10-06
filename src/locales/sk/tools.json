@@ -711,7 +711,10 @@
           "label": "Použiť záhlavie telefónu"
         },
         "usePhoneButtons": {
-          "label": "Použiť tlačidlá telefónu"
+          "label": "Tlačidlá telefónu"
+        },
+        "usePhoneHomeIndicator": {
+          "label": "Domovské tlačítko"
         },
         "phoneHeaderTextColor": {
           "label": "Farba textu"
@@ -785,7 +788,8 @@
             "width": "Šírka",
             "type": "Typ",
             "useFrameOutline": "Použiť obrys",
-            "usePhoneButtons": "Použiť tlačidlá telefónu",
+            "usePhoneButtons": "Tlačidlá telefónu",
+            "usePhoneHomeIndicator": "Domovské tlačítko",
             "phoneHeaderEnabled": "Použiť záhlavie telefónu",
             "phoneHeaderTextColor": "Farba textu",
             "phoneHeaderBackgroundColor": "Farba pozadia",
@@ -890,7 +894,8 @@
             "width": "Šírka",
             "type": "Typ",
             "useFrameOutline": "Použiť obrys",
-            "usePhoneButtons": "Použiť tlačidlá telefónu",
+            "usePhoneButtons": "Tlačidlá telefónu",
+            "usePhoneHomeIndicator": "Domovské tlačítko",
             "phoneHeaderEnabled": "Použiť záhlavie telefónu",
             "phoneHeaderTextColor": "Farba textu",
             "phoneHeaderBackgroundColor": "Farba pozadia",
