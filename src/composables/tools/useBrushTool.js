@@ -78,6 +78,28 @@ export function useBrushTool(imageStore, historyStore, editorStore, t) {
     }
   }
 
+  const clearAllCanvas = async () => {
+    if (imageStore.needRasterization) return
+
+    // Find the brush canvas
+    const canvas = document.getElementById('brushCanvas')
+    if (!canvas) return
+
+    const ctx = canvas.getContext('2d')
+    if (!ctx) return
+
+    // Clear entire canvas
+    ctx.clearRect(0, 0, canvas.width, canvas.height)
+
+    // Reset overlay images
+    imageStore.overlayImage = null
+    imageStore.overlayImageExport = null
+    imageStore.overlayImagePreview = null
+
+    // Push snapshot to history
+    historyStore.push(imageStore.getSnapshot(t))
+  }
+
   return {
     brushColor,
     brushToolSize,
@@ -86,5 +108,6 @@ export function useBrushTool(imageStore, historyStore, editorStore, t) {
     brushMinToolSize,
     saveColorToStore,
     rasterizeImage,
+    clearAllCanvas,
   }
 }

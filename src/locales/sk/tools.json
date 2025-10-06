@@ -364,6 +364,10 @@
         "rasterizeButton": {
           "text": "Rasterizovať",
           "tip": "Obrázok musí byť rasterizovaný pred použitím nástroja guma"
+        },
+        "clearAllButton": {
+          "text": "Vymazať všetko",
+          "tip": "Vymazať všetky natreté oblasti z obrázka"
         }
       }
     }

@@ -4,14 +4,20 @@
     "items": []
   },
   "versions":{
-    "4.8.2":{
-      "label": "4.8.2",
+    "4.9.0":{
+      "label": "4.9.0",
       "date":"6.10. 2025",
       "newFeatures": {
         "items": [
           "Add option to remove phone buttons from phone frames",
           "Add home indicator button to phone frames",
-          "Phone frame header can be expanded beyond the image area or only overlap the image"
+          "Phone frame header can be expanded beyond the image area or only overlap the image",
+          "Clear all button in brush tool to clear all painted areas from the image"
+        ]
+      },
+      "bugFixes": {
+        "items": [
+          "Fix issue with small icons in browser frame in small images"
         ]
       }
     },

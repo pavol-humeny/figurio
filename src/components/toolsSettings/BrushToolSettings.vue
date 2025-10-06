@@ -23,6 +23,7 @@ const {
   brushColor,
   saveColorToStore,
   rasterizeImage,
+  clearAllCanvas,
 } = useBrushTool(
   useImageStore(),
   useHistoryStore(),
@@ -46,9 +47,9 @@ const tabs = ['brush', 'eraser']
           <div class="content-wrapper" :class="{ disabled: !imageStore.needRasterization }">
             <DefaultButton :text="$t('tools.brush.settings.brush.rasterizeButton.text')" position="bottom-left"
               :tip="$t('tools.brush.settings.brush.rasterizeButton.tip')" @click="rasterizeImage" />
-
           </div>
         </div>
+
         <!-- Tool size -->
         <div class="settings-content-wrapper">
           <div class="content-wrapper" :class="{ disabled: imageStore.needRasterization }">
@@ -91,9 +92,17 @@ const tabs = ['brush', 'eraser']
             <DefaultButton :text="$t('tools.brush.settings.eraser.rasterizeButton.text')"
               :tip="$t('tools.brush.settings.eraser.rasterizeButton.tip')" position="bottom-left"
               @click="rasterizeImage" />
-
           </div>
         </div>
+
+        <!-- Clear all button -->
+        <div class="settings-content-wrapper">
+          <div class="content-wrapper" :class="{ disabled: !imageStore.needMergeOverlay }">
+            <DefaultButton :text="$t('tools.brush.settings.eraser.clearAllButton.text')" position="bottom-left"
+              :tip="$t('tools.brush.settings.eraser.clearAllButton.tip')" @click="clearAllCanvas" />
+          </div>
+        </div>
+
         <!-- Tool size -->
         <div class="settings-content-wrapper">
           <div class="content-wrapper" :class="{ disabled: imageStore.needRasterization }">

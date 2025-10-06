@@ -364,6 +364,10 @@
         "rasterizeButton": {
           "text": "Rasterize",
           "tip": "Image need to be rasterized before using the eraser tool"
+        },
+        "clearAllButton": {
+          "text": "Clear all",
+          "tip": "Clear all painted areas from the image"
         }
       }
     }
