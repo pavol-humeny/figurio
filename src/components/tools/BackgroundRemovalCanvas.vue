@@ -120,7 +120,7 @@ const getMousePos = (event) => {
  * @param event Mouse event
  */
 const onMouseDown = (event) => {
-  if (editorStore.selectedToolKey !== 'backgroundRemoval' && editorStore.selectedTabPerTool['backgroundRemoval'] !== 'manual') return
+  if (editorStore.selectedToolKey !== 'backgroundRemoval' || editorStore.selectedTabPerTool['backgroundRemoval'] !== 'manual') return
 
   if (event.button !== 0) return // only left mouse
 
@@ -148,7 +148,7 @@ const onMouseDown = (event) => {
  * @param event Mouse event
  */
 const onMouseMove = (event) => {
-  if (editorStore.selectedToolKey !== 'backgroundRemoval' && editorStore.selectedTabPerTool['backgroundRemoval'] !== 'manual') return
+  if (editorStore.selectedToolKey !== 'backgroundRemoval' || editorStore.selectedTabPerTool['backgroundRemoval'] !== 'manual') return
 
   cursorPos.value = getMousePos(event)
   showCursor.value = true
@@ -173,7 +173,7 @@ const onMouseMove = (event) => {
  * Global mouse up listener to stop drawing when mouse is released
  */
 const onMouseUpGlobal = () => {
-  if (editorStore.selectedToolKey !== 'backgroundRemoval' && editorStore.selectedTabPerTool['backgroundRemoval'] !== 'manual') return
+  if (editorStore.selectedToolKey !== 'backgroundRemoval' || editorStore.selectedTabPerTool['backgroundRemoval'] !== 'manual') return
 
   if (isDrawing.value) {
     isDrawing.value = false

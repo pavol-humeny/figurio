@@ -4,6 +4,21 @@
     "items": []
   },
   "versions":{
+    "4.8.1":{
+      "label": "4.8.1",
+      "date":"1.10. 2025",
+      "newFeatures": {
+        "items": [
+          "Background removal tool - selected area can be modified with offset and soft edges"
+        ]
+      },
+      "bugFixes": {
+        "items": [
+          "Set correct cursor when using brush tool or manual background removal",
+          "Allow manual selecting of part to remove only in manual background removal tool"
+        ]
+      }
+    },
     "4.8.0":{
       "label": "4.8.0",
       "date":"30.9. 2025",

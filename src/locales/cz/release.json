@@ -6,6 +6,21 @@
     ]
   },
   "versions": {
+    "4.8.1":{
+      "label": "4.8.1",
+      "date":"1.10. 2025",
+      "newFeatures": {
+        "items": [
+          "Nástoj na odstraňování pozadí - přidání možnosti nastavení měkkých okrajů výběru a odsazení hranice výběru"
+        ]
+      },
+      "bugFixes": {
+        "items": [
+          "Nastavení správného kurzoru při použití nástroje štětec nebo manuálního odstraňování pozadí",
+          "Povolení manuálního výběru části k odstranění pouze v manuálním nástroji pro odstraňování pozadí"
+        ]
+      }
+    },
     "4.8.0":{
       "label": "4.8.0",
       "date":"30.9. 2025",

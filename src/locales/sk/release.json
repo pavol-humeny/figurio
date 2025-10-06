@@ -6,6 +6,21 @@
     ]
   },
   "versions": {
+    "4.8.1":{
+      "label": "4.8.1",
+      "date":"1.10. 2025",
+      "newFeatures": {
+        "items": [
+          "Nástroj na odstránenie pozadia - možnosť nastaviť mäkké okraje a odsadenie okrajov"
+        ]
+      },
+      "bugFixes": {
+        "items": [
+          "Nastavenie správneho kurzora pri manuálnom odstraňovaní pozadia a pri nástroji štetec",
+          "Povolenie manuálneho výberu časti na odstránenie iba v manuálnom nástroji na odstraňovanie pozadia"
+        ]
+      }
+    },
     "4.8.0":{
       "label": "4.8.0",
       "date":"30.9. 2025",

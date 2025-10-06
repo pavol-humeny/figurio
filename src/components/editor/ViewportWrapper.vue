@@ -196,12 +196,18 @@ const cursorStyleVars = computed(() => {
   }
 })
 
+/**
+ * Whether to show the drawing cursor (for brush and background removal tools)
+ */
+const drawingCursor = computed(() => {
+  return (editorStore.selectedToolKey === 'backgroundRemoval' && editorStore.selectedTabPerTool['backgroundRemoval'] === 'manual') || editorStore.selectedToolKey === 'brush'
+})
 </script>
 
 <template>
   <div class="viewport-wrapper" id="viewport" @mousedown="onMouseDownSelect" @dragover="handleDragOver"
     @dragleave="handleDragLeave" @drop="handleDrop" @mouseleave="onMouseLeave" @mouseenter="onMouseEnter"
-    :style="{ cursor: editorStore.selectedToolKey === 'brush' ? 'none' : 'default' }">
+    :style="{ cursor: drawingCursor ? 'none' : 'default' }">
     <LoadingSpinner />
 
     <div class="viewport-content-wrapper" ref="wrapperRef" @wheel.passive="setZoomAndScroll" @mousedown="startPan"
