@@ -423,6 +423,7 @@ export function usePresetTool(
         currentImageFrame.outlineEnabled === presetFrame.outlineEnabled &&
         currentImageFrame.phoneHeaderEnabled === presetFrame.phoneHeaderEnabled &&
         currentImageFrame.phoneButtonsEnabled === presetFrame.phoneButtonsEnabled &&
+        currentImageFrame.phoneNavigationEnabled === presetFrame.phoneNavigationEnabled &&
         currentImageFrame.phoneHeaderTimeInMinutes === presetFrame.phoneHeaderTimeInMinutes &&
         currentImageFrame.phoneHeaderTextColor === presetFrame.phoneHeaderTextColor &&
         currentImageFrame.phoneHeaderBackgroundColor === presetFrame.phoneHeaderBackgroundColor &&
@@ -578,6 +579,7 @@ export function usePresetTool(
       outlineEnabled: false,
       phoneHeaderEnabled: true,
       phoneButtonsEnabled: true,
+      phoneNavigationEnabled: true,
       phoneHeaderTimeInMinutes: 610,
       phoneHeaderTextColor: '#000000',
       phoneHeaderBackgroundColor: '#ffffff',
@@ -716,6 +718,7 @@ export function usePresetTool(
         outlineEnabled: false,
         phoneHeaderEnabled: true,
         phoneButtonsEnabled: true,
+        phoneNavigationEnabled: true,
         phoneHeaderTimeInMinutes: 610,
         phoneHeaderTextColor: '#000000',
         phoneHeaderBackgroundColor: '#ffffff',
@@ -796,6 +799,7 @@ export function usePresetTool(
       imageFrame.outlineEnabled = newPreset.value.frame.outlineEnabled
       imageFrame.phoneHeaderEnabled = newPreset.value.frame.phoneHeaderEnabled
       imageFrame.phoneButtonsEnabled = newPreset.value.frame.phoneButtonsEnabled
+      imageFrame.phoneNavigationEnabled = newPreset.value.frame.phoneNavigationEnabled
       imageFrame.phoneHeaderTimeInMinutes = newPreset.value.frame.phoneHeaderTimeInMinutes
       imageFrame.phoneHeaderTextColor = newPreset.value.frame.phoneHeaderTextColor
       imageFrame.phoneHeaderBackgroundColor = newPreset.value.frame.phoneHeaderBackgroundColor

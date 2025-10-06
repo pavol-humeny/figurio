@@ -9,7 +9,8 @@
       "date":"6.10. 2025",
       "newFeatures": {
         "items": [
-          "Add option to remove phone buttons from phone frames"
+          "Add option to remove phone buttons from phone frames",
+          "Add home indicator button to phone frames"
         ]
       }
     },

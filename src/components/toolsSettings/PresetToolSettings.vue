@@ -267,6 +267,17 @@ const tabs = ['myPresets', 'createPreset']
               <ToggleButton v-model="localImageFrame.phoneButtonsEnabled" :scale="0.6"
                 :style="{ transform: 'translateX(16px)' }" />
             </div>
+
+            <!-- Phone navigation -->
+            <div v-if="localImageFrame.enabled && isPhoneFrame(localImageFrame.type)" class="content-aligned two-items"
+              :class="!isModifyingPreset ? 'disabled' : ''">
+              <p>
+                {{ t('tools.preset.settings.myPresets.presetValues.frame.usePhoneHomeIndicator') }}
+              </p>
+              <ToggleButton v-model="localImageFrame.phoneNavigationEnabled" :scale="0.6"
+                :style="{ transform: 'translateX(16px)' }" />
+            </div>
+
             <!-- Phone header -->
             <!-- Enabled -->
             <div v-if="localImageFrame.enabled && isPhoneFrame(localImageFrame.type)" class="content-aligned two-items"
@@ -622,6 +633,17 @@ const tabs = ['myPresets', 'createPreset']
               <ToggleButton v-model="newPreset.frame.phoneButtonsEnabled" :scale="0.6"
                 :style="{ transform: 'translateX(16px)' }" />
             </div>
+
+            <!-- Phone navigation -->
+            <div v-if="isPhoneFrame(newPreset.frame.type) && newPreset.frame.enabled" class="content-aligned two-items"
+              :class="newPreset.frame.enabled ? '' : 'disabled'">
+              <p>
+                {{ t('tools.preset.settings.createPreset.presetValues.frame.usePhoneHomeIndicator') }}
+              </p>
+              <ToggleButton v-model="newPreset.frame.phoneNavigationEnabled" :scale="0.6"
+                :style="{ transform: 'translateX(16px)' }" />
+            </div>
+
             <!-- Phone header -->
             <!-- Enabled -->
             <div v-if="isPhoneFrame(newPreset.frame.type) && newPreset.frame.enabled" class="content-aligned two-items"
