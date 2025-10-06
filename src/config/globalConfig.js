@@ -22,7 +22,7 @@ export const globalConfig = {
   textWidth: 15.2, // cm
 
   // Default tool to start with
-  startTool: 'frame',
+  startTool: '',
 
   // Feature flags
   // UPDATE new tool
