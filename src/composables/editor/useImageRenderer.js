@@ -115,7 +115,7 @@ export function useImageRenderer(
         frame.type,
       )
 
-      const noPhoneButtonsAdjustment = frame.phoneHeaderButtonsEnabled ? 0 : (fw / 3) * 2
+      const noPhoneButtonsAdjustment = frame.phoneHeaderButtonsEnabled ? 0 : fw / 3
 
       const frameWidth = width + fw * 2 - noPhoneButtonsAdjustment
       const frameHeight = height + fh * 2 + (hasHeader ? header - fh : 0) + (hasFooter ? footer : 0)

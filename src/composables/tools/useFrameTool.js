@@ -441,6 +441,23 @@ export function useFrameTool(imageStore, historyStore, editorStore, t) {
   }
 
   /**
+   * Check if phone side buttons can be drawn within frame bounds.
+   * @param {number} svgHeight - Total SVG (frame) height
+   * @param {number} fw - Frame width
+   * @param {number} phoneCornerRadius - Corner radius of phone
+   * @returns {boolean} True if buttons fit, false if they would overflow
+   */
+  const canDrawPhoneButtons = (svgHeight, fw, phoneCornerRadius) => {
+    const volumeButtonWidth = fw / 3
+    const volumeButtonHeight = volumeButtonWidth * 25
+    const volumeUpY = svgHeight * 0.22
+    const volumeDownY = volumeUpY + volumeButtonHeight + volumeButtonWidth * 3
+
+    // Check if bottom of volumeDown + margin + rounded corner exceeds frame height
+    return volumeDownY + volumeButtonHeight + 50 + phoneCornerRadius <= svgHeight
+  }
+
+  /**
    * Apply the frame rendering to the specified SVG element
    * @param {SVGElement} el - The SVG element to apply the frame to
    */
@@ -507,26 +524,26 @@ export function useFrameTool(imageStore, historyStore, editorStore, t) {
 
     const hasHeader = isFrameWithHeader(frame.type)
 
-    const adjustmentForPhoneButtons = !frame.phoneHeaderButtonsEnabled ? fw / 3 : 0
+    const adjustmentForPhoneButtons = frame.phoneHeaderButtonsEnabled ? 0 : fw / 3
 
     const header = imageStore.frame.headerSize
     const footer = imageStore.frame.footerSize
     const svgWidth = w + fw * 2 - 2 * adjustmentForPhoneButtons
     const svgHeight = h + fh * 2 + (hasHeader ? header - fh : 0) + (footer > 0 ? footer - fh : 0)
-    const phoneCornerRadius = Math.floor(Math.min(svgWidth, svgHeight) * 0.06)
+    const phoneCornerRadius = Math.max(Math.floor(Math.min(svgWidth, svgHeight) * 0.06), 2)
+
+    console.warn('Phone corner radius:', phoneCornerRadius)
 
     // Values for phone frames
     const strokeWidth = (fw / 3) * 2 // 2/3 of frame width
     const offset = strokeWidth / 2
-
     const headerSize = header - strokeWidth
-
     const drawingAdjustmentForPhoneButtons = frame.phoneHeaderButtonsEnabled ? (fw / 3) * 2 : fw / 3
 
     const phoneFrameValues = {
       strokeWidth,
       radius: phoneCornerRadius,
-      offset,
+      offset, // Need because path is drawn from center of stroke
       left: drawingAdjustmentForPhoneButtons,
       top: offset,
       right: svgWidth - drawingAdjustmentForPhoneButtons,
@@ -592,7 +609,7 @@ export function useFrameTool(imageStore, historyStore, editorStore, t) {
       const volumeUpY = svgHeight * 0.22
       const volumeDownY = volumeUpY + volumeButtonHeight + volumeButtonWidth * 3
 
-      if (volumeDownY + volumeButtonHeight + 50 + phoneCornerRadius > svgHeight) {
+      if (!canDrawPhoneButtons(svgHeight, fw, phoneCornerRadius)) {
         if (!imageStore.phoneButtonsCanNotBeDrawnToastFlag) {
           showToastModal(
             'warning',
@@ -659,7 +676,7 @@ export function useFrameTool(imageStore, historyStore, editorStore, t) {
         const y = phoneFrameValues.top + phoneFrameValues.offset
         const width = phoneFrameValues.right - phoneFrameValues.left - phoneFrameValues.offset * 2
         const height = phoneFrameValues.headerSize + 1
-        const r = Math.min(height, phoneFrameValues.radius * 0.8)
+        const r = Math.min(height, phoneFrameValues.radius) / 2 // /2 because needed radius of inner arc of border
 
         const d = [
           `M ${x + r} ${y}`, // start after top-left corner
@@ -1404,7 +1421,7 @@ export function useFrameTool(imageStore, historyStore, editorStore, t) {
 
     // Round corners for phone frames
     if (isPhoneFrame(imageStore.frame.type)) {
-      const radius = Math.floor(Math.min(svgWidth, svgHeight) * 0.06) - fh // 6% of the smaller dimension + a bit of padding (100% of frame height)
+      const radius = Math.max(Math.floor(Math.min(svgWidth, svgHeight) * 0.06), 2) - fh // 6% of the smaller dimension + a bit of padding (100% of frame height)
 
       const renderedImage = imageStore.getRenderedImage({ t, renderCall: false })
       if (!renderedImage) return
