@@ -687,7 +687,7 @@ export function useFrameTool(imageStore, historyStore, editorStore, t) {
         const y = phoneFrameValues.top + phoneFrameValues.offset
         const width = phoneFrameValues.right - phoneFrameValues.left - phoneFrameValues.offset * 2
         const height = phoneFrameValues.headerSize + 1
-        const r = Math.min(height, phoneFrameValues.radius) / 2 // /2 because needed radius of inner arc of border
+        const r = Math.min(height, phoneFrameValues.radius) - fw / 2 // -fw/2 because needed radius of inner arc of border
 
         const d = [
           `M ${x + r} ${y}`, // start after top-left corner
