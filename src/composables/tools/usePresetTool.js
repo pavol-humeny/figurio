@@ -422,6 +422,7 @@ export function usePresetTool(
         currentImageFrame.width === presetFrame.width &&
         currentImageFrame.outlineEnabled === presetFrame.outlineEnabled &&
         currentImageFrame.phoneHeaderEnabled === presetFrame.phoneHeaderEnabled &&
+        currentImageFrame.phoneButtonsEnabled === presetFrame.phoneButtonsEnabled &&
         currentImageFrame.phoneHeaderTimeInMinutes === presetFrame.phoneHeaderTimeInMinutes &&
         currentImageFrame.phoneHeaderTextColor === presetFrame.phoneHeaderTextColor &&
         currentImageFrame.phoneHeaderBackgroundColor === presetFrame.phoneHeaderBackgroundColor &&
@@ -576,6 +577,7 @@ export function usePresetTool(
       footerSize: 0,
       outlineEnabled: false,
       phoneHeaderEnabled: true,
+      phoneButtonsEnabled: true,
       phoneHeaderTimeInMinutes: 610,
       phoneHeaderTextColor: '#000000',
       phoneHeaderBackgroundColor: '#ffffff',
@@ -713,6 +715,7 @@ export function usePresetTool(
         footerSize: 0,
         outlineEnabled: false,
         phoneHeaderEnabled: true,
+        phoneButtonsEnabled: true,
         phoneHeaderTimeInMinutes: 610,
         phoneHeaderTextColor: '#000000',
         phoneHeaderBackgroundColor: '#ffffff',
@@ -792,6 +795,7 @@ export function usePresetTool(
       imageFrame.height = newPreset.value.frame.width
       imageFrame.outlineEnabled = newPreset.value.frame.outlineEnabled
       imageFrame.phoneHeaderEnabled = newPreset.value.frame.phoneHeaderEnabled
+      imageFrame.phoneButtonsEnabled = newPreset.value.frame.phoneButtonsEnabled
       imageFrame.phoneHeaderTimeInMinutes = newPreset.value.frame.phoneHeaderTimeInMinutes
       imageFrame.phoneHeaderTextColor = newPreset.value.frame.phoneHeaderTextColor
       imageFrame.phoneHeaderBackgroundColor = newPreset.value.frame.phoneHeaderBackgroundColor

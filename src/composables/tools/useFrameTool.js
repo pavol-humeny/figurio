@@ -389,7 +389,7 @@ export function useFrameTool(imageStore, historyStore, editorStore, t) {
     imageStore.frame.enabled = true
     imageStore.frame.outlineEnabled = JSON.parse(JSON.stringify(drawOutline.value))
     imageStore.frame.phoneHeaderEnabled = JSON.parse(JSON.stringify(drawPhoneHeader.value))
-    imageStore.frame.phoneHeaderButtonsEnabled = JSON.parse(JSON.stringify(drawPhoneButtons.value))
+    imageStore.frame.phoneButtonsEnabled = JSON.parse(JSON.stringify(drawPhoneButtons.value))
     imageStore.frame.phoneHeaderTextColor = JSON.parse(JSON.stringify(phoneHeaderTextColor.value))
     imageStore.frame.phoneHeaderBackgroundColor = JSON.parse(
       JSON.stringify(phoneHeaderBackgroundColor.value),
@@ -535,7 +535,7 @@ export function useFrameTool(imageStore, historyStore, editorStore, t) {
 
     const hasHeader = isFrameWithHeader(frame.type)
 
-    const adjustmentForPhoneButtons = frame.phoneHeaderButtonsEnabled ? 0 : fw / 3
+    const adjustmentForPhoneButtons = frame.phoneButtonsEnabled ? 0 : fw / 3
 
     const header = imageStore.frame.headerSize
     const footer = imageStore.frame.footerSize
@@ -549,7 +549,7 @@ export function useFrameTool(imageStore, historyStore, editorStore, t) {
     const strokeWidth = (fw / 3) * 2 // 2/3 of frame width
     const offset = strokeWidth / 2
     const headerSize = header - strokeWidth
-    const drawingAdjustmentForPhoneButtons = frame.phoneHeaderButtonsEnabled ? (fw / 3) * 2 : fw / 3
+    const drawingAdjustmentForPhoneButtons = frame.phoneButtonsEnabled ? (fw / 3) * 2 : fw / 3
 
     const phoneFrameValues = {
       strokeWidth,
@@ -610,7 +610,7 @@ export function useFrameTool(imageStore, historyStore, editorStore, t) {
      * Draws the volume and power buttons for phone frames
      */
     const drawVolumeAndPowerButtons = () => {
-      if (!frame.phoneHeaderButtonsEnabled) return
+      if (!frame.phoneButtonsEnabled) return
 
       // Volume buttons (left side)
       const volumeButtonWidth = fw / 3 // 1/3 of frame width

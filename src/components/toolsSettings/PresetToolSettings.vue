@@ -257,6 +257,16 @@ const tabs = ['myPresets', 'createPreset']
               <ToggleButton v-model="localImageFrame.outlineEnabled" :scale="0.6"
                 :style="{ transform: 'translateX(16px)' }" :disabled="!isModifyingPreset" />
             </div>
+
+            <!-- Phone buttons -->
+            <div v-if="localImageFrame.enabled && isPhoneFrame(localImageFrame.type)" class="content-aligned two-items"
+              :class="!isModifyingPreset ? 'disabled' : ''">
+              <p>
+                {{ t('tools.preset.settings.myPresets.presetValues.frame.usePhoneButtons') }}
+              </p>
+              <ToggleButton v-model="localImageFrame.phoneButtonsEnabled" :scale="0.6"
+                :style="{ transform: 'translateX(16px)' }" />
+            </div>
             <!-- Phone header -->
             <!-- Enabled -->
             <div v-if="localImageFrame.enabled && isPhoneFrame(localImageFrame.type)" class="content-aligned two-items"
@@ -602,6 +612,16 @@ const tabs = ['myPresets', 'createPreset']
               <ToggleButton v-model="newPreset.frame.outlineEnabled" :scale="0.6"
                 :style="{ transform: 'translateX(16px)' }" />
             </div>
+
+            <!-- Phone buttons -->
+            <div v-if="isPhoneFrame(newPreset.frame.type) && newPreset.frame.enabled" class="content-aligned two-items"
+              :class="newPreset.frame.enabled ? '' : 'disabled'">
+              <p>
+                {{ t('tools.preset.settings.createPreset.presetValues.frame.usePhoneButtons') }}
+              </p>
+              <ToggleButton v-model="newPreset.frame.phoneButtonsEnabled" :scale="0.6"
+                :style="{ transform: 'translateX(16px)' }" />
+            </div>
             <!-- Phone header -->
             <!-- Enabled -->
             <div v-if="isPhoneFrame(newPreset.frame.type) && newPreset.frame.enabled" class="content-aligned two-items"
@@ -658,7 +678,7 @@ const tabs = ['myPresets', 'createPreset']
           <div class="content-wrapper">
             <div class="content-button">
               <DefaultButton :text="t('tools.preset.settings.createPreset.createPresetButton.text')"
-                @click="createPreset()" />
+                @click="createPreset()" main />
             </div>
           </div>
         </div>
