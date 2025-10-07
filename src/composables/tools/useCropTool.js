@@ -394,17 +394,30 @@ export function useCropTool(
       cropBox.value.startX = event.clientX
       cropBox.value.startY = event.clientY
 
+      let remainingDx = 0
+      let remainingDy = 0
+
       const onMouseMove = (e) => {
-        const dx = e.clientX - cropBox.value.startX
-        const dy = e.clientY - cropBox.value.startY
+        // Compute raw delta + remaining for smooth movement
+        let rawDx = (e.clientX - cropBox.value.startX) / viewportStore.realZoomLevel + remainingDx
+        let rawDy = (e.clientY - cropBox.value.startY) / viewportStore.realZoomLevel + remainingDy
+
+        // Round to whole pixels
+        const dx = Math.round(rawDx)
+        const dy = Math.round(rawDy)
+
+        // Save remaining for next move
+        remainingDx = rawDx - dx
+        remainingDy = rawDy - dy
+
         cropBox.value.x = clamp(
-          cropBox.value.x + dx / viewportStore.realZoomLevel,
+          cropBox.value.x + dx ,
           0,
           imageStore.fileDimensions.width - cropBox.value.width,
         )
 
         cropBox.value.y = clamp(
-          cropBox.value.y + dy / viewportStore.realZoomLevel,
+          cropBox.value.y + dy ,
           0,
           imageStore.fileDimensions.height - cropBox.value.height,
         )
@@ -444,11 +457,20 @@ export function useCropTool(
     cropBox.value.startX = e.clientX
     cropBox.value.startY = e.clientY
 
+    let remainingDx = 0
+    let remainingDy = 0
+
     const onMouseMove = (ev) => {
-      const dx = ev.clientX - cropBox.value.startX
-      const dy = ev.clientY - cropBox.value.startY
-      const dxNorm = dx / viewportStore.realZoomLevel
-      const dyNorm = dy / viewportStore.realZoomLevel
+      const dx = (ev.clientX - cropBox.value.startX) / viewportStore.realZoomLevel + remainingDx
+      const dy = (ev.clientY - cropBox.value.startY) / viewportStore.realZoomLevel + remainingDy
+
+      // Round to whole pixels
+      const dxNorm = Math.round(dx)
+      const dyNorm = Math.round(dy)
+
+      // Save remaining values for smooth dragging
+      remainingDx = dx - dxNorm
+      remainingDy = dy - dyNorm
 
       const minValue = editorConfig.minCropSize
 
