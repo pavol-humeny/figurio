@@ -2079,7 +2079,6 @@ export const useImageStore = defineStore('imageStore', {
         t,
       ).isPhoneHeaderWithExpandedHeader(this.frame.type, this.frame.phoneHeaderExpand)
 
-
       if (hasHeader) {
         if (phoneFrameWithExpandedHeader) {
           targetHeight = this.newFileDimensions.height - this.frame.headerSize - this.frame.height
@@ -2170,8 +2169,10 @@ export const useImageStore = defineStore('imageStore', {
       const canvasWidth = parseInt(tempFrameSvg.getAttribute('width'), 10)
       const canvasHeight = parseInt(tempFrameSvg.getAttribute('height'), 10)
 
+      const adjustmentForPhoneButtons = this.frame.phoneButtonsEnabled ? 0 : this.frame.width / 3
+
       // Determine image offset inside the frame
-      const offsetX = this.frame?.width || 0
+      const offsetX = this.frame?.width - adjustmentForPhoneButtons || 0
       let offsetY = this.frame?.height || offsetX
 
       // If frame has header, adjust offsetY accordingly
