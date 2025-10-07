@@ -93,6 +93,13 @@ export function usePresetTool(
   const tmpLocalImageFrame = ref({})
 
   /**
+   * Whether the preset was changed
+   *
+   * Needed to prevent resetting frame values on initial load
+   */
+  const presetWasChanged = ref(false)
+
+  /**
    * Watch for changes in the selected preset and update local variables accordingly
    */
   watch(
@@ -109,6 +116,8 @@ export function usePresetTool(
       isPresetModified.value = false
 
       initializing.value = false
+
+      presetWasChanged.value = true
     },
     { immediate: true },
   )
@@ -208,7 +217,9 @@ export function usePresetTool(
     () => localImageFrame.value.enabled,
     (enabled) => {
       isPresetModified.value = true
-      if (enabled) {
+
+      if (enabled && !presetWasChanged.value) {
+        console.warn('enabled frame: ', enabled)
         // Set default values for frame after enable
         localImageFrame.value.type = 'frameSolid'
         localImageFrame.value.color = '#000000'
@@ -218,6 +229,8 @@ export function usePresetTool(
         localImageFrame.value.phoneHeaderBackgroundColor = '#ffffff'
         localImageFrame.value.headerFooterMultiplier = 1
       }
+
+      presetWasChanged.value = false
     },
   )
 

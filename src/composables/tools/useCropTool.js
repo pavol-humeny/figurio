@@ -411,13 +411,13 @@ export function useCropTool(
         remainingDy = rawDy - dy
 
         cropBox.value.x = clamp(
-          cropBox.value.x + dx ,
+          cropBox.value.x + dx,
           0,
           imageStore.fileDimensions.width - cropBox.value.width,
         )
 
         cropBox.value.y = clamp(
-          cropBox.value.y + dy ,
+          cropBox.value.y + dy,
           0,
           imageStore.fileDimensions.height - cropBox.value.height,
         )
@@ -715,6 +715,8 @@ export function useCropTool(
    * @returns {boolean} - True if the pixel color matches the target color, false otherwise.
    */
 
+  const trimmedSides = { left: false, right: false, top: false, bottom: false }
+
   /* global cv */
   /**
    * Calculate the auto crop box with edge smoothing to reduce noise at borders.
@@ -818,128 +820,127 @@ export function useCropTool(
       return [data[idx], data[idx + 1], data[idx + 2], data[idx + 3]]
     }
 
+    // Convert color [r,g,b,a] to intensity (brightness)
+    const getIntensity = ([r, g, b, a]) => r * 0.299 + g * 0.587 + b * 0.114
+
     /**
-     * Trim one edge adaptively based on color similarity
-     * @param {'left'|'right'|'top'|'bottom'} side - Side to trim
+     * Compute average dual contrast for a given edge:
+     * returns { inner1Contrast, inner2Contrast }
      */
-    const trimEdgeAdaptive = (side) => {
-      /**
-       * Check if two colors match within a tolerance
-       * @param {number[]} a - First color [r, g, b, a]
-       * @param {number[]} b - Second color [r, g, b, a]
-       * @param {number} tolerance - Tolerance value
-       * @return {boolean} - True if colors match, false otherwise
-       */
-      const colorMatch = (a, b, tolerance = 10) => {
-        return (
-          Math.abs(a[0] - b[0]) <= tolerance &&
-          Math.abs(a[1] - b[1]) <= tolerance &&
-          Math.abs(a[2] - b[2]) <= tolerance
-        )
-      }
-
-      let total, match, pxRef, pxCompare
-
-      const sensitivityMultiplier = 0.98
+    const getDualContrastForSide = (side) => {
+      const diffs1 = [] // inner1 vs outer
+      const diffs2 = [] // inner2 vs outer
 
       switch (side) {
         case 'left':
-          total = cropRect.height
-          match = 0
-          for (let i = 0; i < total; i++) {
-            pxRef = getPixel(cropRect.x, cropRect.y + i)
-            pxCompare = getPixel(cropRect.x - 1, cropRect.y + i)
-            if (colorMatch(pxRef, pxCompare)) match++
-          }
-          console.log(
-            'Left match:',
-            match / total,
-            'sensitivity:',
-            (1 - sensitivity) * sensitivityMultiplier,
-          )
-          if (match / total >= (1 - sensitivity) * sensitivityMultiplier) {
-            console.warn('LEFT')
-            cropRect.x += 1
-            cropRect.width -= 1
+          for (let i = 0; i < cropRect.height; i++) {
+            const inner1 = getIntensity(getPixel(cropRect.x, cropRect.y + i))
+            const inner2 = getIntensity(getPixel(cropRect.x + 1, cropRect.y + i))
+            const outer = getIntensity(getPixel(cropRect.x - 1, cropRect.y + i))
+            diffs1.push(Math.abs(inner1 - outer))
+            diffs2.push(Math.abs(inner2 - outer))
           }
           break
 
         case 'right':
-          total = cropRect.height
-          match = 0
-          for (let i = 0; i < total; i++) {
-            pxRef = getPixel(cropRect.x + cropRect.width - 1, cropRect.y + i)
-            pxCompare = getPixel(cropRect.x + cropRect.width, cropRect.y + i)
-            if (colorMatch(pxRef, pxCompare)) match++
-          }
-          console.log(
-            'Right match:',
-            match / total,
-            'sensitivity:',
-            (1 - sensitivity) * sensitivityMultiplier,
-          )
-          if (match / total >= (1 - sensitivity) * sensitivityMultiplier) {
-            console.warn('RIGHT')
-            cropRect.width -= 1
+          for (let i = 0; i < cropRect.height; i++) {
+            const inner1 = getIntensity(getPixel(cropRect.x + cropRect.width - 1, cropRect.y + i))
+            const inner2 = getIntensity(getPixel(cropRect.x + cropRect.width - 2, cropRect.y + i))
+            const outer = getIntensity(getPixel(cropRect.x + cropRect.width, cropRect.y + i))
+            diffs1.push(Math.abs(inner1 - outer))
+            diffs2.push(Math.abs(inner2 - outer))
           }
           break
 
         case 'top':
-          total = cropRect.width
-          match = 0
-          for (let i = 0; i < total; i++) {
-            pxRef = getPixel(cropRect.x + i, cropRect.y)
-            pxCompare = getPixel(cropRect.x + i, cropRect.y - 1)
-            if (colorMatch(pxRef, pxCompare)) match++
-          }
-          console.log(
-            'Top match:',
-            match / total,
-            'sensitivity:',
-            (1 - sensitivity) * sensitivityMultiplier,
-          )
-          if (match / total >= (1 - sensitivity) * sensitivityMultiplier) {
-            console.warn('TOP')
-            cropRect.y += 1
-            cropRect.height -= 1
+          for (let i = 0; i < cropRect.width; i++) {
+            const inner1 = getIntensity(getPixel(cropRect.x + i, cropRect.y))
+            const inner2 = getIntensity(getPixel(cropRect.x + i, cropRect.y + 1))
+            const outer = getIntensity(getPixel(cropRect.x + i, cropRect.y - 1))
+            diffs1.push(Math.abs(inner1 - outer))
+            diffs2.push(Math.abs(inner2 - outer))
           }
           break
 
         case 'bottom':
-          total = cropRect.width
-          match = 0
-          for (let i = 0; i < total; i++) {
-            pxRef = getPixel(cropRect.x + i, cropRect.y + cropRect.height - 1)
-            pxCompare = getPixel(cropRect.x + i, cropRect.y + cropRect.height)
-            if (colorMatch(pxRef, pxCompare)) match++
-          }
-          console.log(
-            'Bottom match:',
-            match / total,
-            'sensitivity:',
-            (1 - sensitivity) * sensitivityMultiplier,
-          )
-          if (match / total >= (1 - sensitivity) * sensitivityMultiplier) {
-            console.warn('BOTTOM')
-            cropRect.height -= 1
+          for (let i = 0; i < cropRect.width; i++) {
+            const inner1 = getIntensity(getPixel(cropRect.x + i, cropRect.y + cropRect.height - 1))
+            const inner2 = getIntensity(getPixel(cropRect.x + i, cropRect.y + cropRect.height - 2))
+            const outer = getIntensity(getPixel(cropRect.x + i, cropRect.y + cropRect.height))
+            diffs1.push(Math.abs(inner1 - outer))
+            diffs2.push(Math.abs(inner2 - outer))
           }
           break
+      }
+
+      const inner1Contrast = diffs1.reduce((a, b) => a + b, 0) / diffs1.length
+      const inner2Contrast = diffs2.reduce((a, b) => a + b, 0) / diffs2.length
+
+      return { inner1Contrast, inner2Contrast }
+    }
+
+    /**
+     * Adaptively trim one side based on two contrast values
+     */
+    const trimEdgeAdaptive = (side) => {
+      const { inner1Contrast, inner2Contrast } = getDualContrastForSide(side)
+
+      const c1 = inner1Contrast / 255
+      const c2 = inner2Contrast / 255
+      const edgeScore = Math.abs(c1 - c2) // difference = edge strength
+
+      // Base range of possible thresholds
+      // sensitivity 0 → trims very little (requires extremely low contrast)
+      // sensitivity 1 → trims nearly everything (higher threshold)
+      const minThreshold = 0.05
+      const maxThreshold = 0.99
+      const threshold = minThreshold + (maxThreshold - minThreshold) * (sensitivity * 10)
+
+      console.warn(
+        `${side} contrast1: ${c1.toFixed(3)} contrast2: ${c2.toFixed(3)} edgeScore: ${edgeScore.toFixed(
+          3,
+        )} threshold: ${threshold.toFixed(3)}`,
+      )
+      // If edgeScore is smaller than relative threshold → trim
+      if (edgeScore < threshold) {
+        console.warn(`${side}  → trimming`)
+        switch (side) {
+          case 'left':
+            cropRect.x += 1
+            cropRect.width -= 1
+            trimmedSides.left = true
+            break
+          case 'right':
+            cropRect.width -= 1
+            trimmedSides.right = true
+            break
+          case 'top':
+            cropRect.y += 1
+            cropRect.height -= 1
+            trimmedSides.top = true
+            break
+          case 'bottom':
+            cropRect.height -= 1
+            trimmedSides.bottom = true
+            break
+        }
       }
     }
 
     // Apply for all edges only if specific side changed or sensitivity was changed
-    if (cropBox.value.x !== cropRect.x || autoCropThresholdWasChanged.value)
+    if (cropBox.value.x !== cropRect.x || (autoCropThresholdWasChanged.value && !trimmedSides.left))
       trimEdgeAdaptive('left')
 
     if (
       cropBox.value.x + cropBox.value.width !== cropRect.x + cropRect.width ||
-      autoCropThresholdWasChanged.value
+      (autoCropThresholdWasChanged.value && !trimmedSides.right)
     )
       trimEdgeAdaptive('right')
-    if (cropBox.value.y !== cropRect.y || autoCropThresholdWasChanged.value) trimEdgeAdaptive('top')
+    if (cropBox.value.y !== cropRect.y || (autoCropThresholdWasChanged.value && !trimmedSides.top))
+      trimEdgeAdaptive('top')
     if (
       cropBox.value.y + cropBox.value.height !== cropRect.y + cropRect.height ||
-      autoCropThresholdWasChanged.value
+      (autoCropThresholdWasChanged.value && !trimmedSides.bottom)
     )
       trimEdgeAdaptive('bottom')
 

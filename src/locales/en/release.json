@@ -4,6 +4,15 @@
     "items": []
   },
   "versions":{
+    "4.9.2":{
+      "label": "4.9.2",
+      "date":"7.10. 2025",
+      "bugFixes": {
+        "items": [
+          "Fixed issue with preset frame not being displayed correctly after loading a preset with frame."
+        ]
+      }
+    },
     "4.9.1":{
       "label": "4.9.1",
       "date":"7.10. 2025",

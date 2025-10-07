@@ -83,8 +83,6 @@ export const usePresetsStore = defineStore('presetsStore', {
 
       this.saveToStorage()
 
-      console
-
       return true
     },
 
