@@ -300,7 +300,7 @@ const tabs = ['myPresets', 'createPreset']
             </div>
             <!-- Background color -->
             <div
-              v-if="localImageFrame.enabled && localImageFrame.phoneHeaderEnabled && isPhoneFrame(localImageFrame.type)"
+              v-if="localImageFrame.enabled && localImageFrame.phoneHeaderEnabled && isPhoneFrame(localImageFrame.type) && localImageFrame.phoneHeaderExpand"
               class="content-aligned two-items" :class="!isModifyingPreset ? 'disabled' : ''">
               <p>
                 {{ t('tools.preset.settings.myPresets.presetValues.frame.phoneHeaderBackgroundColor') }}
@@ -676,7 +676,7 @@ const tabs = ['myPresets', 'createPreset']
             </div>
             <!-- Background color -->
             <div
-              v-if="newPreset.frame.phoneHeaderEnabled && isPhoneFrame(newPreset.frame.type) && newPreset.frame.enabled"
+              v-if="newPreset.frame.phoneHeaderEnabled && isPhoneFrame(newPreset.frame.type) && newPreset.frame.enabled && newPreset.frame.phoneHeaderExpand"
               class="content-aligned two-items" :class="newPreset.frame.enabled ? '' : 'disabled'">
               <p>
                 {{ t('tools.preset.settings.createPreset.presetValues.frame.phoneHeaderBackgroundColor') }}

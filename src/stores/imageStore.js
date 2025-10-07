@@ -2079,7 +2079,6 @@ export const useImageStore = defineStore('imageStore', {
         t,
       ).isPhoneHeaderWithExpandedHeader(this.frame.type, this.frame.phoneHeaderExpand)
 
-      console.warn('Target dimensions for preview:', targetWidth, targetHeight)
 
       if (hasHeader) {
         if (phoneFrameWithExpandedHeader) {
@@ -2088,7 +2087,6 @@ export const useImageStore = defineStore('imageStore', {
       } else if (hasFooter) {
         targetHeight = this.newFileDimensions.height - this.frame.footerSize - this.frame.height
       }
-      console.warn('--- Target dimensions for preview:', targetWidth, targetHeight)
 
       // Rasterize base image + SVG objects at export size
       await this.rasterize(t, false, targetWidth, targetHeight, true)
@@ -2201,7 +2199,6 @@ export const useImageStore = defineStore('imageStore', {
         targetHeight,
       )
 
-      console.warn('Drawing base image on preview')
       if (this.overlayImagePreview) {
         console.warn('Drawing overlay image on top of preview')
         ctx.drawImage(
