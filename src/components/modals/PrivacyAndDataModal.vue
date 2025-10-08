@@ -26,7 +26,7 @@ const {
 
 <template>
   <Teleport to="body">
-    <div v-if="isVisible" class="privacy-modal-overlay" @click.self="closePrivacyAndDataModal">
+    <div v-if="isVisible" class="privacy-modal-overlay" @mousedown.self="closePrivacyAndDataModal">
       <div class="modal-box">
         <div class="title-wrapper">
           <BaseIcon name="IconPrivacy" size="28" color="var(--text-c)" />

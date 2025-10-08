@@ -18,7 +18,7 @@ const {
 
 <template>
   <Teleport to="body">
-    <div v-if="isVisible" class="confirm-modal-overlay" @click.self="cancel">
+    <div v-if="isVisible" class="confirm-modal-overlay" @mousedown.self="cancel">
       <div class="modal-box">
         <div class="title-wrapper">
           <p>{{ title }}</p>

@@ -58,7 +58,7 @@
 
   <template>
     <Teleport to="body">
-      <div v-if="isVisible" class="help-modal-overlay" @click.self="closeHelpModal">
+      <div v-if="isVisible" class="help-modal-overlay" @mousedown.self="closeHelpModal">
         <div class="modal-box">
           <div class="title-wrapper">
             <BaseIcon name="IconQuestionMark" size="22" color="var(--secondary-c)" class="help-question-mark" />

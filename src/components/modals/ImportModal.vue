@@ -15,7 +15,7 @@ const {
 
 <template>
   <Teleport to="body">
-    <div v-if="isVisible" class="import-modal-overlay" @click.self="closeImportModal">
+    <div v-if="isVisible" class="import-modal-overlay" @mousedown.self="closeImportModal">
       <div class="modal-box">
         <DragAndDropArea />
         <DefaultButton :text="$t('dragAndDropArea.closeButton.text')" @click="closeImportModal" />

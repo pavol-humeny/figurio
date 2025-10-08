@@ -34,7 +34,7 @@ const emitConfirm = () => {
 
 <template>
   <Teleport to="body">
-    <div v-if="isVisible" class="confirm-modal-overlay" @click.self="triggerShake">
+    <div v-if="isVisible" class="confirm-modal-overlay" @mousedown.self="triggerShake">
       <div class="modal-box" :class="{ shake: isShaking }">
         <div v-if="title" class="title-wrapper">
           <p>{{ title }}</p>

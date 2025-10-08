@@ -13,7 +13,7 @@
 }
 
 @media (max-width: 1118px) {
-  #app {
+  #app {c
     /* Minus slider size */
     height: calc(100vh - 10px);
   }
