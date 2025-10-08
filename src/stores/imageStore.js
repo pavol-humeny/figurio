@@ -726,10 +726,11 @@ export const useImageStore = defineStore('imageStore', {
               uiStore.blockClicks = false
 
               const result = await showGeneralModal(
-                t('imageStore.modal.selectPdfPage.title'),
                 t('imageStore.modal.selectPdfPage.cancel'),
                 t('imageStore.modal.selectPdfPage.confirm'),
                 { numberOfPages: pdf.numPages, selectedPage: 1 }, // payload
+                'selectPdfPage', // modal type
+                false, // If it can be closed by clicking outside (false)
               )
 
               if (!result?.selectedPage) {

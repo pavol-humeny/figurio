@@ -1,20 +1,39 @@
 <script setup>
+import { computed } from 'vue'
 import { useGeneralModal } from '@/composables/modals/useGeneralModal'
 import { useShaking } from '@/composables/common/useShaking'
 import DefaultButton from '@/components/common/DefaultButton.vue'
+import SelectPdfPageModal from './SelectPdfPageModal.vue'
+import CloseAllFilesModal from './CloseAllFilesModal.vue'
 
 /**
  * Logic for the general modal
  */
 const {
   isVisible,
-  title,
   cancelText,
   confirmText,
   confirm,
   cancel,
   payload,
+  modalType,
+  canBeClosedByClickingOutside,
 } = useGeneralModal()
+
+
+/**
+ * Mapping of modal types to their respective components
+ */
+const modalComponents = {
+  selectPdfPage: SelectPdfPageModal,
+  closeAllFiles: CloseAllFilesModal,
+}
+
+/**
+ * Current modal component based on modal type
+ */
+const CurrentModal = computed(() => modalComponents[modalType.value])
+
 
 /**
  * Logic of the shake animation for modal
@@ -23,6 +42,17 @@ const {
   isShaking,
   triggerShake
 } = useShaking()
+
+/**
+ * Handles outside click based on canBeClosedByClickingOutside
+ */
+const handleOutsideClick = () => {
+  if (canBeClosedByClickingOutside.value) {
+    cancel()
+  } else {
+    triggerShake()
+  }
+}
 
 /**
  * Emits confirm event with selected page number
@@ -34,13 +64,10 @@ const emitConfirm = () => {
 
 <template>
   <Teleport to="body">
-    <div v-if="isVisible" class="confirm-modal-overlay" @mousedown.self="triggerShake">
+    <div v-if="isVisible" class="confirm-modal-overlay" @mousedown.self="handleOutsideClick">
       <div class="modal-box" :class="{ shake: isShaking }">
-        <div v-if="title" class="title-wrapper">
-          <p>{{ title }}</p>
-        </div>
         <div class="content-wrapper">
-          <slot></slot>
+          <component :is="CurrentModal" v-if="CurrentModal" />
         </div>
         <div class="button-wrapper">
           <DefaultButton :text="cancelText" @click="cancel" onlyText />
@@ -76,17 +103,6 @@ const emitConfirm = () => {
   flex-direction: column;
   align-items: center;
   gap: 15px;
-}
-
-.title-wrapper {
-  width: 100%;
-  display: flex;
-  justify-content: left;
-}
-
-.title-wrapper p {
-  font-size: var(--title-font-size);
-  font-weight: var(--title-font-weight);
 }
 
 .content-wrapper {

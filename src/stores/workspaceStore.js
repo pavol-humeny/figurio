@@ -16,6 +16,13 @@ export const useWorkspaceStore = defineStore('workspaceStore', {
     activeTabIndex: -1,
   }),
 
+  getters: {
+    /**
+     * Number of open tabs
+     * @returns {number}
+     */
+    numberOfTabs: (state) => state.tabs.length,
+  },
   actions: {
     /**
      * Add a new tab with current state snapshots.
@@ -65,6 +72,15 @@ export const useWorkspaceStore = defineStore('workspaceStore', {
         const imageStore = useImageStore()
 
         imageStore.closeFile()
+      }
+    },
+
+    /**
+     * Close all tabs and clear the workspace.
+     */
+    closeAllTabs() {
+      while (this.tabs.length > 0) {
+        this.closeTab(0)
       }
     },
 

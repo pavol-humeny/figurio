@@ -12,7 +12,6 @@ import HelpModal from './components/modals/HelpModal.vue'
 import { useImageStore } from './stores/imageStore'
 import InteractiveTutorial from './components/tutorial/InteractiveTutorial.vue'
 import GeneralModal from './components/modals/GeneralModal.vue'
-import SelectPdfPageModal from './components/modals/SelectPdfPageModal.vue'
 import { useRouter, useRoute } from 'vue-router'
 import { globalConfig } from './config/globalConfig.js'
 import ReleaseModal from './components/modals/ReleaseModal.vue'
@@ -134,9 +133,7 @@ onBeforeUnmount(() => {
   <div class="main" @wheel="check">
     <ToastModal />
     <ConfirmModal />
-    <GeneralModal>
-      <SelectPdfPageModal />
-    </GeneralModal>
+    <GeneralModal />
     <PrivacyAndDataModal />
     <ImportModal />
     <HelpModal />

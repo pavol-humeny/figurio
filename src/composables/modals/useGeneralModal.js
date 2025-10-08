@@ -6,11 +6,6 @@ import { ref } from 'vue'
 const isVisible = ref(false)
 
 /**
- * Optional modal title
- */
-const title = ref('')
-
-/**
  * Cancel / confirm button labels
  */
 const cancelText = ref('Cancel')
@@ -21,6 +16,16 @@ const confirmText = ref('Confirm')
  * Can be used as key or ID for dynamic rendering
  */
 const payload = ref(null)
+
+/**
+ * Type of modal (used to determine which component to render)
+ */
+const modalType = ref(null)
+
+/**
+ * Whether the modal can be closed by clicking outside
+ */
+const canBeClosedByClickingOutside = ref(true)
 
 /**
  * Resolver function used to finalize the modal Promise
@@ -38,14 +43,21 @@ export function useGeneralModal() {
    * @param {*} data - Optional data passed into modal
    * @returns {Promise<boolean>}
    */
-  const showGeneralModal = (modalTitle, cancelLabel, confirmLabel, data = null) => {
+  const showGeneralModal = (
+    cancelLabel,
+    confirmLabel,
+    data = null,
+    type,
+    outsideClosable,
+  ) => {
     if (isVisible.value) return Promise.resolve(false)
 
     isVisible.value = true
-    title.value = modalTitle
     cancelText.value = cancelLabel
     confirmText.value = confirmLabel
     payload.value = data
+    modalType.value = type
+    canBeClosedByClickingOutside.value = outsideClosable
 
     return new Promise((resolve) => {
       resolver = resolve
@@ -70,12 +82,13 @@ export function useGeneralModal() {
 
   return {
     isVisible,
-    title,
     cancelText,
     confirmText,
     payload,
     showGeneralModal,
     confirm,
     cancel,
+    modalType,
+    canBeClosedByClickingOutside,
   }
 }

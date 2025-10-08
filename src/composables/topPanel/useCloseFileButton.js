@@ -1,6 +1,7 @@
 import { computed } from 'vue'
 import { useConfirmModal } from '@/composables/modals/useConfirmModal'
 import { useSendEvent } from '@/composables/common/useSendEvent'
+import { useGeneralModal } from '@/composables/modals/useGeneralModal'
 
 /**
  * Logic for the Close File button in the top panel
@@ -15,6 +16,7 @@ import { useSendEvent } from '@/composables/common/useSendEvent'
  */
 export function useCloseFileButton(imageStore, workspaceStore, t) {
   const { showConfirmModal } = useConfirmModal()
+  const { showGeneralModal } = useGeneralModal()
 
   /**
    * Disable the close button if no image is loaded
@@ -30,14 +32,33 @@ export function useCloseFileButton(imageStore, workspaceStore, t) {
     // Send event
     useSendEvent().sendEvent('buttonClicked', null, 'closeFile', {})
 
-    const confirmed = await showConfirmModal(
-      t('topPanel.closeFileButton.confirm.title'),
-      t('topPanel.closeFileButton.confirm.message'),
-      t('topPanel.closeFileButton.confirm.cancel'),
-      t('topPanel.closeFileButton.confirm.confirm'),
-    )
-    if (confirmed) {
-      workspaceStore.closeTab()
+    if (workspaceStore.numberOfTabs <= 1) {
+      const confirmed = await showConfirmModal(
+        t('topPanel.closeFileButton.confirm.title'),
+        t('topPanel.closeFileButton.confirm.message'),
+        t('topPanel.closeFileButton.confirm.cancel'),
+        t('topPanel.closeFileButton.confirm.confirm'),
+      )
+
+      if (confirmed) {
+        workspaceStore.closeTab()
+      }
+    } else {
+      const confirmed = await showGeneralModal(
+        t('topPanel.closeFileButton.confirmMultiple.cancel'),
+        t('topPanel.closeFileButton.confirmMultiple.confirm'),
+        { closeAllFiles: false }, // payload
+        'closeAllFiles', // modal type
+        true, // If it can be closed by clicking outside (true)
+      )
+
+      if (confirmed) {
+        if (confirmed.closeAllFiles) {
+          workspaceStore.closeAllTabs()
+        } else {
+          workspaceStore.closeTab()
+        }
+      }
     }
   }
 

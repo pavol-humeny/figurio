@@ -42,6 +42,9 @@ watch(selectedPage, (value) => {
 
 <template>
   <div class="select-pdf-page-modal">
+    <div class="title-wrapper">
+      <p>{{ t('imageStore.modal.selectPdfPage.title') }}</p>
+    </div>
     <p class="modal-text">{{ t('imageStore.modal.selectPdfPage.message') }}</p>
     <div class="page-selection">
       <NumberDropdownInput v-model="selectedPage" :options="pageOptions" :min="1" :max="payload?.numberOfPages || 1"
@@ -77,5 +80,17 @@ watch(selectedPage, (value) => {
 .page-range {
   font-size: var(--text-font-size);
   color: var(--text-secondary-c);
+}
+
+
+.title-wrapper {
+  width: 100%;
+  display: flex;
+  justify-content: left;
+}
+
+.title-wrapper p {
+  font-size: var(--title-font-size);
+  font-weight: var(--title-font-weight);
 }
 </style>

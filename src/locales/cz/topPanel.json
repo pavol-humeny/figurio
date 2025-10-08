@@ -25,6 +25,13 @@
       "message": "Opravdu chcete zavřít aktuální soubor? Neuložené změny budou ztraceny",
       "cancel": "Ne",
       "confirm": "Ano, zavřít"
+    },
+    "confirmMultiple": {
+      "title": "Potvrdit zavření souborů",
+      "message": "Opravdu chcete zavřít soubor? Neuložené změny budou ztraceny.",
+      "closeAll": "Zavřít všechny soubory",
+      "cancel": "Zrušit",
+      "confirm": "Ano, zavřít"
     }
   },
   "undoRedo": {

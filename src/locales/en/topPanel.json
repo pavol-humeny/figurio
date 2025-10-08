@@ -25,6 +25,13 @@
       "message": "Are you sure you want to close the current file? Any unsaved changes will be lost.",
       "cancel": "No",
       "confirm": "Yes, close"
+    },
+    "confirmMultiple": {
+      "title": "Confirm file closure",
+      "message": "Are you sure you want to close file? Any unsaved changes will be lost.",
+      "closeAll": "Close all files",
+      "cancel": "Cancel",
+      "confirm": "Yes, close"
     }
   },
   "undoRedo": {
