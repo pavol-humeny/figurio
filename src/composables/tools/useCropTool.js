@@ -887,22 +887,26 @@ export function useCropTool(
 
       const c1 = inner1Contrast / 255
       const c2 = inner2Contrast / 255
-      const edgeScore = Math.abs(c1 - c2) // difference = edge strength
 
-      // Base range of possible thresholds
-      // sensitivity 0 → trims very little (requires extremely low contrast)
-      // sensitivity 1 → trims nearly everything (higher threshold)
-      const minThreshold = 0.05
-      const maxThreshold = 0.99
-      const threshold = minThreshold + (maxThreshold - minThreshold) * (sensitivity * 10)
+      // Compute ratio (always ≥1)
+      const ratio = c2 > c1 ? c2 / c1 : c1 / c2
 
+      // Base range of possible thresholds for ratio
+      // sensitivity 0 → trims very little (requires ratio very high)
+      // sensitivity 1 → trims more aggressively (lower ratio required)
+      const minRatio = 1.2
+      const maxRatio = 10
+      const threshold = minRatio + (maxRatio - minRatio) * (1 - sensitivity) // inverse sensitivity
+
+      console.warn('sensitivity:', sensitivity)
       console.warn(
-        `${side} contrast1: ${c1.toFixed(3)} contrast2: ${c2.toFixed(3)} edgeScore: ${edgeScore.toFixed(
+        `${side} contrast1: ${c1.toFixed(3)} contrast2: ${c2.toFixed(3)} ratio: ${ratio.toFixed(
           3,
         )} threshold: ${threshold.toFixed(3)}`,
       )
-      // If edgeScore is smaller than relative threshold → trim
-      if (edgeScore < threshold) {
+
+      // If ratio exceeds threshold → trim
+      if (ratio >= threshold) {
         console.warn(`${side}  → trimming`)
         switch (side) {
           case 'left':
