@@ -71,7 +71,7 @@ onUnmounted(() => {
     </div>
     <div class="subtitle-wrapper">
       <p v-if="!props.isHomePage">{{ $t('dragAndDropArea.subtitle') }}</p>
-      <p v-if="props.isHomePage" class="small">{{ $t('dragAndDropArea.pasteHint') }}</p>
+      <p class="small">{{ $t('dragAndDropArea.pasteHint') }}</p>
 
     </div>
     <div v-if="!props.isHomePage" class="button-wrapper">
