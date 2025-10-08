@@ -608,8 +608,6 @@ export function useFrameTool(imageStore, historyStore, editorStore, t) {
     const footer = imageStore.frame.footerSize
     const svgWidth = w + fw * 2 - 2 * adjustmentForPhoneButtons
 
-    console.warn('svgwidth: ', svgWidth)
-
     const svgHeight =
       h +
       fh * 2 +
