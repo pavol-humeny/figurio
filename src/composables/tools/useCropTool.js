@@ -68,6 +68,13 @@ const manualIndents = ref({
   leftIndentMax: Infinity,
 })
 
+const lastCannyCrop = ref({
+  x: 0,
+  y: 0,
+  width: 0,
+  height: 0,
+})
+
 /**
  * Logic for crop tool functionality, including crop box manipulation and position constraints
  *
@@ -90,6 +97,14 @@ export function useCropTool(
   const { showConfirmModal } = useConfirmModal()
   const { showToastModal } = useToastModal()
   const { clamp, round } = useMath()
+
+  const updateLastCannyCrop = () => {
+    console.log('updateLastCannyCrop', cropBox.value)
+    lastCannyCrop.value.width = cropBox.value.width
+    lastCannyCrop.value.height = cropBox.value.height
+    lastCannyCrop.value.x = cropBox.value.x
+    lastCannyCrop.value.y = cropBox.value.y
+  }
 
   /**
    * Whether the fit crop was already applied
@@ -156,6 +171,8 @@ export function useCropTool(
 
       oldManualIndents.value = { ...manualIndents.value }
     }
+
+    updateLastCannyCrop()
   }
 
   /**
@@ -193,6 +210,9 @@ export function useCropTool(
         manualIndents.value.rightIndentMax = fileDimensions.width
         manualIndents.value.bottomIndentMax = fileDimensions.height
         manualIndents.value.leftIndentMax = fileDimensions.width
+
+        // Last canny crop reset
+        updateLastCannyCrop()
       }
     },
     { immediate: true, deep: true },
@@ -358,6 +378,8 @@ export function useCropTool(
       // widthInputRef.value.value = cropWidth.value
       widthInputRef.value.setValue(cropWidth.value)
     })
+
+    updateLastCannyCrop()
   }
 
   /**
@@ -381,6 +403,8 @@ export function useCropTool(
       positionXInputRef.value.setValue(cropPositionX.value)
       positionYInputRef.value.setValue(cropPositionY.value)
     })
+
+    updateLastCannyCrop()
   }
 
   /**
@@ -437,6 +461,8 @@ export function useCropTool(
         document.removeEventListener('mouseup', onMouseUp)
 
         resetCache()
+
+        updateLastCannyCrop()
       }
 
       document.addEventListener('mousemove', onMouseMove)
@@ -566,6 +592,8 @@ export function useCropTool(
       document.removeEventListener('mouseup', onMouseUp)
 
       resetCache()
+
+      updateLastCannyCrop()
     }
 
     document.addEventListener('mousemove', onMouseMove)
@@ -751,18 +779,20 @@ export function useCropTool(
 
     // sensitivity: 0 = najcitlivejšie (detekuje takmer všetko), 1 = najmenej citlivé
     const lower = 1 + sensitivity * 10 * 100 // dolný threshold od 1 do 101
-    const upper = 200 - sensitivity * 10 * 150 // horný threshold od 200 do 50
+    const upper = 20 - sensitivity * 10 * 150 // horný threshold od 200 do 50
 
     cv.Canny(gray, edges, lower, upper)
 
+    console.log('lastCannyCrop', lastCannyCrop.value, useBaseImage)
+
     // Mask edges if not using base image
-    if (!useBaseImage && cropBox.value) {
+    if (lastCannyCrop.value && !useBaseImage) {
       const mask = new cv.Mat.zeros(edges.rows, edges.cols, edges.type())
       const rect = new cv.Rect(
-        cropBox.value.x * scale,
-        cropBox.value.y * scale,
-        cropBox.value.width * scale,
-        cropBox.value.height * scale,
+        lastCannyCrop.value.x * scale,
+        lastCannyCrop.value.y * scale,
+        lastCannyCrop.value.width * scale,
+        lastCannyCrop.value.height * scale,
       )
       const roi = mask.roi(rect)
       roi.setTo(new cv.Scalar(255))
@@ -812,6 +842,8 @@ export function useCropTool(
         height: Math.ceil((yMax - yMin + 1) / scale),
       }
     }
+
+    lastCannyCrop.value = { ...cropRect }
 
     // Function to get pixel color at (x, y)
     const getPixel = (x, y) => {
@@ -898,14 +930,14 @@ export function useCropTool(
       const maxRatio = 10
       const threshold = minRatio + (maxRatio - minRatio) * (1 - sensitivity) // inverse sensitivity
 
-      console.warn('sensitivity:', sensitivity)
-      console.warn(
+      console.log('sensitivity:', sensitivity)
+      console.log(
         `${side} contrast1: ${c1.toFixed(3)} contrast2: ${c2.toFixed(3)} ratio: ${ratio.toFixed(
           3,
         )} threshold: ${threshold.toFixed(3)}`,
       )
 
-      // If ratio exceeds threshold → trim
+      // If ratio exceeds threshold trim
       if (ratio >= threshold) {
         console.warn(`${side}  → trimming`)
         switch (side) {
@@ -1285,6 +1317,7 @@ export function useCropTool(
     }
     fitCropApplied.value = false
     resetCache()
+    updateLastCannyCrop()
   }
 
   /**

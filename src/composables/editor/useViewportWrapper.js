@@ -142,52 +142,73 @@ export function useViewportWrapper(viewportStore, imageStore, editorStore, uiSto
       // Move the viewport to keep the cursor position stable
       viewportStore.panX = cursorX - offsetX * zoomLevel.value
       viewportStore.panY = cursorY - offsetY * zoomLevel.value
-    } else if (event.shiftKey) {
-      // Horizontal scrolling with shift key
+
+      viewportStore.panX = clamp(
+        viewportStore.panX,
+        scrollHorizontalMin.value,
+        scrollHorizontalMax.value,
+      )
+      viewportStore.panY = clamp(
+        viewportStore.panY,
+        scrollVerticalMin.value,
+        scrollVerticalMax.value,
+      )
+
+      return
+    }
+
+    // HORIZONTAL SCROLL (Shift or horizontal wheel)
+    const isHorizontalScroll = event.shiftKey || Math.abs(event.deltaX) > Math.abs(event.deltaY)
+
+    if (isHorizontalScroll) {
+      // Use deltaX if available, otherwise deltaY when Shift is held
+      const delta = event.shiftKey ? event.deltaY : event.deltaX
+
       if (
         viewportStore.panX >= scrollHorizontalMin.value &&
         viewportStore.panX <= scrollHorizontalMax.value
       ) {
         viewportStore.panX = clamp(
-          viewportStore.panX - event.deltaY / horizontalSpeed,
+          viewportStore.panX - delta / horizontalSpeed,
           scrollHorizontalMin.value,
           scrollHorizontalMax.value,
         )
       } else {
         if (viewportStore.panX < scrollHorizontalMin.value) {
           // Enable only scrolling right
-          if (event.deltaY < 0) {
-            viewportStore.panX = viewportStore.panX - event.deltaY / horizontalSpeed
+          if (delta < 0) {
+            viewportStore.panX = viewportStore.panX - delta / horizontalSpeed
           }
         } else {
           // Enable only scrolling left
-          if (event.deltaY > 0) {
-            viewportStore.panX = viewportStore.panX - event.deltaY / horizontalSpeed
+          if (delta > 0) {
+            viewportStore.panX = viewportStore.panX - delta / horizontalSpeed
           }
         }
       }
+      return
+    }
+
+    // VERTICAL SCROLL
+    if (
+      viewportStore.panY >= scrollVerticalMin.value &&
+      viewportStore.panY <= scrollVerticalMax.value
+    ) {
+      viewportStore.panY = clamp(
+        viewportStore.panY - event.deltaY / verticalSpeed,
+        scrollVerticalMin.value,
+        scrollVerticalMax.value,
+      )
     } else {
-      // Vertical scrolling without
-      if (
-        viewportStore.panY >= scrollVerticalMin.value &&
-        viewportStore.panY <= scrollVerticalMax.value
-      ) {
-        viewportStore.panY = clamp(
-          viewportStore.panY - event.deltaY / verticalSpeed,
-          scrollVerticalMin.value,
-          scrollVerticalMax.value,
-        )
+      if (viewportStore.panY < scrollVerticalMin.value) {
+        // Enable only scrolling down
+        if (event.deltaY < 0) {
+          viewportStore.panY = viewportStore.panY - event.deltaY / verticalSpeed
+        }
       } else {
-        if (viewportStore.panY < scrollVerticalMin.value) {
-          // Enable only scrolling down
-          if (event.deltaY < 0) {
-            viewportStore.panY = viewportStore.panY - event.deltaY / verticalSpeed
-          }
-        } else {
-          // Enable only scrolling up
-          if (event.deltaY > 0) {
-            viewportStore.panY = viewportStore.panY - event.deltaY / verticalSpeed
-          }
+        // Enable only scrolling up
+        if (event.deltaY > 0) {
+          viewportStore.panY = viewportStore.panY - event.deltaY / verticalSpeed
         }
       }
     }
