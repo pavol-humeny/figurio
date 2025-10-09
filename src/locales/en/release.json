@@ -4,6 +4,21 @@
     "items": []
   },
   "versions":{
+    "4.10.1":{
+      "label": "4.10.1",
+      "date":"9.10. 2025",
+      "newFeatures": {
+        "items": [
+          "Horizontal scroll with second mouse wheel"
+        ]
+      },
+      "bugFixes": {
+        "items": [
+          "Fix Auto Crop tool"
+        ]
+      }
+      
+    },
     "4.10.0":{
       "label": "4.10.0",
       "date":"8.10. 2025",
