@@ -14,10 +14,12 @@ import StepperInput from '../common/StepperInput.vue'
 import NumberDropdownInput from '../common/NumberDropdownInput.vue'
 import { useWorkspaceStore } from '@/stores/workspaceStore'
 import ExplainItem from '../common/ExplainItem.vue'
+import ToggleHoldButton from '../common/ToggleHoldButton.vue'
 
 const { t } = useI18n()
 
 const imageStore = useImageStore()
+const editorStore = useEditorStore()
 
 /**
  * Logic of the crop tool
@@ -184,7 +186,7 @@ const {
                 <div class="dpad top">
                   <StepperInput v-model="manualIndents.topIndent" :min="manualIndents.topIndentMin"
                     :max="manualIndents.topIndentMax" :step="1"
-                    @update="recalculateCropBox; manualIndentsWereChangedManually() " type="block"
+                    @update="recalculateCropBox; manualIndentsWereChangedManually()" type="block"
                     :tip="$t('tools.crop.settings.general.autoCrop.manualAdjustments.top')"
                     :onReset="() => manualIndents.topIndent = 0" />
                 </div>
@@ -194,7 +196,7 @@ const {
 
                   <StepperInput v-model="manualIndents.leftIndent" :min="manualIndents.leftIndentMin"
                     :max="manualIndents.leftIndentMax" :step="1"
-                    @update="recalculateCropBox; manualIndentsWereChangedManually() " type="block"
+                    @update="recalculateCropBox; manualIndentsWereChangedManually()" type="block"
                     :tip="$t('tools.crop.settings.general.autoCrop.manualAdjustments.left')"
                     :onReset="() => manualIndents.leftIndent = 0" />
                 </div>
@@ -203,7 +205,7 @@ const {
                 <div class="dpad right">
                   <StepperInput v-model="manualIndents.rightIndent" :min="manualIndents.rightIndentMin"
                     :max="manualIndents.rightIndentMax" :step="1"
-                    @update="recalculateCropBox; manualIndentsWereChangedManually() " type="block"
+                    @update="recalculateCropBox; manualIndentsWereChangedManually()" type="block"
                     :tip="$t('tools.crop.settings.general.autoCrop.manualAdjustments.right')"
                     :onReset="() => manualIndents.rightIndent = 0" />
                 </div>
@@ -256,10 +258,14 @@ const {
         <!-- Hide crop box -->
         <div class="settings-content-wrapper">
           <div class="content-wrapper">
-            <div class="content-button">
-              <DefaultButton :text="$t('tools.crop.settings.general.hideCropBoxButton.text')" @mousedown="hideCropBox"
-                @mouseup="showCropBox" :tip="$t('tools.crop.settings.general.hideCropBoxButton.tip')"
-                position="bottom-left" />
+            <div class="content-aligned two-items">
+              <p style="text-align: start">
+                {{ $t('tools.crop.settings.general.hideCropBoxButton.text') }}
+              </p>
+              <ToggleHoldButton :scale="0.6" :style="{ transform: 'translateX(16px)' }"
+                :tip="$t('tools.crop.settings.general.hideCropBoxButton.tip')" position="top-left"
+                :defaultValue=editorStore.toolsConfig.crop.isVisibleCropBox :startFunction="hideCropBox"
+                :endFunction="showCropBox" />
             </div>
           </div>
         </div>

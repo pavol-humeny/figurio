@@ -285,4 +285,17 @@ export const keyboardShortcuts = [
     action: 'cutSelectedSvgObject',
     description: 'Cut selected SVG object',
   },
+
+  // Crop tool
+  {
+    keys: ['space'],
+    action: 'hideCropBox',
+    description: 'Hide crop box',
+  },
+  {
+    keys: ['space'],
+    action: 'showCropBox',
+    description: 'Show crop box',
+    type: 'keyup',
+  },
 ]

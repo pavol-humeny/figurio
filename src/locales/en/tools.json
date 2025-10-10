@@ -287,7 +287,7 @@
         },
         "hideCropBoxButton":{
           "text": "Hide crop box",
-          "tip": "Hold to hide crop box and see full image"
+          "tip": "Hold to hide crop box and see full image (or press and hold Spacebar)"
         },
         "applyCropButton": {
           "text": "Apply crop"

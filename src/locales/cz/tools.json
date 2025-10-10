@@ -287,7 +287,7 @@
         },
         "hideCropBoxButton":{
           "text": "Skrýt ořezový rámeček",
-          "tip": "Držte pro skrytí ořezového rámečku a zobrazení celého obrázku"
+          "tip": "Podržte pro skrytí ořezového rámečku a zobrazení celého obrázku (nebo stiskněte a podržte mezerník)"
         },
         "applyCropButton": {
           "text": "Použít ořezání"

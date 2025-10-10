@@ -35,6 +35,7 @@ import { useFileTabs } from '@/composables/editor/useFileTabs';
 import { useInteractiveTutorial } from '@/composables/tutorial/useInteractiveTutorial';
 import { useRouter } from 'vue-router'
 import { useSvgObjects } from '@/composables/tools/useSvgObjects';
+import { useCropTool } from '@/composables/tools/useCropTool';
 
 const { undo, redo } = useUndoRedo(useHistoryStore(), useImageStore())
 const { zoomIn, zoomOut, resetZoom, toggleZoomMode } = useZoomControl(useViewportStore())
@@ -48,6 +49,8 @@ const { openPrivacyAndDataModal } = usePrivacyAndDataModal(t)
 const { startEditing } = useFileNameDisplay(useImageStore(), t)
 const { switchToNextTab, switchToPreviousTab, } = useFileTabs(useUiStore(), useViewportStore(), useImageStore(), useEditorStore(), t)
 const { prevStep, nextStep, finishTutorial, closeTutorial, startTutorial } = useInteractiveTutorial(useUiStore(), useImageStore(), useRouter(), t)
+const { hideCropBox, showCropBox } = useCropTool(useImageStore(), useViewportStore(), useEditorStore(), useHistoryStore(), useWorkspaceStore(), t)
+
 const {
   moveObjectLeftLocal,
   moveObjectRightLocal,
@@ -105,6 +108,8 @@ useKeyboardShortcuts({
   pasteSvgObjectToCenter,
   duplicateSelectedSvgObject,
   cutSelectedSvgObject,
+  hideCropBox,
+  showCropBox,
 }, useUiStore(), useEditorStore());
 // ======
 

@@ -10,22 +10,21 @@ import { keyboardShortcuts } from '@/config/keyboardShortcutsConfig'
  */
 export function useKeyboardShortcuts(actions, uiStore, editorStore) {
   /**
-   * Normalize pressed keys into string format (e.g., "ctrl+shift+s")
+   * Normalize a keyboard event into a string representation
    *
-   * @param {KeyboardEvent} event - Keyboard event
-   * @returns {string} - Normalized key combination
+   * @param {KeyboardEvent} event - The keyboard event to normalize
+   * @returns {string} Normalized key combination (e.g., 'ctrl+z')
    */
   const normalizeKey = (event) => {
     const keys = []
-
     if (event.ctrlKey || event.metaKey) keys.push('ctrl')
     if (event.altKey) keys.push('alt')
     if (event.shiftKey) keys.push('shift')
 
-    // Get the main key pressed (not modifier)
-    const mainKey = event.key.toLowerCase()
+    let mainKey = event.key.toLowerCase()
+    const specialKeysMap = { ' ': 'space' }
+    if (specialKeysMap[mainKey]) mainKey = specialKeysMap[mainKey]
 
-    // Skip if it's just a modifier
     if (!['control', 'shift', 'alt', 'meta'].includes(mainKey)) {
       keys.push(mainKey)
     }
@@ -34,11 +33,12 @@ export function useKeyboardShortcuts(actions, uiStore, editorStore) {
   }
 
   /**
-   * Handle keydown event, match shortcut, and call corresponding action
+   * Handle keyboard events and trigger corresponding actions
    *
-   * @param {KeyboardEvent} event - Keyboard event
+   * @param {KeyboardEvent} event - The keyboard event
+   * @param {string} type - The type of event ('keydown' or 'keyup')
    */
-  const handleKeydown = (event) => {
+  const handleKeyEvent = (event, type = 'keydown') => {
     if (!uiStore.keyShortcutsEnabled || uiStore.isLoading) return
 
     const el = document.activeElement
@@ -55,15 +55,15 @@ export function useKeyboardShortcuts(actions, uiStore, editorStore) {
 
     for (const shortcut of keyboardShortcuts) {
       const expected = shortcut.keys.map((k) => k.toLowerCase()).join('+')
-      // console.log(`[Shortcut] Pressed: ${pressed}, Expected: ${expected}`)
-      if (pressed === expected) {
+      const expectedType = shortcut.type || 'keydown' // default type
+
+      if (pressed === expected && type === expectedType) {
         event.preventDefault()
         event.stopImmediatePropagation()
+
         const fn = actions[shortcut.action]
         if (typeof fn === 'function') {
-          // console.log('fn:', fn.name, 'args:', shortcut.args)
           if (uiStore.isTutorialRunning) {
-            // If in tutorial mode, only allow specific actions
             if (
               fn.name !== 'nextStep' &&
               fn.name !== 'prevStep' &&
@@ -75,19 +75,25 @@ export function useKeyboardShortcuts(actions, uiStore, editorStore) {
           }
 
           fn(...(shortcut.args || []))
-          console.log(`[Shortcut] ${shortcut.description}`)
+          console.log(`[Shortcut] ${type.toUpperCase()} → ${shortcut.description}`)
         }
       }
     }
   }
 
-  // Register global keydown event on mount
+  // Persistent references for event listeners
+  const handleKeydown = (e) => handleKeyEvent(e, 'keydown')
+  const handleKeyup = (e) => handleKeyEvent(e, 'keyup')
+
+  // Register global listeners on mount
   onMounted(() => {
     window.addEventListener('keydown', handleKeydown)
+    window.addEventListener('keyup', handleKeyup)
   })
 
-  // Clean up event listener on unmount
+  // Clean up listeners on unmount
   onBeforeUnmount(() => {
     window.removeEventListener('keydown', handleKeydown)
+    window.removeEventListener('keyup', handleKeyup)
   })
 }

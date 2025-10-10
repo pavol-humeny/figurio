@@ -4,9 +4,14 @@
     "items": []
   },
   "versions":{
-    "4.10.2":{
-      "label": "4.10.2",
+    "4.11.0":{
+      "label": "4.11.0",
       "date":"9.10. 2025",
+      "newFeatures": {
+        "items": [
+          "Crop box can be hidden temporarily by holding down the hide crop box button or Spacebar"
+        ]
+      },
       "improvements": {
         "items": [
           "Contrast modes can be switched with clicking on one button"
