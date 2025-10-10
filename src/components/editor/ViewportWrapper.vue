@@ -80,6 +80,10 @@ const {
   showCursor,
   onMouseLeave,
   onMouseEnter,
+  backgroundModeValues,
+  backgroundMode,
+  switchBackgroundMode,
+  backgroundModePadding
 } = useViewportWrapper(useViewportStore(), useImageStore(), useEditorStore(), useUiStore(), contentRef, t)
 
 /**
@@ -144,51 +148,6 @@ const disableContextMenu = computed(() => {
 const phoneFrameBorderRadius = ref(0)
 
 /**
- * Background of the viewport wrapper
- */
-const viewportWrapperBackground = ref('var(--background-c)')
-
-/**
- * Background mode for viewport wrapper (normal | contrast)
- */
-const viewportWrapperBackgroundMode = computed({
-  get: () => uiStore.viewportWrapperBackgroundMode,
-  set: (value) => {
-    uiStore.setViewportWrapperBackgroundMode(value)
-  },
-})
-
-/**
- * Padding for the background mode buttons
- */
-const viewportWrapperBackgroundModePadding = computed(() => {
-  return uiStore.rulersEnabled ? '25px' : '10px'
-})
-
-/**
- * Set the background mode for the viewport wrapper
- * @param {string} mode - The background mode to set ('normal' or 'contrast')
- */
-const setViewportWrapperBackgroundMode = (mode) => {
-  if (mode === 'normal') {
-    viewportWrapperBackgroundMode.value = 'normal'
-  } else if (mode === 'contrast') {
-    viewportWrapperBackgroundMode.value = 'contrast'
-  }
-}
-
-/**
- * Watch for changes in the background mode and update the background accordingly
- */
-watch(viewportWrapperBackgroundMode, (newMode) => {
-  if (newMode === 'normal') {
-    viewportWrapperBackground.value = 'var(--viewport-wrapper-background)'
-  } else if (newMode === 'contrast') {
-    viewportWrapperBackground.value = 'var(--viewport-wrapper-contrast-c)'
-  }
-}, { immediate: true })
-
-/**
  * Watch for changes in the frame to determine if it's a phone frame
  */
 watch(
@@ -235,7 +194,7 @@ const drawingCursor = computed(() => {
         'middle-dragging': isMiddleDragging,
         'move-tool-selected': editorStore.selectedToolKey === 'move',
       }" :style="{
-        '--viewport-wrapper-background': viewportWrapperBackground,
+        '--viewport-wrapper-background': backgroundModeValues[backgroundMode],
       }">
       <ContextMenu :items="[
         {
@@ -272,7 +231,7 @@ const drawingCursor = computed(() => {
         <div id="viewport-content" :class="{ 'hide': uiStore.isLoading }" class="viewport-content" ref="contentRef"
           :style="{
             transform: `translate(${panX}px, ${panY}px) scale(${zoomLevel})`,
-            boxShadow: viewportWrapperBackgroundMode === 'normal' ? 'var(--box-shadow-content)' : 'none',
+            boxShadow: backgroundMode === 'normal' ? 'var(--box-shadow-content)' : 'none',
             '--phone-frame-border-radius': phoneFrameBorderRadius + 'px',
           }">
           <img v-if="imageStore.fileType === 'image' || imageStore.showImageInsteadOfPdf" ref="imageRef"
@@ -333,22 +292,18 @@ const drawingCursor = computed(() => {
     </div>
 
     <div class="contrast-mode-wrapper" :style="{
-      '--viewport-wrapper-background-top': viewportWrapperBackgroundModePadding,
+      '--viewport-wrapper-background-top': backgroundModePadding,
     }">
-      <ItemTip advance :text="t('tools.viewportBackgroundMode.normal.tip.text')"
-        :title="$t('tools.viewportBackgroundMode.normal.tip.title')" position="bottom-left" class="contrast-mode-button"
-        :class="{ 'selected': viewportWrapperBackgroundMode === 'normal' }"
-        @click="setViewportWrapperBackgroundMode('normal')">
-        <BaseIcon name="IconNormalMode" size="21" />
+      <ItemTip advance :text="t('tools.viewportBackgroundMode.tip.text')"
+        :title="$t('tools.viewportBackgroundMode.tip.title')" position="bottom-left" class="contrast-mode-button"
+        @click="switchBackgroundMode()">
+        <!-- Change icon based on mode -->
+        <BaseIcon :name="backgroundMode === 'normal'
+          ? 'IconNormalMode'
+          : backgroundMode === 'lightContrast'
+            ? 'IconLightMode'
+            : 'IconDarkMode'" size="27" />
       </ItemTip>
-      <ItemTip advance :text="t('tools.viewportBackgroundMode.contrast.tip.text')"
-        :title="$t('tools.viewportBackgroundMode.contrast.tip.title')" position="bottom-left"
-        class="contrast-mode-button" :class="{ 'selected': viewportWrapperBackgroundMode === 'contrast' }"
-        @click="setViewportWrapperBackgroundMode('contrast')">
-        <BaseIcon name="IconContrastMode" size="21" />
-      </ItemTip>
-
-
     </div>
 
     <!-- Cursor -->
@@ -466,17 +421,15 @@ const drawingCursor = computed(() => {
   position: absolute;
   top: var(--viewport-wrapper-background-top);
   right: 15px;
-  height: 35px;
-  width: 68px;
+  height: 36px;
+  width: 36px;
   border-radius: 8px;
   background: var(--secondary-c);
   z-index: var(--z-index-sliders);
+  color: var(--primary-c);
   display: flex;
   align-items: center;
   justify-content: center;
-  flex-direction: row;
-  gap: 5px;
-  color: var(--primary-c);
 }
 
 

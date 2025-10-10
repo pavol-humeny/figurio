@@ -800,6 +800,47 @@ export function useViewportWrapper(viewportStore, imageStore, editorStore, uiSto
    */
   const showCursor = ref(false)
 
+  // ------------------------------
+  // Background contrast mode
+  // ------------------------------
+  /**
+   * Available background modes
+   */
+  const backgroundModeOptions = ['normal', 'lightContrast', 'darkContrast']
+
+  /**
+   * Background color values for each mode
+   */
+  const backgroundModeValues = {
+    normal: 'var(--background-c)',
+    lightContrast: 'var(--viewport-wrapper-contrast-light-c)',
+    darkContrast: 'var(--viewport-wrapper-contrast-dark-c)',
+  }
+
+  /**
+   * Current mode (stored in uiStore)
+   */
+  const backgroundMode = computed({
+    get: () => uiStore.viewportWrapperBackgroundMode,
+    set: (value) => uiStore.setViewportWrapperBackgroundMode(value),
+  })
+
+  /**
+   * Cycle through modes when the button is clicked
+   */
+  const switchBackgroundMode = () => {
+    const currentIndex = backgroundModeOptions.indexOf(backgroundMode.value)
+    const nextIndex = (currentIndex + 1) % backgroundModeOptions.length
+    backgroundMode.value = backgroundModeOptions[nextIndex]
+  }
+
+  /**
+   * Padding for the background mode buttons
+   */
+  const backgroundModePadding = computed(() => {
+    return uiStore.rulersEnabled ? '25px' : '10px'
+  })
+
   return {
     zoomLevel,
     setZoomAndScroll,
@@ -833,5 +874,9 @@ export function useViewportWrapper(viewportStore, imageStore, editorStore, uiSto
     showCursor,
     onMouseLeave,
     onMouseEnter,
+    backgroundModeValues,
+    backgroundMode,
+    switchBackgroundMode,
+    backgroundModePadding,
   }
 }

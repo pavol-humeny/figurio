@@ -13,7 +13,4 @@
 
 
 <style scoped>
-svg {
-  transform: translateY(-1px);
-}
 </style>

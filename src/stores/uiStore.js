@@ -136,7 +136,7 @@ export const useUiStore = defineStore('ui', {
     /** Whether the tutorial should be started for the first time only after image is loaded*/
     tutorialShouldBeStartedForFirstTime: false,
 
-    /** Background mode for viewport wrapper (normal | contrast) */
+    /** Background mode for viewport wrapper (normal | lightContrast | darkContrast) */
     viewportWrapperBackgroundMode: getString(
       `${globalConfig.LOCAL_STORAGE_PREFIX}viewportWrapperBackgroundMode`,
       'normal',
@@ -290,7 +290,7 @@ export const useUiStore = defineStore('ui', {
     },
 
     /**
-     * Set background mode for viewport wrapper (normal | contrast)
+     * Set background mode for viewport wrapper (normal | lightContrast | darkContrast)
      * @param {string} mode - Background mode
      */
     setViewportWrapperBackgroundMode(mode) {
