@@ -169,6 +169,7 @@ export function useToolsPanel(editorStore, imageStore, uiStore, t) {
       if (
         toolKey === 'crop' ||
         toolKey === 'grayscale' ||
+        toolKey === 'backgroundRemoval' ||
         toolKey === 'blur' ||
         toolKey === 'shape' ||
         toolKey === 'text' ||
