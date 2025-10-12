@@ -11,14 +11,14 @@ import LinkValuesIcon from '../common/LinkValuesIcon.vue'
 import DefaultButton from '../common/DefaultButton.vue'
 import ToggleButton from '../common/ToggleButton.vue'
 import StepperInput from '../common/StepperInput.vue'
-import NumberDropdownInput from '../common/NumberDropdownInput.vue'
+// import NumberDropdownInput from '../common/NumberDropdownInput.vue'
 import { useWorkspaceStore } from '@/stores/workspaceStore'
 import ExplainItem from '../common/ExplainItem.vue'
 import ToggleHoldButton from '../common/ToggleHoldButton.vue'
 
 const { t } = useI18n()
 
-const imageStore = useImageStore()
+// const imageStore = useImageStore()
 const editorStore = useEditorStore()
 
 /**
@@ -33,8 +33,6 @@ const {
   isDimensionsLinked,
   heightInputRef,
   widthInputRef,
-  // cropPositionX,
-  // cropPositionY,
   maxCropPositionX,
   maxCropPositionY,
   updatePosition,
@@ -50,12 +48,11 @@ const {
   fitCrop,
   manualIndents,
   recalculateCropBox,
-  // fitCropApplied,
-  showArtifacts,
-  hideArtifacts,
-  isArtifactsVisible,
-  autoCropThreshold,
-  autoCropThresholdOptions,
+  // showArtifacts,
+  // hideArtifacts,
+  // isArtifactsVisible,
+  // autoCropThreshold,
+  // autoCropThresholdOptions,
   tmpCropX,
   tmpCropY,
   isManualAdjustmentsLinked,
@@ -153,6 +150,7 @@ const {
                 :tip="$t('tools.crop.settings.general.autoCrop.useBaseImage.tip')" position="bottom-left" />
             </div>
           </div>
+          <!--
           <div class="content-wrapper" style="margin-bottom: 10px;">
             <div class="content-aligned two-items">
 
@@ -164,6 +162,7 @@ const {
                 position="bottom-left" />
             </div>
           </div>
+          -->
 
           <!-- Fit crop -->
           <div class="content-wrapper">
@@ -232,6 +231,7 @@ const {
         </div>
 
         <!-- Show/hide artifacts -->
+        <!--
         <div v-if="imageStore.fileType === 'image'" class="settings-content-wrapper">
           <div class="content-wrapper">
             <div class="content-button">
@@ -243,6 +243,7 @@ const {
             </div>
           </div>
         </div>
+        -->
 
         <!-- Reset crop -->
         <div class="settings-content-wrapper">
@@ -264,7 +265,7 @@ const {
               </p>
               <ToggleHoldButton :scale="0.6" :style="{ transform: 'translateX(16px)' }"
                 :tip="$t('tools.crop.settings.general.hideCropBoxButton.tip')" position="top-left"
-                :defaultValue=editorStore.toolsConfig.crop.isVisibleCropBox :startFunction="hideCropBox"
+                :defaultValue=!editorStore.toolsConfig.crop.isVisibleCropBox :startFunction="hideCropBox"
                 :endFunction="showCropBox" />
             </div>
           </div>

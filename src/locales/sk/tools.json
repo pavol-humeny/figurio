@@ -1069,17 +1069,9 @@
   },
   "loadingToolSettings": "Načítavanie...",
   "viewportBackgroundMode":{
-    "normal":{
-      "tip":{
-        "title": "Normálny režim",
-        "text": "Nastaví farbu pozadia zobrazenia na farbu pozadia editora"
-      }
-    },
-    "contrast":{
-      "tip":{
-        "title": "Kontrastný režim",
-        "text": "Nastaví farbu pozadia zobrazenia na kontrastnú farbu"
-      }
+    "tip": {
+      "title": "Zmeniť režim pozadia zobrazenia",
+      "text": "Zmeňte režim pozadia zobrazenia na normálny, kontrastný svetlý alebo kontrastný tmavý pre lepšiu viditeľnosť okrajov obrázka."
     }
   }
 }

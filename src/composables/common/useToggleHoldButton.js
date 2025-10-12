@@ -20,12 +20,18 @@ export function useToggleHoldButton(props) {
     },
   )
 
+  /**
+   * Handle the start of a hold action
+   */
   const holdStart = () => {
     if (props.disabled) return
     isActive.value = !isActive.value
     if (props.startFunction) props.startFunction()
   }
 
+  /**
+   * Handle the end of a hold action
+   */
   const holdEnd = () => {
     if (props.disabled) return
     isActive.value = !isActive.value

@@ -99,7 +99,7 @@ export const useEditorStore = defineStore('editorStore', {
         outlineColor: '#000000',
       },
       blur: {
-        blurStrength: 2,
+        blurStrength: 5,
       },
       brush: {
         color: '#000000',

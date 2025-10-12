@@ -98,8 +98,10 @@ export function useCropTool(
   const { showToastModal } = useToastModal()
   const { clamp, round } = useMath()
 
+  /**
+   * Update last canny crop to current crop box
+   */
   const updateLastCannyCrop = () => {
-    console.log('updateLastCannyCrop', cropBox.value)
     lastCannyCrop.value.width = cropBox.value.width
     lastCannyCrop.value.height = cropBox.value.height
     lastCannyCrop.value.x = cropBox.value.x
@@ -753,8 +755,7 @@ export function useCropTool(
    * @param {number} sensitivity - higher = more aggressive trimming
    * @returns {Object|null} cropRect {x, y, width, height} or null
    */
-  const calculateAutoCropBoxCanny = (useBaseImage, sensitivity) => {
-    sensitivity /= 10 // Make sensitivity more precise
+  const calculateAutoCropBoxCanny = (useBaseImage) => {
     const scale = 1
     const img = imageStore.getRenderedImage({ t, renderCall: false })
     if (!img) return null
@@ -777,13 +778,9 @@ export function useCropTool(
     cv.cvtColor(src, gray, cv.COLOR_RGBA2GRAY, 0)
     cv.GaussianBlur(gray, gray, new cv.Size(5, 5), 0, 0, cv.BORDER_DEFAULT)
 
-    // sensitivity: 0 = najcitlivejšie (detekuje takmer všetko), 1 = najmenej citlivé
-    const lower = 1 + sensitivity * 10 * 100 // dolný threshold od 1 do 101
-    const upper = 20 - sensitivity * 10 * 150 // horný threshold od 200 do 50
-
+    const lower = 1
+    const upper = 20
     cv.Canny(gray, edges, lower, upper)
-
-    console.log('lastCannyCrop', lastCannyCrop.value, useBaseImage)
 
     // Mask edges if not using base image
     if (lastCannyCrop.value && !useBaseImage) {
@@ -845,15 +842,17 @@ export function useCropTool(
 
     lastCannyCrop.value = { ...cropRect }
 
-    // Function to get pixel color at (x, y)
+    /**
+     * Get pixel color at (x, y), returns [r, g, b, a]
+     */
     const getPixel = (x, y) => {
       if (x < 0 || x >= imgWidth || y < 0 || y >= imgHeight) return [0, 0, 0, 255]
       const idx = (y * imgWidth + x) * 4
       return [data[idx], data[idx + 1], data[idx + 2], data[idx + 3]]
     }
 
-    // Convert color [r,g,b,a] to intensity (brightness)
-    const getIntensity = ([r, g, b, a]) => r * 0.299 + g * 0.587 + b * 0.114
+    // Convert color [r,g,b] to intensity (brightness)
+    const getIntensity = ([r, g, b]) => r * 0.299 + g * 0.587 + b * 0.114
 
     /**
      * Compute average dual contrast for a given edge:
@@ -924,13 +923,10 @@ export function useCropTool(
       const ratio = c2 > c1 ? c2 / c1 : c1 / c2
 
       // Base range of possible thresholds for ratio
-      // sensitivity 0 → trims very little (requires ratio very high)
-      // sensitivity 1 → trims more aggressively (lower ratio required)
       const minRatio = 1.2
       const maxRatio = 10
-      const threshold = minRatio + (maxRatio - minRatio) * (1 - sensitivity) // inverse sensitivity
+      const threshold = minRatio + (maxRatio - minRatio)
 
-      console.log('sensitivity:', sensitivity)
       console.log(
         `${side} contrast1: ${c1.toFixed(3)} contrast2: ${c2.toFixed(3)} ratio: ${ratio.toFixed(
           3,
@@ -997,10 +993,7 @@ export function useCropTool(
    * Fit the crop box to the content
    */
   const fitCrop = () => {
-    // const bgColor = getOrDetectBgColor(useBaseImage.value)
-    // const threshold = getOrComputeThreshold(bgColor)
-
-    const newCropBox = calculateAutoCropBoxCanny(useBaseImage.value, autoCropThreshold.value)
+    const newCropBox = calculateAutoCropBoxCanny(useBaseImage.value)
 
     if (
       cropBox.value.x === newCropBox.x &&
@@ -1338,12 +1331,7 @@ export function useCropTool(
    * Apply the auto crop in preset
    */
   const applyAutoCropPreset = async () => {
-    // const useBaseImage = true
-    // const bgColor = getOrDetectBgColor(useBaseImage)
-    // const bins = computeHistogram(bgColor)
-    // const threshold = getThresholdFromHistogram(bins, 0)
-
-    const newCropBox = calculateAutoCropBoxCanny(useBaseImage, 0)
+    const newCropBox = calculateAutoCropBoxCanny(useBaseImage)
 
     applyCropRender(newCropBox)
   }
@@ -1458,8 +1446,6 @@ export function useCropTool(
 
         const pdfBytes = await newPdf.save()
         imageStore.pdfPageBytes = pdfBytes
-
-        console.log('PDF successfully cropped.')
       } catch (e) {
         console.error('Error cropping PDF:', e)
       }
