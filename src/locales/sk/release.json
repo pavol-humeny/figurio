@@ -6,65 +6,79 @@
     ]
   },
   "versions": {
-  "4.10.1": {
-    "label": "4.10.1",
-    "date": "9.10. 2025",
-    "newFeatures": {
-      "items": [
-        "Horizontálne posúvanie pomocou druhého kolieska na myši"
-      ]
+    "4.11.0":{
+      "label": "4.11.0",
+      "date":"9.10. 2025",
+      "newFeatures": {
+        "items": [
+          "Orezový rám možno skryť držaním tlačidla myši na tlačidle alebo podržaním medzerníka"
+        ]
+      },
+      "improvements": {
+        "items": [
+          "Kontrastný režim pozadia môže byť prepínaný kliknutím na jedno tlačítko"
+        ]
+      }
     },
-    "bugFixes": {
-      "items": [
-        "Opravený nástroj Automatické orezanie"
-      ]
-    }
-  },
-  "4.10.0": {
-    "label": "4.10.0",
-    "date": "8.10. 2025",
-    "newFeatures": {
-      "items": [
-        "Možnosť zatvoriť všetky súbory naraz"
-      ]
-    }
-  },
-  "4.9.2": {
-    "label": "4.9.2",
-    "date": "7.10. 2025",
-    "bugFixes": {
-      "items": [
-        "Opravený problém, pri ktorom rám v šablóne nezobrazoval správne po načítaní šablóny."
-      ]
-    }
-  },
-  "4.9.1": {
-    "label": "4.9.1",
-    "date": "7.10. 2025",
-    "bugFixes": {
-      "items": [
-        "Opravené plynulé posúvanie orezávacieho poľa tak, aby fungovalo správne pri rôznych úrovniach priblíženia."
-      ]
-    }
-  },
-  "4.9.0": {
-    "label": "4.9.0",
-    "date": "6.10. 2025",
-    "newFeatures": {
-      "items": [
-        "Pridaná možnosť odstrániť tlačidlá telefónu z rámov telefónov",
-        "Pridané tlačidlo indikátora domovskej obrazovky do rámov telefónov",
-        "Hlavičku rámu telefónu je možné rozšíriť mimo plochy obrázka alebo ju nechať len prekryť obrázok",
-        "Tlačidlo Vyčistiť všetko v nástroji štetec pre odstránenie všetkých vymaľovaných oblastí z obrázka",
-        "Nastavenia kontrastného alebo normálneho režimu sa ukladajú do preferencií a obnovia sa pri spustení aplikácie"
-      ]
+    "4.10.1": {
+      "label": "4.10.1",
+      "date": "9.10. 2025",
+      "newFeatures": {
+        "items": [
+          "Horizontálne posúvanie pomocou druhého kolieska na myši"
+        ]
+      },
+      "bugFixes": {
+        "items": [
+          "Opravený nástroj Automatické orezanie"
+        ]
+      }
     },
-    "bugFixes": {
-      "items": [
-        "Opravený problém s malými ikonami v rámci prehliadača pri malých obrázkoch"
-      ]
-    }
-  },
+    "4.10.0": {
+      "label": "4.10.0",
+      "date": "8.10. 2025",
+      "newFeatures": {
+        "items": [
+          "Možnosť zatvoriť všetky súbory naraz"
+        ]
+      }
+    },
+    "4.9.2": {
+      "label": "4.9.2",
+      "date": "7.10. 2025",
+      "bugFixes": {
+        "items": [
+          "Opravený problém, pri ktorom rám v šablóne nezobrazoval správne po načítaní šablóny."
+        ]
+      }
+    },
+    "4.9.1": {
+      "label": "4.9.1",
+      "date": "7.10. 2025",
+      "bugFixes": {
+        "items": [
+          "Opravené plynulé posúvanie orezávacieho poľa tak, aby fungovalo správne pri rôznych úrovniach priblíženia."
+        ]
+      }
+    },
+    "4.9.0": {
+      "label": "4.9.0",
+      "date": "6.10. 2025",
+      "newFeatures": {
+        "items": [
+          "Pridaná možnosť odstrániť tlačidlá telefónu z rámov telefónov",
+          "Pridané tlačidlo indikátora domovskej obrazovky do rámov telefónov",
+          "Hlavičku rámu telefónu je možné rozšíriť mimo plochy obrázka alebo ju nechať len prekryť obrázok",
+          "Tlačidlo Vyčistiť všetko v nástroji štetec pre odstránenie všetkých vymaľovaných oblastí z obrázka",
+          "Nastavenia kontrastného alebo normálneho režimu sa ukladajú do preferencií a obnovia sa pri spustení aplikácie"
+        ]
+      },
+      "bugFixes": {
+        "items": [
+          "Opravený problém s malými ikonami v rámci prehliadača pri malých obrázkoch"
+        ]
+      }
+    },
     "4.8.1":{
       "label": "4.8.1",
       "date":"1.10. 2025",
