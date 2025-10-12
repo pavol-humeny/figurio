@@ -120,6 +120,16 @@ export function useViewportWrapper(viewportStore, imageStore, editorStore, uiSto
 
   // Zoom and scroll handling
   const setZoomAndScroll = (event) => {
+    console.log(
+      'Wheel event:',
+      event.deltaX,
+      event.deltaY,
+      'ctrlKey:',
+      event.ctrlKey,
+      'shiftKey:',
+      event.shiftKey,
+    )
+
     if (event.ctrlKey) {
       const direction = event.deltaY < 0 ? 1 : -1
       const wrapper = event.currentTarget
@@ -159,10 +169,14 @@ export function useViewportWrapper(viewportStore, imageStore, editorStore, uiSto
 
     // HORIZONTAL SCROLL (Shift or horizontal wheel)
     const isHorizontalScroll = event.shiftKey || Math.abs(event.deltaX) > Math.abs(event.deltaY)
+    console.log('Horizontal scroll?', isHorizontalScroll)
 
     if (isHorizontalScroll) {
+      console.log('Handling horizontal scroll')
       // Use deltaX if available, otherwise deltaY when Shift is held
       const delta = event.shiftKey ? event.deltaY : event.deltaX
+      console.log('Event deltaX:', event.deltaX, 'deltaY:', event.deltaY)
+      console.log('Delta used for horizontal scroll:', delta)
 
       if (
         viewportStore.panX >= scrollHorizontalMin.value &&
