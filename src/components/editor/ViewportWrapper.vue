@@ -187,7 +187,7 @@ const drawingCursor = computed(() => {
   <div class="viewport-wrapper" id="viewport" @mousedown="onMouseDownSelect" @dragover="handleDragOver"
     @dragleave="handleDragLeave" @drop="handleDrop" @mouseleave="onMouseLeave" @mouseenter="onMouseEnter"
     :style="{ cursor: drawingCursor ? 'none' : 'default' }">
-    <LoadingSpinner />
+    <LoadingSpinner />  
 
     <div class="viewport-content-wrapper" ref="wrapperRef" @wheel.passive="setZoomAndScroll" @mousedown="startPan"
       @mousemove="onMouseMove" :class="{
