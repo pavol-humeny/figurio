@@ -259,6 +259,42 @@ export function useBlurTool(imageStore, historyStore, editorStore, t) {
     })
   })
 
+  watch(
+    () => imageStore.blurObjects,
+    (newVal, oldVal) => {
+      if (imageStore.historyWasChanged) {
+        activeObject.value = null
+      }
+      // Find changed object by shallow comparison of attributes
+      newVal.forEach((obj, i) => {
+        const oldObj = oldVal?.[i]
+        if (!oldObj) return
+
+        // Compare keys to detect a change
+        const changed = Object.keys(obj).some((key) => {
+          // Ignore Vue internals
+          if (key.startsWith('__v')) return false
+          return JSON.stringify(obj[key]) !== JSON.stringify(oldObj[key])
+        })
+
+        // Add or replace clip for changed object
+        if (changed) {
+          const { attrs } = obj
+          addOrReplaceClipDef(obj.id, {
+            x: attrs.x,
+            y: attrs.y,
+            width: attrs.width,
+            height: attrs.height,
+            rotation: attrs.transform
+              ? parseFloat(attrs.transform.match(/rotate\(([^)]+)\)/)?.[1]) || 0
+              : 0,
+          })
+        }
+      })
+    },
+    { deep: true },
+  )
+
   /**
    * Apply local settings to the active SVG object
    * @param {boolean} commit - When true, push to history store

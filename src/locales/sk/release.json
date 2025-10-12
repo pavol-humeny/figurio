@@ -6,6 +6,15 @@
     ]
   },
   "versions": {
+    "4.11.1":{
+      "label": "4.11.1",
+      "date":"12.10. 2025",
+      "bugFixes": {
+        "items": [
+          "Oprava problému so zlou pozíciou objektu rozmazania pri operácii späť (undo)"
+        ]
+      }
+    },
     "4.11.0":{
       "label": "4.11.0",
       "date":"9.10. 2025",

@@ -190,7 +190,6 @@ const onMouseUpGlobal = () => {
     imageStore.removalCanvas = imageDataToSave
 
     // Push snapshot to history
-    console.warn('1')
     historyStore.push(imageStore.getSnapshot(t))
   }
 }

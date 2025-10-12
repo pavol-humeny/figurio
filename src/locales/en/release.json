@@ -4,6 +4,15 @@
     "items": []
   },
   "versions":{
+    "4.11.1":{
+      "label": "4.11.1",
+      "date":"12.10. 2025",
+      "bugFixes": {
+        "items": [
+          "Fix issue with blur object undo operation bad positioning"
+        ]
+      }
+    },
     "4.11.0":{
       "label": "4.11.0",
       "date":"9.10. 2025",

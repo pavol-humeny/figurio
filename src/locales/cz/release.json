@@ -6,6 +6,15 @@
     ]
   },
   "versions": {
+    "4.11.1":{
+      "label": "4.11.1",
+      "date":"12.10. 2025",
+      "bugFixes": {
+        "items": [
+          "Oprava problému se špatným umístěním objektu rozmazání při operaci zpět"
+        ]
+      }
+    },
     "4.11.0": {
       "label": "4.11.0",
       "date": "9.10. 2025",
