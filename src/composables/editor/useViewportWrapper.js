@@ -130,8 +130,6 @@ export function useViewportWrapper(viewportStore, imageStore, editorStore, uiSto
       event.shiftKey,
     )
 
-    event.preventDefault()
-
     if (event.ctrlKey) {
       const direction = event.deltaY < 0 ? 1 : -1
       const wrapper = event.currentTarget
