@@ -219,7 +219,7 @@ const {
                 </div>
 
                 <!-- Link -->
-                <div class="dpad center">
+                <div class="dpad center"  style="cursor: pointer;">
                   <LinkValuesIcon v-model="isManualAdjustmentsLinked"
                     :tipLinked="$t('tools.crop.settings.general.autoCrop.manualAdjustments.tipLinked')"
                     :tipUnlinked="$t('tools.crop.settings.general.autoCrop.manualAdjustments.tipUnlinked')" size="30"
