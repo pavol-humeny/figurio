@@ -4,6 +4,16 @@ import { useSendEvent } from '@/composables/common/useSendEvent'
 import { editorConfig } from '@/config/editorConfig'
 
 /**
+ * Removal threshold for background removal
+ */
+const colorRemovalThreshold = ref(editorConfig.defaultThreshold)
+
+/**
+ * Auto removal threshold for automatic background removal
+ */
+const autoRemovalThreshold = ref(editorConfig.defaultAutoRemovalThreshold)
+
+/**
  * Selected manual tool ('brush' | 'eraser')
  */
 const manualSelectedTool = ref('brush') // 'brush' | 'eraser'
@@ -58,11 +68,6 @@ export function useBackgroundRemovalTool(imageStore, historyStore, workspaceStor
    * Background color for removal
    */
   const colorBackgroundColor = ref(editorConfig.defaultBackgroundColor)
-
-  /**
-   * Removal threshold for background removal
-   */
-  const colorRemovalThreshold = ref(editorConfig.defaultThreshold)
 
   /**
    * Watch for removal threshold changes and re-apply color selection
@@ -152,7 +157,7 @@ export function useBackgroundRemovalTool(imageStore, historyStore, workspaceStor
   }
 
   // ----------------------------------
-  // Manual and Object Detection
+  // Manual 
   // ----------------------------------
 
   /**
@@ -323,166 +328,272 @@ export function useBackgroundRemovalTool(imageStore, historyStore, workspaceStor
   }
 
   //////////////////////////////////////////////////////////////////////////
-  const detectObjects = () => {
-    const img = imageStore.originalImage
-    if (!img) return
+  // const detectObjects = () => {
+  //   const img = imageStore.originalImage
+  //   if (!img) return
 
-    const canvas = document.createElement('canvas')
-    canvas.width = img.width
-    canvas.height = img.height
-    const ctx = canvas.getContext('2d', { willReadFrequently: true })
-    ctx.drawImage(img, 0, 0, img.width, img.height)
+  //   const canvas = document.createElement('canvas')
+  //   canvas.width = img.width
+  //   canvas.height = img.height
+  //   const ctx = canvas.getContext('2d', { willReadFrequently: true })
+  //   ctx.drawImage(img, 0, 0, img.width, img.height)
 
-    const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height)
-    return imageData
-  }
+  //   const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height)
+  //   return imageData
+  // }
 
-  const detectEdges = (imageData) => {
-    const { width, height, data } = imageData
-    const gray = new Uint8ClampedArray(width * height)
+  // const detectEdges = (imageData) => {
+  //   const { width, height, data } = imageData
+  //   const gray = new Uint8ClampedArray(width * height)
 
-    // prevod na grayscale
-    for (let i = 0; i < data.length; i += 4) {
-      gray[i / 4] = 0.299 * data[i] + 0.587 * data[i + 1] + 0.114 * data[i + 2]
-    }
+  //   // prevod na grayscale
+  //   for (let i = 0; i < data.length; i += 4) {
+  //     gray[i / 4] = 0.299 * data[i] + 0.587 * data[i + 1] + 0.114 * data[i + 2]
+  //   }
 
-    const edges = new Uint8ClampedArray(width * height)
+  //   const edges = new Uint8ClampedArray(width * height)
 
-    const sobel = (x, y) => {
-      // const idx = y * width + x
-      if (x === 0 || y === 0 || x === width - 1 || y === height - 1) return 0
+  //   const sobel = (x, y) => {
+  //     // const idx = y * width + x
+  //     if (x === 0 || y === 0 || x === width - 1 || y === height - 1) return 0
 
-      const gx =
-        -1 * gray[(y - 1) * width + (x - 1)] +
-        1 * gray[(y - 1) * width + (x + 1)] +
-        -2 * gray[y * width + (x - 1)] +
-        2 * gray[y * width + (x + 1)] +
-        -1 * gray[(y + 1) * width + (x - 1)] +
-        1 * gray[(y + 1) * width + (x + 1)]
+  //     const gx =
+  //       -1 * gray[(y - 1) * width + (x - 1)] +
+  //       1 * gray[(y - 1) * width + (x + 1)] +
+  //       -2 * gray[y * width + (x - 1)] +
+  //       2 * gray[y * width + (x + 1)] +
+  //       -1 * gray[(y + 1) * width + (x - 1)] +
+  //       1 * gray[(y + 1) * width + (x + 1)]
 
-      const gy =
-        -1 * gray[(y - 1) * width + (x - 1)] +
-        -2 * gray[(y - 1) * width + x] +
-        -1 * gray[(y - 1) * width + (x + 1)] +
-        1 * gray[(y + 1) * width + (x - 1)] +
-        2 * gray[(y + 1) * width + x] +
-        1 * gray[(y + 1) * width + (x + 1)]
+  //     const gy =
+  //       -1 * gray[(y - 1) * width + (x - 1)] +
+  //       -2 * gray[(y - 1) * width + x] +
+  //       -1 * gray[(y - 1) * width + (x + 1)] +
+  //       1 * gray[(y + 1) * width + (x - 1)] +
+  //       2 * gray[(y + 1) * width + x] +
+  //       1 * gray[(y + 1) * width + (x + 1)]
 
-      return Math.sqrt(gx * gx + gy * gy)
-    }
+  //     return Math.sqrt(gx * gx + gy * gy)
+  //   }
 
-    for (let y = 0; y < height; y++) {
-      for (let x = 0; x < width; x++) {
-        edges[y * width + x] = sobel(x, y)
-      }
-    }
+  //   for (let y = 0; y < height; y++) {
+  //     for (let x = 0; x < width; x++) {
+  //       edges[y * width + x] = sobel(x, y)
+  //     }
+  //   }
 
-    console.log('edges:', edges)
-    return edges
-  }
+  //   console.log('edges:', edges)
+  //   return edges
+  // }
 
-  // Object detection with precise shape highlighting
-  const detectObjectsClick = () => {
-    const imageData = detectObjects()
-    if (!imageData) return
+  // // Object detection with precise shape highlighting
+  // const detectObjectsClick = () => {
+  //   const imageData = detectObjects()
+  //   if (!imageData) return
 
-    const edges = detectEdges(imageData)
-    drawDetectedObjects(edges, imageData.width, imageData.height)
-    invertSelection()
-  }
+  //   const edges = detectEdges(imageData)
+  //   drawDetectedObjects(edges, imageData.width, imageData.height)
+  //   invertSelection()
+  // }
 
+  // /**
+  //  * Draw detected objects pixel by pixel based on edges
+  //  * @param {Uint8ClampedArray} edges - Array of edge intensities
+  //  * @param {number} width - Image width
+  //  * @param {number} height - Image height
+  //  * @param {number} threshold - Edge threshold for detection
+  //  */
+  // const drawDetectedObjects = (edges, width, height, threshold = 50) => {
+  //   console.log('Drawing detected objects...')
+  //   const canvas = document.getElementById('removalCanvas')
+  //   if (!canvas) return
+  //   const ctx = canvas.getContext('2d')
+
+  //   if (replaceSelection.value) {
+  //     // Clear existing selection
+  //     ctx.clearRect(0, 0, canvas.width, canvas.height)
+  //   }
+
+  //   const visited = new Uint8Array(width * height)
+
+  //   const neighbors = (x, y) => [
+  //     [x - 1, y],
+  //     [x + 1, y],
+  //     [x, y - 1],
+  //     [x, y + 1],
+  //   ]
+
+  //   const floodFillMask = (x0, y0) => {
+  //     const stack = [[x0, y0]]
+  //     const pixels = []
+  //     let touchesEdge = false
+
+  //     while (stack.length) {
+  //       const [x, y] = stack.pop()
+  //       const idx = y * width + x
+  //       if (x < 0 || x >= width || y < 0 || y >= height) {
+  //         touchesEdge = true
+  //         continue
+  //       }
+  //       if (visited[idx]) continue
+  //       if (edges[idx] < threshold) continue
+
+  //       visited[idx] = 1
+  //       pixels.push([x, y])
+  //       neighbors(x, y).forEach(([nx, ny]) => stack.push([nx, ny]))
+  //     }
+
+  //     return touchesEdge ? null : pixels
+  //   }
+
+  //   // Get highlight color RGBA
+  //   const { fillR, fillG, fillB, fillA } = getHighlightColorRGBA()
+  //   ctx.fillStyle = `rgba(${fillR},${fillG},${fillB},${fillA / 255})`
+
+  //   const components = []
+
+  //   // Find connected components of edge pixels
+  //   for (let y = 0; y < height; y++) {
+  //     for (let x = 0; x < width; x++) {
+  //       const idx = y * width + x
+  //       if (!visited[idx] && edges[idx] >= threshold) {
+  //         const pixels = floodFillMask(x, y)
+  //         if (pixels) components.push(pixels)
+  //       }
+  //     }
+  //   }
+
+  //   // Fill all pixels in each component with scanline fill
+  //   components.forEach((pixels) => {
+  //     const yMap = {}
+  //     pixels.forEach(([x, y]) => {
+  //       if (!yMap[y]) yMap[y] = []
+  //       yMap[y].push(x)
+  //     })
+
+  //     Object.keys(yMap).forEach((yStr) => {
+  //       const y = parseInt(yStr)
+  //       const xs = yMap[y]
+  //       const minX = Math.min(...xs)
+  //       const maxX = Math.max(...xs)
+  //       for (let x = minX; x <= maxX; x++) ctx.fillRect(x, y, 1, 1)
+  //     })
+  //   })
+
+  //   // Save canvas to store
+  //   const imageDataToSave = ctx.getImageData(0, 0, canvas.width, canvas.height)
+  //   imageStore.removalCanvasOriginal = imageDataToSave
+
+  //   applyCombinedMaskAdjustments(boundaryOffset.value, softEdgesRadius.value)
+  // }
+
+  //////////////////////////////////////////////////////////////////////////
+
+  // ----------------------------------
+  // Auto selection
+  // ----------------------------------
   /**
-   * Draw detected objects pixel by pixel based on edges
-   * @param {Uint8ClampedArray} edges - Array of edge intensities
-   * @param {number} width - Image width
-   * @param {number} height - Image height
-   * @param {number} threshold - Edge threshold for detection
+   * Automatically selects a region similar to the clicked area.
+   * Works like Photoshop's smart object selection (region growing).
+   * @param {number} clickX - X coordinate of click on canvas
+   * @param {number} clickY - Y coordinate of click on canvas
+   * @param {boolean} shiftKey - Whether Shift key is pressed (to add to selection)
    */
-  const drawDetectedObjects = (edges, width, height, threshold = 50) => {
-    console.log('Drawing detected objects...')
+  const autoSelectSimilarRegion = (clickX, clickY, shiftKey) => {
     const canvas = document.getElementById('removalCanvas')
     if (!canvas) return
-    const ctx = canvas.getContext('2d')
+    const ctx = canvas.getContext('2d', { willReadFrequently: true })
 
-    if (replaceSelection.value) {
-      // Clear existing selection
-      ctx.clearRect(0, 0, canvas.width, canvas.height)
+    const width = canvas.width
+    const height = canvas.height
+
+    // Start from stored original mask if it exists, otherwise create empty
+    let manualImageData
+    if (imageStore.removalCanvasOriginal) {
+      manualImageData = new ImageData(
+        new Uint8ClampedArray(imageStore.removalCanvasOriginal.data),
+        width,
+        height,
+      )
+    } else {
+      manualImageData = ctx.createImageData(width, height)
+    }
+    const manualData = manualImageData.data
+
+    // Reset mask if not adding to selection
+    if (!shiftKey) {
+      manualData.fill(0)
     }
 
+    // Get rendered image
+    const img = imageStore.getRenderedImage({ t, renderCall: false })
+    if (!img) return
+
+    // Draw current rendered image to a temporary canvas
+    const tempCanvas = document.createElement('canvas')
+    tempCanvas.width = width
+    tempCanvas.height = height
+    const tempCtx = tempCanvas.getContext('2d', { willReadFrequently: true })
+    tempCtx.drawImage(img, 0, 0, width, height)
+
+    const imageData = tempCtx.getImageData(0, 0, width, height)
+    const data = imageData.data
+
+    // Get clicked pixel color
+    const index = (Math.floor(clickY) * width + Math.floor(clickX)) * 4
+    const targetR = data[index]
+    const targetG = data[index + 1]
+    const targetB = data[index + 2]
+
+    // Prepare visited mask and output selection
     const visited = new Uint8Array(width * height)
+    const stack = [[Math.floor(clickX), Math.floor(clickY)]]
 
-    const neighbors = (x, y) => [
-      [x - 1, y],
-      [x + 1, y],
-      [x, y - 1],
-      [x, y + 1],
-    ]
+    const getPixelIndex = (x, y) => (y * width + x) * 4
+    const getDistance = (r, g, b) =>
+      Math.sqrt((r - targetR) ** 2 + (g - targetG) ** 2 + (b - targetB) ** 2)
 
-    const floodFillMask = (x0, y0) => {
-      const stack = [[x0, y0]]
-      const pixels = []
-      let touchesEdge = false
-
-      while (stack.length) {
-        const [x, y] = stack.pop()
-        const idx = y * width + x
-        if (x < 0 || x >= width || y < 0 || y >= height) {
-          touchesEdge = true
-          continue
-        }
-        if (visited[idx]) continue
-        if (edges[idx] < threshold) continue
-
-        visited[idx] = 1
-        pixels.push([x, y])
-        neighbors(x, y).forEach(([nx, ny]) => stack.push([nx, ny]))
-      }
-
-      return touchesEdge ? null : pixels
-    }
-
-    // Get highlight color RGBA
+    // Get highlight color
     const { fillR, fillG, fillB, fillA } = getHighlightColorRGBA()
-    ctx.fillStyle = `rgba(${fillR},${fillG},${fillB},${fillA / 255})`
 
-    const components = []
+    // Region growing
+    while (stack.length > 0) {
+      const [x, y] = stack.pop()
+      if (x < 0 || x >= width || y < 0 || y >= height) continue
+      const idx = y * width + x
+      if (visited[idx]) continue
 
-    // Find connected components of edge pixels
-    for (let y = 0; y < height; y++) {
-      for (let x = 0; x < width; x++) {
-        const idx = y * width + x
-        if (!visited[idx] && edges[idx] >= threshold) {
-          const pixels = floodFillMask(x, y)
-          if (pixels) components.push(pixels)
-        }
+      const pix = getPixelIndex(x, y)
+      const r = data[pix]
+      const g = data[pix + 1]
+      const b = data[pix + 2]
+      const dist = getDistance(r, g, b)
+
+      // Convert colorRemovalThreshold from 0-1 to 0-441.67 range
+      const maxDist = Math.sqrt(255 ** 2 + 255 ** 2 + 255 ** 2) // ~441.67
+      const colorThreshold = maxDist * autoRemovalThreshold.value
+
+      if (dist <= colorThreshold) {
+        visited[idx] = 1
+
+        // Apply highlight color to mask
+        manualData[pix] = fillR
+        manualData[pix + 1] = fillG
+        manualData[pix + 2] = fillB
+        manualData[pix + 3] = fillA
+
+        stack.push([x + 1, y])
+        stack.push([x - 1, y])
+        stack.push([x, y + 1])
+        stack.push([x, y - 1])
       }
     }
 
-    // Fill all pixels in each component with scanline fill
-    components.forEach((pixels) => {
-      const yMap = {}
-      pixels.forEach(([x, y]) => {
-        if (!yMap[y]) yMap[y] = []
-        yMap[y].push(x)
-      })
-
-      Object.keys(yMap).forEach((yStr) => {
-        const y = parseInt(yStr)
-        const xs = yMap[y]
-        const minX = Math.min(...xs)
-        const maxX = Math.max(...xs)
-        for (let x = minX; x <= maxX; x++) ctx.fillRect(x, y, 1, 1)
-      })
-    })
-
-    // Save canvas to store
-    const imageDataToSave = ctx.getImageData(0, 0, canvas.width, canvas.height)
-    imageStore.removalCanvasOriginal = imageDataToSave
+    // Save new mask
+    imageStore.removalCanvasOriginal = manualImageData
 
     applyCombinedMaskAdjustments(boundaryOffset.value, softEdgesRadius.value)
   }
-
-  //////////////////////////////////////////////////////////////////////////
 
   /**
    * Mark background color on canvas
@@ -735,7 +846,7 @@ export function useBackgroundRemovalTool(imageStore, historyStore, workspaceStor
   /**
    * Apply background removal
    *
-   * @param {string} removalType - Type of removal ('color', 'manual', 'objectDetection')
+   * @param {string} removalType - Type of removal ('color', 'manual', 'auto')
    */
   const applyBackgroundRemoval = async (removalType) => {
     imageStore.addImageOperation({
@@ -874,7 +985,7 @@ export function useBackgroundRemovalTool(imageStore, historyStore, workspaceStor
     invertSelection,
     useBaseImage,
     changeManualToolSize,
-    detectObjectsClick,
+    // detectObjectsClick,
     replaceSelection,
     highlightColor,
     selectColorClick,
@@ -883,5 +994,7 @@ export function useBackgroundRemovalTool(imageStore, historyStore, workspaceStor
     replaceWithBackgroundColor,
     softEdgesRadius,
     boundaryOffset,
+    autoSelectSimilarRegion,
+    autoRemovalThreshold,
   }
 }

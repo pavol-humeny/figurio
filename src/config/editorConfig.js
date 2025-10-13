@@ -11,6 +11,7 @@ export const editorConfig = {
   // Background removal settings
   defaultBackgroundColor: '#ffffff',
   defaultThreshold: 0.0,
+  defaultAutoRemovalThreshold: 0.2,
   defaultManualToolSize: 10, // in pixels
   maxManualToolSizeCoefficient: 0.4, // 10% of the smaller image dimension
   minManualToolSize: 1, // in pixels

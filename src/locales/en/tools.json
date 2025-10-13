@@ -36,10 +36,10 @@
         "explain": "The Manual tool allows removing parts of the image by drawing over them. Adjust the brush size to control the area being removed.",
         "shortcut": ""
       },
-      "objectDetection": {
-        "label": "Object Detection",
-        "tip": "Detect objects in the image and remove the background",
-        "explain": "The Object Detection tool identifies and removes the background from objects in the image.",
+      "auto": {
+        "label": "Automatic",
+        "tip": "Automatically selects similar areas in the image",
+        "explain": "The Automatic background removal tool detects color-similar areas in the image and removes them.",
         "shortcut": ""
       }
     },
@@ -117,8 +117,8 @@
           "text": "Remove selection"
         }
       },
-      "objectDetection": {
-        "label": "Object Detection",
+      "auto": {
+        "label": "Automatic",
         "replaceSelection":{
           "label": "Replace selection",
           "tip": "Replace current selection with new selection"
@@ -129,6 +129,10 @@
         },
         "removeButton": {
           "text": "Remove selection"
+        },
+        "autoRemovalSensitivity": {
+          "label": "Auto removal sensitivity",
+          "tip": "Adjust how similar a pixel's color must be to the selected color to be removed when clicking on the image. Low for only exact matches, high for also similar shades."
         }
       }
     }

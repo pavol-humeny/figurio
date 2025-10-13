@@ -35,7 +35,7 @@ const {
   clearAllSelections,
   invertSelection,
   useBaseImage,
-  detectObjectsClick,
+  // detectObjectsClick,
   replaceSelection,
   selectColorClick,
   highlightRemovedPixels,
@@ -43,6 +43,7 @@ const {
   replaceWithBackgroundColor,
   softEdgesRadius,
   boundaryOffset,
+  autoRemovalThreshold,
 } = useBackgroundRemovalTool(
   useImageStore(),
   useHistoryStore(),
@@ -54,7 +55,7 @@ const {
 /**
  * Tabs for the background removal tool settings
  */
-const tabs = ['color', 'manual', 'objectDetection']
+const tabs = ['color', 'manual', 'auto']
 </script>
 
 <template>
@@ -73,8 +74,7 @@ const tabs = ['color', 'manual', 'objectDetection']
                 {{ $t('tools.backgroundRemoval.settings.color.replaceSelection.label') }}
               </p>
               <ToggleButton v-model="replaceSelection" :scale="0.6" :style="{ transform: 'translateX(16px)' }"
-                :tip="$t('tools.backgroundRemoval.settings.objectDetection.replaceSelection.tip')"
-                position="bottom-left" />
+                :tip="$t('tools.backgroundRemoval.settings.auto.replaceSelection.tip')" position="bottom-left" />
             </div>
           </div>
         </div>
@@ -366,32 +366,44 @@ const tabs = ['color', 'manual', 'objectDetection']
       </div>
 
       <!-- Object detection removal -->
-      <div v-if="editorStore.selectedTabPerTool[editorStore.selectedToolKey] === 'objectDetection'"
-        class="specific-settings">
+      <div v-if="editorStore.selectedTabPerTool[editorStore.selectedToolKey] === 'auto'" class="specific-settings">
         <!-- Add selection or replace -->
-        <div class="settings-content-wrapper">
-          <ExplainItem :text="$t('tools.backgroundRemoval.subTools.objectDetection.explain')"
-            :title="$t('tools.backgroundRemoval.subTools.objectDetection.label')" position="left" />
+        <!-- <div class="settings-content-wrapper">
+          <ExplainItem :text="$t('tools.backgroundRemoval.subTools.auto.explain')"
+            :title="$t('tools.backgroundRemoval.subTools.auto.label')" position="left" />
           <div class="content-wrapper">
             <div class="content-aligned two-items">
               <p style="text-align: start">
-                {{ $t('tools.backgroundRemoval.settings.objectDetection.replaceSelection.label') }}
+                {{ $t('tools.backgroundRemoval.settings.auto.replaceSelection.label') }}
               </p>
               <ToggleButton v-model="replaceSelection" :scale="0.6" :style="{ transform: 'translateX(16px)' }"
-                :tip="$t('tools.backgroundRemoval.settings.objectDetection.replaceSelection.tip')"
-                position="bottom-left" />
+                :tip="$t('tools.backgroundRemoval.settings.auto.replaceSelection.tip')" position="bottom-left" />
             </div>
+          </div>
+        </div> -->
+
+        <!-- Sensitivity -->
+        <div class="settings-content-wrapper">
+          <div class="content-wrapper">
+            <div class="content-title">
+              <p>
+                {{ $t('tools.backgroundRemoval.settings.color.removalSensitivity.label') }}
+              </p>
+            </div>
+            <NumberDropdownInput v-model="autoRemovalThreshold" :min="0" :max="0.9" :step="0.01"
+              :options="colorRemovalThresholdOptions"
+              :tip="$t('tools.backgroundRemoval.settings.auto.autoRemovalSensitivity.tip')" position="bottom-left" />
           </div>
         </div>
 
         <!-- Detect objects -->
-        <div class="settings-content-wrapper">
+        <!-- <div class="settings-content-wrapper">
           <div class="content-wrapper">
-            <DefaultButton :text="$t('tools.backgroundRemoval.settings.objectDetection.detectButton.text')"
-              :tip="$t('tools.backgroundRemoval.settings.objectDetection.detectButton.tip')" position="bottom-left"
+            <DefaultButton :text="$t('tools.backgroundRemoval.settings.auto.detectButton.text')"
+              :tip="$t('tools.backgroundRemoval.settings.auto.detectButton.tip')" position="bottom-left"
               @click="detectObjectsClick" main />
           </div>
-        </div>
+        </div> -->
 
         <!-- Soft edge radius -->
         <div class="settings-content-wrapper">
@@ -484,8 +496,8 @@ const tabs = ['color', 'manual', 'objectDetection']
         <!-- Remove background button -->
         <div class="settings-content-wrapper">
           <div class="content-wrapper">
-            <DefaultButton :text="$t('tools.backgroundRemoval.settings.objectDetection.removeButton.text')"
-              @click="applyBackgroundRemoval('objectDetection')" main />
+            <DefaultButton :text="$t('tools.backgroundRemoval.settings.auto.removeButton.text')"
+              @click="applyBackgroundRemoval('auto')" main />
           </div>
         </div>
 

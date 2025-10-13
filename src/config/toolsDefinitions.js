@@ -33,8 +33,8 @@ export const toolsDefinitions = [
         iconName: 'IconManualRemovalTool',
       },
       {
-        key: 'objectDetection',
-        iconName: 'IconObjectDetectionRemovalTool',
+        key: 'auto',
+        iconName: 'IconAutoRemovalTool',
       },
     ],
   },

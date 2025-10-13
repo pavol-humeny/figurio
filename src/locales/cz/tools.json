@@ -36,10 +36,10 @@
         "explain": "Nástroj Manuálně umožňuje odstranit části obrázku kreslením. Nastavte velikost štětce pro kontrolu oblasti, která se odstraní.",
         "shortcut": ""
       },
-      "objectDetection": {
-        "label": "Detekce objektů",
-        "tip": "Detekuje objekty na obrázku a odstraní pozadí",
-        "explain": "Nástroj Detekce objektů identifikuje a odstraní pozadí objektů na obrázku.",
+      "auto": {
+        "label": "Automatické",
+        "tip": "Automaticky vybere podobné oblasti na obrázku",
+        "explain": "Nástroj Automatické odstranění pozadí detekuje barevně podobné oblasti na obrázku a odstraní je.",
         "shortcut": ""
       }
     },
@@ -117,8 +117,8 @@
           "text": "Odstranit výběr"
         }
       },
-      "objectDetection": {
-        "label": "Detekce objektů",
+      "auto": {
+        "label": "Automatické",
         "replaceSelection": {
           "label": "Nahradit výběr",
           "tip": "Nahradí aktuální výběr detekovanými objekty"
@@ -129,6 +129,10 @@
         },
         "removeButton": {
           "text": "Odstranit výběr"
+        },
+        "autoRemovalSensitivity": {
+          "label": "Citlivost automatického odstranění",
+          "tip": "Nastavte, jak podobná musí být barva pixelu vybrané barvě, aby byla odstraněna při kliknutí na obrázek. Nízké pro přesné shody, vysoké i pro podobné odstíny."
         }
       }
     }

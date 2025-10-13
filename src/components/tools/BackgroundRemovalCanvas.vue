@@ -16,7 +16,7 @@ const viewportStore = useViewportStore()
 const editorStore = useEditorStore()
 const historyStore = useHistoryStore()
 
-const { manualSelectedTool } = useBackgroundRemovalTool(
+const { manualSelectedTool, autoSelectSimilarRegion } = useBackgroundRemovalTool(
   useImageStore(),
   useHistoryStore(),
   useWorkspaceStore(),
@@ -120,27 +120,32 @@ const getMousePos = (event) => {
  * @param event Mouse event
  */
 const onMouseDown = (event) => {
-  if (editorStore.selectedToolKey !== 'backgroundRemoval' || editorStore.selectedTabPerTool['backgroundRemoval'] !== 'manual') return
+  if (editorStore.selectedToolKey !== 'backgroundRemoval') return
 
   if (event.button !== 0) return // only left mouse
-
   const viewport = document.getElementById('viewport-content')
   if (!viewport.contains(event.target)) return
 
-  // Drawing with Left mouse button
-  isDrawing.value = true
-  const pos = getMousePos(event)
-  lastPos.value = pos
+  if (editorStore.selectedToolKey === 'backgroundRemoval') {
+    const mode = editorStore.selectedTabPerTool['backgroundRemoval']
+    const pos = getMousePos(event)
 
+    if (mode === 'manual') {
+      // Manual drawing
+      isDrawing.value = true
+      lastPos.value = pos
 
-  // Draw a point if the user just clicks without moving
-  let tool = manualSelectedTool.value
-  if (manualSelectedTool.value === 'brush' && event.altKey) {
-    tool = 'eraser'
+      let tool = manualSelectedTool.value
+      if (manualSelectedTool.value === 'brush' && event.altKey) {
+        tool = 'eraser'
+      }
+
+      drawLine(pos, pos, tool)
+    } else if (mode === 'auto') {
+      const shiftKey = event.shiftKey
+      autoSelectSimilarRegion(pos.x, pos.y, shiftKey)
+    }
   }
-
-  // Draw a point
-  drawLine(pos, pos, tool)
 }
 
 /**
