@@ -56,4 +56,7 @@ export const globalConfig = {
 
   // LocalStorage prefix
   LOCAL_STORAGE_PREFIX: 'figurio_',
+
+  // Maximum open files
+  maxNumberOfOpenFiles: 10,
 }

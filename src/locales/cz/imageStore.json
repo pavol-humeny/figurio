@@ -47,6 +47,10 @@
     "successFileCopiedToClipboard": {
       "title": "Soubor zkopírován do schránky",
       "message": "Obrázek byl úspěšně zkopírován do schránky."
+    },
+    "errorMaxNumberOfOpenFiles": {
+      "title": "Byl dosažen maximální počet otevřených souborů",
+      "message": "Dosáhli jste maximálního počtu otevřených souborů ({maxFiles}). Před otevřením nového souboru zavřete některé soubory."
     }
   },
   "modal": {

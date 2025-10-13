@@ -47,6 +47,10 @@
     "successFileCopiedToClipboard": {
       "title": "File copied to clipboard",
       "message": "The image has been successfully copied to the clipboard."
+    },
+    "errorMaxNumberOfOpenFiles": {
+      "title": "Maximum number of open files reached",
+      "message": "You have reached the maximum number of open files ({maxFiles}). Please close some files before opening a new one."
     }
   },
   "modal": {

@@ -959,6 +959,23 @@ export const useImageStore = defineStore('imageStore', {
       input.addEventListener('change', async () => {
         if (!input.files || input.files.length === 0) return
 
+        const workspaceStore = useWorkspaceStore()
+        const currentNumberOfTabs = workspaceStore.numberOfTabs 
+
+        console.warn('Number of selected files:', input.files.length)
+        console.warn('Current number of tabs:', currentNumberOfTabs)
+
+        if (currentNumberOfTabs + input.files.length > globalConfig.maxNumberOfOpenFiles) {
+          showToastModal(
+            'error',
+            t('imageStore.toast.errorMaxNumberOfOpenFiles.title'),
+            t('imageStore.toast.errorMaxNumberOfOpenFiles.message', {
+              maxFiles: globalConfig.maxNumberOfOpenFiles,
+            }),
+          )
+          return
+        }
+
         const filesArray = Array.from(input.files)
         const hasPdf = filesArray.some((file) => file.type === 'application/pdf')
 
