@@ -4,6 +4,22 @@
     "items": []
   },
   "versions":{
+    "4.12.0":{
+      "label": "4.12.0",
+      "date":"13.10. 2025",
+      "newFeatures": {
+        "items": [
+          "Auto background detection in background removal tool",
+          "Key shortcut DELETE for background removal"
+        ]
+      },
+      "bugFixes": {
+        "items": [
+          "Change tip texts for file close button",
+          "Limit maximum opened files"
+        ]
+      }
+    },
     "4.11.1":{
       "label": "4.11.1",
       "date":"12.10. 2025",
