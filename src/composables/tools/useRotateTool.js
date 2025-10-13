@@ -2,6 +2,8 @@ import { useConfirmModal } from '../modals/useConfirmModal'
 import { useSendEvent } from '@/composables/common/useSendEvent'
 import { useMath } from '../common/useMath'
 import { degrees, PDFDocument } from 'pdf-lib'
+import { useConsole } from '@/composables/common/useConsole.js'
+const { log, error } = useConsole()
 
 /**
  * Logic for the rotate tool including confirmation, operation registration, and canvas rendering
@@ -128,9 +130,9 @@ export function useRotateTool(imageStore, historyStore, t) {
         })
 
         imageStore.pdfPageBytes = await newPdf.save()
-        console.log('PDF rotated physically to', normalizedAngle, 'degrees')
+        log('PDF rotated physically to', normalizedAngle, 'degrees')
       } catch (e) {
-        console.error('Error rotating PDF:', e)
+        error('Error rotating PDF:', e)
       }
     }
 

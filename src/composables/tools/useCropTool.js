@@ -8,6 +8,9 @@ import { PDFDocument } from 'pdf-lib'
 
 import { useSendEvent } from '@/composables/common/useSendEvent'
 
+import { useConsole } from '@/composables/common/useConsole.js'
+const { log, warn, error } = useConsole()
+
 /**
  * Detected background color
  */
@@ -927,7 +930,7 @@ export function useCropTool(
       const maxRatio = 10
       const threshold = minRatio + (maxRatio - minRatio)
 
-      console.log(
+      log(
         `${side} contrast1: ${c1.toFixed(3)} contrast2: ${c2.toFixed(3)} ratio: ${ratio.toFixed(
           3,
         )} threshold: ${threshold.toFixed(3)}`,
@@ -935,7 +938,7 @@ export function useCropTool(
 
       // If ratio exceeds threshold trim
       if (ratio >= threshold) {
-        console.warn(`${side}  → trimming`)
+        warn(`${side}  → trimming`)
         switch (side) {
           case 'left':
             cropRect.x += 1
@@ -1447,7 +1450,7 @@ export function useCropTool(
         const pdfBytes = await newPdf.save()
         imageStore.pdfPageBytes = pdfBytes
       } catch (e) {
-        console.error('Error cropping PDF:', e)
+        error('Error cropping PDF:', e)
       }
     }
 

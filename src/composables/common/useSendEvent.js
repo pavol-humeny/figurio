@@ -1,5 +1,7 @@
 import { globalConfig } from '@/config/globalConfig.js'
 import { useUiStore } from '@/stores/uiStore'
+import { useConsole } from '@/composables/common/useConsole.js'
+const { error } = useConsole()
 
 export function useSendEvent() {
   /**
@@ -13,7 +15,6 @@ export function useSendEvent() {
    */
   const sendEvent = async (eventType, tool = null, buttonName = null, eventData = null) => {
     if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
-      // console.log('Skipping event send on localhost:', eventType)
       return null
     }
     const uiStore = useUiStore()
@@ -33,13 +34,13 @@ export function useSendEvent() {
 
       if (!response.ok) {
         const errorText = await response.text()
-        console.error('Server error:', errorText)
+        error('Server error:', errorText)
         return null
       }
 
       return await response.json()
     } catch (error) {
-      console.error('Error sending event:', error)
+      error('Error sending event:', error)
       return null
     }
   }

@@ -8,6 +8,9 @@ import { useExportToolSettings } from '@/composables/toolsSettings/useExportTool
 import { useHistoryStore } from '@/stores/historyStore'
 import { useI18n } from 'vue-i18n'
 
+import { useConsole } from '@/composables/common/useConsole.js'
+const { log } = useConsole()
+
 const { t } = useI18n()
 const editorStore = useEditorStore()
 const imageStore = useImageStore()
@@ -35,7 +38,7 @@ const { openExportToolSettings } = useExportToolSettings(
 const exportFile = () => {
   if (exportIsDisabled.value) return
 
-  console.log('Export file')
+  log('Export file')
   openExportToolSettings()
 }
 

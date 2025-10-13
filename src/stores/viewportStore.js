@@ -4,6 +4,8 @@ import { useMath } from '@/composables/common/useMath'
 import { globalConfig } from '@/config/globalConfig'
 import { nextTick } from 'vue'
 import { useUiStore } from '@/stores/uiStore'
+import { useConsole } from '@/composables/common/useConsole.js'
+const { log, warn } = useConsole()
 
 const { round } = useMath()
 
@@ -96,7 +98,7 @@ export const useViewportStore = defineStore('viewportStore', {
       let wrapper = document.querySelector('.viewport-content-wrapper')
       let content = document.querySelector('.viewport-content')
       if (!content || !wrapper) {
-        console.warn('viewport-content or viewport-content-wrapper element not found!')
+        warn('viewport-content or viewport-content-wrapper element not found!')
         return
       }
 
@@ -201,7 +203,7 @@ export const useViewportStore = defineStore('viewportStore', {
 
       localStorage.setItem(`${globalConfig.LOCAL_STORAGE_PREFIX}zoomMode`, this.zoomMode.toString())
 
-      console.log(
+      log(
         'Zoom mode set to:',
         localStorage.getItem(`${globalConfig.LOCAL_STORAGE_PREFIX}zoomMode`),
       )

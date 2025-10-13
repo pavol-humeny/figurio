@@ -3,6 +3,8 @@ import { useCollapsiblePanel } from '../common/useCollapsiblePanel'
 import { useSendEvent } from '../common/useSendEvent'
 import { useToastModal } from '../modals/useToastModal'
 import { useConfirmModal } from '../modals/useConfirmModal'
+import { useConsole } from '@/composables/common/useConsole.js'
+const { log } = useConsole()
 
 /**
  * Logic for managing the left tools panel
@@ -155,7 +157,7 @@ export function useToolsPanel(editorStore, imageStore, uiStore, t) {
   const toggleTool = async (toolKey, tabKey) => {
     if (!imageStore.isImageLoaded || editorStore.isExportModalOpen) return
     if (editorStore.enableTools[toolKey] === false) {
-      console.log('Tool is disabled:', toolKey)
+      log('Tool is disabled:', toolKey)
 
       showToastModal(
         'info',
@@ -190,7 +192,7 @@ export function useToolsPanel(editorStore, imageStore, uiStore, t) {
       }
     }
 
-    console.log('Toggle tool:', toolKey, 'Tab:', tabKey)
+    log('Toggle tool:', toolKey, 'Tab:', tabKey)
 
     // Send event
     useSendEvent().sendEvent('toggleTool', null, null, {

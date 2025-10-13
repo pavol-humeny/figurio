@@ -1,6 +1,8 @@
 <script setup>
 import { defineAsyncComponent, computed } from 'vue'
 import ItemTip from '@/components/common/ItemTip.vue'
+import { useConsole } from '@/composables/common/useConsole.js'
+const { warn } = useConsole()
 
 /**
  * @typedef {Object} BaseIconProps
@@ -59,7 +61,7 @@ const iconComponent = computed(() => {
   const loader = icons[path]
 
   if (!loader) {
-    console.warn(`Icon ${props.name} does not exist: ${path}`)
+    warn(`Icon ${props.name} does not exist: ${path}`)
     return null
   }
 

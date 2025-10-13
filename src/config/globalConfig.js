@@ -1,4 +1,11 @@
 export const globalConfig = {
+  // Console prints
+  console: {
+    log: true,
+    warn: true,
+    error: true,
+  },
+
   // If app is running
   isRunning: true,
 

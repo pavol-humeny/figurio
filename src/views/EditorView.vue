@@ -1,5 +1,7 @@
 <script setup>
 import { onMounted, watch } from 'vue'
+import { useConsole } from '@/composables/common/useConsole.js'
+const { warn } = useConsole()
 
 import ToolsPanel from '@/components/tools/ToolsPanel.vue';
 import CollapsiblePanel from '@/components/common/CollapsiblePanel.vue';
@@ -125,7 +127,7 @@ useKeyboardShortcuts({
 
 // Start tutorial if opening the editor for the first time
 watch(() => uiStore.tutorialShouldBeStartedForFirstTime, (newVal) => {
-  console.warn('tutorialShouldBeStartedForFirstTime changed: ', newVal)
+  warn('tutorialShouldBeStartedForFirstTime changed: ', newVal)
   if (newVal) {
     uiStore.tutorialShouldBeStartedForFirstTime = false
     startTutorial()

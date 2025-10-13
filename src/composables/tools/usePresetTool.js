@@ -9,7 +9,12 @@ import { editorConfig } from '@/config/editorConfig'
 import { useResizeTool } from './useResizeTool'
 import { useFrameTool } from './useFrameTool'
 import { useSendEvent } from '../common/useSendEvent'
+import { useConsole } from '@/composables/common/useConsole.js'
+const { warn } = useConsole()
 
+/**
+ * Logic for preset tool
+ */
 export function usePresetTool(
   imageStore,
   historyStore,
@@ -219,7 +224,7 @@ export function usePresetTool(
       isPresetModified.value = true
 
       if (enabled && !presetWasChanged.value) {
-        console.warn('enabled frame: ', enabled)
+        warn('enabled frame: ', enabled)
         // Set default values for frame after enable
         localImageFrame.value.type = 'frameSolid'
         localImageFrame.value.color = '#000000'

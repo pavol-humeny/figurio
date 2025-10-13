@@ -17,6 +17,10 @@ import { globalConfig } from './config/globalConfig.js'
 import ReleaseModal from './components/modals/ReleaseModal.vue'
 import { useUiStore } from './stores/uiStore'
 
+import { useConsole } from '@/composables/common/useConsole.js'
+const { log, warn, error } = useConsole()
+
+
 const router = useRouter()
 const route = useRoute()
 
@@ -66,12 +70,12 @@ const setUserLogin = async (userUuid) => {
       body: JSON.stringify({ user_id: userUuid }),
     })
     if (!res.ok) {
-      console.warn('Error during user-login:', await res.text())
+      warn('Error during user-login:', await res.text())
     } else {
-      console.log('User login recorded')
+      log('User login recorded')
     }
   } catch (e) {
-    console.error('Error fetching user-login:', e)
+    error('Error fetching user-login:', e)
   }
 }
 

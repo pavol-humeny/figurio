@@ -6,6 +6,8 @@ import { useSvgFunctions } from './useSvgFunctions'
 import { useMagnifyAreaTool } from './useMagnifyAreaTool'
 import { viewportConfig } from '@/config/viewportConfig'
 import { useSettingsPanel } from '@/composables/topPanel/useSettingsPanel'
+import { useConsole } from '@/composables/common/useConsole.js'
+const { log } = useConsole()
 
 /**
  * Logic for interactive SVG object
@@ -277,11 +279,11 @@ export function useSvgObjectWrapper(
    * Mouse up handler for the SVG object selection
    */
   const onObjectMouseUp = () => {
-    console.log('mouseup object select')
-    console.log('condition: ', !isSelected.value, !editorStore.isSvgObjectResizing)
+    log('mouseup object select')
+    log('condition: ', !isSelected.value, !editorStore.isSvgObjectResizing)
 
     if (!isSelected.value && !editorStore.isSvgObjectResizing) {
-      console.log('tool: ', editorStore.selectedToolKey, 'class:', object.value.class)
+      log('tool: ', editorStore.selectedToolKey, 'class:', object.value.class)
       if (editorStore.selectedToolKey === object.value.class) {
         if (object.value.class === 'magnifyArea' && object.value.attrs.type === 'corner') {
           // If it is corner type, select source
@@ -305,7 +307,7 @@ export function useSvgObjectWrapper(
    * This will set the active resizer index
    */
   const onMouseDownResizer = (event, index) => {
-    console.log('mousedown resizer')
+    log('mousedown resizer')
     if (!areSvgObjectOperationsEnabled.value || !isSelected.value) return
     activeResizerIndex.value = index
     startX.value = event.clientX
@@ -334,7 +336,7 @@ export function useSvgObjectWrapper(
    * @param {MouseEvent} event - Mouse event
    */
   const onMouseDownDrag = (event) => {
-    console.log('mousedown drag')
+    log('mousedown drag')
     if (!areSvgObjectOperationsEnabled.value || !isSelected.value) return
 
     isDragging.value = true
@@ -355,7 +357,7 @@ export function useSvgObjectWrapper(
    * @param {MouseEvent} event - Mouse event
    */
   const onMouseDownRotate = (event) => {
-    console.log('mousedown rotate')
+    log('mousedown rotate')
     if (!areSvgObjectOperationsEnabled.value || !isSelected.value) return
 
     const rect = viewportStore.viewportContentRect
@@ -388,10 +390,10 @@ export function useSvgObjectWrapper(
 
     const currentAngle = parseFloat(match[1])
 
-    console.log('Center from match: ', match[2])
+    log('Center from match: ', match[2])
 
     const { cx, cy } = getObjectCenter(object.value)
-    console.log('Center from getObjectCenter: ', cx, cy)
+    log('Center from getObjectCenter: ', cx, cy)
 
     attrs.transform = `rotate(${currentAngle}, ${cx}, ${cy})`
   }
@@ -638,7 +640,7 @@ export function useSvgObjectWrapper(
         }
 
         if (activeResizerIndex.value === 0) {
-          console.log('resize top-left')
+          log('resize top-left')
           // Top-left
           let newW = attrs.width - dx
           let newH = keepRatio ? newW / ratio.value : attrs.height - dy
@@ -679,7 +681,7 @@ export function useSvgObjectWrapper(
 
           applyRect(newX, newY, newW, newH)
         } else if (activeResizerIndex.value === 1) {
-          console.log('resize top-right')
+          log('resize top-right')
           // Top-right
           let newW = attrs.width + dx
           let newH = keepRatio ? newW / ratio.value : attrs.height - dy
@@ -713,7 +715,7 @@ export function useSvgObjectWrapper(
 
           applyRect(newX, newY, newW, bottom - newY)
         } else if (activeResizerIndex.value === 2) {
-          console.log('resize bottom-left')
+          log('resize bottom-left')
           // Bottom-left
           let newW = attrs.width - dx
           let newH = keepRatio ? newW / ratio.value : attrs.height + dy
@@ -746,7 +748,7 @@ export function useSvgObjectWrapper(
 
           applyRect(newX, newY, right - newX, newH)
         } else if (activeResizerIndex.value === 3) {
-          console.log('resize bottom-right')
+          log('resize bottom-right')
           // Bottom-right
           let newW = attrs.width + dx
           let newH = keepRatio ? newW / ratio.value : attrs.height + dy
@@ -781,7 +783,7 @@ export function useSvgObjectWrapper(
 
           applyRect(newX, newY, newW, newH)
         } else if (activeResizerIndex.value === 4) {
-          console.log('resize top-middle')
+          log('resize top-middle')
           // Top (middle)
           let newH = attrs.height - dy
           let newY = bottom - newH
@@ -805,7 +807,7 @@ export function useSvgObjectWrapper(
 
           applyRect(left, newY, right - left, newH)
         } else if (activeResizerIndex.value === 5) {
-          console.log('resize bottom-middle')
+          log('resize bottom-middle')
           // Bottom (middle)
           let newH = attrs.height + dy
 
@@ -823,7 +825,7 @@ export function useSvgObjectWrapper(
 
           applyRect(left, top, right - left, newH)
         } else if (activeResizerIndex.value === 6) {
-          console.log('resize left-middle')
+          log('resize left-middle')
           // Left (middle)
           let newW = attrs.width - dx
           let newX = right - newW
@@ -847,7 +849,7 @@ export function useSvgObjectWrapper(
 
           applyRect(newX, top, newW, bottom - top)
         } else if (activeResizerIndex.value === 7) {
-          console.log('resize right-middle')
+          log('resize right-middle')
           // Right (middle)
           let newW = attrs.width + dx
 
@@ -1287,7 +1289,7 @@ export function useSvgObjectWrapper(
               const otherY = keyY === 'y1' ? attrs.y2 : attrs.y1
 
               if (keepRatio) {
-                console.log('keep ratio line')
+                log('keep ratio line')
                 // Opposite point (pivot)
                 const dx = newX - otherX
                 const dy = newY - otherY

@@ -1,5 +1,7 @@
 import { onMounted, onBeforeUnmount } from 'vue'
 import { keyboardShortcuts } from '@/config/keyboardShortcutsConfig'
+import { useConsole } from '@/composables/common/useConsole.js'
+const { log } = useConsole()
 
 /**
  * Logic for handling global keyboard shortcuts
@@ -57,7 +59,7 @@ export function useKeyboardShortcuts(actions, uiStore, editorStore) {
       const expected = shortcut.keys.map((k) => k.toLowerCase()).join('+')
       const expectedType = shortcut.type || 'keydown' // default type
 
-      // console.log(`[Shortcut] ${pressed} → ${shortcut.description}`)
+      // log(`[Shortcut] ${pressed} → ${shortcut.description}`)
 
       if (pressed === expected && type === expectedType) {
         event.preventDefault()
@@ -77,7 +79,7 @@ export function useKeyboardShortcuts(actions, uiStore, editorStore) {
           }
 
           fn(...(shortcut.args || []))
-          console.log(`[Shortcut] ${type.toUpperCase()} → ${shortcut.description}`)
+          log(`[Shortcut] ${type.toUpperCase()} → ${shortcut.description}`)
         }
       }
     }

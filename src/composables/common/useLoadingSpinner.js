@@ -1,12 +1,22 @@
 import { onMounted, onBeforeUnmount, computed } from 'vue'
+import { useConsole } from '@/composables/common/useConsole.js'
+const { log } = useConsole()
 
+/**
+ * Logic for loading spinner overlay
+ */
 export function useLoadingSpinner(uiStore) {
   onMounted(() => {
-    const blockAll = (e) => {
+    /**
+     * Block all interactions when loading is active
+     *
+     * @param {Event} event Event to block
+     */
+    const blockAll = (event) => {
       if (uiStore.isLoading && uiStore.blockClicks) {
-        console.log('Blocking interaction due to loading state')
-        e.stopImmediatePropagation()
-        e.preventDefault()
+        log('Blocking interaction due to loading state')
+        event.stopImmediatePropagation()
+        event.preventDefault()
       }
     }
 

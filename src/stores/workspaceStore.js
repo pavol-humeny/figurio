@@ -2,6 +2,8 @@ import { defineStore } from 'pinia'
 import { useImageStore } from './imageStore'
 import { useHistoryStore } from './historyStore'
 import { useViewportStore } from './viewportStore'
+import { useConsole } from '@/composables/common/useConsole.js'
+const { log } = useConsole()
 
 /**
  * Store managing multiple workspace tabs
@@ -39,7 +41,7 @@ export const useWorkspaceStore = defineStore('workspaceStore', {
 
       const id = Date.now()
 
-      console.log('!!!!!!! Adding new tab:', id, name)
+      log('!!!!!!! Adding new tab:', id, name)
 
       this.tabs.push({
         id,

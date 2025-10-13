@@ -1,5 +1,7 @@
 import { ref, watch, computed } from 'vue'
 import { useMath } from './useMath'
+import { useConsole } from '@/composables/common/useConsole.js'
+const { log } = useConsole()
 
 /**
  * Logic for the <NumberInput> component
@@ -84,7 +86,7 @@ export function useNumberInput(props, emit) {
    * Handles blur or enter event, clamps value between min and max, emits update
    */
   const onBlurOrEnter = () => {
-    console.log('NumberInput - onBlurOrEnter: ', inputValue.value)
+    log('NumberInput - onBlurOrEnter: ', inputValue.value)
     const value = normalizeValue(inputValue.value)
     inputValue.value = value
     emit('update:modelValue', value)

@@ -1,5 +1,7 @@
 import { defineStore } from 'pinia'
 import { editorConfig } from '@/config/editorConfig'
+import { useConsole } from '@/composables/common/useConsole.js'
+const { log } = useConsole()
 
 /**
  * Store for managing image presets
@@ -43,7 +45,7 @@ export const usePresetsStore = defineStore('presetsStore', {
           this.presets = parsed.presets || []
           this.selectedPresetName = parsed.selectedPresetName || ''
         } catch (e) {
-          console.error('Failed to load presets from localStorage:', e)
+          error('Failed to load presets from localStorage:', e)
         }
       }
     },

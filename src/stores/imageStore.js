@@ -21,6 +21,9 @@ import { useSendEvent } from '@/composables/common/useSendEvent'
 pdfjsLib.GlobalWorkerOptions.workerSrc =
   'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js'
 
+import { useConsole } from '@/composables/common/useConsole.js'
+const { log, warn, error } = useConsole()
+
 const { showToastModal } = useToastModal()
 const { showGeneralModal } = useGeneralModal()
 
@@ -633,7 +636,7 @@ export const useImageStore = defineStore('imageStore', {
         // Clear removal canvas
         const canvas = document.getElementById('removalCanvas')
         if (canvas) {
-          console.warn('Clearing removal canvas...')
+          warn('Clearing removal canvas...')
           const ctx = canvas.getContext('2d')
           ctx.clearRect(0, 0, canvas.width, canvas.height)
         }
@@ -653,7 +656,7 @@ export const useImageStore = defineStore('imageStore', {
       uiStore.isLoading = true
 
       if (this.file.type.startsWith('image')) {
-        console.log('Loading image file:', file.name)
+        log('Loading image file:', file.name)
         this.fileType = 'image'
         const reader = new FileReader()
         reader.onload = (event) => {
@@ -708,7 +711,7 @@ export const useImageStore = defineStore('imageStore', {
 
         reader.readAsDataURL(file)
       } else if (this.file.type === 'application/pdf') {
-        console.log('Loading PDF file:', file.name)
+        log('Loading PDF file:', file.name)
         this.fileType = 'pdf'
 
         const reader = new FileReader()
@@ -718,7 +721,7 @@ export const useImageStore = defineStore('imageStore', {
           try {
             const pdf = await pdfjsLib.getDocument({ data: typedArray }).promise
 
-            console.log('PDF loaded with', pdf.numPages, 'pages')
+            log('PDF loaded with', pdf.numPages, 'pages')
 
             // Select page
             let pdfPageNumber = 1
@@ -734,7 +737,7 @@ export const useImageStore = defineStore('imageStore', {
               )
 
               if (!result?.selectedPage) {
-                console.log('User cancelled PDF page selection: ', result)
+                log('User cancelled PDF page selection: ', result)
                 uiStore.isLoading = false
                 const workspaceStore = useWorkspaceStore()
 
@@ -751,7 +754,7 @@ export const useImageStore = defineStore('imageStore', {
               uiStore.blockClicks = true
             }
 
-            console.log('Selected PDF page number:', pdfPageNumber)
+            log('Selected PDF page number:', pdfPageNumber)
 
             // Save pdf page bytes
             const pageBytes = await this.extractPdfPageBytes(typedArray, pdfPageNumber)
@@ -806,14 +809,14 @@ export const useImageStore = defineStore('imageStore', {
               t('imageStore.toast.successFileUploaded.message', { fileName: file.name }),
             )
           } catch (err) {
-            console.error('PDF parsing error', err)
+            error('PDF parsing error', err)
             uiStore.isLoading = false
           }
         }
         reader.readAsArrayBuffer(file)
       } else {
         uiStore.isLoading = false
-        console.error('Unsupported file type:', this.file.type)
+        error('Unsupported file type:', this.file.type)
       }
 
       // Send event
@@ -893,7 +896,7 @@ export const useImageStore = defineStore('imageStore', {
             ? file.type.split('/')[1]
             : file.type
 
-        console.log(realType === detectedType, 'realType:', realType, 'detectedType:', detectedType)
+        log(realType === detectedType, 'realType:', realType, 'detectedType:', detectedType)
 
         //  TODO - obrazok vinice sa deteguje zle (ako unknown)
         return (
@@ -960,10 +963,7 @@ export const useImageStore = defineStore('imageStore', {
         if (!input.files || input.files.length === 0) return
 
         const workspaceStore = useWorkspaceStore()
-        const currentNumberOfTabs = workspaceStore.numberOfTabs 
-
-        console.warn('Number of selected files:', input.files.length)
-        console.warn('Current number of tabs:', currentNumberOfTabs)
+        const currentNumberOfTabs = workspaceStore.numberOfTabs
 
         if (currentNumberOfTabs + input.files.length > globalConfig.maxNumberOfOpenFiles) {
           showToastModal(
@@ -1021,7 +1021,7 @@ export const useImageStore = defineStore('imageStore', {
     async copyImageToClipboard(t) {
       const dataUrl = this.previewUrl || ''
       if (!dataUrl) {
-        console.warn('No preview available for clipboard export')
+        warn('No preview available for clipboard export')
         return
       }
 
@@ -1059,7 +1059,7 @@ export const useImageStore = defineStore('imageStore', {
       const canvas = this.getRenderedImage({ t, renderCall: true })
       if (!canvas) return false
 
-      console.log('Exporting file...')
+      log('Exporting file...')
 
       const { width, height, quality } = this.newFileDimensions
       const isPdf = this.newFileFormat === 'pdf'
@@ -1220,7 +1220,7 @@ export const useImageStore = defineStore('imageStore', {
             scale: 1,
           })
         } catch (e) {
-          console.error('Error during svgObjects export to PDF:', e)
+          error('Error during svgObjects export to PDF:', e)
         }
       }
 
@@ -1236,7 +1236,7 @@ export const useImageStore = defineStore('imageStore', {
             scale: 1,
           })
         } catch (e) {
-          console.error('Error during frame SVG export to PDF:', e)
+          error('Error during frame SVG export to PDF:', e)
         }
       }
     },
@@ -1730,7 +1730,7 @@ export const useImageStore = defineStore('imageStore', {
 
         // 2.25 . Magnify overlay if present (bitmap)
         if (this.svgObjects.some((obj) => obj.class === 'magnifyArea')) {
-          console.warn('Rasterizing magnify area for PDF export')
+          warn('Rasterizing magnify area for PDF export')
           await this.rasterize(t, false, null, null, false, true)
 
           // Convert to PNG dataUrl
@@ -1834,7 +1834,7 @@ export const useImageStore = defineStore('imageStore', {
      */
     mergeOverlayIntoImage() {
       if (!this.renderedImage || !this.overlayImage) {
-        console.warn('No rendered image or overlay image to merge')
+        warn('No rendered image or overlay image to merge')
         return
       }
 
@@ -1865,7 +1865,7 @@ export const useImageStore = defineStore('imageStore', {
      * Function to use rasterize background image (only in pdf)
      */
     rasterizeBaseImage() {
-      console.log('Rasterizing background image...')
+      log('Rasterizing background image...')
       this.fileType = 'image'
     },
 
@@ -1887,7 +1887,7 @@ export const useImageStore = defineStore('imageStore', {
     ) {
       if (this.svgObjects.length === 0 && this.blurObjects.length === 0) return
 
-      console.log('Rasterizing image with SVG objects...')
+      log('Rasterizing image with SVG objects...')
 
       // Determine target dimensions
       const usedWidth = width ?? this.fileDimensions.width
@@ -1955,7 +1955,7 @@ export const useImageStore = defineStore('imageStore', {
       //     resolve()
       //   }
       //   img.onerror = (e) => {
-      //     console.error('Error loading SVG overlay image', e)
+      //     error('Error loading SVG overlay image', e)
       //     reject(e)
       //   }
       //   img.src = svgUrl
@@ -2072,7 +2072,7 @@ export const useImageStore = defineStore('imageStore', {
     async generatePreview(editorStore, historyStore, t, renderAsRaster = true) {
       const imageStore = this
 
-      console.log('Generating preview with frame...')
+      log('Generating preview with frame...')
       this.phoneButtonsCanNotBeDrawnToastFlag = true // Set flag to prevent toast showing
 
       const targetWidth = this.frame.enabled
@@ -2110,13 +2110,13 @@ export const useImageStore = defineStore('imageStore', {
 
       const baseImage = this.newRenderedImage || this.getRenderedImage({ t, renderCall: true })
       if (!baseImage) {
-        console.warn('No base image available for preview generation')
+        warn('No base image available for preview generation')
         return
       }
 
       // If frame is not enabled, just return the base image
       if (!this.frame.enabled) {
-        console.log('Frame not enabled, using base image for preview')
+        log('Frame not enabled, using base image for preview')
 
         const mimeType =
           this.newFileFormat === 'jpeg' || this.newFileFormat === 'jpg'
@@ -2149,7 +2149,7 @@ export const useImageStore = defineStore('imageStore', {
         return
       }
 
-      console.log('Generating preview with SVG frame...')
+      log('Generating preview with SVG frame...')
 
       // Create temporary SVG element and apply frame
       const tempFrameSvg = document.createElementNS('http://www.w3.org/2000/svg', 'svg')
@@ -2219,7 +2219,7 @@ export const useImageStore = defineStore('imageStore', {
       )
 
       if (this.overlayImagePreview) {
-        console.warn('Drawing overlay image on top of preview')
+        warn('Drawing overlay image on top of preview')
         ctx.drawImage(
           this.overlayImagePreview,
           0,
@@ -2502,7 +2502,7 @@ export const useImageStore = defineStore('imageStore', {
         tmpRenderedImage: this.tmpRenderedImage?.toDataURL() || null,
       }
 
-      console.log('[getSnapshot] imageOperations:', snapshot.imageOperations)
+      log('[getSnapshot] imageOperations:', snapshot.imageOperations)
 
       return snapshot
     },
@@ -2612,7 +2612,7 @@ export const useImageStore = defineStore('imageStore', {
       // }
       this.removalCanvas = snapshot.removalCanvas
 
-      console.log('[applySnapshot] imageOperations (after apply):', this.imageOperations)
+      log('[applySnapshot] imageOperations (after apply):', this.imageOperations)
     },
 
     /**
@@ -2621,7 +2621,7 @@ export const useImageStore = defineStore('imageStore', {
      * @returns {object} A deep clone of the full image store state.
      */
     getFullSnapshot(t) {
-      console.log('[getFullSnapshot] imageOperations:', this.imageOperations)
+      log('[getFullSnapshot] imageOperations:', this.imageOperations)
       return {
         file: this.file,
         fileType: this.fileType,
@@ -2856,7 +2856,7 @@ export const useImageStore = defineStore('imageStore', {
       // }
       this.removalCanvas = snapshot.removalCanvas
 
-      console.log('[applyFullSnapshot] imageOperations (after apply):', this.imageOperations)
+      log('[applyFullSnapshot] imageOperations (after apply):', this.imageOperations)
     },
   },
 })

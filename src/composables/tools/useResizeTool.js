@@ -5,6 +5,8 @@ import { useSendEvent } from '@/composables/common/useSendEvent'
 import { useMath } from '../common/useMath'
 import { PDFDocument } from 'pdf-lib'
 import { useConfirmModal } from '../modals/useConfirmModal'
+import { useConsole } from '@/composables/common/useConsole.js'
+const { log, error } = useConsole()
 
 /**
  * Logic for the resize tool
@@ -246,9 +248,9 @@ export function useResizeTool(imageStore, historyStore, viewportStore, t) {
         const pdfBytes = await newPdf.save()
         imageStore.pdfPageBytes = pdfBytes
 
-        console.log(`PDF resized physically to ${width}x${height}`)
+        log(`PDF resized physically to ${width}x${height}`)
       } catch (e) {
-        console.error('Error resizing PDF:', e)
+        error('Error resizing PDF:', e)
       }
     }
 

@@ -2,6 +2,8 @@ import { computed, ref, watch, watchEffect, nextTick, onMounted } from 'vue'
 import { useMath } from '../common/useMath'
 import { useSvgFunctions } from './useSvgFunctions'
 import { useSendEvent } from '../common/useSendEvent'
+import { useConsole } from '@/composables/common/useConsole.js'
+const { log } = useConsole()
 
 /**
  * Local editable settings for shape tool
@@ -238,12 +240,12 @@ export function useShapeTool(editorStore, imageStore, historyStore, t) {
 
       // Reset only when not coming from select tool
       if (editorStore.previousToolKey !== 'select') {
-        console.log('Shape tab changed, resetting settings: ', newTab)
+        log('Shape tab changed, resetting settings: ', newTab)
         localObjectSettings.value.type = newTab
-        console.log('10')
+        log('10')
         imageStore.selectedSvgObjectId = null // Reset selection when tab changes
         imageStore.selectedSvgObjectIds = [] // Reset multi-selection
-        console.log('-----------------2')
+        log('-----------------2')
 
         resetObjectSettings()
       }
@@ -513,7 +515,7 @@ export function useShapeTool(editorStore, imageStore, historyStore, t) {
 
       // Dimensions are linked
       if (isDimensionsLinked.value && originalHeight > 0) {
-        console.log('Updating height with aspect ratio')
+        log('Updating height with aspect ratio')
         const aspectRatio = originalWidth / originalHeight
         localObjectSettings.value.height = clampedHeight
         localObjectSettings.value.width = round(

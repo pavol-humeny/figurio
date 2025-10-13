@@ -7,6 +7,8 @@ import { editorConfig } from '@/config/editorConfig'
 import { useBlurTool } from './useBlurTool'
 import { useMagnifyAreaTool } from './useMagnifyAreaTool'
 import { useToolsPanel } from './useToolsPanel'
+import { useConsole } from '@/composables/common/useConsole.js'
+const { log } = useConsole()
 
 export function useSvgObjects(
   imageStore,
@@ -201,7 +203,7 @@ export function useSvgObjects(
         idsToDelete.add(selected.id)
       }
 
-      console.log('11')
+      log('11')
       imageStore.selectedSvgObjectId = null
     }
 
@@ -575,7 +577,7 @@ export function useSvgObjects(
    */
   const deselectAllSvgObjects = () => {
     imageStore.selectedSvgObjectIds = []
-    console.log('13')
+    log('13')
     imageStore.selectedSvgObjectId = null
   }
 
@@ -630,7 +632,7 @@ export function useSvgObjects(
    * @param {MouseEvent} event - Click event
    */
   const onClickImageSvg = (event) => {
-    console.log('click svg')
+    log('click svg')
     if (event.button !== 0) return // Only left mouse button
 
     if (didDrag.value) {
@@ -656,7 +658,7 @@ export function useSvgObjects(
         if (clickedObject) {
           if (event.shiftKey) {
             if (clickedObject.class === 'magnifyArea') {
-              console.log('no multi select magnify area')
+              log('no multi select magnify area')
               return // Do not allow multi-select of magnify area objects
             }
 
@@ -673,7 +675,7 @@ export function useSvgObjects(
             if (imageStore.selectedSvgObjectIds.length === 1) {
               imageStore.selectedSvgObjectId = imageStore.selectedSvgObjectIds[0]
             } else {
-              console.log('5')
+              log('5')
               imageStore.selectedSvgObjectId = null
             }
           } else {
@@ -683,7 +685,7 @@ export function useSvgObjects(
                 clickedObject.class === 'magnifyArea' &&
                 clickedObject.subClass === 'magnify-result'
               ) {
-                console.log('clicked magnify result')
+                log('clicked magnify result')
                 // If clicked on magnify result, select the source instead
                 imageStore.selectedSvgObjectId = clickedObject.linkedSourceId
                 imageStore.selectedSvgObjectIds = [clickedObject.linkedSourceId]
@@ -749,7 +751,7 @@ export function useSvgObjects(
       const y = round((event.clientY - rect.top) / viewportStore.realZoomLevel)
 
       magnifyAreaTool.addMagnifyArea(x, y)
-      console.log('selected object id after add: ', imageStore.selectedSvgObjectId)
+      log('selected object id after add: ', imageStore.selectedSvgObjectId)
     }
   }
 
@@ -759,11 +761,11 @@ export function useSvgObjects(
    */
   const onMouseDownSelect = (event) => {
     if (event.button !== 0) return // Only left mouse button
-    console.log('mousedown select area')
+    log('mousedown select area')
 
     // Selecting objects
     if (editorStore.selectedToolKey === 'select') {
-      console.log('mousedown select')
+      log('mousedown select')
       if (isMovingMultipleObjects.value) {
         return
       }
@@ -800,7 +802,7 @@ export function useSvgObjects(
    */
   const onMouseDownImageSvg = (event) => {
     if (event.button !== 0) return // Only left mouse button
-    console.log('mousedown svg')
+    log('mousedown svg')
 
     didDrag.value = false // Reset at start
 
@@ -839,17 +841,17 @@ export function useSvgObjects(
     const y = round((event.clientY - svgRect.top) / viewportStore.realZoomLevel)
 
     // TODO - remove - debug prints for detection of mouse position issues during drawing
-    console.log('event: ', event.clientX, event.clientY)
-    console.log('content rect', svgRect.left, svgRect.top)
-    console.log('pan', viewportStore.panX, viewportStore.panY)
-    console.log('zoom', viewportStore.realZoomLevel)
+    log('event: ', event.clientX, event.clientY)
+    log('content rect', svgRect.left, svgRect.top)
+    log('pan', viewportStore.panX, viewportStore.panY)
+    log('zoom', viewportStore.realZoomLevel)
 
-    console.log('event.clientX - svgRect.left: ', event.clientX - svgRect.left)
-    console.log('event.clientY - svgRect.top: ', event.clientY - svgRect.top)
-    console.log('x / zoom: ', (event.clientX - svgRect.left) / viewportStore.realZoomLevel)
-    console.log('y / zoom: ', (event.clientY - svgRect.top) / viewportStore.realZoomLevel)
+    log('event.clientX - svgRect.left: ', event.clientX - svgRect.left)
+    log('event.clientY - svgRect.top: ', event.clientY - svgRect.top)
+    log('x / zoom: ', (event.clientX - svgRect.left) / viewportStore.realZoomLevel)
+    log('y / zoom: ', (event.clientY - svgRect.top) / viewportStore.realZoomLevel)
 
-    console.log('start drawing x, y: ', x, y)
+    log('start drawing x, y: ', x, y)
 
     drawingStart.value = { x, y }
     isDrawing.value = true
@@ -898,7 +900,7 @@ export function useSvgObjects(
       if (objectType === 'line') {
         lineEnd = lineArrowEnd
       }
-      console.log('line end: ', lineEnd)
+      log('line end: ', lineEnd)
     } else if (objectClass === 'blur') {
       const { blurStrength, name } = blurTool.getBlurAttributes(id)
 
@@ -1138,7 +1140,7 @@ export function useSvgObjects(
 
         // Apply updated offset
         if (object.class === 'magnifyArea') {
-          console.log('move magnify area')
+          log('move magnify area')
           if (object.subClass === 'magnify-result') {
             const source = imageStore.getSvgObjectById(object.linkedSourceId)
 
@@ -1357,7 +1359,7 @@ export function useSvgObjects(
     if (!checkSizeOfObject(currentDrawingObject.value)) {
       imageStore.selectedSvgObjectId = currentDrawingObject.value.id
     } else {
-      console.log('4')
+      log('4')
       imageStore.selectedSvgObjectId = null
     }
   }
@@ -1424,7 +1426,7 @@ export function useSvgObjects(
       if (selectedIds.length === 1) {
         imageStore.selectedSvgObjectId = selectedIds[0]
       } else {
-        console.log('3')
+        log('3')
         imageStore.selectedSvgObjectId = null
       }
 
@@ -1455,7 +1457,7 @@ export function useSvgObjects(
         imageStore.svgObjects.pop()
       }
 
-      console.log('2')
+      log('2')
       imageStore.selectedSvgObjectId = null
 
       // Select object below if there was one
@@ -1535,7 +1537,7 @@ export function useSvgObjects(
     const clickedInside = viewportContent.contains(e.target)
     if (!clickedInside) return
 
-    console.log('global double click')
+    log('global double click')
 
     const clickedObjectId = Number(e.target.getAttribute('data-id'))
     const clickedObject = imageStore.getSvgObjectById(clickedObjectId)
@@ -1548,7 +1550,7 @@ export function useSvgObjects(
 
     // Deselect objects
     if (!sameClass) {
-      console.log('1')
+      log('1')
       imageStore.selectedSvgObjectId = null
       imageStore.selectedSvgObjectIds = []
     }
@@ -1568,7 +1570,7 @@ export function useSvgObjects(
 
     // Deselect if clicked inside viewport but outside content
     if (clickedInsideViewport && !clickedInsideContent) {
-      console.log('Deselect triggered')
+      log('Deselect triggered')
       imageStore.selectedSvgObjectId = null
       imageStore.selectedSvgObjectIds = []
     }

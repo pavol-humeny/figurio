@@ -7,6 +7,9 @@ import { SVGGraphics } from 'pdfjs-dist/legacy/build/pdf'
 pdfjsLib.GlobalWorkerOptions.workerSrc =
   'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js'
 
+import { useConsole } from '@/composables/common/useConsole.js'
+const { log, warn } = useConsole()
+
 /**
  * Logic for rendering image layers (img, SVG, frame) in the editor viewport
  *
@@ -58,7 +61,7 @@ export function useImageRenderer(
    * Set dimensions of canvas, svg and frame layers based on image size and frame config
    */
   const updateSizes = async () => {
-    console.log('Updating sizes for image renderer...')
+    log('Updating sizes for image renderer...')
     const width = imageStore.fileDimensions.width
     const height = imageStore.fileDimensions.height
 
@@ -145,7 +148,7 @@ export function useImageRenderer(
     await nextTick()
 
     if (imageStore.fileType === 'pdf') {
-      console.log('Rendering PDF page...')
+      log('Rendering PDF page...')
       const pdfPageBytes = imageStore.pdfPageBytes
 
       const pdf = await pdfjsLib.getDocument({ data: pdfPageBytes }).promise
@@ -166,7 +169,7 @@ export function useImageRenderer(
       // Skontroluj, či sa v operator list nachádza aspoň jeden nepodporovaný
       const hasUnimplemented = opList.fnArray.some((fnId) => unimplementedOps.includes(fnId))
       if (hasUnimplemented) {
-        console.warn(
+        warn(
           'PDF obsahuje nepodporované grafické operátory – niektoré efekty nemusia byť presne zobrazené.',
         )
       }
@@ -192,7 +195,7 @@ export function useImageRenderer(
 
       if (!imageRef.value || !img) return
 
-      console.log('Rendering IMAGE (IMAGE only)...')
+      log('Rendering IMAGE (IMAGE only)...')
 
       if (img instanceof HTMLCanvasElement) {
         imageRef.value.src = img.toDataURL()
@@ -224,10 +227,10 @@ export function useImageRenderer(
     if (imageStore.overlayImage && canvas) {
       //wait
       await new Promise((resolve) => setTimeout(resolve, 1))
-      console.warn('Rendering OVERLAY image...')
+      warn('Rendering OVERLAY image...')
 
       if (imageStore.historyWasChanged) {
-        console.log('Clearing OVERLAY image due to history change...')
+        log('Clearing OVERLAY image due to history change...')
         ctx.clearRect(0, 0, canvas.width, canvas.height)
         imageStore.historyWasChanged = false
       }
@@ -235,7 +238,7 @@ export function useImageRenderer(
       ctx.drawImage(imageStore.overlayImage, 0, 0, canvas.width, canvas.height)
     } else {
       if (canvas) {
-        console.log('Clearing OVERLAY image...')
+        log('Clearing OVERLAY image...')
         ctx.clearRect(0, 0, canvas.width, canvas.height)
         imageStore.historyWasChanged = false
       }
@@ -253,7 +256,7 @@ export function useImageRenderer(
   const renderFrameSvg = () => {
     if (renderingFrameSvg.value) return
 
-    console.log('Rendering frame SVG...')
+    log('Rendering frame SVG...')
 
     renderingFrameSvg.value = true
 
@@ -296,7 +299,7 @@ export function useImageRenderer(
     ],
     async ([newImage, newPdfBytes, newFileType, newOverlayImage]) => {
       if (newImage || newPdfBytes || newFileType || newOverlayImage) {
-        console.log('#################### Image or PDF or file Type changed, re-rendering all...')
+        log('#################### Image or PDF or file Type changed, re-rendering all...')
         renderAll()
       }
     },
@@ -308,7 +311,7 @@ export function useImageRenderer(
     () => imageStore.frame,
     (newFrame) => {
       if (newFrame && !renderingFrameSvg.value) {
-        console.log('#################### Frame operations changed, re-rendering frame svg')
+        log('#################### Frame operations changed, re-rendering frame svg')
         updateSizes()
         renderFrameSvg()
       }

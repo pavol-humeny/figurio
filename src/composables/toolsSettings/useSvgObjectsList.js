@@ -1,6 +1,8 @@
 import { useSvgObjects } from '@/composables/tools/useSvgObjects'
 import { useToolsPanel } from '@/composables/tools/useToolsPanel'
 import { ref, computed, watch, nextTick, onBeforeUnmount } from 'vue'
+import { useConsole } from '@/composables/common/useConsole.js'
+const { log } = useConsole()
 
 /**
  * Logic for managing the SVG Objects List panel, including resizing,
@@ -239,7 +241,7 @@ export function useSvgObjectsList(
    * @param {string} newName - The new name for the SVG object
    */
   const renameObject = (id, newName) => {
-    console.log('Renaming', id, 'to', newName)
+    log('Renaming', id, 'to', newName)
 
     const obj = imageStore.svgObjects.find((o) => o.id === id)
     if (!obj) return

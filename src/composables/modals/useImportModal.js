@@ -1,5 +1,7 @@
 import { ref, onMounted, onBeforeUnmount } from 'vue'
 import { useSendEvent } from '@/composables/common/useSendEvent'
+import { useConsole } from '@/composables/common/useConsole.js'
+const { log } = useConsole()
 
 /**
  * Whether the import modal is currently visible
@@ -16,7 +18,7 @@ export function useImportModal() {
       return
     }
 
-    console.log('Opening import modal')
+    log('Opening import modal')
 
     useSendEvent().sendEvent('modalEvent', null, null, { modal: 'import', event: 'open' })
 

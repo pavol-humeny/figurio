@@ -1,5 +1,7 @@
 import { ref, computed, onMounted, onBeforeUnmount, nextTick } from 'vue'
 import { editorConfig } from '@/config/editorConfig'
+import { useConsole } from '@/composables/common/useConsole.js'
+const { log } = useConsole()
 
 /**
  * Logic for context menu component
@@ -90,7 +92,7 @@ export function useContextMenu() {
    */
   const onClickOutside = (event) => {
     if (!isVisible.value) return
-    console.log('click outside')
+    log('click outside')
     if (!document.querySelector('.context-menu-wrapper')?.contains(event.target)) {
       closeMenu()
     }

@@ -1,7 +1,12 @@
 import { editorConfig } from '@/config/editorConfig'
 import { ref, computed, watch, watchEffect, onMounted, nextTick } from 'vue'
 import { useSendEvent } from '../common/useSendEvent'
+import { useConsole } from '@/composables/common/useConsole.js'
+const { log } = useConsole()
 
+/**
+ * Magnify area settings
+ */
 const localMagnifyAreaSettings = ref({
   type: 'center', // center, corner
   sourceX: 0,
@@ -15,6 +20,9 @@ const localMagnifyAreaSettings = ref({
   outlineColor: '#000000',
 })
 
+/**
+ * Logic for the magnify area tool
+ */
 export function useMagnifyAreaTool(imageStore, historyStore, editorStore, workspaceStore, t) {
   /**
    * Active magnify area object being edited
@@ -529,7 +537,7 @@ s
       imageStore.selectedSvgObjectId = sourceId
     }
 
-    console.log('selected', imageStore.selectedSvgObjectId)
+    log('selected', imageStore.selectedSvgObjectId)
 
     useSendEvent().sendEvent('toolSettings', 'magnifyArea', 'create', {
       settings: { ...localMagnifyAreaSettings.value },

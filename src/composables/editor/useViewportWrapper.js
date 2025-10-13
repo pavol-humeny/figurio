@@ -3,6 +3,8 @@ import { viewportConfig } from '@/config/viewportConfig'
 import { useMath } from '@/composables/common/useMath'
 import { useThrottleFn } from '@vueuse/core'
 import { editorConfig } from '@/config/editorConfig'
+import { useConsole } from '@/composables/common/useConsole.js'
+const { log } = useConsole()
 
 /**
  * Logic for managing zooming, panning, scrolling and viewport dimensions
@@ -120,16 +122,6 @@ export function useViewportWrapper(viewportStore, imageStore, editorStore, uiSto
 
   // Zoom and scroll handling
   const setZoomAndScroll = (event) => {
-    console.log(
-      'Wheel event:',
-      event.deltaX,
-      event.deltaY,
-      'ctrlKey:',
-      event.ctrlKey,
-      'shiftKey:',
-      event.shiftKey,
-    )
-
     if (event.ctrlKey) {
       const direction = event.deltaY < 0 ? 1 : -1
       const wrapper = event.currentTarget
@@ -169,14 +161,14 @@ export function useViewportWrapper(viewportStore, imageStore, editorStore, uiSto
 
     // HORIZONTAL SCROLL (Shift or horizontal wheel)
     const isHorizontalScroll = event.shiftKey || Math.abs(event.deltaX) > Math.abs(event.deltaY)
-    console.log('Horizontal scroll?', isHorizontalScroll)
+    log('Horizontal scroll?', isHorizontalScroll)
 
     if (isHorizontalScroll) {
-      console.log('Handling horizontal scroll')
+      log('Handling horizontal scroll')
       // Use deltaX if available, otherwise deltaY when Shift is held
       const delta = event.shiftKey ? event.deltaY : event.deltaX
-      console.log('Event deltaX:', event.deltaX, 'deltaY:', event.deltaY)
-      console.log('Delta used for horizontal scroll:', delta)
+      log('Event deltaX:', event.deltaX, 'deltaY:', event.deltaY)
+      log('Delta used for horizontal scroll:', delta)
 
       if (
         viewportStore.panX >= scrollHorizontalMin.value &&
@@ -395,7 +387,7 @@ export function useViewportWrapper(viewportStore, imageStore, editorStore, uiSto
    * Center the image in the viewport
    */
   const centerImage = () => {
-    console.log('------- Centering image ')
+    log('------- Centering image ')
     if (!wrapperRef.value || !contentRef.value) return
     viewportStore.resetZoom()
 
@@ -491,7 +483,7 @@ export function useViewportWrapper(viewportStore, imageStore, editorStore, uiSto
     () => viewportStore.shouldFitToScreen,
     (shouldFit) => {
       if (shouldFit) {
-        console.log('should fit to screen')
+        log('should fit to screen')
         centerImage()
         viewportStore.shouldFitToScreen = false
       }
@@ -518,7 +510,7 @@ export function useViewportWrapper(viewportStore, imageStore, editorStore, uiSto
   watch(
     [() => viewportStore.zoomMode, () => viewportStore.textWidth],
     () => {
-      console.log('Zoom mode or text width changed')
+      log('Zoom mode or text width changed')
       centerImage()
       viewportStore.resetZoom()
       viewportStore.resetPan()
@@ -747,7 +739,7 @@ export function useViewportWrapper(viewportStore, imageStore, editorStore, uiSto
     viewportStore.viewportContentRect = contentRef.value?.getBoundingClientRect() || {}
 
     nextTick(() => {
-      console.log('Mounted viewport wrapper')
+      log('Mounted viewport wrapper')
       centerImage()
 
       // Center the image after resizing the wrapper
@@ -795,7 +787,7 @@ export function useViewportWrapper(viewportStore, imageStore, editorStore, uiSto
       nextTick(() => {
         if (viewportStore.fitImageOnLoad && !uiStore.isLoading) {
           viewportStore.resetZoom()
-          console.log('Render image')
+          log('Render image')
           centerImage()
 
           viewportStore.fitImageOnLoad = false

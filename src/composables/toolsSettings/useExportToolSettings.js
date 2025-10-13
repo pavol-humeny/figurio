@@ -1,6 +1,8 @@
 import { ref, computed, nextTick, watch, onMounted, onBeforeUnmount } from 'vue'
 import { useMath } from '../common/useMath'
 import { editorConfig } from '@/config/editorConfig'
+import { useConsole } from '@/composables/common/useConsole.js'
+const { error } = useConsole()
 
 /**
  * Visibility state of the export panel
@@ -155,7 +157,7 @@ export function useExportToolSettings(imageStore, editorStore, historyStore, t) 
   const exportFile = () => {
     const success = imageStore.exportFile(editorStore, historyStore, t)
     if (!success) {
-      console.error('Failed to export file')
+      error('Failed to export file')
       return
     }
     closeExportToolSettings()
