@@ -181,12 +181,25 @@ const cursorStyleVars = computed(() => {
 const drawingCursor = computed(() => {
   return (editorStore.selectedToolKey === 'backgroundRemoval' && editorStore.selectedTabPerTool['backgroundRemoval'] === 'manual') || editorStore.selectedToolKey === 'brush'
 })
+
+/**
+ * Cursor style based on the selected tool
+ */
+const cursorStyle = computed(() => {
+  let cursor = 'default'
+  if (drawingCursor.value) {
+    cursor = 'none'
+  } else if (editorStore.selectedToolKey === 'backgroundRemoval' && editorStore.selectedTabPerTool['backgroundRemoval'] === 'auto') {
+    cursor = 'crosshair'
+  }
+  return cursor
+})
 </script>
 
 <template>
   <div class="viewport-wrapper" id="viewport" @mousedown="onMouseDownSelect" @dragover="handleDragOver"
     @dragleave="handleDragLeave" @drop="handleDrop" @mouseleave="onMouseLeave" @mouseenter="onMouseEnter"
-    :style="{ cursor: drawingCursor ? 'none' : 'default' }">
+    :style="{ cursor: cursorStyle }">
     <LoadingSpinner />
 
     <div class="viewport-content-wrapper" ref="wrapperRef" @wheel.passive="setZoomAndScroll" @mousedown="startPan"
@@ -343,7 +356,7 @@ const drawingCursor = computed(() => {
         </div>
         <div v-if="mouseX !== null" class="ruler-cursor-mark horizontal" :style="{ left: mouseX + 'px' }">
           <span class="ruler-cursor-label horizontal" :class="{ 'active': cursorPosXSameAsImageWidth }">{{ cursorPosX
-          }}</span>
+            }}</span>
         </div>
 
       </div>
@@ -356,7 +369,7 @@ const drawingCursor = computed(() => {
         </div>
         <div v-if="mouseY !== null" class="ruler-cursor-mark vertical" :style="{ top: mouseY + 'px' }">
           <span class="ruler-cursor-label vertical" :class="{ 'active': cursorPosYSameAsImageHeight }">{{ cursorPosY
-          }}</span>
+            }}</span>
         </div>
       </div>
     </div>

@@ -116,7 +116,7 @@ const getMousePos = (event) => {
 }
 
 /**
- * Mouse down - start drawing or resizing
+ * Mouse down - start drawing or select area
  * @param event Mouse event
  */
 const onMouseDown = (event) => {
