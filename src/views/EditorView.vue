@@ -36,6 +36,7 @@ import { useInteractiveTutorial } from '@/composables/tutorial/useInteractiveTut
 import { useRouter } from 'vue-router'
 import { useSvgObjects } from '@/composables/tools/useSvgObjects';
 import { useCropTool } from '@/composables/tools/useCropTool';
+import { useBackgroundRemovalTool } from '@/composables/tools/useBackgroundRemovalTool';
 
 const { undo, redo } = useUndoRedo(useHistoryStore(), useImageStore())
 const { zoomIn, zoomOut, resetZoom, toggleZoomMode } = useZoomControl(useViewportStore())
@@ -69,6 +70,14 @@ const {
   duplicateSelectedSvgObject,
   cutSelectedSvgObject,
 } = useSvgObjects(useImageStore(), useHistoryStore(), useViewportStore(), useEditorStore(), useUiStore(), useWorkspaceStore(), t)
+
+const { applyBackgroundRemovalRender } = useBackgroundRemovalTool(
+  useImageStore(),
+  useHistoryStore(),
+  useWorkspaceStore(),
+  useEditorStore(),
+  t,
+)
 
 const imageStore = useImageStore()
 const editorStore = useEditorStore()
@@ -110,6 +119,7 @@ useKeyboardShortcuts({
   cutSelectedSvgObject,
   hideCropBox,
   showCropBox,
+  applyBackgroundRemovalRender,
 }, useUiStore(), useEditorStore());
 // ======
 

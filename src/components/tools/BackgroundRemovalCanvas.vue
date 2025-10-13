@@ -142,8 +142,7 @@ const onMouseDown = (event) => {
 
       drawLine(pos, pos, tool)
     } else if (mode === 'auto') {
-      const shiftKey = event.shiftKey
-      autoSelectSimilarRegion(pos.x, pos.y, shiftKey)
+      autoSelectSimilarRegion(pos.x, pos.y, event.shiftKey, event.altKey)
     }
   }
 }

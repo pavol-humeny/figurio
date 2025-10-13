@@ -57,6 +57,8 @@ export function useKeyboardShortcuts(actions, uiStore, editorStore) {
       const expected = shortcut.keys.map((k) => k.toLowerCase()).join('+')
       const expectedType = shortcut.type || 'keydown' // default type
 
+      // console.log(`[Shortcut] ${pressed} → ${shortcut.description}`)
+
       if (pressed === expected && type === expectedType) {
         event.preventDefault()
         event.stopImmediatePropagation()

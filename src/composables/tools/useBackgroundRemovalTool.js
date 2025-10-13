@@ -157,7 +157,7 @@ export function useBackgroundRemovalTool(imageStore, historyStore, workspaceStor
   }
 
   // ----------------------------------
-  // Manual 
+  // Manual
   // ----------------------------------
 
   /**
@@ -498,8 +498,9 @@ export function useBackgroundRemovalTool(imageStore, historyStore, workspaceStor
    * @param {number} clickX - X coordinate of click on canvas
    * @param {number} clickY - Y coordinate of click on canvas
    * @param {boolean} shiftKey - Whether Shift key is pressed (to add to selection)
+   * @param {boolean} altKey - Whether Alt key is pressed (to use eraser)
    */
-  const autoSelectSimilarRegion = (clickX, clickY, shiftKey) => {
+  const autoSelectSimilarRegion = (clickX, clickY, shiftKey, altKey) => {
     const canvas = document.getElementById('removalCanvas')
     if (!canvas) return
     const ctx = canvas.getContext('2d', { willReadFrequently: true })
@@ -521,7 +522,7 @@ export function useBackgroundRemovalTool(imageStore, historyStore, workspaceStor
     const manualData = manualImageData.data
 
     // Reset mask if not adding to selection
-    if (!shiftKey) {
+    if (!shiftKey && !altKey) {
       manualData.fill(0)
     }
 
@@ -570,17 +571,26 @@ export function useBackgroundRemovalTool(imageStore, historyStore, workspaceStor
       const dist = getDistance(r, g, b)
 
       // Convert colorRemovalThreshold from 0-1 to 0-441.67 range
-      const maxDist = Math.sqrt(255 ** 2 + 255 ** 2 + 255 ** 2) // ~441.67
+      const maxDist = Math.sqrt(255 ** 2 + 255 ** 2 + 255 ** 2) / 2 // ~441.67 / 2 = 220.83 - half to make it less sensitive
       const colorThreshold = maxDist * autoRemovalThreshold.value
 
       if (dist <= colorThreshold) {
         visited[idx] = 1
 
-        // Apply highlight color to mask
-        manualData[pix] = fillR
-        manualData[pix + 1] = fillG
-        manualData[pix + 2] = fillB
-        manualData[pix + 3] = fillA
+        // Apply or erase highlight based on modifier key
+        if (altKey) {
+          // Erase region: set alpha to 0 (fully transparent)
+          manualData[pix] = 0
+          manualData[pix + 1] = 0
+          manualData[pix + 2] = 0
+          manualData[pix + 3] = 0
+        } else {
+          // Add region: apply highlight color
+          manualData[pix] = fillR
+          manualData[pix + 1] = fillG
+          manualData[pix + 2] = fillB
+          manualData[pix + 3] = fillA
+        }
 
         stack.push([x + 1, y])
         stack.push([x - 1, y])
@@ -719,7 +729,6 @@ export function useBackgroundRemovalTool(imageStore, historyStore, workspaceStor
    * @param {number} radius - radius in pixels
    */
   const featherMask = (maskData, width, height, strength = 0, radius = 2) => {
-    console.log('Feathering mask with radius', radius, 'and strength', strength)
     if (radius <= 0 || strength <= 0) return maskData // No feathering
 
     const data = maskData.data
@@ -861,14 +870,14 @@ export function useBackgroundRemovalTool(imageStore, historyStore, workspaceStor
     })
 
     await applyBackgroundRemovalRender()
-
-    historyStore.push(imageStore.getSnapshot(t))
   }
 
   /**
    * Apply background removal rendering
    */
   const applyBackgroundRemovalRender = async () => {
+    if (editorStore.selectedToolKey !== 'backgroundRemoval') return
+
     if (!imageStore.getRenderedImage({ t, renderCall: false })) return
 
     if (imageStore.fileType === 'pdf') {
@@ -911,7 +920,10 @@ export function useBackgroundRemovalTool(imageStore, historyStore, workspaceStor
       }
     }
 
-    applyRemovalRender()
+    const changed = applyRemovalRender()
+    if (!changed) return // Skip history if mask was empty
+
+    historyStore.push(imageStore.getSnapshot(t))
   }
 
   /**
@@ -924,6 +936,16 @@ export function useBackgroundRemovalTool(imageStore, historyStore, workspaceStor
     const ctxMask = manualCanvas.getContext('2d')
     const maskData = ctxMask.getImageData(0, 0, manualCanvas.width, manualCanvas.height)
     const maskPixels = maskData.data
+
+    // Check if mask contains any non-zero alpha (non-empty mask)
+    let hasMask = false
+    for (let i = 3; i < maskPixels.length; i += 4) {
+      if (maskPixels[i] > 0) {
+        hasMask = true
+        break
+      }
+    }
+    if (!hasMask) return false // mask is empty, skip processing
 
     const renderedImage = useBaseImage.value
       ? imageStore.originalImage
@@ -969,6 +991,8 @@ export function useBackgroundRemovalTool(imageStore, historyStore, workspaceStor
 
     // Clear manual selection
     clearAllSelections()
+
+    return true // success
   }
 
   return {
@@ -996,5 +1020,6 @@ export function useBackgroundRemovalTool(imageStore, historyStore, workspaceStor
     boundaryOffset,
     autoSelectSimilarRegion,
     autoRemovalThreshold,
+    applyBackgroundRemovalRender,
   }
 }

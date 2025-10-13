@@ -298,4 +298,11 @@ export const keyboardShortcuts = [
     description: 'Show crop box',
     type: 'keyup',
   },
+
+  // Background removal tool
+  {
+    keys: ['delete'],
+    action: 'applyBackgroundRemovalRender',
+    description: 'Delete background based on current selection',
+  },
 ]

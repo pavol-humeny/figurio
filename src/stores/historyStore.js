@@ -21,6 +21,7 @@ export const useHistoryStore = defineStore('historyStore', {
      * @param {any} stateSnapshot - Deep copy of the current state
      */
     push(stateSnapshot) {
+      if (!stateSnapshot) return
       // Remove all "future" states after current index
       this.history = this.history.slice(0, this.currentIndex + 1)
 
