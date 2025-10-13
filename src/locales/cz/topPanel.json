@@ -13,7 +13,8 @@
     }
   },
   "closeFileButton": {
-    "tip": "Zavírá aktuálně otevřený soubor",
+    "tip": "Zavřít aktuálně otevřený soubor",
+    "tipMultiple": "Zavřít aktuálně otevřené soubory",
     "toast": {
       "success": {
         "title": "Soubor zavřen",

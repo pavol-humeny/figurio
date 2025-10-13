@@ -7,6 +7,7 @@ import { useI18n } from 'vue-i18n'
 import { useWorkspaceStore } from '@/stores/workspaceStore'
 
 const { t } = useI18n()
+const workspaceStore = useWorkspaceStore()
 
 /**
  * Logic for the close file button.
@@ -15,7 +16,9 @@ const { disabled, closeFile } = useCloseFileButton(useImageStore(), useWorkspace
 </script>
 
 <template>
-  <ItemTip :text="!disabled ? $t('topPanel.closeFileButton.tip') : ''" position="bottom">
+  <ItemTip
+    :text="!disabled ? (workspaceStore.numberOfTabs > 1 ? $t('topPanel.closeFileButton.tipMultiple') : $t('topPanel.closeFileButton.tip')) : ''"
+    position="bottom">
     <button class="button button-circle button-control" @click="closeFile" :class="{ disabled: disabled }">
       <BaseIcon name="IconCross" :size="26" />
     </button>

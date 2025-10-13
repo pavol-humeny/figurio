@@ -14,6 +14,7 @@
   },
   "closeFileButton": {
     "tip": "Closes the currently opened file",
+    "tipMultiple": "Closes the currently opened files",
     "toast": {
       "success": {
         "title": "File closed",
