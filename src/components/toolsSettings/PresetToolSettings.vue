@@ -675,7 +675,7 @@ const tabs = ['myPresets', 'createPreset']
               <!-- Expanded header -->
               <div
                 v-if="newPreset.frame.phoneHeaderEnabled && isPhoneFrame(newPreset.frame.type) && newPreset.frame.enabled"
-                class="content-aligned two-items" :class="!isModifyingPreset ? 'disabled' : ''">
+                class="content-aligned two-items">
                 <p>
                   {{ t('tools.preset.settings.createPreset.presetValues.frame.useExpandedPhoneHeader') }}
                 </p>
