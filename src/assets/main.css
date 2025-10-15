@@ -202,6 +202,7 @@ input[type='number'] {
   flex-direction: column;
   align-items: center;
 }
+
 .settings-content-wrapper {
   position: relative;
   width: 100%;
@@ -212,6 +213,24 @@ input[type='number'] {
   gap: 10px;
   padding: 20px 0px 20px 0;
   border-bottom: var(--border-ui);
+}
+
+.settings-content-wrapper-last {
+  border-bottom: none;
+}
+
+.scrollable-settings {
+  flex: 1;
+  width: 100%;
+  overflow-y: auto;
+}
+
+.sticky-bottom-settings {
+  position: sticky;
+  bottom: 0;
+  width: 100%;
+  border-top: var(--border-ui);
+  box-shadow: 0px 2px 6px var(--border-c);
 }
 
 .settings-content-title {

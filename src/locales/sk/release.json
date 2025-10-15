@@ -6,6 +6,15 @@
     ]
   },
   "versions": {
+    "4.12.1":{
+      "label": "4.12.1",
+      "date":"15.10. 2025",
+      "improvements": {
+        "items": [
+          "Zaistenie, aby hlavné tlačidlá boli vždy viditeľné v spodnej časti nastavení nástrojov"
+        ]
+      }
+    },
     "4.12.0": {
       "label": "4.12.0",
       "date": "13.10. 2025",
