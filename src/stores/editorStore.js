@@ -100,6 +100,7 @@ export const useEditorStore = defineStore('editorStore', {
       },
       blur: {
         blurStrength: 5,
+        edgeFade: 10,
       },
       brush: {
         color: '#000000',

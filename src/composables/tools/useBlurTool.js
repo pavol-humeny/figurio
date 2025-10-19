@@ -13,6 +13,7 @@ const localBlurSettings = ref({
   height: 0,
   rotation: 0,
   blurStrength: 5,
+  edgeFade: 10,
 })
 
 /**
@@ -116,17 +117,36 @@ export function useBlurTool(imageStore, historyStore, editorStore, t) {
    * @param {number} params.height - The height of the clipPath
    * @param {number} params.rotation - The rotation of the clipPath
    */
-  const addOrReplaceClipDef = (id, { x, y, width, height, rotation }) => {
+  const addOrReplaceClipDef = (id, { x, y, width, height, rotation, fade }) => {
+    // const cx = x + width / 2
+    // const cy = y + height / 2
+    // const transform = rotation !== 0 ? ` transform="rotate(${rotation}, ${cx}, ${cy})"` : ''
+    // const def = `
+    //   <clipPath id="clip-${id}">
+    //     <rect x="${x}" y="${y}" width="${width}" height="${height}"${transform} />
+    //   </clipPath>
+    // `
+
+    // imageStore.addOrReplaceSvgDef(`clip-${id}`, def)
+
+    console.log('fade', fade)
+
     const cx = x + width / 2
     const cy = y + height / 2
     const transform = rotation !== 0 ? ` transform="rotate(${rotation}, ${cx}, ${cy})"` : ''
-    const def = `
-      <clipPath id="clip-${id}">
-        <rect x="${x}" y="${y}" width="${width}" height="${height}"${transform} />
-      </clipPath>
-    `
 
-    imageStore.addOrReplaceSvgDef(`clip-${id}`, def)
+    // Mask with sharp rect but blurred edges
+    const def = `
+    <mask id="fade-mask-${id}">
+      <rect x="${x}" y="${y}" width="${width}" height="${height}" fill="white" filter="url(#mask-blur-${id})"${transform} />
+    </mask>
+
+    <filter id="mask-blur-${id}">
+      <feGaussianBlur stdDeviation="${fade}" />
+    </filter>
+  `
+
+    imageStore.addOrReplaceSvgDef(`fade-mask-${id}`, def)
   }
 
   /**
@@ -157,7 +177,7 @@ export function useBlurTool(imageStore, historyStore, editorStore, t) {
       y="0"
       width="${imageStore.fileDimensions.width}"
       height="${imageStore.fileDimensions.height}"
-      clip-path="url(#clip-${id})"
+      mask="url(#fade-mask-${id})"
       filter="url(#blur-filter-${id})"
     />
   `
@@ -186,6 +206,7 @@ export function useBlurTool(imageStore, historyStore, editorStore, t) {
     activeObject.value = null
 
     localBlurSettings.value.blurStrength = editorStore.toolsConfig.blur.blurStrength
+    localBlurSettings.value.edgeFade = editorStore.toolsConfig.blur.edgeFade
   }
 
   /**
@@ -218,6 +239,9 @@ export function useBlurTool(imageStore, historyStore, editorStore, t) {
 
           // Blur strength
           localBlurSettings.value.blurStrength = parseFloat(attrs['data-blur-strength']) || 5
+
+          // Edge fade
+          localBlurSettings.value.edgeFade = parseFloat(attrs['data-edge-fade']) || 10
         }
       } else {
         hidePositionAndDimensions.value = true
@@ -256,6 +280,7 @@ export function useBlurTool(imageStore, historyStore, editorStore, t) {
       rotation: attrs.transform
         ? parseFloat(attrs.transform.match(/rotate\(([^)]+)\)/)?.[1]) || 0
         : 0,
+      fade: attrs['data-edge-fade'] || 10,
     })
   })
 
@@ -288,6 +313,7 @@ export function useBlurTool(imageStore, historyStore, editorStore, t) {
             rotation: attrs.transform
               ? parseFloat(attrs.transform.match(/rotate\(([^)]+)\)/)?.[1]) || 0
               : 0,
+            fade: attrs['data-edge-fade'] || 10,
           })
         }
       })
@@ -328,12 +354,16 @@ export function useBlurTool(imageStore, historyStore, editorStore, t) {
       width: settings.width,
       height: settings.height,
       rotation: settings.rotation,
+      fade: settings.edgeFade,
     })
 
     addOrReplaceFilterDef(id, settings.blurStrength)
 
     // Set blur strength
     attrs['data-blur-strength'] = settings.blurStrength
+
+    // Set edge fade
+    attrs['data-edge-fade'] = settings.edgeFade
 
     // Push to history only when explicitly requested
     if (commit) {
@@ -413,6 +443,7 @@ export function useBlurTool(imageStore, historyStore, editorStore, t) {
       width: settings.width,
       height: settings.height,
       rotation: settings.rotation,
+      fade: settings.edgeFade,
     })
     addOrReplaceFilterDef(id, settings.blurStrength)
 
@@ -431,6 +462,20 @@ export function useBlurTool(imageStore, historyStore, editorStore, t) {
 
   onMounted(() => {
     resetBlurSettings()
+  })
+
+  /**
+   * Maximum blur strength based on image dimensions
+   */
+  const maxBlurStrength = computed(() => {
+    return imageStore.getSmallerImageDimension() / 10
+  })
+
+  /**
+   * Maximum edge fade based on image dimensions
+   */
+  const maxEdgeFade = computed(() => {
+    return imageStore.getSmallerImageDimension() / 30
   })
 
   return {
@@ -454,5 +499,7 @@ export function useBlurTool(imageStore, historyStore, editorStore, t) {
     addOrReplaceClipDef,
     addOrReplaceFilterDef,
     addBlurImage,
+    maxBlurStrength,
+    maxEdgeFade,
   }
 }

@@ -409,6 +409,10 @@
           "label": "Intenzita rozmazania",
           "tip": "Nastav silu rozmazania"
         },
+        "edgeFade": {
+          "label": "Zoslabovanie okrajov",
+          "tip": "Uprav zoslabovanie efektu rozmazania smerom k okrajom"
+        },
         "zIndex": {
           "label": "Z-index",
           "bringToFrontButton": {

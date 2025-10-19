@@ -113,7 +113,7 @@ const {
 
       <!-- Rotate icon  -->
       <foreignObject
-        v-if="!isRotating && !isInMultiSelection && object.tag !== 'line' && object.class !== 'magnifyArea'"
+        v-if="!isRotating && !isInMultiSelection && object.tag !== 'line' && object.class !== 'magnifyArea' && object.class !== 'blur'"
         :x="isRotateIconInside ? boundingBox.x + boundingBox.width : boundingBox.x - controlIconSize"
         :y="boundingBox.y + boundingBox.height / 2 - controlIconSize / 2" :width="controlIconSize"
         :height="controlIconSize" @mousedown.stop.prevent="onMouseDownRotate($event)" style="cursor: grab">

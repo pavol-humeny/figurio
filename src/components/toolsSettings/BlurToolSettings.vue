@@ -26,7 +26,7 @@ const editorStore = useEditorStore();
 const {
   localBlurSettings,
   applyLocalBlurSettings,
-  resetRotationAngle,
+  // resetRotationAngle,
   maxBlurPositionX,
   maxBlurPositionY,
   hidePositionAndDimensions,
@@ -38,6 +38,8 @@ const {
   tmpBlurHeight,
   isDimensionsLinked,
   updateDimension,
+  maxBlurStrength,
+  maxEdgeFade,
 } = useBlurTool(useImageStore(), useHistoryStore(), useEditorStore(), t);
 
 
@@ -131,7 +133,7 @@ const {
         </div>
 
         <!-- Rotation -->
-        <div v-if="!editorStore.isSvgObjectResizing && !hidePositionAndDimensions" class="settings-content-wrapper">
+        <!-- <div v-if="!hidePositionAndDimensions" class="settings-content-wrapper">
           <div class="content-wrapper">
             <div class="content-title">
               <p>
@@ -144,7 +146,7 @@ const {
                 :tip="$t('tools.blur.settings.general.rotation.tip')" position="bottom-left" />
             </div>
           </div>
-        </div>
+        </div> -->
 
         <!-- Blur strength -->
         <div class="settings-content-wrapper">
@@ -156,9 +158,23 @@ const {
             </p>
           </div>
           <div class="content-wrapper">
-            <DefaultSlider v-model="localBlurSettings.blurStrength" :min="1" :max="10" :step="1"
+            <DefaultSlider v-model="localBlurSettings.blurStrength" :min="1" :max="maxBlurStrength" :step="1"
               @update="applyLocalBlurSettings(false)" @commit="applyLocalBlurSettings(true)" showValue
               :tip="$t('tools.blur.settings.general.blurStrength.tip')" position="bottom-left" />
+          </div>
+        </div>
+
+        <!-- Edge fade -->
+        <div class="settings-content-wrapper">
+          <div class="content-title">
+            <p>
+              {{ $t('tools.blur.settings.general.edgeFade.label') }}
+            </p>
+          </div>
+          <div class="content-wrapper">
+            <DefaultSlider v-model="localBlurSettings.edgeFade" :min="1" :max="maxEdgeFade" :step="1"
+              @update="applyLocalBlurSettings(false)" @commit="applyLocalBlurSettings(true)" showValue
+              :tip="$t('tools.blur.settings.general.edgeFade.tip')" position="bottom-left" />
           </div>
         </div>
 

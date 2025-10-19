@@ -409,6 +409,10 @@
           "label": "Blur strength",
           "tip": "Adjust the strength of the blur effect"
         },
+        "edgeFade": {
+          "label": "Edge fade",
+          "tip": "Adjust the fade of the blur effect towards the edges"
+        },
         "zIndex": {
           "label": "Z-index",
           "bringToFrontButton": {

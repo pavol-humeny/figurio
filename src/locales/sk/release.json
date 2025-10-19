@@ -6,6 +6,15 @@
     ]
   },
   "versions": {
+    "4.12.3":{
+      "label": "4.12.3",
+      "date":"15.10. 2025",
+      "newFeatures": {
+        "items": [
+          "Pridanie nastavenia edge fade do nástroja rozmazania"
+        ]
+      }
+    },
     "4.12.2":{
       "label": "4.12.2",
       "date":"15.10. 2025",

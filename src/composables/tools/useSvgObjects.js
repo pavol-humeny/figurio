@@ -332,6 +332,8 @@ export function useSvgObjects(
         y: attrs.y,
         width: attrs.width,
         height: attrs.height,
+        rotation: attrs.transform || 0,
+        fade: attrs['data-edge-fade'] || 10,
       })
       blurTool.addOrReplaceFilterDef(newObject.id, attrs['data-blur-strength'])
       blurTool.addBlurImage(newObject.id)
@@ -883,6 +885,7 @@ export function useSvgObjects(
     let objectCornerRadius = 0
     let objectLineType = 'solid'
     let objectBlurStrength
+    let objectEdgeFade
     let lineEnd
 
     if (objectClass === 'shape') {
@@ -911,15 +914,16 @@ export function useSvgObjects(
       if (objectType === 'line') {
         lineEnd = lineArrowEnd
       }
-      log('line end: ', lineEnd)
     } else if (objectClass === 'blur') {
-      const { blurStrength, name } = blurTool.getBlurAttributes(id)
+      const { blurStrength, name, edgeFade } = blurTool.getBlurAttributes(id)
 
       objectName = name
 
       objectBlurStrength = blurStrength
 
-      objectFillColor = '#00000005'
+      objectEdgeFade = edgeFade
+
+      objectFillColor = '#00000000'
     }
 
     if (objectType === 'rect') {
@@ -936,6 +940,7 @@ export function useSvgObjects(
       // Set blur strength
       if (objectClass === 'blur') {
         base.attrs['data-blur-strength'] = objectBlurStrength
+        base.attrs['data-edge-fade'] = objectEdgeFade
       }
 
       // Corner radius
@@ -1363,6 +1368,7 @@ export function useSvgObjects(
         rotation: attrs.transform
           ? parseFloat(attrs.transform.match(/rotate\(([^)]+)\)/)?.[1]) || 0
           : 0,
+        fade: attrs['data-edge-fade'] || 10,
       })
     }
 

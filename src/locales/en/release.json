@@ -4,6 +4,15 @@
     "items": []
   },
   "versions":{
+    "4.12.3":{
+      "label": "4.12.3",
+      "date":"15.10. 2025",
+      "newFeatures": {
+        "items": [
+          "Add edge fade setting to blur tool"
+        ]
+      }
+    },
     "4.12.2":{
       "label": "4.12.2",
       "date":"15.10. 2025",
