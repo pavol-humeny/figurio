@@ -5,12 +5,14 @@ import { useHistoryStore } from '@/stores/historyStore'
 import { useViewportStore } from '@/stores/viewportStore'
 import { useI18n } from 'vue-i18n'
 import { useEditorStore } from '@/stores/editorStore'
+import { useToastModal } from '@/composables/modals/useToastModal'
 
 const { t } = useI18n()
 const imageStore = useImageStore()
 const historyStore = useHistoryStore()
 const viewportStore = useViewportStore()
 const editorStore = useEditorStore()
+const { showToastModal } = useToastModal()
 
 /**
  * Reference to the canvas
@@ -92,8 +94,6 @@ const drawLine = (from, to, tool) => {
  * Drawing logic
  */
 const onMouseDown = (event) => {
-  if (imageStore.needRasterization) return
-
   if (editorStore.isModalOpenFlag) return
 
   if (editorStore.selectedToolKey !== 'brush') return
@@ -102,6 +102,16 @@ const onMouseDown = (event) => {
 
   const viewport = document.getElementById('viewport-content')
   if (!viewport.contains(event.target)) return
+
+  if (imageStore.needRasterization) {
+    // Show warning toast
+    showToastModal(
+      'warning',
+      t('tools.brush.needRasterizationWarning.title'),
+      t('tools.brush.needRasterizationWarning.message'),
+    )
+    return
+  }
 
   isDrawing.value = true
   lastPos.value = getMousePos(event)

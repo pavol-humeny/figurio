@@ -374,6 +374,10 @@
           "tip": "Clear all painted areas from the image"
         }
       }
+    },
+    "needRasterizationWarning": {
+      "title": "Rasterization Required",
+      "message": "The image needs to be rasterized before using the brush or eraser tool. Rasterization converts the image into a pixel-based format suitable for painting."
     }
   },
   "blur": {

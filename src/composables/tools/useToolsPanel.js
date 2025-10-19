@@ -167,30 +167,30 @@ export function useToolsPanel(editorStore, imageStore, uiStore, t) {
       return
     }
 
-    if (imageStore.needMergeOverlay) {
-      if (
-        toolKey === 'crop' ||
-        toolKey === 'grayscale' ||
-        toolKey === 'backgroundRemoval' ||
-        toolKey === 'blur' ||
-        toolKey === 'shape' ||
-        toolKey === 'text' ||
-        toolKey === 'magnifyArea' ||
-        toolKey === 'preset'
-      ) {
-        const confirmed = await showConfirmModal(
-          t('tools.confirmNeedOverlayMerge.title'),
-          t('tools.confirmNeedOverlayMerge.message'),
-          t('tools.confirmNeedOverlayMerge.cancel'),
-          t('tools.confirmNeedOverlayMerge.confirm'),
-        )
-        if (confirmed) {
-          imageStore.mergeOverlayIntoImage()
-        } else {
-          return
-        }
-      }
-    }
+    // if (imageStore.needMergeOverlay) {
+    //   if (
+    //     toolKey === 'crop' ||
+    //     toolKey === 'grayscale' ||
+    //     toolKey === 'backgroundRemoval' ||
+    //     toolKey === 'blur' ||
+    //     toolKey === 'shape' ||
+    //     toolKey === 'text' ||
+    //     toolKey === 'magnifyArea' ||
+    //     toolKey === 'preset'
+    //   ) {
+    //     const confirmed = await showConfirmModal(
+    //       t('tools.confirmNeedOverlayMerge.title'),
+    //       t('tools.confirmNeedOverlayMerge.message'),
+    //       t('tools.confirmNeedOverlayMerge.cancel'),
+    //       t('tools.confirmNeedOverlayMerge.confirm'),
+    //     )
+    //     if (confirmed) {
+    //       imageStore.mergeOverlayIntoImage()
+    //     } else {
+    //       return
+    //     }
+    //   }
+    // }
 
     log('Toggle tool:', toolKey, 'Tab:', tabKey)
 

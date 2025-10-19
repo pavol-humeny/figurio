@@ -374,6 +374,10 @@
           "tip": "Vymazať všetky natreté oblasti z obrázka"
         }
       }
+    },
+    "needRasterizationWarning": {
+      "title": "Vyžaduje sa rasterizácia",
+      "message": "Obrázok musí byť rasterizovaný pred použitím nástroja štetec alebo guma. Rasterizácia prevádza obrázok do formátu založeného na pixele, ktorý je vhodný na maľovanie."
     }
   },
   "blur": {
