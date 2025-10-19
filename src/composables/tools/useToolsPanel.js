@@ -8,7 +8,7 @@ const { log } = useConsole()
 
 /**
  * Logic for managing the left tools panel
- *
+*
  * @param {ReturnType<typeof useEditorStore>} editorStore - Editor store instance
  * @param {ReturnType<typeof useImageStore>} imageStore - Image store instance
  * @param {Function} t - Translation function from vue-i18n
@@ -27,7 +27,6 @@ const { log } = useConsole()
  */
 export function useToolsPanel(editorStore, imageStore, uiStore, t) {
   const { showToastModal } = useToastModal()
-  const { showConfirmModal } = useConfirmModal()
 
   /**
    * Reference to the scrollable tools panel element

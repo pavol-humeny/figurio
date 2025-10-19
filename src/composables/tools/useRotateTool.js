@@ -3,7 +3,8 @@ import { useSendEvent } from '@/composables/common/useSendEvent'
 import { useMath } from '../common/useMath'
 import { degrees, PDFDocument } from 'pdf-lib'
 import { useConsole } from '@/composables/common/useConsole.js'
-const { log, error } = useConsole()
+import { useToastModal } from '../modals/useToastModal'
+const { log, error, warn } = useConsole()
 
 /**
  * Logic for the rotate tool including confirmation, operation registration, and canvas rendering
@@ -18,6 +19,7 @@ const { log, error } = useConsole()
  */
 export function useRotateTool(imageStore, historyStore, t) {
   const { showConfirmModal } = useConfirmModal()
+  const { showToastModal } = useToastModal()
 
   const { round } = useMath()
 
@@ -41,6 +43,15 @@ export function useRotateTool(imageStore, historyStore, t) {
       } else {
         return
       }
+    }
+
+    if (imageStore.needMergeOverlay) {
+      imageStore.mergeOverlayIntoImage()
+      showToastModal(
+        'info',
+        t('tools.infoOverlayWasMerged.title'),
+        t('tools.infoOverlayWasMerged.message'),
+      )
     }
 
     // Register operation in the operation list

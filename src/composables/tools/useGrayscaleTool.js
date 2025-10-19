@@ -2,6 +2,7 @@ import { useConfirmModal } from '../modals/useConfirmModal'
 import { computed } from 'vue'
 import { useSendEvent } from '@/composables/common/useSendEvent'
 import { useMath } from '../common/useMath'
+import { useToastModal } from '../modals/useToastModal'
 /**
  * Logic for applying grayscale
  *
@@ -13,6 +14,7 @@ import { useMath } from '../common/useMath'
 export function useGrayscaleTool(imageStore, historyStore, t) {
   const { showConfirmModal } = useConfirmModal()
   const { round } = useMath()
+  const { showToastModal } = useToastModal()
 
   /**
    * Check if grayscale operation is already applied
@@ -50,6 +52,15 @@ export function useGrayscaleTool(imageStore, historyStore, t) {
       } else {
         return
       }
+    }
+
+    if (imageStore.needMergeOverlay) {
+      imageStore.mergeOverlayIntoImage()
+      showToastModal(
+        'info',
+        t('tools.infoOverlayWasMerged.title'),
+        t('tools.infoOverlayWasMerged.message'),
+      )
     }
 
     imageStore.addImageOperation({

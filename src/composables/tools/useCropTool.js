@@ -996,6 +996,20 @@ export function useCropTool(
    * Fit the crop box to the content
    */
   const fitCrop = () => {
+    let overlayWasMerged = false
+    if (imageStore.needMergeOverlay) {
+      imageStore.mergeOverlayIntoImage()
+      overlayWasMerged = true
+    }
+
+    if (overlayWasMerged) {
+      showToastModal(
+        'info',
+        t('tools.infoOverlayWasMerged.title'),
+        t('tools.infoOverlayWasMerged.message'),
+      )
+    }
+
     const newCropBox = calculateAutoCropBoxCanny(useBaseImage.value)
 
     if (
@@ -1368,6 +1382,15 @@ export function useCropTool(
       if (!confirmed) return
 
       await imageStore.rasterize(t, true)
+    }
+
+    if (imageStore.needMergeOverlay) {
+      imageStore.mergeOverlayIntoImage()
+      showToastModal(
+        'info',
+        t('tools.infoOverlayWasMerged.title'),
+        t('tools.infoOverlayWasMerged.message'),
+      )
     }
 
     imageStore.addImageOperation({

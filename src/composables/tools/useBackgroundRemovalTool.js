@@ -2,6 +2,7 @@ import { computed, ref, watch } from 'vue'
 import { useConfirmModal } from '../modals/useConfirmModal'
 import { useSendEvent } from '@/composables/common/useSendEvent'
 import { editorConfig } from '@/config/editorConfig'
+import { useToastModal } from '../modals/useToastModal'
 
 /**
  * Removal threshold for background removal
@@ -25,6 +26,7 @@ const manualToolSize = ref(0)
 
 export function useBackgroundRemovalTool(imageStore, historyStore, workspaceStore, editorStore, t) {
   const { showConfirmModal } = useConfirmModal()
+  const { showToastModal } = useToastModal()
 
   /**
    * Watch for manual tool size changes in store and update local value
@@ -449,6 +451,16 @@ export function useBackgroundRemovalTool(imageStore, historyStore, workspaceStor
   const selectColorClick = () => {
     const canvas = document.getElementById('removalCanvas')
     if (!canvas) return
+
+    if (imageStore.needMergeOverlay) {
+      imageStore.mergeOverlayIntoImage()
+      showToastModal(
+        'info',
+        t('tools.infoOverlayWasMerged.title'),
+        t('tools.infoOverlayWasMerged.message'),
+      )
+    }
+
     const ctx = canvas.getContext('2d')
 
     const width = canvas.width

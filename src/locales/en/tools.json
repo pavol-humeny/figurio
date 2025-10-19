@@ -1070,6 +1070,10 @@
     "cancel": "Cancel",
     "confirm": "Merge and continue"
   },
+  "infoOverlayWasMerged":{
+    "title": "Canvas overlay merge",
+    "message": "Canvas overlay was merged with the main image to proceed with this operation."
+  },
   "toolIsNotAvailable": {
     "tip": "This tool is not available",
     "title": "Tool is not available",

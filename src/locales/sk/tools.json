@@ -1070,6 +1070,10 @@
     "cancel": "Zrušiť",
     "confirm": "Zlúčiť a pokračovať"
   },
+  "infoOverlayWasMerged": {
+    "title": "Zlúčenie vrstvy plátna",
+    "message": "Vrstva plátna bola zlúčená s hlavním obrázkom, aby bolo možné pokračovať v tejto operácii."
+  },
   "toolIsNotAvailable": {
     "tip": "Tento nástroj nie je k dispozícii",
     "title": "Nástroj nie je k dispozícii",

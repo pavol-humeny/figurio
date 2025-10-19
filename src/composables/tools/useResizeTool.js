@@ -184,6 +184,15 @@ export function useResizeTool(imageStore, historyStore, viewportStore, t) {
       }
     }
 
+    if (imageStore.needMergeOverlay) {
+      imageStore.mergeOverlayIntoImage()
+      showToastModal(
+        'info',
+        t('tools.infoOverlayWasMerged.title'),
+        t('tools.infoOverlayWasMerged.message'),
+      )
+    }
+
     imageStore.addImageOperation({
       type: 'resize',
       resizeDimensions: {
