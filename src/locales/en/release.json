@@ -4,6 +4,15 @@
     "items": []
   },
   "versions":{
+    "4.12.4":{
+      "label": "4.12.4",
+      "date":"15.10. 2025",
+      "bugFixes": {
+        "items": [
+          "Fixed issue with number input not processing smaller value than minimum"
+        ]
+      }
+    },
     "4.12.3":{
       "label": "4.12.3",
       "date":"15.10. 2025",
