@@ -18,7 +18,6 @@ import { useWorkspaceStore } from '@/stores/workspaceStore';
 
 const { t } = useI18n();
 const imageStore = useImageStore();
-const editorStore = useEditorStore();
 
 /**
  * Logic of blur tool

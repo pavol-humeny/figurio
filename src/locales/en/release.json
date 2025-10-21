@@ -4,6 +4,15 @@
     "items": []
   },
   "versions":{
+    "4.13.0":{
+      "label": "4.13.0",
+      "date":"21.10. 2025",
+      "bugFixes": {
+        "items": [
+          "Fixed issue blur object edge fade not working correctly"
+        ]
+      }
+    },
     "4.12.4":{
       "label": "4.12.4",
       "date":"15.10. 2025",

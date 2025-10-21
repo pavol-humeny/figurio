@@ -129,23 +129,29 @@ export function useBlurTool(imageStore, historyStore, editorStore, t) {
 
     // imageStore.addOrReplaceSvgDef(`clip-${id}`, def)
 
-    console.log('fade', fade)
-
     const cx = x + width / 2
     const cy = y + height / 2
     const transform = rotation !== 0 ? ` transform="rotate(${rotation}, ${cx}, ${cy})"` : ''
 
     // Mask with sharp rect but blurred edges
     const def = `
-    <mask id="fade-mask-${id}">
-      <rect x="${x}" y="${y}" width="${width}" height="${height}" fill="white" filter="url(#mask-blur-${id})"${transform} />
-    </mask>
+        <defs>
+          <filter id="mask-blur-${id}" x="-50%" y="-50%" width="200%" height="200%" filterUnits="objectBoundingBox">
+            <!-- Gaussian blur applied with extra margin so edges don't clip -->
+            <feGaussianBlur stdDeviation="${fade}" />
+          </filter>
 
-    <filter id="mask-blur-${id}">
-      <feGaussianBlur stdDeviation="${fade}" />
-    </filter>
-  `
-
+          <mask id="fade-mask-${id}" maskUnits="userSpaceOnUse">
+            <rect
+              x="${x}" y="${y}"
+              width="${width}" height="${height}"
+              fill="white"
+              filter="url(#mask-blur-${id})"
+              ${transform}
+            />
+          </mask>
+        </defs>
+      `
     imageStore.addOrReplaceSvgDef(`fade-mask-${id}`, def)
   }
 
