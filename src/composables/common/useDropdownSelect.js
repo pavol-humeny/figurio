@@ -1,4 +1,4 @@
-import { ref, watch, onMounted, onBeforeUnmount, computed } from 'vue'
+import { ref, watch, onMounted, onBeforeUnmount, computed, nextTick } from 'vue'
 
 /**
  * Logic for the <DropdownSelect> component
@@ -117,12 +117,70 @@ export function useDropdownSelect(props, emit) {
     }
   }
 
-  // Hide the dropdown when clicking outside the component
+  /**
+   * Reference to the dropdown element
+   */
+  const dropdownRef = ref(null)
+
+  /**
+   * Adjusts the dropdown height and position based on viewport space
+   */
+  const adjustDropdownHeight = () => {
+    const dropdown = dropdownRef.value
+    const wrapper = wrapperRef.value
+    if (!dropdown || !wrapper) return
+
+    const rect = wrapper.getBoundingClientRect()
+    const viewportHeight = window.innerHeight
+    const padding = 10 // padding from viewport edges
+
+    // Space above and below the dropdown
+    const spaceBelow = viewportHeight - rect.bottom - padding
+    const spaceAbove = rect.top - padding
+
+    // Determine maximum height
+    let maxHeight
+
+    if (spaceBelow < 150 && spaceAbove > spaceBelow) {
+      // More space above - open upwards
+      maxHeight = spaceAbove
+      dropdown.style.bottom = `100%`
+      dropdown.style.top = 'auto'
+      dropdown.style.marginBottom = '4px'
+      dropdown.style.marginTop = '0'
+    } else {
+      // Open downwards
+      maxHeight = spaceBelow
+      dropdown.style.top = `100%`
+      dropdown.style.bottom = 'auto'
+      dropdown.style.marginTop = '4px'
+      dropdown.style.marginBottom = '0'
+    }
+
+    dropdown.style.maxHeight = `${Math.max(maxHeight, 40)}px`
+  }
+
+  /**
+   * Watch for dropdown visibility changes to adjust height
+   */
+  watch(showDropdown, async (val) => {
+    if (val) {
+      await nextTick()
+      adjustDropdownHeight()
+    }
+  })
+
+  /**
+   * Setup event listeners on mount and cleanup on unmount
+   * Detects outside clicks and window resize
+   */
   onMounted(() => {
     document.addEventListener('mousedown', onClickOutside)
+    window.addEventListener('resize', adjustDropdownHeight)
   })
   onBeforeUnmount(() => {
     document.removeEventListener('mousedown', onClickOutside)
+    window.removeEventListener('resize', adjustDropdownHeight)
   })
 
   return {
@@ -135,5 +193,6 @@ export function useDropdownSelect(props, emit) {
     toggleDropdown,
     wrapperRef,
     longestLabelWidth,
+    dropdownRef,
   }
 }

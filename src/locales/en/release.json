@@ -7,6 +7,11 @@
     "4.13.0":{
       "label": "4.13.0",
       "date":"21.10. 2025",
+      "improvements": {
+        "items": [
+          "Drop down menu used all available space on screen (scrollable only if needed)"
+        ]
+      },
       "bugFixes": {
         "items": [
           "Fixed issue blur object edge fade not working correctly"

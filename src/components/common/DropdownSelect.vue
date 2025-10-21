@@ -76,6 +76,7 @@ const {
   toggleDropdown,
   wrapperRef,
   longestLabelWidth,
+  dropdownRef,
 } = useDropdownSelect(props, emit)
 
 
@@ -98,7 +99,7 @@ defineExpose({ setValue })
           :style="{ transform: showDropdown ? 'rotate(180deg) translateY(-2px)' : 'rotate(0deg)' }" />
       </div>
 
-      <ul v-if="showDropdown" class="dropdown-options">
+      <ul v-if="showDropdown" class="dropdown-options" ref="dropdownRef">
         <li v-for="option in props.options" :key="option.value" @mousedown.prevent="onSelect(option.value)">
           {{ option.label }}
         </li>

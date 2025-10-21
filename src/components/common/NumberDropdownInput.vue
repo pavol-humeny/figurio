@@ -81,7 +81,8 @@
     toggleDropdown,
     setValue,
     onCommit,
-    wrapperRef
+    wrapperRef,
+    dropdownRef,
   } = useNumberDropdownInput(props, emit)
 
   /**
@@ -104,7 +105,7 @@
           :style="{ transform: showDropdown ? 'rotate(180deg) translateY(9px)' : 'rotate(0deg)' }"
           @click="toggleDropdown" />
 
-        <ul v-if="showDropdown" class="dropdown-options">
+        <ul v-if="showDropdown" class="dropdown-options" ref="dropdownRef">
           <li v-for="opt in props.options" :key="opt" @mousedown.prevent="onSelect(opt)"
             :style="{ background: props.background }">
             {{ opt }}
