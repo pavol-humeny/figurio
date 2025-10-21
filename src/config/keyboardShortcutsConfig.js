@@ -27,10 +27,10 @@ export const keyboardShortcuts = [
     description: 'Set zoom mode to classic',
   },
   {
-    keys: ['alt', 't'],
+    keys: ['alt', 'p'],
     action: 'toggleZoomMode',
-    args: ['text'],
-    description: 'Set zoom mode to text',
+    args: ['physical'],
+    description: 'Set zoom mode to physical',
   },
 
   // File management shortcuts

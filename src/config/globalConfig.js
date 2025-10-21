@@ -25,8 +25,9 @@ export const globalConfig = {
   supportedLanguages: ['en', 'sk', 'cz'],
 
   // Default zoom mode
-  zoomMode: 'classic', // 'classic', 'text'
-  textWidth: 15.2, // cm
+  zoomMode: 'classic', // 'classic', 'physical'
+  physicalContentSize: 15.2, // cm
+  calibrationFactor: 0.96, // calibration factor for physical mode
 
   // Default tool to start with
   startTool: '',

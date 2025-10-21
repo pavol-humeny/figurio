@@ -5,7 +5,7 @@ import { globalConfig } from '@/config/globalConfig'
 import { nextTick } from 'vue'
 import { useUiStore } from '@/stores/uiStore'
 import { useConsole } from '@/composables/common/useConsole.js'
-const { log, warn } = useConsole()
+const { warn } = useConsole()
 
 const { round } = useMath()
 
@@ -19,6 +19,17 @@ const { round } = useMath()
 const getString = (key, fallback) => {
   const value = localStorage.getItem(key)
   return value !== null ? value : fallback
+}
+
+/**
+ * Retrieves a number from localStorage.
+ * @param {string} key - The localStorage key to read from.
+ * @param {number} fallback - The default number if the stored value is invalid.
+ * @returns {number} The parsed number or the fallback.
+ */
+const getNumber = (key, fallback) => {
+  const value = localStorage.getItem(key)
+  return value !== null ? Number(value) : fallback
 }
 
 /**
@@ -69,8 +80,19 @@ export const useViewportStore = defineStore('viewportStore', {
     /** Zoom mode */
     zoomMode: getString(`${globalConfig.LOCAL_STORAGE_PREFIX}zoomMode`, globalConfig.zoomMode),
 
-    /** Text size */
-    textWidth: globalConfig.textWidth,
+    /** Physical content size */
+    physicalContentSize: getNumber(
+      `${globalConfig.LOCAL_STORAGE_PREFIX}physicalContentSize`,
+      globalConfig.physicalContentSize,
+    ),
+
+    /** Calibration factor for physical mode */
+    calibrationFactor: getNumber(
+      `${globalConfig.LOCAL_STORAGE_PREFIX}calibrationFactor`,
+      globalConfig.calibrationFactor,
+    ),
+    /** Maximum physical content size */
+    maxPhysicalContentSize: viewportConfig.a4paperWidth,
   }),
   getters: {
     /**
@@ -202,10 +224,31 @@ export const useViewportStore = defineStore('viewportStore', {
       this.zoomMode = mode
 
       localStorage.setItem(`${globalConfig.LOCAL_STORAGE_PREFIX}zoomMode`, this.zoomMode.toString())
+    },
 
-      log(
-        'Zoom mode set to:',
-        localStorage.getItem(`${globalConfig.LOCAL_STORAGE_PREFIX}zoomMode`),
+    /**
+     * Set physical content size
+     * @param {string} size - New physical content size
+     */
+    setPhysicalContentSize(size) {
+      this.physicalContentSize = size
+
+      localStorage.setItem(
+        `${globalConfig.LOCAL_STORAGE_PREFIX}physicalContentSize`,
+        this.physicalContentSize.toString(),
+      )
+    },
+
+    /**
+     * Set calibration factor for physical mode
+     * @param {number} factor - New calibration factor
+     */
+    setCalibrationFactor(factor) {
+      this.calibrationFactor = factor
+
+      localStorage.setItem(
+        `${globalConfig.LOCAL_STORAGE_PREFIX}calibrationFactor`,
+        this.calibrationFactor.toString(),
       )
     },
 

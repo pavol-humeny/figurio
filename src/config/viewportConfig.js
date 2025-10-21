@@ -19,5 +19,8 @@ export const viewportConfig = {
   // Crop
   cropHandleSize: 20,
   cropHandleBorderMultiplier: 1 / 9,
-  cropBorderMultiplier: 1 / 6
+  cropBorderMultiplier: 1 / 6,
+
+  // Zoom mode - physical
+  defaultPxPerCm: 96 / 2.54, // 1 cm = ~37.79 px @96DPI
 }

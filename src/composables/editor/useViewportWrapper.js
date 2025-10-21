@@ -457,20 +457,24 @@ export function useViewportWrapper(viewportStore, imageStore, editorStore, uiSto
 
     if (mode === 'classic') {
       // Classic fit
+
+      console.warn('content.Width.value', contentWidth.value)
+
       const scaleX = (wrapperWidth.value - rulerCorrection) / (contentWidth.value + frameWidth)
       const scaleY = (wrapperHeight.value - rulerCorrection) / (contentHeight.value + frameHeight)
 
       const optimalZoom = Math.min(scaleX, scaleY)
 
       viewportStore.fitZoomLevel = (viewportStore.zoomLevel / optimalZoom) * 1.1
-    } else if (mode === 'text') {
-      // Text fit
-      const scale = viewportStore.textWidth / viewportConfig.a4paperWidth
+    } else if (mode === 'physical') {
+      const PxPerCm = viewportConfig.defaultPxPerCm
 
-      const scaleX =
-        ((wrapperWidth.value - rulerCorrection) * scale) / (contentWidth.value + frameHeight)
+      const calibratedPxPerCm = PxPerCm * viewportStore.calibrationFactor
 
-      viewportStore.fitZoomLevel = viewportStore.zoomLevel / scaleX
+      const imagePixelsForOneCm = contentWidth.value / viewportStore.physicalContentSize
+      const scale = calibratedPxPerCm / imagePixelsForOneCm
+
+      viewportStore.fitZoomLevel = 1 / scale
     }
 
     updateZoomDependentDimensions()
@@ -508,9 +512,9 @@ export function useViewportWrapper(viewportStore, imageStore, editorStore, uiSto
    * Center image after zoom mode changing
    */
   watch(
-    [() => viewportStore.zoomMode, () => viewportStore.textWidth],
+    [() => viewportStore.zoomMode, () => viewportStore.physicalContentSize],
     () => {
-      log('Zoom mode or text width changed')
+      log('Zoom mode or physical content size changed')
       centerImage()
       viewportStore.resetZoom()
       viewportStore.resetPan()
@@ -744,6 +748,16 @@ export function useViewportWrapper(viewportStore, imageStore, editorStore, uiSto
 
       // Center the image after resizing the wrapper
       if (wrapperRef.value) {
+        const viewportWidth = wrapperRef.value.clientWidth
+        const PxPerCm = viewportConfig.defaultPxPerCm
+        const calibratedPxPerCm = PxPerCm * viewportStore.calibrationFactor
+
+        const maxSize = round(viewportWidth / calibratedPxPerCm)
+
+        console.warn('Setting max physical content size to', maxSize)
+
+        viewportStore.maxPhysicalContentSize = maxSize
+
         resizeObserver = new ResizeObserver(() => {
           wrapperSize.value = {
             width: wrapperRef.value.clientWidth,

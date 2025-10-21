@@ -52,13 +52,17 @@
         "text": "In this mode, 100% zoom means the entire image fits within the visible area without cropping.",
         "shortcut": "Alt + C"
       },
-      "textMode": {
-        "title": "Text Zoom Mode",
-        "text": "In this mode, 100% zoom means the image width matches the full width of the text area relative to the page, where the page represents the entire viewport.",
-        "shortcut": "Alt + T"
+      "physicalMode": {
+        "title": "Physical Size Mode",
+        "text": "In this mode, 100% zoom represents the real physical size of the image on your screen — for example, 10 cm on screen equals 10 cm in reality. Use calibration to ensure accurate scaling on your monitor.",
+        "shortcut": "Alt + P"
       },
-      "textWidth":{
-        "tip": "Set text width or double click to icon for reset"
+      "physicalContentSize": {
+        "tip": "Set the desired real-world width in centimeters. Double-click the icon to reset to default."
+      },
+      "calibrateButton": {
+        "text": "Calibrate",
+        "tip": "Start calibration to match on-screen measurements with real-world centimeters."
       }
     }
   },

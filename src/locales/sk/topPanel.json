@@ -52,13 +52,17 @@
         "text": "V tomto režime znamená 100 % priblíženie, že sa celý obrázok vojde do viditeľnej oblasti bez orezania.",
         "shortcut": "Alt + C"
       },
-      "textMode": {
-        "title": "Textový režim priblíženia",
-        "text": "V tomto režime znamená 100 % priblíženie, že šírka obrázka zodpovedá celej šírke textovej časti, pričom strana predstavuje celý aktuálny viewport.",
-        "shortcut": "Alt + T"
+      "physicalMode": {
+        "title": "Režim reálnej veľkosti",
+        "text": "V tomto režime 100 % zobrazuje obrázok v jeho skutočnej fyzickej veľkosti na obrazovke — napríklad 10 cm na monitore zodpovedá 10 cm v skutočnosti. Na presné zobrazenie použite kalibráciu monitora.",
+        "shortcut": "Alt + P"
       },
-      "textWidth": {
-        "tip": "Nastav šírku textu alebo dvojklikom na ikonu obnov predvolenú"
+      "physicalContentSize": {
+        "tip": "Nastav požadovanú reálnu šírku v centimetroch. Dvojklikom na ikonu obnovíš predvolenú hodnotu."
+      },
+      "calibrateButton": {
+        "text": "Kalibrovať",
+        "tip": "Spusť kalibráciu, aby sa zobrazené rozmery zhodovali so skutočnými centimetrami."
       }
     }
   },

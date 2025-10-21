@@ -2,6 +2,7 @@ import { ref, computed, watch } from 'vue'
 import { viewportConfig } from '@/config/viewportConfig'
 import { useMath } from '../common/useMath'
 import { useSendEvent } from '@/composables/common/useSendEvent'
+import { globalConfig } from '@/config/globalConfig'
 
 /**
  * Logic for the zoom control functionality in the viewport
@@ -44,6 +45,13 @@ export function useZoomControl(viewportStore) {
   )
 
   /**
+   * Maximum physical content size in cm
+   */
+  const maxPhysicalContentSize = computed(() => {
+    return viewportStore.maxPhysicalContentSize
+  })
+
+  /**
    * Whether zooming in is possible
    */
   const canZoomIn = computed(() => viewportStore.zoomLevel < viewportStore.maxZoomLevel)
@@ -53,9 +61,9 @@ export function useZoomControl(viewportStore) {
   const canZoomOut = computed(() => viewportStore.zoomLevel > viewportStore.minZoomLevel)
 
   /**
-   * Current text width
+   * Current physical content size in cm
    */
-  const textWidth = ref(viewportStore.textWidth)
+  const physicalContentSize = ref(viewportStore.physicalContentSize)
 
   /**
    * Increase zoom level
@@ -178,14 +186,14 @@ export function useZoomControl(viewportStore) {
     viewportStore.setZoomMode(mode)
   }
 
-  const setNewTextWidth = (newWidth) => {
-    textWidth.value = newWidth
-    viewportStore.textWidth = newWidth
+  const setNewPhysicalContentSize = (newWidth) => {
+    physicalContentSize.value = newWidth
+    viewportStore.setPhysicalContentSize(newWidth)
   }
 
-  const resetTextWidth = () => {
-    viewportStore.textWidth = viewportConfig.defaultTextWidth
-    textWidth.value = viewportStore.textWidth
+  const resetPhysicalContentSize = () => {
+    viewportStore.setPhysicalContentSize(globalConfig.physicalContentSize)
+    physicalContentSize.value = viewportStore.physicalContentSize
   }
 
   return {
@@ -200,8 +208,9 @@ export function useZoomControl(viewportStore) {
     applyZoomFromInput,
     revertZoomInput,
     toggleZoomMode,
-    textWidth,
-    setNewTextWidth,
-    resetTextWidth,
+    physicalContentSize,
+    setNewPhysicalContentSize,
+    resetPhysicalContentSize,
+    maxPhysicalContentSize,
   }
 }

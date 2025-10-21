@@ -5,9 +5,14 @@ import { useViewportStore } from '@/stores/viewportStore'
 import { useImageStore } from '@/stores/imageStore'
 import ItemTip from '@/components/common/ItemTip.vue'
 import NumberInput from '../common/NumberInput.vue'
+import DefaultButton from '../common/DefaultButton.vue'
 
 const imageStore = useImageStore()
 const viewportStore = useViewportStore()
+
+const openCalibrationModal = () => {
+  console.log('Open calibration modal')
+}
 
 /**
  * Logic for the zoom control.
@@ -24,9 +29,10 @@ const {
   applyZoomFromInput,
   revertZoomInput,
   toggleZoomMode,
-  textWidth,
-  setNewTextWidth,
-  resetTextWidth,
+  physicalContentSize,
+  setNewPhysicalContentSize,
+  resetPhysicalContentSize,
+  maxPhysicalContentSize,
 } = useZoomControl(useViewportStore())
 </script>
 
@@ -81,19 +87,24 @@ const {
       </ItemTip>
 
       <!-- Text mode -->
-      <ItemTip advance :text="$t('topPanel.zoomControl.tip.textMode.text')"
-        :title="$t('topPanel.zoomControl.tip.textMode.title')"
-        :shortcut="$t('topPanel.zoomControl.tip.textMode.shortcut')" position="bottom">
-        <div class="zoom-mode-text button button-control button-circle" @click="toggleZoomMode('text')"
-          :class="{ 'selected': viewportStore.zoomMode === 'text' }">
-          <BaseIcon name="IconZoomModeText" size="24" />
+      <ItemTip advance :text="$t('topPanel.zoomControl.tip.physicalMode.text')"
+        :title="$t('topPanel.zoomControl.tip.physicalMode.title')"
+        :shortcut="$t('topPanel.zoomControl.tip.physicalMode.shortcut')" position="bottom">
+        <div class="zoom-mode-physical button button-control button-circle" @click="toggleZoomMode('physical')"
+          :class="{ 'selected': viewportStore.zoomMode === 'physical' }">
+          <BaseIcon name="IconZoomModePhysical" size="24" />
         </div>
       </ItemTip>
     </div>
 
-    <NumberInput v-if="viewportStore.zoomMode === 'text'" v-model="textWidth" @update="setNewTextWidth" unit="cm"
-      :min="1" :max="21" :step="0.01" icon="IconTextWidth" color="var(--primary-c)" :onReset="resetTextWidth"
-      :tip="$t('topPanel.zoomControl.tip.textWidth.tip')" />
+    <NumberInput v-if="viewportStore.zoomMode === 'physical'" v-model="physicalContentSize"
+      @update="setNewPhysicalContentSize" unit="cm" :min="1" :max="maxPhysicalContentSize" :step="0.1"
+      icon="IconPhysicalContentSize" color="var(--primary-c)" :onReset="resetPhysicalContentSize"
+      :tip="$t('topPanel.zoomControl.tip.physicalContentSize.tip')" />
+
+    <DefaultButton v-if="viewportStore.zoomMode === 'physical'" @click="openCalibrationModal"
+      :text="$t('topPanel.zoomControl.tip.calibrateButton.text')"
+      :tip="$t('topPanel.zoomControl.tip.calibrateButton.tip')" />
   </div>
 </template>
 
@@ -175,14 +186,14 @@ const {
 }
 
 .zoom-mode-classic,
-.zoom-mode-text {
+.zoom-mode-physical {
   display: flex;
   align-items: center;
   justify-content: center;
   width: 45px;
 }
 
-.zoom-mode-text {
+.zoom-mode-physical {
   padding-right: 5px;
   border-radius: 0 20px 20px 0;
   border-width: 3px 3px 3px 0px;
