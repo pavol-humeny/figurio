@@ -6,13 +6,14 @@ import { useImageStore } from '@/stores/imageStore'
 import ItemTip from '@/components/common/ItemTip.vue'
 import NumberInput from '../common/NumberInput.vue'
 import DefaultButton from '../common/DefaultButton.vue'
+import { useCalibrationModal } from '@/composables/modals/useCalibrationModal.js'
 
 const imageStore = useImageStore()
 const viewportStore = useViewportStore()
 
-const openCalibrationModal = () => {
-  console.log('Open calibration modal')
-}
+const {
+  openCalibrationModal
+} = useCalibrationModal()
 
 /**
  * Logic for the zoom control.

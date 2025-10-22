@@ -44,6 +44,10 @@ import enHome from './en/home.json'
 import skHome from './sk/home.json'
 import czHome from './cz/home.json'
 
+import enCalibration from './en/calibration.json'
+import skCalibration from './sk/calibration.json'
+import czCalibration from './cz/calibration.json'
+
 /**
  * Language-specific localization data for i18n
  */
@@ -60,6 +64,7 @@ const allLocales = {
     contextMenu: enContextMenu,
     release: enRelease,
     home: enHome,
+    calibration: enCalibration,
   },
   sk: {
     topPanel: skTopPanel,
@@ -73,6 +78,7 @@ const allLocales = {
     contextMenu: skContextMenu,
     release: skRelease,
     home: skHome,
+    calibration: skCalibration,
   },
   cz: {
     topPanel: czTopPanel,
@@ -86,6 +92,7 @@ const allLocales = {
     contextMenu: czContextMenu,
     release: czRelease,
     home: czHome,
+    calibration: czCalibration,
   },
 }
 

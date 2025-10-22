@@ -16,6 +16,7 @@ import { useRouter, useRoute } from 'vue-router'
 import { globalConfig } from './config/globalConfig.js'
 import ReleaseModal from './components/modals/ReleaseModal.vue'
 import { useUiStore } from './stores/uiStore'
+import CalibrationModal from './components/modals/CalibrationModal.vue'
 
 import { useConsole } from '@/composables/common/useConsole.js'
 const { log, warn, error } = useConsole()
@@ -145,6 +146,7 @@ onBeforeUnmount(() => {
     <SettingsPanel />
     <ExportToolSettings />
     <InteractiveTutorial />
+    <CalibrationModal />
 
     <div class="top-panel" v-if="globalConfig.isRunning">
       <TopPanel />
