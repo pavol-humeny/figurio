@@ -13,7 +13,7 @@ const viewportStore = useViewportStore()
 
 const {
   openCalibrationModal
-} = useCalibrationModal()
+} = useCalibrationModal(useViewportStore())
 
 /**
  * Logic for the zoom control.

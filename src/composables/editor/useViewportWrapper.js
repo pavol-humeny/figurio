@@ -512,7 +512,11 @@ export function useViewportWrapper(viewportStore, imageStore, editorStore, uiSto
    * Center image after zoom mode changing
    */
   watch(
-    [() => viewportStore.zoomMode, () => viewportStore.physicalContentSize],
+    [
+      () => viewportStore.zoomMode,
+      () => viewportStore.physicalContentSize,
+      () => viewportStore.calibrationFactor,
+    ],
     () => {
       log('Zoom mode or physical content size changed')
       centerImage()
@@ -753,8 +757,6 @@ export function useViewportWrapper(viewportStore, imageStore, editorStore, uiSto
         const calibratedPxPerCm = PxPerCm * viewportStore.calibrationFactor
 
         const maxSize = round(viewportWidth / calibratedPxPerCm)
-
-        console.warn('Setting max physical content size to', maxSize)
 
         viewportStore.maxPhysicalContentSize = maxSize
 

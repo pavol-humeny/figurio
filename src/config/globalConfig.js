@@ -10,7 +10,7 @@ export const globalConfig = {
   isRunning: true,
 
   // Reset preferences on new version
-  resetPreferencesOnVersionChange: true,
+  resetPreferencesOnVersionChange: false,
 
   // Reset tutorial progress on new version
   resetTutorialOnVersionChange: false,
