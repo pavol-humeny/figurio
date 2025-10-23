@@ -1089,5 +1089,12 @@
       "title": "Zmeniť režim pozadia zobrazenia",
       "text": "Zmeňte režim pozadia zobrazenia na normálny, kontrastný svetlý alebo kontrastný tmavý pre lepšiu viditeľnosť okrajov obrázka."
     }
+  },
+  "artifactsWarning": {
+    "tip": {
+      "title": "Šum v obrázku",
+      "text": "Obrázok obsahuje množstvo jemných pixelov, ktoré môžu na prvý pohľad vyzerať ako súčasť pozadia, no v skutočnosti ide o šum alebo vizuálne artefakty. Tieto artefakty môžu vzniknúť pri kompresii alebo spracovaní obrázka. Kliknutím na túto hlášku môžeš zobraziť alebo skryť zvýraznenie týchto pixelov."
+    },
+    "message": "Vysoká úroveň šumu v obrázku"
   }
 }

@@ -194,6 +194,8 @@ const cursorStyle = computed(() => {
   }
   return cursor
 })
+
+const showArtifactsWarning = ref(true)
 </script>
 
 <template>
@@ -304,6 +306,7 @@ const cursorStyle = computed(() => {
       </ContextMenu>
     </div>
 
+    <!-- Mode -->
     <div class="contrast-mode-wrapper" :style="{
       '--viewport-wrapper-background-top': backgroundModePadding,
     }">
@@ -317,6 +320,19 @@ const cursorStyle = computed(() => {
             ? 'IconLightMode'
             : 'IconDarkMode'" size="27" />
       </ItemTip>
+    </div>
+
+    <!-- Artifacts warning -->
+    <div class="artifacts-warning-wrapper" :style="{
+      '--viewport-wrapper-background-top': backgroundModePadding,
+      '--artifacts-warning-width': showArtifactsWarning ? 'auto' : '36px',
+    }" @click="showArtifactsWarning = !showArtifactsWarning">
+      <ItemTip advance :text="t('tools.artifactsWarning.tip.text')" :title="$t('tools.artifactsWarning.tip.title')"
+        position="bottom-left" class="artifacts-warning-content-wrapper">
+        <BaseIcon name="IconWarning" size="20" color="var(--warning-background-c)" />
+        <p v-if="showArtifactsWarning">{{ t('tools.artifactsWarning.message') }}</p>
+      </ItemTip>
+
     </div>
 
     <!-- Cursor -->
@@ -356,7 +372,7 @@ const cursorStyle = computed(() => {
         </div>
         <div v-if="mouseX !== null" class="ruler-cursor-mark horizontal" :style="{ left: mouseX + 'px' }">
           <span class="ruler-cursor-label horizontal" :class="{ 'active': cursorPosXSameAsImageWidth }">{{ cursorPosX
-            }}</span>
+          }}</span>
         </div>
 
       </div>
@@ -369,7 +385,7 @@ const cursorStyle = computed(() => {
         </div>
         <div v-if="mouseY !== null" class="ruler-cursor-mark vertical" :style="{ top: mouseY + 'px' }">
           <span class="ruler-cursor-label vertical" :class="{ 'active': cursorPosYSameAsImageHeight }">{{ cursorPosY
-            }}</span>
+          }}</span>
         </div>
       </div>
     </div>
@@ -443,8 +459,8 @@ const cursorStyle = computed(() => {
   display: flex;
   align-items: center;
   justify-content: center;
+  box-shadow: var(--box-shadow-hover);
 }
-
 
 .contrast-mode-button {
   padding: 2px;
@@ -459,6 +475,33 @@ const cursorStyle = computed(() => {
 
 .contrast-mode-button.selected {
   background-color: var(--background-c);
+}
+
+/* Artifacts warning */
+.artifacts-warning-wrapper {
+  position: absolute;
+  top: calc(var(--viewport-wrapper-background-top) + 46px);
+  right: 15px;
+  height: 36px;
+  width: var(--artifacts-warning-width);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 10px;
+  border-radius: 8px;
+  background: var(--warning-c);
+  z-index: var(--z-index-sliders);
+  color: var(--warning-background-c);
+  font-size: 14px;
+  box-shadow: var(--box-shadow-hover);
+  cursor: pointer;
+}
+
+.artifacts-warning-content-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 15px;
 }
 
 /* Sliders */
