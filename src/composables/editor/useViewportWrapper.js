@@ -458,8 +458,6 @@ export function useViewportWrapper(viewportStore, imageStore, editorStore, uiSto
     if (mode === 'classic') {
       // Classic fit
 
-      console.warn('content.Width.value', contentWidth.value)
-
       const scaleX = (wrapperWidth.value - rulerCorrection) / (contentWidth.value + frameWidth)
       const scaleY = (wrapperHeight.value - rulerCorrection) / (contentHeight.value + frameHeight)
 
@@ -632,6 +630,10 @@ export function useViewportWrapper(viewportStore, imageStore, editorStore, uiSto
    */
   const fixedCursorPos = ref(null)
 
+  /**
+   * Start resizing the cursor tool
+   * @param {MouseEvent} event - Mouse event
+   */
   const onMouseDown = (event) => {
     if (editorStore.selectedTabPerTool['backgroundRemoval'] !== 'manual') return
 
@@ -645,6 +647,9 @@ export function useViewportWrapper(viewportStore, imageStore, editorStore, uiSto
     }
   }
 
+  /**
+   * Stop resizing the cursor tool
+   */
   const onMouseUpAltResize = () => {
     if (editorStore.isCursorResizing) {
       editorStore.isCursorResizing = false

@@ -1,5 +1,5 @@
 import { useMath } from '@/composables/common/useMath'
-import { computed, ref, nextTick, watch, onBeforeUnmount } from 'vue'
+import { computed, ref, nextTick, watch } from 'vue'
 import { useConfirmModal } from '../modals/useConfirmModal'
 import { useToastModal } from '../modals/useToastModal'
 import { editorConfig } from '@/config/editorConfig'
@@ -11,20 +11,20 @@ import { useSendEvent } from '@/composables/common/useSendEvent'
 import { useConsole } from '@/composables/common/useConsole.js'
 const { log, warn, error } = useConsole()
 
-/**
- * Detected background color
- */
-const detectedBgColor = ref(null)
+// /**
+//  * Detected background color
+//  */
+// const detectedBgColor = ref(null)
 
-/**
- * Cached histogram
- */
-const cachedHistogram = ref(null)
+// /**
+//  * Cached histogram
+//  */
+// const cachedHistogram = ref(null)
 
-/**
- * Cached threshold
- */
-const cachedThreshold = ref(null)
+// /**
+//  * Cached threshold
+//  */
+// const cachedThreshold = ref(null)
 
 /**
  * Reactive state of the crop box used for user interactions
@@ -465,7 +465,7 @@ export function useCropTool(
         document.removeEventListener('mousemove', onMouseMove)
         document.removeEventListener('mouseup', onMouseUp)
 
-        resetCache()
+        // resetCache()
 
         updateLastCannyCrop()
       }
@@ -596,7 +596,7 @@ export function useCropTool(
       document.removeEventListener('mousemove', onMouseMove)
       document.removeEventListener('mouseup', onMouseUp)
 
-      resetCache()
+      // resetCache()
 
       updateLastCannyCrop()
     }
@@ -612,54 +612,54 @@ export function useCropTool(
   /**
    * Threshold for auto cropping
    */
-  const autoCropThreshold = ref(editorConfig.autoCropThreshold)
+  // const autoCropThreshold = ref(editorConfig.autoCropThreshold)
   const autoCropThresholdWasChanged = ref(false)
 
-  watch(autoCropThreshold, () => {
-    autoCropThresholdWasChanged.value = true
-  })
+  // watch(autoCropThreshold, () => {
+  //   autoCropThresholdWasChanged.value = true
+  // })
 
   /**
    * Options for the auto crop threshold dropdown
    */
-  const autoCropThresholdOptions = [
-    '0',
-    '0,1',
-    '0,2',
-    '0,3',
-    '0,4',
-    '0,5',
-    '0,6',
-    '0,7',
-    '0,8',
-    '0,9',
-  ]
+  // const autoCropThresholdOptions = [
+  //   '0',
+  //   '0,1',
+  //   '0,2',
+  //   '0,3',
+  //   '0,4',
+  //   '0,5',
+  //   '0,6',
+  //   '0,7',
+  //   '0,8',
+  //   '0,9',
+  // ]
 
   /**
    * Watch the auto crop threshold and update artifacts visibility
    */
-  watch(autoCropThreshold, (newValue) => {
-    resetCache()
-    if (newValue > 0) {
-      if (isArtifactsVisible.value) {
-        hideArtifacts()
-        showArtifacts()
-      }
-    } else {
-      if (isArtifactsVisible.value) {
-        hideArtifacts()
-      }
-    }
-  })
+  // watch(autoCropThreshold, (newValue) => {
+  //   resetCache()
+  //   if (newValue > 0) {
+  //     if (isArtifactsVisible.value) {
+  //       hideArtifacts()
+  //       showArtifacts()
+  //     }
+  //   } else {
+  //     if (isArtifactsVisible.value) {
+  //       hideArtifacts()
+  //     }
+  //   }
+  // })
 
   /**
    * Whether to apply auto crop from base image or current crop
    */
   const useBaseImage = ref(false)
 
-  watch(useBaseImage, () => {
-    resetCache()
-  })
+  // watch(useBaseImage, () => {
+  //   resetCache()
+  // })
 
   /**
    * Watch crop box and recalculate indents
@@ -704,40 +704,40 @@ export function useCropTool(
   // -------------------------------
   // Auto crop
   // -------------------------------
-  /**
-   * Detects the background from the edges (can be transparent)
-   * @param {Uint8ClampedArray} data - The image data array.
-   * @param {number} width - The width of the image.
-   * @param {number} height - The height of the image.
-   * @returns {Object} - The detected background color as an RGB object.
-   */
-  const guessBackgroundColor = (data, width, height) => {
-    const counts = {}
-    const addPixel = (i) => {
-      const r = data[i]
-      const g = data[i + 1]
-      const b = data[i + 2]
-      const a = data[i + 3]
-      const key = `${r},${g},${b},${a}`
-      counts[key] = (counts[key] || 0) + 1
-    }
+  // /**
+  //  * Detects the background from the edges (can be transparent)
+  //  * @param {Uint8ClampedArray} data - The image data array.
+  //  * @param {number} width - The width of the image.
+  //  * @param {number} height - The height of the image.
+  //  * @returns {Object} - The detected background color as an RGB object.
+  //  */
+  // const guessBackgroundColor = (data, width, height) => {
+  //   const counts = {}
+  //   const addPixel = (i) => {
+  //     const r = data[i]
+  //     const g = data[i + 1]
+  //     const b = data[i + 2]
+  //     const a = data[i + 3]
+  //     const key = `${r},${g},${b},${a}`
+  //     counts[key] = (counts[key] || 0) + 1
+  //   }
 
-    // top + bottom
-    for (let x = 0; x < width; x++) {
-      addPixel((0 * width + x) * 4)
-      addPixel(((height - 1) * width + x) * 4)
-    }
-    // left + right
-    for (let y = 0; y < height; y++) {
-      addPixel((y * width + 0) * 4)
-      addPixel((y * width + (width - 1)) * 4)
-    }
+  //   // top + bottom
+  //   for (let x = 0; x < width; x++) {
+  //     addPixel((0 * width + x) * 4)
+  //     addPixel(((height - 1) * width + x) * 4)
+  //   }
+  //   // left + right
+  //   for (let y = 0; y < height; y++) {
+  //     addPixel((y * width + 0) * 4)
+  //     addPixel((y * width + (width - 1)) * 4)
+  //   }
 
-    // The most frequent color
-    let picked = Object.keys(counts).reduce((a, b) => (counts[a] > counts[b] ? a : b))
-    const [r, g, b, a] = picked.split(',').map(Number)
-    return { r, g, b, a }
-  }
+  //   // The most frequent color
+  //   let picked = Object.keys(counts).reduce((a, b) => (counts[a] > counts[b] ? a : b))
+  //   const [r, g, b, a] = picked.split(',').map(Number)
+  //   return { r, g, b, a }
+  // }
 
   /**
    * Check if the pixel color matches the target color within a threshold.
@@ -1039,126 +1039,126 @@ export function useCropTool(
    * Get or calculate background color
    * @param {boolean} useBaseImage - whether to use the full image or current crop box
    */
-  const getOrDetectBgColor = (useBaseImage = true) => {
-    if (detectedBgColor.value !== null) {
-      return detectedBgColor.value
-    }
+  // const getOrDetectBgColor = (useBaseImage = true) => {
+  //   if (detectedBgColor.value !== null) {
+  //     return detectedBgColor.value
+  //   }
 
-    const img = imageStore.getRenderedImage({ t, renderCall: false })
-    if (!img) return { r: 255, g: 255, b: 255, a: 255 }
+  //   const img = imageStore.getRenderedImage({ t, renderCall: false })
+  //   if (!img) return { r: 255, g: 255, b: 255, a: 255 }
 
-    // Canvas dimensions
-    let canvasWidth = img.width
-    let canvasHeight = img.height
-    let sx = 0,
-      sy = 0,
-      sWidth = img.width,
-      sHeight = img.height
+  //   // Canvas dimensions
+  //   let canvasWidth = img.width
+  //   let canvasHeight = img.height
+  //   let sx = 0,
+  //     sy = 0,
+  //     sWidth = img.width,
+  //     sHeight = img.height
 
-    if (!useBaseImage && cropBox.value) {
-      sx = cropBox.value.x
-      sy = cropBox.value.y
-      sWidth = cropBox.value.width
-      sHeight = cropBox.value.height
+  //   if (!useBaseImage && cropBox.value) {
+  //     sx = cropBox.value.x
+  //     sy = cropBox.value.y
+  //     sWidth = cropBox.value.width
+  //     sHeight = cropBox.value.height
 
-      canvasWidth = sWidth
-      canvasHeight = sHeight
-    }
+  //     canvasWidth = sWidth
+  //     canvasHeight = sHeight
+  //   }
 
-    const canvas = document.createElement('canvas')
-    canvas.width = canvasWidth
-    canvas.height = canvasHeight
-    const ctx = canvas.getContext('2d', { willReadFrequently: true })
+  //   const canvas = document.createElement('canvas')
+  //   canvas.width = canvasWidth
+  //   canvas.height = canvasHeight
+  //   const ctx = canvas.getContext('2d', { willReadFrequently: true })
 
-    ctx.drawImage(img, sx, sy, sWidth, sHeight, 0, 0, canvasWidth, canvasHeight)
+  //   ctx.drawImage(img, sx, sy, sWidth, sHeight, 0, 0, canvasWidth, canvasHeight)
 
-    const { data } = ctx.getImageData(0, 0, canvasWidth, canvasHeight)
-    detectedBgColor.value = guessBackgroundColor(data, canvasWidth, canvasHeight)
+  //   const { data } = ctx.getImageData(0, 0, canvasWidth, canvasHeight)
+  //   detectedBgColor.value = guessBackgroundColor(data, canvasWidth, canvasHeight)
 
-    return detectedBgColor.value
-  }
+  //   return detectedBgColor.value
+  // }
 
   /**
    * Get or calculate threshold (computes histogram if needed)
    */
-  const getOrComputeThreshold = (bgColor) => {
-    if (cachedThreshold.value !== null) {
-      return cachedThreshold.value
-    }
+  // const getOrComputeThreshold = (bgColor) => {
+  //   if (cachedThreshold.value !== null) {
+  //     return cachedThreshold.value
+  //   }
 
-    // Calculate histogram
-    if (cachedHistogram.value === null) {
-      cachedHistogram.value = computeHistogram(bgColor)
-    }
+  //   // Calculate histogram
+  //   if (cachedHistogram.value === null) {
+  //     cachedHistogram.value = computeHistogram(bgColor)
+  //   }
 
-    cachedThreshold.value = getThresholdFromHistogram(
-      cachedHistogram.value,
-      autoCropThreshold.value,
-    )
-    return cachedThreshold.value
-  }
+  //   cachedThreshold.value = getThresholdFromHistogram(
+  //     cachedHistogram.value,
+  //     autoCropThreshold.value,
+  //   )
+  //   return cachedThreshold.value
+  // }
 
   /**
    * Reset background color
    */
-  const resetCache = () => {
-    detectedBgColor.value = null
-    cachedHistogram.value = null
-    cachedThreshold.value = null
-  }
+  // const resetCache = () => {
+  //   detectedBgColor.value = null
+  //   cachedHistogram.value = null
+  //   cachedThreshold.value = null
+  // }
 
   /**
    * Watch for active tab changes and reset cache
    */
-  watch(() => workspaceStore.activeTabIndex, resetCache, { immediate: true })
+  // watch(() => workspaceStore.activeTabIndex, resetCache, { immediate: true })
 
   /**
    * Compute histogram of the image
    * @param {Object} bgColor - Background color
    * @returns {number[]} - Histogram bins
    */
-  const computeHistogram = (bgColor = { r: 255, g: 255, b: 255 }) => {
-    const img = imageStore.getRenderedImage({ t, renderCall: false })
-    if (!img) return null
+  // const computeHistogram = (bgColor = { r: 255, g: 255, b: 255 }) => {
+  //   const img = imageStore.getRenderedImage({ t, renderCall: false })
+  //   if (!img) return null
 
-    // Create temporary canvas
-    const canvas = document.createElement('canvas')
-    const ctx = canvas.getContext('2d', { willReadFrequently: true })
+  //   // Create temporary canvas
+  //   const canvas = document.createElement('canvas')
+  //   const ctx = canvas.getContext('2d', { willReadFrequently: true })
 
-    const width = img.width
-    const height = img.height
+  //   const width = img.width
+  //   const height = img.height
 
-    canvas.width = width
-    canvas.height = height
+  //   canvas.width = width
+  //   canvas.height = height
 
-    if (img instanceof HTMLCanvasElement) {
-      ctx.drawImage(img, 0, 0)
-    } else if (img instanceof HTMLImageElement) {
-      ctx.drawImage(img, 0, 0, width, height)
-    }
+  //   if (img instanceof HTMLCanvasElement) {
+  //     ctx.drawImage(img, 0, 0)
+  //   } else if (img instanceof HTMLImageElement) {
+  //     ctx.drawImage(img, 0, 0, width, height)
+  //   }
 
-    const imageData = ctx.getImageData(0, 0, width, height)
-    const data = imageData.data
+  //   const imageData = ctx.getImageData(0, 0, width, height)
+  //   const data = imageData.data
 
-    // Max distance = 441 (sqrt(255**2 * 3))
-    const maxDist = Math.sqrt(255 ** 2 * 3)
-    const bins = new Array(256).fill(0)
+  //   // Max distance = 441 (sqrt(255**2 * 3))
+  //   const maxDist = Math.sqrt(255 ** 2 * 3)
+  //   const bins = new Array(256).fill(0)
 
-    for (let i = 0; i < data.length; i += 4) {
-      const r = data[i]
-      const g = data[i + 1]
-      const b = data[i + 2]
-      const dist = Math.sqrt((r - bgColor.r) ** 2 + (g - bgColor.g) ** 2 + (b - bgColor.b) ** 2)
+  //   for (let i = 0; i < data.length; i += 4) {
+  //     const r = data[i]
+  //     const g = data[i + 1]
+  //     const b = data[i + 2]
+  //     const dist = Math.sqrt((r - bgColor.r) ** 2 + (g - bgColor.g) ** 2 + (b - bgColor.b) ** 2)
 
-      if (dist > 0) {
-        // Normalize to 0..255
-        const binIndex = Math.floor((dist / maxDist) * 255)
-        bins[binIndex]++
-      }
-    }
+  //     if (dist > 0) {
+  //       // Normalize to 0..255
+  //       const binIndex = Math.floor((dist / maxDist) * 255)
+  //       bins[binIndex]++
+  //     }
+  //   }
 
-    return bins
-  }
+  //   return bins
+  // }
 
   /**
    * Get threshold value from histogram bins
@@ -1166,25 +1166,25 @@ export function useCropTool(
    * @param {number} percentile - Percentile to use for threshold (0..1)
    * @returns {number} - Computed threshold value
    */
-  const getThresholdFromHistogram = (bins, percentile) => {
-    if (percentile <= 0) return 0
-    if (percentile > 1) percentile = 1
+  // const getThresholdFromHistogram = (bins, percentile) => {
+  //   if (percentile <= 0) return 0
+  //   if (percentile > 1) percentile = 1
 
-    const total = bins.reduce((a, b) => a + b, 0)
-    let cumulative = 0
+  //   const total = bins.reduce((a, b) => a + b, 0)
+  //   let cumulative = 0
 
-    for (let i = 0; i < bins.length; i++) {
-      cumulative += bins[i]
-      if (cumulative / total >= percentile) {
-        const maxDist = Math.sqrt(255 ** 2 * 3)
-        const threshold = (i / 255) * maxDist
-        return threshold
-      }
-    }
+  //   for (let i = 0; i < bins.length; i++) {
+  //     cumulative += bins[i]
+  //     if (cumulative / total >= percentile) {
+  //       const maxDist = Math.sqrt(255 ** 2 * 3)
+  //       const threshold = (i / 255) * maxDist
+  //       return threshold
+  //     }
+  //   }
 
-    // fallback
-    return 10
-  }
+  //   // fallback
+  //   return 10
+  // }
 
   // -----------------------------
   // Artifacts
@@ -1193,111 +1193,111 @@ export function useCropTool(
   /**
    * Artifacts
    */
-  const cachedArtifacts = ref(null)
+  // const cachedArtifacts = ref(null)
 
   /**
    * Compute artifacts in the image
    */
-  const computeArtifacts = (threshold, bgColor = { r: 255, g: 255, b: 255 }) => {
-    const img = imageStore.getRenderedImage({ t, renderCall: false })
-    if (!img) return null
+  // const computeArtifacts = (threshold, bgColor = { r: 255, g: 255, b: 255 }) => {
+  //   const img = imageStore.getRenderedImage({ t, renderCall: false })
+  //   if (!img) return null
 
-    // Create temporary canvas
-    const canvas = document.createElement('canvas')
-    const ctx = canvas.getContext('2d', { willReadFrequently: true })
+  //   // Create temporary canvas
+  //   const canvas = document.createElement('canvas')
+  //   const ctx = canvas.getContext('2d', { willReadFrequently: true })
 
-    const width = img.width
-    const height = img.height
+  //   const width = img.width
+  //   const height = img.height
 
-    canvas.width = width
-    canvas.height = height
+  //   canvas.width = width
+  //   canvas.height = height
 
-    if (img instanceof HTMLCanvasElement) {
-      ctx.drawImage(img, 0, 0)
-    } else if (img instanceof HTMLImageElement) {
-      ctx.drawImage(img, 0, 0, width, height)
-    }
+  //   if (img instanceof HTMLCanvasElement) {
+  //     ctx.drawImage(img, 0, 0)
+  //   } else if (img instanceof HTMLImageElement) {
+  //     ctx.drawImage(img, 0, 0, width, height)
+  //   }
 
-    const imageData = ctx.getImageData(0, 0, width, height)
-    const data = imageData.data
+  //   const imageData = ctx.getImageData(0, 0, width, height)
+  //   const data = imageData.data
 
-    const overlayData = new ImageData(canvas.width, canvas.height)
-    const odata = overlayData.data
+  //   const overlayData = new ImageData(canvas.width, canvas.height)
+  //   const odata = overlayData.data
 
-    for (let i = 0; i < data.length; i += 4) {
-      const r = data[i]
-      const g = data[i + 1]
-      const b = data[i + 2]
-      const dist = Math.sqrt((r - bgColor.r) ** 2 + (g - bgColor.g) ** 2 + (b - bgColor.b) ** 2)
+  //   for (let i = 0; i < data.length; i += 4) {
+  //     const r = data[i]
+  //     const g = data[i + 1]
+  //     const b = data[i + 2]
+  //     const dist = Math.sqrt((r - bgColor.r) ** 2 + (g - bgColor.g) ** 2 + (b - bgColor.b) ** 2)
 
-      if (dist > 0 && dist <= threshold) {
-        // Highlight pixel on overlay with red
-        odata[i] = 255
-        odata[i + 1] = 0
-        odata[i + 2] = 0
-        odata[i + 3] = 80 // Opacity
-      } else {
-        odata[i + 3] = 0 // Transparent pixels
-      }
-    }
+  //     if (dist > 0 && dist <= threshold) {
+  //       // Highlight pixel on overlay with red
+  //       odata[i] = 255
+  //       odata[i + 1] = 0
+  //       odata[i + 2] = 0
+  //       odata[i + 3] = 80 // Opacity
+  //     } else {
+  //       odata[i + 3] = 0 // Transparent pixels
+  //     }
+  //   }
 
-    cachedArtifacts.value = overlayData
-    return overlayData
-  }
+  //   cachedArtifacts.value = overlayData
+  //   return overlayData
+  // }
 
   /**
    * Whether artifacts are visible
    */
-  const isArtifactsVisible = computed(() => imageStore.isArtifactsVisible)
+  // const isArtifactsVisible = computed(() => imageStore.isArtifactsVisible)
 
   /**
    * Show artifacts in the image
    */
-  const showArtifacts = () => {
-    const bgColor = getOrDetectBgColor(true)
-    const threshold = getOrComputeThreshold(bgColor)
-    computeArtifacts(threshold, bgColor)
+  // const showArtifacts = () => {
+  //   const bgColor = getOrDetectBgColor(true)
+  //   const threshold = getOrComputeThreshold(bgColor)
+  //   computeArtifacts(threshold, bgColor)
 
-    const canvas = document.querySelector('.image-canvas')
-    const overlay = document.querySelector('.overlay-canvas')
-    if (!canvas || !overlay || !cachedArtifacts.value) return
+  //   const canvas = document.querySelector('.image-canvas')
+  //   const overlay = document.querySelector('.overlay-canvas')
+  //   if (!canvas || !overlay || !cachedArtifacts.value) return
 
-    overlay.width = canvas.width
-    overlay.height = canvas.height
+  //   overlay.width = canvas.width
+  //   overlay.height = canvas.height
 
-    const oCtx = overlay.getContext('2d')
-    oCtx.putImageData(cachedArtifacts.value, 0, 0)
+  //   const oCtx = overlay.getContext('2d')
+  //   oCtx.putImageData(cachedArtifacts.value, 0, 0)
 
-    imageStore.isArtifactsVisible = true
-  }
+  //   imageStore.isArtifactsVisible = true
+  // }
 
   /**
    * Hide artifacts in the image
    */
-  const hideArtifacts = () => {
-    const overlay = document.querySelector('.overlay-canvas')
-    if (overlay) {
-      const oCtx = overlay.getContext('2d')
-      oCtx.clearRect(0, 0, overlay.width, overlay.height)
-    }
-    imageStore.isArtifactsVisible = false
-  }
+  // const hideArtifacts = () => {
+  //   const overlay = document.querySelector('.overlay-canvas')
+  //   if (overlay) {
+  //     const oCtx = overlay.getContext('2d')
+  //     oCtx.clearRect(0, 0, overlay.width, overlay.height)
+  //   }
+  //   imageStore.isArtifactsVisible = false
+  // }
 
   /**
    * Cleanup artifacts on component unmount
    */
-  onBeforeUnmount(() => {
-    hideArtifacts()
-  })
+  // onBeforeUnmount(() => {
+  //   hideArtifacts()
+  // })
 
   /**
    * Watch for changes in isArtifactsVisible and hide it
    */
-  watch(isArtifactsVisible, (newValue) => {
-    if (!newValue) {
-      hideArtifacts()
-    }
-  })
+  // watch(isArtifactsVisible, (newValue) => {
+  //   if (!newValue) {
+  //     hideArtifacts()
+  //   }
+  // })
 
   //----------------------------------
   // Reset
@@ -1326,20 +1326,20 @@ export function useCropTool(
       height: imageStore.fileDimensions.height,
     }
     fitCropApplied.value = false
-    resetCache()
+    // resetCache()
     updateLastCannyCrop()
   }
 
   /**
    * Reset the auto crop threshold to its initial state
    */
-  const resetThreshold = () => {
-    autoCropThreshold.value = editorConfig.autoCropThreshold
-    if (isArtifactsVisible.value) {
-      hideArtifacts()
-      showArtifacts()
-    }
-  }
+  // const resetThreshold = () => {
+  //   autoCropThreshold.value = editorConfig.autoCropThreshold
+  //   if (isArtifactsVisible.value) {
+  //     hideArtifacts()
+  //     showArtifacts()
+  //   }
+  // }
 
   // -------------------------------
   // Crop apply
@@ -1534,13 +1534,11 @@ export function useCropTool(
 
     imageStore.newFileDimensions = { ...imageStore.fileDimensions }
 
-    hideArtifacts()
-
     // Center image
     viewportStore.shouldFitToScreen = true
 
     // Reset crop color
-    resetCache()
+    // resetCache()
   }
 
   /**
@@ -1591,13 +1589,13 @@ export function useCropTool(
     recalculateCropBox,
     fitCropApplied,
     applyAutoCropPreset,
-    showArtifacts,
-    hideArtifacts,
-    isArtifactsVisible,
-    autoCropThreshold,
-    autoCropThresholdOptions,
-    resetThreshold,
-    resetCache,
+    // showArtifacts,
+    // hideArtifacts,
+    // isArtifactsVisible,
+    // autoCropThreshold,
+    // autoCropThresholdOptions,
+    // resetThreshold,
+    // resetCache,
     tmpCropX,
     tmpCropY,
     isManualAdjustmentsLinked,

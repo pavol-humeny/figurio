@@ -475,7 +475,7 @@ export const useImageStore = defineStore('imageStore', {
 
       this.phoneButtonsCanNotBeDrawnToastFlag = false
 
-      this.isArtifactsVisible = false
+      // this.isArtifactsVisible = false
 
       this.resetSvgObject()
 
@@ -2500,6 +2500,8 @@ export const useImageStore = defineStore('imageStore', {
         removalCanvas: this.removalCanvas || null,
 
         tmpRenderedImage: this.tmpRenderedImage?.toDataURL() || null,
+
+        isArtifactsVisible: JSON.parse(JSON.stringify(this.isArtifactsVisible)),
       }
 
       log('[getSnapshot] imageOperations:', snapshot.imageOperations)
@@ -2528,7 +2530,7 @@ export const useImageStore = defineStore('imageStore', {
       this.frame = JSON.parse(JSON.stringify(snapshot.frame))
       this.svgDefs = JSON.parse(JSON.stringify(snapshot.svgDefs))
       this.blurImages = JSON.parse(JSON.stringify(snapshot.blurImages))
-      this.isArtifactsVisible = false
+      this.isArtifactsVisible = JSON.parse(JSON.stringify(snapshot.isArtifactsVisible))
 
       if (snapshot.pdfPageBytes) {
         if (snapshot.pdfPageBytes instanceof Uint8Array) {
@@ -2666,7 +2668,7 @@ export const useImageStore = defineStore('imageStore', {
 
         phoneButtonsCanNotBeDrawnToastFlag: this.phoneButtonsCanNotBeDrawnToastFlag,
 
-        isArtifactsVisible: this.isArtifactsVisible,
+        isArtifactsVisible: JSON.parse(JSON.stringify(this.isArtifactsVisible)),
 
         removalCanvas: this.removalCanvas || null,
       }
@@ -2707,6 +2709,8 @@ export const useImageStore = defineStore('imageStore', {
 
       this.frame = JSON.parse(JSON.stringify(snapshot.frame))
       this.frameSvg = snapshot.frameSvg
+
+      this.isArtifactsVisible = JSON.parse(JSON.stringify(snapshot.isArtifactsVisible))
 
       if (snapshot.pdfPageBytes) {
         if (snapshot.pdfPageBytes instanceof Uint8Array) {

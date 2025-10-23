@@ -56,7 +56,7 @@ export function useFileTabs(uiStore, viewportStore, imageStore, editorStore, t) 
       // viewportStore.shouldFitToScreen = true
 
       // To hide artifacts
-      imageStore.isArtifactsVisible = false
+      // imageStore.isArtifactsVisible = false
     }
   }
 

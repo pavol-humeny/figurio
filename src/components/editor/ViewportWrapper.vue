@@ -24,6 +24,7 @@ import ItemTip from '../common/ItemTip.vue'
 import BaseIcon from '../icons/BaseIcon.vue'
 import BrushToolCanvas from '../tools/BrushToolCanvas.vue'
 import { editorConfig } from '@/config/editorConfig'
+import { useImageAnalysis } from '@/composables/tools/useImageAnalysis'
 
 const { t } = useI18n()
 const uiStore = useUiStore()
@@ -129,6 +130,18 @@ const {
 } = useDragAndDropArea(useImageStore(), useEditorStore(), t, router)
 
 /**
+ * Logic for image analysis (artifacts)
+ */
+const {
+  imageHasArtifacts,
+  hideArtifacts,
+} = useImageAnalysis(
+  useImageStore(),
+  useWorkspaceStore(),
+  t,
+)
+
+/**
  * Whether to show the context menu
  */
 const hideContextMenu = computed(() => {
@@ -195,7 +208,7 @@ const cursorStyle = computed(() => {
   return cursor
 })
 
-const showArtifactsWarning = ref(true)
+const expandArtifactsWarning = ref(true)
 </script>
 
 <template>
@@ -256,8 +269,7 @@ const showArtifactsWarning = ref(true)
           <!-- <img v-if="imageStore.overlayImage !== null" ref="overlayImageRef" class="overlay-image-canvas" /> -->
 
           <!-- Canvas for artifacts -->
-          <canvas v-if="editorStore.selectedToolKey === 'crop' && imageStore.fileType === 'image'"
-            ref="overlayCanvasRef" class="overlay-canvas"></canvas>
+          <canvas v-if="imageStore.fileType === 'image'" ref="overlayCanvasRef" class="overlay-canvas"></canvas>
 
           <svg ref="frameSvgRef" class="frame-svg"></svg>
 
@@ -323,14 +335,17 @@ const showArtifactsWarning = ref(true)
     </div>
 
     <!-- Artifacts warning -->
-    <div class="artifacts-warning-wrapper" :style="{
+    <div v-if="imageHasArtifacts" class="artifacts-warning-wrapper" :style="{
       '--viewport-wrapper-background-top': backgroundModePadding,
-      '--artifacts-warning-width': showArtifactsWarning ? 'auto' : '36px',
-    }" @click="showArtifactsWarning = !showArtifactsWarning">
+      '--artifacts-warning-width': expandArtifactsWarning ? 'auto' : '36px',
+    }" @click="expandArtifactsWarning = !expandArtifactsWarning">
       <ItemTip advance :text="t('tools.artifactsWarning.tip.text')" :title="$t('tools.artifactsWarning.tip.title')"
         position="bottom-left" class="artifacts-warning-content-wrapper">
         <BaseIcon name="IconWarning" size="20" color="var(--warning-background-c)" />
-        <p v-if="showArtifactsWarning">{{ t('tools.artifactsWarning.message') }}</p>
+
+        <p v-if="expandArtifactsWarning">{{ t('tools.artifactsWarning.message') }}</p>
+
+        <button v-if="expandArtifactsWarning" class="close-button" @click="hideArtifacts">✕</button>
       </ItemTip>
 
     </div>
@@ -372,7 +387,7 @@ const showArtifactsWarning = ref(true)
         </div>
         <div v-if="mouseX !== null" class="ruler-cursor-mark horizontal" :style="{ left: mouseX + 'px' }">
           <span class="ruler-cursor-label horizontal" :class="{ 'active': cursorPosXSameAsImageWidth }">{{ cursorPosX
-          }}</span>
+            }}</span>
         </div>
 
       </div>
@@ -385,7 +400,7 @@ const showArtifactsWarning = ref(true)
         </div>
         <div v-if="mouseY !== null" class="ruler-cursor-mark vertical" :style="{ top: mouseY + 'px' }">
           <span class="ruler-cursor-label vertical" :class="{ 'active': cursorPosYSameAsImageHeight }">{{ cursorPosY
-          }}</span>
+            }}</span>
         </div>
       </div>
     </div>
@@ -502,6 +517,16 @@ const showArtifactsWarning = ref(true)
   align-items: center;
   justify-content: center;
   gap: 15px;
+  /* position: relative; */
+}
+
+.close-button {
+  background: transparent;
+  border: none;
+  color: var(--warning-background-c);
+  font-size: 18px;
+  font-weight: bold;
+  cursor: pointer;
 }
 
 /* Sliders */
