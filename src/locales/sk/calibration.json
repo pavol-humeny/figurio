@@ -4,10 +4,14 @@
     "instructions": {
       "title": "Pokyny",
       "step1": "Priložte štandardnú kreditnú kartu (85,60 mm × 53,98 mm) k monitoru.",
-      "step2": "Pomocou posúvača nižšie upravte šírku karty na obrazovke, kým sa nebude zhodovať so skutočnou šírkou vašej kreditnej karty.",
-      "step3": "Keď bude zarovnaná, kliknite na tlačidlo 'Kalibrovať' pre uloženie nastavení."
+      "step2": "Pomocou posunutia upravte šírku karty na obrazovke, kým sa nebude zhodovať so skutočnou šírkou vašej kreditnej karty.",
+      "step3": "Keď bude zarovnaná, kliknite na tlačidlo 'Kalibrovať' pre uloženie nastavení.",
+      "step4": "Dvojklikom na slider resetujete kalibračný faktor na predvolenú hodnotu."
     },
     "button": {
       "text": "Kalibrovať"
+    },
+    "closeButton": {
+      "text": "Zavrieť"
     }
 }

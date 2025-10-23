@@ -14,13 +14,13 @@ const {
   isVisible,
   closeCalibrationModal,
   calibrate,
+  calibrationFactor,
   cardWidthPx,
   cardHeightPx,
-  minWidthCm,
-  maxWidthCm,
-  PxPerCm,
   resetCalibration,
-  originalCardWidthPx
+  minCalibrationFactor,
+  maxCalibrationFactor,
+  stepCalibrationFactor,
 } = useCalibrationModal(useViewportStore());
 </script>
 
@@ -48,6 +48,9 @@ const {
           <div class="instruction-wrapper">
             <p>{{ $t('calibration.instructions.step3') }}</p>
           </div>
+          <div class="instruction-wrapper">
+            <p>{{ $t('calibration.instructions.step4') }}</p>
+          </div>
         </div>
 
         <!-- Credit card visual -->
@@ -57,13 +60,14 @@ const {
 
         <!-- Slider -->
         <div class="slider-wrapper">
-          <input type="range" :min="minWidthCm * PxPerCm" :max="maxWidthCm * PxPerCm" step="1" v-model="cardWidthPx"
-            @dblclick="resetCalibration" />
-          <span>{{ round(cardWidthPx / originalCardWidthPx, 2) }} x</span>
+          <input type="range" :min="minCalibrationFactor" :max="maxCalibrationFactor" :step="stepCalibrationFactor"
+            v-model.number="calibrationFactor" @dblclick="resetCalibration" />
+          <span>{{ round(calibrationFactor, 3) }} ×</span>
         </div>
 
         <div class="button-wrapper">
-          <DefaultButton :text="$t('calibration.button.text')" @click="calibrate" />
+          <DefaultButton :text="$t('calibration.closeButton.text')" @click="closeCalibrationModal" />
+          <DefaultButton :text="$t('calibration.button.text')" @click="calibrate" main />
         </div>
       </div>
     </div>
@@ -156,7 +160,7 @@ const {
   width: 100%;
   display: flex;
   justify-content: space-between;
-  gap: 10px;
+  align-items: center;
   margin-top: 10px;
 }
 

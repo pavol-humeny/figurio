@@ -5,9 +5,13 @@
       "title": "Instructions",
       "step1": "Place a standard credit card (85.60 mm × 53.98 mm) against your monitor.",
       "step2": "Use the slider below to adjust the on-screen width of the card until it matches the physical width of your credit card.",
-      "step3": "Once aligned, click the 'Calibrate' button to save the settings."
+      "step3": "Once aligned, click the 'Calibrate' button to save the settings.",
+      "step4": "Double-click the slider to reset the calibration factor to default."
     },
     "button": {
       "text": "Calibrate"
+    },
+    "closeButton": {
+      "text": "Close"
     }
 }

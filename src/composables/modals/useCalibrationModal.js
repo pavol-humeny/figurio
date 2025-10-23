@@ -3,23 +3,16 @@ import { useSendEvent } from '@/composables/common/useSendEvent'
 import { viewportConfig } from '@/config/viewportConfig'
 
 /**
- * Whether the calibration modal is currently visible
+ * Whether the calibration modal is currently visible.
  */
 const isVisible = ref(false)
 
-/**
- * Logic for the calibration modal
- * @param {Object} viewportStore - The viewport store
- * @return {Object} - The calibration modal logic
- */
 export function useCalibrationModal(viewportStore) {
   /**
-   * Open the modal
+   * Open the calibration modal.
    */
   const openCalibrationModal = () => {
-    if (isVisible.value) {
-      return
-    }
+    if (isVisible.value) return
 
     useSendEvent().sendEvent('modalEvent', null, null, { modal: 'calibration', event: 'open' })
 
@@ -27,7 +20,7 @@ export function useCalibrationModal(viewportStore) {
   }
 
   /**
-   * Close the modal
+   * Close the calibration modal.
    */
   const closeCalibrationModal = () => {
     useSendEvent().sendEvent('modalEvent', null, null, { modal: 'calibration', event: 'close' })
@@ -36,9 +29,7 @@ export function useCalibrationModal(viewportStore) {
   }
 
   /**
-   * Handle Escape key to close the modal
-   *
-   * @param {KeyboardEvent} event
+   * Handle keydown events for closing the modal with Escape key.
    */
   const handleKeydown = (event) => {
     if (event.key === 'Escape' && isVisible.value) {
@@ -48,84 +39,77 @@ export function useCalibrationModal(viewportStore) {
   }
 
   /**
-   * Pixels per centimeter based on default viewport config
+   * Px per cm based on viewport config.
    */
   const PxPerCm = viewportConfig.defaultPxPerCm
 
   /**
-   * Min an max width in cm for the credit card representation
-   */
-  const minWidthCm = 2
-  const maxWidthCm = 20
-
-  /**
-   * Standard credit card dimensions in cm
+   * Standard card dimensions in cm
    */
   const cardWidthCm = 8.56
   const cardHeightCm = 5.398
 
   /**
-   * Original card width in pixels
+   * Original card width in px (without calibration factor)
    */
   const originalCardWidthPx = cardWidthCm * PxPerCm
 
   /**
-   * Reactive card width in pixels
+   * Calibration factor for physical size adjustment
    */
-  const cardWidthPx = ref(originalCardWidthPx * viewportStore.calibrationFactor)
+  const calibrationFactor = ref(viewportStore.calibrationFactor)
+
+  const minCalibrationFactor = 0.2
+  const maxCalibrationFactor = 2
+  const stepCalibrationFactor = 0.005
 
   /**
-   * Reactive card height in pixels
+   * Card dimensions in px adjusted by calibration factor
    */
-  const cardHeightPx = ref(cardHeightCm * PxPerCm)
+  const cardWidthPx = ref(originalCardWidthPx * calibrationFactor.value)
+  const cardHeightPx = ref(cardHeightCm * PxPerCm * calibrationFactor.value)
 
   /**
-   * Calibrate the viewport based on the current card width
+   * Watch for changes in calibration factor to update card dimensions
+   */
+  watch(calibrationFactor, (newFactor) => {
+    cardWidthPx.value = originalCardWidthPx * newFactor
+    cardHeightPx.value = cardHeightCm * PxPerCm * newFactor
+  })
+
+  /**
+   * Apply the calibration factor to the viewport store
    */
   const calibrate = () => {
     isVisible.value = false
-    const calibrationFactor = cardWidthPx.value / originalCardWidthPx
-    console.log('Calibration factor:', calibrationFactor)
-
-    viewportStore.setCalibrationFactor(calibrationFactor)
+    viewportStore.setCalibrationFactor(calibrationFactor.value)
   }
 
   /**
-   * Reset calibration slider to original card width
+   * Reset calibration factor to default (1.0)
    */
   const resetCalibration = () => {
-    cardWidthPx.value = originalCardWidthPx
+    calibrationFactor.value = 1.0
   }
 
-  // recalculate card height when card width changes
-  watch(cardWidthPx, (newWidthPx) => {
-    const newCalibrationFactor = newWidthPx / originalCardWidthPx
-    // adjust card height accordingly
-    cardHeightPx.value = cardHeightCm * PxPerCm * newCalibrationFactor
-    console.log('Adjusted card height to', cardHeightPx.value, 'px')
-  })
-
-  // Register Escape key handler
-  onMounted(() => {
-    window.addEventListener('keydown', handleKeydown)
-  })
-
-  // Cleanup key handler on unmount
-  onBeforeUnmount(() => {
-    window.removeEventListener('keydown', handleKeydown)
-  })
+  /**
+   * Setup and cleanup of keydown event listener
+   */
+  onMounted(() => window.addEventListener('keydown', handleKeydown))
+  onBeforeUnmount(() => window.removeEventListener('keydown', handleKeydown))
 
   return {
     isVisible,
     openCalibrationModal,
     closeCalibrationModal,
     calibrate,
+    calibrationFactor,
     cardWidthPx,
     cardHeightPx,
-    minWidthCm,
-    maxWidthCm,
     PxPerCm,
     resetCalibration,
-    originalCardWidthPx,
+    minCalibrationFactor,
+    maxCalibrationFactor,
+    stepCalibrationFactor,
   }
 }
