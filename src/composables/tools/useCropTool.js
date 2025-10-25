@@ -641,12 +641,12 @@ export function useCropTool(
   // watch(autoCropThreshold, (newValue) => {
   //   resetCache()
   //   if (newValue > 0) {
-  //     if (isArtifactsVisible.value) {
+  //     if (areArtifactsVisible.value) {
   //       hideArtifacts()
   //       showArtifacts()
   //     }
   //   } else {
-  //     if (isArtifactsVisible.value) {
+  //     if (areArtifactsVisible.value) {
   //       hideArtifacts()
   //     }
   //   }
@@ -1248,7 +1248,7 @@ export function useCropTool(
   /**
    * Whether artifacts are visible
    */
-  // const isArtifactsVisible = computed(() => imageStore.isArtifactsVisible)
+  // const areArtifactsVisible = computed(() => imageStore.areArtifactsVisible)
 
   /**
    * Show artifacts in the image
@@ -1268,7 +1268,7 @@ export function useCropTool(
   //   const oCtx = overlay.getContext('2d')
   //   oCtx.putImageData(cachedArtifacts.value, 0, 0)
 
-  //   imageStore.isArtifactsVisible = true
+  //   imageStore.areArtifactsVisible = true
   // }
 
   /**
@@ -1280,7 +1280,7 @@ export function useCropTool(
   //     const oCtx = overlay.getContext('2d')
   //     oCtx.clearRect(0, 0, overlay.width, overlay.height)
   //   }
-  //   imageStore.isArtifactsVisible = false
+  //   imageStore.areArtifactsVisible = false
   // }
 
   /**
@@ -1291,9 +1291,9 @@ export function useCropTool(
   // })
 
   /**
-   * Watch for changes in isArtifactsVisible and hide it
+   * Watch for changes in areArtifactsVisible and hide it
    */
-  // watch(isArtifactsVisible, (newValue) => {
+  // watch(areArtifactsVisible, (newValue) => {
   //   if (!newValue) {
   //     hideArtifacts()
   //   }
@@ -1335,7 +1335,7 @@ export function useCropTool(
    */
   // const resetThreshold = () => {
   //   autoCropThreshold.value = editorConfig.autoCropThreshold
-  //   if (isArtifactsVisible.value) {
+  //   if (areArtifactsVisible.value) {
   //     hideArtifacts()
   //     showArtifacts()
   //   }
@@ -1591,7 +1591,7 @@ export function useCropTool(
     applyAutoCropPreset,
     // showArtifacts,
     // hideArtifacts,
-    // isArtifactsVisible,
+    // areArtifactsVisible,
     // autoCropThreshold,
     // autoCropThresholdOptions,
     // resetThreshold,

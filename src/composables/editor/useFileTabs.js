@@ -43,6 +43,12 @@ export function useFileTabs(uiStore, viewportStore, imageStore, editorStore, t) 
       uiStore.isLoading = true
       // await new Promise((resolve) => setTimeout(resolve, 1))
 
+      const overlayCanvas = document.querySelector('.overlay-canvas')
+      if (overlayCanvas) {
+        // Set class display to none
+        overlayCanvas.style.display = 'none'
+      }
+
       workspaceStore.updateCurrentTabState(t)
       workspaceStore.switchToTab(index)
 
@@ -56,7 +62,7 @@ export function useFileTabs(uiStore, viewportStore, imageStore, editorStore, t) 
       // viewportStore.shouldFitToScreen = true
 
       // To hide artifacts
-      // imageStore.isArtifactsVisible = false
+      // imageStore.areArtifactsVisible = false
     }
   }
 

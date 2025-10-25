@@ -23,4 +23,9 @@ export const viewportConfig = {
 
   // Zoom mode - physical
   defaultPxPerCm: 96 / 2.54, // 1 cm = ~37.79 px @96DPI
+
+  // Noise analysis
+  noiseThreshold: 0.15, // 15% noise level to show artifacts
+  bgCoverageThreshold: 0.5, // 50% background coverage to run noise analysis
+  colorDistanceThreshold: 10, // color distance from background considered as near-background
 }

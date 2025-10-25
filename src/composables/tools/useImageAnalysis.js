@@ -1,20 +1,28 @@
-import { computed, ref, watch } from 'vue'
+import { viewportConfig } from '@/config/viewportConfig'
+import { ref, watch } from 'vue'
 
+/**
+ * Whether to expand the artifacts warning message
+ */
+const expandArtifactsWarning = ref(false)
+
+/**
+ * Current noise level in the image (ratio of noisy pixels)
+ */
+const noiseLevel = ref(0)
+
+/**
+ * Composable for analyzing image artifacts (noise) and managing overlay display
+ */
 export function useImageAnalysis(imageStore, workspaceStore, t) {
-  const noiseLevel = ref(0)
-  const noiseThreshold = 0.15 // minimal ratio of noisy pixels to show warning
-  const bgCoverageThreshold = 0.3 // minimal percentage of background area required to analyze noise
-  const showWarning = ref(false)
-  const colorDistanceThreshold = 35 // color distance from background considered as near-background
+  const noiseThreshold = viewportConfig.noiseThreshold // adjustable block noise threshold
+  const bgCoverageThreshold = viewportConfig.bgCoverageThreshold // minimal percentage of background area required to analyze noise
+  const colorDistanceThreshold = viewportConfig.colorDistanceThreshold // color distance from background considered as near-background
 
-  const imageHasArtifacts = computed({
-    get: () => imageStore.isArtifactsVisible,
-    set: (val) => {
-      imageStore.isArtifactsVisible = val
-    },
-  })
-
-  // --- Detect dominant background color from image borders ---
+  /**
+   * Detect the most common background color by sampling the image edges
+   * @returns {Object} - RGBA color object
+   */
   const detectBgColor = () => {
     const img = imageStore.getRenderedImage({ t, renderCall: false })
     if (!img) return { r: 255, g: 255, b: 255, a: 255 }
@@ -48,9 +56,19 @@ export function useImageAnalysis(imageStore, workspaceStore, t) {
     return { r, g, b, a }
   }
 
-  // --- Compute noise and draw overlay only if above threshold ---
+  /**
+   * Calculate image artifacts (noise) using local blocks
+   * and display overlay if needed
+   */
   const calculateArtifacts = async () => {
     await new Promise((resolve) => setTimeout(resolve, 100))
+
+    if (imageStore.fileType !== 'image') {
+      expandArtifactsWarning.value = false
+      imageStore.imageHasArtifacts = false
+      return
+    }
+
     const img = imageStore.getRenderedImage({ t, renderCall: false })
     if (!img) return
 
@@ -68,106 +86,168 @@ export function useImageAnalysis(imageStore, workspaceStore, t) {
 
     const pixelCount = width * height
     const threshold = colorDistanceThreshold
-    let similarCount = 0
-    let bgCount = 0
 
+    // Background coverage
+    let bgCount = 0
     for (let i = 0; i < data.length; i += 4) {
       const dr = data[i] - bgColor.r
       const dg = data[i + 1] - bgColor.g
       const db = data[i + 2] - bgColor.b
       const dist = Math.sqrt(dr * dr + dg * dg + db * db)
-
-      // count background-like pixels
       if (dist < threshold) bgCount++
-
-      // count slightly deviating pixels as potential noise
-      if (dist > 0 && dist < threshold) {
-        similarCount++
-        odata[i] = 255
-        odata[i + 1] = 0
-        odata[i + 2] = 0
-        odata[i + 3] = 80
-      } else {
-        odata[i + 3] = 0
-      }
     }
-
     const bgCoverage = bgCount / pixelCount
     if (bgCoverage < bgCoverageThreshold) {
       console.log(
-        `[ImageAnalysis] Skipping noise detection — background coverage ${(
-          bgCoverage * 100
-        ).toFixed(1)}% is below threshold (${bgCoverageThreshold * 100}%)`,
+        `[ImageAnalysis] Skipping noise detection — background coverage ${(bgCoverage * 100).toFixed(1)}% is below threshold (${bgCoverageThreshold * 100}%)`,
       )
+      expandArtifactsWarning.value = false
+      imageStore.imageHasArtifacts = false
       return
+    } else {
+      console.log(
+        `[ImageAnalysis] Background coverage (#${bgColor.r}, ${bgColor.g}, ${bgColor.b}): ${(bgCoverage * 100).toFixed(1)}%`,
+      )
     }
 
-    noiseLevel.value = similarCount / pixelCount
-    showWarning.value = noiseLevel.value >= noiseThreshold
+    // Local block noise detection
+    const blockSize = 32
+    const blocksX = Math.ceil(width / blockSize)
+    const blocksY = Math.ceil(height / blockSize)
+    let noisyBlocks = 0
+
+    for (let by = 0; by < blocksY; by++) {
+      for (let bx = 0; bx < blocksX; bx++) {
+        let blockNoiseCount = 0
+
+        for (let y = 0; y < blockSize; y++) {
+          for (let x = 0; x < blockSize; x++) {
+            const px = bx * blockSize + x
+            const py = by * blockSize + y
+            if (px >= width || py >= height) continue
+            const idx = (py * width + px) * 4
+
+            const dr = data[idx] - bgColor.r
+            const dg = data[idx + 1] - bgColor.g
+            const db = data[idx + 2] - bgColor.b
+            const dist = Math.sqrt(dr * dr + dg * dg + db * db)
+
+            if (dist > 0 && dist < threshold) {
+              blockNoiseCount++
+            }
+          }
+        }
+
+        const blockPixels = blockSize * blockSize
+        if (blockNoiseCount / blockPixels > noiseThreshold) {
+          // Adjustable block noise threshold
+          noisyBlocks++
+
+          // Mark noisy pixels in overlay
+          for (let y = 0; y < blockSize; y++) {
+            for (let x = 0; x < blockSize; x++) {
+              const px = bx * blockSize + x
+              const py = by * blockSize + y
+              if (px >= width || py >= height) continue
+              const idx = (py * width + px) * 4
+
+              const dr = data[idx] - bgColor.r
+              const dg = data[idx + 1] - bgColor.g
+              const db = data[idx + 2] - bgColor.b
+              const dist = Math.sqrt(dr * dr + dg * dg + db * db)
+              if (dist > 0 && dist < threshold) {
+                odata[idx] = 255
+                odata[idx + 1] = 0
+                odata[idx + 2] = 0
+                odata[idx + 3] = 80
+              } else {
+                odata[idx + 3] = 0
+              }
+            }
+          }
+        }
+      }
+    }
+
+    // Overall noise level
+    const showWarning = noisyBlocks > 0
 
     const baseCanvas = document.querySelector('.image-canvas')
     const overlayCanvas = document.querySelector('.overlay-canvas')
     if (!baseCanvas || !overlayCanvas) return
 
+    // Show overlay canvas
+    overlayCanvas.style.display = 'block'
     const oCtx = overlayCanvas.getContext('2d')
     overlayCanvas.width = baseCanvas.width
     overlayCanvas.height = baseCanvas.height
 
-    if (showWarning.value) {
+    // Calculate noise level overlay
+    if (showWarning) {
       oCtx.putImageData(overlay, 0, 0)
-      imageHasArtifacts.value = true
-      console.log(
-        `[ImageAnalysis] Noise level: ${(noiseLevel.value * 100).toFixed(2)}% — artifacts shown`,
-      )
+      expandArtifactsWarning.value = true
+      imageStore.imageHasArtifacts = true
+      console.log(`[ImageAnalysis] Noise detected in ${noisyBlocks} blocks — artifacts shown`)
     } else {
       oCtx.clearRect(0, 0, overlayCanvas.width, overlayCanvas.height)
-      imageHasArtifacts.value = false
-      console.log(
-        `[ImageAnalysis] Noise level: ${(noiseLevel.value * 100).toFixed(2)}% — no artifacts`,
-      )
+      expandArtifactsWarning.value = false
+      imageStore.imageHasArtifacts = false
+      console.log(`[ImageAnalysis] No significant noise detected`)
     }
   }
 
-  // --- Hide overlay manually ---
+  /**
+   * Hide artifacts overlay on user click
+   */
+  const hideArtifactsClick = () => {
+    imageStore.imageHasArtifacts = false
+    imageStore.imageArtifactsCanceledByUser = true
+    hideArtifacts()
+  }
+
+  /**
+   * Hide artifacts overlay
+   */
   const hideArtifacts = () => {
     const overlay = document.querySelector('.overlay-canvas')
     if (overlay) overlay.getContext('2d').clearRect(0, 0, overlay.width, overlay.height)
-    imageHasArtifacts.value = false
+    expandArtifactsWarning.value = false
   }
 
-  // --- Toggle overlay manually ---
-  const toggleArtifacts = () => {
-    if (imageHasArtifacts.value) hideArtifacts()
-    else calculateArtifacts()
-  }
-
-  // --- Log and recalculate on tab change ---
+  /**
+   * Calculate artifacts when active tab changes
+   */
   watch(
-    () => workspaceStore.tabs.length,
-    (newLength, oldLength) => {
-      if (newLength > oldLength) {
+    () => workspaceStore.activeTabIndex,
+    () => {
+      if (!imageStore.imageArtifactsCanceledByUser) {
+        console.log('[ImageAnalysis] Active tab changed, recalculating artifacts')
         calculateArtifacts()
       }
     },
     { immediate: true },
   )
 
-  // --- Watch visibility toggle ---
+  /**
+   * Recalculate artifacts when the image visibility flag changes
+   */
   watch(
-    () => imageStore.isArtifactsVisible,
+    () => imageStore.areArtifactsVisible,
     (newValue) => {
-      if (newValue) calculateArtifacts()
-      else hideArtifacts()
+      if (newValue) {
+        calculateArtifacts()
+      } else {
+        hideArtifacts()
+      }
     },
     { immediate: true },
   )
 
   return {
     noiseLevel,
-    showWarning,
-    imageHasArtifacts,
+    expandArtifactsWarning,
     calculateArtifacts,
     hideArtifacts,
-    toggleArtifacts,
+    hideArtifactsClick,
   }
 }

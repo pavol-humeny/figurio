@@ -50,7 +50,7 @@ const {
   recalculateCropBox,
   // showArtifacts,
   // hideArtifacts,
-  // isArtifactsVisible,
+  // areArtifactsVisible,
   // autoCropThreshold,
   // autoCropThresholdOptions,
   tmpCropX,
@@ -237,9 +237,9 @@ const {
           <div class="content-wrapper">
             <div class="content-button">
               <DefaultButton
-                :text="isArtifactsVisible ? $t('tools.crop.settings.general.hideArtifactsButton.text') : $t('tools.crop.settings.general.showArtifactsButton.text')"
-                @click="isArtifactsVisible ? hideArtifacts() : showArtifacts()"
-                :tip="isArtifactsVisible ? $t('tools.crop.settings.general.hideArtifactsButton.tip') : autoCropThreshold === 0 ? $t('tools.crop.settings.general.showArtifactsButton.tipDisabled') : $t('tools.crop.settings.general.showArtifactsButton.tip')"
+                :text="areArtifactsVisible ? $t('tools.crop.settings.general.hideArtifactsButton.text') : $t('tools.crop.settings.general.showArtifactsButton.text')"
+                @click="areArtifactsVisible ? hideArtifacts() : showArtifacts()"
+                :tip="areArtifactsVisible ? $t('tools.crop.settings.general.hideArtifactsButton.tip') : autoCropThreshold === 0 ? $t('tools.crop.settings.general.showArtifactsButton.tipDisabled') : $t('tools.crop.settings.general.showArtifactsButton.tip')"
                 position="bottom-left" :disabled="autoCropThreshold === 0" />
             </div>
           </div>

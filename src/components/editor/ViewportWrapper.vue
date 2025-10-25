@@ -133,8 +133,8 @@ const {
  * Logic for image analysis (artifacts)
  */
 const {
-  imageHasArtifacts,
-  hideArtifacts,
+  hideArtifactsClick,
+  expandArtifactsWarning,
 } = useImageAnalysis(
   useImageStore(),
   useWorkspaceStore(),
@@ -208,7 +208,6 @@ const cursorStyle = computed(() => {
   return cursor
 })
 
-const expandArtifactsWarning = ref(true)
 </script>
 
 <template>
@@ -335,7 +334,7 @@ const expandArtifactsWarning = ref(true)
     </div>
 
     <!-- Artifacts warning -->
-    <div v-if="imageHasArtifacts" class="artifacts-warning-wrapper" :style="{
+    <div v-if="imageStore.imageHasArtifacts" class="artifacts-warning-wrapper" :style="{
       '--viewport-wrapper-background-top': backgroundModePadding,
       '--artifacts-warning-width': expandArtifactsWarning ? 'auto' : '36px',
     }" @click="expandArtifactsWarning = !expandArtifactsWarning">
@@ -345,7 +344,7 @@ const expandArtifactsWarning = ref(true)
 
         <p v-if="expandArtifactsWarning">{{ t('tools.artifactsWarning.message') }}</p>
 
-        <button v-if="expandArtifactsWarning" class="close-button" @click="hideArtifacts">✕</button>
+        <button v-if="expandArtifactsWarning" class="close-button" @click="hideArtifactsClick">✕</button>
       </ItemTip>
 
     </div>
@@ -387,7 +386,7 @@ const expandArtifactsWarning = ref(true)
         </div>
         <div v-if="mouseX !== null" class="ruler-cursor-mark horizontal" :style="{ left: mouseX + 'px' }">
           <span class="ruler-cursor-label horizontal" :class="{ 'active': cursorPosXSameAsImageWidth }">{{ cursorPosX
-            }}</span>
+          }}</span>
         </div>
 
       </div>
@@ -400,7 +399,7 @@ const expandArtifactsWarning = ref(true)
         </div>
         <div v-if="mouseY !== null" class="ruler-cursor-mark vertical" :style="{ top: mouseY + 'px' }">
           <span class="ruler-cursor-label vertical" :class="{ 'active': cursorPosYSameAsImageHeight }">{{ cursorPosY
-            }}</span>
+          }}</span>
         </div>
       </div>
     </div>

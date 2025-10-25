@@ -35,7 +35,7 @@ const {
       <div class="tabs-wrapper">
         <div v-for="(tab, i) in tabs" :key="tab.id" class="tab" draggable="true" @dragstart="onTabDragStart(i)"
           @drop.prevent="onTabDrop(i)" @dragover.prevent :class="{ active: i === activeTabIndex }"
-          @click="setActiveTab(i)">
+          @mousedown="setActiveTab(i)">
           <p>{{ tab.name }}.{{ tab.fileExtension }}</p>
           <span class="tab-close" @click.stop="closeTab(i)">✕</span>
         </div>

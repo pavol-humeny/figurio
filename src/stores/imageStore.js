@@ -175,8 +175,10 @@ export const useImageStore = defineStore('imageStore', {
     /** Flag to prevent showing multiple phone buttons can not be drawn toast */
     phoneButtonsCanNotBeDrawnToastFlag: false,
 
-    /** Whether any artifacts are visible */
-    isArtifactsVisible: false,
+    /** Whether the image has artifacts (noise) */
+    imageHasArtifacts: false,
+    /** Whether the user has canceled image artifacts display */
+    imageArtifactsCanceledByUser: false,
 
     // PDF
     pdfPage: null,
@@ -475,7 +477,8 @@ export const useImageStore = defineStore('imageStore', {
 
       this.phoneButtonsCanNotBeDrawnToastFlag = false
 
-      // this.isArtifactsVisible = false
+      this.imageHasArtifacts = false
+      this.imageArtifactsCanceledByUser = false
 
       this.resetSvgObject()
 
@@ -898,7 +901,6 @@ export const useImageStore = defineStore('imageStore', {
 
         log(realType === detectedType, 'realType:', realType, 'detectedType:', detectedType)
 
-        //  TODO - obrazok vinice sa deteguje zle (ako unknown)
         return (
           realType === detectedType ||
           ((realType === 'png' || realType === 'jpeg' || realType === 'jpg') &&
@@ -916,15 +918,6 @@ export const useImageStore = defineStore('imageStore', {
     async saveToImageStore(files, t, router) {
       if (globalConfig.featureFlags.enableImageLoad === false) return
       if (!files) return
-
-      // if (files.length > 1) {
-      //   showToastModal(
-      //     'error',
-      //     t('imageStore.toast.errorMultipleFiles.title'),
-      //     t('imageStore.toast.errorMultipleFiles.message'),
-      //   )
-      //   return
-      // }
 
       const result = await this.checkFile(files[0])
 
@@ -2500,8 +2493,6 @@ export const useImageStore = defineStore('imageStore', {
         removalCanvas: this.removalCanvas || null,
 
         tmpRenderedImage: this.tmpRenderedImage?.toDataURL() || null,
-
-        isArtifactsVisible: JSON.parse(JSON.stringify(this.isArtifactsVisible)),
       }
 
       log('[getSnapshot] imageOperations:', snapshot.imageOperations)
@@ -2530,7 +2521,6 @@ export const useImageStore = defineStore('imageStore', {
       this.frame = JSON.parse(JSON.stringify(snapshot.frame))
       this.svgDefs = JSON.parse(JSON.stringify(snapshot.svgDefs))
       this.blurImages = JSON.parse(JSON.stringify(snapshot.blurImages))
-      this.isArtifactsVisible = JSON.parse(JSON.stringify(snapshot.isArtifactsVisible))
 
       if (snapshot.pdfPageBytes) {
         if (snapshot.pdfPageBytes instanceof Uint8Array) {
@@ -2668,7 +2658,8 @@ export const useImageStore = defineStore('imageStore', {
 
         phoneButtonsCanNotBeDrawnToastFlag: this.phoneButtonsCanNotBeDrawnToastFlag,
 
-        isArtifactsVisible: JSON.parse(JSON.stringify(this.isArtifactsVisible)),
+        imageHasArtifacts: JSON.parse(JSON.stringify(this.imageHasArtifacts)),
+        imageArtifactsCanceledByUser: JSON.parse(JSON.stringify(this.imageArtifactsCanceledByUser)),
 
         removalCanvas: this.removalCanvas || null,
       }
@@ -2710,7 +2701,8 @@ export const useImageStore = defineStore('imageStore', {
       this.frame = JSON.parse(JSON.stringify(snapshot.frame))
       this.frameSvg = snapshot.frameSvg
 
-      this.isArtifactsVisible = JSON.parse(JSON.stringify(snapshot.isArtifactsVisible))
+      this.imageHasArtifacts = JSON.parse(JSON.stringify(snapshot.imageHasArtifacts))
+      this.imageArtifactsCanceledByUser = JSON.parse(JSON.stringify(snapshot.imageArtifactsCanceledByUser))
 
       if (snapshot.pdfPageBytes) {
         if (snapshot.pdfPageBytes instanceof Uint8Array) {
