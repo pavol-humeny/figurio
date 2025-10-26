@@ -1035,7 +1035,7 @@ export function useFrameTool(imageStore, historyStore, editorStore, t) {
       headerRect.setAttribute('fill', color)
       el.appendChild(headerRect)
 
-      const strokeWidth = Math.max(1, Math.floor(header * 0.07))
+      const strokeWidth = header * 0.07
 
       // VS Code logo
       const logoPath = document.createElementNS(ns, 'path')
