@@ -6,6 +6,28 @@
     ]
   },
   "versions": {
+    "4.13.0": {
+      "label": "4.13.0",
+      "date": "26.10. 2025",
+      "newFeatures": {
+        "items": [
+          "Nový režim zoomu - Fyzická veľkosť: Zobrazí obrázok v jeho reálnej fyzickej veľkosti podľa kalibrácie monitora",
+          "Kalibračné okno na úpravu zobrazenia, aby merania na obrazovke presne zodpovedali reálnej fyzickej veľkosti",
+          "Zobrazí sa upozornenie, keď je po nahraní obrázka detegovaný šum v obrázku",
+          "Obrázok je možné posúvať horizontálne druhým kolieskom myši"
+        ]
+      },
+      "improvements": {
+        "items": [
+          "Rozbaľovacie menu využíva celý dostupný priestor na obrazovke (posúvateľné iba v prípade potreby)"
+        ]
+      },
+      "bugFixes": {
+        "items": [
+          "Opravený problém s nefunkčným rozmazaním okrajov objektu blur area"
+        ]
+      }
+    },
     "4.12.4":{
       "label": "4.12.4",
       "date":"15.10. 2025",

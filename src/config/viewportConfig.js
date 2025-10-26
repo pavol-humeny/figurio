@@ -25,7 +25,8 @@ export const viewportConfig = {
   defaultPxPerCm: 96 / 2.54, // 1 cm = ~37.79 px @96DPI
 
   // Noise analysis
-  noiseThreshold: 0.15, // 15% noise level to show artifacts
+  noiseThreshold: 0.05, // 5% noise level to show artifacts
+  noiseTopThreshold: 0.6, // 60% noise level to skip analysis
   bgCoverageThreshold: 0.5, // 50% background coverage to run noise analysis
-  colorDistanceThreshold: 10, // color distance from background considered as near-background
+  colorDistanceThreshold: 15, // color distance from background considered as near-background
 }

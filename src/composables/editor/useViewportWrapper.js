@@ -161,14 +161,10 @@ export function useViewportWrapper(viewportStore, imageStore, editorStore, uiSto
 
     // HORIZONTAL SCROLL (Shift or horizontal wheel)
     const isHorizontalScroll = event.shiftKey || Math.abs(event.deltaX) > Math.abs(event.deltaY)
-    log('Horizontal scroll?', isHorizontalScroll)
 
     if (isHorizontalScroll) {
-      log('Handling horizontal scroll')
       // Use deltaX if available, otherwise deltaY when Shift is held
       const delta = event.shiftKey ? event.deltaY : event.deltaX
-      log('Event deltaX:', event.deltaX, 'deltaY:', event.deltaY)
-      log('Delta used for horizontal scroll:', delta)
 
       if (
         viewportStore.panX >= scrollHorizontalMin.value &&

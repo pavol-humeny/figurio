@@ -6,11 +6,13 @@
   "versions":{
     "4.13.0":{
       "label": "4.13.0",
-      "date":"X.10. 2025",
+      "date":"26.10. 2025",
       "newFeatures": {
         "items": [
           "New zoom mode - Physical size: Display the image at its real-world physical size based on the monitor calibration",
-          "Calibration modal to adjust the display so that measurements on screen correspond accurately to real-world physical sizes"
+          "Calibration modal to adjust the display so that measurements on screen correspond accurately to real-world physical sizes",
+          "Show alert when noise is detected in the image after uploading the image",
+          "Image can be scrolled horizontally with second mouse wheel"
         ]
       },
       "improvements": {

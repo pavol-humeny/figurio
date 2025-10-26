@@ -16,6 +16,7 @@ const noiseLevel = ref(0)
  */
 export function useImageAnalysis(imageStore, workspaceStore, t) {
   const noiseThreshold = viewportConfig.noiseThreshold // adjustable block noise threshold
+  const noiseTopThreshold = viewportConfig.noiseTopThreshold // Upper limit to ignore blocks with extreme noise - solid color blocks similar to background
   const bgCoverageThreshold = viewportConfig.bgCoverageThreshold // minimal percentage of background area required to analyze noise
   const colorDistanceThreshold = viewportConfig.colorDistanceThreshold // color distance from background considered as near-background
 
@@ -85,7 +86,6 @@ export function useImageAnalysis(imageStore, workspaceStore, t) {
     const odata = overlay.data
 
     const pixelCount = width * height
-    const threshold = colorDistanceThreshold
 
     // Background coverage
     let bgCount = 0
@@ -94,7 +94,7 @@ export function useImageAnalysis(imageStore, workspaceStore, t) {
       const dg = data[i + 1] - bgColor.g
       const db = data[i + 2] - bgColor.b
       const dist = Math.sqrt(dr * dr + dg * dg + db * db)
-      if (dist < threshold) bgCount++
+      if (dist < colorDistanceThreshold) bgCount++
     }
     const bgCoverage = bgCount / pixelCount
     if (bgCoverage < bgCoverageThreshold) {
@@ -132,14 +132,16 @@ export function useImageAnalysis(imageStore, workspaceStore, t) {
             const db = data[idx + 2] - bgColor.b
             const dist = Math.sqrt(dr * dr + dg * dg + db * db)
 
-            if (dist > 0 && dist < threshold) {
+            if (dist > 0 && dist < colorDistanceThreshold) {
               blockNoiseCount++
             }
           }
         }
 
         const blockPixels = blockSize * blockSize
-        if (blockNoiseCount / blockPixels > noiseThreshold) {
+        const blockNoiseRatio = blockNoiseCount / blockPixels
+
+        if (blockNoiseRatio > noiseThreshold && blockNoiseRatio < noiseTopThreshold) {
           // Adjustable block noise threshold
           noisyBlocks++
 
@@ -155,7 +157,7 @@ export function useImageAnalysis(imageStore, workspaceStore, t) {
               const dg = data[idx + 1] - bgColor.g
               const db = data[idx + 2] - bgColor.b
               const dist = Math.sqrt(dr * dr + dg * dg + db * db)
-              if (dist > 0 && dist < threshold) {
+              if (dist > 0 && dist < colorDistanceThreshold) {
                 odata[idx] = 255
                 odata[idx + 1] = 0
                 odata[idx + 2] = 0
