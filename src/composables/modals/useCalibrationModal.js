@@ -7,6 +7,11 @@ import { viewportConfig } from '@/config/viewportConfig'
  */
 const isVisible = ref(false)
 
+/**
+ * Calibration factor for physical size adjustment
+ */
+const calibrationFactor = ref(1.0)
+
 export function useCalibrationModal(viewportStore) {
   /**
    * Open the calibration modal.
@@ -14,6 +19,8 @@ export function useCalibrationModal(viewportStore) {
   const openCalibrationModal = () => {
     if (isVisible.value) return
 
+    calibrationFactor.value = viewportStore.calibrationFactor
+    
     useSendEvent().sendEvent('modalEvent', null, null, { modal: 'calibration', event: 'open' })
 
     isVisible.value = true
@@ -54,11 +61,6 @@ export function useCalibrationModal(viewportStore) {
    */
   const originalCardWidthPx = cardWidthCm * PxPerCm
 
-  /**
-   * Calibration factor for physical size adjustment
-   */
-  const calibrationFactor = ref(viewportStore.calibrationFactor)
-
   const minCalibrationFactor = 0.2
   const maxCalibrationFactor = 2
   const stepCalibrationFactor = 0.005
@@ -95,7 +97,11 @@ export function useCalibrationModal(viewportStore) {
   /**
    * Setup and cleanup of keydown event listener
    */
-  onMounted(() => window.addEventListener('keydown', handleKeydown))
+  onMounted(() => {
+    window.addEventListener('keydown', handleKeydown)
+
+    calibrationFactor.value = viewportStore.calibrationFactor
+  })
   onBeforeUnmount(() => window.removeEventListener('keydown', handleKeydown))
 
   return {

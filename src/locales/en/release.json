@@ -4,6 +4,20 @@
     "items": []
   },
   "versions":{
+    "4.13.1":{
+      "label": "4.13.1",
+      "date":"26.10. 2025",
+      "improvements": {
+        "items": [
+          "Add shortcut CTRL+B to toggle side panel visibility"
+        ]
+      },
+      "bugFixes": {
+        "items": [
+          "Load correct calibration factor from preferences when opening the calibration modal"
+        ]
+      }
+    },
     "4.13.0":{
       "label": "4.13.0",
       "date":"26.10. 2025",

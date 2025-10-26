@@ -33,6 +33,13 @@ export const keyboardShortcuts = [
     description: 'Set zoom mode to physical',
   },
 
+  // Ui
+  {
+    keys: ['ctrl', 'b'],
+    action: 'toggleCollapsiblePanel',
+    description: 'Toggle collapsible panel',
+  },
+
   // File management shortcuts
   {
     keys: ['ctrl', 'o'],

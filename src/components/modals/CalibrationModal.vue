@@ -22,6 +22,7 @@ const {
   maxCalibrationFactor,
   stepCalibrationFactor,
 } = useCalibrationModal(useViewportStore());
+
 </script>
 
 <template>

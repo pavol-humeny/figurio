@@ -6,6 +6,20 @@
     ]
   },
   "versions": {
+    "4.13.1":{
+      "label": "4.13.1",
+      "date":"26.10. 2025",
+      "improvements": {
+        "items": [
+          "Pridanie klávesovej skratky CTRL + B pre prepínanie viditeľnosti bočného panelu"
+        ]
+      },
+      "bugFixes": {
+        "items": [
+          "Načítanie správneho kalibračného faktora pri otvorení modálneho okna kalibrácie"
+        ]
+      }
+    },
     "4.13.0": {
       "label": "4.13.0",
       "date": "26.10. 2025",

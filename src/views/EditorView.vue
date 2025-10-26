@@ -53,6 +53,7 @@ const { startEditing } = useFileNameDisplay(useImageStore(), t)
 const { switchToNextTab, switchToPreviousTab, } = useFileTabs(useUiStore(), useViewportStore(), useImageStore(), useEditorStore(), t)
 const { prevStep, nextStep, finishTutorial, closeTutorial, startTutorial } = useInteractiveTutorial(useUiStore(), useImageStore(), useRouter(), t)
 const { hideCropBox, showCropBox } = useCropTool(useImageStore(), useViewportStore(), useEditorStore(), useHistoryStore(), useWorkspaceStore(), t)
+const { toggleVisibility: toggleCollapsiblePanel, } = useCollapsiblePanel(useUiStore())
 
 const {
   moveObjectLeftLocal,
@@ -122,6 +123,7 @@ useKeyboardShortcuts({
   hideCropBox,
   showCropBox,
   applyBackgroundRemovalRender,
+  toggleCollapsiblePanel,
 }, useUiStore(), useEditorStore());
 // ======
 
