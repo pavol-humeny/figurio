@@ -812,6 +812,7 @@
             "label": "Frame",
             "enabled": "Enabled",
             "color": "Color",
+            "useMillimeters": "Use millimeters",
             "width": "Width",
             "type": "Type",
             "useFrameOutline": "Use outline",
@@ -822,7 +823,9 @@
             "phoneHeaderTextColor": "Text color",
             "phoneHeaderBackgroundColor": "Background color",
             "phoneHeaderTime": "Time",
-            "headerFooterMultiplier": "Height multiplier"
+            "headerFooterMultiplier": "Height multiplier",
+            "headerSize": "Header size",
+            "footerSize": "Footer size"
           },
           "crop": {
             "label": "Crop",
@@ -919,6 +922,7 @@
             "label": "Frame",
             "enabled": "Enabled",
             "color": "Color",
+            "useMillimeters": "Use millimeters",
             "width": "Width",
             "type": "Type",
             "useFrameOutline": "Use outline",
@@ -929,7 +933,9 @@
             "phoneHeaderTextColor": "Text color",
             "phoneHeaderBackgroundColor": "Background color",
             "phoneHeaderTime": "Time",
-            "headerFooterMultiplier": "Height multiplier"
+            "headerFooterMultiplier": "Height multiplier",
+            "headerSize": "Header size",
+            "footerSize": "Footer size"
           },
           "crop": {
             "label": "Crop",

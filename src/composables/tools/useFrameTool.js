@@ -802,6 +802,11 @@ export function useFrameTool(imageStore, historyStore, viewportStore, t) {
         fw = Math.max(Math.floor(editorConfig.phoneFrameDefaultSize * w), 2) * 1.5 * 2
         fh = fw / 1.5
       } else {
+        // Use only max frame width in mm (because of preset values)
+        if (fw > maxFrameWidthMm.value * PxPerMm) {
+          fw = maxFrameWidthMm.value * PxPerMm
+        }
+
         fh = fw / 1.5
       }
       // Non-linear scaling using a power function for smoother growth

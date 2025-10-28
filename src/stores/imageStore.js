@@ -156,7 +156,7 @@ export const useImageStore = defineStore('imageStore', {
       useMillimeters: false,
       width: 0,
       height: 0,
-      widthMm: 1,
+      widthMm: 0,
       heightMm: 0,
       color: '#000000',
       headerSize: 0, // Size of the header for browser frames
@@ -361,7 +361,7 @@ export const useImageStore = defineStore('imageStore', {
         useMillimeters: false,
         width: 0,
         height: 0,
-        widthMm: 1,
+        widthMm: 0,
         heightMm: 0,
         color: '#000000',
         headerSize: 0, // Size of the header for browser frames

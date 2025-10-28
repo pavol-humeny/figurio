@@ -812,6 +812,7 @@
             "label": "Rámik",
             "enabled": "Povolené",
             "color": "Farba",
+            "useMillimeters": "Použiť milimetry",
             "width": "Šírka",
             "type": "Typ",
             "useFrameOutline": "Použiť obrys",
@@ -822,7 +823,9 @@
             "phoneHeaderTextColor": "Farba textu",
             "phoneHeaderBackgroundColor": "Farba pozadia",
             "phoneHeaderTime": "Čas",
-            "headerFooterMultiplier": "Násobiteľ výšky"
+            "headerFooterMultiplier": "Násobiteľ výšky",
+            "headerSize": "Veľkosť záhlavia",
+            "footerSize": "Veľkosť pätičky"
           },
           "crop": {
             "label": "Orezanie",
@@ -919,6 +922,7 @@
             "label": "Rámik",
             "enabled": "Povolené",
             "color": "Farba",
+            "useMillimeters": "Použiť milimetre",
             "width": "Šírka",
             "type": "Typ",
             "useFrameOutline": "Použiť obrys",
@@ -929,7 +933,9 @@
             "phoneHeaderTextColor": "Farba textu",
             "phoneHeaderBackgroundColor": "Farba pozadia",
             "phoneHeaderTime": "Čas",
-            "headerFooterMultiplier": "Násobiteľ výšky"
+            "headerFooterMultiplier": "Násobiteľ výšky",
+            "headerSize": "Veľkosť záhlavia",
+            "footerSize": "Veľkosť pätičky"
           },
           "crop": {
             "label": "Orezanie",

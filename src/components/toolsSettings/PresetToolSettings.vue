@@ -239,15 +239,34 @@ const tabs = ['myPresets', 'createPreset']
                 </p>
                 <ColorPicker v-model="localImageFrame.color" />
               </div>
-              <!-- Width -->
+              <!-- Use millimeters -->
+              <div class="content-aligned two-items" :class="!isModifyingPreset ? 'disabled' : ''">
+                <p>
+                  {{ t('tools.preset.settings.myPresets.presetValues.frame.useMillimeters') }}
+                </p>
+                <ToggleButton v-model="localImageFrame.useMillimeters" :scale="0.6"
+                  :style="{ transform: 'translateX(16px)' }" />
+              </div>
+              <!-- Width px-->
               <div class="content-aligned two-items"
-                v-if="localImageFrame.enabled && (localImageFrame.outlineEnabled || localImageFrame.type === 'frameSolid')">
+                v-if="localImageFrame.enabled && (localImageFrame.outlineEnabled || localImageFrame.type === 'frameSolid') && !localImageFrame.useMillimeters">
                 <p
                   :class="!isModifyingPreset || (localImageFrame.type !== 'frameSolid' && !localImageFrame.outlineEnabled) ? 'disabled' : ''">
                   {{ t('tools.preset.settings.myPresets.presetValues.frame.width') }}
                 </p>
-                <NumberInput ref="frameWidthRef" v-model="localImageFrame.width" :min="0" :max="100" :step="1" unit="px"
+                <NumberInput ref="frameWidthRef" v-model="localImageFrame.width" :min="1" :max="100" :step="1" unit="px"
                   icon="IconArrowWidth" :iconTop="45" :onReset="() => resetFrameWidth()"
+                  :disabled="!isModifyingPreset || (localImageFrame.type !== 'frameSolid' && !localImageFrame.outlineEnabled)" />
+              </div>
+              <!-- Width mm-->
+              <div class="content-aligned two-items"
+                v-if="localImageFrame.enabled && (localImageFrame.outlineEnabled || localImageFrame.type === 'frameSolid' || isPhoneFrame(localImageFrame.type)) && localImageFrame.useMillimeters">
+                <p
+                  :class="!isModifyingPreset || (localImageFrame.type !== 'frameSolid' && !localImageFrame.outlineEnabled) ? 'disabled' : ''">
+                  {{ t('tools.preset.settings.myPresets.presetValues.frame.width') }}
+                </p>
+                <NumberInput ref="frameWidthRef" v-model="localImageFrame.widthMm" :min="1" :max="50" :step="1"
+                  unit="mm" icon="IconArrowWidth" :iconTop="45" :onReset="() => localImageFrame.widthMm = 1"
                   :disabled="!isModifyingPreset || (localImageFrame.type !== 'frameSolid' && !localImageFrame.outlineEnabled)" />
               </div>
               <!-- Use outline -->
@@ -621,15 +640,34 @@ const tabs = ['myPresets', 'createPreset']
                 </p>
                 <ColorPicker v-model="newPreset.frame.color" />
               </div>
-              <!-- Width -->
+              <!-- Use millimeters -->
+              <div v-if="newPreset.frame.enabled" class="content-aligned two-items">
+                <p>
+                  {{ t('tools.preset.settings.createPreset.presetValues.frame.useMillimeters') }}
+                </p>
+                <ToggleButton v-model="newPreset.frame.useMillimeters" :scale="0.6"
+                  :style="{ transform: 'translateX(16px)' }" />
+              </div>
+              <!-- Width px-->
               <div
-                v-if="(newPreset.frame.type === 'frameSolid' || newPreset.frame.outlineEnabled) && newPreset.frame.enabled"
+                v-if="(newPreset.frame.type === 'frameSolid' || newPreset.frame.outlineEnabled) && newPreset.frame.enabled && !newPreset.frame.useMillimeters"
                 class="content-aligned two-items">
                 <p :class="newPreset.frame.enabled ? '' : 'disabled'">
                   {{ t('tools.preset.settings.createPreset.presetValues.frame.width') }}
                 </p>
-                <NumberInput ref="frameWidthRef" v-model="newPreset.frame.width" :min="0" :max="100" :step="1" unit="px"
+                <NumberInput ref="frameWidthRef" v-model="newPreset.frame.width" :min="1" :max="100" :step="1" unit="px"
                   icon="IconArrowWidth" :iconTop="45" :onReset="() => resetFrameWidth()"
+                  :disabled="!newPreset.frame.enabled" />
+              </div>
+              <!-- Width mm-->
+              <div
+                v-if="(newPreset.frame.type === 'frameSolid' || newPreset.frame.outlineEnabled || isPhoneFrame(newPreset.frame.type)) && newPreset.frame.enabled && newPreset.frame.useMillimeters"
+                class="content-aligned two-items">
+                <p :class="newPreset.frame.enabled ? '' : 'disabled'">
+                  {{ t('tools.preset.settings.createPreset.presetValues.frame.width') }}
+                </p>
+                <NumberInput ref="frameWidthRef" v-model="newPreset.frame.widthMm" :min="1" :max="50" :step="1"
+                  unit="mm" icon="IconArrowWidth" :iconTop="45" :onReset="() => newPreset.frame.widthMm = 1"
                   :disabled="!newPreset.frame.enabled" />
               </div>
               <!-- Use outline -->
@@ -709,8 +747,15 @@ const tabs = ['myPresets', 'createPreset']
                 </p>
                 <TimeInput v-model="newPreset.frame.phoneHeaderTimeInMinutes" />
               </div>
+
+              <!-- Header size px-->
+
+              <!-- Footer size px -->
+
+
+
               <!-- Header and footer frames multiplier -->
-              <div v-if="isFrameWithMultiplier(newPreset.frame.type) && newPreset.frame.enabled"
+              <!-- <div v-if="isFrameWithMultiplier(newPreset.frame.type) && newPreset.frame.enabled"
                 class="content-aligned two-items" :class="newPreset.frame.enabled ? '' : 'disabled'">
                 <p>
                   {{ t('tools.preset.settings.createPreset.presetValues.frame.headerFooterMultiplier') }}
@@ -719,7 +764,7 @@ const tabs = ['myPresets', 'createPreset']
                   :min="editorConfig.minHeaderFooterMultiplier" :max="editorConfig.maxHeaderFooterMultiplier"
                   :step="editorConfig.stepHeaderFooterMultiplier"
                   :onReset="() => { newPreset.frame.headerFooterMultiplier = 1 }" showValue />
-              </div>
+              </div> -->
             </div>
           </div>
         </div>

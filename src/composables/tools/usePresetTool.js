@@ -447,6 +447,7 @@ export function usePresetTool(
       areFramesEqual =
         currentImageFrame.color === presetFrame.color &&
         currentImageFrame.width === presetFrame.width &&
+        currentImageFrame.widthMm === presetFrame.widthMm &&
         currentImageFrame.outlineEnabled === presetFrame.outlineEnabled &&
         currentImageFrame.phoneHeaderEnabled === presetFrame.phoneHeaderEnabled &&
         currentImageFrame.phoneHeaderExpand === presetFrame.phoneHeaderExpand &&
@@ -454,8 +455,7 @@ export function usePresetTool(
         currentImageFrame.phoneNavigationEnabled === presetFrame.phoneNavigationEnabled &&
         currentImageFrame.phoneHeaderTimeInMinutes === presetFrame.phoneHeaderTimeInMinutes &&
         currentImageFrame.phoneHeaderTextColor === presetFrame.phoneHeaderTextColor &&
-        currentImageFrame.phoneHeaderBackgroundColor === presetFrame.phoneHeaderBackgroundColor &&
-        currentImageFrame.headerFooterMultiplier === presetFrame.headerFooterMultiplier
+        currentImageFrame.phoneHeaderBackgroundColor === presetFrame.phoneHeaderBackgroundColor
     }
 
     if (areOperationsEqual && areFramesEqual) {
@@ -599,11 +599,16 @@ export function usePresetTool(
     frame: {
       enabled: false,
       type: 'frameSolid',
-      width: 0,
+      useMillimeters: false,
+      width: 1,
+      widthMm: 1,
       height: 0,
+      heightMm: 0,
       color: '#000000',
       headerSize: 0,
+      headerSizeMm: 0,
       footerSize: 0,
+      footerSizeMm: 0,
       outlineEnabled: false,
       phoneHeaderEnabled: true,
       phoneHeaderExpand: false,
@@ -739,11 +744,16 @@ export function usePresetTool(
       frame: {
         enabled: false,
         type: 'frameSolid',
-        width: 0,
+        useMillimeters: false,
+        width: 1,
+        widthMm: 1,
         height: 0,
+        heightMm: 0,
         color: '#000000',
         headerSize: 0,
+        headerSizeMm: 0,
         footerSize: 0,
+        footerSizeMm: 0,
         outlineEnabled: false,
         phoneHeaderEnabled: true,
         phoneHeaderExpand: false,
@@ -824,8 +834,15 @@ export function usePresetTool(
       imageFrame.enabled = newPreset.value.frame.enabled
       imageFrame.type = newPreset.value.frame.type
       imageFrame.color = newPreset.value.frame.color
+      imageFrame.useMillimeters = newPreset.value.frame.useMillimeters
       imageFrame.width = newPreset.value.frame.width
+      imageFrame.widthMm = newPreset.value.frame.widthMm
       imageFrame.height = newPreset.value.frame.width
+      imageFrame.heightMm = newPreset.value.frame.widthMm
+      imageFrame.headerSize = newPreset.value.frame.headerSize
+      imageFrame.headerSizeMm = newPreset.value.frame.headerSizeMm
+      imageFrame.footerSize = newPreset.value.frame.footerSize
+      imageFrame.footerSizeMm = newPreset.value.frame.footerSizeMm
       imageFrame.outlineEnabled = newPreset.value.frame.outlineEnabled
       imageFrame.phoneHeaderEnabled = newPreset.value.frame.phoneHeaderEnabled
       imageFrame.phoneHeaderExpand = newPreset.value.frame.phoneHeaderExpand
@@ -872,7 +889,7 @@ export function usePresetTool(
           Math.max(imageStore.fileDimensions.width, imageStore.fileDimensions.height),
       )
     } else {
-      newPreset.value.frame.width = 0
+      newPreset.value.frame.width = 1
     }
     frameWidthRef.value.setValue(newPreset.value.frame.width)
   }
