@@ -1,3 +1,4 @@
+import { globalConfig } from '@/config/globalConfig'
 import { viewportConfig } from '@/config/viewportConfig'
 import { ref, watch } from 'vue'
 
@@ -62,6 +63,8 @@ export function useImageAnalysis(imageStore, workspaceStore, t) {
    * and display overlay if needed
    */
   const calculateArtifacts = async () => {
+    if (globalConfig.featureFlags.enableNoiseDetectionOnStart === false) return
+
     await new Promise((resolve) => setTimeout(resolve, 100))
 
     if (imageStore.fileType !== 'image') {
