@@ -783,7 +783,8 @@
         "label": "Vytvoriť šablónu",
         "presetName": {
           "text": "Názov šablóny",
-          "placeholder": "Zadajte názov šablóny"
+          "placeholder": "Zadajte názov šablóny",
+          "defaultPresetName": "Šablóna {number}"
         },
         "useCurrentModifications": {
           "text": "Použiť aktuálne úpravy",

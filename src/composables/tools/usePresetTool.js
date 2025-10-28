@@ -1,4 +1,4 @@
-import { ref, computed, watch } from 'vue'
+import { ref, computed, watch, onMounted } from 'vue'
 import { useToastModal } from '../modals/useToastModal'
 import { useConfirmModal } from '../modals/useConfirmModal'
 import { useFlipTool } from './useFlipTool'
@@ -579,6 +579,28 @@ export function usePresetTool(
    */
   const isShowManualPresetSetting = ref(false)
 
+  // onMounted(() => {
+  //   // Set default preset name
+  //   newPreset.value = 'ahoj' + presetsStore.presets.length()
+  // })
+
+  watch(
+    () => ({
+      tool: editorStore.selectedToolKey,
+      tab: editorStore.selectedTabPerTool[editorStore.selectedToolKey],
+    }),
+    (newVal) => {
+      if (newVal.tool === 'preset' && newVal.tab === 'createPreset') {
+        newPreset.value.presetName = t(
+          'tools.preset.settings.createPreset.presetName.defaultPresetName',
+          {
+            number: presetsStore.presets.length + 1,
+          },
+        )
+      }
+    },
+    { immediate: true, deep: false },
+  )
   /**
    * New preset object to be created
    */

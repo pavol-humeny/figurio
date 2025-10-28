@@ -784,7 +784,8 @@
         "label": "Vytvořit šablonu",
         "presetName": {
           "text": "Název šablony",
-          "placeholder": "Zadejte název šablony"
+          "placeholder": "Zadejte název šablony",
+          "defaultPresetName": "Šablona {number}"
         },
         "useCurrentModifications": {
           "text": "Použít aktuální úpravy",

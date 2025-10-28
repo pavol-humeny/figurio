@@ -783,7 +783,8 @@
         "label": "Create preset",
         "presetName": {
           "text": "Preset name",
-          "placeholder": "Enter preset name"
+          "placeholder": "Enter preset name",
+          "defaultPresetName": "Preset {number}"
         },
         "useCurrentModifications": {
           "text": "Use current modifications",

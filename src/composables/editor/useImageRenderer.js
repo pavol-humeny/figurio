@@ -308,7 +308,12 @@ export function useImageRenderer(
    * Watch for changes in viewport dimensions and update sizes
    */
   watch(
-    () => imageStore.frame,
+    [
+      () => imageStore.frame,
+      () => viewportStore.physicalContentSize,
+      () => viewportStore.zoomMode,
+      () => viewportStore.calibrationFactor,
+    ],
     (newFrame) => {
       if (newFrame && !renderingFrameSvg.value) {
         log('#################### Frame operations changed, re-rendering frame svg')

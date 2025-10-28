@@ -36,7 +36,7 @@ export function useFrameTool(imageStore, historyStore, viewportStore, t) {
   /**
    * Whether to use millimeters for frame width input
    */
-  const useMillimeters = ref(false)
+  const useMillimeters = ref(imageStore.frame.useMillimeters)
 
   /**
    * Maximum frame width in millimeters
