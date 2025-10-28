@@ -17,6 +17,11 @@
         "items": [
           "Set default name for new created presets"
         ]
+      },
+      "bugFixes": {
+        "items": [
+          "Clear preferences also reset calibration factor"
+        ]
       }
     },
     "4.13.1":{

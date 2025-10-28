@@ -27,7 +27,7 @@ export const globalConfig = {
   // Default zoom mode
   zoomMode: 'classic', // 'classic', 'physical'
   physicalContentSize: 15.2, // cm
-  calibrationFactor: 0.96, // calibration factor for physical mode
+  calibrationFactor: 1, // calibration factor for physical mode
 
   // Default tool to start with
   startTool: 'frame',
