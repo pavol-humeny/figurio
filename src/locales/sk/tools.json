@@ -747,6 +747,14 @@
         "headerFooterMultiplier": {
           "label": "Násobiteľ výšky"
         },
+        "headerSize":{
+          "label": "Veľkosť záhlavia",
+          "tip": "Upravte veľkosť záhlavia alebo dvojklikom na ikonu resetujte veľkosť"
+        },
+        "footerSize":{
+          "label": "Veľkosť patičky",
+          "tip": "Upravte veľkosť patičky alebo dvojklikom na ikonu resetujte veľkosť"
+        },
         "phoneButtonsCanNotBeDrawn": {
           "title": "Tlačidlá telefónu sa nedajú nakresliť",
           "message": "Tlačidlá telefónu sa nedajú nakresliť, pretože rám nie je dostatočne vysoký."

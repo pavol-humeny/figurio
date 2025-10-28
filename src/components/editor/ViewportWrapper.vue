@@ -182,7 +182,7 @@ const phoneFrameBorderRadius = ref(0)
 watch(
   () => imageStore.frame,
   () => {
-    const isPhoneFrame = useFrameTool(imageStore, useHistoryStore(), editorStore, t).isPhoneFrame(
+    const isPhoneFrame = useFrameTool(imageStore, useHistoryStore(), useViewportStore(), t).isPhoneFrame(
       imageStore.frame.type,
     )
 
@@ -402,7 +402,7 @@ const cursorStyle = computed(() => {
         </div>
         <div v-if="mouseX !== null" class="ruler-cursor-mark horizontal" :style="{ left: mouseX + 'px' }">
           <span class="ruler-cursor-label horizontal" :class="{ 'active': cursorPosXSameAsImageWidth }">{{ cursorPosX
-            }}</span>
+          }}</span>
         </div>
 
       </div>
@@ -415,7 +415,7 @@ const cursorStyle = computed(() => {
         </div>
         <div v-if="mouseY !== null" class="ruler-cursor-mark vertical" :style="{ top: mouseY + 'px' }">
           <span class="ruler-cursor-label vertical" :class="{ 'active': cursorPosYSameAsImageHeight }">{{ cursorPosY
-            }}</span>
+          }}</span>
         </div>
       </div>
     </div>

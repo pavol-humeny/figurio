@@ -30,7 +30,7 @@ export const globalConfig = {
   calibrationFactor: 0.96, // calibration factor for physical mode
 
   // Default tool to start with
-  startTool: '',
+  startTool: 'frame',
 
   // Feature flags
   // UPDATE new tool

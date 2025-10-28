@@ -13,7 +13,6 @@ import { useUiStore } from './uiStore'
 import { editorConfig } from '@/config/editorConfig'
 
 import { useViewportStore } from './viewportStore'
-import { useEditorStore } from './editorStore'
 import { globalConfig } from '@/config/globalConfig'
 import { useGeneralModal } from '@/composables/modals/useGeneralModal'
 import { useSendEvent } from '@/composables/common/useSendEvent'
@@ -154,11 +153,16 @@ export const useImageStore = defineStore('imageStore', {
     frame: {
       enabled: false,
       type: 'none',
+      useMillimeters: false,
       width: 0,
       height: 0,
+      widthMm: 1,
+      heightMm: 0,
       color: '#000000',
       headerSize: 0, // Size of the header for browser frames
+      headerSizeMm: 0, // Size of the header for browser frames in mm
       footerSize: 0, // Size of the footer for windows frame
+      footerSizeMm: 0, // Size of the footer for windows frame in mm
       outlineEnabled: false, // Whether to draw an outline around the frame
       phoneHeaderEnabled: true, // Whether to draw a header for phone frames
       phoneHeaderExpand: false, // Whether header expands beyond image
@@ -241,11 +245,11 @@ export const useImageStore = defineStore('imageStore', {
     getRenderedImage({ t, renderCall }) {
       if (renderCall) {
         const imageStore = this
-        const editorStore = useEditorStore()
         const historyStore = useHistoryStore()
+        const viewportStore = useViewportStore()
         if (
           this.frame.enabled &&
-          useFrameTool(imageStore, historyStore, editorStore, t).isPhoneFrame(this.frame.type)
+          useFrameTool(imageStore, historyStore, viewportStore, t).isPhoneFrame(this.frame.type)
         ) {
           return this.renderedImage
         } else {
@@ -354,11 +358,16 @@ export const useImageStore = defineStore('imageStore', {
       this.frame = {
         enabled: false,
         type: 'none',
+        useMillimeters: false,
         width: 0,
         height: 0,
+        widthMm: 1,
+        heightMm: 0,
         color: '#000000',
         headerSize: 0, // Size of the header for browser frames
+        headerSizeMm: 0, // Size of the header for browser frames in mm
         footerSize: 0, // Size of the footer for windows frame
+        footerSizeMm: 0, // Size of the footer for windows frame in mm
         outlineEnabled: false, // Whether to draw an outline around the frame
         phoneHeaderEnabled: true, // Whether to draw a header for phone frames
         phoneHeaderExpand: false, // Whether header expands beyond image
@@ -1245,7 +1254,7 @@ export const useImageStore = defineStore('imageStore', {
     async exportAsPdf(image, width, height, t) {
       const imageStore = this
       const historyStore = useHistoryStore()
-      const editorStore = useEditorStore()
+      const viewportStore = useViewportStore()
 
       const offsetX = this.frame.enabled ? this.frame.width : 0
       let offsetY = this.frame.enabled ? this.frame.height : 0
@@ -1253,7 +1262,7 @@ export const useImageStore = defineStore('imageStore', {
       const finalWidth = width
       const finalHeight = height
 
-      const hasHeader = useFrameTool(imageStore, historyStore, editorStore, t).isFrameWithHeader(
+      const hasHeader = useFrameTool(imageStore, historyStore, viewportStore, t).isFrameWithHeader(
         this.frame.type,
       )
 
@@ -2064,6 +2073,7 @@ export const useImageStore = defineStore('imageStore', {
      */
     async generatePreview(editorStore, historyStore, t, renderAsRaster = true) {
       const imageStore = this
+      const viewportStore = useViewportStore()
 
       log('Generating preview with frame...')
       this.phoneButtonsCanNotBeDrawnToastFlag = true // Set flag to prevent toast showing
@@ -2075,20 +2085,24 @@ export const useImageStore = defineStore('imageStore', {
         ? this.newFileDimensions.height - 2 * this.frame.height
         : this.newFileDimensions.height
 
-      const hasHeader = useFrameTool(imageStore, historyStore, editorStore, t).isFrameWithHeader(
+      const hasHeader = useFrameTool(imageStore, historyStore, viewportStore, t).isFrameWithHeader(
         this.frame.type,
       )
 
-      const hasFooter = useFrameTool(imageStore, historyStore, editorStore, t).isFrameWithFooter(
+      const hasFooter = useFrameTool(imageStore, historyStore, viewportStore, t).isFrameWithFooter(
         this.frame.type,
       )
 
       const phoneFrameWithExpandedHeader = useFrameTool(
         imageStore,
         historyStore,
-        editorStore,
+        viewportStore,
         t,
       ).isPhoneHeaderWithExpandedHeader(this.frame.type, this.frame.phoneHeaderExpand)
+
+      const phoneFrame = useFrameTool(imageStore, historyStore, viewportStore, t).isPhoneFrame(
+        this.frame.type,
+      )
 
       if (hasHeader) {
         if (phoneFrameWithExpandedHeader) {
@@ -2146,7 +2160,7 @@ export const useImageStore = defineStore('imageStore', {
 
       // Create temporary SVG element and apply frame
       const tempFrameSvg = document.createElementNS('http://www.w3.org/2000/svg', 'svg')
-      const { applyFrameRender } = useFrameTool(this, historyStore, editorStore, t)
+      const { applyFrameRender } = useFrameTool(this, historyStore, viewportStore, t)
       applyFrameRender(tempFrameSvg, targetWidth, targetHeight)
 
       // If vector export only, store raw SVG frame and exit
@@ -2188,7 +2202,7 @@ export const useImageStore = defineStore('imageStore', {
 
       // If frame has header, adjust offsetY accordingly
       if (hasHeader) {
-        if (phoneFrameWithExpandedHeader) {
+        if (phoneFrameWithExpandedHeader || (hasHeader && !phoneFrame)) {
           offsetY = this.frame.headerSize
         }
       }
@@ -2702,7 +2716,9 @@ export const useImageStore = defineStore('imageStore', {
       this.frameSvg = snapshot.frameSvg
 
       this.imageHasArtifacts = JSON.parse(JSON.stringify(snapshot.imageHasArtifacts))
-      this.imageArtifactsCanceledByUser = JSON.parse(JSON.stringify(snapshot.imageArtifactsCanceledByUser))
+      this.imageArtifactsCanceledByUser = JSON.parse(
+        JSON.stringify(snapshot.imageArtifactsCanceledByUser),
+      )
 
       if (snapshot.pdfPageBytes) {
         if (snapshot.pdfPageBytes instanceof Uint8Array) {

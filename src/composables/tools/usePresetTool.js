@@ -191,7 +191,7 @@ export function usePresetTool(
     () => localImageFrame.value.type,
     (type) => {
       isPresetModified.value = true
-      if (!useFrameTool(imageStore, historyStore, editorStore, t).isFrameWithOutline(type)) {
+      if (!useFrameTool(imageStore, historyStore, viewportStore, t).isFrameWithOutline(type)) {
         localImageFrame.value.outlineEnabled = false
       }
     },
@@ -705,7 +705,7 @@ export function usePresetTool(
   watch(
     () => newPreset.value.frame.type,
     (type) => {
-      if (!useFrameTool(imageStore, historyStore, editorStore, t).isFrameWithOutline(type)) {
+      if (!useFrameTool(imageStore, historyStore, viewportStore, t).isFrameWithOutline(type)) {
         newPreset.value.frame.outlineEnabled = false
       }
     },
@@ -860,10 +860,10 @@ export function usePresetTool(
    */
   const resetFrameWidth = () => {
     if (
-      useFrameTool(imageStore, historyStore, editorStore, t).isFrameWithOutline(
+      useFrameTool(imageStore, historyStore, viewportStore, t).isFrameWithOutline(
         newPreset.value.frame.type,
       ) ||
-      useFrameTool(imageStore, historyStore, editorStore, t).isFrameWithOutline(
+      useFrameTool(imageStore, historyStore, viewportStore, t).isFrameWithOutline(
         localImageFrame.value.type,
       )
     ) {

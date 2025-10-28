@@ -747,6 +747,14 @@
         "headerFooterMultiplier": {
           "label": "Height multiplier"
         },
+        "headerSize":{
+          "label": "Header size",
+          "tip": "Adjust the size of the header or double click icon to reset size"
+        },
+        "footerSize":{
+          "label": "Footer size",
+          "tip": "Adjust the size of the footer or double click icon to reset size"
+        },
         "phoneButtonsCanNotBeDrawn": {
           "title": "Phone buttons can not be drawn",
           "message": "Phone buttons can not be drawn, because the frame is not height enough."

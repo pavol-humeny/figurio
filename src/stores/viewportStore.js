@@ -102,6 +102,40 @@ export const useViewportStore = defineStore('viewportStore', {
     realZoomLevel(state) {
       return state.zoomLevel / state.fitZoomLevel
     },
+
+    /**
+     * Pixels per millimeter based on calibration factor
+     * @returns {number}
+     */
+    getPxPerMm(state) {
+      return viewportConfig.defaultPxPerCm * state.calibrationFactor * 0.1
+    },
+
+    /**
+     * Pixels per millimeter based on calibration factor and fit zoom
+     * @returns {number}
+     */
+    getPxPerMmFitZoom(state) {
+      return (
+        (viewportConfig.defaultPxPerCm * state.calibrationFactor * 0.1) / (1 / state.fitZoomLevel)
+      )
+    },
+
+    /**
+     * Pixels per centimeter based on calibration factor
+     * @returns {number}
+     */
+    getPxPerCm(state) {
+      return viewportConfig.defaultPxPerCm * state.calibrationFactor
+    },
+
+    /**
+     * Pixels per centimeter based on calibration factor and fit zoom
+     * @returns {number}
+     */
+    getPxPerCmFitZoom(state) {
+      return (viewportConfig.defaultPxPerCm * state.calibrationFactor) / (1 / state.fitZoomLevel)
+    },
   },
   actions: {
     /**

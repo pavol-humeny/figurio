@@ -9,9 +9,44 @@ import { useConfirmModal } from '../modals/useConfirmModal'
  */
 const phoneButtonsCanBeDrawn = ref(true)
 
-export function useFrameTool(imageStore, historyStore, editorStore, t) {
+/**
+ * Header size px
+ */
+const headerSize = ref(0)
+
+/**
+ * Header size mm
+ */
+const headerSizeMm = ref(0)
+
+/**
+ * Footer size px
+ */
+const footerSize = ref(0)
+
+/**
+ * Footer size mm
+ */
+const footerSizeMm = ref(0)
+
+export function useFrameTool(imageStore, historyStore, viewportStore, t) {
   const { showToastModal } = useToastModal()
   const { showConfirmModal } = useConfirmModal()
+
+  /**
+   * Whether to use millimeters for frame width input
+   */
+  const useMillimeters = ref(false)
+
+  /**
+   * Maximum frame width in millimeters
+   */
+  const maxFrameWidthMm = ref(100)
+
+  /**
+   * Maximum header/footer size in millimeters
+   */
+  const maxHeaderFooterSize = ref(100)
 
   /**
    * Frame color
@@ -62,6 +97,57 @@ export function useFrameTool(imageStore, historyStore, editorStore, t) {
     () => imageStore.frame.width,
     (newWidth) => {
       frameWidth.value = newWidth
+    },
+  )
+
+  /**
+   * Frame width mm
+   */
+  const frameWidthMm = ref(imageStore.frame.widthMm)
+  watch(
+    () => imageStore.frame.widthMm,
+    (newWidth) => {
+      frameWidthMm.value = newWidth
+    },
+  )
+
+  /**
+   * Header size px
+   */
+  watch(
+    () => imageStore.frame.headerSize,
+    (newSize) => {
+      headerSize.value = newSize
+    },
+  )
+
+  /**
+   * Header size mm
+   */
+  watch(
+    () => imageStore.frame.headerSizeMm,
+    (newSize) => {
+      headerSizeMm.value = newSize
+    },
+  )
+
+  /**
+   * Footer size px
+   */
+  watch(
+    () => imageStore.frame.footerSize,
+    (newSize) => {
+      footerSize.value = newSize
+    },
+  )
+
+  /**
+   * Footer size mm
+   */
+  watch(
+    () => imageStore.frame.footerSizeMm,
+    (newSize) => {
+      footerSizeMm.value = newSize
     },
   )
 
@@ -193,13 +279,6 @@ export function useFrameTool(imageStore, historyStore, editorStore, t) {
     }
   })
 
-  // /**
-  //  * Watch for drawPhoneButtons and update frame
-  //  */
-  // watch(drawPhoneButtons, () => {
-  //   applyFrame()
-  // })
-
   // ------------------------
   // Check frame type
   // ------------------------
@@ -297,10 +376,53 @@ export function useFrameTool(imageStore, historyStore, editorStore, t) {
     }
 
     imageStore.frame.type = value
-    nextTick(() => {
+    nextTick(async () => {
       frameWidth.value = calculateInitialFrameWidth()
+
+      if (isFrameWithHeader(value) || isFrameWithFooter(value)) {
+        const PxPerMm = viewportStore.getPxPerMmFitZoom
+
+        headerSize.value = calculateInitialHeaderFooterSize()
+        headerSizeMm.value = Math.max(headerSize.value / PxPerMm, 1)
+
+        footerSize.value = calculateInitialHeaderFooterSize()
+        footerSizeMm.value = Math.max(footerSize.value / PxPerMm, 1)
+      }
+
+      await nextTick()
+
       applyFrame()
     })
+  }
+
+  /**
+   * Set whether to use millimeters for frame width input
+   * @param {boolean} value - Whether to use millimeters
+   */
+  const setUseMillimeters = (value) => {
+    useMillimeters.value = value
+
+    const PxPerMm = viewportStore.getPxPerMmFitZoom
+    if (value) {
+      // Frame
+      frameWidthMm.value = Math.max(frameWidth.value / PxPerMm, 1)
+      maxFrameWidthMm.value = (imageStore.getSmallerImageDimension() * 0.2) / PxPerMm
+
+      // Header and footer
+      if (isFrameWithMultiplier(selectedFrameVariant.value)) {
+        headerSizeMm.value = Math.max(headerSize.value / PxPerMm, 1)
+        footerSizeMm.value = Math.max(footerSize.value / PxPerMm, 1)
+        maxHeaderFooterSize.value = (imageStore.getSmallerImageDimension() * 0.4) / PxPerMm
+      }
+    } else {
+      frameWidth.value = frameWidthMm.value * PxPerMm
+
+      if (isFrameWithMultiplier(selectedFrameVariant.value)) {
+        headerSize.value = headerSizeMm.value * PxPerMm
+        footerSize.value = footerSizeMm.value * PxPerMm
+      }
+    }
+    applyFrame()
   }
 
   /**
@@ -402,6 +524,9 @@ export function useFrameTool(imageStore, historyStore, editorStore, t) {
     applyFrame()
   }
 
+  /**
+   * Calculate initial frame width based on selected frame type and image dimensions
+   */
   const calculateInitialFrameWidth = () => {
     let width
     if (
@@ -419,10 +544,35 @@ export function useFrameTool(imageStore, historyStore, editorStore, t) {
       frameWidthRef.value.setValue(width)
     } else if (selectedFrameVariant.value === 'frameSolid') {
       width = 1
+    } else if (
+      selectedFrameVariant.value === 'framePhoneAndroid' ||
+      selectedFrameVariant.value === 'framePhoneAndroid2' ||
+      selectedFrameVariant.value === 'framePhoneIOS' ||
+      selectedFrameVariant.value === 'framePhoneIOS2' ||
+      selectedFrameVariant.value === 'framePhoneSimple'
+    ) {
+      // WIDTH CALCULATION - CHANGE
+      width =
+        Math.max(
+          Math.floor(editorConfig.phoneFrameDefaultSize * imageStore.fileDimensions.width),
+          2,
+        ) *
+        1.5 *
+        2
     } else {
       width = 0
     }
     return width
+  }
+
+  /**
+   * Calculate initial header/footer size based on image dimensions (not for phone frames)
+   */
+  const calculateInitialHeaderFooterSize = () => {
+    return Math.max(
+      Math.floor(editorConfig.frameHeaderFooterSize * imageStore.fileDimensions.height),
+      5,
+    )
   }
 
   /**
@@ -437,16 +587,89 @@ export function useFrameTool(imageStore, historyStore, editorStore, t) {
   }
 
   /**
+   * Set frame width mm
+   * @param {number} width - New frame width mm
+   */
+  const setFrameWidthMm = (width) => {
+    if (width < 0) {
+      const PxPerMm = viewportStore.getPxPerMmFitZoom
+
+      frameWidth.value = calculateInitialFrameWidth()
+      frameWidthMm.value = Math.max(frameWidth.value / PxPerMm, 1)
+    }
+
+    applyFrame()
+  }
+
+  /**
+   * Set header size
+   */
+  const setHeaderSize = (size) => {
+    console.warn('setHeaderSize called with size:', size)
+    if (size < 0) {
+      headerSize.value = calculateInitialHeaderFooterSize()
+    }
+    applyFrame()
+  }
+
+  /**
+   * Set header size mm
+   */
+  const setHeaderSizeMm = (size) => {
+    if (size < 0) {
+      const PxPerMm = viewportStore.getPxPerMmFitZoom
+
+      headerSize.value = calculateInitialHeaderFooterSize()
+      headerSizeMm.value = Math.max(headerSize.value / PxPerMm, 1)
+    }
+
+    const PxPerMm = viewportStore.getPxPerMmFitZoom
+    headerSize.value = headerSizeMm.value * PxPerMm
+
+    applyFrame()
+  }
+
+  /**
+   * Set footer size
+   */
+  const setFooterSize = (size) => {
+    if (size < 0) {
+      footerSize.value = calculateInitialHeaderFooterSize()
+    }
+    applyFrame()
+  }
+
+  /**
+   * Set footer size mm
+   */
+  const setFooterSizeMm = (size) => {
+    if (size < 0) {
+      const PxPerMm = viewportStore.getPxPerMmFitZoom
+      footerSize.value = calculateInitialHeaderFooterSize()
+      footerSizeMm.value = Math.max(footerSize.value / PxPerMm, 1)
+    }
+
+    const PxPerMm = viewportStore.getPxPerMmFitZoom
+    footerSize.value = footerSizeMm.value * PxPerMm
+
+    applyFrame()
+  }
+
+  /**
    * Apply the selected frame settings to the image
    * @param {boolean} commit - When true, push to history store
    */
   const applyFrame = (commit = true) => {
     // Deep copy to avoid reference issues
     const width = JSON.parse(JSON.stringify(frameWidth.value))
+    const widthMm = JSON.parse(JSON.stringify(frameWidthMm.value))
+    imageStore.frame.widthMm = widthMm
+    imageStore.frame.heightMm = widthMm
 
     imageStore.frame.color = JSON.parse(JSON.stringify(frameColor.value))
     imageStore.frame.type = JSON.parse(JSON.stringify(selectedFrameVariant.value))
     imageStore.frame.enabled = true
+    imageStore.frame.useMillimeters = JSON.parse(JSON.stringify(useMillimeters.value))
     imageStore.frame.outlineEnabled = JSON.parse(JSON.stringify(drawOutline.value))
     imageStore.frame.phoneHeaderEnabled = JSON.parse(JSON.stringify(drawPhoneHeader.value))
     imageStore.frame.phoneHeaderExpand = JSON.parse(JSON.stringify(headerOverlap.value))
@@ -459,14 +682,15 @@ export function useFrameTool(imageStore, historyStore, editorStore, t) {
     imageStore.frame.phoneHeaderTimeInMinutes = JSON.parse(
       JSON.stringify(phoneHeaderTimeInMinutes.value),
     )
-    imageStore.frame.headerFooterMultiplier = JSON.parse(
-      JSON.stringify(headerFooterMultiplier.value),
-    )
+    imageStore.frame.headerFooterMultiplier += 1
 
     if (selectedFrameVariant.value === 'none') {
       imageStore.frame.enabled = false
       imageStore.frame.width = 0
       imageStore.frame.height = 0
+
+      imageStore.frame.widthMm = 0
+      imageStore.frame.heightMm = 0
     } else if (selectedFrameVariant.value === 'frameSolid') {
       imageStore.frame.width = width
       imageStore.frame.height = width
@@ -518,8 +742,7 @@ export function useFrameTool(imageStore, historyStore, editorStore, t) {
   const canDrawPhoneButtons = (svgHeight, svgWidth, fw, phoneCornerRadius) => {
     const volumeButtonWidth = fw / 3
     const volumeButtonHeight = volumeButtonWidth * 25
-    // const volumeUpY = svgHeight * 0.22
-    const volumeUpY = svgWidth * 0.4 // TODO - experimental - use svgWidth for calculation
+    const volumeUpY = svgWidth * 0.4
 
     const volumeDownY = volumeUpY + volumeButtonHeight + volumeButtonWidth * 3
 
@@ -545,8 +768,11 @@ export function useFrameTool(imageStore, historyStore, editorStore, t) {
     const color = frame.color
     const contrastColor = getContrastColor(color)
 
-    let fw = frame.width
-    let fh = frame.height
+    const useMillimetersForFrame = frame.useMillimeters
+    const PxPerMm = viewportStore.getPxPerMmFitZoom
+
+    let fw = useMillimetersForFrame ? frame.widthMm * PxPerMm : frame.width
+    let fh = useMillimetersForFrame ? frame.heightMm * PxPerMm : frame.height
 
     // UPDATE new frame type
     if (
@@ -559,10 +785,11 @@ export function useFrameTool(imageStore, historyStore, editorStore, t) {
         fh = 0
       }
 
-      imageStore.frame.headerSize =
-        Math.max(Math.floor(editorConfig.frameHeaderFooterSize * h), 5) *
-        headerFooterMultiplier.value
+      imageStore.frame.headerSize = headerSize.value
+      imageStore.frame.headerSizeMm = headerSizeMm.value
+
       imageStore.frame.footerSize = 0
+      imageStore.frame.footerSizeMm = 0
     } else if (
       frame.type === 'framePhoneAndroid' ||
       frame.type === 'framePhoneAndroid2' ||
@@ -570,16 +797,19 @@ export function useFrameTool(imageStore, historyStore, editorStore, t) {
       frame.type === 'framePhoneIOS2' ||
       frame.type === 'framePhoneSimple'
     ) {
-      fw = Math.max(Math.floor(editorConfig.phoneFrameDefaultSize * w), 2) * 1.5 * 2 // TODO - experimental - use only width for calculation
-      fh = fw / 1.5
-
-      // if (w >= h) {
-      // imageStore.frame.headerSize = Math.max(Math.floor(0.05 * w), 5)
-      // } else {
-      //   imageStore.frame.headerSize = Math.max(Math.floor(0.05 * h), 5)
-      // }
-
-      imageStore.frame.headerSize = Math.max(Math.floor(0.1 * w), 5) // TODO - experimental - use only width for calculation
+      if (!useMillimetersForFrame) {
+        // WIDTH CALCULATION - CHANGE
+        fw = Math.max(Math.floor(editorConfig.phoneFrameDefaultSize * w), 2) * 1.5 * 2
+        fh = fw / 1.5
+      } else {
+        fh = fw / 1.5
+      }
+      // Non-linear scaling using a power function for smoother growth
+      // headerSize = fh ** exponent * scaleFactor
+      // exponent == 1 - linear
+      // exponent < 1 - slower growth
+      // exponent > 1 - faster growth
+      imageStore.frame.headerSize = Math.floor(fh ** 0.5 * 13)
 
       imageStore.frame.footerSize = 0
     } else if (frame.type === 'frameWindowsTaskBar') {
@@ -588,8 +818,13 @@ export function useFrameTool(imageStore, historyStore, editorStore, t) {
         fh = 0
       }
 
-      imageStore.frame.footerSize = Math.max(Math.floor(0.04 * h), 5) * headerFooterMultiplier.value
+      // imageStore.frame.footerSize = Math.max(Math.floor(0.04 * h), 5) * headerFooterMultiplier.value
+
+      imageStore.frame.footerSize = footerSize.value
+      imageStore.frame.footerSizeMm = footerSizeMm.value
+
       imageStore.frame.headerSize = 0
+      imageStore.frame.headerSizeMm = 0
     } else {
       imageStore.frame.headerSize = 0
       imageStore.frame.footerSize = 0
@@ -604,8 +839,16 @@ export function useFrameTool(imageStore, historyStore, editorStore, t) {
 
     const adjustmentForPhoneButtons = frame.phoneButtonsEnabled ? 0 : fw / 3
 
-    const header = imageStore.frame.headerSize
-    const footer = imageStore.frame.footerSize
+    // Get header and footer sizes based on units
+    const header =
+      useMillimetersForFrame && isFrameWithMultiplier(frame.type)
+        ? imageStore.frame.headerSizeMm * PxPerMm
+        : imageStore.frame.headerSize
+    const footer =
+      useMillimetersForFrame && isFrameWithMultiplier(frame.type)
+        ? imageStore.frame.footerSizeMm * PxPerMm
+        : imageStore.frame.footerSize
+
     const svgWidth = w + fw * 2 - 2 * adjustmentForPhoneButtons
 
     const svgHeight =
@@ -615,12 +858,13 @@ export function useFrameTool(imageStore, historyStore, editorStore, t) {
         ? header - fh
         : 0) +
       (footer > 0 ? footer - fh : 0)
+
     const phoneCornerRadius = Math.max(Math.floor(Math.min(svgWidth, svgHeight) * 0.06), 2)
 
     // Values for phone frames
     const strokeWidth = (fw / 3) * 2 // 2/3 of frame width
     const offset = strokeWidth / 2
-    const headerSize = header - strokeWidth
+    const headerSizePhone = header
     const drawingAdjustmentForPhoneButtons = frame.phoneButtonsEnabled ? (fw / 3) * 2 : fw / 3
 
     const phoneFrameValues = {
@@ -631,7 +875,7 @@ export function useFrameTool(imageStore, historyStore, editorStore, t) {
       top: offset,
       right: svgWidth - drawingAdjustmentForPhoneButtons,
       bottom: svgHeight - offset,
-      headerSize: headerSize,
+      headerSize: headerSizePhone,
     }
 
     el.setAttribute('width', svgWidth)
@@ -690,7 +934,7 @@ export function useFrameTool(imageStore, historyStore, editorStore, t) {
       const volumeButtonRadius = volumeButtonWidth
       const volumeButtonX = 0
       // const volumeUpY = svgHeight * 0.22
-      const volumeUpY = svgWidth * 0.4 // TODO - experimental - use svgWidth for calculation
+      const volumeUpY = svgWidth * 0.4
       const volumeDownY = volumeUpY + volumeButtonHeight + volumeButtonWidth * 3
 
       if (!canDrawPhoneButtons(svgHeight, svgWidth, fw, phoneCornerRadius)) {
@@ -732,8 +976,7 @@ export function useFrameTool(imageStore, historyStore, editorStore, t) {
       const powerButtonHeight = powerButtonWidth * 17
       const powerButtonRadius = powerButtonWidth
       const powerButtonX = svgWidth - powerButtonWidth
-      // const powerButtonY = svgHeight * 0.35
-      const powerButtonY = svgWidth * 0.7 // TODO - experimental - use svgHeight for calculation
+      const powerButtonY = svgWidth * 0.7
 
       el.appendChild(
         drawSideButton(
@@ -789,10 +1032,11 @@ export function useFrameTool(imageStore, historyStore, editorStore, t) {
         const hours = Math.floor(time / 60)
         const minutes = time % 60
         const timeString = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`
+        const fontSize = Math.floor(height * 0.45)
 
         timeText.textContent = timeString
 
-        timeText.setAttribute('x', x + phoneFrameValues.radius)
+        timeText.setAttribute('x', x + phoneFrameValues.radius / 2)
         timeText.setAttribute('y', y + height / 2)
         timeText.setAttribute('fill', textColor)
         timeText.setAttribute('font-size', Math.floor(height * 0.45))
@@ -801,12 +1045,16 @@ export function useFrameTool(imageStore, historyStore, editorStore, t) {
         timeText.setAttribute('text-anchor', 'start')
         el.appendChild(timeText)
 
+        const approxCharWidth = fontSize * 0.6 // average width factor
+        const timeWidth = timeString.length * approxCharWidth
+        const timeEndX = x + phoneFrameValues.radius / 2 + timeWidth
+
         // Right: Signal and Battery
 
         // Battery
         const batteryWidth = height * 0.9
         const batteryHeight = height * 0.45
-        const batteryX = svgWidth - x - batteryWidth - phoneFrameValues.radius
+        const batteryX = svgWidth - x - batteryWidth - phoneFrameValues.radius / 2
         const batteryY = y + (height - batteryHeight) / 2
         const batteryPadding = batteryWidth * 0.05
         const batteryOutlineWidth = batteryWidth * 0.02
@@ -864,6 +1112,11 @@ export function useFrameTool(imageStore, historyStore, editorStore, t) {
           bar.setAttribute('fill', textColor)
           el.appendChild(bar)
         })
+
+        const signalLeftX = barBaseX - (barWidth + barSpacing) * (barHeights.length - 1)
+        const freeSpace = signalLeftX - timeEndX
+
+        return freeSpace
       }
     }
 
@@ -874,12 +1127,16 @@ export function useFrameTool(imageStore, historyStore, editorStore, t) {
     const drawPhoneNavigationButton = (color = '#505152ff') => {
       if (!frame.phoneNavigationEnabled) return
 
-      const indicatorWidth = svgWidth * 0.28 // relative width (typical iPhone style)
-      const indicatorHeight = fh / 2 // thickness of the line
+      const indicatorHeight = phoneFrameValues.headerSize * 0.12
+      const indicatorWidth = w * 0.4
       const indicatorRadius = indicatorHeight * 0.5
 
       const x = svgWidth / 2 - indicatorWidth / 2
-      const y = phoneFrameValues.bottom - indicatorHeight * 3
+      const y =
+        h +
+        fh -
+        indicatorHeight * 3 +
+        (frame.phoneHeaderExpand ? phoneFrameValues.headerSize - fh : 0)
 
       const rect = document.createElementNS(ns, 'rect')
       rect.setAttribute('x', x)
@@ -894,6 +1151,7 @@ export function useFrameTool(imageStore, historyStore, editorStore, t) {
 
     // UPDATE new frame type
     if (frame.type === 'frameSolid') {
+      console.warn('Drawing solid frame', { fw, fh, svgWidth, svgHeight })
       // 4 sides
       const sides = [
         { x: 0, y: 0, width: svgWidth, height: fh }, // top
@@ -1067,9 +1325,9 @@ export function useFrameTool(imageStore, historyStore, editorStore, t) {
       // Minimize
       const line = document.createElementNS(ns, 'line')
       line.setAttribute('x1', startX)
-      line.setAttribute('y1', centerY + 1)
+      line.setAttribute('y1', centerY + strokeWidth / 2)
       line.setAttribute('x2', startX + size)
-      line.setAttribute('y2', centerY + 1)
+      line.setAttribute('y2', centerY + strokeWidth / 2)
       line.setAttribute('stroke', contrastColor)
       line.setAttribute('stroke-width', strokeWidth)
       iconGroup.appendChild(line)
@@ -1132,7 +1390,7 @@ export function useFrameTool(imageStore, historyStore, editorStore, t) {
       outline.setAttribute('stroke-width', phoneFrameValues.strokeWidth)
 
       // Draw phone header if enabled
-      drawPhoneHeader(
+      const freeSpace = drawPhoneHeader(
         phoneHeaderBackgroundColor.value,
         phoneHeaderTextColor.value,
         phoneHeaderTimeInMinutes.value,
@@ -1156,24 +1414,24 @@ export function useFrameTool(imageStore, historyStore, editorStore, t) {
       el.appendChild(outline)
 
       // Dynamic island
-      const notchHeight = phoneFrameValues.headerSize - phoneFrameValues.strokeWidth * 1
+      const notchHeight = phoneFrameValues.headerSize * 0.8
       const notchWidth = notchHeight * 4
 
       const notchRadius = Math.floor(notchHeight * 0.45)
 
-      const notchMarginTop = phoneFrameValues.strokeWidth
+      const notchMarginTop = phoneFrameValues.headerSize - notchHeight
       const notchX = svgWidth / 2 - notchWidth / 2
-      const notchY = phoneFrameValues.top + notchMarginTop
+      const notchY = phoneFrameValues.top + phoneFrameValues.offset + notchMarginTop / 2
 
       // Check if notch fits inside the frame area
-      const notchPadding = 1.5
-      const notchFits =
-        notchX >= phoneFrameValues.left &&
-        notchX + notchWidth * notchPadding <= phoneFrameValues.right &&
-        notchY + notchHeight * notchPadding <= phoneFrameValues.bottom &&
-        notchHeight >= 5
+      // const notchPadding = 1.5
+      // const notchFits =
+      //   notchX >= phoneFrameValues.left &&
+      //   notchX + notchWidth * notchPadding <= phoneFrameValues.right &&
+      //   notchY + notchHeight * notchPadding <= phoneFrameValues.bottom &&
+      //   notchHeight >= 5
 
-      if (notchFits) {
+      if (freeSpace >= notchWidth * 1.2) {
         const notch = document.createElementNS(ns, 'rect')
         notch.setAttribute('x', notchX)
         notch.setAttribute('y', notchY)
@@ -1329,9 +1587,9 @@ export function useFrameTool(imageStore, historyStore, editorStore, t) {
       // Camera circle
       const cameraRadius = phoneFrameValues.headerSize / 4
 
-      const cameraOffset = fw + phoneFrameValues.headerSize / 2 - cameraRadius
+      const cMarginTop = phoneFrameValues.headerSize - cameraRadius * 2
       const cx = svgWidth / 2
-      const cy = phoneFrameValues.top + cameraOffset
+      const cy = phoneFrameValues.top + phoneFrameValues.offset + cMarginTop
 
       const cameraPadding = 1.5
       const cameraFits =
@@ -1630,5 +1888,19 @@ export function useFrameTool(imageStore, historyStore, editorStore, t) {
     setPhoneNavigation,
     headerOverlap,
     setHeaderOverlap,
+    useMillimeters,
+    setUseMillimeters,
+    frameWidthMm,
+    setFrameWidthMm,
+    maxFrameWidthMm,
+    setHeaderSize,
+    setHeaderSizeMm,
+    setFooterSize,
+    setFooterSizeMm,
+    maxHeaderFooterSize,
+    headerSize,
+    headerSizeMm,
+    footerSize,
+    footerSizeMm,
   }
 }

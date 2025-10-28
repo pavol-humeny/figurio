@@ -5,7 +5,6 @@ import ColorPicker from '../common/ColorPicker.vue'
 import NumberInput from '../common/NumberInput.vue'
 import { useFrameTool } from '@/composables/tools/useFrameTool'
 import { useHistoryStore } from '@/stores/historyStore'
-import { useEditorStore } from '@/stores/editorStore'
 import { useI18n } from 'vue-i18n'
 import DropdownSelect from '../common/DropdownSelect.vue'
 import ToggleButton from '../common/ToggleButton.vue'
@@ -13,6 +12,8 @@ import TimeInput from '../common/TimeInput.vue'
 import DefaultSlider from '../common/DefaultSlider.vue'
 import { editorConfig } from '@/config/editorConfig'
 import ExplainItem from '../common/ExplainItem.vue'
+import { useViewportStore } from '@/stores/viewportStore'
+import { ref } from 'vue'
 
 const { t } = useI18n()
 
@@ -44,6 +45,7 @@ const {
   isPhoneFrame,
   isFrameWithOutline,
   isFrameWithMultiplier,
+  isFrameWithFooter,
   drawPhoneButtons,
   setPhoneButtons,
   phoneButtonsCanBeDrawn,
@@ -51,7 +53,22 @@ const {
   setPhoneNavigation,
   headerOverlap,
   setHeaderOverlap,
-} = useFrameTool(useImageStore(), useHistoryStore(), useEditorStore(), t)
+  useMillimeters,
+  setUseMillimeters,
+  frameWidthMm,
+  setFrameWidthMm,
+  maxFrameWidthMm,
+  setHeaderSize,
+  setHeaderSizeMm,
+  setFooterSize,
+  setFooterSizeMm,
+  maxHeaderFooterSize,
+  headerSize,
+  headerSizeMm,
+  footerSize,
+  footerSizeMm,
+  isFrameWithHeader,
+} = useFrameTool(useImageStore(), useHistoryStore(), useViewportStore(), t)
 </script>
 
 <template>
@@ -72,6 +89,20 @@ const {
           </div>
         </div>
 
+        <!-- Use mm -->
+        <div v-if="selectedFrameVariant !== 'none'" class="settings-content-wrapper">
+          <div class="content-wrapper">
+            <div class="content-aligned two-items">
+              <p style="text-align: start">
+                Use millimeters
+              </p>
+              <ToggleButton v-model="useMillimeters" :scale="0.6" :style="{ transform: 'translateX(16px)' }"
+                @update="setUseMillimeters(useMillimeters)"
+                :tip="$t('tools.backgroundRemoval.settings.auto.replaceSelection.tip')" position="bottom-left" />
+            </div>
+          </div>
+        </div>
+
         <!-- Frame color -->
         <div v-if="selectedFrameVariant !== 'none'" class="settings-content-wrapper">
           <div class="content-wrapper">
@@ -85,8 +116,22 @@ const {
           </div>
         </div>
 
-        <!-- Frame width -->
-        <div v-if="selectedFrameVariant === 'frameSolid' || drawOutline" class="settings-content-wrapper">
+        <!-- Frame outline -->
+        <div v-if="isFrameWithOutline(selectedFrameVariant)" class="settings-content-wrapper">
+          <div class="content-wrapper">
+            <div class="content-aligned two-items">
+              <p>
+                {{ t('tools.frame.settings.general.useFrameOutline.label') }}
+              </p>
+              <ToggleButton v-model="drawOutline" style="transform: scale(0.6);"
+                @update="setFrameOutline(drawOutline)" />
+            </div>
+          </div>
+        </div>
+
+        <!-- Frame width px -->
+        <div v-if="(selectedFrameVariant === 'frameSolid' || drawOutline) && !useMillimeters"
+          class="settings-content-wrapper">
           <div class="content-wrapper">
             <div class="content-title">
               <p :class="{ disabled: selectedFrameVariant !== 'frameSolid' && !drawOutline }">
@@ -100,16 +145,20 @@ const {
           </div>
         </div>
 
-        <!-- Frame outline -->
-        <div v-if="isFrameWithOutline(selectedFrameVariant)" class="settings-content-wrapper">
+        <!-- Frame width mm -->
+        <div
+          v-if="((selectedFrameVariant === 'frameSolid' || drawOutline) || isPhoneFrame(selectedFrameVariant)) && useMillimeters"
+          class="settings-content-wrapper">
           <div class="content-wrapper">
-            <div class="content-aligned two-items">
+            <div class="content-title">
               <p>
-                {{ t('tools.frame.settings.general.useFrameOutline.label') }}
+                {{ t('tools.frame.settings.general.frameWidth.label') }}
               </p>
-              <ToggleButton v-model="drawOutline" style="transform: scale(0.6);"
-                @update="setFrameOutline(drawOutline)" />
             </div>
+            <NumberInput ref="frameWidthRef" v-model="frameWidthMm" :min="1" :max="maxFrameWidthMm" :step="1" unit="mm"
+              @update="setFrameWidthMm(frameWidthMm)" icon="IconArrowWidth" :color="'var(--primary-c)'" size="22"
+              :onReset="() => setFrameWidthMm(-1)" :tip="t('tools.frame.settings.general.frameWidth.tip')"
+              position="bottom-left" />
           </div>
         </div>
 
@@ -190,7 +239,7 @@ const {
         </div>
 
         <!-- Header and footer frames multiplier -->
-        <div v-if="isFrameWithMultiplier(selectedFrameVariant)" class="settings-content-wrapper">
+        <!-- <div v-if="isFrameWithMultiplier(selectedFrameVariant)" class="settings-content-wrapper">
           <div class="content-wrapper">
             <div class="content-title">
               <p>
@@ -202,6 +251,74 @@ const {
               @update="setHeaderFooterMultiplier(headerFooterMultiplier, false)"
               @commit="setHeaderFooterMultiplier(headerFooterMultiplier, true)" :onReset="resetHeaderFooterMultiplier"
               showValue />
+          </div>
+        </div> -->
+
+        <!-- Header size px -->
+        <div
+          v-if="isFrameWithMultiplier(selectedFrameVariant) && isFrameWithHeader(selectedFrameVariant) && !useMillimeters"
+          class="settings-content-wrapper">
+          <div class="content-wrapper">
+            <div class="content-title">
+              <p>
+                {{ t('tools.frame.settings.general.headerSize.label') }}
+              </p>
+            </div>
+            <NumberInput ref="frameWidthRef" v-model="headerSize" :min="5" :max="maxHeaderFooterSize" :step="1"
+              unit="px" @update="setHeaderSize(headerSize)" icon="IconArrowWidth" :color="'var(--primary-c)'" size="22"
+              :onReset="() => setHeaderSize(-1)" :tip="t('tools.frame.settings.general.headerSize.tip')"
+              position="bottom-left" />
+          </div>
+        </div>
+
+        <!-- Footer size px -->
+        <div
+          v-if="isFrameWithMultiplier(selectedFrameVariant) && isFrameWithFooter(selectedFrameVariant) && !useMillimeters"
+          class="settings-content-wrapper">
+          <div class="content-wrapper">
+            <div class="content-title">
+              <p>
+                {{ t('tools.frame.settings.general.footerSize.label') }}
+              </p>
+            </div>
+            <NumberInput ref="frameWidthRef" v-model="footerSize" :min="5" :max="maxHeaderFooterSize" :step="1"
+              unit="px" @update="setFooterSize(footerSize)" icon="IconArrowWidth" :color="'var(--primary-c)'" size="22"
+              :onReset="() => setFooterSize(-1)" :tip="t('tools.frame.settings.general.footerSize.tip')"
+              position="bottom-left" />
+          </div>
+        </div>
+
+        <!-- Header size mm -->
+        <div
+          v-if="isFrameWithMultiplier(selectedFrameVariant) && isFrameWithHeader(selectedFrameVariant) && useMillimeters"
+          class="settings-content-wrapper">
+          <div class="content-wrapper">
+            <div class="content-title">
+              <p>
+                {{ t('tools.frame.settings.general.headerSize.label') }}
+              </p>
+            </div>
+            <NumberInput ref="frameWidthRef" v-model="headerSizeMm" :min="5" :max="maxHeaderFooterSize" :step="1"
+              unit="mm" @update="setHeaderSizeMm(headerSizeMm)" icon="IconArrowWidth" :color="'var(--primary-c)'"
+              size="22" :onReset="() => setHeaderSizeMm(-1)" :tip="t('tools.frame.settings.general.headerSize.tip')"
+              position="bottom-left" />
+          </div>
+        </div>
+
+        <!-- Footer size mm -->
+        <div
+          v-if="isFrameWithMultiplier(selectedFrameVariant) && isFrameWithFooter(selectedFrameVariant) && useMillimeters"
+          class="settings-content-wrapper">
+          <div class="content-wrapper">
+            <div class="content-title">
+              <p>
+                {{ t('tools.frame.settings.general.footerSize.label') }}
+              </p>
+            </div>
+            <NumberInput ref="frameWidthRef" v-model="footerSizeMm" :min="5" :max="maxHeaderFooterSize" :step="1"
+              unit="mm" @update="setFooterSizeMm(footerSizeMm)" icon="IconArrowWidth" :color="'var(--primary-c)'"
+              size="22" :onReset="() => setFooterSizeMm(-1)" :tip="t('tools.frame.settings.general.footerSize.tip')"
+              position="bottom-left" />
           </div>
         </div>
 

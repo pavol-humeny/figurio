@@ -84,7 +84,7 @@ const {
 } = useFrameTool(
   useImageStore(),
   useHistoryStore(),
-  useEditorStore(),
+  useViewportStore(),
   t,
 )
 

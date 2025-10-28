@@ -110,15 +110,15 @@ export function useImageRenderer(
       const header = frame?.headerSize || 0
       const footer = frame?.footerSize || 0
 
-      const hasHeader = useFrameTool(imageStore, historyStore, editorStore, t).isFrameWithHeader(
+      const hasHeader = useFrameTool(imageStore, historyStore, viewportStore, t).isFrameWithHeader(
         frame.type,
       )
 
-      const hasFooter = useFrameTool(imageStore, historyStore, editorStore, t).isFrameWithFooter(
+      const hasFooter = useFrameTool(imageStore, historyStore, viewportStore, t).isFrameWithFooter(
         frame.type,
       )
 
-      const hasPhoneFrame = useFrameTool(imageStore, historyStore, editorStore, t).isPhoneFrame(
+      const hasPhoneFrame = useFrameTool(imageStore, historyStore, viewportStore, t).isPhoneFrame(
         frame.type,
       )
 
@@ -267,7 +267,7 @@ export function useImageRenderer(
     }
 
     el.innerHTML = ''
-    useFrameTool(imageStore, historyStore, editorStore, t).applyFrameRender(el)
+    useFrameTool(imageStore, historyStore, viewportStore, t).applyFrameRender(el)
 
     renderCanvas()
 

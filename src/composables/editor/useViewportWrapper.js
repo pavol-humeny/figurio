@@ -461,12 +461,10 @@ export function useViewportWrapper(viewportStore, imageStore, editorStore, uiSto
 
       viewportStore.fitZoomLevel = (viewportStore.zoomLevel / optimalZoom) * 1.1
     } else if (mode === 'physical') {
-      const PxPerCm = viewportConfig.defaultPxPerCm
-
-      const calibratedPxPerCm = PxPerCm * viewportStore.calibrationFactor
+      const PxPerCm = viewportStore.getPxPerCm
 
       const imagePixelsForOneCm = contentWidth.value / viewportStore.physicalContentSize
-      const scale = calibratedPxPerCm / imagePixelsForOneCm
+      const scale = PxPerCm / imagePixelsForOneCm
 
       viewportStore.fitZoomLevel = 1 / scale
     }
@@ -754,10 +752,9 @@ export function useViewportWrapper(viewportStore, imageStore, editorStore, uiSto
       // Center the image after resizing the wrapper
       if (wrapperRef.value) {
         const viewportWidth = wrapperRef.value.clientWidth
-        const PxPerCm = viewportConfig.defaultPxPerCm
-        const calibratedPxPerCm = PxPerCm * viewportStore.calibrationFactor
+        const PxPerCm = viewportStore.getPxPerCm
 
-        const maxSize = round(viewportWidth / calibratedPxPerCm)
+        const maxSize = round(viewportWidth / PxPerCm)
 
         viewportStore.maxPhysicalContentSize = maxSize
 
