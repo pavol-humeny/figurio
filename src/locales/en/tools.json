@@ -744,9 +744,6 @@
         "phoneHeaderTime": {
           "label": "Time"
         },
-        "headerFooterMultiplier": {
-          "label": "Height multiplier"
-        },
         "headerSize":{
           "label": "Header size",
           "tip": "Adjust the size of the header or double click icon to reset size"
@@ -823,7 +820,6 @@
             "phoneHeaderTextColor": "Text color",
             "phoneHeaderBackgroundColor": "Background color",
             "phoneHeaderTime": "Time",
-            "headerFooterMultiplier": "Height multiplier",
             "headerSize": "Header size",
             "footerSize": "Footer size"
           },
@@ -933,7 +929,6 @@
             "phoneHeaderTextColor": "Text color",
             "phoneHeaderBackgroundColor": "Background color",
             "phoneHeaderTime": "Time",
-            "headerFooterMultiplier": "Height multiplier",
             "headerSize": "Header size",
             "footerSize": "Footer size"
           },

@@ -794,8 +794,6 @@ export function useFrameTool(imageStore, historyStore, viewportStore, t) {
         fh = 0
       }
 
-      // imageStore.frame.footerSize = Math.max(Math.floor(0.04 * h), 5) * headerFooterMultiplier.value
-
       imageStore.frame.footerSize = footerSize.value
       imageStore.frame.footerSizeMm = footerSizeMm.value
 

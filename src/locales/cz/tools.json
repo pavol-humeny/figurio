@@ -745,9 +745,6 @@
         "phoneHeaderTime": {
           "label": "Čas"
         },
-        "headerFooterMultiplier": {
-          "label": "Násobitel výšky"
-        },
         "headerSize":{
           "label": "Velikost záhlaví",
           "tip": "Upravte velikost záhlaví nebo dvojklikem na ikonu resetujte velikost"
@@ -824,7 +821,6 @@
             "phoneHeaderTextColor": "Barva textu",
             "phoneHeaderBackgroundColor": "Barva pozadí",
             "phoneHeaderTime": "Čas",
-            "headerFooterMultiplier": "Násobitel výšky",
             "headerSize": "Velikost záhlaví",
             "footerSize": "Velikost patičky"
           },
@@ -934,7 +930,6 @@
             "phoneHeaderTextColor": "Barva textu",
             "phoneHeaderBackgroundColor": "Barva pozadí",
             "phoneHeaderTime": "Čas",
-            "headerFooterMultiplier": "Násobitel výšky",
             "headerSize": "Velikost záhlaví",
             "footerSize": "Velikost patičky"
           },
