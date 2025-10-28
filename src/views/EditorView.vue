@@ -52,7 +52,7 @@ const { openPrivacyAndDataModal } = usePrivacyAndDataModal(t)
 const { startEditing } = useFileNameDisplay(useImageStore(), t)
 const { switchToNextTab, switchToPreviousTab, } = useFileTabs(useUiStore(), useViewportStore(), useImageStore(), useEditorStore(), t)
 const { prevStep, nextStep, finishTutorial, closeTutorial, startTutorial } = useInteractiveTutorial(useUiStore(), useImageStore(), useRouter(), t)
-const { hideCropBox, showCropBox } = useCropTool(useImageStore(), useViewportStore(), useEditorStore(), useHistoryStore(), useWorkspaceStore(), t)
+const { hideCropBox, showCropBox, applyCrop } = useCropTool(useImageStore(), useViewportStore(), useEditorStore(), useHistoryStore(), useWorkspaceStore(), t)
 const { toggleVisibility: toggleCollapsiblePanel, } = useCollapsiblePanel(useUiStore())
 
 const {
@@ -122,6 +122,7 @@ useKeyboardShortcuts({
   cutSelectedSvgObject,
   hideCropBox,
   showCropBox,
+  applyCrop,
   applyBackgroundRemovalRender,
   toggleCollapsiblePanel,
 }, useUiStore(), useEditorStore());

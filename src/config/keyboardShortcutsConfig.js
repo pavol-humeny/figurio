@@ -305,6 +305,11 @@ export const keyboardShortcuts = [
     description: 'Show crop box',
     type: 'keyup',
   },
+  {
+    keys: ['enter'],
+    action: 'applyCrop',
+    description: 'Apply crop',
+  },
 
   // Background removal tool
   {

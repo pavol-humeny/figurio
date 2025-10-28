@@ -4,6 +4,21 @@
     "items": []
   },
   "versions":{
+    "4.14.0":{
+      "label": "4.14.0",
+      "date":"28.10. 2025",
+      "newFeatures": {
+        "items": [
+          "Frames can be measured and set in millimeters based on monitor calibration",
+          "Crop can be applied with Enter key"
+        ]
+      },
+      "improvements": {
+        "items": [
+          "Set default name for new created presets"
+        ]
+      }
+    },
     "4.13.1":{
       "label": "4.13.1",
       "date":"26.10. 2025",
