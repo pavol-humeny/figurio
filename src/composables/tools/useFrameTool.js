@@ -75,21 +75,6 @@ export function useFrameTool(imageStore, historyStore, viewportStore, t) {
   const phoneHeaderTimeInMinutes = ref(imageStore.frame.phoneHeaderTimeInMinutes)
 
   /**
-   * Header/Footer size multiplier
-   */
-  const headerFooterMultiplier = ref(imageStore.frame.headerFooterMultiplier)
-
-  /**
-   * Watch for headerFooterMultiplier changes and update local ref
-   */
-  watch(
-    () => imageStore.frame.headerFooterMultiplier,
-    (newMultiplier) => {
-      headerFooterMultiplier.value = newMultiplier
-    },
-  )
-
-  /**
    * Frame width
    */
   const frameWidth = ref(imageStore.frame.width || 0)
@@ -405,14 +390,14 @@ export function useFrameTool(imageStore, historyStore, viewportStore, t) {
     const PxPerMm = viewportStore.getPxPerMmFitZoom
     if (value) {
       // Frame
-      frameWidthMm.value = Math.max(frameWidth.value / PxPerMm, 1)
+      frameWidthMm.value = Math.min(Math.max(frameWidth.value / PxPerMm, 1), maxFrameWidthMm.value)
       maxFrameWidthMm.value = (imageStore.getSmallerImageDimension() * 0.2) / PxPerMm
 
       // Header and footer
       if (isFrameWithMultiplier(selectedFrameVariant.value)) {
         headerSizeMm.value = Math.max(headerSize.value / PxPerMm, 1)
         footerSizeMm.value = Math.max(footerSize.value / PxPerMm, 1)
-        maxHeaderFooterSize.value = (imageStore.getSmallerImageDimension() * 0.4) / PxPerMm
+        maxHeaderFooterSize.value = (imageStore.getSmallerImageDimension() * 0.5) / PxPerMm
       }
     } else {
       frameWidth.value = frameWidthMm.value * PxPerMm
@@ -420,6 +405,8 @@ export function useFrameTool(imageStore, historyStore, viewportStore, t) {
       if (isFrameWithMultiplier(selectedFrameVariant.value)) {
         headerSize.value = headerSizeMm.value * PxPerMm
         footerSize.value = footerSizeMm.value * PxPerMm
+
+        maxHeaderFooterSize.value = imageStore.getSmallerImageDimension() * 0.5
       }
     }
     applyFrame()
@@ -486,23 +473,6 @@ export function useFrameTool(imageStore, historyStore, viewportStore, t) {
    */
   const setPhoneHeaderTimeInMinutes = (time) => {
     phoneHeaderTimeInMinutes.value = time
-    applyFrame()
-  }
-
-  /**
-   * Set header/footer size multiplier
-   * @param {number} value - New header/footer size multiplier
-   */
-  const setHeaderFooterMultiplier = (value, commit = true) => {
-    headerFooterMultiplier.value = value
-    applyFrame(commit)
-  }
-
-  /**
-   * Reset header/footer size multiplier to default
-   */
-  const resetHeaderFooterMultiplier = () => {
-    headerFooterMultiplier.value = 1
     applyFrame()
   }
 
@@ -682,7 +652,8 @@ export function useFrameTool(imageStore, historyStore, viewportStore, t) {
     imageStore.frame.phoneHeaderTimeInMinutes = JSON.parse(
       JSON.stringify(phoneHeaderTimeInMinutes.value),
     )
-    imageStore.frame.headerFooterMultiplier += 1
+
+    imageStore.frame.modificationFlag += 1
 
     if (selectedFrameVariant.value === 'none') {
       imageStore.frame.enabled = false
@@ -1877,9 +1848,6 @@ export function useFrameTool(imageStore, historyStore, viewportStore, t) {
     setPhoneHeaderBackgroundColor,
     phoneHeaderTimeInMinutes,
     setPhoneHeaderTimeInMinutes,
-    headerFooterMultiplier,
-    setHeaderFooterMultiplier,
-    resetHeaderFooterMultiplier,
     isFrameWithHeader,
     isFrameWithFooter,
     isPhoneFrame,

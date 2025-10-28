@@ -9,11 +9,8 @@ import { useI18n } from 'vue-i18n'
 import DropdownSelect from '../common/DropdownSelect.vue'
 import ToggleButton from '../common/ToggleButton.vue'
 import TimeInput from '../common/TimeInput.vue'
-import DefaultSlider from '../common/DefaultSlider.vue'
-import { editorConfig } from '@/config/editorConfig'
 import ExplainItem from '../common/ExplainItem.vue'
 import { useViewportStore } from '@/stores/viewportStore'
-import { ref } from 'vue'
 
 const { t } = useI18n()
 
@@ -39,9 +36,6 @@ const {
   setPhoneHeaderBackgroundColor,
   phoneHeaderTimeInMinutes,
   setPhoneHeaderTimeInMinutes,
-  headerFooterMultiplier,
-  setHeaderFooterMultiplier,
-  resetHeaderFooterMultiplier,
   isPhoneFrame,
   isFrameWithOutline,
   isFrameWithMultiplier,
@@ -123,8 +117,8 @@ const {
               <p>
                 {{ t('tools.frame.settings.general.useFrameOutline.label') }}
               </p>
-              <ToggleButton v-model="drawOutline" style="transform: scale(0.6);"
-                @update="setFrameOutline(drawOutline)" />
+              <ToggleButton v-model="drawOutline" :scale="0.6" @update="setFrameOutline(drawOutline)"
+                :style="{ transform: 'translateX(16px)' }" />
             </div>
           </div>
         </div>
@@ -237,22 +231,6 @@ const {
             </div>
           </div>
         </div>
-
-        <!-- Header and footer frames multiplier -->
-        <!-- <div v-if="isFrameWithMultiplier(selectedFrameVariant)" class="settings-content-wrapper">
-          <div class="content-wrapper">
-            <div class="content-title">
-              <p>
-                {{ t('tools.frame.settings.general.headerFooterMultiplier.label') }}
-              </p>
-            </div>
-            <DefaultSlider v-model="headerFooterMultiplier" :min="editorConfig.minHeaderFooterMultiplier"
-              :max="editorConfig.maxHeaderFooterMultiplier" :step="editorConfig.stepHeaderFooterMultiplier"
-              @update="setHeaderFooterMultiplier(headerFooterMultiplier, false)"
-              @commit="setHeaderFooterMultiplier(headerFooterMultiplier, true)" :onReset="resetHeaderFooterMultiplier"
-              showValue />
-          </div>
-        </div> -->
 
         <!-- Header size px -->
         <div

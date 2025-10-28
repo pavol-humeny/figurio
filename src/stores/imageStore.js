@@ -171,7 +171,7 @@ export const useImageStore = defineStore('imageStore', {
       phoneHeaderTimeInMinutes: 610, // Default time for phone header (10:10)
       phoneHeaderTextColor: '#000000', // Default text color for phone header
       phoneHeaderBackgroundColor: '#ffffff', // Default background color for phone header
-      headerFooterMultiplier: 1, // Multiplier for header/footer size
+      modificationFlag: 1, // Flag to track frame modifications
     },
     /** Raw SVG frame for vector export */
     frameSvg: '',
@@ -376,7 +376,7 @@ export const useImageStore = defineStore('imageStore', {
         phoneHeaderTimeInMinutes: 610, // Default time for phone header (10:10)
         phoneHeaderTextColor: '#000000', // Default text color for phone header
         phoneHeaderBackgroundColor: '#ffffff', // Default background color for phone header
-        headerFooterMultiplier: 1, // Multiplier for header/footer size
+        modificationFlag: 1, // Flag to track frame modifications
       }
     },
 

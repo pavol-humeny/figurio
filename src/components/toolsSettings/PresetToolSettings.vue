@@ -19,7 +19,6 @@ import PresetNewOperation from '../tools/PresetNewOperation.vue'
 import { useViewportStore } from '@/stores/viewportStore'
 import { editorConfig } from '@/config/editorConfig'
 import TimeInput from '../common/TimeInput.vue'
-import DefaultSlider from '../common/DefaultSlider.vue'
 import { useFrameTool } from '@/composables/tools/useFrameTool'
 import { useWorkspaceStore } from '@/stores/workspaceStore'
 import ExplainItem from '../common/ExplainItem.vue'
@@ -80,7 +79,8 @@ const {
 const {
   isPhoneFrame,
   isFrameWithOutline,
-  isFrameWithMultiplier,
+  isFrameWithFooter,
+  isFrameWithHeader,
 } = useFrameTool(
   useImageStore(),
   useHistoryStore(),
@@ -346,16 +346,45 @@ const tabs = ['myPresets', 'createPreset']
                 </p>
                 <TimeInput v-model="localImageFrame.phoneHeaderTimeInMinutes" />
               </div>
-              <!-- Header and footer frames multiplier -->
-              <div v-if="localImageFrame.enabled && isFrameWithMultiplier(localImageFrame.type)"
-                class="content-aligned two-items" :class="!isModifyingPreset ? 'disabled' : ''">
-                <p>
-                  {{ t('tools.preset.settings.myPresets.presetValues.frame.headerFooterMultiplier') }}
+
+              <!-- Header size px-->
+              <div class="content-aligned two-items"
+                v-if="localImageFrame.enabled && isFrameWithHeader(localImageFrame.type) && !localImageFrame.useMillimeters">
+                <p :class="!isModifyingPreset ? 'disabled' : ''">
+                  {{ t('tools.preset.settings.myPresets.presetValues.frame.headerSize') }}
                 </p>
-                <DefaultSlider v-model="localImageFrame.headerFooterMultiplier"
-                  :min="editorConfig.minHeaderFooterMultiplier" :max="editorConfig.maxHeaderFooterMultiplier"
-                  :step="editorConfig.stepHeaderFooterMultiplier"
-                  :onReset="() => { localImageFrame.headerFooterMultiplier = 1 }" showValue />
+                <NumberInput ref="frameWidthRef" v-model="localImageFrame.headerSize" :min="1" :max="100" :step="1"
+                  unit="px" :disabled="!isModifyingPreset" />
+              </div>
+
+              <!-- Footer size px-->
+              <div class="content-aligned two-items"
+                v-if="localImageFrame.enabled && isFrameWithFooter(localImageFrame.type) && !localImageFrame.useMillimeters">
+                <p :class="!isModifyingPreset ? 'disabled' : ''">
+                  {{ t('tools.preset.settings.myPresets.presetValues.frame.footerSize') }}
+                </p>
+                <NumberInput ref="frameWidthRef" v-model="localImageFrame.footerSize" :min="1" :max="100" :step="1"
+                  unit="px" :disabled="!isModifyingPreset" />
+              </div>
+
+              <!-- Header size mm-->
+              <div class="content-aligned two-items"
+                v-if="localImageFrame.enabled && isFrameWithHeader(localImageFrame.type) && localImageFrame.useMillimeters">
+                <p :class="!isModifyingPreset ? 'disabled' : ''">
+                  {{ t('tools.preset.settings.myPresets.presetValues.frame.headerSize') }}
+                </p>
+                <NumberInput ref="frameWidthRef" v-model="localImageFrame.headerSizeMm" :min="1" :max="50" :step="1"
+                  unit="mm" :disabled="!isModifyingPreset" />
+              </div>
+
+              <!-- Footer size mm-->
+              <div class="content-aligned two-items"
+                v-if="localImageFrame.enabled && isFrameWithFooter(localImageFrame.type) && localImageFrame.useMillimeters">
+                <p :class="!isModifyingPreset ? 'disabled' : ''">
+                  {{ t('tools.preset.settings.myPresets.presetValues.frame.footerSize') }}
+                </p>
+                <NumberInput ref="frameWidthRef" v-model="localImageFrame.footerSizeMm" :min="1" :max="50" :step="1"
+                  unit="mm" :disabled="!isModifyingPreset" />
               </div>
             </div>
           </div>
@@ -749,22 +778,48 @@ const tabs = ['myPresets', 'createPreset']
               </div>
 
               <!-- Header size px-->
+              <div
+                v-if="newPreset.frame.enabled && !newPreset.frame.useMillimeters && isFrameWithHeader(newPreset.frame.type)"
+                class="content-aligned two-items">
+                <p>
+                  {{ t('tools.preset.settings.createPreset.presetValues.frame.headerSize') }}
+                </p>
+                <NumberInput ref="frameWidthRef" v-model="newPreset.frame.headerSize" :min="1" :max="100" :step="1"
+                  unit="px" />
+              </div>
 
               <!-- Footer size px -->
-
-
-
-              <!-- Header and footer frames multiplier -->
-              <!-- <div v-if="isFrameWithMultiplier(newPreset.frame.type) && newPreset.frame.enabled"
-                class="content-aligned two-items" :class="newPreset.frame.enabled ? '' : 'disabled'">
+              <div
+                v-if="newPreset.frame.enabled && !newPreset.frame.useMillimeters && isFrameWithFooter(newPreset.frame.type)"
+                class="content-aligned two-items">
                 <p>
-                  {{ t('tools.preset.settings.createPreset.presetValues.frame.headerFooterMultiplier') }}
+                  {{ t('tools.preset.settings.createPreset.presetValues.frame.footerSize') }}
                 </p>
-                <DefaultSlider v-model="newPreset.frame.headerFooterMultiplier"
-                  :min="editorConfig.minHeaderFooterMultiplier" :max="editorConfig.maxHeaderFooterMultiplier"
-                  :step="editorConfig.stepHeaderFooterMultiplier"
-                  :onReset="() => { newPreset.frame.headerFooterMultiplier = 1 }" showValue />
-              </div> -->
+                <NumberInput ref="frameWidthRef" v-model="newPreset.frame.footerSize" :min="1" :max="100" :step="1"
+                  unit="px" />
+              </div>
+
+              <!-- Header size mm -->
+              <div
+                v-if="newPreset.frame.enabled && newPreset.frame.useMillimeters && isFrameWithHeader(newPreset.frame.type)"
+                class="content-aligned two-items">
+                <p>
+                  {{ t('tools.preset.settings.createPreset.presetValues.frame.headerSize') }}
+                </p>
+                <NumberInput ref="frameWidthRef" v-model="newPreset.frame.headerSizeMm" :min="1" :max="50" :step="1"
+                  unit="mm" />
+              </div>
+
+              <!-- Footer size mm -->
+              <div
+                v-if="newPreset.frame.enabled && newPreset.frame.useMillimeters && isFrameWithFooter(newPreset.frame.type)"
+                class="content-aligned two-items">
+                <p>
+                  {{ t('tools.preset.settings.createPreset.presetValues.frame.footerSize') }}
+                </p>
+                <NumberInput ref="frameWidthRef" v-model="newPreset.frame.footerSizeMm" :min="1" :max="50" :step="1"
+                  unit="mm" />
+              </div>
             </div>
           </div>
         </div>

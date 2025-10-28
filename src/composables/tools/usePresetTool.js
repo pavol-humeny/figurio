@@ -232,7 +232,6 @@ export function usePresetTool(
         localImageFrame.value.phoneHeaderTimeInMinutes = 610
         localImageFrame.value.phoneHeaderTextColor = '#000000'
         localImageFrame.value.phoneHeaderBackgroundColor = '#ffffff'
-        localImageFrame.value.headerFooterMultiplier = 1
       }
 
       presetWasChanged.value = false
@@ -605,10 +604,10 @@ export function usePresetTool(
       height: 0,
       heightMm: 0,
       color: '#000000',
-      headerSize: 0,
-      headerSizeMm: 0,
-      footerSize: 0,
-      footerSizeMm: 0,
+      headerSize: 20,
+      headerSizeMm: 20,
+      footerSize: 20,
+      footerSizeMm: 20,
       outlineEnabled: false,
       phoneHeaderEnabled: true,
       phoneHeaderExpand: false,
@@ -617,7 +616,6 @@ export function usePresetTool(
       phoneHeaderTimeInMinutes: 610,
       phoneHeaderTextColor: '#000000',
       phoneHeaderBackgroundColor: '#ffffff',
-      headerFooterMultiplier: 1,
     },
     cropBox: {
       x: 0,
@@ -750,10 +748,10 @@ export function usePresetTool(
         height: 0,
         heightMm: 0,
         color: '#000000',
-        headerSize: 0,
-        headerSizeMm: 0,
-        footerSize: 0,
-        footerSizeMm: 0,
+        headerSize: 20,
+        headerSizeMm: 20,
+        footerSize: 20,
+        footerSizeMm: 20,
         outlineEnabled: false,
         phoneHeaderEnabled: true,
         phoneHeaderExpand: false,
@@ -762,7 +760,6 @@ export function usePresetTool(
         phoneHeaderTimeInMinutes: 610,
         phoneHeaderTextColor: '#000000',
         phoneHeaderBackgroundColor: '#ffffff',
-        headerFooterMultiplier: 1,
       },
       cropBox: {
         x: 0,
@@ -779,6 +776,47 @@ export function usePresetTool(
 
     isShowManualPresetSetting.value = false
   }
+
+  /**
+   * Watch headerSizeMm and update headerSize accordingly
+   */
+  watch(
+    () => newPreset.value.frame.headerSizeMm,
+    (newSize) => {
+      const PxPerMm = viewportStore.getPxPerMmFitZoom
+      newPreset.value.frame.headerSize = newSize * PxPerMm
+    },
+  )
+  /**
+   * Watch footerSizeMm and update footerSize accordingly
+   */
+  watch(
+    () => newPreset.value.frame.footerSizeMm,
+    (newSize) => {
+      const PxPerMm = viewportStore.getPxPerMmFitZoom
+      newPreset.value.frame.footerSize = newSize * PxPerMm
+    },
+  )
+  /**
+   * Watch headerSize and update headerSizeMm accordingly
+   */
+  watch(
+    () => newPreset.value.frame.headerSize,
+    (newSize) => {
+      const PxPerMm = viewportStore.getPxPerMmFitZoom
+      newPreset.value.frame.headerSizeMm = newSize / PxPerMm
+    },
+  )
+  /**
+   * Watch footerSize and update footerSizeMm accordingly
+   */
+  watch(
+    () => newPreset.value.frame.footerSize,
+    (newSize) => {
+      const PxPerMm = viewportStore.getPxPerMmFitZoom
+      newPreset.value.frame.footerSizeMm = newSize / PxPerMm
+    },
+  )
 
   /**
    * Create a new preset based on the current settings
@@ -833,12 +871,12 @@ export function usePresetTool(
     if (newPreset.value.frame.type !== 'none') {
       imageFrame.enabled = newPreset.value.frame.enabled
       imageFrame.type = newPreset.value.frame.type
-      imageFrame.color = newPreset.value.frame.color
       imageFrame.useMillimeters = newPreset.value.frame.useMillimeters
       imageFrame.width = newPreset.value.frame.width
-      imageFrame.widthMm = newPreset.value.frame.widthMm
       imageFrame.height = newPreset.value.frame.width
+      imageFrame.widthMm = newPreset.value.frame.widthMm
       imageFrame.heightMm = newPreset.value.frame.widthMm
+      imageFrame.color = newPreset.value.frame.color
       imageFrame.headerSize = newPreset.value.frame.headerSize
       imageFrame.headerSizeMm = newPreset.value.frame.headerSizeMm
       imageFrame.footerSize = newPreset.value.frame.footerSize
@@ -851,7 +889,6 @@ export function usePresetTool(
       imageFrame.phoneHeaderTimeInMinutes = newPreset.value.frame.phoneHeaderTimeInMinutes
       imageFrame.phoneHeaderTextColor = newPreset.value.frame.phoneHeaderTextColor
       imageFrame.phoneHeaderBackgroundColor = newPreset.value.frame.phoneHeaderBackgroundColor
-      imageFrame.headerFooterMultiplier = newPreset.value.frame.headerFooterMultiplier
     }
     // UPDATE new tool
 
