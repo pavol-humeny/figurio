@@ -1,7 +1,8 @@
 import { ref, watch, watchEffect, computed, onMounted } from 'vue'
 import { useMath } from '../common/useMath'
-import { useSendEvent } from '@/composables/common/useSendEvent'
 import { editorConfig } from '@/config/editorConfig'
+import { useApi } from '@/composables/common/useApi'
+const { addUserEvent } = useApi()
 
 /**
  * Local editable settings for text tool
@@ -227,7 +228,8 @@ export function useTextTool(imageStore, historyStore, editorStore, t) {
     `
 
     if (commit) {
-      useSendEvent().sendEvent('toolSettings', 'text', 'update', {
+      addUserEvent('applyOperation', {
+        tool: 'text',
         settings: { ...localTextSettings.value },
       })
 
@@ -278,7 +280,8 @@ export function useTextTool(imageStore, historyStore, editorStore, t) {
 
     imageStore.selectedSvgObjectId = id
 
-    useSendEvent().sendEvent('toolSettings', 'text', 'create', {
+    addUserEvent('applyOperation', {
+      tool: 'text',
       settings: { ...localTextSettings.value },
     })
 

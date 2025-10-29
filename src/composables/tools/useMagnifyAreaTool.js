@@ -1,8 +1,9 @@
 import { editorConfig } from '@/config/editorConfig'
 import { ref, computed, watch, watchEffect, onMounted, nextTick } from 'vue'
-import { useSendEvent } from '../common/useSendEvent'
 import { useConsole } from '@/composables/common/useConsole.js'
 const { log } = useConsole()
+import { useApi } from '@/composables/common/useApi'
+const { addUserEvent } = useApi()
 
 /**
  * Magnify area settings
@@ -418,7 +419,8 @@ s
 
     // Push to history only when explicitly requested
     if (commit) {
-      useSendEvent().sendEvent('toolSettings', 'magnifyArea', 'update', {
+      addUserEvent('applyOperation', {
+        tool: 'magnifyArea',
         settings: { ...localMagnifyAreaSettings.value },
       })
 
@@ -539,7 +541,8 @@ s
 
     log('selected', imageStore.selectedSvgObjectId)
 
-    useSendEvent().sendEvent('toolSettings', 'magnifyArea', 'create', {
+    addUserEvent('applyOperation', {
+      tool: 'magnifyArea',
       settings: { ...localMagnifyAreaSettings.value },
     })
 

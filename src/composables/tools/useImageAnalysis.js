@@ -1,6 +1,10 @@
 import { globalConfig } from '@/config/globalConfig'
 import { viewportConfig } from '@/config/viewportConfig'
 import { ref, watch } from 'vue'
+import { useConsole } from '@/composables/common/useConsole.js'
+const { log } = useConsole()
+import { useApi } from '@/composables/common/useApi'
+const { addUserEvent } = useApi()
 
 /**
  * Whether to expand the artifacts warning message
@@ -101,14 +105,14 @@ export function useImageAnalysis(imageStore, workspaceStore, t) {
     }
     const bgCoverage = bgCount / pixelCount
     if (bgCoverage < bgCoverageThreshold) {
-      console.log(
+      log(
         `[ImageAnalysis] Skipping noise detection — background coverage ${(bgCoverage * 100).toFixed(1)}% is below threshold (${bgCoverageThreshold * 100}%)`,
       )
       expandArtifactsWarning.value = false
       imageStore.imageHasArtifacts = false
       return
     } else {
-      console.log(
+      log(
         `[ImageAnalysis] Background coverage (#${bgColor.r}, ${bgColor.g}, ${bgColor.b}): ${(bgCoverage * 100).toFixed(1)}%`,
       )
     }
@@ -192,12 +196,14 @@ export function useImageAnalysis(imageStore, workspaceStore, t) {
       oCtx.putImageData(overlay, 0, 0)
       expandArtifactsWarning.value = true
       imageStore.imageHasArtifacts = true
-      console.log(`[ImageAnalysis] Noise detected in ${noisyBlocks} blocks — artifacts shown`)
+      log(`[ImageAnalysis] Noise detected in ${noisyBlocks} blocks — artifacts shown`)
+
+      addUserEvent('applyOperation', { operation: 'imageNoiseDetected', settings: {} })
     } else {
       oCtx.clearRect(0, 0, overlayCanvas.width, overlayCanvas.height)
       expandArtifactsWarning.value = false
       imageStore.imageHasArtifacts = false
-      console.log(`[ImageAnalysis] No significant noise detected`)
+      log(`[ImageAnalysis] No significant noise detected`)
     }
   }
 
@@ -226,7 +232,7 @@ export function useImageAnalysis(imageStore, workspaceStore, t) {
     () => workspaceStore.activeTabIndex,
     () => {
       if (!imageStore.imageArtifactsCanceledByUser) {
-        console.log('[ImageAnalysis] Active tab changed, recalculating artifacts')
+        log('[ImageAnalysis] Active tab changed, recalculating artifacts')
         calculateArtifacts()
       }
     },

@@ -1,8 +1,9 @@
 import { ref, watch, computed, nextTick } from 'vue'
 import { useToastModal } from '../modals/useToastModal'
 import { editorConfig } from '@/config/editorConfig'
-import { useSendEvent } from '../common/useSendEvent'
 import { useConfirmModal } from '../modals/useConfirmModal'
+import { useApi } from '@/composables/common/useApi'
+const { addUserEvent } = useApi()
 
 /**
  * Whether phone side buttons can be drawn because of dimensions
@@ -575,7 +576,6 @@ export function useFrameTool(imageStore, historyStore, viewportStore, t) {
    * Set header size
    */
   const setHeaderSize = (size) => {
-    console.warn('setHeaderSize called with size:', size)
     if (size < 0) {
       headerSize.value = calculateInitialHeaderFooterSize()
     }
@@ -675,7 +675,8 @@ export function useFrameTool(imageStore, historyStore, viewportStore, t) {
     }
 
     if (commit) {
-      useSendEvent().sendEvent('toolSettings', 'frame', 'update', {
+      addUserEvent('applyOperation', {
+        tool: 'frame',
         settings: { ...imageStore.frame },
       })
 
@@ -1125,7 +1126,6 @@ export function useFrameTool(imageStore, historyStore, viewportStore, t) {
 
     // UPDATE new frame type
     if (frame.type === 'frameSolid') {
-      console.warn('Drawing solid frame', { fw, fh, svgWidth, svgHeight })
       // 4 sides
       const sides = [
         { x: 0, y: 0, width: svgWidth, height: fh }, // top

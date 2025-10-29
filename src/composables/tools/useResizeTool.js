@@ -1,12 +1,13 @@
 import { ref, nextTick, watch } from 'vue'
 import { useToastModal } from '../modals/useToastModal'
 import { editorConfig } from '@/config/editorConfig'
-import { useSendEvent } from '@/composables/common/useSendEvent'
 import { useMath } from '../common/useMath'
 import { PDFDocument } from 'pdf-lib'
 import { useConfirmModal } from '../modals/useConfirmModal'
 import { useConsole } from '@/composables/common/useConsole.js'
 const { log, error } = useConsole()
+import { useApi } from '@/composables/common/useApi'
+const { addUserEvent } = useApi()
 
 /**
  * Logic for the resize tool
@@ -201,13 +202,9 @@ export function useResizeTool(imageStore, historyStore, viewportStore, t) {
       },
     })
 
-    useSendEvent().sendEvent('toolSettings', 'resize', null, {
-      settings: {
-        resizeDimensions: {
-          width: fileDimensionWidth.value,
-          height: fileDimensionHeight.value,
-        },
-      },
+    addUserEvent('applyOperation', {
+      tool: 'resize',
+      settings: { width: fileDimensionWidth.value, height: fileDimensionHeight.value },
     })
 
     await applyResizeRender(fileDimensionWidth.value, fileDimensionHeight.value)

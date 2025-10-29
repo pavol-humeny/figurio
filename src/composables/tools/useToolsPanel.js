@@ -1,14 +1,14 @@
 import { ref, onMounted, nextTick, computed, watch } from 'vue'
 import { useCollapsiblePanel } from '../common/useCollapsiblePanel'
-import { useSendEvent } from '../common/useSendEvent'
 import { useToastModal } from '../modals/useToastModal'
-import { useConfirmModal } from '../modals/useConfirmModal'
 import { useConsole } from '@/composables/common/useConsole.js'
 const { log } = useConsole()
+import { useApi } from '@/composables/common/useApi'
+const { addUserEvent } = useApi()
 
 /**
  * Logic for managing the left tools panel
-*
+ *
  * @param {ReturnType<typeof useEditorStore>} editorStore - Editor store instance
  * @param {ReturnType<typeof useImageStore>} imageStore - Image store instance
  * @param {Function} t - Translation function from vue-i18n
@@ -166,45 +166,10 @@ export function useToolsPanel(editorStore, imageStore, uiStore, t) {
       return
     }
 
-    // if (imageStore.needMergeOverlay) {
-    //   if (
-    //     toolKey === 'crop' ||
-    //     toolKey === 'grayscale' ||
-    //     toolKey === 'backgroundRemoval' ||
-    //     toolKey === 'blur' ||
-    //     toolKey === 'shape' ||
-    //     toolKey === 'text' ||
-    //     toolKey === 'magnifyArea' ||
-    //     toolKey === 'preset'
-    //   ) {
-    //     const confirmed = await showConfirmModal(
-    //       t('tools.confirmNeedOverlayMerge.title'),
-    //       t('tools.confirmNeedOverlayMerge.message'),
-    //       t('tools.confirmNeedOverlayMerge.cancel'),
-    //       t('tools.confirmNeedOverlayMerge.confirm'),
-    //     )
-    //     if (confirmed) {
-    //       imageStore.mergeOverlayIntoImage()
-    //     } else {
-    //       return
-    //     }
-    //   }
-    // }
-
     log('Toggle tool:', toolKey, 'Tab:', tabKey)
 
-    // Send event
-    useSendEvent().sendEvent('toggleTool', null, null, {
-      tool: toolKey,
-      tab: tabKey,
-    })
+    addUserEvent('toggleTool', { tool: toolKey, tab: tabKey || null })
 
-    // if (editorStore.selectedToolKey === toolKey && tabKey === null) {
-    //   // editorStore.selectTool('')
-    //   // If the panel is open, hide it
-    //   // useCollapsiblePanel(uiStore).hidePanel()
-    //   return
-    // }
     editorStore.selectTool(toolKey)
 
     // If the panel is closed, show it

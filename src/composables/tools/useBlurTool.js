@@ -1,7 +1,8 @@
 import { ref, computed, watch, watchEffect, nextTick, onMounted } from 'vue'
 import { useMath } from '../common/useMath'
 import { useSvgFunctions } from './useSvgFunctions'
-import { useSendEvent } from '@/composables/common/useSendEvent'
+import { useApi } from '@/composables/common/useApi'
+const { addUserEvent } = useApi()
 
 /**
  * Local settings for the blur tool
@@ -377,7 +378,8 @@ export function useBlurTool(imageStore, historyStore, editorStore, t) {
 
       historyStore.push(imageStore.getSnapshot(t))
 
-      useSendEvent().sendEvent('toolSettings', 'blur', 'update', {
+      addUserEvent('applyOperation', {
+        tool: 'blur',
         settings: { ...localBlurSettings.value },
       })
     }
@@ -457,7 +459,8 @@ export function useBlurTool(imageStore, historyStore, editorStore, t) {
 
     settings.name = imageStore.getNextObjectName('blur', null)
 
-    useSendEvent().sendEvent('toolSettings', 'blur', 'create', {
+    addUserEvent('applyOperation', {
+      tool: 'blur',
       settings: { ...settings },
     })
 

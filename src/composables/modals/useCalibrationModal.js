@@ -1,7 +1,7 @@
 import { ref, onMounted, onBeforeUnmount, watch } from 'vue'
-import { useSendEvent } from '@/composables/common/useSendEvent'
 import { viewportConfig } from '@/config/viewportConfig'
-
+import { useApi } from '@/composables/common/useApi'
+const { addUserEvent } = useApi()
 /**
  * Whether the calibration modal is currently visible.
  */
@@ -20,8 +20,8 @@ export function useCalibrationModal(viewportStore) {
     if (isVisible.value) return
 
     calibrationFactor.value = viewportStore.calibrationFactor
-    
-    useSendEvent().sendEvent('modalEvent', null, null, { modal: 'calibration', event: 'open' })
+
+    addUserEvent('openModal', { modal: 'calibration' })
 
     isVisible.value = true
   }
@@ -30,8 +30,6 @@ export function useCalibrationModal(viewportStore) {
    * Close the calibration modal.
    */
   const closeCalibrationModal = () => {
-    useSendEvent().sendEvent('modalEvent', null, null, { modal: 'calibration', event: 'close' })
-
     isVisible.value = false
   }
 

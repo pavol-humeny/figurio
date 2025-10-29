@@ -1,5 +1,6 @@
 import { useConfirmModal } from '../modals/useConfirmModal'
-import { useSendEvent } from '@/composables/common/useSendEvent'
+import { useApi } from '@/composables/common/useApi'
+const { addUserEvent } = useApi()
 
 /**
  * Logic for flipping the image and associated SVG elements
@@ -29,7 +30,8 @@ export function useFlipTool(imageStore, historyStore, t) {
       })
     }
 
-    useSendEvent().sendEvent('toolSettings', 'flip', null, {
+    addUserEvent('applyOperation', {
+      tool: 'flip',
       settings: { direction },
     })
 

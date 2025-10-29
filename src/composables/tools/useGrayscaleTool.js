@@ -1,8 +1,10 @@
 import { useConfirmModal } from '../modals/useConfirmModal'
 import { computed } from 'vue'
-import { useSendEvent } from '@/composables/common/useSendEvent'
 import { useMath } from '../common/useMath'
 import { useToastModal } from '../modals/useToastModal'
+import { useApi } from '@/composables/common/useApi'
+const { addUserEvent } = useApi()
+
 /**
  * Logic for applying grayscale
  *
@@ -68,8 +70,9 @@ export function useGrayscaleTool(imageStore, historyStore, t) {
       enabled: true,
     })
 
-    useSendEvent().sendEvent('toolSettings', 'grayscale', 'create', {
-      settings: { grayscale: true },
+    addUserEvent('applyOperation', {
+      tool: 'grayscale',
+      settings: {},
     })
 
     applyGrayscaleRender()

@@ -1,5 +1,6 @@
 import { computed } from 'vue'
-import { useSendEvent } from '@/composables/common/useSendEvent'
+import { useApi } from '@/composables/common/useApi'
+const { addUserEvent } = useApi()
 
 /**
  * Logic for handling undo and redo operations
@@ -29,10 +30,7 @@ export function useUndoRedo(historyStore, imageStore) {
   const undo = () => {
     if (!canUndo.value || !imageStore.isImageLoaded) return
 
-    // Send event
-    useSendEvent().sendEvent('buttonClicked', null, 'undo', {
-      historyIndex: historyStore.currentIndex,
-    })
+    addUserEvent('buttonClicked', { button: 'undo' })
 
     const snapshot = historyStore.undo()
     if (snapshot) {
@@ -47,9 +45,7 @@ export function useUndoRedo(historyStore, imageStore) {
     if (!canRedo.value || !imageStore.isImageLoaded) return
 
     // Send event
-    useSendEvent().sendEvent('buttonClicked', null, 'redo', {
-      historyIndex: historyStore.currentIndex,
-    })
+    addUserEvent('buttonClicked', { button: 'redo' })
 
     const snapshot = historyStore.redo()
     if (snapshot) {

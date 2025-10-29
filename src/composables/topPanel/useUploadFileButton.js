@@ -1,6 +1,7 @@
-import { useSendEvent } from '@/composables/common/useSendEvent'
 import { useImportModal } from '../modals/useImportModal'
 import { watch } from 'vue'
+import { useApi } from '@/composables/common/useApi'
+const { addUserEvent } = useApi()
 
 /**
  * Logic for the upload file button
@@ -19,9 +20,6 @@ export function useUploadFileButton(imageStore, t, router) {
    * Open file dialog and load the selected file
    */
   const uploadFile = async () => {
-    // Send event
-    useSendEvent().sendEvent('buttonClicked', null, 'uploadFile', {})
-
     imageStore.loadFile(t, router)
   }
 
@@ -29,8 +27,7 @@ export function useUploadFileButton(imageStore, t, router) {
    * Open drag and drop modal
    */
   const openDragAndDropModal = async () => {
-    // Send event
-    useSendEvent().sendEvent('buttonClicked', null, 'uploadFileDragAndDrop', {})
+    addUserEvent('openModal', { modal: 'importModal' })
 
     // Open the import modal
     openImportModal()

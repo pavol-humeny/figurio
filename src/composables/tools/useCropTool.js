@@ -6,7 +6,8 @@ import { editorConfig } from '@/config/editorConfig'
 
 import { PDFDocument } from 'pdf-lib'
 
-import { useSendEvent } from '@/composables/common/useSendEvent'
+import { useApi } from '@/composables/common/useApi'
+const { addUserEvent } = useApi()
 
 import { useConsole } from '@/composables/common/useConsole.js'
 const { log, warn, error } = useConsole()
@@ -1357,7 +1358,7 @@ export function useCropTool(
    * Apply the crop operation
    */
   const applyCrop = async () => {
-    if(editorStore.selectedToolKey !== 'crop') return
+    if (editorStore.selectedToolKey !== 'crop') return
 
     // Check if crop box is same as image dimensions
     if (
@@ -1400,7 +1401,8 @@ export function useCropTool(
       cropBox: { ...cropBox.value },
     })
 
-    useSendEvent().sendEvent('toolSettings', 'crop', null, {
+    addUserEvent('applyOperation', {
+      tool: 'crop',
       settings: { cropBox: { ...cropBox.value } },
     })
 

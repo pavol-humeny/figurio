@@ -1,10 +1,11 @@
 import { useConfirmModal } from '../modals/useConfirmModal'
-import { useSendEvent } from '@/composables/common/useSendEvent'
 import { useMath } from '../common/useMath'
 import { degrees, PDFDocument } from 'pdf-lib'
 import { useConsole } from '@/composables/common/useConsole.js'
 import { useToastModal } from '../modals/useToastModal'
-const { log, error, warn } = useConsole()
+const { log, error } = useConsole()
+import { useApi } from '@/composables/common/useApi'
+const { addUserEvent } = useApi()
 
 /**
  * Logic for the rotate tool including confirmation, operation registration, and canvas rendering
@@ -60,10 +61,9 @@ export function useRotateTool(imageStore, historyStore, t) {
       angle: angle,
     })
 
-    useSendEvent().sendEvent('toolSettings', 'rotate', null, {
-      settings: {
-        angle: angle,
-      },
+    addUserEvent('applyOperation', {
+      tool: 'rotate',
+      settings: { angle: angle },
     })
 
     await applyRotationRender(angle)

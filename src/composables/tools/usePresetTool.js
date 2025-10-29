@@ -1,4 +1,4 @@
-import { ref, computed, watch, onMounted } from 'vue'
+import { ref, computed, watch } from 'vue'
 import { useToastModal } from '../modals/useToastModal'
 import { useConfirmModal } from '../modals/useConfirmModal'
 import { useFlipTool } from './useFlipTool'
@@ -8,9 +8,10 @@ import { useCropTool } from './useCropTool'
 import { editorConfig } from '@/config/editorConfig'
 import { useResizeTool } from './useResizeTool'
 import { useFrameTool } from './useFrameTool'
-import { useSendEvent } from '../common/useSendEvent'
 import { useConsole } from '@/composables/common/useConsole.js'
 const { warn } = useConsole()
+import { useApi } from '@/composables/common/useApi'
+const { addUserEvent } = useApi()
 
 /**
  * Logic for preset tool
@@ -251,7 +252,10 @@ export function usePresetTool(
     tmpLocalPresetName.value = localPresetName.value
     tmpLocalImageOperations.value = JSON.parse(JSON.stringify(localImageOperations.value))
 
-    useSendEvent().sendEvent('toolSettings', 'preset', 'modifyPreset', {})
+    addUserEvent('applyOperation', {
+      tool: 'preset',
+      settings: { action: 'modifyPreset' },
+    })
   }
 
   /**
@@ -293,7 +297,10 @@ export function usePresetTool(
 
     editorStore.selectSubTool('')
 
-    useSendEvent().sendEvent('toolSettings', 'preset', 'save', {})
+    addUserEvent('applyOperation', {
+      tool: 'preset',
+      settings: { action: 'savePreset' },
+    })
   }
 
   /**
@@ -333,7 +340,10 @@ export function usePresetTool(
 
     editorStore.selectSubTool('')
 
-    useSendEvent().sendEvent('toolSettings', 'preset', 'close', {})
+    addUserEvent('applyOperation', {
+      tool: 'preset',
+      settings: { action: 'close' },
+    })
   }
 
   /**
@@ -371,7 +381,10 @@ export function usePresetTool(
     newOperation.value = null
     creatingNewOperation.value = false
 
-    useSendEvent().sendEvent('toolSettings', 'preset', 'delete', {})
+    addUserEvent('applyOperation', {
+      tool: 'preset',
+      settings: { action: 'delete' },
+    })
   }
 
   /**
@@ -555,7 +568,10 @@ export function usePresetTool(
     // Save current operations to imageStore
     imageStore.imageOperations = JSON.parse(JSON.stringify(preset.imageOperations))
 
-    useSendEvent().sendEvent('toolSettings', 'preset', 'apply', {})
+    addUserEvent('applyOperation', {
+      tool: 'preset',
+      settings: { action: 'applyPreset' },
+    })
 
     historyStore.push(imageStore.getSnapshot(t))
   }
@@ -928,7 +944,10 @@ export function usePresetTool(
       t('tools.preset.settings.createPreset.presetSuccessfullyCreated.message'),
     )
 
-    useSendEvent().sendEvent('toolSettings', 'preset', 'create', {})
+    addUserEvent('applyOperation', {
+      tool: 'preset',
+      settings: { action: 'createPreset' },
+    })
   }
 
   /**
@@ -1014,7 +1033,10 @@ export function usePresetTool(
       }
     }, 2000)
 
-    useSendEvent().sendEvent('toolSettings', 'preset', 'useCurrentModifications', {})
+    addUserEvent('applyOperation', {
+      tool: 'preset',
+      settings: { action: 'useCurrentModifications' },
+    })
   }
 
   return {

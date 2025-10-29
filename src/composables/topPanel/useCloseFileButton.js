@@ -1,7 +1,8 @@
 import { computed } from 'vue'
 import { useConfirmModal } from '@/composables/modals/useConfirmModal'
-import { useSendEvent } from '@/composables/common/useSendEvent'
 import { useGeneralModal } from '@/composables/modals/useGeneralModal'
+import { useApi } from '@/composables/common/useApi'
+const { addUserEvent } = useApi()
 
 /**
  * Logic for the Close File button in the top panel
@@ -30,7 +31,7 @@ export function useCloseFileButton(imageStore, workspaceStore, t) {
     if (disabled.value) return
 
     // Send event
-    useSendEvent().sendEvent('buttonClicked', null, 'closeFile', {})
+    addUserEvent('buttonClicked', { button: 'closeFile' })
 
     if (workspaceStore.numberOfTabs <= 1) {
       const confirmed = await showConfirmModal(

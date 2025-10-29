@@ -17,9 +17,12 @@ import { globalConfig } from './config/globalConfig.js'
 import ReleaseModal from './components/modals/ReleaseModal.vue'
 import { useUiStore } from './stores/uiStore'
 import CalibrationModal from './components/modals/CalibrationModal.vue'
+import { useApi } from './composables/common/useApi'
 
-import { useConsole } from '@/composables/common/useConsole.js'
-const { log, warn, error } = useConsole()
+const { addUserVisit } = useApi()
+
+// import { useConsole } from '@/composables/common/useConsole.js'
+// const { log, warn, error } = useConsole()
 
 
 const router = useRouter()
@@ -59,26 +62,26 @@ const handleBeforeUnload = (event) => {
  * @param {string} userUuid - The unique identifier for the user.
  *
  */
-const setUserLogin = async (userUuid) => {
-  if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
-    return null
-  }
+// const setUserLogin = async (userUuid) => {
+//   if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+//     return null
+//   }
 
-  try {
-    const res = await fetch(`${globalConfig.API_BASE}/api/user-login`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ user_id: userUuid }),
-    })
-    if (!res.ok) {
-      warn('Error during user-login:', await res.text())
-    } else {
-      log('User login recorded')
-    }
-  } catch (e) {
-    error('Error fetching user-login:', e)
-  }
-}
+//   try {
+//     const res = await fetch(`${globalConfig.API_BASE}/api/user-login`, {
+//       method: 'POST',
+//       headers: { 'Content-Type': 'application/json' },
+//       body: JSON.stringify({ user_id: userUuid }),
+//     })
+//     if (!res.ok) {
+//       warn('Error during user-login:', await res.text())
+//     } else {
+//       log('User login recorded')
+//     }
+//   } catch (e) {
+//     error('Error fetching user-login:', e)
+//   }
+// }
 
 const APP_VERSION = import.meta.env.VITE_APP_VERSION
 
@@ -123,7 +126,7 @@ onMounted(() => {
     router.replace({ name: 'home' })
   }
 
-  setUserLogin(userUuid)
+  addUserVisit(userUuid)
 })
 
 /**

@@ -1,9 +1,10 @@
 import { computed, ref, watch, watchEffect, nextTick, onMounted } from 'vue'
 import { useMath } from '../common/useMath'
 import { useSvgFunctions } from './useSvgFunctions'
-import { useSendEvent } from '../common/useSendEvent'
 import { useConsole } from '@/composables/common/useConsole.js'
 const { log } = useConsole()
+import { useApi } from '@/composables/common/useApi'
+const { addUserEvent } = useApi()
 
 /**
  * Local editable settings for shape tool
@@ -454,7 +455,8 @@ export function useShapeTool(editorStore, imageStore, historyStore, t) {
 
     // Push to history only when explicitly requested
     if (commit) {
-      useSendEvent().sendEvent('toolSettings', 'shape', 'update', {
+      addUserEvent('applyOperation', {
+        tool: 'shape',
         settings: { ...localObjectSettings.value },
       })
 
@@ -479,7 +481,8 @@ export function useShapeTool(editorStore, imageStore, historyStore, t) {
 
     settings.name = imageStore.getNextObjectName('shape', settings.type)
 
-    useSendEvent().sendEvent('toolSettings', 'shape', 'create', {
+    addUserEvent('applyOperation', {
+      tool: 'shape',
       settings: { ...settings },
     })
 

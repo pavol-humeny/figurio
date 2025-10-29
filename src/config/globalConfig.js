@@ -61,7 +61,9 @@ export const globalConfig = {
   maxNumberOfFilesToUploadSimultaneously: 5,
 
   // API
-  API_BASE: 'https://bp-api-ft1e.onrender.com',
+  // API_BASE: 'https://bp-api-ft1e.onrender.com',
+  API_BASE: 'http://139.59.143.44:3000',
+  sendUsageStats: true,
 
   // LocalStorage prefix
   LOCAL_STORAGE_PREFIX: 'figurio_',

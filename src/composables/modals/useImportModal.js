@@ -1,13 +1,14 @@
 import { ref, onMounted, onBeforeUnmount } from 'vue'
-import { useSendEvent } from '@/composables/common/useSendEvent'
 import { useConsole } from '@/composables/common/useConsole.js'
+import { useApi } from '@/composables/common/useApi'
+const { addUserEvent } = useApi()
+
 const { log } = useConsole()
 
 /**
  * Whether the import modal is currently visible
  */
 const isVisible = ref(false)
-
 
 export function useImportModal() {
   /**
@@ -20,7 +21,7 @@ export function useImportModal() {
 
     log('Opening import modal')
 
-    useSendEvent().sendEvent('modalEvent', null, null, { modal: 'import', event: 'open' })
+    addUserEvent('openModal', { modal: 'import' })
 
     isVisible.value = true
   }
@@ -29,8 +30,6 @@ export function useImportModal() {
    * Close the import modal
    */
   const closeImportModal = () => {
-    useSendEvent().sendEvent('modalEvent', null, null, { modal: 'import', event: 'close' })
-
     isVisible.value = false
   }
 

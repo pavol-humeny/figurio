@@ -1,6 +1,7 @@
 import { ref, nextTick, computed, watch } from 'vue'
-import { useSendEvent } from '@/composables/common/useSendEvent'
 import { editorConfig } from '@/config/editorConfig'
+import { useApi } from '@/composables/common/useApi'
+const { addUserEvent } = useApi()
 
 /**
  * Reference to the input element for file name editing
@@ -72,10 +73,7 @@ export function useFileNameDisplay(imageStore, t) {
       })
     }
 
-    // Send event
-    useSendEvent().sendEvent('fileNameChange', null, null, {
-      fileName: fileNameInput.value,
-    })
+    addUserEvent('renameFile', { newFileName: fileNameInput.value })
   }
 
   /**

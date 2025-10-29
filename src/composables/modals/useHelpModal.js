@@ -1,6 +1,7 @@
 import { ref, onMounted, nextTick, onBeforeUnmount } from 'vue'
 import { useInteractiveTutorial } from '@/composables/tutorial/useInteractiveTutorial'
-import { useSendEvent } from '@/composables/common/useSendEvent'
+import { useApi } from '@/composables/common/useApi'
+const { addUserEvent } = useApi()
 
 /**
  * Whether the help modal is currently visible
@@ -47,7 +48,7 @@ export function useHelpModal(uiStore, imageStore, router, t) {
       return
     }
 
-    useSendEvent().sendEvent('modalEvent', null, null, { modal: 'help', event: 'open' })
+    addUserEvent('openModal', { modal: 'help' })
 
     isVisible.value = true
   }
@@ -56,8 +57,6 @@ export function useHelpModal(uiStore, imageStore, router, t) {
    * Close the help modal
    */
   const closeHelpModal = () => {
-    useSendEvent().sendEvent('modalEvent', null, null, { modal: 'help', event: 'close' })
-
     isVisible.value = false
   }
 

@@ -1,5 +1,6 @@
 import { ref, onMounted, nextTick, onBeforeUnmount } from 'vue'
-import { useSendEvent } from '@/composables/common/useSendEvent'
+import { useApi } from '@/composables/common/useApi'
+const { addUserEvent } = useApi()
 
 /**
  * Whether the patch notes modal is currently visible
@@ -45,7 +46,7 @@ export function useReleaseModal() {
       return
     }
 
-    useSendEvent().sendEvent('modalEvent', null, null, { modal: 'release', event: 'open' })
+    addUserEvent('openModal', { modal: 'releaseNotes' })
 
     isVisible.value = true
   }
@@ -54,8 +55,6 @@ export function useReleaseModal() {
    * Close the patch notes modal
    */
   const closeReleaseModal = () => {
-    useSendEvent().sendEvent('modalEvent', null, null, { modal: 'release', event: 'close' })
-
     isVisible.value = false
   }
 

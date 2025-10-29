@@ -5,6 +5,8 @@ import { useThrottleFn } from '@vueuse/core'
 import { editorConfig } from '@/config/editorConfig'
 import { useConsole } from '@/composables/common/useConsole.js'
 const { log } = useConsole()
+import { useApi } from '@/composables/common/useApi'
+const { addUserEvent } = useApi()
 
 /**
  * Logic for managing zooming, panning, scrolling and viewport dimensions
@@ -852,6 +854,8 @@ export function useViewportWrapper(viewportStore, imageStore, editorStore, uiSto
     const currentIndex = backgroundModeOptions.indexOf(backgroundMode.value)
     const nextIndex = (currentIndex + 1) % backgroundModeOptions.length
     backgroundMode.value = backgroundModeOptions[nextIndex]
+
+    addUserEvent('constrastModeChanged', { mode: backgroundMode.value })
   }
 
   /**

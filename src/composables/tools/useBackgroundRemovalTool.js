@@ -1,8 +1,9 @@
 import { computed, ref, watch } from 'vue'
 import { useConfirmModal } from '../modals/useConfirmModal'
-import { useSendEvent } from '@/composables/common/useSendEvent'
 import { editorConfig } from '@/config/editorConfig'
 import { useToastModal } from '../modals/useToastModal'
+import { useApi } from '@/composables/common/useApi'
+const { addUserEvent } = useApi()
 
 /**
  * Removal threshold for background removal
@@ -713,7 +714,8 @@ export function useBackgroundRemovalTool(imageStore, historyStore, workspaceStor
       removalType,
     })
 
-    useSendEvent().sendEvent('toolSettings', 'backgroundRemoval', null, {
+    addUserEvent('applyOperation', {
+      tool: 'backgroundRemoval',
       settings: {
         removalType,
       },

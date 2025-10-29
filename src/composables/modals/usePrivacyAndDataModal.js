@@ -1,6 +1,7 @@
 import { ref, onMounted, onBeforeUnmount } from 'vue'
 import { useConfirmModal } from './useConfirmModal'
-import { useSendEvent } from '@/composables/common/useSendEvent'
+import { useApi } from '@/composables/common/useApi'
+const { addUserEvent } = useApi()
 
 /**
  * Whether the privacy and data modal is currently visible
@@ -29,7 +30,7 @@ export function usePrivacyAndDataModal(t) {
       return
     }
 
-    useSendEvent().sendEvent('modalEvent', null, null, { modal: 'privacyAndData', event: 'open' })
+    addUserEvent('openModal', { modal: 'privacyAndData' })
 
     isVisible.value = true
   }
@@ -38,8 +39,6 @@ export function usePrivacyAndDataModal(t) {
    * Close the modal
    */
   const closePrivacyAndDataModal = () => {
-    useSendEvent().sendEvent('modalEvent', null, null, { modal: 'privacyAndData', event: 'close' })
-
     isVisible.value = false
   }
 
@@ -47,7 +46,7 @@ export function usePrivacyAndDataModal(t) {
    * Clear localStorage and reload after confirmation
    */
   const clearLocalStorage = async () => {
-    useSendEvent().sendEvent('buttonClicked', null, 'clearLocalStorage', {})
+    addUserEvent('buttonClicked', { button: 'clearLocalStorage' })
 
     localStorage.clear()
 

@@ -15,7 +15,8 @@ import { editorConfig } from '@/config/editorConfig'
 import { useViewportStore } from './viewportStore'
 import { globalConfig } from '@/config/globalConfig'
 import { useGeneralModal } from '@/composables/modals/useGeneralModal'
-import { useSendEvent } from '@/composables/common/useSendEvent'
+import { useApi } from '@/composables/common/useApi'
+const { addUserEvent } = useApi()
 
 pdfjsLib.GlobalWorkerOptions.workerSrc =
   'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js'
@@ -831,9 +832,8 @@ export const useImageStore = defineStore('imageStore', {
         error('Unsupported file type:', this.file.type)
       }
 
-      // Send event
-      useSendEvent().sendEvent('fileUpload', null, null, {
-        fileType: this.fileFormat,
+      addUserEvent('fileUpload', {
+        fileFormat: this.fileFormat,
         fileName: this.fileName,
         fileSize: this.fileSize,
         fileWidth: this.fileDimensions.width,
@@ -1109,6 +1109,14 @@ export const useImageStore = defineStore('imageStore', {
         )
       }
       image.src = this.previewUrl
+
+      addUserEvent('exportImage', {
+        fileFormat: this.newFileFormat,
+        fileName: this.newFileName,
+        fileWidth: width,
+        fileHeight: height,
+        quality: quality,
+      })
 
       return true
     },

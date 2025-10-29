@@ -2,6 +2,8 @@ import { onMounted, onBeforeUnmount } from 'vue'
 import { keyboardShortcuts } from '@/config/keyboardShortcutsConfig'
 import { useConsole } from '@/composables/common/useConsole.js'
 const { log } = useConsole()
+import { useApi } from '@/composables/common/useApi'
+const { addUserEvent } = useApi()
 
 /**
  * Logic for handling global keyboard shortcuts
@@ -80,6 +82,11 @@ export function useKeyboardShortcuts(actions, uiStore, editorStore) {
 
           fn(...(shortcut.args || []))
           log(`[Shortcut] ${type.toUpperCase()} → ${shortcut.description}`)
+
+          addUserEvent('keyboardShortcut', {
+            action: shortcut.action,
+            keys: pressed,
+          })
         }
       }
     }
