@@ -6,6 +6,15 @@
     ]
   },
   "versions": {
+    "4.15.0":{
+      "label": "4.15.0",
+      "date":"29.10. 2025",
+      "newFeatures": {
+        "items": [
+          "Přidání statistik používání"
+        ]
+      }
+    },
     "4.14.1": {
       "label": "4.14.1",
       "date": "29.10. 2025",
