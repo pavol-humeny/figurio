@@ -141,6 +141,9 @@ export const useUiStore = defineStore('ui', {
       `${globalConfig.LOCAL_STORAGE_PREFIX}viewportWrapperBackgroundMode`,
       'normal',
     ),
+
+    /** Whether any item tip is currently visible - use to show only one at the time */
+    isItemTipVisible: false,
   }),
   actions: {
     /**

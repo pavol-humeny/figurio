@@ -1,5 +1,6 @@
 <script setup>
 import { useItemTip } from '@/composables/common/useItemTip'
+import { useUiStore } from '@/stores/uiStore'
 import { computed } from 'vue'
 
 /**
@@ -53,7 +54,7 @@ const {
   position: props.position,
   text: props.text,
   delay: props.delay,
-})
+}, useUiStore())
 
 /**
  * Whether to show the tooltip (text must be non-empty)

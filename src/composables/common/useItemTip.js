@@ -18,7 +18,7 @@ import { editorConfig } from '@/config/editorConfig'
  *   updatePosition: () => void
  * }}
  */
-export function useItemTip(options = {}) {
+export function useItemTip(options = {}, uiStore) {
   /**
    * Tooltip position (defaults to 'top')
    */
@@ -148,6 +148,8 @@ export function useItemTip(options = {}) {
    * Handles mouseenter event and starts delayed tooltip show
    */
   const handleMouseEnter = () => {
+    if (uiStore.isItemTipVisible) return
+    uiStore.isItemTipVisible = true
     hoverTimeout.value = setTimeout(() => {
       isVisible.value = true
     }, delay)
@@ -159,6 +161,7 @@ export function useItemTip(options = {}) {
   const handleMouseLeave = () => {
     clearTimeout(hoverTimeout.value)
     isVisible.value = false
+    uiStore.isItemTipVisible = false
   }
 
   /**

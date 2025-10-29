@@ -1106,5 +1106,8 @@
       "text": "Obrázok obsahuje množstvo jemných pixelov, ktoré môžu na prvý pohľad vyzerať ako súčasť pozadia, no v skutočnosti ide o šum alebo vizuálne artefakty. Tieto artefakty môžu vzniknúť pri kompresii alebo spracovaní obrázka. Kliknutím na túto hlášku môžeš zobraziť alebo skryť zvýraznenie týchto pixelov."
     },
     "message": "Vysoká úroveň šumu v obrázku"
+  },
+  "colorEyeDropper":{
+    "tip": "Kapátko pre výber farby z obrázku"
   }
 }

@@ -1,7 +1,7 @@
 <script setup>
+import BaseIcon from '../icons/BaseIcon.vue'
 import ItemTip from './ItemTip.vue'
 import { useColorPicker } from '@/composables/common/useColorPicker'
-
 
 /**
  * @typedef {Object} ColorPickerProps
@@ -64,6 +64,8 @@ const {
   setValue,
   onEnter,
   inputRef,
+  isSupported,
+  pickColor,
 } = useColorPicker(props, emit)
 
 /**
@@ -73,49 +75,59 @@ defineExpose({ setValue })
 </script>
 
 <template>
-  <ItemTip :text="props.tip" :position="props.position">
-    <div class="color-wrapper">
+
+  <div class="color-wrapper">
+    <ItemTip :text="props.tip" :position="props.position">
       <div ref="previewRef" class="color-preview" @click="toggle" :style="{ background: colorValue }"
         :class="{ disabled: props.disabled }"></div>
-      <div class="hex-input-wrapper">
-        <input class="hex-input-visible" type="text" ref="inputRef" v-model="hexValue" maxlength="7" @input="onHexInput"
-          @blur="onHexBlur" @keydown.enter="onEnter" />
-      </div>
+    </ItemTip>
+    <div class="hex-input-wrapper">
+      <input class="hex-input-visible" type="text" ref="inputRef" v-model="hexValue" maxlength="7" @input="onHexInput"
+        @blur="onHexBlur" @keydown.enter="onEnter" :class="{ disabled: props.disabled }" />
+    </div>
 
-      <Teleport to="body">
-        <div v-if="isVisible" ref="panelRef" class="color-settings" :style="panelStyle">
-          <!-- SV plocha -->
-          <div class="canvas-wrapper">
-            <canvas ref="svCanvasRef" class="sv-canvas" width="200" height="200" @mousedown="startSVPick"></canvas>
-            <div class="sv-indicator"
-              :style="{ left: svIndicatorX + 'px', top: svIndicatorY + 'px', background: colorValue }"></div>
-          </div>
+    <Teleport to="body">
+      <div v-if="isVisible" ref="panelRef" class="color-settings" :style="panelStyle">
+        <!-- SV plocha -->
+        <div class="canvas-wrapper">
+          <canvas ref="svCanvasRef" class="sv-canvas" width="200" height="200" @mousedown="startSVPick"></canvas>
+          <div class="sv-indicator"
+            :style="{ left: svIndicatorX + 'px', top: svIndicatorY + 'px', background: colorValue }"></div>
+        </div>
 
-          <!-- Hue slider -->
-          <div class="canvas-wrapper">
-            <canvas ref="hueCanvasRef" class="hue-canvas" width="200" height="10" @mousedown="startHuePick"></canvas>
-            <div class="hue-indicator" :style="{ left: hueIndicatorX + 'px', background: hueIndicatorColor }"></div>
-          </div>
+        <!-- Hue slider -->
+        <div class="canvas-wrapper">
+          <canvas ref="hueCanvasRef" class="hue-canvas" width="200" height="10" @mousedown="startHuePick"></canvas>
+          <div class="hue-indicator" :style="{ left: hueIndicatorX + 'px', background: hueIndicatorColor }"></div>
+        </div>
 
+        <div class="input-dropper-wrapper">
           <!-- Hex input -->
           <div class="hex-input-wrapper">
             <input class="hex-input" type="text" v-model="hexValue" maxlength="7" @input="onHexInput"
               @blur="onHexBlur" />
           </div>
 
-          <!-- Recent colors -->
-          <div class="recent-colors">
-            <div v-for="(c, i) in recentColors" :key="i" class="recent-color" :style="{
-              background: c || '#ffffff',
-              opacity: c ? 1 : 0.3,
-              cursor: c ? 'pointer' : 'default'
-            }" @click="c && selectRecentColor(c)">
-            </div>
+          <!-- Eye dropper -->
+          <div class="eye-dropper" :class="{ disabled: props.disabled }">
+            <BaseIcon name="IconEyeDropper" size="18" color="var(--primary-c)" :tip="$t('tools.colorEyeDropper.tip')"
+              position="bottom-left" :disabled="!isSupported || props.disabled" @click="pickColor"
+              style="cursor: pointer; z-index: var(--z-index-color-eyedropper);" />
           </div>
         </div>
-      </Teleport>
-    </div>
-  </ItemTip>
+
+        <!-- Recent colors -->
+        <div class="recent-colors">
+          <div v-for="(c, i) in recentColors" :key="i" class="recent-color" :style="{
+            background: c || '#ffffff',
+            opacity: c ? 1 : 0.3,
+            cursor: c ? 'pointer' : 'default'
+          }" @click="c && selectRecentColor(c)">
+          </div>
+        </div>
+      </div>
+    </Teleport>
+  </div>
 </template>
 
 
@@ -204,6 +216,13 @@ defineExpose({ setValue })
   transform: translateX(-50%);
   pointer-events: none;
   cursor: pointer;
+}
+
+.input-dropper-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
 }
 
 .hex-input-wrapper {

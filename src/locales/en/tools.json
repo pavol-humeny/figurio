@@ -1106,5 +1106,8 @@
       "text": "The image contains many subtle pixels that may appear to be part of the background but are actually noise or visual artifacts. These artifacts can result from compression or image processing. Click this message to hide or show highlight of these pixels."
     },
     "message": "High noise level in the image"
+  },
+  "colorEyeDropper":{
+    "tip": "Eye dropper for color selection"
   }
 }

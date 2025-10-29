@@ -1,4 +1,6 @@
 import { ref, nextTick, onBeforeUnmount, watch, computed } from 'vue'
+import { useEyeDropper } from '@vueuse/core'
+const { isSupported, open, sRGBHex } = useEyeDropper()
 
 /**
  * Array for recent colors (max 7)
@@ -534,6 +536,14 @@ export function useColorPicker(props, emit) {
   // Cleanup listener on unmount
   onBeforeUnmount(() => document.removeEventListener('mousedown', onClickOutside))
 
+  const pickColor = async () => {
+    const result = await open()
+    if (result?.sRGBHex) {
+      hexValue.value = result.sRGBHex
+      applyHexColor(result.sRGBHex)
+    }
+  }
+
   return {
     colorValue,
     hueIndicatorColor,
@@ -558,5 +568,7 @@ export function useColorPicker(props, emit) {
     setValue,
     onEnter,
     inputRef,
+    isSupported,
+    pickColor,
   }
 }
