@@ -4,6 +4,25 @@
     "items": []
   },
   "versions":{
+    "4.14.1":{
+      "label": "4.14.1",
+      "date":"29.10. 2025",
+      "newFeatures": {
+        "items": [
+          "Add eye dropper to color picker component"
+        ]
+      },
+      "improvements": {
+        "items": [
+          "New design of color picker input with hex input"
+        ]
+      },
+      "bugFixes": {
+        "items": [
+          "Set rotate icon border to be visible on all backgrounds"
+        ]
+      }
+    },
     "4.14.0":{
       "label": "4.14.0",
       "date":"28.10. 2025",

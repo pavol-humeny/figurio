@@ -6,6 +6,45 @@
     ]
   },
   "versions": {
+    "4.14.1": {
+      "label": "4.14.1",
+      "date": "29.10. 2025",
+      "newFeatures": {
+        "items": [
+          "Pridanie kvapátka do komponentu výberu farby"
+        ]
+      },
+      "improvements": {
+        "items": [
+          "Nový dizajn výberu farby s hexadecimálnym vstupom"
+        ]
+      },
+      "bugFixes": {
+        "items": [
+          "Nastavenie viditeľnej hranice ikony rotácie na všetkých pozadiach"
+        ]
+      }
+    },
+    "4.14.0": {
+      "label": "4.14.0",
+      "date": "28.10. 2025",
+      "newFeatures": {
+        "items": [
+          "Rámy môžu byť merané a nastavené v milimetroch podľa kalibrácie monitora",
+          "Orezať sa dá stlačením klávesy Enter"
+        ]
+      },
+      "improvements": {
+        "items": [
+          "Nastavenie predvoleného názvu pre novo vytvorené prednastavenia"
+        ]
+      },
+      "bugFixes": {
+        "items": [
+          "Vymazanie preferencií taktiež resetuje kalibračný faktor"
+        ]
+      }
+    },
     "4.13.1":{
       "label": "4.13.1",
       "date":"26.10. 2025",

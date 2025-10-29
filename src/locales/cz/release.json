@@ -6,6 +6,45 @@
     ]
   },
   "versions": {
+    "4.14.1": {
+      "label": "4.14.1",
+      "date": "29.10. 2025",
+      "newFeatures": {
+        "items": [
+          "Přidaní kapátka do komponenty výběru barvy"
+        ]
+      },
+      "improvements": {
+        "items": [
+          "Nový design vstupu výběru barvy s hexadecimálním vstupem"
+        ]
+      },
+      "bugFixes": {
+        "items": [
+          "Nastavení viditelného okraje ikony otáčení na všech pozadích"
+        ]
+      }
+    },
+    "4.14.0": {
+      "label": "4.14.0",
+      "date": "28.10. 2025",
+      "newFeatures": {
+        "items": [
+          "Rámečky lze měřit a nastavit v milimetrech podle kalibrace monitoru",
+          "Oříznutí lze aplikovat klávesou Enter"
+        ]
+      },
+      "improvements": {
+        "items": [
+          "Nastavení výchozího názvu pro nově vytvořené presety"
+        ]
+      },
+      "bugFixes": {
+        "items": [
+          "Vymazání preferencí také resetuje kalibrační faktor"
+        ]
+      }
+    },
     "4.13.1":{
       "label": "4.13.1",
       "date":"26.10. 2025",
