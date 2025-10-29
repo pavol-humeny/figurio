@@ -10,6 +10,10 @@ const { log, warn, error } = useConsole()
 export function useApi() {
   const API_BASE = globalConfig.API_BASE
 
+  const isLocalhost = () => {
+    return window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+  }
+
   /**
    * Adds a visit for a user.
    * If user does not exist, backend will create it automatically.
@@ -17,6 +21,8 @@ export function useApi() {
    */
   const addUserVisit = async (userId) => {
     if (!globalConfig.sendUsageStats) return
+
+    if (isLocalhost() && !globalConfig.sendUsageStatsOnLocalhost) return
 
     if (!userId) {
       warn('Missing userId for visit')
@@ -49,6 +55,8 @@ export function useApi() {
    */
   const addUserEvent = async (eventType, data) => {
     if (!globalConfig.sendUsageStats) return
+
+    if (isLocalhost() && !globalConfig.sendUsageStatsOnLocalhost) return
 
     const uiStore = useUiStore()
     const userId = uiStore.userUuid
