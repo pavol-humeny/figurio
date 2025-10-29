@@ -74,7 +74,7 @@ const drawLine = (from, to, tool) => {
   if (tool === 'eraser') {
     ctx.save()
     ctx.globalCompositeOperation = 'destination-out'
-    ctx.strokeStyle = '#000000' // color doesn't matter for eraser
+    ctx.strokeStyle = '#000000' // Color doesn't matter for eraser
   } else {
     ctx.save()
     ctx.globalCompositeOperation = 'source-over'

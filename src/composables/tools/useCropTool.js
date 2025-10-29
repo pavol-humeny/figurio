@@ -1357,6 +1357,8 @@ export function useCropTool(
    * Apply the crop operation
    */
   const applyCrop = async () => {
+    if(editorStore.selectedToolKey !== 'crop') return
+
     // Check if crop box is same as image dimensions
     if (
       cropBox.value.x === 0 &&

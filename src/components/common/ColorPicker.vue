@@ -62,6 +62,8 @@ const {
   recentColors,
   selectRecentColor,
   setValue,
+  onEnter,
+  inputRef,
 } = useColorPicker(props, emit)
 
 /**
@@ -75,6 +77,10 @@ defineExpose({ setValue })
     <div class="color-wrapper">
       <div ref="previewRef" class="color-preview" @click="toggle" :style="{ background: colorValue }"
         :class="{ disabled: props.disabled }"></div>
+      <div class="hex-input-wrapper">
+        <input class="hex-input-visible" type="text" ref="inputRef" v-model="hexValue" maxlength="7" @input="onHexInput"
+          @blur="onHexBlur" @keydown.enter="onEnter" />
+      </div>
 
       <Teleport to="body">
         <div v-if="isVisible" ref="panelRef" class="color-settings" :style="panelStyle">
@@ -115,15 +121,22 @@ defineExpose({ setValue })
 
 <style scoped>
 .color-wrapper {
-  width: 35px;
-  height: 35px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: row;
+  gap: 5px;
+  background: var(--secondary-c);
+  padding: 0 5px;
+  border-radius: 4px;
 }
 
 .color-preview {
-  width: 100%;
-  height: 100%;
+  width: 20px;
+  height: 20px;
   border: var(--border-modal);
-  border-radius: 50%;
+  border-radius: 4px;
   cursor: pointer;
 }
 
@@ -138,6 +151,17 @@ defineExpose({ setValue })
   display: flex;
   flex-direction: column;
   gap: 10px;
+}
+
+.hex-input-visible {
+  width: 9ch;
+  padding: 2px 0px;
+  font-size: 14px;
+  border-radius: 4px;
+  background: var(--secondary-c);
+  border: none;
+  color: var(--text-c);
+  text-align: center;
 }
 
 .canvas-wrapper {

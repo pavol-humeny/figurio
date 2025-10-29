@@ -53,6 +53,7 @@ export function useColorPicker(props, emit) {
   const panelRef = ref(null)
   const svCanvasRef = ref(null)
   const hueCanvasRef = ref(null)
+  const inputRef = ref(null)
 
   /**
    * HSV values
@@ -247,6 +248,13 @@ export function useColorPicker(props, emit) {
     if (/^#([0-9A-Fa-f]{6})$/.test(hex)) {
       applyHexColor(hex)
     }
+  }
+
+  /**
+   * Handle HEX input enter key (blur input)
+   */
+  const onEnter = () => {
+    inputRef.value.blur()
   }
 
   /**
@@ -548,5 +556,7 @@ export function useColorPicker(props, emit) {
     selectRecentColor,
     commitChanges,
     setValue,
+    onEnter,
+    inputRef,
   }
 }
