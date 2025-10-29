@@ -118,7 +118,7 @@ const {
         :y="boundingBox.y + boundingBox.height / 2 - controlIconSize / 2" :width="controlIconSize"
         :height="controlIconSize" @mousedown.stop.prevent="onMouseDownRotate($event)" style="cursor: grab">
         <BaseIcon :name="'IconRotate'" :tip="t('tools.svgObject.rotateObject.tip')" :size="controlIconSize"
-          :color="'var(--primary-c)'" />
+          :color="'var(--primary-c)'"/>
       </foreignObject>
     </g>
   </g>
