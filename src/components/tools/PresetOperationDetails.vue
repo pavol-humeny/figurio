@@ -7,6 +7,7 @@ import { useEditorStore } from '@/stores/editorStore'
 import LinkValuesIcon from '@/components/common/LinkValuesIcon.vue'
 import { usePresetOperationDetails } from '@/composables/tools/usePresetOperationDetails'
 import { editorConfig } from '@/config/editorConfig'
+import { computed } from 'vue'
 
 const { t } = useI18n()
 
@@ -77,12 +78,11 @@ const presetFlipOptions = [
   },
 ]
 
-const presetGrayscaleOptions = [
+const presetGrayscaleOptions = computed(() => [
   { value: 'luminance', label: t('tools.grayscale.settings.options.luminance') },
   { value: 'average', label: t('tools.grayscale.settings.options.average') },
   { value: 'lightness', label: t('tools.grayscale.settings.options.lightness') },
-  { value: 'desaturation', label: t('tools.grayscale.settings.options.desaturation') },
-]
+])
 </script>
 
 <template>
@@ -119,8 +119,7 @@ const presetGrayscaleOptions = [
         <p>
           {{ t('tools.preset.settings.myPresets.presetValues.grayscale.grayscaleType') }}
         </p>
-        <DropdownSelect v-model="localOperation.grayscaleType" :options="presetGrayscaleOptions"
-          @update="update" />
+        <DropdownSelect v-model="localOperation.grayscaleType" :options="presetGrayscaleOptions" @update="update" />
       </div>
     </template>
 

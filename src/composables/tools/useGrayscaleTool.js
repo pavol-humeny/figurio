@@ -1,5 +1,5 @@
 import { useConfirmModal } from '../modals/useConfirmModal'
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import { useMath } from '../common/useMath'
 import { useToastModal } from '../modals/useToastModal'
 import { useApi } from '@/composables/common/useApi'
@@ -23,12 +23,11 @@ export function useGrayscaleTool(imageStore, editorStore, historyStore, t) {
   /**
    * Grayscale options for the dropdown select in the settings panel
    */
-  const grayscaleOptions = [
+  const grayscaleOptions = computed(() => [
     { value: 'luminance', label: t('tools.grayscale.settings.options.luminance') },
     { value: 'average', label: t('tools.grayscale.settings.options.average') },
     { value: 'lightness', label: t('tools.grayscale.settings.options.lightness') },
-    { value: 'desaturation', label: t('tools.grayscale.settings.options.desaturation') },
-  ]
+  ])
 
   /**
    * Apply grayscale operation and push to history
@@ -89,7 +88,7 @@ export function useGrayscaleTool(imageStore, editorStore, historyStore, t) {
 
   /**
    * Convert the current rendered image to grayscale
-   * Supports: luminance, average, lightness, desaturation
+   * Supports: luminance, average, lightness
    * @param {string} type - Grayscale conversion method
    */
   const applyGrayscaleRender = (type) => {
@@ -116,6 +115,7 @@ export function useGrayscaleTool(imageStore, editorStore, historyStore, t) {
 
       switch (type) {
         case 'luminance':
+        default:
           // Weighted luminance method
           gray = round(0.299 * r + 0.587 * g + 0.114 * b)
           break
@@ -125,11 +125,6 @@ export function useGrayscaleTool(imageStore, editorStore, historyStore, t) {
           break
         case 'lightness':
           // Average of the max and min channel
-          gray = round((Math.max(r, g, b) + Math.min(r, g, b)) / 2)
-          break
-        case 'desaturation':
-        default:
-          // Desaturation method – same formula as lightness, conceptually HSL-based
           gray = round((Math.max(r, g, b) + Math.min(r, g, b)) / 2)
           break
       }

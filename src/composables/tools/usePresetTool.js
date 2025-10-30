@@ -746,13 +746,12 @@ export function usePresetTool(
   /**
    * Available grayscale options for the preset
    */
-  const presetGrayscaleOptions = [
+  const presetGrayscaleOptions = computed(() => [
     { value: 'none', label: t('tools.grayscale.settings.options.none') },
     { value: 'luminance', label: t('tools.grayscale.settings.options.luminance') },
     { value: 'average', label: t('tools.grayscale.settings.options.average') },
     { value: 'lightness', label: t('tools.grayscale.settings.options.lightness') },
-    { value: 'desaturation', label: t('tools.grayscale.settings.options.desaturation') },
-  ]
+  ])
 
   /**
    * Watch new preset frame type and if it is solid set outlineEnabled to false
@@ -895,7 +894,10 @@ export function usePresetTool(
       })
     }
     if (newPreset.value.grayscale.grayscaleType !== 'none') {
-      imageOperations.push({ type: 'grayscale', grayscaleType: newPreset.value.grayscale.grayscaleType })
+      imageOperations.push({
+        type: 'grayscale',
+        grayscaleType: newPreset.value.grayscale.grayscaleType,
+      })
     }
 
     if (newPreset.value.cropBox.width > 0 && newPreset.value.cropBox.height > 0) {

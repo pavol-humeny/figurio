@@ -328,9 +328,11 @@
       "options":{
         "none": "None",
         "luminance": "Luminance",
+        "luminanceExplained": "Weighted average based on human perception (0.2126 R + 0.7152 G + 0.0722 B)",
         "average": "Average",
+        "averageExplained": "Simple average of the RGB values ((R + G + B) / 3)",
         "lightness": "Lightness",
-        "desaturation": "Desaturation"
+        "lightnessExplained": "Average of the max and min RGB values ((max(R, G, B) + min(R, G, B)) / 2)"
       }
     }
   },

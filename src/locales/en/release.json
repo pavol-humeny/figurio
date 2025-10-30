@@ -4,6 +4,15 @@
     "items": []
   },
   "versions":{
+    "4.15.1":{
+      "label": "4.15.1",
+      "date":"30.10. 2025",
+      "newFeatures": {
+        "items": [
+          "More variants of grayscale conversion"
+        ]
+      }
+    },
     "4.15.0":{
       "label": "4.15.0",
       "date":"29.10. 2025",

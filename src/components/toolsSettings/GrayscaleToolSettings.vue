@@ -8,7 +8,6 @@ import { useI18n } from 'vue-i18n'
 import ExplainItem from '../common/ExplainItem.vue'
 import DropdownSelect from '../common/DropdownSelect.vue'
 import { useEditorStore } from '@/stores/editorStore'
-
 const { t } = useI18n()
 
 /**
@@ -24,6 +23,7 @@ const {
   useHistoryStore(),
   t,
 )
+
 </script>
 
 <template>
@@ -41,6 +41,9 @@ const {
             <DropdownSelect v-model="grayscaleType" :options="grayscaleOptions"
               :tip="$t('tools.grayscale.settings.grayscaleType.tip')" />
           </div>
+          <p class="grayscale-explain">
+            {{ $t(`tools.grayscale.settings.options.${grayscaleType}Explained`) }}
+          </p>
         </div>
 
         <!-- Grayscale conversion button -->
@@ -60,4 +63,11 @@ const {
   </div>
 </template>
 
-<style scoped></style>
+<style scoped>
+.grayscale-explain {
+  text-align: center;
+  padding: 10px 30px;
+  opacity: 0.75;
+
+}
+</style>

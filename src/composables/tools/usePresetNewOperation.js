@@ -70,12 +70,11 @@ export function usePresetNewOperation(imageStore, props, emit, t) {
   /**
    * Available grayscale options for the preset
    */
-  const presetGrayscaleOptions = [
+  const presetGrayscaleOptions = computed(() => [
     { value: 'luminance', label: t('tools.grayscale.settings.options.luminance') },
     { value: 'average', label: t('tools.grayscale.settings.options.average') },
     { value: 'lightness', label: t('tools.grayscale.settings.options.lightness') },
-    { value: 'desaturation', label: t('tools.grayscale.settings.options.desaturation') },
-  ]
+  ])
 
   /**
    * Computed operation options based on existing image operations

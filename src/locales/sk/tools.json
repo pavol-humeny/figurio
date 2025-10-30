@@ -328,9 +328,11 @@
       "options":{
         "none": "Žiadny",
         "luminance": "Jas",
+        "luminanceExplained": "Vážený priemer založený na ľudskom vnímaní (0.2126 R + 0.7152 G + 0.0722 B)",
         "average": "Priemer",
+        "averageExplained": "Jednoduchý priemer hodnôt RGB ((R + G + B) / 3)",
         "lightness": "Svetlosť",
-        "desaturation": "Desaturácia"
+        "lightnessExplained": "Priemer maximálnych a minimálnych hodnôt RGB ((max(R, G, B) + min(R, G, B)) / 2)"
       }
     }
   },
