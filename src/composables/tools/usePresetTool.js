@@ -535,7 +535,7 @@ export function usePresetTool(
             t,
           ).applyAutoCropPreset()
         } else if (operation.type === 'grayscale') {
-          await useGrayscaleTool(imageStore, historyStore).applyGrayscaleRender()
+          await useGrayscaleTool(imageStore, editorStore, historyStore).applyGrayscaleRender()
         } else if (operation.type === 'crop') {
           await useCropTool(
             imageStore,

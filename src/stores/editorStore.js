@@ -68,6 +68,9 @@ export const useEditorStore = defineStore('editorStore', {
         replaceWithBackgroundColor: false,
         backgroundColor: '#ffffff',
       },
+      grayscale: {
+        type: 'luminance', // 'luminance', 'average', 'lightness', 'desaturation'
+      },
       crop: {
         isVisibleCropBox: true,
       },

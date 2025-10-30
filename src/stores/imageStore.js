@@ -146,7 +146,7 @@ export const useImageStore = defineStore('imageStore', {
     /** Array of image operations to apply */
     imageOperations: [],
     // imageOperations: [
-    // {'grayscale': {'enabled': true}},
+    // {'grayscale': {'type': 'average'}},
     // {'crop': {'x': 50, 'y': 50, 'width': 200, 'height': 200}}
     // ]
 
@@ -299,13 +299,13 @@ export const useImageStore = defineStore('imageStore', {
      * Checks whether a grayscale operation is applied
      * @returns {boolean}
      */
-    hasGrayscaleOperation() {
-      return this.imageOperations.some((op) => op.type === 'grayscale')
-    },
+    // hasGrayscaleOperation() {
+    //   return this.imageOperations.some((op) => op.type === 'grayscale')
+    // },
 
-    removeGrayscaleOperation() {
-      this.imageOperations = this.imageOperations.filter((op) => op.type !== 'grayscale')
-    },
+    // removeGrayscaleOperation() {
+    //   this.imageOperations = this.imageOperations.filter((op) => op.type !== 'grayscale')
+    // },
 
     /**
      * Adds a deep copy of a new image operation to the operations list

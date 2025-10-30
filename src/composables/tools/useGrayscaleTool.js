@@ -1,9 +1,11 @@
 import { useConfirmModal } from '../modals/useConfirmModal'
-import { computed } from 'vue'
+import { computed, ref, onMounted } from 'vue'
 import { useMath } from '../common/useMath'
 import { useToastModal } from '../modals/useToastModal'
 import { useApi } from '@/composables/common/useApi'
 const { addUserEvent } = useApi()
+
+const grayscaleType = ref('')
 
 /**
  * Logic for applying grayscale
@@ -13,17 +15,20 @@ const { addUserEvent } = useApi()
  * @param {Function} t - Translation function from vue-i18n
  * @returns {object} Grayscale tool methods and state
  */
-export function useGrayscaleTool(imageStore, historyStore, t) {
+export function useGrayscaleTool(imageStore, editorStore, historyStore, t) {
   const { showConfirmModal } = useConfirmModal()
   const { round } = useMath()
   const { showToastModal } = useToastModal()
 
   /**
-   * Check if grayscale operation is already applied
+   * Grayscale options for the dropdown select in the settings panel
    */
-  const isGrayscaleApplied = computed(() => {
-    return imageStore.hasGrayscaleOperation()
-  })
+  const grayscaleOptions = [
+    { value: 'luminance', label: t('tools.grayscale.settings.options.luminance') },
+    { value: 'average', label: t('tools.grayscale.settings.options.average') },
+    { value: 'lightness', label: t('tools.grayscale.settings.options.lightness') },
+    { value: 'desaturation', label: t('tools.grayscale.settings.options.desaturation') },
+  ]
 
   /**
    * Apply grayscale operation and push to history
@@ -67,29 +72,32 @@ export function useGrayscaleTool(imageStore, historyStore, t) {
 
     imageStore.addImageOperation({
       type: 'grayscale',
-      enabled: true,
+      settings: { type: grayscaleType.value },
     })
 
     addUserEvent('applyOperation', {
       tool: 'grayscale',
-      settings: {},
+      settings: { type: grayscaleType.value },
     })
 
-    applyGrayscaleRender()
+    applyGrayscaleRender(grayscaleType.value)
+
+    saveConfigToEditorStore()
 
     historyStore.push(imageStore.getSnapshot(t))
   }
 
   /**
    * Convert the current rendered image to grayscale
-   * using luminosity method on pixel data
+   * Supports: luminance, average, lightness, desaturation
+   * @param {string} type - Grayscale conversion method
    */
-  const applyGrayscaleRender = () => {
-    if (!imageStore.getRenderedImage({ t, renderCall: false })) return
+  const applyGrayscaleRender = (type) => {
+    const img = imageStore.getRenderedImage({ t, renderCall: false })
+    if (!img) return
 
     const canvas = document.createElement('canvas')
     const ctx = canvas.getContext('2d')
-    const img = imageStore.getRenderedImage({ t, renderCall: false })
 
     canvas.width = img.width
     canvas.height = img.height
@@ -102,18 +110,53 @@ export function useGrayscaleTool(imageStore, historyStore, t) {
       const r = data[i]
       const g = data[i + 1]
       const b = data[i + 2]
-      const gray = round(0.299 * r + 0.587 * g + 0.114 * b)
+      let gray
+
+      switch (type) {
+        case 'luminance':
+          // Weighted luminance method
+          gray = Math.round(0.299 * r + 0.587 * g + 0.114 * b)
+          break
+        case 'average':
+          // Simple average of RGB channels
+          gray = Math.round((r + g + b) / 3)
+          break
+        case 'lightness':
+          // Average of the max and min channel
+          gray = Math.round((Math.max(r, g, b) + Math.min(r, g, b)) / 2)
+          break
+        case 'desaturation':
+        default:
+          // Desaturation method – same formula as lightness, conceptually HSL-based
+          gray = Math.round((Math.max(r, g, b) + Math.min(r, g, b)) / 2)
+          break
+      }
+
       data[i] = data[i + 1] = data[i + 2] = gray
     }
 
     ctx.putImageData(imageData, 0, 0)
-
     imageStore.setRenderedImage(canvas)
   }
+
+  /**
+   * Save grayscale config to editor store
+   */
+  const saveConfigToEditorStore = () => {
+    editorStore.toolsConfig.grayscale.type = grayscaleType.value
+  }
+
+  /**
+   * Initialize grayscale type from editor store on mount
+   */
+  onMounted(() => {
+    grayscaleType.value = editorStore.toolsConfig.grayscale.type
+  })
 
   return {
     applyGrayscale,
     applyGrayscaleRender,
-    isGrayscaleApplied,
+    grayscaleType,
+    grayscaleOptions,
   }
 }

@@ -320,6 +320,16 @@
     "settings": {
       "convertToGrayscaleButton": {
         "text": "Convert to grayscale"
+      },
+      "grayscaleType": {
+        "label": "Grayscale type",
+        "tip": "Select the method used to convert the image to grayscale"
+      },
+      "options":{
+        "luminance": "Luminance",
+        "average": "Average",
+        "lightness": "Lightness",
+        "desaturation": "Desaturation"
       }
     }
   },

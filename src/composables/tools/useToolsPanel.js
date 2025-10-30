@@ -77,7 +77,7 @@ export function useToolsPanel(editorStore, imageStore, uiStore, t) {
         newVal.tool === 'crop'
       ) {
         editorStore.selectSubTool('')
-        imageStore.removeGrayscaleOperation()
+        // imageStore.removeGrayscaleOperation()
       }
 
       if (

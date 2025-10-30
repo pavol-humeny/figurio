@@ -321,6 +321,16 @@
     "settings": {
       "convertToGrayscaleButton": {
         "text": "Převést na odstíny šedi"
+      },
+      "grayscaleType": {
+        "label": "Typ odstínů šedi",
+        "tip": "Vyberte metodu použitou k převodu obrázku na odstíny šedi"
+      },
+      "options": {
+        "luminance": "Jas",
+        "average": "Průměr",
+        "lightness": "Světlost",
+        "desaturation": "Desaturace"
       }
     }
   },
