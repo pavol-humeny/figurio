@@ -6,9 +6,18 @@
     ]
   },
   "versions": {
-    "4.15.0":{
+    "4.15.1": {
+      "label": "4.15.1",
+      "date": "30.10. 2025",
+      "newFeatures": {
+        "items": [
+          "Více variant převodu do odstínů šedé"
+        ]
+      }
+    },
+    "4.15.0": {
       "label": "4.15.0",
-      "date":"29.10. 2025",
+      "date": "29.10. 2025",
       "newFeatures": {
         "items": [
           "Přidání statistik používání"
