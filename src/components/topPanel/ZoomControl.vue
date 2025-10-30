@@ -34,7 +34,7 @@ const {
   setNewPhysicalContentSize,
   resetPhysicalContentSize,
   maxPhysicalContentSize,
-} = useZoomControl(useViewportStore())
+} = useZoomControl(useViewportStore(), useImageStore())
 </script>
 
 <template>

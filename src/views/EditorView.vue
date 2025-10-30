@@ -41,7 +41,7 @@ import { useCropTool } from '@/composables/tools/useCropTool';
 import { useBackgroundRemovalTool } from '@/composables/tools/useBackgroundRemovalTool';
 
 const { undo, redo } = useUndoRedo(useHistoryStore(), useImageStore())
-const { zoomIn, zoomOut, resetZoom, toggleZoomMode } = useZoomControl(useViewportStore())
+const { zoomIn, zoomOut, resetZoom, toggleZoomMode } = useZoomControl(useViewportStore(), useImageStore())
 const { closeFile } = useCloseFileButton(useImageStore(), useWorkspaceStore(), t)
 const { uploadFile } = useUploadFileButton(useImageStore(), t, useRouter())
 const { toggleTool } = useToolsPanel(useEditorStore(), useImageStore(), useUiStore(), t)

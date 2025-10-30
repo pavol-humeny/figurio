@@ -20,7 +20,7 @@ const { addUserEvent } = useApi()
  *   toggleZoomMode: (mode: string) => void
  * }}
  */
-export function useZoomControl(viewportStore) {
+export function useZoomControl(viewportStore, imageStore) {
   const { clamp, round } = useMath()
 
   /**
@@ -175,6 +175,7 @@ export function useZoomControl(viewportStore) {
 
     addUserEvent('zoomModeToggle', { zoomMode: mode })
 
+    imageStore.modificationFlag += 1
     viewportStore.setZoomMode(mode)
   }
 
