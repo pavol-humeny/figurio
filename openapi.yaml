@@ -22,21 +22,6 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/User'
-    post: 
-      summary: Vytvorenie nového používateľa
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                userId:
-                  type: string
-                  description: ID nového používateľa
-      responses:
-        '201':
-          description: Používateľ úspešne vytvorený
 
   /api/users/{userId}/visits:
     get: 
@@ -58,7 +43,7 @@ paths:
                 items:
                   $ref: '#/components/schemas/Visit'
     post:
-      summary: Uloženie návštevy používateľa
+      summary: Uloženie návštevy používateľa vytvorením nového užívateľa, ak neexistuje
       parameters:
         - name: userId
           in: path
@@ -110,7 +95,7 @@ paths:
 
   /api/events:
     get:
-      summary: Získanie všetkých udalostí alebo filtrovanie podľa typu
+      summary: Získanie všetkých udalostí alebo filtrovanie podľa typu, používateľa a časového intervalu
       parameters:
         - name: eventType
           in: query
