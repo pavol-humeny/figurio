@@ -53,6 +53,7 @@ const {
   maxCropHeight,
   updatePosition,
   updateDimension,
+  presetGrayscaleOptions,
 } = usePresetNewOperation(useImageStore(), props, emit, t)
 </script>
 
@@ -68,15 +69,19 @@ const {
       <p v-else-if="selectedType === 'flip'">
         {{ t('tools.preset.settings.myPresets.presetValues.transformations.flip') }}
       </p>
-      <!-- <p v-else-if="selectedType === 'autoCrop'">
-        {{ t('tools.preset.settings.myPresets.presetValues.autoCrop.label') }}
-      </p> -->
+      <p v-else-if="selectedType === 'grayscale'">
+        {{ t('tools.preset.settings.myPresets.presetValues.grayscale.grayscaleType') }}
+      </p>
 
       <!-- Rotate -->
       <DropdownSelect v-if="selectedType === 'rotation'" v-model="params.angle" :options="rotationOptions" />
 
       <!-- Flip -->
       <DropdownSelect v-if="selectedType === 'flip'" v-model="params.direction" :options="flipOptions" />
+
+      <!-- Grayscale -->
+      <DropdownSelect v-if="selectedType === 'grayscale'" v-model="params.grayscaleType"
+        :options="presetGrayscaleOptions" />
 
       <!-- Crop -->
       <div class="crop-inputs" v-if="selectedType === 'crop'">

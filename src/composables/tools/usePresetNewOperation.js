@@ -68,6 +68,16 @@ export function usePresetNewOperation(imageStore, props, emit, t) {
   ]
 
   /**
+   * Available grayscale options for the preset
+   */
+  const presetGrayscaleOptions = [
+    { value: 'luminance', label: t('tools.grayscale.settings.options.luminance') },
+    { value: 'average', label: t('tools.grayscale.settings.options.average') },
+    { value: 'lightness', label: t('tools.grayscale.settings.options.lightness') },
+    { value: 'desaturation', label: t('tools.grayscale.settings.options.desaturation') },
+  ]
+
+  /**
    * Computed operation options based on existing image operations
    * Do not return grayscale or autoCrop if it is already applied
    */
@@ -94,10 +104,11 @@ export function usePresetNewOperation(imageStore, props, emit, t) {
    * Parameters for all supported operations
    */
   const params = reactive({
-    angle: 0,
+    angle: 90,
     direction: 'horizontal',
     cropBox: { x: 0, y: 0, width: 0, height: 0 },
     resizeDimensions: { width: 0, height: 0 },
+    grayscaleType: 'luminance',
     // UPDATE new tool
   })
 
@@ -141,7 +152,7 @@ export function usePresetNewOperation(imageStore, props, emit, t) {
     } else if (type === 'autoCrop') {
       op = { type }
     } else if (type === 'grayscale') {
-      op = { type, enable: true }
+      op = { type, grayscaleType: 'none' }
     } else if (type === 'crop') {
       op = { type, cropBox: { x: 0, y: 0, width: 0, height: 0 } }
     } else if (type === 'resize') {
@@ -163,7 +174,9 @@ export function usePresetNewOperation(imageStore, props, emit, t) {
       if (selectedType.value === 'rotation') op.angle = params.angle
       if (selectedType.value === 'flip') op.direction = params.direction
       // if (selectedType.value === 'autoCrop') op.color = params.color --- IGNORE ---
-      if (selectedType.value === 'grayscale') op.enable = true
+      if (selectedType.value === 'grayscale') {
+        op.grayscaleType = params.grayscaleType
+      }
       if (selectedType.value === 'crop') {
         op.cropBox = { ...params.cropBox }
       }
@@ -249,5 +262,6 @@ export function usePresetNewOperation(imageStore, props, emit, t) {
     maxCropHeight,
     updatePosition,
     updateDimension,
+    presetGrayscaleOptions,
   }
 }

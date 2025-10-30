@@ -327,6 +327,7 @@
         "tip": "Vyberte metodu použitou k převodu obrázku na odstíny šedi"
       },
       "options": {
+        "none": "Žádný",
         "luminance": "Jas",
         "average": "Průměr",
         "lightness": "Světlost",
@@ -924,7 +925,8 @@
           },
           "grayscale": {
             "label": "Odstíny šedi",
-            "enabled": "Povoleno"
+            "enabled": "Povoleno",
+            "grayscaleType": "Typ"
           },
           "frame": {
             "label": "Rámeček",

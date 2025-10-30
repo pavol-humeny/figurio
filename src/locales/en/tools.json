@@ -326,6 +326,7 @@
         "tip": "Select the method used to convert the image to grayscale"
       },
       "options":{
+        "none": "None",
         "luminance": "Luminance",
         "average": "Average",
         "lightness": "Lightness",
@@ -923,7 +924,8 @@
           },
           "grayscale": {
             "label": "Grayscale",
-            "enabled": "Enabled"
+            "enabled": "Enabled",
+            "grayscaleType": "Type"
           },
           "frame": {
             "label": "Frame",

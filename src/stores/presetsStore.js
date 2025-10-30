@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia'
 import { editorConfig } from '@/config/editorConfig'
 import { useConsole } from '@/composables/common/useConsole.js'
-const { log } = useConsole()
+const { error } = useConsole()
 
 /**
  * Store for managing image presets

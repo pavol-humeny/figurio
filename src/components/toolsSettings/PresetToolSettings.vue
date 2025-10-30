@@ -63,6 +63,7 @@ const {
   maxCropBoxPositionY,
   maxCropBoxWidth,
   maxCropBoxHeight,
+  presetGrayscaleOptions,
 } = usePresetTool(
   useImageStore(),
   useHistoryStore(),
@@ -550,13 +551,16 @@ const tabs = ['myPresets', 'createPreset']
                   {{ t('tools.preset.settings.createPreset.presetValues.grayscale.label') }}
                 </p>
               </div>
-              <div class="content-aligned two-items">
+              <div class="content-wrapper">
+                <DropdownSelect v-model="newPreset.grayscale.grayscaleType" :options="presetGrayscaleOptions" />
+              </div>
+              <!-- <div class="content-aligned two-items">
                 <p>
                   {{ t('tools.preset.settings.createPreset.presetValues.grayscale.enabled') }}
                 </p>
                 <ToggleButton v-model="newPreset.grayscale.enabled" :scale="0.6"
                   :style="{ transform: 'translateX(16px)' }" />
-              </div>
+              </div> -->
             </div>
           </div>
 

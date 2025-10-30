@@ -180,6 +180,7 @@ export function usePresetTool(
    */
   watch(selectedOperation, (op) => {
     if (op) {
+      console.warn('selectedOperation changed: ', op)
       creatingNewOperation.value = false
       clearSelected.value = false
     }
@@ -535,7 +536,9 @@ export function usePresetTool(
             t,
           ).applyAutoCropPreset()
         } else if (operation.type === 'grayscale') {
-          await useGrayscaleTool(imageStore, editorStore, historyStore).applyGrayscaleRender()
+          await useGrayscaleTool(imageStore, editorStore, historyStore, t).applyGrayscaleRender(
+            operation.grayscaleType,
+          )
         } else if (operation.type === 'crop') {
           await useCropTool(
             imageStore,
@@ -631,7 +634,7 @@ export function usePresetTool(
       enabled: false,
     },
     grayscale: {
-      enabled: false,
+      grayscaleType: 'none',
     },
     frame: {
       enabled: false,
@@ -741,6 +744,17 @@ export function usePresetTool(
   ])
 
   /**
+   * Available grayscale options for the preset
+   */
+  const presetGrayscaleOptions = [
+    { value: 'none', label: t('tools.grayscale.settings.options.none') },
+    { value: 'luminance', label: t('tools.grayscale.settings.options.luminance') },
+    { value: 'average', label: t('tools.grayscale.settings.options.average') },
+    { value: 'lightness', label: t('tools.grayscale.settings.options.lightness') },
+    { value: 'desaturation', label: t('tools.grayscale.settings.options.desaturation') },
+  ]
+
+  /**
    * Watch new preset frame type and if it is solid set outlineEnabled to false
    */
   watch(
@@ -775,7 +789,7 @@ export function usePresetTool(
         enabled: false,
       },
       grayscale: {
-        enabled: false,
+        type: 'none',
       },
       frame: {
         enabled: false,
@@ -880,8 +894,8 @@ export function usePresetTool(
         type: 'autoCrop',
       })
     }
-    if (newPreset.value.grayscale.enabled) {
-      imageOperations.push({ type: 'grayscale', enabled: true })
+    if (newPreset.value.grayscale.grayscaleType !== 'none') {
+      imageOperations.push({ type: 'grayscale', grayscaleType: newPreset.value.grayscale.grayscaleType })
     }
 
     if (newPreset.value.cropBox.width > 0 && newPreset.value.cropBox.height > 0) {
@@ -1072,5 +1086,6 @@ export function usePresetTool(
     maxCropBoxPositionY,
     maxCropBoxWidth,
     maxCropBoxHeight,
+    presetGrayscaleOptions,
   }
 }

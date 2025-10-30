@@ -1,11 +1,9 @@
 import { useConfirmModal } from '../modals/useConfirmModal'
-import { computed, ref, onMounted } from 'vue'
+import { ref } from 'vue'
 import { useMath } from '../common/useMath'
 import { useToastModal } from '../modals/useToastModal'
 import { useApi } from '@/composables/common/useApi'
 const { addUserEvent } = useApi()
-
-const grayscaleType = ref('')
 
 /**
  * Logic for applying grayscale
@@ -19,6 +17,8 @@ export function useGrayscaleTool(imageStore, editorStore, historyStore, t) {
   const { showConfirmModal } = useConfirmModal()
   const { round } = useMath()
   const { showToastModal } = useToastModal()
+
+  const grayscaleType = ref(editorStore.toolsConfig.grayscale.type)
 
   /**
    * Grayscale options for the dropdown select in the settings panel
@@ -72,12 +72,12 @@ export function useGrayscaleTool(imageStore, editorStore, historyStore, t) {
 
     imageStore.addImageOperation({
       type: 'grayscale',
-      settings: { type: grayscaleType.value },
+      grayscaleType: grayscaleType.value,
     })
 
     addUserEvent('applyOperation', {
       tool: 'grayscale',
-      settings: { type: grayscaleType.value },
+      settings: { grayscaleType: grayscaleType.value },
     })
 
     applyGrayscaleRender(grayscaleType.value)
@@ -93,6 +93,8 @@ export function useGrayscaleTool(imageStore, editorStore, historyStore, t) {
    * @param {string} type - Grayscale conversion method
    */
   const applyGrayscaleRender = (type) => {
+    if (type === 'none') return
+
     const img = imageStore.getRenderedImage({ t, renderCall: false })
     if (!img) return
 
@@ -115,20 +117,20 @@ export function useGrayscaleTool(imageStore, editorStore, historyStore, t) {
       switch (type) {
         case 'luminance':
           // Weighted luminance method
-          gray = Math.round(0.299 * r + 0.587 * g + 0.114 * b)
+          gray = round(0.299 * r + 0.587 * g + 0.114 * b)
           break
         case 'average':
           // Simple average of RGB channels
-          gray = Math.round((r + g + b) / 3)
+          gray = round((r + g + b) / 3)
           break
         case 'lightness':
           // Average of the max and min channel
-          gray = Math.round((Math.max(r, g, b) + Math.min(r, g, b)) / 2)
+          gray = round((Math.max(r, g, b) + Math.min(r, g, b)) / 2)
           break
         case 'desaturation':
         default:
           // Desaturation method – same formula as lightness, conceptually HSL-based
-          gray = Math.round((Math.max(r, g, b) + Math.min(r, g, b)) / 2)
+          gray = round((Math.max(r, g, b) + Math.min(r, g, b)) / 2)
           break
       }
 
@@ -145,13 +147,6 @@ export function useGrayscaleTool(imageStore, editorStore, historyStore, t) {
   const saveConfigToEditorStore = () => {
     editorStore.toolsConfig.grayscale.type = grayscaleType.value
   }
-
-  /**
-   * Initialize grayscale type from editor store on mount
-   */
-  onMounted(() => {
-    grayscaleType.value = editorStore.toolsConfig.grayscale.type
-  })
 
   return {
     applyGrayscale,

@@ -326,6 +326,7 @@
         "tip": "Vyberte metódu použitú na prevod obrázku na odtiene sivej"
       },
       "options":{
+        "none": "Žiadny",
         "luminance": "Jas",
         "average": "Priemer",
         "lightness": "Svetlosť",
@@ -923,7 +924,8 @@
           },
           "grayscale": {
             "label": "Odtiene šedi",
-            "enabled": "Povolené"
+            "enabled": "Povolené",
+            "grayscaleType": "Typ"
           },
           "frame": {
             "label": "Rámik",

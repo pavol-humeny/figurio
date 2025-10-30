@@ -76,10 +76,17 @@ const presetFlipOptions = [
     value: 'vertical',
   },
 ]
+
+const presetGrayscaleOptions = [
+  { value: 'luminance', label: t('tools.grayscale.settings.options.luminance') },
+  { value: 'average', label: t('tools.grayscale.settings.options.average') },
+  { value: 'lightness', label: t('tools.grayscale.settings.options.lightness') },
+  { value: 'desaturation', label: t('tools.grayscale.settings.options.desaturation') },
+]
 </script>
 
 <template>
-  <div class="operation-details" v-if="localOperation.type !== 'grayscale' && localOperation.type !== 'autoCrop'">
+  <div class="operation-details" v-if="localOperation.type !== 'autoCrop'">
     <div class="content-title" :style="{ padding: '10px 0' }">
       <p>
         {{ t('tools.preset.settings.myPresets.modifyOperation') }}
@@ -103,6 +110,17 @@ const presetFlipOptions = [
           {{ t('tools.preset.settings.myPresets.presetValues.transformations.flip') }}
         </p>
         <DropdownSelect v-model="localOperation.direction" :options="presetFlipOptions" @update="update" />
+      </div>
+    </template>
+
+    <!-- Grayscale -->
+    <template v-else-if="localOperation.type === 'grayscale'">
+      <div class="content-aligned two-items">
+        <p>
+          {{ t('tools.preset.settings.myPresets.presetValues.grayscale.grayscaleType') }}
+        </p>
+        <DropdownSelect v-model="localOperation.grayscaleType" :options="presetGrayscaleOptions"
+          @update="update" />
       </div>
     </template>
 
