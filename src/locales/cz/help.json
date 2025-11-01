@@ -79,6 +79,13 @@
         "Obnovení prohlížeče smaže neuložený postup."
       ]
     },
+    "statistics":{
+      "title": "Statistiky používání",
+      "text": "Statistiky jsou shromažďovány za účelem zlepšení editoru. Statistiky zahrnují informace o tom, kolikrát byly použity různé funkce.",
+      "seeStatisticsButton": {
+        "text": "Zobrazit statistiky"
+      }
+    },
     "contactAndFeedback": {
       "title": "Kontakt a zpětná vazba",
       "text": "Pokud máte jakékoli dotazy, návrhy nebo zpětnou vazbu k editoru, kontaktujte mě na:"

@@ -54,7 +54,7 @@
     useRouter(),
     t
   )
-  </script>
+</script>
 
   <template>
     <Teleport to="body">
@@ -65,344 +65,363 @@
             <p>{{ $t('help.title') }}</p>
           </div>
 
-        <div class="help-content-panel">
-          <!-- Arrow up -->
-          <div v-if="!atTop" class="arrow-up" @click="scrollUp">
-            <BaseIcon name="IconArrowUp" size="24" color="var(--primary-c)" />
-          </div>
-
-          <!-- Help content -->
-          <div class="help-content-wrapper" ref="helpContentRef" @scroll="checkScroll">
-            <!-- Purpose -->
-            <div class="help-content">
-              <p class="help-content-title">
-                {{ $t('help.helpContent.purpose.title') }}
-              </p>
-              <ul class="dot-paragraph">
-                <li>
-                  {{ $t('help.helpContent.purpose.text') }}
-                </li>
-              </ul>
+          <div class="help-content-panel">
+            <!-- Arrow up -->
+            <div v-if="!atTop" class="arrow-up" @click="scrollUp">
+              <BaseIcon name="IconArrowUp" size="24" color="var(--primary-c)" />
             </div>
 
-            <!-- Tools -->
-            <div class="help-content">
-              <p class="help-content-title">
-                {{ $t('help.helpContent.tools.title') }}
-              </p>
-              <!-- Crop -->
-              <div class="tool-description">
-                <div>
-                  <p class="title">
-                    {{ $t('tools.crop.label') }}
-                  </p>
-                  <p class="shortcut">
-                    {{ $t('tools.crop.shortcut') }}
-                  </p>
-                </div>
-                <ul class="description dot-paragraph">
-                  <li>
-                    {{ $t('tools.crop.tip') }}
-                  </li>
-                </ul>
-              </div>
-              <!-- Frame -->
-              <div class="tool-description">
-                <div>
-                  <p class="title">
-                    {{ $t('tools.frame.label') }}
-                  </p>
-                  <p class="shortcut">
-                    {{ $t('tools.frame.shortcut') }}
-                  </p>
-                </div>
-                <ul class="description dot-paragraph">
-                  <li>
-                    {{ $t('tools.frame.tip') }}
-                  </li>
-                </ul>
-              </div>
-              <!-- GrayScale -->
-              <div class="tool-description">
-                <div>
-                  <p class="title">
-                    {{ $t('tools.grayscale.label') }}
-                  </p>
-                  <p class="shortcut">
-                    {{ $t('tools.grayscale.shortcut') }}
-                  </p>
-                </div>
-                <ul class="description dot-paragraph">
-                  <li>
-                    {{ $t('tools.grayscale.tip') }}
-                  </li>
-                </ul>
-              </div>
-              <!-- Select -->
-              <div class="tool-description">
-                <div>
-                  <p class="title">
-                    {{ $t('tools.select.label') }}
-                  </p>
-                  <p class="shortcut">
-                    {{ $t('tools.select.shortcut') }}
-                  </p>
-                </div>
-                <ul class="description dot-paragraph">
-                  <li>
-                    {{ $t('tools.select.tip') }}
-                  </li>
-                </ul>
-              </div>
-              <!-- Blur -->
-              <div class="tool-description">
-                <div>
-                  <p class="title">
-                    {{ $t('tools.blur.label') }}
-                  </p>
-                  <p class="shortcut">
-                    {{ $t('tools.blur.shortcut') }}
-                  </p>
-                </div>
-                <ul class="description dot-paragraph">
-                  <li>
-                    {{ $t('tools.blur.tip') }}
-                  </li>
-                </ul>
-              </div>
-              <!-- Shape -->
-              <div class="tool-description">
-                <div>
-                  <p class="title">
-                    {{ $t('tools.shape.label') }}
-                  </p>
-                  <p class="shortcut">
-                    {{ $t('tools.shape.shortcut') }}
-                  </p>
-                </div>
-                <ul class="description dot-paragraph">
-                  <li>
-                    {{ $t('tools.shape.tip') }}
-                  </li>
-                </ul>
-              </div>
-              <!-- Text -->
-              <div class="tool-description">
-                <div>
-                  <p class="title">
-                    {{ $t('tools.text.label') }}
-                  </p>
-                  <p class="shortcut">
-                    {{ $t('tools.text.shortcut') }}
-                  </p>
-                </div>
-                <ul class="description dot-paragraph">
-                  <li>
-                    {{ $t('tools.text.tip') }}
-                  </li>
-                </ul>
-              </div>
-              <!-- Magnify area -->
-              <div class="tool-description">
-                <div>
-                  <p class="title">
-                    {{ $t('tools.magnifyArea.label') }}
-                  </p>
-                  <p class="shortcut">
-                    {{ $t('tools.magnifyArea.shortcut') }}
-                  </p>
-                </div>
-                <ul class="description dot-paragraph">
-                  <li>
-                    {{ $t('tools.magnifyArea.tip') }}
-                  </li>
-                </ul>
-              </div>
-              <!-- Transform - Rotate -->
-              <div class="tool-description">
-                <div>
-                  <p class="title">
-                    {{ $t('tools.transform.subTools.rotate.label') }}
-                  </p>
-                  <p class="shortcut">
-                    {{ $t('tools.transform.subTools.rotate.shortcut') }}
-                  </p>
-                </div>
-                <ul class="description dot-paragraph">
-                  <li>
-                    {{ $t('tools.transform.subTools.rotate.tip') }}
-                  </li>
-                </ul>
-              </div>
-              <!-- Transform - Flip -->
-              <div class="tool-description">
-                <div>
-                  <p class="title">
-                    {{ $t('tools.transform.subTools.flip.label') }}
-                  </p>
-                  <p class="shortcut">
-                    {{ $t('tools.transform.subTools.flip.shortcut') }}
-                  </p>
-                </div>
-                <ul class="description dot-paragraph">
-                  <li>
-                    {{ $t('tools.transform.subTools.flip.tip') }}
-                  </li>
-                </ul>
-              </div>
-              <!-- Transform - Resize -->
-              <div class="tool-description">
-                <div>
-                  <p class="title">
-                    {{ $t('tools.transform.subTools.resize.label') }}
-                  </p>
-                  <p class="shortcut">
-                    {{ $t('tools.transform.subTools.resize.shortcut') }}
-                  </p>
-                </div>
-                <ul class="description dot-paragraph">
-                  <li>
-                    {{ $t('tools.transform.subTools.resize.tip') }}
-                  </li>
-                </ul>
-              </div>
-              <!-- Preset - My presets -->
-              <div class="tool-description">
-                <div>
-                  <p class="title">
-                    {{ $t('tools.preset.subTools.myPresets.label') }}
-                  </p>
-                  <p class="shortcut">
-                    {{ $t('tools.preset.subTools.myPresets.shortcut') }}
-                  </p>
-                </div>
-                <ul class="description dot-paragraph">
-                  <li>
-                    {{ $t('tools.preset.subTools.myPresets.tip') }}
-                  </li>
-                </ul>
-              </div>
-              <!-- Preset - Create Preset -->
-              <div class="tool-description">
-                <div>
-                  <p class="title">
-                    {{ $t('tools.preset.subTools.createPreset.label') }}
-                  </p>
-                  <p class="shortcut">
-                    {{ $t('tools.preset.subTools.createPreset.shortcut') }}
-                  </p>
-                </div>
-                <ul class="description dot-paragraph">
-                  <li>
-                    {{ $t('tools.preset.subTools.createPreset.tip') }}
-                  </li>
-                </ul>
-              </div>
-              <!-- Export -->
-              <div class="tool-description">
-                <div>
-                  <p class="title">
-                    {{ $t('tools.export.label') }}
-                  </p>
-                  <p class="shortcut">
-                    {{ $t('tools.export.shortcut') }}
-                  </p>
-                </div>
-                <ul class="description dot-paragraph">
-                  <li>
-                    {{ $t('tools.export.tip') }}
-                  </li>
-                </ul>
-              </div>
-            </div>
-
-            <!-- Other shortcuts -->
-            <div class="help-content">
-              <p class="help-content-title">
-                {{ $t('help.helpContent.shortcuts.title') }}
-              </p>
-              <ul class="dot-paragraph">
-                <li>
-                  {{ $t('help.helpContent.shortcuts.text') }}
-                </li>
-              </ul>
-              <br>
-              <div v-for="(category, cIndex) in keyboardShortcuts" :key="cIndex" class="shortcut-category">
-                <h4 class="category-title">{{ category.name }}</h4>
-
-                <div v-for="(item, index) in category.list" :key="index" class="shortcuts-description">
-                  <ul class="description dot-paragraph">
-                    <li>{{ item.description }}</li>
-                  </ul>
-                  <p class="shortcut">{{ item.shortcut }}</p>
-                </div>
-              </div>
-            </div>
-
-            <!-- Tutorial -->
-            <div class="help-content">
-              <div class="tutorial-title-wrapper">
-                <BaseIcon v-if="tutorialCompleted" class="tutorial-completed-icon" name="IconTick" size="20"
-                  :tip='$t("help.helpContent.tutorial.tutorialCompletedTip")' position="top-right" />
-                <p class="help-content-title" style="margin-bottom: 0;">
-                  {{ $t('help.helpContent.tutorial.title') }}
+            <!-- Help content -->
+            <div class="help-content-wrapper" ref="helpContentRef" @scroll="checkScroll">
+              <!-- Purpose -->
+              <div class="help-content">
+                <p class="help-content-title">
+                  {{ $t('help.helpContent.purpose.title') }}
                 </p>
+                <ul class="dot-paragraph">
+                  <li>
+                    {{ $t('help.helpContent.purpose.text') }}
+                  </li>
+                </ul>
               </div>
-              <ul class="dot-paragraph">
-                <li>
-                  {{ $t('help.helpContent.tutorial.text') }}
-                </li>
-              </ul>
-              <div class="tutorial-button">
-                <DefaultButton :disabled="!isTutorialEnabled" :text="$t('help.startTutorialButton.text')"
-                  @click="startInteractiveTutorial()"
-                  :tip="!isTutorialEnabled ? globalConfig.featureFlags.notEnabledMessage : ''" />
-                <DefaultButton :disabled="!isTutorialEnabled" :text="$t('help.continueTutorialButton.text')"
-                  @click="continueInteractiveTutorial()" v-if="!tutorialCompleted && tutorialStep !== 0"
-                  :tip="!isTutorialEnabled ? globalConfig.featureFlags.notEnabledMessage : ''" />
+
+              <!-- Tools -->
+              <div class="help-content">
+                <p class="help-content-title">
+                  {{ $t('help.helpContent.tools.title') }}
+                </p>
+                <!-- Crop -->
+                <div class="tool-description">
+                  <div>
+                    <p class="title">
+                      {{ $t('tools.crop.label') }}
+                    </p>
+                    <p class="shortcut">
+                      {{ $t('tools.crop.shortcut') }}
+                    </p>
+                  </div>
+                  <ul class="description dot-paragraph">
+                    <li>
+                      {{ $t('tools.crop.tip') }}
+                    </li>
+                  </ul>
+                </div>
+                <!-- Frame -->
+                <div class="tool-description">
+                  <div>
+                    <p class="title">
+                      {{ $t('tools.frame.label') }}
+                    </p>
+                    <p class="shortcut">
+                      {{ $t('tools.frame.shortcut') }}
+                    </p>
+                  </div>
+                  <ul class="description dot-paragraph">
+                    <li>
+                      {{ $t('tools.frame.tip') }}
+                    </li>
+                  </ul>
+                </div>
+                <!-- GrayScale -->
+                <div class="tool-description">
+                  <div>
+                    <p class="title">
+                      {{ $t('tools.grayscale.label') }}
+                    </p>
+                    <p class="shortcut">
+                      {{ $t('tools.grayscale.shortcut') }}
+                    </p>
+                  </div>
+                  <ul class="description dot-paragraph">
+                    <li>
+                      {{ $t('tools.grayscale.tip') }}
+                    </li>
+                  </ul>
+                </div>
+                <!-- Select -->
+                <div class="tool-description">
+                  <div>
+                    <p class="title">
+                      {{ $t('tools.select.label') }}
+                    </p>
+                    <p class="shortcut">
+                      {{ $t('tools.select.shortcut') }}
+                    </p>
+                  </div>
+                  <ul class="description dot-paragraph">
+                    <li>
+                      {{ $t('tools.select.tip') }}
+                    </li>
+                  </ul>
+                </div>
+                <!-- Blur -->
+                <div class="tool-description">
+                  <div>
+                    <p class="title">
+                      {{ $t('tools.blur.label') }}
+                    </p>
+                    <p class="shortcut">
+                      {{ $t('tools.blur.shortcut') }}
+                    </p>
+                  </div>
+                  <ul class="description dot-paragraph">
+                    <li>
+                      {{ $t('tools.blur.tip') }}
+                    </li>
+                  </ul>
+                </div>
+                <!-- Shape -->
+                <div class="tool-description">
+                  <div>
+                    <p class="title">
+                      {{ $t('tools.shape.label') }}
+                    </p>
+                    <p class="shortcut">
+                      {{ $t('tools.shape.shortcut') }}
+                    </p>
+                  </div>
+                  <ul class="description dot-paragraph">
+                    <li>
+                      {{ $t('tools.shape.tip') }}
+                    </li>
+                  </ul>
+                </div>
+                <!-- Text -->
+                <div class="tool-description">
+                  <div>
+                    <p class="title">
+                      {{ $t('tools.text.label') }}
+                    </p>
+                    <p class="shortcut">
+                      {{ $t('tools.text.shortcut') }}
+                    </p>
+                  </div>
+                  <ul class="description dot-paragraph">
+                    <li>
+                      {{ $t('tools.text.tip') }}
+                    </li>
+                  </ul>
+                </div>
+                <!-- Magnify area -->
+                <div class="tool-description">
+                  <div>
+                    <p class="title">
+                      {{ $t('tools.magnifyArea.label') }}
+                    </p>
+                    <p class="shortcut">
+                      {{ $t('tools.magnifyArea.shortcut') }}
+                    </p>
+                  </div>
+                  <ul class="description dot-paragraph">
+                    <li>
+                      {{ $t('tools.magnifyArea.tip') }}
+                    </li>
+                  </ul>
+                </div>
+                <!-- Transform - Rotate -->
+                <div class="tool-description">
+                  <div>
+                    <p class="title">
+                      {{ $t('tools.transform.subTools.rotate.label') }}
+                    </p>
+                    <p class="shortcut">
+                      {{ $t('tools.transform.subTools.rotate.shortcut') }}
+                    </p>
+                  </div>
+                  <ul class="description dot-paragraph">
+                    <li>
+                      {{ $t('tools.transform.subTools.rotate.tip') }}
+                    </li>
+                  </ul>
+                </div>
+                <!-- Transform - Flip -->
+                <div class="tool-description">
+                  <div>
+                    <p class="title">
+                      {{ $t('tools.transform.subTools.flip.label') }}
+                    </p>
+                    <p class="shortcut">
+                      {{ $t('tools.transform.subTools.flip.shortcut') }}
+                    </p>
+                  </div>
+                  <ul class="description dot-paragraph">
+                    <li>
+                      {{ $t('tools.transform.subTools.flip.tip') }}
+                    </li>
+                  </ul>
+                </div>
+                <!-- Transform - Resize -->
+                <div class="tool-description">
+                  <div>
+                    <p class="title">
+                      {{ $t('tools.transform.subTools.resize.label') }}
+                    </p>
+                    <p class="shortcut">
+                      {{ $t('tools.transform.subTools.resize.shortcut') }}
+                    </p>
+                  </div>
+                  <ul class="description dot-paragraph">
+                    <li>
+                      {{ $t('tools.transform.subTools.resize.tip') }}
+                    </li>
+                  </ul>
+                </div>
+                <!-- Preset - My presets -->
+                <div class="tool-description">
+                  <div>
+                    <p class="title">
+                      {{ $t('tools.preset.subTools.myPresets.label') }}
+                    </p>
+                    <p class="shortcut">
+                      {{ $t('tools.preset.subTools.myPresets.shortcut') }}
+                    </p>
+                  </div>
+                  <ul class="description dot-paragraph">
+                    <li>
+                      {{ $t('tools.preset.subTools.myPresets.tip') }}
+                    </li>
+                  </ul>
+                </div>
+                <!-- Preset - Create Preset -->
+                <div class="tool-description">
+                  <div>
+                    <p class="title">
+                      {{ $t('tools.preset.subTools.createPreset.label') }}
+                    </p>
+                    <p class="shortcut">
+                      {{ $t('tools.preset.subTools.createPreset.shortcut') }}
+                    </p>
+                  </div>
+                  <ul class="description dot-paragraph">
+                    <li>
+                      {{ $t('tools.preset.subTools.createPreset.tip') }}
+                    </li>
+                  </ul>
+                </div>
+                <!-- Export -->
+                <div class="tool-description">
+                  <div>
+                    <p class="title">
+                      {{ $t('tools.export.label') }}
+                    </p>
+                    <p class="shortcut">
+                      {{ $t('tools.export.shortcut') }}
+                    </p>
+                  </div>
+                  <ul class="description dot-paragraph">
+                    <li>
+                      {{ $t('tools.export.tip') }}
+                    </li>
+                  </ul>
+                </div>
+              </div>
+
+              <!-- Other shortcuts -->
+              <div class="help-content">
+                <p class="help-content-title">
+                  {{ $t('help.helpContent.shortcuts.title') }}
+                </p>
+                <ul class="dot-paragraph">
+                  <li>
+                    {{ $t('help.helpContent.shortcuts.text') }}
+                  </li>
+                </ul>
+                <br>
+                <div v-for="(category, cIndex) in keyboardShortcuts" :key="cIndex" class="shortcut-category">
+                  <h4 class="category-title">{{ category.name }}</h4>
+
+                  <div v-for="(item, index) in category.list" :key="index" class="shortcuts-description">
+                    <ul class="description dot-paragraph">
+                      <li>{{ item.description }}</li>
+                    </ul>
+                    <p class="shortcut">{{ item.shortcut }}</p>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Tutorial -->
+              <div class="help-content">
+                <div class="tutorial-title-wrapper">
+                  <BaseIcon v-if="tutorialCompleted" class="tutorial-completed-icon" name="IconTick" size="20"
+                    :tip='$t("help.helpContent.tutorial.tutorialCompletedTip")' position="top-right" />
+                  <p class="help-content-title" style="margin-bottom: 0;">
+                    {{ $t('help.helpContent.tutorial.title') }}
+                  </p>
+                </div>
+                <ul class="dot-paragraph">
+                  <li>
+                    {{ $t('help.helpContent.tutorial.text') }}
+                  </li>
+                </ul>
+                <div class="tutorial-button">
+                  <DefaultButton :disabled="!isTutorialEnabled" :text="$t('help.startTutorialButton.text')"
+                    @click="startInteractiveTutorial()"
+                    :tip="!isTutorialEnabled ? globalConfig.featureFlags.notEnabledMessage : ''" />
+                  <DefaultButton :disabled="!isTutorialEnabled" :text="$t('help.continueTutorialButton.text')"
+                    @click="continueInteractiveTutorial()" v-if="!tutorialCompleted && tutorialStep !== 0"
+                    :tip="!isTutorialEnabled ? globalConfig.featureFlags.notEnabledMessage : ''" />
+                </div>
+              </div>
+
+              <!-- Technical limitations -->
+              <div class="help-content">
+                <p class="help-content-title">Technical Limitations</p>
+                <ul class="dot-paragraph">
+                  <li v-for="(item, index) in technicalLimitations" :key="index">
+                    {{ item }}
+                  </li>
+                </ul>
+              </div>
+
+              <!-- Statistics -->
+              <div class="help-content">
+                <div class="tutorial-title-wrapper">
+                  <p class="help-content-title" style="margin-bottom: 0;">
+                    {{ $t('help.helpContent.statistics.title') }}
+                  </p>
+                  <BaseIcon name="IconStatistics" size="20" position="top-right" color="var(--primary-c)" />
+                </div>
+                <ul class="dot-paragraph">
+                  <li>
+                    {{ $t('help.helpContent.statistics.text') }}
+                  </li>
+                </ul>
+                <div class="tutorial-button">
+                  <DefaultButton :disabled="!isTutorialEnabled"
+                    :text="$t('help.helpContent.statistics.seeStatisticsButton.text')" @click="showStatistics()" />
+                </div>
+              </div>
+
+              <!-- Contact and feedback -->
+              <div class="help-content">
+                <p class="help-content-title" @click="sendFeedback">
+                  {{ $t('help.helpContent.contactAndFeedback.title') }}
+                </p>
+
+                <ul class="dot-paragraph">
+                  <li>
+                    {{ $t('help.helpContent.contactAndFeedback.text') }}
+                    <a href="mailto:xhumenp00@stud.fit.vut.cz" class="action-text">xhumenp00@stud.fit.vut.cz</a>.
+                  </li>
+                </ul>
+
               </div>
             </div>
 
-            <!-- Technical limitations -->
-            <div class="help-content">
-              <p class="help-content-title">Technical Limitations</p>
-              <ul class="dot-paragraph">
-                <li v-for="(item, index) in technicalLimitations" :key="index">
-                  {{ item }}
-                </li>
-              </ul>
-            </div>
-
-            <!-- Contact and feedback -->
-            <div class="help-content">
-              <p class="help-content-title" @click="sendFeedback">
-                {{ $t('help.helpContent.contactAndFeedback.title') }}
-              </p>
-
-              <ul class="dot-paragraph">
-                <li>
-                  {{ $t('help.helpContent.contactAndFeedback.text') }}
-                  <a href="mailto:xhumenp00@stud.fit.vut.cz" class="action-text">xhumenp00@stud.fit.vut.cz</a>.
-                </li>
-              </ul>
-
+            <!-- Arrow down -->
+            <div v-if="!atBottom" class="arrow-down" @click="scrollDown">
+              <BaseIcon name="IconArrowDown" size="24" color="var(--primary-c)" />
             </div>
           </div>
 
-          <!-- Arrow down -->
-          <div v-if="!atBottom" class="arrow-down" @click="scrollDown">
-            <BaseIcon name="IconArrowDown" size="24" color="var(--primary-c)" />
+          <!-- Close help -->
+          <div class="button-wrapper">
+            <DefaultButton :text="$t('help.closeButton.text')" @click="closeHelpModal" />
           </div>
-        </div>
-
-        <!-- Close help -->
-        <div class="button-wrapper">
-          <DefaultButton :text="$t('help.closeButton.text')" @click="closeHelpModal" />
         </div>
       </div>
-    </div>
-  </Teleport>
-</template>
+    </Teleport>
+  </template>
 
 <style scoped>
 .help-modal-overlay {

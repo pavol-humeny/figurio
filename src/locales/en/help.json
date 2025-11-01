@@ -79,6 +79,13 @@
         "Browser refresh will erase unsaved progress."
       ]
     },
+    "statistics":{
+      "title": "Usage Statistics",
+      "text": "Statistics are collected to help improve the editor. Statistics include information about how many times are used various features.",
+      "seeStatisticsButton": {
+        "text": "See Statistics"
+      }
+    },
     "contactAndFeedback": {
       "title": "Contact and Feedback",
       "text": "If you have any questions, suggestions, or feedback regarding the editor, please contact me at:"
