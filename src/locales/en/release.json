@@ -4,6 +4,15 @@
     "items": []
   },
   "versions":{
+    "4.15.2":{
+      "label": "4.15.2",
+      "date":"1.11. 2025",
+      "improvements": {
+        "items": [
+          "ALT key makes scrolling faster"
+        ]
+      }
+    },
     "4.15.1":{
       "label": "4.15.1",
       "date":"30.10. 2025",

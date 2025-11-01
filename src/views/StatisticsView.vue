@@ -14,7 +14,6 @@
   width: 100vw;
   height: 100%;
   background: var(--background-c);
-  border: solid 1px red;
   overflow: hidden;
 }
 </style>
