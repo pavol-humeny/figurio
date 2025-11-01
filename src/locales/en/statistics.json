@@ -1,0 +1,15 @@
+{
+  "visits":{
+    "buttonText":{
+      "text": "Visits"
+    },
+    "allVisits": "All Visits",
+    "uniqueVisits": "Unique Visits"
+  },
+  "events": {
+    "buttonText": {
+      "text": "Events"
+    },
+    "totalEvents": "Total Events"
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "visits":{
+    "buttonText":{
+      "text": "Návštěvy"
+    },
+    "allVisits": "Počet návštěv",
+    "uniqueVisits": "Počet unikátních návštěv"
+  },
+  "events": {
+    "buttonText": {
+      "text": "Udalosti"
+    },
+    "totalEvents": "Počet událostí"
+  }
+}

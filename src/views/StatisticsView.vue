@@ -1,19 +1,124 @@
 <script setup>
+import { ref } from 'vue';
+import AllVisits from '../components/statistics/AllVisits.vue';
+import UniqueVisits from '../components/statistics/UniqueVisits.vue';
+
+
+const statisticsView = ref('visits'); // 'visits' | 'events'
 
 </script>
 
 <template>
-  <div class="maintenance-view">
-    ahoj
+  <div class="statistics-view">
+    <div class="visits-events-wrapper">
+      <div class="visits-events-background">
+        <div :class="['visits-event-button', statisticsView === 'visits' ? 'active' : '']"
+          @click="statisticsView = 'visits'">
+          {{ $t('statistics.visits.buttonText.text') }}
+        </div>
+        <div :class="['visits-event-button', statisticsView === 'events' ? 'active' : '']"
+          @click="statisticsView = 'events'">
+          {{ $t('statistics.events.buttonText.text') }}
+        </div>
+      </div>
+    </div>
+    <div v-if="statisticsView === 'visits'" class="visits-wrapper">
+      <div class="all-unique-visits">
+        <AllVisits />
+        <UniqueVisits />
+      </div>
+    </div>
+    <div v-else-if="statisticsView === 'events'" class="events-wrapper">
+
+    </div>
   </div>
 </template>
 
 <style scoped>
-.maintenance-view {
+.statistics-view {
   position: relative;
   width: 100vw;
   height: 100%;
   background: var(--background-c);
   overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 30px 0;
+  gap: 25px;
+}
+
+.visits-events-wrapper {
+  width: 100%;
+  padding: 0 10%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.visits-events-background {
+  background: var(--secondary-c);
+  width: 100%;
+  height: 40px;
+  border-radius: 20px;
+  padding: 5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: row;
+  gap: 5px;
+}
+
+.visits-event-button {
+  flex: 1;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  user-select: none;
+  font-weight: 600;
+  color: var(--text-secondary-c);
+  border-radius: 20px;
+}
+
+.visits-event-button:hover {
+  background: var(--background-c);
+}
+
+.visits-event-button.active {
+  background: var(--primary-c);
+  color: var(--secondary-c);
+  box-shadow: var(--box-shadow-hover);
+}
+
+/* visits */
+.visits-wrapper {
+  width: 100%;
+  padding: 0 10%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.all-unique-visits {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  gap: 25px;
+}
+
+.all-unique-visits>* {
+  flex: 1;
+  /* Each child takes up equal space */
+}
+
+/* events */
+.events-wrapper {
+  width: 100%;
+  padding: 0 10%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 </style>
