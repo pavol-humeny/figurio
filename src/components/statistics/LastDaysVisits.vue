@@ -13,6 +13,7 @@ import { Bar } from 'vue-chartjs';
 // Register Chart.js components
 ChartJS.register(Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale);
 
+// Example data
 const visits = [
   { day: 'Pon', total: 120, unique: 90 },
   { day: 'Uto', total: 150, unique: 110 },
@@ -23,9 +24,15 @@ const visits = [
   { day: 'Ned', total: 70, unique: 60 },
 ];
 
-const totalColor = 'rgba(189, 171, 139, 0.9)';
-const uniqueColor = 'rgba(128, 89, 62, 0.9)';
+/**
+ * Chart colors
+ */
+const totalColor = 'rgba(34, 197, 94, 0.6)'; // green
+const uniqueColor = 'rgba(59, 130, 246, 0.6)'; // blue
 
+/**
+ * Chart data
+ */
 const data = {
   labels: visits.map(v => v.day),
   datasets: [
@@ -44,6 +51,9 @@ const data = {
   ],
 };
 
+/**
+ * Chart options
+ */
 const options = {
   responsive: true,
   plugins: {
@@ -67,6 +77,5 @@ const options = {
   display: flex;
   align-items: center;
   justify-content: center;
-
 }
 </style>
