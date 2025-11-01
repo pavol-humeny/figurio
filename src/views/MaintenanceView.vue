@@ -1,8 +1,11 @@
 <script setup>
+import { globalConfig } from '@/config/globalConfig'
 import { ref, onMounted } from 'vue'
 import { useI18n } from 'vue-i18n'
+import { useRouter } from 'vue-router'
 
 const { t } = useI18n()
+const router = useRouter()
 
 const canvasRef = ref(null)
 let ctx = null
@@ -62,6 +65,11 @@ const clearCanvas = () => {
  * Set the canvas size and context on mount
  */
 onMounted(() => {
+  // Redirect to home if not in maintenance mode
+  if (globalConfig.isRunning) {
+    router.push({ name: 'home' })
+  }
+
   const canvas = canvasRef.value
   canvas.width = window.innerWidth
   canvas.height = window.innerHeight

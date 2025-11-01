@@ -1,4 +1,4 @@
-import { createRouter, createWebHashHistory  } from 'vue-router'
+import { createRouter, createWebHashHistory } from 'vue-router'
 import HomeView from '@/views/HomeView.vue'
 
 /**
@@ -6,6 +6,7 @@ import HomeView from '@/views/HomeView.vue'
  * - HomeView ("/")
  * - EditorView ("/Editor")
  * - MaintenanceView ("/Maintenance")
+ * - StatisticsView ("/Statistics")
  */
 const router = createRouter({
   history: createWebHashHistory(import.meta.env.BASE_URL),
@@ -24,6 +25,11 @@ const router = createRouter({
       path: '/Maintenance',
       name: 'maintenance',
       component: () => import('@/views/MaintenanceView.vue'),
+    },
+    {
+      path: '/Statistics',
+      name: 'statistics',
+      component: () => import('@/views/StatisticsView.vue'),
     },
     {
       path: '/:pathMatch(.*)*',

@@ -12,8 +12,10 @@ import { useRoute } from 'vue-router'
 import { computed } from 'vue'
 import FigurioLogoDark from '@/assets/FigurioLogoDark.png'
 import FigurioLogoLight from '@/assets/FigurioLogoLight.png'
+import { useRouter } from 'vue-router'
 
 const uiStore = useUiStore()
+const router = useRouter()
 
 /**
  * Checks if the current view is 'home' to conditionally render parts of the top panel
@@ -32,23 +34,25 @@ const logoSrc = computed(() => {
  * Navigates to the home view.
  */
 const goHome = () => {
-  window.location.reload()
+  router.replace({ name: 'home' })
 }
 
+/** Computes whether to show the controls */
+const showControls = computed(() => route.name === 'editor')
 </script>
 
 <template>
   <div class="top-panel">
     <div class="top-panel-left" v-if="!isHomeView" id="top-panel-left">
       <img @click="goHome" :src="logoSrc" alt="Figurio logo">
-      <FileNameDisplay />
-      <UploadFileButton />
-      <CloseFileButton />
-      <ExportFileButton />
+      <FileNameDisplay v-if="showControls" />
+      <UploadFileButton v-if="showControls" />
+      <CloseFileButton v-if="showControls" />
+      <ExportFileButton v-if="showControls" />
     </div>
     <div class="top-panel-center" v-if="!isHomeView" id="top-panel-center">
-      <UndoRedo />
-      <ZoomControl />
+      <UndoRedo v-if="showControls" />
+      <ZoomControl v-if="showControls" />
     </div>
     <div class="top-panel-right" id="top-panel-right">
       <HelpButton />

@@ -88,7 +88,7 @@ const APP_VERSION = import.meta.env.VITE_APP_VERSION
 /**
  * Register unload warning on mount
  */
-onMounted(() => {
+onMounted(async () => {
   window.addEventListener('beforeunload', handleBeforeUnload)
 
   // Reset localStorage (preferences) if app version has changed and in global config is set reset
@@ -115,6 +115,8 @@ onMounted(() => {
     }
   }
 
+  await router.isReady() // wait until router is fully loaded
+
   // If the app is not running show MaintenanceView
   if (!globalConfig.isRunning) {
     router.replace({ name: 'maintenance' })
@@ -122,7 +124,8 @@ onMounted(() => {
   }
 
   // Redirect to home view on reload
-  if (route.name !== 'home') {
+  if (route.name !== 'home' && route.name !== 'statistics') {
+    console.warn('App reloaded, redirecting to home view: ' + route.name)
     router.replace({ name: 'home' })
   }
 
@@ -135,6 +138,8 @@ onMounted(() => {
 onBeforeUnmount(() => {
   window.removeEventListener('beforeunload', handleBeforeUnload)
 })
+
+
 </script>
 
 <template>
