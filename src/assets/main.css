@@ -377,3 +377,11 @@ input[type='range']::-moz-range-thumb {
 .hide{
   opacity: 0;
 }
+
+/* Statistics */
+.statistics-card{
+  background: var(--secondary-c);
+  border-radius: 20px;
+  padding: 30px 20px;
+  box-shadow: var(--box-shadow-hover);
+}

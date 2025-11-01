@@ -2,6 +2,7 @@
 import { ref } from 'vue';
 import AllVisits from '../components/statistics/AllVisits.vue';
 import UniqueVisits from '../components/statistics/UniqueVisits.vue';
+import LastDaysVisits from '../components/statistics/LastDaysVisits.vue';
 
 
 const statisticsView = ref('visits'); // 'visits' | 'events'
@@ -27,6 +28,7 @@ const statisticsView = ref('visits'); // 'visits' | 'events'
         <AllVisits />
         <UniqueVisits />
       </div>
+      <LastDaysVisits />
     </div>
     <div v-else-if="statisticsView === 'events'" class="events-wrapper">
 
@@ -46,6 +48,7 @@ const statisticsView = ref('visits'); // 'visits' | 'events'
   align-items: center;
   padding: 30px 0;
   gap: 25px;
+  overflow: auto;
 }
 
 .visits-events-wrapper {
@@ -99,6 +102,8 @@ const statisticsView = ref('visits'); // 'visits' | 'events'
   display: flex;
   align-items: center;
   justify-content: center;
+  flex-direction: column;
+  gap: 25px;
 }
 
 .all-unique-visits {

@@ -64,6 +64,9 @@
 
   --viewport-wrapper-contrast-dark-c: #101010;
   --viewport-wrapper-contrast-light-c: #f7f7f7;
+
+  --chart-color-1-dark: rgba(189, 171, 139, 0.9);
+  --chart-color-2-dark: rgba(128, 89, 62, 0.9);
 }
 
 :root {

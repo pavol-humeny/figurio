@@ -20,7 +20,7 @@ const props = defineProps({
 </script>
 
 <template>
-  <div class="visit-card">
+  <div class="visit-card statistics-card">
     <div class="visit-count">
       <p class="description">
         {{ $t(`statistics.visits.${props.visitType}Visits`) }}
@@ -39,13 +39,9 @@ const props = defineProps({
 .visit-card {
   width: 100%;
   height: 100px;
-  background: var(--secondary-c);
-  border-radius: 20px;
-  padding: 30px 20px;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  box-shadow: var(--box-shadow-hover);
 }
 
 .visit-count {
