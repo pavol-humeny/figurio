@@ -260,6 +260,24 @@ export function useApi() {
     }
   }
 
+  /**
+   * Fetches keyboard shortcut events
+   */
+  const getKeyboardShortcuts = async () => {
+    try {
+      const res = await fetch(`${API_BASE}/api/events/keyboardShortcuts`)
+      if (!res.ok) throw new Error('Failed to fetch keyboard shortcut events')
+
+      const data = await res.json()
+      log('Keyboard shortcut events fetched:', data)
+
+      return data
+    } catch (err) {
+      error('Error fetching keyboard shortcut events:', err)
+      return []
+    }
+  }
+
   return {
     addUserVisit,
     addUserEvent,
@@ -273,5 +291,6 @@ export function useApi() {
     getUploadImage,
     getExportImage,
     getOpenModal,
+    getKeyboardShortcuts,
   }
 }

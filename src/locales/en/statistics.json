@@ -42,6 +42,10 @@
       "openModal": {
         "title": "Open Modal",
         "totalEvents": "Total Opens:"
+      },
+      "keyboardShortcuts": {
+        "title": "Keyboard Shortcut",
+        "totalEvents": "Total Uses:"
       }
     }
   }

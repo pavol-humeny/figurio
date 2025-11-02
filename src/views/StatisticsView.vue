@@ -11,6 +11,7 @@ import EventToggleTool from '@/components/statistics/EventToggleTool.vue';
 import EventUploadImage from '@/components/statistics/EventUploadImage.vue';
 import EventExportImage from '@/components/statistics/EventExportImage.vue';
 import EventOpenModal from '@/components/statistics/EventOpenModal.vue';
+import EventKeyboardShortcuts from '@/components/statistics/EventKeyboardShortcuts.vue';
 
 const statisticsView = ref(localStorage.getItem(`${globalConfig.LOCAL_STORAGE_PREFIX}statisticsView`) || 'visits'); // 'visits' | 'events'
 
@@ -53,6 +54,7 @@ const selectStatistics = (view) => {
       <EventUploadImage />
       <EventExportImage />
       <EventOpenModal />
+      <EventKeyboardShortcuts />
     </div>
   </div>
 </template>

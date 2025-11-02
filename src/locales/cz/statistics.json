@@ -17,6 +17,36 @@
     "buttonText": {
       "text": "Udalosti"
     },
-    "totalEvents": "Počet událostí"
+    "totalEvents": "Počet událostí",
+    "overview": {
+      "title": "Events Overview",
+      "totalEvents": "Total Events",
+      "numberOfUploads": "Uploads",
+      "numberOfExport": "Exports",
+      "numberOfUseTool": "Operations",
+      "numberOfKeyboardShortcuts": "Keyboard Shortcut"
+    },
+    "singleEvent":{
+      "toggleTool": {
+        "title": "Přepnutí nástroje",
+        "totalEvents": "Celkem přepnutí:"
+      },
+      "uploadImage": {
+        "title": "Nahrání obrázku",
+        "totalEvents": "Celkem nahrání:"
+      },
+      "exportImage": {
+        "title": "Export obrázku",
+        "totalEvents": "Celkem exportů:"
+      },
+      "openModal": {
+        "title": "Otevření modálního okna",
+        "totalEvents": "Celkem otevření:"
+      },
+      "keyboardShortcuts": {
+        "title": "Klávesová zkratka",
+        "totalEvents": "Celkem použití:"
+      }
+    }
   }
 }

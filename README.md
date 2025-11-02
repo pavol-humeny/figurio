@@ -33,7 +33,7 @@ Event type:
 - applyOperation
     - tool
     - settings
-- keyBoardShortcut
+- keyboardShortcuts
     - action
     - keys
 - buttonClicked

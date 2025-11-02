@@ -83,7 +83,7 @@ export function useKeyboardShortcuts(actions, uiStore, editorStore) {
           fn(...(shortcut.args || []))
           log(`[Shortcut] ${type.toUpperCase()} → ${shortcut.description}`)
 
-          addUserEvent('keyboardShortcut', {
+          addUserEvent('keyboardShortcuts', {
             action: shortcut.action,
             keys: pressed,
           })
