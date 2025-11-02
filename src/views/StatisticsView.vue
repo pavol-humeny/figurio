@@ -7,6 +7,7 @@ import CountryVisits from '../components/statistics/CountryVisits.vue';
 import DaysVisits from '@/components/statistics/DaysVisits.vue';
 import EventsOverview from '@/components/statistics/EventsOverview.vue';
 import { globalConfig } from '@/config/globalConfig.js';
+import EventToggleTool from '@/components/statistics/EventToggleTool.vue';
 
 const statisticsView = ref(localStorage.getItem(`${globalConfig.LOCAL_STORAGE_PREFIX}statisticsView`) || 'visits'); // 'visits' | 'events'
 
@@ -45,6 +46,7 @@ const selectStatistics = (view) => {
     </div>
     <div v-else-if="statisticsView === 'events'" class="events-wrapper">
       <EventsOverview />
+      <EventToggleTool />
     </div>
   </div>
 </template>
@@ -138,5 +140,7 @@ const selectStatistics = (view) => {
   display: flex;
   align-items: center;
   justify-content: center;
+  flex-direction: column;
+  gap: 25px;
 }
 </style>

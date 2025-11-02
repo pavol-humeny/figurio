@@ -385,3 +385,50 @@ input[type='range']::-moz-range-thumb {
   padding: 30px 20px;
   box-shadow: var(--box-shadow-hover);
 }
+
+.single-event {
+  flex: 1;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  padding: 30px 50px;
+}
+
+.single-event-title {
+  font-size: 22px;
+  font-weight: bold;
+  color: var(--statistics-title-c);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.single-event-title .total-number-of-event p {
+  font-size: 17px;
+  color: var(--text-c);
+}
+
+.single-event-values {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  margin-top: 20px;
+  border-top: solid 1px var(--border-c);
+  padding-top: 20px;
+}
+
+.item-label {
+  opacity: 0.7;
+}
+
+.item-value {
+  font-size: 29px;
+  font-weight: bold;
+  color: var(--primary-c);
+}

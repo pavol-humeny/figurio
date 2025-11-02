@@ -25,6 +25,12 @@
       "numberOfExport": "Exports",
       "numberOfUseTool": "Operations",
       "numberOfKeyboardShortcuts": "Keyboard Shortcut"
+    },
+    "singleEvent":{
+      "toggleTool": {
+        "title": "Toggle Tool",
+        "totalEvents": "Total Toggles:"
+      }
     }
   }
 }

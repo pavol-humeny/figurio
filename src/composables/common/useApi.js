@@ -188,6 +188,24 @@ export function useApi() {
     }
   }
 
+  /**
+   * Fetches toggle tool events
+   */
+  const getToggleTool = async () => {
+    try {
+      const res = await fetch(`${API_BASE}/api/events/toggleTool`)
+      if (!res.ok) throw new Error('Failed to fetch toggle tool events')
+
+      const data = await res.json()
+      log('Toggle tool events fetched:', data)
+
+      return data
+    } catch (err) {
+      error('Error fetching toggle tool events:', err)
+      return []
+    }
+  }
+
   return {
     addUserVisit,
     addUserEvent,
@@ -197,5 +215,6 @@ export function useApi() {
     getVisitsByCountry,
     getDaysVisits,
     getEventsOverview,
+    getToggleTool,
   }
 }
