@@ -242,6 +242,24 @@ export function useApi() {
     }
   }
 
+  /**
+   * Fetches open modal events
+   */
+  const getOpenModal = async () => {
+    try {
+      const res = await fetch(`${API_BASE}/api/events/openModal`)
+      if (!res.ok) throw new Error('Failed to fetch open modal events')
+
+      const data = await res.json()
+      log('Open modal events fetched:', data)
+
+      return data
+    } catch (err) {
+      error('Error fetching open modal events:', err)
+      return []
+    }
+  }
+
   return {
     addUserVisit,
     addUserEvent,
@@ -254,5 +272,6 @@ export function useApi() {
     getToggleTool,
     getUploadImage,
     getExportImage,
+    getOpenModal,
   }
 }

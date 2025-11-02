@@ -10,6 +10,7 @@ import { globalConfig } from '@/config/globalConfig.js';
 import EventToggleTool from '@/components/statistics/EventToggleTool.vue';
 import EventUploadImage from '@/components/statistics/EventUploadImage.vue';
 import EventExportImage from '@/components/statistics/EventExportImage.vue';
+import EventOpenModal from '@/components/statistics/EventOpenModal.vue';
 
 const statisticsView = ref(localStorage.getItem(`${globalConfig.LOCAL_STORAGE_PREFIX}statisticsView`) || 'visits'); // 'visits' | 'events'
 
@@ -51,6 +52,7 @@ const selectStatistics = (view) => {
       <EventToggleTool />
       <EventUploadImage />
       <EventExportImage />
+      <EventOpenModal />
     </div>
   </div>
 </template>

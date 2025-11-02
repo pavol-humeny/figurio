@@ -38,6 +38,10 @@
       "exportImage": {
         "title": "Export Image",
         "totalEvents": "Total Exports:"
+      },
+      "openModal": {
+        "title": "Open Modal",
+        "totalEvents": "Total Opens:"
       }
     }
   }

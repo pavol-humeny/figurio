@@ -27,7 +27,7 @@ export function useUploadFileButton(imageStore, t, router) {
    * Open drag and drop modal
    */
   const openDragAndDropModal = async () => {
-    addUserEvent('openModal', { modal: 'importModal' })
+    addUserEvent('buttonClicked', { button: 'uploadFile' })
 
     // Open the import modal
     openImportModal()
