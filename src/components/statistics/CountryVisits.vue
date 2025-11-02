@@ -7,21 +7,22 @@ import {
   ArcElement,
 } from 'chart.js';
 import { Doughnut } from 'vue-chartjs';
+import { ref, onMounted } from 'vue';
+import { useApi } from '@/composables/common/useApi';
+import { useI18n } from 'vue-i18n';
 
-// Register Chart.js components
 ChartJS.register(Title, Tooltip, Legend, ArcElement);
 
-// Example data
-const countries = [
-  { country: 'Slovensko', visits: 250 },
-  { country: 'Česko', visits: 180 },
-  { country: 'Poľsko', visits: 120 },
-  { country: 'Nemecko', visits: 90 },
-  { country: 'Ostatné', visits: 60 },
-];
+const { getVisitsByCountry } = useApi();
+const { t } = useI18n();
 
 /**
- * Generates an array of distinct colors for the chart segments.
+ * Reactive array for visits by country
+ */
+const countries = ref([]);
+
+/**
+ * Base colors for the chart segments
  */
 const baseColors = [
   'rgba(220, 38, 38, 0.6)',   // red
@@ -41,10 +42,7 @@ const baseColors = [
 ];
 
 /**
- * Generates an array of colors for the chart segments based on the number of segments.
- * If there are more segments than base colors, colors will repeat.
- * @param {number} n - Number of segments
- * @returns {string[]} Array of color strings
+ * Generate an array of colors for the chart segments
  */
 const generateColors = (n) => {
   const colors = [];
@@ -55,18 +53,18 @@ const generateColors = (n) => {
 };
 
 /**
- * Chart data 
+ * Data for the doughnut chart
  */
-const data = {
-  labels: countries.map(c => c.country),
+const data = ref({
+  labels: [],
   datasets: [
     {
-      data: countries.map(c => c.visits),
-      backgroundColor: generateColors(countries.length),
+      data: [],
+      backgroundColor: [],
       borderWidth: 1,
     },
   ],
-};
+});
 
 /**
  * Chart options
@@ -76,10 +74,34 @@ const options = {
   maintainAspectRatio: false,
   cutout: '0%',
   plugins: {
-    legend: { position: 'right' },
+    legend: { position: 'bottom' },
     tooltip: { enabled: true },
+    title: {
+      display: true,
+      text: t('statistics.visits.countryVisits'),
+      font: { size: 18 },
+    },
   },
 };
+
+/**
+ * Fetch visits by country on component mount
+ */
+onMounted(async () => {
+  const res = await getVisitsByCountry();
+  countries.value = res;
+
+  data.value = {
+    labels: countries.value.map(c => c.country),
+    datasets: [
+      {
+        data: countries.value.map(c => c.visitCount),
+        backgroundColor: generateColors(countries.value.length),
+        borderWidth: 1,
+      },
+    ],
+  };
+});
 </script>
 
 <template>

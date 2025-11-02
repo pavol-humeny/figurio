@@ -9,47 +9,23 @@ import {
   LinearScale,
 } from 'chart.js';
 import { Bar } from 'vue-chartjs';
+import { ref, onMounted } from 'vue';
+import { useApi } from '@/composables/common/useApi';
+import { useI18n } from 'vue-i18n';
+
+const { getLastSevenDaysVisits } = useApi();
+const { t } = useI18n();
 
 // Register Chart.js components
 ChartJS.register(Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale);
 
-// Example data
-const visits = [
-  { day: 'Pon', total: 120, unique: 90 },
-  { day: 'Uto', total: 150, unique: 110 },
-  { day: 'Str', total: 130, unique: 100 },
-  { day: 'Štv', total: 170, unique: 140 },
-  { day: 'Pia', total: 160, unique: 120 },
-  { day: 'Sob', total: 90, unique: 80 },
-  { day: 'Ned', total: 70, unique: 60 },
-];
-
 /**
- * Chart colors
+ * Data and options for the bar chart
  */
-const totalColor = 'rgba(34, 197, 94, 0.6)'; // green
-const uniqueColor = 'rgba(59, 130, 246, 0.6)'; // blue
-
-/**
- * Chart data
- */
-const data = {
-  labels: visits.map(v => v.day),
-  datasets: [
-    {
-      label: 'Celkový počet',
-      data: visits.map(v => v.total),
-      backgroundColor: totalColor,
-      borderRadius: 4,
-    },
-    {
-      label: 'Unikátne návštevy',
-      data: visits.map(v => v.unique),
-      backgroundColor: uniqueColor,
-      borderRadius: 4,
-    },
-  ],
-};
+const data = ref({
+  labels: [],
+  datasets: [],
+});
 
 /**
  * Chart options
@@ -59,9 +35,49 @@ const options = {
   plugins: {
     legend: { position: 'top' },
     tooltip: { mode: 'index', intersect: false },
+    title: {
+      display: true,
+      text: t('statistics.visits.lastDaysVisits.title'),
+      font: { size: 18 },
+    },
   },
-
 };
+
+// Colors
+const totalColor = 'rgba(34, 197, 94, 0.6)'; // green
+const uniqueColor = 'rgba(59, 130, 246, 0.6)'; // blue
+
+/**
+ * Fetch and prepare data on component mount
+ */
+onMounted(async () => {
+  const visits = await getLastSevenDaysVisits();
+
+  visits.sort((a, b) => new Date(a.date) - new Date(b.date));
+
+  const labels = visits.map(v => v.date.split('T')[0]);
+
+  const totalData = visits.map(v => v.allVisits);
+  const uniqueData = visits.map(v => v.newUsers);
+
+  data.value = {
+    labels,
+    datasets: [
+      {
+        label: t('statistics.visits.lastDaysVisits.allVisits'),
+        data: totalData,
+        backgroundColor: totalColor,
+        borderRadius: 4,
+      },
+      {
+        label: t('statistics.visits.lastDaysVisits.uniqueVisits'),
+        data: uniqueData,
+        backgroundColor: uniqueColor,
+        borderRadius: 4,
+      },
+    ],
+  };
+});
 </script>
 
 <template>

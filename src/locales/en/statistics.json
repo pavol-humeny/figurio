@@ -4,7 +4,14 @@
       "text": "Visits"
     },
     "allVisits": "All Visits",
-    "uniqueVisits": "Unique Visits"
+    "uniqueVisits": "Unique Visits",
+    "countryVisits": "Visits by Country",
+    "lastDaysVisits": {
+      "title": "Visits in the Last Days",
+      "allVisits": "All Visits",
+      "uniqueVisits": "Unique Visits"
+    },
+    "allDaysVisits": "Visits Over All Days"
   },
   "events": {
     "buttonText": {

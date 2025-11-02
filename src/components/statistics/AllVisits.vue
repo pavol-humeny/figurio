@@ -1,9 +1,18 @@
 <script setup>
-import { ref } from 'vue';
+import { ref, onMounted } from 'vue';
 import VisitCard from './VisitCard.vue';
+import { useApi } from '@/composables/common/useApi';
 
-const allVisits = ref(100);
+const allVisits = ref(0);
 
+const { getAllVisits } = useApi();
+
+/**
+ * Fetch total visits on component mount
+ */
+onMounted(async () => {
+  allVisits.value = await getAllVisits();
+});
 </script>
 
 <template>

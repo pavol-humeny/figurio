@@ -4,7 +4,14 @@
       "text": "Návštevy"
     },
     "allVisits": "Počet návštev",
-    "uniqueVisits": "Počet unikátnych návštev"
+    "uniqueVisits": "Počet unikátnych návštev",
+    "countryVisits": "Návštevy podľa krajín",
+    "lastDaysVisits": {
+      "title": "Návštevy za posledné dni",
+      "allVisits": "Všetky návštevy",
+      "uniqueVisits": "Unikátne návštevy"
+    },
+    "allDaysVisits": "Návštevy za všetky dni"
   },
   "events": {
     "buttonText": {

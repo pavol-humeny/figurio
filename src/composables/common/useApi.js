@@ -29,8 +29,6 @@ export function useApi() {
       return
     }
 
-    // log('Adding visit for user:', userId)
-
     try {
       const res = await fetch(`${API_BASE}/api/users/${userId}/visits`, {
         method: 'POST',
@@ -86,8 +84,99 @@ export function useApi() {
     }
   }
 
+  /**
+   * Fetches total number of visits
+   */
+  const getAllVisits = async () => {
+    try {
+      const res = await fetch(`${API_BASE}/api/visits/allVisits`)
+      if (!res.ok) throw new Error('Failed to fetch all visits')
+      const data = await res.json()
+      log('Total visits fetched:', data.totalVisits)
+      return data.totalVisits
+    } catch (err) {
+      error('Error fetching total visits:', err)
+      return 0
+    }
+  }
+
+  /**
+   * Fetches number of unique visitors
+   */
+  const getUniqueVisits = async () => {
+    try {
+      const res = await fetch(`${API_BASE}/api/visits/uniqueVisits`)
+      if (!res.ok) throw new Error('Failed to fetch unique visits')
+      const data = await res.json()
+      log('Unique visits fetched:', data.uniqueVisitors)
+      return data.uniqueVisitors
+    } catch (err) {
+      error('Error fetching unique visits:', err)
+      return 0
+    }
+  }
+
+  /**
+   * Fetches visits data for the last seven days
+   */
+  const getLastSevenDaysVisits = async () => {
+    try {
+      const res = await fetch(`${API_BASE}/api/visits/lastSevenDaysVisits`)
+      if (!res.ok) throw new Error('Failed to fetch last seven days visits')
+
+      const data = await res.json()
+      log('Last seven days visits fetched:', data)
+
+      return data
+    } catch (err) {
+      error('Error fetching last seven days visits:', err)
+      return []
+    }
+  }
+
+  /**
+   * Fetches visits grouped by country
+   */
+  const getVisitsByCountry = async () => {
+    try {
+      const res = await fetch(`${API_BASE}/api/visits/visitsByCountry`)
+      if (!res.ok) throw new Error('Failed to fetch visits by country')
+
+      const data = await res.json()
+      log('Visits by country fetched:', data)
+
+      return data
+    } catch (err) {
+      error('Error fetching visits by country:', err)
+      return []
+    }
+  }
+
+  /**
+   * Fetches all visits with total visits and new users per day
+   */
+  const getDaysVisits = async () => {
+    try {
+      const res = await fetch(`${API_BASE}/api/visits`)
+      if (!res.ok) throw new Error('Failed to fetch all visits')
+
+      const data = await res.json()
+      log('All visits fetched:', data)
+
+      return data
+    } catch (err) {
+      error('Error fetching all visits:', err)
+      return []
+    }
+  }
+
   return {
     addUserVisit,
     addUserEvent,
+    getAllVisits,
+    getUniqueVisits,
+    getLastSevenDaysVisits,
+    getVisitsByCountry,
+    getDaysVisits,
   }
 }

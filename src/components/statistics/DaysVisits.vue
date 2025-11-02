@@ -1,22 +1,39 @@
 <script setup>
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted } from 'vue'
+import { useApi } from '@/composables/common/useApi'
 
-const visits = ref([
-  { date: '2025-10-01', total: 120, unique: 90 },
-  { date: '2025-10-02', total: 150, unique: 110 },
-  { date: '2025-10-03', total: 130, unique: 100 },
-  { date: '2025-10-04', total: 170, unique: 140 },
-  { date: '2025-10-05', total: 160, unique: 120 },
-  { date: '2025-10-06', total: 90, unique: 80 },
-  { date: '2025-10-07', total: 70, unique: 60 },
-  // More data can be added here
-])
+const { getDaysVisits } = useApi()
 
+/**
+ * Reactive array for visits data
+ */
+const visits = ref([])
+
+/**
+ * Sorting and filtering state
+ */
 const sortKey = ref('')
 const sortAsc = ref(true)
 const fromDate = ref('')
 const toDate = ref('')
 
+/**
+ * Fetch visits data on component mount
+ */
+onMounted(async () => {
+  const data = await getDaysVisits()
+
+  // Map API fields to table fields
+  visits.value = data.map(v => ({
+    date: v.date.split('T')[0], // format YYYY-MM-DD
+    total: v.allVisits,
+    unique: v.newUsers,
+  }))
+})
+
+/**
+ * Computed properties for filtered and sorted visits
+ */
 const filteredVisits = computed(() => {
   const from = fromDate.value ? parseInt(fromDate.value.replace(/-/g, ''), 10) : null
   const to = toDate.value ? parseInt(toDate.value.replace(/-/g, ''), 10) : null
@@ -31,6 +48,9 @@ const filteredVisits = computed(() => {
   })
 })
 
+/**
+ * Computed property for sorted visits
+ */
 const sortedVisits = computed(() => {
   const base = filteredVisits.value
   if (!sortKey.value) return base
@@ -43,6 +63,9 @@ const sortedVisits = computed(() => {
   })
 })
 
+/**
+ * Methods for sorting
+ */
 const sortBy = (key) => {
   if (sortKey.value === key) sortAsc.value = !sortAsc.value
   else {
@@ -51,6 +74,9 @@ const sortBy = (key) => {
   }
 }
 
+/**
+ * Reset date filters
+ */
 const resetFilter = () => {
   fromDate.value = ''
   toDate.value = ''
@@ -59,6 +85,8 @@ const resetFilter = () => {
 
 <template>
   <div class="days-visits statistics-card">
+    <p class="table-title">{{ $t('statistics.visits.allDaysVisits') }}</p>
+
     <div class="date-filter">
       <label>
         Od:
@@ -213,5 +241,12 @@ const resetFilter = () => {
 
 .days-visits-table tbody tr:nth-child(even) {
   background-color: var(--background-c);
+}
+
+.table-title {
+  font-size: 17px;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  color: #666666;
 }
 </style>
