@@ -8,6 +8,8 @@ import DaysVisits from '@/components/statistics/DaysVisits.vue';
 import EventsOverview from '@/components/statistics/EventsOverview.vue';
 import { globalConfig } from '@/config/globalConfig.js';
 import EventToggleTool from '@/components/statistics/EventToggleTool.vue';
+import EventUploadImage from '@/components/statistics/EventUploadImage.vue';
+import EventExportImage from '@/components/statistics/EventExportImage.vue';
 
 const statisticsView = ref(localStorage.getItem(`${globalConfig.LOCAL_STORAGE_PREFIX}statisticsView`) || 'visits'); // 'visits' | 'events'
 
@@ -47,6 +49,8 @@ const selectStatistics = (view) => {
     <div v-else-if="statisticsView === 'events'" class="events-wrapper">
       <EventsOverview />
       <EventToggleTool />
+      <EventUploadImage />
+      <EventExportImage />
     </div>
   </div>
 </template>

@@ -30,6 +30,14 @@
       "toggleTool": {
         "title": "Toggle Tool",
         "totalEvents": "Total Toggles:"
+      },
+      "uploadImage": {
+        "title": "Upload Image",
+        "totalEvents": "Total Uploads:"
+      },
+      "exportImage": {
+        "title": "Export Image",
+        "totalEvents": "Total Exports:"
       }
     }
   }

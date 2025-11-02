@@ -206,6 +206,42 @@ export function useApi() {
     }
   }
 
+  /**
+   * Fetches upload image events
+   */
+  const getUploadImage = async () => {
+    try {
+      const res = await fetch(`${API_BASE}/api/events/uploadImage`)
+      if (!res.ok) throw new Error('Failed to fetch upload image events')
+
+      const data = await res.json()
+      log('Upload image events fetched:', data)
+
+      return data
+    } catch (err) {
+      error('Error fetching upload image events:', err)
+      return []
+    }
+  }
+
+  /**
+   * Fetches export image events
+   */
+  const getExportImage = async () => {
+    try {
+      const res = await fetch(`${API_BASE}/api/events/exportImage`)
+      if (!res.ok) throw new Error('Failed to fetch export image events')
+
+      const data = await res.json()
+      log('Export image events fetched:', data)
+
+      return data
+    } catch (err) {
+      error('Error fetching export image events:', err)
+      return []
+    }
+  }
+
   return {
     addUserVisit,
     addUserEvent,
@@ -216,5 +252,7 @@ export function useApi() {
     getDaysVisits,
     getEventsOverview,
     getToggleTool,
+    getUploadImage,
+    getExportImage,
   }
 }
