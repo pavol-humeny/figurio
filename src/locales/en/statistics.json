@@ -17,6 +17,14 @@
     "buttonText": {
       "text": "Events"
     },
-    "totalEvents": "Total Events"
+    "totalEvents": "Total Events",
+    "overview": {
+      "title": "Events Overview",
+      "totalEvents": "Total Events",
+      "numberOfUploads": "Uploads",
+      "numberOfExport": "Exports",
+      "numberOfUseTool": "Operations",
+      "numberOfKeyboardShortcuts": "Keyboard Shortcut"
+    }
   }
 }

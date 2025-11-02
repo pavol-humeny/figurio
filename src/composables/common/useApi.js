@@ -170,6 +170,24 @@ export function useApi() {
     }
   }
 
+  /**
+   * Fetches overview of events
+   */
+  const getEventsOverview = async () => {
+    try {
+      const res = await fetch(`${API_BASE}/api/events/overview`)
+      if (!res.ok) throw new Error('Failed to fetch events overview')
+
+      const data = await res.json()
+      log('Events overview fetched:', data)
+
+      return data
+    } catch (err) {
+      error('Error fetching events overview:', err)
+      return []
+    }
+  }
+
   return {
     addUserVisit,
     addUserEvent,
@@ -178,5 +196,6 @@ export function useApi() {
     getLastSevenDaysVisits,
     getVisitsByCountry,
     getDaysVisits,
+    getEventsOverview,
   }
 }

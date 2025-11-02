@@ -5,8 +5,18 @@ import UniqueVisits from '../components/statistics/UniqueVisits.vue';
 import LastDaysVisits from '../components/statistics/LastDaysVisits.vue';
 import CountryVisits from '../components/statistics/CountryVisits.vue';
 import DaysVisits from '@/components/statistics/DaysVisits.vue';
+import EventsOverview from '@/components/statistics/EventsOverview.vue';
+import { globalConfig } from '@/config/globalConfig.js';
 
-const statisticsView = ref('visits'); // 'visits' | 'events'
+const statisticsView = ref(localStorage.getItem(`${globalConfig.LOCAL_STORAGE_PREFIX}statisticsView`) || 'visits'); // 'visits' | 'events'
+
+const selectStatistics = (view) => {
+  localStorage.setItem(
+    `${globalConfig.LOCAL_STORAGE_PREFIX}statisticsView`,
+    view
+  )
+  statisticsView.value = view;
+};
 
 </script>
 
@@ -15,11 +25,11 @@ const statisticsView = ref('visits'); // 'visits' | 'events'
     <div class="visits-events-wrapper">
       <div class="visits-events-background">
         <div :class="['visits-event-button', statisticsView === 'visits' ? 'active' : '']"
-          @click="statisticsView = 'visits'">
+          @click="selectStatistics('visits')">
           {{ $t('statistics.visits.buttonText.text') }}
         </div>
         <div :class="['visits-event-button', statisticsView === 'events' ? 'active' : '']"
-          @click="statisticsView = 'events'">
+          @click="selectStatistics('events')">
           {{ $t('statistics.events.buttonText.text') }}
         </div>
       </div>
@@ -34,7 +44,7 @@ const statisticsView = ref('visits'); // 'visits' | 'events'
       <DaysVisits />
     </div>
     <div v-else-if="statisticsView === 'events'" class="events-wrapper">
-
+      <EventsOverview />
     </div>
   </div>
 </template>

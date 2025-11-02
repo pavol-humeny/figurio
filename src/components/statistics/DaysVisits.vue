@@ -247,6 +247,6 @@ const resetFilter = () => {
   font-size: 17px;
   font-weight: 600;
   margin-bottom: 1rem;
-  color: #666666;
+  color: var(--statistics-title-c);
 }
 </style>
