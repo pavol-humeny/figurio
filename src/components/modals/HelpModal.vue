@@ -10,9 +10,11 @@ import { useRouter } from 'vue-router';
 import { useImageStore } from '@/stores/imageStore';
 import { useInteractiveTutorial } from '@/composables/tutorial/useInteractiveTutorial';
 import { globalConfig } from '@/config/globalConfig';
+import { useApi } from '../../composables/common/useApi';
 
 const { messages, locale, t } = useI18n()
 const router = useRouter()
+const { addUserEvent } = useApi()
 
 const uiStore = useUiStore()
 const { tutorialStep, tutorialCompleted } = storeToRefs(uiStore)
@@ -63,6 +65,8 @@ const showStatistics = () => {
   // Open statistics view in a new tab
   const url = router.resolve({ name: 'statistics' }).href
   window.open(url, '_blank')
+
+  addUserEvent('openModal', { modal: 'statistics' })
 }
 </script>
 
