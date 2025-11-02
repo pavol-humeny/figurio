@@ -38,7 +38,7 @@ const {
   resizerBorderSize,
   object,
   isSymmetricalObject,
-  // showResizers,
+  hideResizers,
   controlIconSize,
   boundingBoxStrokeWidth,
   onMouseDownRotate,
@@ -72,7 +72,8 @@ const {
       </text>
     </g>
 
-    <g v-if="(isSelected && boundingBox) || isInMultiSelection" :transform="object?.attrs?.transform">
+    <g v-if="((isSelected && boundingBox) || isInMultiSelection) && !hideResizers"
+      :transform="object?.attrs?.transform">
       <!-- Bounding box -->
       <rect :x="boundingBox.x" :y="boundingBox.y" :width="boundingBox.width" :height="boundingBox.height"
         :data-id="object.id" fill="#00000001" :style="{ cursor: cursorOnSvgObject }" @mousedown="onMouseDownDrag"
@@ -118,7 +119,7 @@ const {
         :y="boundingBox.y + boundingBox.height / 2 - controlIconSize / 2" :width="controlIconSize"
         :height="controlIconSize" @mousedown.stop.prevent="onMouseDownRotate($event)" style="cursor: grab">
         <BaseIcon :name="'IconRotate'" :tip="t('tools.svgObject.rotateObject.tip')" :size="controlIconSize"
-          :color="'var(--primary-c)'"/>
+          :color="'var(--primary-c)'" />
       </foreignObject>
     </g>
   </g>

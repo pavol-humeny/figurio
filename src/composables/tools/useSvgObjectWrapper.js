@@ -206,31 +206,9 @@ export function useSvgObjectWrapper(
    */
   const activeResizerIndex = ref(null)
   /**
-   * Variable to track if resizers should be shown
+   * Variable to track if resizers should be hidden
    */
-  // const showResizers = ref(false)
-
-  /**
-   * Hide resizers when tool is switched
-   */
-  // watch(
-  //   () => editorStore.selectedToolKey,
-  //   () => {
-  //     showResizers.value = false
-  //   },
-  // )
-
-  /**
-   * Hide resizers when object is deselected
-   */
-  // watch(
-  //   () => imageStore.selectedSvgObjectId,
-  //   (newId) => {
-  //     if (newId !== object.value.id) {
-  //       showResizers.value = false
-  //     }
-  //   },
-  // )
+  const hideResizers = ref(false)
 
   // ---------------------------
   // Rotation
@@ -342,6 +320,9 @@ export function useSvgObjectWrapper(
     isDragging.value = true
     startX.value = event.clientX
     startY.value = event.clientY
+
+    hideResizers.value = true
+
     event.stopPropagation()
 
     // Close settings panel if open because event propagation is stopped
@@ -375,6 +356,9 @@ export function useSvgObjectWrapper(
     originalAngle.value = match ? parseFloat(match[1]) : 0
 
     isRotating.value = true
+
+    hideResizers.value = true
+
     event.stopPropagation()
   }
 
@@ -1559,6 +1543,8 @@ export function useSvgObjectWrapper(
     isSymmetricalObject.value = false
     isRotating.value = false
 
+    hideResizers.value = false
+
     viewportStore.guideLines = null
 
     remainingDx.value = 0
@@ -1888,7 +1874,7 @@ export function useSvgObjectWrapper(
     isSymmetricalObject,
     activeResizerIndex,
     isDragging,
-    // showResizers,
+    hideResizers,
     controlIconSize,
     boundingBoxStrokeWidth,
     onMouseDownRotate,
