@@ -16,7 +16,9 @@
       },
       "improvements": {
         "items": [
-          "Snímanie a zmena veľkosti čiar je intuitívnejšia"
+          "Snímanie a zmena veľkosti čiar je intuitívnejšia",
+          "Zvýšenie jasu svetlej farby v kontrastnom režime pre lepšiu viditeľnosť",
+          "Skrytie upozornenia na detekciu šumu pri aplikácii obrazových operácií"
         ]
       },
       "bugFixes": {

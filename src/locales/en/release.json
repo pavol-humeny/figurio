@@ -14,7 +14,9 @@
       },
       "improvements":{
         "items":[
-          "Make line snapping and resizing more intuitive"
+          "Make line snapping and resizing more intuitive",
+          "Make contrast mode light color slightly lighter for better visibility",
+          "Hide noise detection alert when applying image operations"
         ]
       },
       "bugFixes": {

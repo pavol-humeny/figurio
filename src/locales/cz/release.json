@@ -16,7 +16,9 @@
       },
       "improvements": {
         "items": [
-          "Snappování a změna velikosti čar je intuitivnější"
+          "Snappování a změna velikosti čar je intuitivnější",
+          "Zvýšení jasu světlé barvy v kontrastním režimu pro lepší viditelnost",
+          "Skrytí upozornění na detekci šumu při aplikaci obrazových operací"
         ]
       },
       "bugFixes": {
