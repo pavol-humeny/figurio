@@ -168,11 +168,16 @@ export function useSvgFunctions(imageStore) {
    * @param {number} bottom - current bottom edge
    * @returns {{dx: number, dy: number}}
    */
-  const getSnapOffsetToEdges = (object, left, right, top, bottom) => {
+  const getSnapOffsetToEdges = (object, left, right, top, bottom, snapTargets = []) => {
     const threshold =
       imageStore.getSmallerImageDimension() * editorConfig.snapEdgeThresholdCoefficient
 
-    const targets = getSnapEdgeTargets(object)
+    const targets = []
+
+    const edgeTargets = getSnapEdgeTargets(object)
+
+    targets.push(...edgeTargets)
+    targets.push(...snapTargets)
 
     let bestDx = null
     let bestDy = null

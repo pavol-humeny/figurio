@@ -7,6 +7,11 @@
     "4.16.1":{
       "label": "4.16.1",
       "date":"3.11. 2025",
+      "improvements":{
+        "items":[
+          "Make line snapping and resizing more intuitive"
+        ]
+      },
       "bugFixes": {
         "items": [
           "Show guide lines correctly when drawing objects"

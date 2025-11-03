@@ -1251,8 +1251,8 @@ export function useSvgObjectWrapper(
           // Corner resizers
           case 0: // top-left
           case 1: // bottom-right
-          case 2: // bottom-left
-          case 3: // top-right
+          case 2: // bottom-left - off
+          case 3: // top-right - off
             {
               const keyX =
                 activeResizerIndex.value === 0 || activeResizerIndex.value === 2 ? 'x1' : 'x2'
@@ -1297,15 +1297,42 @@ export function useSvgObjectWrapper(
 
               // Snap
               if (isCtrlKey && onlyOneKeyPressed) {
-                let left = newX >= otherX ? otherX : newX
-                let right = newX < otherX ? otherX : newX
-                let top = newY >= otherY ? otherY : newY
-                let bottom = newY < otherY ? otherY : newY
+                const threshold =
+                  imageStore.getSmallerImageDimension() * editorConfig.snapEdgeThresholdCoefficient
 
-                const snap = getSnapOffsetToEdges(object.value, left, right, top, bottom)
+                // Add the other point of the line as a target
+                const snapTargets = []
+                snapTargets.push({ left: otherX, right: otherX, top: otherY, bottom: otherY })
+
+                // Compute snap offset for the moving point
+                const snap = getSnapOffsetToEdges(object.value, newX, newX, newY, newY, snapTargets)
+
                 newX += snap.dx
                 newY += snap.dy
-                showResizeGuideLine(snap, { left, right, top, bottom })
+
+                // If line is horizontal/vertical, snap to that axis
+                if (Math.abs(newX - otherX) <= threshold) newX = otherX
+                if (Math.abs(newY - otherY) <= threshold) newY = otherY
+
+                // Swap snapped edges if points crossed
+                if (newX > otherX) {
+                  if (snap.snappedEdgeX === 'left') snap.snappedEdgeX = 'right'
+                } else {
+                  if (snap.snappedEdgeX === 'right') snap.snappedEdgeX = 'left'
+                }
+
+                if (newY > otherY) {
+                  if (snap.snappedEdgeY === 'top') snap.snappedEdgeY = 'bottom'
+                } else {
+                  if (snap.snappedEdgeY === 'bottom') snap.snappedEdgeY = 'top'
+                }
+
+                showResizeGuideLine(snap, {
+                  left: Math.min(newX, otherX),
+                  right: Math.max(newX, otherX),
+                  top: Math.min(newY, otherY),
+                  bottom: Math.max(newY, otherY),
+                })
               }
 
               applyLine(keyX, keyY, newX, newY)

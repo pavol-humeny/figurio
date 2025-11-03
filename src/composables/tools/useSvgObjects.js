@@ -1296,10 +1296,29 @@ export function useSvgObjects(
         y2 = Math.max(drawingStart.value.y, y)
       }
 
+      const threshold =
+        imageStore.getSmallerImageDimension() * editorConfig.snapEdgeThresholdCoefficient
+
       const snap = getSnapOffsetToEdges(currentDrawingObject.value, x1, x2, y1, y2)
 
       x += snap.dx
       y += snap.dy
+
+      // If drawing a line, snap to horizontal or vertical
+      let snappedToVertical = false
+      let snappedToHorizontal = false
+
+      // If drawing a line, snap to horizontal or vertical
+      if (objectType === 'line') {
+        if (Math.abs(x - drawingStart.value.x) <= threshold) {
+          x = drawingStart.value.x
+          snappedToVertical = true
+        }
+        if (Math.abs(y - drawingStart.value.y) <= threshold) {
+          y = drawingStart.value.y
+          snappedToHorizontal = true
+        }
+      }
 
       // Recalculate deltas (to adjust width and height)
       dx = x - drawingStart.value.x
@@ -1307,6 +1326,23 @@ export function useSvgObjects(
 
       // Show guideline if snapped
       const lines = []
+
+      // Vertical or horizontal alignment for line
+      if (snappedToVertical) {
+        lines.push({
+          x: x,
+          y: (drawingStart.value.y + y) / 2,
+          angle: 90,
+        })
+      }
+
+      if (snappedToHorizontal) {
+        lines.push({
+          x: (drawingStart.value.x + x) / 2,
+          y: y,
+          angle: 0,
+        })
+      }
 
       if (snap.snappedEdgeX) {
         lines.push({
