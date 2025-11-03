@@ -43,7 +43,7 @@ export function useSvgObjectsList(
     workspaceStore,
     t,
   )
-  const { toggleTool } = useToolsPanel(editorStore, imageStore, uiStore, t)
+  const { toggleTool } = useToolsPanel(editorStore, imageStore, uiStore, workspaceStore, t)
 
   /**
    * Whether resize is currently active

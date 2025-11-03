@@ -8,6 +8,7 @@ import { toolsDefinitions } from '@/config/toolsDefinitions'
 import { useEditorStore } from '@/stores/editorStore'
 import { useImageStore } from '@/stores/imageStore'
 import { useUiStore } from '@/stores/uiStore'
+import { useWorkspaceStore } from '@/stores/workspaceStore'
 
 const { t } = useI18n()
 
@@ -24,7 +25,7 @@ const {
   scrollDown,
   selectTool,
   isToolDisabled,
-} = useToolsPanel(useEditorStore(), useImageStore(), useUiStore(), t)
+} = useToolsPanel(useEditorStore(), useImageStore(), useUiStore(), useWorkspaceStore(), t)
 
 /**
  * Computed tool list with localized labels, tips and shortcuts

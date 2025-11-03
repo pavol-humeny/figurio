@@ -1,6 +1,6 @@
 import { globalConfig } from '@/config/globalConfig'
 import { viewportConfig } from '@/config/viewportConfig'
-import { ref, watch } from 'vue'
+import { onMounted, ref, watch } from 'vue'
 import { useConsole } from '@/composables/common/useConsole.js'
 const { log } = useConsole()
 import { useApi } from '@/composables/common/useApi'
@@ -67,6 +67,7 @@ export function useImageAnalysis(imageStore, workspaceStore, t) {
    * and display overlay if needed
    */
   const calculateArtifacts = async () => {
+    console.warn('[ImageAnalysis] Calculating image artifacts (noise)...')
     if (globalConfig.featureFlags.enableNoiseDetectionOnStart === false) return
 
     await new Promise((resolve) => setTimeout(resolve, 100))
@@ -230,9 +231,16 @@ export function useImageAnalysis(imageStore, workspaceStore, t) {
    */
   watch(
     () => workspaceStore.activeTabIndex,
-    () => {
+    (oldValue, newValue) => {
+      if (newValue === undefined) return
+
       if (!imageStore.imageArtifactsCanceledByUser) {
-        log('[ImageAnalysis] Active tab changed, recalculating artifacts')
+        log(
+          '[ImageAnalysis] Active tab changed, recalculating artifacts: ',
+          oldValue,
+          '->',
+          newValue,
+        )
         calculateArtifacts()
       }
     },
@@ -253,6 +261,11 @@ export function useImageAnalysis(imageStore, workspaceStore, t) {
     },
     { immediate: true },
   )
+
+  onMounted(() => {
+    // Add event listener to click and on each click hide artifacts if visible
+    window.addEventListener('click', hideArtifacts)
+  })
 
   return {
     noiseLevel,

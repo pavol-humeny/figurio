@@ -25,7 +25,7 @@ const { addUserEvent } = useApi()
  *   isToolDisabled: import('vue').ComputedRef<boolean>,
  * }}
  */
-export function useToolsPanel(editorStore, imageStore, uiStore, t) {
+export function useToolsPanel(editorStore, imageStore, uiStore, workspaceStore, t) {
   const { showToastModal } = useToastModal()
 
   /**

@@ -32,7 +32,7 @@ export function useSvgObjects(
     workspaceStore,
     t,
   )
-  const { toggleTool } = useToolsPanel(editorStore, imageStore, uiStore, t)
+  const { toggleTool } = useToolsPanel(editorStore, imageStore, uiStore, workspaceStore, t)
   const { showToastModal } = useToastModal()
 
   /**
