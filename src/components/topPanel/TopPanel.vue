@@ -34,7 +34,12 @@ const logoSrc = computed(() => {
  * Navigates to the home view.
  */
 const goHome = () => {
-  router.replace({ name: 'home' })
+  if (route.name === 'editor') {
+    // Reload window to reset state
+    window.location.reload();
+  } else {
+    router.replace({ name: 'home' })
+  }
 }
 
 /** Computes whether to show the controls */
