@@ -6,6 +6,25 @@
     ]
   },
   "versions": {
+    "4.16.1": {
+      "label": "4.16.1",
+      "date": "3.11. 2025",
+      "newFeatures": {
+        "items": [
+          "Pridanie axis lock pri presúvaní objektov"
+        ]
+      },
+      "improvements": {
+        "items": [
+          "Snímanie a zmena veľkosti čiar je intuitívnejšia"
+        ]
+      },
+      "bugFixes": {
+        "items": [
+          "Správne zobrazovanie pomocných čiar pri kreslení objektov"
+        ]
+      }
+    },
     "4.16.0": {
       "label": "4.16.0",
       "date": "2.11. 2025",

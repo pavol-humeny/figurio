@@ -6,6 +6,25 @@
     ]
   },
   "versions": {
+    "4.16.1": {
+      "label": "4.16.1",
+      "date": "3.11. 2025",
+      "newFeatures": {
+        "items": [
+          "Přidání axis lock při přesunu objektů"
+        ]
+      },
+      "improvements": {
+        "items": [
+          "Snappování a změna velikosti čar je intuitivnější"
+        ]
+      },
+      "bugFixes": {
+        "items": [
+          "Správné zobrazování pomocných čar při kreslení objektů"
+        ]
+      }
+    },
     "4.16.0": {
       "label": "4.16.0",
       "date": "2.11. 2025",
