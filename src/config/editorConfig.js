@@ -54,11 +54,11 @@ export const editorConfig = {
   angleSnapTolerance: 5, // degrees
   rotationSensitivity: 1, // Higher = rotates faster, lower = slower
   snapEdgeThresholdCoefficient: 0.01, // 1% of the smaller dimension of the image (higher = more sensitive)
-  snapOnlyWhenOverlapping: true, // Snap only when the object is overlapping with the other object
+  snapOnlyWhenOverlapping: true, // Snap only when the object is overlapping with the other object // DO NOT CHANGE - change needObjectOverlapToSnap
   minimumObjectSize: 2, // Minimum size of the object to be drawn
   magnifyAreaDefaultRadiusFromImage: 0.1, // 10% of smaller dimension
   objectResizingOverflow: true, // Allow resizing objects outside the image area
-  needObjectOverlapToSnap: true, // Need the object to overlap to snap to edges
+  needObjectOverlapToSnap: false, // Need the object to overlap to snap to edges
 
   // Text fonts
   textFontOptions: [

@@ -853,19 +853,6 @@ export function useSvgObjects(
     const x = round((event.clientX - svgRect.left) / viewportStore.realZoomLevel)
     const y = round((event.clientY - svgRect.top) / viewportStore.realZoomLevel)
 
-    // TODO - remove - debug prints for detection of mouse position issues during drawing
-    log('event: ', event.clientX, event.clientY)
-    log('content rect', svgRect.left, svgRect.top)
-    log('pan', viewportStore.panX, viewportStore.panY)
-    log('zoom', viewportStore.realZoomLevel)
-
-    log('event.clientX - svgRect.left: ', event.clientX - svgRect.left)
-    log('event.clientY - svgRect.top: ', event.clientY - svgRect.top)
-    log('x / zoom: ', (event.clientX - svgRect.left) / viewportStore.realZoomLevel)
-    log('y / zoom: ', (event.clientY - svgRect.top) / viewportStore.realZoomLevel)
-
-    log('start drawing x, y: ', x, y)
-
     drawingStart.value = { x, y }
     isDrawing.value = true
 
@@ -1319,26 +1306,25 @@ export function useSvgObjects(
       dy = y - drawingStart.value.y
 
       // Show guideline if snapped
-      if (snap.dx !== 0 || snap.dy !== 0) {
-        let gx = null,
-          gy = null,
-          angle = null
+      const lines = []
 
-        if (snap.snappedEdgeX) {
-          gx = (snap.snappedEdgeX === 'left' ? x1 : x2) + snap.dx
-          gy = (y1 + y2) / 2 + snap.dy
-          angle = 90
-        }
-        if (snap.snappedEdgeY) {
-          gy = (snap.snappedEdgeY === 'top' ? y1 : y2) + snap.dy
-          gx = (x1 + x2) / 2 + snap.dx
-          angle = 0
-        }
-
-        viewportStore.guideLines = { x: gx, y: gy, angle }
-      } else {
-        viewportStore.guideLines = null
+      if (snap.snappedEdgeX) {
+        lines.push({
+          x: snap.snappedEdgeX === 'left' ? x1 + snap.dx : x2 + snap.dx,
+          y: (y1 + y2) / 2 + snap.dy,
+          angle: 90,
+        })
       }
+
+      if (snap.snappedEdgeY) {
+        lines.push({
+          x: (x1 + x2) / 2 + snap.dx,
+          y: snap.snappedEdgeY === 'top' ? y1 + snap.dy : y2 + snap.dy,
+          angle: 0,
+        })
+      }
+
+      viewportStore.guideLines = lines.length ? lines : null
     } else {
       viewportStore.guideLines = null
     }

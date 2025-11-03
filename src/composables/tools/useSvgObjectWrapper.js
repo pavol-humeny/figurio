@@ -1729,8 +1729,8 @@ export function useSvgObjectWrapper(
         // Corners - circle
         { type: 'circle', x: x1, y: y1, cursor: 'nwse-resize', visible: true },
         { type: 'circle', x: x2, y: y2, cursor: 'nwse-resize', visible: true },
-        { type: 'circle', x: x1, y: y2, cursor: 'nesw-resize', visible: true },
-        { type: 'circle', x: x2, y: y1, cursor: 'nesw-resize', visible: true },
+        { type: 'circle', x: x1, y: y2, cursor: 'nesw-resize', visible: false },
+        { type: 'circle', x: x2, y: y1, cursor: 'nesw-resize', visible: false },
 
         // Top
         {
