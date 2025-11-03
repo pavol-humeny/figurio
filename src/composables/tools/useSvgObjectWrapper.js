@@ -169,6 +169,13 @@ export function useSvgObjectWrapper(
   )
 
   // ---------------------------
+  // Axis locks
+  // ---------------------------
+  const axisLock = ref(null) // 'x' | 'y' | null - direction of axis lock
+  const lockStartX = ref(0)
+  const lockStartY = ref(0)
+
+  // ---------------------------
   // Dragging
   // ---------------------------
   /**
@@ -320,6 +327,10 @@ export function useSvgObjectWrapper(
     isDragging.value = true
     startX.value = event.clientX
     startY.value = event.clientY
+
+    lockStartX.value = event.clientX
+    lockStartY.value = event.clientY
+    axisLock.value = null
 
     hideResizers.value = true
 
@@ -503,7 +514,8 @@ export function useSvgObjectWrapper(
 
     const isCtrlKey = event.ctrlKey || event.metaKey
     const isShiftKey = event.shiftKey
-    const onlyOneKeyPressed = isCtrlKey !== isShiftKey
+    const isAltKey = event.altKey
+    const onlyOneKeyPressed = [isCtrlKey, isShiftKey, isAltKey].filter(Boolean).length === 1
 
     if (!isCtrlKey) {
       viewportStore.guideLines = null
@@ -597,10 +609,45 @@ export function useSvgObjectWrapper(
       const angleRad = (angle * Math.PI) / 180
       const cos = Math.cos(-angleRad)
       const sin = Math.sin(-angleRad)
-      const localDx = dx * cos - dy * sin
-      const localDy = dx * sin + dy * cos
-      dx = localDx
-      dy = localDy
+      let localDx = dx * cos - dy * sin
+      let localDy = dx * sin + dy * cos
+
+      // Axis lock with Alt key
+      if (isAltKey && onlyOneKeyPressed) {
+        const deltaX = event.clientX - lockStartX.value
+        const deltaY = event.clientY - lockStartY.value
+
+        if (
+          Math.abs(deltaX) > editorConfig.axisLockMinDelta ||
+          Math.abs(deltaY) > editorConfig.axisLockMinDelta
+        ) {
+          if (!axisLock.value) {
+            axisLock.value = Math.abs(deltaX) > Math.abs(deltaY) ? 'x' : 'y'
+          } else {
+            if (
+              axisLock.value === 'x' &&
+              Math.abs(deltaY) > Math.abs(deltaX) * editorConfig.axisLockHysteresis
+            ) {
+              axisLock.value = 'y'
+            } else if (
+              axisLock.value === 'y' &&
+              Math.abs(deltaX) > Math.abs(deltaY) * editorConfig.axisLockHysteresis
+            ) {
+              axisLock.value = 'x'
+            }
+          }
+        }
+
+        // Apply axis lock to local deltas
+        if (axisLock.value === 'x') localDy = 0
+        else if (axisLock.value === 'y') localDx = 0
+      } else if (!isAltKey) {
+        axisLock.value = null
+      }
+
+      // Apply local deltas back
+      dx = localDx * cos + localDy * sin
+      dy = -localDx * sin + localDy * cos
 
       // Rectangle
       if (tag === 'rect') {
@@ -1441,6 +1488,41 @@ export function useSvgObjectWrapper(
       let offsetX = dx
       let offsetY = dy
 
+      // AXIS LOCK (Alt)
+      if (isAltKey && onlyOneKeyPressed) {
+        const deltaX = event.clientX - lockStartX.value
+        const deltaY = event.clientY - lockStartY.value
+
+        if (
+          Math.abs(deltaX) > editorConfig.axisLockMinDelta ||
+          Math.abs(deltaY) > editorConfig.axisLockMinDelta
+        ) {
+          // Determine or update axis lock with hysteresis
+          if (!axisLock.value) {
+            axisLock.value = Math.abs(deltaX) > Math.abs(deltaY) ? 'x' : 'y'
+          } else {
+            if (
+              axisLock.value === 'x' &&
+              Math.abs(deltaY) > Math.abs(deltaX) * editorConfig.axisLockHysteresis
+            ) {
+              axisLock.value = 'y'
+            } else if (
+              axisLock.value === 'y' &&
+              Math.abs(deltaX) > Math.abs(deltaY) * editorConfig.axisLockHysteresis
+            ) {
+              axisLock.value = 'x'
+            }
+          }
+        }
+
+        // Apply axis lock
+        if (axisLock.value === 'x') offsetY = 0
+        else if (axisLock.value === 'y') offsetX = 0
+      } else {
+        axisLock.value = null
+      }
+
+      // SNAP TO EDGES (Ctrl)
       if (isCtrlKey && onlyOneKeyPressed) {
         const bBox = getTransformedBoundingBox(object.value)
 

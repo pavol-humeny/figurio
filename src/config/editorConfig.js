@@ -59,6 +59,8 @@ export const editorConfig = {
   magnifyAreaDefaultRadiusFromImage: 0.1, // 10% of smaller dimension
   objectResizingOverflow: true, // Allow resizing objects outside the image area
   needObjectOverlapToSnap: false, // Need the object to overlap to snap to edges
+  axisLockHysteresis: 1.2, // ratio to switch axis (tolerance for natural feel)
+  axisLockMinDelta: 5, // minimum delta in pixels to trigger axis lock
 
   // Text fonts
   textFontOptions: [

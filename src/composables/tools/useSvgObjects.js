@@ -1117,6 +1117,7 @@ export function useSvgObjects(
       return
     }
 
+    // Moving multiple objects
     if (isMovingMultipleObjects.value) {
       // Mouse was moved
       didDrag.value = true
@@ -1274,7 +1275,6 @@ export function useSvgObjects(
 
     // Apply SHIFT for aspect ratio
     if (isShiftKey && onlyOneKeyPressed && objectType !== 'line') {
-      // TODO drawing in axis-aligned mode
       const maxDelta = Math.max(Math.abs(dx), Math.abs(dy))
       dx = dx < 0 ? -maxDelta : maxDelta
       dy = dy < 0 ? -maxDelta : maxDelta
