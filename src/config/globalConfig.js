@@ -62,7 +62,7 @@ export const globalConfig = {
 
   // API
   // API_BASE: 'https://bp-api-ft1e.onrender.com',
-  API_BASE: 'http://139.59.143.44:3000',
+  API_BASE: 'https://139.59.143.44:3000',
   // If usage stats should be sent to the API
   sendUsageStats: true,
   // If usage stats should be sent when running on localhost

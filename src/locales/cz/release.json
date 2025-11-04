@@ -6,6 +6,15 @@
     ]
   },
   "versions": {
+    "4.17.1":{
+      "label": "4.17.1",
+      "date":"1.11. 2025",
+      "bugFixes": {
+        "items": [
+          "Použití https API endpointu pro statistiky používání"
+        ]
+      }
+    },
     "4.17.0":{
       "label": "4.17.0",
       "date":"1.11. 2025",
