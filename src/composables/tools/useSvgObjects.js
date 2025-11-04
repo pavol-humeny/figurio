@@ -285,45 +285,47 @@ export function useSvgObjects(
 
     newObject.id = Date.now()
 
-    const { width: imageWidth, height: imageHeight } = imageStore.fileDimensions
-    const centerX = imageWidth / 2
-    const centerY = imageHeight / 2
+    // const { width: imageWidth, height: imageHeight } = imageStore.fileDimensions
+    // const centerX = imageWidth / 2
+    // const centerY = imageHeight / 2
 
     const { attrs, tag } = newObject
 
+    const offset = 0 // Offset from center to avoid exact overlap (DOES NOT WORK WITH ROTATION !!! - need be fixed if used)
+
     if (tag === 'rect') {
-      attrs.x = centerX - attrs.width / 2
-      attrs.y = centerY - attrs.height / 2
+      attrs.x += offset
+      attrs.y += offset
     } else if (tag === 'ellipse' && 'rx' in attrs && 'ry' in attrs) {
-      attrs.cx = centerX
-      attrs.cy = centerY
+      attrs.cx += offset
+      attrs.cy += offset
     } else if (tag === 'line' && 'x1' in attrs && 'x2' in attrs && 'y1' in attrs && 'y2' in attrs) {
-      const dx = (attrs.x2 - attrs.x1) / 2
-      const dy = (attrs.y2 - attrs.y1) / 2
-      attrs.x1 = centerX - dx
-      attrs.y1 = centerY - dy
-      attrs.x2 = centerX + dx
-      attrs.y2 = centerY + dy
+      // const dx = (attrs.x2 - attrs.x1) / 2
+      // const dy = (attrs.y2 - attrs.y1) / 2
+      attrs.x1 += offset
+      attrs.y1 += offset
+      attrs.x2 += offset
+      attrs.y2 += offset
     } else if (tag === 'text') {
       if (newObject.textBBox) {
-        const { width, height } = newObject.textBBox
-        attrs.x = centerX - width / 2
-        attrs.y = centerY + height / 2
+        // const { width, height } = newObject.textBBox
+        attrs.x += offset
+        attrs.y += offset
       } else {
-        attrs.x = centerX
-        attrs.y = centerY
+        attrs.x += offset
+        attrs.y += offset
       }
     }
 
     // Recalculate rotation
-    if (attrs.transform) {
-      const angleMatch = attrs.transform.match(/rotate\((-?\d+\.?\d*)/)
+    // if (attrs.transform) {
+    //   const angleMatch = attrs.transform.match(/rotate\((-?\d+\.?\d*)/)
 
-      if (angleMatch) {
-        const angle = parseFloat(angleMatch[1])
-        attrs.transform = `rotate(${angle}, ${centerX}, ${centerY})`
-      }
-    }
+    //   if (angleMatch) {
+    //     const angle = parseFloat(angleMatch[1])
+    //     attrs.transform = `rotate(${angle}, ${centerX}, ${centerY})`
+    //   }
+    // }
 
     // If it is blur add clip, filter and image
     if (newObject.class === 'blur') {

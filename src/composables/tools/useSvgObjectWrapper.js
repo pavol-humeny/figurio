@@ -515,7 +515,8 @@ export function useSvgObjectWrapper(
     const isCtrlKey = event.ctrlKey || event.metaKey
     const isShiftKey = event.shiftKey
     const isAltKey = event.altKey
-    const onlyOneKeyPressed = [isCtrlKey, isShiftKey, isAltKey].filter(Boolean).length === 1
+    const onlyOneKeyPressed = true
+    // const onlyOneKeyPressed = [isCtrlKey, isShiftKey, isAltKey].filter(Boolean).length === 1
 
     if (!isCtrlKey) {
       viewportStore.guideLines = null
