@@ -105,7 +105,7 @@ const {
         </div>
 
         <!-- Dimensions -->
-        <div v-if="!hidePositionAndDimensions" class="settings-content-wrapper">
+        <div v-if="!hidePositionAndDimensions && localObjectSettings.type !== 'line'" class="settings-content-wrapper">
           <div class="content-wrapper">
             <div class="content-title">
               <p>
