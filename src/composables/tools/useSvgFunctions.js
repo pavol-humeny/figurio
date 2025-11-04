@@ -1,4 +1,5 @@
 import { editorConfig } from '@/config/editorConfig'
+import { useMath } from '../common/useMath'
 
 /**
  * Logic for handling SVG object snapping
@@ -12,37 +13,53 @@ import { editorConfig } from '@/config/editorConfig'
  * }}
  */
 export function useSvgFunctions(imageStore) {
+  const { round } = useMath()
+
   /**
-   * Compute the center point (cx, cy) of the given object based on its tag and attributes
+   * Compute the transformed center (cx, cy) considering object rotation
    * @param {Object} object - SVG object with tag, attrs, and optionally textBBox
-   * @returns {{cx: number, cy: number}} Center coordinates
+   * @returns {{cx: number, cy: number}} Center coordinates in global coordinates
    */
   const getObjectCenter = (object) => {
     const { tag, attrs, textBBox } = object
+    let cx = 0
+    let cy = 0
 
+    // --- Basic center without rotation ---
     if ('x' in attrs && 'y' in attrs && 'width' in attrs && 'height' in attrs) {
-      return {
-        cx: attrs.x + attrs.width / 2,
-        cy: attrs.y + attrs.height / 2,
-      }
+      cx = attrs.x + attrs.width / 2
+      cy = attrs.y + attrs.height / 2
     } else if ('cx' in attrs && 'cy' in attrs) {
-      return {
-        cx: attrs.cx,
-        cy: attrs.cy,
-      }
+      cx = attrs.cx
+      cy = attrs.cy
     } else if ('x1' in attrs && 'x2' in attrs && 'y1' in attrs && 'y2' in attrs) {
-      return {
-        cx: (attrs.x1 + attrs.x2) / 2,
-        cy: (attrs.y1 + attrs.y2) / 2,
-      }
+      cx = (attrs.x1 + attrs.x2) / 2
+      cy = (attrs.y1 + attrs.y2) / 2
     } else if (tag === 'text' && textBBox) {
-      return {
-        cx: textBBox.x + textBBox.width / 2,
-        cy: textBBox.y + textBBox.height / 2,
-      }
+      cx = textBBox.x + textBBox.width / 2
+      cy = textBBox.y + textBBox.height / 2
     }
 
-    return { cx: 0, cy: 0 }
+    // --- Adjust center by rotation transform ---
+    const match = attrs.transform?.match(/rotate\((-?\d+\.?\d*),\s*([-\d.]+),\s*([-\d.]+)\)/)
+    if (match) {
+      const angle = parseFloat(match[1]) * (Math.PI / 180)
+      const rotCx = parseFloat(match[2])
+      const rotCy = parseFloat(match[3])
+
+      // Rotate point (cx, cy) around (rotCx, rotCy)
+      const dx = cx - rotCx
+      const dy = cy - rotCy
+      const rotatedX = rotCx + dx * Math.cos(angle) - dy * Math.sin(angle)
+      const rotatedY = rotCy + dx * Math.sin(angle) + dy * Math.cos(angle)
+
+      cx = round(rotatedX)
+      cy = round(rotatedY)
+
+      console.log('Rotated center:', { cx, cy })
+    }
+
+    return { cx, cy }
   }
 
   /**

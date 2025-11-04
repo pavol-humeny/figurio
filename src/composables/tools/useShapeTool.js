@@ -131,7 +131,7 @@ export function useShapeTool(editorStore, imageStore, historyStore, t) {
   /**
    * Whether the dimensions are linked
    */
-  const isDimensionsLinked = ref(true)
+  const isDimensionsLinked = ref(false)
 
   /**
    * Line type options for the line shape
