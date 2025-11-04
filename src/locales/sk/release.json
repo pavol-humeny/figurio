@@ -6,6 +6,16 @@
     ]
   },
   "versions": {
+    "4.17.0":{
+      "label": "4.17.0",
+      "date":"1.11. 2025",
+      "improvements": {
+        "items": [
+          "Pdf s nepodporovanými prvkami sú v náhlede rasterizované",
+          "Nový objekt je vložený na pôvodný objekt a nie do stredu obrázka"
+        ]
+      }
+    },
     "4.16.1": {
       "label": "4.16.1",
       "date": "3.11. 2025",

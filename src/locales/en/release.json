@@ -4,6 +4,16 @@
     "items": []
   },
   "versions":{
+    "4.17.0":{
+      "label": "4.17.0",
+      "date":"1.11. 2025",
+      "improvements": {
+        "items": [
+          "Pdf with unsupported elements are rasterized in preview",
+          "New object is pasted on original object and not to the center of the image"
+        ]
+      }
+    },
     "4.16.1":{
       "label": "4.16.1",
       "date":"3.11. 2025",
