@@ -47,7 +47,9 @@ export const useImageStore = defineStore('imageStore', {
     file: null,
     /** Type of the loaded file */
     fileType: '', // 'image' or 'pdf'
-    showImageInsteadOfPdf: false,
+
+    /** Whether to show PDF as image because of unsupported features */
+    showPdfAsImage: false,
 
     /** Name of the loaded file */
     fileName: '',
@@ -606,6 +608,13 @@ export const useImageStore = defineStore('imageStore', {
       return true
     },
 
+    /**
+     * Extracts a specific page from a PDF and returns its bytes
+     * @param {Uint8Array} pdfBytes - The bytes of the source PDF
+     * @param {number} pageNumber - The page number to extract (1-based)
+     *
+     * @returns {Promise<Uint8Array>} - The bytes of the extracted PDF page
+     */
     async extractPdfPageBytes(pdfBytes, pageNumber) {
       // Read pdf file
       const srcPdf = await PDFDocument.load(pdfBytes)
@@ -789,7 +798,6 @@ export const useImageStore = defineStore('imageStore', {
 
             await page.render({ canvasContext: ctx, viewport }).promise
 
-            // Check image dimensions
             if (!this.checkFileDimensions(canvas.width, canvas.height, file.name, t)) {
               uiStore.isLoading = false
               return
@@ -939,7 +947,7 @@ export const useImageStore = defineStore('imageStore', {
           uiStore.isLoading = true
         }
 
-        this.setFile(files[0], t)
+        await this.setFile(files[0], t)
       } else {
         showToastModal(
           'error',
@@ -2493,6 +2501,7 @@ export const useImageStore = defineStore('imageStore', {
       const snapshot = {
         fileName: this.fileName,
         fileType: this.fileType,
+        showPdfAsImage: this.showPdfAsImage,
         fileDimensions: JSON.parse(JSON.stringify(this.fileDimensions)),
         // originalFileDimensions: JSON.parse(JSON.stringify(this.originalFileDimensions)),
         previewUrl: this.previewUrl,
@@ -2533,6 +2542,7 @@ export const useImageStore = defineStore('imageStore', {
 
       this.fileName = snapshot.fileName
       this.fileType = snapshot.fileType
+      this.showPdfAsImage = snapshot.showPdfAsImage
       this.fileDimensions = JSON.parse(JSON.stringify(snapshot.fileDimensions))
       this.previewUrl = snapshot.previewUrl
       // this.blurPreviewUrl = JSON.parse(JSON.stringify(snapshot.blurPreviewUrl))
@@ -2639,6 +2649,7 @@ export const useImageStore = defineStore('imageStore', {
       return {
         file: this.file,
         fileType: this.fileType,
+        showPdfAsImage: this.showPdfAsImage,
 
         fileName: this.fileName,
         fileFormat: this.fileFormat,
@@ -2694,8 +2705,12 @@ export const useImageStore = defineStore('imageStore', {
      * @returns {void}
      */
     applyFullSnapshot(snapshot) {
+      const uiStore = useUiStore()
+      uiStore.isLoading = true
+
       this.file = snapshot.file
       this.fileType = snapshot.fileType
+      this.showPdfAsImage = snapshot.showPdfAsImage
 
       this.fileName = snapshot.fileName
       this.fileFormat = snapshot.fileFormat
@@ -2875,6 +2890,8 @@ export const useImageStore = defineStore('imageStore', {
       //   this.removalCanvas = null
       // }
       this.removalCanvas = snapshot.removalCanvas
+
+      uiStore.isLoading = false
 
       log('[applyFullSnapshot] imageOperations (after apply):', this.imageOperations)
     },

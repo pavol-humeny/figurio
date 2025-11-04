@@ -67,7 +67,6 @@ export function useImageAnalysis(imageStore, workspaceStore, t) {
    * and display overlay if needed
    */
   const calculateArtifacts = async () => {
-    console.warn('[ImageAnalysis] Calculating image artifacts (noise)...')
     if (globalConfig.featureFlags.enableNoiseDetectionOnStart === false) return
 
     await new Promise((resolve) => setTimeout(resolve, 100))
@@ -235,12 +234,6 @@ export function useImageAnalysis(imageStore, workspaceStore, t) {
       if (newValue === undefined) return
 
       if (!imageStore.imageArtifactsCanceledByUser) {
-        log(
-          '[ImageAnalysis] Active tab changed, recalculating artifacts: ',
-          oldValue,
-          '->',
-          newValue,
-        )
         calculateArtifacts()
       }
     },

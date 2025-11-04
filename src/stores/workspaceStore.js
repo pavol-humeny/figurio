@@ -93,7 +93,22 @@ export const useWorkspaceStore = defineStore('workspaceStore', {
     switchToTab(index) {
       if (index < 0 || index >= this.tabs.length) return
       this.activeTabIndex = index
+
+      const viewportEl = document.querySelector('.viewport-content-wrapper')
+
+      if (viewportEl) {
+        // Set opacity to 0
+        viewportEl.style.opacity = 0
+      }
+
       this.restoreTab(index)
+
+      if (viewportEl) {
+        // After 50ms set opacity back to 1
+        setTimeout(() => {
+          viewportEl.style.opacity = 1
+        }, 50)
+      }
     },
 
     /**

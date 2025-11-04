@@ -277,7 +277,7 @@ const cursorStyle = computed(() => {
             boxShadow: backgroundMode === 'normal' ? 'var(--box-shadow-content)' : 'none',
             '--phone-frame-border-radius': phoneFrameBorderRadius + 'px',
           }">
-          <img v-if="imageStore.fileType === 'image' || imageStore.showImageInsteadOfPdf" ref="imageRef"
+          <img v-if="imageStore.fileType === 'image' || imageStore.showPdfAsImage" ref="imageRef"
             class="image-canvas" />
           <div v-else-if="imageStore.fileType === 'pdf'" ref="pdfContainerRef" class="pdf-viewer"></div>
 
@@ -402,7 +402,7 @@ const cursorStyle = computed(() => {
         </div>
         <div v-if="mouseX !== null" class="ruler-cursor-mark horizontal" :style="{ left: mouseX + 'px' }">
           <span class="ruler-cursor-label horizontal" :class="{ 'active': cursorPosXSameAsImageWidth }">{{ cursorPosX
-          }}</span>
+            }}</span>
         </div>
 
       </div>
@@ -415,7 +415,7 @@ const cursorStyle = computed(() => {
         </div>
         <div v-if="mouseY !== null" class="ruler-cursor-mark vertical" :style="{ top: mouseY + 'px' }">
           <span class="ruler-cursor-label vertical" :class="{ 'active': cursorPosYSameAsImageHeight }">{{ cursorPosY
-          }}</span>
+            }}</span>
         </div>
       </div>
     </div>

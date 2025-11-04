@@ -43,6 +43,7 @@ export function useFileTabs(uiStore, viewportStore, imageStore, editorStore, t) 
       uiStore.isLoading = true
       // await new Promise((resolve) => setTimeout(resolve, 1))
 
+      // Artifact overlay canvas
       const overlayCanvas = document.querySelector('.overlay-canvas')
       if (overlayCanvas) {
         // Set class display to none

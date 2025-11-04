@@ -51,6 +51,10 @@
     "errorMaxNumberOfOpenFiles": {
       "title": "Maximum number of open files reached",
       "message": "You have reached the maximum number of open files ({maxFiles}). Please close some files before opening a new one."
+    },
+    "unsupportedPdfObjects": {
+      "title": "Unsupported PDF objects",
+      "message": "The PDF contains unsupported graphic operators for rendering - image will be shown as a raster but operation will be performed on original pdf file."
     }
   },
   "modal": {

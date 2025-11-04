@@ -51,6 +51,10 @@
     "errorMaxNumberOfOpenFiles": {
       "title": "Byl dosažen maximální počet otevřených souborů",
       "message": "Dosáhli jste maximálního počtu otevřených souborů ({maxFiles}). Před otevřením nového souboru zavřete některé soubory."
+    },
+    "unsupportedPdfObjects": {
+      "title": "Nepodporované objekty PDF",
+      "message": "PDF obsahuje nepodporované grafické operátory pro vykreslování - obrázek bude zobrazen jako rastrový, ale operace budou provedeny na původním pdf souboru."
     }
   },
   "modal": {

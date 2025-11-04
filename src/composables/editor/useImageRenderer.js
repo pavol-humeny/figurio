@@ -3,12 +3,16 @@ import { useFrameTool } from '../tools/useFrameTool'
 
 import * as pdfjsLib from 'pdfjs-dist/legacy/build/pdf'
 import { SVGGraphics } from 'pdfjs-dist/legacy/build/pdf'
+import { useToastModal } from '../modals/useToastModal'
 
 pdfjsLib.GlobalWorkerOptions.workerSrc =
   'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js'
 
 import { useConsole } from '@/composables/common/useConsole.js'
 const { log, warn } = useConsole()
+const { showToastModal } = useToastModal()
+
+const blockRender = ref(false)
 
 /**
  * Logic for rendering image layers (img, SVG, frame) in the editor viewport
@@ -144,10 +148,17 @@ export function useImageRenderer(
    * Render base image
    */
   const renderCanvas = async () => {
+    console.log('--- renderCanvas called: ---', blockRender.value)
+
+    if (blockRender.value) return
+    blockRender.value = true
+
     // Wait one tick (needed for background rasterization)
     await nextTick()
 
-    if (imageStore.fileType === 'pdf') {
+    if (imageStore.fileType === 'pdf' && !imageStore.showPdfAsImage) {
+      await new Promise((resolve) => setTimeout(resolve, 100))
+
       log('Rendering PDF page...')
       const pdfPageBytes = imageStore.pdfPageBytes
 
@@ -158,7 +169,7 @@ export function useImageRenderer(
       const opList = await page.getOperatorList()
       const svgGfx = new SVGGraphics(page.commonObjs, page.objs)
 
-      // Zoznam známych nepodporovaných operátorov
+      // List of unimplemented PDF operators in pdf.js
       const { OPS } = pdfjsLib
       const unimplementedOps = [
         OPS.setBlendMode, // BM
@@ -166,12 +177,60 @@ export function useImageRenderer(
         OPS.endGroup, // endGroup
       ]
 
-      // Skontroluj, či sa v operator list nachádza aspoň jeden nepodporovaný
-      const hasUnimplemented = opList.fnArray.some((fnId) => unimplementedOps.includes(fnId))
+      /**
+       * Check if the operator list contains any unimplemented operators
+       */
+      const checkUnimplemented = (opList) =>
+        opList.fnArray.some((fnId) => unimplementedOps.includes(fnId))
+
+      // Check for unimplemented operators in the PDF
+      let hasUnimplemented = checkUnimplemented(opList)
+
+      if (page.commonObjs && Object.keys(page.commonObjs._objs || {}).length > 0) {
+        for (const obj of Object.values(page.commonObjs._objs)) {
+          if (obj && obj.data && obj.data.Subtype === 'Form') {
+            hasUnimplemented = true
+            warn(
+              'PDF obsahuje Form XObject – môže obsahovať graf alebo legendu, ktoré nemusia byť správne zobrazené.',
+            )
+            break
+          }
+        }
+      }
+
       if (hasUnimplemented) {
         warn(
           'PDF obsahuje nepodporované grafické operátory – niektoré efekty nemusia byť presne zobrazené.',
         )
+
+        // Rasterize PDF into image
+        imageStore.showPdfAsImage = true
+
+        const viewport = page.getViewport({ scale: 1 }) // vyššie rozlíšenie pre ostrejší raster
+        const canvas = document.createElement('canvas')
+        canvas.width = viewport.width
+        canvas.height = viewport.height
+        const ctx = canvas.getContext('2d', { willReadFrequently: true })
+
+        await page.render({ canvasContext: ctx, viewport }).promise
+
+        // Uloženie ako obrázok (rovnako ako pri image file)
+        imageStore.setRenderedImage(canvas)
+        imageStore.originalImage = canvas
+        imageStore.previewUrl = canvas.toDataURL()
+        imageStore.blurPreviewUrl = canvas.toDataURL()
+
+        blockRender.value = false
+
+        // Show toast modal about unsupported PDF objects
+        showToastModal(
+          'warning',
+          t('imageStore.toast.unsupportedPdfObjects.title'),
+          t('imageStore.toast.unsupportedPdfObjects.message'),
+        )
+
+        renderCanvas()
+        return
       }
 
       const svg = await svgGfx.getSVG(opList, viewportPdf)
@@ -190,12 +249,14 @@ export function useImageRenderer(
 
       // Preview URL môžeme nastaviť na blob URL
       // imageStore.previewUrl = pdfUrl
-    } else if (imageStore.fileType === 'image') {
+    } else if (imageStore.fileType === 'image' || imageStore.showPdfAsImage) {
+      log('Rendering IMAGE file...')
       const img = imageStore.getRenderedImage({ t, renderCall: true })
 
-      if (!imageRef.value || !img) return
-
-      log('Rendering IMAGE (IMAGE only)...')
+      if (!imageRef.value || !img) {
+        blockRender.value = false
+        return
+      }
 
       if (img instanceof HTMLCanvasElement) {
         imageRef.value.src = img.toDataURL()
@@ -248,6 +309,8 @@ export function useImageRenderer(
     if (historyStore.history.length === 0) {
       historyStore.push(imageStore.getSnapshot(t))
     }
+
+    blockRender.value = false
   }
 
   /**
