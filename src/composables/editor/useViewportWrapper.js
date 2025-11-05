@@ -127,6 +127,8 @@ export function useViewportWrapper(viewportStore, imageStore, editorStore, uiSto
     const speedFactor = event.altKey ? viewportConfig.fasterScrollMultiplier : 1
 
     if (event.ctrlKey) {
+      event.preventDefault() // Prevent page zooming
+
       const direction = event.deltaY < 0 ? 1 : -1
       const wrapper = event.currentTarget
       const boundingBox = wrapper.getBoundingClientRect()

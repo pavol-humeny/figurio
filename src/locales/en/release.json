@@ -4,13 +4,26 @@
     "items": []
   },
   "versions":{
-    "4.17.1":{
-      "label": "4.17.1",
+    "4.17.2":{
+      "label": "4.17.2",
       "date":"5.11. 2025",
+      "newFeatures": {
+        "items": [
+          "Add pinch-to-zoom support using two-finger gesture on touchpad"
+        ]
+      },
       "bugFixes": {
         "items": [
-          "Use https API endpoint for usage statistics",
           "The button to close the context menu overlaps with the text"
+        ]
+      }
+    },
+    "4.17.1":{
+      "label": "4.17.1",
+      "date":"4.11. 2025",
+      "bugFixes": {
+        "items": [
+          "Use https API endpoint for usage statistics"
         ]
       }
     },
