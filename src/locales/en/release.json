@@ -6,16 +6,17 @@
   "versions":{
     "4.17.1":{
       "label": "4.17.1",
-      "date":"1.11. 2025",
+      "date":"5.11. 2025",
       "bugFixes": {
         "items": [
-          "Use https API endpoint for usage statistics"
+          "Use https API endpoint for usage statistics",
+          "The button to close the context menu overlaps with the text"
         ]
       }
     },
     "4.17.0":{
       "label": "4.17.0",
-      "date":"1.11. 2025",
+      "date":"4.11. 2025",
       "improvements": {
         "items": [
           "Pdf with unsupported elements are rasterized in preview",

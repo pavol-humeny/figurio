@@ -487,6 +487,8 @@ export const useImageStore = defineStore('imageStore', {
       this.resetFrame()
       this.frameSvg = ''
 
+      this.showPdfAsImage = false
+
       this.phoneButtonsCanNotBeDrawnToastFlag = false
 
       this.imageHasArtifacts = false
@@ -509,6 +511,7 @@ export const useImageStore = defineStore('imageStore', {
     closeFile() {
       this.file = null
       this.fileType = ''
+      this.showPdfAsImage = false
 
       this.fileName = ''
       this.fileFormat = ''

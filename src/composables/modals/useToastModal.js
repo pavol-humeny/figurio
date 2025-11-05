@@ -61,7 +61,7 @@ export function useToastModal() {
    */
   const getToastStyle = (toast, index) => {
     const screenHeight = window.innerHeight
- 
+
     if (!toastPositions.value[toast.id]) {
       toastPositions.value[toast.id] = {
         bottom: index * 10 + 40,

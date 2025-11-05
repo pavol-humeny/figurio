@@ -47,7 +47,7 @@ const { toasts, removeToastModal, getToastStyle } = useToastModal()
   left: 50%;
   transform: translateX(-50%);
   border-radius: 10px;
-  padding: 15px 20px;
+  padding: 15px 20px 15px 20px;
   color: var(--text-c);
   max-width: 400px;
   min-width: 250px;
@@ -72,6 +72,7 @@ const { toasts, removeToastModal, getToastStyle } = useToastModal()
 .title {
   font-weight: 800;
   margin-bottom: 15px;
+  padding-right: 20px;
 }
 
 .message {
