@@ -6,6 +6,9 @@ const { log } = useConsole()
 import { useApi } from '@/composables/common/useApi'
 const { addUserEvent } = useApi()
 
+import { useWarningList } from '../modals/useWarningList'
+const { addWarning } = useWarningList()
+
 /**
  * Whether to expand the artifacts warning message
  */
@@ -196,6 +199,40 @@ export function useImageAnalysis(imageStore, workspaceStore, t) {
       oCtx.putImageData(overlay, 0, 0)
       expandArtifactsWarning.value = true
       imageStore.imageHasArtifacts = true
+
+      addWarning(
+        'artifact-warning1',
+        'Artifacts detected1',
+        'Some image artifacts were found during processing.',
+        'tools.artifactsWarning.tip.text', // tipText
+        'tools.artifactsWarning.tip.title', // tipTitle
+        'warning', // type: 'warning' | 'info' | 'error'
+        'close', // startState
+        (id) => console.log(`Warning ${id} removed`), // onRemove
+      )
+
+      addWarning(
+        'artifact-warning2',
+        'Artifacts detected2',
+        'Some image artifacts were found during processing.',
+        'tools.artifactsWarning.tip.text', // tipText
+        'tools.artifactsWarning.tip.title', // tipTitle
+        'info', // type: 'warning' | 'info' | 'error'
+        'open', // startState
+        (id) => console.log(`Warning ${id} removed`), // onRemove
+      )
+
+      addWarning(
+        'artifact-warning3',
+        'Artifacts detected3',
+        'Some image artifacts were found during processing.',
+        'tools.artifactsWarning.tip.text', // tipText
+        'tools.artifactsWarning.tip.title', // tipTitle
+        'error', // type: 'warning' | 'info' | 'error'
+        'open', // startState
+        (id) => console.log(`Warning ${id} removed`), // onRemove
+      )
+
       log(`[ImageAnalysis] Noise detected in ${noisyBlocks} blocks — artifacts shown`)
 
       addUserEvent('applyOperation', { operation: 'imageNoiseDetected', settings: {} })

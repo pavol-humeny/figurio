@@ -25,6 +25,7 @@ import BaseIcon from '../icons/BaseIcon.vue'
 import BrushToolCanvas from '../tools/BrushToolCanvas.vue'
 import { editorConfig } from '@/config/editorConfig'
 import { useImageAnalysis } from '@/composables/tools/useImageAnalysis'
+import WarningList from '../modals/WarningList.vue'
 
 const { t } = useI18n()
 const uiStore = useUiStore()
@@ -350,7 +351,7 @@ const cursorStyle = computed(() => {
     </div>
 
     <!-- Artifacts warning -->
-    <div v-if="imageStore.imageHasArtifacts" class="artifacts-warning-wrapper" :style="{
+    <!-- <div v-if="imageStore.imageHasArtifacts" class="artifacts-warning-wrapper" :style="{
       '--viewport-wrapper-background-top': backgroundModePadding,
       '--artifacts-warning-width': expandArtifactsWarning ? 'auto' : '36px',
     }" @click="toggleExpandArtifactsWarning">
@@ -362,8 +363,11 @@ const cursorStyle = computed(() => {
 
         <button v-if="expandArtifactsWarning" class="close-button" @click.stop="hideArtifactsClick">✕</button>
       </ItemTip>
+    </div> -->
 
-    </div>
+    <WarningList class="warning-list" :style="{
+      '--viewport-wrapper-background-top': backgroundModePadding,
+    }" />
 
     <!-- Cursor -->
     <div
@@ -505,6 +509,14 @@ const cursorStyle = computed(() => {
 
 .contrast-mode-button.selected {
   background-color: var(--background-c);
+}
+
+/* Warning List */
+.warning-list {
+  position: absolute;
+  top: calc(var(--viewport-wrapper-background-top) + 46px);
+  right: 15px;
+  z-index: var(--z-index-sliders);
 }
 
 /* Artifacts warning */
