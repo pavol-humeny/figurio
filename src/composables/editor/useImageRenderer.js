@@ -3,14 +3,15 @@ import { useFrameTool } from '../tools/useFrameTool'
 
 import * as pdfjsLib from 'pdfjs-dist/legacy/build/pdf'
 import { SVGGraphics } from 'pdfjs-dist/legacy/build/pdf'
-import { useToastModal } from '../modals/useToastModal'
+// import { useToastModal } from '../modals/useToastModal'
+import { useWarningList } from '../modals/useWarningList'
 
 pdfjsLib.GlobalWorkerOptions.workerSrc =
   'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js'
 
 import { useConsole } from '@/composables/common/useConsole.js'
 const { log, warn } = useConsole()
-const { showToastModal } = useToastModal()
+// const { showToastModal } = useToastModal()
 
 const blockRender = ref(false)
 
@@ -37,6 +38,8 @@ export function useImageRenderer(
   contentRef,
   t,
 ) {
+  const { addWarning } = useWarningList(imageStore)
+
   /**
    * Reference to the base image layer
    */
@@ -223,10 +226,22 @@ export function useImageRenderer(
         blockRender.value = false
 
         // Show toast modal about unsupported PDF objects
-        showToastModal(
-          'warning',
-          t('imageStore.toast.unsupportedPdfObjects.title'),
-          t('imageStore.toast.unsupportedPdfObjects.message'),
+        // showToastModal(
+        //   'warning',
+        //   t('imageStore.toast.unsupportedPdfObjects.title'),
+        //   t('imageStore.toast.unsupportedPdfObjects.message'),
+        // )
+
+        addWarning(
+          'unsupported-pdf-objects', // id
+          'imageStore.toast.unsupportedPdfObjects.title', // message
+          'imageStore.toast.unsupportedPdfObjects.message', // tipText
+          'imageStore.toast.unsupportedPdfObjects.title', // tipTitle
+          'info', // type: 'warning' | 'info' | 'error'
+          'open', // startState
+          null, // onRemove
+          null, // onOpen
+          null, // onClose
         )
 
         renderCanvas()
