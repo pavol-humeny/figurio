@@ -131,32 +131,13 @@ const {
 } = useDragAndDropArea(useImageStore(), useEditorStore(), t, router)
 
 /**
- * Logic for image analysis (artifacts)
+ * Start image analysis
  */
-const {
-  hideArtifactsClick,
-  expandArtifactsWarning,
-  calculateArtifacts,
-  hideArtifacts,
-} = useImageAnalysis(
+useImageAnalysis(
   useImageStore(),
   useWorkspaceStore(),
   t,
 )
-
-/**
- * Toggle expand/collapse of artifacts warning
- */
-const toggleExpandArtifactsWarning = () => {
-  expandArtifactsWarning.value = !expandArtifactsWarning.value
-  if (expandArtifactsWarning.value) {
-    // Recalculate artifacts when expanding the warning
-    calculateArtifacts()
-  } else {
-    // Hide artifacts when collapsing the warning
-    hideArtifacts()
-  }
-}
 
 /**
  * Whether to show the context menu
@@ -350,21 +331,7 @@ const cursorStyle = computed(() => {
       </ItemTip>
     </div>
 
-    <!-- Artifacts warning -->
-    <!-- <div v-if="imageStore.imageHasArtifacts" class="artifacts-warning-wrapper" :style="{
-      '--viewport-wrapper-background-top': backgroundModePadding,
-      '--artifacts-warning-width': expandArtifactsWarning ? 'auto' : '36px',
-    }" @click="toggleExpandArtifactsWarning">
-      <ItemTip advance :text="t('tools.artifactsWarning.tip.text')" :title="$t('tools.artifactsWarning.tip.title')"
-        position="bottom-left" class="artifacts-warning-content-wrapper">
-        <BaseIcon name="IconWarning" size="20" color="var(--warning-background-c)" />
-
-        <p v-if="expandArtifactsWarning">{{ t('tools.artifactsWarning.message') }}</p>
-
-        <button v-if="expandArtifactsWarning" class="close-button" @click.stop="hideArtifactsClick">✕</button>
-      </ItemTip>
-    </div> -->
-
+    <!-- Warning List -->
     <WarningList class="warning-list" :style="{
       '--viewport-wrapper-background-top': backgroundModePadding,
     }" />
@@ -406,7 +373,7 @@ const cursorStyle = computed(() => {
         </div>
         <div v-if="mouseX !== null" class="ruler-cursor-mark horizontal" :style="{ left: mouseX + 'px' }">
           <span class="ruler-cursor-label horizontal" :class="{ 'active': cursorPosXSameAsImageWidth }">{{ cursorPosX
-            }}</span>
+          }}</span>
         </div>
 
       </div>
@@ -419,7 +386,7 @@ const cursorStyle = computed(() => {
         </div>
         <div v-if="mouseY !== null" class="ruler-cursor-mark vertical" :style="{ top: mouseY + 'px' }">
           <span class="ruler-cursor-label vertical" :class="{ 'active': cursorPosYSameAsImageHeight }">{{ cursorPosY
-            }}</span>
+          }}</span>
         </div>
       </div>
     </div>
@@ -517,43 +484,6 @@ const cursorStyle = computed(() => {
   top: calc(var(--viewport-wrapper-background-top) + 46px);
   right: 15px;
   z-index: var(--z-index-sliders);
-}
-
-/* Artifacts warning */
-.artifacts-warning-wrapper {
-  position: absolute;
-  top: calc(var(--viewport-wrapper-background-top) + 46px);
-  right: 15px;
-  height: 36px;
-  width: var(--artifacts-warning-width);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 8px 10px;
-  border-radius: 8px;
-  background: var(--warning-c);
-  z-index: var(--z-index-sliders);
-  color: var(--warning-background-c);
-  font-size: 14px;
-  box-shadow: var(--box-shadow-hover);
-  cursor: pointer;
-}
-
-.artifacts-warning-content-wrapper {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 15px;
-  /* position: relative; */
-}
-
-.close-button {
-  background: transparent;
-  border: none;
-  color: var(--warning-background-c);
-  font-size: 18px;
-  font-weight: bold;
-  cursor: pointer;
 }
 
 /* Sliders */

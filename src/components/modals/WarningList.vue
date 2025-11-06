@@ -2,6 +2,10 @@
 import { useWarningList } from '@/composables/modals/useWarningList'
 import BaseIcon from '../icons/BaseIcon.vue'
 import ItemTip from '../common/ItemTip.vue'
+import { computed } from 'vue'
+import { useImageStore } from '@/stores/imageStore.js'
+
+const imageStore = useImageStore()
 
 const {
   warnings,
@@ -9,8 +13,14 @@ const {
   removeWarning,
   openByClick,
   closeByArrow,
-} = useWarningList()
+} = useWarningList(useImageStore())
 
+/**
+ * List of active warnings based on imageStore's imageWarnings
+ */
+const activeWarnings = computed(() =>
+  warnings.value.filter((w) => imageStore.imageWarnings.includes(w.id))
+)
 
 /**
  * Get color based on warning type
@@ -18,7 +28,6 @@ const {
  * @returns {string} - Corresponding color value
  */
 const getColor = (type) => {
-  console.log('Getting color for type:', type)
   switch (type) {
     case 'info': return 'var(--notification-background-c)'
     case 'error': return 'var(--error-background-c)'
@@ -55,7 +64,7 @@ const getMessageIcon = (type) => {
 
 <template>
   <div class="warning-list">
-    <div v-for="warning in warnings" :key="warning.id" class="warning-item" @click="openByClick(warning.id)"
+    <div v-for="warning in activeWarnings" :key="warning.id" class="warning-item" @click="openByClick(warning.id)"
       :class="{ collapsed: !expandedIds.has(warning.id) }"
       :style="{ color: getColor(warning.type), backgroundColor: getBackgroundColor(warning.type) }">
 
@@ -72,7 +81,7 @@ const getMessageIcon = (type) => {
 
         <!-- Message text -->
         <div class="warning-text" v-if="expandedIds.has(warning.id)" :style="{ color: getColor(warning.type) }">
-          <p>{{ warning.message }}</p>
+          <p>{{ $t(warning.message) }}</p>
         </div>
 
         <!-- Close button -->

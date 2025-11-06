@@ -7,7 +7,6 @@ import { useApi } from '@/composables/common/useApi'
 const { addUserEvent } = useApi()
 
 import { useWarningList } from '../modals/useWarningList'
-const { addWarning } = useWarningList()
 
 /**
  * Whether to expand the artifacts warning message
@@ -23,6 +22,8 @@ const noiseLevel = ref(0)
  * Composable for analyzing image artifacts (noise) and managing overlay display
  */
 export function useImageAnalysis(imageStore, workspaceStore, t) {
+  const { addWarning, isWarningExpanded, isWarningDefined } = useWarningList(imageStore)
+
   const noiseThreshold = viewportConfig.noiseThreshold // adjustable block noise threshold
   const noiseTopThreshold = viewportConfig.noiseTopThreshold // Upper limit to ignore blocks with extreme noise - solid color blocks similar to background
   const bgCoverageThreshold = viewportConfig.bgCoverageThreshold // minimal percentage of background area required to analyze noise
@@ -201,36 +202,15 @@ export function useImageAnalysis(imageStore, workspaceStore, t) {
       imageStore.imageHasArtifacts = true
 
       addWarning(
-        'artifact-warning1',
-        'Artifacts detected1',
-        'Some image artifacts were found during processing.',
+        'artifact-warning', // id
+        'tools.artifactsWarning.message', // message
         'tools.artifactsWarning.tip.text', // tipText
         'tools.artifactsWarning.tip.title', // tipTitle
         'warning', // type: 'warning' | 'info' | 'error'
-        'close', // startState
-        (id) => console.log(`Warning ${id} removed`), // onRemove
-      )
-
-      addWarning(
-        'artifact-warning2',
-        'Artifacts detected2',
-        'Some image artifacts were found during processing.',
-        'tools.artifactsWarning.tip.text', // tipText
-        'tools.artifactsWarning.tip.title', // tipTitle
-        'info', // type: 'warning' | 'info' | 'error'
         'open', // startState
-        (id) => console.log(`Warning ${id} removed`), // onRemove
-      )
-
-      addWarning(
-        'artifact-warning3',
-        'Artifacts detected3',
-        'Some image artifacts were found during processing.',
-        'tools.artifactsWarning.tip.text', // tipText
-        'tools.artifactsWarning.tip.title', // tipTitle
-        'error', // type: 'warning' | 'info' | 'error'
-        'open', // startState
-        (id) => console.log(`Warning ${id} removed`), // onRemove
+        hideArtifactsClick, // onRemove
+        calculateArtifacts, // onOpen
+        hideArtifacts, // onClose
       )
 
       log(`[ImageAnalysis] Noise detected in ${noisyBlocks} blocks — artifacts shown`)
@@ -240,6 +220,7 @@ export function useImageAnalysis(imageStore, workspaceStore, t) {
       oCtx.clearRect(0, 0, overlayCanvas.width, overlayCanvas.height)
       expandArtifactsWarning.value = false
       imageStore.imageHasArtifacts = false
+
       log(`[ImageAnalysis] No significant noise detected`)
     }
   }
@@ -268,10 +249,23 @@ export function useImageAnalysis(imageStore, workspaceStore, t) {
   watch(
     () => workspaceStore.activeTabIndex,
     (oldValue, newValue) => {
+      console.warn(
+        'Active tab changed:',
+        oldValue,
+        '->',
+        newValue,
+        !imageStore.imageArtifactsCanceledByUser,
+      )
       if (newValue === undefined) return
 
       if (!imageStore.imageArtifactsCanceledByUser) {
-        calculateArtifacts()
+        if (isWarningDefined('artifact-warning')) {
+          if (isWarningExpanded('artifact-warning')) {
+            calculateArtifacts()
+          }
+        } else {
+          calculateArtifacts()
+        }
       }
     },
     { immediate: true },
@@ -279,6 +273,7 @@ export function useImageAnalysis(imageStore, workspaceStore, t) {
 
   /**
    * Recalculate artifacts when the image visibility flag changes
+   * TODO - maybe removed - never user???
    */
   watch(
     () => imageStore.areArtifactsVisible,

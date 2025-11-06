@@ -204,6 +204,9 @@ export const useImageStore = defineStore('imageStore', {
     removalCanvas: null,
     /** Background removal canvas without feather */
     removalCanvasOriginal: null,
+
+    /** List of image warnings id */
+    imageWarnings: [],
   }),
   getters: {
     /**
@@ -503,6 +506,8 @@ export const useImageStore = defineStore('imageStore', {
       this.overlayImageExport = null
       this.overlayImagePreview = null
       this.removalCanvas = null
+
+      this.imageWarnings = []
     },
 
     /**
@@ -553,6 +558,8 @@ export const useImageStore = defineStore('imageStore', {
       this.resetSvgObject()
 
       this.resetImageStoreForNewFile()
+
+      this.imageWarnings = []
     },
 
     /**
@@ -2527,6 +2534,8 @@ export const useImageStore = defineStore('imageStore', {
         removalCanvas: this.removalCanvas || null,
 
         tmpRenderedImage: this.tmpRenderedImage?.toDataURL() || null,
+
+        imageWarnings: JSON.parse(JSON.stringify(this.imageWarnings)),
       }
 
       log('[getSnapshot] imageOperations:', snapshot.imageOperations)
@@ -2556,6 +2565,8 @@ export const useImageStore = defineStore('imageStore', {
       this.frame = JSON.parse(JSON.stringify(snapshot.frame))
       this.svgDefs = JSON.parse(JSON.stringify(snapshot.svgDefs))
       this.blurImages = JSON.parse(JSON.stringify(snapshot.blurImages))
+
+      this.imageWarnings = JSON.parse(JSON.stringify(snapshot.imageWarnings))
 
       if (snapshot.pdfPageBytes) {
         if (snapshot.pdfPageBytes instanceof Uint8Array) {
@@ -2698,6 +2709,8 @@ export const useImageStore = defineStore('imageStore', {
         imageArtifactsCanceledByUser: JSON.parse(JSON.stringify(this.imageArtifactsCanceledByUser)),
 
         removalCanvas: this.removalCanvas || null,
+
+        imageWarnings: JSON.parse(JSON.stringify(this.imageWarnings)),
       }
     },
 
@@ -2745,6 +2758,8 @@ export const useImageStore = defineStore('imageStore', {
       this.imageArtifactsCanceledByUser = JSON.parse(
         JSON.stringify(snapshot.imageArtifactsCanceledByUser),
       )
+
+      this.imageWarnings = JSON.parse(JSON.stringify(snapshot.imageWarnings))
 
       if (snapshot.pdfPageBytes) {
         if (snapshot.pdfPageBytes instanceof Uint8Array) {
