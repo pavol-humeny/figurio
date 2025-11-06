@@ -45,6 +45,7 @@ const {
   softEdgesRadius,
   boundaryOffset,
   autoRemovalThreshold,
+  someAreaIsSelected,
 } = useBackgroundRemovalTool(
   useImageStore(),
   useHistoryStore(),
@@ -154,7 +155,7 @@ const tabs = ['auto', 'manual', 'color']
             <div class="content-wrapper">
               <DefaultButton :text="$t('tools.backgroundRemoval.settings.manual.clearAllButton.text')"
                 :tip="$t('tools.backgroundRemoval.settings.manual.clearAllButton.tip')" position="bottom-left"
-                @click="clearAllSelections" />
+                @click="clearAllSelections" :disabled="!someAreaIsSelected" />
             </div>
           </div>
 
@@ -163,7 +164,7 @@ const tabs = ['auto', 'manual', 'color']
             <div class="content-wrapper">
               <DefaultButton :text="$t('tools.backgroundRemoval.settings.manual.invertSelectionButton.text')"
                 :tip="$t('tools.backgroundRemoval.settings.manual.invertSelectionButton.tip')" position="bottom-left"
-                @click="invertSelection" />
+                @click="invertSelection" :disabled="!someAreaIsSelected" />
             </div>
           </div>
 
@@ -308,7 +309,7 @@ const tabs = ['auto', 'manual', 'color']
             <div class="content-wrapper">
               <DefaultButton :text="$t('tools.backgroundRemoval.settings.manual.clearAllButton.text')"
                 :tip="$t('tools.backgroundRemoval.settings.manual.clearAllButton.tip')" position="bottom-left"
-                @click="clearAllSelections" />
+                @click="clearAllSelections" :disabled="!someAreaIsSelected" />
             </div>
           </div>
 
@@ -317,7 +318,7 @@ const tabs = ['auto', 'manual', 'color']
             <div class="content-wrapper">
               <DefaultButton :text="$t('tools.backgroundRemoval.settings.manual.invertSelectionButton.text')"
                 :tip="$t('tools.backgroundRemoval.settings.manual.invertSelectionButton.tip')" position="bottom-left"
-                @click="invertSelection" />
+                @click="invertSelection" :disabled="!someAreaIsSelected" />
             </div>
           </div>
 
@@ -440,7 +441,7 @@ const tabs = ['auto', 'manual', 'color']
             <div class="content-wrapper">
               <DefaultButton :text="$t('tools.backgroundRemoval.settings.manual.clearAllButton.text')"
                 :tip="$t('tools.backgroundRemoval.settings.manual.clearAllButton.tip')" position="bottom-left"
-                @click="clearAllSelections" />
+                @click="clearAllSelections" :disabled="!someAreaIsSelected" />
             </div>
           </div>
 
@@ -449,7 +450,7 @@ const tabs = ['auto', 'manual', 'color']
             <div class="content-wrapper">
               <DefaultButton :text="$t('tools.backgroundRemoval.settings.manual.invertSelectionButton.text')"
                 :tip="$t('tools.backgroundRemoval.settings.manual.invertSelectionButton.tip')" position="bottom-left"
-                @click="invertSelection" />
+                @click="invertSelection" :disabled="!someAreaIsSelected" />
             </div>
           </div>
 

@@ -17,7 +17,11 @@ const viewportStore = useViewportStore()
 const editorStore = useEditorStore()
 const historyStore = useHistoryStore()
 
-const { manualSelectedTool, autoSelectSimilarRegion } = useBackgroundRemovalTool(
+const {
+  manualSelectedTool,
+  autoSelectSimilarRegion,
+  someAreaIsSelected,
+} = useBackgroundRemovalTool(
   useImageStore(),
   useHistoryStore(),
   useWorkspaceStore(),
@@ -96,6 +100,8 @@ const drawLine = (from, to, tool) => {
     // Brush
     ctx.globalCompositeOperation = 'source-over'
     ctx.strokeStyle = editorConfig.removalHighlightColor
+
+    someAreaIsSelected.value = true
   }
 
   ctx.beginPath()
@@ -188,22 +194,52 @@ const onMouseMove = (event) => {
 /**
  * Global mouse up listener to stop drawing when mouse is released
  */
+let canvasWorker = null
+
 const onMouseUpGlobal = () => {
-  if (editorStore.selectedToolKey !== 'backgroundRemoval' || editorStore.selectedTabPerTool['backgroundRemoval'] !== 'manual') return
+  if (
+    editorStore.selectedToolKey !== 'backgroundRemoval' ||
+    editorStore.selectedTabPerTool['backgroundRemoval'] !== 'manual'
+  )
+    return
 
-  if (isDrawing.value) {
-    isDrawing.value = false
-    isErasingDuringDraw.value = false
+  if (!isDrawing.value) return
+  isDrawing.value = false
+  isErasingDuringDraw.value = false
 
-    const manualCanvas = manualCanvasRef.value
-    if (!manualCanvas) return
+  const manualCanvas = manualCanvasRef.value
+  if (!manualCanvas) return
 
-    const ctx = manualCanvas.getContext('2d')
+  const ctx = manualCanvas.getContext('2d')
+  const width = manualCanvas.width
+  const height = manualCanvas.height
 
-    // Store the current pixels of the manual canvas
-    const imageDataToSave = ctx.getImageData(0, 0, manualCanvas.width, manualCanvas.height)
-    imageStore.removalCanvasOriginal = imageDataToSave
-    imageStore.removalCanvas = imageDataToSave
+  // Create worker if not exists
+  if (!canvasWorker) {
+    canvasWorker = new Worker(new URL('@/composables/worker/canvasWorker.js', import.meta.url))
+  }
+
+  // Main thread
+  const imageData = ctx.getImageData(0, 0, width, height);
+
+  // Copy the buffer BEFORE transfer to worker
+  const bufferCopy = new Uint8ClampedArray(imageData.data);
+
+  canvasWorker.postMessage(
+    {
+      width,
+      height,
+      imageDataBuffer: bufferCopy.buffer, // pass copy
+    },
+    [bufferCopy.buffer] // transfer ownership
+  );
+
+  canvasWorker.onmessage = (event) => {
+    const savedImageData = event.data.imageData
+
+    // Save to store
+    imageStore.removalCanvasOriginal = savedImageData
+    imageStore.removalCanvas = savedImageData
 
     // Push snapshot to history
     historyStore.push(imageStore.getSnapshot(t))

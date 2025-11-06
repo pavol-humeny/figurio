@@ -12,6 +12,11 @@ const softEdgesRadius = ref(0)
 const boundaryOffset = ref(0)
 
 /**
+ * Whether some area is currently selected on the removal canvas
+ */
+const someAreaIsSelected = ref(false)
+
+/**
  * Removal threshold for background removal
  */
 const colorRemovalThreshold = ref(editorConfig.defaultThreshold)
@@ -233,6 +238,8 @@ export function useBackgroundRemovalTool(imageStore, historyStore, workspaceStor
     const imageDataToSave = ctx.getImageData(0, 0, canvas.width, canvas.height)
     imageStore.removalCanvasOriginal = imageDataToSave
     imageStore.removalCanvas = imageDataToSave
+
+    someAreaIsSelected.value = false
   }
 
   /**
@@ -314,6 +321,8 @@ export function useBackgroundRemovalTool(imageStore, historyStore, workspaceStor
     const manualImageData = ctx.getImageData(0, 0, width, height)
     const manualData = manualImageData.data
 
+    let numberOfSelectedPixels = 0
+
     for (let i = 0; i < data.length; i += 4) {
       const alpha = data[i + 3] // opacity of current pixel
 
@@ -323,7 +332,16 @@ export function useBackgroundRemovalTool(imageStore, historyStore, workspaceStor
         manualData[i + 1] = fillG
         manualData[i + 2] = fillB
         manualData[i + 3] = fillA
+
+        numberOfSelectedPixels++
       }
+    }
+
+    // Set flag to indicate if some area is selected
+    if (numberOfSelectedPixels > 0) {
+      someAreaIsSelected.value = true
+    } else {
+      someAreaIsSelected.value = false
     }
 
     // Apply overlay to canvas
@@ -404,6 +422,8 @@ export function useBackgroundRemovalTool(imageStore, historyStore, workspaceStor
     // Get highlight color
     const { fillR, fillG, fillB, fillA } = getHighlightColorRGBA()
 
+    let numberOfSelectedPixels = 0
+
     // Region growing
     while (stack.length > 0) {
       const [x, y] = stack.pop()
@@ -437,6 +457,8 @@ export function useBackgroundRemovalTool(imageStore, historyStore, workspaceStor
           manualData[pix + 1] = fillG
           manualData[pix + 2] = fillB
           manualData[pix + 3] = fillA
+
+          numberOfSelectedPixels++
         }
 
         stack.push([x + 1, y])
@@ -446,10 +468,15 @@ export function useBackgroundRemovalTool(imageStore, historyStore, workspaceStor
       }
     }
 
+    // Set flag to indicate if some area is selected
+    if (numberOfSelectedPixels > 0) {
+      someAreaIsSelected.value = true
+    } else {
+      someAreaIsSelected.value = false
+    }
+
     // Save new mask
     imageStore.removalCanvasOriginal = manualImageData
-
-    console.log('offset: ', boundaryOffset.value, '  soft: ', softEdgesRadius.value)
 
     applyCombinedMaskAdjustments(boundaryOffset.value, softEdgesRadius.value)
   }
@@ -514,6 +541,8 @@ export function useBackgroundRemovalTool(imageStore, historyStore, workspaceStor
     // Get highlight color RGBA
     const { fillR, fillG, fillB, fillA } = getHighlightColorRGBA()
 
+    let numberOfSelectedPixels = 0
+
     // Apply new selection on top of stored original mask
     for (let i = 0; i < data.length; i += 4) {
       const r = data[i]
@@ -526,7 +555,16 @@ export function useBackgroundRemovalTool(imageStore, historyStore, workspaceStor
         manualData[i + 1] = fillG
         manualData[i + 2] = fillB
         manualData[i + 3] = fillA
+
+        numberOfSelectedPixels++
       }
+    }
+
+    // Set flag to indicate if some area is selected
+    if (numberOfSelectedPixels > 0) {
+      someAreaIsSelected.value = true
+    } else {
+      someAreaIsSelected.value = false
     }
 
     // Save original mask to store
@@ -778,6 +816,8 @@ export function useBackgroundRemovalTool(imageStore, historyStore, workspaceStor
     if (!changed) return // Skip history if mask was empty
 
     historyStore.push(imageStore.getSnapshot(t))
+
+    someAreaIsSelected.value = false
   }
 
   /**
@@ -875,5 +915,6 @@ export function useBackgroundRemovalTool(imageStore, historyStore, workspaceStor
     autoSelectSimilarRegion,
     autoRemovalThreshold,
     applyBackgroundRemovalRender,
+    someAreaIsSelected,
   }
 }
