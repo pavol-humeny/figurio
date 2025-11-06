@@ -55,7 +55,7 @@ const {
 /**
  * Tabs for the background removal tool settings
  */
-const tabs = ['color', 'manual', 'auto']
+const tabs = ['auto', 'manual', 'color']
 </script>
 
 <template>

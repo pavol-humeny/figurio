@@ -25,16 +25,16 @@ export const toolsDefinitions = [
     settingsComponent: () => import('@/components/toolsSettings/BackgroundRemovalToolSettings.vue'),
     subTools: [
       {
-        key: 'color',
-        iconName: 'IconColorRemovalTool',
+        key: 'auto',
+        iconName: 'IconAutoRemovalTool',
       },
       {
         key: 'manual',
         iconName: 'IconManualRemovalTool',
       },
       {
-        key: 'auto',
-        iconName: 'IconAutoRemovalTool',
+        key: 'color',
+        iconName: 'IconColorRemovalTool',
       },
     ],
   },
