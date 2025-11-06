@@ -14,6 +14,7 @@ import BaseIcon from '@/components/icons/BaseIcon.vue'
 import NumberInput from '../common/NumberInput.vue'
 import ItemTip from '../common/ItemTip.vue'
 import ToggleButton from '../common/ToggleButton.vue'
+import DefaultSlider from '../common/DefaultSlider.vue'
 
 const { t } = useI18n()
 const editorStore = useEditorStore()
@@ -23,7 +24,7 @@ const editorStore = useEditorStore()
  */
 const {
   applyBackgroundRemoval,
-  colorRemovalThresholdOptions,
+  // colorRemovalThresholdOptions,
   colorRemovalThreshold,
   colorBackgroundColor,
   manualSelectedTool,
@@ -101,9 +102,12 @@ const tabs = ['auto', 'manual', 'color']
                   {{ $t('tools.backgroundRemoval.settings.color.removalSensitivity.label') }}
                 </p>
               </div>
-              <NumberDropdownInput v-model="colorRemovalThreshold" :min="0" :max="0.9" :step="0.01"
+              <!-- <NumberDropdownInput v-model="colorRemovalThreshold" :min="0" :max="0.9" :step="0.01"
                 :options="colorRemovalThresholdOptions"
-                :tip="$t('tools.backgroundRemoval.settings.color.removalSensitivity.tip')" position="bottom-left" />
+                :tip="$t('tools.backgroundRemoval.settings.color.removalSensitivity.tip')" position="bottom-left" /> -->
+              <DefaultSlider v-model="colorRemovalThreshold" :min="0" :max="0.9" :step="0.01"
+                :tip="$t('tools.backgroundRemoval.settings.color.removalSensitivity.tip')" position="bottom-left"
+                showValue />
             </div>
           </div>
 
@@ -113,9 +117,12 @@ const tabs = ['auto', 'manual', 'color']
               <div class="content-title">
                 {{ $t('tools.backgroundRemoval.settings.manual.edgeSoftness.label') }}
               </div>
-              <NumberDropdownInput v-model="softEdgesRadius" :min="0" :max="1" :step="0.1"
+              <!-- <NumberDropdownInput v-model="softEdgesRadius" :min="0" :max="1" :step="0.1"
                 :options="[0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1]"
-                :tip="$t('tools.backgroundRemoval.settings.manual.edgeSoftness.tip')" position="bottom-left" />
+                :tip="$t('tools.backgroundRemoval.settings.manual.edgeSoftness.tip')" position="bottom-left" /> -->
+              <DefaultSlider v-model="softEdgesRadius" :min="0" :max="1" :step="0.1"
+                :tip="$t('tools.backgroundRemoval.settings.manual.edgeSoftness.tip')" position="bottom-left"
+                showValue />
             </div>
           </div>
 
@@ -125,9 +132,12 @@ const tabs = ['auto', 'manual', 'color']
               <div class="content-title">
                 {{ $t('tools.backgroundRemoval.settings.manual.boundaryOffset.label') }}
               </div>
-              <NumberDropdownInput v-model="boundaryOffset" :min="-5" :max="5" :step="1"
+              <!-- <NumberDropdownInput v-model="boundaryOffset" :min="-5" :max="5" :step="1"
                 :options="[-5, -4, -3, -2, -1, 0, 1, 2, 3, 4, 5]"
-                :tip="$t('tools.backgroundRemoval.settings.manual.boundaryOffset.tip')" position="bottom-left" />
+                :tip="$t('tools.backgroundRemoval.settings.manual.boundaryOffset.tip')" position="bottom-left" /> -->
+              <DefaultSlider v-model="boundaryOffset" :min="-5" :max="5" :step="1"
+                :tip="$t('tools.backgroundRemoval.settings.manual.boundaryOffset.tip')" position="bottom-left"
+                showValue />
             </div>
           </div>
 
@@ -386,9 +396,12 @@ const tabs = ['auto', 'manual', 'color']
                   {{ $t('tools.backgroundRemoval.settings.color.removalSensitivity.label') }}
                 </p>
               </div>
-              <NumberDropdownInput v-model="autoRemovalThreshold" :min="0" :max="0.9" :step="0.01"
+              <!-- <NumberDropdownInput v-model="autoRemovalThreshold" :min="0" :max="0.9" :step="0.01"
                 :options="colorRemovalThresholdOptions"
-                :tip="$t('tools.backgroundRemoval.settings.auto.autoRemovalSensitivity.tip')" position="bottom-left" />
+                :tip="$t('tools.backgroundRemoval.settings.auto.autoRemovalSensitivity.tip')" position="bottom-left" /> -->
+              <DefaultSlider v-model="autoRemovalThreshold" :min="0" :max="0.9" :step="0.01"
+                :tip="$t('tools.backgroundRemoval.settings.auto.autoRemovalSensitivity.tip')" position="bottom-left"
+                showValue />
             </div>
           </div>
 
@@ -398,9 +411,12 @@ const tabs = ['auto', 'manual', 'color']
               <div class="content-title">
                 {{ $t('tools.backgroundRemoval.settings.manual.edgeSoftness.label') }}
               </div>
-              <NumberDropdownInput v-model="softEdgesRadius" :min="0" :max="1" :step="0.1"
+              <!-- <NumberDropdownInput v-model="softEdgesRadius" :min="0" :max="1" :step="0.1"
                 :options="[0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1]"
-                :tip="$t('tools.backgroundRemoval.settings.manual.edgeSoftness.tip')" position="bottom-left" />
+                :tip="$t('tools.backgroundRemoval.settings.manual.edgeSoftness.tip')" position="bottom-left" /> -->
+              <DefaultSlider v-model="softEdgesRadius" :min="0" :max="1" :step="0.1"
+                :tip="$t('tools.backgroundRemoval.settings.manual.edgeSoftness.tip')" position="bottom-left"
+                showValue />
             </div>
           </div>
 
@@ -410,9 +426,12 @@ const tabs = ['auto', 'manual', 'color']
               <div class="content-title">
                 {{ $t('tools.backgroundRemoval.settings.manual.boundaryOffset.label') }}
               </div>
-              <NumberDropdownInput v-model="boundaryOffset" :min="-5" :max="5" :step="1"
+              <!-- <NumberDropdownInput v-model="boundaryOffset" :min="-5" :max="5" :step="1"
                 :options="[-5, -4, -3, -2, -1, 0, 1, 2, 3, 4, 5]"
-                :tip="$t('tools.backgroundRemoval.settings.manual.boundaryOffset.tip')" position="bottom-left" />
+                :tip="$t('tools.backgroundRemoval.settings.manual.boundaryOffset.tip')" position="bottom-left" /> -->
+              <DefaultSlider v-model="boundaryOffset" :min="-5" :max="5" :step="1"
+                :tip="$t('tools.backgroundRemoval.settings.manual.boundaryOffset.tip')" position="bottom-left"
+                showValue />
             </div>
           </div>
 

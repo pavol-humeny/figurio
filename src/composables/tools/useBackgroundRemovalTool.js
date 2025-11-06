@@ -5,6 +5,12 @@ import { useToastModal } from '../modals/useToastModal'
 import { useApi } from '@/composables/common/useApi'
 const { addUserEvent } = useApi()
 
+// ----------------------------------
+// Soft edges and Boundary offset
+// ----------------------------------
+const softEdgesRadius = ref(0)
+const boundaryOffset = ref(0)
+
 /**
  * Removal threshold for background removal
  */
@@ -443,6 +449,8 @@ export function useBackgroundRemovalTool(imageStore, historyStore, workspaceStor
     // Save new mask
     imageStore.removalCanvasOriginal = manualImageData
 
+    console.log('offset: ', boundaryOffset.value, '  soft: ', softEdgesRadius.value)
+
     applyCombinedMaskAdjustments(boundaryOffset.value, softEdgesRadius.value)
   }
 
@@ -526,12 +534,6 @@ export function useBackgroundRemovalTool(imageStore, historyStore, workspaceStor
 
     applyCombinedMaskAdjustments(boundaryOffset.value, softEdgesRadius.value)
   }
-
-  // ----------------------------------
-  // Soft edges and Boundary offset
-  // ----------------------------------
-  const softEdgesRadius = ref(0)
-  const boundaryOffset = ref(0)
 
   /**
    * Watch for changes in either soft edges or boundary offset
