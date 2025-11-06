@@ -63,7 +63,7 @@ const getMessageIcon = (type) => {
 </script>
 
 <template>
-  <div class="warning-list">
+  <div class="warning-list" id="warning-list">
     <div v-for="warning in activeWarnings" :key="warning.id" class="warning-item" @click="openByClick(warning.id)"
       :class="{ collapsed: !expandedIds.has(warning.id) }"
       :style="{ color: getColor(warning.type), backgroundColor: getBackgroundColor(warning.type) }">

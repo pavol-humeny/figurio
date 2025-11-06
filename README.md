@@ -41,4 +41,6 @@ Event type:
 
 
 
-
+## Warning list
+- artifact-warning
+- unsupported-pdf-objects

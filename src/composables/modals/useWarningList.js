@@ -120,6 +120,13 @@ export const useWarningList = (imageStore) => {
     expandedIds.value.delete(id)
   }
 
+  const hideWarningById = (id) => {
+    const warning = warnings.value.find((w) => w.id === id)
+    if (!warning) return
+
+    expandedIds.value.delete(id)
+  }
+
   return {
     warnings,
     expandedIds,
@@ -130,5 +137,6 @@ export const useWarningList = (imageStore) => {
     isWarningExpanded,
     isWarningDefined,
     deleteWarning,
+    hideWarningById,
   }
 }

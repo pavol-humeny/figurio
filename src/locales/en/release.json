@@ -4,6 +4,25 @@
     "items": []
   },
   "versions":{
+    "4.17.3":{
+      "label": "4.17.3",
+      "date":"6.11. 2025",
+      "newFeatures": {
+        "items": [
+          "Section with warning messages for detected image issues"
+        ]
+      },
+      "improvements": {
+        "items": [
+          "Change dropdown menu in background removal tool to sliders"
+        ]
+      },
+      "bugFixes": {
+        "items": [
+          "Auto background removal tool use selected values correctly"
+        ]
+      }
+    },
     "4.17.2":{
       "label": "4.17.2",
       "date":"5.11. 2025",
