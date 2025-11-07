@@ -110,6 +110,7 @@ const visibleSideDirs = computed(() => {
   background: transparent;
   pointer-events: auto;
   cursor: move;
+  z-index: var(--z-index-crop-box);
 }
 
 /* Resizers */

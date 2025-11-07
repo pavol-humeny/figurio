@@ -8,7 +8,6 @@ import { useBlurTool } from './useBlurTool'
 import { useMagnifyAreaTool } from './useMagnifyAreaTool'
 import { useToolsPanel } from './useToolsPanel'
 import { useConsole } from '@/composables/common/useConsole.js'
-import { useToastModal } from '../modals/useToastModal'
 const { log } = useConsole()
 
 export function useSvgObjects(
@@ -33,8 +32,6 @@ export function useSvgObjects(
     t,
   )
   const { toggleTool } = useToolsPanel(editorStore, imageStore, uiStore, workspaceStore, t)
-  const { showToastModal } = useToastModal()
-
   /**
    * Selection box rectangle (used when dragging with select tool)
    */
@@ -828,15 +825,6 @@ export function useSvgObjects(
 
     // Drawing objects
     if (!['blur', 'shape'].includes(editorStore.selectedToolKey)) return
-
-    if (imageStore.needMergeOverlay) {
-      imageStore.mergeOverlayIntoImage()
-      showToastModal(
-        'info',
-        t('tools.infoOverlayWasMerged.title'),
-        t('tools.infoOverlayWasMerged.message'),
-      )
-    }
 
     // if (imageStore.selectedSvgObjectId !== null) return // Disable drawing objects when another is selected
 

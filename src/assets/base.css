@@ -167,6 +167,7 @@ body {
   --z-index-rulers-padding: 530;
   --z-index-rulers: 525;
   --z-index-file-tabs: 520;
+  --z-index-crop-box: 515;
   --z-index-guide-lines: 510;
   --z-index-viewport: 500;
 

@@ -4,6 +4,16 @@
     "items": []
   },
   "versions":{
+    "4.17.4":{
+      "label": "4.17.4",
+      "date":"7.11. 2025",
+      "bugFixes": {
+        "items": [
+          "Brush objects can be edited after cropping the image",
+          "Auto crop is calculated correctly after cropping the image with drawn objects"
+        ]
+      }
+    },
     "4.17.3":{
       "label": "4.17.3",
       "date":"6.11. 2025",

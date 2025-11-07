@@ -30,7 +30,7 @@ export const globalConfig = {
   calibrationFactor: 1, // calibration factor for physical mode
 
   // Default tool to start with
-  startTool: 'backgroundRemoval',
+  startTool: 'shape',
 
   // Feature flags
   // UPDATE new tool
@@ -51,7 +51,7 @@ export const globalConfig = {
       preset: true,
       export: true,
     },
-    enableNoiseDetectionOnStart: true,
+    enableNoiseDetectionOnStart: false,
     enableTutorial: true,
     enableImageLoad: true,
     notEnabledMessage: 'This feature is currently not available.',
@@ -67,7 +67,7 @@ export const globalConfig = {
   // If usage stats should be sent to the API
   sendUsageStats: true,
   // If usage stats should be sent when running on localhost
-  sendUsageStatsOnLocalhost: true,
+  sendUsageStatsOnLocalhost: false,
 
   // LocalStorage prefix
   LOCAL_STORAGE_PREFIX: 'figurio_',
