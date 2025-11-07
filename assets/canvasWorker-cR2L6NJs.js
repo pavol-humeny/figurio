@@ -1,0 +1,1 @@
+(function(){"use strict";self.onmessage=s=>{const{width:e,height:a,imageDataBuffer:g}=s.data,t=new Uint8ClampedArray(g);if(t.length!==e*a*4){console.error("Invalid ImageData length",t.length,e,a);return}const n=new ImageData(t,e,a);self.postMessage({imageData:n},[n.data.buffer])}})();
