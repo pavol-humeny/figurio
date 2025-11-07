@@ -6,6 +6,49 @@
     ]
   },
   "versions": {
+    "4.17.4": {
+      "label": "4.17.4",
+      "date": "7.11. 2025",
+      "bugFixes": {
+        "items": [
+          "Kresby je možné upravovať po orezaní obrázka",
+          "Automatické orezanie sa správne počíta po orezaní obrázka s kresbami"
+        ]
+      }
+    },
+    "4.17.3": {
+      "label": "4.17.3",
+      "date": "6.11. 2025",
+      "newFeatures": {
+        "items": [
+          "Nová sekcia s upozorneniami na zistené problémy s obrázkom"
+        ]
+      },
+      "improvements": {
+        "items": [
+          "Zmena rozbaľovacieho menu v nástroji na odstraňovanie pozadia na posuvníky"
+        ]
+      },
+      "bugFixes": {
+        "items": [
+          "Nástroj automatického odstraňovania pozadia používa správne vybrané hodnoty z posuvníkov"
+        ]
+      }
+    },
+    "4.17.2": {
+      "label": "4.17.2",
+      "date": "5.11. 2025",
+      "newFeatures": {
+        "items": [
+          "Pridanie podpory pinch-to-zoom pomocou gesta dvoch prstov na touchpade"
+        ]
+      },
+      "bugFixes": {
+        "items": [
+          "Tlačidlo X na zatvorenie kontextového menu sa neprekrýva s textom"
+        ]
+      }
+    },
     "4.17.1":{
       "label": "4.17.1",
       "date":"1.11. 2025",

@@ -6,6 +6,49 @@
     ]
   },
   "versions": {
+    "4.17.4": {
+      "label": "4.17.4",
+      "date": "7.11. 2025",
+      "bugFixes": {
+        "items": [
+          "Kresby štětce lze upravovat po ořezu obrázku",
+          "Automatické ořezání se správně počítá po ořezu obrázku s nakreslenými objekty"
+        ]
+      }
+    },
+    "4.17.3": {
+      "label": "4.17.3",
+      "date": "6.11. 2025",
+      "newFeatures": {
+        "items": [
+          "Nová sekce s varovnými zprávami pro zjištěné problémy s obrázkem"
+        ]
+      },
+      "improvements": {
+        "items": [
+          "Změna rozbalovacího menu v nástroji pro odstranění pozadí na posuvníky"
+        ]
+      },
+      "bugFixes": {
+        "items": [
+          "Nástroj automatického odstranění pozadí správně používá vybrané hodnoty z posuvníků"
+        ]
+      }
+    },
+    "4.17.2": {
+      "label": "4.17.2",
+      "date": "5.11. 2025",
+      "newFeatures": {
+        "items": [
+          "Přidaní podpory pinch-to-zoom pomocí gesta dvou prstů na touchpadu"
+        ]
+      },
+      "bugFixes": {
+        "items": [
+          "Tlačítko pro zavření kontextového menu nepřekrývá text"
+        ]
+      }
+    },
     "4.17.1":{
       "label": "4.17.1",
       "date":"1.11. 2025",
