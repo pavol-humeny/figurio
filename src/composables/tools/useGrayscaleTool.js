@@ -1,9 +1,9 @@
 import { useConfirmModal } from '../modals/useConfirmModal'
 import { ref, computed } from 'vue'
-import { useMath } from '../common/useMath'
 import { useToastModal } from '../modals/useToastModal'
 import { useApi } from '@/composables/common/useApi'
 const { addUserEvent } = useApi()
+import { useUiStore } from '@/stores/uiStore'
 
 /**
  * Logic for applying grayscale
@@ -15,8 +15,8 @@ const { addUserEvent } = useApi()
  */
 export function useGrayscaleTool(imageStore, editorStore, historyStore, t) {
   const { showConfirmModal } = useConfirmModal()
-  const { round } = useMath()
   const { showToastModal } = useToastModal()
+  const uiStore = useUiStore()
 
   const grayscaleType = ref(editorStore.toolsConfig.grayscale.type)
 
@@ -91,7 +91,7 @@ export function useGrayscaleTool(imageStore, editorStore, historyStore, t) {
    * Supports: luminance, average, lightness
    * @param {string} type - Grayscale conversion method
    */
-  const applyGrayscaleRender = (type) => {
+  const applyGrayscaleRender = async (type) => {
     if (type === 'none') return
 
     const img = imageStore.getRenderedImage({ t, renderCall: false })
@@ -99,41 +99,36 @@ export function useGrayscaleTool(imageStore, editorStore, historyStore, t) {
 
     const canvas = document.createElement('canvas')
     const ctx = canvas.getContext('2d')
-
     canvas.width = img.width
     canvas.height = img.height
 
     ctx.drawImage(img, 0, 0)
     const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height)
-    const data = imageData.data
 
-    for (let i = 0; i < data.length; i += 4) {
-      const r = data[i]
-      const g = data[i + 1]
-      const b = data[i + 2]
-      let gray
+    // Set loading state
+    uiStore.isApplying = true
 
-      switch (type) {
-        case 'luminance':
-        default:
-          // Weighted luminance method
-          gray = round(0.299 * r + 0.587 * g + 0.114 * b)
-          break
-        case 'average':
-          // Simple average of RGB channels
-          gray = round((r + g + b) / 3)
-          break
-        case 'lightness':
-          // Average of the max and min channel
-          gray = round((Math.max(r, g, b) + Math.min(r, g, b)) / 2)
-          break
-      }
+    try {
+      const worker = new Worker(new URL('@/composables/worker/grayscaleWorker.js', import.meta.url))
 
-      data[i] = data[i + 1] = data[i + 2] = gray
+      const data = await new Promise((resolve) => {
+        worker.onmessage = (e) => {
+          resolve(e.data)
+          worker.terminate()
+        }
+        worker.postMessage({ data: imageData.data, type })
+      })
+
+      // Apply the processed data back to canvas
+      imageData.data.set(data)
+      ctx.putImageData(imageData, 0, 0)
+
+      // Update store
+      imageStore.setRenderedImage(canvas)
+    } finally {
+      // Reset loading state even if an error occurs
+      uiStore.isApplying = false
     }
-
-    ctx.putImageData(imageData, 0, 0)
-    imageStore.setRenderedImage(canvas)
   }
 
   /**
