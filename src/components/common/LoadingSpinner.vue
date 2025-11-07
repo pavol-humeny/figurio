@@ -5,7 +5,7 @@ import { useLoadingSpinner } from '@/composables/common/useLoadingSpinner'
 /**
  * Logic for the loading spinner component
  */
-const { isVisible, blockClicks } = useLoadingSpinner(useUiStore())
+const { isVisible, isApplying, blockClicks } = useLoadingSpinner(useUiStore())
 
 
 </script>
@@ -13,7 +13,7 @@ const { isVisible, blockClicks } = useLoadingSpinner(useUiStore())
 <template>
   <div>
 
-    <div v-if="isVisible" class="loading-overlay">
+    <div v-if="isVisible || isApplying" class="loading-overlay">
       <div class="spinner"></div>
     </div>
 

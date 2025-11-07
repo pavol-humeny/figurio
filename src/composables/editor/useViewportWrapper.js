@@ -55,6 +55,8 @@ export function useViewportWrapper(viewportStore, imageStore, editorStore, uiSto
    * @param {MouseEvent} event - Mouse event
    */
   const startPan = (event) => {
+    if (uiStore.isApplying) return
+
     // Resizing tool size with Alt + Right mouse button
     if (
       (editorStore.selectedToolKey === 'brush' ||
@@ -124,6 +126,8 @@ export function useViewportWrapper(viewportStore, imageStore, editorStore, uiSto
 
   // Zoom and scroll handling
   const setZoomAndScroll = (event) => {
+    if (uiStore.isApplying) return
+
     const speedFactor = event.altKey ? viewportConfig.fasterScrollMultiplier : 1
 
     if (event.ctrlKey) {
@@ -343,6 +347,8 @@ export function useViewportWrapper(viewportStore, imageStore, editorStore, uiSto
    * @param {MouseEvent} event - Mouse event
    */
   const startDrag = (axis, event) => {
+    if (uiStore.isApplying) return
+
     event.preventDefault()
     const startClient = axis === 'y' ? event.clientY : event.clientX
     const startPan = axis === 'y' ? viewportStore.panY : viewportStore.panX
