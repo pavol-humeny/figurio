@@ -51,7 +51,7 @@ export const globalConfig = {
       preset: true,
       export: true,
     },
-    enableNoiseDetectionOnStart: false,
+    enableNoiseDetectionOnStart: true,
     enableTutorial: true,
     enableImageLoad: true,
     notEnabledMessage: 'This feature is currently not available.',
