@@ -328,7 +328,7 @@
       "options":{
         "none": "Žiadny",
         "luminance": "Jas",
-        "luminanceExplained": "Vážený priemer založený na ľudskom vnímaní (0.2126 R + 0.7152 G + 0.0722 B)",
+        "luminanceExplained": "Vážený priemer založený na ľudskom vnímaní (0.299 R + 0.587 G + 0.114 B)",
         "average": "Priemer",
         "averageExplained": "Jednoduchý priemer hodnôt RGB ((R + G + B) / 3)",
         "lightness": "Svetlosť",
