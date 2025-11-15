@@ -9,6 +9,11 @@
     "4.17.6":{
       "label": "4.17.6",
       "date":"15.11. 2025",
+      "improvements": {
+        "items": [
+          "Tlačítka přiblížení lze podržet pro kontinuální přiblížení nebo oddálení"
+        ]
+      },
       "bugFixes": {
         "items": [
           "Přidání přichytávání SVG objektů na střed obrázku a ostatních objektů"

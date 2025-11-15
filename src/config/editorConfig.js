@@ -84,7 +84,7 @@ export const editorConfig = {
     // { label: 'Cambria', value: 'Cambria' },
   ],
 
-  // Stepper input
-  stepperHoldTimeout: 400, // ms before starting to hold
-  stepperHoldInterval: 50, // ms between each step when holding
+  // Hold button settings
+  holdButtonTimeout: 400, // ms before starting to hold
+  holdButtonInterval: 50, // ms between each call when holding
 }

@@ -89,8 +89,8 @@ export function useStepperInput(props, emit) {
       // Start interval with shorter period
       holdInterval.value = setInterval(() => {
         action()
-      }, editorConfig.stepperHoldInterval)
-    }, editorConfig.stepperHoldTimeout)
+      }, editorConfig.holdButtonInterval)
+    }, editorConfig.holdButtonTimeout)
   }
 
   /**

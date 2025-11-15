@@ -3,6 +3,7 @@ import { viewportConfig } from '@/config/viewportConfig'
 import { useMath } from '../common/useMath'
 import { globalConfig } from '@/config/globalConfig'
 import { useApi } from '@/composables/common/useApi'
+import { editorConfig } from '@/config/editorConfig'
 const { addUserEvent } = useApi()
 
 /**
@@ -179,14 +180,54 @@ export function useZoomControl(viewportStore, imageStore) {
     viewportStore.setZoomMode(mode)
   }
 
+  /**
+   * Sets a new physical content size in cm
+   */
   const setNewPhysicalContentSize = (newWidth) => {
     physicalContentSize.value = newWidth
     viewportStore.setPhysicalContentSize(newWidth)
   }
 
+  /**
+   * Resets physical content size to default from config
+   */
   const resetPhysicalContentSize = () => {
     viewportStore.setPhysicalContentSize(globalConfig.physicalContentSize)
     physicalContentSize.value = viewportStore.physicalContentSize
+  }
+
+  /**
+   * Timeout and interval references for hold action
+   */
+  const holdTimeout = ref(null)
+  const holdInterval = ref(null)
+
+  /**
+   * Starts the hold action to continuously call the provided action function
+   *
+   * @param {Function} action - Function to call repeatedly while holding
+   */
+  const startHold = (action) => {
+    // Call immediately
+    action(0.1)
+
+    // Wait (longer pause before repeating)
+    holdTimeout.value = setTimeout(() => {
+      // Start interval with shorter period
+      holdInterval.value = setInterval(() => {
+        action(0.01)
+      }, editorConfig.holdButtonInterval)
+    }, editorConfig.holdButtonTimeout)
+  }
+
+  /**
+   * Stops the hold action by clearing timeouts and intervals
+   */
+  const stopHold = () => {
+    clearTimeout(holdTimeout.value)
+    clearInterval(holdInterval.value)
+    holdTimeout.value = null
+    holdInterval.value = null
   }
 
   return {
@@ -205,5 +246,7 @@ export function useZoomControl(viewportStore, imageStore) {
     setNewPhysicalContentSize,
     resetPhysicalContentSize,
     maxPhysicalContentSize,
+    startHold,
+    stopHold,
   }
 }

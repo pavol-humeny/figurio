@@ -34,6 +34,8 @@ const {
   setNewPhysicalContentSize,
   resetPhysicalContentSize,
   maxPhysicalContentSize,
+  startHold,
+  stopHold,
 } = useZoomControl(useViewportStore(), useImageStore())
 </script>
 
@@ -49,8 +51,8 @@ const {
     <div class="zoom-buttons">
       <!-- Zoom Out -->
       <ItemTip :text="$t('topPanel.zoomControl.tip.zoomOut')" position="bottom">
-        <div class="zoom-out-button button button-control button-circle" @click="zoomOut()"
-          :class="{ 'disabled': !canZoomOut }">
+        <div class="zoom-out-button button button-control button-circle" @mousedown="startHold(zoomOut)"
+          @mouseup="stopHold" @mouseleave="stopHold" :class="{ 'disabled': !canZoomOut }">
           <BaseIcon name="IconMinus" size="24" />
         </div>
       </ItemTip>
@@ -68,8 +70,8 @@ const {
 
       <!-- Zoom In -->
       <ItemTip :text="$t('topPanel.zoomControl.tip.zoomIn')" position="bottom">
-        <div class="zoom-in-button button button-control button-circle" @click="zoomIn()"
-          :class="{ 'disabled': !canZoomIn }">
+        <div class="zoom-in-button button button-control button-circle" @mousedown="startHold(zoomIn)"
+          @mouseup="stopHold" @mouseleave="stopHold" :class="{ 'disabled': !canZoomIn }">
           <BaseIcon name="IconPlus" size="24" />
         </div>
       </ItemTip>
