@@ -4,6 +4,15 @@
     "items": []
   },
   "versions":{
+    "4.17.5":{
+      "label": "4.17.5",
+      "date":"15.11. 2025",
+      "bugFixes": {
+        "items": [
+          "Fix usage statistics"
+        ]
+      }
+    },
     "4.17.4":{
       "label": "4.17.4",
       "date":"7.11. 2025",

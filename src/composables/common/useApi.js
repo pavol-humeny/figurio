@@ -30,9 +30,14 @@ export function useApi() {
     }
 
     try {
+      // Get public IP
+      const ipRes = await fetch('https://api.ipify.org?format=json')
+      const { ip } = await ipRes.json()
+
       const res = await fetch(`${API_BASE}/api/users/${userId}/visits`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ ip }),
       })
 
       if (res.ok) {
