@@ -74,7 +74,7 @@ const showControls = computed(() => route.name === 'editor')
   width: 100%;
   height: 70px;
   background: var(--background-c);
-  border: var(--border-ui);
+  border-bottom: var(--border-ui);
   padding: 0 20px;
   z-index: var(--z-index-top-panel);
   position: relative;

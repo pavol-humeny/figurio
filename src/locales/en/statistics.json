@@ -31,6 +31,10 @@
         "title": "Toggle Tool",
         "totalEvents": "Total Toggles:"
       },
+      "applyOperation": {
+        "title": "Apply Operation",
+        "totalEvents": "Total Applications:"
+      },
       "uploadImage": {
         "title": "Upload Image",
         "totalEvents": "Total Uploads:"

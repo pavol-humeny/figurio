@@ -31,6 +31,10 @@
         "title": "Prepnutie nástroja",
         "totalEvents": "Celkom prepnutí:"
       },
+      "applyOperation": {
+        "title": "Použitie operácie",
+        "totalEvents": "Celkom použití:"
+      },
       "uploadImage": {
         "title": "Nahratie obrázku",
         "totalEvents": "Celkom nahratí:"

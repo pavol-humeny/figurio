@@ -212,6 +212,24 @@ export function useApi() {
   }
 
   /**
+   * Fetches apply operation events
+   */
+  const getApplyOperation = async () => {
+    try {
+      const res = await fetch(`${API_BASE}/api/events/applyOperation`)
+      if (!res.ok) throw new Error('Failed to fetch apply operation events')
+
+      const data = await res.json()
+      log('Apply operation events fetched:', data)
+
+      return data
+    } catch (err) {
+      error('Error fetching apply operation events:', err)
+      return []
+    }
+  }
+
+  /**
    * Fetches upload image events
    */
   const getUploadImage = async () => {
@@ -293,6 +311,7 @@ export function useApi() {
     getDaysVisits,
     getEventsOverview,
     getToggleTool,
+    getApplyOperation,
     getUploadImage,
     getExportImage,
     getOpenModal,
