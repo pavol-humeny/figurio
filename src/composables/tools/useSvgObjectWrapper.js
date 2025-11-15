@@ -1538,6 +1538,8 @@ export function useSvgObjectWrapper(
           offsetX += snap.dx
           offsetY += snap.dy
 
+          console.log('Snap offset:', offsetX, offsetY)
+
           showResizeGuideLine(snap, bBox)
         }
       }
@@ -1674,17 +1676,27 @@ export function useSvgObjectWrapper(
   const showResizeGuideLine = (snap, bBox) => {
     const lines = []
 
+    // Vertical guide lines
     if (snap.snappedEdgeX) {
+      let x = (bBox.left + bBox.right) / 2 // default to center
+      if (snap.snappedEdgeX === 'left') x = bBox.left
+      else if (snap.snappedEdgeX === 'right') x = bBox.right
+      // centerX already uses default
       lines.push({
-        x: snap.snappedEdgeX === 'left' ? bBox.left : bBox.right,
+        x,
         y: (bBox.top + bBox.bottom) / 2,
         angle: 90,
       })
     }
 
+    // Horizontal guide lines
     if (snap.snappedEdgeY) {
+      let y = (bBox.top + bBox.bottom) / 2 // default to center
+      if (snap.snappedEdgeY === 'top') y = bBox.top
+      else if (snap.snappedEdgeY === 'bottom') y = bBox.bottom
+      // centerY already uses default
       lines.push({
-        y: snap.snappedEdgeY === 'top' ? bBox.top : bBox.bottom,
+        y,
         x: (bBox.left + bBox.right) / 2,
         angle: 0,
       })

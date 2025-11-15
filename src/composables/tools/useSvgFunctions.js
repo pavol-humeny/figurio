@@ -160,19 +160,31 @@ export function useSvgFunctions(imageStore) {
   const getSnapEdgeTargets = (object) => {
     const targets = [...(imageStore.svgObjects || []), ...(imageStore.blurObjects || [])]
       .filter((o) => o.id !== object.id)
-      .map((o) => getTransformedBoundingBox(o))
+      .map((o) => {
+        const bbox = getTransformedBoundingBox(o)
+        if (!bbox) return null
+        return {
+          ...bbox,
+          cx: (bbox.left + bbox.right) / 2, // center X
+          cy: (bbox.top + bbox.bottom) / 2, // center Y
+        }
+      })
       .filter(Boolean)
 
-    // Add image border as an extra snap target
     const imgWidth = imageStore.fileDimensions.width
     const imgHeight = imageStore.fileDimensions.height
 
+    // Add image border as edge target
     targets.push({
       left: 0,
       right: imgWidth,
       top: 0,
       bottom: imgHeight,
+      cx: imgWidth / 2,
+      cy: imgHeight / 2,
     })
+
+    console.warn('Snap edge targets:', targets)
 
     return targets
   }
@@ -196,14 +208,17 @@ export function useSvgFunctions(imageStore) {
     targets.push(...edgeTargets)
     targets.push(...snapTargets)
 
+    const objCenter = getObjectCenter(object)
     let bestDx = null
     let bestDy = null
+
+    console.log('object center for snapping:', objCenter)
 
     for (const t of targets) {
       const verticalOverlap = !(bottom < t.top || top > t.bottom)
       const horizontalOverlap = !(right < t.left || left > t.right)
 
-      // X os
+      // X
       if (
         (verticalOverlap || !editorConfig.needObjectOverlapToSnap) &&
         editorConfig.snapOnlyWhenOverlapping
@@ -213,6 +228,7 @@ export function useSvgFunctions(imageStore) {
           { offset: t.right - left, edge: 'left' },
           { offset: t.left - right, edge: 'right' },
           { offset: t.right - right, edge: 'right' },
+          { offset: t.cx - objCenter.cx, edge: 'centerX' }, // center X snap
         ]
         for (const c of candidatesX) {
           if (
@@ -224,7 +240,7 @@ export function useSvgFunctions(imageStore) {
         }
       }
 
-      // Y os
+      // Y
       if (
         (horizontalOverlap || !editorConfig.needObjectOverlapToSnap) &&
         editorConfig.snapOnlyWhenOverlapping
@@ -234,6 +250,7 @@ export function useSvgFunctions(imageStore) {
           { offset: t.bottom - top, edge: 'top' },
           { offset: t.top - bottom, edge: 'bottom' },
           { offset: t.bottom - bottom, edge: 'bottom' },
+          { offset: t.cy - objCenter.cy, edge: 'centerY' }, // center Y snap
         ]
         for (const c of candidatesY) {
           if (

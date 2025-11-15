@@ -4,6 +4,15 @@
     "items": []
   },
   "versions":{
+    "4.17.6":{
+      "label": "4.17.6",
+      "date":"15.11. 2025",
+      "bugFixes": {
+        "items": [
+          "Add snapping svg objects to the center of image and other objects"
+        ]
+      }
+    },
     "4.17.5":{
       "label": "4.17.5",
       "date":"15.11. 2025",
