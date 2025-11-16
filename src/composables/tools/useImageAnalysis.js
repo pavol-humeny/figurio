@@ -216,7 +216,7 @@ export function useImageAnalysis(imageStore, workspaceStore, t) {
 
       log(`[ImageAnalysis] Noise detected in ${noisyBlocks} blocks — artifacts shown`)
 
-      addUserEvent('applyOperation', { operation: 'imageNoiseDetected', settings: {} })
+      addUserEvent('applyOperation', { tool: 'imageNoiseDetected', settings: {} })
     } else {
       oCtx.clearRect(0, 0, overlayCanvas.width, overlayCanvas.height)
       expandArtifactsWarning.value = false

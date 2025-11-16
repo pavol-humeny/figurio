@@ -4,6 +4,15 @@
     "items": []
   },
   "versions":{
+    "4.17.7":{
+      "label": "4.17.7",
+      "date":"16.11. 2025",
+      "bugFixes": {
+        "items": [
+          "Save image noise detection to usage statistics"
+        ]
+      }
+    },
     "4.17.6":{
       "label": "4.17.6",
       "date":"15.11. 2025",
