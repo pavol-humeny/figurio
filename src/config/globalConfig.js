@@ -58,7 +58,7 @@ export const globalConfig = {
   },
 
   // Max number of files to upload simultaneously
-  maxNumberOfFilesToUploadSimultaneously: 5,
+  maxNumberOfFilesToUploadSimultaneously: 1, // To avoid issues with image analysis on load
 
   // API
   // API_BASE: 'https://bp-api-ft1e.onrender.com',
