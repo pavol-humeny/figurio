@@ -686,9 +686,10 @@ export function useSvgObjects(
             if (editorStore.selectedToolKey === 'select') {
               if (
                 clickedObject.class === 'magnifyArea' &&
-                clickedObject.subClass === 'magnify-result'
+                clickedObject.subClass === 'magnify-result' &&
+                clickedObject.attrs.type === 'corner'
               ) {
-                log('clicked magnify result')
+                log('clicked magnify result corner - select source instead')
                 // If clicked on magnify result, select the source instead
                 imageStore.selectedSvgObjectId = clickedObject.linkedSourceId
                 imageStore.selectedSvgObjectIds = [clickedObject.linkedSourceId]

@@ -267,11 +267,12 @@ export function useSvgObjectWrapper(
     log('mouseup object select')
     log('condition: ', !isSelected.value, !editorStore.isSvgObjectResizing)
 
-    console.log('selecting')
+    log('selecting object:', object.value.id)
 
     if (
       (!isSelected.value && !editorStore.isSvgObjectResizing) ||
-      editorStore.selectedToolKey === 'text'
+      editorStore.selectedToolKey === 'text' ||
+      editorStore.selectedToolKey === 'magnifyArea'
     ) {
       log('tool: ', editorStore.selectedToolKey, 'class:', object.value.class)
       if (editorStore.selectedToolKey === object.value.class) {
