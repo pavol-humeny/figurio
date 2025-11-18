@@ -40,7 +40,9 @@ export function useLoadingSpinner(uiStore) {
 
   const isApplying = computed(() => uiStore.isApplying)
 
-  const blockClicks = computed(() => uiStore.blockClicks)
+  const blockClicks = computed(
+    () => (uiStore.isLoading && uiStore.blockClicks) || uiStore.isApplying,
+  )
 
   return {
     isVisible,

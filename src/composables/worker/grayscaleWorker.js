@@ -1,6 +1,9 @@
 // grayscaleWorker.js
-self.onmessage = (e) => {
+self.onmessage = async (e) => {
   const { data, type } = e.data
+
+  // wait 30s
+  await new Promise((resolve) => setTimeout(resolve, 10000))
 
   const calculateGrayscale = (r, g, b) => {
     switch (type) {

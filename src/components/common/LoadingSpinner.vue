@@ -18,7 +18,7 @@ const { isVisible, isApplying, blockClicks } = useLoadingSpinner(useUiStore())
     </div>
 
     <teleport to="body">
-      <div v-if="isVisible && blockClicks" class="click-blocker">
+      <div v-if="blockClicks" class="click-blocker">
       </div>
     </teleport>
   </div>
@@ -61,7 +61,5 @@ const { isVisible, isApplying, blockClicks } = useLoadingSpinner(useUiStore())
   pointer-events: all;
   cursor: progress;
   z-index: var(--z-index-loading);
-  /* backdrop-filter: blur(20px); */
-
 }
 </style>
