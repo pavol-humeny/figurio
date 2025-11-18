@@ -1,4 +1,4 @@
-import { ref, watch, watchEffect, computed, onMounted } from 'vue'
+import { ref, watch, watchEffect, computed } from 'vue'
 import { useMath } from '../common/useMath'
 import { editorConfig } from '@/config/editorConfig'
 import { useApi } from '@/composables/common/useApi'
@@ -148,6 +148,7 @@ export function useTextTool(imageStore, historyStore, editorStore, t) {
           localTextSettings.value.bold = attrs['font-weight'] === 'bold'
           localTextSettings.value.italic = attrs['font-style'] === 'italic'
           localTextSettings.value.underline = attrs['text-decoration'] === 'underline'
+
         } else {
           resetTextSettings()
         }
@@ -337,10 +338,6 @@ export function useTextTool(imageStore, historyStore, editorStore, t) {
     localTextSettings.value.underline = !localTextSettings.value.underline
     applyLocalTextSettings()
   }
-
-  onMounted(() => {
-    resetTextSettings()
-  })
 
   return {
     localTextSettings,
