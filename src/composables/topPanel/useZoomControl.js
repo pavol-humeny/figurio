@@ -201,6 +201,7 @@ export function useZoomControl(viewportStore, imageStore) {
    */
   const holdTimeout = ref(null)
   const holdInterval = ref(null)
+  const isHolding = ref(false)
 
   /**
    * Starts the hold action to continuously call the provided action function
@@ -208,12 +209,16 @@ export function useZoomControl(viewportStore, imageStore) {
    * @param {Function} action - Function to call repeatedly while holding
    */
   const startHold = (action) => {
-    // Call immediately
-    action(0.1)
+    isHolding.value = false
 
-    // Wait (longer pause before repeating)
     holdTimeout.value = setTimeout(() => {
-      // Start interval with shorter period
+      // Holding started
+      isHolding.value = true
+
+      // Call immediately in hold mode
+      action(0.01)
+
+      // Continue repeatedly
       holdInterval.value = setInterval(() => {
         action(0.01)
       }, editorConfig.holdButtonInterval)
@@ -228,6 +233,22 @@ export function useZoomControl(viewportStore, imageStore) {
     clearInterval(holdInterval.value)
     holdTimeout.value = null
     holdInterval.value = null
+  }
+
+  /**
+   * Handle mouseup for zoom buttons
+   */
+  const handleClickOrHold = (action) => {
+    // Stop hold first
+    stopHold()
+
+    // If not holding -> normal click
+    if (!isHolding.value) {
+      action(0.1)
+    }
+
+    // Reset flag
+    isHolding.value = false
   }
 
   return {
@@ -248,5 +269,6 @@ export function useZoomControl(viewportStore, imageStore) {
     maxPhysicalContentSize,
     startHold,
     stopHold,
+    handleClickOrHold,
   }
 }
