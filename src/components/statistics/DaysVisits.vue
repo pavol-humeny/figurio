@@ -38,8 +38,6 @@ const filteredVisits = computed(() => {
   const from = fromDate.value ? parseInt(fromDate.value.replace(/-/g, ''), 10) : null
   const to = toDate.value ? parseInt(toDate.value.replace(/-/g, ''), 10) : null
 
-  console.log('Filtering visits from', from, 'to', to)
-
   return visits.value.filter(v => {
     const vDate = parseInt(v.date.replace(/-/g, ''), 10)
     if (from !== null && vDate < from) return false

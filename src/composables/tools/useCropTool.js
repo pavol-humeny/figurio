@@ -968,9 +968,6 @@ export function useCropTool(
 
       // If overlay crop box is larger, use it
       if (overlayCropBox) {
-        console.log('Overlay crop box:', overlayCropBox)
-        console.log('New crop box:', newCropBox)
-
         newCropBox.x = Math.min(newCropBox.x, overlayCropBox.x)
         newCropBox.y = Math.min(newCropBox.y, overlayCropBox.y)
         const rightSide = Math.max(

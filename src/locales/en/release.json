@@ -4,6 +4,16 @@
     "items": []
   },
   "versions":{
+    "4.17.8":{
+      "label": "4.17.8",
+      "date":"18.11. 2025",
+      "bugFixes": {
+        "items": [
+          "Text tool - object can be edited immediately after creation",
+          "Text tool - object is deselected from multiple selection after single selection"
+        ]
+      }
+    },
     "4.17.7":{
       "label": "4.17.7",
       "date":"16.11. 2025",

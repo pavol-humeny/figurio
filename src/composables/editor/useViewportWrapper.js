@@ -737,7 +737,6 @@ export function useViewportWrapper(viewportStore, imageStore, editorStore, uiSto
    * Guide line definition (center point + angle in degrees)
    */
   const guideLines = computed(() => {
-    console.log('Guide lines from store', viewportStore.guideLines)
     return viewportStore.guideLines
   })
 

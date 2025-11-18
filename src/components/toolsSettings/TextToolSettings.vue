@@ -19,7 +19,6 @@ import ExplainItem from '../common/ExplainItem.vue';
 import { editorConfig } from '@/config/editorConfig'
 import { useWorkspaceStore } from '@/stores/workspaceStore';
 
-const editorStore = useEditorStore();
 const imageStore = useImageStore();
 const { t } = useI18n()
 
@@ -109,7 +108,7 @@ const {
         </div>
 
         <!-- Rotation -->
-        <div v-if="!editorStore.isSvgObjectResizing && !hidePosition" class="settings-content-wrapper">
+        <div v-if="!hidePosition" class="settings-content-wrapper">
           <div class="content-wrapper">
             <div class="content-title">
               <p>

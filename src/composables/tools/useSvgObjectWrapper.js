@@ -267,7 +267,7 @@ export function useSvgObjectWrapper(
     log('mouseup object select')
     log('condition: ', !isSelected.value, !editorStore.isSvgObjectResizing)
 
-    console.warn('selecting')
+    console.log('selecting')
 
     if (
       (!isSelected.value && !editorStore.isSvgObjectResizing) ||
@@ -286,6 +286,8 @@ export function useSvgObjectWrapper(
           imageStore.selectedSvgObjectId = object.value.id
         }
         editorStore.previousToolKey = ''
+
+        imageStore.selectedSvgObjectIds = []
       }
     }
   }

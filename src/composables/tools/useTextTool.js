@@ -148,7 +148,6 @@ export function useTextTool(imageStore, historyStore, editorStore, t) {
           localTextSettings.value.bold = attrs['font-weight'] === 'bold'
           localTextSettings.value.italic = attrs['font-style'] === 'italic'
           localTextSettings.value.underline = attrs['text-decoration'] === 'underline'
-
         } else {
           resetTextSettings()
         }

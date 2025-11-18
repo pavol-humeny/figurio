@@ -261,13 +261,6 @@ export function useImageAnalysis(imageStore, workspaceStore, t) {
   watch(
     () => workspaceStore.activeTabIndex,
     (oldValue, newValue) => {
-      console.warn(
-        'Active tab changed:',
-        oldValue,
-        '->',
-        newValue,
-        !imageStore.imageArtifactsCanceledByUser,
-      )
       if (newValue === undefined) return
 
       if (!imageStore.imageArtifactsCanceledByUser) {
