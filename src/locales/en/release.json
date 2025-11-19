@@ -12,7 +12,8 @@
           "Text tool - object can be edited immediately after creation",
           "Text tool - object is deselected from multiple selection after single selection",
           "Magnify area - correctly select linked source or result object when clicking on magnify area object",
-          "Magnify area - enable selecting new object when previous object is selected"
+          "Magnify area - enable selecting new object when previous object is selected",
+          "Improve zoom control button behavior for click and hold actions"
         ]
       }
     },
