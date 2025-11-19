@@ -57,6 +57,13 @@
             { "description": "Duplikovať vybraný objekt", "shortcut": "Ctrl + D" },
             { "description": "Vystrihnúť vybraný objekt", "shortcut": "Ctrl + X" }
           ]
+        },
+        {
+          "name": "Operácie s obrázkami",
+          "list": [
+            { "description": "Nástroj na odstránenie pozadia - odstrániť vybranú oblasť", "shortcut": "Delete" },
+            { "description": "Nástroj orezávania - použiť orezanie", "shortcut": "Enter" }
+          ]
         }
       ]
     },

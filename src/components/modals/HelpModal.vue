@@ -152,6 +152,54 @@ const showStatistics = () => {
                   </li>
                 </ul>
               </div>
+              <!-- BackgroundRemoval -->
+              <div class="tool-description">
+                <div>
+                  <p class="title">
+                    {{ $t('tools.backgroundRemoval.label') }}
+                  </p>
+                  <p class="shortcut">
+                    {{ $t('tools.backgroundRemoval.shortcut') }}
+                  </p>
+                </div>
+                <ul class="description dot-paragraph">
+                  <li>
+                    {{ $t('tools.backgroundRemoval.tip') }}
+                  </li>
+                </ul>
+              </div>
+              <!-- Brush -->
+              <div class="tool-description">
+                <div>
+                  <p class="title">
+                    {{ $t('tools.brush.label') }}
+                  </p>
+                  <p class="shortcut">
+                    {{ $t('tools.brush.shortcut') }}
+                  </p>
+                </div>
+                <ul class="description dot-paragraph">
+                  <li>
+                    {{ $t('tools.brush.tip') }}
+                  </li>
+                </ul>
+              </div>
+              <!-- Eraser -->
+              <div class="tool-description">
+                <div>
+                  <p class="title">
+                    {{ $t('tools.brush.subTools.eraser.label') }}
+                  </p>
+                  <p class="shortcut">
+                    {{ $t('tools.brush.subTools.eraser.shortcut') }}
+                  </p>
+                </div>
+                <ul class="description dot-paragraph">
+                  <li>
+                    {{ $t('tools.brush.subTools.eraser.tip') }}
+                  </li>
+                </ul>
+              </div>
               <!-- Select -->
               <div class="tool-description">
                 <div>

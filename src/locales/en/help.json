@@ -57,6 +57,13 @@
             { "description": "Duplicate selected object", "shortcut": "Ctrl + D" },
             { "description": "Cut selected object", "shortcut": "Ctrl + X" }
           ]
+        },
+        {
+          "name": "Image operations",
+          "list": [
+            { "description": "Background removal tool - remove selected area", "shortcut": "Delete" },
+            { "description": "Crop tool - apply crop", "shortcut": "Enter" }
+          ]
         }
       ]
     },
