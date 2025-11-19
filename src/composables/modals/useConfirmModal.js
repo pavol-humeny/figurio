@@ -24,6 +24,11 @@ const cancelText = ref('Cancel')
 const confirmText = ref('Confirm')
 
 /**
+ * Whether to use close action
+ */
+const useClose = ref(false)
+
+/**
  * Resolver function used to finalize the modal Promise
  * @type {(result: boolean) => void | null}
  */
@@ -55,7 +60,13 @@ export function useConfirmModal() {
    * @param {string} modalConfirmText - Label for confirm button
    * @returns {Promise<boolean>} - Resolves true if confirmed, false if canceled
    */
-  const showConfirmModal = (modalTitle, modalMessage, modalCancelText, modalConfirmText) => {
+  const showConfirmModal = (
+    modalTitle,
+    modalMessage,
+    modalCancelText,
+    modalConfirmText,
+    modalUseClose = false,
+  ) => {
     if (isVisible.value) {
       return Promise.resolve(false)
     }
@@ -65,6 +76,7 @@ export function useConfirmModal() {
     message.value = modalMessage
     cancelText.value = modalCancelText
     confirmText.value = modalConfirmText
+    useClose.value = modalUseClose
 
     editorStore.isModalOpenFlag = true
 
@@ -91,6 +103,20 @@ export function useConfirmModal() {
     resolver?.(false)
   }
 
+  /**
+   * Resolve with "other"
+   */
+  const close = () => {
+    isVisible.value = false
+    editorStore.isModalOpenFlag = false
+
+    if (useClose.value) {
+      resolver?.('close') // <-- third state
+    } else {
+      resolver?.(false)
+    }
+  }
+
   return {
     isVisible,
     title,
@@ -100,5 +126,7 @@ export function useConfirmModal() {
     confirmText,
     cancel,
     cancelText,
+    close,
+    useClose,
   }
 }

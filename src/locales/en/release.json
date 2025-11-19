@@ -16,7 +16,8 @@
       "bugFixes": {
         "items": [
           "Disable phone frame expanded header when phone header is disabled",
-          "Show image dimensions as rounded values in Export settings"
+          "Show image dimensions as rounded values in Export settings",
+          "Process of preset application can be canceled"
         ]
       }
     },

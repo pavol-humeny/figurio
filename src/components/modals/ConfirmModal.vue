@@ -13,13 +13,18 @@ const {
   confirmText,
   cancel,
   cancelText,
+  close,
+  useClose,
 } = useConfirmModal();
 </script>
 
 <template>
   <Teleport to="body">
-    <div v-if="isVisible" class="confirm-modal-overlay" @mousedown.self="cancel">
+    <div v-if="isVisible" class="confirm-modal-overlay" @mousedown.self="close">
       <div class="modal-box">
+        <!-- Close icon -->
+        <div v-if="useClose" class="close-icon" @click="close">✕</div>
+
         <div class="title-wrapper">
           <p>{{ title }}</p>
         </div>
@@ -50,6 +55,7 @@ const {
 }
 
 .modal-box {
+  position: relative;
   background: var(--secondary-c);
   border: var(--border-modal);
   padding: 20px 25px;
@@ -86,5 +92,19 @@ const {
   justify-content: space-between;
   gap: 10px;
   margin-top: 10px;
+}
+
+.close-icon {
+  position: absolute;
+  top: 10px;
+  right: 15px;
+  cursor: pointer;
+  font-size: 20px;
+  user-select: none;
+  opacity: 0.7;
+}
+
+.close-icon:hover {
+  color: var(--primary-c);
 }
 </style>

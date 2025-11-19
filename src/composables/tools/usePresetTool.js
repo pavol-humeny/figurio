@@ -501,9 +501,12 @@ export function usePresetTool(
       t('tools.preset.settings.myPresets.addPresetOperationsOrReplace.message'),
       t('tools.preset.settings.myPresets.addPresetOperationsOrReplace.cancel'),
       t('tools.preset.settings.myPresets.addPresetOperationsOrReplace.confirm'),
+      true,
     )
-    if (confirmed) {
+    if (confirmed === true) {
       replace = true
+    } else if (confirmed === 'close') {
+      return
     }
 
     // Check if operations contain crop operation
