@@ -21,6 +21,21 @@ const headerSize = ref(0)
 const headerSizeMm = ref(0)
 
 /**
+ * User set header size mm if using millimeters
+ */
+const userSetHeaderSizeMm = ref(0)
+
+/**
+ * Minimum user set header size mm
+ */
+const minUserSetHeaderSizeMm = ref(5)
+
+/**
+ * Maximum user set header size mm
+ */
+const maxUserSetHeaderSizeMm = ref(25)
+
+/**
  * Footer size px
  */
 const footerSize = ref(0)
@@ -387,6 +402,25 @@ export function useFrameTool(imageStore, historyStore, viewportStore, t) {
   }
 
   /**
+   * Set user set header size mm
+   * @param {number} size - New header size in mm
+   */
+  const setUserSetHeaderSizeMm = (size) => {
+    userSetHeaderSizeMm.value = size
+    applyFrame()
+  }
+
+  /**
+   * Reset user set header size mm to default value
+   */
+  const resetUserSetHeaderSizeMm = () => {
+    const PxPerMm = viewportStore.getPxPerMmFitZoom
+    userSetHeaderSizeMm.value =
+      Math.max(Math.floor(0.1 * imageStore.fileDimensions.width), 5) / PxPerMm
+    applyFrame()
+  }
+
+  /**
    * Set whether to use millimeters for frame width input
    * @param {boolean} value - Whether to use millimeters
    */
@@ -405,6 +439,10 @@ export function useFrameTool(imageStore, historyStore, viewportStore, t) {
         footerSizeMm.value = Math.max(footerSize.value / PxPerMm, 1)
         maxHeaderFooterSize.value = (imageStore.getSmallerImageDimension() * 0.5) / PxPerMm
       }
+
+      // Set default user set header size mm
+      userSetHeaderSizeMm.value =
+        Math.max(Math.floor(0.1 * imageStore.fileDimensions.width), 5) / PxPerMm
     } else {
       frameWidth.value = frameWidthMm.value * PxPerMm
 
@@ -736,6 +774,7 @@ export function useFrameTool(imageStore, historyStore, viewportStore, t) {
    * @param {SVGElement} el - The SVG element to apply the frame to
    */
   const applyFrameRender = (el, width = null, height = null) => {
+    console.log('Applying frame render...')
     const ns = 'http://www.w3.org/2000/svg'
     const frame = imageStore.frame
     if (!frame?.enabled || !el) return
@@ -774,10 +813,15 @@ export function useFrameTool(imageStore, historyStore, viewportStore, t) {
       frame.type === 'framePhoneIOS2' ||
       frame.type === 'framePhoneSimple'
     ) {
+      console.warn('Calculating phone frame dimensions...')
       if (!useMillimetersForFrame) {
         // WIDTH CALCULATION - CHANGE
         fw = Math.max(Math.floor(editorConfig.phoneFrameDefaultSize * w), 2) * 1.5 * 2
         fh = fw / 1.5
+
+        // Header size
+        imageStore.frame.headerSize = Math.max(Math.floor(0.1 * w), 5)
+        console.warn('1Set header size px:', imageStore.frame.headerSize)
       } else {
         // Use only max frame width in mm (because of preset values)
         if (fw > maxFrameWidthMm.value * PxPerMm) {
@@ -785,13 +829,16 @@ export function useFrameTool(imageStore, historyStore, viewportStore, t) {
         }
 
         fh = fw / 1.5
+
+        // Header size in mm (used value set by user)
+        imageStore.frame.headerSize = userSetHeaderSizeMm.value * PxPerMm
+        console.warn('userSetHeaderSizeMm:', userSetHeaderSizeMm.value)
+        console.warn('2Set header size px:', imageStore.frame.headerSize)
       }
-      // Non-linear scaling using a power function for smoother growth
-      // headerSize = fh ** exponent * scaleFactor
-      // exponent == 1 - linear
-      // exponent < 1 - slower growth
-      // exponent > 1 - faster growth
-      imageStore.frame.headerSize = Math.floor(fh ** 0.5 * 13)
+
+      // imageStore.frame.headerSize = 10 * PxPerMm
+
+      // imageStore.frame.headerSize = Math.max(Math.floor(0.1 * w), 5)
 
       imageStore.frame.footerSize = 0
     } else if (frame.type === 'frameWindowsTaskBar') {
@@ -1878,5 +1925,10 @@ export function useFrameTool(imageStore, historyStore, viewportStore, t) {
     headerSizeMm,
     footerSize,
     footerSizeMm,
+    userSetHeaderSizeMm,
+    setUserSetHeaderSizeMm,
+    resetUserSetHeaderSizeMm,
+    minUserSetHeaderSizeMm,
+    maxUserSetHeaderSizeMm,
   }
 }

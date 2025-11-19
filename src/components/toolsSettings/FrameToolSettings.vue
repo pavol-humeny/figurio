@@ -62,6 +62,11 @@ const {
   footerSize,
   footerSizeMm,
   isFrameWithHeader,
+  userSetHeaderSizeMm,
+  setUserSetHeaderSizeMm,
+  resetUserSetHeaderSizeMm,
+  minUserSetHeaderSizeMm,
+  maxUserSetHeaderSizeMm
 } = useFrameTool(useImageStore(), useHistoryStore(), useViewportStore(), t)
 </script>
 
@@ -153,6 +158,17 @@ const {
               @update="setFrameWidthMm(frameWidthMm)" icon="IconArrowWidth" :color="'var(--primary-c)'" size="22"
               :onReset="() => setFrameWidthMm(-1)" :tip="t('tools.frame.settings.general.frameWidth.tip')"
               position="bottom-left" />
+          </div>
+          <div v-if="useMillimeters" class="content-wrapper">
+            <div class="content-title">
+              <p>
+                {{ t('tools.frame.settings.general.headerSize.label') }}
+              </p>
+            </div>
+            <NumberInput v-model="userSetHeaderSizeMm" :min="minUserSetHeaderSizeMm" :max="maxUserSetHeaderSizeMm"
+              :step="1" unit="mm" @update="setUserSetHeaderSizeMm(userSetHeaderSizeMm)" icon="IconArrowWidth"
+              :color="'var(--primary-c)'" size="22" :onReset="resetUserSetHeaderSizeMm"
+              :tip="t('tools.frame.settings.general.headerSize.tip')" position="bottom-left" />
           </div>
         </div>
 
