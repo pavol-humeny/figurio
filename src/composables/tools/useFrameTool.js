@@ -717,6 +717,30 @@ export function useFrameTool(imageStore, historyStore, viewportStore, t) {
       imageStore.frame.height = width
     }
 
+    if (isPhoneFrame(selectedFrameVariant.value)) {
+      // imageStore.frame.headerSize = headerSize.value
+      // imageStore.frame.headerSizeMm = headerSizeMm.value
+
+      // Header size in mm (used value set by user)
+
+      if (imageStore.frame.useMillimeters) {
+        const PxPerMm = viewportStore.getPxPerMmFitZoom
+        imageStore.frame.headerSize = userSetHeaderSizeMm.value * PxPerMm
+      } else {
+        imageStore.frame.headerSize = Math.max(Math.floor(0.1 * imageStore.fileDimensions.width), 5)
+      }
+    } else if (isFrameWithFooter(selectedFrameVariant.value)) {
+      imageStore.frame.footerSize = footerSize.value
+      imageStore.frame.footerSizeMm = footerSizeMm.value
+      imageStore.frame.headerSize = 0
+      imageStore.frame.headerSizeMm = 0
+    } else if (isFrameWithHeader(selectedFrameVariant.value)) {
+      imageStore.frame.headerSize = headerSize.value
+      imageStore.frame.headerSizeMm = headerSizeMm.value
+      imageStore.frame.footerSize = 0
+      imageStore.frame.footerSizeMm = 0
+    }
+
     if (commit) {
       addUserEvent('applyOperation', {
         tool: 'frame',
@@ -801,11 +825,11 @@ export function useFrameTool(imageStore, historyStore, viewportStore, t) {
         fh = 0
       }
 
-      imageStore.frame.headerSize = headerSize.value
-      imageStore.frame.headerSizeMm = headerSizeMm.value
+      // imageStore.frame.headerSize = imageStore.frame.userSetSize.size
+      // imageStore.frame.headerSizeMm = imageStore.frame.userSetSize.sizeMm
 
-      imageStore.frame.footerSize = 0
-      imageStore.frame.footerSizeMm = 0
+      // imageStore.frame.footerSize = 0
+      // imageStore.frame.footerSizeMm = 0
     } else if (
       frame.type === 'framePhoneAndroid' ||
       frame.type === 'framePhoneAndroid2' ||
@@ -820,8 +844,7 @@ export function useFrameTool(imageStore, historyStore, viewportStore, t) {
         fh = fw / 1.5
 
         // Header size
-        imageStore.frame.headerSize = Math.max(Math.floor(0.1 * w), 5)
-        console.warn('1Set header size px:', imageStore.frame.headerSize)
+        // imageStore.frame.headerSize = Math.max(Math.floor(0.1 * w), 5)
       } else {
         // Use only max frame width in mm (because of preset values)
         if (fw > maxFrameWidthMm.value * PxPerMm) {
@@ -831,14 +854,8 @@ export function useFrameTool(imageStore, historyStore, viewportStore, t) {
         fh = fw / 1.5
 
         // Header size in mm (used value set by user)
-        imageStore.frame.headerSize = userSetHeaderSizeMm.value * PxPerMm
-        console.warn('userSetHeaderSizeMm:', userSetHeaderSizeMm.value)
-        console.warn('2Set header size px:', imageStore.frame.headerSize)
+        // imageStore.frame.headerSize = userSetHeaderSizeMm.value * PxPerMm
       }
-
-      // imageStore.frame.headerSize = 10 * PxPerMm
-
-      // imageStore.frame.headerSize = Math.max(Math.floor(0.1 * w), 5)
 
       imageStore.frame.footerSize = 0
     } else if (frame.type === 'frameWindowsTaskBar') {
@@ -847,11 +864,11 @@ export function useFrameTool(imageStore, historyStore, viewportStore, t) {
         fh = 0
       }
 
-      imageStore.frame.footerSize = footerSize.value
-      imageStore.frame.footerSizeMm = footerSizeMm.value
+      // imageStore.frame.footerSize = imageStore.frame.userSetSize.size
+      // imageStore.frame.footerSizeMm = imageStore.frame.userSetSize.sizeMm
 
-      imageStore.frame.headerSize = 0
-      imageStore.frame.headerSizeMm = 0
+      // imageStore.frame.headerSize = 0
+      // imageStore.frame.headerSizeMm = 0
     } else {
       imageStore.frame.headerSize = 0
       imageStore.frame.footerSize = 0
