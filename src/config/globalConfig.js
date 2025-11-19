@@ -30,7 +30,7 @@ export const globalConfig = {
   calibrationFactor: 1, // calibration factor for physical mode
 
   // Default tool to start with
-  startTool: 'text',
+  startTool: 'frame',
 
   // Feature flags
   // UPDATE new tool
@@ -51,7 +51,7 @@ export const globalConfig = {
       preset: true,
       export: true,
     },
-    enableNoiseDetectionOnStart: true,
+    enableNoiseDetectionOnStart: false,
     enableTutorial: true,
     enableImageLoad: true,
     notEnabledMessage: 'This feature is currently not available.',

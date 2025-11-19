@@ -241,6 +241,18 @@ export function usePresetTool(
   )
 
   /**
+   * Watch localImageFrame.phoneHeaderEnabled and if it is false set phoneHeaderExpand to falsep
+   */
+  watch(
+    () => localImageFrame.value.phoneHeaderEnabled,
+    (enabled) => {
+      if (!enabled) {
+        localImageFrame.value.phoneHeaderExpand = false
+      }
+    },
+  )
+
+  /**
    * Modify the preset
    * Copy current preset data to temporary variables
    * to revert changes if needed
@@ -866,6 +878,18 @@ export function usePresetTool(
     (newSize) => {
       const PxPerMm = viewportStore.getPxPerMmFitZoom
       newPreset.value.frame.footerSizeMm = newSize / PxPerMm
+    },
+  )
+
+  /**
+   * Watch phoneHeaderEnabled and if it is false set phoneHeaderExpand to false
+   */
+  watch(
+    () => newPreset.value.frame.phoneHeaderEnabled,
+    (enabled) => {
+      if (!enabled) {
+        newPreset.value.frame.phoneHeaderExpand = false
+      }
     },
   )
 

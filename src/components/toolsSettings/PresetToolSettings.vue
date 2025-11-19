@@ -242,7 +242,8 @@ const tabs = ['myPresets', 'createPreset']
                 <ColorPicker v-model="localImageFrame.color" />
               </div>
               <!-- Use millimeters -->
-              <div class="content-aligned two-items" :class="!isModifyingPreset ? 'disabled' : ''">
+              <div class="content-aligned two-items" v-if="localImageFrame.enabled"
+                :class="!isModifyingPreset ? 'disabled' : ''">
                 <p>
                   {{ t('tools.preset.settings.myPresets.presetValues.frame.useMillimeters') }}
                 </p>

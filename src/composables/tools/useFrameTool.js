@@ -184,6 +184,11 @@ export function useFrameTool(imageStore, historyStore, viewportStore, t) {
     get: () => imageStore.frame.phoneHeaderEnabled,
     set: (value) => {
       imageStore.frame.phoneHeaderEnabled = value
+
+      // If header is disabled, also disable expanded header
+      if (!value) {
+        imageStore.frame.phoneHeaderExpand = false
+      }
     },
   })
 
