@@ -9,7 +9,8 @@
       "date":"19.11. 2025",
       "improvements": {
         "items": [
-          "Add new keyboard shortcuts for brush and eraser tools (B and E keys)"
+          "Add new keyboard shortcuts for brush and eraser tools (B and E keys)",
+          "Update keyboard shortcut list in help modal to include new shortcuts"
         ]
       },
       "newFeatures": {

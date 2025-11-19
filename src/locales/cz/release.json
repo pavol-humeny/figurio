@@ -6,6 +6,43 @@
     ]
   },
   "versions": {
+    "4.17.9": {
+      "label": "4.17.9",
+      "date": "19.11. 2025",
+      "improvements": {
+        "items": [
+          "Přidány nové klávesové zkratky pro nástroje štětec a guma (klávesy B a E)",
+          "Aktualizován seznam klávesových zkratek v nápovědě o nové zkratky"
+        ]
+      },
+      "newFeatures": {
+        "items": [
+          "Přidána možnost upravit výšku hlavičky rámu v mm",
+          "Do šablony přidáno pole pro velikost hlavičky rámu"
+        ]
+      },
+      "bugFixes": {
+        "items": [
+          "Deaktivace rozšířené hlavičky telefonu, když je hlavička telefonu vypnutá",
+          "Zobrazení rozměrů obrázku zaokrouhlených v nastavení exportu",
+          "Proces aplikace šablony lze zrušit",
+          "Správné zobrazování pohybu kurzoru – pouze při přesouvání obrázku prostředním tlačítkem myši"
+        ]
+      }
+    },
+    "4.17.8": {
+      "label": "4.17.8",
+      "date": "18.11. 2025",
+      "bugFixes": {
+        "items": [
+          "Textový nástroj – objekt lze upravovat ihned po vytvoření",
+          "Textový nástroj – objekt je odebrán z vícenásobného výběru po samostatném výběru",
+          "Zvětšovací oblast – správný výběr propojeného zdrojového nebo výsledného objektu při kliknutí na objekt zvětšené oblasti",
+          "Zvětšovací oblast – umožnění výběru nového objektu, když je předchozí objekt vybrán",
+          "Vylepšeno chování zoom tlačítek při kliknutí a podržení"
+        ]
+      }
+    },
     "4.17.7":{
       "label": "4.17.7",
       "date":"16.11. 2025",
