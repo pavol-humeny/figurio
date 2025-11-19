@@ -341,19 +341,19 @@
     "tip": "Paints on the image with a brush tool",
     "tipDisabled": "",
     "explain": "The Brush tool allows you to paint on the image with a brush. You can adjust the brush size, hardness, and opacity to achieve different effects.",
-    "shortcut": "SHIFT + B",
+    "shortcut": "B",
     "subTools": {
       "brush": {
         "label": "Brush",
         "tip": "Paints on the image with a brush tool",
         "explain": "The Brush tool allows you to paint on the image with a brush. You can adjust the brush size, hardness, and opacity to achieve different effects.",
-        "shortcut": ""
+        "shortcut": "B"
       },
       "eraser": {
         "label": "Eraser",
         "tip": "Removes painted areas from the image",
         "explain": "The Eraser tool allows you to remove painted areas from the image. You can adjust the eraser size and hardness to control how much of the painted area is removed.",
-        "shortcut": ""
+        "shortcut": "E"
       }
     },
     "settings": {

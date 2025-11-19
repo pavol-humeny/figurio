@@ -7,6 +7,11 @@
     "4.17.9":{
       "label": "4.17.9",
       "date":"19.11. 2025",
+      "improvements": {
+        "items": [
+          "Add new keyboard shortcuts for brush and eraser tools (B and E keys)"
+        ]
+      },
       "newFeatures": {
         "items": [
           "Add option to customize frame header size in mm",
@@ -17,7 +22,8 @@
         "items": [
           "Disable phone frame expanded header when phone header is disabled",
           "Show image dimensions as rounded values in Export settings",
-          "Process of preset application can be canceled"
+          "Process of preset application can be canceled",
+          "Show cursor move correctly, only when moving the image with middle mouse button"
         ]
       }
     },

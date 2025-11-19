@@ -99,6 +99,7 @@ export function useViewportWrapper(viewportStore, imageStore, editorStore, uiSto
       const onMouseUp = () => {
         document.removeEventListener('mousemove', onMouseMove)
         document.removeEventListener('mouseup', onMouseUp)
+        isMiddleDragging.value = false
       }
 
       document.addEventListener('mousemove', onMouseMove)

@@ -217,7 +217,6 @@ const cursorStyle = computed(() => {
     <div class="viewport-content-wrapper" ref="wrapperRef" @wheel.passive="setZoomAndScroll" @mousedown="startPan"
       @mousemove="onMouseMove" :class="{
         'middle-dragging': isMiddleDragging,
-        'move-tool-selected': editorStore.selectedToolKey === 'move',
       }" :style="{
         '--viewport-wrapper-background': backgroundModeValues[backgroundMode],
       }">
@@ -540,10 +539,6 @@ const cursorStyle = computed(() => {
 }
 
 .middle-dragging {
-  cursor: move;
-}
-
-.move-tool-selected {
   cursor: move;
 }
 

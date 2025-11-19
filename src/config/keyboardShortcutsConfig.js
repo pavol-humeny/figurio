@@ -171,8 +171,14 @@ export const keyboardShortcuts = [
   {
     keys: ['b'],
     action: 'toggleTool',
-    args: ['brush', null],
+    args: ['brush', 'brush'],
     description: 'Toggle brush tool',
+  },
+  {
+    keys: ['e'],
+    action: 'toggleTool',
+    args: ['brush', 'eraser'],
+    description: 'Toggle eraser tool',
   },
 
   // Multi-file management shortcuts
