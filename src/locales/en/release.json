@@ -9,7 +9,8 @@
       "date":"19.11. 2025",
       "newFeatures": {
         "items": [
-          "Add option to customize frame header size in mm"
+          "Add option to customize frame header size in mm",
+          "Add frame header size input to presets"
         ]
       },
       "bugFixes": {

@@ -836,7 +836,6 @@ export function useFrameTool(imageStore, historyStore, viewportStore, t) {
       frame.type === 'framePhoneIOS2' ||
       frame.type === 'framePhoneSimple'
     ) {
-      console.warn('Calculating phone frame dimensions...')
       if (!useMillimetersForFrame) {
         // WIDTH CALCULATION - CHANGE
         fw = Math.max(Math.floor(editorConfig.phoneFrameDefaultSize * w), 2) * 1.5 * 2
