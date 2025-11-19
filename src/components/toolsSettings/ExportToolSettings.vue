@@ -8,8 +8,11 @@ import { useI18n } from 'vue-i18n'
 import DefaultSlider from '@/components/common/DefaultSlider.vue'
 import { useEditorStore } from '@/stores/editorStore'
 import { useHistoryStore } from '@/stores/historyStore'
+import { useMath } from '@/composables/common/useMath'
 
 const { t } = useI18n()
+const { round } = useMath()
+
 
 /**
  * Logic of the shaking animation (used when clicking outside modal)
@@ -60,8 +63,8 @@ const {
           <div class="export-settings-item" v-if="fileFormat === 'jpg' || fileFormat === 'webp'">
             <label for="file-quality">{{
               $t('tools.export.settings.general.fileQuality.label')
-            }}</label>
-            <p>{{ fileDimensions.quality }} %</p>
+              }}</label>
+            <p>{{ round(fileDimensions.quality) }} %</p>
             <DefaultSlider v-model="fileDimensions.quality" :min="0" :max="100" :step="1"
               @update:modelValue="(value) => updateQuality(value)" :backgroundColor="'var(--background-c)'" />
           </div>
@@ -78,14 +81,14 @@ const {
           <div class="export-settings-item">
             <label>{{
               $t('tools.export.settings.general.fileDimensions.label')
-              }}</label>
+            }}</label>
             <div class="export-settings-item-value">
               <div class="width disabled">
                 <p>
                   {{ $t('tools.export.settings.general.fileDimensions.width') }}
                 </p>
                 <p>
-                  : {{ fileDimensions.width }}px
+                  : {{ round(fileDimensions.width) }}px
                 </p>
               </div>
 
@@ -94,7 +97,7 @@ const {
                   {{ $t('tools.export.settings.general.fileDimensions.height') }}
                 </p>
                 <p>
-                  : {{ fileDimensions.height }}px
+                  : {{ round(fileDimensions.height) }}px
                 </p>
               </div>
             </div>

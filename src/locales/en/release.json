@@ -15,7 +15,8 @@
       },
       "bugFixes": {
         "items": [
-          "Disable phone frame expanded header when phone header is disabled"
+          "Disable phone frame expanded header when phone header is disabled",
+          "Show image dimensions as rounded values in Export settings"
         ]
       }
     },
