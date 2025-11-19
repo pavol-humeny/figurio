@@ -372,7 +372,7 @@ const tabs = ['myPresets', 'createPreset']
 
               <!-- Header size mm-->
               <div class="content-aligned two-items"
-                v-if="localImageFrame.enabled && isFrameWithMultiplier(localImageFrame.type) && isFrameWithHeader(localImageFrame.type) && localImageFrame.useMillimeters">
+                v-if="localImageFrame.enabled && (isFrameWithMultiplier(localImageFrame.type) || isFrameWithHeader(localImageFrame.type) || isPhoneFrame(localImageFrame.type)) && localImageFrame.useMillimeters">
                 <p :class="!isModifyingPreset ? 'disabled' : ''">
                   {{ t('tools.preset.settings.myPresets.presetValues.frame.headerSize') }}
                 </p>

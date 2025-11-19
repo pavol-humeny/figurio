@@ -241,7 +241,7 @@ export function usePresetTool(
   )
 
   /**
-   * Watch localImageFrame.phoneHeaderEnabled and if it is false set phoneHeaderExpand to falsep
+   * Watch localImageFrame.phoneHeaderEnabled and if it is false set phoneHeaderExpand to false
    */
   watch(
     () => localImageFrame.value.phoneHeaderEnabled,
@@ -570,6 +570,8 @@ export function usePresetTool(
         // UPDATE new tool
       })
     }
+
+    console.warn('Applying preset frame:', preset.imageFrame)
 
     // Apply frame
     if (!replace) {

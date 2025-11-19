@@ -129,6 +129,7 @@ export function useFrameTool(imageStore, historyStore, viewportStore, t) {
     () => imageStore.frame.headerSizeMm,
     (newSize) => {
       headerSizeMm.value = newSize
+      userSetHeaderSizeMm.value = newSize
     },
   )
 
@@ -717,15 +718,13 @@ export function useFrameTool(imageStore, historyStore, viewportStore, t) {
       imageStore.frame.height = width
     }
 
+    // Set header and footer sizes
     if (isPhoneFrame(selectedFrameVariant.value)) {
       // imageStore.frame.headerSize = headerSize.value
       // imageStore.frame.headerSizeMm = headerSizeMm.value
 
-      // Header size in mm (used value set by user)
-
       if (imageStore.frame.useMillimeters) {
-        const PxPerMm = viewportStore.getPxPerMmFitZoom
-        imageStore.frame.headerSize = userSetHeaderSizeMm.value * PxPerMm
+        imageStore.frame.headerSizeMm = userSetHeaderSizeMm.value
       } else {
         imageStore.frame.headerSize = Math.max(Math.floor(0.1 * imageStore.fileDimensions.width), 5)
       }
@@ -844,7 +843,7 @@ export function useFrameTool(imageStore, historyStore, viewportStore, t) {
         fh = fw / 1.5
 
         // Header size
-        // imageStore.frame.headerSize = Math.max(Math.floor(0.1 * w), 5)
+        imageStore.frame.headerSize = Math.max(Math.floor(0.1 * w), 5)
       } else {
         // Use only max frame width in mm (because of preset values)
         if (fw > maxFrameWidthMm.value * PxPerMm) {
@@ -855,6 +854,8 @@ export function useFrameTool(imageStore, historyStore, viewportStore, t) {
 
         // Header size in mm (used value set by user)
         // imageStore.frame.headerSize = userSetHeaderSizeMm.value * PxPerMm
+
+        imageStore.frame.headerSize = imageStore.frame.headerSizeMm * PxPerMm
       }
 
       imageStore.frame.footerSize = 0
