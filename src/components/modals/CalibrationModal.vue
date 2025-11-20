@@ -175,7 +175,6 @@ const {
 .credit-card {
   background: var(--primary-c);
   border-radius: 8px;
-  /* box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2); */
 }
 
 .slider-wrapper {
@@ -190,10 +189,45 @@ const {
   width: 80%;
 }
 
-/* slider track */
+/* Slider for WebKit + Firefox */
+/* Track - WebKit (Chrome, Edge, Safari) */
 input[type='range']::-webkit-slider-runnable-track {
   background-color: var(--background-c);
   border-radius: 10px;
   height: 10px;
+}
+
+/* Thumb - WebKit */
+input[type='range']::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  background: var(--primary-c);
+  border-radius: 50%;
+  cursor: pointer;
+  margin-top: -5px;
+}
+
+/* Track - Firefox */
+input[type="range"]::-moz-range-track {
+  background-color: var(--background-c);
+  border-radius: 10px;
+  height: 10px;
+}
+
+/* Thumb - Firefox */
+input[type="range"]::-moz-range-thumb {
+  width: 20px;
+  height: 20px;
+  background: var(--primary-c);
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+/* Fix for Firefox focus outline */
+input[type="range"]::-moz-focus-outer {
+  border: 0;
 }
 </style>

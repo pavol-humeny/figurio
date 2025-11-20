@@ -30,7 +30,7 @@ export const globalConfig = {
   calibrationFactor: 1, // calibration factor for physical mode
 
   // Default tool to start with
-  startTool: 'frame',
+  startTool: '',
 
   // Feature flags
   // UPDATE new tool
@@ -51,7 +51,7 @@ export const globalConfig = {
       preset: true,
       export: true,
     },
-    enableNoiseDetectionOnStart: false,
+    enableNoiseDetectionOnStart: true,
     enableTutorial: true,
     enableImageLoad: true,
     notEnabledMessage: 'This feature is currently not available.',
@@ -61,8 +61,6 @@ export const globalConfig = {
   maxNumberOfFilesToUploadSimultaneously: 1, // To avoid issues with image analysis on load
 
   // API
-  // API_BASE: 'https://bp-api-ft1e.onrender.com',
-  // API_BASE: 'https://139.59.143.44:3000',
   API_BASE: 'https://figurio.online',
   // If usage stats should be sent to the API
   sendUsageStats: true,
