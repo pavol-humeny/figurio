@@ -79,12 +79,12 @@
       "en": "EN",
       "sk": "SK",
       "cz": "CZ",
-      "tip": "Selects the language for the application"
+      "tip": ""
     },
     "theme": {
-      "label": "Theme",
+      "label": "Switch to light mode",
       "button": {
-        "tip": "Toggles between light and dark themes"
+        "tip": "Toggles between light and dark mode"
       }
     },
     "enableShortcuts": {

@@ -79,12 +79,12 @@
       "en": "EN",
       "sk": "SK",
       "cz": "CZ",
-      "tip": "Vyberie jazyk aplikácie"
+      "tip": ""
     },
     "theme": {
-      "label": "Téma",
+      "label": "Prepnúť na svetlý režim",
       "button": {
-        "tip": "Prepína medzi svetlou a tmavou témou"
+        "tip": "Prepínanie medzi svetlým a tmavým režimom"
       }
     },
     "enableShortcuts": {

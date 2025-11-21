@@ -7,30 +7,34 @@ const { addUserEvent } = useApi()
  *
  * @param {Object} uiStore - The UI store with theme state and toggleTheme method
  * @returns {{
- *   theme: import('vue').ComputedRef<string>,
+ *   isLightMode: import('vue').ComputedRef<boolean>,
  *   toggleTheme: () => void
  * }}
  */
 export function useThemeSwitch(uiStore) {
   /**
-   * Currently active theme
+   * Weather the light mode is active
    */
-  const theme = computed(() => uiStore.theme)
+  const isLightMode = computed(() => uiStore.theme === 'light')
 
   /**
-   * Toggle between light and dark themes
+   * Toggle between light and dark modes
    */
   const toggleTheme = () => {
+    const newMode = isLightMode.value ? 'dark' : 'light'
+
     addUserEvent('settingChanged', {
       setting: 'theme',
-      value: theme.value === 'dark' ? 'light' : 'dark',
+      value: newMode,
     })
 
     uiStore.toggleTheme()
   }
 
   return {
-    theme,
+    // theme,
+    // toggleTheme,
+    isLightMode,
     toggleTheme,
   }
 }
