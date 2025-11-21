@@ -1,5 +1,6 @@
 import { computed, ref, onMounted, onBeforeUnmount } from 'vue'
 import { usePrivacyAndDataModal } from '@/composables/modals/usePrivacyAndDataModal'
+import { useReleaseModal } from '@/composables/modals/useReleaseModal'
 import { useApi } from '@/composables/common/useApi'
 const { addUserEvent } = useApi()
 
@@ -25,6 +26,7 @@ const isVisible = ref(false)
  */
 export function useSettingsPanel(uiStore) {
   const { openPrivacyAndDataModal } = usePrivacyAndDataModal()
+  const { openReleaseModal } = useReleaseModal()
 
   /**
    * Enable or disable keyboard shortcuts
@@ -88,8 +90,14 @@ export function useSettingsPanel(uiStore) {
   /**
    * Open the privacy and data modal
    */
-  const openPrivacyModal = () => {
+  const openPrivacyModalSettingsPanel = () => {
+    closeSettingsPanel()
     openPrivacyAndDataModal()
+  }
+
+  const openReleaseModalSettingsPanel = () => {
+    closeSettingsPanel()
+    openReleaseModal()
   }
 
   /**
@@ -139,7 +147,8 @@ export function useSettingsPanel(uiStore) {
     enableShortcuts,
     resetPanelWidthDisabled,
     resetPanelWidth,
-    openPrivacyModal,
+    openPrivacyModalSettingsPanel,
     enableRulers,
+    openReleaseModalSettingsPanel,
   }
 }

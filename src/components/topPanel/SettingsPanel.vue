@@ -7,7 +7,6 @@ import ToggleButton from '@/components/common/ToggleButton.vue';
 import { useSettingsPanel } from '@/composables/topPanel/useSettingsPanel';
 import { useUiStore } from '@/stores/uiStore';
 import pkg from '../../../package.json';
-import { useReleaseModal } from '@/composables/modals/useReleaseModal';
 
 /**
  * Logic for the settings panel.
@@ -18,16 +17,10 @@ const {
   enableShortcuts,
   resetPanelWidthDisabled,
   resetPanelWidth,
-  openPrivacyModal,
-  enableRulers
+  openPrivacyModalSettingsPanel,
+  enableRulers,
+  openReleaseModalSettingsPanel
 } = useSettingsPanel(useUiStore());
-
-/**
- * Logic of the patch notes modal state and scrolling
- */
-const {
-  openReleaseModal
-} = useReleaseModal();
 
 </script>
 
@@ -95,13 +88,13 @@ const {
 
       <DefaultButton :text="$t('topPanel.settingsPanel.openPrivacyAndData.button.text')"
         :tip="$t('topPanel.settingsPanel.openPrivacyAndData.button.tip')" position="bottom-left"
-        @click="openPrivacyModal" />
+        @click="openPrivacyModalSettingsPanel" />
     </div>
 
     <!-- Close Settings and version -->
     <div class="close-button-wrapper">
       <DefaultButton text="Close" @click="closeSettingsPanel" />
-      <p class="version" @click="openReleaseModal">{{ $t('topPanel.settingsPanel.appVersion.label') }}: {{
+      <p class="version" @click="openReleaseModalSettingsPanel">{{ $t('topPanel.settingsPanel.appVersion.label') }}: {{
         pkg.version }}</p>
     </div>
   </div>

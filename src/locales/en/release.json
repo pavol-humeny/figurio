@@ -4,6 +4,17 @@
     "items": []
   },
   "versions":{
+    "4.17.12":{
+      "label": "4.17.12",
+      "date":"21.11. 2025",
+      "improvements": {
+        "items": [
+          "Replace underline text with button to clear preferences",
+          "Improve theme switcher UI",
+          "Close Settings Panel when opening Release Notes and Privacy Modal"
+        ]
+      }
+    },
     "4.17.11":{
       "label": "4.17.11",
       "date":"21.11. 2025",
