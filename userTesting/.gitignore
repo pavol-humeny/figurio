@@ -4,6 +4,9 @@
 *.fls
 *.log
 *.synctex.gz
+*.toc
+*.out
+*.synctex
 
 
 # Keep source files
