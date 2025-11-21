@@ -1,5 +1,7 @@
 import { ref } from 'vue'
 import { useToastModal } from '../modals/useToastModal'
+import { useConsole } from '../common/useConsole'
+const { log } = useConsole()
 
 /**
  * Logic for handling drag & drop and paste interactions for file input
@@ -73,6 +75,8 @@ export function useDragAndDropArea(imageStore, editorStore, t, router) {
   const handlePaste = (event) => {
     if (!editorStore.imageCanBePasted) return
 
+    log('Paste event: ', event)
+
     const items = event.clipboardData?.items
     if (!items || items.length === 0) return
 
@@ -107,6 +111,7 @@ export function useDragAndDropArea(imageStore, editorStore, t, router) {
         img.src = url
       })
     } else {
+      log('Pasted: ', firstItem)
       showToastModal(
         'warning',
         t('dragAndDropArea.toast.warningPasteNotImage.title'),
