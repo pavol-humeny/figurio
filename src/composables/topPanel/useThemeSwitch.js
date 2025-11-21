@@ -32,8 +32,6 @@ export function useThemeSwitch(uiStore) {
   }
 
   return {
-    // theme,
-    // toggleTheme,
     isLightMode,
     toggleTheme,
   }

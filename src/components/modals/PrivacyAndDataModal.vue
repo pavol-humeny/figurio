@@ -37,8 +37,8 @@ const {
           <div v-for="(section, index) in sections" :key="index" class="message-wrapper">
             <p v-if="section.title">{{ section.title }}</p>
             <p>{{ section.text }}</p>
-            <p v-if="section.action" class="action-text" @click="clearLocalStorage">{{ section.action.text }}</p>
-
+            <DefaultButton :text="section.action.text" @click="clearLocalStorage" v-if="section.action"
+              style="margin-top: 5px;" />
           </div>
         </div>
 
