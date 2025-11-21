@@ -2,6 +2,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 from pathlib import Path
 import sys
+import textwrap
 
 def visualize_csv(csv_path: str):
     # Load CSV
@@ -25,14 +26,15 @@ def visualize_csv(csv_path: str):
     print(f"\nCelkový priemer: {overall_mean:.3f}")
 
     # Plot
-    plt.figure(figsize=(12, 6))
+    plt.figure(figsize=(14, 7))
 
     # Plot individual users as lines, exclude last column
     for col in numeric_df.columns[:-1]:
         plt.plot(df.index, numeric_df[col], marker="o", label=col)
 
-    # X-axis labels correspond to všetky úlohy, vrátane posledného stĺpca
-    plt.xticks(df.index, df.iloc[:, 0], rotation=45, ha="right")
+    # Wrap x-axis labels
+    wrapped_labels = [ "\n".join(textwrap.wrap(str(label), 20)) for label in df.iloc[:, 0] ]
+    plt.xticks(df.index, wrapped_labels, rotation=0, ha="center")
 
     # Plot per-test average as bars (transparent)
     plt.bar(df.index, test_averages, alpha=0.3, color='gray', label='Priemer testu')
@@ -40,12 +42,13 @@ def visualize_csv(csv_path: str):
     # Horizontal line for overall average only
     plt.axhline(overall_mean, color='red', linestyle='--', linewidth=2, label=f'Celkový priemer ({overall_mean:.2f})')
 
-    plt.xticks(df.index, df.iloc[:, 0], rotation=45, ha="right")  # show first column (text) as labels
-    plt.ylim(0, 5.5)  # scale from 0 to 6
+    plt.ylim(0, 5.5)  # scale from 0 to 5.5
     plt.ylabel("Hodnotenie")
-    plt.title("Hodnotenia používateľov s priemernými hodnotami testov")
     plt.grid(axis='y', linestyle=':', alpha=0.7)
     plt.legend()
+
+    # Adjust layout to fit long labels
+    plt.tight_layout(rect=[0, 0, 1, 1])  # leave extra space at bottom
 
     # Save figure as PNG
     out_path_png = Path(csv_path).with_name(Path(csv_path).stem + "_graf.png")
