@@ -11,7 +11,8 @@
         "items": [
           "Replace underline text with button to clear preferences",
           "Improve theme switcher UI",
-          "Close Settings Panel when opening Release Notes and Privacy Modal"
+          "Close Settings Panel when opening Release Notes and Privacy Modal",
+          "Improve tutorial step highlighting and positioning"
         ]
       }
     },

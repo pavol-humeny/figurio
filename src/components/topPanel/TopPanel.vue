@@ -48,20 +48,26 @@ const showControls = computed(() => route.name === 'editor')
 
 <template>
   <div class="top-panel">
-    <div class="top-panel-left" v-if="!isHomeView" id="top-panel-left">
-      <img @click="goHome" :src="logoSrc" alt="Figurio logo">
-      <FileNameDisplay v-if="showControls" />
-      <UploadFileButton v-if="showControls" />
-      <CloseFileButton v-if="showControls" />
+    <div class="top-panel-left" v-if="!isHomeView">
+      <div class="top-panel-left-wrapper" id="top-panel-left">
+        <img @click="goHome" :src="logoSrc" alt="Figurio logo">
+        <FileNameDisplay v-if="showControls" />
+        <UploadFileButton v-if="showControls" />
+        <CloseFileButton v-if="showControls" />
+      </div>
       <ExportFileButton v-if="showControls" />
     </div>
-    <div class="top-panel-center" v-if="!isHomeView" id="top-panel-center">
-      <UndoRedo v-if="showControls" />
-      <ZoomControl v-if="showControls" />
+    <div class="top-panel-center" v-if="!isHomeView">
+      <div class="top-panel-center-wrapper" id="top-panel-center">
+        <UndoRedo v-if="showControls" />
+        <ZoomControl v-if="showControls" />
+      </div>
     </div>
-    <div class="top-panel-right" id="top-panel-right">
-      <HelpButton />
-      <SettingsButton />
+    <div class="top-panel-right">
+      <div class="top-panel-right-wrapper" id="top-panel-right">
+        <HelpButton />
+        <SettingsButton />
+      </div>
     </div>
   </div>
 </template>
@@ -88,8 +94,25 @@ const showControls = computed(() => route.name === 'editor')
   align-items: center;
 }
 
+.top-panel-left-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.top-panel-center-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.top-panel-right-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
 .top-panel-left {
-  justify-content: flex-start;
   gap: 10px;
 }
 

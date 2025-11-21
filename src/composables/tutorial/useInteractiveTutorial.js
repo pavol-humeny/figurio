@@ -247,6 +247,23 @@ export function useInteractiveTutorial(uiStore, imageStore, router, t) {
           style.top = `${targetRect.top + targetRect.height / 2 - popupRect.height / 2}px`
           style.left = `${targetRect.right + offset}px`
           break
+        // Diagonal outside positions
+        case 'top-left':
+          style.top = `${targetRect.top - offset - popupRect.height}px`
+          style.left = `${targetRect.left - offset - popupRect.width}px`
+          break
+        case 'top-right':
+          style.top = `${targetRect.top - offset - popupRect.height}px`
+          style.left = `${targetRect.right + offset}px`
+          break
+        case 'bottom-left':
+          style.top = `${targetRect.bottom + offset}px`
+          style.left = `${targetRect.left - offset - popupRect.width}px`
+          break
+        case 'bottom-right':
+          style.top = `${targetRect.bottom + offset}px`
+          style.left = `${targetRect.right + offset}px`
+          break
         // Inside positions
         case 'top-in':
           style.top = `${targetRect.top + offset}px`

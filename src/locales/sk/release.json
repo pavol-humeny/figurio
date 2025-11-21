@@ -6,6 +6,18 @@
     ]
   },
   "versions": {
+    "4.17.12": {
+      "label": "4.17.12",
+      "date": "21.11. 2025",
+      "improvements": {
+        "items": [
+          "Nahradenie podčiarknutého textu tlačidlom na vymazanie preferencií",
+          "Zlepšenie vzhľadu prepínača témy",
+          "Zavretie nastavení pri otvorení poznámok k vydaniu a modalu ochrany súkromia",
+          "Zlepšenie zvýraznenia a polohovania krokov tutoriálu"
+        ]
+      }
+    },
     "4.17.11":{
       "label": "4.17.11",
       "date":"21.11. 2025",

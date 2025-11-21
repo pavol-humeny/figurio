@@ -17,6 +17,7 @@ const router = useRouter()
 const { addUserEvent } = useApi()
 
 const uiStore = useUiStore()
+const imageStore = useImageStore()
 const { tutorialStep, tutorialCompleted } = storeToRefs(uiStore)
 
 /**
@@ -402,7 +403,7 @@ const showStatistics = () => {
             </div>
 
             <!-- Tutorial -->
-            <div class="help-content">
+            <div class="help-content" v-if="imageStore.isImageLoaded">
               <div class="tutorial-title-wrapper">
                 <BaseIcon v-if="tutorialCompleted" class="tutorial-completed-icon" name="IconTick" size="20"
                   :tip='$t("help.helpContent.tutorial.tutorialCompletedTip")' position="top-right" />
