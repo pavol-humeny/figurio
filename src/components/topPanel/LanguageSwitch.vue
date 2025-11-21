@@ -39,16 +39,13 @@ const getButtonClass = (lang) => {
   <ItemTip :text="$t('topPanel.settingsPanel.language.tip')" position="bottom-left">
     <div class="language-switch">
       <div class="slider" :class="hoveredLang || locale"></div>
-      <button :class="getButtonClass('sk')" @click="switchLanguage('sk')" @mouseenter="hoveredLang = 'sk'"
-        @mouseleave="hoveredLang = null">
+      <button :class="getButtonClass('sk')" @click="switchLanguage('sk')" @mouseleave="hoveredLang = null">
         SK
       </button>
-      <button :class="getButtonClass('en')" @click="switchLanguage('en')" @mouseenter="hoveredLang = 'en'"
-        @mouseleave="hoveredLang = null">
+      <button :class="getButtonClass('en')" @click="switchLanguage('en')" @mouseleave="hoveredLang = null">
         EN
       </button>
-      <button :class="getButtonClass('cz')" @click="switchLanguage('cz')" @mouseenter="hoveredLang = 'cz'"
-        @mouseleave="hoveredLang = null">
+      <button :class="getButtonClass('cz')" @click="switchLanguage('cz')" @mouseleave="hoveredLang = null">
         CZ
       </button>
     </div>
@@ -86,7 +83,7 @@ const getButtonClass = (lang) => {
 }
 
 .language-switch button:not(.button-active):hover {
-  color: var(--secondary-c);
+  color: var(--text-c);
   transition: var(--default-transition);
 }
 
