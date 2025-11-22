@@ -399,7 +399,7 @@ input[type='range']::-moz-range-thumb {
 .single-event-title {
   font-size: 22px;
   font-weight: bold;
-  color: var(--statistics-title-c);
+  color: var(--statistics-c);
   display: flex;
   align-items: center;
   justify-content: center;

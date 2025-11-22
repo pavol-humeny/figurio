@@ -4,6 +4,15 @@
     "items": []
   },
   "versions":{
+    "4.17.13":{
+      "label": "4.17.13",
+      "date":"22.11. 2025",
+      "improvements": {
+        "items": [
+          "Adjust statistics title color for better visibility"
+        ]
+      }
+    },
     "4.17.12":{
       "label": "4.17.12",
       "date":"21.11. 2025",

@@ -217,5 +217,5 @@ body {
 
   --vibration-range: 1px;
 
-  --statistics-title-c: #666666;
+  --statistics-title-c: var(--text-c);
 }
