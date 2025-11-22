@@ -86,7 +86,7 @@ const tools = computed(() =>
   gap: 15px;
   overflow-y: auto;
   scrollbar-width: none;
-  padding: 30px 20px;
+  padding: 30px 25px;
   height: 100%;
   mask-image: linear-gradient(to bottom,
       transparent,

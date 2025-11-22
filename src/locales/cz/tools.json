@@ -158,7 +158,7 @@
     }
   },
   "transform": {
-    "label": "Úpravy",
+    "label": "Transformace",
     "tip": "Aplikuje otáčení, zrcadlení nebo změnu velikosti obrázku",
     "tipDisabled": "",
     "shortcut": "",
