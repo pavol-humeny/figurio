@@ -9,7 +9,8 @@
       "date":"22.11. 2025",
       "improvements": {
         "items": [
-          "Adjust statistics title color for better visibility"
+          "Adjust statistics title color for better visibility",
+          "Statistics translations are updated when changing language"
         ]
       }
     },

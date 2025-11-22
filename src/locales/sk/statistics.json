@@ -11,7 +11,15 @@
       "allVisits": "Všetky návštevy",
       "uniqueVisits": "Unikátne návštevy"
     },
-    "allDaysVisits": "Návštevy za všetky dni"
+    "allDaysVisits": "Návštevy za všetky dni",
+    "table": {
+      "from": "Od",
+      "to": "Do",
+      "reset": "Resetovať",
+      "date": "Dátum",
+      "allVisits": "Všetky návštevy",
+      "uniqueVisits": "Unikátne návštevy"
+    }
   },
   "events": {
     "buttonText": {
@@ -19,12 +27,12 @@
     },
     "totalEvents": "Počet udalostí",
     "overview": {
-      "title": "Events Overview",
-      "totalEvents": "Total Events",
-      "numberOfUploads": "Uploads",
-      "numberOfExport": "Exports",
-      "numberOfUseTool": "Operations",
-      "numberOfKeyboardShortcuts": "Keyboard Shortcut"
+      "title": "Prehľad udalostí",
+      "totalEvents": "Počet udalostí",
+      "numberOfUploads": "Nahrania",
+      "numberOfExport": "Exporty",
+      "numberOfUseTool": "Operácie",
+      "numberOfKeyboardShortcuts": "Klávesové skratky"
     },
     "singleEvent":{
       "toggleTool": {

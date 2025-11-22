@@ -11,7 +11,15 @@
       "allVisits": "All Visits",
       "uniqueVisits": "Unique Visits"
     },
-    "allDaysVisits": "Visits Over All Days"
+    "allDaysVisits": "Visits Over All Days",
+    "table": {
+      "from": "From",
+      "to": "To",
+      "reset": "Reset",
+      "date": "Date",
+      "allVisits": "All Visits",
+      "uniqueVisits": "Unique Visits"
+    }
   },
   "events": {
     "buttonText": {

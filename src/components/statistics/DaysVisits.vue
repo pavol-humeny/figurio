@@ -83,18 +83,20 @@ const resetFilter = () => {
 
 <template>
   <div class="days-visits statistics-card">
-    <p class="table-title">{{ $t('statistics.visits.allDaysVisits') }}</p>
+    <div class="single-event-title" style="margin-bottom: 30px;">
+      {{ $t('statistics.visits.allDaysVisits') }}
+    </div>
 
     <div class="date-filter">
       <label>
-        Od:
+        {{ $t('statistics.visits.table.from') }}:
         <input type="date" v-model="fromDate" />
       </label>
       <label>
-        Do:
+        {{ $t('statistics.visits.table.to') }}:
         <input type="date" v-model="toDate" />
       </label>
-      <button class="reset-btn" @click="resetFilter">Resetovať</button>
+      <button class="reset-btn" @click="resetFilter">{{ $t('statistics.visits.table.reset') }}</button>
     </div>
 
     <div class="table-scroll">
@@ -102,19 +104,19 @@ const resetFilter = () => {
         <thead>
           <tr>
             <th @click="sortBy('date')" class="sortable">
-              Dátum
+              {{ $t('statistics.visits.table.date') }}
               <span class="sort-indicator">
                 <span v-if="sortKey === 'date'">{{ sortAsc ? '▲' : '▼' }}</span>
               </span>
             </th>
             <th @click="sortBy('total')" class="sortable">
-              Celkový počet
+              {{ $t('statistics.visits.table.allVisits') }}
               <span class="sort-indicator">
                 <span v-if="sortKey === 'total'">{{ sortAsc ? '▲' : '▼' }}</span>
               </span>
             </th>
             <th @click="sortBy('unique')" class="sortable">
-              Unikátne návštevy
+              {{ $t('statistics.visits.table.uniqueVisits') }}
               <span class="sort-indicator">
                 <span v-if="sortKey === 'unique'">{{ sortAsc ? '▲' : '▼' }}</span>
               </span>

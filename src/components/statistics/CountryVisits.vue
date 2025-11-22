@@ -9,12 +9,10 @@ import {
 import { Doughnut } from 'vue-chartjs';
 import { ref, onMounted } from 'vue';
 import { useApi } from '@/composables/common/useApi';
-import { useI18n } from 'vue-i18n';
 
 ChartJS.register(Title, Tooltip, Legend, ArcElement);
 
 const { getVisitsByCountry } = useApi();
-const { t } = useI18n();
 
 /**
  * Reactive array for visits by country
@@ -76,11 +74,6 @@ const options = {
   plugins: {
     legend: { position: 'bottom' },
     tooltip: { enabled: true },
-    title: {
-      display: true,
-      text: t('statistics.visits.countryVisits'),
-      font: { size: 18 },
-    },
   },
 };
 
@@ -106,7 +99,12 @@ onMounted(async () => {
 
 <template>
   <div class="country-chart statistics-card">
-    <Doughnut :data="data" :options="options" />
+    <div class="single-event-title" style="margin-bottom: 30px;">
+      {{ $t('statistics.visits.countryVisits') }}
+    </div>
+    <div class="graph-wrapper">
+      <Doughnut :data="data" :options="options" />
+    </div>
   </div>
 </template>
 
@@ -117,5 +115,6 @@ onMounted(async () => {
   display: flex;
   align-items: center;
   justify-content: center;
+  flex-direction: column;
 }
 </style>
