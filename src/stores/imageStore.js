@@ -928,10 +928,18 @@ export const useImageStore = defineStore('imageStore', {
 
         log(realType === detectedType, 'realType:', realType, 'detectedType:', detectedType)
 
+        // return (
+        //   realType === detectedType ||
+        //   ((realType === 'png' || realType === 'jpeg' || realType === 'jpg') &&
+        //     detectedType === 'webp') // Allow webp if image is png or jpeg
+        // )
+
         return (
           realType === detectedType ||
-          ((realType === 'png' || realType === 'jpeg' || realType === 'jpg') &&
-            detectedType === 'webp') // Allow webp if image is png or jpeg
+          detectedType === 'png' ||
+          detectedType === 'jpeg' ||
+          detectedType === 'jpg' ||
+          detectedType === 'webp'
         )
       }
     },
