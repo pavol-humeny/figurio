@@ -247,6 +247,9 @@ export function useTextTool(imageStore, historyStore, editorStore, t) {
   const addTextObject = (x, y) => {
     if (!localTextSettings.value.text.trim()) return
 
+    // Trim text to 1000 chars
+    localTextSettings.value.text = localTextSettings.value.text.trim().slice(0, editorConfig.maxTextLength)
+
     const id = Date.now()
     const fontSize = localTextSettings.value.size
 

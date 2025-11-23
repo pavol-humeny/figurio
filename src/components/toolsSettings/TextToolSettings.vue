@@ -69,7 +69,7 @@ const {
           <div class="content-wrapper">
             <TextInput v-model="localTextSettings.text"
               :placeholder="$t('tools.text.settings.general.textContent.placeholder')" updateOnChange
-              @update="applyLocalTextSettings" />
+              @update="applyLocalTextSettings" :maxLength="editorConfig.maxTextLength" />
           </div>
         </div>
 

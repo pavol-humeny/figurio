@@ -38,6 +38,10 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
+  maxLength: {
+    type: Number,
+    default: null,
+  },
 })
 
 /**
@@ -71,7 +75,7 @@ defineExpose({
   <ItemTip :text="props.tip" :position="props.position">
     <input type="text" class="text-input" v-model="inputValue" :disabled="props.disabled"
       :placeholder="props.placeholder" @blur="onBlurOrEnter" @keydown.enter="onBlurOrEnter" @input="onInput"
-      ref="inputRef" />
+      ref="inputRef" :maxlength="props.maxLength" />
   </ItemTip>
 </template>
 

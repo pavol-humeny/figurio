@@ -117,7 +117,6 @@ export function useCropTool(
   const oldManualIndents = ref({ ...manualIndents.value })
 
   const calculateMaxMinIndents = () => {
-    console.warn('Calculating max/min indents, current indents:', manualIndents.value)
     const totalWidth = imageStore.fileDimensions.width
     const totalHeight = imageStore.fileDimensions.height
 
@@ -164,7 +163,7 @@ export function useCropTool(
       } else if (currentHeight <= editorConfig.minCropSize) {
         manualIndents.value.leftIndentMax = manualIndents.value.leftIndent
         manualIndents.value.rightIndentMax = manualIndents.value.rightIndent
-      } 
+      }
     }
   }
 
@@ -1038,8 +1037,6 @@ export function useCropTool(
         newCropBox.width = rightSide - newCropBox.x
         newCropBox.height = bottomSide - newCropBox.y
       }
-
-      console.log('Final crop box after overlay check:', newCropBox)
     }
 
     if (

@@ -10,7 +10,8 @@
       "bugFixes": {
         "items": [
           "Settings window sometimes close when clicking inside it",
-          "Manual crop adjustments can not exceed image boundaries"
+          "Manual crop adjustments can not exceed image boundaries",
+          "Limit text object content to maximum number of characters"
         ]
       }
     },
