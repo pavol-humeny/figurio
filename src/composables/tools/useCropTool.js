@@ -164,7 +164,7 @@ export function useCropTool(
       } else if (currentHeight <= editorConfig.minCropSize) {
         manualIndents.value.leftIndentMax = manualIndents.value.leftIndent
         manualIndents.value.rightIndentMax = manualIndents.value.rightIndent
-      }
+      } 
     }
   }
 
