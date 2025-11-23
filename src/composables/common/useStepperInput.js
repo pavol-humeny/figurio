@@ -51,6 +51,7 @@ export function useStepperInput(props, emit) {
    * Emits the updated value to the parent component
    */
   const emitChange = () => {
+    console.warn('PROP.MODELVALUE:', props.modelValue)
     emit('update:modelValue', inputValue.value)
     emit('update', inputValue.value)
   }

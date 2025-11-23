@@ -4,6 +4,16 @@
     "items": []
   },
   "versions":{
+    "4.17.14":{
+      "label": "4.17.14",
+      "date":"22.11. 2025",
+      "bugFixes": {
+        "items": [
+          "Settings window sometimes close when clicking inside it",
+          "Manual crop adjustments can not exceed image boundaries"
+        ]
+      }
+    },
     "4.17.13":{
       "label": "4.17.13",
       "date":"22.11. 2025",

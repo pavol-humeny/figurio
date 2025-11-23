@@ -57,6 +57,7 @@ const {
   tmpCropY,
   isManualAdjustmentsLinked,
   manualIndentsWereChangedManually,
+  keepModelValue
 } = useCropTool(useImageStore(), useViewportStore(), useEditorStore(), useHistoryStore(), useWorkspaceStore(), t)
 
 </script>
@@ -188,7 +189,7 @@ const {
                       :max="manualIndents.topIndentMax" :step="1"
                       @update="recalculateCropBox; manualIndentsWereChangedManually()" type="block"
                       :tip="$t('tools.crop.settings.general.autoCrop.manualAdjustments.top')"
-                      :onReset="() => manualIndents.topIndent = 0" />
+                      :onReset="() => manualIndents.topIndent = 0" :keepModelValue="keepModelValue" />
                   </div>
 
                   <!-- Left -->

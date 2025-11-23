@@ -12,21 +12,6 @@ const { addUserEvent } = useApi()
 import { useConsole } from '@/composables/common/useConsole.js'
 const { log, warn, error } = useConsole()
 
-// /**
-//  * Detected background color
-//  */
-// const detectedBgColor = ref(null)
-
-// /**
-//  * Cached histogram
-//  */
-// const cachedHistogram = ref(null)
-
-// /**
-//  * Cached threshold
-//  */
-// const cachedThreshold = ref(null)
-
 /**
  * Reactive state of the crop box used for user interactions
  * @type {import('vue').Ref<{
@@ -131,52 +116,119 @@ export function useCropTool(
    */
   const oldManualIndents = ref({ ...manualIndents.value })
 
+  const calculateMaxMinIndents = () => {
+    console.warn('Calculating max/min indents, current indents:', manualIndents.value)
+    const totalWidth = imageStore.fileDimensions.width
+    const totalHeight = imageStore.fileDimensions.height
+
+    const top = manualIndents.value.topIndent
+    const right = manualIndents.value.rightIndent
+    const bottom = manualIndents.value.bottomIndent
+    const left = manualIndents.value.leftIndent
+
+    if (isManualAdjustmentsLinked.value) {
+      // Helper to compute min for a single indent
+      const getMin = (value, others) => {
+        // If any other indent is less than or equal to 0, min is 0
+        return others.some((v) => v <= 0) ? value : 0
+      }
+
+      manualIndents.value.topIndentMin = getMin(top, [right, bottom, left])
+      manualIndents.value.rightIndentMin = getMin(right, [top, bottom, left])
+      manualIndents.value.bottomIndentMin = getMin(bottom, [top, right, left])
+      manualIndents.value.leftIndentMin = getMin(left, [top, right, bottom])
+    } else {
+      manualIndents.value.topIndentMin = 0
+      manualIndents.value.rightIndentMin = 0
+      manualIndents.value.bottomIndentMin = 0
+      manualIndents.value.leftIndentMin = 0
+    }
+    // Set max so that the image size is not exceeded
+    manualIndents.value.topIndentMax =
+      totalHeight - manualIndents.value.bottomIndent - editorConfig.minCropSize
+    manualIndents.value.rightIndentMax =
+      totalWidth - manualIndents.value.leftIndent - editorConfig.minCropSize
+    manualIndents.value.bottomIndentMax =
+      totalHeight - manualIndents.value.topIndent - editorConfig.minCropSize
+    manualIndents.value.leftIndentMax =
+      totalWidth - manualIndents.value.rightIndent - editorConfig.minCropSize
+
+    if (isManualAdjustmentsLinked.value) {
+      // Update max values if width or height is on min size
+      const currentWidth = totalWidth - left - right
+      const currentHeight = totalHeight - top - bottom
+
+      if (currentWidth <= editorConfig.minCropSize) {
+        manualIndents.value.topIndentMax = manualIndents.value.topIndent
+        manualIndents.value.bottomIndentMax = manualIndents.value.bottomIndent
+      } else if (currentHeight <= editorConfig.minCropSize) {
+        manualIndents.value.leftIndentMax = manualIndents.value.leftIndent
+        manualIndents.value.rightIndentMax = manualIndents.value.rightIndent
+      }
+    }
+  }
+
+  /**
+   * Watch for changes in isManualAdjustmentsLinked and recalculate max/min indents
+   */
+  watch(isManualAdjustmentsLinked, () => {
+    calculateMaxMinIndents()
+  })
+
   /**
    * Update all indents if they are linked and one was changed
    */
-  const manualIndentsWereChangedManually = () => {
-    // If is isManualAdjustmentsLinked, update all indents
+  const manualIndentsWereChangedManually = async () => {
     if (isManualAdjustmentsLinked.value) {
       // Find which indent was changed
-      let changedIndent = { name: null, value: 0 }
-      if (manualIndents.value.topIndent > oldManualIndents.value.topIndent) {
-        changedIndent = { name: 'topIndent', value: 1 }
-      } else if (manualIndents.value.topIndent < oldManualIndents.value.topIndent) {
-        changedIndent = { name: 'topIndent', value: -1 }
-      } else if (manualIndents.value.rightIndent > oldManualIndents.value.rightIndent) {
-        changedIndent = { name: 'rightIndent', value: 1 }
-      } else if (manualIndents.value.rightIndent < oldManualIndents.value.rightIndent) {
-        changedIndent = { name: 'rightIndent', value: -1 }
-      } else if (manualIndents.value.bottomIndent > oldManualIndents.value.bottomIndent) {
-        changedIndent = { name: 'bottomIndent', value: 1 }
-      } else if (manualIndents.value.bottomIndent < oldManualIndents.value.bottomIndent) {
-        changedIndent = { name: 'bottomIndent', value: -1 }
-      } else if (manualIndents.value.leftIndent > oldManualIndents.value.leftIndent) {
-        changedIndent = { name: 'leftIndent', value: 1 }
-      } else if (manualIndents.value.leftIndent < oldManualIndents.value.leftIndent) {
-        changedIndent = { name: 'leftIndent', value: -1 }
+      let changedEdge = null
+      let delta = 0
+
+      const edges = ['topIndent', 'rightIndent', 'bottomIndent', 'leftIndent']
+      // Check which edge changed
+      for (let edge of edges) {
+        if (manualIndents.value[edge] > oldManualIndents.value[edge]) {
+          changedEdge = edge
+          delta = 1
+          break
+        } else if (manualIndents.value[edge] < oldManualIndents.value[edge]) {
+          changedEdge = edge
+          delta = -1
+          break
+        }
       }
 
-      if (changedIndent.name === 'topIndent') {
-        manualIndents.value.rightIndent += changedIndent.value
-        manualIndents.value.bottomIndent += changedIndent.value
-        manualIndents.value.leftIndent += changedIndent.value
-      } else if (changedIndent.name === 'rightIndent') {
-        manualIndents.value.topIndent += changedIndent.value
-        manualIndents.value.bottomIndent += changedIndent.value
-        manualIndents.value.leftIndent += changedIndent.value
-      } else if (changedIndent.name === 'bottomIndent') {
-        manualIndents.value.topIndent += changedIndent.value
-        manualIndents.value.rightIndent += changedIndent.value
-        manualIndents.value.leftIndent += changedIndent.value
-      } else if (changedIndent.name === 'leftIndent') {
-        manualIndents.value.topIndent += changedIndent.value
-        manualIndents.value.rightIndent += changedIndent.value
-        manualIndents.value.bottomIndent += changedIndent.value
+      // No edge changed (should not happen)
+      if (!changedEdge) {
+        updateLastCannyCrop()
+        return
       }
+
+      // Check if any other linked indent would exceed min/max
+      const otherEdges = edges.filter((e) => e !== changedEdge)
+      let exceeded = false
+      otherEdges.forEach((edge) => {
+        const tmp = manualIndents.value[edge] + delta
+        const min = manualIndents.value[edge + 'Min']
+        const max = manualIndents.value[edge + 'Max']
+        if (tmp < min || tmp > max) exceeded = true
+      })
+
+      // If any other linked indent would exceed min/max, recalculate and return
+      if (exceeded) {
+        calculateMaxMinIndents()
+        return
+      }
+
+      // Apply delta to all other linked edges
+      otherEdges.forEach((edge) => {
+        manualIndents.value[edge] += delta
+      })
 
       oldManualIndents.value = { ...manualIndents.value }
     }
+
+    calculateMaxMinIndents()
 
     updateLastCannyCrop()
   }
@@ -635,6 +687,11 @@ export function useCropTool(
       manualIndents.value.rightIndentMax = imageStore.fileDimensions.width - newCropBox.x
       manualIndents.value.bottomIndentMax = imageStore.fileDimensions.height - newCropBox.y
       manualIndents.value.leftIndentMax = newCropBox.x + newCropBox.width
+
+      // Also set oldManualIndents to current manualIndents when cropBox changes
+      oldManualIndents.value = { ...manualIndents.value }
+
+      calculateMaxMinIndents()
     },
     {
       deep: true,

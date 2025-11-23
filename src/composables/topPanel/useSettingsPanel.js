@@ -121,6 +121,10 @@ export function useSettingsPanel(uiStore) {
     const target = event.target
     const settingsPanel = document.getElementById('settings-panel')
 
+    if (target.closest('.item-tip-bubble')) {
+      return
+    }
+
     if (settingsPanel && !settingsPanel.contains(target)) {
       setTimeout(() => {
         closeSettingsPanel()
