@@ -11,7 +11,8 @@
         "items": [
           "Settings window sometimes close when clicking inside it",
           "Manual crop adjustments can not exceed image boundaries",
-          "Limit text object content to maximum number of characters"
+          "Limit text object content to maximum number of characters",
+          "Fix blured brush strokes when drawing"
         ]
       }
     },

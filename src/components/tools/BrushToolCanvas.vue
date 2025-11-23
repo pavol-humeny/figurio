@@ -71,22 +71,15 @@ const drawLine = (from, to, tool) => {
   ctx.lineWidth = editorStore.cursorSize
   ctx.lineCap = 'round'
 
-  if (tool === 'eraser') {
-    ctx.save()
-    ctx.globalCompositeOperation = 'destination-out'
-    ctx.strokeStyle = '#000000' // Color doesn't matter for eraser
-  } else {
-    ctx.save()
-    ctx.globalCompositeOperation = 'source-over'
-    ctx.strokeStyle = editorStore.toolsConfig.brush.color ? hexToRgb(editorStore.toolsConfig.brush.color) : 'rgb(0,0,0)'
-  }
+  ctx.save()
+  ctx.globalCompositeOperation = tool === 'eraser' ? 'destination-out' : 'source-over'
+  ctx.strokeStyle = tool === 'eraser' ? '#000' : hexToRgb(editorStore.toolsConfig.brush.color)
 
   ctx.beginPath()
-  ctx.moveTo(from.x, from.y)
-  ctx.lineTo(to.x, to.y)
+  ctx.moveTo(Math.round(from.x), Math.round(from.y))
+  ctx.lineTo(Math.round(to.x), Math.round(to.y))
   ctx.stroke()
   ctx.closePath()
-
   ctx.restore()
 }
 
@@ -154,6 +147,7 @@ const onMouseUpGlobal = () => {
  */
 onMounted(() => {
   ctx = canvasRef.value.getContext('2d', { willReadFrequently: true })
+  ctx.imageSmoothingEnabled = false
   window.addEventListener('mouseup', onMouseUpGlobal)
   window.addEventListener('mousemove', onMouseMove)
   window.addEventListener('mousedown', onMouseDown)

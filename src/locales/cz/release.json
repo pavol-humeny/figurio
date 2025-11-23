@@ -6,6 +6,18 @@
     ]
   },
   "versions": {
+    "4.17.14":{
+      "label": "4.17.14",
+      "date":"22.11. 2025",
+      "bugFixes": {
+        "items": [
+          "Panel nastavení se někdy zavírá při kliknutí dovnitř",
+          "Manuální úpravy ořezu nemohou přesáhnout hranice obrázku",
+          "Omezení obsahu textového objektu na maximální počet znaků",
+          "Oprava rozmazaných tahů štětcem při kreslení"
+        ]
+      }
+    },
     "4.17.13":{
       "label": "4.17.13",
       "date":"22.11. 2025",
