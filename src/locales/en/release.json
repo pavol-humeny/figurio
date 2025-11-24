@@ -4,6 +4,15 @@
     "items": []
   },
   "versions":{
+    "4.17.15":{
+      "label": "4.17.15",
+      "date":"24.11. 2025",
+      "improvements": {
+        "items": [
+          "Enable image drop on all home view area"
+        ]
+      }
+    },
     "4.17.14":{
       "label": "4.17.14",
       "date":"22.11. 2025",

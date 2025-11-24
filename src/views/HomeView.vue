@@ -42,13 +42,13 @@ const features = computed(() => {
  * Logic of the drag-and-drop area
  */
 const {
+  handleDrop,
   selectFile
 } = useDragAndDropArea(useImageStore(), useEditorStore(), t, router)
-
 </script>
 
 <template>
-  <div class="home-view">
+  <div class="home-view" @drop="handleDrop" @dragover.prevent @dragleave.prevent>
     <div class="background"></div>
 
     <div class="left-side">
