@@ -10,7 +10,8 @@
       "improvements": {
         "items": [
           "Enable image drop on all home view area",
-          "Use opacity when hiding crop box instead of removing it"
+          "Use opacity when hiding crop box instead of removing it",
+          "Add statistics event only on key up event for keyboard shortcuts"
         ]
       }
     },
