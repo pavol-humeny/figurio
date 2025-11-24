@@ -84,7 +84,7 @@ const visibleSideDirs = computed(() => {
       width: cropBox.width + 'px',
       height: cropBox.height + 'px',
       borderWidth: borderWidth + 'px',
-    }" @mousedown="startPan" v-if="editorStore.toolsConfig.crop.isVisibleCropBox">
+    }" @mousedown="startPan" :class="{ 'crop-box-opacity': !editorStore.toolsConfig.crop.isVisibleCropBox }">
 
       <!-- Corners -->
       <div v-for="dir in ['top-left', 'top-right', 'bottom-left', 'bottom-right']" :key="dir" class="resizer"
@@ -111,6 +111,7 @@ const visibleSideDirs = computed(() => {
   pointer-events: auto;
   cursor: move;
   z-index: var(--z-index-crop-box);
+  opacity: 1;
 }
 
 /* Resizers */
@@ -197,5 +198,9 @@ const visibleSideDirs = computed(() => {
   top: 50%;
   transform: translateY(-50%);
   cursor: ew-resize;
+}
+
+.crop-box-opacity {
+  opacity: 0.2;
 }
 </style>

@@ -9,7 +9,8 @@
       "date":"24.11. 2025",
       "improvements": {
         "items": [
-          "Enable image drop on all home view area"
+          "Enable image drop on all home view area",
+          "Use opacity when hiding crop box instead of removing it"
         ]
       }
     },
