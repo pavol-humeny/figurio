@@ -82,11 +82,12 @@ defineExpose({
 <style scoped>
 .text-input {
   /* width: 100%; */
-  padding: 7px 10px;
-  border-radius: 10px;
+  padding: var(--input-top-padding) 10px;
+  border-radius: var(--input-border-radius);
   border: none;
   background: var(--secondary-c);
   color: var(--text-c);
+  font-size: var(--input-text-size);
 }
 
 .text-input:disabled {

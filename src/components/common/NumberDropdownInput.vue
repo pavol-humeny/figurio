@@ -125,7 +125,7 @@
 .text-input {
   width: 100%;
   padding: 7px 25px 7px 10px;
-  border-radius: 10px;
+  border-radius: var(--input-border-radius);
   border: none;
   color: var(--text-c);
   text-align: center;
@@ -164,7 +164,7 @@
   list-style: none;
   margin: 4px 0 0 0;
   padding: 0;
-  border-radius: 10px;
+  border-radius: var(--input-border-radius);
   overflow-y: auto;
   max-height: 140px;
   box-shadow: var(--box-shadow-ui);

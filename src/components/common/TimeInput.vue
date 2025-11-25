@@ -1,4 +1,5 @@
-DefaultSlider<script setup>
+DefaultSlider
+<script setup>
 import ItemTip from './ItemTip.vue'
 import { useTimeInput } from '@/composables/common/useTimeInput'
 
@@ -51,27 +52,13 @@ const {
 <template>
   <ItemTip :text="props.tip" :position="props.position">
     <div class="input-wrapper time">
-      <input
-        type="text"
-        class="value-input"
-        :disabled="props.disabled"
-        :value="hours.toString().padStart(2, '0')"
-        @input="onHoursInput"
-        @blur="updateTime"
-        @keydown.enter="updateTime"
-      />
+      <input type="text" class="value-input" :disabled="props.disabled" :value="hours.toString().padStart(2, '0')"
+        @input="onHoursInput" @blur="updateTime" @keydown.enter="updateTime" />
 
       <span class="colon">:</span>
 
-      <input
-        type="text"
-        class="value-input"
-        :disabled="props.disabled"
-        :value="minutes.toString().padStart(2, '0')"
-        @input="onMinutesInput"
-        @blur="updateTime"
-        @keydown.enter="updateTime"
-      />
+      <input type="text" class="value-input" :disabled="props.disabled" :value="minutes.toString().padStart(2, '0')"
+        @input="onMinutesInput" @blur="updateTime" @keydown.enter="updateTime" />
     </div>
   </ItemTip>
 </template>
@@ -90,11 +77,12 @@ input[type='text'] {
 
 .value-input {
   width: 5ch;
-  padding: 7px 8px;
-  border-radius: 10px;
+  padding: var(--input-top-padding) 8px;
+  border-radius: var(--input-border-radius);
   border: none;
   background: var(--secondary-c);
   color: var(--text-c);
+  font-size: var(--input-text-size);
 }
 
 .value-input:disabled {

@@ -116,8 +116,8 @@ defineExpose({ setValue })
 }
 
 .select-display {
-  padding: 7px 10px;
-  border-radius: 10px;
+  padding: var(--input-top-padding) 10px;
+  border-radius: var(--input-border-radius);
   background: var(--secondary-c);
   color: var(--text-c);
   position: relative;
@@ -125,7 +125,7 @@ defineExpose({ setValue })
   justify-content: space-between;
   align-items: center;
   gap: 10px;
-  font-size: var(--text-font-size);
+  font-size: var(--input-text-size);
 }
 
 .input-icon-left {
@@ -154,7 +154,7 @@ defineExpose({ setValue })
   padding: 0;
   list-style: none;
   background: var(--secondary-c);
-  border-radius: 10px;
+  border-radius: var(--input-border-radius);
   max-height: 140px;
   overflow-y: auto;
   box-shadow: var(--box-shadow-ui);

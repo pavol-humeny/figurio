@@ -133,7 +133,7 @@ input[type='number'] {
 .value-input {
   width: 13ch;
   padding: var(--input-top-padding) 10px var(--input-top-padding) 10px;
-  border-radius: 10px;
+  border-radius: var(--input-border-radius);
   border: none;
   background: var(--secondary-c);
   color: var(--text-c);

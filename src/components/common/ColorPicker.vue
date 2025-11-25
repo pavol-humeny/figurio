@@ -133,20 +133,20 @@ defineExpose({ setValue })
 
 <style scoped>
 .color-wrapper {
-  height: 30px;
+  height: 27px;
   display: flex;
   align-items: center;
   justify-content: center;
   flex-direction: row;
   gap: 5px;
   background: var(--secondary-c);
-  padding: 0 5px;
-  border-radius: 4px;
+  border-radius: var(--input-border-radius);
+  padding: var(--input-top-padding) 5px;
 }
 
 .color-preview {
-  width: 20px;
-  height: 20px;
+  width: 18px;
+  height: 18px;
   border: var(--border-modal);
   border-radius: 4px;
   cursor: pointer;
@@ -167,13 +167,14 @@ defineExpose({ setValue })
 
 .hex-input-visible {
   width: 9ch;
-  padding: 2px 0px;
   font-size: var(--input-text-size);
   border-radius: 4px;
   background: var(--secondary-c);
   border: none;
   color: var(--text-c);
   text-align: center;
+  padding: 0;
+  font-size: var(--input-text-size);
 }
 
 .canvas-wrapper {
@@ -235,7 +236,7 @@ defineExpose({ setValue })
   width: 11ch;
   padding: var(--input-top-padding) 10px;
   font-size: var(--input-text-size);
-  border-radius: 4px;
+  border-radius: var(--input-border-radius);
   background: var(--secondary-c);
   border: none;
   color: var(--text-c);

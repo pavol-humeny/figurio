@@ -221,4 +221,5 @@ body {
 
   --input-text-size: 15px;
   --input-top-padding: 5px;
+  --input-border-radius: 8px;
 }
