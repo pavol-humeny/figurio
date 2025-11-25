@@ -88,6 +88,13 @@ defineExpose({ setValue })
       <BaseIcon name="IconPlus" :size="16" @mousedown="startHold(increase)" @mouseup="stopHold" @mouseleave="stopHold"
         :disabled="disableIncrease()" class="increase-decrease-icon" />
     </div>
+    <div v-if="type === 'vertical'" class="stepper-vertical">
+      <BaseIcon name="IconMinus" :size="16" @mousedown="startHold(decrease)" @mouseup="stopHold" @mouseleave="stopHold"
+        :disabled="disableDecrease()" class="increase-decrease-icon" />
+      <span class="value-vertical" @dblclick="handleReset" @wheel="changeValue">{{ inputValue }}</span>
+      <BaseIcon name="IconPlus" :size="16" @mousedown="startHold(increase)" @mouseup="stopHold" @mouseleave="stopHold"
+        :disabled="disableIncrease()" class="increase-decrease-icon" />
+    </div>
     <div v-else-if="type === 'block'" class="stepper-block">
       <span class="value-block" @dblclick="handleReset" @wheel="changeValue">{{ inputValue }}</span>
       <div class="buttons-wrapper-block">
@@ -106,10 +113,22 @@ defineExpose({ setValue })
   align-items: center;
   background: var(--secondary-c);
   border-radius: 10px;
-  padding: 4px 8px;
+  padding: var(--input-top-padding) var(--input-top-padding);
   user-select: none;
   gap: 10px;
-  font-size: 14px;
+  font-size: var(--input-text-size);
+}
+
+.stepper-vertical {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  background: var(--secondary-c);
+  border-radius: 10px;
+  padding: var(--input-top-padding) var(--input-top-padding);
+  user-select: none;
+  gap: 6px;
+  font-size: var(--input-text-size);
 }
 
 .increase-decrease-icon {
@@ -122,7 +141,8 @@ defineExpose({ setValue })
 }
 
 .value-inline,
-.value-block {
+.value-block,
+.value-vertical {
   min-width: 30px;
   text-align: center;
   color: var(--text-c);

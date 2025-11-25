@@ -187,7 +187,7 @@ const {
                   <div class="dpad top">
                     <StepperInput v-model="manualIndents.topIndent" :min="manualIndents.topIndentMin"
                       :max="manualIndents.topIndentMax" :step="1"
-                      @update="recalculateCropBox; manualIndentsWereChangedManually()" type="block"
+                      @update="recalculateCropBox; manualIndentsWereChangedManually()" type="inline"
                       :tip="$t('tools.crop.settings.general.autoCrop.manualAdjustments.top')"
                       :onReset="() => manualIndents.topIndent = 0" :keepModelValue="keepModelValue" />
                   </div>
@@ -197,7 +197,7 @@ const {
 
                     <StepperInput v-model="manualIndents.leftIndent" :min="manualIndents.leftIndentMin"
                       :max="manualIndents.leftIndentMax" :step="1"
-                      @update="recalculateCropBox; manualIndentsWereChangedManually()" type="block"
+                      @update="recalculateCropBox; manualIndentsWereChangedManually()" type="inline"
                       :tip="$t('tools.crop.settings.general.autoCrop.manualAdjustments.left')"
                       :onReset="() => manualIndents.leftIndent = 0" />
                   </div>
@@ -206,7 +206,7 @@ const {
                   <div class="dpad right">
                     <StepperInput v-model="manualIndents.rightIndent" :min="manualIndents.rightIndentMin"
                       :max="manualIndents.rightIndentMax" :step="1"
-                      @update="recalculateCropBox; manualIndentsWereChangedManually()" type="block"
+                      @update="recalculateCropBox; manualIndentsWereChangedManually()" type="inline"
                       :tip="$t('tools.crop.settings.general.autoCrop.manualAdjustments.right')"
                       :onReset="() => manualIndents.rightIndent = 0" />
                   </div>
@@ -215,7 +215,7 @@ const {
                   <div class="dpad bottom">
                     <StepperInput v-model="manualIndents.bottomIndent" :min="manualIndents.bottomIndentMin"
                       :max="manualIndents.bottomIndentMax" :step="1"
-                      @update="recalculateCropBox; manualIndentsWereChangedManually()" type="block"
+                      @update="recalculateCropBox; manualIndentsWereChangedManually()" type="inline"
                       :tip="$t('tools.crop.settings.general.autoCrop.manualAdjustments.bottom')"
                       :onReset="() => manualIndents.bottomIndent = 0" />
                   </div>
