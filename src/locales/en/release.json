@@ -4,6 +4,17 @@
     "items": []
   },
   "versions":{
+    "4.17.16":{
+      "label": "4.17.16",
+      "date":"25.11. 2025",
+      "improvements": {
+        "items": [
+          "Adjust crop box in crop tool to center resizers correctly",
+          "Do not reset image to the center when zooming with buttons",
+          "Increase zoom speed when holding zoom buttons"
+        ]
+      }
+    },
     "4.17.15":{
       "label": "4.17.15",
       "date":"24.11. 2025",

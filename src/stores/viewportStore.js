@@ -3,7 +3,6 @@ import { viewportConfig } from '@/config/viewportConfig'
 import { useMath } from '@/composables/common/useMath'
 import { globalConfig } from '@/config/globalConfig'
 import { nextTick } from 'vue'
-import { useUiStore } from '@/stores/uiStore'
 import { useConsole } from '@/composables/common/useConsole.js'
 const { warn } = useConsole()
 
@@ -147,7 +146,8 @@ export const useViewportStore = defineStore('viewportStore', {
     // },
 
     /**
-     * Set the current zoom level keeping the center of the image fixed in the viewport.
+     * Set the current zoom level keeping the current viewport center
+     * anchored to the same point in the image (not the global center).
      * @param {number} level
      */
     setZoomLevel(level) {
@@ -158,21 +158,27 @@ export const useViewportStore = defineStore('viewportStore', {
         return
       }
 
-      this.zoomLevel = round(level, 2)
+      const oldZoom = this.zoomLevel
+      const newZoom = round(level, 2)
+      this.zoomLevel = newZoom
 
       nextTick(() => {
         const wrapperRect = wrapper.getBoundingClientRect()
-        const wrapperWidth = wrapperRect.width
-        const wrapperHeight = wrapperRect.height
 
-        const rectAfter = content.getBoundingClientRect()
-        const contentWidth = rectAfter.width
-        const contentHeight = rectAfter.height
+        const wrapperCenterX = wrapperRect.width / 2
+        const wrapperCenterY = wrapperRect.height / 2
 
-        const uiStore = useUiStore()
-        const slidersCorrection = uiStore.rulersEnabled ? 0 : 7.5
-        this.panX = wrapperWidth / 2 - contentWidth / 2
-        this.panY = wrapperHeight / 2 - contentHeight / 2 - slidersCorrection
+        // Compute which point in the image is currently under the viewport center
+        // Convert screen coords → content coords
+        const anchorImageX = (wrapperCenterX - this.panX) / oldZoom
+        const anchorImageY = (wrapperCenterY - this.panY) / oldZoom
+
+        // After zoom change, compute new pan so the same image point stays under cursor/center
+        const newPanX = wrapperCenterX - anchorImageX * newZoom
+        const newPanY = wrapperCenterY - anchorImageY * newZoom
+
+        this.panX = newPanX
+        this.panY = newPanY
       })
     },
 

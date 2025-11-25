@@ -216,11 +216,11 @@ export function useZoomControl(viewportStore, imageStore) {
       isHolding.value = true
 
       // Call immediately in hold mode
-      action(0.01)
+      action(0.05)
 
       // Continue repeatedly
       holdInterval.value = setInterval(() => {
-        action(0.01)
+        action(0.05)
       }, editorConfig.holdButtonInterval)
     }, editorConfig.holdButtonTimeout)
   }
