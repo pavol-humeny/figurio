@@ -14,7 +14,7 @@ const { t } = useI18n()
 const editorStore = useEditorStore()
 
 /**
- * Logic of the crop tool
+ * Crop tool logic
  */
 const { startPan, startResize, cropBox } = useCropTool(
   useImageStore(),
@@ -26,54 +26,53 @@ const { startPan, startResize, cropBox } = useCropTool(
 )
 
 /**
- * Resizer size
+ * Compute handle size so it always appears visually identical regardless of zoom
  */
 const resizerSize = computed(() => {
   return viewportConfig.cropHandleSize / viewportStore.realZoomLevel
 })
 
 /**
- * Style object for resizer handles
+ * Compute border width so it's visually constant regardless of zoom
+ */
+const borderWidth = computed(() => {
+  return viewportConfig.cropHandleBorderMultiplier / viewportStore.realZoomLevel
+})
+
+/**
+ * Styles for handle blocks
  */
 const resizerStyle = computed(() => {
   const size = Math.max(resizerSize.value, 10)
   const offset = size / 2
-  const border = Math.max(size * viewportConfig.cropHandleBorderMultiplier, 1)
+  const border = Math.max(size * 0.15, 1 / viewportStore.realZoomLevel)
 
   return {
-    '--width': `${size}px`,
-    '--height': `${size}px`,
+    '--size': `${size}px`,
     '--offset': `${offset}px`,
     '--border-width': `${border}px`,
   }
 })
 
-/**
- * Border width of the crop box
- */
-const borderWidth = computed(() => {
-  return 1
-})
-
-/** Side resizers */
+/** Sides */
 const sideDirs = ['top', 'bottom', 'left', 'right']
 
 /**
- * Which sides should be visible
+ * Hide side handles if crop box is too small
  */
 const visibleSideDirs = computed(() => {
   if (!cropBox || !cropBox.value) return sideDirs
 
   return sideDirs.filter(dir => {
     const box = cropBox.value
+    const size = parseFloat(resizerStyle.value['--size'])
     if (dir === 'top' || dir === 'bottom') {
-      return box.width > parseFloat(resizerStyle.value['--width']) * 2
+      return box.width > size * 2
     } else {
-      return box.height > parseFloat(resizerStyle.value['--height']) * 2
+      return box.height > size * 2
     }
   })
 })
-
 </script>
 
 <template>
@@ -83,14 +82,14 @@ const visibleSideDirs = computed(() => {
       top: cropBox.y + 'px',
       width: cropBox.width + 'px',
       height: cropBox.height + 'px',
-      borderWidth: borderWidth + 'px',
+      borderWidth: borderWidth + 'px'
     }" @mousedown="startPan" :class="{ 'crop-box-opacity': !editorStore.toolsConfig.crop.isVisibleCropBox }">
 
-      <!-- Corners -->
-      <div v-for="dir in ['top-left', 'top-right', 'bottom-left', 'bottom-right']" :key="dir" class="resizer"
-        :class="dir" @mousedown="(event) => startResize(event, dir.replace('-', ''))" :style="resizerStyle"></div>
+      <!-- Corner handles -->
+      <div v-for="dir in ['top-left', 'top-right', 'bottom-left', 'bottom-right']" :key="dir" class="resizer" :class="dir"
+        @mousedown="(event) => startResize(event, dir.replace('-', ''))" :style="resizerStyle"></div>
 
-      <!-- Sides -->
+      <!-- Side handles -->
       <div v-for="dir in visibleSideDirs" :key="dir" class="resizer" :class="dir"
         @mousedown="(event) => startResize(event, dir)" :style="resizerStyle"></div>
     </div>
@@ -106,48 +105,39 @@ const visibleSideDirs = computed(() => {
 .crop-box {
   position: absolute;
   border: 1px dashed var(--editor-highlight-c);
-  /* background-color: var(--crop-c); */
   background: transparent;
   pointer-events: auto;
   cursor: move;
   z-index: var(--z-index-crop-box);
-  opacity: 1;
 }
 
-/* Resizers */
+/* Resize handles */
 .resizer {
   position: absolute;
   background: var(--text-c);
   border: var(--border-width) solid var(--editor-highlight-c);
-  /* border-radius: 50%; */
-  cursor: nwse-resize;
+  /* Scales with zoom */
+  border-radius: 50%;
+  width: var(--size);
+  height: var(--size);
 }
 
 /* Corners */
-.resizer.top-left,
-.resizer.top-right,
-.resizer.bottom-left,
-.resizer.bottom-right {
-  width: calc(var(--width));
-  height: calc(var(--height));
-  border-radius: 50%;
-}
-
 .resizer.top-left {
-  top: calc(0px - var(--offset) - 1px);
-  left: calc(0px - var(--offset) - 1px);
+  top: calc(0px - var(--offset));
+  left: calc(0px - var(--offset));
   cursor: nwse-resize;
 }
 
 .resizer.top-right {
-  top: calc(0px - var(--offset) - 1px);
+  top: calc(0px - var(--offset));
   right: calc(0px - var(--offset));
   cursor: nesw-resize;
 }
 
 .resizer.bottom-left {
   bottom: calc(0px - var(--offset));
-  left: calc(0px - var(--offset) - 1px);
+  left: calc(0px - var(--offset));
   cursor: nesw-resize;
 }
 
@@ -161,43 +151,37 @@ const visibleSideDirs = computed(() => {
 .resizer.top,
 .resizer.bottom {
   border-radius: 2px;
-  height: calc(var(--height)/2);
-  width: calc(var(--width));
+  width: var(--size);
+  height: calc(var(--size) / 2);
+  left: 50%;
+  transform: translateX(-50%);
+  cursor: ns-resize;
+}
+
+.resizer.top {
+  top: calc(0px - (var(--size) / 4));
+}
+
+.resizer.bottom {
+  bottom: calc(0px - (var(--size) / 4));
 }
 
 .resizer.left,
 .resizer.right {
   border-radius: 2px;
-  width: calc(var(--height)/2);
-  height: calc(var(--width));
-}
-
-.resizer.top {
-  top: calc(0px - calc(var(--height)/4) - 1px);
-  left: 50%;
-  transform: translateX(-50%);
-  cursor: ns-resize;
-}
-
-.resizer.bottom {
-  bottom: calc(0px - calc(var(--height)/4));
-  left: 50%;
-  transform: translateX(-50%);
-  cursor: ns-resize;
+  height: var(--size);
+  width: calc(var(--size) / 2);
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: ew-resize;
 }
 
 .resizer.left {
-  left: calc(0px - calc(var(--width)/4) - 1px);
-  top: 50%;
-  transform: translateY(-50%);
-  cursor: ew-resize;
+  left: calc(0px - (var(--size) / 4));
 }
 
 .resizer.right {
-  right: calc(0px - calc(var(--width)/4));
-  top: 50%;
-  transform: translateY(-50%);
-  cursor: ew-resize;
+  right: calc(0px - (var(--size) / 4));
 }
 
 .crop-box-opacity {
