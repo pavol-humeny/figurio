@@ -159,7 +159,7 @@ const {
               :onReset="() => setFrameWidthMm(-1)" :tip="t('tools.frame.settings.general.frameWidth.tip')"
               position="bottom-left" />
           </div>
-          <div v-if="useMillimeters" class="content-wrapper">
+          <div v-if="useMillimeters && isPhoneFrame(selectedFrameVariant)" class="content-wrapper">
             <div class="content-title">
               <p>
                 {{ t('tools.frame.settings.general.headerSize.label') }}

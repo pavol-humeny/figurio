@@ -189,6 +189,7 @@ export function useFrameTool(imageStore, historyStore, viewportStore, t) {
   const drawOutline = computed({
     get: () => imageStore.frame.outlineEnabled,
     set: (value) => {
+      frameWidth.value = calculateInitialFrameWidth()
       imageStore.frame.outlineEnabled = value
     },
   })
@@ -276,15 +277,17 @@ export function useFrameTool(imageStore, historyStore, viewportStore, t) {
   /**
    * Watch for drawOutline and update frame width accordingly
    */
-  watch(drawOutline, (newValue) => {
-    if (newValue) {
-      nextTick(() => {
-        frameWidth.value = calculateInitialFrameWidth()
+  // watch(drawOutline, (newValue) => {
+  //   if (newValue) {
+  //     nextTick(() => {
+  //       console.warn('frameWidth: ', frameWidth.value)
+  //       frameWidth.value = calculateInitialFrameWidth()
+  //       console.warn('frameWidth: ', frameWidth.value)
 
-        applyFrame()
-      })
-    }
-  })
+  //       applyFrame()
+  //     })
+  //   }
+  // })
 
   // ------------------------
   // Check frame type
@@ -556,7 +559,6 @@ export function useFrameTool(imageStore, historyStore, viewportStore, t) {
         editorConfig.browserFrameDefaultSize *
           Math.max(imageStore.fileDimensions.width, imageStore.fileDimensions.height),
       )
-      frameWidthRef.value.setValue(width)
     } else if (selectedFrameVariant.value === 'frameSolid') {
       width = 1
     } else if (
@@ -597,6 +599,8 @@ export function useFrameTool(imageStore, historyStore, viewportStore, t) {
   const setFrameWidth = (width) => {
     if (width < 0) {
       frameWidth.value = calculateInitialFrameWidth()
+
+      console.warn('frameWidth: ', frameWidth.value)
     }
     applyFrame()
   }
@@ -611,6 +615,8 @@ export function useFrameTool(imageStore, historyStore, viewportStore, t) {
 
       frameWidth.value = calculateInitialFrameWidth()
       frameWidthMm.value = Math.max(frameWidth.value / PxPerMm, 1)
+
+      console.warn('frameWidth: ', frameWidth.value, ' frameWidthMm: ', frameWidthMm.value)
     }
 
     applyFrame()

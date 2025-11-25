@@ -4,6 +4,15 @@
     "items": []
   },
   "versions":{
+    "4.17.17":{
+      "label": "4.17.17",
+      "date":"25.11. 2025",
+      "bugFixes": {
+        "items": [
+          "Remove duplicated width input in frame tool settings"
+        ]
+      }
+    },
     "4.17.16":{
       "label": "4.17.16",
       "date":"25.11. 2025",
