@@ -395,7 +395,7 @@
   },
   "blur": {
     "label": "Blur area",
-    "tip": "Applies a blur effect to the image",
+    "tip": "Adds blur area to the image",
     "tipDisabled": "",
     "explain": "The Blur area tool applies a blur effect to a selected rectangular area of the image. The size, position, and rotation of the blur box can be adjusted manually or by entering exact values. The blur strength slider controls how strong the effect is.",
     "shortcut": "B",

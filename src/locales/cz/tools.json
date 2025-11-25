@@ -396,7 +396,7 @@
   },
   "blur": {
     "label": "Rozmazání oblasti",
-    "tip": "Aplikuje efekt rozmazání na obrázek",
+    "tip": "Přidává rozmazanou oblast do obrázku",
     "tipDisabled": "",
     "explain": "Nástroj Rozmazání oblasti aplikuje efekt rozmazání na vybranou obdélníkovou oblast obrázku. Velikost, pozici a rotaci rozmazávacího boxu lze nastavit ručně nebo zadáním přesných hodnot. Síla rozmazání se nastavuje posuvníkem.",
     "shortcut": "B",
