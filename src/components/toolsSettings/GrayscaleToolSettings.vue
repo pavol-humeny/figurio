@@ -68,6 +68,6 @@ const {
   text-align: center;
   padding: 10px 30px;
   opacity: 0.75;
-
+  height: 75px;
 }
 </style>
