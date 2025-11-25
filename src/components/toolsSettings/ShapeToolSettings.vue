@@ -269,7 +269,7 @@ const {
           class="settings-content-wrapper">
           <div class="content-wrapper">
             <div class="content-title">
-              <p :class="{ disabled: localObjectSettings.strokeWidth === 0 }">
+              <p>
                 {{ $t('tools.shape.settings.cornerRadius.label') }}
               </p>
             </div>
