@@ -17,7 +17,7 @@
   --secondary-c-dark: #3c3c3c;
   --background-c-dark: #282828;
   --text-c-dark: #F5F1E9;
-  --text-placeholder-c-dark: #F5F1E9;
+  --text-placeholder-c-dark: #b6b3ad;
   --border-c-dark: #545454c4;
 
   --primary-c-light: #695331;
@@ -25,7 +25,7 @@
   --background-c-light: #f5f5f5;
   /* --background-c-light: #EAEAEA; */
   --text-c-light: #0F0B04;
-  --text-placeholder-c-light: #0F0B04;
+  --text-placeholder-c-light: #3f3f3f;
   --border-c-light: #3d3d3d42;
 
   --notification-c-dark: #409AE3;
@@ -218,4 +218,7 @@ body {
   --vibration-range: 1px;
 
   --statistics-title-c: var(--text-c);
+
+  --input-text-size: 15px;
+  --input-top-padding: 5px;
 }

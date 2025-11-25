@@ -168,7 +168,7 @@ defineExpose({ setValue })
 .hex-input-visible {
   width: 9ch;
   padding: 2px 0px;
-  font-size: 14px;
+  font-size: var(--input-text-size);
   border-radius: 4px;
   background: var(--secondary-c);
   border: none;
@@ -233,8 +233,8 @@ defineExpose({ setValue })
 
 .hex-input {
   width: 11ch;
-  padding: 7px 10px;
-  font-size: 14px;
+  padding: var(--input-top-padding) 10px;
+  font-size: var(--input-text-size);
   border-radius: 4px;
   background: var(--secondary-c);
   border: none;

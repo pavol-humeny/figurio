@@ -52,7 +52,7 @@ const {
   width: 100%;
   background: transparent;
   border: none;
-  color: var(--text-placeholder-c);
+  color: var(--text-c);
   font-size: var(--text-font-size);
   outline: none;
 }

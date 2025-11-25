@@ -166,7 +166,7 @@ const {
               </p>
             </div>
             <NumberInput v-model="userSetHeaderSizeMm" :min="minUserSetHeaderSizeMm" :max="maxUserSetHeaderSizeMm"
-              :step="1" unit="mm" @update="setUserSetHeaderSizeMm(userSetHeaderSizeMm)" icon="IconArrowWidth"
+              :step="1" unit="mm" @update="setUserSetHeaderSizeMm(userSetHeaderSizeMm)" icon="IconArrowHeight"
               :color="'var(--primary-c)'" size="22" :onReset="resetUserSetHeaderSizeMm"
               :tip="t('tools.frame.settings.general.headerSize.tip')" position="bottom-left" />
           </div>
@@ -259,7 +259,7 @@ const {
               </p>
             </div>
             <NumberInput ref="frameWidthRef" v-model="headerSize" :min="5" :max="maxHeaderFooterSize" :step="1"
-              unit="px" @update="setHeaderSize(headerSize)" icon="IconArrowWidth" :color="'var(--primary-c)'" size="22"
+              unit="px" @update="setHeaderSize(headerSize)" icon="IconArrowHeight" :color="'var(--primary-c)'" size="22"
               :onReset="() => setHeaderSize(-1)" :tip="t('tools.frame.settings.general.headerSize.tip')"
               position="bottom-left" />
           </div>
@@ -276,7 +276,7 @@ const {
               </p>
             </div>
             <NumberInput ref="frameWidthRef" v-model="footerSize" :min="5" :max="maxHeaderFooterSize" :step="1"
-              unit="px" @update="setFooterSize(footerSize)" icon="IconArrowWidth" :color="'var(--primary-c)'" size="22"
+              unit="px" @update="setFooterSize(footerSize)" icon="IconArrowHeight" :color="'var(--primary-c)'" size="22"
               :onReset="() => setFooterSize(-1)" :tip="t('tools.frame.settings.general.footerSize.tip')"
               position="bottom-left" />
           </div>
@@ -293,7 +293,7 @@ const {
               </p>
             </div>
             <NumberInput ref="frameWidthRef" v-model="headerSizeMm" :min="5" :max="maxHeaderFooterSize" :step="1"
-              unit="mm" @update="setHeaderSizeMm(headerSizeMm)" icon="IconArrowWidth" :color="'var(--primary-c)'"
+              unit="mm" @update="setHeaderSizeMm(headerSizeMm)" icon="IconArrowHeight" :color="'var(--primary-c)'"
               size="22" :onReset="() => setHeaderSizeMm(-1)" :tip="t('tools.frame.settings.general.headerSize.tip')"
               position="bottom-left" />
           </div>
@@ -310,7 +310,7 @@ const {
               </p>
             </div>
             <NumberInput ref="frameWidthRef" v-model="footerSizeMm" :min="5" :max="maxHeaderFooterSize" :step="1"
-              unit="mm" @update="setFooterSizeMm(footerSizeMm)" icon="IconArrowWidth" :color="'var(--primary-c)'"
+              unit="mm" @update="setFooterSizeMm(footerSizeMm)" icon="IconArrowHeight" :color="'var(--primary-c)'"
               size="22" :onReset="() => setFooterSizeMm(-1)" :tip="t('tools.frame.settings.general.footerSize.tip')"
               position="bottom-left" />
           </div>
