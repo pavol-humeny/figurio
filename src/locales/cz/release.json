@@ -6,6 +6,17 @@
     ]
   },
   "versions": {
+    "4.17.15": {
+      "label": "4.17.15",
+      "date": "24.11. 2025",
+      "improvements": {
+        "items": [
+          "Povolení nahrání obrázku na celé ploše domovské obrazovky přetažením souboru",
+          "Použití průhlednosti při skrytí ořezového rámečku místo jeho odstranění",
+          "Zaznamenání události stisknutí klávesy pouze při jejím uvolnění"
+        ]
+      }
+    },
     "4.17.14":{
       "label": "4.17.14",
       "date":"22.11. 2025",
