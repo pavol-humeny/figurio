@@ -93,6 +93,7 @@ const {
   setValue,
   showIcon,
   showUnit,
+  onWheel,
 } = useNumberInput(props, emit)
 
 /**
@@ -109,13 +110,13 @@ defineExpose({ setValue })
         paddingLeft: showIcon ? '30px' : '10px',
         paddingRight: showUnit ? '30px' : '10px',
       }" v-model.number="inputValue" :min="props.min" :max="props.max" :step="props.step" :disabled="props.disabled"
-        @blur="onBlurOrEnter" @input="onInput" @keydown.enter="onBlurOrEnter" />
+        @blur="onBlurOrEnter" @input="onInput" @keydown.enter="onBlurOrEnter" @wheel="onWheel" />
       <BaseIcon v-if="showIcon" :name="props.icon" class="input-icon" :size="props.size" :color="props.color"
         @dblclick="onIconDoubleClick" :class="{ 'not-allowed': props.disabled, disabled: props.disabled }"
         :style="{ top: props.iconTop + '%' }" />
       <span v-if="showUnit" class="input-unit" :class="{ disabled: props.disabled }">{{
         props.unit
-      }}</span>
+        }}</span>
     </div>
   </ItemTip>
 </template>

@@ -122,6 +122,22 @@ export function useNumberInput(props, emit) {
     inputValue.value = normalizeValue(newValue)
   }
 
+  /**
+   * Handles mouse wheel events to increment/decrement value
+   * @param {WheelEvent} event - The wheel event
+   */
+  const onWheel = (event) => {
+    if (props.disabled) return
+    event.preventDefault()
+
+    const direction = event.deltaY < 0 ? 1 : -1
+    const newValue = normalizeValue(inputValue.value + props.step * direction)
+
+    inputValue.value = newValue
+    emit('update:modelValue', newValue)
+    emit('update', newValue)
+  }
+
   return {
     inputValue,
     onBlurOrEnter,
@@ -130,5 +146,6 @@ export function useNumberInput(props, emit) {
     setValue,
     showIcon,
     showUnit,
+    onWheel,
   }
 }

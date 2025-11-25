@@ -11,6 +11,13 @@
         "items": [
           "Remove duplicated width input in frame tool settings"
         ]
+      },
+      "improvements": {
+        "items": [
+          "Enable setting number input value with mouse wheel", 
+          "Increase size of numbers in inputs",
+          "Make units of number inputs less contrast"
+        ]
       }
     },
     "4.17.16":{
