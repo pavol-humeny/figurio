@@ -90,7 +90,7 @@ onMounted(() => {
 
 .video-wrapper {
   width: 100%;
-  height: 65%;
+  height: 70%;
   border-top-left-radius: 18px;
   border-top-right-radius: 18px;
   overflow: hidden;
@@ -105,7 +105,7 @@ onMounted(() => {
 
 .card-content-wrapper {
   width: 100%;
-  height: 35%;
+  height: 30%;
   display: flex;
   flex-direction: column;
   align-items: start;

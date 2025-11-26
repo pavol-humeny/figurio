@@ -124,8 +124,8 @@ const closeFeatureTourModalWrapper = () => {
 }
 
 .modal-box {
-  width: 70%;
-  height: 80%;
+  width: 60%;
+  height: 90%;
   display: flex;
   flex-direction: column;
   align-items: center;

@@ -11,10 +11,12 @@ import { useImageStore } from '@/stores/imageStore';
 import { useInteractiveTutorial } from '@/composables/tutorial/useInteractiveTutorial';
 import { globalConfig } from '@/config/globalConfig';
 import { useApi } from '../../composables/common/useApi';
+import { useFeatureTourModal } from '@/composables/modals/useFeatureTourModal';
 
 const { messages, locale, t } = useI18n()
 const router = useRouter()
 const { addUserEvent } = useApi()
+const { openFeatureTourModal } = useFeatureTourModal();
 
 const uiStore = useUiStore()
 const imageStore = useImageStore()
@@ -426,6 +428,23 @@ const showStatistics = () => {
               </div>
             </div>
 
+            <!-- Feature Tour -->
+            <div class="help-content">
+              <div class="feature-tour-title-wrapper">
+                <p class="help-content-title" style="margin-bottom: 0;">
+                  {{ $t('help.helpContent.featureTour.title') }}
+                </p>
+              </div>
+              <ul class="dot-paragraph">
+                <li>
+                  {{ $t('help.helpContent.featureTour.text') }}
+                </li>
+              </ul>
+              <div class="feature-tour-button">
+                <DefaultButton :text="$t('help.helpContent.featureTour.button.text')" @click="openFeatureTourModal()" />
+              </div>
+            </div>
+
             <!-- Technical limitations -->
             <div class="help-content">
               <p class="help-content-title">Technical Limitations</p>
@@ -602,7 +621,8 @@ const showStatistics = () => {
   gap: 10px;
 }
 
-.tutorial-title-wrapper {
+.tutorial-title-wrapper,
+.feature-tour-title-wrapper {
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -616,7 +636,8 @@ const showStatistics = () => {
   padding: 3px;
 }
 
-.tutorial-button {
+.tutorial-button,
+.feature-tour-button {
   width: 100%;
   padding-top: 10px;
   display: flex;

@@ -76,6 +76,13 @@
         "message": "Congratulations! You have successfully completed the tutorial. You should now have a good understanding of the main features of the editor and how to use them."
       }
     },
+    "featureTour": {
+      "title": "Feature Tour",
+      "text": "Short videos demonstrating specific features of the editor. You can access the feature tour at any time to learn more about the available tools and functionalities.",
+      "button": {
+        "text": "Open Feature Tour"
+      }
+    },
     "technicalLimitations": {
       "title": "Technical Limitations",
       "limitations": [

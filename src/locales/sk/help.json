@@ -76,6 +76,13 @@
         "message": "Gratulujeme! Práve ste úspešne dokončili tutoriál. Teraz by ste mali mať dobrý prehľad o hlavných funkciách editora a o tom, ako ich používať."
       }
     },
+    "featureTour": {
+      "title": "Prehliadka funkcií",
+      "text": "Krátke videá predvádzajúce konkrétne funkcie editora. K prehliadke funkcií môžete kedykoľvek pristúpiť a dozvedieť sa viac o dostupných nástrojoch a funkcionalitách.",
+      "button": {
+        "text": "Otvoriť prehliadku funkcií"
+      }
+    },
     "technicalLimitations": {
       "title": "Technické obmedzenia",
       "limitations": [

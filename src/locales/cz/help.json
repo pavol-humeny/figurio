@@ -76,6 +76,13 @@
         "message": "Gratulujeme! Právě jste úspěšně dokončili tutoriál. Nyní byste měli mít dobrý přehled o hlavních funkcích editoru a jak je používat."
       }
     },
+    "featureTour": {
+      "title": "Prohlídka funkcí",
+      "text": "Krátká videa předvádějící konkrétní funkce editoru. K prohlídce funkcí můžete kdykoli přistoupit a dozvědět se více o dostupných nástrojích a funkcionalitách.",
+      "button": {
+        "text": "Otevřít prohlídku funkcí"
+      }
+    },
     "technicalLimitations": {
       "title": "Technická omezení",
       "limitations": [
