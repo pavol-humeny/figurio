@@ -1,4 +1,6 @@
 <script setup>
+import { onMounted } from 'vue';
+import { globalConfig } from '@/config/globalConfig.js';
 import DragAndDropArea from '@/components/editor/DragAndDropArea.vue';
 import { useKeyboardShortcuts } from '@/composables/editor/useKeyboardShortcuts';
 import { useUiStore } from '@/stores/uiStore';
@@ -50,6 +52,16 @@ const {
 const {
   openFeatureTourModal
 } = useFeatureTourModal();
+
+/**
+ * On mounted, check seen feature tour slides and open modal
+ */
+onMounted(() => {
+  const seen = JSON.parse(localStorage.getItem(`${globalConfig.LOCAL_STORAGE_PREFIX}seenFeatureTour`) || '[]')
+
+  // Open feature tour modal
+  openFeatureTourModal(seen)
+})
 </script>
 
 <template>
@@ -79,7 +91,6 @@ const {
 
       <DefaultButton @click="selectFile" :text="$t('dragAndDropArea.button.text')"
         :style="{ 'user-select': 'none', 'padding-top': '30px' }" />
-      <button @click="openFeatureTourModal">Open</button>
     </div>
     <div class="right-side">
       <DragAndDropArea isHomePage />

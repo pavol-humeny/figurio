@@ -77,7 +77,8 @@ const closeFeatureTourModalWrapper = () => {
           <!-- Current card -->
           <transition name="fade" mode="out-in">
             <FeatureTourCard :key="currentCard" :icon="slides[currentCard].icon" :title="slides[currentCard].title"
-              :description="slides[currentCard].description" :videoSrc="slides[currentCard].videoSrc" />
+              :description="slides[currentCard].description" :videoSrc="slides[currentCard].videoSrc"
+              :videoKey="slides[currentCard].videoKey" />
           </transition>
 
           <!-- Close cross -->
@@ -86,17 +87,17 @@ const closeFeatureTourModalWrapper = () => {
           </p>
 
           <!-- Left arrow -->
-          <p class="navigation-arrow left" @click="prev">
+          <p v-if="slides.length > 1" class="navigation-arrow left" @click="prev">
             ‹
           </p>
 
           <!-- Right arrow -->
-          <p class="navigation-arrow right" @click="next">
+          <p v-if="slides.length > 1" class="navigation-arrow right" @click="next">
             ›
           </p>
 
           <!-- Dots -->
-          <div class="dots">
+          <div v-if="slides.length > 1" class="dots">
             <span v-for="(s, i) in slides" :key="i" class="dot" :class="{ active: i === currentCard }"
               @click="currentCard = i"></span>
           </div>

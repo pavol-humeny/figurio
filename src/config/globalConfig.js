@@ -57,6 +57,9 @@ export const globalConfig = {
     notEnabledMessage: 'This feature is currently not available.',
   },
 
+  // List of feature tour video identifiers to show in the feature tour modal
+  listOfFeatureTourVideos: ['cropTool', 'brushTool', 'shapeTool'],
+
   // Max number of files to upload simultaneously
   maxNumberOfFilesToUploadSimultaneously: 1, // To avoid issues with image analysis on load
 

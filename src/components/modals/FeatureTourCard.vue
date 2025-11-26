@@ -1,6 +1,7 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import BaseIcon from '../icons/BaseIcon.vue'
+import { globalConfig } from '@/config/globalConfig.js'
 
 // Props for title, description and video source
 const props = defineProps({
@@ -20,6 +21,10 @@ const props = defineProps({
     type: String,
     required: true,
   },
+  videoKey: {
+    type: String,
+    required: true,
+  },
 })
 
 /**
@@ -28,11 +33,26 @@ const props = defineProps({
 const videoRef = ref(null)
 
 /**
+ * Update seen slides in localStorage
+ * @param {string} key - video key
+ */
+const updateSeenSlides = (key) => {
+  const seen = JSON.parse(localStorage.getItem(`${globalConfig.LOCAL_STORAGE_PREFIX}seenFeatureTour`) || '[]')
+  if (!seen.includes(key)) {
+    seen.push(key)
+    localStorage.setItem(`${globalConfig.LOCAL_STORAGE_PREFIX}seenFeatureTour`, JSON.stringify(seen))
+  }
+}
+
+/**
  * Try to play the video on mount
  */
 onMounted(() => {
   // Try to play again if browser blocks autoplay
   videoRef.value?.play().catch(() => { })
+
+  // Update seen slides
+  updateSeenSlides(props.videoKey)
 })
 
 </script>

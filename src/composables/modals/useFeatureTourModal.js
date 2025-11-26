@@ -1,5 +1,7 @@
 import { ref } from 'vue'
 import { useApi } from '@/composables/common/useApi'
+import { globalConfig } from '@/config/globalConfig.js'
+
 const { addUserEvent } = useApi()
 
 /**
@@ -25,15 +27,25 @@ const activeVideos = ref([])
 export function useFeatureTourModal() {
   /**
    * Open the modal
-   * @param {string[]} [identifiers] - optional array of video identifiers to show
+   * @param {string[]} seenIdentifiers - optional array of already seen video identifiers
    */
-  const openFeatureTourModal = (identifiers) => {
+  const openFeatureTourModal = (seenIdentifiers) => {
     if (isVisible.value) return
 
-    addUserEvent('openModal', { modal: 'featureTour', identifiers })
+    if (Array.isArray(seenIdentifiers)) {
+      // Show only videos not in seenIdentifiers
+      activeVideos.value = globalConfig.listOfFeatureTourVideos.filter(
+        (id) => !seenIdentifiers.includes(id),
+      )
+    } else {
+      // No parameter => show all
+      activeVideos.value = [...globalConfig.listOfFeatureTourVideos]
+    }
 
-    // If no identifiers, show all slides
-    activeVideos.value = Array.isArray(identifiers) && identifiers.length ? identifiers : []
+    // Do not open if nothing to show
+    if (!activeVideos.value.length) return
+
+    addUserEvent('openModal', { modal: 'featureTour', identifiers: activeVideos.value })
     isVisible.value = true
   }
 
