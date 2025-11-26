@@ -11,19 +11,33 @@ export function useVideoLoader() {
    * @param {string} key
    * @returns {string} video path
    */
-  const getVideo = (key) => {
+  const getVideo = (key, isToolTip = false) => {
     let src = cropVideo // fallback
 
-    switch (key) {
-      case 'cropTool':
-        src = cropVideo
-        break
-      case 'brushTool':
-        src = brushVideo
-        break
-      case 'shapeTool':
-        src = shapeVideo
-        break
+    if (isToolTip) {
+      switch (key) {
+        case 'crop':
+          src = cropVideo
+          break
+        case 'brush':
+          src = brushVideo
+          break
+        case 'shape':
+          src = shapeVideo
+          break
+      }
+    } else {
+      switch (key) {
+        case 'cropTool':
+          src = cropVideo
+          break
+        case 'brushTool':
+          src = brushVideo
+          break
+        case 'shapeTool':
+          src = shapeVideo
+          break
+      }
     }
 
     return src

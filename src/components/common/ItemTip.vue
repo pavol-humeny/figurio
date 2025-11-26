@@ -1,7 +1,10 @@
 <script setup>
 import { useItemTip } from '@/composables/common/useItemTip'
 import { useUiStore } from '@/stores/uiStore'
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
+import { useVideoLoader } from '@/composables/modals/useVideoLoader'
+
+const { getVideo } = useVideoLoader()
 
 /**
  * @typedef {Object} ItemTipProps
@@ -26,6 +29,14 @@ const props = defineProps({
   advance: {
     type: Boolean,
     default: false,
+  },
+  advanceTool: {
+    type: Boolean,
+    default: false,
+  },
+  toolKey: {
+    type: String,
+    default: '',
   },
   title: {
     type: String,
@@ -60,6 +71,8 @@ const {
  * Whether to show the tooltip (text must be non-empty)
  */
 const showTip = computed(() => props.text !== '')
+
+const videoRef = ref(null)
 </script>
 
 <template>
@@ -69,7 +82,19 @@ const showTip = computed(() => props.text !== '')
     <teleport to="body">
       <Transition name="fade">
         <div v-if="isVisible && showTip" :style="itemTipStyle" :class="['item-tip-bubble', props.position]">
-          <template v-if="props.advance">
+          <template v-if="props.advanceTool">
+            <div class="tip-video">
+              <video ref="videoRef" class="video-preview" :src="getVideo(props.toolKey, true)" autoplay loop muted
+                playsinline></video>
+            </div>
+            <div class="item-tip-title-row">
+              <span class="tip-title">{{ props.title }}</span>
+              <span v-if="props.shortcut" class="tip-shortcut">{{ props.shortcut }}</span>
+            </div>
+            <div class="tip-description">{{ props.text }}</div>
+          </template>
+
+          <template v-else-if="props.advance">
             <div class="item-tip-title-row">
               <span class="tip-title">{{ props.title }}</span>
               <span v-if="props.shortcut" class="tip-shortcut">{{ props.shortcut }}</span>
@@ -80,7 +105,7 @@ const showTip = computed(() => props.text !== '')
           <template v-else>
             {{ props.text }}
           </template>
-          <div class="item-tip-arrow" :class="props.position"></div>
+          <div v-if="!props.advanceTool" class="item-tip-arrow" :class="props.position"></div>
         </div>
       </Transition>
     </teleport>
@@ -255,5 +280,21 @@ const showTip = computed(() => props.text !== '')
 .fade-enter-from,
 .fade-leave-to {
   opacity: 0;
+}
+
+/* Advance tool tip */
+.tip-video {
+  width: 100%;
+  height: 130px;
+  background: black;
+  border-radius: 6px;
+  margin-bottom: 8px;
+}
+
+.video-preview {
+  width: 100%;
+  height: 100%;
+  object-fit: fill;
+  background: black;
 }
 </style>

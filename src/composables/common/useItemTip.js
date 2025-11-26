@@ -91,57 +91,60 @@ export function useItemTip(options = {}, uiStore) {
 
     const rect = wrapperRef.value.getBoundingClientRect()
 
+    let top = 0
+    let left = 0
+
+    // Maximum height of the tooltip to prevent overflow under screen
+    const tipMaxHeight = 150
+
     switch (position) {
       case 'top':
-        coords.value = {
-          top: rect.top - offset,
-          left: rect.left + rect.width / 2,
-        }
+        top = rect.top - offset
+        left = rect.left + rect.width / 2
         break
+
       case 'top-right':
-        coords.value = {
-          top: rect.top - offset,
-          left: rect.left,
-        }
+        top = rect.top - offset
+        left = rect.left
         break
+
       case 'top-left':
-        coords.value = {
-          top: rect.top - offset,
-          left: rect.right,
-        }
+        top = rect.top - offset
+        left = rect.right
         break
+
       case 'bottom':
-        coords.value = {
-          top: rect.bottom + offset,
-          left: rect.left + rect.width / 2,
-        }
+        top = rect.bottom + offset
+        left = rect.left + rect.width / 2
         break
+
       case 'bottom-right':
-        coords.value = {
-          top: rect.bottom + offset,
-          left: rect.left,
-        }
+        top = rect.bottom + offset
+        left = rect.left
         break
+
       case 'bottom-left':
-        coords.value = {
-          top: rect.bottom + offset,
-          left: rect.right,
-        }
+        top = rect.bottom + offset
+        left = rect.right
         break
+
       case 'left':
-        coords.value = {
-          top: rect.top + rect.height / 2,
-          left: rect.left - offset,
-        }
+        top = rect.top + rect.height / 2
+        left = rect.left - offset
         break
+
       case 'right':
       default:
-        coords.value = {
-          top: rect.top + rect.height / 2,
-          left: rect.right + offset,
+        top = rect.top + rect.height / 2
+        left = rect.right + offset
+
+        if (top + tipMaxHeight > window.innerHeight) {
+          top = window.innerHeight - tipMaxHeight - 10 // 10px margin from bottom
         }
         break
     }
+
+    coords.value = { top, left }
   }
 
   /**

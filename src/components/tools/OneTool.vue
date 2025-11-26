@@ -62,8 +62,9 @@ const { wrapperRef, subToolPos, onMouseEnter, onMouseLeave, onClickTab, onClickT
     text: editorStore.enableTools[props.tool.key] === false ? $t('tools.toolIsNotAvailable.tip') : props.advanceTip.text,
     title: props.advanceTip.title,
     shortcut: props.advanceTip.shortcut,
-    advance: true,
-    position: 'top-right',
+    advanceTool: true,
+    toolKey: props.tool.key,
+    position: 'right',
   } : {
     text: props.tip,
     position: 'top-right',
