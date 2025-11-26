@@ -18,6 +18,7 @@ import ReleaseModal from './components/modals/ReleaseModal.vue'
 import { useUiStore } from './stores/uiStore'
 import CalibrationModal from './components/modals/CalibrationModal.vue'
 import { useApi } from './composables/common/useApi'
+import FeatureTourModal from './components/modals/FeatureTourModal.vue'
 
 const { addUserVisit } = useApi()
 
@@ -155,6 +156,7 @@ onBeforeUnmount(() => {
     <ExportToolSettings />
     <InteractiveTutorial />
     <CalibrationModal />
+    <FeatureTourModal />
 
     <div class="top-panel" v-if="globalConfig.isRunning">
       <TopPanel />

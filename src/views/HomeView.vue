@@ -15,6 +15,7 @@ import FigurioLogoDark from '@/assets/FigurioLogoDark.png'
 import FigurioLogoLight from '@/assets/FigurioLogoLight.png'
 import { useDragAndDropArea } from '@/composables/editor/useDragAndDropArea';
 import { useEditorStore } from '@/stores/editorStore';
+import { useFeatureTourModal } from '@/composables/modals/useFeatureTourModal';
 
 const { t, messages, locale } = useI18n()
 const router = useRouter()
@@ -45,6 +46,10 @@ const {
   handleDrop,
   selectFile
 } = useDragAndDropArea(useImageStore(), useEditorStore(), t, router)
+
+const {
+  openFeatureTourModal
+} = useFeatureTourModal();
 </script>
 
 <template>
@@ -74,6 +79,7 @@ const {
 
       <DefaultButton @click="selectFile" :text="$t('dragAndDropArea.button.text')"
         :style="{ 'user-select': 'none', 'padding-top': '30px' }" />
+      <button @click="openFeatureTourModal">Open</button>
     </div>
     <div class="right-side">
       <DragAndDropArea isHomePage />
