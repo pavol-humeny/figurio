@@ -1,0 +1,20 @@
+[
+  {
+    "icon": "IconCropTool",
+    "title": "Crop tool",
+    "description": "This is crop tool",
+    "video": "cropTool"
+  },
+  {
+    "icon": "IconBrush",
+    "title": "Brush",
+    "description": "Simple brush demo",
+    "video": "brushTool"
+  },
+  {
+    "icon": "IconShapeTool",
+    "title": "Shape",
+    "description": "Add and edit shapes easily",
+    "video": "shapeTool"
+  }
+]

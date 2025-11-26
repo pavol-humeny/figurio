@@ -52,6 +52,10 @@ import enStatistics from './en/statistics.json'
 import skStatistics from './sk/statistics.json'
 import czStatistics from './cz/statistics.json'
 
+import enFeatureTour from './en/featureTour.json'
+import skFeatureTour from './sk/featureTour.json'
+import czFeatureTour from './cz/featureTour.json'
+
 /**
  * Language-specific localization data for i18n
  */
@@ -70,6 +74,7 @@ const allLocales = {
     home: enHome,
     calibration: enCalibration,
     statistics: enStatistics,
+    featureTour: enFeatureTour,
   },
   sk: {
     topPanel: skTopPanel,
@@ -85,6 +90,7 @@ const allLocales = {
     home: skHome,
     calibration: skCalibration,
     statistics: skStatistics,
+    featureTour: skFeatureTour,
   },
   cz: {
     topPanel: czTopPanel,
@@ -100,6 +106,7 @@ const allLocales = {
     home: czHome,
     calibration: czCalibration,
     statistics: czStatistics,
+    featureTour: czFeatureTour,
   },
 }
 

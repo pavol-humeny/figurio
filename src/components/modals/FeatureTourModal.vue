@@ -1,32 +1,46 @@
 <script setup>
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import { useFeatureTourModal } from '@/composables/modals/useFeatureTourModal'
 import FeatureTourCard from './FeatureTourCard.vue'
+import { useVideoLoader } from '@/composables/modals/useVideoLoader.js'
+import { useI18n } from 'vue-i18n'
 
-import cropVideo from '@/assets/videos/crop.mp4'
+const { getVideo } = useVideoLoader()
+const { messages, locale } = useI18n()
+/**
+ * Logic of the feature tour modal state
+ */
+const {
+  isVisible,
+  closeFeatureTourModal,
+  activeVideos
+} = useFeatureTourModal()
 
-// Pole kariet (môžeš si ho neskôr ťahať z i18n)
-const slides = ref([
-  {
-    icon: 'IconCropTool',
-    title: 'Crop tool',
-    description: 'This is crop tool',
-    videoSrc: cropVideo
-  },
-  {
-    icon: 'IconBrush',
-    title: 'Brush',
-    description: 'Simple brush demo',
-    videoSrc: cropVideo
-  },
-  {
-    icon: 'IconShapeTool',
-    title: 'Shape',
-    description: 'Work with layers easily',
-    videoSrc: cropVideo
-  }
-])
+/**
+ * All slides from i18n with video sources
+ */
+const allSlides = computed(() => {
+  const featureTour = messages.value[locale.value]?.featureTour || []
+  return featureTour.map(f => ({
+    icon: f.icon,
+    title: f.title,
+    description: f.description,
+    videoSrc: getVideo(f.video),
+    videoKey: f.video
+  }))
+})
 
+/**
+ * Slides to display based on currently activeVideos
+ * If activeVideos is empty, display all slides
+ */
+const slides = computed(() => {
+  if (!activeVideos.value.length) return allSlides.value
+  return allSlides.value.filter(slide => activeVideos.value.includes(slide.videoKey))
+})
+/**
+ * Current card index
+ */
 const currentCard = ref(0)
 
 /**
@@ -45,14 +59,17 @@ const prev = () => {
 }
 
 /**
- * Logic of the feature tour modal state
+ * Close the feature tour modal and reset the current card index
  */
-const { isVisible, closeFeatureTourModal } = useFeatureTourModal()
+const closeFeatureTourModalWrapper = () => {
+  closeFeatureTourModal()
+  currentCard.value = 0
+}
 </script>
 
 <template>
   <Teleport to="body">
-    <div v-if="isVisible" class="feature-tour-modal-overlay" @mousedown.self="closeFeatureTourModal">
+    <div v-if="isVisible" class="feature-tour-modal-overlay" @mousedown.self="closeFeatureTourModalWrapper">
       <div class="modal-box">
 
         <div class="card-wrapper">
@@ -64,7 +81,7 @@ const { isVisible, closeFeatureTourModal } = useFeatureTourModal()
           </transition>
 
           <!-- Close cross -->
-          <p class="navigation-cross" @click="closeFeatureTourModal">
+          <p class="navigation-cross" @click="closeFeatureTourModalWrapper">
             ✕
           </p>
 
