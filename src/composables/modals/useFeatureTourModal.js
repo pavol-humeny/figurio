@@ -38,7 +38,7 @@ export function useFeatureTourModal() {
         (id) => !seenIdentifiers.includes(id),
       )
     } else {
-      // No parameter => show all
+      // No parameter - show all
       activeVideos.value = [...globalConfig.listOfFeatureTourVideos]
     }
 

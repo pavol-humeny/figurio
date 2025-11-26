@@ -59,31 +59,8 @@ const handleBeforeUnload = (event) => {
 }
 
 /**
- * Sets the user login state.
- * @param {string} userUuid - The unique identifier for the user.
- *
+ * Application version from environment variable
  */
-// const setUserLogin = async (userUuid) => {
-//   if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
-//     return null
-//   }
-
-//   try {
-//     const res = await fetch(`${globalConfig.API_BASE}/api/user-login`, {
-//       method: 'POST',
-//       headers: { 'Content-Type': 'application/json' },
-//       body: JSON.stringify({ user_id: userUuid }),
-//     })
-//     if (!res.ok) {
-//       warn('Error during user-login:', await res.text())
-//     } else {
-//       log('User login recorded')
-//     }
-//   } catch (e) {
-//     error('Error fetching user-login:', e)
-//   }
-// }
-
 const APP_VERSION = import.meta.env.VITE_APP_VERSION
 
 /**
@@ -93,9 +70,9 @@ onMounted(async () => {
   window.addEventListener('beforeunload', handleBeforeUnload)
 
   // Reset localStorage (preferences) if app version has changed and in global config is set reset
-  if (globalConfig.resetPreferencesOnVersionChange) {
-    const savedVersion = localStorage.getItem(`${globalConfig.LOCAL_STORAGE_PREFIX}appVersion`)
-    if (savedVersion !== APP_VERSION) {
+  const savedVersion = localStorage.getItem(`${globalConfig.LOCAL_STORAGE_PREFIX}appVersion`)
+  if (savedVersion !== APP_VERSION) {
+    if (globalConfig.resetPreferencesOnVersionChange) {
       // Reset localStorage
       if (globalConfig.resetTutorialOnVersionChange) {
         localStorage.clear()
@@ -113,6 +90,25 @@ onMounted(async () => {
 
       localStorage.setItem(`${globalConfig.LOCAL_STORAGE_PREFIX}appVersion`, APP_VERSION)
       location.reload()
+    }
+
+    // Update seen feature tour videos based on global config
+    if (globalConfig.updateFeatureTourVideos) {
+      // Load seen videos from localStorage
+      const seen = JSON.parse(localStorage.getItem(`${globalConfig.LOCAL_STORAGE_PREFIX}seenFeatureTour`) || '[]')
+
+      // Keep only videos that are in the current list and not in the "to remove" list
+      const updatedSeen = seen.filter(
+        videoKey =>
+          globalConfig.listOfFeatureTourVideos.includes(videoKey) &&
+          !globalConfig.listOfFeatureTourVideosToRemoveFromSeen.includes(videoKey)
+      )
+
+      // Save back to localStorage
+      localStorage.setItem(
+        `${globalConfig.LOCAL_STORAGE_PREFIX}seenFeatureTour`,
+        JSON.stringify(updatedSeen)
+      )
     }
   }
 
