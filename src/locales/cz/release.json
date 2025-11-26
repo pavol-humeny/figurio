@@ -6,6 +6,43 @@
     ]
   },
   "versions": {
+    "4.18.0": {
+      "label": "4.18.0",
+      "date": "26.11. 2025",
+      "newFeatures": {
+        "items": [
+          "Přidána úvodní prohlídka aplikace (feature tour) pro vysvětlení hlavních funkcí",
+          "Vylepšeny tooltipy, přidáno použití videí pro lepší vysvětlení"
+        ]
+      }
+    },
+    "4.17.17": {
+      "label": "4.17.17",
+      "date": "25.11. 2025",
+      "bugFixes": {
+        "items": [
+          "Odstraněn duplicitní vstup pro šířku v nastavení nástroje rámečku"
+        ]
+      },
+      "improvements": {
+        "items": [
+          "Umožněno nastavovat hodnotu číselného vstupu kolečkem myši",
+          "Zvětšena velikost čísel ve vstupních polích",
+          "Snížen kontrast jednotek u číselných vstupů"
+        ]
+      }
+    },
+    "4.17.16": {
+      "label": "4.17.16",
+      "date": "25.11. 2025",
+      "improvements": {
+        "items": [
+          "Upraven ořezový rámeček v nástroji ořezu pro správné vystředění úchytů",
+          "Při zoomování tlačítky se obrázek již nevrací na střed",
+          "Zvýšena rychlost přiblížení při držení zoomovacích tlačítek"
+        ]
+      }
+    },
     "4.17.15": {
       "label": "4.17.15",
       "date": "24.11. 2025",

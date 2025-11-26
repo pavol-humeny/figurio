@@ -19,11 +19,38 @@ export function useVideoLoader() {
         case 'crop':
           src = cropVideo
           break
+        case 'frame':
+          src = cropVideo
+          break
+        case 'grayscale':
+          src = cropVideo
+          break
+        case 'backgroundRemoval':
+          src = cropVideo
+          break
         case 'brush':
-          src = brushVideo
+          src = cropVideo
+          break
+        case 'select':
+          src = cropVideo
+          break
+        case 'blur':
+          src = cropVideo
           break
         case 'shape':
-          src = shapeVideo
+          src = cropVideo
+          break
+        case 'text':
+          src = cropVideo
+          break
+        case 'magnifyArea':
+          src = cropVideo
+          break
+        case 'transform':
+          src = cropVideo
+          break
+        case 'preset':
+          src = cropVideo
           break
       }
     } else {
