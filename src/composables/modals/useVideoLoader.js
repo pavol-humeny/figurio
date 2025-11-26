@@ -1,4 +1,5 @@
 import cropVideo from '@/assets/videos/crop.mp4'
+import cropToolVideo from '@/assets/videos/cropTool.mp4'
 import brushVideo from '@/assets/videos/brush.mp4'
 import shapeVideo from '@/assets/videos/shape.mp4'
 
@@ -17,7 +18,7 @@ export function useVideoLoader() {
     if (isToolTip) {
       switch (key) {
         case 'crop':
-          src = cropVideo
+          src = cropToolVideo
           break
         case 'frame':
           src = cropVideo
