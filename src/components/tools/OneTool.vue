@@ -59,7 +59,11 @@ const { wrapperRef, subToolPos, onMouseEnter, onMouseLeave, onClickTab, onClickT
 
 <template>
   <ItemTip v-bind="props.advanceTip?.advance ? {
-    text: editorStore.enableTools[props.tool.key] === false ? $t('tools.toolIsNotAvailable.tip') : props.advanceTip.text,
+    text: props.tool.subTools.length > 0
+      ? ''
+      : (editorStore.enableTools[props.tool.key] === false
+        ? $t('tools.toolIsNotAvailable.tip')
+        : props.advanceTip.text),
     title: props.advanceTip.title,
     shortcut: props.advanceTip.shortcut,
     advanceTool: true,
@@ -89,7 +93,8 @@ const { wrapperRef, subToolPos, onMouseEnter, onMouseLeave, onClickTab, onClickT
           text: sub.tip,
           title: sub.label,
           shortcut: sub.shortcut || '',
-          advance: true,
+          advanceTool: true,
+          toolKey: props.tool.key,
           position: 'right',
         }">
           <div class="subTool-wrapper" @mouseleave="onMouseLeave">
