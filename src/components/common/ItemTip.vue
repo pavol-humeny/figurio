@@ -81,7 +81,8 @@ const videoRef = ref(null)
 
     <teleport to="body">
       <Transition name="fade">
-        <div v-if="isVisible && showTip" :style="itemTipStyle" :class="['item-tip-bubble', props.position]">
+        <div v-if="isVisible && showTip" :style="itemTipStyle" :class="['item-tip-bubble', props.position,
+          { 'item-tip-advance-tool': props.advanceTool }]">
           <template v-if="props.advanceTool">
             <div class="tip-video">
               <video ref="videoRef" class="video-preview" :src="getVideo(props.toolKey, true)" autoplay loop muted
@@ -124,6 +125,10 @@ const videoRef = ref(null)
   /* max-width: 300px; */
   /* min-width: 200px; */
   /* width: fit-content; */
+}
+
+.item-tip-advance-tool{
+  padding: 10px;
 }
 
 .item-tip-bubble {
