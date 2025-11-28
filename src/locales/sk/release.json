@@ -6,6 +6,15 @@
     ]
   },
   "versions": {
+    "4.18.1":{
+      "label": "4.18.1",
+      "date":"26.11. 2025",
+      "improvements": {
+        "items": [
+          "Z nástrojových tipov je teraz možné otvoriť video pre lepšie vysvetlenie funkcie"
+        ]
+      }
+    },
     "4.18.0": {
       "label": "4.18.0",
       "date": "26.11. 2025",

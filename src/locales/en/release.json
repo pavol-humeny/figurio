@@ -4,6 +4,15 @@
     "items": []
   },
   "versions":{
+    "4.18.1":{
+      "label": "4.18.1",
+      "date":"26.11. 2025",
+      "improvements": {
+        "items": [
+          "From tool tip video can be opened video for better explanation of the feature"
+        ]
+      }
+    },
     "4.18.0":{
       "label": "4.18.0",
       "date":"26.11. 2025",

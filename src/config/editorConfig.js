@@ -21,6 +21,7 @@ export const editorConfig = {
 
   // Item tip settings
   tipDelay: 700,
+  tipDelayHide: 70,
 
   // Context menu settings
   contextMenuDelay: 50,

@@ -56,22 +56,32 @@ export function useOneTool(editorStore, imageStore, props, emit) {
   }
 
   /**
+   * Handle mouse leave event to close subtools popup
+   */
+  const subToolTipRef = ref(null)
+
+  /**
    * Check if mouse is outside tool and popup
    */
   const closeIfOutside = () => {
     closeTimeout.value = setTimeout(() => {
       const popupEl = document.querySelector('.subTools-popup')
       const toolEl = wrapperRef.value
+      const tipEl = subToolTipRef.value
 
       if (!popupEl || !toolEl) return
 
       const active = editorStore.toolWithOpenSubToolsKey === props.tool.key
 
-      // Close if mouse is not over tool or popup
-      if (active && !toolEl.matches(':hover') && !popupEl.matches(':hover')) {
+      if (
+        active &&
+        !toolEl.matches(':hover') &&
+        !popupEl.matches(':hover') &&
+        !(tipEl && tipEl.matches(':hover'))
+      ) {
         editorStore.setToolWithOpenSubTools('')
       }
-    }, 250) // Delay for mouse movement to subtools
+    }, 250)
   }
 
   /**
@@ -132,5 +142,6 @@ export function useOneTool(editorStore, imageStore, props, emit) {
     onMouseLeave,
     onClickTab,
     onClickTool,
+    subToolTipRef,
   }
 }

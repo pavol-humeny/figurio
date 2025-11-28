@@ -3,6 +3,7 @@ import { useItemTip } from '@/composables/common/useItemTip'
 import { useUiStore } from '@/stores/uiStore'
 import { computed, ref } from 'vue'
 import { useVideoLoader } from '@/composables/modals/useVideoLoader'
+import { useEditorStore } from '@/stores/editorStore'
 
 const { getVideo } = useVideoLoader()
 
@@ -61,11 +62,13 @@ const {
   itemTipStyle,
   handleMouseEnter,
   handleMouseLeave,
+  tipRef,
+  openToolVideo,
 } = useItemTip({
   position: props.position,
   text: props.text,
   delay: props.delay,
-}, useUiStore())
+}, useUiStore(), useEditorStore())
 
 /**
  * Whether to show the tooltip (text must be non-empty)
@@ -81,12 +84,12 @@ const videoRef = ref(null)
 
     <teleport to="body">
       <Transition name="fade">
-        <div v-if="isVisible && showTip" :style="itemTipStyle" :class="['item-tip-bubble', props.position,
+        <div v-if="isVisible && showTip" :style="itemTipStyle" ref="tipRef" @mouseleave="handleMouseLeave" :class="['item-tip-bubble', props.position,
           { 'item-tip-advance-tool': props.advanceTool }]">
           <template v-if="props.advanceTool">
             <div class="tip-video">
               <video ref="videoRef" class="video-preview" :src="getVideo(props.toolKey, true)" autoplay loop muted
-                playsinline></video>
+                playsinline @click="openToolVideo(props.toolKey)"></video>
             </div>
             <div class="item-tip-title-row">
               <span class="tip-title">{{ props.title }}</span>
@@ -127,7 +130,7 @@ const videoRef = ref(null)
   /* width: fit-content; */
 }
 
-.item-tip-advance-tool{
+.item-tip-advance-tool {
   padding: 10px;
 }
 
@@ -301,5 +304,6 @@ const videoRef = ref(null)
   height: 100%;
   object-fit: fill;
   background: black;
+  cursor: pointer;
 }
 </style>

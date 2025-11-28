@@ -49,7 +49,15 @@ const emit = defineEmits(['click'])
 /**
  * Logic of the single tool and subtools popup
  */
-const { wrapperRef, subToolPos, onMouseEnter, onMouseLeave, onClickTab, onClickTool } = useOneTool(
+const {
+  wrapperRef,
+  subToolPos,
+  onMouseEnter,
+  onMouseLeave,
+  onClickTab,
+  onClickTool,
+  subToolTipRef
+} = useOneTool(
   useEditorStore(),
   useImageStore(),
   props,
@@ -83,13 +91,14 @@ const { wrapperRef, subToolPos, onMouseEnter, onMouseLeave, onClickTab, onClickT
         {{ props.tool.label }}</p>
     </div>
 
+    <!-- Subtool -->
     <Teleport to="body" v-if="editorStore.toolWithOpenSubToolsKey === props.tool.key && props.tool.subTools.length > 0">
       <div class="subTools-popup" :style="{
         position: 'absolute',
         top: subToolPos.top + 'px',
         left: subToolPos.left + 'px',
       }">
-        <ItemTip v-for="sub in props.tool.subTools" :key="sub.key" v-bind="{
+        <ItemTip ref="subToolTipRef" v-for="sub in props.tool.subTools" :key="sub.key" v-bind="{
           text: sub.tip,
           title: sub.label,
           shortcut: sub.shortcut || '',

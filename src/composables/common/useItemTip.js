@@ -1,5 +1,8 @@
 import { ref, computed, onMounted, onBeforeUnmount, watch, nextTick } from 'vue'
 import { editorConfig } from '@/config/editorConfig'
+import { useFeatureTourModal } from '@/composables/modals/useFeatureTourModal.js'
+
+const { openSingleFeatureTourModal } = useFeatureTourModal()
 
 /**
  * Logic for <itemTip> component
@@ -18,7 +21,7 @@ import { editorConfig } from '@/config/editorConfig'
  *   updatePosition: () => void
  * }}
  */
-export function useItemTip(options = {}, uiStore) {
+export function useItemTip(options = {}, uiStore, editorStore) {
   /**
    * Tooltip position (defaults to 'top')
    */
@@ -74,6 +77,18 @@ export function useItemTip(options = {}, uiStore) {
       maxWidth: '300px',
       whiteSpace: 'normal',
     }
+  })
+
+  const tipRef = ref(null)
+
+  // Last mouse position (for checking element under cursor)
+  let lastMouseX = 0
+  let lastMouseY = 0
+
+  // Track mouse position globally
+  document.addEventListener('mousemove', (e) => {
+    lastMouseX = e.clientX
+    lastMouseY = e.clientY
   })
 
   /**
@@ -151,46 +166,57 @@ export function useItemTip(options = {}, uiStore) {
    * Handles mouseenter event and starts delayed tooltip show
    */
   const handleMouseEnter = () => {
-    if (uiStore.isItemTipVisible) return
-    uiStore.isItemTipVisible = true
+    // if (uiStore.isItemTipVisible) return
     hoverTimeout.value = setTimeout(() => {
       isVisible.value = true
+      uiStore.isItemTipVisible = true
     }, delay)
   }
 
   /**
-   * Handles mouseleave event and hides the tooltip
+   * Mouse leave: use grace period so tooltip stays visible while moving over the gap
    */
   const handleMouseLeave = () => {
     clearTimeout(hoverTimeout.value)
-    isVisible.value = false
-    uiStore.isItemTipVisible = false
+
+    setTimeout(() => {
+      if (!wrapperRef.value || !tipRef.value) return
+
+      // Determine what element is currently under cursor
+      const el = document.elementFromPoint(lastMouseX, lastMouseY)
+
+      const isOverWrapper = wrapperRef.value.contains(el)
+      const isOverTip = tipRef.value.contains(el)
+
+      // Hide only when cursor is outside both
+      if (!isOverWrapper && !isOverTip) {
+        isVisible.value = false
+
+        editorStore.setToolWithOpenSubTools('')
+        // uiStore.isItemTipVisible = false
+      }
+    }, editorConfig.tipDelayHide)
   }
 
   /**
-   * Hide the tip when mouse moves outside trigger element
+   * Opens the video tutorial for the given tool key
+   *
+   * @param {string} toolKey - The key of the tool to open the video for
    */
-  const onMouseMove = (e) => {
-    if (!wrapperRef.value) return
+  const openToolVideo = (toolKey) => {
+    // Hide the tooltip
+    isVisible.value = false
+    // uiStore.isItemTipVisible = false
 
-    // ak myš nie je nad trigger elementom → skryť
-    if (!wrapperRef.value.contains(e.target)) {
-      isVisible.value = false
-    }
+    // Open the feature tour modal with the specific tool video
+    openSingleFeatureTourModal(toolKey + 'Tool')
   }
+
   // Update position after mount
   onMounted(() => nextTick(updatePosition))
 
   // Clear tooltip timeout before component unmounts
   onBeforeUnmount(() => clearTimeout(hoverTimeout.value))
-
-  // Hide the tip when clicking
-  onMounted(() => {
-    document.addEventListener('mousemove', onMouseMove)
-  })
-  onBeforeUnmount(() => {
-    document.removeEventListener('mousemove', onMouseMove)
-  })
 
   return {
     isVisible,
@@ -199,5 +225,7 @@ export function useItemTip(options = {}, uiStore) {
     handleMouseEnter,
     handleMouseLeave,
     updatePosition,
+    tipRef,
+    openToolVideo,
   }
 }

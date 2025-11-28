@@ -142,5 +142,6 @@ const getMessageIcon = (type) => {
   background: transparent;
   font-size: 16px;
   cursor: pointer;
+  margin-bottom: 3px;
 }
 </style>

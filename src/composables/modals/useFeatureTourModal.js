@@ -50,6 +50,27 @@ export function useFeatureTourModal() {
   }
 
   /**
+   * Open modal with a single video by identifier
+   * @param {string} identifier
+   */
+  const openSingleFeatureTourModal = (identifier) => {
+    console.log('openSingleFeatureTourModal', identifier)
+    if (isVisible.value) return
+    if (!identifier) return
+
+    // Check if the identifier exists
+    if (!globalConfig.listOfFeatureTourVideos.includes(identifier)) {
+      console.warn(`Feature tour video identifier "${identifier}" does not exist.`)
+      return
+    }
+
+    activeVideos.value = [identifier]
+
+    addUserEvent('openModal', { modal: 'featureTour', identifiers: activeVideos.value })
+    isVisible.value = true
+  }
+
+  /**
    * Close the modal
    */
   const closeFeatureTourModal = () => {
@@ -62,5 +83,6 @@ export function useFeatureTourModal() {
     activeVideos,
     openFeatureTourModal,
     closeFeatureTourModal,
+    openSingleFeatureTourModal,
   }
 }
