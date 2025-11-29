@@ -192,8 +192,9 @@ export function useItemTip(options = {}, uiStore, editorStore) {
       if (!isOverWrapper && !isOverTip) {
         isVisible.value = false
 
+        console.warn('Hiding tooltip')
         editorStore.setToolWithOpenSubTools('')
-        // uiStore.isItemTipVisible = false
+        uiStore.isItemTipVisible = false
       }
     }, editorConfig.tipDelayHide)
   }
@@ -206,7 +207,9 @@ export function useItemTip(options = {}, uiStore, editorStore) {
   const openToolVideo = (toolKey) => {
     // Hide the tooltip
     isVisible.value = false
-    // uiStore.isItemTipVisible = false
+    uiStore.isItemTipVisible = false
+
+    console.warn('Opening tool video for', toolKey)
 
     // Open the feature tour modal with the specific tool video
     openSingleFeatureTourModal(toolKey + 'Tool')

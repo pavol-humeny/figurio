@@ -4,6 +4,7 @@ import ItemTip from '@/components/common/ItemTip.vue'
 import { useEditorStore } from '@/stores/editorStore'
 import { useOneTool } from '@/composables/tools/useOneTool'
 import { useImageStore } from '@/stores/imageStore'
+import { useUiStore } from '@/stores/uiStore'
 
 const editorStore = useEditorStore()
 const imageStore = useImageStore()
@@ -60,6 +61,7 @@ const {
 } = useOneTool(
   useEditorStore(),
   useImageStore(),
+  useUiStore(),
   props,
   emit,
 )
@@ -103,7 +105,7 @@ const {
           title: sub.label,
           shortcut: sub.shortcut || '',
           advanceTool: true,
-          toolKey: props.tool.key,
+          toolKey: sub.key,
           position: 'right',
         }">
           <div class="subTool-wrapper" @mouseleave="onMouseLeave">

@@ -1,4 +1,28 @@
 # Figurio
+## TODO 
+- Rámik monitoru 
+- Vylepšenie rámiku pre prehliadače 
+- Toggle button na skrytie crop boxu 
+- Hláška o tom že sa nedajú vykresliť tlačidlá telefónu sa vypisuje viac krát
+- Videá pre nástroje 
+- Videá pre feature tour 
+
+## Dlhodobé TODO 
+- Globálne úpravy (rasterizácia)
+- BG removal - ukladanie do undo redo operácií pri výbere 
+- Poskakovanie pri resize ak je to otočené 
+- PDF s nepodporovanými svg objektami 
+- Poloha magnify area a blur object voči ostatným objektom (možné riešenie vrstvy)
+- Centrovanie obrázku v iných kartách (otvorených obrázkoch) ak na inej karte došlo ku otvoreniu bočného panelu 
+- Tutoriál nefunguje šípkami 
+
+## Insane ideas
+- Premenné prostredia (pre farbu, veľkosť)
+- Vrstvy 
+- Možnosť si uložiť aktuálnu prácu 
+- Nástroj na kreslenie (štetce)
+
+
 ## API
 ### addUserEvent()
 Event type:
@@ -38,8 +62,6 @@ Event type:
     - keys
 - buttonClicked
     - button
-
-
 
 ## Warning list
 - artifact-warning

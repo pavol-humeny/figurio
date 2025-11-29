@@ -6,6 +6,15 @@
     ]
   },
   "versions": {
+    "4.18.2":{
+      "label": "4.18.2",
+      "date":"29.11. 2025",
+      "bugFixes": {
+        "items": [
+          "Nástrojové tipy se nyní správně zobrazují a skrývají"
+        ]
+      }
+    },
     "4.18.1":{
       "label": "4.18.1",
       "date":"26.11. 2025",

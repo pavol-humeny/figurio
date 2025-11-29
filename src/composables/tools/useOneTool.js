@@ -1,4 +1,5 @@
 import { ref, nextTick, onMounted, onBeforeUnmount } from 'vue'
+import { editorConfig } from '@/config/editorConfig.js'
 
 /**
  * Logic for handling a single tool button
@@ -8,7 +9,7 @@ import { ref, nextTick, onMounted, onBeforeUnmount } from 'vue'
  * @param {Function} emit - Emit function from the component to send events upward.
  * @returns {object} Bindings and methods for the tool component
  */
-export function useOneTool(editorStore, imageStore, props, emit) {
+export function useOneTool(editorStore, imageStore, uiStore, props, emit) {
   /**
    * Reference to the DOM element of the tool wrapper
    */
@@ -31,6 +32,11 @@ export function useOneTool(editorStore, imageStore, props, emit) {
     if (closeTimeout.value) {
       clearTimeout(closeTimeout.value)
       closeTimeout.value = null
+    }
+
+    // Need to wait for any tooltip hide delay because when moving too fast from tool to another tool, it did not open subtools
+    if (uiStore.isItemTipVisible) {
+      await new Promise((resolve) => setTimeout(resolve, editorConfig.tipDelayHide + 20))
     }
 
     if (!props.tool.subTools || !imageStore.isImageLoaded) return
@@ -67,7 +73,6 @@ export function useOneTool(editorStore, imageStore, props, emit) {
     closeTimeout.value = setTimeout(() => {
       const popupEl = document.querySelector('.subTools-popup')
       const toolEl = wrapperRef.value
-      const tipEl = subToolTipRef.value
 
       if (!popupEl || !toolEl) return
 
@@ -77,7 +82,7 @@ export function useOneTool(editorStore, imageStore, props, emit) {
         active &&
         !toolEl.matches(':hover') &&
         !popupEl.matches(':hover') &&
-        !(tipEl && tipEl.matches(':hover'))
+        !uiStore.isItemTipVisible
       ) {
         editorStore.setToolWithOpenSubTools('')
       }
