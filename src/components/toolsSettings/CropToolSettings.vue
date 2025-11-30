@@ -15,6 +15,7 @@ import StepperInput from '../common/StepperInput.vue'
 import { useWorkspaceStore } from '@/stores/workspaceStore'
 import ExplainItem from '../common/ExplainItem.vue'
 import ToggleHoldButton from '../common/ToggleHoldButton.vue'
+import LevelSelector from '../common/LevelSelector.vue'
 
 const { t } = useI18n()
 
@@ -48,16 +49,12 @@ const {
   fitCrop,
   manualIndents,
   recalculateCropBox,
-  // showArtifacts,
-  // hideArtifacts,
-  // areArtifactsVisible,
-  // autoCropThreshold,
-  // autoCropThresholdOptions,
   tmpCropX,
   tmpCropY,
   isManualAdjustmentsLinked,
   manualIndentsWereChangedManually,
-  keepModelValue
+  keepModelValue,
+  cropSensitivityLevel,
 } = useCropTool(useImageStore(), useViewportStore(), useEditorStore(), useHistoryStore(), useWorkspaceStore(), t)
 
 </script>
@@ -152,19 +149,17 @@ const {
                   :tip="$t('tools.crop.settings.general.autoCrop.useBaseImage.tip')" position="bottom-left" />
               </div>
             </div>
-            <!--
-          <div class="content-wrapper" style="margin-bottom: 10px;">
-            <div class="content-aligned two-items">
 
-              <div class="content-title">
-                {{ $t('tools.crop.settings.general.autoCrop.sensitivity.title') }}
+            <!-- Sensitivity level -->
+            <div class="content-wrapper">
+              <div class="content-aligned two-items">
+                <p style="text-align: start">
+                  {{ $t('tools.crop.settings.general.autoCrop.sensitivity.title') }}
+                </p>
+                <LevelSelector v-model="cropSensitivityLevel" :levels="[1, 2, 3]"
+                  :tip="$t('tools.crop.settings.general.autoCrop.sensitivity.tip')" position="bottom-left" />
               </div>
-              <NumberDropdownInput v-model="autoCropThreshold" :min="0" :max="0.9" :step="0.01"
-                :options="autoCropThresholdOptions" :tip="$t('tools.crop.settings.general.autoCrop.sensitivity.tip')"
-                position="bottom-left" />
             </div>
-          </div>
-          -->
 
             <!-- Fit crop -->
             <div class="content-wrapper">

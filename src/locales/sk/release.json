@@ -6,6 +6,20 @@
     ]
   },
   "versions": {
+    "4.18.3":{
+      "label": "4.18.3",
+      "date":"29.11. 2025",
+      "newFeatures": {
+        "items": [
+          "Pridanie nastavenia citlivosti pre nástroj automatického orezávania"
+        ]
+      },
+      "bugFixes": {
+        "items": [
+          "Zabránenie deformácii videa v modálnom okne úvodnej prehliadky funkcií"
+        ]
+      }
+    },
     "4.18.2":{
       "label": "4.18.2",
       "date":"29.11. 2025",

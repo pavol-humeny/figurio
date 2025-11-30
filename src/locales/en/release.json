@@ -7,6 +7,11 @@
     "4.18.3":{
       "label": "4.18.3",
       "date":"29.11. 2025",
+      "newFeatures": {
+        "items": [
+          "Add sensitivity setting to auto crop tool"
+        ]
+      },
       "bugFixes": {
         "items": [
           "Prevent video deforming in feature tour modal"

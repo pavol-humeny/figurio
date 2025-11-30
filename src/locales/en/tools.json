@@ -251,6 +251,10 @@
             "title": "Auto crop color",
             "tip": "Select the color for the auto crop"
           },
+          "sensitivity": {
+            "title": "Sensitivity",
+            "tip": "Sensitivity level for auto crop, higher values include more background-like pixels in the crop calculation"
+          },
           "useBaseImage":{
             "title": "Use base image",
             "tip": "Use base image to calculate crop or calculate from current crop box"
@@ -267,10 +271,6 @@
             "tipLinked": "Unlink all sides",
             "tipUnlinked": "Link all sides"
           },
-          "sensitivity": {
-            "title": "Sensitivity",
-            "tip": "Adjust the sensitivity of the auto crop. Higher sensitivity will treat more pixels as background-like and include them in the crop calculation, lower sensitivity is more conservative. This threshold works together with the artifact preview."
-          }, 
           "smallAutoCropInfo":{
             "title": "Auto crop too small",
             "message": "Auto crop was smaller than the minimum allowed crop size and was adjusted to the minimum size."

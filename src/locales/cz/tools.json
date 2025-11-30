@@ -251,6 +251,10 @@
             "title": "Barva automatického ořezání",
             "tip": "Vyber barvu pro automatické ořezání"
           },
+          "sensitivity": {
+            "title": "Citlivost",
+            "tip": "Úroveň citlivosti pro automatické ořezání, vyšší hodnoty zahrnují více pixelů podobných pozadí do výpočtu ořezu"
+          },
           "useBaseImage": {
             "title": "Použít původní obrázek",
             "tip": "Použít původní obrázek na výpočet ořezání nebo vypočítat z aktuálního ořezání"
@@ -267,10 +271,6 @@
             "tipLinked": "Odpojit všechny strany",
             "tipUnlinked": "Propojit všechny strany"
           },
-          "sensitivity": {
-            "title": "Citlivost",
-            "tip": "Nastavte citlivost automatického ořezu. Vyšší citlivost označí více pixelů, ktoré sú podobní pozadí a zahrne je do výpočtu ořezu, nižší citlivost zahrne méně pixelů."
-          }, 
           "smallAutoCropInfo":{
             "title": "Automatické ořezání je příliš malé",
             "message": "Automatické ořezání bylo menší než minimální povolená velikost ořezu a bylo upraveno na minimální velikost."

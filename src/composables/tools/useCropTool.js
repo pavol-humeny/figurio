@@ -57,12 +57,20 @@ const manualIndents = ref({
   leftIndentMax: Infinity,
 })
 
+/**
+ * Last canny crop box used for auto crop calculations
+ */
 const lastCannyCrop = ref({
   x: 0,
   y: 0,
   width: 0,
   height: 0,
 })
+
+/**
+ * Crop sensitivity level for auto crop
+ */
+const cropSensitivityLevel = ref(2)
 
 /**
  * Logic for crop tool functionality, including crop box manipulation and position constraints
@@ -756,8 +764,23 @@ export function useCropTool(
     cv.cvtColor(src, gray, cv.COLOR_RGBA2GRAY, 0)
     cv.GaussianBlur(gray, gray, new cv.Size(5, 5), 0, 0, cv.BORDER_DEFAULT)
 
-    const lower = 1
-    const upper = 20
+    const level = cropSensitivityLevel.value
+
+    // Base thresholds
+    const baseLower = 1
+    const baseUpper = 20
+
+    // Sensitivity multiplier
+    const sensitivityMultiplier = {
+      1: 0.4, // Less sensitive (crop less aggressively)
+      2: 1.0, // Normal sensitivity
+      3: 5.0, // More sensitive (crop more aggressively)
+    }[level]
+
+    // Final thresholds
+    const lower = baseLower * sensitivityMultiplier
+    const upper = baseUpper * sensitivityMultiplier
+
     cv.Canny(gray, edges, lower, upper)
 
     // Mask edges if not using base image
@@ -1332,5 +1355,6 @@ export function useCropTool(
     tmpCropY,
     isManualAdjustmentsLinked,
     manualIndentsWereChangedManually,
+    cropSensitivityLevel,
   }
 }

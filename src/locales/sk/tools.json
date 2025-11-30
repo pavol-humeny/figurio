@@ -251,6 +251,10 @@
             "title": "Farba automatického orezania",
             "tip": "Vyber farbu pre automatické orezanie"
           },
+          "sensitivity": {
+            "title": "Citlivosť",
+            "tip": "Úroveň citlivosti pre automatické orezanie, vyššie hodnoty zahrňujú viac pixelov podobných pozadiu do výpočtu orezania"
+          },
           "useBaseImage": {
             "title": "Použiť pôvodný obrázok",
             "tip": "Použiť pôvodný obrázok na výpočet orezania alebo vypočítať z aktuálneho orezania"
@@ -267,10 +271,6 @@
             "tipLinked": "Odpojiť všetky strany",
             "tipUnlinked": "Prepojiť všetky strany"
           },
-          "sensitivity": {
-            "title": "Citlivost",
-            "tip": "Nastavte citlivosť automatického orezania. Vyššia citlivosť označí viac pixelov, ktoré sú podobné pozadiu a zahrnie ich do výpočtu orezania, nižšia citlivosť zahrnie menej pixelov."
-          }, 
           "smallAutoCropInfo":{
             "title": "Automatické orezanie je príliš malé",
             "message": "Automatické orezanie bolo menšie než minimálna povolená veľkosť orezania a bolo upravené na minimálnu veľkosť."
