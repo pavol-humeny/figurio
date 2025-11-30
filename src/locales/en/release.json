@@ -4,6 +4,15 @@
     "items": []
   },
   "versions":{
+    "4.18.3":{
+      "label": "4.18.3",
+      "date":"29.11. 2025",
+      "bugFixes": {
+        "items": [
+          "Prevent video deforming in feature tour modal"
+        ]
+      }
+    },
     "4.18.2":{
       "label": "4.18.2",
       "date":"29.11. 2025",

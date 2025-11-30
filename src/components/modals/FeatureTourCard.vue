@@ -84,13 +84,13 @@ onMounted(() => {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
+  justify-content: start;
   user-select: none;
 }
 
 .video-wrapper {
   width: 100%;
-  height: 70%;
+  /* aspect-ratio: 16 / 8; */
   border-top-left-radius: 18px;
   border-top-right-radius: 18px;
   overflow: hidden;

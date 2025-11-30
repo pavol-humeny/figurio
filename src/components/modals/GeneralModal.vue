@@ -90,6 +90,8 @@ const emitConfirm = () => {
   justify-content: center;
   align-items: center;
   z-index: var(--z-index-modal);
+  min-width: var(--min-window-width);
+  min-height: var(--min-window-height);
 }
 
 .modal-box {
