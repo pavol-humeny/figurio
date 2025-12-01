@@ -9,6 +9,7 @@
       "date":"29.11. 2025",
       "newFeatures": {
         "items": [
+          "Add animation to noise detection overlay",
           "Add sensitivity setting to auto crop tool"
         ]
       },

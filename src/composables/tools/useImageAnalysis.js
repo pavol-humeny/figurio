@@ -173,7 +173,7 @@ export function useImageAnalysis(imageStore, workspaceStore, t) {
                 odata[idx] = 255
                 odata[idx + 1] = 0
                 odata[idx + 2] = 0
-                odata[idx + 3] = 80
+                odata[idx + 3] = 180
               } else {
                 odata[idx + 3] = 0
               }

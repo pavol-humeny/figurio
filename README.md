@@ -6,6 +6,8 @@
 - Hláška o tom že sa nedajú vykresliť tlačidlá telefónu sa vypisuje viac krát
 - Videá pre nástroje 
 - Videá pre feature tour 
+- Farba sa do zoznamu farieb ukladá len raz (asi nedáva zmysel - treba premyslieť)
+- Blikanie šumu 
 
 ## Dlhodobé TODO 
 - Globálne úpravy (rasterizácia)

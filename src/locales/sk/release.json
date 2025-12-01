@@ -11,6 +11,7 @@
       "date":"29.11. 2025",
       "newFeatures": {
         "items": [
+          "Pridanie animácie na prekryv detekcie šumu",
           "Pridanie nastavenia citlivosti pre nástroj automatického orezávania"
         ]
       },
