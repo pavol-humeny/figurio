@@ -200,6 +200,25 @@ export function useItemTip(options = {}, uiStore, editorStore) {
   }
 
   /**
+   * Handles mouse click event to hide the tooltip if clicked outside
+   */
+  const handleMouseClick = () => {
+    // Close tip if click is not in object or bubble
+
+    if (!wrapperRef.value || !tipRef.value) return
+
+    const el = document.elementFromPoint(lastMouseX, lastMouseY)
+
+    const isOverTip = tipRef.value.contains(el)
+
+    if (isOverTip) return
+
+    // Hide the tooltip
+    isVisible.value = false
+    uiStore.isItemTipVisible = false
+  }
+
+  /**
    * Opens the video tutorial for the given tool key
    *
    * @param {string} toolKey - The key of the tool to open the video for
@@ -216,10 +235,17 @@ export function useItemTip(options = {}, uiStore, editorStore) {
   }
 
   // Update position after mount
-  onMounted(() => nextTick(updatePosition))
+  onMounted(() => {
+    nextTick(updatePosition)
+
+    document.addEventListener('click', handleMouseClick)
+  })
 
   // Clear tooltip timeout before component unmounts
-  onBeforeUnmount(() => clearTimeout(hoverTimeout.value))
+  onBeforeUnmount(() => {
+    clearTimeout(hoverTimeout.value)
+    document.removeEventListener('click', handleMouseClick)
+  })
 
   return {
     isVisible,
@@ -230,5 +256,6 @@ export function useItemTip(options = {}, uiStore, editorStore) {
     updatePosition,
     tipRef,
     openToolVideo,
+    handleMouseClick,
   }
 }
