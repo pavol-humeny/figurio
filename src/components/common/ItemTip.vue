@@ -7,6 +7,8 @@ import { useEditorStore } from '@/stores/editorStore'
 
 const { getVideo } = useVideoLoader()
 
+const uiStore = useUiStore()
+
 /**
  * @typedef {Object} ItemTipProps
  * @property {string} text - Tooltip text (required)
@@ -84,8 +86,9 @@ const videoRef = ref(null)
 
     <teleport to="body">
       <Transition name="fade">
-        <div v-if="isVisible && showTip" :style="itemTipStyle" ref="tipRef" @mouseleave="handleMouseLeave" :class="['item-tip-bubble', props.position,
-          { 'item-tip-advance-tool': props.advanceTool }]">
+        <div v-if="isVisible && uiStore.isItemTipVisible && showTip" :style="itemTipStyle" ref="tipRef"
+          @mouseleave="handleMouseLeave" :class="['item-tip-bubble', props.position,
+            { 'item-tip-advance-tool': props.advanceTool }]">
           <template v-if="props.advanceTool">
             <div class="tip-video">
               <video ref="videoRef" class="video-preview" :src="getVideo(props.toolKey, true)" autoplay loop muted

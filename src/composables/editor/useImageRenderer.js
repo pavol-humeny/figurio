@@ -35,10 +35,11 @@ export function useImageRenderer(
   historyStore,
   editorStore,
   viewportStore,
+  uiStore,
   contentRef,
   t,
 ) {
-  const { addWarning } = useWarningList(imageStore)
+  const { addWarning } = useWarningList(imageStore, uiStore)
 
   /**
    * Reference to the base image layer

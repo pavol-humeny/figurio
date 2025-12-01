@@ -4,6 +4,7 @@ import BaseIcon from '../icons/BaseIcon.vue'
 import ItemTip from '../common/ItemTip.vue'
 import { computed } from 'vue'
 import { useImageStore } from '@/stores/imageStore.js'
+import { useUiStore } from '@/stores/uiStore'
 
 const imageStore = useImageStore()
 
@@ -13,7 +14,7 @@ const {
   removeWarning,
   openByClick,
   closeByArrow,
-} = useWarningList(useImageStore())
+} = useWarningList(useImageStore(), useUiStore())
 
 /**
  * List of active warnings based on imageStore's imageWarnings

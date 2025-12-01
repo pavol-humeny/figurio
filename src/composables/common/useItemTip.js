@@ -192,7 +192,6 @@ export function useItemTip(options = {}, uiStore, editorStore) {
       if (!isOverWrapper && !isOverTip) {
         isVisible.value = false
 
-        console.warn('Hiding tooltip')
         editorStore.setToolWithOpenSubTools('')
         uiStore.isItemTipVisible = false
       }
@@ -203,8 +202,6 @@ export function useItemTip(options = {}, uiStore, editorStore) {
    * Handles mouse click event to hide the tooltip if clicked outside
    */
   const handleMouseClick = () => {
-    // Close tip if click is not in object or bubble
-
     if (!wrapperRef.value || !tipRef.value) return
 
     const el = document.elementFromPoint(lastMouseX, lastMouseY)

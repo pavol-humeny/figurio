@@ -46,6 +46,7 @@ const { imageRef, svgRef, frameSvgRef, pdfContainerRef, overlayImageRef } = useI
   useHistoryStore(),
   useEditorStore(),
   useViewportStore(),
+  useUiStore(),
   contentRef,
   t
 )
@@ -136,6 +137,7 @@ const {
 useImageAnalysis(
   useImageStore(),
   useWorkspaceStore(),
+  useUiStore(),
   t,
 )
 
@@ -445,23 +447,22 @@ const cursorStyle = computed(() => {
   display: block;
 }
 
-
-
 .overlay-canvas {
+  opacity: 0;
   animation: overlayBlink 2s infinite;
 }
 
 @keyframes overlayBlink {
   0% {
-    opacity: 1;
-  }
-
-  50% {
     opacity: 0;
   }
 
-  100% {
+  50% {
     opacity: 1;
+  }
+
+  100% {
+    opacity: 0;
   }
 }
 

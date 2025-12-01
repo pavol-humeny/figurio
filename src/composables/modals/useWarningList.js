@@ -3,7 +3,7 @@ import { ref } from 'vue'
 const warnings = ref([]) // Array of warnings
 const expandedIds = ref(new Set()) // IDs of expanded warnings
 
-export const useWarningList = (imageStore) => {
+export const useWarningList = (imageStore, uiStore) => {
   /**
    * Add new warning
    * @param {string} id - Unique ID
@@ -95,6 +95,9 @@ export const useWarningList = (imageStore) => {
 
     expandedIds.value.delete(id)
     if (typeof warning.onClose === 'function') warning.onClose(id)
+
+    // Need to also hide item tip when closing warning
+    uiStore.isItemTipVisible = false
   }
 
   /**
@@ -115,11 +118,19 @@ export const useWarningList = (imageStore) => {
     return warnings.value.find((w) => w.id === id) !== undefined
   }
 
+  /**
+   * Delete warning completely
+   * @param {string} id - Unique ID
+   */
   const deleteWarning = (id) => {
     warnings.value = warnings.value.filter((w) => w.id !== id)
     expandedIds.value.delete(id)
   }
 
+  /**
+   * Hide warning by ID (collapse it)
+   * @param {string} id - Unique ID
+   */
   const hideWarningById = (id) => {
     const warning = warnings.value.find((w) => w.id === id)
     if (!warning) return

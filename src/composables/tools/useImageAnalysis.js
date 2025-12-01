@@ -21,9 +21,9 @@ const noiseLevel = ref(0)
 /**
  * Composable for analyzing image artifacts (noise) and managing overlay display
  */
-export function useImageAnalysis(imageStore, workspaceStore, t) {
+export function useImageAnalysis(imageStore, workspaceStore, uiStore, t) {
   const { addWarning, isWarningExpanded, isWarningDefined, hideWarningById } =
-    useWarningList(imageStore)
+    useWarningList(imageStore, uiStore)
 
   const noiseThreshold = viewportConfig.noiseThreshold // adjustable block noise threshold
   const noiseTopThreshold = viewportConfig.noiseTopThreshold // Upper limit to ignore blocks with extreme noise - solid color blocks similar to background
@@ -202,6 +202,8 @@ export function useImageAnalysis(imageStore, workspaceStore, t) {
       expandArtifactsWarning.value = true
       imageStore.imageHasArtifacts = true
 
+      console.warn('')
+
       addWarning(
         'artifact-warning', // id
         'tools.artifactsWarning.message', // message
@@ -239,6 +241,7 @@ export function useImageAnalysis(imageStore, workspaceStore, t) {
    * Hide artifacts overlay
    */
   const hideArtifacts = () => {
+    console.log('hideArtifacts')
     const overlay = document.querySelector('.overlay-canvas')
     if (overlay) overlay.getContext('2d').clearRect(0, 0, overlay.width, overlay.height)
     expandArtifactsWarning.value = false
