@@ -7,7 +7,9 @@
 - Videá pre nástroje 
 - Videá pre feature tour 
 - Farba sa do zoznamu farieb ukladá len raz (asi nedáva zmysel - treba premyslieť)
-- Blikanie šumu 
+- Admin režim - režim bez obmedzení 
+- DONE Blikanie šumu 
+
 
 ## Dlhodobé TODO 
 - Globálne úpravy (rasterizácia)
