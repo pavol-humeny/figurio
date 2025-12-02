@@ -9,6 +9,7 @@
 - Farba sa do zoznamu farieb ukladá len raz (asi nedáva zmysel - treba premyslieť)
 - Admin režim - režim bez obmedzení 
 - DONE Blikanie šumu 
+- DONE pri preklikávaní medzi feature tour sa meni velkost arei pre video ak ešte nie je načítané 
 
 
 ## Dlhodobé TODO 

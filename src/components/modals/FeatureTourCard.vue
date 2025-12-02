@@ -91,6 +91,7 @@ onMounted(() => {
 .video-wrapper {
   width: 100%;
   /* aspect-ratio: 16 / 8; */
+  aspect-ratio: 16 / 8;
   border-top-left-radius: 18px;
   border-top-right-radius: 18px;
   overflow: hidden;
