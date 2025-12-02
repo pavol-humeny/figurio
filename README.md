@@ -9,7 +9,16 @@
 - Farba sa do zoznamu farieb ukladá len raz (asi nedáva zmysel - treba premyslieť)
 - Admin režim - režim bez obmedzení 
 - DONE Blikanie šumu 
-- DONE pri preklikávaní medzi feature tour sa meni velkost arei pre video ak ešte nie je načítané 
+- DONE pri preklikávaní medzi feature tour sa meni velkost arei pre video ak ešte nie je načítané
+- escape nezatvara feature tour, ale zatvori help modal pod tym 
+- krok späť spôsobí zmazanie eventu artifacts warning 
+- zoomovanie pomocou tlacitok, ak je obrazok mimo stred tak to zoomuje mimo obrázok 
+- 
+
+## Admin mode 
+- neobmedzena veľkosť obrázku 
+- ľubovoľné orezávanie 
+- nekonečné zoomovanie 
 
 
 ## Dlhodobé TODO 
