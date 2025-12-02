@@ -17,6 +17,7 @@ import { globalConfig } from '@/config/globalConfig'
 import { useGeneralModal } from '@/composables/modals/useGeneralModal'
 import { useApi } from '@/composables/common/useApi'
 const { addUserEvent } = useApi()
+import { useImageAnalysis } from '@/composables/tools/useImageAnalysis'
 
 pdfjsLib.GlobalWorkerOptions.workerSrc =
   'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js'
@@ -183,7 +184,7 @@ export const useImageStore = defineStore('imageStore', {
     phoneButtonsCanNotBeDrawnToastFlag: false,
 
     /** Whether the image has artifacts (noise) */
-    imageHasArtifacts: false,
+    imageHasArtifacts: false, // TODO nepoužíva sa nikde
     /** Whether the user has canceled image artifacts display */
     imageArtifactsCanceledByUser: false,
 
@@ -207,6 +208,8 @@ export const useImageStore = defineStore('imageStore', {
 
     /** List of image warnings id */
     imageWarnings: [],
+    /** Set of expanded image warning IDs */
+    expandedImageWarningIds: new Set(),
   }),
   getters: {
     /**
@@ -508,6 +511,8 @@ export const useImageStore = defineStore('imageStore', {
       this.removalCanvas = null
 
       this.imageWarnings = []
+
+      this.expandedImageWarningIds = new Set()
     },
 
     /**
@@ -736,6 +741,13 @@ export const useImageStore = defineStore('imageStore', {
               t('imageStore.toast.successFileUploaded.title'),
               t('imageStore.toast.successFileUploaded.message', { fileName: file.name }),
             )
+
+            console.warn('calculateArtifacts called from setFile - image loaded')
+
+            // Calculate image artifacts (noise)
+            const { calculateArtifacts } = useImageAnalysis(this, workspaceStore, uiStore, t)
+
+            await calculateArtifacts()
           }
 
           img.src = event.target.result

@@ -1,6 +1,6 @@
 import { globalConfig } from '@/config/globalConfig'
 import { viewportConfig } from '@/config/viewportConfig'
-import { onMounted, ref, watch } from 'vue'
+import { ref, watch } from 'vue'
 import { useConsole } from '@/composables/common/useConsole.js'
 const { log } = useConsole()
 import { useApi } from '@/composables/common/useApi'
@@ -22,8 +22,10 @@ const noiseLevel = ref(0)
  * Composable for analyzing image artifacts (noise) and managing overlay display
  */
 export function useImageAnalysis(imageStore, workspaceStore, uiStore, t) {
-  const { addWarning, isWarningExpanded, isWarningDefined, hideWarningById } =
-    useWarningList(imageStore, uiStore)
+  const { addWarning, isWarningExpanded, isWarningDefined, hideWarningById } = useWarningList(
+    imageStore,
+    uiStore,
+  )
 
   const noiseThreshold = viewportConfig.noiseThreshold // adjustable block noise threshold
   const noiseTopThreshold = viewportConfig.noiseTopThreshold // Upper limit to ignore blocks with extreme noise - solid color blocks similar to background
@@ -188,6 +190,7 @@ export function useImageAnalysis(imageStore, workspaceStore, uiStore, t) {
 
     const baseCanvas = document.querySelector('.image-canvas')
     const overlayCanvas = document.querySelector('.overlay-canvas')
+    
     if (!baseCanvas || !overlayCanvas) return
 
     // Show overlay canvas
@@ -201,8 +204,6 @@ export function useImageAnalysis(imageStore, workspaceStore, uiStore, t) {
       oCtx.putImageData(overlay, 0, 0)
       expandArtifactsWarning.value = true
       imageStore.imageHasArtifacts = true
-
-      console.warn('')
 
       addWarning(
         'artifact-warning', // id
@@ -241,7 +242,9 @@ export function useImageAnalysis(imageStore, workspaceStore, uiStore, t) {
    * Hide artifacts overlay
    */
   const hideArtifacts = () => {
-    console.log('hideArtifacts')
+    // Do nothing if no artifacts
+    if (!imageStore.imageHasArtifacts) return
+
     const overlay = document.querySelector('.overlay-canvas')
     if (overlay) overlay.getContext('2d').clearRect(0, 0, overlay.width, overlay.height)
     expandArtifactsWarning.value = false
@@ -276,29 +279,7 @@ export function useImageAnalysis(imageStore, workspaceStore, uiStore, t) {
         }
       }
     },
-    { immediate: true },
   )
-
-  /**
-   * Recalculate artifacts when the image visibility flag changes
-   * TODO - maybe removed - never user???
-   */
-  watch(
-    () => imageStore.areArtifactsVisible,
-    (newValue) => {
-      if (newValue) {
-        calculateArtifacts()
-      } else {
-        hideArtifacts()
-      }
-    },
-    { immediate: true },
-  )
-
-  onMounted(() => {
-    // Add event listener to click and on each click hide artifacts if visible
-    window.addEventListener('click', hideArtifacts)
-  })
 
   return {
     noiseLevel,

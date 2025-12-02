@@ -1,7 +1,7 @@
-import { ref } from 'vue'
+// import { ref } from 'vue'
 
-const warnings = ref([]) // Array of warnings
-const expandedIds = ref(new Set()) // IDs of expanded warnings
+// const warnings = ref([]) // Array of warnings
+// const expandedIds = ref(new Set()) // IDs of expanded warnings
 
 export const useWarningList = (imageStore, uiStore) => {
   /**
@@ -27,9 +27,9 @@ export const useWarningList = (imageStore, uiStore) => {
     onOpen = null,
     onClose = null,
   ) => {
-    if (warnings.value.find((w) => w.id === id)) return
+    if (imageStore.imageWarnings.find((w) => w.id === id)) return
 
-    warnings.value.push({
+    imageStore.imageWarnings.push({
       id,
       message,
       tipText,
@@ -40,17 +40,12 @@ export const useWarningList = (imageStore, uiStore) => {
       onClose,
     })
 
-    // Add to imageStore warnings
-    if (!imageStore.imageWarnings.includes(id)) {
-      imageStore.imageWarnings.push(id)
-    }
-
     // Set initial expanded state
     if (startState === 'open') {
-      expandedIds.value.add(id)
+      imageStore.expandedImageWarningIds.add(id)
       if (typeof onOpen === 'function') onOpen(id)
     } else {
-      expandedIds.value.delete(id)
+      imageStore.expandedImageWarningIds.delete(id)
       if (typeof onClose === 'function') onClose(id)
     }
   }
@@ -60,15 +55,11 @@ export const useWarningList = (imageStore, uiStore) => {
    * @param {string} id - Unique ID
    */
   const removeWarning = (id) => {
-    const warning = warnings.value.find((w) => w.id === id)
+    const warning = imageStore.imageWarnings.find((w) => w.id === id)
     if (!warning) return
 
-    warnings.value = warnings.value.filter((w) => w.id !== id)
-    expandedIds.value.delete(id)
-
-    // Remove from imageStore warnings
-    const index = imageStore.imageWarnings.indexOf(id)
-    if (index !== -1) imageStore.imageWarnings.splice(index, 1)
+    imageStore.imageWarnings = imageStore.imageWarnings.filter((w) => w.id !== id)
+    imageStore.expandedImageWarningIds.delete(id)
 
     if (typeof warning.onRemove === 'function') warning.onRemove(id)
   }
@@ -78,10 +69,10 @@ export const useWarningList = (imageStore, uiStore) => {
    * @param {string} id - Unique ID
    */
   const openByClick = (id) => {
-    const warning = warnings.value.find((w) => w.id === id)
+    const warning = imageStore.imageWarnings.find((w) => w.id === id)
     if (!warning) return
 
-    expandedIds.value.add(id)
+    imageStore.expandedImageWarningIds.add(id)
     if (typeof warning.onOpen === 'function') warning.onOpen(id)
   }
 
@@ -90,10 +81,11 @@ export const useWarningList = (imageStore, uiStore) => {
    * @param {string} id - Unique ID
    */
   const closeByArrow = (id) => {
-    const warning = warnings.value.find((w) => w.id === id)
+    const warning = imageStore.imageWarnings.find((w) => w.id === id)
+    console.warn("closeByArrow called for id:", id)
     if (!warning) return
 
-    expandedIds.value.delete(id)
+    imageStore.expandedImageWarningIds.delete(id)
     if (typeof warning.onClose === 'function') warning.onClose(id)
 
     // Need to also hide item tip when closing warning
@@ -106,7 +98,7 @@ export const useWarningList = (imageStore, uiStore) => {
    * @returns {boolean} - Is expanded
    */
   const isWarningExpanded = (id) => {
-    return expandedIds.value.has(id)
+    return imageStore.expandedImageWarningIds.has(id)
   }
 
   /**
@@ -115,7 +107,7 @@ export const useWarningList = (imageStore, uiStore) => {
    * @returns {boolean} - Is defined
    */
   const isWarningDefined = (id) => {
-    return warnings.value.find((w) => w.id === id) !== undefined
+    return imageStore.imageWarnings.find((w) => w.id === id) !== undefined
   }
 
   /**
@@ -123,8 +115,8 @@ export const useWarningList = (imageStore, uiStore) => {
    * @param {string} id - Unique ID
    */
   const deleteWarning = (id) => {
-    warnings.value = warnings.value.filter((w) => w.id !== id)
-    expandedIds.value.delete(id)
+    imageStore.imageWarnings = imageStore.imageWarnings.filter((w) => w.id !== id)
+    imageStore.expandedImageWarningIds.delete(id)
   }
 
   /**
@@ -132,15 +124,15 @@ export const useWarningList = (imageStore, uiStore) => {
    * @param {string} id - Unique ID
    */
   const hideWarningById = (id) => {
-    const warning = warnings.value.find((w) => w.id === id)
+    const warning = imageStore.imageWarnings.find((w) => w.id === id)
     if (!warning) return
 
-    expandedIds.value.delete(id)
+    imageStore.expandedImageWarningIds.delete(id)
   }
 
   return {
-    warnings,
-    expandedIds,
+    // warnings,
+    // expandedIds,
     addWarning,
     removeWarning,
     openByClick,

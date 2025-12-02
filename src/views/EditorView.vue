@@ -1,5 +1,5 @@
 <script setup>
-import { onMounted, watch } from 'vue'
+import { onBeforeMount, onMounted, watch } from 'vue'
 import { useConsole } from '@/composables/common/useConsole.js'
 const { warn } = useConsole()
 
@@ -39,6 +39,9 @@ import { useRouter } from 'vue-router'
 import { useSvgObjects } from '@/composables/tools/useSvgObjects';
 import { useCropTool } from '@/composables/tools/useCropTool';
 import { useBackgroundRemovalTool } from '@/composables/tools/useBackgroundRemovalTool';
+import { useImageAnalysis } from '@/composables/tools/useImageAnalysis';
+
+const { hideArtifacts } = useImageAnalysis(useImageStore(), useWorkspaceStore(), useUiStore(), t)
 
 const { undo, redo } = useUndoRedo(useHistoryStore(), useImageStore())
 const { zoomIn, zoomOut, resetZoom, toggleZoomMode } = useZoomControl(useViewportStore(), useImageStore())
@@ -138,12 +141,21 @@ watch(() => uiStore.tutorialShouldBeStartedForFirstTime, (newVal) => {
 })
 
 onMounted(() => {
-
+  // Hide artifacts overlay on any click
+  window.addEventListener('click', () => {
+    hideArtifacts()
+  })
 
   // Close right panel if there is no selected tool
   if (editorStore.selectedToolKey === '') {
     useCollapsiblePanel(uiStore).hidePanel()
   }
+})
+
+onBeforeMount(() => {
+  window.removeEventListener('click', () => {
+    hideArtifacts()
+  })
 })
 </script>
 

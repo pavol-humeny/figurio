@@ -274,21 +274,6 @@ export function useFrameTool(imageStore, historyStore, viewportStore, t) {
     imageStore.phoneButtonsCanNotBeDrawnToastFlag = false // Reset flag when changing frame type
   })
 
-  /**
-   * Watch for drawOutline and update frame width accordingly
-   */
-  // watch(drawOutline, (newValue) => {
-  //   if (newValue) {
-  //     nextTick(() => {
-  //       console.warn('frameWidth: ', frameWidth.value)
-  //       frameWidth.value = calculateInitialFrameWidth()
-  //       console.warn('frameWidth: ', frameWidth.value)
-
-  //       applyFrame()
-  //     })
-  //   }
-  // })
-
   // ------------------------
   // Check frame type
   // ------------------------

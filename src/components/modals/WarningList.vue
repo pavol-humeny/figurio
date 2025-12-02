@@ -9,19 +9,18 @@ import { useUiStore } from '@/stores/uiStore'
 const imageStore = useImageStore()
 
 const {
-  warnings,
-  expandedIds,
+  // warnings,
+  // expandedIds,
   removeWarning,
   openByClick,
   closeByArrow,
 } = useWarningList(useImageStore(), useUiStore())
 
 /**
- * List of active warnings based on imageStore's imageWarnings
+ * Computed properties for warnings and expanded IDs from imageStore
  */
-const activeWarnings = computed(() =>
-  warnings.value.filter((w) => imageStore.imageWarnings.includes(w.id))
-)
+const activeWarnings = computed(() => imageStore.imageWarnings)
+const expandedIds = computed(() => imageStore.expandedImageWarningIds)
 
 /**
  * Get color based on warning type
