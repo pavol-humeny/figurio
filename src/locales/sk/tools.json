@@ -319,7 +319,7 @@
     "shortcut": "G",
     "settings": {
       "convertToGrayscaleButton": {
-        "text": "Převést na odstíny šedi"
+        "text": "Previesť na odtiene sivej"
       },
       "grayscaleType": {
         "label": "Typ odtienu sivej",
@@ -333,6 +333,18 @@
         "averageExplained": "Jednoduchý priemer hodnôt RGB ((R + G + B) / 3)",
         "lightness": "Svetlosť",
         "lightnessExplained": "Priemer maximálnych a minimálnych hodnôt RGB ((max(R, G, B) + min(R, G, B)) / 2)"
+      }
+    }
+  },
+  "darkLightConvertor": {
+    "label": "Tmavý/Svetelný režim",
+    "tip": "Prevedie tmavý obrázok kódu na svetlý a naopak",
+    "tipDisabled": "",
+    "explain": "Nástroj Tmavý/Svetelný režim prepína farebnú schému obrázka z tmavého na svetlý alebo naopak. Je užitočný na prispôsobenie obrázkov rôznym preferenciám alebo prostrediam prezerania.",
+    "shortcut": "Shift + C",
+    "settings": {
+      "convertToDarkLightButton": {
+        "text": "Previesť "
       }
     }
   },

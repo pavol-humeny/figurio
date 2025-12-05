@@ -5,8 +5,7 @@ import { useDarkLightConvertorTool } from '@/composables/tools/useDarkLightConve
 import { useImageStore } from '@/stores/imageStore'
 import { useHistoryStore } from '@/stores/historyStore'
 import { useI18n } from 'vue-i18n'
-// import ExplainItem from '../common/ExplainItem.vue'
-// import DropdownSelect from '../common/DropdownSelect.vue'
+import ExplainItem from '../common/ExplainItem.vue'
 import { useEditorStore } from '@/stores/editorStore'
 import { useUiStore } from '@/stores/uiStore'
 const { t } = useI18n()
@@ -34,6 +33,8 @@ const {
 
         <!-- Dark/Light conversion button -->
         <div class="settings-content-wrapper">
+          <ExplainItem :text="$t('tools.darkLightConvertor.explain')" :title="$t('tools.darkLightConvertor.label')"
+            position="left" />
           <div class="content-wrapper">
             <DefaultButton :text="$t('tools.darkLightConvertor.settings.convertToDarkLightButton.text')"
               @click="applyDarkLightConvertor" main />

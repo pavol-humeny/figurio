@@ -336,6 +336,18 @@
       }
     }
   },
+  "darkLightConvertor": {
+    "label": "Dark/Light Convertor",
+    "tip": "Converts dark code screen to light and vice versa",
+    "tipDisabled": "",
+    "explain": "The Dark/Light Convertor tool switches the color scheme of the image from dark to light or vice versa. This is useful for adapting images to different viewing preferences or environments.",
+    "shortcut": "Shift + C",
+    "settings": {
+      "convertToDarkLightButton": {
+        "text": "Convert"
+      }
+    }
+  },
   "brush": {
     "label": "Brush",
     "tip": "Paints on the image with a brush tool",

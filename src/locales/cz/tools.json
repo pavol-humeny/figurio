@@ -337,6 +337,18 @@
       }
     }
   },
+  "darkLightConvertor": {
+    "label": "Tmavý/Světelný režim",
+    "tip": "Převede tmavý obrázek kódu na světlý a naopak",
+    "tipDisabled": "",
+    "explain": "Nástroj Tmavý/Světelný režim přepíná barevné schéma obrázku z tmavého na světlý nebo naopak. Je užitečný pro přizpůsobení obrázků různým preferencím nebo prostředím prohlížení.",
+    "shortcut": "Shift + C",
+    "settings": {
+      "convertToDarkLightButton": {
+        "text": "Převést"
+      }
+    }
+  },
   "brush": {
     "label": "Štětec",
     "tip": "Malování na obrázek pomocí štětce",
