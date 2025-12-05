@@ -25,11 +25,36 @@ export function useLoadingSpinner(uiStore) {
     window.addEventListener('keydown', blockAll, true)
     window.addEventListener('pointerdown', blockAll, true)
 
+    /**
+     * Prevent browser zoom with CTRL + mouse wheel
+     */
+    const blockCtrlWheel = (e) => {
+      // Prevent zooming when CTRL is pressed
+      if (e.ctrlKey) {
+        e.preventDefault()
+      }
+    }
+
+    /**
+     * Prevent CTRL + +/-/0 zoom shortcuts
+     */
+    const blockCtrlKeys = (e) => {
+      if (e.ctrlKey && ['+', '-', '=', '0'].includes(e.key)) {
+        e.preventDefault()
+      }
+    }
+
+    window.addEventListener('wheel', blockCtrlWheel, { passive: false })
+    window.addEventListener('keydown', blockCtrlKeys)
+
     onBeforeUnmount(() => {
       window.removeEventListener('click', blockAll, true)
       window.removeEventListener('mousedown', blockAll, true)
       window.removeEventListener('keydown', blockAll, true)
       window.removeEventListener('pointerdown', blockAll, true)
+
+      window.removeEventListener('wheel', blockCtrlWheel, { passive: false })
+      window.removeEventListener('keydown', blockCtrlKeys)
     })
   })
 

@@ -7,7 +7,6 @@ import { useLoadingSpinner } from '@/composables/common/useLoadingSpinner'
  */
 const { isVisible, isApplying, blockClicks } = useLoadingSpinner(useUiStore())
 
-
 </script>
 
 <template>
@@ -35,6 +34,7 @@ const { isVisible, isApplying, blockClicks } = useLoadingSpinner(useUiStore())
   background-color: var(--background-c-transparent, rgba(0, 0, 0, 0.3));
   backdrop-filter: blur(2px);
   pointer-events: none;
+  user-select: none;
 }
 
 .spinner {

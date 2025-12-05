@@ -16,9 +16,9 @@
 - Prepracovať zatváranie modalov pomocou ESCAPE - vytvoriť nejakú hierarchiu a zatvárať to z jedného miesta 
 - Skontrolovať či sa rámiky telefónu nejako neorezávajú 
 - Oblé zakončenie čiar (line tool)
-- noise detection sa neskryje pri kliknutí na krížik ak tam je viac súborov 
+- FIXED - noise detection sa neskryje pri kliknutí na krížik ak tam je viac súborov 
 - noise detection sa zmaže pri undo operácie 
-- pri aplikovaní operácie sa dá zoomovať obrazovka
+- FIXED - pri aplikovaní operácie sa dá zoomovať obrazovka
 - logo sa dá drag and drop do editoru 
 - pri dokreslení background removal canvas sa to sekne 
 
