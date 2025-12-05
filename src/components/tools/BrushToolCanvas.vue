@@ -148,13 +148,10 @@ const onMouseUpGlobal = () => {
 onMounted(() => {
   ctx = canvasRef.value.getContext('2d', { willReadFrequently: true })
   ctx.imageSmoothingEnabled = false
+  canvasRef.value.style.imageRendering = 'pixelated'
   window.addEventListener('mouseup', onMouseUpGlobal)
   window.addEventListener('mousemove', onMouseMove)
   window.addEventListener('mousedown', onMouseDown)
-
-  // if (!imageStore.overlayImage || !canvasRef.value) return
-  // ctx.clearRect(0, 0, canvasRef.value.width, canvasRef.value.height)
-  // ctx.drawImage(imageStore.overlayImage, 0, 0, canvasRef.value.width, canvasRef.value.height)
 })
 
 onBeforeUnmount(() => {

@@ -250,6 +250,9 @@ const onMouseUpGlobal = () => {
  * Global mouse up listener to stop drawing when mouse is released outside the canvas
  */
 onMounted(() => {
+  ctx = manualCanvasRef.value.getContext('2d', { willReadFrequently: true })
+  ctx.imageSmoothingEnabled = false
+  manualCanvasRef.value.style.imageRendering = 'pixelated'
   window.addEventListener('mouseup', onMouseUpGlobal)
   window.addEventListener('mousemove', onMouseMove)
   window.addEventListener('mousedown', onMouseDown)
@@ -294,7 +297,6 @@ onBeforeUnmount(() => {
       :height="imageHeight"></canvas>
   </div>
 </template>
-
 
 <style scoped>
 .manual-removal-wrapper {

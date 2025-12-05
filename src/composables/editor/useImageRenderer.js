@@ -287,6 +287,7 @@ export function useImageRenderer(
       }
 
       imageStore.previewUrl = imageRef.value.src
+      imageRef.value.style.imageRendering = 'pixelated'
     }
 
     // Value for blur preview

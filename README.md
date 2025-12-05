@@ -12,14 +12,20 @@
 - DONE pri preklikávaní medzi feature tour sa meni velkost arei pre video ak ešte nie je načítané
 - escape nezatvara feature tour, ale zatvori help modal pod tym 
 - krok späť spôsobí zmazanie eventu artifacts warning 
-- zoomovanie pomocou tlacitok, ak je obrazok mimo stred tak to zoomuje mimo obrázok 
-- 
+- SKIP (asi to je v pohode tak ako to je) zoomovanie pomocou tlacitok, ak je obrazok mimo stred tak to zoomuje mimo obrázok 
+- Prepracovať zatváranie modalov pomocou ESCAPE - vytvoriť nejakú hierarchiu a zatvárať to z jedného miesta 
+- Skontrolovať či sa rámiky telefónu nejako neorezávajú 
+- Oblé zakončenie čiar (line tool)
+- noise detection sa neskryje pri kliknutí na krížik ak tam je viac súborov 
+- noise detection sa zmaže pri undo operácie 
+- pri aplikovaní operácie sa dá zoomovať obrazovka
+- logo sa dá drag and drop do editoru 
+- pri dokreslení background removal canvas sa to sekne 
 
 ## Admin mode 
 - neobmedzena veľkosť obrázku 
 - ľubovoľné orezávanie 
 - nekonečné zoomovanie 
-
 
 ## Dlhodobé TODO 
 - Globálne úpravy (rasterizácia)
@@ -35,7 +41,7 @@
 - Vrstvy 
 - Možnosť si uložiť aktuálnu prácu 
 - Nástroj na kreslenie (štetce)
-
+- Split screen pre viac obrázkov 
 
 ## API
 ### addUserEvent()
