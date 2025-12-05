@@ -1,5 +1,5 @@
 <script setup>
-import { defineAsyncComponent, computed } from 'vue'
+import { computed } from 'vue'
 import ItemTip from '@/components/common/ItemTip.vue'
 import { useConsole } from '@/composables/common/useConsole.js'
 const { warn } = useConsole()
@@ -51,21 +51,21 @@ const emit = defineEmits(['click'])
 /**
  * All available icons loaded via Vite's glob import
  */
-const icons = import.meta.glob('@/components/icons/Icon*.vue')
+const icons = import.meta.glob('@/components/icons/Icon*.vue', { eager: true, import: 'default' })
 
 /**
  * Selected icon component based on the provided name
  */
 const iconComponent = computed(() => {
   const path = `/src/components/icons/${props.name}.vue`
-  const loader = icons[path]
+  const component = icons[path]
 
-  if (!loader) {
+  if (!component) {
     warn(`Icon ${props.name} does not exist: ${path}`)
     return null
   }
 
-  return defineAsyncComponent(loader)
+  return component
 })
 </script>
 

@@ -70,7 +70,7 @@ onMounted(() => {
 
     <div class="left-side">
       <div class="app-name">
-        <img :src="logoSrc" alt="Figurio logo" :style="{ 'user-select': 'none' }">
+        <img :src="logoSrc" alt="Figurio logo" :style="{ 'user-select': 'none' }" @dragstart.prevent>
         <h2><span class="highlight-e">{{ $t('home.appNameHighlight') }}</span>{{ $t('home.appNameBasic') }}
         </h2>
       </div>
