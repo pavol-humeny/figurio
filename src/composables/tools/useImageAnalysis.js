@@ -190,7 +190,7 @@ export function useImageAnalysis(imageStore, workspaceStore, uiStore, t) {
 
     const baseCanvas = document.querySelector('.image-canvas')
     const overlayCanvas = document.querySelector('.overlay-canvas')
-    
+
     if (!baseCanvas || !overlayCanvas) return
 
     // Show overlay canvas
@@ -243,7 +243,7 @@ export function useImageAnalysis(imageStore, workspaceStore, uiStore, t) {
    */
   const hideArtifacts = () => {
     // Do nothing if no artifacts
-    if (!imageStore.imageHasArtifacts) return
+    // if (!imageStore.imageHasArtifacts) return
 
     const overlay = document.querySelector('.overlay-canvas')
     if (overlay) overlay.getContext('2d').clearRect(0, 0, overlay.width, overlay.height)
