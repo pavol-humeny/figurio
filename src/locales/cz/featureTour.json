@@ -1,20 +1,104 @@
 [
   {
+    "icon": "IconNoiseDetection",
+    "title": "Detekce šumu",
+    "description": "Automaticky zvýrazní šum nebo artefakty na obrázku, které nejsou na první pohled viditelné.",
+    "video": "noiseDetection"
+  },
+  {
     "icon": "IconCropTool",
-    "title": "Crop tool",
-    "description": "This is crop tool",
+    "title": "Nástroj ořezu",
+    "description": "Ručně ořežte obrázek nebo použijte fit crop k odstranění okrajů připomínajících pozadí. Nastavte pozici, velikost a citlivost pro přesné výsledky.",
     "video": "cropTool"
   },
   {
     "icon": "IconBrush",
-    "title": "Brush",
-    "description": "Simple brush demo",
+    "title": "Štětec",
+    "description": "Malujte na obrázku s nastavitelnou velikostí, neprůhledností a tvrdostí štětce. Guma odstraní namalované oblasti.",
     "video": "brushTool"
   },
   {
     "icon": "IconShapeTool",
-    "title": "Shape",
-    "description": "Add and edit shapes easily",
+    "title": "Tvar",
+    "description": "Přidejte vektorové tvary jako obdélníky, elipsy nebo čáry. Přizpůsobte velikost, pozici, rotaci, výplň, obrys a neprůhlednost.",
     "video": "shapeTool"
+  },
+  {
+    "icon": "IconMoveTool",
+    "title": "Pohyb",
+    "description": "Posouvejte nebo přibližujte plátno. Nastavte rychlost pohybu a citlivost zoomu pro plynulou navigaci.",
+    "video": "moveTool"
+  },
+  {
+    "icon": "IconSelectTool",
+    "title": "Výběr",
+    "description": "Vyberte, přesouvejte nebo odstraňujte objekty na obrázku. Použijte více výběrů, vybrat vše nebo zrušit výběr pro přesnou kontrolu.",
+    "video": "selectTool"
+  },
+  {
+    "icon": "IconTransformTool",
+    "title": "Transformace",
+    "description": "Otočte, převraťte nebo změňte velikost obrázku. K dispozici je volná rotace a uzamčení rozměrů.",
+    "video": "transformTool"
+  },
+  {
+    "icon": "IconGrayscaleTool",
+    "title": "Šedotón",
+    "description": "Převeďte obrázek na odstíny šedé. K dispozici je několik metod konverze.",
+    "video": "grayscaleTool"
+  },
+  {
+    "icon": "IconDarkLightTool",
+    "title": "Přepínač tmavý/světly",
+    "description": "Přepínejte barevné schéma obrázku mezi tmavým a světlým režimem.",
+    "video": "darkLightTool"
+  },
+  {
+    "icon": "IconBackgroundRemovalTool",
+    "title": "Odstranění pozadí",
+    "description": "Odstraňte pozadí obrázku automaticky, ručně nebo podle výběru barvy. Nastavte citlivost pro přesné výsledky.",
+    "video": "backgroundRemovalTool"
+  },
+  {
+    "icon": "IconBlurTool",
+    "title": "Rozmazání oblasti",
+    "description": "Použijte efekt rozmazání na vybrané obdélníkové oblasti. Nastavte velikost, rotaci, sílu a zjemnění okrajů.",
+    "video": "blurTool"
+  },
+  {
+    "icon": "IconTextTool",
+    "title": "Text",
+    "description": "Přidejte a upravujte text s fontem, velikostí, barvou, neprůhledností, stylem, rotací a vrstvou Z-index.",
+    "video": "textTool"
+  },
+  {
+    "icon": "IconMagnifyTool",
+    "title": "Zvětšení oblasti",
+    "description": "Zvětšete konkrétní oblast obrázku. Přizpůsobte zoom, poloměr, pozici, obrys a Z-index.",
+    "video": "magnifyAreaTool"
+  },
+  {
+    "icon": "IconFrameTool",
+    "title": "Rám",
+    "description": "Přidejte vizuální rámy jako plné, prohlížečové nebo telefonní. Přizpůsobte barvu, šířku a záhlaví.",
+    "video": "frameTool"
+  },
+  {
+    "icon": "IconPresetTool",
+    "title": "Přednastavení",
+    "description": "Uložte a použijte přednastavení úprav obrázků včetně otočení, převrácení, ořezu, změny velikosti, šedotónu a rámu.",
+    "video": "presetTool"
+  },
+  {
+    "icon": "IconExportTool",
+    "title": "Export",
+    "description": "Exportujte obrázky v různých formátech, nastavte kvalitu a rozměry souboru, náhled nebo zkopírujte do schránky.",
+    "video": "exportTool"
+  },
+  {
+    "icon": "IconColorEyeDropper",
+    "title": "Kapátko barev",
+    "description": "Vyberte barvu z obrázku pro použití s nástroji jako štětec nebo odstranění pozadí.",
+    "video": "eyeDropperTool"
   }
 ]

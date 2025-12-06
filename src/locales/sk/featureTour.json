@@ -1,20 +1,104 @@
 [
   {
+    "icon": "IconNoiseDetection",
+    "title": "Detekcia šumu",
+    "description": "Automaticky zvýrazní šum alebo artefakty na obrázku, ktoré nie sú na prvý pohľad viditeľné.",
+    "video": "noiseDetection"
+  },
+  {
     "icon": "IconCropTool",
-    "title": "Crop tool",
-    "description": "This is crop tool",
+    "title": "Nástroj orezania",
+    "description": "Ručne orežte obrázok alebo použite fit crop na odstránenie okrajov pripomínajúcich pozadie. Nastavte pozíciu, veľkosť a citlivosť pre presné výsledky.",
     "video": "cropTool"
   },
   {
     "icon": "IconBrush",
-    "title": "Brush",
-    "description": "Simple brush demo",
+    "title": "Štetec",
+    "description": "Maľujte na obrázku s nastaviteľnou veľkosťou, nepriehľadnosťou a tvrdosťou štetca. Guma odstraňuje namaľované oblasti.",
     "video": "brushTool"
   },
   {
     "icon": "IconShapeTool",
-    "title": "Shape",
-    "description": "Add and edit shapes easily",
+    "title": "Tvar",
+    "description": "Pridajte vektorové tvary ako obdĺžniky, elipsy alebo čiary. Prispôsobte veľkosť, pozíciu, rotáciu, výplň, obrys a nepriehľadnosť.",
     "video": "shapeTool"
+  },
+  {
+    "icon": "IconMoveTool",
+    "title": "Presun",
+    "description": "Posúvajte alebo priblížte plátno. Nastavte rýchlosť pohybu a citlivosť zoomu pre plynulú navigáciu.",
+    "video": "moveTool"
+  },
+  {
+    "icon": "IconSelectTool",
+    "title": "Výber",
+    "description": "Vyberte, presuňte alebo odstráňte objekty na obrázku. Použite viacnásobný výber, vybrať všetko alebo zrušiť výber pre presnú kontrolu.",
+    "video": "selectTool"
+  },
+  {
+    "icon": "IconTransformTool",
+    "title": "Transformácia",
+    "description": "Otočte, prevráťte alebo zmeňte veľkosť obrázku. K dispozícii sú voľná rotácia a uzamknutie rozmerov.",
+    "video": "transformTool"
+  },
+  {
+    "icon": "IconGrayscaleTool",
+    "title": "Odtieň šedej",
+    "description": "Konvertujte obrázok na odtiene sivej. K dispozícii sú viaceré metódy konverzie.",
+    "video": "grayscaleTool"
+  },
+  {
+    "icon": "IconDarkLightTool",
+    "title": "Prepínač svetlý/tmavý",
+    "description": "Prepínajte farebnú schému obrázku medzi tmavým a svetlým režimom.",
+    "video": "darkLightTool"
+  },
+  {
+    "icon": "IconBackgroundRemovalTool",
+    "title": "Odstránenie pozadia",
+    "description": "Odstráňte pozadie obrázku automaticky, ručne alebo podľa výberu farby. Nastavte citlivosť pre presné výsledky.",
+    "video": "backgroundRemovalTool"
+  },
+  {
+    "icon": "IconBlurTool",
+    "title": "Zamäknutie oblasti",
+    "description": "Použite efekt rozmazania na vybranej obdĺžnikovej oblasti. Nastavte veľkosť, rotáciu, intenzitu a zjemnenie okrajov.",
+    "video": "blurTool"
+  },
+  {
+    "icon": "IconTextTool",
+    "title": "Text",
+    "description": "Pridajte a upravujte text s fontom, veľkosťou, farbou, nepriehľadnosťou, štýlom, rotáciou a vrstvovým Z-indexom.",
+    "video": "textTool"
+  },
+  {
+    "icon": "IconMagnifyTool",
+    "title": "Priblíženie oblasti",
+    "description": "Zväčšite konkrétnu oblasť obrázku. Prispôsobte zoom, polomer, pozíciu, obrys a Z-index.",
+    "video": "magnifyAreaTool"
+  },
+  {
+    "icon": "IconFrameTool",
+    "title": "Rám",
+    "description": "Pridajte vizuálne rámy ako plné, prehliadačové alebo telefónové. Prispôsobte farbu, šírku a hlavičky.",
+    "video": "frameTool"
+  },
+  {
+    "icon": "IconPresetTool",
+    "title": "Prednastavenia",
+    "description": "Uložte a použite prednastavenia úprav obrázkov vrátane otočenia, prevrátenia, orezania, zmeny veľkosti, odtieňa šedej a rámu.",
+    "video": "presetTool"
+  },
+  {
+    "icon": "IconExportTool",
+    "title": "Export",
+    "description": "Exportujte obrázky v rôznych formátoch, nastavte kvalitu a rozmery súboru, náhľad alebo skopírujte do schránky.",
+    "video": "exportTool"
+  },
+  {
+    "icon": "IconColorEyeDropper",
+    "title": "Kapátko farby",
+    "description": "Vyberte farbu z obrázku na použitie s nástrojmi ako štetec alebo odstránenie pozadia.",
+    "video": "eyeDropperTool"
   }
 ]

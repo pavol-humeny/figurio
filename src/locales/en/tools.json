@@ -226,10 +226,10 @@
   },
   "crop": {
     "label": "Crop",
-    "tip": "Crops the image manualy or use auto crop",
+    "tip": "Crops the image manualy or use fit crop",
     "tipDisabled": "",
     "explain": "The Crop tool allows the image to be cropped by defining a rectangular crop box. The box can be moved with the mouse or exact values for position and size can be entered. The aspect ratio can be locked when resizing. The Reset button restores the original crop box, and Apply confirms the crop.",
-    "explain2": "The Auto Crop option automatically detects and removes background-like areas from the edges of the image. The sensitivity can be adjusted to control how much of the background is included in the crop. The artifacts preview helps visualize which pixels will be treated as background.",
+    "explain2": "The Fit Crop option automatically detects and removes background-like areas from the edges of the image. The sensitivity can be adjusted to control how much of the background is included in the crop. The artifacts preview helps visualize which pixels will be treated as background.",
     "shortcut": "C",
     "settings": {
       "general": {

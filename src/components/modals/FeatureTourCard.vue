@@ -129,7 +129,7 @@ onMounted(() => {
 }
 
 .feature-description {
-  width: 40%;
+  width: 70%;
   font-size: 18px;
   color: var(--text-c);
 }

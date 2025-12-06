@@ -1,20 +1,104 @@
 [
   {
+    "icon": "IconNoiseDetection",
+    "title": "Noise Detection",
+    "description": "Automatically highlights noise or artifacts in the image that may not be visible at first glance.",
+    "video": "noiseDetection"
+  },
+  {
     "icon": "IconCropTool",
     "title": "Crop tool",
-    "description": "This is crop tool",
+    "description": "Manually crop the image or use fit crop to remove background-like edges. Adjust position, size, and sensitivity for precise results.",
     "video": "cropTool"
   },
   {
     "icon": "IconBrush",
     "title": "Brush",
-    "description": "Simple brush demo",
+    "description": "Paint on the image with adjustable brush size, opacity, and hardness. Eraser tool can remove painted areas.",
     "video": "brushTool"
   },
   {
     "icon": "IconShapeTool",
     "title": "Shape",
-    "description": "Add and edit shapes easily",
+    "description": "Add vector shapes like rectangles, ellipses, or lines. Customize size, position, rotation, fill, stroke, and opacity.",
     "video": "shapeTool"
+  },
+  {
+    "icon": "IconMoveTool",
+    "title": "Move",
+    "description": "Move or zoom the canvas. Adjust movement speed and zoom sensitivity for smooth navigation.",
+    "video": "moveTool"
+  },
+  {
+    "icon": "IconSelectTool",
+    "title": "Select",
+    "description": "Select, move, or delete objects on the image. Use multi-select, select all, or deselect options for precise control.",
+    "video": "selectTool"
+  },
+  {
+    "icon": "IconTransformTool",
+    "title": "Transform",
+    "description": "Rotate, flip, or resize the image. Options for free rotation and dimension locking included.",
+    "video": "transformTool"
+  },
+  {
+    "icon": "IconGrayscaleTool",
+    "title": "Grayscale",
+    "description": "Convert the image to shades of gray. Multiple conversion methods are available.",
+    "video": "grayscaleTool"
+  },
+  {
+    "icon": "IconDarkLightTool",
+    "title": "Dark/Light Converter",
+    "description": "Switch the color scheme of the image between dark and light modes.",
+    "video": "darkLightTool"
+  },
+  {
+    "icon": "IconBackgroundRemovalTool",
+    "title": "Background Removal",
+    "description": "Remove image background automatically, manually, or by color selection. Adjust sensitivity for precise results.",
+    "video": "backgroundRemovalTool"
+  },
+  {
+    "icon": "IconBlurTool",
+    "title": "Blur Area",
+    "description": "Apply a blur effect to a selected rectangular area. Adjust size, rotation, strength, and edge fade.",
+    "video": "blurTool"
+  },
+  {
+    "icon": "IconTextTool",
+    "title": "Text",
+    "description": "Add and edit text with font, size, color, opacity, style, rotation, and Z-index layering.",
+    "video": "textTool"
+  },
+  {
+    "icon": "IconMagnifyTool",
+    "title": "Magnify Area",
+    "description": "Enlarge a specific area of the image. Customize zoom, radius, position, outline, and Z-index.",
+    "video": "magnifyAreaTool"
+  },
+  {
+    "icon": "IconFrameTool",
+    "title": "Frame",
+    "description": "Add visual frames such as solid, browser, or phone frames. Customize color, width, and headers.",
+    "video": "frameTool"
+  },
+  {
+    "icon": "IconPresetTool",
+    "title": "Presets",
+    "description": "Save and apply image modification presets including rotate, flip, crop, resize, grayscale, and frame.",
+    "video": "presetTool"
+  },
+  {
+    "icon": "IconExportTool",
+    "title": "Export",
+    "description": "Export images in different formats, set file quality and dimensions, preview, or copy to clipboard.",
+    "video": "exportTool"
+  },
+  {
+    "icon": "IconColorEyeDropper",
+    "title": "Color Eye Dropper",
+    "description": "Pick a color from the image to use with tools like brush or background removal.",
+    "video": "eyeDropperTool"
   }
 ]

@@ -21,7 +21,8 @@
         "items": [
           "App can not be zoomed when applying operation",
           "Fix issue with icon loading",
-          "Fix disabled color picker eye dropper"
+          "Fix disabled color picker eye dropper",
+          "Upload image only once from drag and drop"
         ]
       }
     },

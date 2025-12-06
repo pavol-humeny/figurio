@@ -85,7 +85,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="home-view" @drop="handleDrop" @dragover.prevent @dragleave.prevent>
+  <div class="home-view" @drop.stop="handleDrop" @dragover.prevent @dragleave.prevent>
     <div class="background"></div>
 
     <div class="left-side">

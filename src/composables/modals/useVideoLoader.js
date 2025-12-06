@@ -16,6 +16,7 @@ export function useVideoLoader() {
     let src = cropVideo // fallback
 
     if (isToolTip) {
+      // Tool tip videos
       switch (key) {
         case 'crop':
           src = cropToolVideo
@@ -55,6 +56,7 @@ export function useVideoLoader() {
           break
       }
     } else {
+      // Feature tour videos
       switch (key) {
         case 'cropTool':
           src = cropVideo
