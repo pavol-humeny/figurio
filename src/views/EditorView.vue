@@ -53,7 +53,7 @@ const { closeFile } = useCloseFileButton(useImageStore(), useWorkspaceStore(), t
 const { uploadFile } = useUploadFileButton(useImageStore(), t, useRouter())
 const { toggleTool } = useToolsPanel(useEditorStore(), useImageStore(), useUiStore(), useWorkspaceStore(), t)
 const { openExportToolSettings } = useExportToolSettings(useImageStore(), useEditorStore(), useHistoryStore(), t)
-const { openHelpModal } = useHelpModal(useUiStore(), useImageStore(), useRouter(), t)
+const { openHelpModal } = useHelpModal(useUiStore(), useImageStore(), useEditorStore(), useRouter(), t)
 const { openSettingsPanel } = useSettingsPanel(useUiStore())
 const { openPrivacyAndDataModal } = usePrivacyAndDataModal(t)
 const { startEditing } = useFileNameDisplay(useImageStore(), t)
@@ -89,7 +89,7 @@ const { applyBackgroundRemovalRender } = useBackgroundRemovalTool(
   t,
 )
 
-const { closeHelpModal } = useHelpModal(useUiStore(), useImageStore(), useRouter(), t)
+const { closeHelpModal } = useHelpModal(useUiStore(), useImageStore(), useEditorStore(), useRouter(), t)
 const { closeSettingsPanel } = useSettingsPanel(useUiStore())
 const { closePrivacyAndDataModal } = usePrivacyAndDataModal(t)
 const { closeFeatureTourModal } = useFeatureTourModal()

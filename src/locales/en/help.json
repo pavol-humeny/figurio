@@ -102,7 +102,14 @@
     },
     "contactAndFeedback": {
       "title": "Contact and Feedback",
-      "text": "If you have any questions, suggestions, or feedback regarding the editor, please contact me at:"
+      "text": "If you have any questions, suggestions, or feedback regarding the editor, please use the contact form below or contact me at:",
+      "contactForm": {
+        "name": "Name",
+        "email": "Email",
+        "subject": "Subject",
+        "message": "Message",
+        "send": "Send message"
+      }
     }
   },
   "closeButton": {

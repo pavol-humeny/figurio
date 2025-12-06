@@ -21,6 +21,8 @@
 - FIXED - pri aplikovaní operácie sa dá zoomovať obrazovka
 - FIXED - logo sa dá drag and drop do editoru 
 - pri dokreslení background removal canvas sa to sekne 
+- Pri vlozeni hodnoty do formulara sa spusti funkcia na kontrolu vlozenia obrazku
+- v help modal nefunguje ctrl + c, v
 
 ## Admin mode 
 - neobmedzena veľkosť obrázku 
@@ -82,6 +84,10 @@ Event type:
     - keys
 - buttonClicked
     - button
+- submitContactForm
+    - contactForm
+- adminMode
+    - contactForm
 
 ## Warning list
 - artifact-warning
@@ -91,3 +97,10 @@ Event type:
 - Obmedzená veľkosť súboru 
 - Obmedzené rozmery súboru 
 
+## Browser specifics items
+- Slider 
+- Color picker
+- Zoom 
+- Pan 
+- Keyboard shortcuts 
+- Scroll nad number input

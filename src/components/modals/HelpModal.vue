@@ -11,6 +11,7 @@ import { useImageStore } from '@/stores/imageStore';
 import { useInteractiveTutorial } from '@/composables/tutorial/useInteractiveTutorial';
 import { globalConfig } from '@/config/globalConfig';
 import { useApi } from '../../composables/common/useApi';
+import { useEditorStore } from '@/stores/editorStore';
 
 const { messages, locale, t } = useI18n()
 const router = useRouter()
@@ -51,7 +52,10 @@ const {
   startInteractiveTutorial,
   continueInteractiveTutorial,
   openFeatureTourModalHelper,
-} = useHelpModal(useUiStore(), useImageStore(), useRouter(), t);
+  contactForm,
+  submitContactForm,
+  sendContactFormDisabled
+} = useHelpModal(useUiStore(), useImageStore(), useEditorStore(), useRouter(), t);
 
 const { isTutorialEnabled } = useInteractiveTutorial(
   useUiStore(),
@@ -440,7 +444,8 @@ const showStatistics = () => {
                 </li>
               </ul>
               <div class="feature-tour-button">
-                <DefaultButton :text="$t('help.helpContent.featureTour.button.text')" @click="openFeatureTourModalHelper()" />
+                <DefaultButton :text="$t('help.helpContent.featureTour.button.text')"
+                  @click="openFeatureTourModalHelper()" />
               </div>
             </div>
 
@@ -482,10 +487,49 @@ const showStatistics = () => {
               <ul class="dot-paragraph">
                 <li>
                   {{ $t('help.helpContent.contactAndFeedback.text') }}
-                  <a href="mailto:xhumenp00@stud.fit.vut.cz" class="action-text">xhumenp00@stud.fit.vut.cz</a>.
+                  <a href="mailto:xhumenp00@stud.fit.vut.cz" class="action-text">{{ globalConfig.contactMail }}</a>.
                 </li>
               </ul>
 
+              <!-- Contact Form -->
+              <div class="contact-form">
+                <div class="contact-name-email">
+                  <!-- Name -->
+                  <div class="input-label-wrapper">
+                    <label>
+                      {{ $t('help.helpContent.contactAndFeedback.contactForm.name') }}
+                    </label>
+                    <input v-model="contactForm.name" type="text" required maxlength="25" />
+                  </div>
+
+                  <!-- Email -->
+                  <div class="input-label-wrapper">
+                    <label>
+                      {{ $t('help.helpContent.contactAndFeedback.contactForm.email') }}
+                    </label>
+                    <input v-model="contactForm.email" type="email" required maxlength="25" />
+                  </div>
+                </div>
+
+                <!-- Subject -->
+                <div class="input-label-wrapper">
+                  <label>
+                    {{ $t('help.helpContent.contactAndFeedback.contactForm.subject') }}
+                  </label>
+                  <input v-model="contactForm.subject" type="text" required maxlength="50" />
+                </div>
+
+                <!-- Message -->
+                <div class="input-label-wrapper">
+                  <label>
+                    {{ $t('help.helpContent.contactAndFeedback.contactForm.message') }}
+                  </label>
+                  <textarea v-model="contactForm.message" required maxlength="500"></textarea>
+                </div>
+
+                <DefaultButton :text="$t('help.helpContent.contactAndFeedback.contactForm.send')"
+                  @click="submitContactForm" :disabled="sendContactFormDisabled" />
+              </div>
             </div>
           </div>
 
@@ -703,5 +747,42 @@ const showStatistics = () => {
   color: var(--text-c);
   font-size: var(--text-font-size);
   line-height: 1.3;
+}
+
+/* Contact form */
+.contact-form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 20px;
+}
+
+.contact-name-email {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.input-label-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  width: 100%;
+}
+
+.contact-form input,
+.contact-form textarea {
+  width: 100%;
+  padding: var(--input-top-padding) 10px var(--input-top-padding) 10px;
+  border-radius: var(--input-border-radius);
+  border: none;
+  background: var(--background-c);
+  color: var(--text-c);
+  font-size: var(--input-text-size);
+}
+
+.contact-form textarea {
+  height: 150px;
+  resize: none;
 }
 </style>

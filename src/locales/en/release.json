@@ -7,10 +7,16 @@
     "4.18.4":{
       "label": "4.18.4",
       "date":"5.12. 2025",
+      "newFeatures": {
+        "items": [
+          "Contact form"
+        ]
+      },
       "bugFixes": {
         "items": [
           "App can not be zoomed when applying operation",
-          "Fix issue with icon loading"
+          "Fix issue with icon loading",
+          "Fix disabled color picker eye dropper"
         ]
       }
     },

@@ -301,6 +301,29 @@ export function useApi() {
     }
   }
 
+  /**
+   * Sends contact form email
+   * @param {Object} contactForm - Contact form data
+   */
+  const sendContactFormEmail = async (contactForm) => {
+    try {
+      const res = await fetch(`${API_BASE}/api/contact`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(contactForm),
+      })
+
+      if (res.ok) {
+        log('Contact form email successfully sent')
+      } else {
+        const msg = await res.text()
+        warn(`Failed to send contact form email: ${msg}`)
+      }
+    } catch (err) {
+      error('Network error while sending contact form email:', err)
+    }
+  }
+
   return {
     addUserVisit,
     addUserEvent,
@@ -316,5 +339,6 @@ export function useApi() {
     getExportImage,
     getOpenModal,
     getKeyboardShortcuts,
+    sendContactFormEmail,
   }
 }

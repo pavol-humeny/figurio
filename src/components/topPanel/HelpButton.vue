@@ -6,6 +6,7 @@ import { useI18n } from 'vue-i18n'
 import { useUiStore } from '@/stores/uiStore'
 import { useRouter } from 'vue-router'
 import { useImageStore } from '@/stores/imageStore'
+import { useEditorStore } from '@/stores/editorStore'
 
 const { t } = useI18n()
 
@@ -14,7 +15,7 @@ const { t } = useI18n()
  */
 const {
   openHelpModal
-} = useHelpModal(useUiStore(), useImageStore(), useRouter(), t)
+} = useHelpModal(useUiStore(), useImageStore(), useEditorStore(), useRouter(), t)
 </script>
 
 <template>

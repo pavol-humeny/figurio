@@ -1,4 +1,7 @@
 export const globalConfig = {
+  // Contact email
+  contactMail: 'pavol.humeny@gmail.com',
+
   // Console prints
   console: {
     log: true,
@@ -79,4 +82,12 @@ export const globalConfig = {
 
   // Maximum open files
   maxNumberOfOpenFiles: 10,
+
+  // Admin mode
+  adminMode: {
+    email: 'ea14d625304b1a81ef42c3bf046630bf9307dd44e3f3e02e48a6cb8040173c3e',
+    subject: 'e9fce340e4152169c513115fb6fa3abc6f41fb6952829a01a08413f6ffd13f38',
+    message: 'e7f4248325988555f785f0fb4908ee87a963c78cb7a6bc691782eff5f6de807e',
+    logOutSubject: 'su user',
+  },
 }

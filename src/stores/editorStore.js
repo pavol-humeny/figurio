@@ -3,6 +3,20 @@ import { globalConfig } from '@/config/globalConfig'
 import { defineStore } from 'pinia'
 
 /**
+ * Retrieves a boolean value from localStorage.
+ * Returns `false` only if the stored value is the string `'false'`, otherwise returns the fallback.
+
+ *
+ * @param {string} key - The localStorage key to read from.
+ * @param {boolean} [fallback=true] - The default value if the key is not set.
+ * @returns {boolean} The parsed boolean value.
+ */
+const getBoolean = (key, fallback = true) => {
+  const value = localStorage.getItem(key)
+  return value === 'false' ? false : value === 'true' ? true : fallback
+}
+
+/**
  * State and actions for managing editor tool selection, subtools, and active tabs
  */
 export const useEditorStore = defineStore('editorStore', {
@@ -110,7 +124,11 @@ export const useEditorStore = defineStore('editorStore', {
       },
     },
 
+    /** Whether any modal is open */
     isModalOpenFlag: false,
+
+    /** Whether admin mode is enabled */
+    isAdminModeEnabled: getBoolean(`${globalConfig.LOCAL_STORAGE_PREFIX}adminMode`, false),
   }),
   actions: {
     /**
@@ -145,6 +163,19 @@ export const useEditorStore = defineStore('editorStore', {
      */
     setToolWithOpenSubTools(toolKey) {
       this.toolWithOpenSubToolsKey = toolKey
+    },
+
+    /**
+     * Set admin mode
+     * @param {boolean} isEnabled - Whether admin mode is enabled
+     */
+    setAdminMode(isEnabled) {
+      this.isAdminModeEnabled = isEnabled
+      // Save to localStorage
+      localStorage.setItem(
+        `${globalConfig.LOCAL_STORAGE_PREFIX}adminMode`,
+        JSON.stringify(isEnabled),
+      )
     },
   },
 })
