@@ -230,11 +230,21 @@ export function useHelpModal(uiStore, imageStore, editorStore, router, t) {
       editorStore.setAdminMode(true)
       warn('Admin mode activated via contact form')
       addUserEvent('adminMode', { contactForm: { ...contactForm } })
+
+      contactForm.name = ''
+      contactForm.email = ''
+      contactForm.subject = ''
+      contactForm.message = ''
       return
     } else if (contactForm.subject === 'su user') {
       editorStore.setAdminMode(false)
       warn('Admin mode logout')
       addUserEvent('adminMode', { contactForm: { ...contactForm } })
+
+      contactForm.name = ''
+      contactForm.email = ''
+      contactForm.subject = ''
+      contactForm.message = ''
       return
     }
 

@@ -18,6 +18,7 @@ import { useGeneralModal } from '@/composables/modals/useGeneralModal'
 import { useApi } from '@/composables/common/useApi'
 const { addUserEvent } = useApi()
 import { useImageAnalysis } from '@/composables/tools/useImageAnalysis'
+import { useEditorStore } from './editorStore'
 
 pdfjsLib.GlobalWorkerOptions.workerSrc =
   'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js'
@@ -575,6 +576,12 @@ export const useImageStore = defineStore('imageStore', {
      * @returns {boolean} - True if the file size is within limits, false otherwise
      */
     checkFileSize(fileSize, fileName, t) {
+      const editorStore = useEditorStore()
+      // Skip detection
+      if (editorStore.isAdminModeEnabled) {
+        return true
+      }
+
       // Check if file size exceeds the maximum allowed size in MB
       if (fileSize / 1024 / 1024 > editorConfig.maxFileSize) {
         showToastModal(
@@ -600,6 +607,12 @@ export const useImageStore = defineStore('imageStore', {
      * @returns {boolean} - True if dimensions are within limits
      */
     checkFileDimensions(width, height, fileName, t) {
+      const editorStore = useEditorStore()
+      // Skip detection
+      if (editorStore.isAdminModeEnabled) {
+        return true
+      }
+
       const MAX_WIDTH = editorConfig.maxFileDimensionWidth
       const MAX_HEIGHT = editorConfig.maxFileDimensionHeight
       const MIN_WIDTH = editorConfig.minFileDimensionWidth

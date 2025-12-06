@@ -4,6 +4,7 @@ import { useMath } from '@/composables/common/useMath'
 import { globalConfig } from '@/config/globalConfig'
 import { nextTick } from 'vue'
 import { useConsole } from '@/composables/common/useConsole.js'
+import { useEditorStore } from './editorStore'
 const { warn } = useConsole()
 
 const { round } = useMath()
@@ -187,7 +188,15 @@ export const useViewportStore = defineStore('viewportStore', {
      */
     zoomIn() {
       const newZoomLevel = this.zoomLevel * (1 + this.zoomSpeed)
-      this.zoomLevel = round(Math.min(newZoomLevel, this.maxZoomLevel), 2)
+
+      const editorStore = useEditorStore()
+
+      let maxZoomLevel = this.maxZoomLevel
+      if (editorStore.isAdminModeEnabled) {
+        maxZoomLevel = Infinity
+      }
+
+      this.zoomLevel = round(Math.min(newZoomLevel, maxZoomLevel), 2)
     },
 
     /**
