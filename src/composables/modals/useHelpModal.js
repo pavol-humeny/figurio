@@ -72,6 +72,8 @@ export function useHelpModal(uiStore, imageStore, editorStore, router, t) {
     addUserEvent('openModal', { modal: 'help' })
 
     isVisible.value = true
+
+    editorStore.imageCanBePasted = false
   }
 
   /**
@@ -79,6 +81,14 @@ export function useHelpModal(uiStore, imageStore, editorStore, router, t) {
    */
   const closeHelpModal = () => {
     isVisible.value = false
+
+    editorStore.imageCanBePasted = true
+
+    // Clear contact form on close
+    contactForm.name = ''
+    contactForm.email = ''
+    contactForm.subject = ''
+    contactForm.message = ''
   }
 
   /**

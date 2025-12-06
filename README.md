@@ -28,6 +28,7 @@
 - zatvaranie pdf je strasne pomale
 - pri zatvorení súboru - resetovať zoom mode na 100%
 - pixelovať všetky canvasy 
+- API na zaslanie mailu 
 
 
 ## Admin mode 

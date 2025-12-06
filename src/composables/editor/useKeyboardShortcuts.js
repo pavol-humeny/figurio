@@ -25,7 +25,7 @@ export function useKeyboardShortcuts(actions, uiStore, editorStore) {
     if (event.altKey) keys.push('alt')
     if (event.shiftKey) keys.push('shift')
 
-    let mainKey = event.key.toLowerCase()
+    let mainKey = event.key ? event.key.toLowerCase() : ''
     const specialKeysMap = { ' ': 'space' }
     if (specialKeysMap[mainKey]) mainKey = specialKeysMap[mainKey]
 
@@ -49,7 +49,7 @@ export function useKeyboardShortcuts(actions, uiStore, editorStore) {
     const isTyping =
       el && (el.isContentEditable || ['INPUT', 'TEXTAREA', 'SELECT'].includes(el.tagName))
     const isImagePaste =
-      event.key.toLowerCase() === 'v' &&
+      event.key?.toLowerCase() === 'v' &&
       (event.ctrlKey || event.metaKey) &&
       editorStore.imageCanBePasted
 
