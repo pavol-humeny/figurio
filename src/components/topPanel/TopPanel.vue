@@ -50,7 +50,7 @@ const showControls = computed(() => route.name === 'editor')
   <div class="top-panel">
     <div class="top-panel-left" v-if="!isHomeView">
       <div class="top-panel-left-wrapper" id="top-panel-left">
-        <img @click="goHome" :src="logoSrc" alt="Figurio logo">
+        <img @click="goHome" :src="logoSrc" alt="Figurio logo" @dragstart.prevent>
         <FileNameDisplay v-if="showControls" />
         <UploadFileButton v-if="showControls" />
         <CloseFileButton v-if="showControls" />

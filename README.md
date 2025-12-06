@@ -19,7 +19,7 @@
 - FIXED - noise detection sa neskryje pri kliknutí na krížik ak tam je viac súborov 
 - noise detection sa zmaže pri undo operácie 
 - FIXED - pri aplikovaní operácie sa dá zoomovať obrazovka
-- logo sa dá drag and drop do editoru 
+- FIXED - logo sa dá drag and drop do editoru 
 - pri dokreslení background removal canvas sa to sekne 
 
 ## Admin mode 
@@ -86,3 +86,8 @@ Event type:
 ## Warning list
 - artifact-warning
 - unsupported-pdf-objects
+
+## Admin mode
+- Obmedzená veľkosť súboru 
+- Obmedzené rozmery súboru 
+
