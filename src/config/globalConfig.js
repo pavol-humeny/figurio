@@ -60,6 +60,11 @@ export const globalConfig = {
     notEnabledMessage: 'This feature is currently not available.',
   },
 
+  // Random events configuration
+  randomEvents: {
+    enableSnowfall: true,
+  },
+
   // List of feature tour video identifiers to show in the feature tour modal
   listOfFeatureTourVideos: ['noiseDetection', 'cropTool', 'brushTool', 'shapeTool'],
   // Whether to update the list of seen feature tour videos on app version change
