@@ -7,6 +7,11 @@
     "4.18.4":{
       "label": "4.18.4",
       "date":"5.12. 2025",
+      "improvements": {
+        "items": [
+          "Do not open feature tour modal on each app start after it was closed manually"
+        ]
+      },
       "newFeatures": {
         "items": [
           "Contact form"

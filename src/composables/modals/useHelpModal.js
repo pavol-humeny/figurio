@@ -133,7 +133,7 @@ export function useHelpModal(uiStore, imageStore, editorStore, router, t) {
    */
   const openFeatureTourModalHelper = () => {
     closeHelpModal()
-    openFeatureTourModal()
+    openFeatureTourModal(false, [])
   }
 
   /**

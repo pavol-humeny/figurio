@@ -29,9 +29,24 @@ export function useFeatureTourModal() {
    * Open the modal
    * @param {string[]} seenIdentifiers - optional array of already seen video identifiers
    */
-  const openFeatureTourModal = (seenIdentifiers) => {
+  const openFeatureTourModal = (autoOpen = false, seenIdentifiers) => {
     if (isVisible.value) return
 
+    // Open only if numberOfFeatureTourCloses in localStorage is 0 else decrement and return
+    if (autoOpen === true) {
+      const storageKey = `${globalConfig.LOCAL_STORAGE_PREFIX}numberOfFeatureTourCloses`
+      const numClosesStr = localStorage.getItem(storageKey)
+      let numCloses = numClosesStr ? parseInt(numClosesStr, 10) : 0
+      if (isNaN(numCloses) || numCloses < 0) numCloses = 0
+
+      if (numCloses > 0) {
+        // Decrement and return
+        localStorage.setItem(storageKey, (numCloses - 1).toString())
+        return
+      }
+    }
+
+    // Determine which videos to show
     if (Array.isArray(seenIdentifiers)) {
       // Show only videos not in seenIdentifiers
       activeVideos.value = globalConfig.listOfFeatureTourVideos.filter(
@@ -74,6 +89,12 @@ export function useFeatureTourModal() {
    * Close the modal
    */
   const closeFeatureTourModal = () => {
+    // If activeVideos has more than 1 item, set numberOfFeatureTourCloses to 10 (do not auto open on each visit)
+    if (activeVideos.value.length > 1) {
+      const storageKey = `${globalConfig.LOCAL_STORAGE_PREFIX}numberOfFeatureTourCloses`
+      localStorage.setItem(storageKey, globalConfig.numberOfFeatureTourCloses.toString())
+    }
+
     isVisible.value = false
     activeVideos.value = []
   }

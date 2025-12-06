@@ -80,7 +80,7 @@ onMounted(() => {
   const seen = JSON.parse(localStorage.getItem(`${globalConfig.LOCAL_STORAGE_PREFIX}seenFeatureTour`) || '[]')
 
   // Open feature tour modal
-  openFeatureTourModal(seen)
+  openFeatureTourModal(true, seen)
 })
 </script>
 

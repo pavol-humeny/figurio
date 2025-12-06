@@ -66,6 +66,8 @@ export const globalConfig = {
   updateFeatureTourVideos: true,
   // List of feature tour video identifiers to remove from seen on app version change
   listOfFeatureTourVideosToRemoveFromSeen: [], // Features which should be shown again
+  // Number of times to skip auto open the feature tour modal
+  numberOfFeatureTourCloses: 10,
 
   // Max number of files to upload simultaneously
   maxNumberOfFilesToUploadSimultaneously: 1, // To avoid issues with image analysis on load
