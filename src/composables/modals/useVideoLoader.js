@@ -1,3 +1,5 @@
+import noiseDetectionVideo from '@/assets/videos/noiseDetection.mp4'
+
 import cropVideo from '@/assets/videos/crop.mp4'
 import cropToolVideo from '@/assets/videos/cropTool.mp4'
 import brushVideo from '@/assets/videos/brush.mp4'
@@ -66,6 +68,9 @@ export function useVideoLoader() {
           break
         case 'shapeTool':
           src = shapeVideo
+          break
+        case 'noiseDetection':
+          src = noiseDetectionVideo
           break
       }
     }
