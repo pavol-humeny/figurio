@@ -40,6 +40,10 @@ import { useSvgObjects } from '@/composables/tools/useSvgObjects';
 import { useCropTool } from '@/composables/tools/useCropTool';
 import { useBackgroundRemovalTool } from '@/composables/tools/useBackgroundRemovalTool';
 import { useImageAnalysis } from '@/composables/tools/useImageAnalysis';
+import { useFeatureTourModal } from '@/composables/modals/useFeatureTourModal';
+import { useCalibrationModal } from '@/composables/modals/useCalibrationModal';
+import { useImportModal } from '@/composables/modals/useImportModal';
+import { useReleaseModal } from '@/composables/modals/useReleaseModal';
 
 const { hideArtifacts } = useImageAnalysis(useImageStore(), useWorkspaceStore(), useUiStore(), t)
 
@@ -85,6 +89,15 @@ const { applyBackgroundRemovalRender } = useBackgroundRemovalTool(
   t,
 )
 
+const { closeHelpModal } = useHelpModal(useUiStore(), useImageStore(), useRouter(), t)
+const { closeSettingsPanel } = useSettingsPanel(useUiStore())
+const { closePrivacyAndDataModal } = usePrivacyAndDataModal(t)
+const { closeFeatureTourModal } = useFeatureTourModal()
+const { closeCalibrationModal } = useCalibrationModal(useViewportStore())
+const { closeExportToolSettings, exportFile } = useExportToolSettings(useImageStore(), useEditorStore(), useHistoryStore(), t)
+const { closeImportModal } = useImportModal()
+const { closeReleaseModal } = useReleaseModal()
+
 const imageStore = useImageStore()
 const editorStore = useEditorStore()
 const uiStore = useUiStore()
@@ -128,6 +141,15 @@ useKeyboardShortcuts({
   applyCrop,
   applyBackgroundRemovalRender,
   toggleCollapsiblePanel,
+  closeHelpModal,
+  closeSettingsPanel,
+  closePrivacyAndDataModal,
+  closeFeatureTourModal,
+  closeCalibrationModal,
+  closeExportToolSettings,
+  exportFile,
+  closeImportModal,
+  closeReleaseModal,
 }, useUiStore(), useEditorStore());
 // ======
 

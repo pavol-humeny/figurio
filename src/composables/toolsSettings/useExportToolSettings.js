@@ -1,4 +1,4 @@
-import { ref, computed, nextTick, watch, onMounted, onBeforeUnmount } from 'vue'
+import { ref, computed, nextTick, watch } from 'vue'
 import { useMath } from '../common/useMath'
 import { editorConfig } from '@/config/editorConfig'
 import { useConsole } from '@/composables/common/useConsole.js'
@@ -155,6 +155,8 @@ export function useExportToolSettings(imageStore, editorStore, historyStore, t) 
    * Trigger export using current settings
    */
   const exportFile = () => {
+    if (!isVisible.value) return
+
     const success = imageStore.exportFile(editorStore, historyStore, t)
     if (!success) {
       error('Failed to export file')
@@ -185,30 +187,6 @@ export function useExportToolSettings(imageStore, editorStore, historyStore, t) 
 
     return round(byteLength / 1024, 1) // in kB
   }
-
-  /**
-   * Handle keyboard shortcuts: Escape (close), Enter (export)
-   * @param {KeyboardEvent} event - The keydown event
-   */
-  const handleKeydown = (event) => {
-    if (event.key === 'Escape' && isVisible.value) {
-      event.preventDefault()
-      closeExportToolSettings()
-    } else if (event.key === 'Enter' && isVisible.value) {
-      event.preventDefault()
-      exportFile()
-    }
-  }
-
-  // Add event listener for Escape key to close the settings panel
-  onMounted(() => {
-    window.addEventListener('keydown', handleKeydown)
-  })
-
-  // Remove event listener on component unmount
-  onBeforeUnmount(() => {
-    window.removeEventListener('keydown', handleKeydown)
-  })
 
   return {
     isVisible,

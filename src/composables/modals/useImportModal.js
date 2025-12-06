@@ -1,4 +1,4 @@
-import { ref, onMounted, onBeforeUnmount } from 'vue'
+import { ref } from 'vue'
 import { useConsole } from '@/composables/common/useConsole.js'
 import { useApi } from '@/composables/common/useApi'
 const { addUserEvent } = useApi()
@@ -32,28 +32,6 @@ export function useImportModal() {
   const closeImportModal = () => {
     isVisible.value = false
   }
-
-  /**
-   * Handle Escape key to close the modal
-   *
-   * @param {KeyboardEvent} event
-   */
-  const handleKeydown = (event) => {
-    if (event.key === 'Escape' && isVisible.value) {
-      event.preventDefault()
-      closeImportModal()
-    }
-  }
-
-  // Register Escape key handler
-  onMounted(() => {
-    window.addEventListener('keydown', handleKeydown)
-  })
-
-  // Cleanup key handler on unmount
-  onBeforeUnmount(() => {
-    window.removeEventListener('keydown', handleKeydown)
-  })
 
   return {
     isVisible,

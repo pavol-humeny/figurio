@@ -222,6 +222,53 @@ export const keyboardShortcuts = [
     description: 'Close (pause) tutorial',
   },
 
+  // Modal closing shortcut
+  {
+    keys: ['escape'],
+    action: 'closeHelpModal',
+    description: 'Close help modal',
+  },
+  {
+    keys: ['escape'],
+    action: 'closePrivacyAndDataModal',
+    description: 'Close privacy and data modal',
+  },
+  {
+    keys: ['escape'],
+    action: 'closeFeatureTourModal',
+    description: 'Close feature tour modal',
+  },
+  {
+    keys: ['escape'],
+    action: 'closeSettingsPanel',
+    description: 'Close settings panel',
+  },
+  {
+    keys: ['escape'],
+    action: 'closeCalibrationModal',
+    description: 'Close calibration modal',
+  },
+  {
+    keys: ['escape'],
+    action: 'closeImportModal',
+    description: 'Close import modal',
+  },
+  {
+    keys: ['escape'],
+    action: 'closeReleaseModal',
+    description: 'Close release modal',
+  },
+  {
+    keys: ['escape'],
+    action: 'closeExportToolSettings',
+    description: 'Close export tool settings modal',
+  },
+  {
+    keys: ['enter'],
+    action: 'exportFile',
+    description: 'Export file',
+  },
+
   // Tools control shortcuts
   // Svg object operations
   {

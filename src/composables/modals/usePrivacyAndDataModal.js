@@ -1,4 +1,4 @@
-import { ref, onMounted, onBeforeUnmount } from 'vue'
+import { ref } from 'vue'
 import { useConfirmModal } from './useConfirmModal'
 import { useApi } from '@/composables/common/useApi'
 const { addUserEvent } = useApi()
@@ -61,28 +61,6 @@ export function usePrivacyAndDataModal(t) {
       location.reload()
     }
   }
-
-  /**
-   * Handle Escape key to close the modal
-   *
-   * @param {KeyboardEvent} event
-   */
-  const handleKeydown = (event) => {
-    if (event.key === 'Escape' && isVisible.value) {
-      event.preventDefault()
-      closePrivacyAndDataModal()
-    }
-  }
-
-  // Register Escape key handler
-  onMounted(() => {
-    window.addEventListener('keydown', handleKeydown)
-  })
-
-  // Cleanup key handler on unmount
-  onBeforeUnmount(() => {
-    window.removeEventListener('keydown', handleKeydown)
-  })
 
   return {
     isVisible,

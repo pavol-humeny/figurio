@@ -1,4 +1,4 @@
-import { ref, onMounted, nextTick, onBeforeUnmount } from 'vue'
+import { ref, onMounted, nextTick } from 'vue'
 import { useInteractiveTutorial } from '@/composables/tutorial/useInteractiveTutorial'
 import { useApi } from '@/composables/common/useApi'
 import { useFeatureTourModal } from '@/composables/modals/useFeatureTourModal'
@@ -88,18 +88,6 @@ export function useHelpModal(uiStore, imageStore, router, t) {
   }
 
   /**
-   * Handle Escape key to close the modal
-   *
-   * @param {KeyboardEvent} e
-   */
-  const handleKeydown = (e) => {
-    if (e.key === 'Escape' && isVisible.value) {
-      e.preventDefault()
-      closeHelpModal()
-    }
-  }
-
-  /**
    * Start the tutorial
    */
   const startInteractiveTutorial = () => {
@@ -120,16 +108,6 @@ export function useHelpModal(uiStore, imageStore, router, t) {
   // Check scroll position on mount
   onMounted(() => {
     nextTick(() => checkScroll())
-  })
-
-  // Register Escape key handler
-  onMounted(() => {
-    window.addEventListener('keydown', handleKeydown)
-  })
-
-  // Cleanup key handler on unmount
-  onBeforeUnmount(() => {
-    window.removeEventListener('keydown', handleKeydown)
   })
 
   /**

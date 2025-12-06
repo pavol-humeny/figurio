@@ -1,4 +1,4 @@
-import { ref, onMounted, nextTick, onBeforeUnmount } from 'vue'
+import { ref, onMounted, nextTick } from 'vue'
 import { useApi } from '@/composables/common/useApi'
 const { addUserEvent } = useApi()
 
@@ -82,31 +82,9 @@ export function useReleaseModal() {
     atBottom.value = element.scrollTop + element.clientHeight >= element.scrollHeight - 1
   }
 
-  /**
-   * Handle Escape key to close the modal
-   *
-   * @param {KeyboardEvent} e
-   */
-  const handleKeydown = (e) => {
-    if (e.key === 'Escape' && isVisible.value) {
-      e.preventDefault()
-      closeReleaseModal()
-    }
-  }
-
   // Check scroll position on mount
   onMounted(() => {
     nextTick(() => checkScroll())
-  })
-
-  // Register Escape key handler
-  onMounted(() => {
-    window.addEventListener('keydown', handleKeydown)
-  })
-
-  // Cleanup key handler on unmount
-  onBeforeUnmount(() => {
-    window.removeEventListener('keydown', handleKeydown)
   })
 
   return {

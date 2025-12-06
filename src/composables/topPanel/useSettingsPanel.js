@@ -101,18 +101,6 @@ export function useSettingsPanel(uiStore) {
   }
 
   /**
-   * Close panel on Escape key
-   *
-   * @param {KeyboardEvent} event - The keydown event
-   */
-  const handleKeydown = (event) => {
-    if (event.key === 'Escape' && isVisible.value) {
-      event.preventDefault()
-      closeSettingsPanel()
-    }
-  }
-
-  /**
    * Close panel when clicking outside of it
    *
    * @param {MouseEvent} event - The mouse event
@@ -134,13 +122,11 @@ export function useSettingsPanel(uiStore) {
 
   // Register global keydown listener to close settings panel
   onMounted(() => {
-    window.addEventListener('keydown', handleKeydown)
     window.addEventListener('mousedown', handleClickOutside)
   })
 
   // Cleanup listener on unmount
   onBeforeUnmount(() => {
-    window.removeEventListener('keydown', handleKeydown)
     window.removeEventListener('mousedown', handleClickOutside)
   })
 

@@ -1,4 +1,4 @@
-import { ref, onMounted, onBeforeUnmount, watch } from 'vue'
+import { ref, onMounted, watch } from 'vue'
 import { viewportConfig } from '@/config/viewportConfig'
 import { useApi } from '@/composables/common/useApi'
 const { addUserEvent } = useApi()
@@ -31,16 +31,6 @@ export function useCalibrationModal(viewportStore) {
    */
   const closeCalibrationModal = () => {
     isVisible.value = false
-  }
-
-  /**
-   * Handle keydown events for closing the modal with Escape key.
-   */
-  const handleKeydown = (event) => {
-    if (event.key === 'Escape' && isVisible.value) {
-      event.preventDefault()
-      closeCalibrationModal()
-    }
   }
 
   /**
@@ -96,11 +86,8 @@ export function useCalibrationModal(viewportStore) {
    * Setup and cleanup of keydown event listener
    */
   onMounted(() => {
-    window.addEventListener('keydown', handleKeydown)
-
     calibrationFactor.value = viewportStore.calibrationFactor
   })
-  onBeforeUnmount(() => window.removeEventListener('keydown', handleKeydown))
 
   return {
     isVisible,

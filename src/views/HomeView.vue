@@ -18,6 +18,8 @@ import FigurioLogoLight from '@/assets/FigurioLogoLight.png'
 import { useDragAndDropArea } from '@/composables/editor/useDragAndDropArea';
 import { useEditorStore } from '@/stores/editorStore';
 import { useFeatureTourModal } from '@/composables/modals/useFeatureTourModal';
+import { usePrivacyAndDataModal } from '@/composables/modals/usePrivacyAndDataModal';
+import { useReleaseModal } from '@/composables/modals/useReleaseModal';
 
 const { t, messages, locale } = useI18n()
 const router = useRouter()
@@ -27,8 +29,26 @@ const { uploadFile } = useUploadFileButton(useImageStore(), t, useRouter())
 const { openHelpModal } = useHelpModal(useUiStore(), useImageStore(), useRouter(), t)
 const { openSettingsPanel } = useSettingsPanel(useUiStore())
 const { prevStep, nextStep, finishTutorial, closeTutorial } = useInteractiveTutorial(useUiStore(), useImageStore(), useRouter(), t)
+const { closeHelpModal } = useHelpModal(useUiStore(), useImageStore(), useRouter(), t)
+const { closeSettingsPanel } = useSettingsPanel(useUiStore())
+const { closePrivacyAndDataModal } = usePrivacyAndDataModal(t)
+const { closeFeatureTourModal } = useFeatureTourModal()
+const { closeReleaseModal } = useReleaseModal()
 
-useKeyboardShortcuts({ uploadFile, openHelpModal, openSettingsPanel, prevStep, nextStep, finishTutorial, closeTutorial }, useUiStore(), useEditorStore());
+useKeyboardShortcuts({
+  uploadFile,
+  openHelpModal,
+  openSettingsPanel,
+  prevStep,
+  nextStep,
+  finishTutorial,
+  closeTutorial,
+  closeHelpModal,
+  closeSettingsPanel,
+  closePrivacyAndDataModal,
+  closeFeatureTourModal,
+  closeReleaseModal,
+}, useUiStore(), useEditorStore());
 
 /**
  * Computes the logo source based on the current theme.
