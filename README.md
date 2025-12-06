@@ -7,22 +7,22 @@
 - Videá pre nástroje 
 - Videá pre feature tour 
 - Farba sa do zoznamu farieb ukladá len raz (asi nedáva zmysel - treba premyslieť)
-- DONE Admin režim - režim bez obmedzení 
-- DONE Blikanie šumu 
-- DONE pri preklikávaní medzi feature tour sa meni velkost arei pre video ak ešte nie je načítané
-- DONE escape nezatvara feature tour, ale zatvori help modal pod tym 
+- DONE - Admin režim - režim bez obmedzení 
+- DONE - Blikanie šumu 
+- DONE - pri preklikávaní medzi feature tour sa meni velkost arei pre video ak ešte nie je načítané
+- DONE - escape nezatvara feature tour, ale zatvori help modal pod tym 
 - krok späť spôsobí zmazanie eventu artifacts warning 
-- SKIP (asi to je v pohode tak ako to je) zoomovanie pomocou tlacitok, ak je obrazok mimo stred tak to zoomuje mimo obrázok 
-- DONE Prepracovať zatváranie modalov pomocou ESCAPE - vytvoriť nejakú hierarchiu a zatvárať to z jedného miesta 
-- Skontrolovať či sa rámiky telefónu nejako neorezávajú 
+- SKIP - (asi to je v pohode tak ako to je) zoomovanie pomocou tlacitok, ak je obrazok mimo stred tak to zoomuje mimo obrázok 
+- DONE - Prepracovať zatváranie modalov pomocou ESCAPE - vytvoriť nejakú hierarchiu a zatvárať to z jedného miesta 
+- DONE - Skontrolovať či sa rámiky telefónu nejako neorezávajú 
 - Oblé zakončenie čiar (line tool)
 - FIXED - noise detection sa neskryje pri kliknutí na krížik ak tam je viac súborov 
 - noise detection sa zmaže pri undo operácie 
 - FIXED - pri aplikovaní operácie sa dá zoomovať obrazovka
 - FIXED - logo sa dá drag and drop do editoru 
 - pri dokreslení background removal canvas sa to sekne 
-- Pri vlozeni hodnoty do formulara sa spusti funkcia na kontrolu vlozenia obrazku
-- v help modal nefunguje ctrl + c, v
+- FIXED - Pri vlozeni hodnoty do formulara sa spusti funkcia na kontrolu vlozenia obrazku
+- FIXED - v help modal nefunguje ctrl + c, v
 - 3 úrovne pre auto background removal 
 - eye dropper na safari
 - zatvaranie pdf je strasne pomale

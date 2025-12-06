@@ -6,6 +6,29 @@
     ]
   },
   "versions": {
+    "4.18.4": {
+      "label": "4.18.4",
+      "date": "5.12. 2025",
+      "improvements": {
+        "items": [
+          "Po manuálním zavření se nepřepíná průvodce funkcemi při každém spuštění aplikace"
+        ]
+      },
+      "newFeatures": {
+        "items": [
+          "Kontaktní formulář"
+        ]
+      },
+      "bugFixes": {
+        "items": [
+          "Aplikaci nelze přiblížit při aplikování operace",
+          "Oprava načítání ikon",
+          "Oprava nefunkční kapátka při zakázaném výběru barev",
+          "Při drag & drop se obrázek nahraje pouze jednou",
+          "Povolení kopírování textů z editoru"
+        ]
+      }
+    },
     "4.18.3":{
       "label": "4.18.3",
       "date":"29.11. 2025",

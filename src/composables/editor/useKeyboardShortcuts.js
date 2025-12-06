@@ -64,8 +64,10 @@ export function useKeyboardShortcuts(actions, uiStore, editorStore) {
       // log(`[Shortcut] ${pressed} → ${shortcut.description}`)
 
       if (pressed === expected && type === expectedType) {
-        event.preventDefault()
-        event.stopImmediatePropagation()
+        if (!['ctrl+c', 'ctrl+v', 'ctrl+x', 'ctrl+a'].includes(pressed)) {
+          event.preventDefault()
+          event.stopImmediatePropagation()
+        }
 
         const fn = actions[shortcut.action]
         if (typeof fn === 'function') {

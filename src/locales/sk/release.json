@@ -6,6 +6,29 @@
     ]
   },
   "versions": {
+    "4.18.4": {
+      "label": "4.18.4",
+      "date": "5.12. 2025",
+      "improvements": {
+        "items": [
+          "Po manuálnom zatvorení sa neotvára prehliadka funkcií pri každom spustení aplikácie"
+        ]
+      },
+      "newFeatures": {
+        "items": [
+          "Kontaktný formulár"
+        ]
+      },
+      "bugFixes": {
+        "items": [
+          "Aplikáciu nie je možné priblížiť pri aplikovaní operácie",
+          "Oprava načítania ikon",
+          "Oprava nefunkčného kvapkadla farieb pri zakázanom výbere",
+          "Pri drag & drop sa obrázok nahrá iba raz",
+          "Povolenie kopírovania textov z editora"
+        ]
+      }
+    },
     "4.18.3":{
       "label": "4.18.3",
       "date":"29.11. 2025",
