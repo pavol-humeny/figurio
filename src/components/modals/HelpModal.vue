@@ -11,12 +11,10 @@ import { useImageStore } from '@/stores/imageStore';
 import { useInteractiveTutorial } from '@/composables/tutorial/useInteractiveTutorial';
 import { globalConfig } from '@/config/globalConfig';
 import { useApi } from '../../composables/common/useApi';
-import { useFeatureTourModal } from '@/composables/modals/useFeatureTourModal';
 
 const { messages, locale, t } = useI18n()
 const router = useRouter()
 const { addUserEvent } = useApi()
-const { openFeatureTourModal } = useFeatureTourModal();
 
 const uiStore = useUiStore()
 const imageStore = useImageStore()
@@ -52,6 +50,7 @@ const {
   closeHelpModal,
   startInteractiveTutorial,
   continueInteractiveTutorial,
+  openFeatureTourModalHelper,
 } = useHelpModal(useUiStore(), useImageStore(), useRouter(), t);
 
 const { isTutorialEnabled } = useInteractiveTutorial(
@@ -441,7 +440,7 @@ const showStatistics = () => {
                 </li>
               </ul>
               <div class="feature-tour-button">
-                <DefaultButton :text="$t('help.helpContent.featureTour.button.text')" @click="openFeatureTourModal()" />
+                <DefaultButton :text="$t('help.helpContent.featureTour.button.text')" @click="openFeatureTourModalHelper()" />
               </div>
             </div>
 

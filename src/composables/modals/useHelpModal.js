@@ -1,7 +1,10 @@
 import { ref, onMounted, nextTick, onBeforeUnmount } from 'vue'
 import { useInteractiveTutorial } from '@/composables/tutorial/useInteractiveTutorial'
 import { useApi } from '@/composables/common/useApi'
+import { useFeatureTourModal } from '@/composables/modals/useFeatureTourModal'
+
 const { addUserEvent } = useApi()
+const { openFeatureTourModal } = useFeatureTourModal()
 
 /**
  * Whether the help modal is currently visible
@@ -129,6 +132,14 @@ export function useHelpModal(uiStore, imageStore, router, t) {
     window.removeEventListener('keydown', handleKeydown)
   })
 
+  /**
+   * Open the feature tour modal from help modal
+   */
+  const openFeatureTourModalHelper = () => {
+    closeHelpModal()
+    openFeatureTourModal()
+  }
+
   return {
     helpContentRef,
     atTop,
@@ -141,5 +152,6 @@ export function useHelpModal(uiStore, imageStore, router, t) {
     closeHelpModal,
     startInteractiveTutorial,
     continueInteractiveTutorial,
+    openFeatureTourModalHelper,
   }
 }
