@@ -432,3 +432,17 @@ input[type='range']::-moz-range-thumb {
   font-weight: bold;
   color: var(--primary-c);
 }
+
+
+/* Modal styles */
+.modal-overlay{
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: var(--overlay-c);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}

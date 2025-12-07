@@ -15,7 +15,7 @@ const {
 
 <template>
   <Teleport to="body">
-    <div v-if="isVisible" class="import-modal-overlay" @mousedown.self="closeImportModal">
+    <div v-if="isVisible" class="import-modal-overlay modal-overlay" @mousedown.self="closeImportModal">
       <div class="modal-box">
         <DragAndDropArea />
         <DefaultButton :text="$t('dragAndDropArea.closeButton.text')" @click="closeImportModal" />
@@ -26,18 +26,7 @@ const {
 
 <style scoped>
 .import-modal-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  background: var(--overlay-c);
-  display: flex;
-  justify-content: center;
-  align-items: center;
   z-index: var(--z-index-import);
-  min-width: var(--min-window-width);
-  min-height: var(--min-window-height);
 }
 
 .modal-box {

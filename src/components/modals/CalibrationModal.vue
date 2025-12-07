@@ -27,7 +27,7 @@ const {
 
 <template>
   <Teleport to="body">
-    <div v-if="isVisible" class="calibration-modal-overlay" @mousedown.self="closeCalibrationModal">
+    <div v-if="isVisible" class="calibration-modal-overlay modal-overlay" @mousedown.self="closeCalibrationModal">
       <div class="modal-box">
         <div class="title-wrapper">
           <BaseIcon name="IconCalibration" size="28" color="var(--text-c)" />
@@ -78,18 +78,7 @@ const {
 
 <style scoped>
 .calibration-modal-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  background: var(--overlay-c);
-  display: flex;
-  justify-content: center;
-  align-items: center;
   z-index: var(--z-index-privacy);
-  min-width: var(--min-window-width);
-  min-height: var(--min-window-height);
 }
 
 .modal-box {

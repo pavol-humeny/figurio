@@ -26,7 +26,7 @@ const {
 
 <template>
   <Teleport to="body">
-    <div v-if="isVisible" class="privacy-modal-overlay" @mousedown.self="closePrivacyAndDataModal">
+    <div v-if="isVisible" class="privacy-modal-overlay modal-overlay" @mousedown.self="closePrivacyAndDataModal">
       <div class="modal-box">
         <div class="title-wrapper">
           <BaseIcon name="IconPrivacy" size="28" color="var(--text-c)" />
@@ -52,18 +52,7 @@ const {
 
 <style scoped>
 .privacy-modal-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  background: var(--overlay-c);
-  display: flex;
-  justify-content: center;
-  align-items: center;
   z-index: var(--z-index-privacy);
-  min-width: var(--min-window-width);
-  min-height: var(--min-window-height);
 }
 
 .modal-box {
