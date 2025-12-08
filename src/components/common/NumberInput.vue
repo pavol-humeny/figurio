@@ -140,10 +140,6 @@ input[type='number'] {
   font-size: var(--input-text-size);
 }
 
-.value-input::selection {
-  background: var(--primary-c);
-}
-
 .value-input:disabled {
   opacity: 0.5;
   pointer-events: none;

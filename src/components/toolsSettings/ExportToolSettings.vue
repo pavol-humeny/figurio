@@ -60,7 +60,7 @@ const {
           <div class="export-settings-item" v-if="fileFormat === 'jpg' || fileFormat === 'webp'">
             <label for="file-quality">{{
               $t('tools.export.settings.general.fileQuality.label')
-            }}</label>
+              }}</label>
             <p>{{ round(fileDimensions.quality) }} %</p>
             <DefaultSlider v-model="fileDimensions.quality" :min="0" :max="100" :step="1"
               @update:modelValue="(value) => updateQuality(value)" />
@@ -78,7 +78,7 @@ const {
           <div class="export-settings-item">
             <label>{{
               $t('tools.export.settings.general.fileDimensions.label')
-              }}</label>
+            }}</label>
             <div class="export-settings-item-value">
               <div class="width disabled">
                 <p>
@@ -216,10 +216,6 @@ const {
   color: var(--text-c);
 }
 
-.export-settings-item input::selection {
-  background: var(--primary-c);
-}
-
 .input-wrapper {
   position: relative;
   width: 100%;
@@ -282,54 +278,6 @@ const {
   align-items: center;
   padding: 5px;
   background: rgb(255, 255, 255);
-}
-
-/*********** Baseline, reset styles ***********/
-input[type='range'] {
-  -webkit-appearance: none;
-  appearance: none;
-  background: transparent;
-  cursor: pointer;
-  width: 100%;
-  padding: 0;
-}
-
-/******** Chrome, Safari, Opera and Edge Chromium styles ********/
-/* slider track */
-input[type='range']::-webkit-slider-runnable-track {
-  background-color: var(--background-c);
-  border-radius: 10px;
-  height: 10px;
-}
-
-/* slider thumb */
-input[type='range']::-webkit-slider-thumb {
-  -webkit-appearance: none;
-  /* Override default look */
-  appearance: none;
-  margin-top: -5px;
-  /* Centers thumb on the track */
-  background-color: var(--primary-c);
-  border-radius: 10px;
-  height: 20px;
-  width: 20px;
-}
-
-/*********** Firefox styles ***********/
-/* slider track */
-input[type='range']::-moz-range-track {
-  background-color: var(--background-c);
-  border-radius: 10px;
-  height: 10px;
-}
-
-/* slider thumb */
-input[type='range']::-moz-range-thumb {
-  background-color: var(--primary-c);
-  border: none;
-  border-radius: 10px;
-  height: 20px;
-  width: 20px;
 }
 
 .export-preview {

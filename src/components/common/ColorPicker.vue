@@ -243,10 +243,6 @@ defineExpose({ setValue })
   text-align: center;
 }
 
-.hex-input::selection {
-  background: var(--primary-c);
-}
-
 .recent-colors {
   display: flex;
   justify-content: space-between;

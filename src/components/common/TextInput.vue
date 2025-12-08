@@ -90,10 +90,6 @@ defineExpose({
   font-size: var(--input-text-size);
 }
 
-.text-input::selection {
-  background: var(--primary-c);
-}
-
 .text-input:disabled {
   opacity: 0.5;
   pointer-events: none;

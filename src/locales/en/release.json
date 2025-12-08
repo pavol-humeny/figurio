@@ -4,6 +4,15 @@
     "items": []
   },
   "versions":{
+    "4.18.5":{
+      "label": "4.18.5",
+      "date":"8.12. 2025",
+      "improvements": {
+        "items": [
+          "Highlight selected text inputs with primary color"
+        ]
+      }
+    },
     "4.18.4":{
       "label": "4.18.4",
       "date":"5.12. 2025",

@@ -173,10 +173,6 @@ const {
   outline: none;
 }
 
-.zoom-level::selection {
-  background: var(--primary-c);
-}
-
 .zoom-level-wrapper .zoom-level-percentage {
   background: var(--secondary-c);
   color: var(--text-c);

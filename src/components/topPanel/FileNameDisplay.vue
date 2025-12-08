@@ -57,10 +57,6 @@ const {
   outline: none;
 }
 
-.file-name-display-input::selection {
-  background: var(--primary-c);
-}
-
 .file-name-display-text {
   color: var(--text-primary);
   font-size: 15px;

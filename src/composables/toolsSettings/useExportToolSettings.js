@@ -81,8 +81,8 @@ export function useExportToolSettings(imageStore, editorStore, historyStore, t) 
       value: 'png',
     },
     {
-      label: 'JPEG',
-      value: 'jpeg',
+      label: 'JPG',
+      value: 'jpg',
     },
     {
       label: 'WEBP',

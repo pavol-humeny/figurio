@@ -146,6 +146,10 @@ input[type='number'] {
   -moz-appearance: textfield;
 }
 
+input::selection {
+  background: var(--primary-c);
+}
+
 /* Scrollbar styles */
 /* Chrome, Edge and Safari */
 *::-webkit-scrollbar {
