@@ -69,7 +69,8 @@ const closeFeatureTourModalWrapper = () => {
 
 <template>
   <Teleport to="body">
-    <div v-if="isVisible" class="feature-tour-modal-overlay modal-overlay" @mousedown.self="closeFeatureTourModalWrapper">
+    <div v-if="isVisible" class="feature-tour-modal-overlay modal-overlay"
+      @mousedown.self="closeFeatureTourModalWrapper">
       <div class="modal-box">
 
         <div class="card-wrapper">
@@ -183,7 +184,7 @@ const closeFeatureTourModalWrapper = () => {
 .dot {
   width: 12px;
   height: 12px;
-  background: var(--background-c);
+  background: var(--secondary-c);
   border-radius: 50%;
   cursor: pointer;
   transition: 0.2s;

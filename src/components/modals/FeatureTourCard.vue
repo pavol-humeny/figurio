@@ -80,7 +80,7 @@ onMounted(() => {
   width: 100%;
   height: 100%;
   border-radius: 20px;
-  background: var(--secondary-c);
+  background: var(--background-c);
   display: flex;
   flex-direction: column;
   align-items: center;
