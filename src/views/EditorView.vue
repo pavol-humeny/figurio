@@ -44,6 +44,7 @@ import { useFeatureTourModal } from '@/composables/modals/useFeatureTourModal';
 import { useCalibrationModal } from '@/composables/modals/useCalibrationModal';
 import { useImportModal } from '@/composables/modals/useImportModal';
 import { useReleaseModal } from '@/composables/modals/useReleaseModal';
+import { useUserModeStore } from '@/stores/userModeStore';
 
 const { hideArtifacts } = useImageAnalysis(useImageStore(), useWorkspaceStore(), useUiStore(), t)
 
@@ -53,7 +54,7 @@ const { closeFile } = useCloseFileButton(useImageStore(), useWorkspaceStore(), t
 const { uploadFile } = useUploadFileButton(useImageStore(), t, useRouter())
 const { toggleTool } = useToolsPanel(useEditorStore(), useImageStore(), useUiStore(), useWorkspaceStore(), t)
 const { openExportToolSettings } = useExportToolSettings(useImageStore(), useEditorStore(), useHistoryStore(), t)
-const { openHelpModal } = useHelpModal(useUiStore(), useImageStore(), useEditorStore(), useRouter(), t)
+const { openHelpModal } = useHelpModal(useUiStore(), useImageStore(), useEditorStore(), useUserModeStore(), useRouter(), t)
 const { openSettingsPanel } = useSettingsPanel(useUiStore())
 const { openPrivacyAndDataModal } = usePrivacyAndDataModal(t)
 const { startEditing } = useFileNameDisplay(useImageStore(), t)
@@ -89,7 +90,7 @@ const { applyBackgroundRemovalRender } = useBackgroundRemovalTool(
   t,
 )
 
-const { closeHelpModal } = useHelpModal(useUiStore(), useImageStore(), useEditorStore(), useRouter(), t)
+const { closeHelpModal } = useHelpModal(useUiStore(), useImageStore(), useEditorStore(), useUserModeStore(), useRouter(), t)
 const { closeSettingsPanel } = useSettingsPanel(useUiStore())
 const { closePrivacyAndDataModal } = usePrivacyAndDataModal(t)
 const { closeFeatureTourModal } = useFeatureTourModal()

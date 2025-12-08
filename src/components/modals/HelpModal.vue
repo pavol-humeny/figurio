@@ -12,6 +12,7 @@ import { useInteractiveTutorial } from '@/composables/tutorial/useInteractiveTut
 import { globalConfig } from '@/config/globalConfig';
 import { useApi } from '../../composables/common/useApi';
 import { useEditorStore } from '@/stores/editorStore';
+import { useUserModeStore } from '@/stores/userModeStore';
 
 const { messages, locale, t } = useI18n()
 const router = useRouter()
@@ -55,7 +56,7 @@ const {
   contactForm,
   submitContactForm,
   sendContactFormDisabled
-} = useHelpModal(useUiStore(), useImageStore(), useEditorStore(), useRouter(), t);
+} = useHelpModal(useUiStore(), useImageStore(), useEditorStore(), useUserModeStore(), useRouter(), t);
 
 const { isTutorialEnabled } = useInteractiveTutorial(
   useUiStore(),

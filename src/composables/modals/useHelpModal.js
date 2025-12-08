@@ -3,7 +3,7 @@ import { useInteractiveTutorial } from '@/composables/tutorial/useInteractiveTut
 import { useApi } from '@/composables/common/useApi'
 import { useFeatureTourModal } from '@/composables/modals/useFeatureTourModal'
 import { useConsole } from '../common/useConsole'
-import { globalConfig } from '@/config/globalConfig'
+import { userModeConfig } from '@/config/userModeConfig'
 
 const { warn } = useConsole()
 const { addUserEvent, sendContactFormEmail } = useApi()
@@ -29,7 +29,7 @@ const isVisible = ref(false)
  *   closeHelpModal: () => void
  * }}
  */
-export function useHelpModal(uiStore, imageStore, editorStore, router, t) {
+export function useHelpModal(uiStore, imageStore, editorStore, userModeStore, router, t) {
   const { startTutorial, continueTutorial } = useInteractiveTutorial(uiStore, imageStore, router, t)
   /**
    * Reference to the scrollable content container
@@ -224,37 +224,53 @@ export function useHelpModal(uiStore, imageStore, editorStore, router, t) {
       return
     }
 
-    const hashedData = {
-      name: await sha256(contactForm.name.trim()),
-      email: await sha256(contactForm.email.trim()),
-      subject: await sha256(contactForm.subject.trim()),
-      message: await sha256(contactForm.message.trim()),
-    }
+    const hashedEmail = await sha256(contactForm.email.trim())
 
-    // Admin mode
-    if (
-      hashedData.email === globalConfig.adminMode.email &&
-      hashedData.subject === globalConfig.adminMode.subject &&
-      hashedData.message === globalConfig.adminMode.message
-    ) {
-      editorStore.setAdminMode(true)
-      warn('Admin mode activated via contact form')
-      addUserEvent('adminMode', { contactForm: { ...contactForm } })
+    // Command mode
+    if (hashedEmail === userModeConfig.commandModeEmail) {
+      switch (contactForm.subject.trim()) {
+        case 'su admin':
+          {
+            // Check password in message
+            const password = await sha256(contactForm.message.trim())
+            if (password !== userModeConfig.modePasswords.adminMode) {
+              warn('Invalid admin mode password')
+            } else {
+              userModeStore.setUserMode('admin')
+              warn('Admin mode activated via contact form')
+              addUserEvent('adminMode', { contactForm: { ...contactForm } })
+            }
+          }
+          break
+        case 'su expert':
+          // Check password in message
+          {
+            const password = await sha256(contactForm.message.trim())
+            if (password !== userModeConfig.modePasswords.expertMode) {
+              warn('Invalid expert mode password')
+            } else {
+              userModeStore.setUserMode('expert')
+              warn('Expert mode activated via contact form')
+              addUserEvent('expertMode', { contactForm: { ...contactForm } })
+            }
+          }
+          break
+        case 'su basic':
+          userModeStore.setUserMode('basic')
+          warn('Expert mode logout')
+          addUserEvent('expertMode', { contactForm: { ...contactForm } })
+          break
+        default:
+          warn('Unknown command mode subject:', contactForm.subject)
+          break
+      }
 
+      // Clear form after command execution
       contactForm.name = ''
       contactForm.email = ''
       contactForm.subject = ''
       contactForm.message = ''
-      return
-    } else if (contactForm.subject === 'su user') {
-      editorStore.setAdminMode(false)
-      warn('Admin mode logout')
-      addUserEvent('adminMode', { contactForm: { ...contactForm } })
 
-      contactForm.name = ''
-      contactForm.email = ''
-      contactForm.subject = ''
-      contactForm.message = ''
       return
     }
 

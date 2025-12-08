@@ -15,9 +15,12 @@ import FigurioLogoLight from '@/assets/FigurioLogoLight.png'
 import { useRouter } from 'vue-router'
 import { ref } from 'vue'
 import { globalConfig } from '@/config/globalConfig';
+import BaseIcon from '@/components/icons/BaseIcon.vue'
+import { useUserModeStore } from '@/stores/userModeStore';
 
 const uiStore = useUiStore()
 const router = useRouter()
+const userModeStore = useUserModeStore()
 
 /**
  * Checks if the current view is 'home' to conditionally render parts of the top panel
@@ -74,7 +77,13 @@ const snowflakes = ref(
 
     <div class="top-panel-left" v-if="!isHomeView">
       <div class="top-panel-left-wrapper" id="top-panel-left">
-        <img @click="goHome" :src="logoSrc" alt="Figurio logo" @dragstart.prevent>
+        <div class="top-panel-logo-wrapper">
+          <img @click="goHome" :src="logoSrc" alt="Figurio logo" @dragstart.prevent>
+          <BaseIcon v-if="userModeStore.isExpertMode" class="user-mode-icon" name="IconStar" size="17"
+            color="var(--gold-c)" />
+          <BaseIcon v-if="userModeStore.isAdminMode" class="user-mode-icon" name="IconCrown" size="17"
+            color="var(--gold-c)" />
+        </div>
         <FileNameDisplay v-if="showControls" />
         <UploadFileButton v-if="showControls" />
         <CloseFileButton v-if="showControls" />
@@ -140,14 +149,27 @@ const snowflakes = ref(
   gap: 10px;
 }
 
-.top-panel-left img {
-  height: 40px;
+.top-panel-logo-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
   margin-right: 10px;
+}
+
+.user-mode-icon {
+  position: absolute;
+  top: -6px;
+  left: -4px;
+  filter: drop-shadow(var(--box-shadow-hover));
+}
+
+.top-panel-left .top-panel-logo-wrapper img {
+  height: 40px;
   transition: var(--default-transition);
   cursor: pointer;
 }
 
-.top-panel-left img:hover {
+.top-panel-left .top-panel-logo-wrapper img:hover {
   transition: var(--default-transition);
   filter: drop-shadow(var(--box-shadow-hover));
 }

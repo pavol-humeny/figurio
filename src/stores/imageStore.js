@@ -18,12 +18,12 @@ import { useGeneralModal } from '@/composables/modals/useGeneralModal'
 import { useApi } from '@/composables/common/useApi'
 const { addUserEvent } = useApi()
 import { useImageAnalysis } from '@/composables/tools/useImageAnalysis'
-import { useEditorStore } from './editorStore'
 
 pdfjsLib.GlobalWorkerOptions.workerSrc =
   'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js'
 
 import { useConsole } from '@/composables/common/useConsole.js'
+import { useUserModeStore } from './userModeStore'
 const { log, warn, error } = useConsole()
 
 const { showToastModal } = useToastModal()
@@ -576,9 +576,9 @@ export const useImageStore = defineStore('imageStore', {
      * @returns {boolean} - True if the file size is within limits, false otherwise
      */
     checkFileSize(fileSize, fileName, t) {
-      const editorStore = useEditorStore()
+      const userModeStore = useUserModeStore()
       // Skip detection
-      if (editorStore.isAdminModeEnabled) {
+      if (userModeStore.hasUserAccessToFeature('fileSize')) {
         return true
       }
 
@@ -607,9 +607,9 @@ export const useImageStore = defineStore('imageStore', {
      * @returns {boolean} - True if dimensions are within limits
      */
     checkFileDimensions(width, height, fileName, t) {
-      const editorStore = useEditorStore()
+      const userModeStore = useUserModeStore()
       // Skip detection
-      if (editorStore.isAdminModeEnabled) {
+      if (userModeStore.hasUserAccessToFeature('fileDimensions')) {
         return true
       }
 
@@ -1006,6 +1006,8 @@ export const useImageStore = defineStore('imageStore', {
      * @param {import('vue-router').Router} router - Vue router instance
      */
     loadFile(t, router) {
+      const userModeStore = useUserModeStore()
+
       const input = document.createElement('input')
       input.type = 'file'
       input.accept = '.png, .jpg, .jpeg, .pdf, .webp'
@@ -1018,15 +1020,17 @@ export const useImageStore = defineStore('imageStore', {
         const workspaceStore = useWorkspaceStore()
         const currentNumberOfTabs = workspaceStore.numberOfTabs
 
-        if (currentNumberOfTabs + input.files.length > globalConfig.maxNumberOfOpenFiles) {
-          showToastModal(
-            'error',
-            t('imageStore.toast.errorMaxNumberOfOpenFiles.title'),
-            t('imageStore.toast.errorMaxNumberOfOpenFiles.message', {
-              maxFiles: globalConfig.maxNumberOfOpenFiles,
-            }),
-          )
-          return
+        if (!userModeStore.hasUserAccessToFeature('maxNumberOfOpenFiles')) {
+          if (currentNumberOfTabs + input.files.length > globalConfig.maxNumberOfOpenFiles) {
+            showToastModal(
+              'error',
+              t('imageStore.toast.errorMaxNumberOfOpenFiles.title'),
+              t('imageStore.toast.errorMaxNumberOfOpenFiles.message', {
+                maxFiles: globalConfig.maxNumberOfOpenFiles,
+              }),
+            )
+            return
+          }
         }
 
         const filesArray = Array.from(input.files)
@@ -1043,15 +1047,17 @@ export const useImageStore = defineStore('imageStore', {
         }
 
         // Limit number of files if no PDF is present
-        if (!hasPdf && filesArray.length > globalConfig.maxNumberOfFilesToUploadSimultaneously) {
-          showToastModal(
-            'error',
-            t('imageStore.toast.errorMultipleFiles.title'),
-            t('imageStore.toast.errorMultipleFiles.message', {
-              maxFiles: globalConfig.maxNumberOfFilesToUploadSimultaneously,
-            }),
-          )
-          return
+        if (!userModeStore.hasUserAccessToFeature('maxNumberOfFilesToUploadSimultaneously')) {
+          if (!hasPdf && filesArray.length > globalConfig.maxNumberOfFilesToUploadSimultaneously) {
+            showToastModal(
+              'error',
+              t('imageStore.toast.errorMultipleFiles.title'),
+              t('imageStore.toast.errorMultipleFiles.message', {
+                maxFiles: globalConfig.maxNumberOfFilesToUploadSimultaneously,
+              }),
+            )
+            return
+          }
         }
 
         // Process files sequentially

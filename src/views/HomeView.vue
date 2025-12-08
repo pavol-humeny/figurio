@@ -20,16 +20,19 @@ import { useEditorStore } from '@/stores/editorStore';
 import { useFeatureTourModal } from '@/composables/modals/useFeatureTourModal';
 import { usePrivacyAndDataModal } from '@/composables/modals/usePrivacyAndDataModal';
 import { useReleaseModal } from '@/composables/modals/useReleaseModal';
+import { useUserModeStore } from '@/stores/userModeStore';
+import BaseIcon from '@/components/icons/BaseIcon.vue';
 
 const { t, messages, locale } = useI18n()
 const router = useRouter()
 const uiStore = useUiStore()
+const userModeStore = useUserModeStore()
 
 const { uploadFile } = useUploadFileButton(useImageStore(), t, useRouter())
-const { openHelpModal } = useHelpModal(useUiStore(), useImageStore(), useEditorStore(), useRouter(), t)
+const { openHelpModal } = useHelpModal(useUiStore(), useImageStore(), useEditorStore(), useUserModeStore(), useRouter(), t)
 const { openSettingsPanel } = useSettingsPanel(useUiStore())
 const { prevStep, nextStep, finishTutorial, closeTutorial } = useInteractiveTutorial(useUiStore(), useImageStore(), useRouter(), t)
-const { closeHelpModal } = useHelpModal(useUiStore(), useImageStore(), useEditorStore(), useRouter(), t)
+const { closeHelpModal } = useHelpModal(useUiStore(), useImageStore(), useEditorStore(), useUserModeStore(), useRouter(), t)
 const { closeSettingsPanel } = useSettingsPanel(useUiStore())
 const { closePrivacyAndDataModal } = usePrivacyAndDataModal(t)
 const { closeFeatureTourModal } = useFeatureTourModal()
@@ -90,7 +93,13 @@ onMounted(() => {
 
     <div class="left-side">
       <div class="app-name">
-        <img :src="logoSrc" alt="Figurio logo" :style="{ 'user-select': 'none' }" @dragstart.prevent>
+        <div class="logo-wrapper">
+          <img :src="logoSrc" alt="Figurio logo" :style="{ 'user-select': 'none' }" @dragstart.prevent>
+          <BaseIcon v-if="userModeStore.isExpertMode" class="user-mode-icon" name="IconStar" size="25"
+            color="var(--gold-c)" />
+          <BaseIcon v-if="userModeStore.isAdminMode" class="user-mode-icon" name="IconCrown" size="25"
+            color="var(--gold-c)" />
+        </div>
         <h2><span class="highlight-e">{{ $t('home.appNameHighlight') }}</span>{{ $t('home.appNameBasic') }}
         </h2>
       </div>
@@ -151,12 +160,25 @@ onMounted(() => {
   gap: calc(var(--landing-page-logo-size) / 4);
 }
 
-.app-name img {
+.logo-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.user-mode-icon {
+  position: absolute;
+  top: -6px;
+  left: -4px;
+  filter: drop-shadow(var(--box-shadow-hover));
+}
+
+.app-name .logo-wrapper img {
   height: var(--landing-page-logo-size);
   transition: var(--default-transition);
 }
 
-.app-name img:hover {
+.app-name .logo-wrapper img:hover {
   transition: var(--default-transition);
   filter: drop-shadow(var(--box-shadow-hover));
 }
