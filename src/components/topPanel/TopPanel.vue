@@ -199,7 +199,7 @@ const snowflakes = ref(
 
 .snowflake {
   position: absolute;
-  color: white;
+  color: var(--text-c);
   user-select: none;
   animation-name: fall;
   animation-timing-function: linear;

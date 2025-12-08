@@ -30,7 +30,7 @@ const {
 }
 
 .modal-box {
-  background: var(--secondary-c);
+  background: var(--background-c);
   border: var(--border-modal);
   padding: 25px 30px 15px 30px;
   border-radius: 20px;

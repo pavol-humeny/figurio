@@ -9,6 +9,7 @@ import DefaultSlider from '@/components/common/DefaultSlider.vue'
 import { useEditorStore } from '@/stores/editorStore'
 import { useHistoryStore } from '@/stores/historyStore'
 import { useMath } from '@/composables/common/useMath'
+import DropdownSelect from '../common/DropdownSelect.vue'
 
 const { t } = useI18n()
 const { round } = useMath()
@@ -34,7 +35,8 @@ const {
   exportFile,
   previewUrl,
   copyImageToClipboard,
-  expectedPreviewSize
+  expectedPreviewSize,
+  fileFormatOptions
 } = useExportToolSettings(useImageStore(), useEditorStore(), useHistoryStore(), t)
 </script>
 
@@ -50,23 +52,18 @@ const {
 
           <!-- File format -->
           <div class="export-settings-item">
-            <label for="file-format">{{ $t('tools.export.settings.general.fileFormat') }}</label>
-            <select id="file-format" v-model="fileFormat">
-              <option value="png">PNG</option>
-              <option value="jpg">JPG</option>
-              <option value="pdf">PDF</option>
-              <option value="webp">WebP</option>
-            </select>
+            <label>{{ $t('tools.export.settings.general.fileFormat') }}</label>
+            <DropdownSelect v-model="fileFormat" :options="fileFormatOptions" />
           </div>
 
           <!-- Quality setting -->
           <div class="export-settings-item" v-if="fileFormat === 'jpg' || fileFormat === 'webp'">
             <label for="file-quality">{{
               $t('tools.export.settings.general.fileQuality.label')
-              }}</label>
+            }}</label>
             <p>{{ round(fileDimensions.quality) }} %</p>
             <DefaultSlider v-model="fileDimensions.quality" :min="0" :max="100" :step="1"
-              @update:modelValue="(value) => updateQuality(value)" :backgroundColor="'var(--background-c)'" />
+              @update:modelValue="(value) => updateQuality(value)" />
           </div>
 
           <!-- File name -->
@@ -81,7 +78,7 @@ const {
           <div class="export-settings-item">
             <label>{{
               $t('tools.export.settings.general.fileDimensions.label')
-            }}</label>
+              }}</label>
             <div class="export-settings-item-value">
               <div class="width disabled">
                 <p>
@@ -156,7 +153,7 @@ const {
 }
 
 .export-box {
-  background: var(--secondary-c);
+  background: var(--background-c);
   border: var(--border-modal);
   padding: 40px 50px;
   border-radius: 20px;
@@ -215,8 +212,12 @@ const {
   padding: 7px 25px 7px 10px;
   border-radius: 10px;
   border: none;
-  background: var(--background-c);
+  background: var(--secondary-c);
   color: var(--text-c);
+}
+
+.export-settings-item input::selection {
+  background: var(--primary-c);
 }
 
 .input-wrapper {
@@ -235,7 +236,7 @@ const {
 }
 
 .export-settings-item-value {
-  background-color: var(--background-c);
+  background-color: var(--secondary-c);
   border-radius: 10px;
   padding: 7px 10px;
   display: flex;
@@ -359,4 +360,5 @@ input[type='range']::-moz-range-thumb {
   align-items: center;
   border-radius: 10px;
 }
+
 </style>

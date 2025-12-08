@@ -73,6 +73,28 @@ export function useExportToolSettings(imageStore, editorStore, historyStore, t) 
   const fileDimensions = computed(() => imageStore.newFileDimensions)
 
   /**
+   * Available file format options for export
+   */
+  const fileFormatOptions = [
+    {
+      label: 'PNG',
+      value: 'png',
+    },
+    {
+      label: 'JPEG',
+      value: 'jpeg',
+    },
+    {
+      label: 'WEBP',
+      value: 'webp',
+    },
+    {
+      label: 'PDF',
+      value: 'pdf',
+    },
+  ]
+
+  /**
    * Watch for changes in the file format and regenerate preview
    */
   watch(
@@ -202,5 +224,6 @@ export function useExportToolSettings(imageStore, editorStore, historyStore, t) 
     previewUrl,
     copyImageToClipboard,
     expectedPreviewSize,
+    fileFormatOptions,
   }
 }

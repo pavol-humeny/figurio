@@ -120,7 +120,7 @@ const closeFeatureTourModalWrapper = () => {
   flex-direction: column;
   align-items: center;
   justify-content: space-between;
-  background: var(--secondary-c);
+  background: var(--background-c);
   border-radius: 20px;
   border: var(--border-modal);
   box-shadow: var(--box-shadow-ui);

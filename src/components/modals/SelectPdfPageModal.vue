@@ -48,7 +48,7 @@ watch(selectedPage, (value) => {
     <p class="modal-text">{{ t('imageStore.modal.selectPdfPage.message') }}</p>
     <div class="page-selection">
       <NumberDropdownInput v-model="selectedPage" :options="pageOptions" :min="1" :max="payload?.numberOfPages || 1"
-        :style="{ width: 100 }" :background="'var(--background-c)'" />
+        :style="{ width: 100 }" />
 
       <p class="page-range">
         {{ t('imageStore.modal.selectPdfPage.pageRange', { from: 1, to: payload?.numberOfPages || 1 }) }}

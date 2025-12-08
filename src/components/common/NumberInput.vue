@@ -116,7 +116,7 @@ defineExpose({ setValue })
         :style="{ top: props.iconTop + '%' }" />
       <span v-if="showUnit" class="input-unit" :class="{ disabled: props.disabled }">{{
         props.unit
-        }}</span>
+      }}</span>
     </div>
   </ItemTip>
 </template>
@@ -138,6 +138,10 @@ input[type='number'] {
   background: var(--secondary-c);
   color: var(--text-c);
   font-size: var(--input-text-size);
+}
+
+.value-input::selection {
+  background: var(--primary-c);
 }
 
 .value-input:disabled {

@@ -555,7 +555,7 @@ const showStatistics = () => {
 }
 
 .modal-box {
-  background: var(--secondary-c);
+  background: var(--background-c);
   border: var(--border-modal);
   padding: 25px 30px;
   border-radius: 20px;
@@ -766,7 +766,7 @@ const showStatistics = () => {
   padding: var(--input-top-padding) 10px var(--input-top-padding) 10px;
   border-radius: var(--input-border-radius);
   border: none;
-  background: var(--background-c);
+  background: var(--secondary-c);
   color: var(--text-c);
   font-size: var(--input-text-size);
 }
