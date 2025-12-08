@@ -569,7 +569,7 @@ const showStatistics = () => {
 }
 
 .help-question-mark {
-  background: var(--text-c);
+  background: var(--primary-c);
   border-radius: 50%;
   padding: 3px;
 }
@@ -586,6 +586,7 @@ const showStatistics = () => {
 .title-wrapper p {
   font-size: var(--title-font-size);
   font-weight: var(--title-font-weight);
+  color: var(--primary-c);
 }
 
 .help-content-panel {

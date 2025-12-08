@@ -30,7 +30,7 @@ const {
     <div v-if="isVisible" class="calibration-modal-overlay modal-overlay" @mousedown.self="closeCalibrationModal">
       <div class="modal-box">
         <div class="title-wrapper">
-          <BaseIcon name="IconCalibration" size="28" color="var(--text-c)" />
+          <BaseIcon name="IconCalibration" size="28" color="var(--primary-c)" />
           <p>{{ $t('calibration.title') }}</p>
         </div>
 
@@ -107,6 +107,7 @@ const {
 .title-wrapper p {
   font-size: var(--title-font-size);
   font-weight: var(--title-font-weight);
+  color: var(--primary-c);
 }
 
 .description-wrapper {
@@ -183,7 +184,7 @@ const {
 /* Slider for WebKit + Firefox */
 /* Track - WebKit (Chrome, Edge, Safari) */
 input[type='range']::-webkit-slider-runnable-track {
-  background-color: var(--background-c);
+  background-color: var(--secondary-c);
   border-radius: 10px;
   height: 10px;
 }
@@ -202,7 +203,7 @@ input[type='range']::-webkit-slider-thumb {
 
 /* Track - Firefox */
 input[type="range"]::-moz-range-track {
-  background-color: var(--background-c);
+  background-color: var(--secondary-c);
   border-radius: 10px;
   height: 10px;
 }

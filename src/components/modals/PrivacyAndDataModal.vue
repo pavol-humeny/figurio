@@ -29,7 +29,7 @@ const {
     <div v-if="isVisible" class="privacy-modal-overlay modal-overlay" @mousedown.self="closePrivacyAndDataModal">
       <div class="modal-box">
         <div class="title-wrapper">
-          <BaseIcon name="IconPrivacy" size="28" color="var(--text-c)" />
+          <BaseIcon name="IconPrivacy" size="28" color="var(--primary-c)" />
           <p>{{ $t('privacy.title') }}</p>
         </div>
 
@@ -81,6 +81,7 @@ const {
 .title-wrapper p {
   font-size: var(--title-font-size);
   font-weight: var(--title-font-weight);
+  color: var(--primary-c);
 }
 
 .messages-wrapper {

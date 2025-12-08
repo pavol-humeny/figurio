@@ -154,6 +154,7 @@ const {
 .title-wrapper p {
   font-size: var(--title-font-size);
   font-weight: var(--title-font-weight);
+  color: var(--primary-c);
 }
 
 .release-content-panel {

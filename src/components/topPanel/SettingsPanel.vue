@@ -28,7 +28,7 @@ const {
   <div id="settings-panel" class="settings-panel" v-if="isVisible">
     <!-- Title -->
     <div class="settings-panel-label">
-      <BaseIcon name="IconSettings" :size="28" :color="'var(--text-c)'" />
+      <BaseIcon name="IconSettings" :size="28" :color="'var(--primary-c)'" />
       <p>
         {{ $t('topPanel.settingsPanel.title') }}
       </p>
@@ -120,6 +120,12 @@ const {
   font-size: var(--title-font-size);
   margin-bottom: 20px;
 }
+
+.settings-panel-label p {
+  font-weight: var(--title-font-weight);
+  color: var(--primary-c);
+}
+
 
 .section {
   margin: 15px 0;
