@@ -328,7 +328,7 @@ const cursorStyle = computed(() => {
           ? 'IconNormalMode'
           : backgroundMode === 'lightContrast'
             ? 'IconLightMode'
-            : 'IconDarkMode'" size="27" />
+            : 'IconDarkMode'" size="26" />
       </ItemTip>
     </div>
 
@@ -374,7 +374,7 @@ const cursorStyle = computed(() => {
         </div>
         <div v-if="mouseX !== null" class="ruler-cursor-mark horizontal" :style="{ left: mouseX + 'px' }">
           <span class="ruler-cursor-label horizontal" :class="{ 'active': cursorPosXSameAsImageWidth }">{{ cursorPosX
-            }}</span>
+          }}</span>
         </div>
 
       </div>
@@ -387,7 +387,7 @@ const cursorStyle = computed(() => {
         </div>
         <div v-if="mouseY !== null" class="ruler-cursor-mark vertical" :style="{ top: mouseY + 'px' }">
           <span class="ruler-cursor-label vertical" :class="{ 'active': cursorPosYSameAsImageHeight }">{{ cursorPosY
-            }}</span>
+          }}</span>
         </div>
       </div>
     </div>
@@ -481,7 +481,7 @@ const cursorStyle = computed(() => {
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: var(--box-shadow-hover);
+  /* box-shadow: var(--box-shadow-ui); */
 }
 
 .contrast-mode-button {

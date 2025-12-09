@@ -90,7 +90,6 @@ onMounted(() => {
 
 .video-wrapper {
   width: 100%;
-  /* aspect-ratio: 16 / 8; */
   aspect-ratio: 16 / 8;
   border-top-left-radius: 18px;
   border-top-right-radius: 18px;
@@ -101,7 +100,7 @@ onMounted(() => {
   width: 100%;
   height: 100%;
   object-fit: fill;
-  background: black;
+  background: var(--background-c);
 }
 
 .card-content-wrapper {

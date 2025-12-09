@@ -178,11 +178,6 @@ onMounted(() => {
   transition: var(--default-transition);
 }
 
-.app-name .logo-wrapper img:hover {
-  transition: var(--default-transition);
-  filter: drop-shadow(var(--box-shadow-hover));
-}
-
 .app-name h2 {
   font-size: var(--landing-page-app-name-font-size);
   font-weight: var(--landing-page-app-name-font-weight);

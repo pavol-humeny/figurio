@@ -22,6 +22,10 @@
 - Expand header nefunguje dobre pri velkej hrubke ramiku 
 - prerobit resize tool, najskor sa nastavi velkost a az potom sa aplikuje
 - možno odstrániť hover efekt nad logom na home page 
+- pixely od určitej úrovne pri približovaní 
+- pixely by sa mohli dať prepínať manuálne 
+- Zjednodušiť nápovedy (kratšie texty)
+- šípky pre posúvanie (panel s nástrojmi, help, release note) by mohli fungovať aj na držanie
 
 
 ## Admin mode 
