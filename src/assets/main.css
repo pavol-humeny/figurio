@@ -19,6 +19,12 @@
   }
 }
 
+/* Text selection color */
+::selection {
+  background: var(--primary-c); /* color of highlight */
+  color: var(--text-c)
+}
+
 /* Buttons styles */
 .button {
   border-radius: 20px;
