@@ -102,7 +102,15 @@
     },
     "contactAndFeedback": {
       "title": "Kontakt a zpětná vazba",
-      "text": "Pokud máte jakékoli dotazy, návrhy nebo zpětnou vazbu k editoru, kontaktujte mě na:"
+      "text": "Pokud máte jakékoli dotazy, návrhy nebo zpětnou vazbu k editoru, kontaktujte mě pomocí níže uvedeného formuláře nebo e-mailem na adresu:",
+      "contactForm": {
+        "name": "Jméno",
+        "email": "E-mail",
+        "subject": "Předmět",
+        "message": "Zpráva",
+        "password": "Heslo",
+        "send": "Odeslat zprávu"
+      }
     }
   },
   "closeButton": {

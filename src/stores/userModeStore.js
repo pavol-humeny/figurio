@@ -3,11 +3,23 @@ import { defineStore } from 'pinia'
 import { globalConfig } from '@/config/globalConfig.js'
 
 /**
+ * Retrieves a string from localStorage.
+ *
+ * @param {string} key - The localStorage key to read from.
+ * @param {string} fallback - The default value if the key is not found.
+ * @returns {string} The stored string or the fallback.
+ */
+const getString = (key, fallback) => {
+  const value = localStorage.getItem(key)
+  return value !== null ? value : fallback
+}
+
+/**
  * Store managing undo/redo history for image operations
  */
 export const useUserModeStore = defineStore('userModeStore', {
   state: () => ({
-    userMode: localStorage.getItem(`${globalConfig.LOCAL_STORAGE_PREFIX}userMode`) || 'basic', // 'basic', 'expert', 'admin'
+    userMode: getString(`${globalConfig.LOCAL_STORAGE_PREFIX}userMode`, 'basic'),
   }),
   getters: {
     /**
@@ -28,6 +40,12 @@ export const useUserModeStore = defineStore('userModeStore', {
     isExpertMode(state) {
       return state.userMode === 'expert'
     },
+    /**
+     * Check if user is in expert or admin mode
+     */
+    isExpertOrAdminMode(state) {
+      return state.userMode === 'expert' || state.userMode === 'admin'
+    },
   },
   actions: {
     /**
@@ -37,7 +55,7 @@ export const useUserModeStore = defineStore('userModeStore', {
     setUserMode(mode) {
       this.userMode = mode
       // Save to localStorage
-      localStorage.setItem(`${globalConfig.LOCAL_STORAGE_PREFIX}userMode`, JSON.stringify(mode))
+      localStorage.setItem(`${globalConfig.LOCAL_STORAGE_PREFIX}userMode`, mode)
     },
 
     /**

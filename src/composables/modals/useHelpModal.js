@@ -54,12 +54,18 @@ export function useHelpModal(uiStore, imageStore, editorStore, userModeStore, ro
     email: '',
     subject: '',
     message: '',
+    password: '',
   })
 
   /**
    * Whether the send contact form button is disabled
    */
   const sendContactFormDisabled = ref(true)
+
+  /**
+   * Whether the provided email is the command mode email
+   */
+  const isCommandEmail = ref(false)
 
   /**
    * Whether the subject input is wrong (for command mode feedback)
@@ -72,9 +78,9 @@ export function useHelpModal(uiStore, imageStore, editorStore, userModeStore, ro
   const subjectInputSuccess = ref(false)
 
   /**
-   * Whether a message is needed (for command mode feedback)
+   * Whether the password input is wrong (for command mode feedback)
    */
-  const messageNeeded = ref(false)
+  const passwordInputWrong = ref(false)
 
   /**
    * Open the help modal
@@ -162,14 +168,26 @@ export function useHelpModal(uiStore, imageStore, editorStore, userModeStore, ro
   }
 
   /**
+   * Password visibility toggle for command mode
+   */
+  const showPassword = ref(false)
+
+  /**
+   * Toggle password visibility
+   */
+  const togglePasswordVisibility = () => {
+    showPassword.value = !showPassword.value
+  }
+
+  /**
    * Watch contact form fields to enable/disable the send button
    */
   watch(
     () => ({ ...contactForm }),
-    (val) => {
+    async (val) => {
       subjectInputWrong.value = false
       subjectInputSuccess.value = false
-      messageNeeded.value = false
+      passwordInputWrong.value = false
 
       // Truncate fields if they exceed max length
       if (val.name.length > 25) contactForm.name = val.name.slice(0, 25)
@@ -182,6 +200,14 @@ export function useHelpModal(uiStore, imageStore, editorStore, userModeStore, ro
       contactForm.email = contactForm.email.trimStart()
       contactForm.subject = contactForm.subject.trimStart()
       contactForm.message = contactForm.message.trimStart()
+
+      const hashedEmail = await sha256(contactForm.email.trim())
+      // Command mode
+      if (hashedEmail === userModeConfig.commandModeEmail) {
+        isCommandEmail.value = true
+      } else {
+        isCommandEmail.value = false
+      }
 
       // Check if all fields are non-empty
       const allFilled =
@@ -216,110 +242,159 @@ export function useHelpModal(uiStore, imageStore, editorStore, userModeStore, ro
     return [...new Uint8Array(hashBuffer)].map((b) => b.toString(16).padStart(2, '0')).join('')
   }
 
-  const handleCommand = async () => {
-    // Need email and subject for command mode
-    if (contactForm.email.trim() === '' || contactForm.subject.trim() === '') {
-      return false
-    }
+  // const handleCommand = async () => {
+  //   // Need email and subject for command mode
+  //   if (contactForm.email.trim() === '' || contactForm.subject.trim() === '') {
+  //     return false
+  //   }
 
-    const hashedEmail = await sha256(contactForm.email.trim())
+  //   const hashedEmail = await sha256(contactForm.email.trim())
 
-    // Command mode
-    if (hashedEmail === userModeConfig.commandModeEmail) {
-      switch (contactForm.subject.trim()) {
-        case 'su admin':
-          {
-            // Check password in message
-            const password = await sha256(contactForm.message.trim())
-            if (password !== userModeConfig.modePasswords.adminMode) {
-              warn('Invalid admin mode password')
-              subjectInputWrong.value = true
-              messageNeeded.value = true
-              return false
-            } else {
-              userModeStore.setUserMode('admin')
-              warn('Admin mode activated via contact form')
-              addUserEvent('adminMode', { contactForm: { ...contactForm } })
-            }
-          }
-          break
-        case 'su expert':
-          // Check password in message
-          {
-            const password = await sha256(contactForm.message.trim())
-            if (password !== userModeConfig.modePasswords.expertMode) {
-              warn('Invalid expert mode password')
-              subjectInputWrong.value = true
-              messageNeeded.value = true
-              return false
-            } else {
-              userModeStore.setUserMode('expert')
-              warn('Expert mode activated via contact form')
-              addUserEvent('expertMode', { contactForm: { ...contactForm } })
-            }
-          }
-          break
-        case 'su basic':
-          userModeStore.setUserMode('basic')
-          warn('Expert mode logout')
-          addUserEvent('expertMode', { contactForm: { ...contactForm } })
-          break
-        case 'turn on randomEvents':
-          editorStore.randomEvents.snowfallActive = true
-          editorStore.randomEvents.christmasLightsActive = true
-          warn('Random events enabled via contact form')
-          addUserEvent('command', { commandIdentifier: 'turn on randomEvents' })
-          break
-        case 'turn off randomEvents':
-          editorStore.randomEvents.snowfallActive = false
-          editorStore.randomEvents.christmasLightsActive = false
-          warn('Random events disabled via contact form')
-          addUserEvent('command', { commandIdentifier: 'turn off randomEvents' })
-          break
-        case 'turn on snowfall':
-          editorStore.randomEvents.snowfallActive = true
-          warn('Snowfall enabled via contact form')
-          addUserEvent('command', { commandIdentifier: 'turn on snowfall' })
-          break
-        case 'turn off snowfall':
-          editorStore.randomEvents.snowfallActive = false
-          warn('Snowfall disabled via contact form')
-          addUserEvent('command', { commandIdentifier: 'turn off snowfall' })
-          break
-        case 'turn on christmasLights':
-          editorStore.randomEvents.christmasLightsActive = true
-          warn('Christmas lights enabled via contact form')
-          addUserEvent('command', { commandIdentifier: 'turn on christmasLights' })
-          break
-        case 'turn off christmasLights':
-          editorStore.randomEvents.christmasLightsActive = false
-          warn('Christmas lights disabled via contact form')
-          addUserEvent('command', { commandIdentifier: 'turn off christmasLights' })
-          break
-        case 'clear':
-          contactForm.name = ''
-          contactForm.email = ''
-          contactForm.subject = ''
-          contactForm.message = ''
-          break
-        default:
-          warn('Unknown command mode subject:', contactForm.subject)
-          subjectInputWrong.value = true
-          return
+  //   // Command mode
+  //   if (hashedEmail === userModeConfig.commandModeEmail) {
+  //     switch (contactForm.subject.trim()) {
+  //       case 'su admin':
+  //         {
+  //           // Check password in message
+  //           const password = await sha256(contactForm.message.trim())
+  //           if (password !== userModeConfig.modePasswords.adminMode) {
+  //             warn('Invalid admin mode password')
+  //             subjectInputWrong.value = true
+  //             return false
+  //           } else {
+  //             userModeStore.setUserMode('admin')
+  //             warn('Admin mode activated via contact form')
+  //             addUserEvent('adminMode', { contactForm: { ...contactForm } })
+  //           }
+  //         }
+  //         break
+  //       case 'su expert':
+  //         // Check password in message
+  //         {
+  //           const password = await sha256(contactForm.message.trim())
+  //           if (password !== userModeConfig.modePasswords.expertMode) {
+  //             warn('Invalid expert mode password')
+  //             subjectInputWrong.value = true
+  //             return false
+  //           } else {
+  //             userModeStore.setUserMode('expert')
+  //             warn('Expert mode activated via contact form')
+  //             addUserEvent('expertMode', { contactForm: { ...contactForm } })
+  //           }
+  //         }
+  //         break
+  //       case 'su basic':
+  //         userModeStore.setUserMode('basic')
+  //         warn('Expert mode logout')
+  //         addUserEvent('expertMode', { contactForm: { ...contactForm } })
+  //         break
+  //       case 'turn on randomEvents':
+  //         editorStore.randomEvents.snowfallActive = true
+  //         editorStore.randomEvents.christmasLightsActive = true
+  //         warn('Random events enabled via contact form')
+  //         addUserEvent('command', { commandIdentifier: 'turn on randomEvents' })
+  //         break
+  // case 'turn off randomEvents':
+  //   editorStore.randomEvents.snowfallActive = false
+  //   editorStore.randomEvents.christmasLightsActive = false
+  //   warn('Random events disabled via contact form')
+  //   addUserEvent('command', { commandIdentifier: 'turn off randomEvents' })
+  //         break
+        // case 'turn on snowfall':
+        //   editorStore.randomEvents.snowfallActive = true
+        //   warn('Snowfall enabled via contact form')
+        //   addUserEvent('command', { commandIdentifier: 'turn on snowfall' })
+        //   break
+        // case 'turn off snowfall':
+        //   editorStore.randomEvents.snowfallActive = false
+        //   warn('Snowfall disabled via contact form')
+        //   addUserEvent('command', { commandIdentifier: 'turn off snowfall' })
+        //   break
+        // case 'turn on christmasLights':
+        //   editorStore.randomEvents.christmasLightsActive = true
+        //   warn('Christmas lights enabled via contact form')
+        //   addUserEvent('command', { commandIdentifier: 'turn on christmasLights' })
+        //   break
+        // case 'turn off christmasLights':
+        //   editorStore.randomEvents.christmasLightsActive = false
+        //   warn('Christmas lights disabled via contact form')
+        //   addUserEvent('command', { commandIdentifier: 'turn off christmasLights' })
+        //   break
+  //       case 'clear':
+  //         contactForm.name = ''
+  //         contactForm.email = ''
+  //         contactForm.subject = ''
+  //         contactForm.message = ''
+  //         break
+  //       default:
+  //         warn('Unknown command mode subject:', contactForm.subject)
+  //         subjectInputWrong.value = true
+  //         return
+  //     }
+  //     subjectInputSuccess.value = true
+
+  //     return true
+  //   }
+
+  //   return false
+  // }
+
+  const handleUserSwitchCommand = async () => {
+    switch (contactForm.subject.trim()) {
+      case 'admin': {
+        // Check password
+        const password = await sha256(contactForm.password.trim())
+        if (password !== userModeConfig.modePasswords.adminMode) {
+          warn('Invalid admin mode password')
+          passwordInputWrong.value = true
+          return false
+        } else {
+          userModeStore.setUserMode('admin')
+          warn('Admin mode activated via contact form')
+          addUserEvent('adminMode', { contactForm: { ...contactForm } })
+          return true
+        }
       }
-      subjectInputSuccess.value = true
-
-      return true
+      case 'expert': {
+        // Check password
+        const password = await sha256(contactForm.password.trim())
+        if (password !== userModeConfig.modePasswords.expertMode) {
+          warn('Invalid expert mode password')
+          passwordInputWrong.value = true
+          return false
+        } else {
+          userModeStore.setUserMode('expert')
+          warn('Expert mode activated via contact form')
+          addUserEvent('expertMode', { contactForm: { ...contactForm } })
+          return true
+        }
+      }
+      default:
+        warn('Unknown command mode subject:', contactForm.subject)
+        subjectInputWrong.value = true
+        return false
     }
-
-    return false
   }
 
   /**
    * Submit the contact form
    */
   const submitContactForm = async () => {
-    if (handleCommand()) return
+    if (isCommandEmail.value) {
+      if (await handleUserSwitchCommand()) {
+        // Clear form after successful command
+        contactForm.name = ''
+        contactForm.email = ''
+        contactForm.subject = ''
+        contactForm.message = ''
+        contactForm.password = ''
+        return
+      } else {
+        return
+      }
+    }
+
+    console.warn('Submitting contact form')
 
     if (sendContactFormDisabled.value) return
 
@@ -375,6 +450,9 @@ export function useHelpModal(uiStore, imageStore, editorStore, userModeStore, ro
     sendContactFormDisabled,
     subjectInputWrong,
     subjectInputSuccess,
-    messageNeeded,
+    isCommandEmail,
+    passwordInputWrong,
+    togglePasswordVisibility,
+    showPassword,
   }
 }

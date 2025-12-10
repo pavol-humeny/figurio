@@ -13,6 +13,7 @@ import { globalConfig } from '@/config/globalConfig';
 import { useApi } from '../../composables/common/useApi';
 import { useEditorStore } from '@/stores/editorStore';
 import { useUserModeStore } from '@/stores/userModeStore';
+import CommandLine from './CommandLine.vue';
 
 const { messages, locale, t } = useI18n()
 const router = useRouter()
@@ -20,6 +21,7 @@ const { addUserEvent } = useApi()
 
 const uiStore = useUiStore()
 const imageStore = useImageStore()
+const userModeStore = useUserModeStore()
 const { tutorialStep, tutorialCompleted } = storeToRefs(uiStore)
 
 /**
@@ -58,7 +60,10 @@ const {
   sendContactFormDisabled,
   subjectInputWrong,
   subjectInputSuccess,
-  messageNeeded,
+  isCommandEmail,
+  passwordInputWrong,
+  togglePasswordVisibility,
+  showPassword,
 } = useHelpModal(useUiStore(), useImageStore(), useEditorStore(), useUserModeStore(), useRouter(), t);
 
 const { isTutorialEnabled } = useInteractiveTutorial(
@@ -496,10 +501,10 @@ const showStatistics = () => {
               </ul>
 
               <!-- Contact Form -->
-              <div class="contact-form">
+              <div v-if="!userModeStore.isExpertOrAdminMode" class="contact-form">
                 <div class="contact-name-email">
                   <!-- Name -->
-                  <div class="input-label-wrapper">
+                  <div v-if="!isCommandEmail" class="input-label-wrapper">
                     <label>
                       {{ $t('help.helpContent.contactAndFeedback.contactForm.name') }}
                     </label>
@@ -529,16 +534,33 @@ const showStatistics = () => {
                 </div>
 
                 <!-- Message -->
-                <div class="input-label-wrapper">
+                <div v-if="!isCommandEmail" class="input-label-wrapper">
                   <label>
                     {{ $t('help.helpContent.contactAndFeedback.contactForm.message') }}
                   </label>
-                  <textarea :class="{ 'message-needed': messageNeeded }" v-model="contactForm.message" required
-                    maxlength="500" @keydown.enter="submitContactForm"></textarea>
+                  <textarea v-model="contactForm.message" required maxlength="500"
+                    @keydown.enter="submitContactForm"></textarea>
                 </div>
 
-                <DefaultButton :text="$t('help.helpContent.contactAndFeedback.contactForm.send')"
+                <!-- Password -->
+                <div v-else class="input-label-wrapper">
+                  <label>
+                    {{ $t('help.helpContent.contactAndFeedback.contactForm.password') }}
+                  </label>
+                  <div class="password-wrapper">
+                    <input :type="showPassword ? 'text' : 'password'"
+                      :class="{ 'password-input-wrong': passwordInputWrong }" v-model="contactForm.password" required
+                      maxlength="50" @keydown.enter="submitContactForm" />
+                    <BaseIcon :name="showPassword ? 'IconEyeOff' : 'IconEye'" size="20" class="password-toggle-icon"
+                      color="var(--primary-c)" @click="togglePasswordVisibility" />
+                  </div>
+                </div>
+
+                <DefaultButton v-if="!isCommandEmail" :text="$t('help.helpContent.contactAndFeedback.contactForm.send')"
                   @click="submitContactForm" :disabled="sendContactFormDisabled" />
+              </div>
+              <div v-else class="command-line-wrapper">
+                <CommandLine />
               </div>
             </div>
           </div>
@@ -757,6 +779,10 @@ const showStatistics = () => {
   margin-top: 20px;
 }
 
+.command-line-wrapper {
+  margin-top: 20px;
+}
+
 .contact-name-email {
   display: flex;
   justify-content: space-between;
@@ -768,6 +794,19 @@ const showStatistics = () => {
   flex-direction: column;
   gap: 5px;
   width: 100%;
+}
+
+.password-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.password-toggle-icon {
+  position: absolute;
+  right: 7px;
+  cursor: pointer;
+  margin-bottom: 2px;
 }
 
 .contact-form input,
@@ -794,7 +833,7 @@ const showStatistics = () => {
   background: var(--success-c) !important;
 }
 
-.message-needed {
-  background: var(--notification-c) !important;
+.password-input-wrong {
+  background: var(--error-c) !important;
 }
 </style>

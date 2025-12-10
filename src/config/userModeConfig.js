@@ -5,6 +5,50 @@ export const userModeConfig = {
   // 'unlimitedZoom',
   // 'numberOfOpenedFiles',
   // 'maxNumberOfFilesToUploadSimultaneously',
+  listOfCommands: [
+    'turn on <snowfall|christmasLights|randomEvents>', // Enable feature
+    'turn off <snowfall|christmasLights|randomEvents>', // Disable feature
+    'help', // Show help information
+  ],
+
+  commandManPages: {
+    'turn on': `
+      NAME
+          turn on - Enable a specific feature
+
+      SYNOPSIS
+          turn on <snowfall|christmasLights|randomEvents>
+
+      DESCRIPTION
+          Enables the chosen feature:
+            snowfall        Start snowfall effect
+            christmasLights Turn on Christmas lights
+            randomEvents    Enable all events
+      `,
+    'turn off': `
+      NAME
+          turn off - Disable a specific feature
+
+      SYNOPSIS
+          turn off <snowfall|christmasLights|randomEvents>
+
+      DESCRIPTION
+          Disables the chosen feature:
+            snowfall        Stop snowfall effect
+            christmasLights Turn off Christmas lights
+            randomEvents   Disable random events
+      `,
+    help: `
+      NAME
+          help - Display available commands
+
+      SYNOPSIS
+          help
+
+      DESCRIPTION
+          Shows a list of all available commands and their usage information.
+      `,
+  },
 
   /** List of features accessible to expert users */
   expertFeatures: ['fileSize', 'fileDimensions', 'unlimitedZoom'],

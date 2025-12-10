@@ -102,7 +102,15 @@
     },
     "contactAndFeedback": {
       "title": "Kontakt a spätná väzba",
-      "text": "Ak máte otázky, návrhy alebo spätnú väzbu k editoru, kontaktujte ma na:"
+      "text": "Ak máte otázky, návrhy alebo spätnú väzbu k editoru, kontaktujte ma pomocou nižšie uvedeného formulára alebo e-mailom na adresu:",
+      "contactForm": {
+        "name": "Meno",
+        "email": "E-mail",
+        "subject": "Predmet",
+        "message": "Správa",
+        "password": "Heslo",
+        "send": "Odoslať správu"  
+      }
     }
   },
   "closeButton": {
