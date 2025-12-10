@@ -112,6 +112,14 @@ export const useEditorStore = defineStore('editorStore', {
 
     /** Whether any modal is open */
     isModalOpenFlag: false,
+
+    /**
+     * Random events state
+     */
+    randomEvents: {
+      snowfallActive: globalConfig.randomEvents.snowfallActive,
+      christmasLightsActive: globalConfig.randomEvents.christmasLightsActive,
+    },
   }),
   actions: {
     /**

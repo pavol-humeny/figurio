@@ -55,7 +55,10 @@ const {
   openFeatureTourModalHelper,
   contactForm,
   submitContactForm,
-  sendContactFormDisabled
+  sendContactFormDisabled,
+  subjectInputWrong,
+  subjectInputSuccess,
+  messageNeeded,
 } = useHelpModal(useUiStore(), useImageStore(), useEditorStore(), useUserModeStore(), useRouter(), t);
 
 const { isTutorialEnabled } = useInteractiveTutorial(
@@ -500,7 +503,8 @@ const showStatistics = () => {
                     <label>
                       {{ $t('help.helpContent.contactAndFeedback.contactForm.name') }}
                     </label>
-                    <input v-model="contactForm.name" type="text" required maxlength="25" />
+                    <input v-model="contactForm.name" type="text" required maxlength="25"
+                      @keydown.enter="submitContactForm" />
                   </div>
 
                   <!-- Email -->
@@ -508,7 +512,8 @@ const showStatistics = () => {
                     <label>
                       {{ $t('help.helpContent.contactAndFeedback.contactForm.email') }}
                     </label>
-                    <input v-model="contactForm.email" type="email" required maxlength="25" />
+                    <input v-model="contactForm.email" type="email" required maxlength="50"
+                      @keydown.enter="submitContactForm" />
                   </div>
                 </div>
 
@@ -517,7 +522,10 @@ const showStatistics = () => {
                   <label>
                     {{ $t('help.helpContent.contactAndFeedback.contactForm.subject') }}
                   </label>
-                  <input v-model="contactForm.subject" type="text" required maxlength="50" />
+                  <input
+                    :class="{ 'subject-input-wrong': subjectInputWrong, 'subject-input-success': subjectInputSuccess }"
+                    v-model="contactForm.subject" type="text" required maxlength="50"
+                    @keydown.enter="submitContactForm" />
                 </div>
 
                 <!-- Message -->
@@ -525,7 +533,8 @@ const showStatistics = () => {
                   <label>
                     {{ $t('help.helpContent.contactAndFeedback.contactForm.message') }}
                   </label>
-                  <textarea v-model="contactForm.message" required maxlength="500"></textarea>
+                  <textarea :class="{ 'message-needed': messageNeeded }" v-model="contactForm.message" required
+                    maxlength="500" @keydown.enter="submitContactForm"></textarea>
                 </div>
 
                 <DefaultButton :text="$t('help.helpContent.contactAndFeedback.contactForm.send')"
@@ -775,5 +784,17 @@ const showStatistics = () => {
 .contact-form textarea {
   height: 150px;
   resize: none;
+}
+
+.subject-input-wrong {
+  background: var(--error-c) !important;
+}
+
+.subject-input-success {
+  background: var(--success-c) !important;
+}
+
+.message-needed {
+  background: var(--notification-c) !important;
 }
 </style>

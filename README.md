@@ -92,6 +92,15 @@ Event type:
     - contactForm
 - adminMode
     - contactForm
+- expertMode
+    - contactForm
+- command
+    - commandIdentifier
+
+## Commands
+ - su <basic/expert/admin>
+ - turn on <snowfall/christmasLights/randomEvents>
+ - turn off <snowfall/christmasLights/randomEvents>
 
 ## Warning list
 - artifact-warning

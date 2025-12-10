@@ -14,13 +14,14 @@ import FigurioLogoDark from '@/assets/FigurioLogoDark.png'
 import FigurioLogoLight from '@/assets/FigurioLogoLight.png'
 import { useRouter } from 'vue-router'
 import { ref } from 'vue'
-import { globalConfig } from '@/config/globalConfig';
 import BaseIcon from '@/components/icons/BaseIcon.vue'
 import { useUserModeStore } from '@/stores/userModeStore';
+import { useEditorStore } from '@/stores/editorStore';
 
 const uiStore = useUiStore()
 const router = useRouter()
 const userModeStore = useUserModeStore()
+const editorStore = useEditorStore()
 
 /**
  * Checks if the current view is 'home' to conditionally render parts of the top panel
@@ -59,12 +60,45 @@ const snowflakes = ref(
     delay: Math.random() * 5 + 's'
   }))
 );
+
+/** Christmas lights data (evenly spaced on a string) */
+const lights = ref(
+  Array.from({ length: 30 }, (_, i) => ({
+    left: (i / 29) * 100 + '%', // evenly spaced
+    color: ['#ff5757', '#ffd257', '#7cff8a', '#57c9ff', '#c57fff'][Math.floor(Math.random() * 5)],
+    delay: Math.random() * 2.5 + 's'
+  }))
+);
+
+const getLightPosition = (index, total, color, delay) => {
+  const svg = document.querySelector('.lights-svg')
+  const path = svg?.querySelector('#light-path')
+  if (!path) return {}
+
+  const t = index / (total - 1)
+  const length = path.getTotalLength()
+  const point = path.getPointAtLength(length * t)
+
+  // bounding box of the rendered SVG
+  const rect = svg.getBoundingClientRect()
+
+  // convert SVG coordinates → screen pixel coordinates
+  const x = rect.left + (point.x / 100) * rect.width
+  const y = rect.top + (point.y / 80) * rect.height
+
+  return {
+    left: x + 'px',
+    top: (y - 6) + 'px',
+    backgroundColor: color,
+    animationDelay: delay
+  }
+}
 </script>
 
 <template>
   <div class="top-panel">
     <!-- Snow animation -->
-    <div class="snow-container" v-if="globalConfig.randomEvents.enableSnowfall">
+    <div class="snow-container" v-if="editorStore.randomEvents.snowfallActive">
       <div v-for="(flake, index) in snowflakes" :key="index" class="snowflake" :style="{
         left: flake.left,
         fontSize: flake.size,
@@ -73,6 +107,22 @@ const snowflakes = ref(
       }">
         ❄
       </div>
+    </div>
+
+    <!-- Christmas lights -->
+    <div class="lights-container" v-if="editorStore.randomEvents.christmasLightsActive">
+
+      <!-- Cable curve -->
+
+      <svg class="lights-svg" viewBox="0 0 100 80" preserveAspectRatio="none">
+        <path id="light-path" d="M 0 15 Q 50 35 100 15" fill="none" stroke="rgba(80,80,80,0.8)" stroke-width="2" />
+      </svg>
+
+      <!-- Bulbs following the path -->
+      <div v-for="(l, i) in lights" :key="'light-' + i" class="light-bulb"
+        :style="getLightPosition(i, lights.length, l.color, l.delay)">
+      </div>
+
     </div>
 
     <div class="top-panel-left" v-if="!isHomeView">
@@ -221,6 +271,51 @@ const snowflakes = ref(
   100% {
     transform: translateY(150%) rotate(360deg);
     opacity: 0;
+  }
+}
+
+.lights-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 40px;
+  pointer-events: none;
+  z-index: 999999;
+}
+
+.lights-svg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 40px;
+  overflow: visible;
+  pointer-events: none;
+}
+
+.light-bulb {
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  opacity: 0.8;
+  animation: bulbGlow 1.6s infinite ease-in-out alternate;
+  box-shadow: 0 0 8px currentColor;
+}
+
+@keyframes bulbGlow {
+  0% {
+    opacity: 0.4;
+    transform: translateX(-50%) scale(0.95);
+    box-shadow: 0 0 4px currentColor;
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateX(-50%) scale(1.1);
+    box-shadow: 0 0 14px currentColor;
   }
 }
 </style>
