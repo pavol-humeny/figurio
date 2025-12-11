@@ -7,71 +7,70 @@ const { warn } = useConsole()
 const { addUserEvent } = useApi()
 
 export function useCommandLine(userModeStore, editorStore) {
+  /**
+   * Command line state
+   */
   const command = ref('')
   const output = ref([])
-  const outputRef = ref(null) // reference to CLI output div
+  const outputRef = ref(null)
 
+  /**
+   * Command history
+   */
+  const history = ref([])
+  const historyIndex = ref(-1)
+
+  /**
+   * Process entered command
+   */
   const processCommand = () => {
     const trimmed = command.value.trim()
     if (!trimmed) return
 
+    // Save to history
+    history.value.push(trimmed)
+    historyIndex.value = history.value.length
+
     pushCommandLine(trimmed)
 
-    switch (trimmed.toLowerCase()) {
+    // Split into parts
+    const parts = trimmed.toLowerCase().split(/\s+/)
+    const main = parts[0]
+    const args = parts.slice(1)
+
+    // Command switch
+    switch (main) {
       case 'quit':
         switchToBasicMode()
         break
+
       case 'clear':
         output.value = []
         break
-      case 'turn on':
-        useManPrint('turn on')
-        break
-      case 'turn off randomEvents':
-        editorStore.randomEvents.snowfallActive = false
-        editorStore.randomEvents.christmasLightsActive = false
-        warn('Random events disabled via contact form')
-        addUserEvent('command', { commandIdentifier: 'turn off randomEvents' })
-        break
-      case 'turn on snowfall':
-        editorStore.randomEvents.snowfallActive = true
-        warn('Snowfall enabled via contact form')
-        addUserEvent('command', { commandIdentifier: 'turn on snowfall' })
-        break
-      case 'turn off snowfall':
-        editorStore.randomEvents.snowfallActive = false
-        warn('Snowfall disabled via contact form')
-        addUserEvent('command', { commandIdentifier: 'turn off snowfall' })
-        break
-      case 'turn on christmasLights':
-        editorStore.randomEvents.christmasLightsActive = true
-        warn('Christmas lights enabled via contact form')
-        addUserEvent('command', { commandIdentifier: 'turn on christmasLights' })
-        break
-      case 'turn off christmasLights':
-        editorStore.randomEvents.christmasLightsActive = false
-        warn('Christmas lights disabled via contact form')
-        addUserEvent('command', { commandIdentifier: 'turn off christmasLights' })
-        break
-      case 'man help':
-        printManPage('help')
-        break
-      case 'man turn on':
-        printManPage('turn on')
-        break
-      case 'man turn off':
-        printManPage('turn off')
-        break
+
       case 'help':
         printHelp()
         break
+
+      case 'man':
+        if (args.length === 0) {
+          output.value.push('Specify a command: man <command>')
+        } else {
+          const manCommand = args.join(' ')
+          printManPage(manCommand)
+        }
+        break
+
+      case 'turn':
+        handleTurnCommand(args)
+        break
+
       default:
         output.value.push('Unknown command: ' + trimmed)
     }
 
     command.value = ''
 
-    // Scroll to bottom after next DOM update
     nextTick(() => {
       if (outputRef.value) {
         outputRef.value.scrollTop = outputRef.value.scrollHeight
@@ -79,32 +78,111 @@ export function useCommandLine(userModeStore, editorStore) {
     })
   }
 
+  /**
+   * Handle 'turn on/off' commands
+   */
+  const handleTurnCommand = (args) => {
+    if (args.length < 2) {
+      output.value.push('Usage: turn <on/off> <feature>')
+      return
+    }
+
+    const action = args[0]
+    const feature = args[1]
+    const full = `turn ${action} ${feature}`
+
+    if (action === 'on') {
+      useManPrint(`turn on ${feature}`)
+    }
+
+    // Execute command
+    switch (full) {
+      case 'turn on snowfall':
+        editorStore.randomEvents.snowfallActive = true
+        warn('Snowfall enabled via contact form')
+        addUserEvent('command', { commandIdentifier: full })
+        break
+
+      case 'turn off snowfall':
+        editorStore.randomEvents.snowfallActive = false
+        warn('Snowfall disabled via contact form')
+        addUserEvent('command', { commandIdentifier: full })
+        break
+
+      case 'turn on christmaslights':
+        editorStore.randomEvents.christmasLightsActive = true
+        warn('Christmas lights enabled via contact form')
+        addUserEvent('command', { commandIdentifier: full })
+        break
+
+      case 'turn off christmaslights':
+        editorStore.randomEvents.christmasLightsActive = false
+        warn('Christmas lights disabled via contact form')
+        addUserEvent('command', { commandIdentifier: full })
+        break
+
+      case 'turn off randomevents':
+        editorStore.randomEvents.snowfallActive = false
+        editorStore.randomEvents.christmasLightsActive = false
+        warn('Random events disabled via contact form')
+        addUserEvent('command', { commandIdentifier: full })
+        break
+
+      case 'turn on randomevents':
+        editorStore.randomEvents.snowfallActive = true
+        editorStore.randomEvents.christmasLightsActive = true
+        warn('Random events enabled via contact form')
+        addUserEvent('command', { commandIdentifier: full })
+        break
+
+      default:
+        output.value.push(`Unknown turn command: ${full}`)
+    }
+  }
+
+  /**
+   * Print man page hint
+   *
+   * @param {string} commandName  Name of the command
+   */
   const useManPrint = (commandName) => {
     output.value.push(`For more information on '${commandName}', type 'man ${commandName}'`)
   }
 
+  /**
+   * Print help information
+   * Data are taken from userModeConfig.js
+   */
   const printHelp = () => {
     const commands = userModeConfig.listOfCommands
     output.value.push('Available commands:')
-    commands.forEach((cmd) => {
-      output.value.push(' - ' + cmd)
-    })
+    commands.forEach((cmd) => output.value.push(' - ' + cmd))
   }
 
+  /**
+   * Print man page for a specific command
+   * Data are taken from userModeConfig.js
+   *
+   * @param {string} commandName  Name of the command to print
+   */
   const printManPage = (commandName) => {
     const manPage = userModeConfig.commandManPages[commandName]
     if (manPage) {
-      output.value.push(manPage) // don't trim(), keep spaces and newlines
+      output.value.push(manPage)
     } else {
       output.value.push('No manual entry for ' + commandName)
     }
   }
 
+  /**
+   * Push command line to output
+   *
+   * @param {string} enteredCommand  Entered command
+   */
   const pushCommandLine = (enteredCommand) => {
     if (!outputRef.value) return
     output.value.push(`${userModeStore.userMode}@figurio:~/$ ${enteredCommand}`)
 
-    // Scroll to bottom after next DOM update
     nextTick(() => {
       if (outputRef.value) {
         outputRef.value.scrollTop = outputRef.value.scrollHeight
@@ -112,22 +190,55 @@ export function useCommandLine(userModeStore, editorStore) {
     })
   }
 
+  /**
+   * Switch to basic mode
+   */
   const switchToBasicMode = () => {
     userModeStore.setUserMode('basic')
   }
 
-  // Add event to ctrl + d for switching to basic mode
+  /**
+   * Handle keydown events for command history navigation
+   */
   const handleKeydown = (e) => {
+    // Ctrl + D - switch to basic mode
     if (e.ctrlKey && e.key.toLowerCase() === 'd') {
       e.preventDefault()
       switchToBasicMode()
+      return
+    }
+
+    // ArrowUp - previous command
+    if (e.key === 'ArrowUp') {
+      e.preventDefault()
+      if (history.value.length === 0) return
+
+      historyIndex.value = Math.max(0, historyIndex.value - 1)
+      command.value = history.value[historyIndex.value]
+      return
+    }
+
+    // ArrowDown - next command
+    if (e.key === 'ArrowDown') {
+      e.preventDefault()
+      if (history.value.length === 0) return
+
+      historyIndex.value = Math.min(history.value.length, historyIndex.value + 1)
+
+      if (historyIndex.value === history.value.length) {
+        command.value = ''
+      } else {
+        command.value = history.value[historyIndex.value]
+      }
     }
   }
 
+  /**
+   * Lifecycle hooks
+   */
   onMounted(() => {
     window.addEventListener('keydown', handleKeydown)
   })
-
   onBeforeMount(() => {
     window.removeEventListener('keydown', handleKeydown)
   })

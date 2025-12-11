@@ -5,6 +5,9 @@ import { useEditorStore } from '@/stores/editorStore';
 
 const userModeStore = useUserModeStore();
 
+/**
+ * Logic for command line modal
+ */
 const {
   command,
   output,
