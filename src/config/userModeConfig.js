@@ -6,8 +6,8 @@ export const userModeConfig = {
   // 'numberOfOpenedFiles',
   // 'maxNumberOfFilesToUploadSimultaneously',
   listOfCommands: [
-    'turn on <snowfall|christmasLights|randomEvents>', // Enable feature
-    'turn off <snowfall|christmasLights|randomEvents>', // Disable feature
+    'turn on <snowfall|christmasLights|christmasTree|randomEvents>', // Enable feature
+    'turn off <snowfall|christmasLights|christmasTree|randomEvents>', // Disable feature
     'help', // Show help information
   ],
 
