@@ -62,8 +62,9 @@ export const globalConfig = {
 
   // Random events configuration
   randomEvents: {
-    snowfallActive: false,
-    christmasLightsActive: true,
+    snowfall: false,
+    christmasLights: false,
+    christmasTree: false,
   },
 
   // List of feature tour video identifiers to show in the feature tour modal

@@ -98,7 +98,7 @@ const getLightPosition = (index, total, color, delay) => {
 <template>
   <div class="top-panel">
     <!-- Snow animation -->
-    <div class="snow-container" v-if="editorStore.randomEvents.snowfallActive">
+    <div class="snow-container" v-if="editorStore.randomEvents.snowfall">
       <div v-for="(flake, index) in snowflakes" :key="index" class="snowflake" :style="{
         left: flake.left,
         fontSize: flake.size,
@@ -110,7 +110,7 @@ const getLightPosition = (index, total, color, delay) => {
     </div>
 
     <!-- Christmas lights -->
-    <div class="lights-container" v-if="editorStore.randomEvents.christmasLightsActive">
+    <div class="lights-container" v-if="editorStore.randomEvents.christmasLights">
 
       <!-- Cable curve -->
 

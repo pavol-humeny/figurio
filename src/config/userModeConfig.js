@@ -17,12 +17,13 @@ export const userModeConfig = {
           turn on - Enable a specific feature
 
       SYNOPSIS
-          turn on <snowfall|christmasLights|randomEvents>
+          turn on <snowfall|christmasLights|christmasTree|randomEvents>
 
       DESCRIPTION
           Enables the chosen feature:
             snowfall        Start snowfall effect
             christmasLights Turn on Christmas lights
+            christmasTree   Show Christmas tree
             randomEvents    Enable all events
       `,
     'turn off': `
@@ -30,13 +31,14 @@ export const userModeConfig = {
           turn off - Disable a specific feature
 
       SYNOPSIS
-          turn off <snowfall|christmasLights|randomEvents>
+          turn off <snowfall|christmasLights|christmasTree|randomEvents>
 
       DESCRIPTION
           Disables the chosen feature:
             snowfall        Stop snowfall effect
             christmasLights Turn off Christmas lights
-            randomEvents   Disable random events
+            christmasTree   Hide Christmas tree
+            randomEvents    Disable random events
       `,
     help: `
       NAME

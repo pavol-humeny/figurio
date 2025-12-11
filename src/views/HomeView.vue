@@ -22,11 +22,13 @@ import { usePrivacyAndDataModal } from '@/composables/modals/usePrivacyAndDataMo
 import { useReleaseModal } from '@/composables/modals/useReleaseModal';
 import { useUserModeStore } from '@/stores/userModeStore';
 import BaseIcon from '@/components/icons/BaseIcon.vue';
+import ChristmasTree from '@/components/randomEvents/ChristmasTree.vue';
 
 const { t, messages, locale } = useI18n()
 const router = useRouter()
 const uiStore = useUiStore()
 const userModeStore = useUserModeStore()
+const editorStore = useEditorStore()
 
 const { uploadFile } = useUploadFileButton(useImageStore(), t, useRouter())
 const { openHelpModal } = useHelpModal(useUiStore(), useImageStore(), useEditorStore(), useUserModeStore(), useRouter(), t)
@@ -122,7 +124,8 @@ onMounted(() => {
         :style="{ 'user-select': 'none', 'padding-top': '30px' }" />
     </div>
     <div class="right-side">
-      <DragAndDropArea isHomePage />
+      <DragAndDropArea v-if="!editorStore.randomEvents.christmasTree" isHomePage />
+      <ChristmasTree v-else />
     </div>
 
   </div>

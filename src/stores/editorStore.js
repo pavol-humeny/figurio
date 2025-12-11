@@ -3,6 +3,20 @@ import { globalConfig } from '@/config/globalConfig'
 import { defineStore } from 'pinia'
 
 /**
+ * Retrieves a boolean value from localStorage.
+ * Returns `false` only if the stored value is the string `'false'`, otherwise returns the fallback.
+
+ *
+ * @param {string} key - The localStorage key to read from.
+ * @param {boolean} [fallback=true] - The default value if the key is not set.
+ * @returns {boolean} The parsed boolean value.
+ */
+const getBoolean = (key, fallback = true) => {
+  const value = localStorage.getItem(key)
+  return value === 'false' ? false : value === 'true' ? true : fallback
+}
+
+/**
  * State and actions for managing editor tool selection, subtools, and active tabs
  */
 export const useEditorStore = defineStore('editorStore', {
@@ -117,8 +131,18 @@ export const useEditorStore = defineStore('editorStore', {
      * Random events state
      */
     randomEvents: {
-      snowfallActive: globalConfig.randomEvents.snowfallActive,
-      christmasLightsActive: globalConfig.randomEvents.christmasLightsActive,
+      snowfall: getBoolean(
+        `${globalConfig.LOCAL_STORAGE_PREFIX}randomEvent_snowfall`,
+        globalConfig.randomEvents.snowfall,
+      ),
+      christmasLights: getBoolean(
+        `${globalConfig.LOCAL_STORAGE_PREFIX}randomEvent_christmasLights`,
+        globalConfig.randomEvents.christmasLights,
+      ),
+      christmasTree: getBoolean(
+        `${globalConfig.LOCAL_STORAGE_PREFIX}randomEvent_christmasTree`,
+        globalConfig.randomEvents.christmasTree,
+      ),
     },
   }),
   actions: {
@@ -154,6 +178,28 @@ export const useEditorStore = defineStore('editorStore', {
      */
     setToolWithOpenSubTools(toolKey) {
       this.toolWithOpenSubToolsKey = toolKey
+    },
+
+    /**
+     * Turn on a random event
+     * @param {string} eventKey - Key of the random event
+     */
+    turnOnRandomEvent(eventKey) {
+      if (eventKey in this.randomEvents) {
+        this.randomEvents[eventKey] = true
+        localStorage.setItem(`${globalConfig.LOCAL_STORAGE_PREFIX}randomEvent_${eventKey}`, 'true')
+      }
+    },
+
+    /**
+     * Turn off a random event
+     * @param {string} eventKey - Key of the random event
+     */
+    turnOffRandomEvent(eventKey) {
+      if (eventKey in this.randomEvents) {
+        this.randomEvents[eventKey] = false
+        localStorage.setItem(`${globalConfig.LOCAL_STORAGE_PREFIX}randomEvent_${eventKey}`, 'false')
+      }
     },
   },
 })

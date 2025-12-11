@@ -98,40 +98,52 @@ export function useCommandLine(userModeStore, editorStore) {
     // Execute command
     switch (full) {
       case 'turn on snowfall':
-        editorStore.randomEvents.snowfallActive = true
+        editorStore.turnOnRandomEvent('snowfall')
         warn('Snowfall enabled via contact form')
         addUserEvent('command', { commandIdentifier: full })
         break
 
       case 'turn off snowfall':
-        editorStore.randomEvents.snowfallActive = false
+        editorStore.turnOffRandomEvent('snowfall')
         warn('Snowfall disabled via contact form')
         addUserEvent('command', { commandIdentifier: full })
         break
 
       case 'turn on christmaslights':
-        editorStore.randomEvents.christmasLightsActive = true
+        editorStore.turnOnRandomEvent('christmasLights')
         warn('Christmas lights enabled via contact form')
         addUserEvent('command', { commandIdentifier: full })
         break
 
       case 'turn off christmaslights':
-        editorStore.randomEvents.christmasLightsActive = false
+        editorStore.turnOffRandomEvent('christmasLights')
         warn('Christmas lights disabled via contact form')
         addUserEvent('command', { commandIdentifier: full })
         break
 
       case 'turn off randomevents':
-        editorStore.randomEvents.snowfallActive = false
-        editorStore.randomEvents.christmasLightsActive = false
+        editorStore.turnOffRandomEvent('snowfall')
+        editorStore.turnOffRandomEvent('christmasLights')
         warn('Random events disabled via contact form')
         addUserEvent('command', { commandIdentifier: full })
         break
 
       case 'turn on randomevents':
-        editorStore.randomEvents.snowfallActive = true
-        editorStore.randomEvents.christmasLightsActive = true
+        editorStore.turnOnRandomEvent('snowfall')
+        editorStore.turnOnRandomEvent('christmasLights')
         warn('Random events enabled via contact form')
+        addUserEvent('command', { commandIdentifier: full })
+        break
+
+      case 'turn on christmastree':
+        editorStore.turnOnRandomEvent('christmasTree')
+        warn('Christmas tree enabled via contact form')
+        addUserEvent('command', { commandIdentifier: full })
+        break
+
+      case 'turn off christmastree':
+        editorStore.turnOffRandomEvent('christmasTree')
+        warn('Christmas tree disabled via contact form')
         addUserEvent('command', { commandIdentifier: full })
         break
 
