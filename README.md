@@ -24,7 +24,7 @@
 - možno odstrániť hover efekt nad logom na home page 
 - pixely od určitej úrovne pri približovaní 
 - pixely by sa mohli dať prepínať manuálne 
-- Zjednodušiť nápovedy (kratšie texty)
+- Zjednodušiť nápovedy - tipy (kratšie texty)
 - šípky pre posúvanie (panel s nástrojmi, help, release note) by mohli fungovať aj na držanie
 
 

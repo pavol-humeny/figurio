@@ -137,6 +137,32 @@ export function useToolsPanel(editorStore, imageStore, uiStore, workspaceStore, 
     toolsRef.value?.scrollBy({ top: 100, behavior: 'smooth' })
   }
 
+  // Hold-scroll state
+  const holdInterval = ref(null)
+  const isHolding = ref(false)
+
+  // Start auto-scrolling (direction: "up" | "down")
+  const startHoldScroll = (direction) => {
+    isHolding.value = true
+
+    // First immediate scroll
+    if (direction === 'up') scrollUp()
+    else scrollDown()
+
+    // Then repeating scroll
+    holdInterval.value = setInterval(() => {
+      if (direction === 'up') scrollUp()
+      else scrollDown()
+    }, 120) // repeat every 120 ms (tweakable)
+  }
+
+  // Stop auto-scrolling
+  const stopHoldScroll = () => {
+    isHolding.value = false
+    clearInterval(holdInterval.value)
+    holdInterval.value = null
+  }
+
   /**
    * Check scroll position and set atTop/atBottom flags
    */
@@ -207,5 +233,7 @@ export function useToolsPanel(editorStore, imageStore, uiStore, workspaceStore, 
     toggleTool,
     selectTool,
     isToolDisabled,
+    startHoldScroll,
+    stopHoldScroll,
   }
 }
