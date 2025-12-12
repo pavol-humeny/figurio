@@ -81,12 +81,10 @@ export function useFileTabs(uiStore, viewportStore, imageStore, editorStore, t) 
     )
     if (confirmed) {
       uiStore.isLoading = true
-      // await new Promise((resolve) => setTimeout(resolve, 1))
 
       workspaceStore.updateCurrentTabState(t)
       workspaceStore.closeTab(index)
 
-      // await new Promise((resolve) => setTimeout(resolve, 1))
       uiStore.isLoading = false
     }
   }

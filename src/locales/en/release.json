@@ -4,6 +4,15 @@
     "items": []
   },
   "versions":{
+    "4.18.6":{
+      "label": "4.18.6",
+      "date":"8.12. 2025",
+      "bugFixes": {
+        "items": [
+          "Reset zoom level after closing the file"
+        ]
+      }
+    },
     "4.18.5":{
       "label": "4.18.5",
       "date":"8.12. 2025",

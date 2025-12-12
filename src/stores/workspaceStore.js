@@ -72,8 +72,12 @@ export const useWorkspaceStore = defineStore('workspaceStore', {
         this.restoreTab(this.activeTabIndex)
       } else {
         const imageStore = useImageStore()
+        const viewportStore = useViewportStore()
 
         imageStore.closeFile()
+
+        // Reset viewport zoom level (only for displayed value)
+        viewportStore.setZoomLevel(1)
       }
     },
 

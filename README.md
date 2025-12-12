@@ -15,9 +15,7 @@
 - 3 úrovne pre auto background removal 
 - eye dropper na safari
 - zatvaranie pdf je strasne pomale
-- pri zatvorení súboru - resetovať zoom mode na 100%
 - pixelovať všetky canvasy 
-- API na zaslanie mailu 
 - Ak je obrazok zmenseny a meni sa side panel tak to lieta 
 - Expand header nefunguje dobre pri velkej hrubke ramiku 
 - prerobit resize tool, najskor sa nastavi velkost a az potom sa aplikuje
@@ -26,6 +24,9 @@
 - pixely by sa mohli dať prepínať manuálne 
 - Zjednodušiť nápovedy - tipy (kratšie texty)
 - šípky pre posúvanie (panel s nástrojmi, help, release note) by mohli fungovať aj na držanie
+- command - prepnutie do odtieňov sedi 
+- achievementy
+
 
 
 ## Admin mode 
