@@ -5,9 +5,10 @@ import { useMath } from '../common/useMath'
 import { PDFDocument } from 'pdf-lib'
 import { useConfirmModal } from '../modals/useConfirmModal'
 import { useConsole } from '@/composables/common/useConsole.js'
-const { log, error } = useConsole()
+const { error } = useConsole()
 import { useApi } from '@/composables/common/useApi'
 const { addUserEvent } = useApi()
+import { useUiStore } from '@/stores/uiStore'
 
 /**
  * Logic for the resize tool
@@ -20,7 +21,7 @@ const { addUserEvent } = useApi()
 export function useResizeTool(imageStore, historyStore, viewportStore, t) {
   const { showToastModal } = useToastModal()
   const { showConfirmModal } = useConfirmModal()
-
+  const uiStore = useUiStore()
   const { round } = useMath()
 
   /**
@@ -224,71 +225,98 @@ export function useResizeTool(imageStore, historyStore, viewportStore, t) {
       return
     }
 
-    // const oldImage = imageStore.getRenderedImage({ t, renderCall: false })
     const oldImage = imageStore.originalImage
     if (!oldImage) return
 
+    // Pdf resize
     if (imageStore.fileType === 'pdf' && imageStore.pdfPageBytes) {
       try {
         const existingPdf = await PDFDocument.load(imageStore.pdfPageBytes)
         const oldPage = existingPdf.getPage(0)
 
-        // Create new pdf
         const newPdf = await PDFDocument.create()
         const newPage = newPdf.addPage([width, height])
-
         const [embeddedPage] = await newPdf.embedPages([oldPage])
 
-        // Draw the embedded page onto the new page
-        newPage.drawPage(embeddedPage, {
-          x: 0,
-          y: 0,
+        newPage.drawPage(embeddedPage, { x: 0, y: 0, width, height })
+
+        imageStore.pdfPageBytes = await newPdf.save()
+
+        imageStore.fileDimensions = {
           width,
           height,
-        })
+          fileAspectRatio: width / height || 1,
+        }
 
-        const pdfBytes = await newPdf.save()
-        imageStore.pdfPageBytes = pdfBytes
-
-        log(`PDF resized physically to ${width}x${height}`)
+        viewportStore.shouldFitToScreen = true
+        return
       } catch (e) {
         error('Error resizing PDF:', e)
       }
     }
 
+    // Image resize
     const canvas = document.createElement('canvas')
     const ctx = canvas.getContext('2d')
+    canvas.width = oldImage.width
+    canvas.height = oldImage.height
+    ctx.drawImage(oldImage, 0, 0)
 
-    canvas.width = width
-    canvas.height = height
+    const imgData = ctx.getImageData(0, 0, oldImage.width, oldImage.height)
 
-    ctx.drawImage(oldImage, 0, 0, width, height)
+    uiStore.isApplying = true
 
-    imageStore.setRenderedImage(canvas)
+    try {
+      const worker = new Worker(new URL('@/composables/worker/resizeWorker.js', import.meta.url))
 
-    imageStore.fileDimensions = {
-      width,
-      height,
-      fileAspectRatio: width / height || 1,
+      const resized = await new Promise((resolve) => {
+        worker.onmessage = (e) => {
+          resolve(e.data)
+          worker.terminate()
+        }
+
+        worker.postMessage({
+          imageData: imgData,
+          width,
+          height,
+          oldWidth: oldImage.width,
+          oldHeight: oldImage.height,
+        })
+      })
+
+      // draw result
+      const outCanvas = document.createElement('canvas')
+      const outCtx = outCanvas.getContext('2d')
+      outCanvas.width = width
+      outCanvas.height = height
+      outCtx.putImageData(resized, 0, 0)
+
+      imageStore.setRenderedImage(outCanvas)
+
+      imageStore.fileDimensions = {
+        width,
+        height,
+        fileAspectRatio: width / height || 1,
+      }
+
+      // overlay scaling stays same (2D draw)
+      if (imageStore.overlayImage) {
+        const overlayCanvas = document.createElement('canvas')
+        overlayCanvas.width = width
+        overlayCanvas.height = height
+
+        const octx = overlayCanvas.getContext('2d')
+        octx.drawImage(imageStore.overlayImage, 0, 0, width, height)
+
+        imageStore.overlayImage = overlayCanvas
+        imageStore.overlayImageExport = overlayCanvas
+        imageStore.overlayImagePreview = overlayCanvas
+      }
+
+      viewportStore.shouldFitToScreen = true
+    } finally {
+      uiStore.isApplying = false
     }
-
-    // Resize overlay svg objects
-    if (imageStore.overlayImage) {
-      const oldOverlay = imageStore.overlayImage
-      const overlayCanvas = document.createElement('canvas')
-      overlayCanvas.width = width
-      overlayCanvas.height = height
-
-      const overlayCtx = overlayCanvas.getContext('2d')
-      overlayCtx.drawImage(oldOverlay, 0, 0, width, height)
-
-      imageStore.overlayImage = overlayCanvas
-      imageStore.overlayImageExport = overlayCanvas
-      imageStore.overlayImagePreview = overlayCanvas
-    }
-
-    // Center image
-    viewportStore.shouldFitToScreen = true
   }
 
   return {
