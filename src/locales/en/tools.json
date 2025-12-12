@@ -220,6 +220,10 @@
         "resetResizeButton":{
           "text": "Reset resize",
           "tip": "Resets the resize dimensions to the original image dimensions"
+        },
+        "applyResizeButton":{
+          "text": "Apply resize",
+          "tip": "Applies the resize to the image"
         }
       }
     }

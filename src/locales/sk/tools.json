@@ -220,6 +220,10 @@
         "resetResizeButton":{
           "text": "Resetovať zmenu veľkosti",
           "tip": "Resetuje rozměry změny velikosti na původní rozměry obrázku"
+        },
+        "applyResizeButton":{
+          "text": "Aplikovat zmenu",
+          "tip": "Aplikuje aktuálne rozmery zmeny veľkosti na obrázok"
         }
       }
     }

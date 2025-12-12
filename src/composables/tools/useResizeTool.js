@@ -133,8 +133,6 @@ export function useResizeTool(imageStore, historyStore, viewportStore, t) {
       FileDimensionWidthInputRef.value?.setValue(fileDimensionWidth.value)
       FileDimensionHeightInputRef.value?.setValue(fileDimensionHeight.value)
     })
-
-    applyResize()
   }
 
   /**
@@ -149,8 +147,6 @@ export function useResizeTool(imageStore, historyStore, viewportStore, t) {
       FileDimensionWidthInputRef.value?.setValue(fileDimensionWidth.value)
       FileDimensionHeightInputRef.value?.setValue(fileDimensionHeight.value)
     })
-
-    applyResize()
   }
 
   /**

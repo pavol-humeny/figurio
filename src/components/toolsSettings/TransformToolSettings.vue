@@ -41,6 +41,7 @@ const {
   FileDimensionHeightInputRef,
   isFileDimensionsLinked,
   resetResize,
+  applyResize,
 } = useResizeTool(useImageStore(), useHistoryStore(), useViewportStore(), t)
 
 /**
@@ -181,7 +182,14 @@ const tabs = ['rotate', 'flip', 'resize']
             <DefaultButton :text="$t('tools.transform.settings.resize.resetResizeButton.text')"
               :tip="$t('tools.transform.settings.resize.resetResizeButton.tip')" position="bottom-left"
               @click="resetResize" />
+          </div>
+        </div>
 
+        <!-- Apply resize -->
+        <div class="settings-content-wrapper">
+          <div class="content-wrapper">
+            <DefaultButton :text="$t('tools.transform.settings.resize.applyResizeButton.text')" @click="applyResize"
+              main />
           </div>
         </div>
 
