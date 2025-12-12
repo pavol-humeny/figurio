@@ -2,10 +2,9 @@
 ## TODO 
 - Rámik monitoru 
 - Vylepšenie rámiku pre prehliadače 
-- Toggle button na skrytie crop boxu 
 - Hláška o tom že sa nedajú vykresliť tlačidlá telefónu sa vypisuje viac krát
 - Videá pre nástroje 
-- Videá pre feature tour 
+- Videá pre feature tour p
 - Farba sa do zoznamu farieb ukladá len raz (asi nedáva zmysel - treba premyslieť)
 - krok späť spôsobí zmazanie eventu artifacts warning 
 - SKIP - (asi to je v pohode tak ako to je) zoomovanie pomocou tlacitok, ak je obrazok mimo stred tak to zoomuje mimo obrázok 
@@ -17,14 +16,13 @@
 - zatvaranie pdf je strasne pomale
 - pixelovať všetky canvasy 
 - Expand header nefunguje dobre pri velkej hrubke ramiku 
-- prerobit resize tool, najskor sa nastavi velkost a az potom sa aplikuje
-- možno odstrániť hover efekt nad logom na home page 
 - pixely od určitej úrovne pri približovaní 
 - pixely by sa mohli dať prepínať manuálne 
 - Zjednodušiť nápovedy - tipy (kratšie texty)
 - šípky pre posúvanie (panel s nástrojmi, help, release note) by mohli fungovať aj na držanie
 - command - prepnutie do odtieňov sedi 
 - achievementy
+- pri zmene suboru sa neprepocitaju nejake hodnoty pre spravne zoomovanie
 
 
 
@@ -74,7 +72,9 @@ Event type:
     - value
 - zoomModeToggle
     - zoomMode
-- contrastModeToggle
+- contrastModeChanged
+    - mode
+- pixelateModeChanged
     - mode
 - closeFile
     - multipleFileClose

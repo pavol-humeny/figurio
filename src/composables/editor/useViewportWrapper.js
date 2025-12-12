@@ -874,6 +874,33 @@ export function useViewportWrapper(viewportStore, imageStore, editorStore, uiSto
     return uiStore.rulersEnabled ? '25px' : '10px'
   })
 
+  // ------------------------------
+  // Pixel grid mode
+  // ------------------------------
+  /**
+   * Available options for showing pixel grid
+   */
+  const viewportPixelateOptions = ['auto', 'always', 'never']
+
+  /**
+   * Mode for showing pixel grid (auto | always | never)
+   */
+  const viewportPixelateMode = computed({
+    get: () => uiStore.viewportPixelateMode,
+    set: (value) => uiStore.setViewportPixelateMode(value),
+  })
+
+  /**
+   * Cycle through pixel grid modes
+   */
+  const switchViewportPixelateMode = () => {
+    const currentIndex = viewportPixelateOptions.indexOf(viewportPixelateMode.value)
+    const nextIndex = (currentIndex + 1) % viewportPixelateOptions.length
+    viewportPixelateMode.value = viewportPixelateOptions[nextIndex]
+
+    addUserEvent('pixelateModeChanged', { mode: viewportPixelateMode.value })
+  }
+
   return {
     zoomLevel,
     setZoomAndScroll,
@@ -911,5 +938,7 @@ export function useViewportWrapper(viewportStore, imageStore, editorStore, uiSto
     backgroundMode,
     switchBackgroundMode,
     backgroundModePadding,
+    viewportPixelateMode,
+    switchViewportPixelateMode,
   }
 }

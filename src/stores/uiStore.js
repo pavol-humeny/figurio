@@ -142,6 +142,12 @@ export const useUiStore = defineStore('ui', {
       'normal',
     ),
 
+    /** Mode for pixelation (auto | always | never) */
+    viewportPixelateMode: getString(
+      `${globalConfig.LOCAL_STORAGE_PREFIX}viewportPixelateMode`,
+      'auto',
+    ),
+
     /** Whether any item tip is currently visible - use to show only one at the time */
     isItemTipVisible: false,
   }),
@@ -301,6 +307,18 @@ export const useUiStore = defineStore('ui', {
       localStorage.setItem(
         `${globalConfig.LOCAL_STORAGE_PREFIX}viewportWrapperBackgroundMode`,
         this.viewportWrapperBackgroundMode,
+      )
+    },
+
+    /**
+     * Set mode for showing pixel grid (auto | always | never)
+     * @param {string} mode - Pixel grid mode
+     */
+    setViewportPixelateMode(mode) {
+      this.viewportPixelateMode = mode
+      localStorage.setItem(
+        `${globalConfig.LOCAL_STORAGE_PREFIX}viewportPixelateMode`,
+        this.viewportPixelateMode,
       )
     },
   },

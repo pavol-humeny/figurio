@@ -1131,6 +1131,12 @@
       "text": "Změňte režim pozadí zobrazení na normální, kontrastní světlý nebo kontrastní tmavý pro lepší viditelnost okrajů obrázku."
     }
   },
+  "viewportPixelateMode": {
+    "tip": {
+      "title": "Režim pixelace",
+      "text": "Přepínejte mezi automatickou pixelací, vždy zapnutou nebo vypnutou pixelací a určete tak, jak se má obrázek zobrazovat při přiblížení."
+    }
+  },
   "artifactsWarning": {
     "tip": {
       "title": "Šum v obrázku",

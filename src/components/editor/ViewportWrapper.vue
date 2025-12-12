@@ -86,7 +86,9 @@ const {
   backgroundModeValues,
   backgroundMode,
   switchBackgroundMode,
-  backgroundModePadding
+  backgroundModePadding,
+  viewportPixelateMode,
+  switchViewportPixelateMode,
 } = useViewportWrapper(useViewportStore(), useImageStore(), useEditorStore(), useUiStore(), contentRef, t)
 
 /**
@@ -316,7 +318,7 @@ const cursorStyle = computed(() => {
       </ContextMenu>
     </div>
 
-    <!-- Mode -->
+    <!-- Contrast mode -->
     <div class="contrast-mode-wrapper" :style="{
       '--viewport-wrapper-background-top': backgroundModePadding,
     }">
@@ -329,6 +331,22 @@ const cursorStyle = computed(() => {
           : backgroundMode === 'lightContrast'
             ? 'IconLightMode'
             : 'IconDarkMode'" size="26" />
+      </ItemTip>
+    </div>
+
+    <!-- Pixelate Mode -->
+    <div class="pixelate-mode-wrapper" :style="{
+      '--viewport-wrapper-background-top': backgroundModePadding,
+    }">
+      <ItemTip advance :text="t('tools.viewportPixelateMode.tip.text')"
+        :title="$t('tools.viewportPixelateMode.tip.title')" position="bottom-left" class="pixelate-mode-button"
+        @click="switchViewportPixelateMode()">
+        <!-- Change icon based on mode -->
+        <BaseIcon :name="viewportPixelateMode === 'auto'
+          ? 'IconAutoMode'
+          : viewportPixelateMode === 'always'
+            ? 'IconPixelsOnMode'
+            : 'IconPixelsOffMode'" size="26" />
       </ItemTip>
     </div>
 
@@ -374,7 +392,7 @@ const cursorStyle = computed(() => {
         </div>
         <div v-if="mouseX !== null" class="ruler-cursor-mark horizontal" :style="{ left: mouseX + 'px' }">
           <span class="ruler-cursor-label horizontal" :class="{ 'active': cursorPosXSameAsImageWidth }">{{ cursorPosX
-          }}</span>
+            }}</span>
         </div>
 
       </div>
@@ -387,7 +405,7 @@ const cursorStyle = computed(() => {
         </div>
         <div v-if="mouseY !== null" class="ruler-cursor-mark vertical" :style="{ top: mouseY + 'px' }">
           <span class="ruler-cursor-label vertical" :class="{ 'active': cursorPosYSameAsImageHeight }">{{ cursorPosY
-          }}</span>
+            }}</span>
         </div>
       </div>
     </div>
@@ -450,7 +468,7 @@ const cursorStyle = computed(() => {
 .overlay-canvas {
   opacity: 0;
   animation: overlayBlink 2s infinite;
-  image-rendering: pixelated;
+  /* image-rendering: pixelated; */
 }
 
 @keyframes overlayBlink {
@@ -481,23 +499,40 @@ const cursorStyle = computed(() => {
   display: flex;
   align-items: center;
   justify-content: center;
-  /* box-shadow: var(--box-shadow-ui); */
 }
 
-.contrast-mode-button {
+.pixelate-mode-wrapper {
+  position: absolute;
+  top: var(--viewport-wrapper-background-top);
+  right: 60px;
+  height: 36px;
+  width: 36px;
+  border-radius: 8px;
+  background: var(--secondary-c);
+  z-index: var(--z-index-sliders);
+  color: var(--primary-c);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.contrast-mode-button,
+.pixelate-mode-button {
   padding: 2px;
   border-radius: 7px;
   border: 1px solid transparent;
 }
 
-.contrast-mode-button:hover {
+.contrast-mode-button:hover,
+.pixelate-mode-button:hover {
   border: var(--border-ui);
   cursor: pointer;
 }
 
-.contrast-mode-button.selected {
+/* .contrast-mode-button.selected,
+.pixelate-mode-button.selected {
   background-color: var(--background-c);
-}
+} */
 
 /* Warning List */
 .warning-list {

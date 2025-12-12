@@ -1130,6 +1130,12 @@
       "text": "Zmeňte režim pozadia zobrazenia na normálny, kontrastný svetlý alebo kontrastný tmavý pre lepšiu viditeľnosť okrajov obrázka."
     }
   },
+  "viewportPixelateMode": {
+    "tip": {
+      "title": "Režim pixelácia",
+      "text": "Prepínajte medzi automatickou pixeláciou, vždy zapnutou alebo vypnutou pixeláciou a určite tak, ako sa má obrázok zobrazovať pri priblížení."
+    }
+  },
   "artifactsWarning": {
     "tip": {
       "title": "Šum v obrázku",

@@ -126,7 +126,7 @@ export const useEditorStore = defineStore('editorStore', {
 
     /** Whether any modal is open */
     isModalOpenFlag: false,
-
+    
     /**
      * Random events state
      */

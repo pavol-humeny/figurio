@@ -1130,6 +1130,12 @@
       "text": "Change the background mode of the viewport to normal, contrast light or contrast dark for better visibility of the image edges."
     }
   },
+  "viewportPixelateMode": {
+    "tip": {
+      "title": "Pixelation mode",
+      "text": "Switch between automatic, always-on, or disabled pixelation to control how the image is displayed when zooming."
+    }
+  },
   "artifactsWarning": {
     "tip": {
       "title": "Noise in image",
