@@ -10,6 +10,7 @@ pdfjsLib.GlobalWorkerOptions.workerSrc =
   'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js'
 
 import { useConsole } from '@/composables/common/useConsole.js'
+import { viewportConfig } from '@/config/viewportConfig'
 const { log, warn } = useConsole()
 // const { showToastModal } = useToastModal()
 
@@ -287,7 +288,7 @@ export function useImageRenderer(
       }
 
       imageStore.previewUrl = imageRef.value.src
-      imageRef.value.style.imageRendering = 'pixelated'
+      // imageRef.value.style.imageRendering = 'pixelated'
     }
 
     // Value for blur preview
@@ -366,6 +367,26 @@ export function useImageRenderer(
       renderCanvas()
     }
   }
+
+  /**
+   * Watch for changes in pixelate mode or zoom level and update image rendering style
+   */
+  watch(
+    [() => uiStore.viewportPixelateMode, () => viewportStore.zoomLevel],
+    ([mode, zoom]) => {
+      if (!imageRef.value) return
+
+      if (mode === 'always') {
+        imageRef.value.style.imageRendering = 'pixelated'
+      } else if (mode === 'never') {
+        imageRef.value.style.imageRendering = 'auto'
+      } else if (mode === 'auto') {
+        imageRef.value.style.imageRendering =
+          zoom > viewportConfig.pixelateAutoZoomThreshold ? 'pixelated' : 'auto'
+      }
+    },
+    { immediate: true },
+  )
 
   /**
    * Watch for changes in image store and re-render all layers

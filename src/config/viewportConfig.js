@@ -31,4 +31,7 @@ export const viewportConfig = {
   noiseTopThreshold: 0.6, // 60% noise level to skip analysis
   bgCoverageThreshold: 0.5, // 50% background coverage to run noise analysis
   colorDistanceThreshold: 15, // color distance from background considered as near-background
+
+  // Pixelate modes
+  pixelateAutoZoomThreshold: 3.0, // Zoom level above which pixelation is applied in 'auto' mode
 }

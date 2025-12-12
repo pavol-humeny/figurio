@@ -9,6 +9,8 @@ import { useViewportStore } from '@/stores/viewportStore'
 import { editorConfig } from '@/config/editorConfig.js'
 import { useEditorStore } from '@/stores/editorStore'
 import { useToastModal } from '@/composables/modals/useToastModal'
+import { useUiStore } from '@/stores/uiStore'
+import { viewportConfig } from '@/config/viewportConfig.js'
 
 const { t } = useI18n()
 
@@ -16,6 +18,7 @@ const imageStore = useImageStore()
 const viewportStore = useViewportStore()
 const editorStore = useEditorStore()
 const historyStore = useHistoryStore()
+const uiStore = useUiStore()
 
 const {
   manualSelectedTool,
@@ -252,11 +255,33 @@ const onMouseUpGlobal = () => {
 onMounted(() => {
   ctx = manualCanvasRef.value.getContext('2d', { willReadFrequently: true })
   ctx.imageSmoothingEnabled = false
-  manualCanvasRef.value.style.imageRendering = 'pixelated'
+  // manualCanvasRef.value.style.imageRendering = 'pixelated'
   window.addEventListener('mouseup', onMouseUpGlobal)
   window.addEventListener('mousemove', onMouseMove)
   window.addEventListener('mousedown', onMouseDown)
 })
+
+/**
+  * Watch for changes in pixelate mode or zoom level and update image rendering style
+  */
+watch(
+  [() => uiStore.viewportPixelateMode, () => viewportStore.zoomLevel],
+  ([mode, zoom]) => {
+
+    if (!manualCanvasRef.value) return
+
+    if (mode === 'always') {
+      manualCanvasRef.value.style.imageRendering = 'pixelated'
+    } else if (mode === 'never') {
+      manualCanvasRef.value.style.imageRendering = 'auto'
+    } else if (mode === 'auto') {
+      manualCanvasRef.value.style.imageRendering =
+        zoom > viewportConfig.pixelateAutoZoomThreshold ? 'pixelated' : 'auto'
+    }
+  },
+  { immediate: true },
+)
+
 
 /**
  * Watch for changes in the stored manual canvas and update the displayed canvas accordingly

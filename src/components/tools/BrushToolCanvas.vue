@@ -1,17 +1,20 @@
 <script setup>
-import { ref, computed, onMounted, onBeforeUnmount } from 'vue'
+import { ref, computed, onMounted, onBeforeUnmount, watch } from 'vue'
 import { useImageStore } from '@/stores/imageStore'
 import { useHistoryStore } from '@/stores/historyStore'
 import { useViewportStore } from '@/stores/viewportStore'
 import { useI18n } from 'vue-i18n'
 import { useEditorStore } from '@/stores/editorStore'
 import { useToastModal } from '@/composables/modals/useToastModal'
+import { useUiStore } from '@/stores/uiStore'
+import { viewportConfig } from '@/config/viewportConfig.js'
 
 const { t } = useI18n()
 const imageStore = useImageStore()
 const historyStore = useHistoryStore()
 const viewportStore = useViewportStore()
 const editorStore = useEditorStore()
+const uiStore = useUiStore()
 const { showToastModal } = useToastModal()
 
 /**
@@ -143,12 +146,34 @@ const onMouseUpGlobal = () => {
 }
 
 /**
+  * Watch for changes in pixelate mode or zoom level and update image rendering style
+  */
+watch(
+  [() => uiStore.viewportPixelateMode, () => viewportStore.zoomLevel],
+  ([mode, zoom]) => {
+
+    if (!canvasRef.value) return
+
+    if (mode === 'always') {
+      canvasRef.value.style.imageRendering = 'pixelated'
+    } else if (mode === 'never') {
+      canvasRef.value.style.imageRendering = 'auto'
+    } else if (mode === 'auto') {
+      canvasRef.value.style.imageRendering =
+        zoom > viewportConfig.pixelateAutoZoomThreshold ? 'pixelated' : 'auto'
+    }
+  },
+  { immediate: true },
+)
+
+
+/**
  * Init + cleanup
  */
 onMounted(() => {
   ctx = canvasRef.value.getContext('2d', { willReadFrequently: true })
   ctx.imageSmoothingEnabled = false
-  canvasRef.value.style.imageRendering = 'pixelated'
+  // canvasRef.value.style.imageRendering = 'pixelated'
   window.addEventListener('mouseup', onMouseUpGlobal)
   window.addEventListener('mousemove', onMouseMove)
   window.addEventListener('mousedown', onMouseDown)
