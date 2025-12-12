@@ -505,7 +505,7 @@ export function useViewportWrapper(viewportStore, imageStore, editorStore, uiSto
     () => uiStore.rightPanelOpen,
     () => {
       nextTick(() => {
-        centerImagePosition()
+        // centerImagePosition()
       })
     },
     { immediate: true },
@@ -775,7 +775,7 @@ export function useViewportWrapper(viewportStore, imageStore, editorStore, uiSto
             height: wrapperRef.value.clientHeight,
           }
 
-          setValuesForCenterImage()
+          // setValuesForCenterImage() // To prevent jumping when side panel is opened/closed
 
           throttledUpdateRulers()
         })

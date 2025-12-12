@@ -139,14 +139,6 @@ export const useViewportStore = defineStore('viewportStore', {
   },
   actions: {
     /**
-     * Set the current zoom level, rounded to 2 decimal places.
-     * @param {number} level
-     */
-    // setZoomLevel(level) {
-    //   this.zoomLevel = round(level, 2)
-    // },
-
-    /**
      * Set the current zoom level keeping the current viewport center
      * anchored to the same point in the image (not the global center).
      * @param {number} level

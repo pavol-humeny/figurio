@@ -16,7 +16,6 @@
 - eye dropper na safari
 - zatvaranie pdf je strasne pomale
 - pixelovať všetky canvasy 
-- Ak je obrazok zmenseny a meni sa side panel tak to lieta 
 - Expand header nefunguje dobre pri velkej hrubke ramiku 
 - prerobit resize tool, najskor sa nastavi velkost a az potom sa aplikuje
 - možno odstrániť hover efekt nad logom na home page 

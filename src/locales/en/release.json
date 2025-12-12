@@ -9,7 +9,8 @@
       "date":"8.12. 2025",
       "bugFixes": {
         "items": [
-          "Reset zoom level after closing the file"
+          "Reset zoom level after closing the file",
+          "Fix issue with jumping viewport when changing closing and opening side panel"
         ]
       }
     },
