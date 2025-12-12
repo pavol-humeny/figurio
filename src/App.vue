@@ -126,6 +126,13 @@ onMounted(async () => {
     router.replace({ name: 'home' })
   }
 
+
+  // Set primary color CSS variable if in localStorage
+  const primaryColor = localStorage.getItem(`${globalConfig.LOCAL_STORAGE_PREFIX}primaryColor`)
+  if (primaryColor) {
+    document.documentElement.style.setProperty('--primary-c', primaryColor)
+  }
+
   addUserVisit(userUuid)
 })
 

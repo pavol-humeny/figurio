@@ -8,6 +8,8 @@ export const userModeConfig = {
   listOfCommands: [
     'turn on <snowfall|christmasLights|christmasTree|randomEvents>', // Enable feature
     'turn off <snowfall|christmasLights|christmasTree|randomEvents>', // Disable feature
+    'set <option> <value>', // Set configuration option
+    'reset <option>', // Reset configuration option
     'help', // Show help information
   ],
 
@@ -49,6 +51,29 @@ export const userModeConfig = {
 
       DESCRIPTION
           Shows a list of all available commands and their usage information.
+      `,
+    set: `
+      NAME
+          set - Set a configuration option
+
+      SYNOPSIS
+          set <option> <value>
+
+      DESCRIPTION
+          Available options:
+            primaryColor <color>   Set the primary color of the application (e.g., #ff0000)
+
+      `,
+    reset: `
+      NAME
+          reset - Reset a configuration option
+
+      SYNOPSIS
+          reset <option>
+
+      DESCRIPTION
+          Available options:
+            primaryColor   Reset the primary color to default
       `,
   },
 

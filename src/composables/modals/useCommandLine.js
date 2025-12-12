@@ -2,6 +2,7 @@ import { ref, nextTick, onMounted, onBeforeMount } from 'vue'
 import { useConsole } from '../common/useConsole'
 import { useApi } from '../common/useApi'
 import { userModeConfig } from '@/config/userModeConfig'
+import { globalConfig } from '@/config/globalConfig'
 
 const { warn } = useConsole()
 const { addUserEvent } = useApi()
@@ -63,6 +64,14 @@ export function useCommandLine(userModeStore, editorStore) {
 
       case 'turn':
         handleTurnCommand(args)
+        break
+
+      case 'set':
+        handleSetCommand(args)
+        break
+
+      case 'reset':
+        handleResetCommand(args)
         break
 
       default:
@@ -152,6 +161,66 @@ export function useCommandLine(userModeStore, editorStore) {
     }
   }
 
+  const handleSetCommand = (args) => {
+    if (args.length < 2) {
+      output.value.push('Usage: set <setting> <value>')
+      return
+    }
+
+    const setting = args[0]
+    const value = args[1]
+    const commandIdentifier = `set ${setting}`
+
+    console.log('SET COMMAND:', commandIdentifier, value)
+
+    // Execute command
+    switch (commandIdentifier) {
+      case 'set primarycolor':
+        setPrimaryColor(value)
+        addUserEvent('command', { commandIdentifier: `${commandIdentifier} ${value}` })
+        break
+
+      default:
+        output.value.push(`Unknown set command: ${commandIdentifier}`)
+    }
+  }
+
+  const handleResetCommand = (args) => {
+    if (args.length < 1) {
+      output.value.push('Usage: reset <setting>')
+      return
+    }
+
+    const setting = args[0]
+    const commandIdentifier = `reset ${setting}`
+
+    // Execute command
+    switch (commandIdentifier) {
+      case 'reset primarycolor':
+        resetPrimaryColor()
+        addUserEvent('command', { commandIdentifier })
+        break
+
+      default:
+        output.value.push(`Unknown reset command: ${commandIdentifier}`)
+    }
+  }
+
+  const setPrimaryColor = (color) => {
+    document.documentElement.style.setProperty('--primary-c', color)
+
+    // Save to localStorage
+    localStorage.setItem(`${globalConfig.LOCAL_STORAGE_PREFIX}primaryColor`, color)
+  }
+
+  const resetPrimaryColor = () => {
+    // Remove inline override
+    document.documentElement.style.removeProperty('--primary-c')
+
+    // Remove saved value
+    localStorage.removeItem(`${globalConfig.LOCAL_STORAGE_PREFIX}primaryColor`)
+  }
+
   /**
    * Print man page hint
    *
@@ -217,6 +286,13 @@ export function useCommandLine(userModeStore, editorStore) {
     if (e.ctrlKey && e.key.toLowerCase() === 'd') {
       e.preventDefault()
       switchToBasicMode()
+      return
+    }
+
+    // CTRL + C - clear command line
+    if (e.ctrlKey && e.key.toLowerCase() === 'c') {
+      e.preventDefault()
+      command.value = ''
       return
     }
 
