@@ -14,6 +14,7 @@ import { useApi } from '../../composables/common/useApi';
 import { useEditorStore } from '@/stores/editorStore';
 import { useUserModeStore } from '@/stores/userModeStore';
 import CommandLine from './CommandLine.vue';
+import { useHoldButton } from '@/composables/common/useHoldButton';
 
 const { messages, locale, t } = useI18n()
 const router = useRouter()
@@ -74,6 +75,14 @@ const { isTutorialEnabled } = useInteractiveTutorial(
 )
 
 /**
+ * Logic of the hold button for continuous action on hold
+ */
+const {
+  startHold,
+  stopHold,
+} = useHoldButton();
+
+/**
  * Navigates to the statistics view
  */
 const showStatistics = () => {
@@ -96,7 +105,8 @@ const showStatistics = () => {
 
         <div class="help-content-panel">
           <!-- Arrow up -->
-          <div v-if="!atTop" class="arrow-up" @click="scrollUp">
+          <div v-if="!atTop" class="arrow-up" @mousedown="startHold(scrollUp)" @mouseup="stopHold"
+            @mouseleave="stopHold">
             <BaseIcon name="IconArrowUp" size="24" color="var(--primary-c)" />
           </div>
 
@@ -566,7 +576,8 @@ const showStatistics = () => {
           </div>
 
           <!-- Arrow down -->
-          <div v-if="!atBottom" class="arrow-down" @click="scrollDown">
+          <div v-if="!atBottom" class="arrow-down" @mousedown="startHold(scrollDown)" @mouseup="stopHold"
+            @mouseleave="stopHold">
             <BaseIcon name="IconArrowDown" size="24" color="var(--primary-c)" />
           </div>
         </div>

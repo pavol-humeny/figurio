@@ -116,14 +116,14 @@ export function useHelpModal(uiStore, imageStore, editorStore, userModeStore, ro
    * Scroll up the help modal content
    */
   const scrollUp = () => {
-    helpContentRef.value?.scrollBy({ top: -100, behavior: 'smooth' })
+    helpContentRef.value?.scrollBy({ top: -20, behavior: 'auto' })
   }
 
   /**
    * Scroll down the help modal content
    */
   const scrollDown = () => {
-    helpContentRef.value?.scrollBy({ top: 100, behavior: 'smooth' })
+    helpContentRef.value?.scrollBy({ top: 20, behavior: 'auto' })
   }
 
   /**
@@ -300,26 +300,26 @@ export function useHelpModal(uiStore, imageStore, editorStore, userModeStore, ro
   //   warn('Random events disabled via contact form')
   //   addUserEvent('command', { commandIdentifier: 'turn off randomEvents' })
   //         break
-        // case 'turn on snowfall':
-        //   editorStore.randomEvents.snowfallActive = true
-        //   warn('Snowfall enabled via contact form')
-        //   addUserEvent('command', { commandIdentifier: 'turn on snowfall' })
-        //   break
-        // case 'turn off snowfall':
-        //   editorStore.randomEvents.snowfallActive = false
-        //   warn('Snowfall disabled via contact form')
-        //   addUserEvent('command', { commandIdentifier: 'turn off snowfall' })
-        //   break
-        // case 'turn on christmasLights':
-        //   editorStore.randomEvents.christmasLightsActive = true
-        //   warn('Christmas lights enabled via contact form')
-        //   addUserEvent('command', { commandIdentifier: 'turn on christmasLights' })
-        //   break
-        // case 'turn off christmasLights':
-        //   editorStore.randomEvents.christmasLightsActive = false
-        //   warn('Christmas lights disabled via contact form')
-        //   addUserEvent('command', { commandIdentifier: 'turn off christmasLights' })
-        //   break
+  // case 'turn on snowfall':
+  //   editorStore.randomEvents.snowfallActive = true
+  //   warn('Snowfall enabled via contact form')
+  //   addUserEvent('command', { commandIdentifier: 'turn on snowfall' })
+  //   break
+  // case 'turn off snowfall':
+  //   editorStore.randomEvents.snowfallActive = false
+  //   warn('Snowfall disabled via contact form')
+  //   addUserEvent('command', { commandIdentifier: 'turn off snowfall' })
+  //   break
+  // case 'turn on christmasLights':
+  //   editorStore.randomEvents.christmasLightsActive = true
+  //   warn('Christmas lights enabled via contact form')
+  //   addUserEvent('command', { commandIdentifier: 'turn on christmasLights' })
+  //   break
+  // case 'turn off christmasLights':
+  //   editorStore.randomEvents.christmasLightsActive = false
+  //   warn('Christmas lights disabled via contact form')
+  //   addUserEvent('command', { commandIdentifier: 'turn off christmasLights' })
+  //   break
   //       case 'clear':
   //         contactForm.name = ''
   //         contactForm.email = ''

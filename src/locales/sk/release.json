@@ -6,6 +6,22 @@
     ]
   },
   "versions": {
+    "4.18.6": {
+      "label": "4.18.6",
+      "date": "12.12. 2025",
+      "newFeatures": {
+        "items": [
+          "Pridané rôzne režimy pixelácie pre vykresľovanie viewportu",
+          "Šípky na posúvanie nahor a nadol je možné podržať pre plynulé posúvanie"
+        ]
+      },
+      "bugFixes": {
+        "items": [
+          "Reset úrovne priblíženia po zatvorení súboru",
+          "Opravený problém s poskakovaním viewportu pri zatváraní a otváraní bočného panela"
+        ]
+      }
+    },
     "4.18.5":{
       "label": "4.18.5",
       "date":"8.12. 2025",

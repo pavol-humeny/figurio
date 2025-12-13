@@ -4,6 +4,7 @@ import DefaultButton from '@/components/common/DefaultButton.vue';
 import { useReleaseModal } from '@/composables/modals/useReleaseModal';
 import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
+import { useHoldButton } from '@/composables/common/useHoldButton';
 
 const { messages, locale } = useI18n()
 
@@ -35,6 +36,14 @@ const {
   closeReleaseModal,
 } = useReleaseModal();
 
+/**
+ * Logic of the hold button for continuous action on hold
+ */
+const {
+  startHold,
+  stopHold,
+} = useHoldButton();
+
 </script>
 
 <template>
@@ -48,7 +57,8 @@ const {
 
         <div class="release-content-panel">
           <!-- Arrow up -->
-          <div v-if="!atTop" class="arrow-up" @click="scrollUp">
+          <div v-if="!atTop" class="arrow-up" @mousedown="startHold(scrollUp)" @mouseup="stopHold"
+            @mouseleave="stopHold">
             <BaseIcon name="IconArrowUp" size="24" color="var(--primary-c)" />
           </div>
 
@@ -108,7 +118,8 @@ const {
           </div>
 
           <!-- Arrow down -->
-          <div v-if="!atBottom" class="arrow-down" @click="scrollDown">
+          <div v-if="!atBottom" class="arrow-down" @mousedown="startHold(scrollDown)" @mouseup="stopHold"
+            @mouseleave="stopHold">
             <BaseIcon name="IconArrowDown" size="24" color="var(--primary-c)" />
           </div>
         </div>

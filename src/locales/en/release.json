@@ -6,10 +6,11 @@
   "versions":{
     "4.18.6":{
       "label": "4.18.6",
-      "date":"8.12. 2025",
+      "date":"12.12. 2025",
       "newFeatures": {
         "items": [
-          "Add different pixelate modes for viewport rendering"
+          "Add different pixelate modes for viewport rendering",
+          "Arrows for scrolling up and down can be hold for continuous scrolling"
         ]
       },
       "bugFixes": {

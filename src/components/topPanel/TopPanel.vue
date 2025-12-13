@@ -28,6 +28,7 @@ const editorStore = useEditorStore()
  */
 const route = useRoute()
 const isEditorViewOrStatistics = computed(() => route.name === 'editor' || route.name === 'statistics')
+const isEditorView = computed(() => route.name === 'editor')
 
 /**
  * Computes the logo source based on the current theme.
@@ -145,7 +146,7 @@ const getLightPosition = (index, total, color, delay) => {
       </div>
       <ExportFileButton v-if="showControls" />
     </div>
-    <div class="top-panel-center" v-if="!isHomeView">
+    <div class="top-panel-center" v-if="isEditorView">
       <div class="top-panel-center-wrapper" id="top-panel-center">
         <UndoRedo v-if="showControls" />
         <ZoomControl v-if="showControls" />

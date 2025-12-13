@@ -1,4 +1,3 @@
-import { editorConfig } from '@/config/editorConfig'
 import { ref, watch } from 'vue'
 
 /**
@@ -30,12 +29,6 @@ export function useStepperInput(props, emit) {
    * Internal reactive value of the input
    */
   const inputValue = ref(props.modelValue)
-
-  /**
-   * Timeout and interval references for hold action
-   */
-  const holdTimeout = ref(null)
-  const holdInterval = ref(null)
 
   /**
    * Watch for external changes to modelValue and update internal state
@@ -73,34 +66,6 @@ export function useStepperInput(props, emit) {
       inputValue.value -= props.step
       emitChange()
     }
-  }
-
-  /**
-   * Starts the hold action to continuously call the provided action function
-   *
-   * @param {Function} action - Function to call repeatedly while holding
-   */
-  const startHold = (action) => {
-    // Call immediately
-    action()
-
-    // Wait (longer pause before repeating)
-    holdTimeout.value = setTimeout(() => {
-      // Start interval with shorter period
-      holdInterval.value = setInterval(() => {
-        action()
-      }, editorConfig.holdButtonInterval)
-    }, editorConfig.holdButtonTimeout)
-  }
-
-  /**
-   * Stops the hold action by clearing timeouts and intervals
-   */
-  const stopHold = () => {
-    clearTimeout(holdTimeout.value)
-    clearInterval(holdInterval.value)
-    holdTimeout.value = null
-    holdInterval.value = null
   }
 
   /**
@@ -164,7 +129,5 @@ export function useStepperInput(props, emit) {
     disableIncrease,
     disableDecrease,
     changeValue,
-    startHold,
-    stopHold,
   }
 }

@@ -2,6 +2,7 @@
 import ItemTip from './ItemTip.vue'
 import BaseIcon from '../icons/BaseIcon.vue'
 import { useStepperInput } from '@/composables/common/useStepperInput'
+import { useHoldButton } from '@/composables/common/useHoldButton'
 
 /**
  * @typedef {Object} StepperInputProps
@@ -67,10 +68,16 @@ const {
   setValue,
   disableIncrease,
   disableDecrease,
-  changeValue,
+  changeValue
+} = useStepperInput(props, emit)
+
+/**
+ * Logic of the hold button for continuous action on hold
+ */
+const {
   startHold,
   stopHold,
-} = useStepperInput(props, emit)
+} = useHoldButton()
 
 /**
  * Expose methods for external use

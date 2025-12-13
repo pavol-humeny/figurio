@@ -127,14 +127,16 @@ export function useToolsPanel(editorStore, imageStore, uiStore, workspaceStore, 
    * Scroll panel upward by 100px
    */
   const scrollUp = () => {
-    toolsRef.value?.scrollBy({ top: -100, behavior: 'smooth' })
+    console.log('scrollUp')
+    toolsRef.value?.scrollBy({ top: -10, behavior: 'auto' })
   }
 
   /**
    * Scroll panel downward by 100px
    */
   const scrollDown = () => {
-    toolsRef.value?.scrollBy({ top: 100, behavior: 'smooth' })
+    console.log('scrollDown')
+    toolsRef.value?.scrollBy({ top: 10, behavior: 'auto' })
   }
 
   // Hold-scroll state

@@ -2,13 +2,14 @@
 import BaseIcon from '@/components/icons/BaseIcon.vue'
 import OneTool from './OneTool.vue'
 import { useI18n } from 'vue-i18n'
-import { computed } from 'vue'
+import { computed, watch } from 'vue'
 import { useToolsPanel } from '@/composables/tools/useToolsPanel'
 import { toolsDefinitions } from '@/config/toolsDefinitions'
 import { useEditorStore } from '@/stores/editorStore'
 import { useImageStore } from '@/stores/imageStore'
 import { useUiStore } from '@/stores/uiStore'
 import { useWorkspaceStore } from '@/stores/workspaceStore'
+import { useHoldButton } from '@/composables/common/useHoldButton';
 
 const { t } = useI18n()
 
@@ -26,6 +27,15 @@ const {
   selectTool,
   isToolDisabled,
 } = useToolsPanel(useEditorStore(), useImageStore(), useUiStore(), useWorkspaceStore(), t)
+
+
+/**
+ * Logic of the hold button for continuous action on hold
+ */
+const {
+  startHold,
+  stopHold,
+} = useHoldButton();
 
 /**
  * Computed tool list with localized labels, tips and shortcuts
@@ -46,12 +56,23 @@ const tools = computed(() =>
       })) || [],
   })),
 )
+
+/**
+ * Watchers to stop hold scrolling when reaching top or bottom
+ */
+watch(atTop, (newVal) => {
+  if (newVal) stopHold();
+});
+watch(atBottom, (newVal) => {
+  if (newVal) stopHold();
+});
 </script>
 
 <template>
   <div class="tools-panel" id="tools-panel">
-    <div v-if="!atTop" class="arrow-up" @click="scrollUp">
-      <BaseIcon name="IconArrowUp" size="24" color="var(--primary-c)" />
+    <div v-if="!atTop" class="arrow-up">
+      <BaseIcon name="IconArrowUp" size="24" color="var(--primary-c)" @mousedown="startHold(scrollUp)"
+        @mouseup="stopHold" @mouseleave="stopHold" />
     </div>
 
     <div ref="toolsRef" class="tools-wrapper" @scroll="checkScroll">
@@ -64,8 +85,9 @@ const tools = computed(() =>
         }" @click="selectTool" :disabled="isToolDisabled" />
     </div>
 
-    <div v-if="!atBottom" class="arrow-down" @click="scrollDown">
-      <BaseIcon name="IconArrowDown" size="24" color="var(--primary-c)" />
+    <div v-if="!atBottom" class="arrow-down">
+      <BaseIcon name="IconArrowDown" size="24" color="var(--primary-c)" @mousedown="startHold(scrollDown)"
+        @mouseup="stopHold" @mouseleave="stopHold" />
     </div>
   </div>
 </template>
