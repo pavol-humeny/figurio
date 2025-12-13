@@ -7,18 +7,18 @@ import ZoomControl from './ZoomControl.vue';
 import UploadFileButton from './UploadFileButton.vue';
 import CloseFileButton from './CloseFileButton.vue';
 import ExportFileButton from './ExportFileButton.vue';
-import { useUiStore } from '@/stores/uiStore';
+// import { useUiStore } from '@/stores/uiStore';
 import { useRoute } from 'vue-router'
 import { computed } from 'vue'
-import FigurioLogoDark from '@/assets/FigurioLogoDark.png'
-import FigurioLogoLight from '@/assets/FigurioLogoLight.png'
+// import FigurioLogoDark from '@/assets/FigurioLogoDark.png'
+// import FigurioLogoLight from '@/assets/FigurioLogoLight.png'
 import { useRouter } from 'vue-router'
 import { ref } from 'vue'
 import BaseIcon from '@/components/icons/BaseIcon.vue'
 import { useUserModeStore } from '@/stores/userModeStore';
 import { useEditorStore } from '@/stores/editorStore';
 
-const uiStore = useUiStore()
+// const uiStore = useUiStore()
 const router = useRouter()
 const userModeStore = useUserModeStore()
 const editorStore = useEditorStore()
@@ -27,14 +27,14 @@ const editorStore = useEditorStore()
  * Checks if the current view is 'home' to conditionally render parts of the top panel
  */
 const route = useRoute()
-const isHomeView = computed(() => route.name === 'home')
+const isEditorViewOrStatistics = computed(() => route.name === 'editor' || route.name === 'statistics')
 
 /**
  * Computes the logo source based on the current theme.
  */
-const logoSrc = computed(() => {
-  return uiStore.theme === 'dark' ? FigurioLogoDark : FigurioLogoLight
-})
+// const logoSrc = computed(() => {
+//   return uiStore.theme === 'dark' ? FigurioLogoDark : FigurioLogoLight
+// })
 
 /**
  * Navigates to the home view.
@@ -125,10 +125,15 @@ const getLightPosition = (index, total, color, delay) => {
 
     </div>
 
-    <div class="top-panel-left" v-if="!isHomeView">
+    <div class="top-panel-left" v-if="isEditorViewOrStatistics">
       <div class="top-panel-left-wrapper" id="top-panel-left">
-        <div class="top-panel-logo-wrapper">
-          <img @click="goHome" :src="logoSrc" alt="Figurio logo" @dragstart.prevent>
+        <div class="top-panel-logo-wrapper" @click="goHome">
+          <!-- <img @click="goHome" :src="logoSrc" alt="Figurio logo" @dragstart.prevent> -->
+
+          <BaseIcon name="IconLogo" class="logo" :size="40" color="var(--primary-c)" />
+
+          <p class="logo-letter">F</p>
+
           <BaseIcon v-if="userModeStore.isExpertMode" class="user-mode-icon" name="IconStar" size="17"
             color="var(--gold-c)" />
           <BaseIcon v-if="userModeStore.isAdminMode" class="user-mode-icon" name="IconCrown" size="17"
@@ -204,6 +209,17 @@ const getLightPosition = (index, total, color, delay) => {
   display: flex;
   align-items: center;
   margin-right: 10px;
+  cursor: pointer;
+}
+
+.logo-letter {
+  position: absolute;
+  top: 50%;
+  left: 45%;
+  transform: translate(-50%, -50%);
+  font-family: var(--font-family-rc);
+  font-size: 33px;
+  opacity: 0.8;
 }
 
 .user-mode-icon {

@@ -13,8 +13,8 @@ import { useSettingsPanel } from '@/composables/topPanel/useSettingsPanel';
 import { useInteractiveTutorial } from '@/composables/tutorial/useInteractiveTutorial';
 import DefaultButton from '@/components/common/DefaultButton.vue';
 import { computed } from 'vue'
-import FigurioLogoDark from '@/assets/FigurioLogoDark.png'
-import FigurioLogoLight from '@/assets/FigurioLogoLight.png'
+// import FigurioLogoDark from '@/assets/FigurioLogoDark.png'
+// import FigurioLogoLight from '@/assets/FigurioLogoLight.png'
 import { useDragAndDropArea } from '@/composables/editor/useDragAndDropArea';
 import { useEditorStore } from '@/stores/editorStore';
 import { useFeatureTourModal } from '@/composables/modals/useFeatureTourModal';
@@ -26,7 +26,7 @@ import ChristmasTree from '@/components/randomEvents/ChristmasTree.vue';
 
 const { t, messages, locale } = useI18n()
 const router = useRouter()
-const uiStore = useUiStore()
+// const uiStore = useUiStore()
 const userModeStore = useUserModeStore()
 const editorStore = useEditorStore()
 
@@ -58,9 +58,9 @@ useKeyboardShortcuts({
 /**
  * Computes the logo source based on the current theme.
  */
-const logoSrc = computed(() => {
-  return uiStore.theme === 'dark' ? FigurioLogoDark : FigurioLogoLight
-})
+// const logoSrc = computed(() => {
+//   return uiStore.theme === 'dark' ? FigurioLogoDark : FigurioLogoLight
+// })
 
 const features = computed(() => {
   return messages.value[locale.value]?.home?.features || [];
@@ -96,7 +96,11 @@ onMounted(() => {
     <div class="left-side">
       <div class="app-name">
         <div class="logo-wrapper">
-          <img :src="logoSrc" alt="Figurio logo" :style="{ 'user-select': 'none' }" @dragstart.prevent>
+          <!-- <img :src="logoSrc" alt="Figurio logo" :style="{ 'user-select': 'none' }" @dragstart.prevent> -->
+          <BaseIcon name="IconLogo" class="logo" :size="60" color="var(--primary-c)" />
+
+          <p class="logo-letter">F</p>
+
           <BaseIcon v-if="userModeStore.isExpertMode" class="user-mode-icon" name="IconStar" size="25"
             color="var(--gold-c)" />
           <BaseIcon v-if="userModeStore.isAdminMode" class="user-mode-icon" name="IconCrown" size="25"
@@ -167,6 +171,16 @@ onMounted(() => {
   position: relative;
   display: flex;
   align-items: center;
+}
+
+.logo-letter {
+  position: absolute;
+  top: 50%;
+  left: 45%;
+  transform: translate(-50%, -50%);
+  font-family: var(--font-family-rc);
+  font-size: 48px;
+  opacity: 0.8;
 }
 
 .user-mode-icon {
