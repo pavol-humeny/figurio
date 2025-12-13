@@ -1,0 +1,1 @@
+(function(){"use strict";self.onmessage=async f=>{const{imageData:g,width:t,height:e,oldWidth:s,oldHeight:a}=f.data,n=new OffscreenCanvas(t,e).getContext("2d"),c=new OffscreenCanvas(s,a);c.getContext("2d").putImageData(g,0,0),n.drawImage(c,0,0,s,a,0,0,t,e);const o=n.getImageData(0,0,t,e);self.postMessage(o,[o.data.buffer])}})();
