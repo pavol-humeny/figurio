@@ -10,20 +10,31 @@ const blinkEnabled = ref(true)
 const whiteLights = ref(false)
 
 let scene, camera, renderer, controls, animationId
+let raycaster, mouse
+let draggedOrnament = null
+let treeMesh = null
+
 const lights = []
+const ornaments = []
 
 const lightColors = ['#ff0000', '#00ffcc', '#ffff00', '#ff00ff']
+
+// Lowered scene baseline
+const BASE_Y = -0.8
 
 // Tree dimensions
 const TREE_HEIGHT = 4.5
 const TREE_RADIUS = 2.2
 const TRUNK_HEIGHT = 1.2
-const TREE_OFFSET_Y = TRUNK_HEIGHT
+const TREE_OFFSET_Y = TRUNK_HEIGHT + BASE_Y
+
 const STAR_SIZE = 0.45
-const STAR_Y = TRUNK_HEIGHT + TREE_HEIGHT + STAR_SIZE * 0.6
+const STAR_Y = TREE_OFFSET_Y + TREE_HEIGHT + STAR_SIZE * 0.6
+const ORNAMENT_RADIUS = 0.18
 
-
-// Create bulbs distributed in a spiral on cone surface
+/* --------------------------------------------------
+   CHRISTMAS LIGHTS
+-------------------------------------------------- */
 function createTree(numBulbs = 200) {
   lights.forEach(b => scene.remove(b))
   lights.length = 0
@@ -43,9 +54,7 @@ function createTree(numBulbs = 200) {
     )
 
     const t = i / numBulbs
-
-    const localY = t * TREE_HEIGHT
-    const y = TREE_OFFSET_Y + localY
+    const y = TREE_OFFSET_Y + t * TREE_HEIGHT
     const radiusAtH = TREE_RADIUS * (1 - t)
     const angle = t * Math.PI * 2 * turns
 
@@ -54,15 +63,8 @@ function createTree(numBulbs = 200) {
 
     const normal = new THREE.Vector3(x, TREE_RADIUS / TREE_HEIGHT, z).normalize()
 
-    bulb.position
-      .set(x, y, z)
-      .add(normal.multiplyScalar(0.06))
-
-    bulb.userData = {
-      t,
-      base: 0.25,
-      originalColor
-    }
+    bulb.position.set(x, y, z).add(normal.multiplyScalar(0.06))
+    bulb.userData = { t, base: 0.25, originalColor }
 
     scene.add(bulb)
     lights.push(bulb)
@@ -71,156 +73,180 @@ function createTree(numBulbs = 200) {
   applyLightColors()
 }
 
-// Apply white / colored mode
 function applyLightColors() {
   lights.forEach(b => {
-    const color = whiteLights.value ? '#ffffff' : b.userData.originalColor
-    b.material.color.set(color)
-    b.material.emissive.set(color)
+    const c = whiteLights.value ? '#ffffff' : b.userData.originalColor
+    b.material.color.set(c)
+    b.material.emissive.set(c)
   })
 }
 
+/* --------------------------------------------------
+   ORNAMENT BOX
+-------------------------------------------------- */
+function createOrnamentsBox() {
+  const box = new THREE.Mesh(
+    new THREE.BoxGeometry(2.4, 0.6, 1.6),
+    new THREE.MeshStandardMaterial({ color: '#8b4513' })
+  )
+  box.position.set(-3.2, BASE_Y + 0.3, 0)
+  scene.add(box)
+
+  const colors = [
+    '#ff0000', '#ffd700', '#00ff00', '#00aaff', '#ff00ff',
+    '#ff8800', '#ffffff', '#00ffcc', '#aa00ff', '#ff5555'
+  ]
+
+  colors.forEach((color, i) => {
+    const ball = new THREE.Mesh(
+      new THREE.SphereGeometry(ORNAMENT_RADIUS, 16, 16),
+      new THREE.MeshStandardMaterial({
+        color,
+        metalness: 0.6,
+        roughness: 0.3
+      })
+    )
+
+    ball.position.set(
+      -3.2 + (i % 5) * 0.45 - 0.9,
+      BASE_Y + 0.7,
+      Math.floor(i / 5) * 0.45 - 0.4
+    )
+
+    ball.userData.isOrnament = true
+    scene.add(ball)
+    ornaments.push(ball)
+  })
+}
+
+/* --------------------------------------------------
+   DRAG & DROP (PROPER CONE SNAP)
+-------------------------------------------------- */
+function updateMouse(event) {
+  mouse.x = (event.offsetX / container.value.clientWidth) * 2 - 1
+  mouse.y = -(event.offsetY / container.value.clientHeight) * 2 + 1
+}
+
+function onPointerDown(e) {
+  updateMouse(e)
+  raycaster.setFromCamera(mouse, camera)
+
+  const hits = raycaster.intersectObjects(ornaments)
+  if (hits.length) {
+    draggedOrnament = hits[0].object
+    controls.enabled = false
+  }
+}
+
+function onPointerMove(e) {
+  if (!draggedOrnament) return
+
+  updateMouse(e)
+  raycaster.setFromCamera(mouse, camera)
+
+  // Try to snap directly onto the cone surface
+  const hit = raycaster.intersectObject(treeMesh)
+  if (hit.length) {
+    draggedOrnament.position.copy(hit[0].point)
+  }
+}
+
+function onPointerUp() {
+  draggedOrnament = null
+  controls.enabled = true
+}
+
+/* --------------------------------------------------
+   MOUNT
+-------------------------------------------------- */
 onMounted(() => {
   scene = new THREE.Scene()
+  raycaster = new THREE.Raycaster()
+  mouse = new THREE.Vector2()
 
-  // Camera
   camera = new THREE.PerspectiveCamera(
     75,
     container.value.clientWidth / container.value.clientHeight,
     0.1,
     1000
   )
-  camera.position.set(0, 2.8, 7)
+  camera.position.set(0, 2.0, 7)
 
-  // Renderer
   renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true })
   renderer.setSize(container.value.clientWidth, container.value.clientHeight)
   renderer.setPixelRatio(window.devicePixelRatio)
-  renderer.shadowMap.enabled = true
   container.value.appendChild(renderer.domElement)
 
-  // Lights
   scene.add(new THREE.AmbientLight('#ffffff', 0.8))
-  const dirLight = new THREE.DirectionalLight('#ffffff', 0.6)
-  dirLight.position.set(3, 6, 4)
-  scene.add(dirLight)
-
-  // Shadow
-  const shadowTexture = new THREE.TextureLoader().load(
-    'https://threejs.org/examples/textures/roundshadow.png'
-  )
-  const shadowMat = new THREE.MeshBasicMaterial({
-    map: shadowTexture,
-    transparent: true,
-    opacity: 0.4
-  })
-  const shadowPlane = new THREE.Mesh(
-    new THREE.PlaneGeometry(6, 6),
-    shadowMat
-  )
-  shadowPlane.rotation.x = -Math.PI / 2
-  shadowPlane.position.y = 0.01
-  scene.add(shadowPlane)
+  const dir = new THREE.DirectionalLight('#ffffff', 0.6)
+  dir.position.set(3, 6, 4)
+  scene.add(dir)
 
   // Tree
-  const treeMaterial = new THREE.MeshStandardMaterial({ color: '#0b8f2f' })
-  const tree = new THREE.Mesh(
+  treeMesh = new THREE.Mesh(
     new THREE.ConeGeometry(TREE_RADIUS, TREE_HEIGHT, 48),
-    treeMaterial
+    new THREE.MeshStandardMaterial({ color: '#0b8f2f' })
   )
-  tree.position.y = TRUNK_HEIGHT + TREE_HEIGHT / 2
-  scene.add(tree)
+  treeMesh.position.y = TREE_OFFSET_Y + TREE_HEIGHT / 2
+  scene.add(treeMesh)
 
   // Trunk
   const trunk = new THREE.Mesh(
     new THREE.CylinderGeometry(0.35, 0.35, TRUNK_HEIGHT, 16),
     new THREE.MeshStandardMaterial({ color: '#5a3b1e' })
   )
-  trunk.position.y = TRUNK_HEIGHT / 2
+  trunk.position.y = BASE_Y + TRUNK_HEIGHT / 2
   scene.add(trunk)
 
-  // Star (golden)
-  const starGeometry = new THREE.IcosahedronGeometry(STAR_SIZE, 0)
-  const starMaterial = new THREE.MeshStandardMaterial({
-    color: '#ffd700',
-    emissive: '#ffcc33',
-    emissiveIntensity: 0.8,
-    metalness: 0.9,
-    roughness: 0.2
-  })
-
-  const star = new THREE.Mesh(starGeometry, starMaterial)
-  star.position.set(0, STAR_Y, 0)
+  // Star
+  const star = new THREE.Mesh(
+    new THREE.IcosahedronGeometry(STAR_SIZE),
+    new THREE.MeshStandardMaterial({
+      color: '#ffd700',
+      emissive: '#ffcc33',
+      emissiveIntensity: 0.8
+    })
+  )
+  star.position.y = STAR_Y
   scene.add(star)
 
-  // Initial bulbs
   createTree(bulbCount.value)
+  createOrnamentsBox()
 
-  // Controls
   controls = new OrbitControls(camera, renderer.domElement)
   controls.enableDamping = true
   controls.enablePan = false
-  controls.minDistance = 4
-  controls.maxDistance = 9
-  controls.target.set(0, TRUNK_HEIGHT + TREE_HEIGHT / 2, 0)
+  controls.target.set(0, TREE_OFFSET_Y + TREE_HEIGHT / 2, 0)
 
-  // Animation loop
+  renderer.domElement.addEventListener('pointerdown', onPointerDown)
+  renderer.domElement.addEventListener('pointermove', onPointerMove)
+  renderer.domElement.addEventListener('pointerup', onPointerUp)
+
   const animate = () => {
     animationId = requestAnimationFrame(animate)
     controls.update()
 
     if (blinkEnabled.value) {
-      const time = Date.now() * 0.001 * blinkSpeed.value
-
-      const waveWidth = 0.12
-      const waveSpeed = 0.25
-
+      const t = Date.now() * 0.001 * blinkSpeed.value
       lights.forEach(b => {
-        const d = b.userData
-
-        const wavePos = (time * waveSpeed) % 1
-        let dist = Math.abs(d.t - wavePos)
-        dist = Math.min(dist, 1 - dist)
-
-        const wave = Math.max(0, 1 - dist / waveWidth)
-        b.material.emissiveIntensity = d.base + wave * 1.4
+        let d = Math.abs(b.userData.t - (t * 0.25) % 1)
+        d = Math.min(d, 1 - d)
+        b.material.emissiveIntensity =
+          b.userData.base + Math.max(0, 1 - d / 0.12) * 1.4
       })
-
-      // Star subtle shimmer
-      const starTime = Date.now() * 0.002
-      star.material.emissiveIntensity =
-        0.7 + Math.sin(starTime) * 0.15
-
-      star.rotation.y += 0.002
-    } else {
-      lights.forEach(b => (b.material.emissiveIntensity = 0))
     }
 
     renderer.render(scene, camera)
   }
   animate()
-
-  // Resize
-  const handleResize = () => {
-    const { clientWidth, clientHeight } = container.value
-    camera.aspect = clientWidth / clientHeight
-    camera.updateProjectionMatrix()
-    renderer.setSize(clientWidth, clientHeight)
-  }
-
-  window.addEventListener('resize', handleResize)
-
-  onBeforeUnmount(() => {
-    cancelAnimationFrame(animationId)
-    renderer.dispose()
-    window.removeEventListener('resize', handleResize)
-  })
 })
 
-// UI watchers
+onBeforeUnmount(() => cancelAnimationFrame(animationId))
+
 watch(bulbCount, v => createTree(v))
 watch(whiteLights, applyLightColors)
 </script>
+
 
 <template>
   <div class="wrapper">

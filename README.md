@@ -17,7 +17,15 @@
 - Zjednodušiť nápovedy - tipy (kratšie texty)
 - achievementy
 
-
+## TODO
+- spracovanie pdf súborov 
+- pdf sa niekedy nenačíta 
+- optimalizovanie undo, redo operácie 
+- využitie workerov pre aplikovanie operácie 
+- prevod na raster ak to obsahuje hlúposti 
+- pomalé zatváranie pdf 
+- pomalé prepínanie medzi tabmi 
+- zmen na light mode 
 
 ## Admin mode 
 - neobmedzena veľkosť obrázku 
@@ -30,8 +38,6 @@
 - Poskakovanie pri resize ak je to otočené 
 - PDF s nepodporovanými svg objektami 
 - Poloha magnify area a blur object voči ostatným objektom (možné riešenie vrstvy)
-- Centrovanie obrázku v iných kartách (otvorených obrázkoch) ak na inej karte došlo ku otvoreniu bočného panelu 
-- Tutoriál nefunguje šípkami 
 
 ## Insane ideas
 - Premenné prostredia (pre farbu, veľkosť)
