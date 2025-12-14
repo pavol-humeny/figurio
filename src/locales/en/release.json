@@ -4,6 +4,20 @@
     "items": []
   },
   "versions":{
+    "5.0.0":{
+      "label": "5.0.0",
+      "date":"XX.XX. 202X",
+      "newFeatures": {
+        "items": [
+          "a"
+        ]
+      },
+      "bugFixes": {
+        "items": [
+          "Reset viewport when switching tabs"
+        ]
+      }
+    },
     "4.18.6":{
       "label": "4.18.6",
       "date":"12.12. 2025",

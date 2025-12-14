@@ -11,15 +11,11 @@
 - Oblé zakončenie čiar (line tool)
 - noise detection sa zmaže pri undo operácie 
 - pri dokreslení background removal canvas sa to sekne 
-- 3 úrovne pre auto background removal 
 - eye dropper na safari
 - zatvaranie pdf je strasne pomale
 - Expand header nefunguje dobre pri velkej hrubke ramiku 
 - Zjednodušiť nápovedy - tipy (kratšie texty)
-- šípky pre posúvanie (panel s nástrojmi, help, release note) by mohli fungovať aj na držanie
-- command - prepnutie do odtieňov sedi 
 - achievementy
-- pri zmene suboru sa neprepocitaju nejake hodnoty pre spravne zoomovanie
 
 
 
