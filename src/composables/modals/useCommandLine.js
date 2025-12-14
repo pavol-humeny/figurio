@@ -199,10 +199,7 @@ export function useCommandLine(userModeStore, editorStore) {
     // Execute command
     switch (commandIdentifier) {
       case 'reset all':
-        resetPrimaryColor()
-        editorStore.turnOffRandomEvent('snowfall')
-        editorStore.turnOffRandomEvent('christmasLights')
-        editorStore.turnOffRandomEvent('christmasTree')
+        resetAll()
         addUserEvent('command', { commandIdentifier })
         break
       case 'reset primarycolor':
@@ -228,6 +225,16 @@ export function useCommandLine(userModeStore, editorStore) {
 
     // Remove saved value
     localStorage.removeItem(`${globalConfig.LOCAL_STORAGE_PREFIX}primaryColor`)
+  }
+
+  /**
+   * Reset all settings to default
+   */
+  const resetAll = () => {
+    resetPrimaryColor()
+    editorStore.turnOffRandomEvent('snowfall')
+    editorStore.turnOffRandomEvent('christmasLights')
+    editorStore.turnOffRandomEvent('christmasTree')
   }
 
   /**
@@ -285,6 +292,7 @@ export function useCommandLine(userModeStore, editorStore) {
    */
   const switchToBasicMode = () => {
     userModeStore.setUserMode('basic')
+    resetAll()
   }
 
   /**
