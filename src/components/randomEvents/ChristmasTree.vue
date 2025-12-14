@@ -7,6 +7,7 @@ const container = ref(null)
 const blinkSpeed = ref(1.0)
 const bulbCount = ref(200)
 const blinkEnabled = ref(true)
+const whiteLights = ref(false)
 
 let scene, camera, renderer, controls, animationId
 const lights = []
@@ -16,23 +17,27 @@ const lightColors = ['#ff0000', '#00ffcc', '#ffff00', '#ff00ff']
 // Tree dimensions
 const TREE_HEIGHT = 4.5
 const TREE_RADIUS = 2.2
+const TRUNK_HEIGHT = 1.2
+const TREE_OFFSET_Y = TRUNK_HEIGHT
+const STAR_SIZE = 0.45
+const STAR_Y = TRUNK_HEIGHT + TREE_HEIGHT + STAR_SIZE * 0.6
 
-// Create bulbs distributed on a single cone surface
+
+// Create bulbs distributed in a spiral on cone surface
 function createTree(numBulbs = 200) {
   lights.forEach(b => scene.remove(b))
   lights.length = 0
 
   const turns = 8
-  const TREE_OFFSET_Y = 1.2 // must match TRUNK_HEIGHT
 
   for (let i = 0; i < numBulbs; i++) {
-    const color = lightColors[i % lightColors.length]
+    const originalColor = lightColors[i % lightColors.length]
 
     const bulb = new THREE.Mesh(
       new THREE.SphereGeometry(0.08, 8, 8),
       new THREE.MeshStandardMaterial({
-        color,
-        emissive: color,
+        color: originalColor,
+        emissive: originalColor,
         emissiveIntensity: 0
       })
     )
@@ -41,7 +46,6 @@ function createTree(numBulbs = 200) {
 
     const localY = t * TREE_HEIGHT
     const y = TREE_OFFSET_Y + localY
-
     const radiusAtH = TREE_RADIUS * (1 - t)
     const angle = t * Math.PI * 2 * turns
 
@@ -55,14 +59,27 @@ function createTree(numBulbs = 200) {
       .add(normal.multiplyScalar(0.06))
 
     bulb.userData = {
-      speed: 0.002 + (i % 5) * 0.001,
-      offset: i * 0.3
+      t,
+      base: 0.25,
+      originalColor
     }
 
     scene.add(bulb)
     lights.push(bulb)
   }
+
+  applyLightColors()
 }
+
+// Apply white / colored mode
+function applyLightColors() {
+  lights.forEach(b => {
+    const color = whiteLights.value ? '#ffffff' : b.userData.originalColor
+    b.material.color.set(color)
+    b.material.emissive.set(color)
+  })
+}
+
 onMounted(() => {
   scene = new THREE.Scene()
 
@@ -105,9 +122,7 @@ onMounted(() => {
   shadowPlane.position.y = 0.01
   scene.add(shadowPlane)
 
-  const TRUNK_HEIGHT = 1.2
-
-  // Tree (single cone)
+  // Tree
   const treeMaterial = new THREE.MeshStandardMaterial({ color: '#0b8f2f' })
   const tree = new THREE.Mesh(
     new THREE.ConeGeometry(TREE_RADIUS, TREE_HEIGHT, 48),
@@ -124,6 +139,20 @@ onMounted(() => {
   trunk.position.y = TRUNK_HEIGHT / 2
   scene.add(trunk)
 
+  // Star (golden)
+  const starGeometry = new THREE.IcosahedronGeometry(STAR_SIZE, 0)
+  const starMaterial = new THREE.MeshStandardMaterial({
+    color: '#ffd700',
+    emissive: '#ffcc33',
+    emissiveIntensity: 0.8,
+    metalness: 0.9,
+    roughness: 0.2
+  })
+
+  const star = new THREE.Mesh(starGeometry, starMaterial)
+  star.position.set(0, STAR_Y, 0)
+  scene.add(star)
+
   // Initial bulbs
   createTree(bulbCount.value)
 
@@ -133,7 +162,7 @@ onMounted(() => {
   controls.enablePan = false
   controls.minDistance = 4
   controls.maxDistance = 9
-  controls.target.set(0, TREE_HEIGHT / 2, 0)
+  controls.target.set(0, TRUNK_HEIGHT + TREE_HEIGHT / 2, 0)
 
   // Animation loop
   const animate = () => {
@@ -141,10 +170,28 @@ onMounted(() => {
     controls.update()
 
     if (blinkEnabled.value) {
+      const time = Date.now() * 0.001 * blinkSpeed.value
+
+      const waveWidth = 0.12
+      const waveSpeed = 0.25
+
       lights.forEach(b => {
-        const t = Date.now() * b.userData.speed * blinkSpeed.value + b.userData.offset
-        b.material.emissiveIntensity = Math.abs(Math.sin(t)) * 1.5
+        const d = b.userData
+
+        const wavePos = (time * waveSpeed) % 1
+        let dist = Math.abs(d.t - wavePos)
+        dist = Math.min(dist, 1 - dist)
+
+        const wave = Math.max(0, 1 - dist / waveWidth)
+        b.material.emissiveIntensity = d.base + wave * 1.4
       })
+
+      // Star subtle shimmer
+      const starTime = Date.now() * 0.002
+      star.material.emissiveIntensity =
+        0.7 + Math.sin(starTime) * 0.15
+
+      star.rotation.y += 0.002
     } else {
       lights.forEach(b => (b.material.emissiveIntensity = 0))
     }
@@ -153,7 +200,7 @@ onMounted(() => {
   }
   animate()
 
-  // Resize handling
+  // Resize
   const handleResize = () => {
     const { clientWidth, clientHeight } = container.value
     camera.aspect = clientWidth / clientHeight
@@ -172,6 +219,7 @@ onMounted(() => {
 
 // UI watchers
 watch(bulbCount, v => createTree(v))
+watch(whiteLights, applyLightColors)
 </script>
 
 <template>
@@ -179,14 +227,20 @@ watch(bulbCount, v => createTree(v))
     <div class="christmas-tree-wrapper" ref="container"></div>
 
     <div class="ui-panel">
-      <label>Rýchlosť blikania: {{ blinkSpeed }}</label>
-      <input type="range" min="0.1" max="5" step="0.1" v-model="blinkSpeed" />
+      <label>Rýchlosť pohybu: {{ blinkSpeed }}</label>
+      <input type="range" min="0.2" max="5" step="0.1" v-model="blinkSpeed" />
       <br />
+
       <label>Počet svetielok: {{ bulbCount }}</label>
       <input type="range" min="50" max="500" step="10" v-model="bulbCount" />
       <br />
-      <label>Blikanie zap./vyp.:</label>
+
+      <label>Animácia zap./vyp.:</label>
       <input type="checkbox" v-model="blinkEnabled" />
+      <br />
+
+      <label>Biele svetielka:</label>
+      <input type="checkbox" v-model="whiteLights" />
     </div>
   </div>
 </template>
@@ -195,7 +249,6 @@ watch(bulbCount, v => createTree(v))
 .wrapper {
   width: 100%;
   height: 100%;
-  position: relative;
   display: flex;
   flex-direction: column;
 }
