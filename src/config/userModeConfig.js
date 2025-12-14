@@ -10,6 +10,7 @@ export const userModeConfig = {
     'turn off <snowfall|christmasLights|christmasTree|randomEvents>', // Disable feature
     'set <option> <value>', // Set configuration option
     'reset <option>', // Reset configuration option
+    'reset all', // Reset all configuration options
     'help', // Show help information
   ],
 
@@ -74,6 +75,16 @@ export const userModeConfig = {
       DESCRIPTION
           Available options:
             primaryColor   Reset the primary color to default
+      `,
+    'reset all': `
+      NAME
+          reset all - Reset all configuration options to default
+
+      SYNOPSIS
+          reset all
+
+      DESCRIPTION
+          Resets all configuration options back to their default values.
       `,
   },
 

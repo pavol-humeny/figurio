@@ -133,6 +133,7 @@ export function useCommandLine(userModeStore, editorStore) {
       case 'turn off randomevents':
         editorStore.turnOffRandomEvent('snowfall')
         editorStore.turnOffRandomEvent('christmasLights')
+        editorStore.turnOffRandomEvent('christmasTree')
         warn('Random events disabled via contact form')
         addUserEvent('command', { commandIdentifier: full })
         break
@@ -140,6 +141,7 @@ export function useCommandLine(userModeStore, editorStore) {
       case 'turn on randomevents':
         editorStore.turnOnRandomEvent('snowfall')
         editorStore.turnOnRandomEvent('christmasLights')
+        editorStore.turnOnRandomEvent('christmasTree')
         warn('Random events enabled via contact form')
         addUserEvent('command', { commandIdentifier: full })
         break
@@ -196,6 +198,13 @@ export function useCommandLine(userModeStore, editorStore) {
 
     // Execute command
     switch (commandIdentifier) {
+      case 'reset all':
+        resetPrimaryColor()
+        editorStore.turnOffRandomEvent('snowfall')
+        editorStore.turnOffRandomEvent('christmasLights')
+        editorStore.turnOffRandomEvent('christmasTree')
+        addUserEvent('command', { commandIdentifier })
+        break
       case 'reset primarycolor':
         resetPrimaryColor()
         addUserEvent('command', { commandIdentifier })
