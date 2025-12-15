@@ -1,7 +1,7 @@
 import { ref } from 'vue'
 import { useToastModal } from '../modals/useToastModal'
 import { useConsole } from '../common/useConsole'
-import { importFile } from '@/services/importFile'
+import { importFileService } from '@/services/importFileService'
 const { log } = useConsole()
 
 /**
@@ -30,7 +30,7 @@ export function useDragAndDropArea(
   historyStore,
 ) {
   const { showToastModal } = useToastModal()
-  const { openFileInput, loadFile } = importFile(
+  const { openFileInput, loadFile } = importFileService(
     userModeStore,
     workspaceStore,
     uiStore,

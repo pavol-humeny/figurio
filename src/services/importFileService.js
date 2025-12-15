@@ -15,7 +15,7 @@ const { log } = useConsole()
 const { showToastModal } = useToastModal()
 const { showGeneralModal } = useGeneralModal()
 
-export function importFile(
+export function importFileService(
   userModeStore,
   workspaceStore,
   uiStore,

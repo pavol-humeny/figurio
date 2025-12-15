@@ -1,7 +1,7 @@
 import { useImportModal } from '../modals/useImportModal'
 import { watch } from 'vue'
 import { useApi } from '@/composables/common/useApi'
-import { importFile } from '@/services/importFile'
+import { importFileService } from '@/services/importFileService'
 const { addUserEvent } = useApi()
 
 /**
@@ -25,7 +25,7 @@ export function useUploadFileButton(
   historyStore,
 ) {
   const { openImportModal, closeImportModal } = useImportModal()
-  const { openFileInput } = importFile(
+  const { openFileInput } = importFileService(
     userModeStore,
     workspaceStore,
     uiStore,
