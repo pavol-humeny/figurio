@@ -19,7 +19,6 @@
 - Hláška o tom že sa nedajú vykresliť tlačidlá telefónu sa vypisuje viac krát
 - Videá pre nástroje 
 - Videá pre feature tour p
-- Farba sa do zoznamu farieb ukladá len raz (asi nedáva zmysel - treba premyslieť)
 - krok späť spôsobí zmazanie eventu artifacts warning 
 - SKIP - (asi to je v pohode tak ako to je) zoomovanie pomocou tlacitok, ak je obrazok mimo stred tak to zoomuje mimo obrázok 
 - Oblé zakončenie čiar (line tool)

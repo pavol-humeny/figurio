@@ -2,7 +2,7 @@
 import BaseIcon from '@/components/icons/BaseIcon.vue';
 import DefaultButton from '@/components/common/DefaultButton.vue';
 import { useReleaseModal } from '@/composables/modals/useReleaseModal';
-import { computed } from 'vue'
+import { computed, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useHoldButton } from '@/composables/common/useHoldButton';
 
@@ -44,6 +44,16 @@ const {
   stopHold,
 } = useHoldButton();
 
+
+/**
+ * Watchers to stop hold scrolling when reaching top or bottom
+ */
+watch(atTop, (newVal) => {
+  if (newVal) stopHold();
+});
+watch(atBottom, (newVal) => {
+  if (newVal) stopHold();
+});
 </script>
 
 <template>
