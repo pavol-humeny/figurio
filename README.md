@@ -1,4 +1,18 @@
 # Figurio
+
+15.12.
+- noise detection on undo
+- background removal kreslenie sa sekne 
+- Undo,redo optimalizacia
+
+- pdf nacitanie 
+- pdf optimalizacia
+
+- rámiky - expand header
+- rámik monitoru
+- hláška pri tlačítkach že sa nedajú zobraziť 
+
+
 ## TODO 
 - Rámik monitoru 
 - Vylepšenie rámiku pre prehliadače 
@@ -29,7 +43,6 @@
 
 ## Admin mode 
 - neobmedzena veľkosť obrázku 
-- ľubovoľné orezávanie 
 - nekonečné zoomovanie 
 
 ## Dlhodobé TODO 

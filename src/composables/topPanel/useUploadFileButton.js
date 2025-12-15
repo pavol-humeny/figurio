@@ -1,6 +1,7 @@
 import { useImportModal } from '../modals/useImportModal'
 import { watch } from 'vue'
 import { useApi } from '@/composables/common/useApi'
+import { importFile } from '@/services/importFile'
 const { addUserEvent } = useApi()
 
 /**
@@ -13,14 +14,31 @@ const { addUserEvent } = useApi()
  *   uploadFile: () => void
  * }} Object containing the upload file handler
  */
-export function useUploadFileButton(imageStore, t, router) {
+export function useUploadFileButton(
+  imageStore,
+  t,
+  router,
+  userModeStore,
+  workspaceStore,
+  uiStore,
+  viewportStore,
+  historyStore,
+) {
   const { openImportModal, closeImportModal } = useImportModal()
+  const { openFileInput } = importFile(
+    userModeStore,
+    workspaceStore,
+    uiStore,
+    imageStore,
+    viewportStore,
+    historyStore,
+  )
 
   /**
    * Open file dialog and load the selected file
    */
   const uploadFile = async () => {
-    imageStore.loadFile(t, router)
+    openFileInput(t, router)
   }
 
   /**

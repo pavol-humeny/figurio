@@ -74,6 +74,7 @@ export function useImageAnalysis(imageStore, workspaceStore, uiStore, t) {
    * and display overlay if needed
    */
   const calculateArtifacts = async () => {
+    log('[ImageAnalysis] Starting artifact calculation...')
     if (globalConfig.featureFlags.enableNoiseDetectionOnStart === false) return
 
     await new Promise((resolve) => setTimeout(resolve, 100))
@@ -268,6 +269,7 @@ export function useImageAnalysis(imageStore, workspaceStore, uiStore, t) {
     () => workspaceStore.activeTabIndex,
     (oldValue, newValue) => {
       if (newValue === undefined) return
+      if (workspaceStore.newTabWasAdded) return
 
       if (!imageStore.imageArtifactsCanceledByUser) {
         if (isWarningDefined('artifact-warning')) {

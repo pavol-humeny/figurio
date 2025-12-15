@@ -26,6 +26,7 @@ import BrushToolCanvas from '../tools/BrushToolCanvas.vue'
 import { editorConfig } from '@/config/editorConfig'
 import { useImageAnalysis } from '@/composables/tools/useImageAnalysis'
 import WarningList from '../modals/WarningList.vue'
+import { useUserModeStore } from '@/stores/userModeStore'
 
 const { t } = useI18n()
 const uiStore = useUiStore()
@@ -131,7 +132,7 @@ const {
   handleDragOver,
   handleDragLeave,
   handleDrop,
-} = useDragAndDropArea(useImageStore(), useEditorStore(), t, router)
+} = useDragAndDropArea(useImageStore(), useEditorStore(), t, router, useUserModeStore(), useWorkspaceStore(), useUiStore(), useViewportStore(), useHistoryStore())
 
 /**
  * Start image analysis
@@ -301,11 +302,9 @@ const cursorStyle = computed(() => {
               fill="var(--editor-highlight-with-opacity-c)" />
           </svg>
 
-
           <CropTool v-if="editorStore.selectedToolKey === 'crop'" />
           <PresetCropTool v-if="
             editorStore.selectedToolKey === 'preset' && editorStore.selectedSubToolKey === 'crop'" />
-
 
           <BrushToolCanvas :style="{
             pointerEvents: editorStore.selectedToolKey === 'brush' ? 'auto' : 'none'

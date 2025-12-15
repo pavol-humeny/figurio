@@ -16,6 +16,9 @@ export const useWorkspaceStore = defineStore('workspaceStore', {
 
     /** Index of the currently active tab */
     activeTabIndex: -1,
+
+    /** Flag indicating if a new tab was recently added */
+    newTabWasAdded: false,
   }),
 
   getters: {
@@ -53,6 +56,8 @@ export const useWorkspaceStore = defineStore('workspaceStore', {
       })
 
       this.activeTabIndex = this.tabs.length - 1
+
+      this.newTabWasAdded = true
     },
 
     /**

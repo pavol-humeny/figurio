@@ -8,6 +8,11 @@ import { useImageStore } from '@/stores/imageStore'
 import { useRouter } from 'vue-router'
 import { useEditorStore } from '@/stores/editorStore'
 import { onMounted, onUnmounted } from 'vue'
+import { useUserModeStore } from '@/stores/userModeStore'
+import { useWorkspaceStore } from '@/stores/workspaceStore'
+import { useUiStore } from '@/stores/uiStore'
+import { useViewportStore } from '@/stores/viewportStore'
+import { useHistoryStore } from '@/stores/historyStore'
 
 const { t } = useI18n()
 const router = useRouter()
@@ -36,7 +41,7 @@ const {
   handleDrop,
   selectFile,
   handlePaste,
-} = useDragAndDropArea(useImageStore(), useEditorStore(), t, router)
+} = useDragAndDropArea(useImageStore(), useEditorStore(), t, router, useUserModeStore(), useWorkspaceStore(), useUiStore(), useViewportStore(), useHistoryStore())
 
 /**
  * Enable paste event listener on mount

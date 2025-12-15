@@ -23,6 +23,9 @@ import { useReleaseModal } from '@/composables/modals/useReleaseModal';
 import { useUserModeStore } from '@/stores/userModeStore';
 import BaseIcon from '@/components/icons/BaseIcon.vue';
 import ChristmasTree from '@/components/randomEvents/ChristmasTree.vue';
+import { useWorkspaceStore } from '@/stores/workspaceStore';
+import { useHistoryStore } from '@/stores/historyStore';
+import { useViewportStore } from '@/stores/viewportStore';
 
 const { t, messages, locale } = useI18n()
 const router = useRouter()
@@ -30,7 +33,7 @@ const router = useRouter()
 const userModeStore = useUserModeStore()
 const editorStore = useEditorStore()
 
-const { uploadFile } = useUploadFileButton(useImageStore(), t, useRouter())
+const { uploadFile } = useUploadFileButton(useImageStore(), t, useRouter(), useUserModeStore(), useWorkspaceStore(), useUiStore(), useViewportStore(), useHistoryStore())
 const { openHelpModal } = useHelpModal(useUiStore(), useImageStore(), useEditorStore(), useUserModeStore(), useRouter(), t)
 const { openSettingsPanel } = useSettingsPanel(useUiStore())
 const { prevStep, nextStep, finishTutorial, closeTutorial } = useInteractiveTutorial(useUiStore(), useImageStore(), useRouter(), t)
@@ -72,7 +75,7 @@ const features = computed(() => {
 const {
   handleDrop,
   selectFile
-} = useDragAndDropArea(useImageStore(), useEditorStore(), t, router)
+} = useDragAndDropArea(useImageStore(), useEditorStore(), t, router, useUserModeStore(), useWorkspaceStore(), useUiStore(), useViewportStore(), useHistoryStore())
 
 const {
   openFeatureTourModal

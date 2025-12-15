@@ -1,6 +1,7 @@
 import { ref } from 'vue'
 import { useToastModal } from '../modals/useToastModal'
 import { useConsole } from '../common/useConsole'
+import { importFile } from '@/services/importFile'
 const { log } = useConsole()
 
 /**
@@ -17,8 +18,26 @@ const { log } = useConsole()
  *   selectFile: () => void
  * }}
  */
-export function useDragAndDropArea(imageStore, editorStore, t, router) {
+export function useDragAndDropArea(
+  imageStore,
+  editorStore,
+  t,
+  router,
+  userModeStore,
+  workspaceStore,
+  uiStore,
+  viewportStore,
+  historyStore,
+) {
   const { showToastModal } = useToastModal()
+  const { openFileInput, loadFile } = importFile(
+    userModeStore,
+    workspaceStore,
+    uiStore,
+    imageStore,
+    viewportStore,
+    historyStore,
+  )
 
   /**
    * Whether a file is currently being dragged over the drop area
@@ -46,7 +65,7 @@ export function useDragAndDropArea(imageStore, editorStore, t, router) {
   }
 
   /**
-   * Handles drop event and passes dropped files to imageStore
+   * Handles drop event and loads the dropped file
    *
    * @param {DragEvent} event - Drop event
    */
@@ -55,8 +74,10 @@ export function useDragAndDropArea(imageStore, editorStore, t, router) {
     isDragging.value = false
 
     const files = event.dataTransfer?.files
+
     if (files && files.length > 0) {
-      imageStore.saveToImageStore(files, t, router)
+      // Support only single file upload via drag and drop
+      loadFile(files[0], t, router)
     }
   }
 
@@ -64,7 +85,7 @@ export function useDragAndDropArea(imageStore, editorStore, t, router) {
    * Triggers file selection dialog for manual upload
    */
   const selectFile = () => {
-    imageStore.loadFile(t, router)
+    openFileInput(t, router)
   }
 
   /**
@@ -84,7 +105,7 @@ export function useDragAndDropArea(imageStore, editorStore, t, router) {
     const file = firstItem.getAsFile()
 
     if (file) {
-      imageStore.saveToImageStore([file], t, router)
+      loadFile(file, t, router)
     } else if (firstItem.kind === 'string' && firstItem.type === 'image/svg+xml') {
       firstItem.getAsString((svgString) => {
         // Convert string to Blob
@@ -104,7 +125,7 @@ export function useDragAndDropArea(imageStore, editorStore, t, router) {
           // Export as PNG
           canvas.toBlob((pngBlob) => {
             const file = new File([pngBlob], 'pasted.png', { type: 'image/png' })
-            imageStore.saveToImageStore([file], t, router)
+            loadFile(file, t, router)
             URL.revokeObjectURL(url)
           }, 'image/png')
         }
