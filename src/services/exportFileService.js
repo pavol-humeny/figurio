@@ -438,6 +438,20 @@ export function exportFileService(imageStore, editorStore, historyStore, viewpor
           const fontSize = parseNum(attrs['font-size'].replace('px', ''), 12)
           const x = parseNum(attrs.x, 0) + offsetX
           const y = parseNum(attrs.y, 0) + offsetY
+
+          // SVG uses dominant-baseline="middle"
+          // PDF uses text baseline -> compensate
+          // console.warn(
+          //   'PDF text baseline correction for size:',
+          //   fontSize,
+          //   'without correction: ',
+          //   finalHeight - y,
+          //   'with correction: ',
+          //   finalHeight - y - fontSize * 0.35,
+          // )
+
+          // const baselineCorrection = fontSize * 0.35
+          // const pdfY = finalHeight - y - baselineCorrection
           const pdfY = finalHeight - y
 
           const svgFontFamily = attrs['font-family'] || ''
@@ -702,6 +716,7 @@ export function exportFileService(imageStore, editorStore, historyStore, viewpor
    * @param {number} offsetY - Y offset for the SVG content
    */
   const createSvgPdf = async (pdfSvg, width, height, offsetX = 0, offsetY = 0) => {
+    console.warn('Adding SVG objects to PDF export...')
     // Defs
     const staticDefs = `
           <marker id="arrow-end" markerWidth="10" markerHeight="10" refX="3" refY="3" orient="auto" markerUnits="strokeWidth">
@@ -776,6 +791,32 @@ export function exportFileService(imageStore, editorStore, historyStore, viewpor
           imageStore.frameSvg,
           'image/svg+xml',
         ).documentElement
+
+        /**
+         * svg2pdf does not support dominant-baseline="middle"
+         * Fix text baseline by shifting Y down before rendering to PDF
+         */
+        const baselineCorrectionFactor = 0.35
+
+        svgElement.querySelectorAll('text').forEach((textEl) => {
+          const dominantBaseline = textEl.getAttribute('dominant-baseline')
+          const yAttr = textEl.getAttribute('y')
+          const fontSizeAttr = textEl.getAttribute('font-size')
+
+          if (dominantBaseline === 'middle' && yAttr !== null && fontSizeAttr !== null) {
+            const fontSize = parseFloat(fontSizeAttr.replace('px', ''))
+            const y = parseFloat(yAttr)
+
+            if (!isNaN(fontSize) && !isNaN(y)) {
+              // Shift Y to compensate baseline difference (SVG vs PDF)
+              const correctedY = y + fontSize * baselineCorrectionFactor
+              textEl.setAttribute('y', correctedY.toString())
+            }
+
+            // Remove unsupported attribute for svg2pdf
+            textEl.removeAttribute('dominant-baseline')
+          }
+        })
 
         await svg2pdf(svgElement, pdfSvg, {
           xOffset: 0,
