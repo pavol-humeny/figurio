@@ -37,6 +37,7 @@ export function useDragAndDropArea(
     imageStore,
     viewportStore,
     historyStore,
+    t,
   )
 
   /**
@@ -77,7 +78,7 @@ export function useDragAndDropArea(
 
     if (files && files.length > 0) {
       // Support only single file upload via drag and drop
-      loadFile(files[0], t, router)
+      loadFile(files[0], router)
     }
   }
 
@@ -85,7 +86,7 @@ export function useDragAndDropArea(
    * Triggers file selection dialog for manual upload
    */
   const selectFile = () => {
-    openFileInput(t, router)
+    openFileInput(router)
   }
 
   /**
@@ -105,7 +106,7 @@ export function useDragAndDropArea(
     const file = firstItem.getAsFile()
 
     if (file) {
-      loadFile(file, t, router)
+      loadFile(file, router)
     } else if (firstItem.kind === 'string' && firstItem.type === 'image/svg+xml') {
       firstItem.getAsString((svgString) => {
         // Convert string to Blob
@@ -125,7 +126,7 @@ export function useDragAndDropArea(
           // Export as PNG
           canvas.toBlob((pngBlob) => {
             const file = new File([pngBlob], 'pasted.png', { type: 'image/png' })
-            loadFile(file, t, router)
+            loadFile(file, router)
             URL.revokeObjectURL(url)
           }, 'image/png')
         }

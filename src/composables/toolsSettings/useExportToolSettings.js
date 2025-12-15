@@ -2,6 +2,7 @@ import { ref, computed, nextTick, watch } from 'vue'
 import { useMath } from '../common/useMath'
 import { editorConfig } from '@/config/editorConfig'
 import { useConsole } from '@/composables/common/useConsole.js'
+import { exportFileService } from '@/services/exportFileService'
 const { error } = useConsole()
 
 /**
@@ -18,8 +19,15 @@ const isVisible = ref(false)
  * @param {Function} t - Translation function
  * @returns {object} Export tool settings logic
  */
-export function useExportToolSettings(imageStore, editorStore, historyStore, t) {
+export function useExportToolSettings(imageStore, editorStore, historyStore, viewportStore, t) {
   const { round } = useMath()
+  const { exportFile, copyImageToClipboard } = exportFileService(
+    imageStore,
+    editorStore,
+    historyStore,
+    viewportStore,
+    t,
+  )
 
   /**
    * Ref to the file name input for managing focus
@@ -176,10 +184,10 @@ export function useExportToolSettings(imageStore, editorStore, historyStore, t) 
   /**
    * Trigger export using current settings
    */
-  const exportFile = () => {
+  const exportFileFunction = () => {
     if (!isVisible.value) return
 
-    const success = imageStore.exportFile(editorStore, historyStore, t)
+    const success = exportFile()
     if (!success) {
       error('Failed to export file')
       return
@@ -190,8 +198,8 @@ export function useExportToolSettings(imageStore, editorStore, historyStore, t) 
   /**
    * Copy rendered image preview to clipboard
    */
-  const copyImageToClipboard = async () => {
-    await imageStore.copyImageToClipboard(t)
+  const copyImageToClipboardFunction = async () => {
+    await copyImageToClipboard()
   }
 
   /**
@@ -220,9 +228,9 @@ export function useExportToolSettings(imageStore, editorStore, historyStore, t) 
     saveNewFileName,
     openExportToolSettings,
     closeExportToolSettings,
-    exportFile,
+    exportFileFunction,
     previewUrl,
-    copyImageToClipboard,
+    copyImageToClipboardFunction,
     expectedPreviewSize,
     fileFormatOptions,
   }

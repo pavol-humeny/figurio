@@ -53,7 +53,6 @@ const { zoomIn, zoomOut, resetZoom, toggleZoomMode } = useZoomControl(useViewpor
 const { closeFile } = useCloseFileButton(useImageStore(), useWorkspaceStore(), t)
 const { uploadFile } = useUploadFileButton(useImageStore(), t, useRouter(), useUserModeStore(), useWorkspaceStore(), useUiStore(), useViewportStore(), useHistoryStore())
 const { toggleTool } = useToolsPanel(useEditorStore(), useImageStore(), useUiStore(), useWorkspaceStore(), t)
-const { openExportToolSettings } = useExportToolSettings(useImageStore(), useEditorStore(), useHistoryStore(), t)
 const { openHelpModal } = useHelpModal(useUiStore(), useImageStore(), useEditorStore(), useUserModeStore(), useRouter(), t)
 const { openSettingsPanel } = useSettingsPanel(useUiStore())
 const { openPrivacyAndDataModal } = usePrivacyAndDataModal(t)
@@ -95,7 +94,7 @@ const { closeSettingsPanel } = useSettingsPanel(useUiStore())
 const { closePrivacyAndDataModal } = usePrivacyAndDataModal(t)
 const { closeFeatureTourModal } = useFeatureTourModal()
 const { closeCalibrationModal } = useCalibrationModal(useViewportStore())
-const { closeExportToolSettings, exportFile } = useExportToolSettings(useImageStore(), useEditorStore(), useHistoryStore(), t)
+const { closeExportToolSettings, exportFileFunction, openExportToolSettings } = useExportToolSettings(useImageStore(), useEditorStore(), useHistoryStore(), useViewportStore(), t)
 const { closeImportModal } = useImportModal()
 const { closeReleaseModal } = useReleaseModal()
 
@@ -148,7 +147,7 @@ useKeyboardShortcuts({
   closeFeatureTourModal,
   closeCalibrationModal,
   closeExportToolSettings,
-  exportFile,
+  exportFileFunction,
   closeImportModal,
   closeReleaseModal,
 }, useUiStore(), useEditorStore());

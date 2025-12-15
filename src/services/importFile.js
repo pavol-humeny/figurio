@@ -22,13 +22,13 @@ export function importFile(
   imageStore,
   viewportStore,
   historyStore,
+  t,
 ) {
   /**
    * Opens a file input dialog for the user to select files and processes them
-   * @param {(key: string) => string} t - Translation function
    * @param {import('vue-router').Router} router - Vue router instance
    */
-  const openFileInput = (t, router) => {
+  const openFileInput = (router) => {
     const input = document.createElement('input')
     input.type = 'file'
     input.accept = '.png, .jpg, .jpeg, .pdf, .webp'
@@ -88,11 +88,11 @@ export function importFile(
         userModeStore.hasUserAccessToFeature('maxNumberOfOpenFiles')
       ) {
         for (const file of filesArray) {
-          await loadFile(file, t, router)
+          await loadFile(file, router)
           await new Promise((resolve) => setTimeout(resolve, 200)) // Small delay to ensure UI updates
         }
       } else {
-        await loadFile(filesArray[0], t, router)
+        await loadFile(filesArray[0], router)
       }
     })
 
@@ -104,10 +104,10 @@ export function importFile(
   /**
    * Loads and processes the selected file
    * @param {File} file - File to load
-   * @param {(key: string) => string} t - Translation function
+
    * @param {import('vue-router').Router} router - Vue router instance
    */
-  const loadFile = async (file, t, router) => {
+  const loadFile = async (file, router) => {
     if (globalConfig.featureFlags.enableImageLoad === false) return
 
     if (!file) return
@@ -133,7 +133,7 @@ export function importFile(
         await router.isReady()
       }
 
-      await setFile(file, t)
+      await setFile(file)
     }
   }
 
@@ -200,10 +200,9 @@ export function importFile(
    * @param {number} width - Width of the image
    * @param {number} height - Height of the image
    * @param {string} fileName - File name (for error message)
-   * @param {Function} t - i18n translation function
    * @returns {boolean} - True if dimensions are within limits
    */
-  const checkFileDimensions = (width, height, fileName, t) => {
+  const checkFileDimensions = (width, height, fileName) => {
     // Skip detection
     if (userModeStore.hasUserAccessToFeature('fileDimensions')) {
       return true
@@ -253,13 +252,13 @@ export function importFile(
   /**
    * Sets the selected file in the image store and processes it
    * @param {File} file - File to set
-   * @param {(key: string) => string} t - Translation function
+function
    */
-  const setFile = async (file, t) => {
+  const setFile = async (file) => {
     uiStore.isLoading = true
 
     try {
-      resetForNewFile(t)
+      resetForNewFile()
 
       imageStore.file = file
       imageStore.setFileName({
@@ -273,9 +272,9 @@ export function importFile(
       imageStore.newFileFormat = imageStore.fileFormat
 
       if (file.type.startsWith('image/')) {
-        await setImageFile(file, t)
+        await setImageFile(file)
       } else if (file.type === 'application/pdf') {
-        await setPdfFile(file, t)
+        await setPdfFile(file)
       }
 
       if (uiStore.tutorialStep === -1) {
@@ -299,9 +298,8 @@ export function importFile(
   /**
    * Sets a PDF file in the image store, allowing page selection if multiple pages exist
    * @param {File} file - PDF file to set
-   * @param {(key: string) => string} t - Translation function
    */
-  const setPdfFile = async (file, t) => {
+  const setPdfFile = async (file) => {
     log('Loading PDF file:', file.name)
 
     const buffer = await readAsArrayBuffer(file)
@@ -364,7 +362,7 @@ export function importFile(
     }).promise
 
     // Check dimensions
-    if (!checkFileDimensions(viewport.width, viewport.height, file.name, t)) {
+    if (!checkFileDimensions(viewport.width, viewport.height, file.name)) {
       imageStore.closeFile()
       return
     }
@@ -386,9 +384,8 @@ export function importFile(
   /**
    * Sets an image file in the image store and processes it
    * @param {File} file - Image file to set
-   * @param {(key: string) => string} t - Translation function
    */
-  const setImageFile = async (file, t) => {
+  const setImageFile = async (file) => {
     log('Loading image file:', file.name)
 
     const dataUrl = await readAsDataURL(file)
@@ -402,7 +399,7 @@ export function importFile(
     imageStore.file = file
 
     // Check dimensions
-    if (!checkFileDimensions(img.width, img.height, file.name, t)) {
+    if (!checkFileDimensions(img.width, img.height, file.name)) {
       imageStore.closeFile()
       return
     }
@@ -438,9 +435,8 @@ export function importFile(
 
   /**
    * Resets the stores for loading a new file
-   * @param {(key: string) => string} t - Translation function
    */
-  const resetForNewFile = (t) => {
+  const resetForNewFile = () => {
     workspaceStore.updateCurrentTabState(t)
     historyStore.reset()
     viewportStore.reset()

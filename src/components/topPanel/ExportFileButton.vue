@@ -9,6 +9,7 @@ import { useHistoryStore } from '@/stores/historyStore'
 import { useI18n } from 'vue-i18n'
 
 import { useConsole } from '@/composables/common/useConsole.js'
+import { useViewportStore } from '@/stores/viewportStore'
 const { log } = useConsole()
 
 const { t } = useI18n()
@@ -29,6 +30,7 @@ const { openExportToolSettings } = useExportToolSettings(
   useImageStore(),
   useEditorStore(),
   useHistoryStore(),
+  useViewportStore(),
   t,
 )
 

@@ -32,13 +32,14 @@ export function useUploadFileButton(
     imageStore,
     viewportStore,
     historyStore,
+    t,
   )
 
   /**
    * Open file dialog and load the selected file
    */
   const uploadFile = async () => {
-    openFileInput(t, router)
+    openFileInput(router)
   }
 
   /**

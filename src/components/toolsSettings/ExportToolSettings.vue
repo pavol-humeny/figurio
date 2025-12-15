@@ -10,6 +10,7 @@ import { useEditorStore } from '@/stores/editorStore'
 import { useHistoryStore } from '@/stores/historyStore'
 import { useMath } from '@/composables/common/useMath'
 import DropdownSelect from '../common/DropdownSelect.vue'
+import { useViewportStore } from '@/stores/viewportStore'
 
 const { t } = useI18n()
 const { round } = useMath()
@@ -32,12 +33,12 @@ const {
   updateQuality,
   saveNewFileName,
   closeExportToolSettings,
-  exportFile,
+  exportFileFunction,
   previewUrl,
-  copyImageToClipboard,
+  copyImageToClipboardFunction,
   expectedPreviewSize,
   fileFormatOptions
-} = useExportToolSettings(useImageStore(), useEditorStore(), useHistoryStore(), t)
+} = useExportToolSettings(useImageStore(), useEditorStore(), useHistoryStore(), useViewportStore(), t)
 </script>
 
 <template>
@@ -60,7 +61,7 @@ const {
           <div class="export-settings-item" v-if="fileFormat === 'jpg' || fileFormat === 'webp'">
             <label for="file-quality">{{
               $t('tools.export.settings.general.fileQuality.label')
-              }}</label>
+            }}</label>
             <p>{{ round(fileDimensions.quality) }} %</p>
             <DefaultSlider v-model="fileDimensions.quality" :min="0" :max="100" :step="1"
               @update:modelValue="(value) => updateQuality(value)" />
@@ -78,7 +79,7 @@ const {
           <div class="export-settings-item">
             <label>{{
               $t('tools.export.settings.general.fileDimensions.label')
-            }}</label>
+              }}</label>
             <div class="export-settings-item-value">
               <div class="width disabled">
                 <p>
@@ -112,14 +113,14 @@ const {
           <!-- Copy to clipboard button for PNG format -->
           <div v-if="fileFormat !== 'pdf'" class="export-settings-item">
             <DefaultButton :text="$t('tools.export.settings.general.copyToClipboardButton.text')"
-              :tip="$t('tools.export.settings.general.copyToClipboardButton.tip')" @click="copyImageToClipboard" />
+              :tip="$t('tools.export.settings.general.copyToClipboardButton.tip')" @click="copyImageToClipboardFunction" />
           </div>
 
           <!-- Export or close -->
           <div class="buttons-wrapper">
             <DefaultButton :text="$t('tools.export.settings.general.cancelButton.text')"
               @click="closeExportToolSettings" onlyText />
-            <DefaultButton :text="$t('tools.export.settings.general.exportButton.text')" @click="exportFile" />
+            <DefaultButton :text="$t('tools.export.settings.general.exportButton.text')" @click="exportFileFunction" />
           </div>
         </div>
 
@@ -308,5 +309,4 @@ const {
   align-items: center;
   border-radius: 10px;
 }
-
 </style>
