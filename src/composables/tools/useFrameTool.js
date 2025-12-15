@@ -1886,6 +1886,60 @@ export function useFrameTool(imageStore, historyStore, viewportStore, t) {
     }
   }
 
+  /**
+   * Calculate layout inside the frame based on frame settings and file dimensions
+   * @param {Object} fileDimensions - Original file dimensions { width, height }
+   * @returns {Object} - Calculated layout { finalWidth, finalHeight, targetWidth, targetHeight, offsetX, offsetY }
+   */
+  const calculateFrameLayout = (fileDimensions) => {
+    const frame = imageStore.frame
+
+    const hasHeader = isFrameWithHeader(frame.type)
+    const hasFooter = isFrameWithFooter(frame.type)
+    const phoneFrame = isPhoneFrame(frame.type)
+    const phoneFrameWithExpandedHeader = isPhoneHeaderWithExpandedHeader(
+      frame.type,
+      frame.phoneHeaderExpand,
+    )
+
+    // Target size (image inside frame)
+    const targetWidth = frame.enabled
+      ? fileDimensions.width - 2 * frame.width
+      : fileDimensions.width
+
+    let targetHeight = frame.enabled
+      ? fileDimensions.height - 2 * frame.height
+      : fileDimensions.height
+
+    if (hasHeader) {
+      if (phoneFrameWithExpandedHeader) {
+        targetHeight = fileDimensions.height - frame.headerSize - frame.height
+      }
+    } else if (hasFooter) {
+      targetHeight = fileDimensions.height - frame.footerSize - frame.height
+    }
+
+    // Offsets inside frame
+    const adjustmentForPhoneButtons = frame.phoneButtonsEnabled ? 0 : frame.width / 3
+    const offsetX = frame.enabled ? frame.width - adjustmentForPhoneButtons : 0
+
+    let offsetY = frame.enabled ? frame.height : 0
+    if (hasHeader) {
+      if (phoneFrameWithExpandedHeader || (hasHeader && !phoneFrame)) {
+        offsetY = frame.headerSize
+      }
+    }
+
+    return {
+      finalWidth: fileDimensions.width,
+      finalHeight: fileDimensions.height,
+      targetWidth,
+      targetHeight,
+      offsetX,
+      offsetY,
+    }
+  }
+
   return {
     frameColor,
     frameWidthRef,
@@ -1938,5 +1992,6 @@ export function useFrameTool(imageStore, historyStore, viewportStore, t) {
     resetUserSetHeaderSizeMm,
     minUserSetHeaderSizeMm,
     maxUserSetHeaderSizeMm,
+    calculateFrameLayout,
   }
 }

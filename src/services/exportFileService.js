@@ -88,6 +88,8 @@ export function exportFileService(imageStore, editorStore, historyStore, viewpor
    * @returns {Promise<void>}
    */
   const exportAsRaster = async (image, width, height, quality) => {
+    console.warn('W x H raster export:', width, height, quality)
+
     const mimeType =
       imageStore.newFileFormat === 'jpeg' || imageStore.newFileFormat === 'jpg'
         ? 'image/jpeg'
@@ -125,19 +127,14 @@ export function exportFileService(imageStore, editorStore, historyStore, viewpor
    * @returns {Promise<void>}
    */
   const exportAsPdf = async (image, width, height) => {
-    const offsetX = imageStore.frame.enabled ? imageStore.frame.width : 0
-    let offsetY = imageStore.frame.enabled ? imageStore.frame.height : 0
+    console.warn('W x H pdf export:', width, height)
 
-    const finalWidth = width
-    const finalHeight = height
-
-    const hasHeader = useFrameTool(imageStore, historyStore, viewportStore, t).isFrameWithHeader(
-      imageStore.frame.type,
-    )
-
-    if (hasHeader) {
-      offsetY = imageStore.frame.headerSize
-    }
+    const { finalWidth, finalHeight, targetWidth, targetHeight, offsetX, offsetY } = useFrameTool(
+      imageStore,
+      historyStore,
+      viewportStore,
+      t,
+    ).calculateFrameLayout(imageStore.newFileDimensions)
 
     // Export pdf as vector
     if (imageStore.fileType === 'pdf' && imageStore.pdfPageBytes) {
@@ -573,8 +570,6 @@ export function exportFileService(imageStore, editorStore, historyStore, viewpor
       const pdf = await PDFDocument.create()
 
       const originalPage = existingPdf.getPage(0)
-      const width = originalPage.getWidth()
-      const height = originalPage.getHeight()
 
       // Embed page
       const [embeddedPage] = await pdf.embedPages([originalPage])
@@ -582,9 +577,9 @@ export function exportFileService(imageStore, editorStore, historyStore, viewpor
       const finalPage = pdf.addPage([finalWidth, finalHeight])
       finalPage.drawPage(embeddedPage, {
         x: offsetX,
-        y: finalHeight - offsetY - embeddedPage.height,
-        width,
-        height,
+        y: finalHeight - offsetY - targetHeight,
+        width: targetWidth,
+        height: targetHeight,
       })
 
       // 2. SVG objects
@@ -673,16 +668,15 @@ export function exportFileService(imageStore, editorStore, historyStore, viewpor
       })
 
       // Add base image
-      pdf.addImage(image, 'PNG', offsetX, offsetY, image.width, image.height)
+      pdf.addImage(image, 'PNG', offsetX, offsetY, targetWidth, targetHeight)
 
       // Add svgObjects and frame
       await createSvgPdf(pdf, finalWidth, finalHeight, offsetX, offsetY)
 
       // Add overlay image if present
-      if (imageStore.overlayImage !== null) {
-        const overlayCanvas = imageStore.overlayImage
-        const overlayDataUrl = overlayCanvas.toDataURL('image/png')
-        pdf.addImage(overlayDataUrl, 'PNG', 0, 0, overlayCanvas.width, overlayCanvas.height)
+      if (imageStore.overlayImage) {
+        const overlayUrl = imageStore.overlayImage.toDataURL('image/png')
+        pdf.addImage(overlayUrl, 'PNG', 0, 0)
       }
 
       // Add magnify overlay image as extra layer

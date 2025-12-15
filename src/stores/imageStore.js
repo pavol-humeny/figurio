@@ -797,39 +797,12 @@ export const useImageStore = defineStore('imageStore', {
       log('Generating preview with frame...')
       this.phoneButtonsCanNotBeDrawnToastFlag = true // Set flag to prevent toast showing
 
-      const targetWidth = this.frame.enabled
-        ? this.newFileDimensions.width - 2 * this.frame.width
-        : this.newFileDimensions.width
-      let targetHeight = this.frame.enabled
-        ? this.newFileDimensions.height - 2 * this.frame.height
-        : this.newFileDimensions.height
-
-      const hasHeader = useFrameTool(imageStore, historyStore, viewportStore, t).isFrameWithHeader(
-        this.frame.type,
-      )
-
-      const hasFooter = useFrameTool(imageStore, historyStore, viewportStore, t).isFrameWithFooter(
-        this.frame.type,
-      )
-
-      const phoneFrameWithExpandedHeader = useFrameTool(
+      const { finalWidth, finalHeight, targetWidth, targetHeight, offsetX, offsetY } = useFrameTool(
         imageStore,
         historyStore,
         viewportStore,
         t,
-      ).isPhoneHeaderWithExpandedHeader(this.frame.type, this.frame.phoneHeaderExpand)
-
-      const phoneFrame = useFrameTool(imageStore, historyStore, viewportStore, t).isPhoneFrame(
-        this.frame.type,
-      )
-
-      if (hasHeader) {
-        if (phoneFrameWithExpandedHeader) {
-          targetHeight = this.newFileDimensions.height - this.frame.headerSize - this.frame.height
-        }
-      } else if (hasFooter) {
-        targetHeight = this.newFileDimensions.height - this.frame.footerSize - this.frame.height
-      }
+      ).calculateFrameLayout(this.newFileDimensions)
 
       // Rasterize base image + SVG objects at export size
       await this.rasterize(t, false, targetWidth, targetHeight, true)
@@ -909,27 +882,10 @@ export const useImageStore = defineStore('imageStore', {
         img.src = frameUrl
       })
 
-      // Get canvas size from rendered frame SVG
-      const canvasWidth = parseInt(tempFrameSvg.getAttribute('width'), 10)
-      const canvasHeight = parseInt(tempFrameSvg.getAttribute('height'), 10)
-
-      const adjustmentForPhoneButtons = this.frame.phoneButtonsEnabled ? 0 : this.frame.width / 3
-
-      // Determine image offset inside the frame
-      const offsetX = this.frame?.width - adjustmentForPhoneButtons || 0
-      let offsetY = this.frame?.height || offsetX
-
-      // If frame has header, adjust offsetY accordingly
-      if (hasHeader) {
-        if (phoneFrameWithExpandedHeader || (hasHeader && !phoneFrame)) {
-          offsetY = this.frame.headerSize
-        }
-      }
-
       // Create final canvas and render both layers
       const exportCanvas = document.createElement('canvas')
-      exportCanvas.width = canvasWidth
-      exportCanvas.height = canvasHeight
+      exportCanvas.width = finalWidth
+      exportCanvas.height = finalHeight
       const ctx = exportCanvas.getContext('2d')
 
       ctx.drawImage(
@@ -976,7 +932,6 @@ export const useImageStore = defineStore('imageStore', {
     // --------------------------------
     // SVG object management methods
     // --------------------------------
-
     /**
      * Adds or replaces an SVG definition in the svgDefs array.
      * @param {string} id - The ID of the SVG definition
