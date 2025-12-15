@@ -1,16 +1,10 @@
 <template>
-  <svg version="1.1" id="Ibm-Cloud-Pak-Netezza--Streamline-Carbon" xmlns="http://www.w3.org/2000/svg"
-    xmlns:xlink="http://www.w3.org/1999/xlink" x="0" y="0" viewBox="0 0 20 20" xml:space="preserve"
-    enable-background="new 0 0 32 32" height="20" width="20">
-    <path d="m11.875 6.25 0 5.75 -3.4375 -5.75 -1.5625 0 0 7.5 1.25 0 0 -5.75 3.4375 5.75 1.5625 0 0 -7.5z"
-      fill="currentColor" stroke-width="0.625"></path>
-    <path
-      d="M10 18.75C5.1875 18.75 1.25 14.8125 1.25 10S5.1875 1.25 10 1.25s8.75 3.9375 8.75 8.75 -3.9375 8.75 -8.75 8.75zm0 -16.25C5.875 2.5 2.5 5.875 2.5 10s3.375 7.5 7.5 7.5 7.5 -3.375 7.5 -7.5S14.125 2.5 10 2.5z"
-      fill="currentColor" stroke-width="0.625"></path>
-    <path id="_x3C_Transparent_Rectangle_x3E__232_" d="M0 0h20v20H0Z" fill="none" stroke-width="0.625"></path>
+  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="-0.5 -0.5 16 16" stroke-linecap="round"
+    stroke-linejoin="round" stroke="currentColor" id="Letter-N-Circle--Streamline-Mynaui" height="16" width="16">
+    <path d="M1.875 7.5a5.625 5.625 0 1 0 11.25 0 5.625 5.625 0 1 0 -11.25 0" stroke-width="1"></path>
+    <path d="M5.625 10V5l3.75 5V5" stroke-width="1"></path>
   </svg>
 </template>
 
 
-<style scoped>
-</style>
+<style scoped></style>

@@ -7,6 +7,11 @@
     "5.0.0":{
       "label": "5.0.0",
       "date":"XX.XX. 202X",
+      "improvements": {
+        "items": [
+          "Auto mode and normal mode icons are more similar"
+        ]
+      },
       "newFeatures": {
         "items": [
           "a"
