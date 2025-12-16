@@ -74,7 +74,7 @@ export function useFeatureTourModal() {
     if (!identifier) return
 
     // Check if the identifier exists
-    if (!globalConfig.listOfFeatureTourVideos.includes(identifier)) {
+    if (!globalConfig.listOfTooltipVideos.includes(identifier)) {
       console.warn(`Feature tour video identifier "${identifier}" does not exist.`)
       return
     }

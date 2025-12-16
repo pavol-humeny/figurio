@@ -67,7 +67,16 @@ export const globalConfig = {
   },
 
   // List of feature tour video identifiers to show in the feature tour modal
-  listOfFeatureTourVideos: ['noiseDetection', 'cropTool', 'brushTool', 'shapeTool'],
+  listOfTooltipVideos: [
+    'cropTool',
+    'frameTool',
+    'grayscaleTool',
+    'backgroundRemovalTool',
+    'manualTool',
+    'autoTool',
+    'colorTool',
+  ],
+  listOfFeatureTourVideos: ['noiseDetection', 'cropTool', 'frameTool'],
   // Whether to update the list of seen feature tour videos on app version change
   updateFeatureTourVideos: true,
   // List of feature tour video identifiers to remove from seen on app version change

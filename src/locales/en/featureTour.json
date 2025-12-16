@@ -57,7 +57,19 @@
     "icon": "IconBackgroundRemovalTool",
     "title": "Background Removal",
     "description": "Remove image background automatically, manually, or by color selection. Adjust sensitivity for precise results.",
-    "video": "backgroundRemovalTool"
+    "video": "autoTool"
+  },
+  {
+    "icon": "IconBackgroundRemovalTool",
+    "title": "Background Removal",
+    "description": "Remove image background automatically, manually, or by color selection. Adjust sensitivity for precise results.",
+    "video": "manualTool"
+  },
+  {
+    "icon": "IconBackgroundRemovalTool",
+    "title": "Background Removal",
+    "description": "Remove image background automatically, manually, or by color selection. Adjust sensitivity for precise results.",
+    "video": "colorTool"
   },
   {
     "icon": "IconBlurTool",

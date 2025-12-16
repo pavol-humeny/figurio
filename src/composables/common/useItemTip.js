@@ -187,12 +187,16 @@ export function useItemTip(options = {}, uiStore, editorStore) {
 
       const isOverWrapper = wrapperRef.value.contains(el)
       const isOverTip = tipRef.value.contains(el)
+      const subToolPopup = document.querySelector('.subTools-popup')
+      const isOverSubToolPopup = subToolPopup ? subToolPopup.contains(el) : false
 
       // Hide only when cursor is outside both
       if (!isOverWrapper && !isOverTip) {
         isVisible.value = false
 
-        editorStore.setToolWithOpenSubTools('')
+        if (!isOverSubToolPopup) {
+          editorStore.setToolWithOpenSubTools('')
+        }
         uiStore.isItemTipVisible = false
       }
     }, editorConfig.tipDelayHide)

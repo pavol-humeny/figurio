@@ -99,7 +99,7 @@ const {
         position: 'absolute',
         top: subToolPos.top + 'px',
         left: subToolPos.left + 'px',
-      }">
+      }" @mouseleave="onMouseLeave">
         <ItemTip ref="subToolTipRef" v-for="sub in props.tool.subTools" :key="sub.key" v-bind="{
           text: sub.tip,
           title: sub.label,
@@ -108,7 +108,7 @@ const {
           toolKey: sub.key,
           position: 'right',
         }">
-          <div class="subTool-wrapper" @mouseleave="onMouseLeave">
+          <div class="subTool-wrapper">
             <div class="subTool" @click.stop="onClickTab(sub.key)">
               <BaseIcon :name="sub.iconName" :size="27" :color="'var(--primary-c)'" />
             </div>

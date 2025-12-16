@@ -295,18 +295,19 @@ const videoRef = ref(null)
 
 /* Advance tool tip */
 .tip-video {
-  width: 100%;
-  height: 130px;
-  background: black;
+  aspect-ratio: 16 / 9;
+  background: var(--background-c);
   border-radius: 6px;
   margin-bottom: 8px;
+  overflow: hidden;
 }
 
 .video-preview {
   width: 100%;
   height: 100%;
-  object-fit: fill;
-  background: black;
+  object-fit: contain;
+  background: var(--background-c);
   cursor: pointer;
+
 }
 </style>

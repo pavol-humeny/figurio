@@ -57,7 +57,19 @@
     "icon": "IconBackgroundRemovalTool",
     "title": "Odstránenie pozadia",
     "description": "Odstráňte pozadie obrázku automaticky, ručne alebo podľa výberu farby. Nastavte citlivosť pre presné výsledky.",
-    "video": "backgroundRemovalTool"
+    "video": "autoTool"
+  },
+  {
+    "icon": "IconBackgroundRemovalTool",
+    "title": "Odstránenie pozadia",
+    "description": "Odstráňte pozadie obrázku automaticky, ručne alebo podľa výberu farby. Nastavte citlivosť pre presné výsledky.",
+    "video": "manualTool"
+  },
+  {
+    "icon": "IconBackgroundRemovalTool",
+    "title": "Odstránenie pozadia",
+    "description": "Odstráňte pozadie obrázku automaticky, ručne alebo podľa výberu farby. Nastavte citlivosť pre presné výsledky.",
+    "video": "colorTool"
   },
   {
     "icon": "IconBlurTool",
