@@ -1,7 +1,4 @@
-// import jsPDF from 'jspdf'
-// import { svg2pdf } from 'svg2pdf.js'
 import * as pdfjsLib from 'pdfjs-dist/legacy/build/pdf'
-// import { PDFDocument, rgb, degrees, StandardFonts } from 'pdf-lib'
 import { defineStore } from 'pinia'
 import { useToastModal } from '@/composables/modals/useToastModal'
 import { nextTick } from 'vue'
@@ -12,8 +9,6 @@ import { useUiStore } from './uiStore'
 import { editorConfig } from '@/config/editorConfig'
 import { useConsole } from '@/composables/common/useConsole.js'
 import { useViewportStore } from './viewportStore'
-// import { useApi } from '@/composables/common/useApi'
-// const { addUserEvent } = useApi()
 
 pdfjsLib.GlobalWorkerOptions.workerSrc =
   'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js'

@@ -8,7 +8,7 @@
   </svg>
 </template>
 <style scoped>
-/* svg {
-  transform: scale(1.05);
-} */
+svg {
+  transform: scale(1.15);
+}
 </style>

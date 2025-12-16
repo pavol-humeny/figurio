@@ -29,6 +29,8 @@
 - Expand header nefunguje dobre pri velkej hrubke ramiku 
 - Zjednodušiť nápovedy - tipy (kratšie texty)
 - achievementy
+- high noise leven in image by sa pri crop, resize... asi mal odstranit (ten warning)
+- divne sa zobrazuju 2 item tipy sucasne
 
 ## TODO
 - spracovanie pdf súborov 
