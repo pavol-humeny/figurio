@@ -31,6 +31,33 @@ const isValidFileName = (name) => {
  */
 export const useImageStore = defineStore('imageStore', {
   state: () => ({
+    renderPipeline: {
+      baseState: null,
+      // {
+      //   canvas: HTMLCanvasElement,
+      //   pdfBytes: Uint8Array | null
+      // }
+
+      checkpoints: [],
+      // [
+      //   {
+      //     opIndex: number,
+      //     state: {
+      //       canvas: HTMLCanvasElement,
+      //       pdfBytes: Uint8Array | null
+      //     },
+      //     dimensions: {
+      //       width,
+      //       height,
+      //       fileAspectRatio
+      //     }
+      //   }
+      // ]
+
+      currentOpIndex: -1, // Where we are in the operation list
+      lastRenderedOpIndex: -1, // Optimization )
+    },
+
     historyWasChanged: false,
     /** The currently loaded image file */
     file: null,
@@ -1145,45 +1172,73 @@ export const useImageStore = defineStore('imageStore', {
      *
      * @returns {object} Snapshot object
      */
-    getSnapshot(t) {
-      const cloneCanvasToDataURL = (canvas) => {
-        if (!canvas) return null
-        return canvas.toDataURL() // store as string, avoids Vue Proxy issues
-      }
+    // getSnapshot(t) {
+    //   const cloneCanvasToDataURL = (canvas) => {
+    //     if (!canvas) return null
+    //     return canvas.toDataURL() // store as string, avoids Vue Proxy issues
+    //   }
 
-      const snapshot = {
-        fileName: this.fileName,
+    //   const snapshot = {
+    //     fileName: this.fileName,
+    //     fileType: this.fileType,
+    //     showPdfAsImage: this.showPdfAsImage,
+    //     fileDimensions: JSON.parse(JSON.stringify(this.fileDimensions)),
+    //     // originalFileDimensions: JSON.parse(JSON.stringify(this.originalFileDimensions)),
+    //     previewUrl: this.previewUrl,
+    //     // blurPreviewUrl: JSON.parse(JSON.stringify(this.blurPreviewUrl)),
+    //     renderedImage: this.getRenderedImage({ t, renderCall: true })?.toDataURL() || null,
+
+    //     overlayImage: cloneCanvasToDataURL(this.overlayImage),
+    //     overlayImageExport: cloneCanvasToDataURL(this.overlayImageExport),
+    //     overlayImagePreview: cloneCanvasToDataURL(this.overlayImagePreview),
+
+    //     pdfPageBytes: this.pdfPageBytes ? new Uint8Array(this.pdfPageBytes) : undefined,
+    //     totalPdfCropBox: JSON.parse(JSON.stringify(this.totalPdfCropBox)),
+    //     // originalImage: this.originalImage?.toDataURL() || null,
+    //     svgObjects: JSON.parse(JSON.stringify(this.svgObjects)),
+    //     blurObjects: JSON.parse(JSON.stringify(this.blurObjects)),
+    //     svgDefs: JSON.parse(JSON.stringify(this.svgDefs)),
+    //     blurImages: JSON.parse(JSON.stringify(this.blurImages)),
+    //     imageOperations: JSON.parse(JSON.stringify(this.imageOperations)),
+    //     frame: JSON.parse(JSON.stringify(this.frame)),
+    //     removalCanvas: this.removalCanvas || null,
+
+    //     tmpRenderedImage: this.tmpRenderedImage?.toDataURL() || null,
+
+    //     imageWarnings: JSON.parse(JSON.stringify(this.imageWarnings)),
+    //   }
+
+    //   log('[getSnapshot] imageOperations:', snapshot.imageOperations)
+
+    //   return snapshot
+    // },
+
+    getSnapshot() {
+      return {
+        // 🔹 PIPELINE POSITION
+        opIndex: this.renderPipeline.currentOpIndex,
+
+        // 🔹 IMAGE STATE
         fileType: this.fileType,
         showPdfAsImage: this.showPdfAsImage,
         fileDimensions: JSON.parse(JSON.stringify(this.fileDimensions)),
-        // originalFileDimensions: JSON.parse(JSON.stringify(this.originalFileDimensions)),
-        previewUrl: this.previewUrl,
-        // blurPreviewUrl: JSON.parse(JSON.stringify(this.blurPreviewUrl)),
-        renderedImage: this.getRenderedImage({ t, renderCall: true })?.toDataURL() || null,
 
-        overlayImage: cloneCanvasToDataURL(this.overlayImage),
-        overlayImageExport: cloneCanvasToDataURL(this.overlayImageExport),
-        overlayImagePreview: cloneCanvasToDataURL(this.overlayImagePreview),
+        // 🔹 OPERATIONS (SOURCE OF TRUTH)
+        imageOperations: JSON.parse(JSON.stringify(this.imageOperations)),
 
-        pdfPageBytes: this.pdfPageBytes ? new Uint8Array(this.pdfPageBytes) : undefined,
-        totalPdfCropBox: JSON.parse(JSON.stringify(this.totalPdfCropBox)),
-        // originalImage: this.originalImage?.toDataURL() || null,
+        // 🔹 SVG / OVERLAY METADATA
         svgObjects: JSON.parse(JSON.stringify(this.svgObjects)),
         blurObjects: JSON.parse(JSON.stringify(this.blurObjects)),
         svgDefs: JSON.parse(JSON.stringify(this.svgDefs)),
         blurImages: JSON.parse(JSON.stringify(this.blurImages)),
-        imageOperations: JSON.parse(JSON.stringify(this.imageOperations)),
+
+        // 🔹 FRAME
         frame: JSON.parse(JSON.stringify(this.frame)),
-        removalCanvas: this.removalCanvas || null,
 
-        tmpRenderedImage: this.tmpRenderedImage?.toDataURL() || null,
-
-        imageWarnings: JSON.parse(JSON.stringify(this.imageWarnings)),
+        // 🔹 PDF
+        pdfPageBytes: this.pdfPageBytes ? new Uint8Array(this.pdfPageBytes) : undefined,
+        totalPdfCropBox: JSON.parse(JSON.stringify(this.totalPdfCropBox)),
       }
-
-      log('[getSnapshot] imageOperations:', snapshot.imageOperations)
-
-      return snapshot
     },
 
     /**
@@ -1192,108 +1247,135 @@ export const useImageStore = defineStore('imageStore', {
      * @param {object} snapshot - Snapshot object (from `getSnapshot`)
      * @returns {void}
      */
+    // applySnapshot(snapshot) {
+    //   this.historyWasChanged = true
+
+    //   this.fileName = snapshot.fileName
+    //   this.fileType = snapshot.fileType
+    //   this.showPdfAsImage = snapshot.showPdfAsImage
+    //   this.fileDimensions = JSON.parse(JSON.stringify(snapshot.fileDimensions))
+    //   this.previewUrl = snapshot.previewUrl
+    //   // this.blurPreviewUrl = JSON.parse(JSON.stringify(snapshot.blurPreviewUrl))
+    //   this.svgObjects = JSON.parse(JSON.stringify(snapshot.svgObjects))
+    //   this.blurObjects = JSON.parse(JSON.stringify(snapshot.blurObjects))
+    //   this.selectedSvgObjectId = null // Reset selected SVG object after applying snapshot
+    //   this.imageOperations = JSON.parse(JSON.stringify(snapshot.imageOperations))
+    //   this.frame = JSON.parse(JSON.stringify(snapshot.frame))
+    //   this.svgDefs = JSON.parse(JSON.stringify(snapshot.svgDefs))
+    //   this.blurImages = JSON.parse(JSON.stringify(snapshot.blurImages))
+
+    //   this.imageWarnings = JSON.parse(JSON.stringify(snapshot.imageWarnings))
+
+    //   if (snapshot.pdfPageBytes) {
+    //     if (snapshot.pdfPageBytes instanceof Uint8Array) {
+    //       this.pdfPageBytes = new Uint8Array(snapshot.pdfPageBytes)
+    //     } else if (typeof snapshot.pdfPageBytes === 'object') {
+    //       // Conversion of {0: 37, 1: 80, ...} to Uint8Array
+    //       const keys = Object.keys(snapshot.pdfPageBytes).sort((a, b) => a - b)
+    //       const arr = keys.map((k) => snapshot.pdfPageBytes[k])
+    //       this.pdfPageBytes = new Uint8Array(arr)
+    //     } else {
+    //       this.pdfPageBytes = undefined
+    //     }
+    //   } else {
+    //     this.pdfPageBytes = undefined
+    //   }
+
+    //   this.totalPdfCropBox = JSON.parse(JSON.stringify(snapshot.totalPdfCropBox))
+
+    //   if (snapshot.renderedImage) {
+    //     const img = new Image()
+    //     img.onload = () => {
+    //       const canvas = document.createElement('canvas')
+    //       canvas.width = img.width
+    //       canvas.height = img.height
+    //       const ctx = canvas.getContext('2d')
+    //       ctx.drawImage(img, 0, 0)
+    //       this.setRenderedImage(canvas)
+    //     }
+    //     img.src = snapshot.renderedImage
+    //   } else {
+    //     this.setRenderedImage(null)
+    //   }
+
+    //   const recreateCanvas = (dataURL) => {
+    //     if (!dataURL) return null
+    //     const img = new Image()
+    //     const canvas = document.createElement('canvas')
+    //     img.onload = () => {
+    //       canvas.width = img.width
+    //       canvas.height = img.height
+    //       canvas.getContext('2d').drawImage(img, 0, 0)
+    //     }
+    //     img.src = dataURL
+    //     return canvas
+    //   }
+
+    //   this.overlayImage = recreateCanvas(snapshot.overlayImage)
+    //   this.overlayImageExport = recreateCanvas(snapshot.overlayImageExport)
+    //   this.overlayImagePreview = recreateCanvas(snapshot.overlayImagePreview)
+
+    //   // Tmp rendered image
+    //   if (snapshot.tmpRenderedImage) {
+    //     const img = new Image()
+    //     img.onload = () => {
+    //       const canvas = document.createElement('canvas')
+    //       canvas.width = img.width
+    //       canvas.height = img.height
+    //       const ctx = canvas.getContext('2d')
+    //       ctx.drawImage(img, 0, 0)
+    //       this.tmpRenderedImage = canvas
+    //     }
+    //     img.src = snapshot.tmpRenderedImage
+    //   } else {
+    //     this.tmpRenderedImage = null
+    //   }
+
+    //   // Removal canvas
+    //   // if (snapshot.removalCanvas) {
+    //   //   const img = new Image()
+    //   //   img.onload = () => {
+    //   //     const canvas = document.createElement('canvas')
+    //   //     canvas.width = img.width
+    //   //     canvas.height = img.height
+    //   //     const ctx = canvas.getContext('2d')
+    //   //     ctx.drawImage(img, 0, 0)
+    //   //     this.removalCanvas = canvas
+    //   //   }
+    //   //   img.src = snapshot.removalCanvas
+    //   // } else {
+    //   //   this.removalCanvas = null
+    //   // }
+    //   this.removalCanvas = snapshot.removalCanvas
+
+    //   log('[applySnapshot] imageOperations (after apply):', this.imageOperations)
+    // },
+
     applySnapshot(snapshot) {
       this.historyWasChanged = true
 
-      this.fileName = snapshot.fileName
+      // Restore metadata
       this.fileType = snapshot.fileType
       this.showPdfAsImage = snapshot.showPdfAsImage
       this.fileDimensions = JSON.parse(JSON.stringify(snapshot.fileDimensions))
-      this.previewUrl = snapshot.previewUrl
-      // this.blurPreviewUrl = JSON.parse(JSON.stringify(snapshot.blurPreviewUrl))
+
+      this.imageOperations = JSON.parse(JSON.stringify(snapshot.imageOperations))
+
       this.svgObjects = JSON.parse(JSON.stringify(snapshot.svgObjects))
       this.blurObjects = JSON.parse(JSON.stringify(snapshot.blurObjects))
-      this.selectedSvgObjectId = null // Reset selected SVG object after applying snapshot
-      this.imageOperations = JSON.parse(JSON.stringify(snapshot.imageOperations))
-      this.frame = JSON.parse(JSON.stringify(snapshot.frame))
       this.svgDefs = JSON.parse(JSON.stringify(snapshot.svgDefs))
       this.blurImages = JSON.parse(JSON.stringify(snapshot.blurImages))
 
-      this.imageWarnings = JSON.parse(JSON.stringify(snapshot.imageWarnings))
+      this.frame = JSON.parse(JSON.stringify(snapshot.frame))
 
-      if (snapshot.pdfPageBytes) {
-        if (snapshot.pdfPageBytes instanceof Uint8Array) {
-          this.pdfPageBytes = new Uint8Array(snapshot.pdfPageBytes)
-        } else if (typeof snapshot.pdfPageBytes === 'object') {
-          // Conversion of {0: 37, 1: 80, ...} to Uint8Array
-          const keys = Object.keys(snapshot.pdfPageBytes).sort((a, b) => a - b)
-          const arr = keys.map((k) => snapshot.pdfPageBytes[k])
-          this.pdfPageBytes = new Uint8Array(arr)
-        } else {
-          this.pdfPageBytes = undefined
-        }
-      } else {
-        this.pdfPageBytes = undefined
-      }
+      this.pdfPageBytes = snapshot.pdfPageBytes ? new Uint8Array(snapshot.pdfPageBytes) : undefined
 
       this.totalPdfCropBox = JSON.parse(JSON.stringify(snapshot.totalPdfCropBox))
 
-      if (snapshot.renderedImage) {
-        const img = new Image()
-        img.onload = () => {
-          const canvas = document.createElement('canvas')
-          canvas.width = img.width
-          canvas.height = img.height
-          const ctx = canvas.getContext('2d')
-          ctx.drawImage(img, 0, 0)
-          this.setRenderedImage(canvas)
-        }
-        img.src = snapshot.renderedImage
-      } else {
-        this.setRenderedImage(null)
-      }
+      // 🔥 CRITICAL PART
+      this.renderPipeline.currentOpIndex = snapshot.opIndex
 
-      const recreateCanvas = (dataURL) => {
-        if (!dataURL) return null
-        const img = new Image()
-        const canvas = document.createElement('canvas')
-        img.onload = () => {
-          canvas.width = img.width
-          canvas.height = img.height
-          canvas.getContext('2d').drawImage(img, 0, 0)
-        }
-        img.src = dataURL
-        return canvas
-      }
-
-      this.overlayImage = recreateCanvas(snapshot.overlayImage)
-      this.overlayImageExport = recreateCanvas(snapshot.overlayImageExport)
-      this.overlayImagePreview = recreateCanvas(snapshot.overlayImagePreview)
-
-      // Tmp rendered image
-      if (snapshot.tmpRenderedImage) {
-        const img = new Image()
-        img.onload = () => {
-          const canvas = document.createElement('canvas')
-          canvas.width = img.width
-          canvas.height = img.height
-          const ctx = canvas.getContext('2d')
-          ctx.drawImage(img, 0, 0)
-          this.tmpRenderedImage = canvas
-        }
-        img.src = snapshot.tmpRenderedImage
-      } else {
-        this.tmpRenderedImage = null
-      }
-
-      // Removal canvas
-      // if (snapshot.removalCanvas) {
-      //   const img = new Image()
-      //   img.onload = () => {
-      //     const canvas = document.createElement('canvas')
-      //     canvas.width = img.width
-      //     canvas.height = img.height
-      //     const ctx = canvas.getContext('2d')
-      //     ctx.drawImage(img, 0, 0)
-      //     this.removalCanvas = canvas
-      //   }
-      //   img.src = snapshot.removalCanvas
-      // } else {
-      //   this.removalCanvas = null
-      // }
-      this.removalCanvas = snapshot.removalCanvas
-
-      log('[applySnapshot] imageOperations (after apply):', this.imageOperations)
+      // Rendering happens OUTSIDE (undo/redo or watcher)
     },
 
     /**

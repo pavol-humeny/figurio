@@ -6,6 +6,7 @@ import { useToastModal } from '../modals/useToastModal'
 const { log, error } = useConsole()
 import { useApi } from '@/composables/common/useApi'
 const { addUserEvent } = useApi()
+import { useImagePipeline } from '../editor/useImagePipeline'
 
 /**
  * Logic for the rotate tool including confirmation, operation registration, and canvas rendering
@@ -21,7 +22,7 @@ const { addUserEvent } = useApi()
 export function useRotateTool(imageStore, historyStore, t) {
   const { showConfirmModal } = useConfirmModal()
   const { showToastModal } = useToastModal()
-
+  const { renderUpTo } = useImagePipeline(imageStore)
   const { round } = useMath()
 
   /**
@@ -31,6 +32,7 @@ export function useRotateTool(imageStore, historyStore, t) {
    * @returns {Promise<void>}
    */
   const applyRotation = async (angle) => {
+    console.warn('applyRotation called with angle:', angle)
     // Show confirmation if SVG objects need to be rasterized first
     if (imageStore.needRasterization) {
       const confirmed = await showConfirmModal(
@@ -57,8 +59,10 @@ export function useRotateTool(imageStore, historyStore, t) {
 
     // Register operation in the operation list
     imageStore.addImageOperation({
-      type: 'rotation',
-      angle: angle,
+      type: 'rotate',
+      params: { angle },
+      cost: 'high',
+      affectsGeometry: true,
     })
 
     addUserEvent('applyOperation', {
@@ -66,7 +70,13 @@ export function useRotateTool(imageStore, historyStore, t) {
       settings: { angle: angle },
     })
 
-    await applyRotationRender(angle)
+    const nextIndex = imageStore.renderPipeline.currentOpIndex + 1
+    await renderUpTo(nextIndex)
+
+    // undo/redo už len index
+    // historyStore.newPush({ opIndex: nextIndex })
+
+    // await applyRotationRender(angle)
 
     // Push to undo history
     historyStore.push(imageStore.getSnapshot(t))

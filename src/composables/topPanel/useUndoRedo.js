@@ -1,5 +1,6 @@
 import { computed } from 'vue'
 import { useApi } from '@/composables/common/useApi'
+import { useImagePipeline } from '../editor/useImagePipeline'
 const { addUserEvent } = useApi()
 
 /**
@@ -15,6 +16,7 @@ const { addUserEvent } = useApi()
  * }}
  */
 export function useUndoRedo(historyStore, imageStore) {
+  const { renderUpTo } = useImagePipeline(imageStore)
   /**
    * Whether undo operation is available
    */
@@ -33,9 +35,10 @@ export function useUndoRedo(historyStore, imageStore) {
     addUserEvent('buttonClicked', { button: 'undo' })
 
     const snapshot = historyStore.undo()
-    if (snapshot) {
-      imageStore.applySnapshot(snapshot)
-    }
+    if (!snapshot) return
+
+    imageStore.applySnapshot(snapshot)
+    renderUpTo(snapshot.opIndex)
   }
 
   /**
@@ -48,9 +51,10 @@ export function useUndoRedo(historyStore, imageStore) {
     addUserEvent('buttonClicked', { button: 'redo' })
 
     const snapshot = historyStore.redo()
-    if (snapshot) {
-      imageStore.applySnapshot(snapshot)
-    }
+    if (!snapshot) return
+
+    imageStore.applySnapshot(snapshot)
+    renderUpTo(snapshot.opIndex)
   }
   return {
     undo,

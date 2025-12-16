@@ -44,7 +44,6 @@ export const globalConfig = {
       select: true,
       brush: true,
       transform: true,
-      autoCrop: true,
       grayscale: true,
       blur: true,
       shape: true,
