@@ -886,7 +886,12 @@ export function useViewportWrapper(viewportStore, imageStore, editorStore, uiSto
    * Mode for showing pixel grid (auto | always | never)
    */
   const viewportPixelateMode = computed({
-    get: () => uiStore.viewportPixelateMode,
+    get: () => {
+      if (imageStore.fileType === 'pdf' && !imageStore.showPdfAsImage) {
+        uiStore.setViewportPixelateMode('never')
+      }
+      return uiStore.viewportPixelateMode
+    },
     set: (value) => uiStore.setViewportPixelateMode(value),
   })
 
