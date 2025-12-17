@@ -64,7 +64,7 @@ export const useWorkspaceStore = defineStore('workspaceStore', {
      * Close a tab by index and restore the next available tab if any.
      * @param {number} index - Index of the tab to close (defaults to active)
      */
-    closeTab(index = this.activeTabIndex) {
+    async closeTab(index = this.activeTabIndex) {
       if (index < 0 || index >= this.tabs.length) return
 
       this.tabs.splice(index, 1)
@@ -74,7 +74,7 @@ export const useWorkspaceStore = defineStore('workspaceStore', {
       }
 
       if (this.activeTabIndex >= 0) {
-        this.restoreTab(this.activeTabIndex)
+        await this.restoreTab(this.activeTabIndex)
       } else {
         const imageStore = useImageStore()
         const viewportStore = useViewportStore()
@@ -89,9 +89,9 @@ export const useWorkspaceStore = defineStore('workspaceStore', {
     /**
      * Close all tabs and clear the workspace.
      */
-    closeAllTabs() {
+    async closeAllTabs() {
       while (this.tabs.length > 0) {
-        this.closeTab(0)
+        await this.closeTab(0)
       }
     },
 
@@ -99,32 +99,27 @@ export const useWorkspaceStore = defineStore('workspaceStore', {
      * Switch to a tab by its index and restore its state.
      * @param {number} index
      */
-    switchToTab(index) {
+    async switchToTab(index) {
       if (index < 0 || index >= this.tabs.length) return
       this.activeTabIndex = index
 
-      const viewportEl = document.querySelector('.viewport-content-wrapper')
+      // const viewportEl = document.querySelector('.viewport-content-wrapper')
+      // if (viewportEl) viewportEl.style.opacity = 0
 
-      if (viewportEl) {
-        // Set opacity to 0
-        viewportEl.style.opacity = 0
-      }
+      await this.restoreTab(index)
 
-      this.restoreTab(index)
-
-      if (viewportEl) {
-        // After 50ms set opacity back to 1
-        setTimeout(() => {
-          viewportEl.style.opacity = 1
-        }, 50)
-      }
+      // if (viewportEl) {
+      //   setTimeout(() => {
+      //     viewportEl.style.opacity = 1
+      //   }, 50)
+      // }
     },
 
     /**
      * Restore the state from a tab snapshot to all stores.
      * @param {number} index
      */
-    restoreTab(index) {
+    async restoreTab(index) {
       const imageStore = useImageStore()
       const historyStore = useHistoryStore()
       const viewportStore = useViewportStore()
@@ -132,7 +127,7 @@ export const useWorkspaceStore = defineStore('workspaceStore', {
       const tab = this.tabs[index]
       if (!tab) return
 
-      imageStore.applyFullSnapshot(tab.imageSnapshot)
+      await imageStore.applyFullSnapshot(tab.imageSnapshot)
       historyStore.applyFullSnapshot(tab.historySnapshot)
       viewportStore.applyFullSnapshot(tab.viewportSnapshot)
     },

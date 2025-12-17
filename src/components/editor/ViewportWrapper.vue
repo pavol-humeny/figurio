@@ -452,6 +452,10 @@ const cursorStyle = computed(() => {
   background-size: 20px 20px;
 }
 
+.viewport-content.hide {
+  background: none;
+}
+
 .image-canvas,
 .image-svg,
 .frame-svg,

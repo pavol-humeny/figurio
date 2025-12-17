@@ -11,6 +11,7 @@ import { useFrameTool } from './useFrameTool'
 import { useConsole } from '@/composables/common/useConsole.js'
 const { warn } = useConsole()
 import { useApi } from '@/composables/common/useApi'
+import { useUiStore } from '@/stores/uiStore'
 const { addUserEvent } = useApi()
 
 /**
@@ -538,9 +539,11 @@ export function usePresetTool(
     if (preset.imageOperations.length !== 0) {
       preset.imageOperations.forEach(async (operation) => {
         if (operation.type === 'rotation') {
-          await useRotateTool(imageStore, historyStore, t).applyRotationRender(operation.angle)
+          await useRotateTool(imageStore, historyStore, useUiStore(), t).applyRotationRender(
+            operation.angle,
+          )
         } else if (operation.type === 'flip') {
-          await useFlipTool(imageStore, historyStore, t).applyFlipRender(operation.direction)
+          await useFlipTool(imageStore, historyStore, useUiStore(), t).applyFlipRender(operation.direction)
         } else if (operation.type === 'autoCrop') {
           await useCropTool(
             imageStore,

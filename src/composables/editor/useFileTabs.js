@@ -2,6 +2,7 @@ import { ref, onMounted } from 'vue'
 import { useWorkspaceStore } from '@/stores/workspaceStore'
 import { storeToRefs } from 'pinia'
 import { useConfirmModal } from '../modals/useConfirmModal'
+import { useImagePipeline } from './useImagePipeline'
 
 /**
  * Logic for handling file tab behavior, including switching, closing, dragging and scrolling
@@ -12,6 +13,7 @@ import { useConfirmModal } from '../modals/useConfirmModal'
  */
 export function useFileTabs(uiStore, viewportStore, imageStore, editorStore, t) {
   const { showConfirmModal } = useConfirmModal()
+  const { renderUpTo } = useImagePipeline(imageStore, uiStore)
 
   /**
    * Ref to wrapper element for scroll manipulation
@@ -51,16 +53,19 @@ export function useFileTabs(uiStore, viewportStore, imageStore, editorStore, t) 
       }
 
       workspaceStore.updateCurrentTabState(t)
-      workspaceStore.switchToTab(index)
+      await workspaceStore.switchToTab(index)
 
       // await new Promise((resolve) => setTimeout(resolve, 1))
-      uiStore.isLoading = false
 
       // Reset when switching tabs
       // To reset rulers position
       viewportStore.resetZoom()
       viewportStore.resetPan()
       viewportStore.shouldFitToScreen = true
+
+      await renderUpTo(imageStore.renderPipeline.currentOpIndex)
+
+      uiStore.isLoading = false
 
       // To hide artifacts
       // imageStore.areArtifactsVisible = false
@@ -83,7 +88,11 @@ export function useFileTabs(uiStore, viewportStore, imageStore, editorStore, t) 
       uiStore.isLoading = true
 
       workspaceStore.updateCurrentTabState(t)
-      workspaceStore.closeTab(index)
+      await workspaceStore.closeTab(index)
+
+      if (workspaceStore.activeTabIndex !== -1) {
+        await renderUpTo(imageStore.renderPipeline.currentOpIndex)
+      }
 
       uiStore.isLoading = false
     }

@@ -19,10 +19,10 @@ import { useImagePipeline } from '../editor/useImagePipeline'
  *   applyRotationRender: (angle: number) => void,
  * }}
  */
-export function useRotateTool(imageStore, historyStore, t) {
+export function useRotateTool(imageStore, historyStore, uiStore, t) {
   const { showConfirmModal } = useConfirmModal()
   const { showToastModal } = useToastModal()
-  const { renderUpTo } = useImagePipeline(imageStore)
+  const { renderUpTo } = useImagePipeline(imageStore, uiStore)
   // const { round } = useMath()
 
   /**

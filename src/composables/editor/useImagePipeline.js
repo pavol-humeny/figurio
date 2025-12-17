@@ -2,7 +2,7 @@ import { operationRegistry } from './operationRegistry'
 import { useMath } from '../common/useMath'
 const { round } = useMath()
 
-export function useImagePipeline(imageStore) {
+export function useImagePipeline(imageStore, uiStore) {
   /**
    * Clone the given state to avoid mutations
    * @param {{ canvas: HTMLCanvasElement, overlay: HTMLCanvasElement|null, pdfBytes: Uint8Array|null }} state
@@ -55,6 +55,7 @@ export function useImagePipeline(imageStore) {
    * @returns {{ canvas: HTMLCanvasElement, overlay: HTMLCanvasElement|null, pdfBytes: Uint8Array|null }} new state
    */
   const applyOperation = async (state, operation, meta) => {
+    console.warn('applyOperation called with operation:', operation)
     const executor = operationRegistry[operation.type]
     if (!executor) return state
 
@@ -68,10 +69,12 @@ export function useImagePipeline(imageStore) {
 
     meta.dimensions = result.dimensions
 
+    console.warn('Operation result:', result)
+
     return {
       canvas: result.canvas,
       overlay: result.overlay ?? state.overlay,
-      pdfBytes: imageStore.fileType === 'pdf' ? new Uint8Array(result.pdfBytes) : null,
+      pdfBytes: result.pdfBytes ? new Uint8Array(result.pdfBytes) : state.pdfBytes,
     }
   }
 
@@ -80,51 +83,106 @@ export function useImagePipeline(imageStore) {
    * @param {number} targetIndex operation index to render up to
    */
   const renderUpTo = async (targetIndex) => {
+    console.warn('renderUpTo called with targetIndex:', targetIndex)
     const pipeline = imageStore.renderPipeline
     const { baseState } = pipeline
 
     if (!baseState) return
     if (targetIndex < -1) return
 
-    // Find nearest checkpoint
-    const checkpoint = findCheckpoint(targetIndex)
-    if (!checkpoint) return
+    uiStore.isApplying = true
 
-    let state = cloneState(checkpoint.state)
-    let currentDimensions = { ...checkpoint.dimensions }
+    try {
+      // Add example time wait
+      // await new Promise((resolve) => setTimeout(resolve, 500))
 
-    // Apply operations from checkpoint to target index
-    for (let i = checkpoint.opIndex + 1; i <= targetIndex; i++) {
-      const operation = imageStore.imageOperations[i]
-      if (!operation) continue
+      // Find nearest checkpoint
+      const checkpoint = findCheckpoint(targetIndex)
 
-      const meta = {}
-      state = await applyOperation(state, operation, meta)
+      let state
+      let currentDimensions
 
-      if (meta.dimensions) {
-        currentDimensions = meta.dimensions
+      if (checkpoint) {
+        // 🔹 Normal path – render from checkpoint
+        state = cloneState(checkpoint.state)
+        currentDimensions = { ...checkpoint.dimensions }
+
+        console.warn(
+          'Starting from checkpoint at opIndex:',
+          checkpoint.opIndex + 1,
+          'to targetIndex:',
+          targetIndex,
+        )
+
+        for (let i = checkpoint.opIndex + 1; i <= targetIndex; i++) {
+          const operation = imageStore.imageOperations[i]
+          if (!operation) continue
+
+          const meta = {}
+          state = await applyOperation(state, operation, meta)
+
+          if (meta.dimensions && operation.affectsGeometry !== false) {
+            currentDimensions = meta.dimensions
+          }
+
+          if (shouldCreateCheckpoint(operation)) {
+            pipeline.checkpoints.push({
+              opIndex: i,
+              state: cloneState(state),
+              dimensions: { ...currentDimensions },
+            })
+          }
+        }
+      } else {
+        // 🔥 FALLBACK – render from baseState
+        console.warn('No checkpoint found, rendering from baseState')
+
+        state = cloneState(pipeline.baseState)
+
+        currentDimensions = {
+          width: pipeline.baseState.canvas.width,
+          height: pipeline.baseState.canvas.height,
+          fileAspectRatio: pipeline.baseState.canvas.width / pipeline.baseState.canvas.height || 1,
+        }
+
+        // Apply operations from start
+        for (let i = 0; i <= targetIndex; i++) {
+          const operation = imageStore.imageOperations[i]
+          if (!operation) continue
+
+          const meta = {}
+          state = await applyOperation(state, operation, meta)
+
+          if (meta.dimensions && operation.affectsGeometry !== false) {
+            currentDimensions = meta.dimensions
+          }
+
+          if (shouldCreateCheckpoint(operation)) {
+            pipeline.checkpoints.push({
+              opIndex: i,
+              state: cloneState(state),
+              dimensions: { ...currentDimensions },
+            })
+          }
+        }
       }
 
-      if (shouldCreateCheckpoint(operation)) {
-        pipeline.checkpoints.push({
-          opIndex: i,
-          state: cloneState(state),
-          dimensions: { ...currentDimensions },
-        })
+      pipeline.currentOpIndex = targetIndex
+      pipeline.lastRenderedOpIndex = targetIndex
+
+      // Update the rendered image in the store and dimensions
+      imageStore.setRenderedImage(state.canvas)
+      imageStore.setOverlay(state.overlay)
+      imageStore.fileDimensions = { ...currentDimensions }
+      imageStore.newFileDimensions = { ...currentDimensions }
+
+      if (state.pdfBytes && state.pdfBytes.length > 0) {
+        imageStore.pdfPageBytes = new Uint8Array(state.pdfBytes)
+      } else {
+        imageStore.pdfPageBytes = null
       }
-    }
-
-    pipeline.currentOpIndex = targetIndex
-    pipeline.lastRenderedOpIndex = targetIndex
-
-    // Update the rendered image in the store and dimensions
-    imageStore.setRenderedImage(state.canvas)
-    imageStore.setOverlay(state.overlay)
-    imageStore.fileDimensions = { ...currentDimensions }
-    imageStore.newFileDimensions = { ...currentDimensions }
-
-    if (imageStore.fileType === 'pdf' && state.pdfBytes) {
-      imageStore.pdfPageBytes = new Uint8Array(state.pdfBytes)
+    } finally {
+      uiStore.isApplying = false
     }
   }
 

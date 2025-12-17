@@ -10,9 +10,9 @@ import { useImagePipeline } from '../editor/useImagePipeline'
  * @param {object} historyStore - Store for undo/redo history
  * @returns {object} Flip tool methods
  */
-export function useFlipTool(imageStore, historyStore, t) {
+export function useFlipTool(imageStore, historyStore, uiStore, t) {
   const { showConfirmModal } = useConfirmModal()
-  const { renderUpTo } = useImagePipeline(imageStore)
+  const { renderUpTo } = useImagePipeline(imageStore, uiStore)
 
   /**
    * Add flip operation, apply transformation and push to history
@@ -20,6 +20,18 @@ export function useFlipTool(imageStore, historyStore, t) {
    * @param {'horizontal' | 'vertical'} direction - Flip direction
    */
   const applyFlip = async (direction) => {
+    if (imageStore.fileType === 'pdf') {
+      const confirmed = await showConfirmModal(
+        t('tools.confirmNeedBaseImageRasterization.title'),
+        t('tools.confirmNeedBaseImageRasterization.message'),
+        t('tools.confirmNeedBaseImageRasterization.cancel'),
+        t('tools.confirmNeedBaseImageRasterization.confirm'),
+      )
+      if (!confirmed) return
+
+      await imageStore.rasterizeBaseImage(t)
+    }
+
     if (imageStore.needRasterization) {
       const confirmed = await showConfirmModal(
         t('tools.confirmNeedRasterization.title'),
@@ -37,7 +49,7 @@ export function useFlipTool(imageStore, historyStore, t) {
     imageStore.addImageOperation({
       type: 'flip',
       params: { direction },
-      cost: 'medium',
+      cost: 'high',
       affectsGeometry: false,
     })
 

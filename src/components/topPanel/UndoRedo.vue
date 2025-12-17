@@ -4,13 +4,14 @@ import { useUndoRedo } from '@/composables/topPanel/useUndoRedo'
 import { useImageStore } from '@/stores/imageStore'
 import ItemTip from '@/components/common/ItemTip.vue'
 import { useHistoryStore } from '@/stores/historyStore'
+import { useUiStore } from '@/stores/uiStore'
 
 const imageStore = useImageStore()
 
 /**
  * Logic for the undo/redo buttons.
  */
-const { undo, redo, canUndo, canRedo } = useUndoRedo(useHistoryStore(), useImageStore())
+const { undo, redo, canUndo, canRedo } = useUndoRedo(useHistoryStore(), useImageStore(), useUiStore())
 </script>
 
 <template>

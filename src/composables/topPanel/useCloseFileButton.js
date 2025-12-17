@@ -42,7 +42,7 @@ export function useCloseFileButton(imageStore, workspaceStore, t) {
       )
 
       if (confirmed) {
-        workspaceStore.closeTab()
+        await workspaceStore.closeTab()
       }
     } else {
       const confirmed = await showGeneralModal(
@@ -55,9 +55,9 @@ export function useCloseFileButton(imageStore, workspaceStore, t) {
 
       if (confirmed) {
         if (confirmed.closeAllFiles) {
-          workspaceStore.closeAllTabs()
+          await workspaceStore.closeAllTabs()
         } else {
-          workspaceStore.closeTab()
+          await workspaceStore.closeTab()
         }
       }
     }

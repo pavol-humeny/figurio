@@ -48,7 +48,7 @@ import { useUserModeStore } from '@/stores/userModeStore';
 
 const { hideArtifacts } = useImageAnalysis(useImageStore(), useWorkspaceStore(), useUiStore(), t)
 
-const { undo, redo } = useUndoRedo(useHistoryStore(), useImageStore())
+const { undo, redo } = useUndoRedo(useHistoryStore(), useImageStore(), useUiStore())
 const { zoomIn, zoomOut, resetZoom, toggleZoomMode } = useZoomControl(useViewportStore(), useImageStore())
 const { closeFile } = useCloseFileButton(useImageStore(), useWorkspaceStore(), t)
 const { uploadFile } = useUploadFileButton(useImageStore(), t, useRouter(), useUserModeStore(), useWorkspaceStore(), useUiStore(), useViewportStore(), useHistoryStore())

@@ -5,7 +5,7 @@ import { nextTick } from 'vue'
 import { useHistoryStore } from './historyStore'
 import { useFrameTool } from '@/composables/tools/useFrameTool'
 import { useWorkspaceStore } from './workspaceStore'
-import { useUiStore } from './uiStore'
+// import { useUiStore } from './uiStore'
 import { editorConfig } from '@/config/editorConfig'
 import { useConsole } from '@/composables/common/useConsole.js'
 import { useViewportStore } from './viewportStore'
@@ -256,6 +256,7 @@ export const useImageStore = defineStore('imageStore', {
      * @param {boolean} [onlyOriginal=false] - Whether to skip updating the temporary image
      */
     setRenderedImage(image, onlyOriginal = false) {
+      console.warn('setRenderedImage called')
       this.renderedImage = image
       if (!onlyOriginal) {
         this.tmpRenderedImage = image
@@ -1395,58 +1396,49 @@ export const useImageStore = defineStore('imageStore', {
      *
      * @returns {object} A deep clone of the full image store state.
      */
-    getFullSnapshot(t) {
-      log('[getFullSnapshot] imageOperations:', this.imageOperations)
+    getFullSnapshot() {
       return {
+        // 🔹 FILE IDENTITY
         file: this.file,
         fileType: this.fileType,
-        showPdfAsImage: this.showPdfAsImage,
-
         fileName: this.fileName,
         fileFormat: this.fileFormat,
+        showPdfAsImage: this.showPdfAsImage,
+
+        // 🔹 BASE STATE (SOURCE IMAGE / PDF)
+        baseState: this.renderPipeline.baseState
+          ? {
+              canvas: this.renderPipeline.baseState.canvas
+                ? this.renderPipeline.baseState.canvas.toDataURL()
+                : null,
+              pdfBytes: this.renderPipeline.baseState.pdfBytes
+                ? new Uint8Array(this.renderPipeline.baseState.pdfBytes)
+                : null,
+            }
+          : null,
+
+        // 🔹 PIPELINE
+        imageOperations: JSON.parse(JSON.stringify(this.imageOperations)),
+        currentOpIndex: this.renderPipeline.currentOpIndex,
+
+        // 🔹 DIMENSIONS
         fileDimensions: JSON.parse(JSON.stringify(this.fileDimensions)),
 
-        newFileName: this.newFileName,
-        newFileFormat: this.newFileFormat,
-        newFileDimensions: JSON.parse(JSON.stringify(this.newFileDimensions)),
-
-        previewUrl: this.previewUrl,
-        // blurPreviewUrl: JSON.parse(JSON.stringify(this.blurPreviewUrl)),
-
-        originalImage: this.originalImage?.toDataURL() || null,
-        originalFileDimensions: JSON.parse(JSON.stringify(this.originalFileDimensions)),
-
-        renderedImage: this.getRenderedImage({ t, renderCall: true })?.toDataURL() || null,
-        tmpRenderedImage: this.tmpRenderedImage?.toDataURL() || null,
-        newRenderedImage: this.newRenderedImage?.toDataURL() || null,
-        overlayImage: this.overlayImage?.toDataURL() || null,
-        overlayImageExport: this.overlayImageExport?.toDataURL() || null,
-        overlayImagePreview: this.overlayImagePreview?.toDataURL() || null,
-
-        pdfPageBytes: this.pdfPageBytes ? new Uint8Array(this.pdfPageBytes) : undefined,
-        totalPdfCropBox: JSON.parse(JSON.stringify(this.totalPdfCropBox)),
-
+        // 🔹 SVG / OVERLAYS (LOGICAL, NOT RENDERED)
         svgObjects: JSON.parse(JSON.stringify(this.svgObjects)),
-        selectedSvgObjectId: this.selectedSvgObjectId,
-        blurImages: JSON.parse(JSON.stringify(this.blurImages)),
         blurObjects: JSON.parse(JSON.stringify(this.blurObjects)),
-
-        // justCreatedSvgObjectId: this.justCreatedSvgObjectId,
-        // selectedSvgObjectIds: this.selectedSvgObjectIds,
         svgDefs: JSON.parse(JSON.stringify(this.svgDefs)),
+        blurImages: JSON.parse(JSON.stringify(this.blurImages)),
 
-        imageOperations: JSON.parse(JSON.stringify(this.imageOperations)),
-
+        // 🔹 FRAME
         frame: JSON.parse(JSON.stringify(this.frame)),
         frameSvg: this.frameSvg,
 
-        phoneButtonsCanNotBeDrawnToastFlag: this.phoneButtonsCanNotBeDrawnToastFlag,
+        // 🔹 PDF
+        pdfPageBytes: this.pdfPageBytes ? new Uint8Array(this.pdfPageBytes) : null,
+        totalPdfCropBox: JSON.parse(JSON.stringify(this.totalPdfCropBox)),
 
-        imageHasArtifacts: JSON.parse(JSON.stringify(this.imageHasArtifacts)),
-        imageArtifactsCanceledByUser: JSON.parse(JSON.stringify(this.imageArtifactsCanceledByUser)),
-
-        removalCanvas: this.removalCanvas || null,
-
+        // 🔹 WARNINGS
         imageWarnings: JSON.parse(JSON.stringify(this.imageWarnings)),
       }
     },
@@ -1457,198 +1449,63 @@ export const useImageStore = defineStore('imageStore', {
      * @param {object} snapshot - The full snapshot object previously created by `getFullSnapshot`.
      * @returns {void}
      */
-    applyFullSnapshot(snapshot) {
-      const uiStore = useUiStore()
-      uiStore.isLoading = true
-
+    async applyFullSnapshot(snapshot) {
+      // FILE METADATA
       this.file = snapshot.file
       this.fileType = snapshot.fileType
-      this.showPdfAsImage = snapshot.showPdfAsImage
-
       this.fileName = snapshot.fileName
       this.fileFormat = snapshot.fileFormat
+      this.showPdfAsImage = snapshot.showPdfAsImage
+
       this.fileDimensions = JSON.parse(JSON.stringify(snapshot.fileDimensions))
 
-      this.newFileName = snapshot.newFileName
-      this.newFileFormat = snapshot.newFileFormat
-      this.newFileDimensions = JSON.parse(JSON.stringify(snapshot.newFileDimensions))
-
-      this.previewUrl = snapshot.previewUrl
-      // this.blurPreviewUrl = JSON.parse(JSON.stringify(snapshot.blurPreviewUrl))
-
-      this.originalFileDimensions = JSON.parse(JSON.stringify(snapshot.originalFileDimensions))
-
+      // SVG / FRAME
       this.svgObjects = JSON.parse(JSON.stringify(snapshot.svgObjects))
-      this.selectedSvgObjectId = null
-      this.blurImages = JSON.parse(JSON.stringify(snapshot.blurImages))
       this.blurObjects = JSON.parse(JSON.stringify(snapshot.blurObjects))
-      // this.justCreatedSvgObjectId = null
-      // this.selectedSvgObjectIds = []
       this.svgDefs = JSON.parse(JSON.stringify(snapshot.svgDefs))
-
-      this.imageOperations = JSON.parse(JSON.stringify(snapshot.imageOperations))
+      this.blurImages = JSON.parse(JSON.stringify(snapshot.blurImages))
 
       this.frame = JSON.parse(JSON.stringify(snapshot.frame))
       this.frameSvg = snapshot.frameSvg
 
-      this.imageHasArtifacts = JSON.parse(JSON.stringify(snapshot.imageHasArtifacts))
-      this.imageArtifactsCanceledByUser = JSON.parse(
-        JSON.stringify(snapshot.imageArtifactsCanceledByUser),
-      )
-
-      this.imageWarnings = JSON.parse(JSON.stringify(snapshot.imageWarnings))
-
-      if (snapshot.pdfPageBytes) {
-        if (snapshot.pdfPageBytes instanceof Uint8Array) {
-          this.pdfPageBytes = new Uint8Array(snapshot.pdfPageBytes)
-        } else if (typeof snapshot.pdfPageBytes === 'object') {
-          // Conversion of {0: 37, 1: 80, ...} to Uint8Array
-          const keys = Object.keys(snapshot.pdfPageBytes).sort((a, b) => a - b)
-          const arr = keys.map((k) => snapshot.pdfPageBytes[k])
-          this.pdfPageBytes = new Uint8Array(arr)
-        } else {
-          this.pdfPageBytes = undefined
-        }
-      } else {
-        this.pdfPageBytes = undefined
-      }
+      // PDF
+      this.pdfPageBytes = snapshot.pdfPageBytes ? new Uint8Array(snapshot.pdfPageBytes) : null
 
       this.totalPdfCropBox = JSON.parse(JSON.stringify(snapshot.totalPdfCropBox))
 
-      this.phoneButtonsCanNotBeDrawnToastFlag = snapshot.phoneButtonsCanNotBeDrawnToastFlag
+      // PIPELINE (LOGICAL)
+      this.imageOperations = JSON.parse(JSON.stringify(snapshot.imageOperations))
 
-      // Rendered image
-      if (snapshot.renderedImage) {
-        const img = new Image()
-        img.onload = () => {
-          const canvas = document.createElement('canvas')
-          canvas.width = img.width
-          canvas.height = img.height
-          const ctx = canvas.getContext('2d')
-          ctx.drawImage(img, 0, 0)
-          this.setRenderedImage(canvas)
-        }
-        img.src = snapshot.renderedImage
-      } else {
-        this.setRenderedImage(null)
+      // RESET PIPELINE
+      this.renderPipeline = {
+        baseState: null,
+        checkpoints: [],
+        currentOpIndex: snapshot.currentOpIndex,
+        lastRenderedOpIndex: -1,
       }
 
-      // Original image
-      if (snapshot.originalImage) {
-        const img = new Image()
-        img.onload = () => {
-          const canvas = document.createElement('canvas')
-          canvas.width = img.width
-          canvas.height = img.height
-          const ctx = canvas.getContext('2d')
-          ctx.drawImage(img, 0, 0)
-          this.originalImage = canvas
-        }
-        img.src = snapshot.originalImage
-      } else {
-        this.originalImage = null
+      // ⏳ WAIT FOR BASE CANVAS
+      if (snapshot.baseState?.canvas) {
+        await new Promise((resolve) => {
+          const img = new Image()
+          img.onload = () => {
+            const canvas = document.createElement('canvas')
+            canvas.width = img.width
+            canvas.height = img.height
+            canvas.getContext('2d').drawImage(img, 0, 0)
+
+            this.renderPipeline.baseState = {
+              canvas,
+              pdfBytes: snapshot.baseState.pdfBytes
+                ? new Uint8Array(snapshot.baseState.pdfBytes)
+                : null,
+            }
+
+            resolve()
+          }
+          img.src = snapshot.baseState.canvas
+        })
       }
-
-      // Tmp rendered image
-      if (snapshot.tmpRenderedImage) {
-        const img = new Image()
-        img.onload = () => {
-          const canvas = document.createElement('canvas')
-          canvas.width = img.width
-          canvas.height = img.height
-          const ctx = canvas.getContext('2d')
-          ctx.drawImage(img, 0, 0)
-          this.tmpRenderedImage = canvas
-        }
-        img.src = snapshot.tmpRenderedImage
-      } else {
-        this.tmpRenderedImage = null
-      }
-
-      // New rendered image
-      if (snapshot.newRenderedImage) {
-        const img = new Image()
-        img.onload = () => {
-          const canvas = document.createElement('canvas')
-          canvas.width = img.width
-          canvas.height = img.height
-          const ctx = canvas.getContext('2d')
-          ctx.drawImage(img, 0, 0)
-          this.newRenderedImage = canvas
-        }
-        img.src = snapshot.newRenderedImage
-      } else {
-        this.newRenderedImage = null
-      }
-
-      // OverlayImage
-      if (snapshot.overlayImage) {
-        const img = new Image()
-        img.onload = () => {
-          const canvas = document.createElement('canvas')
-          canvas.width = img.width
-          canvas.height = img.height
-          const ctx = canvas.getContext('2d')
-          ctx.drawImage(img, 0, 0)
-          this.overlayImage = canvas
-        }
-        img.src = snapshot.overlayImage
-      } else {
-        this.overlayImage = null
-      }
-
-      // Overlay image for export
-      if (snapshot.overlayImageExport) {
-        const img = new Image()
-        img.onload = () => {
-          const canvas = document.createElement('canvas')
-          canvas.width = img.width
-          canvas.height = img.height
-          const ctx = canvas.getContext('2d')
-          ctx.drawImage(img, 0, 0)
-          this.overlayImageExport = canvas
-        }
-        img.src = snapshot.overlayImageExport
-      } else {
-        this.overlayImageExport = null
-      }
-
-      // Overlay image for preview
-      if (snapshot.overlayImagePreview) {
-        const img = new Image()
-        img.onload = () => {
-          const canvas = document.createElement('canvas')
-          canvas.width = img.width
-          canvas.height = img.height
-          const ctx = canvas.getContext('2d')
-          ctx.drawImage(img, 0, 0)
-          this.overlayImagePreview = canvas
-        }
-        img.src = snapshot.overlayImagePreview
-      } else {
-        this.overlayImagePreview = null
-      }
-
-      // Removal canvas
-      // if (snapshot.removalCanvas) {
-      //   const img = new Image()
-      //   img.onload = () => {
-      //     const canvas = document.createElement('canvas')
-      //     canvas.width = img.width
-      //     canvas.height = img.height
-      //     const ctx = canvas.getContext('2d')
-      //     ctx.drawImage(img, 0, 0)
-      //     this.removalCanvas = canvas
-      //   }
-      //   img.src = snapshot.removalCanvas
-      // } else {
-      //   this.removalCanvas = null
-      // }
-      this.removalCanvas = snapshot.removalCanvas
-
-      uiStore.isLoading = false
-
-      log('[applyFullSnapshot] imageOperations (after apply):', this.imageOperations)
     },
   },
 })

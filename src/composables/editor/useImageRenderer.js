@@ -162,10 +162,18 @@ export function useImageRenderer(
     await nextTick()
 
     if (imageStore.fileType === 'pdf' && !imageStore.showPdfAsImage) {
-      await new Promise((resolve) => setTimeout(resolve, 100))
+      // await new Promise((resolve) => setTimeout(resolve, 100))
+      uiStore.isApplying = true
 
       log('Rendering PDF page...')
       const pdfPageBytes = imageStore.pdfPageBytes
+
+      if (!pdfPageBytes || pdfPageBytes.length === 0) {
+        warn('PDF bytes missing or empty – skipping PDF render')
+        blockRender.value = false
+        uiStore.isApplying = false
+        return
+      }
 
       const pdf = await pdfjsLib.getDocument({ data: pdfPageBytes }).promise
       const page = await pdf.getPage(1)
@@ -247,6 +255,7 @@ export function useImageRenderer(
         )
 
         renderCanvas()
+        uiStore.isApplying = false
         return
       }
 
@@ -263,6 +272,8 @@ export function useImageRenderer(
 
       pdfContainerRef.value.innerHTML = ''
       pdfContainerRef.value.appendChild(svg)
+
+      uiStore.isApplying = false
 
       // Preview URL môžeme nastaviť na blob URL
       // imageStore.previewUrl = pdfUrl

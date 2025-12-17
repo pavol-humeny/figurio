@@ -7,6 +7,7 @@ import * as pdfjsLib from 'pdfjs-dist/legacy/build/pdf'
 import { PDFDocument } from 'pdf-lib'
 import { useImageAnalysis } from '@/composables/tools/useImageAnalysis'
 import { useGeneralModal } from '@/composables/modals/useGeneralModal'
+import { useImagePipeline } from '@/composables/editor/useImagePipeline'
 
 pdfjsLib.GlobalWorkerOptions.workerSrc =
   'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js'
@@ -14,20 +15,6 @@ pdfjsLib.GlobalWorkerOptions.workerSrc =
 const { log } = useConsole()
 const { showToastModal } = useToastModal()
 const { showGeneralModal } = useGeneralModal()
-
-/**
- * Clones a canvas element
- * @param {HTMLCanvasElement} src - Source canvas to clone
- * @returns {HTMLCanvasElement} - Cloned canvas element
- * TODO move to common utils
- */
-const cloneCanvas = (src) => {
-  const c = document.createElement('canvas')
-  c.width = src.width
-  c.height = src.height
-  c.getContext('2d').drawImage(src, 0, 0)
-  return c
-}
 
 export function importFileService(
   userModeStore,
@@ -38,6 +25,7 @@ export function importFileService(
   historyStore,
   t,
 ) {
+  const { resetPipeline } = useImagePipeline(imageStore, uiStore)
   /**
    * Opens a file input dialog for the user to select files and processes them
    * @param {import('vue-router').Router} router - Vue router instance
@@ -388,31 +376,33 @@ function
     imageStore.newFileDimensions = { ...imageStore.fileDimensions }
     imageStore.originalFileDimensions = { ...imageStore.fileDimensions }
 
-    // Initialize render pipeline
-    const dimensions = {
-      width: canvas.width,
-      height: canvas.height,
-      fileAspectRatio: canvas.width / canvas.height || 1,
-    }
+    resetPipeline(canvas)
 
-    imageStore.renderPipeline = {
-      baseState: {
-        canvas, // PDF as canvas
-        pdfBytes: new Uint8Array(imageStore.pdfPageBytes), // PDF bytes
-      },
-      checkpoints: [
-        {
-          opIndex: -1,
-          state: {
-            canvas: cloneCanvas(canvas),
-            pdfBytes: new Uint8Array(imageStore.pdfPageBytes),
-          },
-          dimensions: { ...dimensions },
-        },
-      ],
-      currentOpIndex: -1,
-      lastRenderedOpIndex: -1,
-    }
+    // // Initialize render pipeline
+    // const dimensions = {
+    //   width: canvas.width,
+    //   height: canvas.height,
+    //   fileAspectRatio: canvas.width / canvas.height || 1,
+    // }
+
+    // imageStore.renderPipeline = {
+    //   baseState: {
+    //     canvas, // PDF as canvas
+    //     pdfBytes: new Uint8Array(imageStore.pdfPageBytes), // PDF bytes
+    //   },
+    //   checkpoints: [
+    //     {
+    //       opIndex: -1,
+    //       state: {
+    //         canvas: cloneCanvas(canvas),
+    //         pdfBytes: new Uint8Array(imageStore.pdfPageBytes),
+    //       },
+    //       dimensions: { ...dimensions },
+    //     },
+    //   ],
+    //   currentOpIndex: -1,
+    //   lastRenderedOpIndex: -1,
+    // }
     // -----------------
 
     imageStore.setRenderedImage(canvas)
@@ -458,32 +448,8 @@ function
     canvas.height = img.height
     canvas.getContext('2d').drawImage(img, 0, 0)
 
-    // Dimensions object
-    const dimensions = {
-      width: img.width,
-      height: img.height,
-      fileAspectRatio: img.width / img.height || 1,
-    }
-
     // Initialize render pipeline
-    imageStore.renderPipeline = {
-      baseState: {
-        canvas,
-        pdfBytes: null, // IMAGE - no pdfBytes
-      },
-      checkpoints: [
-        {
-          opIndex: -1,
-          state: {
-            canvas: cloneCanvas(canvas),
-            pdfBytes: null,
-          },
-          dimensions: { ...dimensions },
-        },
-      ],
-      currentOpIndex: -1,
-      lastRenderedOpIndex: -1,
-    }
+    resetPipeline(canvas)
     // -----------------
 
     imageStore.setRenderedImage(canvas)

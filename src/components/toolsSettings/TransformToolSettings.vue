@@ -13,6 +13,7 @@ import { useResizeTool } from '@/composables/tools/useResizeTool'
 import { useI18n } from 'vue-i18n'
 import { useViewportStore } from '@/stores/viewportStore'
 import ExplainItem from '../common/ExplainItem.vue'
+import { useUiStore } from '@/stores/uiStore'
 
 const { t } = useI18n()
 
@@ -21,12 +22,12 @@ const editorStore = useEditorStore()
 /**
  * Logic of the flip tool
  */
-const { applyFlip } = useFlipTool(useImageStore(), useHistoryStore(), t)
+const { applyFlip } = useFlipTool(useImageStore(), useHistoryStore(), useUiStore(), t)
 
 /**
  * Logic of the rotate tool
  */
-const { applyRotation } = useRotateTool(useImageStore(), useHistoryStore(), t)
+const { applyRotation } = useRotateTool(useImageStore(), useHistoryStore(), useUiStore(), t)
 
 /**
  * Logic of the resize tool

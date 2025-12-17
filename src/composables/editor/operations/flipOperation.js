@@ -22,38 +22,38 @@ export async function flipOperation({ srcCanvas, srcPdfBytes, srcOverlay, direct
   // ------------------------------------------------
   // PDF flip
   // ------------------------------------------------
-  if (pdfBytes) {
-    const existingPdf = await PDFDocument.load(pdfBytes)
-    const oldPage = existingPdf.getPage(0)
+  // if (pdfBytes) {
+  //   const existingPdf = await PDFDocument.load(pdfBytes)
+  //   const oldPage = existingPdf.getPage(0)
 
-    const newPdf = await PDFDocument.create()
-    const newPage = newPdf.addPage([width, height])
-    const [embeddedPage] = await newPdf.embedPages([oldPage])
+  //   const newPdf = await PDFDocument.create()
+  //   const newPage = newPdf.addPage([width, height])
+  //   const [embeddedPage] = await newPdf.embedPages([oldPage])
 
-    let x = 0
-    let y = 0
-    let rotate = degrees(0)
-    let scaleX = 1
-    let scaleY = 1
+  //   let x = 0
+  //   let y = 0
+  //   let rotate = degrees(0)
+  //   let scaleX = 1
+  //   let scaleY = 1
 
-    if (direction === 'horizontal') {
-      scaleY = -1
-      y = height
-    } else if (direction === 'vertical') {
-      scaleX = -1
-      x = width
-    }
+  //   if (direction === 'horizontal') {
+  //     scaleY = -1
+  //     y = height
+  //   } else if (direction === 'vertical') {
+  //     scaleX = -1
+  //     x = width
+  //   }
 
-    newPage.drawPage(embeddedPage, {
-      x,
-      y,
-      xScale: scaleX,
-      yScale: scaleY,
-      rotate,
-    })
+  //   newPage.drawPage(embeddedPage, {
+  //     x,
+  //     y,
+  //     xScale: scaleX,
+  //     yScale: scaleY,
+  //     rotate,
+  //   })
 
-    pdfBytes = await newPdf.save()
-  }
+  //   pdfBytes = await newPdf.save()
+  // }
 
   // ------------------------------------------------
   // Canvas flip
