@@ -163,10 +163,12 @@ export const useImageStore = defineStore('imageStore', {
 
     /** Array of image operations to apply */
     imageOperations: [],
-    // imageOperations: [
-    // {'grayscale': {'type': 'average'}},
-    // {'crop': {'x': 50, 'y': 50, 'width': 200, 'height': 200}}
-    // ]
+    // type ImageOperation = {
+    //   type: string
+    //   params?: Record<string, any>
+    //   cost?: 'low' | 'medium' | 'high'
+    //   affectsGeometry?: boolean
+    // }
 
     /** Image frame */
     frame: {

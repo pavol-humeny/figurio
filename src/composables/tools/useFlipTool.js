@@ -1,6 +1,7 @@
 import { useConfirmModal } from '../modals/useConfirmModal'
 import { useApi } from '@/composables/common/useApi'
 const { addUserEvent } = useApi()
+import { useImagePipeline } from '../editor/useImagePipeline'
 
 /**
  * Logic for flipping the image and associated SVG elements
@@ -11,31 +12,41 @@ const { addUserEvent } = useApi()
  */
 export function useFlipTool(imageStore, historyStore, t) {
   const { showConfirmModal } = useConfirmModal()
+  const { renderUpTo } = useImagePipeline(imageStore)
 
   /**
    * Add flip operation, apply transformation and push to history
    *
    * @param {'horizontal' | 'vertical'} direction - Flip direction
    */
-  const applyFlip = (direction) => {
-    if (direction === 'horizontal') {
-      imageStore.addImageOperation({
-        type: 'flip',
-        direction: 'horizontal',
-      })
-    } else if (direction === 'vertical') {
-      imageStore.addImageOperation({
-        type: 'flip',
-        direction: 'vertical',
-      })
+  const applyFlip = async (direction) => {
+    if (imageStore.needRasterization) {
+      const confirmed = await showConfirmModal(
+        t('tools.confirmNeedRasterization.title'),
+        t('tools.confirmNeedRasterization.message'),
+        t('tools.confirmNeedRasterization.cancel'),
+        t('tools.confirmNeedRasterization.confirm'),
+      )
+      if (confirmed) {
+        await imageStore.rasterize(t)
+      } else {
+        return
+      }
     }
+
+    imageStore.addImageOperation({
+      type: 'flip',
+      params: { direction },
+      cost: 'medium',
+      affectsGeometry: false,
+    })
 
     addUserEvent('applyOperation', {
       tool: 'flip',
       settings: { direction },
     })
 
-    applyFlipRender(direction)
+    await renderUpTo(imageStore.renderPipeline.currentOpIndex + 1)
 
     historyStore.push(imageStore.getSnapshot(t))
   }

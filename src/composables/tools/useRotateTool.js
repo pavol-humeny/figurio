@@ -70,13 +70,7 @@ export function useRotateTool(imageStore, historyStore, t) {
       settings: { angle: angle },
     })
 
-    const nextIndex = imageStore.renderPipeline.currentOpIndex + 1
-    await renderUpTo(nextIndex)
-
-    // undo/redo už len index
-    // historyStore.newPush({ opIndex: nextIndex })
-
-    // await applyRotationRender(angle)
+    await renderUpTo(imageStore.renderPipeline.currentOpIndex + 1)
 
     // Push to undo history
     historyStore.push(imageStore.getSnapshot(t))
