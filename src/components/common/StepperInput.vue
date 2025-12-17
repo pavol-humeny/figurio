@@ -90,25 +90,25 @@ defineExpose({ setValue })
   <ItemTip :text="tip" position="bottom">
     <div v-if="type === 'inline'" class="stepper-inline">
       <BaseIcon name="IconMinus" :size="16" @mousedown="startHold(decrease)" @mouseup="stopHold" @mouseleave="stopHold"
-        :disabled="disableDecrease()" class="increase-decrease-icon" />
+        :disabled="disableDecrease()" class="increase-decrease-icon button-clickable" />
       <span class="value-inline" @dblclick="handleReset" @wheel="changeValue">{{ inputValue }}</span>
       <BaseIcon name="IconPlus" :size="16" @mousedown="startHold(increase)" @mouseup="stopHold" @mouseleave="stopHold"
-        :disabled="disableIncrease()" class="increase-decrease-icon" />
+        :disabled="disableIncrease()" class="increase-decrease-icon button-clickable" />
     </div>
     <div v-if="type === 'vertical'" class="stepper-vertical">
       <BaseIcon name="IconMinus" :size="16" @mousedown="startHold(decrease)" @mouseup="stopHold" @mouseleave="stopHold"
-        :disabled="disableDecrease()" class="increase-decrease-icon" />
+        :disabled="disableDecrease()" class="increase-decrease-icon button-clickable" />
       <span class="value-vertical" @dblclick="handleReset" @wheel="changeValue">{{ inputValue }}</span>
       <BaseIcon name="IconPlus" :size="16" @mousedown="startHold(increase)" @mouseup="stopHold" @mouseleave="stopHold"
-        :disabled="disableIncrease()" class="increase-decrease-icon" />
+        :disabled="disableIncrease()" class="increase-decrease-icon button-clickable" />
     </div>
     <div v-else-if="type === 'block'" class="stepper-block">
       <span class="value-block" @dblclick="handleReset" @wheel="changeValue">{{ inputValue }}</span>
       <div class="buttons-wrapper-block">
         <BaseIcon name="IconMinus" :size="16" @mousedown="startHold(decrease)" @mouseup="stopHold"
-          @mouseleave="stopHold" :disabled="disableDecrease()" class="increase-decrease-icon" />
+          @mouseleave="stopHold" :disabled="disableDecrease()" class="increase-decrease-icon button-clickable" />
         <BaseIcon name="IconPlus" :size="16" @mousedown="startHold(increase)" @mouseup="stopHold" @mouseleave="stopHold"
-          :disabled="disableIncrease()" class="increase-decrease-icon" />
+          :disabled="disableIncrease()" class="increase-decrease-icon button-clickable" />
       </div>
     </div>
   </ItemTip>

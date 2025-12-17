@@ -16,7 +16,7 @@ const {
 
 <template>
   <ItemTip :text="$t('topPanel.settingsButton.tip')" position="bottom-left">
-    <button class="button button-circle button-control"
+    <button class="button button-circle button-control button-clickable"
       @click.stop="isVisible ? closeSettingsPanel() : openSettingsPanel()">
       <BaseIcon name="IconSettings" :size="26" />
     </button>

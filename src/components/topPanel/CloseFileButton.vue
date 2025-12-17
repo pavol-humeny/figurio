@@ -19,7 +19,7 @@ const { disabled, closeFile } = useCloseFileButton(useImageStore(), useWorkspace
   <ItemTip
     :text="!disabled ? (workspaceStore.numberOfTabs > 1 ? $t('topPanel.closeFileButton.tipMultiple') : $t('topPanel.closeFileButton.tip')) : ''"
     position="bottom">
-    <button class="button button-circle button-control" @click="closeFile" :class="{ disabled: disabled }">
+    <button class="button button-circle button-control button-clickable" @click="closeFile" :class="{ disabled: disabled }">
       <BaseIcon name="IconCross" :size="26" />
     </button>
   </ItemTip>

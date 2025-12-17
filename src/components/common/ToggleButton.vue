@@ -52,7 +52,7 @@ const { isActive, toggleSwitch } = useToggleButton(props, emit)
     <div class="toggle-switch" :style="{ transform: `scale(${props.scale})` }">
       <div class="toggle-switch-wrapper" :class="{ 'toggle-disabled': props.disabled, active: isActive }"
         @click="toggleSwitch">
-        <div class="toggle-switch-slider" :class="{ active: isActive }"></div>
+        <div class="toggle-switch-slider button-clickable" :class="{ active: isActive }"></div>
       </div>
     </div>
   </ItemTip>

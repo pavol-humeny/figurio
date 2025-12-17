@@ -19,6 +19,7 @@ import { useUiStore } from './stores/uiStore'
 import CalibrationModal from './components/modals/CalibrationModal.vue'
 import { useApi } from './composables/common/useApi'
 import FeatureTourModal from './components/modals/FeatureTourModal.vue'
+import { uiConfig } from './config/uiConfig'
 
 const { addUserVisit } = useApi()
 
@@ -67,6 +68,12 @@ const APP_VERSION = import.meta.env.VITE_APP_VERSION
  * Register unload warning on mount
  */
 onMounted(async () => {
+  // Set click effect scale based on uiConfig
+  document.documentElement.style.setProperty(
+    '--click-scale',
+    uiConfig.enableClickEffects ? uiConfig.clickEffectScale : '1'
+  )
+
   window.addEventListener('beforeunload', handleBeforeUnload)
 
   // Reset localStorage (preferences) if app version has changed and in global config is set reset

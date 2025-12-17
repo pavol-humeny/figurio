@@ -29,7 +29,7 @@ const {
       <input ref="inputRef" name="fileName" v-model="fileNameInput" @blur="saveNewFileName"
         @keydown.enter="saveNewFileName" @click="startEditing" class="file-name-display-input" type="text" />
       <BaseIcon :name="editEnabled ? 'IconTick' : 'IconEditPencil'" :size="23" :color="'var(--primary-c)'"
-        @click="editEnabled ? saveNewFileName() : startEditing()" />
+        class="button-clickable" @click="editEnabled ? saveNewFileName() : startEditing()" />
     </div>
   </ItemTip>
 </template>

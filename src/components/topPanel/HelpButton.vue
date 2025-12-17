@@ -21,7 +21,7 @@ const {
 
 <template>
   <ItemTip :text="$t('topPanel.helpButton.tip')" position="bottom-left">
-    <button class="button button-circle button-control" @click="openHelpModal">
+    <button class="button button-circle button-control button-clickable" @click="openHelpModal">
       <BaseIcon name="IconQuestionMark" :size="23" />
     </button>
   </ItemTip>

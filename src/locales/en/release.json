@@ -12,12 +12,13 @@
           "Auto mode and normal mode icons are more similar",
           "Unify help modal subtitle styles",
           "Add contact form placeholders",
-          "Improve displaying of contact form field validation errors"
+          "Improve displaying of contact form field validation errors",
+          "Unify buttons styles for text style selection"
         ]
       },
       "newFeatures": {
         "items": [
-          "a"
+          "Add clickable button effect"
         ]
       },
       "bugFixes": {

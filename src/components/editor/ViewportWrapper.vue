@@ -322,8 +322,8 @@ const cursorStyle = computed(() => {
       '--viewport-wrapper-background-top': backgroundModePadding,
     }">
       <ItemTip advance :text="t('tools.viewportBackgroundMode.tip.text')"
-        :title="$t('tools.viewportBackgroundMode.tip.title')" position="bottom-left" class="contrast-mode-button"
-        @click="switchBackgroundMode()">
+        :title="$t('tools.viewportBackgroundMode.tip.title')" position="bottom-left"
+        class="contrast-mode-button button-clickable" @click="switchBackgroundMode()">
         <!-- Change icon based on mode -->
         <BaseIcon :name="backgroundMode === 'normal'
           ? 'IconNormalMode'
@@ -338,8 +338,8 @@ const cursorStyle = computed(() => {
       '--viewport-wrapper-background-top': backgroundModePadding,
     }">
       <ItemTip advance :text="t('tools.viewportPixelateMode.tip.text')"
-        :title="$t('tools.viewportPixelateMode.tip.title')" position="bottom-left" class="pixelate-mode-button"
-        @click="switchViewportPixelateMode()">
+        :title="$t('tools.viewportPixelateMode.tip.title')" position="bottom-left"
+        class="pixelate-mode-button button-clickable" @click="switchViewportPixelateMode()">
         <!-- Change icon based on mode -->
         <BaseIcon :name="viewportPixelateMode === 'auto'
           ? 'IconAutoMode'

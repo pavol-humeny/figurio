@@ -104,6 +104,15 @@
   transition: var(--default-transition);
 }
 
+/* Clickable button effect (globally controllable) */
+.button-clickable {
+  transition: transform 0.12s ease;
+}
+
+.button-clickable:active {
+  transform: scale(var(--click-scale, 1));
+}
+
 .button-main{
   background:  var(--primary-c);
   color: var(--secondary-c);

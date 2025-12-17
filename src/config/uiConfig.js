@@ -1,6 +1,10 @@
 import { globalConfig } from '@/config/globalConfig'
 
 export const uiConfig = {
+  // Clickable button effect
+  enableClickEffects: true,
+  clickEffectScale: 0.95,
+
   // Theme
   theme: globalConfig.defaultTheme,
 

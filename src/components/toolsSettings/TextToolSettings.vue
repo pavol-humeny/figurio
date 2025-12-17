@@ -193,12 +193,12 @@ const {
           </div>
           <div class="content-wrapper">
             <div class="text-style-wrapper">
-              <IconButton icon="IconBold" :size="30" :scale="0.9" :active="localTextSettings.bold" @click="setBoldStyle"
+              <IconButton icon="IconBold" :size="25" :scale="0.9" :active="localTextSettings.bold" @click="setBoldStyle"
                 :tip="$t('tools.text.settings.general.textStyle.bold')" position="bottom-left" />
-              <IconButton icon="IconItalic" :size="30" :scale="0.9" :active="localTextSettings.italic"
+              <IconButton icon="IconItalic" :size="25" :scale="0.9" :active="localTextSettings.italic"
                 @click="setItalicStyle" :tip="$t('tools.text.settings.general.textStyle.italic')"
                 position="bottom-left" />
-              <IconButton icon="IconUnderline" :size="30" :scale="0.9" :active="localTextSettings.underline"
+              <IconButton icon="IconUnderline" :size="25" :scale="0.9" :active="localTextSettings.underline"
                 @click="setUnderlineStyle" :tip="$t('tools.text.settings.general.textStyle.underline')"
                 position="bottom-left" />
             </div>
@@ -243,7 +243,7 @@ const {
   justify-content: space-between;
   /* width: 100%; */
   background: var(--secondary-c);
-  padding: 2px;
-  border-radius: 10px;
+  padding: 1px;
+  border-radius: 8px;
 }
 </style>

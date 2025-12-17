@@ -64,7 +64,7 @@ onUnmounted(() => {
   <div class="drag-and-drop-area" :class="{ dragging: isDragging }" @dragover="handleDragOver"
     @dragleave="handleDragLeave" @drop.stop="handleDrop" id="drag-drop-area">
     <ItemTip :text="$t('dragAndDropArea.tip')" position="bottom">
-      <div class="icon-wrap" @click="selectFile">
+      <div class="icon-wrap button-clickable" @click="selectFile">
         <BaseIcon name="IconImport" size="74" :color="'var(--primary-c)'" />
       </div>
     </ItemTip>

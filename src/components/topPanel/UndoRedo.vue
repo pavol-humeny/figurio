@@ -18,14 +18,14 @@ const { undo, redo, canUndo, canRedo } = useUndoRedo(useHistoryStore(), useImage
   <div class="undo-redo" :class="{ disabled: imageStore.file === null }">
     <!-- Undo -->
     <ItemTip :text="canUndo ? $t('topPanel.undoRedo.tip.undo') : ''" position="bottom">
-      <div class="undo-button button button-control button-circle" @click="undo" :class="{ disabled: !canUndo }">
+      <div class="undo-button button button-control button-circle button-clickable" @click="undo" :class="{ disabled: !canUndo }">
         <BaseIcon name="IconUndo" size="24" />
       </div>
     </ItemTip>
 
     <!-- Redo -->
     <ItemTip :text="canRedo ? $t('topPanel.undoRedo.tip.redo') : ''" position="bottom">
-      <div class="redo-button button button-control button-circle" @click="redo" :class="{ disabled: !canRedo }">
+      <div class="redo-button button button-control button-circle button-clickable" @click="redo" :class="{ disabled: !canRedo }">
         <BaseIcon name="IconRedo" size="24" />
       </div>
     </ItemTip>

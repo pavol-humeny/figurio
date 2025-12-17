@@ -84,7 +84,7 @@ const {
     position: 'top-right',
   }">
     <div class="tool-wrapper" ref="wrapperRef" @mouseenter="onMouseEnter" @mouseleave="onMouseLeave">
-      <div class="tool"
+      <div class="tool button-clickable"
         :class="{ active: props.active && imageStore.isImageLoaded, disabled: props.disabled || editorStore.enableTools[props.tool.key] === false }"
         @click.left="onClickTool">
         <BaseIcon :name="props.tool.iconName" :size="27" :color="'var(--primary-c)'" />
@@ -109,7 +109,7 @@ const {
           position: 'right',
         }">
           <div class="subTool-wrapper">
-            <div class="subTool" @click.stop="onClickTab(sub.key)">
+            <div class="subTool button-clickable" @click.stop="onClickTab(sub.key)">
               <BaseIcon :name="sub.iconName" :size="27" :color="'var(--primary-c)'" />
             </div>
             <p class="tool-label"> {{ sub.label }}</p>

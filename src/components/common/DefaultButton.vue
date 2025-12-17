@@ -48,7 +48,7 @@ const emit = defineEmits(['click'])
 
 <template>
   <ItemTip :text="props.tip" :position="props.position">
-    <button class="button" @click="emit('click')" :class="{
+    <button class="button button-clickable" @click="emit('click')" :class="{
       'button-text': props.onlyText,
       'button-default': !props.onlyText,
       'disabled': props.disabled,

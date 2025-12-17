@@ -114,7 +114,6 @@ const getLightPosition = (index, total, color, delay) => {
     <div class="lights-container" v-if="editorStore.randomEvents.christmasLights">
 
       <!-- Cable curve -->
-
       <svg class="lights-svg" viewBox="0 0 100 80" preserveAspectRatio="none">
         <path id="light-path" d="M 0 15 Q 50 35 100 15" fill="none" stroke="rgba(80,80,80,0.8)" stroke-width="2" />
       </svg>
@@ -129,8 +128,6 @@ const getLightPosition = (index, total, color, delay) => {
     <div class="top-panel-left" v-if="isEditorViewOrStatistics">
       <div class="top-panel-left-wrapper" id="top-panel-left">
         <div class="top-panel-logo-wrapper" @click="goHome">
-          <!-- <img @click="goHome" :src="logoSrc" alt="Figurio logo" @dragstart.prevent> -->
-
           <BaseIcon name="IconLogo" class="logo" :size="40" color="var(--primary-c)" />
 
           <p class="logo-letter">F</p>

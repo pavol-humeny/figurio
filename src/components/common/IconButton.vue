@@ -47,7 +47,7 @@ const emit = defineEmits(['click'])
 
 <template>
   <ItemTip :text="props.tip" :position="props.position" :style="{ transform: `scale(${props.scale})` }">
-    <button class="button button-icon" @click="emit('click')" :class="{
+    <button class="button button-icon button-clickable" @click="emit('click')" :class="{
       'disabled': props.disabled,
       'active': props.active,
     }">
@@ -56,4 +56,15 @@ const emit = defineEmits(['click'])
   </ItemTip>
 </template>
 
-<style scoped></style>
+<style scoped>
+.button-icon {
+  width: 35px;
+  height: 35px;
+  border-radius: 8px;
+}
+
+.button-icon:hover {
+  transition: none;
+  box-shadow: none;
+}
+</style>
