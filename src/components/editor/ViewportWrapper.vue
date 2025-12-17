@@ -199,11 +199,16 @@ const drawingCursor = computed(() => {
 })
 
 /**
+ * Whether the cursor is over the viewport settings buttons (pixelate mode, background mode, warning list)
+ */
+const cursorOverViewportSettings = ref(false)
+
+/**
  * Cursor style based on the selected tool
  */
 const cursorStyle = computed(() => {
   let cursor = 'default'
-  if (drawingCursor.value) {
+  if (drawingCursor.value && !cursorOverViewportSettings.value) {
     cursor = 'none'
   } else if (editorStore.selectedToolKey === 'backgroundRemoval' && editorStore.selectedTabPerTool['backgroundRemoval'] === 'auto') {
     cursor = 'crosshair'
@@ -320,7 +325,7 @@ const cursorStyle = computed(() => {
     <!-- Contrast mode -->
     <div class="contrast-mode-wrapper" :style="{
       '--viewport-wrapper-background-top': backgroundModePadding,
-    }">
+    }" @mouseenter="cursorOverViewportSettings = true" @mouseleave="cursorOverViewportSettings = false">
       <ItemTip advance :text="t('tools.viewportBackgroundMode.tip.text')"
         :title="$t('tools.viewportBackgroundMode.tip.title')" position="bottom-left"
         class="contrast-mode-button button-clickable" @click="switchBackgroundMode()">
@@ -336,7 +341,7 @@ const cursorStyle = computed(() => {
     <!-- Pixelate Mode -->
     <div v-if="!(imageStore.fileType === 'pdf' && !imageStore.showPdfAsImage)" class="pixelate-mode-wrapper" :style="{
       '--viewport-wrapper-background-top': backgroundModePadding,
-    }">
+    }" @mouseenter="cursorOverViewportSettings = true" @mouseleave="cursorOverViewportSettings = false">
       <ItemTip advance :text="t('tools.viewportPixelateMode.tip.text')"
         :title="$t('tools.viewportPixelateMode.tip.title')" position="bottom-left"
         class="pixelate-mode-button button-clickable" @click="switchViewportPixelateMode()">
@@ -352,11 +357,11 @@ const cursorStyle = computed(() => {
     <!-- Warning List -->
     <WarningList class="warning-list" :style="{
       '--viewport-wrapper-background-top': backgroundModePadding,
-    }" />
+    }" @mouseenter="cursorOverViewportSettings = true" @mouseleave="cursorOverViewportSettings = false" />
 
     <!-- Cursor -->
     <div
-      v-if="showCursor && ((editorStore.selectedToolKey === 'backgroundRemoval' && editorStore.selectedTabPerTool['backgroundRemoval'] === 'manual') || editorStore.selectedToolKey === 'brush')"
+      v-if="showCursor && ((editorStore.selectedToolKey === 'backgroundRemoval' && editorStore.selectedTabPerTool['backgroundRemoval'] === 'manual') || editorStore.selectedToolKey === 'brush') && !cursorOverViewportSettings"
       class="custom-cursor" :style="{
         ...cursorStyleVars,
         width: editorStore.cursorSize * zoomLevel + 'px',
@@ -391,7 +396,7 @@ const cursorStyle = computed(() => {
         </div>
         <div v-if="mouseX !== null" class="ruler-cursor-mark horizontal" :style="{ left: mouseX + 'px' }">
           <span class="ruler-cursor-label horizontal" :class="{ 'active': cursorPosXSameAsImageWidth }">{{ cursorPosX
-          }}</span>
+            }}</span>
         </div>
 
       </div>
@@ -404,7 +409,7 @@ const cursorStyle = computed(() => {
         </div>
         <div v-if="mouseY !== null" class="ruler-cursor-mark vertical" :style="{ top: mouseY + 'px' }">
           <span class="ruler-cursor-label vertical" :class="{ 'active': cursorPosYSameAsImageHeight }">{{ cursorPosY
-          }}</span>
+            }}</span>
         </div>
       </div>
     </div>

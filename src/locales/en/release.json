@@ -23,7 +23,8 @@
       },
       "bugFixes": {
         "items": [
-          "Reset viewport when switching tabs"
+          "Reset viewport when switching tabs",
+          "Hide brush cursor when hovering over viewport settings buttons"
         ]
       }
     },
