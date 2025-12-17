@@ -65,6 +65,7 @@ const {
   passwordInputWrong,
   togglePasswordVisibility,
   showPassword,
+  emailInputWrong,
 } = useHelpModal(useUiStore(), useImageStore(), useEditorStore(), useUserModeStore(), useRouter(), t);
 
 const { isTutorialEnabled } = useInteractiveTutorial(
@@ -480,7 +481,7 @@ watch(atBottom, (newVal) => {
 
             <!-- Technical limitations -->
             <div class="help-content">
-              <p class="help-content-title">Technical Limitations</p>
+              <p class="help-content-title">{{ $t('help.helpContent.technicalLimitations.title') }}</p>
               <ul class="dot-paragraph">
                 <li v-for="(item, index) in technicalLimitations" :key="index">
                   {{ item }}
@@ -537,8 +538,8 @@ watch(atBottom, (newVal) => {
                     <label>
                       {{ $t('help.helpContent.contactAndFeedback.contactForm.email') }}
                     </label>
-                    <input v-model="contactForm.email" type="email" required maxlength="50"
-                      @keydown.enter="submitContactForm" />
+                    <input :class="{ 'email-input-wrong': emailInputWrong }" v-model="contactForm.email" type="email"
+                      required maxlength="50" @keydown.enter="submitContactForm" />
                   </div>
                 </div>
 
@@ -835,10 +836,10 @@ watch(atBottom, (newVal) => {
   width: 100%;
   padding: var(--input-top-padding) 10px var(--input-top-padding) 10px;
   border-radius: var(--input-border-radius);
-  border: none;
   background: var(--secondary-c);
   color: var(--text-c);
   font-size: var(--input-text-size);
+  border: solid 1px transparent;
 }
 
 .contact-form textarea {
@@ -848,6 +849,10 @@ watch(atBottom, (newVal) => {
 
 .subject-input-wrong {
   background: var(--error-c) !important;
+}
+
+.email-input-wrong {
+  border: solid 1px var(--error-c) !important;
 }
 
 .subject-input-success {
