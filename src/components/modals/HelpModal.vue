@@ -439,7 +439,7 @@ watch(atBottom, (newVal) => {
 
             <!-- Tutorial -->
             <div class="help-content" v-if="imageStore.isImageLoaded">
-              <div class="tutorial-title-wrapper">
+              <div class="subtitle-wrapper">
                 <BaseIcon v-if="tutorialCompleted" class="tutorial-completed-icon" name="IconTick" size="20"
                   :tip='$t("help.helpContent.tutorial.tutorialCompletedTip")' position="top-right" />
                 <p class="help-content-title" style="margin-bottom: 0;">
@@ -463,8 +463,8 @@ watch(atBottom, (newVal) => {
 
             <!-- Feature Tour -->
             <div class="help-content">
-              <div class="feature-tour-title-wrapper">
-                <p class="help-content-title" style="margin-bottom: 0;">
+              <div class="subtitle-wrapper">
+                <p class="help-content-title">
                   {{ $t('help.helpContent.featureTour.title') }}
                 </p>
               </div>
@@ -491,11 +491,11 @@ watch(atBottom, (newVal) => {
 
             <!-- Statistics -->
             <div class="help-content">
-              <div class="tutorial-title-wrapper">
+              <div class="subtitle-wrapper">
                 <p class="help-content-title" style="margin-bottom: 0;">
                   {{ $t('help.helpContent.statistics.title') }}
                 </p>
-                <BaseIcon name="IconStatistics" size="20" position="top-right" color="var(--primary-c)" />
+                <!-- <BaseIcon name="IconStatistics" size="20" position="top-right" color="var(--primary-c)" /> -->
               </div>
               <ul class="dot-paragraph">
                 <li>
@@ -696,6 +696,14 @@ watch(atBottom, (newVal) => {
   color: var(--primary-c);
 }
 
+.subtitle-wrapper {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
 .action-text {
   color: var(--primary-c);
   text-decoration: none;
@@ -712,8 +720,7 @@ watch(atBottom, (newVal) => {
   gap: 10px;
 }
 
-.tutorial-title-wrapper,
-.feature-tour-title-wrapper {
+.title-wrapper {
   display: flex;
   flex-direction: row;
   align-items: center;

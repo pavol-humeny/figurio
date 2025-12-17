@@ -9,7 +9,10 @@
       "date":"XX.XX. 202X",
       "improvements": {
         "items": [
-          "Auto mode and normal mode icons are more similar"
+          "Auto mode and normal mode icons are more similar",
+          "Unify help modal subtitle styles",
+          "Add contact form placeholders",
+          "Improve displaying of contact form field validation errors"
         ]
       },
       "newFeatures": {
