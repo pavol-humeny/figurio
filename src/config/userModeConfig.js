@@ -14,6 +14,15 @@ export const userModeConfig = {
     'help', // Show help information
   ],
 
+  autocomplete: {
+    root: ['help', 'man', 'turn', 'set', 'reset', 'clear', 'quit'],
+    turn: ['on', 'off'],
+    'turn on': ['snowfall', 'christmasLights', 'christmasTree', 'randomEvents'],
+    'turn off': ['snowfall', 'christmasLights', 'christmasTree', 'randomEvents'],
+    set: ['primaryColor'],
+    reset: ['primaryColor', 'all'],
+  },
+
   commandManPages: {
     'turn on': `
       NAME

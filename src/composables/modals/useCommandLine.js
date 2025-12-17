@@ -22,6 +22,12 @@ export function useCommandLine(userModeStore, editorStore) {
   const historyIndex = ref(-1)
 
   /**
+   * Tab press tracking
+   */
+  const tabPressCount = ref(0)
+  const lastTabInput = ref('')
+
+  /**
    * Process entered command
    */
   const processCommand = () => {
@@ -99,10 +105,6 @@ export function useCommandLine(userModeStore, editorStore) {
     const action = args[0]
     const feature = args[1]
     const full = `turn ${action} ${feature}`
-
-    if (action === 'on') {
-      useManPrint(`turn on ${feature}`)
-    }
 
     // Execute command
     switch (full) {
@@ -238,15 +240,6 @@ export function useCommandLine(userModeStore, editorStore) {
   }
 
   /**
-   * Print man page hint
-   *
-   * @param {string} commandName  Name of the command
-   */
-  const useManPrint = (commandName) => {
-    output.value.push(`For more information on '${commandName}', type 'man ${commandName}'`)
-  }
-
-  /**
    * Print help information
    * Data are taken from userModeConfig.js
    */
@@ -336,6 +329,131 @@ export function useCommandLine(userModeStore, editorStore) {
         command.value = history.value[historyIndex.value]
       }
     }
+
+    if (e.key === 'Tab') {
+      e.preventDefault()
+
+      const input = command.value
+      const trimmed = input.trim()
+      const endsWithSpace = /\s$/.test(input)
+
+      // Reset counter if input changed
+      if (trimmed !== lastTabInput.value) {
+        tabPressCount.value = 0
+        lastTabInput.value = trimmed
+      }
+
+      tabPressCount.value++
+
+      // Never autocomplete after space (BUT allow listing)
+      if (endsWithSpace && tabPressCount.value < 3) return
+
+      const parts = input.split(/\s+/)
+      const lastPart = parts[parts.length - 1] ?? ''
+
+      const matches = getAutocompleteMatches(input)
+      if (matches.length === 0) return
+
+      const commonPrefix = getCommonPrefix(matches)
+
+      // 1st TAB – try to autocomplete ONLY if there is something to extend
+      if (tabPressCount.value === 1) {
+        if (lastPart && commonPrefix && commonPrefix !== lastPart) {
+          parts[parts.length - 1] = commonPrefix
+          command.value = parts.join(' ')
+        }
+        return
+      }
+
+      // 3rd TAB – show options
+      if (tabPressCount.value === 3) {
+        printAutocompleteOptions(matches)
+      }
+
+      return
+    }
+
+    if (e.key !== 'Tab') {
+      tabPressCount.value = 0
+      lastTabInput.value = ''
+    }
+  }
+
+  /**
+   * Get autocomplete suggestions based on current input
+   *
+   * @param {string} input
+   * @returns {string[]}
+   */
+  const getAutocompleteMatches = (input) => {
+    const endsWithSpace = /\s$/.test(input)
+    const parts = input.toLowerCase().trim().split(/\s+/)
+
+    if (parts.length === 0) return []
+
+    // Command only
+    if (parts.length === 1) {
+      const cmd = parts[0]
+
+      // "set␣" → arguments of set
+      if (endsWithSpace && userModeConfig.autocomplete[cmd]) {
+        return userModeConfig.autocomplete[cmd]
+      }
+
+      // "se" → command completion
+      return userModeConfig.autocomplete.root.filter((c) => c.startsWith(cmd))
+    }
+
+    // Command + arguments
+    const baseCommand = endsWithSpace ? parts.join(' ') : parts.slice(0, -1).join(' ')
+
+    const lastPart = endsWithSpace ? '' : parts[parts.length - 1]
+
+    const options = userModeConfig.autocomplete[baseCommand]
+    if (!options) return []
+
+    // After space → list all options
+    if (!lastPart) return options
+
+    // Partial argument → filter
+    return options.filter((opt) => opt.toLowerCase().startsWith(lastPart))
+  }
+
+  /**
+   * Get longest common prefix from list of strings
+   *
+   * @param {string[]} values
+   * @returns {string}
+   */
+  const getCommonPrefix = (values) => {
+    if (values.length === 0) return ''
+    if (values.length === 1) return values[0]
+
+    let prefix = values[0]
+
+    for (let i = 1; i < values.length; i++) {
+      while (!values[i].startsWith(prefix)) {
+        prefix = prefix.slice(0, -1)
+        if (!prefix) return ''
+      }
+    }
+
+    return prefix
+  }
+
+  /**
+   * Print autocomplete options
+   *
+   * @param {string[]} options
+   */
+  const printAutocompleteOptions = (options) => {
+    output.value.push(options.join('    '))
+
+    nextTick(() => {
+      if (outputRef.value) {
+        outputRef.value.scrollTop = outputRef.value.scrollHeight
+      }
+    })
   }
 
   /**
