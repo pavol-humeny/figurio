@@ -30,7 +30,6 @@ export function useHoldButton() {
    * Stops the hold action by clearing timeouts and intervals
    */
   const stopHold = () => {
-    console.warn('stopHold')
     clearTimeout(holdTimeout.value)
     clearInterval(holdInterval.value)
     holdTimeout.value = null

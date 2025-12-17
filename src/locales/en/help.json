@@ -105,9 +105,14 @@
       "text": "If you have any questions, suggestions, or feedback regarding the editor, please use the contact form below or contact me at:",
       "contactForm": {
         "name": "Name",
+        "namePlaceholder": "John Doe",
         "email": "Email",
+        "emailPlaceholder1": "john.doe",
+        "emailPlaceholder2": "example.com",
         "subject": "Subject",
+        "subjectPlaceholder": "General inquiry",
         "message": "Message",
+        "messagePlaceholder": "Please write your message here...",
         "password": "Password",
         "send": "Send message"
       }

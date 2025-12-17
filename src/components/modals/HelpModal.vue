@@ -530,7 +530,8 @@ watch(atBottom, (newVal) => {
                       {{ $t('help.helpContent.contactAndFeedback.contactForm.name') }}
                     </label>
                     <input v-model="contactForm.name" type="text" required maxlength="25"
-                      @keydown.enter="submitContactForm" />
+                      @keydown.enter="submitContactForm"
+                      :placeholder="$t('help.helpContent.contactAndFeedback.contactForm.namePlaceholder')" />
                   </div>
 
                   <!-- Email -->
@@ -539,7 +540,8 @@ watch(atBottom, (newVal) => {
                       {{ $t('help.helpContent.contactAndFeedback.contactForm.email') }}
                     </label>
                     <input :class="{ 'email-input-wrong': emailInputWrong }" v-model="contactForm.email" type="email"
-                      required maxlength="50" @keydown.enter="submitContactForm" />
+                      required maxlength="50" @keydown.enter="submitContactForm"
+                      :placeholder="$t('help.helpContent.contactAndFeedback.contactForm.emailPlaceholder1') + '@' + $t('help.helpContent.contactAndFeedback.contactForm.emailPlaceholder2')" />
                   </div>
                 </div>
 
@@ -550,8 +552,8 @@ watch(atBottom, (newVal) => {
                   </label>
                   <input
                     :class="{ 'subject-input-wrong': subjectInputWrong, 'subject-input-success': subjectInputSuccess }"
-                    v-model="contactForm.subject" type="text" required maxlength="50"
-                    @keydown.enter="submitContactForm" />
+                    v-model="contactForm.subject" type="text" required maxlength="50" @keydown.enter="submitContactForm"
+                    :placeholder="$t('help.helpContent.contactAndFeedback.contactForm.subjectPlaceholder')" />
                 </div>
 
                 <!-- Message -->
@@ -559,8 +561,8 @@ watch(atBottom, (newVal) => {
                   <label>
                     {{ $t('help.helpContent.contactAndFeedback.contactForm.message') }}
                   </label>
-                  <textarea v-model="contactForm.message" required maxlength="500"
-                    @keydown.enter="submitContactForm"></textarea>
+                  <textarea v-model="contactForm.message" required maxlength="500" @keydown.enter="submitContactForm"
+                    :placeholder="$t('help.helpContent.contactAndFeedback.contactForm.messagePlaceholder')"></textarea>
                 </div>
 
                 <!-- Password -->

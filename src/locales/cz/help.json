@@ -105,9 +105,14 @@
       "text": "Pokud máte jakékoli dotazy, návrhy nebo zpětnou vazbu k editoru, kontaktujte mě pomocí níže uvedeného formuláře nebo e-mailem na adresu:",
       "contactForm": {
         "name": "Jméno",
-        "email": "E-mail",
+        "namePlaceholder": "Jan Novák",
+        "email": "Email",
+        "emailPlaceholder1": "jan.novak",
+        "emailPlaceholder2": "example.com",
         "subject": "Předmět",
+        "subjectPlaceholder": "Obecný dotaz",
         "message": "Zpráva",
+        "messagePlaceholder": "Zde napište svou zprávu...",
         "password": "Heslo",
         "send": "Odeslat zprávu"
       }

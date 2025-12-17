@@ -105,11 +105,16 @@
       "text": "Ak máte otázky, návrhy alebo spätnú väzbu k editoru, kontaktujte ma pomocou nižšie uvedeného formulára alebo e-mailom na adresu:",
       "contactForm": {
         "name": "Meno",
-        "email": "E-mail",
+        "namePlaceholder": "Ján Novák",
+        "email": "Email",
+        "emailPlaceholder1": "jan.novak",
+        "emailPlaceholder2": "example.com",
         "subject": "Predmet",
+        "subjectPlaceholder": "Všeobecný dotaz",
         "message": "Správa",
+        "messagePlaceholder": "Sem napíšte svoju správu...",
         "password": "Heslo",
-        "send": "Odoslať správu"  
+        "send": "Odoslať správu"
       }
     }
   },
