@@ -260,6 +260,16 @@ export const useImageStore = defineStore('imageStore', {
       }
     },
 
+    /**
+     * Sets the current overlay image
+     * @param {HTMLCanvasElement} overlay - The overlay image to set
+     */
+    setOverlay(overlay) {
+      this.overlayImage = overlay
+      this.overlayImageExport = overlay
+      this.overlayImagePreview = overlay
+    },
+
     // Getters
     /**
      * Returns the appropriate rendered image based on the rendering context and frame type

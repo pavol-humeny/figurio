@@ -1,9 +1,9 @@
 import { useConfirmModal } from '../modals/useConfirmModal'
-import { useMath } from '../common/useMath'
-import { degrees, PDFDocument } from 'pdf-lib'
-import { useConsole } from '@/composables/common/useConsole.js'
+// import { useMath } from '../common/useMath'
+// import { degrees, PDFDocument } from 'pdf-lib'
+// import { useConsole } from '@/composables/common/useConsole.js'
 import { useToastModal } from '../modals/useToastModal'
-const { log, error } = useConsole()
+// const { log, error } = useConsole()
 import { useApi } from '@/composables/common/useApi'
 const { addUserEvent } = useApi()
 import { useImagePipeline } from '../editor/useImagePipeline'
@@ -23,7 +23,7 @@ export function useRotateTool(imageStore, historyStore, t) {
   const { showConfirmModal } = useConfirmModal()
   const { showToastModal } = useToastModal()
   const { renderUpTo } = useImagePipeline(imageStore)
-  const { round } = useMath()
+  // const { round } = useMath()
 
   /**
    * Apply rotation to the image
@@ -87,126 +87,126 @@ export function useRotateTool(imageStore, historyStore, t) {
    *
    * @param {number} angle - Angle in degrees
    */
-  const applyRotationRender = async (angle) => {
-    if (!imageStore.getRenderedImage({ t, renderCall: false }) || !angle) return
+  // const applyRotationRender = async (angle) => {
+  //   if (!imageStore.getRenderedImage({ t, renderCall: false }) || !angle) return
 
-    if (imageStore.fileType === 'pdf' && imageStore.pdfPageBytes) {
-      try {
-        const existingPdf = await PDFDocument.load(imageStore.pdfPageBytes)
-        const oldPage = existingPdf.getPage(0)
+  //   if (imageStore.fileType === 'pdf' && imageStore.pdfPageBytes) {
+  //     try {
+  //       const existingPdf = await PDFDocument.load(imageStore.pdfPageBytes)
+  //       const oldPage = existingPdf.getPage(0)
 
-        const oldWidth = oldPage.getWidth()
-        const oldHeight = oldPage.getHeight()
+  //       const oldWidth = oldPage.getWidth()
+  //       const oldHeight = oldPage.getHeight()
 
-        // Create new pdf
-        const newPdf = await PDFDocument.create()
+  //       // Create new pdf
+  //       const newPdf = await PDFDocument.create()
 
-        // Create new page with correct dimensions (for 90/270 swap width/height)
-        let newWidth = oldWidth
-        let newHeight = oldHeight
-        const normalizedAngle = ((-angle % 360) + 360) % 360
-        if (normalizedAngle === 90 || normalizedAngle === 270) {
-          newWidth = oldHeight
-          newHeight = oldWidth
-        }
-        const newPage = newPdf.addPage([newWidth, newHeight])
+  //       // Create new page with correct dimensions (for 90/270 swap width/height)
+  //       let newWidth = oldWidth
+  //       let newHeight = oldHeight
+  //       const normalizedAngle = ((-angle % 360) + 360) % 360
+  //       if (normalizedAngle === 90 || normalizedAngle === 270) {
+  //         newWidth = oldHeight
+  //         newHeight = oldWidth
+  //       }
+  //       const newPage = newPdf.addPage([newWidth, newHeight])
 
-        // Embed old page
-        const [embeddedPage] = await newPdf.embedPages([oldPage])
+  //       // Embed old page
+  //       const [embeddedPage] = await newPdf.embedPages([oldPage])
 
-        // Calculate transformation for physical rotation
-        let x = 0
-        let y = 0
-        let rotate = degrees(0)
-        switch (normalizedAngle) {
-          case 0:
-            x = 0
-            y = 0
-            rotate = degrees(0)
-            break
-          case 90:
-            x = newWidth
-            y = 0
-            rotate = degrees(90)
-            break
-          case 180:
-            x = newWidth
-            y = newHeight
-            rotate = degrees(180)
-            break
-          case 270:
-            x = 0
-            y = newHeight
-            rotate = degrees(270)
-            break
-        }
+  //       // Calculate transformation for physical rotation
+  //       let x = 0
+  //       let y = 0
+  //       let rotate = degrees(0)
+  //       switch (normalizedAngle) {
+  //         case 0:
+  //           x = 0
+  //           y = 0
+  //           rotate = degrees(0)
+  //           break
+  //         case 90:
+  //           x = newWidth
+  //           y = 0
+  //           rotate = degrees(90)
+  //           break
+  //         case 180:
+  //           x = newWidth
+  //           y = newHeight
+  //           rotate = degrees(180)
+  //           break
+  //         case 270:
+  //           x = 0
+  //           y = newHeight
+  //           rotate = degrees(270)
+  //           break
+  //       }
 
-        // Draw embedded page with transformation
-        newPage.drawPage(embeddedPage, {
-          x,
-          y,
-          width: oldWidth,
-          height: oldHeight,
-          rotate,
-        })
+  //       // Draw embedded page with transformation
+  //       newPage.drawPage(embeddedPage, {
+  //         x,
+  //         y,
+  //         width: oldWidth,
+  //         height: oldHeight,
+  //         rotate,
+  //       })
 
-        imageStore.pdfPageBytes = await newPdf.save()
-        log('PDF rotated physically to', normalizedAngle, 'degrees')
-      } catch (e) {
-        error('Error rotating PDF:', e)
-      }
-    }
+  //       imageStore.pdfPageBytes = await newPdf.save()
+  //       log('PDF rotated physically to', normalizedAngle, 'degrees')
+  //     } catch (e) {
+  //       error('Error rotating PDF:', e)
+  //     }
+  //   }
 
-    const radians = (angle * Math.PI) / 180
+  //   const radians = (angle * Math.PI) / 180
 
-    const oldCanvas = imageStore.getRenderedImage({ t, renderCall: false })
-    const oldWidth = oldCanvas.width
-    const oldHeight = oldCanvas.height
+  //   const oldCanvas = imageStore.getRenderedImage({ t, renderCall: false })
+  //   const oldWidth = oldCanvas.width
+  //   const oldHeight = oldCanvas.height
 
-    const sin = Math.abs(Math.sin(radians))
-    const cos = Math.abs(Math.cos(radians))
+  //   const sin = Math.abs(Math.sin(radians))
+  //   const cos = Math.abs(Math.cos(radians))
 
-    const rotatedWidth = round(oldWidth * cos + oldHeight * sin)
-    const rotatedHeight = round(oldWidth * sin + oldHeight * cos)
+  //   const rotatedWidth = round(oldWidth * cos + oldHeight * sin)
+  //   const rotatedHeight = round(oldWidth * sin + oldHeight * cos)
 
-    const canvas = document.createElement('canvas')
-    canvas.width = rotatedWidth
-    canvas.height = rotatedHeight
-    const tempCtx = canvas.getContext('2d')
+  //   const canvas = document.createElement('canvas')
+  //   canvas.width = rotatedWidth
+  //   canvas.height = rotatedHeight
+  //   const tempCtx = canvas.getContext('2d')
 
-    tempCtx.translate(rotatedWidth / 2, rotatedHeight / 2)
-    tempCtx.rotate(radians)
-    tempCtx.drawImage(oldCanvas, -oldWidth / 2, -oldHeight / 2)
+  //   tempCtx.translate(rotatedWidth / 2, rotatedHeight / 2)
+  //   tempCtx.rotate(radians)
+  //   tempCtx.drawImage(oldCanvas, -oldWidth / 2, -oldHeight / 2)
 
-    imageStore.setRenderedImage(canvas)
-    imageStore.fileDimensions.width = rotatedWidth
-    imageStore.fileDimensions.height = rotatedHeight
-    imageStore.fileDimensions.fileAspectRatio = rotatedWidth / rotatedHeight || 1
-    imageStore.newFileDimensions = { ...imageStore.fileDimensions }
+  //   imageStore.setRenderedImage(canvas)
+  //   imageStore.fileDimensions.width = rotatedWidth
+  //   imageStore.fileDimensions.height = rotatedHeight
+  //   imageStore.fileDimensions.fileAspectRatio = rotatedWidth / rotatedHeight || 1
+  //   imageStore.newFileDimensions = { ...imageStore.fileDimensions }
 
-    // Rotate overlay svg objects
-    if (imageStore.overlayImage !== null) {
-      const oldOverlay = imageStore.overlayImage
-      const overlayCanvas = document.createElement('canvas')
-      overlayCanvas.width = rotatedWidth
-      overlayCanvas.height = rotatedHeight
-      const overlayCtx = overlayCanvas.getContext('2d')
+  //   // Rotate overlay svg objects
+  //   if (imageStore.overlayImage !== null) {
+  //     const oldOverlay = imageStore.overlayImage
+  //     const overlayCanvas = document.createElement('canvas')
+  //     overlayCanvas.width = rotatedWidth
+  //     overlayCanvas.height = rotatedHeight
+  //     const overlayCtx = overlayCanvas.getContext('2d')
 
-      overlayCtx.translate(rotatedWidth / 2, rotatedHeight / 2)
-      overlayCtx.rotate(radians)
-      overlayCtx.drawImage(oldOverlay, -oldOverlay.width / 2, -oldOverlay.height / 2)
+  //     overlayCtx.translate(rotatedWidth / 2, rotatedHeight / 2)
+  //     overlayCtx.rotate(radians)
+  //     overlayCtx.drawImage(oldOverlay, -oldOverlay.width / 2, -oldOverlay.height / 2)
 
-      imageStore.overlayImage = overlayCanvas
-      imageStore.overlayImageExport = overlayCanvas
-      imageStore.overlayImagePreview = overlayCanvas
-    }
+  //     imageStore.overlayImage = overlayCanvas
+  //     imageStore.overlayImageExport = overlayCanvas
+  //     imageStore.overlayImagePreview = overlayCanvas
+  //   }
 
-    // wait for image to be set
-    await new Promise((resolve) => setTimeout(resolve, 1))
-  }
+  //   // wait for image to be set
+  //   await new Promise((resolve) => setTimeout(resolve, 1))
+  // }
 
   return {
     applyRotation,
-    applyRotationRender,
+    // applyRotationRender,
   }
 }

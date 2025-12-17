@@ -1,6 +1,15 @@
-// editor/operations/rotateOperation.js
 import { degrees, PDFDocument } from 'pdf-lib'
 
+/**
+ * Rotate operation for image and PDF
+ * @param {object} params parameters
+ * @param {HTMLCanvasElement} params.srcCanvas source canvas
+ * @param {Uint8Array|null} params.srcPdfBytes source PDF bytes
+ * @param {HTMLCanvasElement|null} params.srcOverlay source overlay canvas
+ * @param {number} params.angle rotation angle in degrees
+ * @param {function} params.round function to round numbers
+ * @returns {{ canvas: HTMLCanvasElement, pdfBytes: Uint8Array|null, overlay: HTMLCanvasElement|null, dimensions: { width: number, height: number, fileAspectRatio: number } }} result
+ */
 export async function rotateOperation({ srcCanvas, srcPdfBytes, srcOverlay, angle, round }) {
   const radians = (angle * Math.PI) / 180
 
@@ -8,7 +17,7 @@ export async function rotateOperation({ srcCanvas, srcPdfBytes, srcOverlay, angl
   let overlay = srcOverlay ?? null
 
   // ------------------------------------------------
-  // PDF rotation (PURE – no store mutation)
+  // PDF rotation
   // ------------------------------------------------
   if (pdfBytes) {
     const existingPdf = await PDFDocument.load(pdfBytes)
@@ -84,7 +93,7 @@ export async function rotateOperation({ srcCanvas, srcPdfBytes, srcOverlay, angl
   ctx.drawImage(srcCanvas, -oldWidth / 2, -oldHeight / 2)
 
   // ------------------------------------------------
-  // Overlay rotation (PURE)
+  // Overlay rotation
   // ------------------------------------------------
   if (overlay) {
     const overlayCanvas = document.createElement('canvas')
