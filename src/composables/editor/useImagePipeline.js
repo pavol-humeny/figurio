@@ -1,6 +1,4 @@
 import { operationRegistry } from './operationRegistry'
-import { useMath } from '../common/useMath'
-const { round } = useMath()
 
 export function useImagePipeline(imageStore, uiStore) {
   /**
@@ -63,8 +61,7 @@ export function useImagePipeline(imageStore, uiStore) {
       srcCanvas: state.canvas,
       srcPdfBytes: state.pdfBytes,
       srcOverlay: state.overlay,
-      ...operation.params,
-      round,
+      params: operation.params,
     })
 
     meta.dimensions = result.dimensions

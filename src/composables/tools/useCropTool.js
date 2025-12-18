@@ -990,7 +990,7 @@ export function useCropTool(imageStore, viewportStore, editorStore, historyStore
    * @param {HTMLCanvasElement} overlayCanvas
    * @returns {Object|null} cropRect {x, y, width, height} or null if fully transparent
    */
-  function calculateOverlayCropBox(overlayCanvas) {
+  const calculateOverlayCropBox = (overlayCanvas) => {
     if (!overlayCanvas) return null
 
     const ctx = overlayCanvas.getContext('2d', { willReadFrequently: true })
@@ -1171,7 +1171,10 @@ export function useCropTool(imageStore, viewportStore, editorStore, historyStore
     imageStore.addImageOperation({
       type: 'crop',
       params: {
-        cropBox: { ...cropBox.value },
+        x: cropBox.value.x,
+        y: cropBox.value.y,
+        width: cropBox.value.width,
+        height: cropBox.value.height,
       },
       cost: 'high',
       affectsGeometry: true,

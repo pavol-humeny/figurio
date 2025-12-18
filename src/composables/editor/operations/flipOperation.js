@@ -1,16 +1,23 @@
-import { PDFDocument, degrees } from 'pdf-lib'
+// import { PDFDocument, degrees } from 'pdf-lib'
 
 /**
- * Flip operation for canvas, overlay and PDF
+ * Flip operation for canvas, overlay and PDF (pipeline-style)
  *
- * @param {object} params
- * @param {HTMLCanvasElement} params.srcCanvas
- * @param {Uint8Array|null} params.srcPdfBytes
- * @param {HTMLCanvasElement|null} params.srcOverlay
- * @param {'horizontal'|'vertical'} params.direction
- * @param {(n:number)=>number} params.round
+ * @param {object} ctx
+ * @param {HTMLCanvasElement} ctx.srcCanvas source canvas
+ * @param {Uint8Array|null} ctx.srcPdfBytes source PDF bytes
+ * @param {HTMLCanvasElement|null} ctx.srcOverlay source overlay canvas
+ * @param {{ direction: 'horizontal' | 'vertical' }} ctx.params operation parameters
+ *
+ * @returns {{
+ *   canvas: HTMLCanvasElement,
+ *   overlay: HTMLCanvasElement | null,
+ *   pdfBytes: Uint8Array | null,
+ *   dimensions: { width: number, height: number, fileAspectRatio: number }
+ * }}
  */
-export async function flipOperation({ srcCanvas, srcPdfBytes, srcOverlay, direction }) {
+export async function flipOperation({ srcCanvas, srcPdfBytes, srcOverlay, params }) {
+  const { direction } = params
   console.warn('flipOperation called with direction:', direction)
 
   let pdfBytes = srcPdfBytes ?? null

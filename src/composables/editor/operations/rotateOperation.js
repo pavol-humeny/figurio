@@ -1,16 +1,25 @@
 import { degrees, PDFDocument } from 'pdf-lib'
+import { useMath } from '../../common/useMath'
+const { round } = useMath()
 
 /**
- * Rotate operation for image and PDF
- * @param {object} params parameters
- * @param {HTMLCanvasElement} params.srcCanvas source canvas
- * @param {Uint8Array|null} params.srcPdfBytes source PDF bytes
- * @param {HTMLCanvasElement|null} params.srcOverlay source overlay canvas
- * @param {number} params.angle rotation angle in degrees
- * @param {function} params.round function to round numbers
- * @returns {{ canvas: HTMLCanvasElement, pdfBytes: Uint8Array|null, overlay: HTMLCanvasElement|null, dimensions: { width: number, height: number, fileAspectRatio: number } }} result
+ * Rotate operation for image and PDF (pipeline-style, no external helpers)
+ *
+ * @param {object} ctx
+ * @param {HTMLCanvasElement} ctx.srcCanvas source canvas
+ * @param {Uint8Array|null} ctx.srcPdfBytes source PDF bytes
+ * @param {HTMLCanvasElement|null} ctx.srcOverlay source overlay canvas
+ * @param {{ angle: number }} ctx.params operation parameters
+ *
+ * @returns {{
+ *   canvas: HTMLCanvasElement,
+ *   pdfBytes: Uint8Array | null,
+ *   overlay: HTMLCanvasElement | null,
+ *   dimensions: { width: number, height: number, fileAspectRatio: number }
+ * }}
  */
-export async function rotateOperation({ srcCanvas, srcPdfBytes, srcOverlay, angle, round }) {
+export async function rotateOperation({ srcCanvas, srcPdfBytes, srcOverlay, params }) {
+  const { angle } = params
   const radians = (angle * Math.PI) / 180
 
   let pdfBytes = srcPdfBytes ?? null
