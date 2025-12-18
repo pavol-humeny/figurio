@@ -336,10 +336,10 @@ export function useImageRenderer(
       }
     }
 
-    // Save initial state to history if empty
-    if (historyStore.history.length === 0) {
-      historyStore.push(imageStore.getSnapshot(t))
-    }
+    // // Save initial state to history if empty
+    // if (historyStore.history.length === 0) {
+    //   historyStore.push(imageStore.getSnapshot(t))
+    // }
 
     blockRender.value = false
   }

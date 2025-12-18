@@ -279,6 +279,11 @@ function
         await setPdfFile(file)
       }
 
+      // Save initial state to history if empty
+      if (historyStore.history.length === 0) {
+        historyStore.push(imageStore.getSnapshot(t))
+      }
+
       if (uiStore.tutorialStep === -1) {
         uiStore.tutorialShouldBeStartedForFirstTime = true
       }
@@ -377,33 +382,6 @@ function
     imageStore.originalFileDimensions = { ...imageStore.fileDimensions }
 
     resetPipeline(canvas)
-
-    // // Initialize render pipeline
-    // const dimensions = {
-    //   width: canvas.width,
-    //   height: canvas.height,
-    //   fileAspectRatio: canvas.width / canvas.height || 1,
-    // }
-
-    // imageStore.renderPipeline = {
-    //   baseState: {
-    //     canvas, // PDF as canvas
-    //     pdfBytes: new Uint8Array(imageStore.pdfPageBytes), // PDF bytes
-    //   },
-    //   checkpoints: [
-    //     {
-    //       opIndex: -1,
-    //       state: {
-    //         canvas: cloneCanvas(canvas),
-    //         pdfBytes: new Uint8Array(imageStore.pdfPageBytes),
-    //       },
-    //       dimensions: { ...dimensions },
-    //     },
-    //   ],
-    //   currentOpIndex: -1,
-    //   lastRenderedOpIndex: -1,
-    // }
-    // -----------------
 
     imageStore.setRenderedImage(canvas)
     imageStore.originalImage = canvas

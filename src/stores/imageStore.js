@@ -504,7 +504,8 @@ export const useImageStore = defineStore('imageStore', {
      * Resets the image store to a clean state for a new file
      */
     resetImageStoreForNewFile() {
-      // FILE
+      console.warn('resetImageStoreForNewFile called')
+      // // FILE
       this.file = null
       this.fileType = ''
       this.fileFormat = ''
