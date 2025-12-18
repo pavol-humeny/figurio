@@ -3,14 +3,14 @@ import { computed, ref, nextTick, watch } from 'vue'
 import { useConfirmModal } from '../modals/useConfirmModal'
 import { useToastModal } from '../modals/useToastModal'
 import { editorConfig } from '@/config/editorConfig'
-
-import { PDFDocument } from 'pdf-lib'
+import { useImagePipeline } from '../editor/useImagePipeline'
+// import { PDFDocument } from 'pdf-lib'
 
 import { useApi } from '@/composables/common/useApi'
 const { addUserEvent } = useApi()
 
 import { useConsole } from '@/composables/common/useConsole.js'
-const { log, warn, error } = useConsole()
+const { log, warn } = useConsole()
 
 /**
  * Reactive state of the crop box used for user interactions
@@ -79,21 +79,15 @@ const cropSensitivityLevel = ref(2)
  * @param {object} viewportStore - Store managing viewport state
  * @param {object} editorStore - Store for currently selected tool/tab
  * @param {object} historyStore - Store for undo/redo history
- * @param {object} workspaceStore - Store for workspace state
+ * @param {object} uiStore - Store for UI state
  * @param {function} t - Translation function (vue-i18n)
  * @returns {object} Crop tool logic and reactive state
  */
-export function useCropTool(
-  imageStore,
-  viewportStore,
-  editorStore,
-  historyStore,
-  workspaceStore,
-  t,
-) {
+export function useCropTool(imageStore, viewportStore, editorStore, historyStore, uiStore, t) {
   const { showConfirmModal } = useConfirmModal()
   const { showToastModal } = useToastModal()
   const { clamp, round } = useMath()
+  const { renderUpTo } = useImagePipeline(imageStore, uiStore)
 
   /**
    * Update last canny crop to current crop box
@@ -1119,9 +1113,9 @@ export function useCropTool(
    * Apply the auto crop in preset
    */
   const applyAutoCropPreset = async () => {
-    const newCropBox = calculateAutoCropBoxCanny(useBaseImage)
-
-    applyCropRender(newCropBox)
+    // TODO probably add operation into image operations stack directly here and call renderUpTo
+    // const newCropBox = calculateAutoCropBoxCanny(useBaseImage)
+    // applyCropRender(newCropBox)
   }
 
   /**
@@ -1145,6 +1139,23 @@ export function useCropTool(
       return
     }
 
+    // Check if crop box is valid
+    if (
+      cropBox.value.x < 0 ||
+      cropBox.value.y < 0 ||
+      cropBox.value.width <= 0 ||
+      cropBox.value.height <= 0 ||
+      cropBox.value.x + cropBox.value.width > imageStore.fileDimensions.width ||
+      cropBox.value.y + cropBox.value.height > imageStore.fileDimensions.height
+    ) {
+      showToastModal(
+        'warning',
+        t('tools.crop.settings.general.invalidCropBox.title'),
+        t('tools.crop.settings.general.invalidCropBox.message'),
+      )
+      return
+    }
+
     if (imageStore.needRasterization) {
       const confirmed = await showConfirmModal(
         t('tools.confirmNeedRasterization.title'),
@@ -1159,7 +1170,11 @@ export function useCropTool(
 
     imageStore.addImageOperation({
       type: 'crop',
-      cropBox: { ...cropBox.value },
+      params: {
+        cropBox: { ...cropBox.value },
+      },
+      cost: 'high',
+      affectsGeometry: true,
     })
 
     addUserEvent('applyOperation', {
@@ -1167,7 +1182,7 @@ export function useCropTool(
       settings: { cropBox: { ...cropBox.value } },
     })
 
-    await applyCropRender(cropBox.value)
+    await renderUpTo(imageStore.renderPipeline.currentOpIndex + 1)
 
     historyStore.push(imageStore.getSnapshot(t))
   }
@@ -1176,132 +1191,132 @@ export function useCropTool(
    * Apply the crop operation to the rendered image
    * @param {Object} cropBox - Crop box dimensions
    */
-  const applyCropRender = async (cropBox) => {
-    if (!imageStore.getRenderedImage({ t, renderCall: false }) || !cropBox) return
+  // const applyCropRender = async (cropBox) => {
+  //   if (!imageStore.getRenderedImage({ t, renderCall: false }) || !cropBox) return
 
-    const { x, y, width, height } = cropBox
+  //   const { x, y, width, height } = cropBox
 
-    // Check if crop box is same as image dimensions
-    if (
-      x === 0 &&
-      y === 0 &&
-      width === imageStore.fileDimensions.width &&
-      height === imageStore.fileDimensions.height
-    ) {
-      showToastModal(
-        'info',
-        t('tools.crop.settings.general.cropBoxIsSameAsOriginalImage.title'),
-        t('tools.crop.settings.general.cropBoxIsSameAsOriginalImage.message'),
-      )
-      return
-    }
+  //   // Check if crop box is same as image dimensions
+  //   if (
+  //     x === 0 &&
+  //     y === 0 &&
+  //     width === imageStore.fileDimensions.width &&
+  //     height === imageStore.fileDimensions.height
+  //   ) {
+  //     showToastModal(
+  //       'info',
+  //       t('tools.crop.settings.general.cropBoxIsSameAsOriginalImage.title'),
+  //       t('tools.crop.settings.general.cropBoxIsSameAsOriginalImage.message'),
+  //     )
+  //     return
+  //   }
 
-    // Check if crop box is valid
-    if (
-      x < 0 ||
-      y < 0 ||
-      width <= 0 ||
-      height <= 0 ||
-      x + width > imageStore.fileDimensions.width ||
-      y + height > imageStore.fileDimensions.height
-    ) {
-      showToastModal(
-        'warning',
-        t('tools.crop.settings.general.invalidCropBox.title'),
-        t('tools.crop.settings.general.invalidCropBox.message'),
-      )
-      return
-    }
+  //   // Check if crop box is valid
+  //   if (
+  //     x < 0 ||
+  //     y < 0 ||
+  //     width <= 0 ||
+  //     height <= 0 ||
+  //     x + width > imageStore.fileDimensions.width ||
+  //     y + height > imageStore.fileDimensions.height
+  //   ) {
+  //     showToastModal(
+  //       'warning',
+  //       t('tools.crop.settings.general.invalidCropBox.title'),
+  //       t('tools.crop.settings.general.invalidCropBox.message'),
+  //     )
+  //     return
+  //   }
 
-    if (imageStore.fileType === 'pdf' && imageStore.pdfPageBytes) {
-      try {
-        const currentPdf = await PDFDocument.load(imageStore.pdfPageBytes)
-        // Create new page
-        const newPdf = await PDFDocument.create()
+  //   if (imageStore.fileType === 'pdf' && imageStore.pdfPageBytes) {
+  //     try {
+  //       const currentPdf = await PDFDocument.load(imageStore.pdfPageBytes)
+  //       // Create new page
+  //       const newPdf = await PDFDocument.create()
 
-        // Embed old page
-        const [embeddedPage] = await newPdf.embedPages([currentPdf.getPage(0)])
+  //       // Embed old page
+  //       const [embeddedPage] = await newPdf.embedPages([currentPdf.getPage(0)])
 
-        const { x, y, width, height } = cropBox
-        const pageHeight = embeddedPage.height
-        const pdfY = pageHeight - (y + height)
+  //       const { x, y, width, height } = cropBox
+  //       const pageHeight = embeddedPage.height
+  //       const pdfY = pageHeight - (y + height)
 
-        // Add cropped page
-        const page = newPdf.addPage([width, height])
-        page.drawPage(embeddedPage, {
-          x: -x, // Move according to crop box
-          y: -pdfY,
-          width: embeddedPage.width,
-          height: embeddedPage.height,
-        })
+  //       // Add cropped page
+  //       const page = newPdf.addPage([width, height])
+  //       page.drawPage(embeddedPage, {
+  //         x: -x, // Move according to crop box
+  //         y: -pdfY,
+  //         width: embeddedPage.width,
+  //         height: embeddedPage.height,
+  //       })
 
-        const pdfBytes = await newPdf.save()
-        imageStore.pdfPageBytes = pdfBytes
-      } catch (e) {
-        error('Error cropping PDF:', e)
-      }
-    }
+  //       const pdfBytes = await newPdf.save()
+  //       imageStore.pdfPageBytes = pdfBytes
+  //     } catch (e) {
+  //       error('Error cropping PDF:', e)
+  //     }
+  //   }
 
-    const canvas = document.createElement('canvas')
-    const ctx = canvas.getContext('2d')
+  //   const canvas = document.createElement('canvas')
+  //   const ctx = canvas.getContext('2d')
 
-    canvas.width = width
-    canvas.height = height
+  //   canvas.width = width
+  //   canvas.height = height
 
-    ctx.drawImage(
-      imageStore.getRenderedImage({ t, renderCall: false }),
-      x,
-      y,
-      width,
-      height, // Source region
-      0,
-      0,
-      width,
-      height, // Destination canvas
-    )
+  //   ctx.drawImage(
+  //     imageStore.getRenderedImage({ t, renderCall: false }),
+  //     x,
+  //     y,
+  //     width,
+  //     height, // Source region
+  //     0,
+  //     0,
+  //     width,
+  //     height, // Destination canvas
+  //   )
 
-    // Update rendered image and preview URL
-    imageStore.setRenderedImage(canvas)
-    imageStore.originalImage = canvas
-    imageStore.originalFileDimensions.width = width
-    imageStore.originalFileDimensions.height = height
-    imageStore.originalFileDimensions.fileAspectRatio = width / height || 1
+  //   // Update rendered image and preview URL
+  //   imageStore.setRenderedImage(canvas)
+  //   imageStore.originalImage = canvas
+  //   imageStore.originalFileDimensions.width = width
+  //   imageStore.originalFileDimensions.height = height
+  //   imageStore.originalFileDimensions.fileAspectRatio = width / height || 1
 
-    // Crop overlay svg objects
-    if (imageStore.overlayImage) {
-      const oldOverlay = imageStore.overlayImage
-      const overlayCanvas = document.createElement('canvas')
-      const overlayCtx = overlayCanvas.getContext('2d')
-      overlayCanvas.width = width
-      overlayCanvas.height = height
+  //   // Crop overlay svg objects
+  //   if (imageStore.overlayImage) {
+  //     const oldOverlay = imageStore.overlayImage
+  //     const overlayCanvas = document.createElement('canvas')
+  //     const overlayCtx = overlayCanvas.getContext('2d')
+  //     overlayCanvas.width = width
+  //     overlayCanvas.height = height
 
-      overlayCtx.drawImage(
-        oldOverlay,
-        x,
-        y,
-        width,
-        height, // Source crop region
-        0,
-        0,
-        width,
-        height, // Destination
-      )
+  //     overlayCtx.drawImage(
+  //       oldOverlay,
+  //       x,
+  //       y,
+  //       width,
+  //       height, // Source crop region
+  //       0,
+  //       0,
+  //       width,
+  //       height, // Destination
+  //     )
 
-      imageStore.overlayImage = overlayCanvas
-      imageStore.overlayImageExport = overlayCanvas
-      imageStore.overlayImagePreview = overlayCanvas
-    }
+  //     imageStore.overlayImage = overlayCanvas
+  //     imageStore.overlayImageExport = overlayCanvas
+  //     imageStore.overlayImagePreview = overlayCanvas
+  //   }
 
-    // Update file dimensions
-    imageStore.fileDimensions.width = width
-    imageStore.fileDimensions.height = height
-    imageStore.fileDimensions.fileAspectRatio = width / height || 1
+  //   // Update file dimensions
+  //   imageStore.fileDimensions.width = width
+  //   imageStore.fileDimensions.height = height
+  //   imageStore.fileDimensions.fileAspectRatio = width / height || 1
 
-    imageStore.newFileDimensions = { ...imageStore.fileDimensions }
+  //   imageStore.newFileDimensions = { ...imageStore.fileDimensions }
 
-    // Center image
-    viewportStore.shouldFitToScreen = true
-  }
+  //   // Center image
+  //   viewportStore.shouldFitToScreen = true
+  // }
 
   /**
    * Show crop box
@@ -1339,7 +1354,7 @@ export function useCropTool(
     positionYInputRef,
     cropBox,
     applyCrop,
-    applyCropRender,
+    // applyCropRender,
     resetCrop,
     cropCanBeReset,
     showCropBox,

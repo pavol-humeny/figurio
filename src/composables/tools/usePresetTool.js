@@ -550,7 +550,7 @@ export function usePresetTool(
             viewportStore,
             editorStore,
             historyStore,
-            workspaceStore,
+            useUiStore(),
             t,
           ).applyAutoCropPreset()
         } else if (operation.type === 'grayscale') {
@@ -563,7 +563,7 @@ export function usePresetTool(
             viewportStore,
             editorStore,
             historyStore,
-            workspaceStore,
+            useUiStore(),
             t,
           ).applyCropRender(operation.cropBox)
         } else if (operation.type === 'resize') {

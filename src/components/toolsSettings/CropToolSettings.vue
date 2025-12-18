@@ -12,10 +12,10 @@ import DefaultButton from '../common/DefaultButton.vue'
 import ToggleButton from '../common/ToggleButton.vue'
 import StepperInput from '../common/StepperInput.vue'
 // import NumberDropdownInput from '../common/NumberDropdownInput.vue'
-import { useWorkspaceStore } from '@/stores/workspaceStore'
 import ExplainItem from '../common/ExplainItem.vue'
 import ToggleHoldButton from '../common/ToggleHoldButton.vue'
 import LevelSelector from '../common/LevelSelector.vue'
+import { useUiStore } from '@/stores/uiStore'
 
 const { t } = useI18n()
 
@@ -55,7 +55,7 @@ const {
   manualIndentsWereChangedManually,
   keepModelValue,
   cropSensitivityLevel,
-} = useCropTool(useImageStore(), useViewportStore(), useEditorStore(), useHistoryStore(), useWorkspaceStore(), t)
+} = useCropTool(useImageStore(), useViewportStore(), useEditorStore(), useHistoryStore(), useUiStore(), t)
 
 </script>
 

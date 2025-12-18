@@ -504,83 +504,144 @@ export const useImageStore = defineStore('imageStore', {
      * Resets the image store to a clean state for a new file
      */
     resetImageStoreForNewFile() {
+      // FILE
+      this.file = null
+      this.fileType = ''
+      this.fileFormat = ''
+      this.showPdfAsImage = false
+
+      // PDF
+      this.pdfPage = null
+      this.pdfFile = null
+      this.pdfPageBytes = null
+
+      // PIPELINE
+      this.renderPipeline = {
+        baseState: null,
+        checkpoints: [],
+        currentOpIndex: -1,
+        lastRenderedOpIndex: -1,
+      }
+
       this.resetImageOperations()
 
+      // --- FRAME ---
       this.resetFrame()
       this.frameSvg = ''
 
-      this.showPdfAsImage = false
-
-      this.phoneButtonsCanNotBeDrawnToastFlag = false
-
-      this.imageHasArtifacts = false
-      this.imageArtifactsCanceledByUser = false
-
-      this.resetSvgObject()
-
-      // Also reset rendered images
-      this.setRenderedImage(null)
-      this.newRenderedImage = null
-      this.overlayImage = null
-      this.overlayImageExport = null
-      this.overlayImagePreview = null
-      this.removalCanvas = null
-
-      this.imageWarnings = []
-
-      this.expandedImageWarningIds = new Set()
-    },
-
-    /**
-     * Closes the current file and resets all image-related state
-     */
-    closeFile() {
-      this.file = null
-      this.fileType = ''
-      this.showPdfAsImage = false
-
-      this.fileName = ''
-      this.fileFormat = ''
+      // --- DIMENSIONS ---
       this.fileDimensions = {
         fileAspectRatio: 1,
         width: 0,
         height: 0,
         quality: 100,
       }
+      this.newFileDimensions = { ...this.fileDimensions }
+      this.originalFileDimensions = { ...this.fileDimensions }
 
-      this.newFileName = ''
-      this.newFileFormat = ''
-      this.newFileDimensions = {
-        fileAspectRatio: 1,
-        width: 0,
-        height: 0,
-        quality: 100,
-      }
-
-      this.previewUrl = ''
-
-      this.renderedImage = null
-      this.originalFileDimensions = {
-        fileAspectRatio: 1,
-        width: 0,
-        height: 0,
-        quality: 100,
-      }
-
+      // --- IMAGES ---
       this.renderedImage = null
       this.tmpRenderedImage = null
+      this.newRenderedImage = null
+      this.originalImage = null
 
+      // --- OVERLAYS ---
       this.overlayImage = null
       this.overlayImageExport = null
       this.overlayImagePreview = null
+      this.magnifyOverlayImage = null
 
-      this.newRenderedImage = null
-
+      // --- SVG ---
       this.resetSvgObject()
 
-      this.resetImageStoreForNewFile()
+      // --- FLAGS ---
+      this.historyWasChanged = false
+      this.phoneButtonsCanNotBeDrawnToastFlag = false
+      this.imageHasArtifacts = false
+      this.imageArtifactsCanceledByUser = false
 
+      // --- WARNINGS ---
       this.imageWarnings = []
+      this.expandedImageWarningIds = new Set()
+
+      // this.resetImageOperations()
+
+      // this.resetFrame()
+      // this.frameSvg = ''
+
+      // this.showPdfAsImage = false
+
+      // this.phoneButtonsCanNotBeDrawnToastFlag = false
+
+      // this.imageHasArtifacts = false
+      // this.imageArtifactsCanceledByUser = false
+
+      // this.resetSvgObject()
+
+      // // Also reset rendered images
+      // this.setRenderedImage(null)
+      // this.newRenderedImage = null
+      // this.overlayImage = null
+      // this.overlayImageExport = null
+      // this.overlayImagePreview = null
+      // this.removalCanvas = null
+
+      // this.imageWarnings = []
+
+      // this.expandedImageWarningIds = new Set()
+    },
+
+    /**
+     * Closes the current file and resets all image-related state
+     */
+    closeFile() {
+      // this.file = null
+      // this.fileType = ''
+      // this.showPdfAsImage = false
+
+      // this.fileName = ''
+      // this.fileFormat = ''
+      // this.fileDimensions = {
+      //   fileAspectRatio: 1,
+      //   width: 0,
+      //   height: 0,
+      //   quality: 100,
+      // }
+
+      // this.newFileName = ''
+      // this.newFileFormat = ''
+      // this.newFileDimensions = {
+      //   fileAspectRatio: 1,
+      //   width: 0,
+      //   height: 0,
+      //   quality: 100,
+      // }
+
+      // this.previewUrl = ''
+
+      // this.renderedImage = null
+      // this.originalFileDimensions = {
+      //   fileAspectRatio: 1,
+      //   width: 0,
+      //   height: 0,
+      //   quality: 100,
+      // }
+
+      // this.renderedImage = null
+      // this.tmpRenderedImage = null
+
+      // this.overlayImage = null
+      // this.overlayImageExport = null
+      // this.overlayImagePreview = null
+
+      // this.newRenderedImage = null
+
+      // this.resetSvgObject()
+
+      // this.resetImageStoreForNewFile()
+
+      // this.imageWarnings = []
+      this.resetImageStoreForNewFile()
     },
 
     /**
