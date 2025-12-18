@@ -43,7 +43,7 @@ const {
   isFileDimensionsLinked,
   resetResize,
   applyResize,
-} = useResizeTool(useImageStore(), useHistoryStore(), useViewportStore(), t)
+} = useResizeTool(useImageStore(), useHistoryStore(), useViewportStore(), useUiStore(), t)
 
 /**
  * Tabs for the transform tool settings

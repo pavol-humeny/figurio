@@ -8,7 +8,7 @@ import { useConsole } from '@/composables/common/useConsole.js'
 const { error } = useConsole()
 import { useApi } from '@/composables/common/useApi'
 const { addUserEvent } = useApi()
-import { useUiStore } from '@/stores/uiStore'
+import { useImagePipeline } from '../editor/useImagePipeline'
 
 /**
  * Logic for the resize tool
@@ -18,11 +18,11 @@ import { useUiStore } from '@/stores/uiStore'
  * @param {Function} t - Translation function
  * @returns {object} Resize tool bindings and methods
  */
-export function useResizeTool(imageStore, historyStore, viewportStore, t) {
+export function useResizeTool(imageStore, historyStore, viewportStore, uiStore, t) {
   const { showToastModal } = useToastModal()
   const { showConfirmModal } = useConfirmModal()
-  const uiStore = useUiStore()
   const { round } = useMath()
+  const { renderUpTo } = useImagePipeline(imageStore, uiStore)
 
   /**
    * Flag to prevent infinite loops during updates from the store
@@ -193,10 +193,12 @@ export function useResizeTool(imageStore, historyStore, viewportStore, t) {
 
     imageStore.addImageOperation({
       type: 'resize',
-      resizeDimensions: {
+      params: {
         width: fileDimensionWidth.value,
         height: fileDimensionHeight.value,
       },
+      cost: 'high',
+      affectsGeometry: true,
     })
 
     addUserEvent('applyOperation', {
@@ -204,7 +206,9 @@ export function useResizeTool(imageStore, historyStore, viewportStore, t) {
       settings: { width: fileDimensionWidth.value, height: fileDimensionHeight.value },
     })
 
-    await applyResizeRender(fileDimensionWidth.value, fileDimensionHeight.value)
+    await renderUpTo(imageStore.renderPipeline.currentOpIndex + 1)
+
+    // await applyResizeRender(fileDimensionWidth.value, fileDimensionHeight.value)
 
     historyStore.push(imageStore.getSnapshot(t))
   }

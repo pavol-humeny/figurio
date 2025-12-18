@@ -59,6 +59,8 @@ export function useImagePipeline(imageStore, uiStore) {
 
     const result = await executor({
       srcCanvas: state.canvas,
+      baseCanvas:
+        operation.type === 'resize' ? imageStore.renderPipeline.baseState.canvas : undefined,
       srcPdfBytes: state.pdfBytes,
       srcOverlay: state.overlay,
       params: operation.params,
@@ -81,8 +83,12 @@ export function useImagePipeline(imageStore, uiStore) {
    */
   const renderUpTo = async (targetIndex) => {
     console.warn('renderUpTo called with targetIndex:', targetIndex)
+    // Remove checkpoints beyond targetIndex (important for undo)
+
     const pipeline = imageStore.renderPipeline
     const { baseState } = pipeline
+
+    pipeline.checkpoints = pipeline.checkpoints.filter((cp) => cp.opIndex <= targetIndex)
 
     if (!baseState) return
     if (targetIndex < -1) return
