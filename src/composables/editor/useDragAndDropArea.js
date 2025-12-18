@@ -10,6 +10,12 @@ const { log } = useConsole()
  * @param {ReturnType<typeof import('@/stores/imageStore').useImageStore>} imageStore - Image store for handling files
  * @param {(key: string) => string} t - Translation function
  * @param {import('vue-router').Router} router - Vue router instance
+ * @param {ReturnType<typeof import('@/stores/editorStore').useEditorStore>} editorStore - Editor store for editing state
+ * @param {ReturnType<typeof import('@/stores/userModeStore').useUserModeStore>} userModeStore - User mode store for user settings
+ * @param {ReturnType<typeof import('@/stores/workspaceStore').useWorkspaceStore>} workspaceStore - Workspace store for managing tabs
+ * @param {ReturnType<typeof import('@/stores/uiStore').useUIStore>} uiStore - UI store for UI state
+ * @param {ReturnType<typeof import('@/stores/viewportStore').useViewportStore>} viewportStore - Viewport store for view settings
+ * @param {ReturnType<typeof import('@/stores/historyStore').useHistoryStore>} historyStore - History store for undo/redo functionality
  * @returns {{
  *   isDragging: import('vue').Ref<boolean>,
  *   handleDragOver: (event: DragEvent) => void,

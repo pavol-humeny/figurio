@@ -175,8 +175,6 @@ export function useCommandLine(userModeStore, editorStore) {
     const value = args[1]
     const commandIdentifier = `set ${setting}`
 
-    console.log('SET COMMAND:', commandIdentifier, value)
-
     // Execute command
     switch (commandIdentifier) {
       case 'set primarycolor':

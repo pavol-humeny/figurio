@@ -1,3 +1,6 @@
+import { useConsole } from '../common/useConsole'
+const { log } = useConsole()
+
 import noiseDetectionVideo_tour from '@/assets/videos/noiseDetection_tour.mp4'
 
 import cropTool_tour from '@/assets/videos/cropTool_tour.mp4'
@@ -18,7 +21,7 @@ export function useVideoLoader() {
    */
   const getVideo = (key, isToolTip = false) => {
     let src = cropTool_tour // fallback
-    console.log('Getting video for key:', key, 'isToolTip:', isToolTip)
+    log('Getting video for key:', key, 'isToolTip:', isToolTip)
 
     if (isToolTip) {
       // Tool tip videos

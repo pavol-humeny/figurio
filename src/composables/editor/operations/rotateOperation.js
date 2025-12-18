@@ -3,7 +3,7 @@ import { useMath } from '../../common/useMath'
 const { round } = useMath()
 
 /**
- * Rotate operation for image and PDF (pipeline-style, no external helpers)
+ * Rotate operation for image and PDF
  *
  * @param {object} ctx
  * @param {HTMLCanvasElement} ctx.srcCanvas source canvas
@@ -25,9 +25,7 @@ export async function rotateOperation({ srcCanvas, srcPdfBytes, srcOverlay, para
   let pdfBytes = srcPdfBytes ?? null
   let overlay = srcOverlay ?? null
 
-  // ------------------------------------------------
   // PDF rotation
-  // ------------------------------------------------
   if (pdfBytes) {
     const existingPdf = await PDFDocument.load(pdfBytes)
     const oldPage = existingPdf.getPage(0)
@@ -80,9 +78,7 @@ export async function rotateOperation({ srcCanvas, srcPdfBytes, srcOverlay, para
     pdfBytes = await newPdf.save()
   }
 
-  // ------------------------------------------------
   // Canvas rotation
-  // ------------------------------------------------
   const oldWidth = srcCanvas.width
   const oldHeight = srcCanvas.height
 
@@ -101,9 +97,7 @@ export async function rotateOperation({ srcCanvas, srcPdfBytes, srcOverlay, para
   ctx.rotate(radians)
   ctx.drawImage(srcCanvas, -oldWidth / 2, -oldHeight / 2)
 
-  // ------------------------------------------------
   // Overlay rotation
-  // ------------------------------------------------
   if (overlay) {
     const overlayCanvas = document.createElement('canvas')
     overlayCanvas.width = newWidth

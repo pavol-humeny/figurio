@@ -229,8 +229,6 @@ export function useItemTip(options = {}, uiStore, editorStore) {
     isVisible.value = false
     uiStore.isItemTipVisible = false
 
-    console.warn('Opening tool video for', toolKey)
-
     // Open the feature tour modal with the specific tool video
     openSingleFeatureTourModal(toolKey + 'Tool')
   }

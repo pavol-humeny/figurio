@@ -55,7 +55,7 @@ export const useImageStore = defineStore('imageStore', {
       // ]
 
       currentOpIndex: -1, // Where we are in the operation list
-      lastRenderedOpIndex: -1, // Optimization )
+      lastRenderedOpIndex: -1, // Optimization
     },
 
     historyWasChanged: false,
@@ -212,12 +212,6 @@ export const useImageStore = defineStore('imageStore', {
     /** PDF page bytes */
     pdfPageBytes: null,
 
-    /** Total PDF crop box */
-    totalPdfCropBox: {
-      x: 0,
-      y: 0,
-    },
-
     /** Background removal canvas with feather */
     removalCanvas: null,
     /** Background removal canvas without feather */
@@ -256,7 +250,6 @@ export const useImageStore = defineStore('imageStore', {
      * @param {boolean} [onlyOriginal=false] - Whether to skip updating the temporary image
      */
     setRenderedImage(image, onlyOriginal = false) {
-      console.warn('setRenderedImage called')
       this.renderedImage = image
       if (!onlyOriginal) {
         this.tmpRenderedImage = image
@@ -504,8 +497,7 @@ export const useImageStore = defineStore('imageStore', {
      * Resets the image store to a clean state for a new file
      */
     resetImageStoreForNewFile() {
-      console.warn('resetImageStoreForNewFile called')
-      // // FILE
+      // FILE
       this.file = null
       this.fileType = ''
       this.fileFormat = ''
@@ -526,11 +518,11 @@ export const useImageStore = defineStore('imageStore', {
 
       this.resetImageOperations()
 
-      // --- FRAME ---
+      // FRAME
       this.resetFrame()
       this.frameSvg = ''
 
-      // --- DIMENSIONS ---
+      // DIMENSIONS
       this.fileDimensions = {
         fileAspectRatio: 1,
         width: 0,
@@ -540,108 +532,36 @@ export const useImageStore = defineStore('imageStore', {
       this.newFileDimensions = { ...this.fileDimensions }
       this.originalFileDimensions = { ...this.fileDimensions }
 
-      // --- IMAGES ---
+      // IMAGES
       this.renderedImage = null
       this.tmpRenderedImage = null
       this.newRenderedImage = null
       this.originalImage = null
 
-      // --- OVERLAYS ---
+      // OVERLAYS
       this.overlayImage = null
       this.overlayImageExport = null
       this.overlayImagePreview = null
       this.magnifyOverlayImage = null
 
-      // --- SVG ---
+      // SVG
       this.resetSvgObject()
 
-      // --- FLAGS ---
+      // FLAGS
       this.historyWasChanged = false
       this.phoneButtonsCanNotBeDrawnToastFlag = false
       this.imageHasArtifacts = false
       this.imageArtifactsCanceledByUser = false
 
-      // --- WARNINGS ---
+      // WARNINGS
       this.imageWarnings = []
       this.expandedImageWarningIds = new Set()
-
-      // this.resetImageOperations()
-
-      // this.resetFrame()
-      // this.frameSvg = ''
-
-      // this.showPdfAsImage = false
-
-      // this.phoneButtonsCanNotBeDrawnToastFlag = false
-
-      // this.imageHasArtifacts = false
-      // this.imageArtifactsCanceledByUser = false
-
-      // this.resetSvgObject()
-
-      // // Also reset rendered images
-      // this.setRenderedImage(null)
-      // this.newRenderedImage = null
-      // this.overlayImage = null
-      // this.overlayImageExport = null
-      // this.overlayImagePreview = null
-      // this.removalCanvas = null
-
-      // this.imageWarnings = []
-
-      // this.expandedImageWarningIds = new Set()
     },
 
     /**
      * Closes the current file and resets all image-related state
      */
     closeFile() {
-      // this.file = null
-      // this.fileType = ''
-      // this.showPdfAsImage = false
-
-      // this.fileName = ''
-      // this.fileFormat = ''
-      // this.fileDimensions = {
-      //   fileAspectRatio: 1,
-      //   width: 0,
-      //   height: 0,
-      //   quality: 100,
-      // }
-
-      // this.newFileName = ''
-      // this.newFileFormat = ''
-      // this.newFileDimensions = {
-      //   fileAspectRatio: 1,
-      //   width: 0,
-      //   height: 0,
-      //   quality: 100,
-      // }
-
-      // this.previewUrl = ''
-
-      // this.renderedImage = null
-      // this.originalFileDimensions = {
-      //   fileAspectRatio: 1,
-      //   width: 0,
-      //   height: 0,
-      //   quality: 100,
-      // }
-
-      // this.renderedImage = null
-      // this.tmpRenderedImage = null
-
-      // this.overlayImage = null
-      // this.overlayImageExport = null
-      // this.overlayImagePreview = null
-
-      // this.newRenderedImage = null
-
-      // this.resetSvgObject()
-
-      // this.resetImageStoreForNewFile()
-
-      // this.imageWarnings = []
       this.resetImageStoreForNewFile()
     },
 
@@ -1290,29 +1210,28 @@ export const useImageStore = defineStore('imageStore', {
 
     getSnapshot() {
       return {
-        // 🔹 PIPELINE POSITION
+        // PIPELINE POSITION
         opIndex: this.renderPipeline.currentOpIndex,
 
-        // 🔹 IMAGE STATE
+        // IMAGE STATE
         fileType: this.fileType,
         showPdfAsImage: this.showPdfAsImage,
         fileDimensions: JSON.parse(JSON.stringify(this.fileDimensions)),
 
-        // 🔹 OPERATIONS (SOURCE OF TRUTH)
+        // OPERATIONS (SOURCE OF TRUTH)
         imageOperations: JSON.parse(JSON.stringify(this.imageOperations)),
 
-        // 🔹 SVG / OVERLAY METADATA
+        // SVG / OVERLAY METADATA
         svgObjects: JSON.parse(JSON.stringify(this.svgObjects)),
         blurObjects: JSON.parse(JSON.stringify(this.blurObjects)),
         svgDefs: JSON.parse(JSON.stringify(this.svgDefs)),
         blurImages: JSON.parse(JSON.stringify(this.blurImages)),
 
-        // 🔹 FRAME
+        // FRAME
         frame: JSON.parse(JSON.stringify(this.frame)),
 
-        // 🔹 PDF
+        // PDF
         pdfPageBytes: this.pdfPageBytes ? new Uint8Array(this.pdfPageBytes) : undefined,
-        totalPdfCropBox: JSON.parse(JSON.stringify(this.totalPdfCropBox)),
       }
     },
 
@@ -1445,12 +1364,9 @@ export const useImageStore = defineStore('imageStore', {
 
       this.pdfPageBytes = snapshot.pdfPageBytes ? new Uint8Array(snapshot.pdfPageBytes) : undefined
 
-      this.totalPdfCropBox = JSON.parse(JSON.stringify(snapshot.totalPdfCropBox))
-
-      // 🔥 CRITICAL PART
       this.renderPipeline.currentOpIndex = snapshot.opIndex
 
-      // Rendering happens OUTSIDE (undo/redo or watcher)
+      // Rendering happens OUTSIDE (undo/redo)
     },
 
     /**
@@ -1460,14 +1376,14 @@ export const useImageStore = defineStore('imageStore', {
      */
     getFullSnapshot() {
       return {
-        // 🔹 FILE IDENTITY
+        // FILE IDENTITY
         file: this.file,
         fileType: this.fileType,
         fileName: this.fileName,
         fileFormat: this.fileFormat,
         showPdfAsImage: this.showPdfAsImage,
 
-        // 🔹 BASE STATE (SOURCE IMAGE / PDF)
+        // BASE STATE (SOURCE IMAGE / PDF)
         baseState: this.renderPipeline.baseState
           ? {
               canvas: this.renderPipeline.baseState.canvas
@@ -1479,28 +1395,27 @@ export const useImageStore = defineStore('imageStore', {
             }
           : null,
 
-        // 🔹 PIPELINE
+        // PIPELINE
         imageOperations: JSON.parse(JSON.stringify(this.imageOperations)),
         currentOpIndex: this.renderPipeline.currentOpIndex,
 
-        // 🔹 DIMENSIONS
+        // DIMENSIONS
         fileDimensions: JSON.parse(JSON.stringify(this.fileDimensions)),
 
-        // 🔹 SVG / OVERLAYS (LOGICAL, NOT RENDERED)
+        // SVG / OVERLAYS (LOGICAL, NOT RENDERED)
         svgObjects: JSON.parse(JSON.stringify(this.svgObjects)),
         blurObjects: JSON.parse(JSON.stringify(this.blurObjects)),
         svgDefs: JSON.parse(JSON.stringify(this.svgDefs)),
         blurImages: JSON.parse(JSON.stringify(this.blurImages)),
 
-        // 🔹 FRAME
+        // FRAME
         frame: JSON.parse(JSON.stringify(this.frame)),
         frameSvg: this.frameSvg,
 
-        // 🔹 PDF
+        // PDF
         pdfPageBytes: this.pdfPageBytes ? new Uint8Array(this.pdfPageBytes) : null,
-        totalPdfCropBox: JSON.parse(JSON.stringify(this.totalPdfCropBox)),
 
-        // 🔹 WARNINGS
+        // WARNINGS
         imageWarnings: JSON.parse(JSON.stringify(this.imageWarnings)),
       }
     },
@@ -1532,8 +1447,6 @@ export const useImageStore = defineStore('imageStore', {
 
       // PDF
       this.pdfPageBytes = snapshot.pdfPageBytes ? new Uint8Array(snapshot.pdfPageBytes) : null
-
-      this.totalPdfCropBox = JSON.parse(JSON.stringify(snapshot.totalPdfCropBox))
 
       // PIPELINE (LOGICAL)
       this.imageOperations = JSON.parse(JSON.stringify(snapshot.imageOperations))

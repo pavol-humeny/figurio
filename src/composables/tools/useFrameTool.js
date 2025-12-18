@@ -3,6 +3,8 @@ import { useToastModal } from '../modals/useToastModal'
 import { editorConfig } from '@/config/editorConfig'
 import { useConfirmModal } from '../modals/useConfirmModal'
 import { useApi } from '@/composables/common/useApi'
+import { useConsole } from '@/composables/common/useConsole.js'
+const { log } = useConsole()
 const { addUserEvent } = useApi()
 
 /**
@@ -584,8 +586,6 @@ export function useFrameTool(imageStore, historyStore, viewportStore, t) {
   const setFrameWidth = (width) => {
     if (width < 0) {
       frameWidth.value = calculateInitialFrameWidth()
-
-      console.warn('frameWidth: ', frameWidth.value)
     }
     applyFrame()
   }
@@ -600,8 +600,6 @@ export function useFrameTool(imageStore, historyStore, viewportStore, t) {
 
       frameWidth.value = calculateInitialFrameWidth()
       frameWidthMm.value = Math.max(frameWidth.value / PxPerMm, 1)
-
-      console.warn('frameWidth: ', frameWidth.value, ' frameWidthMm: ', frameWidthMm.value)
     }
 
     applyFrame()
@@ -788,7 +786,7 @@ export function useFrameTool(imageStore, historyStore, viewportStore, t) {
    * @param {SVGElement} el - The SVG element to apply the frame to
    */
   const applyFrameRender = (el, width = null, height = null) => {
-    console.log('Applying frame render...')
+    log('Applying frame render...')
     const ns = 'http://www.w3.org/2000/svg'
     const frame = imageStore.frame
     if (!frame?.enabled || !el) return

@@ -82,7 +82,6 @@ export const useWarningList = (imageStore, uiStore) => {
    */
   const closeByArrow = (id) => {
     const warning = imageStore.imageWarnings.find((w) => w.id === id)
-    console.warn('closeByArrow called for id:', id)
     if (!warning) return
 
     imageStore.expandedImageWarningIds.delete(id)

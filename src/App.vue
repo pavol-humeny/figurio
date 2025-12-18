@@ -20,7 +20,9 @@ import CalibrationModal from './components/modals/CalibrationModal.vue'
 import { useApi } from './composables/common/useApi'
 import FeatureTourModal from './components/modals/FeatureTourModal.vue'
 import { uiConfig } from './config/uiConfig'
+import { useConsole } from './composables/common/useConsole'
 
+const { warn } = useConsole()
 const { addUserVisit } = useApi()
 
 // import { useConsole } from '@/composables/common/useConsole.js'
@@ -129,7 +131,7 @@ onMounted(async () => {
 
   // Redirect to home view on reload
   if (route.name !== 'home' && route.name !== 'statistics') {
-    console.warn('App reloaded, redirecting to home view: ' + route.name)
+    warn('App reloaded, redirecting to home view: ' + route.name)
     router.replace({ name: 'home' })
   }
 

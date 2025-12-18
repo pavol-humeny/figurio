@@ -871,7 +871,7 @@ export function useViewportWrapper(viewportStore, imageStore, editorStore, uiSto
    * Padding for the background mode buttons
    */
   const backgroundModePadding = computed(() => {
-    return uiStore.rulersEnabled ? '25px' : '10px'
+    return uiStore.rulersEnabled ? '25px' : '15px'
   })
 
   // ------------------------------

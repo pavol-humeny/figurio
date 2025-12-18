@@ -1,7 +1,7 @@
 import { PDFDocument } from 'pdf-lib'
 
 /**
- * Crop operation for canvas, overlay and PDF (pipeline-style)
+ * Crop operation for canvas, overlay and PDF
  *
  * @param {object} ctx
  * @param {HTMLCanvasElement} ctx.srcCanvas source canvas
@@ -24,9 +24,7 @@ import { PDFDocument } from 'pdf-lib'
 export async function cropOperation({ srcCanvas, srcPdfBytes, srcOverlay, params }) {
   const { x, y, width, height } = params
 
-  // ---------------------------
   // PDF
-  // ---------------------------
   let pdfBytes = srcPdfBytes ?? null
   if (pdfBytes) {
     const pdf = await PDFDocument.load(pdfBytes)
@@ -49,9 +47,7 @@ export async function cropOperation({ srcCanvas, srcPdfBytes, srcOverlay, params
     pdfBytes = await newPdf.save()
   }
 
-  // ---------------------------
   // Canvas
-  // ---------------------------
   const canvas = document.createElement('canvas')
   canvas.width = width
   canvas.height = height
@@ -59,9 +55,7 @@ export async function cropOperation({ srcCanvas, srcPdfBytes, srcOverlay, params
   const ctx = canvas.getContext('2d')
   ctx.drawImage(srcCanvas, x, y, width, height, 0, 0, width, height)
 
-  // ---------------------------
   // Overlay
-  // ---------------------------
   let overlay = null
   if (srcOverlay) {
     overlay = document.createElement('canvas')

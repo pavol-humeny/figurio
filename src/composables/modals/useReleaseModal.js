@@ -69,7 +69,6 @@ export function useReleaseModal() {
    * Scroll down the patch notes modal content
    */
   const scrollDown = () => {
-    console.log('scrollDown')
     releaseContentRef.value?.scrollBy({ top: 20, behavior: 'auto' })
   }
 

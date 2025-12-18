@@ -2,20 +2,30 @@ import { globalConfig } from '@/config/globalConfig'
 import { useToastModal } from '@/composables/modals/useToastModal'
 import { useConsole } from '@/composables/common/useConsole'
 import { editorConfig } from '@/config/editorConfig'
-
 import * as pdfjsLib from 'pdfjs-dist/legacy/build/pdf'
 import { PDFDocument } from 'pdf-lib'
 import { useImageAnalysis } from '@/composables/tools/useImageAnalysis'
 import { useGeneralModal } from '@/composables/modals/useGeneralModal'
 import { useImagePipeline } from '@/composables/editor/useImagePipeline'
-
+import { useImportModal } from '@/composables/modals/useImportModal'
 pdfjsLib.GlobalWorkerOptions.workerSrc =
   'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js'
 
-const { log } = useConsole()
+const { log, warn } = useConsole()
 const { showToastModal } = useToastModal()
 const { showGeneralModal } = useGeneralModal()
 
+/**
+ * Service for importing files into the application, handling validations and state management
+ * @param {ReturnType<typeof import('@/stores/userModeStore').useUserModeStore>} userModeStore - User mode store for feature access
+ * @param {ReturnType<typeof import('@/stores/workspaceStore').useWorkspaceStore>} workspaceStore - Workspace store for tab management
+ * @param {ReturnType<typeof import('@/stores/uiStore').useUiStore>} uiStore - UI store for loading state
+ * @param {ReturnType<typeof import('@/stores/imageStore').useImageStore>} imageStore - Image store for image data
+ * @param {ReturnType<typeof import('@/stores/viewportStore').useViewportStore>} viewportStore - Viewport store for view settings
+ * @param {ReturnType<typeof import('@/stores/historyStore').useHistoryStore>} historyStore - History store for undo/redo functionality
+ * @param {(key: string) => string} t - Translation function
+ * @returns {Object} - Object containing the openFileInput function
+ */
 export function importFileService(
   userModeStore,
   workspaceStore,
@@ -26,6 +36,7 @@ export function importFileService(
   t,
 ) {
   const { resetPipeline } = useImagePipeline(imageStore, uiStore)
+  const { closeImportModal } = useImportModal()
   /**
    * Opens a file input dialog for the user to select files and processes them
    * @param {import('vue-router').Router} router - Vue router instance
@@ -133,6 +144,9 @@ export function importFileService(
       if (router.currentRoute.value.name !== 'editor') {
         await router.push({ name: 'editor' })
         await router.isReady()
+      } else {
+        // Close import modal if open
+        closeImportModal()
       }
 
       await setFile(file)
@@ -284,6 +298,7 @@ function
         historyStore.push(imageStore.getSnapshot(t))
       }
 
+      // Tutorial check for first time
       if (uiStore.tutorialStep === -1) {
         uiStore.tutorialShouldBeStartedForFirstTime = true
       }
@@ -438,7 +453,7 @@ function
     // Workspace tab
     workspaceStore.addNewTab(imageStore.fileName, imageStore.fileFormat, t)
 
-    console.warn('calculateArtifacts called from setFile - image loaded')
+    warn('calculateArtifacts called from setFile - image loaded')
 
     // Calculate image artifacts (noise)
     const { calculateArtifacts } = useImageAnalysis(imageStore, workspaceStore, uiStore, t)

@@ -1,9 +1,8 @@
 import { PDFDocument } from 'pdf-lib'
 
 /**
- * Resize operation for canvas, overlay and PDF (pipeline-style)
+ * Resize operation for canvas, overlay and PDF
  *
- * IMPORTANT:
  * Resize is absolute – it must always be computed from the original base canvas,
  * not from already resized intermediate results.
  *
@@ -17,10 +16,7 @@ import { PDFDocument } from 'pdf-lib'
 export async function resizeOperation({ baseCanvas, srcPdfBytes, srcOverlay, params }) {
   const { width, height } = params
 
-  console.warn('resizeOperation called with params:', params)
-  console.warn('Base canvas size:', baseCanvas.width, baseCanvas.height)
-
-  // 🔹 ALWAYS resize from original image
+  // ALWAYS resize from original image
   const outCanvas = document.createElement('canvas')
   outCanvas.width = width
   outCanvas.height = height

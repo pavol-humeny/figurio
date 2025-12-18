@@ -1,4 +1,6 @@
 import { operationRegistry } from './operationRegistry'
+import { useConsole } from '../common/useConsole'
+const { warn, log } = useConsole()
 
 export function useImagePipeline(imageStore, uiStore) {
   /**
@@ -53,7 +55,7 @@ export function useImagePipeline(imageStore, uiStore) {
    * @returns {{ canvas: HTMLCanvasElement, overlay: HTMLCanvasElement|null, pdfBytes: Uint8Array|null }} new state
    */
   const applyOperation = async (state, operation, meta) => {
-    console.warn('applyOperation called with operation:', operation)
+    log('Applying operation:', operation.type, operation.params)
     const executor = operationRegistry[operation.type]
     if (!executor) return state
 
@@ -68,8 +70,6 @@ export function useImagePipeline(imageStore, uiStore) {
 
     meta.dimensions = result.dimensions
 
-    console.warn('Operation result:', result)
-
     return {
       canvas: result.canvas,
       overlay: result.overlay ?? state.overlay,
@@ -82,12 +82,10 @@ export function useImagePipeline(imageStore, uiStore) {
    * @param {number} targetIndex operation index to render up to
    */
   const renderUpTo = async (targetIndex) => {
-    console.warn('renderUpTo called with targetIndex:', targetIndex)
-    // Remove checkpoints beyond targetIndex (important for undo)
-
     const pipeline = imageStore.renderPipeline
     const { baseState } = pipeline
 
+    // Remove checkpoints beyond targetIndex (for undo)
     pipeline.checkpoints = pipeline.checkpoints.filter((cp) => cp.opIndex <= targetIndex)
 
     if (!baseState) return
@@ -96,9 +94,6 @@ export function useImagePipeline(imageStore, uiStore) {
     uiStore.isApplying = true
 
     try {
-      // Add example time wait
-      // await new Promise((resolve) => setTimeout(resolve, 500))
-
       // Find nearest checkpoint
       const checkpoint = findCheckpoint(targetIndex)
 
@@ -106,16 +101,9 @@ export function useImagePipeline(imageStore, uiStore) {
       let currentDimensions
 
       if (checkpoint) {
-        // 🔹 Normal path – render from checkpoint
+        // Normal path – render from checkpoint
         state = cloneState(checkpoint.state)
         currentDimensions = { ...checkpoint.dimensions }
-
-        console.warn(
-          'Starting from checkpoint at opIndex:',
-          checkpoint.opIndex + 1,
-          'to targetIndex:',
-          targetIndex,
-        )
 
         for (let i = checkpoint.opIndex + 1; i <= targetIndex; i++) {
           const operation = imageStore.imageOperations[i]
@@ -137,8 +125,8 @@ export function useImagePipeline(imageStore, uiStore) {
           }
         }
       } else {
-        // 🔥 FALLBACK – render from baseState
-        console.warn('No checkpoint found, rendering from baseState')
+        // FALLBACK – render from baseState
+        warn('No checkpoint found, rendering from baseState')
 
         state = cloneState(pipeline.baseState)
 

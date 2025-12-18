@@ -52,7 +52,6 @@ export function useFileTabs(uiStore, viewportStore, imageStore, editorStore, t) 
         overlayCanvas.style.display = 'none'
       }
 
-      console.warn("1")
       workspaceStore.updateCurrentTabState(t)
       await workspaceStore.switchToTab(index)
 
@@ -88,7 +87,6 @@ export function useFileTabs(uiStore, viewportStore, imageStore, editorStore, t) 
     if (confirmed) {
       uiStore.isLoading = true
 
-      console.warn("2")
       workspaceStore.updateCurrentTabState(t)
       await workspaceStore.closeTab(index)
 

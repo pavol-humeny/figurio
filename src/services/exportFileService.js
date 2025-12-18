@@ -1,6 +1,5 @@
 import jsPDF from 'jspdf'
 import { svg2pdf } from 'svg2pdf.js'
-// import * as pdfjsLib from 'pdfjs-dist/legacy/build/pdf'
 import { PDFDocument, rgb, degrees, StandardFonts } from 'pdf-lib'
 import { useToastModal } from '@/composables/modals/useToastModal.js'
 import { useConsole } from '@/composables/common/useConsole.js'
@@ -10,6 +9,15 @@ const { addUserEvent } = useApi()
 const { log, error, warn } = useConsole()
 const { showToastModal } = useToastModal()
 
+/**
+ * Service for exporting files in various formats
+ * @param {ReturnType<typeof import('@/stores/imageStore').useImageStore>} imageStore - Image store for image data
+ * @param {ReturnType<typeof import('@/stores/editorStore').useEditorStore>} editorStore - Editor store for editing state
+ * @param {ReturnType<typeof import('@/stores/historyStore').useHistoryStore>} historyStore - History store for undo/redo functionality
+ * @param {ReturnType<typeof import('@/stores/viewportStore').useViewportStore>} viewportStore - Viewport store for view settings
+ * @param {(key: string) => string} t - Translation function
+ * @returns {Object} - Object containing the exportFile function
+ */
 export function exportFileService(imageStore, editorStore, historyStore, viewportStore, t) {
   /**
    * Exports the current image as PNG, JPEG, WebP, SVG, or PDF based on format settings
@@ -36,7 +44,7 @@ export function exportFileService(imageStore, editorStore, historyStore, viewpor
       reader.onload = async () => {
         const image = new Image()
         image.onload = async () => {
-          await exportAsPdf(image, width, height)
+          await exportAsPdf(image)
 
           showToastModal(
             'success',
@@ -88,8 +96,6 @@ export function exportFileService(imageStore, editorStore, historyStore, viewpor
    * @returns {Promise<void>}
    */
   const exportAsRaster = async (image, width, height, quality) => {
-    console.warn('W x H raster export:', width, height, quality)
-
     const mimeType =
       imageStore.newFileFormat === 'jpeg' || imageStore.newFileFormat === 'jpg'
         ? 'image/jpeg'
@@ -122,13 +128,9 @@ export function exportFileService(imageStore, editorStore, historyStore, viewpor
    * Exports the rendered image and optional SVG objects/frame as a PDF
    * using jsPDF and svg2pdf.
    * @param {HTMLImageElement} image - Base image to include in PDF
-   * @param {number} width - Width of the PDF page
-   * @param {number} height - Height of the PDF page
    * @returns {Promise<void>}
    */
-  const exportAsPdf = async (image, width, height) => {
-    console.warn('W x H pdf export:', width, height)
-
+  const exportAsPdf = async (image) => {
     const { finalWidth, finalHeight, targetWidth, targetHeight, offsetX, offsetY } = useFrameTool(
       imageStore,
       historyStore,
@@ -439,19 +441,6 @@ export function exportFileService(imageStore, editorStore, historyStore, viewpor
           const x = parseNum(attrs.x, 0) + offsetX
           const y = parseNum(attrs.y, 0) + offsetY
 
-          // SVG uses dominant-baseline="middle"
-          // PDF uses text baseline -> compensate
-          // console.warn(
-          //   'PDF text baseline correction for size:',
-          //   fontSize,
-          //   'without correction: ',
-          //   finalHeight - y,
-          //   'with correction: ',
-          //   finalHeight - y - fontSize * 0.35,
-          // )
-
-          // const baselineCorrection = fontSize * 0.35
-          // const pdfY = finalHeight - y - baselineCorrection
           const pdfY = finalHeight - y
 
           const svgFontFamily = attrs['font-family'] || ''
@@ -716,7 +705,6 @@ export function exportFileService(imageStore, editorStore, historyStore, viewpor
    * @param {number} offsetY - Y offset for the SVG content
    */
   const createSvgPdf = async (pdfSvg, width, height, offsetX = 0, offsetY = 0) => {
-    console.warn('Adding SVG objects to PDF export...')
     // Defs
     const staticDefs = `
           <marker id="arrow-end" markerWidth="10" markerHeight="10" refX="3" refY="3" orient="auto" markerUnits="strokeWidth">

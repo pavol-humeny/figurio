@@ -1,7 +1,6 @@
 # Figurio
 
 15.12.
-- noise detection on undo
 - background removal kreslenie sa sekne 
 - Undo,redo optimalizacia
 
@@ -22,7 +21,6 @@
 - krok späť spôsobí zmazanie eventu artifacts warning 
 - SKIP - (asi to je v pohode tak ako to je) zoomovanie pomocou tlacitok, ak je obrazok mimo stred tak to zoomuje mimo obrázok 
 - Oblé zakončenie čiar (line tool)
-- noise detection sa zmaže pri undo operácie 
 - pri dokreslení background removal canvas sa to sekne 
 - eye dropper na safari
 - zatvaranie pdf je strasne pomale

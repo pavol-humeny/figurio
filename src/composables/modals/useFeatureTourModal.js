@@ -1,7 +1,8 @@
 import { ref } from 'vue'
 import { useApi } from '@/composables/common/useApi'
 import { globalConfig } from '@/config/globalConfig.js'
-
+import { useConsole } from '@/composables/common/useConsole.js'
+const { warn } = useConsole()
 const { addUserEvent } = useApi()
 
 /**
@@ -69,13 +70,12 @@ export function useFeatureTourModal() {
    * @param {string} identifier
    */
   const openSingleFeatureTourModal = (identifier) => {
-    console.log('openSingleFeatureTourModal', identifier)
     if (isVisible.value) return
     if (!identifier) return
 
     // Check if the identifier exists
     if (!globalConfig.listOfTooltipVideos.includes(identifier)) {
-      console.warn(`Feature tour video identifier "${identifier}" does not exist.`)
+      warn(`Feature tour video identifier "${identifier}" does not exist.`)
       return
     }
 

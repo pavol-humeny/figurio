@@ -184,8 +184,6 @@ export function useSvgFunctions(imageStore) {
       cy: imgHeight / 2,
     })
 
-    console.warn('Snap edge targets:', targets)
-
     return targets
   }
 

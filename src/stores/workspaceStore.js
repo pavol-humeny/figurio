@@ -42,8 +42,6 @@ export const useWorkspaceStore = defineStore('workspaceStore', {
       const historySnapshot = structuredClone(historyStore.getFullSnapshot())
       const viewportSnapshot = structuredClone(viewportStore.getFullSnapshot())
 
-      console.warn('immageSnapshot:', imageSnapshot)
-
       const id = Date.now()
 
       log('!!!!!!! Adding new tab:', id, name)
@@ -138,7 +136,6 @@ export const useWorkspaceStore = defineStore('workspaceStore', {
      * Save current state to the active tab snapshot.
      */
     updateCurrentTabState(t) {
-      console.warn('updateCurrentTabState called for tab index:', this.activeTabIndex)
       if (this.activeTabIndex === -1) return
 
       const imageStore = useImageStore()
@@ -167,7 +164,6 @@ export const useWorkspaceStore = defineStore('workspaceStore', {
 
       const nextIndex = (this.activeTabIndex + 1) % this.tabs.length
 
-      console.warn('5')
       this.updateCurrentTabState(t)
       this.switchToTab(nextIndex)
     },
@@ -180,7 +176,6 @@ export const useWorkspaceStore = defineStore('workspaceStore', {
 
       const prevIndex = (this.activeTabIndex - 1 + this.tabs.length) % this.tabs.length
 
-      console.warn('26')
       this.updateCurrentTabState(t)
       this.switchToTab(prevIndex)
     },

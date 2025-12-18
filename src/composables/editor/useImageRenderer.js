@@ -153,15 +153,13 @@ export function useImageRenderer(
    * Render base image
    */
   const renderCanvas = async () => {
-    console.log('--- renderCanvas called: ---', blockRender.value)
+    log('--- renderCanvas called: ---', blockRender.value)
 
     if (blockRender.value) return
     blockRender.value = true
 
     // Wait one tick (needed for background rasterization)
     await nextTick()
-
-    console.warn('FileType in renderCanvas:', imageStore.fileType, imageStore.showPdfAsImage)
 
     if (imageStore.fileType === 'pdf' && !imageStore.showPdfAsImage) {
       // await new Promise((resolve) => setTimeout(resolve, 100))
@@ -413,7 +411,6 @@ export function useImageRenderer(
     ],
     async ([newImage, newPdfBytes, newFileType, newOverlayImage]) => {
       if (newImage || newPdfBytes || newFileType || newOverlayImage) {
-        console.warn('Image type: ', newFileType, imageStore.showPdfAsImage)
         log('#################### Image or PDF or file Type changed, re-rendering all...')
         renderAll()
       }

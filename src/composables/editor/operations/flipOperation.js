@@ -1,5 +1,3 @@
-// import { PDFDocument, degrees } from 'pdf-lib'
-
 /**
  * Flip operation for canvas, overlay and PDF (pipeline-style)
  *
@@ -18,7 +16,6 @@
  */
 export async function flipOperation({ srcCanvas, srcPdfBytes, srcOverlay, params }) {
   const { direction } = params
-  console.warn('flipOperation called with direction:', direction)
 
   let pdfBytes = srcPdfBytes ?? null
   let overlay = srcOverlay ?? null

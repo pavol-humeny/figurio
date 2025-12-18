@@ -311,8 +311,6 @@ export function useHelpModal(uiStore, imageStore, editorStore, userModeStore, ro
       }
     }
 
-    console.warn('Submitting contact form')
-
     if (sendContactFormDisabled.value) return
 
     // Check again before submission

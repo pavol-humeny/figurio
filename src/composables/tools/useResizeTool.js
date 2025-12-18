@@ -2,10 +2,7 @@ import { ref, nextTick, watch } from 'vue'
 import { useToastModal } from '../modals/useToastModal'
 import { editorConfig } from '@/config/editorConfig'
 import { useMath } from '../common/useMath'
-import { PDFDocument } from 'pdf-lib'
 import { useConfirmModal } from '../modals/useConfirmModal'
-import { useConsole } from '@/composables/common/useConsole.js'
-const { error } = useConsole()
 import { useApi } from '@/composables/common/useApi'
 const { addUserEvent } = useApi()
 import { useImagePipeline } from '../editor/useImagePipeline'
@@ -208,119 +205,7 @@ export function useResizeTool(imageStore, historyStore, viewportStore, uiStore, 
 
     await renderUpTo(imageStore.renderPipeline.currentOpIndex + 1)
 
-    // await applyResizeRender(fileDimensionWidth.value, fileDimensionHeight.value)
-
     historyStore.push(imageStore.getSnapshot(t))
-  }
-
-  /**
-   * Resize the current canvas and update imageStore accordingly
-   *
-   * @param {number} width - Target width
-   * @param {number} height - Target height
-   */
-  const applyResizeRender = async (width, height) => {
-    if (width <= 0 || height <= 0) {
-      showToastModal(
-        'error',
-        t('tools.transform.settings.resize.invalidResizeDimensions.title'),
-        t('tools.transform.settings.resize.invalidResizeDimensions.message'),
-      )
-      return
-    }
-
-    const oldImage = imageStore.originalImage
-    if (!oldImage) return
-
-    // Pdf resize
-    if (imageStore.fileType === 'pdf' && imageStore.pdfPageBytes) {
-      try {
-        const existingPdf = await PDFDocument.load(imageStore.pdfPageBytes)
-        const oldPage = existingPdf.getPage(0)
-
-        const newPdf = await PDFDocument.create()
-        const newPage = newPdf.addPage([width, height])
-        const [embeddedPage] = await newPdf.embedPages([oldPage])
-
-        newPage.drawPage(embeddedPage, { x: 0, y: 0, width, height })
-
-        imageStore.pdfPageBytes = await newPdf.save()
-
-        imageStore.fileDimensions = {
-          width,
-          height,
-          fileAspectRatio: width / height || 1,
-        }
-
-        viewportStore.shouldFitToScreen = true
-        return
-      } catch (e) {
-        error('Error resizing PDF:', e)
-      }
-    }
-
-    // Image resize
-    const canvas = document.createElement('canvas')
-    const ctx = canvas.getContext('2d')
-    canvas.width = oldImage.width
-    canvas.height = oldImage.height
-    ctx.drawImage(oldImage, 0, 0)
-
-    const imgData = ctx.getImageData(0, 0, oldImage.width, oldImage.height)
-
-    uiStore.isApplying = true
-
-    try {
-      const worker = new Worker(new URL('@/composables/worker/resizeWorker.js', import.meta.url))
-
-      const resized = await new Promise((resolve) => {
-        worker.onmessage = (e) => {
-          resolve(e.data)
-          worker.terminate()
-        }
-
-        worker.postMessage({
-          imageData: imgData,
-          width,
-          height,
-          oldWidth: oldImage.width,
-          oldHeight: oldImage.height,
-        })
-      })
-
-      // draw result
-      const outCanvas = document.createElement('canvas')
-      const outCtx = outCanvas.getContext('2d')
-      outCanvas.width = width
-      outCanvas.height = height
-      outCtx.putImageData(resized, 0, 0)
-
-      imageStore.setRenderedImage(outCanvas)
-
-      imageStore.fileDimensions = {
-        width,
-        height,
-        fileAspectRatio: width / height || 1,
-      }
-
-      // overlay scaling stays same (2D draw)
-      if (imageStore.overlayImage) {
-        const overlayCanvas = document.createElement('canvas')
-        overlayCanvas.width = width
-        overlayCanvas.height = height
-
-        const octx = overlayCanvas.getContext('2d')
-        octx.drawImage(imageStore.overlayImage, 0, 0, width, height)
-
-        imageStore.overlayImage = overlayCanvas
-        imageStore.overlayImageExport = overlayCanvas
-        imageStore.overlayImagePreview = overlayCanvas
-      }
-
-      viewportStore.shouldFitToScreen = true
-    } finally {
-      uiStore.isApplying = false
-    }
   }
 
   return {
@@ -333,7 +218,6 @@ export function useResizeTool(imageStore, historyStore, viewportStore, uiStore, 
     FileDimensionHeightInputRef,
     updateFileDimension,
     applyResize,
-    applyResizeRender,
     resetResize,
   }
 }
