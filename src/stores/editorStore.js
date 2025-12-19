@@ -126,7 +126,7 @@ export const useEditorStore = defineStore('editorStore', {
 
     /** Whether any modal is open */
     isModalOpenFlag: false,
-    
+
     /**
      * Random events state
      */
@@ -142,6 +142,10 @@ export const useEditorStore = defineStore('editorStore', {
       christmasTree: getBoolean(
         `${globalConfig.LOCAL_STORAGE_PREFIX}randomEvent_christmasTree`,
         globalConfig.randomEvents.christmasTree,
+      ),
+      fireworks: getBoolean(
+        `${globalConfig.LOCAL_STORAGE_PREFIX}randomEvent_fireworks`,
+        globalConfig.randomEvents.fireworks,
       ),
     },
   }),

@@ -136,6 +136,7 @@ export function useCommandLine(userModeStore, editorStore) {
         editorStore.turnOffRandomEvent('snowfall')
         editorStore.turnOffRandomEvent('christmasLights')
         editorStore.turnOffRandomEvent('christmasTree')
+        editorStore.turnOffRandomEvent('fireworks')
         warn('Random events disabled via contact form')
         addUserEvent('command', { commandIdentifier: full })
         break
@@ -144,6 +145,7 @@ export function useCommandLine(userModeStore, editorStore) {
         editorStore.turnOnRandomEvent('snowfall')
         editorStore.turnOnRandomEvent('christmasLights')
         editorStore.turnOnRandomEvent('christmasTree')
+        editorStore.turnOnRandomEvent('fireworks')
         warn('Random events enabled via contact form')
         addUserEvent('command', { commandIdentifier: full })
         break
@@ -157,6 +159,18 @@ export function useCommandLine(userModeStore, editorStore) {
       case 'turn off christmastree':
         editorStore.turnOffRandomEvent('christmasTree')
         warn('Christmas tree disabled via contact form')
+        addUserEvent('command', { commandIdentifier: full })
+        break
+
+      case 'turn on fireworks':
+        editorStore.turnOnRandomEvent('fireworks')
+        warn('Fireworks enabled via contact form')
+        addUserEvent('command', { commandIdentifier: full })
+        break
+
+      case 'turn off fireworks':
+        editorStore.turnOffRandomEvent('fireworks')
+        warn('Fireworks disabled via contact form')
         addUserEvent('command', { commandIdentifier: full })
         break
 

@@ -6,8 +6,8 @@ export const userModeConfig = {
   // 'numberOfOpenedFiles',
   // 'maxNumberOfFilesToUploadSimultaneously',
   listOfCommands: [
-    'turn on <snowfall|christmasLights|christmasTree|randomEvents>', // Enable feature
-    'turn off <snowfall|christmasLights|christmasTree|randomEvents>', // Disable feature
+    'turn on <snowfall|christmasLights|christmasTree|fireworks|randomEvents>', // Enable feature
+    'turn off <snowfall|christmasLights|christmasTree|fireworks|randomEvents>', // Disable feature
     'set <option> <value>', // Set configuration option
     'reset <option>', // Reset configuration option
     'reset all', // Reset all configuration options
@@ -17,8 +17,8 @@ export const userModeConfig = {
   autocomplete: {
     root: ['help', 'man', 'turn', 'set', 'reset', 'clear', 'quit'],
     turn: ['on', 'off'],
-    'turn on': ['snowfall', 'christmasLights', 'christmasTree', 'randomEvents'],
-    'turn off': ['snowfall', 'christmasLights', 'christmasTree', 'randomEvents'],
+    'turn on': ['snowfall', 'christmasLights', 'christmasTree', 'fireworks', 'randomEvents'],
+    'turn off': ['snowfall', 'christmasLights', 'christmasTree', 'fireworks', 'randomEvents'],
     set: ['primaryColor'],
     reset: ['primaryColor', 'all'],
   },
@@ -29,13 +29,14 @@ export const userModeConfig = {
           turn on - Enable a specific feature
 
       SYNOPSIS
-          turn on <snowfall|christmasLights|christmasTree|randomEvents>
+          turn on <snowfall|christmasLights|christmasTree|fireworks|randomEvents>
 
       DESCRIPTION
           Enables the chosen feature:
             snowfall        Start snowfall effect
             christmasLights Turn on Christmas lights
             christmasTree   Show Christmas tree
+            fireworks       Start fireworks display
             randomEvents    Enable all events
       `,
     'turn off': `
@@ -43,13 +44,14 @@ export const userModeConfig = {
           turn off - Disable a specific feature
 
       SYNOPSIS
-          turn off <snowfall|christmasLights|christmasTree|randomEvents>
+          turn off <snowfall|christmasLights|christmasTree|fireworks|randomEvents>
 
       DESCRIPTION
           Disables the chosen feature:
             snowfall        Stop snowfall effect
             christmasLights Turn off Christmas lights
             christmasTree   Hide Christmas tree
+            fireworks       Stop fireworks display
             randomEvents    Disable random events
       `,
     help: `
