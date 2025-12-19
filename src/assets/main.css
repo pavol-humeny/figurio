@@ -380,7 +380,7 @@ input[type='range']::-moz-range-thumb {
 }
 
 .two-items p{
-  text-align: center;
+  text-align: left;
 }
 
 /* Disabled state styles */

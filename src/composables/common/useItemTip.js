@@ -33,6 +33,18 @@ export function useItemTip(options = {}, uiStore, editorStore) {
   const isVisible = ref(false)
 
   /**
+   * Watch for global item tip visibility changes to hide this tooltip
+   */
+  watch(
+    () => uiStore.isItemTipVisible,
+    (newVal) => {
+      if (!newVal) {
+        isVisible.value = false
+      }
+    },
+  )
+
+  /**
    * Reference to the DOM element the tooltip is attached to
    */
   const wrapperRef = ref(null)
