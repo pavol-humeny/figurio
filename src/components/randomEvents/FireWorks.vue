@@ -7,7 +7,7 @@ import { ref, onMounted, onBeforeUnmount } from 'vue'
 const canvas = ref(null)
 let ctx = null
 let rafId = null
-let spawnInterval = null
+let eventTimer = null
 
 /* ===============================
    Physics constants
@@ -31,21 +31,21 @@ const pick = arr => arr[Math.floor(Math.random() * arr.length)]
    Color palettes
 ================================ */
 const COLOR_SETS = [
-  ['#ffd166', '#ffb703'], // gold
-  ['#ff595e', '#f94144'], // red
-  ['#4cc9f0', '#4895ef'], // blue
-  ['#cdb4db', '#9d4edd'], // violet
-  ['#ffffff'], // white
+  ['#ffd166', '#ffb703'],
+  ['#ff595e', '#f94144'],
+  ['#4cc9f0', '#4895ef'],
+  ['#cdb4db', '#9d4edd'],
+  ['#ffffff'],
 ]
 
 /* ===============================
-   Firework shell (rocket)
+   Firework shell
 ================================ */
 class Firework {
-  constructor(width, height) {
-    this.x = rand(width * 0.2, width * 0.8)
+  constructor(width, height, forcedX = null) {
+    this.x = forcedX ?? rand(width * 0.1, width * 0.9)
     this.y = height
-    this.vx = rand(-1.6, 1.6)
+    this.vx = rand(-0.6, 0.6)
     this.vy = rand(-11.5, -14)
     this.explodeY = rand(height * 0.25, height * 0.65)
     this.colors = pick(COLOR_SETS)
@@ -59,7 +59,7 @@ class Firework {
   }
 
   draw() {
-    ctx.fillStyle = this.colors
+    ctx.fillStyle = '#ffffff'
     ctx.fillRect(this.x, this.y, 2, 8)
   }
 
@@ -68,8 +68,7 @@ class Firework {
   }
 
   explode() {
-    const type = pick(['peony', 'chrysanthemum', 'willow'])
-    createExplosion(this.x, this.y, this.colors, type)
+    createExplosion(this.x, this.y, this.colors, pick(['peony', 'chrysanthemum', 'willow']))
   }
 }
 
@@ -80,29 +79,23 @@ class Particle {
   constructor(x, y, angle, speed, color, life) {
     this.x = x
     this.y = y
-
     this.vx = Math.cos(angle) * speed
     this.vy = Math.sin(angle) * speed
-
     this.life = life
     this.remaining = life
     this.color = color
     this.size = rand(0.7, 2.2)
 
-    // 🆕 realistic physics
     this.age = 0
-    this.gravityDelay = rand(10, 25) // frames before gravity
+    this.gravityDelay = rand(10, 25)
     this.gravityScale = 0
   }
 
   update() {
     this.age++
-
-    // air drag
     this.vx *= AIR_DRAG
     this.vy *= AIR_DRAG
 
-    // gravity ramp-up
     if (this.age > this.gravityDelay) {
       this.gravityScale = Math.min(this.gravityScale + 0.04, 1)
       this.vy += GRAVITY * this.gravityScale
@@ -128,42 +121,23 @@ class Particle {
 }
 
 /* ===============================
-   Explosion types
+   Explosion
 ================================ */
 function createExplosion(x, y, colors, type) {
-  let count = 0
-  let speedMin = 0
-  let speedMax = 0
-  let life = 0
+  let count = 120
+  let speedMin = 1.5
+  let speedMax = 4
+  let life = 120
 
-  switch (type) {
-    case 'peony':
-      count = 120
-      speedMin = 2.5
-      speedMax = 4.2
-      life = 100
-      break
-
-    case 'chrysanthemum':
-      count = 160
-      speedMin = 1.8
-      speedMax = 3.6
-      life = 130
-      break
-
-    case 'willow':
-      count = 140
-      speedMin = 1.0
-      speedMax = 2.0
-      life = 200
-      break
+  if (type === 'willow') {
+    speedMin = 1
+    speedMax = 2
+    life = 200
   }
 
   for (let i = 0; i < count; i++) {
     const angle = Math.random() * Math.PI * 2
-
-    // 🆕 slight upward / horizontal bias
-    const biasedAngle =
+    const biased =
       angle > Math.PI
         ? angle + rand(-0.2, 0.2)
         : angle + rand(-0.35, 0.35)
@@ -172,7 +146,7 @@ function createExplosion(x, y, colors, type) {
       new Particle(
         x,
         y,
-        biasedAngle,
+        biased,
         rand(speedMin, speedMax),
         pick(colors),
         life + rand(-20, 20),
@@ -182,19 +156,87 @@ function createExplosion(x, y, colors, type) {
 }
 
 /* ===============================
+   Launch patterns
+================================ */
+function launchSingle() {
+  fireworks.push(new Firework(canvas.value.width, canvas.value.height))
+}
+
+function launchBurst() {
+  const count = Math.floor(rand(15, 20))
+  for (let i = 0; i < count; i++) {
+    fireworks.push(new Firework(canvas.value.width, canvas.value.height))
+  }
+}
+
+function launchWave() {
+  const steps = 20
+  for (let i = 0; i < steps; i++) {
+    setTimeout(() => {
+      const x = (canvas.value.width / steps) * i
+      fireworks.push(new Firework(canvas.value.width, canvas.value.height, x))
+    }, i * 120)
+  }
+}
+
+function launchDoubleWave() {
+  const steps = 20
+  for (let i = 0; i < steps; i++) {
+    setTimeout(() => {
+      const x = (canvas.value.width / steps) * i
+      fireworks.push(new Firework(canvas.value.width, canvas.value.height, x))
+    }, i * 100)
+  }
+  for (let i = steps - 1; i >= 0; i--) {
+    setTimeout(() => {
+      const x = (canvas.value.width / steps) * i
+      fireworks.push(new Firework(canvas.value.width, canvas.value.height, x))
+    }, (steps + (steps - i)) * 100)
+  }
+}
+
+function launchFinaleMini() {
+  const duration = 3000
+  const start = performance.now()
+
+  function loop(time) {
+    if (time - start > duration) return
+    fireworks.push(new Firework(canvas.value.width, canvas.value.height))
+    setTimeout(() => requestAnimationFrame(loop), 50)
+  }
+
+  requestAnimationFrame(loop)
+}
+
+/* ===============================
+   Event scheduler
+================================ */
+function scheduleEvent() {
+  const events = [
+    launchSingle,
+    launchSingle,
+    launchBurst,
+    launchWave,
+    launchDoubleWave,
+    launchFinaleMini,
+  ]
+
+  pick(events)()
+
+  eventTimer = setTimeout(scheduleEvent, rand(1200, 2800))
+}
+
+/* ===============================
    Animation loop
 ================================ */
 function animate() {
   rafId = requestAnimationFrame(animate)
-
-  // transparent overlay
   ctx.clearRect(0, 0, canvas.value.width, canvas.value.height)
 
   for (let i = fireworks.length - 1; i >= 0; i--) {
     const fw = fireworks[i]
     fw.update()
     fw.draw()
-
     if (fw.shouldExplode()) {
       fw.explode()
       fireworks.splice(i, 1)
@@ -205,10 +247,7 @@ function animate() {
     const p = particles[i]
     p.update()
     p.draw()
-
-    if (p.isDead()) {
-      particles.splice(i, 1)
-    }
+    if (p.isDead()) particles.splice(i, 1)
   }
 }
 
@@ -218,15 +257,11 @@ function animate() {
 onMounted(() => {
   const c = canvas.value
   ctx = c.getContext('2d')
-
   c.width = window.innerWidth
   c.height = window.innerHeight
 
   animate()
-
-  spawnInterval = setInterval(() => {
-    fireworks.push(new Firework(c.width, c.height))
-  }, 450)
+  scheduleEvent()
 
   window.addEventListener('resize', () => {
     c.width = window.innerWidth
@@ -236,7 +271,7 @@ onMounted(() => {
 
 onBeforeUnmount(() => {
   cancelAnimationFrame(rafId)
-  clearInterval(spawnInterval)
+  clearTimeout(eventTimer)
 })
 </script>
 
