@@ -52,7 +52,7 @@ onMounted(() => {
 <template>
   <div v-if="props.tabs.length > 0" class="settings-tabs">
     <div class="tabs-wrapper" ref="wrapperRef">
-      <div class="tab" v-for="tab in props.tabs" :key="tab" :class="{ active: tab === activeTab, grabbing: isDragging }"
+      <div class="tab" v-for="tab in props.tabs" :key="tab" :class="{ active: tab === activeTab}"
         @click="setActiveTab(tab)" @mousedown="startDragging">
         {{ $t(`tools.${editorStore.selectedToolKey}.settings.${tab}.label`) }}
       </div>
@@ -100,9 +100,9 @@ onMounted(() => {
   background: var(--secondary-c);
 }
 
-.tab.grabbing {
+/* .tab.grabbing {
   cursor: grabbing;
-}
+} */
 
 .tab.active {
   background: var(--secondary-c);

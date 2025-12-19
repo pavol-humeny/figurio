@@ -15,7 +15,7 @@
 ## TODO 
 - Rámik monitoru 
 - Vylepšenie rámiku pre prehliadače 
-- Hláška o tom že sa nedajú vykresliť tlačidlá telefónu sa vypisuje viac krát
+- DONE - MOZNO VYMYSLIET LEPSIE (TERAZ SA NEZOBRAZUJE VOBEC)Hláška o tom že sa nedajú vykresliť tlačidlá telefónu sa vypisuje viac krát
 - Videá pre nástroje 
 - Videá pre feature tour p
 - SKIP - (asi to je v pohode tak ako to je) zoomovanie pomocou tlacitok, ak je obrazok mimo stred tak to zoomuje mimo obrázok 

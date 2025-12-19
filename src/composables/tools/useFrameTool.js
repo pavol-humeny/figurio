@@ -1,5 +1,5 @@
 import { ref, watch, computed, nextTick } from 'vue'
-import { useToastModal } from '../modals/useToastModal'
+// import { useToastModal } from '../modals/useToastModal'
 import { editorConfig } from '@/config/editorConfig'
 import { useConfirmModal } from '../modals/useConfirmModal'
 import { useApi } from '@/composables/common/useApi'
@@ -48,7 +48,7 @@ const footerSize = ref(0)
 const footerSizeMm = ref(0)
 
 export function useFrameTool(imageStore, historyStore, viewportStore, t) {
-  const { showToastModal } = useToastModal()
+  // const { showToastModal } = useToastModal()
   const { showConfirmModal } = useConfirmModal()
 
   /**
@@ -766,19 +766,31 @@ export function useFrameTool(imageStore, historyStore, viewportStore, t) {
    * @param {number} phoneCornerRadius - Corner radius of phone
    * @returns {boolean} True if buttons fit, false if they would overflow
    */
-  const canDrawPhoneButtons = (svgHeight, svgWidth, fw, phoneCornerRadius) => {
+  const canDrawPhoneButtons = () => {
+    const fw = imageStore.frame.width || 0
+    const svgHeightApproximation = imageStore.fileDimensions.height + fw * 2
+    const svgWidthApproximation = imageStore.fileDimensions.width + fw * 2
+    const phoneCornerRadiusApproximation = Math.max(
+      Math.floor(Math.min(svgHeightApproximation, svgWidthApproximation) * 0.06),
+      2,
+    )
+
     const volumeButtonWidth = fw / 3
     const volumeButtonHeight = volumeButtonWidth * 25
-    const volumeUpY = svgWidth * 0.4
+    const volumeUpY = svgWidthApproximation * 0.4
 
     const volumeDownY = volumeUpY + volumeButtonHeight + volumeButtonWidth * 3
 
     // Set global ref for disabled state
     phoneButtonsCanBeDrawn.value =
-      volumeDownY + volumeButtonHeight + 50 + phoneCornerRadius <= svgHeight
+      volumeDownY + volumeButtonHeight + 50 + phoneCornerRadiusApproximation <=
+      svgHeightApproximation
 
     // Check if bottom of volumeDown + margin + rounded corner exceeds frame height
-    return volumeDownY + volumeButtonHeight + 50 + phoneCornerRadius <= svgHeight
+    return (
+      volumeDownY + volumeButtonHeight + 50 + phoneCornerRadiusApproximation <=
+      svgHeightApproximation
+    )
   }
 
   /**
@@ -970,16 +982,8 @@ export function useFrameTool(imageStore, historyStore, viewportStore, t) {
       const volumeUpY = svgWidth * 0.4
       const volumeDownY = volumeUpY + volumeButtonHeight + volumeButtonWidth * 3
 
-      if (!canDrawPhoneButtons(svgHeight, svgWidth, fw, phoneCornerRadius)) {
-        if (!imageStore.phoneButtonsCanNotBeDrawnToastFlag) {
-          showToastModal(
-            'warning',
-            t('tools.frame.settings.general.phoneButtonsCanNotBeDrawn.title'),
-            t('tools.frame.settings.general.phoneButtonsCanNotBeDrawn.message'),
-          )
-          imageStore.phoneButtonsCanNotBeDrawnToastFlag = true
-        }
-        return
+      if (!canDrawPhoneButtons()) {
+        drawPhoneButtons.value = false
       }
 
       el.appendChild(
