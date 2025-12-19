@@ -249,6 +249,7 @@ export function useCommandLine(userModeStore, editorStore) {
     editorStore.turnOffRandomEvent('snowfall')
     editorStore.turnOffRandomEvent('christmasLights')
     editorStore.turnOffRandomEvent('christmasTree')
+    editorStore.turnOffRandomEvent('fireworks')
   }
 
   /**
