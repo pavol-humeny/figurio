@@ -1,0 +1,16 @@
+task_id,task_description,metric,user_01,user_02,user_03
+1,"Orezať obrázok na objekt v strede",clarity,3,2,3
+1,"Orezať obrázok na objekt v strede",task_success,1,0.5,1
+1,"Orezať obrázok na objekt v strede",error_count,1,3,0
+
+2,"Orezať obrázok na pomer 1:1",clarity,2,2,3
+2,"Orezať obrázok na pomer 1:1",task_success,1,1,0.5
+2,"Orezať obrázok na pomer 1:1",error_count,0,1,2
+
+3,"Orezať obrázok na pomer 1:1",clarity,1,2,3
+3,"Orezať obrázok na pomer 1:1",task_success,0,1,0.5
+3,"Orezať obrázok na pomer 1:1",error_count,5,1,2
+
+4,"Orezať obrázok na objekt v strede",clarity,2,2,2
+4,"Orezať obrázok na objekt v strede",task_success,1,0.5,0
+4,"Orezať obrázok na objekt v strede",error_count,1,3,6
