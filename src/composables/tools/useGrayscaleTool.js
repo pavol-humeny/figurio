@@ -4,6 +4,7 @@ import { useToastModal } from '../modals/useToastModal'
 import { useApi } from '@/composables/common/useApi'
 const { addUserEvent } = useApi()
 import { useUiStore } from '@/stores/uiStore'
+import { useImagePipeline } from '../editor/useImagePipeline'
 
 /**
  * Logic for applying grayscale
@@ -17,6 +18,7 @@ export function useGrayscaleTool(imageStore, editorStore, historyStore, t) {
   const { showConfirmModal } = useConfirmModal()
   const { showToastModal } = useToastModal()
   const uiStore = useUiStore()
+  const { renderUpTo } = useImagePipeline(imageStore, uiStore)
 
   const grayscaleType = ref(editorStore.toolsConfig.grayscale.type)
 
@@ -69,21 +71,29 @@ export function useGrayscaleTool(imageStore, editorStore, historyStore, t) {
       )
     }
 
-    imageStore.addImageOperation({
-      type: 'grayscale',
-      grayscaleType: grayscaleType.value,
-    })
-
     addUserEvent('applyOperation', {
       tool: 'grayscale',
       settings: { grayscaleType: grayscaleType.value },
     })
 
-    applyGrayscaleRender(grayscaleType.value)
+    imageStore.addImageOperation({
+      type: 'grayscale',
+      params: {
+        grayscaleType: grayscaleType.value,
+      },
+      cost: 'medium',
+      affectsGeometry: false,
+    })
+
+    await renderUpTo(imageStore.renderPipeline.currentOpIndex + 1)
+
+    historyStore.push(imageStore.getSnapshot())
+
+    // applyGrayscaleRender(grayscaleType.value)
 
     saveConfigToEditorStore()
 
-    historyStore.push(imageStore.getSnapshot(t))
+    // historyStore.push(imageStore.getSnapshot(t))
   }
 
   /**
@@ -91,45 +101,45 @@ export function useGrayscaleTool(imageStore, editorStore, historyStore, t) {
    * Supports: luminance, average, lightness
    * @param {string} type - Grayscale conversion method
    */
-  const applyGrayscaleRender = async (type) => {
-    if (type === 'none') return
+  // const applyGrayscaleRender = async (type) => {
+  //   if (type === 'none') return
 
-    const img = imageStore.getRenderedImage({ t, renderCall: false })
-    if (!img) return
+  //   const img = imageStore.getRenderedImage({ t, renderCall: false })
+  //   if (!img) return
 
-    const canvas = document.createElement('canvas')
-    const ctx = canvas.getContext('2d')
-    canvas.width = img.width
-    canvas.height = img.height
+  //   const canvas = document.createElement('canvas')
+  //   const ctx = canvas.getContext('2d')
+  //   canvas.width = img.width
+  //   canvas.height = img.height
 
-    ctx.drawImage(img, 0, 0)
-    const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height)
+  //   ctx.drawImage(img, 0, 0)
+  //   const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height)
 
-    // Set loading state
-    uiStore.isApplying = true
+  //   // Set loading state
+  //   uiStore.isApplying = true
 
-    try {
-      const worker = new Worker(new URL('@/composables/worker/grayscaleWorker.js', import.meta.url))
+  //   try {
+  //     const worker = new Worker(new URL('@/composables/worker/grayscaleWorker.js', import.meta.url))
 
-      const data = await new Promise((resolve) => {
-        worker.onmessage = (e) => {
-          resolve(e.data)
-          worker.terminate()
-        }
-        worker.postMessage({ data: imageData.data, type })
-      })
+  //     const data = await new Promise((resolve) => {
+  //       worker.onmessage = (e) => {
+  //         resolve(e.data)
+  //         worker.terminate()
+  //       }
+  //       worker.postMessage({ data: imageData.data, type })
+  //     })
 
-      // Apply the processed data back to canvas
-      imageData.data.set(data)
-      ctx.putImageData(imageData, 0, 0)
+  //     // Apply the processed data back to canvas
+  //     imageData.data.set(data)
+  //     ctx.putImageData(imageData, 0, 0)
 
-      // Update store
-      imageStore.setRenderedImage(canvas)
-    } finally {
-      // Reset loading state even if an error occurs
-      uiStore.isApplying = false
-    }
-  }
+  //     // Update store
+  //     imageStore.setRenderedImage(canvas)
+  //   } finally {
+  //     // Reset loading state even if an error occurs
+  //     uiStore.isApplying = false
+  //   }
+  // }
 
   /**
    * Save grayscale config to editor store
@@ -140,7 +150,7 @@ export function useGrayscaleTool(imageStore, editorStore, historyStore, t) {
 
   return {
     applyGrayscale,
-    applyGrayscaleRender,
+    // applyGrayscaleRender,
     grayscaleType,
     grayscaleOptions,
   }
