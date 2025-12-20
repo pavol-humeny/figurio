@@ -53,7 +53,7 @@ def visualize_csv(csv_path: str):
     plt.axhline(overall_mean, color='red', linestyle='--', linewidth=2,
                 label=f'Celkový priemer ({overall_mean:.2f})')
 
-    plt.ylim(0, 5.5)
+    plt.ylim(0, 3.5)
     plt.ylabel("Hodnotenie")
     plt.grid(axis='y', linestyle=':', alpha=0.7)
     plt.legend()
