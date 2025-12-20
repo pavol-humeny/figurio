@@ -165,28 +165,28 @@ export function useResizeTool(imageStore, historyStore, viewportStore, uiStore, 
       }
     }
 
-    if (imageStore.needMergeOverlay) {
-      const confirmed = await showConfirmModal(
-        t('tools.confirmNeedOverlayMerge.title'),
-        t('tools.confirmNeedOverlayMerge.message'),
-        t('tools.confirmNeedOverlayMerge.cancel'),
-        t('tools.confirmNeedOverlayMerge.confirm'),
-      )
-      if (confirmed) {
-        imageStore.mergeOverlayIntoImage()
-      } else {
-        return
-      }
-    }
+    // if (imageStore.needMergeOverlay) {
+    //   const confirmed = await showConfirmModal(
+    //     t('tools.confirmNeedOverlayMerge.title'),
+    //     t('tools.confirmNeedOverlayMerge.message'),
+    //     t('tools.confirmNeedOverlayMerge.cancel'),
+    //     t('tools.confirmNeedOverlayMerge.confirm'),
+    //   )
+    //   if (confirmed) {
+    //     imageStore.mergeOverlayIntoImage()
+    //   } else {
+    //     return
+    //   }
+    // }
 
-    if (imageStore.needMergeOverlay) {
-      imageStore.mergeOverlayIntoImage()
-      showToastModal(
-        'info',
-        t('tools.infoOverlayWasMerged.title'),
-        t('tools.infoOverlayWasMerged.message'),
-      )
-    }
+    // if (imageStore.needMergeOverlay) {
+    //   imageStore.mergeOverlayIntoImage()
+    //   showToastModal(
+    //     'info',
+    //     t('tools.infoOverlayWasMerged.title'),
+    //     t('tools.infoOverlayWasMerged.message'),
+    //   )
+    // }
 
     imageStore.addImageOperation({
       type: 'resize',

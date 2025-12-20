@@ -1,5 +1,5 @@
 /**
- * Grayscale operation for canvas
+ * Grayscale operation for canvas + overlay
  *
  * @param {object} ctx
  * @param {HTMLCanvasElement} ctx.srcCanvas
@@ -16,54 +16,57 @@
 export async function grayscaleOperation({ srcCanvas, srcOverlay, params }) {
   const { grayscaleType = 'luminance' } = params
 
-  const width = srcCanvas.width
-  const height = srcCanvas.height
+  const applyGrayscale = (sourceCanvas) => {
+    const canvas = document.createElement('canvas')
+    canvas.width = sourceCanvas.width
+    canvas.height = sourceCanvas.height
 
-  const canvas = document.createElement('canvas')
-  canvas.width = width
-  canvas.height = height
-  const ctx = canvas.getContext('2d')
+    const ctx = canvas.getContext('2d')
+    ctx.drawImage(sourceCanvas, 0, 0)
 
-  ctx.drawImage(srcCanvas, 0, 0)
+    const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height)
+    const data = imageData.data
 
-  const imageData = ctx.getImageData(0, 0, width, height)
-  const data = imageData.data
+    for (let i = 0; i < data.length; i += 4) {
+      const r = data[i]
+      const g = data[i + 1]
+      const b = data[i + 2]
+      // alpha (data[i + 3]) stays untouched
 
-  for (let i = 0; i < data.length; i += 4) {
-    const r = data[i]
-    const g = data[i + 1]
-    const b = data[i + 2]
+      let gray
+      switch (grayscaleType) {
+        case 'average':
+          gray = (r + g + b) / 3
+          break
 
-    let gray = 0
+        case 'lightness':
+          gray = (Math.max(r, g, b) + Math.min(r, g, b)) / 2
+          break
 
-    switch (grayscaleType) {
-      case 'average':
-        gray = (r + g + b) / 3
-        break
+        case 'luminance':
+        default:
+          gray = 0.299 * r + 0.587 * g + 0.114 * b
+          break
+      }
 
-      case 'lightness':
-        gray = (Math.max(r, g, b) + Math.min(r, g, b)) / 2
-        break
-
-      case 'luminance':
-      default:
-        gray = 0.299 * r + 0.587 * g + 0.114 * b
-        break
+      data[i] = data[i + 1] = data[i + 2] = gray
     }
 
-    data[i] = data[i + 1] = data[i + 2] = gray
+    ctx.putImageData(imageData, 0, 0)
+    return canvas
   }
 
-  ctx.putImageData(imageData, 0, 0)
+  const canvas = applyGrayscale(srcCanvas)
+  const overlay = srcOverlay ? applyGrayscale(srcOverlay) : null
 
   return {
     canvas,
-    overlay: srcOverlay ?? null,
+    overlay,
     pdfBytes: null,
     dimensions: {
-      width,
-      height,
-      fileAspectRatio: width / height || 1,
+      width: canvas.width,
+      height: canvas.height,
+      fileAspectRatio: canvas.width / canvas.height || 1,
     },
   }
 }
