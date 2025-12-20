@@ -310,29 +310,49 @@ export function useImageRenderer(
       imageStore.blurPreviewUrl = img.src
     }
 
+    // // Overlay image with drawing (brush) layer
+    // const canvas = document.getElementById('brushCanvas')
+    // const ctx = canvas.getContext('2d')
+
+    // if (imageStore.overlayImage && canvas) {
+    //   //wait
+    //   await new Promise((resolve) => setTimeout(resolve, 1))
+    //   warn('Rendering OVERLAY image...')
+
+    //   if (imageStore.historyWasChanged) {
+    //     log('Clearing OVERLAY image due to history change...')
+    //     ctx.clearRect(0, 0, canvas.width, canvas.height)
+    //     imageStore.historyWasChanged = false
+    //   }
+
+    //   ctx.drawImage(imageStore.overlayImage, 0, 0, canvas.width, canvas.height)
+    // } else {
+    //   if (canvas) {
+    //     log('Clearing OVERLAY image...')
+    //     ctx.clearRect(0, 0, canvas.width, canvas.height)
+    //     imageStore.historyWasChanged = false
+    //   }
+    // }
     // Overlay image with drawing (brush) layer
     const canvas = document.getElementById('brushCanvas')
+    if (!canvas) {
+      blockRender.value = false
+      return
+    }
+
     const ctx = canvas.getContext('2d')
 
-    if (imageStore.overlayImage && canvas) {
-      //wait
-      await new Promise((resolve) => setTimeout(resolve, 1))
+    // 1️⃣ vždy najprv clear
+    ctx.clearRect(0, 0, canvas.width, canvas.height)
+
+    // 2️⃣ ak existuje overlay → nakresli
+    if (imageStore.overlayImage) {
       warn('Rendering OVERLAY image...')
-
-      if (imageStore.historyWasChanged) {
-        log('Clearing OVERLAY image due to history change...')
-        ctx.clearRect(0, 0, canvas.width, canvas.height)
-        imageStore.historyWasChanged = false
-      }
-
       ctx.drawImage(imageStore.overlayImage, 0, 0, canvas.width, canvas.height)
-    } else {
-      if (canvas) {
-        log('Clearing OVERLAY image...')
-        ctx.clearRect(0, 0, canvas.width, canvas.height)
-        imageStore.historyWasChanged = false
-      }
     }
+
+    // 3️⃣ reset flagu
+    imageStore.historyWasChanged = false
 
     // // Save initial state to history if empty
     // if (historyStore.history.length === 0) {

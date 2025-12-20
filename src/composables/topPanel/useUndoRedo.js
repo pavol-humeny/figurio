@@ -37,7 +37,7 @@ export function useUndoRedo(historyStore, imageStore, uiStore) {
     const snapshot = historyStore.undo()
     if (!snapshot) return
 
-    imageStore.applySnapshot(snapshot)
+    await imageStore.applySnapshot(snapshot)
     await renderUpTo(snapshot.opIndex)
   }
 
@@ -53,7 +53,7 @@ export function useUndoRedo(historyStore, imageStore, uiStore) {
     const snapshot = historyStore.redo()
     if (!snapshot) return
 
-    imageStore.applySnapshot(snapshot)
+    await imageStore.applySnapshot(snapshot)
     await renderUpTo(snapshot.opIndex)
   }
   return {

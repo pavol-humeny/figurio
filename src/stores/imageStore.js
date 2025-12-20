@@ -261,6 +261,7 @@ export const useImageStore = defineStore('imageStore', {
      * @param {HTMLCanvasElement} overlay - The overlay image to set
      */
     setOverlay(overlay) {
+      console.warn('Setting overlay image')
       this.overlayImage = overlay
       this.overlayImageExport = overlay
       this.overlayImagePreview = overlay
@@ -329,7 +330,8 @@ export const useImageStore = defineStore('imageStore', {
      * @param {Object} operation - The image operation to add
      */
     addImageOperation(operation) {
-      this.imageOperations.push(structuredClone(operation))
+      // this.imageOperations.push(structuredClone(operation))
+      this.imageOperations.push(operation)
     },
 
     /**
@@ -1219,7 +1221,21 @@ export const useImageStore = defineStore('imageStore', {
         fileDimensions: JSON.parse(JSON.stringify(this.fileDimensions)),
 
         // OPERATIONS (SOURCE OF TRUTH)
-        imageOperations: JSON.parse(JSON.stringify(this.imageOperations)),
+        // imageOperations: JSON.parse(JSON.stringify(this.imageOperations)),
+        imageOperations: this.imageOperations.map((op) => {
+          if (op.type === 'brush') {
+            console.warn('Serializing brush operation as overlay data URL')
+            return {
+              type: 'brush',
+              overlayDataURL: op.overlay.toDataURL(),
+              cost: op.cost,
+              affectsGeometry: false,
+            }
+          }
+
+          // ostatné operácie sú čistý JSON
+          return JSON.parse(JSON.stringify(op))
+        }),
 
         // SVG / OVERLAY METADATA
         svgObjects: JSON.parse(JSON.stringify(this.svgObjects)),
@@ -1345,7 +1361,7 @@ export const useImageStore = defineStore('imageStore', {
     //   log('[applySnapshot] imageOperations (after apply):', this.imageOperations)
     // },
 
-    applySnapshot(snapshot) {
+    async applySnapshot(snapshot) {
       this.historyWasChanged = true
 
       // Restore metadata
@@ -1353,7 +1369,36 @@ export const useImageStore = defineStore('imageStore', {
       this.showPdfAsImage = snapshot.showPdfAsImage
       this.fileDimensions = JSON.parse(JSON.stringify(snapshot.fileDimensions))
 
-      this.imageOperations = JSON.parse(JSON.stringify(snapshot.imageOperations))
+      // this.imageOperations = JSON.parse(JSON.stringify(snapshot.imageOperations))
+
+      this.imageOperations = []
+
+      for (const op of snapshot.imageOperations) {
+        if (op.type === 'brush') {
+          const img = new Image()
+
+          await new Promise((resolve) => {
+            img.onload = () => {
+              const canvas = document.createElement('canvas')
+              canvas.width = img.width
+              canvas.height = img.height
+              canvas.getContext('2d').drawImage(img, 0, 0)
+
+              this.imageOperations.push({
+                type: 'brush',
+                overlay: canvas,
+                cost: 'low',
+                affectsGeometry: false,
+              })
+
+              resolve()
+            }
+            img.src = op.overlayDataURL
+          })
+        } else {
+          this.imageOperations.push(JSON.parse(JSON.stringify(op)))
+        }
+      }
 
       this.svgObjects = JSON.parse(JSON.stringify(snapshot.svgObjects))
       this.blurObjects = JSON.parse(JSON.stringify(snapshot.blurObjects))
@@ -1396,7 +1441,21 @@ export const useImageStore = defineStore('imageStore', {
           : null,
 
         // PIPELINE
-        imageOperations: JSON.parse(JSON.stringify(this.imageOperations)),
+        // imageOperations: JSON.parse(JSON.stringify(this.imageOperations)),
+        imageOperations: this.imageOperations.map((op) => {
+          if (op.type === 'brush') {
+            console.warn('Serializing brush operation as overlay data URL')
+            return {
+              type: 'brush',
+              overlayDataURL: op.overlay.toDataURL(),
+              cost: op.cost,
+              affectsGeometry: false,
+            }
+          }
+
+          // ostatné operácie sú čistý JSON
+          return JSON.parse(JSON.stringify(op))
+        }),
         currentOpIndex: this.renderPipeline.currentOpIndex,
 
         // DIMENSIONS
@@ -1449,7 +1508,35 @@ export const useImageStore = defineStore('imageStore', {
       this.pdfPageBytes = snapshot.pdfPageBytes ? new Uint8Array(snapshot.pdfPageBytes) : null
 
       // PIPELINE (LOGICAL)
-      this.imageOperations = JSON.parse(JSON.stringify(snapshot.imageOperations))
+      // this.imageOperations = JSON.parse(JSON.stringify(snapshot.imageOperations))
+      this.imageOperations = []
+
+      for (const op of snapshot.imageOperations) {
+        if (op.type === 'brush') {
+          const img = new Image()
+
+          await new Promise((resolve) => {
+            img.onload = () => {
+              const canvas = document.createElement('canvas')
+              canvas.width = img.width
+              canvas.height = img.height
+              canvas.getContext('2d').drawImage(img, 0, 0)
+
+              this.imageOperations.push({
+                type: 'brush',
+                overlay: canvas,
+                cost: 'low',
+                affectsGeometry: false,
+              })
+
+              resolve()
+            }
+            img.src = op.overlayDataURL
+          })
+        } else {
+          this.imageOperations.push(JSON.parse(JSON.stringify(op)))
+        }
+      }
 
       // RESET PIPELINE
       this.renderPipeline = {

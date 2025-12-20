@@ -19,6 +19,9 @@ export const editorConfig = {
   cursorResizingSensitivity: 2, // Higher = slower resizing, lower = faster
   removalHighlightColor: 'rgba(255, 0, 0, 1)',
 
+  // Brush commit time
+  brushCommitDelay: 50, // in ms
+
   // Item tip settings
   tipDelay: 700,
   tipDelayHide: 70,

@@ -30,6 +30,19 @@ export function useImagePipeline(imageStore, uiStore) {
   }
 
   /**
+   * Clone a canvas element
+   * @param {HTMLCanvasElement} src source canvas
+   * @returns {HTMLCanvasElement} cloned canvas
+   */
+  const cloneCanvas = (src) => {
+    const c = document.createElement('canvas')
+    c.width = src.width
+    c.height = src.height
+    c.getContext('2d').drawImage(src, 0, 0)
+    return c
+  }
+
+  /**
    * Find nearest checkpoint before or at the given operation index
    * @param {number} opIndex operation index
    * @returns {{ opIndex: number, canvas: HTMLCanvasElement, dimensions: object }} checkpoint
@@ -56,6 +69,15 @@ export function useImagePipeline(imageStore, uiStore) {
    */
   const applyOperation = async (state, operation, meta) => {
     log('Applying operation:', operation.type, operation.params)
+
+    if (operation.type === 'brush') {
+      return {
+        canvas: state.canvas,
+        overlay: operation.overlay ? cloneCanvas(operation.overlay) : null,
+        pdfBytes: state.pdfBytes,
+      }
+    }
+
     const executor = operationRegistry[operation.type]
     if (!executor) return state
 
@@ -82,6 +104,9 @@ export function useImagePipeline(imageStore, uiStore) {
    * @param {number} targetIndex operation index to render up to
    */
   const renderUpTo = async (targetIndex) => {
+    // wait 1 second
+    // await new Promise((resolve) => setTimeout(resolve, 1))
+
     const pipeline = imageStore.renderPipeline
     const { baseState } = pipeline
 

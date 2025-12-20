@@ -8,6 +8,8 @@ import { useEditorStore } from '@/stores/editorStore'
 import { useToastModal } from '@/composables/modals/useToastModal'
 import { useUiStore } from '@/stores/uiStore'
 import { viewportConfig } from '@/config/viewportConfig.js'
+import { useImagePipeline } from '@/composables/editor/useImagePipeline'
+import { editorConfig } from '@/config/editorConfig'
 
 const { t } = useI18n()
 const imageStore = useImageStore()
@@ -16,7 +18,7 @@ const viewportStore = useViewportStore()
 const editorStore = useEditorStore()
 const uiStore = useUiStore()
 const { showToastModal } = useToastModal()
-
+const { renderUpTo } = useImagePipeline(imageStore, uiStore)
 /**
  * Reference to the canvas
  */
@@ -34,6 +36,16 @@ const imageHeight = computed(() => imageStore.fileDimensions.height)
 const isDrawing = ref(false)
 const lastPos = ref({ x: 0, y: 0 })
 const mouseMovedSinceDown = ref(false)
+
+/**
+ * Commit timer
+ */
+let commitTimer = null
+
+/**
+ * Pending overlay snapshot for commit
+ */
+let pendingOverlaySnapshot = null
 
 
 /**
@@ -123,7 +135,7 @@ const onMouseMove = (event) => {
   lastPos.value = currentPos
 }
 
-const onMouseUpGlobal = () => {
+const onMouseUpGlobal = async () => {
   if (!isDrawing.value || editorStore.selectedToolKey !== 'brush') return
   isDrawing.value = false
 
@@ -134,15 +146,46 @@ const onMouseUpGlobal = () => {
 
   if (!canvasRef.value) return
 
-  // Save overlay AFTER drawing
-  imageStore.overlayImage = canvasRef.value
-  imageStore.overlayImageExport = canvasRef.value
-  imageStore.overlayImagePreview = canvasRef.value
+  // Clear commit timer
+  if (commitTimer) {
+    clearTimeout(commitTimer)
+    commitTimer = null
+  }
 
-  // Push snapshot to history
-  historyStore.push(imageStore.getSnapshot(t))
+  // CLONE overlay canvas
+  const overlaySnapshot = document.createElement('canvas')
+  overlaySnapshot.width = canvasRef.value.width
+  overlaySnapshot.height = canvasRef.value.height
+  overlaySnapshot.getContext('2d').drawImage(canvasRef.value, 0, 0)
+
+  // Add last overlay snapshot to pending
+  pendingOverlaySnapshot = overlaySnapshot
+
+  // Commit brush operation
+  commitTimer = setTimeout(commitBrushOperation, editorConfig.brushCommitDelay)
 
   mouseMovedSinceDown.value = false
+}
+
+/**
+ * Commit brush operation to image store
+ */
+const commitBrushOperation = async () => {
+  if (!pendingOverlaySnapshot) return
+
+  imageStore.addImageOperation({
+    type: 'brush',
+    overlay: pendingOverlaySnapshot,
+    cost: 'low',
+    affectsGeometry: false,
+  })
+
+  pendingOverlaySnapshot = null
+  commitTimer = null
+
+  await renderUpTo(imageStore.renderPipeline.currentOpIndex + 1)
+
+  historyStore.push(imageStore.getSnapshot(t))
 }
 
 /**
@@ -179,10 +222,11 @@ onMounted(() => {
   window.addEventListener('mousedown', onMouseDown)
 })
 
-onBeforeUnmount(() => {
+onBeforeUnmount(async () => {
   window.removeEventListener('mouseup', onMouseUpGlobal)
   window.removeEventListener('mousemove', onMouseMove)
   window.removeEventListener('mousedown', onMouseDown)
+  await commitBrushOperation()
 })
 </script>
 
