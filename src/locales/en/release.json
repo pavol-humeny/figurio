@@ -26,7 +26,8 @@
           "Reset viewport when switching tabs",
           "Hide brush cursor when hovering over viewport settings buttons",
           "Fix issue with noise detection alert not showing correctly after undo operation",
-          "Fix issue with showing multiple item tips at once"
+          "Fix issue with showing multiple item tips at once",
+          "Set correct contact email address in contact form"
         ]
       }
     },
