@@ -27,7 +27,7 @@
 - Zjednodušiť nápovedy - tipy (kratšie texty)
 - achievementy
 - high noise leven in image by sa pri crop, resize... asi mal odstranit (ten warning)
-- divne sa zobrazuju 2 item tipy sucasne
+- blur, ak bol blue objekt zmazany a klikne sa (ide sa kreslit novy) tak to zvyrazni ten stary
 
 ## TODO
 - spracovanie pdf súborov 

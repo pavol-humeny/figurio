@@ -67,7 +67,7 @@ export function useImagePipeline(imageStore, uiStore) {
    * @param {object} meta metadata object to store additional info
    * @returns {{ canvas: HTMLCanvasElement, overlay: HTMLCanvasElement|null, pdfBytes: Uint8Array|null }} new state
    */
-  const applyOperation = async (state, operation, meta) => {
+  const applyOperation = async (state, operation, meta, ctx) => {
     log('Applying operation:', operation.type, operation.params)
 
     if (operation.type === 'brush') {
@@ -88,6 +88,7 @@ export function useImagePipeline(imageStore, uiStore) {
       srcPdfBytes: state.pdfBytes,
       srcOverlay: state.overlay,
       params: operation.params,
+      ctx,
     })
 
     meta.dimensions = result.dimensions
@@ -103,10 +104,7 @@ export function useImagePipeline(imageStore, uiStore) {
    * Render image up to the specified operation index
    * @param {number} targetIndex operation index to render up to
    */
-  const renderUpTo = async (targetIndex) => {
-    // wait 1 second
-    // await new Promise((resolve) => setTimeout(resolve, 1))
-
+  const renderUpTo = async (targetIndex, ctx = {}) => {
     const pipeline = imageStore.renderPipeline
     const { baseState } = pipeline
 
@@ -135,7 +133,7 @@ export function useImagePipeline(imageStore, uiStore) {
           if (!operation) continue
 
           const meta = {}
-          state = await applyOperation(state, operation, meta)
+          state = await applyOperation(state, operation, meta, ctx)
 
           if (meta.dimensions && operation.affectsGeometry !== false) {
             currentDimensions = meta.dimensions

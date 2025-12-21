@@ -1,14 +1,18 @@
 import { ref, watch, computed } from 'vue'
 import { editorConfig } from '@/config/editorConfig.js'
 import { useConfirmModal } from '@/composables/modals/useConfirmModal.js'
+import { useApi } from '../common/useApi'
+const { addUserEvent } = useApi()
+import { useImagePipeline } from '../editor/useImagePipeline.js'
 
 /**
  * Size of the brush tool
  */
 const brushToolSize = ref(0)
 
-export function useBrushTool(imageStore, historyStore, editorStore, t) {
+export function useBrushTool(imageStore, historyStore, editorStore, uiStore, t) {
   const { showConfirmModal } = useConfirmModal()
+  const { renderUpTo } = useImagePipeline(imageStore, uiStore)
 
   /**
    * Color of the brush tool (initialized from store)
@@ -72,8 +76,26 @@ export function useBrushTool(imageStore, historyStore, editorStore, t) {
       )
       if (!confirmed) return
 
-      await imageStore.rasterize(t, true)
+      // await imageStore.rasterize(t, true)
 
+      // historyStore.push(imageStore.getSnapshot(t))
+
+      // Register operation in the operation list
+      imageStore.addImageOperation({
+        type: 'rasterize',
+        params: {},
+        cost: 'high',
+        affectsGeometry: true,
+      })
+
+      addUserEvent('applyOperation', {
+        tool: 'rasterize',
+        settings: {},
+      })
+
+      await renderUpTo(imageStore.renderPipeline.currentOpIndex + 1, { t, imageStore })
+
+      // Push to undo history
       historyStore.push(imageStore.getSnapshot(t))
     }
   }

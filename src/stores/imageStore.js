@@ -617,29 +617,208 @@ export const useImageStore = defineStore('imageStore', {
      * @param {boolean} storeAsNew - Whether to store the result in `newRenderedImage` or update current `renderedImage`
      * @returns {Promise<void>}
      */
-    async rasterize(
-      t,
-      generateOverlay = false,
-      width = null,
-      height = null,
-      storeAsNew = false,
-      generateMagnifyAreaOverlay = false,
-    ) {
-      if (this.svgObjects.length === 0 && this.blurObjects.length === 0) return
+    // async rasterize(
+    //   t,
+    //   generateOverlay = false,
+    //   width = null,
+    //   height = null,
+    //   storeAsNew = false,
+    //   generateMagnifyAreaOverlay = false,
+    // ) {
+    //   if (this.svgObjects.length === 0 && this.blurObjects.length === 0) return
 
-      log('Rasterizing image with SVG objects...')
+    //   log('Rasterizing image with SVG objects...')
 
-      // Determine target dimensions
+    //   // Determine target dimensions
+    //   const usedWidth = width ?? this.fileDimensions.width
+    //   const usedHeight = height ?? this.fileDimensions.height
+
+    //   // SVG <defs> for markers (arrows, circles, squares)
+    //   // UPDATE svg string
+    //   const staticDefs = `
+    //     <marker id="arrow-end" markerWidth="10" markerHeight="10" refX="3" refY="3" orient="auto" markerUnits="strokeWidth">
+    //       <path d="M0,0 L0,6 L6,3 z" fill="context-stroke" />
+    //     </marker>
+    //     `.trim()
+
+    //   const dynamicDefs = Object.values(this.svgDefs || {}).join('\n')
+
+    //   const svgDefsString = `
+    //     <defs>
+    //       ${staticDefs}
+    //       ${dynamicDefs}
+    //     </defs>
+    //   `.trim()
+
+    //   // Combine normal SVG objects
+    //   const objectsToRender = [...(this.blurObjects || []), ...(this.svgObjects || [])]
+
+    //   const svgObjectsString = objectsToRender
+    //     .map((obj) => {
+    //       const attrs = Object.entries(obj.attrs || {})
+    //         .map(([key, val]) => `${key}="${val}"`)
+    //         .join(' ')
+    //       if (obj.tag === 'text') {
+    //         return `<text ${attrs}>${obj.content || ''}</text>`
+    //       }
+    //       return `<${obj.tag} ${attrs} />`
+    //     })
+    //     .join('\n')
+
+    //   // Add blur images (already have clip-path and filter applied)
+    //   const blurImagesString = (this.blurImages || []).join('\n')
+
+    //   // Full SVG
+    //   const svgString = `
+    //     <svg xmlns="http://www.w3.org/2000/svg" width="${usedWidth}" height="${usedHeight}">
+    //       ${svgDefsString}
+    //       ${blurImagesString}
+    //       ${svgObjectsString}
+    //     </svg>
+    //   `.trim()
+
+    //   // Prepare canvas and context
+    //   const canvas = document.createElement('canvas')
+    //   canvas.width = usedWidth
+    //   canvas.height = usedHeight
+    //   const ctx = canvas.getContext('2d')
+
+    //   // Draw base image, scaled if necessary
+    //   ctx.drawImage(this.getRenderedImage({ t, renderCall: true }), 0, 0, usedWidth, usedHeight)
+
+    //   // Draw SVG overlay on top of the image
+    //   // await new Promise((resolve, reject) => {
+    //   //   const img = new Image()
+    //   //   img.onload = () => {
+    //   //     ctx.drawImage(img, 0, 0)
+    //   //     URL.revokeObjectURL(svgUrl)
+    //   //     resolve()
+    //   //   }
+    //   //   img.onerror = (e) => {
+    //   //     error('Error loading SVG overlay image', e)
+    //   //     reject(e)
+    //   //   }
+    //   //   img.src = svgUrl
+    //   // })
+
+    //   // Create overlay image from SVG (without base image)
+    //   const overlayCanvas = document.createElement('canvas')
+    //   overlayCanvas.width = usedWidth
+    //   overlayCanvas.height = usedHeight
+    //   const overlayCtx = overlayCanvas.getContext('2d')
+
+    //   // If there is already an overlay image, draw it first
+    //   if (this.overlayImageExport) {
+    //     overlayCtx.drawImage(this.overlayImageExport, 0, 0, usedWidth, usedHeight)
+    //   }
+
+    //   const svgBlob = new Blob([svgString], { type: 'image/svg+xml' })
+    //   const svgUrl = URL.createObjectURL(svgBlob)
+
+    //   await new Promise((resolve, reject) => {
+    //     const overlayImg = new Image()
+    //     overlayImg.onload = () => {
+    //       overlayCtx.drawImage(overlayImg, 0, 0)
+    //       URL.revokeObjectURL(svgUrl)
+    //       resolve()
+    //     }
+    //     overlayImg.onerror = reject
+    //     overlayImg.src = svgUrl
+    //   })
+
+    //   if (generateOverlay) {
+    //     this.overlayImageExport = overlayCanvas
+    //     this.overlayImage = overlayCanvas
+    //   }
+
+    //   // Create magnify area overlay if it is pdf export
+    //   if (generateMagnifyAreaOverlay) {
+    //     const magnifyObjects = objectsToRender.filter((obj) => obj.class === 'magnifyArea')
+
+    //     if (magnifyObjects.length > 0) {
+    //       const magnifyObjectsString = magnifyObjects
+    //         .map((obj) => {
+    //           const attrs = Object.entries(obj.attrs || {})
+    //             .map(([key, val]) => `${key}="${val}"`)
+    //             .join(' ')
+    //           if (obj.tag === 'text') {
+    //             return `<text ${attrs}>${obj.content || ''}</text>`
+    //           }
+    //           return `<${obj.tag} ${attrs} />`
+    //         })
+    //         .join('\n')
+
+    //       const magnifySvgString = `
+    //         <svg xmlns="http://www.w3.org/2000/svg" width="${usedWidth}" height="${usedHeight}">
+    //           ${svgDefsString}
+    //           ${magnifyObjectsString}
+    //         </svg>
+    //       `.trim()
+
+    //       const magnifyCanvas = document.createElement('canvas')
+    //       magnifyCanvas.width = usedWidth
+    //       magnifyCanvas.height = usedHeight
+    //       const magnifyCtx = magnifyCanvas.getContext('2d')
+
+    //       const magnifyBlob = new Blob([magnifySvgString], { type: 'image/svg+xml' })
+    //       const magnifyUrl = URL.createObjectURL(magnifyBlob)
+
+    //       await new Promise((resolve, reject) => {
+    //         const magnifyImg = new Image()
+    //         magnifyImg.onload = () => {
+    //           magnifyCtx.drawImage(magnifyImg, 0, 0)
+    //           URL.revokeObjectURL(magnifyUrl)
+    //           resolve()
+    //         }
+    //         magnifyImg.onerror = reject
+    //         magnifyImg.src = magnifyUrl
+    //       })
+
+    //       this.magnifyOverlayImage = magnifyCanvas
+    //     }
+    //     return
+    //   }
+
+    //   // Store result either as renderedImage or newRenderedImage
+    //   if (storeAsNew) {
+    //     this.newRenderedImage = canvas
+    //     this.overlayImagePreview = overlayCanvas
+    //   } else {
+    //     this.setRenderedImage(canvas)
+    //     this.newRenderedImage = null
+
+    //     // Clear svg values
+    //     this.svgObjects = []
+    //     this.selectedSvgObjectId = null
+
+    //     this.originalImage = canvas
+    //     this.blurPreviewUrl = canvas.toDataURL()
+
+    //     this.blurObjects = []
+    //     this.blurImages = []
+    //   }
+    // },
+
+    async rasterize(mode, { width = null, height = null } = {}, t) {
+      if (this.svgObjects.length === 0 && this.blurObjects.length === 0) {
+        return null
+      }
+
+      log(`[rasterize] mode = ${mode}`)
+
       const usedWidth = width ?? this.fileDimensions.width
       const usedHeight = height ?? this.fileDimensions.height
 
-      // SVG <defs> for markers (arrows, circles, squares)
-      // UPDATE svg string
+      /* =========================
+      SVG DEFINITIONS
+      ========================= */
+
       const staticDefs = `
-        <marker id="arrow-end" markerWidth="10" markerHeight="10" refX="3" refY="3" orient="auto" markerUnits="strokeWidth">
+        <marker id="arrow-end" markerWidth="10" markerHeight="10"
+          refX="3" refY="3" orient="auto" markerUnits="strokeWidth">
           <path d="M0,0 L0,6 L6,3 z" fill="context-stroke" />
         </marker>
-        `.trim()
+      `.trim()
 
       const dynamicDefs = Object.values(this.svgDefs || {}).join('\n')
 
@@ -650,10 +829,9 @@ export const useImageStore = defineStore('imageStore', {
         </defs>
       `.trim()
 
-      // Combine normal SVG objects
-      const objectsToRender = [...(this.blurObjects || []), ...(this.svgObjects || [])]
+      const allObjects = [...(this.blurObjects || []), ...(this.svgObjects || [])]
 
-      const svgObjectsString = objectsToRender
+      const svgObjectsString = allObjects
         .map((obj) => {
           const attrs = Object.entries(obj.attrs || {})
             .map(([key, val]) => `${key}="${val}"`)
@@ -665,49 +843,27 @@ export const useImageStore = defineStore('imageStore', {
         })
         .join('\n')
 
-      // Add blur images (already have clip-path and filter applied)
       const blurImagesString = (this.blurImages || []).join('\n')
 
-      // Full SVG
       const svgString = `
-        <svg xmlns="http://www.w3.org/2000/svg" width="${usedWidth}" height="${usedHeight}">
+        <svg xmlns="http://www.w3.org/2000/svg"
+            width="${usedWidth}"
+            height="${usedHeight}">
           ${svgDefsString}
           ${blurImagesString}
           ${svgObjectsString}
         </svg>
       `.trim()
 
-      // Prepare canvas and context
-      const canvas = document.createElement('canvas')
-      canvas.width = usedWidth
-      canvas.height = usedHeight
-      const ctx = canvas.getContext('2d')
+      /* =========================
+      OVERLAY (bitmap of SVG)
+      ======================== */
 
-      // Draw base image, scaled if necessary
-      ctx.drawImage(this.getRenderedImage({ t, renderCall: true }), 0, 0, usedWidth, usedHeight)
-
-      // Draw SVG overlay on top of the image
-      // await new Promise((resolve, reject) => {
-      //   const img = new Image()
-      //   img.onload = () => {
-      //     ctx.drawImage(img, 0, 0)
-      //     URL.revokeObjectURL(svgUrl)
-      //     resolve()
-      //   }
-      //   img.onerror = (e) => {
-      //     error('Error loading SVG overlay image', e)
-      //     reject(e)
-      //   }
-      //   img.src = svgUrl
-      // })
-
-      // Create overlay image from SVG (without base image)
       const overlayCanvas = document.createElement('canvas')
       overlayCanvas.width = usedWidth
       overlayCanvas.height = usedHeight
       const overlayCtx = overlayCanvas.getContext('2d')
 
-      // If there is already an overlay image, draw it first
       if (this.overlayImageExport) {
         overlayCtx.drawImage(this.overlayImageExport, 0, 0, usedWidth, usedHeight)
       }
@@ -716,87 +872,105 @@ export const useImageStore = defineStore('imageStore', {
       const svgUrl = URL.createObjectURL(svgBlob)
 
       await new Promise((resolve, reject) => {
-        const overlayImg = new Image()
-        overlayImg.onload = () => {
-          overlayCtx.drawImage(overlayImg, 0, 0)
+        const img = new Image()
+        img.onload = () => {
+          overlayCtx.drawImage(img, 0, 0)
           URL.revokeObjectURL(svgUrl)
           resolve()
         }
-        overlayImg.onerror = reject
-        overlayImg.src = svgUrl
+        img.onerror = reject
+        img.src = svgUrl
       })
 
-      if (generateOverlay) {
-        this.overlayImageExport = overlayCanvas
-        this.overlayImage = overlayCanvas
-      }
+      /* =========================
+      MODE: EXPORT PDF
+      ========================= */
 
-      // Create magnify area overlay if it is pdf export
-      if (generateMagnifyAreaOverlay) {
-        const magnifyObjects = objectsToRender.filter((obj) => obj.class === 'magnifyArea')
+      if (mode === 'export-pdf') {
+        let magnifyOverlay = null
+
+        const magnifyObjects = allObjects.filter((o) => o.class === 'magnifyArea')
 
         if (magnifyObjects.length > 0) {
-          const magnifyObjectsString = magnifyObjects
-            .map((obj) => {
-              const attrs = Object.entries(obj.attrs || {})
-                .map(([key, val]) => `${key}="${val}"`)
-                .join(' ')
-              if (obj.tag === 'text') {
-                return `<text ${attrs}>${obj.content || ''}</text>`
-              }
-              return `<${obj.tag} ${attrs} />`
-            })
-            .join('\n')
-
           const magnifySvgString = `
-            <svg xmlns="http://www.w3.org/2000/svg" width="${usedWidth}" height="${usedHeight}">
+            <svg xmlns="http://www.w3.org/2000/svg"
+                width="${usedWidth}"
+                height="${usedHeight}">
               ${svgDefsString}
-              ${magnifyObjectsString}
+              ${magnifyObjects
+                .map((obj) => {
+                  const attrs = Object.entries(obj.attrs || {})
+                    .map(([k, v]) => `${k}="${v}"`)
+                    .join(' ')
+                  return obj.tag === 'text'
+                    ? `<text ${attrs}>${obj.content || ''}</text>`
+                    : `<${obj.tag} ${attrs} />`
+                })
+                .join('\n')}
             </svg>
           `.trim()
 
-          const magnifyCanvas = document.createElement('canvas')
-          magnifyCanvas.width = usedWidth
-          magnifyCanvas.height = usedHeight
-          const magnifyCtx = magnifyCanvas.getContext('2d')
+          magnifyOverlay = document.createElement('canvas')
+          magnifyOverlay.width = usedWidth
+          magnifyOverlay.height = usedHeight
 
-          const magnifyBlob = new Blob([magnifySvgString], { type: 'image/svg+xml' })
-          const magnifyUrl = URL.createObjectURL(magnifyBlob)
+          const ctx = magnifyOverlay.getContext('2d')
+          const blob = new Blob([magnifySvgString], { type: 'image/svg+xml' })
+          const url = URL.createObjectURL(blob)
 
           await new Promise((resolve, reject) => {
-            const magnifyImg = new Image()
-            magnifyImg.onload = () => {
-              magnifyCtx.drawImage(magnifyImg, 0, 0)
-              URL.revokeObjectURL(magnifyUrl)
+            const img = new Image()
+            img.onload = () => {
+              ctx.drawImage(img, 0, 0)
+              URL.revokeObjectURL(url)
               resolve()
             }
-            magnifyImg.onerror = reject
-            magnifyImg.src = magnifyUrl
+            img.onerror = reject
+            img.src = url
           })
-
-          this.magnifyOverlayImage = magnifyCanvas
         }
-        return
+
+        return {
+          overlay: overlayCanvas,
+          magnifyOverlay,
+        }
       }
 
-      // Store result either as renderedImage or newRenderedImage
-      if (storeAsNew) {
-        this.newRenderedImage = canvas
-        this.overlayImagePreview = overlayCanvas
-      } else {
-        this.setRenderedImage(canvas)
-        this.newRenderedImage = null
+      /* =========================
+      MODE: EXPORT IMAGE
+      ========================= */
 
-        // Clear svg values
+      if (mode === 'export-image') {
+        const imageCanvas = document.createElement('canvas')
+        imageCanvas.width = usedWidth
+        imageCanvas.height = usedHeight
+
+        const ctx = imageCanvas.getContext('2d')
+        ctx.drawImage(this.getRenderedImage({ t, renderCall: true }), 0, 0, usedWidth, usedHeight)
+        ctx.drawImage(overlayCanvas, 0, 0)
+
+        return {
+          image: imageCanvas,
+          overlay: overlayCanvas,
+        }
+      }
+
+      /* =========================
+      MODE: EDITOR
+      ========================= */
+
+      if (mode === 'editor') {
         this.svgObjects = []
-        this.selectedSvgObjectId = null
-
-        this.originalImage = canvas
-        this.blurPreviewUrl = canvas.toDataURL()
-
         this.blurObjects = []
         this.blurImages = []
+        this.selectedSvgObjectId = null
+
+        return {
+          overlay: overlayCanvas,
+        }
       }
+
+      return null
     },
 
     /**
@@ -824,9 +998,19 @@ export const useImageStore = defineStore('imageStore', {
       ).calculateFrameLayout(this.newFileDimensions)
 
       // Rasterize base image + SVG objects at export size
-      await this.rasterize(t, false, targetWidth, targetHeight, true)
+      // await this.rasterize(t, false, targetWidth, targetHeight, true)
+      const rasterized = await this.rasterize(
+        'export-image',
+        {
+          width: targetWidth,
+          height: targetHeight,
+        },
+        t,
+      )
+      const overlay = rasterized?.overlay || null
 
-      const baseImage = this.newRenderedImage || this.getRenderedImage({ t, renderCall: true })
+      // const baseImage = this.newRenderedImage || this.getRenderedImage({ t, renderCall: true })
+      const baseImage = rasterized?.image || this.getRenderedImage({ t, renderCall: true })
       if (!baseImage) {
         warn('No base image available for preview generation')
         return
@@ -846,7 +1030,7 @@ export const useImageStore = defineStore('imageStore', {
         const quality = this.newFileDimensions.quality / 100
 
         // this.previewUrl = baseImage.toDataURL(mimeType, quality)
-        if (renderAsRaster && this.overlayImagePreview) {
+        if (renderAsRaster && overlay) {
           // Merge base image + overlay into a new canvas
           const mergeCanvas = document.createElement('canvas')
           mergeCanvas.width = baseImage.width
@@ -857,7 +1041,7 @@ export const useImageStore = defineStore('imageStore', {
           mergeCtx.drawImage(baseImage, 0, 0)
 
           // Draw overlay on top
-          mergeCtx.drawImage(this.overlayImagePreview, 0, 0)
+          mergeCtx.drawImage(overlay, 0, 0)
 
           this.previewUrl = mergeCanvas.toDataURL(mimeType, quality)
         } else {
@@ -919,14 +1103,29 @@ export const useImageStore = defineStore('imageStore', {
         targetHeight,
       )
 
-      if (this.overlayImagePreview) {
+      // if (this.overlayImagePreview) {
+      //   warn('Drawing overlay image on top of preview')
+      //   ctx.drawImage(
+      //     this.overlayImagePreview,
+      //     0,
+      //     0,
+      //     this.overlayImagePreview.width,
+      //     this.overlayImagePreview.height,
+      //     offsetX,
+      //     offsetY,
+      //     targetWidth,
+      //     targetHeight,
+      //   )
+      // }
+
+      if (overlay) {
         warn('Drawing overlay image on top of preview')
         ctx.drawImage(
-          this.overlayImagePreview,
+          overlay,
           0,
           0,
-          this.overlayImagePreview.width,
-          this.overlayImagePreview.height,
+          overlay.width,
+          overlay.height,
           offsetX,
           offsetY,
           targetWidth,

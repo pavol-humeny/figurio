@@ -9,6 +9,7 @@ import { useBrushTool } from '@/composables/tools/useBrushTool'
 import { useEditorStore } from '@/stores/editorStore'
 import NumberInput from '../common/NumberInput.vue'
 import ColorPicker from '../common/ColorPicker.vue'
+import { useUiStore } from '@/stores/uiStore'
 
 
 const { t } = useI18n()
@@ -28,6 +29,7 @@ const {
   useImageStore(),
   useHistoryStore(),
   useEditorStore(),
+  useUiStore(),
   t,
 )
 

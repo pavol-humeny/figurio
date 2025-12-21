@@ -568,6 +568,12 @@ export function exportFileService(imageStore, editorStore, historyStore, viewpor
         }
       }
 
+      let rasterized = null
+
+      if (imageStore.svgObjects.length || imageStore.blurObjects.length) {
+        rasterized = await imageStore.rasterize('export-pdf', {}, t)
+      }
+
       // 1. Base image
       const existingPdf = await PDFDocument.load(imageStore.pdfPageBytes)
       const pdf = await PDFDocument.create()
@@ -600,43 +606,35 @@ export function exportFileService(imageStore, editorStore, historyStore, viewpor
       // 2.25 . Magnify overlay if present (bitmap)
       if (imageStore.svgObjects.some((obj) => obj.class === 'magnifyArea')) {
         warn('Rasterizing magnify area for PDF export')
-        await imageStore.rasterize(t, false, null, null, false, true)
-
-        // Convert to PNG dataUrl
-        const overlayDataUrl = imageStore.magnifyOverlayImage.toDataURL('image/png')
+        const overlayDataUrl = rasterized.magnifyOverlay.toDataURL('image/png')
         const overlayBytes = Uint8Array.from(atob(overlayDataUrl.split(',')[1]), (c) =>
           c.charCodeAt(0),
         )
 
-        // Embed do PDF
         const overlayImage = await pdf.embedPng(overlayBytes)
 
         finalPage.drawImage(overlayImage, {
           x: 0,
           y: 0,
-          width: imageStore.magnifyOverlayImage.width,
-          height: imageStore.magnifyOverlayImage.height,
+          width: rasterized.magnifyOverlay.width,
+          height: rasterized.magnifyOverlay.height,
         })
       }
 
       // 2.5. Overlay image if present (bitmap)
-      if (imageStore.overlayImage !== null) {
-        const overlayCanvas = imageStore.overlayImage
-
-        // Convert to PNG dataUrl
-        const overlayDataUrl = overlayCanvas.toDataURL('image/png')
+      if (rasterized?.overlay) {
+        const overlayDataUrl = rasterized.overlay.toDataURL('image/png')
         const overlayBytes = Uint8Array.from(atob(overlayDataUrl.split(',')[1]), (c) =>
           c.charCodeAt(0),
         )
 
-        // Embed do PDF
         const overlayImage = await pdf.embedPng(overlayBytes)
 
         finalPage.drawImage(overlayImage, {
           x: 0,
           y: 0,
-          width: overlayCanvas.width,
-          height: overlayCanvas.height,
+          width: rasterized.overlay.width,
+          height: rasterized.overlay.height,
         })
       }
 
@@ -683,10 +681,10 @@ export function exportFileService(imageStore, editorStore, historyStore, viewpor
       }
 
       // Add magnify overlay image as extra layer
-      if (imageStore.svgObjects.some((obj) => obj.class === 'magnifyArea')) {
-        await imageStore.rasterize(t, false, null, null, false, true)
+      const rasterized = await imageStore.rasterize('export-pdf', {}, t)
 
-        const magnifyDataUrl = imageStore.magnifyOverlayImage.toDataURL('image/png')
+      if (rasterized?.magnifyOverlay) {
+        const magnifyDataUrl = rasterized.magnifyOverlay.toDataURL('image/png')
         pdf.addImage(magnifyDataUrl, 'PNG', offsetX, offsetY, image.width, image.height)
       }
 
