@@ -75,6 +75,8 @@ export const globalConfig = {
     'manualTool',
     'autoTool',
     'colorTool',
+    'brushTool',
+    'selectTool',
   ],
   listOfFeatureTourVideos: ['noiseDetection', 'cropTool', 'frameTool'],
   // Whether to update the list of seen feature tour videos on app version change
