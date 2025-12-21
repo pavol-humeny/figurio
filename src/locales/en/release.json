@@ -13,7 +13,8 @@
           "Unify help modal subtitle styles",
           "Add contact form placeholders",
           "Improve displaying of contact form field validation errors",
-          "Unify buttons styles for text style selection"
+          "Unify buttons styles for text style selection",
+          "Adjust corner radius of drag and drop area"
         ]
       },
       "newFeatures": {

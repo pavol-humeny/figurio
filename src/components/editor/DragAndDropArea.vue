@@ -94,7 +94,7 @@ onUnmounted(() => {
   gap: 10px;
   width: 100%;
   height: 100%;
-  border-radius: 20px;
+  border-radius: 15px;
   border: var(--border-drag-and-drop);
   background: var(--secondary-c);
   box-shadow: var(--box-shadow-ui);
