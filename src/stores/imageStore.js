@@ -111,20 +111,8 @@ export const useImageStore = defineStore('imageStore', {
     /** Temporary rendered image - used for saving canvas if frame with rounded corners is applied */
     tmpRenderedImage: null,
 
-    /** New rendered image - used for rasterizing SVG objects before export */
-    newRenderedImage: null,
-
     /** Overlay image - used for displaying svg objects after rasterization in pdf file */
     overlayImage: null,
-
-    /** Overlay image for preview - contains objects that can be further modified */
-    // overlayImagePreview: null,
-
-    /** Overlay image - contains objects that can not be further modified */
-    // overlayImageExport: null,
-
-    /** Overlay image for magnify area svg objects - used for displaying magnified areas in pdf export */
-    // magnifyOverlayImage: null,
 
     /** Array of SVG objects to render on the image */
     svgObjects: [
@@ -197,9 +185,6 @@ export const useImageStore = defineStore('imageStore', {
     /** Raw SVG frame for vector export */
     frameSvg: '',
 
-    /** Flag to prevent showing multiple phone buttons can not be drawn toast */
-    phoneButtonsCanNotBeDrawnToastFlag: false,
-
     /** Whether the image has artifacts (noise) */
     imageHasArtifacts: false, // TODO nepoužíva sa nikde
     /** Whether the user has canceled image artifacts display */
@@ -263,8 +248,6 @@ export const useImageStore = defineStore('imageStore', {
     setOverlay(overlay) {
       console.warn('Setting overlay image')
       this.overlayImage = overlay
-      // this.overlayImageExport = overlay
-      // this.overlayImagePreview = overlay
     },
 
     // Getters
@@ -537,21 +520,16 @@ export const useImageStore = defineStore('imageStore', {
       // IMAGES
       this.renderedImage = null
       this.tmpRenderedImage = null
-      this.newRenderedImage = null
       this.originalImage = null
 
       // OVERLAYS
       this.overlayImage = null
-      // this.overlayImageExport = null
-      // this.overlayImagePreview = null
-      // this.magnifyOverlayImage = null
 
       // SVG
       this.resetSvgObject()
 
       // FLAGS
       this.historyWasChanged = false
-      this.phoneButtonsCanNotBeDrawnToastFlag = false
       this.imageHasArtifacts = false
       this.imageArtifactsCanceledByUser = false
 
@@ -597,8 +575,6 @@ export const useImageStore = defineStore('imageStore', {
 
       // Clear overlay
       this.overlayImage = null
-      // this.overlayImageExport = null
-      // this.magnifyOverlayImage = null
     },
 
     /**
@@ -608,196 +584,6 @@ export const useImageStore = defineStore('imageStore', {
       log('Rasterizing background image...')
       this.fileType = 'image'
     },
-
-    /**
-     * Renders all SVG objects over the base image and rasterize the result into a canvas.
-     * Used to prepare the image for export as raster or PDF.
-     * @param {number|null} width - Optional width to rasterize to
-     * @param {number|null} height - Optional height to rasterize to
-     * @param {boolean} storeAsNew - Whether to store the result in `newRenderedImage` or update current `renderedImage`
-     * @returns {Promise<void>}
-     */
-    // async rasterize(
-    //   t,
-    //   generateOverlay = false,
-    //   width = null,
-    //   height = null,
-    //   storeAsNew = false,
-    //   generateMagnifyAreaOverlay = false,
-    // ) {
-    //   if (this.svgObjects.length === 0 && this.blurObjects.length === 0) return
-
-    //   log('Rasterizing image with SVG objects...')
-
-    //   // Determine target dimensions
-    //   const usedWidth = width ?? this.fileDimensions.width
-    //   const usedHeight = height ?? this.fileDimensions.height
-
-    //   // SVG <defs> for markers (arrows, circles, squares)
-    //   // UPDATE svg string
-    //   const staticDefs = `
-    //     <marker id="arrow-end" markerWidth="10" markerHeight="10" refX="3" refY="3" orient="auto" markerUnits="strokeWidth">
-    //       <path d="M0,0 L0,6 L6,3 z" fill="context-stroke" />
-    //     </marker>
-    //     `.trim()
-
-    //   const dynamicDefs = Object.values(this.svgDefs || {}).join('\n')
-
-    //   const svgDefsString = `
-    //     <defs>
-    //       ${staticDefs}
-    //       ${dynamicDefs}
-    //     </defs>
-    //   `.trim()
-
-    //   // Combine normal SVG objects
-    //   const objectsToRender = [...(this.blurObjects || []), ...(this.svgObjects || [])]
-
-    //   const svgObjectsString = objectsToRender
-    //     .map((obj) => {
-    //       const attrs = Object.entries(obj.attrs || {})
-    //         .map(([key, val]) => `${key}="${val}"`)
-    //         .join(' ')
-    //       if (obj.tag === 'text') {
-    //         return `<text ${attrs}>${obj.content || ''}</text>`
-    //       }
-    //       return `<${obj.tag} ${attrs} />`
-    //     })
-    //     .join('\n')
-
-    //   // Add blur images (already have clip-path and filter applied)
-    //   const blurImagesString = (this.blurImages || []).join('\n')
-
-    //   // Full SVG
-    //   const svgString = `
-    //     <svg xmlns="http://www.w3.org/2000/svg" width="${usedWidth}" height="${usedHeight}">
-    //       ${svgDefsString}
-    //       ${blurImagesString}
-    //       ${svgObjectsString}
-    //     </svg>
-    //   `.trim()
-
-    //   // Prepare canvas and context
-    //   const canvas = document.createElement('canvas')
-    //   canvas.width = usedWidth
-    //   canvas.height = usedHeight
-    //   const ctx = canvas.getContext('2d')
-
-    //   // Draw base image, scaled if necessary
-    //   ctx.drawImage(this.getRenderedImage({ t, renderCall: true }), 0, 0, usedWidth, usedHeight)
-
-    //   // Draw SVG overlay on top of the image
-    //   // await new Promise((resolve, reject) => {
-    //   //   const img = new Image()
-    //   //   img.onload = () => {
-    //   //     ctx.drawImage(img, 0, 0)
-    //   //     URL.revokeObjectURL(svgUrl)
-    //   //     resolve()
-    //   //   }
-    //   //   img.onerror = (e) => {
-    //   //     error('Error loading SVG overlay image', e)
-    //   //     reject(e)
-    //   //   }
-    //   //   img.src = svgUrl
-    //   // })
-
-    //   // Create overlay image from SVG (without base image)
-    //   const overlayCanvas = document.createElement('canvas')
-    //   overlayCanvas.width = usedWidth
-    //   overlayCanvas.height = usedHeight
-    //   const overlayCtx = overlayCanvas.getContext('2d')
-
-    //   // If there is already an overlay image, draw it first
-    //   if (this.overlayImageExport) {
-    //     overlayCtx.drawImage(this.overlayImageExport, 0, 0, usedWidth, usedHeight)
-    //   }
-
-    //   const svgBlob = new Blob([svgString], { type: 'image/svg+xml' })
-    //   const svgUrl = URL.createObjectURL(svgBlob)
-
-    //   await new Promise((resolve, reject) => {
-    //     const overlayImg = new Image()
-    //     overlayImg.onload = () => {
-    //       overlayCtx.drawImage(overlayImg, 0, 0)
-    //       URL.revokeObjectURL(svgUrl)
-    //       resolve()
-    //     }
-    //     overlayImg.onerror = reject
-    //     overlayImg.src = svgUrl
-    //   })
-
-    //   if (generateOverlay) {
-    //     this.overlayImageExport = overlayCanvas
-    //     this.overlayImage = overlayCanvas
-    //   }
-
-    //   // Create magnify area overlay if it is pdf export
-    //   if (generateMagnifyAreaOverlay) {
-    //     const magnifyObjects = objectsToRender.filter((obj) => obj.class === 'magnifyArea')
-
-    //     if (magnifyObjects.length > 0) {
-    //       const magnifyObjectsString = magnifyObjects
-    //         .map((obj) => {
-    //           const attrs = Object.entries(obj.attrs || {})
-    //             .map(([key, val]) => `${key}="${val}"`)
-    //             .join(' ')
-    //           if (obj.tag === 'text') {
-    //             return `<text ${attrs}>${obj.content || ''}</text>`
-    //           }
-    //           return `<${obj.tag} ${attrs} />`
-    //         })
-    //         .join('\n')
-
-    //       const magnifySvgString = `
-    //         <svg xmlns="http://www.w3.org/2000/svg" width="${usedWidth}" height="${usedHeight}">
-    //           ${svgDefsString}
-    //           ${magnifyObjectsString}
-    //         </svg>
-    //       `.trim()
-
-    //       const magnifyCanvas = document.createElement('canvas')
-    //       magnifyCanvas.width = usedWidth
-    //       magnifyCanvas.height = usedHeight
-    //       const magnifyCtx = magnifyCanvas.getContext('2d')
-
-    //       const magnifyBlob = new Blob([magnifySvgString], { type: 'image/svg+xml' })
-    //       const magnifyUrl = URL.createObjectURL(magnifyBlob)
-
-    //       await new Promise((resolve, reject) => {
-    //         const magnifyImg = new Image()
-    //         magnifyImg.onload = () => {
-    //           magnifyCtx.drawImage(magnifyImg, 0, 0)
-    //           URL.revokeObjectURL(magnifyUrl)
-    //           resolve()
-    //         }
-    //         magnifyImg.onerror = reject
-    //         magnifyImg.src = magnifyUrl
-    //       })
-
-    //       this.magnifyOverlayImage = magnifyCanvas
-    //     }
-    //     return
-    //   }
-
-    //   // Store result either as renderedImage or newRenderedImage
-    //   if (storeAsNew) {
-    //     this.newRenderedImage = canvas
-    //     this.overlayImagePreview = overlayCanvas
-    //   } else {
-    //     this.setRenderedImage(canvas)
-    //     this.newRenderedImage = null
-
-    //     // Clear svg values
-    //     this.svgObjects = []
-    //     this.selectedSvgObjectId = null
-
-    //     this.originalImage = canvas
-    //     this.blurPreviewUrl = canvas.toDataURL()
-
-    //     this.blurObjects = []
-    //     this.blurImages = []
-    //   }
-    // },
 
     async rasterize(mode, { width = null, height = null } = {}, t) {
       if (this.svgObjects.length === 0 && this.blurObjects.length === 0) {
@@ -984,7 +770,6 @@ export const useImageStore = defineStore('imageStore', {
       const viewportStore = useViewportStore()
 
       log('Generating preview with frame...')
-      this.phoneButtonsCanNotBeDrawnToastFlag = true // Set flag to prevent toast showing
 
       const { finalWidth, finalHeight, targetWidth, targetHeight, offsetX, offsetY } = useFrameTool(
         imageStore,
@@ -1005,7 +790,6 @@ export const useImageStore = defineStore('imageStore', {
       )
       const overlay = rasterized?.overlay || null
 
-      // const baseImage = this.newRenderedImage || this.getRenderedImage({ t, renderCall: true })
       const baseImage = rasterized?.image || this.getRenderedImage({ t, renderCall: true })
       if (!baseImage) {
         warn('No base image available for preview generation')
@@ -1098,21 +882,6 @@ export const useImageStore = defineStore('imageStore', {
         targetWidth,
         targetHeight,
       )
-
-      // if (this.overlayImagePreview) {
-      //   warn('Drawing overlay image on top of preview')
-      //   ctx.drawImage(
-      //     this.overlayImagePreview,
-      //     0,
-      //     0,
-      //     this.overlayImagePreview.width,
-      //     this.overlayImagePreview.height,
-      //     offsetX,
-      //     offsetY,
-      //     targetWidth,
-      //     targetHeight,
-      //   )
-      // }
 
       if (overlay) {
         warn('Drawing overlay image on top of preview')
@@ -1357,54 +1126,10 @@ export const useImageStore = defineStore('imageStore', {
     // --------------------------------
     // Snapshot management methods
     // --------------------------------
-
     /**
-     * Returns a snapshot of the current image state.
-     * Used for undo/redo and workspace tab management.
-     *
-     * @returns {object} Snapshot object
+     * Creates a snapshot of the current image state for history management
+     * @returns {object} - Snapshot object representing the current image state
      */
-    // getSnapshot(t) {
-    //   const cloneCanvasToDataURL = (canvas) => {
-    //     if (!canvas) return null
-    //     return canvas.toDataURL() // store as string, avoids Vue Proxy issues
-    //   }
-
-    //   const snapshot = {
-    //     fileName: this.fileName,
-    //     fileType: this.fileType,
-    //     showPdfAsImage: this.showPdfAsImage,
-    //     fileDimensions: JSON.parse(JSON.stringify(this.fileDimensions)),
-    //     // originalFileDimensions: JSON.parse(JSON.stringify(this.originalFileDimensions)),
-    //     previewUrl: this.previewUrl,
-    //     // blurPreviewUrl: JSON.parse(JSON.stringify(this.blurPreviewUrl)),
-    //     renderedImage: this.getRenderedImage({ t, renderCall: true })?.toDataURL() || null,
-
-    //     overlayImage: cloneCanvasToDataURL(this.overlayImage),
-    //     overlayImageExport: cloneCanvasToDataURL(this.overlayImageExport),
-    //     overlayImagePreview: cloneCanvasToDataURL(this.overlayImagePreview),
-
-    //     pdfPageBytes: this.pdfPageBytes ? new Uint8Array(this.pdfPageBytes) : undefined,
-    //     totalPdfCropBox: JSON.parse(JSON.stringify(this.totalPdfCropBox)),
-    //     // originalImage: this.originalImage?.toDataURL() || null,
-    //     svgObjects: JSON.parse(JSON.stringify(this.svgObjects)),
-    //     blurObjects: JSON.parse(JSON.stringify(this.blurObjects)),
-    //     svgDefs: JSON.parse(JSON.stringify(this.svgDefs)),
-    //     blurImages: JSON.parse(JSON.stringify(this.blurImages)),
-    //     imageOperations: JSON.parse(JSON.stringify(this.imageOperations)),
-    //     frame: JSON.parse(JSON.stringify(this.frame)),
-    //     removalCanvas: this.removalCanvas || null,
-
-    //     tmpRenderedImage: this.tmpRenderedImage?.toDataURL() || null,
-
-    //     imageWarnings: JSON.parse(JSON.stringify(this.imageWarnings)),
-    //   }
-
-    //   log('[getSnapshot] imageOperations:', snapshot.imageOperations)
-
-    //   return snapshot
-    // },
-
     getSnapshot() {
       return {
         // PIPELINE POSITION
@@ -1447,115 +1172,10 @@ export const useImageStore = defineStore('imageStore', {
     },
 
     /**
-     * Applies a previously saved snapshot to the image state.
-     *
-     * @param {object} snapshot - Snapshot object (from `getSnapshot`)
-     * @returns {void}
+     * Applies a previously saved snapshot to restore the image state
+     * @param {object} snapshot - Snapshot object to restore
+     * @returns {Promise<void>}
      */
-    // applySnapshot(snapshot) {
-    //   this.historyWasChanged = true
-
-    //   this.fileName = snapshot.fileName
-    //   this.fileType = snapshot.fileType
-    //   this.showPdfAsImage = snapshot.showPdfAsImage
-    //   this.fileDimensions = JSON.parse(JSON.stringify(snapshot.fileDimensions))
-    //   this.previewUrl = snapshot.previewUrl
-    //   // this.blurPreviewUrl = JSON.parse(JSON.stringify(snapshot.blurPreviewUrl))
-    //   this.svgObjects = JSON.parse(JSON.stringify(snapshot.svgObjects))
-    //   this.blurObjects = JSON.parse(JSON.stringify(snapshot.blurObjects))
-    //   this.selectedSvgObjectId = null // Reset selected SVG object after applying snapshot
-    //   this.imageOperations = JSON.parse(JSON.stringify(snapshot.imageOperations))
-    //   this.frame = JSON.parse(JSON.stringify(snapshot.frame))
-    //   this.svgDefs = JSON.parse(JSON.stringify(snapshot.svgDefs))
-    //   this.blurImages = JSON.parse(JSON.stringify(snapshot.blurImages))
-
-    //   this.imageWarnings = JSON.parse(JSON.stringify(snapshot.imageWarnings))
-
-    //   if (snapshot.pdfPageBytes) {
-    //     if (snapshot.pdfPageBytes instanceof Uint8Array) {
-    //       this.pdfPageBytes = new Uint8Array(snapshot.pdfPageBytes)
-    //     } else if (typeof snapshot.pdfPageBytes === 'object') {
-    //       // Conversion of {0: 37, 1: 80, ...} to Uint8Array
-    //       const keys = Object.keys(snapshot.pdfPageBytes).sort((a, b) => a - b)
-    //       const arr = keys.map((k) => snapshot.pdfPageBytes[k])
-    //       this.pdfPageBytes = new Uint8Array(arr)
-    //     } else {
-    //       this.pdfPageBytes = undefined
-    //     }
-    //   } else {
-    //     this.pdfPageBytes = undefined
-    //   }
-
-    //   this.totalPdfCropBox = JSON.parse(JSON.stringify(snapshot.totalPdfCropBox))
-
-    //   if (snapshot.renderedImage) {
-    //     const img = new Image()
-    //     img.onload = () => {
-    //       const canvas = document.createElement('canvas')
-    //       canvas.width = img.width
-    //       canvas.height = img.height
-    //       const ctx = canvas.getContext('2d')
-    //       ctx.drawImage(img, 0, 0)
-    //       this.setRenderedImage(canvas)
-    //     }
-    //     img.src = snapshot.renderedImage
-    //   } else {
-    //     this.setRenderedImage(null)
-    //   }
-
-    //   const recreateCanvas = (dataURL) => {
-    //     if (!dataURL) return null
-    //     const img = new Image()
-    //     const canvas = document.createElement('canvas')
-    //     img.onload = () => {
-    //       canvas.width = img.width
-    //       canvas.height = img.height
-    //       canvas.getContext('2d').drawImage(img, 0, 0)
-    //     }
-    //     img.src = dataURL
-    //     return canvas
-    //   }
-
-    //   this.overlayImage = recreateCanvas(snapshot.overlayImage)
-    //   this.overlayImageExport = recreateCanvas(snapshot.overlayImageExport)
-    //   this.overlayImagePreview = recreateCanvas(snapshot.overlayImagePreview)
-
-    //   // Tmp rendered image
-    //   if (snapshot.tmpRenderedImage) {
-    //     const img = new Image()
-    //     img.onload = () => {
-    //       const canvas = document.createElement('canvas')
-    //       canvas.width = img.width
-    //       canvas.height = img.height
-    //       const ctx = canvas.getContext('2d')
-    //       ctx.drawImage(img, 0, 0)
-    //       this.tmpRenderedImage = canvas
-    //     }
-    //     img.src = snapshot.tmpRenderedImage
-    //   } else {
-    //     this.tmpRenderedImage = null
-    //   }
-
-    //   // Removal canvas
-    //   // if (snapshot.removalCanvas) {
-    //   //   const img = new Image()
-    //   //   img.onload = () => {
-    //   //     const canvas = document.createElement('canvas')
-    //   //     canvas.width = img.width
-    //   //     canvas.height = img.height
-    //   //     const ctx = canvas.getContext('2d')
-    //   //     ctx.drawImage(img, 0, 0)
-    //   //     this.removalCanvas = canvas
-    //   //   }
-    //   //   img.src = snapshot.removalCanvas
-    //   // } else {
-    //   //   this.removalCanvas = null
-    //   // }
-    //   this.removalCanvas = snapshot.removalCanvas
-
-    //   log('[applySnapshot] imageOperations (after apply):', this.imageOperations)
-    // },
-
     async applySnapshot(snapshot) {
       this.historyWasChanged = true
 
@@ -1703,7 +1323,6 @@ export const useImageStore = defineStore('imageStore', {
       this.pdfPageBytes = snapshot.pdfPageBytes ? new Uint8Array(snapshot.pdfPageBytes) : null
 
       // PIPELINE (LOGICAL)
-      // this.imageOperations = JSON.parse(JSON.stringify(snapshot.imageOperations))
       this.imageOperations = []
 
       for (const op of snapshot.imageOperations) {

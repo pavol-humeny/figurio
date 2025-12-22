@@ -266,16 +266,6 @@ export function useFrameTool(imageStore, historyStore, viewportStore, t) {
     },
   ])
 
-  /**
-   * Watch for frame variant changes and reset frame width if necessary
-   */
-  watch(selectedFrameVariant, (newType) => {
-    if (newType !== 'frameSolid') {
-      frameWidth.value = 0
-    }
-    imageStore.phoneButtonsCanNotBeDrawnToastFlag = false // Reset flag when changing frame type
-  })
-
   // ------------------------
   // Check frame type
   // ------------------------
