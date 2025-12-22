@@ -455,7 +455,7 @@ export function useBlurTool(imageStore, historyStore, editorStore, t) {
     })
     addOrReplaceFilterDef(id, settings.blurStrength)
 
-    addBlurImage(id)
+    // addBlurImage(id)
 
     settings.name = imageStore.getNextObjectName('blur', null)
 

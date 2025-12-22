@@ -1383,6 +1383,7 @@ export function useSvgObjects(
           : 0,
         fade: attrs['data-edge-fade'] || 10,
       })
+      blurTool.addBlurImage(currentDrawingObject.value.id)
     }
 
     // Check if it is not too small object
