@@ -100,25 +100,29 @@ export function useBrushTool(imageStore, historyStore, editorStore, uiStore, t) 
     }
   }
 
+  /**
+   * Clear all brush strokes from the overlay
+   */
   const clearAllCanvas = async () => {
     if (imageStore.needRasterization) return
 
-    // Find the brush canvas
-    const canvas = document.getElementById('brushCanvas')
-    if (!canvas) return
+    // Create empty overlay canvas (same size as image)
+    const emptyOverlay = document.createElement('canvas')
+    emptyOverlay.width = imageStore.fileDimensions.width
+    emptyOverlay.height = imageStore.fileDimensions.height
 
-    const ctx = canvas.getContext('2d')
-    if (!ctx) return
+    // Register as brush operation with empty overlay
+    imageStore.addImageOperation({
+      type: 'brush',
+      overlay: emptyOverlay,
+      cost: 'low',
+      affectsGeometry: false,
+    })
 
-    // Clear entire canvas
-    ctx.clearRect(0, 0, canvas.width, canvas.height)
+    // Re-render pipeline
+    await renderUpTo(imageStore.renderPipeline.currentOpIndex + 1, { t, imageStore })
 
-    // Reset overlay images
-    imageStore.overlayImage = null
-    imageStore.overlayImageExport = null
-    imageStore.overlayImagePreview = null
-
-    // Push snapshot to history
+    // Push undo snapshot
     historyStore.push(imageStore.getSnapshot(t))
   }
 

@@ -118,13 +118,13 @@ export const useImageStore = defineStore('imageStore', {
     overlayImage: null,
 
     /** Overlay image for preview - contains objects that can be further modified */
-    overlayImagePreview: null,
+    // overlayImagePreview: null,
 
     /** Overlay image - contains objects that can not be further modified */
-    overlayImageExport: null,
+    // overlayImageExport: null,
 
     /** Overlay image for magnify area svg objects - used for displaying magnified areas in pdf export */
-    magnifyOverlayImage: null,
+    // magnifyOverlayImage: null,
 
     /** Array of SVG objects to render on the image */
     svgObjects: [
@@ -263,8 +263,8 @@ export const useImageStore = defineStore('imageStore', {
     setOverlay(overlay) {
       console.warn('Setting overlay image')
       this.overlayImage = overlay
-      this.overlayImageExport = overlay
-      this.overlayImagePreview = overlay
+      // this.overlayImageExport = overlay
+      // this.overlayImagePreview = overlay
     },
 
     // Getters
@@ -542,9 +542,9 @@ export const useImageStore = defineStore('imageStore', {
 
       // OVERLAYS
       this.overlayImage = null
-      this.overlayImageExport = null
-      this.overlayImagePreview = null
-      this.magnifyOverlayImage = null
+      // this.overlayImageExport = null
+      // this.overlayImagePreview = null
+      // this.magnifyOverlayImage = null
 
       // SVG
       this.resetSvgObject()
@@ -597,8 +597,8 @@ export const useImageStore = defineStore('imageStore', {
 
       // Clear overlay
       this.overlayImage = null
-      this.overlayImageExport = null
-      this.magnifyOverlayImage = null
+      // this.overlayImageExport = null
+      // this.magnifyOverlayImage = null
     },
 
     /**
@@ -863,10 +863,6 @@ export const useImageStore = defineStore('imageStore', {
       overlayCanvas.width = usedWidth
       overlayCanvas.height = usedHeight
       const overlayCtx = overlayCanvas.getContext('2d')
-
-      if (this.overlayImageExport) {
-        overlayCtx.drawImage(this.overlayImageExport, 0, 0, usedWidth, usedHeight)
-      }
 
       const svgBlob = new Blob([svgString], { type: 'image/svg+xml' })
       const svgUrl = URL.createObjectURL(svgBlob)
