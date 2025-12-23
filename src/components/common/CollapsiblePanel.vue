@@ -6,7 +6,14 @@ import { useUiStore } from '@/stores/uiStore'
 /**
  * Logic of the collapsible panel
  */
-const { isVisible, toggleVisibility, rightSidePanelWidth, collapseButtonWidth, startResize } =
+const {
+  isVisible,
+  toggleVisibility,
+  rightSidePanelWidth,
+  collapseButtonWidth,
+  startResize,
+  resetPanelWidth,
+} =
   useCollapsiblePanel(useUiStore())
 </script>
 
@@ -20,7 +27,8 @@ const { isVisible, toggleVisibility, rightSidePanelWidth, collapseButtonWidth, s
       <slot></slot>
     </div>
 
-    <div class="resize-handle" @mousedown="startResize" :class="{ hidden: !isVisible }"></div>
+    <div class="resize-handle" @dblclick="resetPanelWidth" @mousedown="startResize" :class="{ hidden: !isVisible }">
+    </div>
   </div>
 </template>
 

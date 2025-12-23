@@ -229,7 +229,7 @@ export const useUiStore = defineStore('ui', {
         this.setRightPanelWidth(width)
         this.rightPanelDefaultWidth = width
       } else {
-        this.setRightPanelWidth(this.rightPanelDefaultWidth)
+        // this.setRightPanelWidth(this.rightPanelDefaultWidth)
         this.rightPanelDefaultWidth = uiConfig.rightPanelDefaultWidth
       }
     },

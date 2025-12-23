@@ -120,6 +120,14 @@ export function useCollapsiblePanel(uiStore) {
     document.removeEventListener('mouseup', stopResize)
   }
 
+  /**
+   * Reset panel width to default value
+   */
+  const resetPanelWidth = () => {
+    uiStore.resetRightPanelWidth()
+    uiStore.resetSvgObjectsListHeight()
+  }
+
   return {
     isVisible,
     toggleVisibility,
@@ -133,5 +141,6 @@ export function useCollapsiblePanel(uiStore) {
     startX,
     startWidth,
     handleResize,
+    resetPanelWidth,
   }
 }

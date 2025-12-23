@@ -20,7 +20,8 @@
       },
       "newFeatures": {
         "items": [
-          "Press effect when clicking on buttons"
+          "Press effect when clicking on buttons",
+          "Right side pane width can be reset by double clicking on resize handle"
         ]
       },
       "bugFixes": {

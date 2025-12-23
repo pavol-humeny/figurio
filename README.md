@@ -12,6 +12,7 @@
 
 
 ## TODO 
+- Ak dám rotate a potom resize tak to nefunguje, lebo resize robi s base canvas 
 - Rámik monitoru 
 - Vylepšenie rámiku pre prehliadače 
 - DONE - MOZNO VYMYSLIET LEPSIE (TERAZ SA NEZOBRAZUJE VOBEC)Hláška o tom že sa nedajú vykresliť tlačidlá telefónu sa vypisuje viac krát
