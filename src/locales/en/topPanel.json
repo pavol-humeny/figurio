@@ -53,7 +53,7 @@
         "shortcut": "Alt + C"
       },
       "physicalMode": {
-        "title": "Physical Size Mode",
+        "title": "Physical Zoom Mode",
         "text": "In this mode, 100% zoom represents the real physical size of the image on your screen — for example, 10 cm on screen equals 10 cm in reality. Use calibration to ensure accurate scaling on your monitor.",
         "shortcut": "Alt + P"
       },

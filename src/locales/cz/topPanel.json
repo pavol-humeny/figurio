@@ -53,7 +53,7 @@
         "shortcut": "Alt + C"
       },
       "physicalMode": {
-        "title": "Režim skutečné velikosti",
+        "title": "Režim reálného přiblížení",
         "text": "V tomto režimu 100 % zobrazuje obrázek ve své reálné fyzické velikosti na obrazovce — například 10 cm na monitoru odpovídá 10 cm ve skutečnosti. Pro přesné měřítko použijte kalibraci monitoru.",
         "shortcut": "Alt + P"
       },
