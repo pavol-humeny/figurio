@@ -733,15 +733,21 @@ export function useCropTool(imageStore, viewportStore, editorStore, historyStore
    */
   const calculateAutoCropBoxCanny = (useBaseImage) => {
     const scale = 1
-    let img = imageStore.getRenderedImage({ t, renderCall: false })
 
+    const img = imageStore.getRenderedImage({ t, renderCall: false })
     if (!img) return null
 
     const canvas = document.createElement('canvas')
     const ctx = canvas.getContext('2d', { willReadFrequently: true })
     canvas.width = img.width * scale
     canvas.height = img.height * scale
+
+    // Draw base image
     ctx.drawImage(img, 0, 0, canvas.width, canvas.height)
+    // Merge overlay into the same canvas
+    if (imageStore.needMergeOverlay && imageStore.overlayImage) {
+      ctx.drawImage(imageStore.overlayImage, 0, 0, canvas.width, canvas.height)
+    }
 
     const imgData = ctx.getImageData(0, 0, canvas.width, canvas.height)
     const { data, width: imgWidth, height: imgHeight } = imgData
@@ -978,52 +984,24 @@ export function useCropTool(imageStore, viewportStore, editorStore, historyStore
     hierarchy.delete()
     maskFilled.delete()
 
+    // Enforce minimum crop size and keep it inside image bounds
+    if (cropRect.width < editorConfig.minCropSize) {
+      cropRect.width = editorConfig.minCropSize
+    }
+    if (cropRect.height < editorConfig.minCropSize) {
+      cropRect.height = editorConfig.minCropSize
+    }
+
+    // Keep inside image bounds (prefer keeping x,y)
+    if (cropRect.x + cropRect.width > imageStore.fileDimensions.width) {
+      cropRect.x = imageStore.fileDimensions.width - cropRect.width
+    }
+
+    if (cropRect.y + cropRect.height > imageStore.fileDimensions.height) {
+      cropRect.y = imageStore.fileDimensions.height - cropRect.height
+    }
+
     return cropRect
-  }
-
-  /**
-   * Calculate crop box of overlay image by ignoring transparent pixels.
-   * Works directly on HTMLCanvasElement (overlay).
-   * @param {HTMLCanvasElement} overlayCanvas
-   * @returns {Object|null} cropRect {x, y, width, height} or null if fully transparent
-   */
-  const calculateOverlayCropBox = (overlayCanvas) => {
-    if (!overlayCanvas) return null
-
-    const ctx = overlayCanvas.getContext('2d', { willReadFrequently: true })
-    const { width, height } = overlayCanvas
-    const imgData = ctx.getImageData(0, 0, width, height)
-    const data = imgData.data
-
-    let xMin = width,
-      yMin = height,
-      xMax = 0,
-      yMax = 0
-    let hasOpaque = false
-
-    for (let y = 0; y < height; y++) {
-      for (let x = 0; x < width; x++) {
-        const idx = (y * width + x) * 4
-        const alpha = data[idx + 3]
-        if (alpha > 0) {
-          // non-transparent pixel
-          hasOpaque = true
-          xMin = Math.min(xMin, x)
-          yMin = Math.min(yMin, y)
-          xMax = Math.max(xMax, x)
-          yMax = Math.max(yMax, y)
-        }
-      }
-    }
-
-    if (!hasOpaque) return null
-
-    return {
-      x: xMin,
-      y: yMin,
-      width: xMax - xMin + 1,
-      height: yMax - yMin + 1,
-    }
   }
 
   /**
@@ -1032,26 +1010,7 @@ export function useCropTool(imageStore, viewportStore, editorStore, historyStore
   const fitCrop = () => {
     const newCropBox = calculateAutoCropBoxCanny(useBaseImage.value)
 
-    if (imageStore.needMergeOverlay) {
-      const overlayCanvas = imageStore.overlayImage
-      const overlayCropBox = calculateOverlayCropBox(overlayCanvas)
-
-      // If overlay crop box is larger, use it
-      if (overlayCropBox) {
-        newCropBox.x = Math.min(newCropBox.x, overlayCropBox.x)
-        newCropBox.y = Math.min(newCropBox.y, overlayCropBox.y)
-        const rightSide = Math.max(
-          newCropBox.x + newCropBox.width,
-          overlayCropBox.x + overlayCropBox.width,
-        )
-        const bottomSide = Math.max(
-          newCropBox.y + newCropBox.height,
-          overlayCropBox.y + overlayCropBox.height,
-        )
-        newCropBox.width = rightSide - newCropBox.x
-        newCropBox.height = bottomSide - newCropBox.y
-      }
-    }
+    if (!newCropBox) return
 
     if (
       cropBox.value.x === newCropBox.x &&
@@ -1066,10 +1025,8 @@ export function useCropTool(imageStore, viewportStore, editorStore, historyStore
       )
     }
 
-    if (newCropBox) {
-      cropBox.value = newCropBox
-      fitCropApplied.value = true
-    }
+    cropBox.value = newCropBox
+    fitCropApplied.value = true
   }
 
   //----------------------------------
