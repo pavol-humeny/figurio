@@ -28,7 +28,8 @@
           "Hide brush cursor when hovering over viewport settings buttons",
           "Fix issue with noise detection alert not showing correctly after undo operation",
           "Fix issue with showing multiple item tips at once",
-          "Set correct contact email address in contact form"
+          "Set correct contact email address in contact form",
+          "Fix magnify area object z-index positioning"
         ]
       }
     },

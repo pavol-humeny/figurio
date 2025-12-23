@@ -1226,6 +1226,11 @@ export const useImageStore = defineStore('imageStore', {
 
       this.renderPipeline.currentOpIndex = snapshot.opIndex
 
+      // Reset selected SVG object
+      this.selectedSvgObjectId = null
+      this.justCreatedSvgObjectId = null
+      this.selectedSvgObjectIds = []
+
       // Rendering happens OUTSIDE (undo/redo)
     },
 
@@ -1360,7 +1365,7 @@ export const useImageStore = defineStore('imageStore', {
         lastRenderedOpIndex: -1,
       }
 
-      // ⏳ WAIT FOR BASE CANVAS
+      // WAIT FOR BASE CANVAS
       if (snapshot.baseState?.canvas) {
         await new Promise((resolve) => {
           const img = new Image()
@@ -1382,6 +1387,15 @@ export const useImageStore = defineStore('imageStore', {
           img.src = snapshot.baseState.canvas
         })
       }
+
+      // Reset selected SVG object
+      this.selectedSvgObjectId = null
+      this.justCreatedSvgObjectId = null
+      this.selectedSvgObjectIds = []
+      this.clipboardSvgObject = null
+
+      // WARNINGS
+      this.imageWarnings = JSON.parse(JSON.stringify(snapshot.imageWarnings))
     },
   },
 })

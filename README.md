@@ -7,7 +7,6 @@
 - pdf nacitanie 
 - pdf optimalizacia
 
-- rámiky - expand header
 - rámik monitoru
 - hláška pri tlačítkach že sa nedajú zobraziť 
 
@@ -16,14 +15,11 @@
 - Rámik monitoru 
 - Vylepšenie rámiku pre prehliadače 
 - DONE - MOZNO VYMYSLIET LEPSIE (TERAZ SA NEZOBRAZUJE VOBEC)Hláška o tom že sa nedajú vykresliť tlačidlá telefónu sa vypisuje viac krát
-- Videá pre nástroje 
-- Videá pre feature tour p
 - SKIP - (asi to je v pohode tak ako to je) zoomovanie pomocou tlacitok, ak je obrazok mimo stred tak to zoomuje mimo obrázok 
 - Oblé zakončenie čiar (line tool)
 - pri dokreslení background removal canvas sa to sekne 
 - eye dropper na safari
 - zatvaranie pdf je strasne pomale
-- Expand header nefunguje dobre pri velkej hrubke ramiku 
 - Zjednodušiť nápovedy - tipy (kratšie texty)
 - achievementy
 - high noise leven in image by sa pri crop, resize... asi mal odstranit (ten warning)

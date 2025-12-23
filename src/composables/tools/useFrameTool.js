@@ -918,6 +918,9 @@ export function useFrameTool(imageStore, historyStore, viewportStore, t) {
     el.style.left = `-${fw - adjustmentForPhoneButtons}px`
     el.style.top = `-${(hasHeader && !hasPhoneFrame) || (hasPhoneFrame && frame.phoneHeaderExpand) ? header : fh}px`
 
+    // Recalculate if phone buttons can be drawn 
+    canDrawPhoneButtons()
+
     /**
      * Draws a side button with rounded corners
      * @param {number} x - X position
