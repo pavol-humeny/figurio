@@ -278,10 +278,10 @@ export function useCropTool(imageStore, viewportStore, editorStore, historyStore
    * Maximum allowed crop position based on image dimensions
    */
   const maxCropPositionX = computed(() => {
-    return imageStore.fileDimensions.width
+    return imageStore.fileDimensions.width - editorConfig.minCropSize
   })
   const maxCropPositionY = computed(() => {
-    return imageStore.fileDimensions.height
+    return imageStore.fileDimensions.height - editorConfig.minCropSize
   })
 
   /**

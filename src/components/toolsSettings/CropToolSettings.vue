@@ -11,11 +11,11 @@ import LinkValuesIcon from '../common/LinkValuesIcon.vue'
 import DefaultButton from '../common/DefaultButton.vue'
 import ToggleButton from '../common/ToggleButton.vue'
 import StepperInput from '../common/StepperInput.vue'
-// import NumberDropdownInput from '../common/NumberDropdownInput.vue'
 import ExplainItem from '../common/ExplainItem.vue'
 import ToggleHoldButton from '../common/ToggleHoldButton.vue'
 import LevelSelector from '../common/LevelSelector.vue'
 import { useUiStore } from '@/stores/uiStore'
+import { editorConfig } from '@/config/editorConfig'
 
 const { t } = useI18n()
 
@@ -32,13 +32,9 @@ const {
   tmpCropWidth,
   updateDimension,
   isDimensionsLinked,
-  heightInputRef,
-  widthInputRef,
   maxCropPositionX,
   maxCropPositionY,
   updatePosition,
-  positionXInputRef,
-  positionYInputRef,
   applyCrop,
   resetCrop,
   cropCanBeReset,
@@ -109,7 +105,7 @@ const {
                   <label for="width-input">
                     {{ $t('tools.crop.settings.general.cropDimensions.width') }}
                   </label>
-                  <NumberInput ref="widthInputRef" v-model="tmpCropWidth" :min="0" :max="maxCropWidth"
+                  <NumberInput ref="widthInputRef" v-model="tmpCropWidth" :min="editorConfig.minCropSize" :max="maxCropWidth"
                     @update="(val) => updateDimension('width', val)" unit="px" />
                 </div>
 
@@ -124,7 +120,7 @@ const {
                   <label for="height-input">
                     {{ $t('tools.crop.settings.general.cropDimensions.height') }}
                   </label>
-                  <NumberInput ref="heightInputRef" v-model="tmpCropHeight" :min="0" :max="maxCropHeight"
+                  <NumberInput ref="heightInputRef" v-model="tmpCropHeight" :min="editorConfig.minCropSize" :max="maxCropHeight"
                     @update="(val) => updateDimension('height', val)" unit="px" />
                 </div>
               </div>
