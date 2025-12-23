@@ -14,12 +14,13 @@
           "Add contact form placeholders",
           "Improve displaying of contact form field validation errors",
           "Unify buttons styles for text style selection",
-          "Adjust corner radius of drag and drop area"
+          "Adjust corner radius of drag and drop area",
+          "File tab can be close without switching to it first"
         ]
       },
       "newFeatures": {
         "items": [
-          "Add clickable button effect"
+          "Press effect when clicking on buttons"
         ]
       },
       "bugFixes": {
