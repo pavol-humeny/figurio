@@ -15,7 +15,7 @@
 - Ak dám rotate a potom resize tak to nefunguje, lebo resize robi s base canvas 
 - Rámik monitoru 
 - Vylepšenie rámiku pre prehliadače 
-- DONE - MOZNO VYMYSLIET LEPSIE (TERAZ SA NEZOBRAZUJE VOBEC)Hláška o tom že sa nedajú vykresliť tlačidlá telefónu sa vypisuje viac krát
+- DONE - MOZNO VYMYSLIET LEPSIE (TERAZ SA NEZOBRAZUJE VOBEC) Hláška o tom že sa nedajú vykresliť tlačidlá telefónu sa vypisuje viac krát
 - SKIP - (asi to je v pohode tak ako to je) zoomovanie pomocou tlacitok, ak je obrazok mimo stred tak to zoomuje mimo obrázok 
 - Oblé zakončenie čiar (line tool)
 - pri dokreslení background removal canvas sa to sekne 
