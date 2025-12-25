@@ -8,7 +8,7 @@ import { useI18n } from 'vue-i18n'
 import { useViewportStore } from '@/stores/viewportStore'
 import { editorConfig } from '@/config/editorConfig.js'
 import { useEditorStore } from '@/stores/editorStore'
-import { useToastModal } from '@/composables/modals/useToastModal'
+// import { useToastModal } from '@/composables/modals/useToastModal'
 import { useUiStore } from '@/stores/uiStore'
 import { viewportConfig } from '@/config/viewportConfig.js'
 
@@ -29,10 +29,11 @@ const {
   useHistoryStore(),
   useWorkspaceStore(),
   useEditorStore(),
+  useUiStore(),
   t,
 )
 
-const { showToastModal } = useToastModal()
+// const { showToastModal } = useToastModal()
 
 /**
  * Reference to the manual canvas element
@@ -138,14 +139,14 @@ const onMouseDown = (event) => {
   const viewport = document.getElementById('viewport-content')
   if (!viewport.contains(event.target)) return
 
-  if (imageStore.needMergeOverlay) {
-    imageStore.mergeOverlayIntoImage()
-    showToastModal(
-      'info',
-      t('tools.infoOverlayWasMerged.title'),
-      t('tools.infoOverlayWasMerged.message'),
-    )
-  }
+  // if (imageStore.needMergeOverlay) {
+  //   imageStore.mergeOverlayIntoImage()
+  //   showToastModal(
+  //     'info',
+  //     t('tools.infoOverlayWasMerged.title'),
+  //     t('tools.infoOverlayWasMerged.message'),
+  //   )
+  // }
 
   if (editorStore.selectedToolKey === 'backgroundRemoval') {
     const mode = editorStore.selectedTabPerTool['backgroundRemoval']

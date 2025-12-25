@@ -1,5 +1,5 @@
 import { useConfirmModal } from '../modals/useConfirmModal'
-import { useToastModal } from '../modals/useToastModal'
+// import { useToastModal } from '../modals/useToastModal'
 import { useApi } from '@/composables/common/useApi'
 const { addUserEvent } = useApi()
 import { useImagePipeline } from '../editor/useImagePipeline'
@@ -17,7 +17,7 @@ import { useImagePipeline } from '../editor/useImagePipeline'
  */
 export function useRotateTool(imageStore, historyStore, uiStore, t) {
   const { showConfirmModal } = useConfirmModal()
-  const { showToastModal } = useToastModal()
+  // const { showToastModal } = useToastModal()
   const { renderUpTo } = useImagePipeline(imageStore, uiStore)
 
   /**
@@ -42,14 +42,14 @@ export function useRotateTool(imageStore, historyStore, uiStore, t) {
       }
     }
 
-    if (imageStore.needMergeOverlay) {
-      imageStore.mergeOverlayIntoImage()
-      showToastModal(
-        'info',
-        t('tools.infoOverlayWasMerged.title'),
-        t('tools.infoOverlayWasMerged.message'),
-      )
-    }
+    // if (imageStore.needMergeOverlay) {
+    //   imageStore.mergeOverlayIntoImage()
+    //   showToastModal(
+    //     'info',
+    //     t('tools.infoOverlayWasMerged.title'),
+    //     t('tools.infoOverlayWasMerged.message'),
+    //   )
+    // }
 
     // Register operation in the operation list
     imageStore.addImageOperation({

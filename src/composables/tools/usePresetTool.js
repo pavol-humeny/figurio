@@ -444,14 +444,14 @@ export function usePresetTool(
       }
     }
 
-    if (imageStore.needMergeOverlay) {
-      imageStore.mergeOverlayIntoImage()
-      showToastModal(
-        'info',
-        t('tools.infoOverlayWasMerged.title'),
-        t('tools.infoOverlayWasMerged.message'),
-      )
-    }
+    // if (imageStore.needMergeOverlay) {
+    //   imageStore.mergeOverlayIntoImage()
+    //   showToastModal(
+    //     'info',
+    //     t('tools.infoOverlayWasMerged.title'),
+    //     t('tools.infoOverlayWasMerged.message'),
+    //   )
+    // }
 
     const preset = presetsStore.selectedPreset
 

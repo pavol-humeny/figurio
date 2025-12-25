@@ -15,6 +15,7 @@ import NumberInput from '../common/NumberInput.vue'
 import ItemTip from '../common/ItemTip.vue'
 import ToggleButton from '../common/ToggleButton.vue'
 import DefaultSlider from '../common/DefaultSlider.vue'
+import { useUiStore } from '@/stores/uiStore'
 
 const { t } = useI18n()
 const editorStore = useEditorStore()
@@ -51,6 +52,7 @@ const {
   useHistoryStore(),
   useWorkspaceStore(),
   useEditorStore(),
+  useUiStore(),
   t,
 )
 
@@ -221,7 +223,7 @@ const tabs = ['auto', 'manual', 'color']
           <div class="settings-content-wrapper settings-content-wrapper-last">
             <div class="content-wrapper">
               <DefaultButton :text="$t('tools.backgroundRemoval.settings.color.removeButton.text')"
-                @click="applyBackgroundRemoval('color')" main />
+                @click="applyBackgroundRemoval" main />
             </div>
           </div>
         </div>
@@ -375,7 +377,7 @@ const tabs = ['auto', 'manual', 'color']
           <div class="settings-content-wrapper settings-content-wrapper-last">
             <div class="content-wrapper">
               <DefaultButton :text="$t('tools.backgroundRemoval.settings.manual.removeButton.text')"
-                @click="applyBackgroundRemoval('manual')" main />
+                @click="applyBackgroundRemoval" main />
             </div>
           </div>
         </div>
@@ -507,7 +509,7 @@ const tabs = ['auto', 'manual', 'color']
           <div class="settings-content-wrapper settings-content-wrapper-last">
             <div class="content-wrapper">
               <DefaultButton :text="$t('tools.backgroundRemoval.settings.auto.removeButton.text')"
-                @click="applyBackgroundRemoval('auto')" main />
+                @click="applyBackgroundRemoval" main />
             </div>
           </div>
         </div>

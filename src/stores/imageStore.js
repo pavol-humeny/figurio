@@ -536,6 +536,10 @@ export const useImageStore = defineStore('imageStore', {
       // WARNINGS
       this.imageWarnings = []
       this.expandedImageWarningIds = new Set()
+
+      // BACKGROUND REMOVAL
+      this.removalCanvas = null
+      this.removalCanvasOriginal = null
     },
 
     /**
@@ -549,6 +553,7 @@ export const useImageStore = defineStore('imageStore', {
      * Merge the overlay image into the main rendered image
      * This will draw the overlay on top of the current rendered image
      * and save the result back into renderedImage (and tmpRenderedImage).
+     * TODO - maybe remove uz sa to nikde nepouziva
      */
     mergeOverlayIntoImage() {
       if (!this.renderedImage || !this.overlayImage) {
@@ -1143,8 +1148,21 @@ export const useImageStore = defineStore('imageStore', {
         // OPERATIONS (SOURCE OF TRUTH)
         // imageOperations: JSON.parse(JSON.stringify(this.imageOperations)),
         imageOperations: this.imageOperations.map((op) => {
+          if (op.type === 'backgroundRemoval') {
+            return {
+              type: 'backgroundRemoval',
+              cost: op.cost,
+              affectsGeometry: false,
+              params: {
+                maskBuffer: op.params.mask.buffer.slice(0),
+                width: op.params.width,
+                height: op.params.height,
+                bgColor: { ...op.params.bgColor },
+              },
+            }
+          }
+
           if (op.type === 'brush') {
-            console.warn('Serializing brush operation as overlay data URL')
             return {
               type: 'brush',
               overlayDataURL: op.overlay.toDataURL(),
@@ -1153,8 +1171,7 @@ export const useImageStore = defineStore('imageStore', {
             }
           }
 
-          // ostatné operácie sú čistý JSON
-          return JSON.parse(JSON.stringify(op))
+          return structuredClone(op)
         }),
 
         // SVG / OVERLAY METADATA
@@ -1177,6 +1194,8 @@ export const useImageStore = defineStore('imageStore', {
      * @returns {Promise<void>}
      */
     async applySnapshot(snapshot) {
+      warn('Applying image store snapshot...')
+
       this.historyWasChanged = true
 
       // Restore metadata
@@ -1189,6 +1208,21 @@ export const useImageStore = defineStore('imageStore', {
       this.imageOperations = []
 
       for (const op of snapshot.imageOperations) {
+        if (op.type === 'backgroundRemoval') {
+          this.imageOperations.push({
+            type: 'backgroundRemoval',
+            cost: op.cost,
+            affectsGeometry: false,
+            params: {
+              mask: new Uint8ClampedArray(op.params.maskBuffer),
+              width: op.params.width,
+              height: op.params.height,
+              bgColor: { ...op.params.bgColor },
+            },
+          })
+          continue
+        }
+
         if (op.type === 'brush') {
           const img = new Image()
 
@@ -1211,7 +1245,7 @@ export const useImageStore = defineStore('imageStore', {
             img.src = op.overlayDataURL
           })
         } else {
-          this.imageOperations.push(JSON.parse(JSON.stringify(op)))
+          this.imageOperations.push(structuredClone(op))
         }
       }
 
@@ -1230,6 +1264,8 @@ export const useImageStore = defineStore('imageStore', {
       this.selectedSvgObjectId = null
       this.justCreatedSvgObjectId = null
       this.selectedSvgObjectIds = []
+
+      warn('Snapshot applied.')
 
       // Rendering happens OUTSIDE (undo/redo)
     },
@@ -1261,10 +1297,22 @@ export const useImageStore = defineStore('imageStore', {
           : null,
 
         // PIPELINE
-        // imageOperations: JSON.parse(JSON.stringify(this.imageOperations)),
         imageOperations: this.imageOperations.map((op) => {
+          if (op.type === 'backgroundRemoval') {
+            return {
+              type: 'backgroundRemoval',
+              cost: op.cost,
+              affectsGeometry: false,
+              params: {
+                maskBuffer: op.params.mask.buffer.slice(0),
+                width: op.params.width,
+                height: op.params.height,
+                bgColor: { ...op.params.bgColor },
+              },
+            }
+          }
+
           if (op.type === 'brush') {
-            console.warn('Serializing brush operation as overlay data URL')
             return {
               type: 'brush',
               overlayDataURL: op.overlay.toDataURL(),
@@ -1273,9 +1321,9 @@ export const useImageStore = defineStore('imageStore', {
             }
           }
 
-          // ostatné operácie sú čistý JSON
-          return JSON.parse(JSON.stringify(op))
+          return structuredClone(op)
         }),
+
         currentOpIndex: this.renderPipeline.currentOpIndex,
 
         // DIMENSIONS
@@ -1331,6 +1379,21 @@ export const useImageStore = defineStore('imageStore', {
       this.imageOperations = []
 
       for (const op of snapshot.imageOperations) {
+        if (op.type === 'backgroundRemoval') {
+          this.imageOperations.push({
+            type: 'backgroundRemoval',
+            cost: op.cost,
+            affectsGeometry: false,
+            params: {
+              mask: new Uint8ClampedArray(op.params.maskBuffer),
+              width: op.params.width,
+              height: op.params.height,
+              bgColor: { ...op.params.bgColor },
+            },
+          })
+          continue
+        }
+
         if (op.type === 'brush') {
           const img = new Image()
 
@@ -1353,7 +1416,7 @@ export const useImageStore = defineStore('imageStore', {
             img.src = op.overlayDataURL
           })
         } else {
-          this.imageOperations.push(JSON.parse(JSON.stringify(op)))
+          this.imageOperations.push(structuredClone(op))
         }
       }
 
@@ -1396,6 +1459,10 @@ export const useImageStore = defineStore('imageStore', {
 
       // WARNINGS
       this.imageWarnings = JSON.parse(JSON.stringify(snapshot.imageWarnings))
+
+      // BACKGROUND REMOVAL CANVASES
+      this.removalCanvas = null
+      this.removalCanvasOriginal = null
     },
   },
 })

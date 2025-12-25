@@ -373,7 +373,7 @@ export const keyboardShortcuts = [
   // Background removal tool
   {
     keys: ['delete'],
-    action: 'applyBackgroundRemovalRender',
+    action: 'applyBackgroundRemoval',
     description: 'Delete background based on current selection',
   },
 ]

@@ -35,14 +35,14 @@ export function useDarkLightConvertorTool(imageStore, editorStore, uiStore, hist
       }
     }
 
-    if (imageStore.needMergeOverlay) {
-      imageStore.mergeOverlayIntoImage()
-      showToastModal(
-        'info',
-        t('tools.infoOverlayWasMerged.title'),
-        t('tools.infoOverlayWasMerged.message'),
-      )
-    }
+    // if (imageStore.needMergeOverlay) {
+    //   imageStore.mergeOverlayIntoImage()
+    //   showToastModal(
+    //     'info',
+    //     t('tools.infoOverlayWasMerged.title'),
+    //     t('tools.infoOverlayWasMerged.message'),
+    //   )
+    // }
 
     imageStore.addImageOperation({
       type: 'darkLightConvertor',

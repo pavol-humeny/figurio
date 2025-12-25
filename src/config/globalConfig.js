@@ -65,6 +65,7 @@ export const globalConfig = {
     snowfall: false,
     christmasLights: false,
     christmasTree: false,
+    fireworks: false,
   },
 
   // List of feature tour video identifiers to show in the feature tour modal

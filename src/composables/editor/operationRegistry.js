@@ -4,6 +4,7 @@ import { cropOperation } from './operations/cropOperation'
 import { resizeOperation } from './operations/resizeOperation'
 import { grayscaleOperation } from './operations/grayscaleOperation'
 import { rasterizeOperation } from './operations/rasterizeOperation'
+import { backgroundRemovalOperation } from './operations/backgroundRemovalOperation'
 
 /**
  * Registry mapping operation types to their executor functions
@@ -15,4 +16,5 @@ export const operationRegistry = {
   resize: resizeOperation,
   grayscale: grayscaleOperation,
   rasterize: rasterizeOperation,
+  backgroundRemoval: backgroundRemovalOperation,
 }

@@ -1,9 +1,9 @@
 import { computed, ref, watch } from 'vue'
 import { useConfirmModal } from '../modals/useConfirmModal'
 import { editorConfig } from '@/config/editorConfig'
-import { useToastModal } from '../modals/useToastModal'
 import { useApi } from '@/composables/common/useApi'
 const { addUserEvent } = useApi()
+import { useImagePipeline } from '../editor/useImagePipeline'
 
 // ----------------------------------
 // Soft edges and Boundary offset
@@ -36,9 +36,16 @@ const manualSelectedTool = ref('brush') // 'brush' | 'eraser'
  */
 const manualToolSize = ref(0)
 
-export function useBackgroundRemovalTool(imageStore, historyStore, workspaceStore, editorStore, t) {
+export function useBackgroundRemovalTool(
+  imageStore,
+  historyStore,
+  workspaceStore,
+  editorStore,
+  uiStore,
+  t,
+) {
   const { showConfirmModal } = useConfirmModal()
-  const { showToastModal } = useToastModal()
+  const { renderUpTo } = useImagePipeline(imageStore, uiStore)
 
   /**
    * Watch for manual tool size changes in store and update local value
@@ -391,16 +398,22 @@ export function useBackgroundRemovalTool(imageStore, historyStore, workspaceStor
       manualData.fill(0)
     }
 
-    // Get rendered image
-    const img = imageStore.getRenderedImage({ t, renderCall: false })
-    if (!img) return
+    // Create combine image (image + overlay)
+    const baseImage = imageStore.getRenderedImage({ t, renderCall: false })
+    if (!baseImage) return
 
-    // Draw current rendered image to a temporary canvas
     const tempCanvas = document.createElement('canvas')
     tempCanvas.width = width
     tempCanvas.height = height
     const tempCtx = tempCanvas.getContext('2d', { willReadFrequently: true })
-    tempCtx.drawImage(img, 0, 0, width, height)
+
+    // draw base image
+    tempCtx.drawImage(baseImage, 0, 0, width, height)
+
+    // draw overlay if exists
+    if (imageStore.overlayImage) {
+      tempCtx.drawImage(imageStore.overlayImage, 0, 0, width, height)
+    }
 
     const imageData = tempCtx.getImageData(0, 0, width, height)
     const data = imageData.data
@@ -410,14 +423,15 @@ export function useBackgroundRemovalTool(imageStore, historyStore, workspaceStor
     const targetR = data[index]
     const targetG = data[index + 1]
     const targetB = data[index + 2]
+    const targetA = data[index + 3]
 
     // Prepare visited mask and output selection
     const visited = new Uint8Array(width * height)
     const stack = [[Math.floor(clickX), Math.floor(clickY)]]
 
     const getPixelIndex = (x, y) => (y * width + x) * 4
-    const getDistance = (r, g, b) =>
-      Math.sqrt((r - targetR) ** 2 + (g - targetG) ** 2 + (b - targetB) ** 2)
+    const getDistance = (r, g, b, a) =>
+      Math.sqrt((r - targetR) ** 2 + (g - targetG) ** 2 + (b - targetB) ** 2 + (a - targetA) ** 2)
 
     // Get highlight color
     const { fillR, fillG, fillB, fillA } = getHighlightColorRGBA()
@@ -435,10 +449,11 @@ export function useBackgroundRemovalTool(imageStore, historyStore, workspaceStor
       const r = data[pix]
       const g = data[pix + 1]
       const b = data[pix + 2]
-      const dist = getDistance(r, g, b)
+      const a = data[pix + 3]
+      const dist = getDistance(r, g, b, a)
 
       // Convert colorRemovalThreshold from 0-1 to 0-441.67 range
-      const maxDist = Math.sqrt(255 ** 2 + 255 ** 2 + 255 ** 2) / 2 // ~441.67 / 2 = 220.83 - half to make it less sensitive
+      const maxDist = Math.sqrt(255 ** 2 + 255 ** 2 + 255 ** 2 + 255 ** 2) / 2 // ~441.67 / 2 = 220.83 - half to make it less sensitive
       const colorThreshold = maxDist * autoRemovalThreshold.value
 
       if (dist <= colorThreshold) {
@@ -488,55 +503,53 @@ export function useBackgroundRemovalTool(imageStore, historyStore, workspaceStor
     const canvas = document.getElementById('removalCanvas')
     if (!canvas) return
 
-    if (imageStore.needMergeOverlay) {
-      imageStore.mergeOverlayIntoImage()
-      showToastModal(
-        'info',
-        t('tools.infoOverlayWasMerged.title'),
-        t('tools.infoOverlayWasMerged.message'),
-      )
-    }
-
     const ctx = canvas.getContext('2d')
 
     const width = canvas.width
     const height = canvas.height
 
     // Start from stored original mask if it exists, otherwise create empty
-    let manualImageData
+    let maskImageData
     if (imageStore.removalCanvasOriginal) {
-      manualImageData = new ImageData(
+      maskImageData = new ImageData(
         new Uint8ClampedArray(imageStore.removalCanvasOriginal.data),
         width,
         height,
       )
     } else {
-      manualImageData = ctx.createImageData(width, height)
+      maskImageData = ctx.createImageData(width, height)
     }
-    const manualData = manualImageData.data
+    const maskData = maskImageData.data
 
     if (replaceSelection.value) {
       // Completely reset mask
-      manualData.fill(0)
+      maskData.fill(0)
     }
 
-    // Get rendered image
-    const img = imageStore.getRenderedImage({ t, renderCall: false })
-    if (!img) return
+    // Create combine image (image + overlay)
+    const baseImage = imageStore.getRenderedImage({ t, renderCall: false })
+    if (!baseImage) return
+
+    const tempCanvas = document.createElement('canvas')
+    tempCanvas.width = width
+    tempCanvas.height = height
+    const tempCtx = tempCanvas.getContext('2d', { willReadFrequently: true })
+
+    // draw base image
+    tempCtx.drawImage(baseImage, 0, 0, width, height)
+
+    // draw overlay if exists
+    if (imageStore.overlayImage) {
+      tempCtx.drawImage(imageStore.overlayImage, 0, 0, width, height)
+    }
+
+    const imageData = tempCtx.getImageData(0, 0, width, height)
+    const data = imageData.data
 
     // Background color + threshold
     const bgColor = hexToRgb(colorBackgroundColor.value)
     const maxDist = Math.sqrt(255 ** 2 + 255 ** 2 + 255 ** 2) // ~441.67
     const threshold = maxDist * colorRemovalThreshold.value
-
-    // Draw rendered image to temp canvas
-    const tempCanvas = document.createElement('canvas')
-    tempCanvas.width = width
-    tempCanvas.height = height
-    const tempCtx = tempCanvas.getContext('2d')
-    tempCtx.drawImage(img, 0, 0, width, height)
-    const imageData = tempCtx.getImageData(0, 0, width, height)
-    const data = imageData.data
 
     // Get highlight color RGBA
     const { fillR, fillG, fillB, fillA } = getHighlightColorRGBA()
@@ -551,10 +564,10 @@ export function useBackgroundRemovalTool(imageStore, historyStore, workspaceStor
 
       const dist = Math.sqrt((r - bgColor.r) ** 2 + (g - bgColor.g) ** 2 + (b - bgColor.b) ** 2)
       if (dist <= threshold) {
-        manualData[i] = fillR
-        manualData[i + 1] = fillG
-        manualData[i + 2] = fillB
-        manualData[i + 3] = fillA
+        maskData[i] = fillR
+        maskData[i + 1] = fillG
+        maskData[i + 2] = fillB
+        maskData[i + 3] = fillA
 
         numberOfSelectedPixels++
       }
@@ -568,7 +581,7 @@ export function useBackgroundRemovalTool(imageStore, historyStore, workspaceStor
     }
 
     // Save original mask to store
-    imageStore.removalCanvasOriginal = manualImageData
+    imageStore.removalCanvasOriginal = maskImageData
 
     applyCombinedMaskAdjustments(boundaryOffset.value, softEdgesRadius.value)
   }
@@ -746,28 +759,8 @@ export function useBackgroundRemovalTool(imageStore, historyStore, workspaceStor
   /**
    * Apply background removal
    *
-   * @param {string} removalType - Type of removal ('color', 'manual', 'auto')
    */
-  const applyBackgroundRemoval = async (removalType) => {
-    imageStore.addImageOperation({
-      type: 'backgroundRemoval',
-      removalType,
-    })
-
-    addUserEvent('applyOperation', {
-      tool: 'backgroundRemoval',
-      settings: {
-        removalType,
-      },
-    })
-
-    await applyBackgroundRemovalRender()
-  }
-
-  /**
-   * Apply background removal rendering
-   */
-  const applyBackgroundRemovalRender = async () => {
+  const applyBackgroundRemoval = async () => {
     if (editorStore.selectedToolKey !== 'backgroundRemoval') return
 
     if (!imageStore.getRenderedImage({ t, renderCall: false })) return
@@ -798,96 +791,175 @@ export function useBackgroundRemovalTool(imageStore, historyStore, workspaceStor
       }
     }
 
-    if (imageStore.needMergeOverlay) {
-      const confirmed = await showConfirmModal(
-        t('tools.confirmNeedOverlayMerge.title'),
-        t('tools.confirmNeedOverlayMerge.message'),
-        t('tools.confirmNeedOverlayMerge.cancel'),
-        t('tools.confirmNeedOverlayMerge.confirm'),
-      )
-      if (confirmed) {
-        imageStore.mergeOverlayIntoImage()
-      } else {
-        return
-      }
-    }
-
-    const changed = applyRemovalRender()
-    if (!changed) return // Skip history if mask was empty
-
-    historyStore.push(imageStore.getSnapshot(t))
-
-    someAreaIsSelected.value = false
-  }
-
-  /**
-   * Apply removal rendering based on canvas mask
-   */
-  const applyRemovalRender = () => {
+    // Get mask from canvas
     const manualCanvas = document.getElementById('removalCanvas')
     if (!manualCanvas) return
 
-    const ctxMask = manualCanvas.getContext('2d')
-    const maskData = ctxMask.getImageData(0, 0, manualCanvas.width, manualCanvas.height)
-    const maskPixels = maskData.data
+    const ctx = manualCanvas.getContext('2d')
+    const maskImageData = ctx.getImageData(0, 0, manualCanvas.width, manualCanvas.height)
 
-    // Check if mask contains any non-zero alpha (non-empty mask)
+    // Check empty mask
     let hasMask = false
-    for (let i = 3; i < maskPixels.length; i += 4) {
-      if (maskPixels[i] > 0) {
+    for (let i = 3; i < maskImageData.data.length; i += 4) {
+      if (maskImageData.data[i] > 0) {
         hasMask = true
         break
       }
     }
-    if (!hasMask) return false // mask is empty, skip processing
-
-    const renderedImage = useBaseImage.value
-      ? imageStore.originalImage
-      : imageStore.getRenderedImage({ t, renderCall: false })
-    if (!renderedImage) return
-
-    // Create a temporary canvas to manipulate the rendered image
-    const canvas = document.createElement('canvas')
-    canvas.width = renderedImage.width
-    canvas.height = renderedImage.height
-    const ctx = canvas.getContext('2d', { willReadFrequently: true })
-    ctx.drawImage(renderedImage, 0, 0)
-
-    const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height)
-    const data = imageData.data
+    if (!hasMask) return
 
     // Get background replacement color
-    const {
-      r: bgR,
-      g: bgG,
-      b: bgB,
-      a: bgA,
-    } = getBackgroundColorRGBA(replaceWithBackgroundColor.value)
+    const bgColor = getBackgroundColorRGBA(replaceWithBackgroundColor.value)
 
-    // Apply mask: remove/replace based on mask alpha
-    for (let i = 0; i < data.length; i += 4) {
-      const maskA = maskPixels[i + 3] // alpha channel
+    imageStore.addImageOperation({
+      type: 'backgroundRemoval',
+      params: {
+        mask: new Uint8ClampedArray(maskImageData.data),
+        width: maskImageData.width,
+        height: maskImageData.height,
+        bgColor: { ...bgColor },
+      },
+      cost: 'high',
+      affectsGeometry: false,
+    })
 
-      if (maskA > 0) {
-        // Use alpha as blending factor
-        const alpha = maskA / 255
+    addUserEvent('applyOperation', {
+      tool: 'backgroundRemoval',
+      settings: {},
+    })
 
-        // Linear blend between background and original pixel
-        data[i] = data[i] * (1 - alpha) + bgR * alpha
-        data[i + 1] = data[i + 1] * (1 - alpha) + bgG * alpha
-        data[i + 2] = data[i + 2] * (1 - alpha) + bgB * alpha
-        data[i + 3] = data[i + 3] * (1 - alpha) + bgA * alpha
-      }
-    }
+    await renderUpTo(imageStore.renderPipeline.currentOpIndex + 1)
 
-    ctx.putImageData(imageData, 0, 0)
-    imageStore.setRenderedImage(canvas)
+    historyStore.push(imageStore.getSnapshot(t))
 
-    // Clear manual selection
     clearAllSelections()
-
-    return true // success
+    someAreaIsSelected.value = false
   }
+
+  // /**
+  //  * Apply background removal rendering
+  //  */
+  // const applyBackgroundRemovalRender = async () => {
+  //   if (editorStore.selectedToolKey !== 'backgroundRemoval') return
+
+  //   if (!imageStore.getRenderedImage({ t, renderCall: false })) return
+
+  //   if (imageStore.fileType === 'pdf') {
+  //     const confirmed = await showConfirmModal(
+  //       t('tools.confirmNeedBaseImageRasterization.title'),
+  //       t('tools.confirmNeedBaseImageRasterization.message'),
+  //       t('tools.confirmNeedBaseImageRasterization.cancel'),
+  //       t('tools.confirmNeedBaseImageRasterization.confirm'),
+  //     )
+  //     if (!confirmed) return
+
+  //     await imageStore.rasterizeBaseImage(t)
+  //   }
+
+  //   if (imageStore.needRasterization) {
+  //     const confirmed = await showConfirmModal(
+  //       t('tools.confirmNeedRasterization.title'),
+  //       t('tools.confirmNeedRasterization.message'),
+  //       t('tools.confirmNeedRasterization.cancel'),
+  //       t('tools.confirmNeedRasterization.confirm'),
+  //     )
+  //     if (confirmed) {
+  //       await imageStore.rasterize(t)
+  //     } else {
+  //       return
+  //     }
+  //   }
+
+  //   if (imageStore.needMergeOverlay) {
+  //     const confirmed = await showConfirmModal(
+  //       t('tools.confirmNeedOverlayMerge.title'),
+  //       t('tools.confirmNeedOverlayMerge.message'),
+  //       t('tools.confirmNeedOverlayMerge.cancel'),
+  //       t('tools.confirmNeedOverlayMerge.confirm'),
+  //     )
+  //     if (confirmed) {
+  //       imageStore.mergeOverlayIntoImage()
+  //     } else {
+  //       return
+  //     }
+  //   }
+
+  //   const changed = applyRemovalRender()
+  //   if (!changed) return // Skip history if mask was empty
+
+  //   historyStore.push(imageStore.getSnapshot(t))
+
+  //   someAreaIsSelected.value = false
+  // }
+
+  // /**
+  //  * Apply removal rendering based on canvas mask
+  //  */
+  // const applyRemovalRender = () => {
+  //   const manualCanvas = document.getElementById('removalCanvas')
+  //   if (!manualCanvas) return
+
+  //   const ctxMask = manualCanvas.getContext('2d')
+  //   const maskData = ctxMask.getImageData(0, 0, manualCanvas.width, manualCanvas.height)
+  //   const maskPixels = maskData.data
+
+  //   // Check if mask contains any non-zero alpha (non-empty mask)
+  //   let hasMask = false
+  //   for (let i = 3; i < maskPixels.length; i += 4) {
+  //     if (maskPixels[i] > 0) {
+  //       hasMask = true
+  //       break
+  //     }
+  //   }
+  //   if (!hasMask) return false // mask is empty, skip processing
+
+  //   const renderedImage = useBaseImage.value
+  //     ? imageStore.originalImage
+  //     : imageStore.getRenderedImage({ t, renderCall: false })
+  //   if (!renderedImage) return
+
+  //   // Create a temporary canvas to manipulate the rendered image
+  //   const canvas = document.createElement('canvas')
+  //   canvas.width = renderedImage.width
+  //   canvas.height = renderedImage.height
+  //   const ctx = canvas.getContext('2d', { willReadFrequently: true })
+  //   ctx.drawImage(renderedImage, 0, 0)
+
+  //   const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height)
+  //   const data = imageData.data
+
+  //   // Get background replacement color
+  //   const {
+  //     r: bgR,
+  //     g: bgG,
+  //     b: bgB,
+  //     a: bgA,
+  //   } = getBackgroundColorRGBA(replaceWithBackgroundColor.value)
+
+  //   // Apply mask: remove/replace based on mask alpha
+  //   for (let i = 0; i < data.length; i += 4) {
+  //     const maskA = maskPixels[i + 3] // alpha channel
+
+  //     if (maskA > 0) {
+  //       // Use alpha as blending factor
+  //       const alpha = maskA / 255
+
+  //       // Linear blend between background and original pixel
+  //       data[i] = data[i] * (1 - alpha) + bgR * alpha
+  //       data[i + 1] = data[i + 1] * (1 - alpha) + bgG * alpha
+  //       data[i + 2] = data[i + 2] * (1 - alpha) + bgB * alpha
+  //       data[i + 3] = data[i + 3] * (1 - alpha) + bgA * alpha
+  //     }
+  //   }
+
+  //   ctx.putImageData(imageData, 0, 0)
+  //   imageStore.setRenderedImage(canvas)
+
+  //   // Clear manual selection
+  //   clearAllSelections()
+
+  //   return true // success
+  // }
 
   return {
     colorRemovalThreshold,
@@ -914,7 +986,7 @@ export function useBackgroundRemovalTool(imageStore, historyStore, workspaceStor
     boundaryOffset,
     autoSelectSimilarRegion,
     autoRemovalThreshold,
-    applyBackgroundRemovalRender,
+    // applyBackgroundRemovalRender,
     someAreaIsSelected,
   }
 }

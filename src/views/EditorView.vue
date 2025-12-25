@@ -81,11 +81,12 @@ const {
   cutSelectedSvgObject,
 } = useSvgObjects(useImageStore(), useHistoryStore(), useViewportStore(), useEditorStore(), useUiStore(), useWorkspaceStore(), t)
 
-const { applyBackgroundRemovalRender } = useBackgroundRemovalTool(
+const { applyBackgroundRemoval } = useBackgroundRemovalTool(
   useImageStore(),
   useHistoryStore(),
   useWorkspaceStore(),
   useEditorStore(),
+  useUiStore(),
   t,
 )
 
@@ -139,7 +140,7 @@ useKeyboardShortcuts({
   hideCropBox,
   showCropBox,
   applyCrop,
-  applyBackgroundRemovalRender,
+  applyBackgroundRemoval,
   toggleCollapsiblePanel,
   closeHelpModal,
   closeSettingsPanel,
