@@ -1,5 +1,4 @@
-import { ref, nextTick, watch } from 'vue'
-import { useToastModal } from '../modals/useToastModal'
+import { ref, nextTick, watch, computed } from 'vue'
 import { editorConfig } from '@/config/editorConfig'
 import { useMath } from '../common/useMath'
 import { useConfirmModal } from '../modals/useConfirmModal'
@@ -16,7 +15,6 @@ import { useImagePipeline } from '../editor/useImagePipeline'
  * @returns {object} Resize tool bindings and methods
  */
 export function useResizeTool(imageStore, historyStore, viewportStore, uiStore, t) {
-  const { showToastModal } = useToastModal()
   const { showConfirmModal } = useConfirmModal()
   const { round } = useMath()
   const { renderUpTo } = useImagePipeline(imageStore, uiStore)
@@ -54,6 +52,18 @@ export function useResizeTool(imageStore, historyStore, viewportStore, uiStore, 
    */
   const FileDimensionWidthInputRef = ref(null)
   const FileDimensionHeightInputRef = ref(null)
+
+  /**
+   * Operation can not be applied if image has same dimensions as requested or zero dimensions
+   */
+  const canBeApplied = computed(() => {
+    return (
+      fileDimensionWidth.value > 0 &&
+      fileDimensionHeight.value > 0 &&
+      (fileDimensionWidth.value !== imageStore.fileDimensions.width ||
+        fileDimensionHeight.value !== imageStore.fileDimensions.height)
+    )
+  })
 
   /**
    * Watch for changes in file dimensions and update inputs accordingly
@@ -134,11 +144,43 @@ export function useResizeTool(imageStore, historyStore, viewportStore, uiStore, 
   }
 
   /**
+   * Compute effective rotation (0, 90, 180, 270) from image operations.
+   *
+   * @returns {number} rotation in degrees
+   */
+  const getEffectiveRotation = () => {
+    let rotation = 0
+
+    for (const op of imageStore.imageOperations) {
+      if (op.type !== 'rotate') continue
+
+      rotation = (rotation + op.params.angle) % 360
+    }
+
+    // Normalize to positive values
+    return (rotation + 360) % 360
+  }
+
+  /**
    * Reset resize dimensions to original image dimensions
    */
   const resetResize = () => {
-    fileDimensionWidth.value = imageStore.originalFileDimensions.width
-    fileDimensionHeight.value = imageStore.originalFileDimensions.height
+    const rotation = getEffectiveRotation()
+
+    let width = imageStore.originalFileDimensions.width
+    let height = imageStore.originalFileDimensions.height
+
+    // Swap dimensions for 90° or 270° rotation
+    if (rotation === 90 || rotation === 270) {
+      const tmp = width
+      width = height
+      height = tmp
+    }
+
+    fileDimensionWidth.value = width
+    fileDimensionHeight.value = height
+    originalAspectRatio = width / height || 1
+
     isFileDimensionsLinked.value = true
 
     nextTick(() => {
@@ -151,6 +193,8 @@ export function useResizeTool(imageStore, historyStore, viewportStore, uiStore, 
    * Apply the resize operation to the operation history and canvas
    */
   const applyResize = async () => {
+    if (!canBeApplied.value) return
+
     if (imageStore.needRasterization) {
       const confirmed = await showConfirmModal(
         t('tools.confirmNeedRasterization.title'),
@@ -219,5 +263,6 @@ export function useResizeTool(imageStore, historyStore, viewportStore, uiStore, 
     updateFileDimension,
     applyResize,
     resetResize,
+    canBeApplied,
   }
 }
