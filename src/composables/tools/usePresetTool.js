@@ -44,7 +44,7 @@ export function usePresetTool(
   const isModifyingPreset = ref(false)
 
   /**
-   * Whether the preset is currently being initialized
+   * Whether the preset is currently being initialized from store
    */
   const initializing = ref(false)
 
@@ -67,6 +67,60 @@ export function usePresetTool(
    * Whether the selected operation should be cleared
    */
   const clearSelected = ref(false)
+
+  /**
+   * New preset object to be created
+   */
+  const newPreset = ref({
+    presetName: '',
+    cropEnabled: false,
+    resizeEnabled: false,
+    transformations: {
+      rotationAngle: 0,
+      horizontalFlip: false,
+      verticalFlip: false,
+    },
+    autoCrop: {
+      enabled: false,
+    },
+    grayscale: {
+      grayscaleType: 'none',
+    },
+    frame: {
+      enabled: false,
+      type: 'frameSolid',
+      useMillimeters: false,
+      width: 1,
+      widthMm: 1,
+      height: 0,
+      heightMm: 0,
+      color: '#000000',
+      headerSize: 20,
+      headerSizeMm: 20,
+      footerSize: 20,
+      footerSizeMm: 20,
+      outlineEnabled: false,
+      phoneHeaderEnabled: true,
+      phoneHeaderExpand: false,
+      phoneButtonsEnabled: true,
+      phoneNavigationEnabled: true,
+      phoneHeaderTimeInMinutes: 610,
+      phoneHeaderTextColor: '#000000',
+      phoneHeaderBackgroundColor: '#ffffff',
+    },
+    cropBox: {
+      x: 0,
+      y: 0,
+      width: 0,
+      height: 0,
+    },
+    resizeDimensions: {
+      width: 0,
+      height: 0,
+    },
+
+    // UPDATE new tool
+  })
 
   /**
    * Currently available presets options for selection
@@ -206,6 +260,8 @@ export function usePresetTool(
   watch(
     () => localImageFrame.value.outlineEnabled,
     (enabled) => {
+      if (initializing.value) return
+
       isPresetModified.value = true
       if (enabled) {
         localImageFrame.value.width = Math.floor(
@@ -645,59 +701,6 @@ export function usePresetTool(
     },
     { immediate: true, deep: false },
   )
-  /**
-   * New preset object to be created
-   */
-  const newPreset = ref({
-    presetName: '',
-    cropEnabled: false,
-    resizeEnabled: false,
-    transformations: {
-      rotationAngle: 0,
-      horizontalFlip: false,
-      verticalFlip: false,
-    },
-    autoCrop: {
-      enabled: false,
-    },
-    grayscale: {
-      grayscaleType: 'none',
-    },
-    frame: {
-      enabled: false,
-      type: 'frameSolid',
-      useMillimeters: false,
-      width: 1,
-      widthMm: 1,
-      height: 0,
-      heightMm: 0,
-      color: '#000000',
-      headerSize: 20,
-      headerSizeMm: 20,
-      footerSize: 20,
-      footerSizeMm: 20,
-      outlineEnabled: false,
-      phoneHeaderEnabled: true,
-      phoneHeaderExpand: false,
-      phoneButtonsEnabled: true,
-      phoneNavigationEnabled: true,
-      phoneHeaderTimeInMinutes: 610,
-      phoneHeaderTextColor: '#000000',
-      phoneHeaderBackgroundColor: '#ffffff',
-    },
-    cropBox: {
-      x: 0,
-      y: 0,
-      width: 0,
-      height: 0,
-    },
-    resizeDimensions: {
-      width: 0,
-      height: 0,
-    },
-
-    // UPDATE new tool
-  })
 
   /**
    * Max crop box position based on editor config
@@ -806,6 +809,8 @@ export function usePresetTool(
   const resetPreset = () => {
     newPreset.value = {
       presetName: '',
+      cropEnabled: false,
+      resizeEnabled: false,
       transformations: {
         rotationAngle: 0,
         horizontalFlip: false,
@@ -939,7 +944,11 @@ export function usePresetTool(
       })
     }
 
-    if (newPreset.value.cropBox.width > 0 && newPreset.value.cropBox.height > 0) {
+    if (
+      newPreset.value.cropEnabled &&
+      newPreset.value.cropBox.width > 0 &&
+      newPreset.value.cropBox.height > 0
+    ) {
       imageOperations.push({
         type: 'crop',
         cropBox: {
@@ -951,7 +960,11 @@ export function usePresetTool(
       })
     }
 
-    if (newPreset.value.resizeDimensions.width > 0 && newPreset.value.resizeDimensions.height > 0) {
+    if (
+      newPreset.value.resizeEnabled &&
+      newPreset.value.resizeDimensions.width > 0 &&
+      newPreset.value.resizeDimensions.height > 0
+    ) {
       imageOperations.push({
         type: 'resize',
         resizeDimensions: {
