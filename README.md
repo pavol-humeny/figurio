@@ -10,6 +10,10 @@
 - eye dropper na safari
 - Zjednodušiť nápovedy - tipy (kratšie texty)
 - high noise leven in image by sa pri crop, resize... asi mal odstranit (ten warning)
+- bg removal skratky pridať do help, brush manipulation skratky (ALT = resize)
+- pri prepnutí z color na manual select sa nezapne spravny kurzor
+- prehodiť blur za shape
+- Paste by to mohol klásť inde ako na ten istý objekt, aspoň pri kliknutí pravím 
 
 ## TODO
 - spracovanie pdf súborov 

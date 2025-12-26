@@ -100,7 +100,7 @@ defineExpose({ setValue })
       </div>
 
       <ul v-if="showDropdown" class="dropdown-options" ref="dropdownRef">
-        <li v-for="option in props.options" :key="option.value" @mousedown.prevent="onSelect(option.value)">
+        <li v-for="option in props.options" :key="option.value" @click.prevent="onSelect(option.value)">
           {{ option.label }}
         </li>
       </ul>
