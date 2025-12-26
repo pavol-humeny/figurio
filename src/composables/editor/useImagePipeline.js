@@ -69,7 +69,7 @@ export function useImagePipeline(imageStore, uiStore) {
    * @param {object} ctx
    * @returns {Promise<HTMLCanvasElement>}
    */
-  const computeEffectiveBaseCanvas = async (resizeOpIndex, ctx) => {
+  const computeEffectiveBaseCanvasForResize = async (resizeOpIndex, ctx) => {
     const base = imageStore.renderPipeline.baseState
     let state = cloneState(base)
 
@@ -79,6 +79,33 @@ export function useImagePipeline(imageStore, uiStore) {
 
       const meta = {}
       state = await applyOperation(state, op, meta, ctx)
+    }
+
+    return state.canvas
+  }
+
+  /**
+   * Returns rendered canvas after applying operations up to given index
+   */
+  const getEffectiveCanvas = async (targetIndex) => {
+    const pipeline = imageStore.renderPipeline
+
+    if (!pipeline.baseState) return null
+
+    let state = {
+      canvas: pipeline.baseState.canvas,
+      overlay: pipeline.baseState.overlay,
+      pdfBytes: pipeline.baseState.pdfBytes,
+    }
+
+    console.warn('Computing effective canvas up to index:', targetIndex)
+    for (let i = 0; i <= targetIndex; i++) {
+      const op = imageStore.imageOperations[i]
+      console.warn('Applying op index', i, op ? op.type : 'null')
+      if (!op) continue
+
+      const meta = {}
+      state = await applyOperation(state, op, meta, { opIndex: i })
     }
 
     return state.canvas
@@ -104,7 +131,7 @@ export function useImagePipeline(imageStore, uiStore) {
     }
 
     if (operation.type === 'resize') {
-      const effectiveBaseCanvas = await computeEffectiveBaseCanvas(ctx.opIndex, ctx)
+      const effectiveBaseCanvas = await computeEffectiveBaseCanvasForResize(ctx.opIndex, ctx)
 
       const result = await resizeOperation({
         baseCanvas: effectiveBaseCanvas,
@@ -249,18 +276,21 @@ export function useImagePipeline(imageStore, uiStore) {
    * Reset pipeline when a new image is loaded
    * @param {HTMLCanvasElement} baseCanvas
    */
-  const resetPipeline = (baseCanvas) => {
-    const baseState = {
-      canvas: baseCanvas,
-      pdfBytes: imageStore.fileType === 'pdf' ? new Uint8Array(imageStore.pdfPageBytes) : null,
-    }
-
+  const initPipeline = (baseCanvas) => {
     imageStore.renderPipeline = {
-      baseState,
+      baseState: {
+        canvas: baseCanvas,
+        overlay: null,
+        pdfBytes: imageStore.fileType === 'pdf' ? new Uint8Array(imageStore.pdfPageBytes) : null,
+      },
       checkpoints: [
         {
           opIndex: -1,
-          state: cloneState(baseState),
+          state: {
+            canvas: cloneCanvas(baseCanvas),
+            overlay: null,
+            pdfBytes: imageStore.pdfPageBytes,
+          },
           dimensions: {
             width: baseCanvas.width,
             height: baseCanvas.height,
@@ -272,9 +302,36 @@ export function useImagePipeline(imageStore, uiStore) {
       lastRenderedOpIndex: -1,
     }
   }
+  const resetPipeline = () => {
+    const base = imageStore.renderPipeline.baseState
+    if (!base) return
+
+    imageStore.renderPipeline = {
+      baseState: {
+        canvas: base.canvas,
+        overlay: base.overlay,
+        pdfBytes: base.pdfBytes ? new Uint8Array(base.pdfBytes) : null,
+      },
+      checkpoints: [
+        {
+          opIndex: -1,
+          state: cloneState(base),
+          dimensions: {
+            width: base.canvas.width,
+            height: base.canvas.height,
+            fileAspectRatio: base.canvas.width / base.canvas.height || 1,
+          },
+        },
+      ],
+      currentOpIndex: -1,
+      lastRenderedOpIndex: -1,
+    }
+  }
 
   return {
     renderUpTo,
+    initPipeline,
     resetPipeline,
+    getEffectiveCanvas,
   }
 }

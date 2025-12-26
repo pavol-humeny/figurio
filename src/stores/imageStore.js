@@ -9,12 +9,50 @@ import { useWorkspaceStore } from './workspaceStore'
 import { editorConfig } from '@/config/editorConfig'
 import { useConsole } from '@/composables/common/useConsole.js'
 import { useViewportStore } from './viewportStore'
+import { toRaw } from 'vue'
 
 pdfjsLib.GlobalWorkerOptions.workerSrc =
   'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js'
 
 const { log, warn } = useConsole()
 const { showToastModal } = useToastModal()
+
+/**
+ * Serialize an image operation for storage
+ */
+const serializeOperation = (op) => {
+  const raw = toRaw(op)
+
+  if (raw.type === 'backgroundRemoval') {
+    return {
+      type: 'backgroundRemoval',
+      cost: raw.cost,
+      affectsGeometry: false,
+      params: {
+        maskBuffer: raw.params.mask.buffer.slice(0),
+        width: raw.params.width,
+        height: raw.params.height,
+        bgColor: { ...raw.params.bgColor },
+      },
+    }
+  }
+
+  if (raw.type === 'brush') {
+    return {
+      type: 'brush',
+      overlayDataURL: raw.overlay.toDataURL(),
+      cost: raw.cost,
+      affectsGeometry: false,
+    }
+  }
+
+  return {
+    type: raw.type,
+    params: raw.params,
+    cost: raw.cost,
+    affectsGeometry: raw.affectsGeometry,
+  }
+}
 
 /**
  * Checks if a file name is valid by ensuring it does not contain invalid characters.
@@ -35,6 +73,7 @@ export const useImageStore = defineStore('imageStore', {
       baseState: null,
       // {
       //   canvas: HTMLCanvasElement,
+      //   overlay: HTMLCanvasElement | null,
       //   pdfBytes: Uint8Array | null
       // }
 
@@ -1146,33 +1185,7 @@ export const useImageStore = defineStore('imageStore', {
         fileDimensions: JSON.parse(JSON.stringify(this.fileDimensions)),
 
         // OPERATIONS (SOURCE OF TRUTH)
-        // imageOperations: JSON.parse(JSON.stringify(this.imageOperations)),
-        imageOperations: this.imageOperations.map((op) => {
-          if (op.type === 'backgroundRemoval') {
-            return {
-              type: 'backgroundRemoval',
-              cost: op.cost,
-              affectsGeometry: false,
-              params: {
-                maskBuffer: op.params.mask.buffer.slice(0),
-                width: op.params.width,
-                height: op.params.height,
-                bgColor: { ...op.params.bgColor },
-              },
-            }
-          }
-
-          if (op.type === 'brush') {
-            return {
-              type: 'brush',
-              overlayDataURL: op.overlay.toDataURL(),
-              cost: op.cost,
-              affectsGeometry: false,
-            }
-          }
-
-          return structuredClone(op)
-        }),
+        imageOperations: this.imageOperations.map(serializeOperation),
 
         // SVG / OVERLAY METADATA
         svgObjects: JSON.parse(JSON.stringify(this.svgObjects)),
@@ -1245,7 +1258,13 @@ export const useImageStore = defineStore('imageStore', {
             img.src = op.overlayDataURL
           })
         } else {
-          this.imageOperations.push(structuredClone(op))
+          // this.imageOperations.push(structuredClone(op))
+          this.imageOperations.push({
+            type: op.type,
+            params: op.params,
+            cost: op.cost,
+            affectsGeometry: op.affectsGeometry,
+          })
         }
       }
 
@@ -1297,32 +1316,7 @@ export const useImageStore = defineStore('imageStore', {
           : null,
 
         // PIPELINE
-        imageOperations: this.imageOperations.map((op) => {
-          if (op.type === 'backgroundRemoval') {
-            return {
-              type: 'backgroundRemoval',
-              cost: op.cost,
-              affectsGeometry: false,
-              params: {
-                maskBuffer: op.params.mask.buffer.slice(0),
-                width: op.params.width,
-                height: op.params.height,
-                bgColor: { ...op.params.bgColor },
-              },
-            }
-          }
-
-          if (op.type === 'brush') {
-            return {
-              type: 'brush',
-              overlayDataURL: op.overlay.toDataURL(),
-              cost: op.cost,
-              affectsGeometry: false,
-            }
-          }
-
-          return structuredClone(op)
-        }),
+        imageOperations: this.imageOperations.map(serializeOperation),
 
         currentOpIndex: this.renderPipeline.currentOpIndex,
 
@@ -1416,7 +1410,12 @@ export const useImageStore = defineStore('imageStore', {
             img.src = op.overlayDataURL
           })
         } else {
-          this.imageOperations.push(structuredClone(op))
+          this.imageOperations.push({
+            type: op.type,
+            params: op.params ? structuredClone(op.params) : undefined,
+            cost: op.cost,
+            affectsGeometry: op.affectsGeometry,
+          })
         }
       }
 

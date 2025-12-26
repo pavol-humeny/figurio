@@ -84,7 +84,7 @@ export function useCropTool(imageStore, viewportStore, editorStore, historyStore
   const { showConfirmModal } = useConfirmModal()
   const { showToastModal } = useToastModal()
   const { clamp, round } = useMath()
-  const { renderUpTo } = useImagePipeline(imageStore, uiStore)
+  const { renderUpTo, getEffectiveCanvas } = useImagePipeline(imageStore, uiStore)
 
   /**
    * Update last canny crop to current crop box
@@ -731,10 +731,17 @@ export function useCropTool(imageStore, viewportStore, editorStore, historyStore
    * @param {number} sensitivity - higher = more aggressive trimming
    * @returns {Object|null} cropRect {x, y, width, height} or null
    */
-  const calculateAutoCropBoxCanny = (useBaseImage) => {
+  const calculateAutoCropBoxCanny = async (useBaseImage, useEffectiveCanvas) => {
     const scale = 1
 
-    const img = imageStore.getRenderedImage({ t, renderCall: false })
+    const img = useEffectiveCanvas
+      ? await getEffectiveCanvas(imageStore.imageOperations.length - 1)
+      : imageStore.getRenderedImage({ t, renderCall: false })
+
+    console.warn('useEffectiveCanvas', useEffectiveCanvas)
+    console.warn('img', img)
+    console.warn('WxH', img ? img.width + 'x' + img.height : null)
+
     if (!img) return null
 
     const canvas = document.createElement('canvas')
@@ -993,13 +1000,15 @@ export function useCropTool(imageStore, viewportStore, editorStore, historyStore
     }
 
     // Keep inside image bounds (prefer keeping x,y)
-    if (cropRect.x + cropRect.width > imageStore.fileDimensions.width) {
-      cropRect.x = imageStore.fileDimensions.width - cropRect.width
+    if (cropRect.x + cropRect.width > imgWidth) {
+      cropRect.x = imgWidth - cropRect.width
     }
 
-    if (cropRect.y + cropRect.height > imageStore.fileDimensions.height) {
-      cropRect.y = imageStore.fileDimensions.height - cropRect.height
+    if (cropRect.y + cropRect.height > imgHeight) {
+      cropRect.y = imgHeight - cropRect.height
     }
+
+    console.warn('Final crop rect:', cropRect)
 
     return cropRect
   }
@@ -1007,8 +1016,8 @@ export function useCropTool(imageStore, viewportStore, editorStore, historyStore
   /**
    * Fit the crop box to the content
    */
-  const fitCrop = () => {
-    const newCropBox = calculateAutoCropBoxCanny(useBaseImage.value)
+  const fitCrop = async () => {
+    const newCropBox = await calculateAutoCropBoxCanny(useBaseImage.value, false)
 
     if (!newCropBox) return
 
@@ -1066,10 +1075,8 @@ export function useCropTool(imageStore, viewportStore, editorStore, historyStore
   /**
    * Apply the auto crop in preset
    */
-  const applyAutoCropPreset = async () => {
-    // TODO probably add operation into image operations stack directly here and call renderUpTo
-    // const newCropBox = calculateAutoCropBoxCanny(useBaseImage)
-    // applyCropRender(newCropBox)
+  const getAutoCropBox = async () => {
+    return await calculateAutoCropBoxCanny(true, true)
   }
 
   /**
@@ -1190,7 +1197,7 @@ export function useCropTool(imageStore, viewportStore, editorStore, historyStore
     manualIndents,
     recalculateCropBox,
     fitCropApplied,
-    applyAutoCropPreset,
+    getAutoCropBox,
     tmpCropX,
     tmpCropY,
     isManualAdjustmentsLinked,

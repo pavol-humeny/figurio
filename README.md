@@ -1,30 +1,15 @@
 # Figurio
 
-15.12.
-- background removal kreslenie sa sekne 
-- Undo,redo optimalizacia
-
-- pdf nacitanie 
-- pdf optimalizacia
-
-- rámik monitoru
-- hláška pri tlačítkach že sa nedajú zobraziť 
-
-
 ## TODO 
-- Ak dám rotate a potom resize tak to nefunguje, lebo resize robi s base canvas 
-- Rámik monitoru 
+- rámik monitoru
+- background removal kreslenie sa sekne 
 - Vylepšenie rámiku pre prehliadače 
 - DONE - MOZNO VYMYSLIET LEPSIE (TERAZ SA NEZOBRAZUJE VOBEC) Hláška o tom že sa nedajú vykresliť tlačidlá telefónu sa vypisuje viac krát
 - SKIP - (asi to je v pohode tak ako to je) zoomovanie pomocou tlacitok, ak je obrazok mimo stred tak to zoomuje mimo obrázok 
 - Oblé zakončenie čiar (line tool)
-- pri dokreslení background removal canvas sa to sekne 
 - eye dropper na safari
-- zatvaranie pdf je strasne pomale
 - Zjednodušiť nápovedy - tipy (kratšie texty)
-- achievementy
 - high noise leven in image by sa pri crop, resize... asi mal odstranit (ten warning)
-- blur, ak bol blue objekt zmazany a klikne sa (ide sa kreslit novy) tak to zvyrazni ten stary
 
 ## TODO
 - spracovanie pdf súborov 
@@ -41,6 +26,7 @@
 - nekonečné zoomovanie 
 
 ## Dlhodobé TODO 
+- achievementy
 - Globálne úpravy (rasterizácia)
 - BG removal - ukladanie do undo redo operácií pri výbere 
 - Poskakovanie pri resize ak je to otočené 

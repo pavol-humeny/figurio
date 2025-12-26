@@ -1,18 +1,14 @@
 import { ref, computed, watch } from 'vue'
 import { useToastModal } from '../modals/useToastModal'
 import { useConfirmModal } from '../modals/useConfirmModal'
-import { useFlipTool } from './useFlipTool'
-import { useRotateTool } from './useRotateTool'
-import { useGrayscaleTool } from './useGrayscaleTool'
 import { useCropTool } from './useCropTool'
 import { editorConfig } from '@/config/editorConfig'
-import { useResizeTool } from './useResizeTool'
 import { useFrameTool } from './useFrameTool'
 import { useConsole } from '@/composables/common/useConsole.js'
 const { warn } = useConsole()
 import { useApi } from '@/composables/common/useApi'
-import { useUiStore } from '@/stores/uiStore'
 const { addUserEvent } = useApi()
+import { useImagePipeline } from '../editor/useImagePipeline'
 
 /**
  * Logic for preset tool
@@ -23,11 +19,12 @@ export function usePresetTool(
   editorStore,
   presetsStore,
   viewportStore,
-  workspaceStore,
+  uiStore,
   t,
 ) {
   const { showToastModal } = useToastModal()
   const { showConfirmModal } = useConfirmModal()
+  const { renderUpTo, resetPipeline } = useImagePipeline(imageStore, uiStore)
 
   // --------------------------
   // myPresets
@@ -478,6 +475,82 @@ export function usePresetTool(
   }
 
   /**
+   * Normalize preset operation to match image operation format
+   * @param {Object} op - Preset operation
+   * @returns {Object} - Normalized image operation
+   */
+  const normalizePresetOperation = async (op) => {
+    switch (op.type) {
+      case 'rotation':
+        return {
+          type: 'rotate',
+          params: { angle: op.angle },
+          cost: 'high',
+          affectsGeometry: true,
+        }
+
+      case 'flip':
+        return {
+          type: 'flip',
+          params: { direction: op.direction },
+          cost: 'high',
+          affectsGeometry: false,
+        }
+
+      case 'grayscale':
+        return {
+          type: 'grayscale',
+          params: { grayscaleType: op.grayscaleType },
+          cost: 'medium',
+          affectsGeometry: false,
+        }
+
+      case 'autoCrop': {
+        const autoCropBox = await useCropTool(
+          imageStore,
+          viewportStore,
+          editorStore,
+          historyStore,
+          uiStore,
+          t,
+        ).getAutoCropBox()
+
+        return {
+          type: 'crop',
+          params: {
+            x: autoCropBox.x,
+            y: autoCropBox.y,
+            width: autoCropBox.width,
+            height: autoCropBox.height,
+          },
+          cost: 'high',
+          affectsGeometry: true,
+        }
+      }
+
+      case 'crop':
+        return {
+          type: 'crop',
+          params: { ...op.cropBox },
+          cost: 'high',
+          affectsGeometry: true,
+        }
+
+      case 'resize':
+        return {
+          type: 'resize',
+          params: { ...op.resizeDimensions },
+          cost: 'high',
+          affectsGeometry: true,
+        }
+
+      default:
+        console.warn('Unknown preset operation:', op)
+        return null
+    }
+  }
+
+  /**
    * Apply the selected preset
    *
    * Apply only if current image operations and frame are different from preset
@@ -499,15 +572,6 @@ export function usePresetTool(
         return
       }
     }
-
-    // if (imageStore.needMergeOverlay) {
-    //   imageStore.mergeOverlayIntoImage()
-    //   showToastModal(
-    //     'info',
-    //     t('tools.infoOverlayWasMerged.title'),
-    //     t('tools.infoOverlayWasMerged.message'),
-    //   )
-    // }
 
     const preset = presetsStore.selectedPreset
 
@@ -590,52 +654,16 @@ export function usePresetTool(
 
     if (replace) {
       imageStore.resetRenderedImageToOriginal()
+      imageStore.resetImageOperations()
+      resetPipeline()
     }
 
-    if (preset.imageOperations.length !== 0) {
-      preset.imageOperations.forEach(async (operation) => {
-        if (operation.type === 'rotation') {
-          await useRotateTool(imageStore, historyStore, useUiStore(), t).applyRotationRender(
-            operation.angle,
-          )
-        } else if (operation.type === 'flip') {
-          await useFlipTool(imageStore, historyStore, useUiStore(), t).applyFlipRender(
-            operation.direction,
-          )
-        } else if (operation.type === 'autoCrop') {
-          await useCropTool(
-            imageStore,
-            viewportStore,
-            editorStore,
-            historyStore,
-            useUiStore(),
-            t,
-          ).applyAutoCropPreset()
-        } else if (operation.type === 'grayscale') {
-          await useGrayscaleTool(imageStore, editorStore, historyStore, t).applyGrayscaleRender(
-            operation.grayscaleType,
-          )
-        } else if (operation.type === 'crop') {
-          await useCropTool(
-            imageStore,
-            viewportStore,
-            editorStore,
-            historyStore,
-            useUiStore(),
-            t,
-          ).applyCropRender(operation.cropBox)
-        } else if (operation.type === 'resize') {
-          await useResizeTool(
-            imageStore,
-            historyStore,
-            viewportStore,
-            useUiStore(),
-            t,
-          ).applyResizeRender(operation.resizeDimensions.width, operation.resizeDimensions.height)
-        }
+    // Push preset operations to imageStore
+    for (const op of preset.imageOperations) {
+      const normalized = await normalizePresetOperation(op)
+      if (!normalized) continue
 
-        // UPDATE new tool
-      })
+      imageStore.imageOperations.push(normalized)
     }
 
     console.warn('Applying preset frame:', preset.imageFrame)
@@ -649,13 +677,12 @@ export function usePresetTool(
       imageStore.frame = JSON.parse(JSON.stringify(preset.imageFrame))
     }
 
-    // Save current operations to imageStore
-    imageStore.imageOperations = JSON.parse(JSON.stringify(preset.imageOperations))
-
     addUserEvent('applyOperation', {
       tool: 'preset',
       settings: { action: 'applyPreset' },
     })
+
+    await renderUpTo(imageStore.imageOperations.length - 1)
 
     historyStore.push(imageStore.getSnapshot(t))
   }
@@ -925,23 +952,69 @@ export function usePresetTool(
         type: 'rotation',
         angle: newPreset.value.transformations.rotationAngle,
       })
+      // imageOperations.push({
+      //   type: 'rotate',
+      //   params: { angle: newPreset.value.transformations.rotationAngle },
+      //   cost: 'high',
+      //   affectsGeometry: true,
+      // })
     }
     if (newPreset.value.transformations.horizontalFlip) {
       imageOperations.push({ type: 'flip', direction: 'horizontal' })
+      // imageOperations.push({
+      //   type: 'flip',
+      //   params: { direction: 'horizontal' },
+      //   cost: 'high',
+      //   affectsGeometry: false,
+      // })
     }
     if (newPreset.value.transformations.verticalFlip) {
       imageOperations.push({ type: 'flip', direction: 'vertical' })
+      // imageOperations.push({
+      //   type: 'flip',
+      //   params: { direction: 'vertical' },
+      //   cost: 'high',
+      //   affectsGeometry: false,
+      // })
     }
     if (newPreset.value.autoCrop.enabled) {
       imageOperations.push({
         type: 'autoCrop',
       })
+      // const autoCropBox = useCropTool(
+      //   imageStore,
+      //   viewportStore,
+      //   editorStore,
+      //   historyStore,
+      //   uiStore,
+      //   t,
+      // ).getAutoCropBox()
+
+      // imageOperations.push({
+      //   type: 'crop',
+      //   params: {
+      //     x: autoCropBox.x,
+      //     y: autoCropBox.y,
+      //     width: autoCropBox.width,
+      //     height: autoCropBox.height,
+      //   },
+      //   cost: 'high',
+      //   affectsGeometry: true,
+      // })
     }
     if (newPreset.value.grayscale.grayscaleType !== 'none') {
       imageOperations.push({
         type: 'grayscale',
         grayscaleType: newPreset.value.grayscale.grayscaleType,
       })
+      // imageOperations.push({
+      //   type: 'grayscale',
+      //   params: {
+      //     grayscaleType: newPreset.value.grayscale.grayscaleType,
+      //   },
+      //   cost: 'medium',
+      //   affectsGeometry: false,
+      // })
     }
 
     if (

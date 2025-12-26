@@ -35,7 +35,7 @@ export function importFileService(
   historyStore,
   t,
 ) {
-  const { resetPipeline } = useImagePipeline(imageStore, uiStore)
+  const { initPipeline } = useImagePipeline(imageStore, uiStore)
   const { closeImportModal } = useImportModal()
   /**
    * Opens a file input dialog for the user to select files and processes them
@@ -396,7 +396,7 @@ function
     imageStore.newFileDimensions = { ...imageStore.fileDimensions }
     imageStore.originalFileDimensions = { ...imageStore.fileDimensions }
 
-    resetPipeline(canvas)
+    initPipeline(canvas)
 
     imageStore.setRenderedImage(canvas)
     imageStore.originalImage = canvas
@@ -442,7 +442,7 @@ function
     canvas.getContext('2d').drawImage(img, 0, 0)
 
     // Initialize render pipeline
-    resetPipeline(canvas)
+    initPipeline(canvas)
     // -----------------
 
     imageStore.setRenderedImage(canvas)

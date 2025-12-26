@@ -1,6 +1,5 @@
 import { useConfirmModal } from '../modals/useConfirmModal'
 import { ref, computed } from 'vue'
-import { useToastModal } from '../modals/useToastModal'
 import { useApi } from '@/composables/common/useApi'
 const { addUserEvent } = useApi()
 import { useUiStore } from '@/stores/uiStore'
@@ -16,7 +15,6 @@ import { useImagePipeline } from '../editor/useImagePipeline'
  */
 export function useGrayscaleTool(imageStore, editorStore, historyStore, t) {
   const { showConfirmModal } = useConfirmModal()
-  const { showToastModal } = useToastModal()
   const uiStore = useUiStore()
   const { renderUpTo } = useImagePipeline(imageStore, uiStore)
 
@@ -89,11 +87,8 @@ export function useGrayscaleTool(imageStore, editorStore, historyStore, t) {
 
     historyStore.push(imageStore.getSnapshot())
 
-    // applyGrayscaleRender(grayscaleType.value)
 
     saveConfigToEditorStore()
-
-    // historyStore.push(imageStore.getSnapshot(t))
   }
 
   /**
@@ -150,7 +145,6 @@ export function useGrayscaleTool(imageStore, editorStore, historyStore, t) {
 
   return {
     applyGrayscale,
-    // applyGrayscaleRender,
     grayscaleType,
     grayscaleOptions,
   }

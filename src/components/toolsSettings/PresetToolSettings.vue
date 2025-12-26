@@ -20,8 +20,8 @@ import { useViewportStore } from '@/stores/viewportStore'
 import { editorConfig } from '@/config/editorConfig'
 import TimeInput from '../common/TimeInput.vue'
 import { useFrameTool } from '@/composables/tools/useFrameTool'
-import { useWorkspaceStore } from '@/stores/workspaceStore'
 import ExplainItem from '../common/ExplainItem.vue'
+import { useUiStore } from '@/stores/uiStore'
 
 const { t } = useI18n()
 
@@ -70,7 +70,7 @@ const {
   useEditorStore(),
   usePresetsStore(),
   useViewportStore(),
-  useWorkspaceStore(),
+  useUiStore(),
   t,
 )
 

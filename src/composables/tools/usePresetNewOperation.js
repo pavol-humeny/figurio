@@ -145,7 +145,7 @@ export function usePresetNewOperation(imageStore, props, emit, t) {
     let op = null
     // UPDATE new tool
     if (type === 'rotation') {
-      op = { type, angle: 0 }
+      op = { type, angle: 90 }
     } else if (type === 'flip') {
       op = { type, direction: 'horizontal' }
     } else if (type === 'autoCrop') {
