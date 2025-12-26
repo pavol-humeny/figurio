@@ -555,13 +555,6 @@ const tabs = ['myPresets', 'createPreset']
               <div class="content-wrapper">
                 <DropdownSelect v-model="newPreset.grayscale.grayscaleType" :options="presetGrayscaleOptions" />
               </div>
-              <!-- <div class="content-aligned two-items">
-                <p>
-                  {{ t('tools.preset.settings.createPreset.presetValues.grayscale.enabled') }}
-                </p>
-                <ToggleButton v-model="newPreset.grayscale.enabled" :scale="0.6"
-                  :style="{ transform: 'translateX(16px)' }" />
-              </div> -->
             </div>
           </div>
 
@@ -573,8 +566,14 @@ const tabs = ['myPresets', 'createPreset']
                   {{ t('tools.preset.settings.createPreset.presetValues.crop.label') }}
                 </p>
               </div>
+              <div class="content-aligned two-items">
+                <p>
+                  {{ t('tools.preset.settings.createPreset.presetValues.autoCrop.enabled') }}
+                </p>
+                <ToggleButton v-model="newPreset.cropEnabled" :scale="0.6" :style="{ transform: 'translateX(16px)' }" />
+              </div>
               <div class="content-inputs">
-                <div class="content-input" :class="newPreset.cropBox.x === 0 ? 'no-value' : ''">
+                <div class="content-input" :class="newPreset.cropEnabled ? '' : 'disabled'">
                   <label for="x-input">
                     {{ $t('tools.crop.settings.general.cropPosition.x') }}
                   </label>
@@ -582,7 +581,7 @@ const tabs = ['myPresets', 'createPreset']
                     :max="maxCropBoxPositionX" unit="px" />
                 </div>
                 <div class="content-between-inputs-icon-wrapper disabled"></div>
-                <div class="content-input" :class="newPreset.cropBox.y === 0 ? 'no-value' : ''">
+                <div class="content-input" :class="newPreset.cropEnabled ? '' : 'disabled'">
                   <label for="y-input">
                     {{ $t('tools.crop.settings.general.cropPosition.y') }}
                   </label>
@@ -591,7 +590,7 @@ const tabs = ['myPresets', 'createPreset']
                 </div>
               </div>
               <div class="content-inputs" :style="{ marginTop: '10px' }">
-                <div class="content-input" :class="newPreset.cropBox.width === 0 ? 'no-value' : ''">
+                <div class="content-input" :class="newPreset.cropEnabled ? '' : 'disabled'">
                   <label for="width-input">
                     {{ $t('tools.crop.settings.general.cropDimensions.width') }}
                   </label>
@@ -601,7 +600,7 @@ const tabs = ['myPresets', 'createPreset']
 
                 <div class="content-between-inputs-icon-wrapper disabled"></div>
 
-                <div class="content-input" :class="newPreset.cropBox.height === 0 ? 'no-value' : ''">
+                <div class="content-input" :class="newPreset.cropEnabled ? '' : 'disabled'">
                   <label for="height-input">
                     {{ $t('tools.crop.settings.general.cropDimensions.height') }}
                   </label>
@@ -620,8 +619,15 @@ const tabs = ['myPresets', 'createPreset']
                   {{ t('tools.preset.settings.createPreset.presetValues.resize.label') }}
                 </p>
               </div>
+              <div class="content-aligned two-items">
+                <p>
+                  {{ t('tools.preset.settings.createPreset.presetValues.autoCrop.enabled') }}
+                </p>
+                <ToggleButton v-model="newPreset.resizeEnabled" :scale="0.6"
+                  :style="{ transform: 'translateX(16px)' }" />
+              </div>
               <div class="content-inputs">
-                <div class="content-input" :class="newPreset.resizeDimensions.width === 0 ? 'no-value' : ''">
+                <div class="content-input" :class="newPreset.resizeEnabled ? '' : 'disabled'">
                   <label for="width-input">
                     {{ $t('tools.transform.settings.resize.resizeDimensions.width') }}
                   </label>
@@ -629,9 +635,10 @@ const tabs = ['myPresets', 'createPreset']
                     :max="editorConfig.maxFileDimensionWidth" unit="px" />
                 </div>
 
+                <!-- To keep alignment -->
                 <div class="content-between-inputs-icon-wrapper disabled"></div>
 
-                <div class="content-input" :class="newPreset.resizeDimensions.height === 0 ? 'no-value' : ''">
+                <div class="content-input" :class="newPreset.resizeEnabled ? '' : 'disabled'">
                   <label for="height-input">
                     {{ $t('tools.transform.settings.resize.resizeDimensions.height') }}
                   </label>

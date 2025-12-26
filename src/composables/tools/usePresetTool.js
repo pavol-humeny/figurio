@@ -543,7 +543,9 @@ export function usePresetTool(
             operation.angle,
           )
         } else if (operation.type === 'flip') {
-          await useFlipTool(imageStore, historyStore, useUiStore(), t).applyFlipRender(operation.direction)
+          await useFlipTool(imageStore, historyStore, useUiStore(), t).applyFlipRender(
+            operation.direction,
+          )
         } else if (operation.type === 'autoCrop') {
           await useCropTool(
             imageStore,
@@ -567,10 +569,13 @@ export function usePresetTool(
             t,
           ).applyCropRender(operation.cropBox)
         } else if (operation.type === 'resize') {
-          await useResizeTool(imageStore, historyStore, viewportStore, useUiStore(), t).applyResizeRender(
-            operation.resizeDimensions.width,
-            operation.resizeDimensions.height,
-          )
+          await useResizeTool(
+            imageStore,
+            historyStore,
+            viewportStore,
+            useUiStore(),
+            t,
+          ).applyResizeRender(operation.resizeDimensions.width, operation.resizeDimensions.height)
         }
 
         // UPDATE new tool
@@ -645,6 +650,8 @@ export function usePresetTool(
    */
   const newPreset = ref({
     presetName: '',
+    cropEnabled: false,
+    resizeEnabled: false,
     transformations: {
       rotationAngle: 0,
       horizontalFlip: false,
