@@ -918,7 +918,7 @@ export function useFrameTool(imageStore, historyStore, viewportStore, t) {
     el.style.left = `-${fw - adjustmentForPhoneButtons}px`
     el.style.top = `-${(hasHeader && !hasPhoneFrame) || (hasPhoneFrame && frame.phoneHeaderExpand) ? header : fh}px`
 
-    // Recalculate if phone buttons can be drawn 
+    // Recalculate if phone buttons can be drawn
     canDrawPhoneButtons()
 
     /**
@@ -1898,20 +1898,26 @@ export function useFrameTool(imageStore, historyStore, viewportStore, t) {
     )
 
     // Target size (image inside frame)
-    const targetWidth = frame.enabled
-      ? fileDimensions.width - 2 * frame.width
-      : fileDimensions.width
+    let targetWidth = fileDimensions.width
+    let targetHeight = fileDimensions.height
 
-    let targetHeight = frame.enabled
-      ? fileDimensions.height - 2 * frame.height
-      : fileDimensions.height
+    if (frame.enabled) {
+      // always remove left + right frame
+      targetWidth -= 2 * frame.width
 
-    if (hasHeader) {
-      if (phoneFrameWithExpandedHeader) {
-        targetHeight = fileDimensions.height - frame.headerSize - frame.height
+      // always remove top + bottom frame
+      targetHeight -= 2 * frame.height
+
+      // header / footer are EXTRA space inside frame
+      if (hasHeader) {
+        targetHeight -= frame.headerSize
+        targetHeight += frame.height
       }
-    } else if (hasFooter) {
-      targetHeight = fileDimensions.height - frame.footerSize - frame.height
+
+      if (hasFooter) {
+        targetHeight -= frame.footerSize
+        targetHeight += frame.height
+      }
     }
 
     // Offsets inside frame
@@ -1924,6 +1930,14 @@ export function useFrameTool(imageStore, historyStore, viewportStore, t) {
         offsetY = frame.headerSize
       }
     }
+
+    console.warn('Frame layout calculation:', {
+      fileDimensions,
+      targetWidth,
+      targetHeight,
+      offsetX,
+      offsetY,
+    })
 
     return {
       finalWidth: fileDimensions.width,

@@ -14,6 +14,7 @@
 - pri prepnutí z color na manual select sa nezapne spravny kurzor
 - prehodiť blur za shape
 - Paste by to mohol klásť inde ako na ten istý objekt, aspoň pri kliknutí pravím 
+- výber pdf strany, nie drop down menu ale iba number input so šípočkami
 
 ## TODO
 - spracovanie pdf súborov 

@@ -138,6 +138,15 @@ export function exportFileService(imageStore, editorStore, historyStore, viewpor
       t,
     ).calculateFrameLayout(imageStore.newFileDimensions)
 
+    console.log('Export with size:', {
+      finalWidth,
+      finalHeight,
+      targetWidth,
+      targetHeight,
+      offsetX,
+      offsetY,
+    })
+
     // Export pdf as vector
     if (imageStore.fileType === 'pdf' && imageStore.pdfPageBytes) {
       /**
@@ -582,6 +591,20 @@ export function exportFileService(imageStore, editorStore, historyStore, viewpor
 
       // Embed page
       const [embeddedPage] = await pdf.embedPages([originalPage])
+
+      console.log('originalPage PDF page size:', {
+        width: embeddedPage.width,
+        height: embeddedPage.height,
+      })
+
+      console.log('Final PDF page size:', { finalWidth, finalHeight })
+
+      console.log('Drawing embedded page at:', {
+        x: offsetX,
+        y: finalHeight - offsetY - targetHeight,
+        width: targetWidth,
+        height: targetHeight,
+      })
 
       const finalPage = pdf.addPage([finalWidth, finalHeight])
       finalPage.drawPage(embeddedPage, {
