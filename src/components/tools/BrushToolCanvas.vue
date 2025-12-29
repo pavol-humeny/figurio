@@ -183,7 +183,7 @@ const commitBrushOperation = async () => {
   pendingOverlaySnapshot = null
   commitTimer = null
 
-  await renderUpTo(imageStore.renderPipeline.currentOpIndex + 1)
+  await renderUpTo(imageStore.renderPipeline.currentOpIndex + 1, { t, imageStore })
 
   historyStore.push(imageStore.getSnapshot(t))
 }

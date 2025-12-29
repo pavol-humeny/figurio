@@ -1,12 +1,11 @@
 import { useConfirmModal } from '../modals/useConfirmModal'
-import { ref, computed } from 'vue'
-import { useToastModal } from '../modals/useToastModal'
 import { useApi } from '@/composables/common/useApi'
 const { addUserEvent } = useApi()
+import { useImagePipeline } from '../editor/useImagePipeline.js'
 
 export function useDarkLightConvertorTool(imageStore, editorStore, uiStore, historyStore, t) {
   const { showConfirmModal } = useConfirmModal()
-  const { showToastModal } = useToastModal()
+  const { renderUpTo } = useImagePipeline(imageStore, uiStore)
 
   const applyDarkLightConvertor = async () => {
     if (imageStore.fileType === 'pdf') {
@@ -29,7 +28,23 @@ export function useDarkLightConvertorTool(imageStore, editorStore, uiStore, hist
         t('tools.confirmNeedRasterization.confirm'),
       )
       if (confirmed) {
-        await imageStore.rasterize(t)
+        const result = await imageStore.rasterize('editor', {}, t)
+
+        imageStore.addImageOperation({
+          type: 'rasterize',
+          params: {
+            overlay: result.overlay,
+          },
+          cost: 'high',
+          affectsGeometry: true,
+        })
+
+        addUserEvent('applyOperation', {
+          tool: 'rasterize',
+          settings: {},
+        })
+
+        await renderUpTo(imageStore.renderPipeline.currentOpIndex + 1, { t, imageStore })
       } else {
         return
       }

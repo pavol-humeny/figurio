@@ -63,7 +63,7 @@ export function useFileTabs(uiStore, viewportStore, imageStore, editorStore, t) 
       viewportStore.resetPan()
       viewportStore.shouldFitToScreen = true
 
-      await renderUpTo(imageStore.renderPipeline.currentOpIndex)
+      await renderUpTo(imageStore.renderPipeline.currentOpIndex, { t, imageStore })
 
       uiStore.isLoading = false
 
@@ -91,7 +91,7 @@ export function useFileTabs(uiStore, viewportStore, imageStore, editorStore, t) 
       await workspaceStore.closeTab(index)
 
       if (workspaceStore.activeTabIndex !== -1) {
-        await renderUpTo(imageStore.renderPipeline.currentOpIndex)
+        await renderUpTo(imageStore.renderPipeline.currentOpIndex, { t, imageStore })
       }
 
       uiStore.isLoading = false

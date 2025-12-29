@@ -46,6 +46,15 @@ const serializeOperation = (op) => {
     }
   }
 
+  if (raw.type === 'rasterize') {
+    return {
+      type: 'rasterize',
+      cost: raw.cost,
+      affectsGeometry: raw.affectsGeometry,
+      overlayDataURL: raw.params.overlay.toDataURL(),
+    }
+  }
+
   return {
     type: raw.type,
     params: raw.params,
@@ -1236,6 +1245,28 @@ export const useImageStore = defineStore('imageStore', {
           continue
         }
 
+        if (op.type === 'rasterize') {
+          const img = new Image()
+          await new Promise((resolve) => {
+            img.onload = () => {
+              const canvas = document.createElement('canvas')
+              canvas.width = img.width
+              canvas.height = img.height
+              canvas.getContext('2d').drawImage(img, 0, 0)
+
+              this.imageOperations.push({
+                type: 'rasterize',
+                params: { overlay: canvas },
+                cost: op.cost,
+                affectsGeometry: op.affectsGeometry,
+              })
+              resolve()
+            }
+            img.src = op.overlayDataURL
+          })
+          continue
+        }
+
         if (op.type === 'brush') {
           const img = new Image()
 
@@ -1257,15 +1288,16 @@ export const useImageStore = defineStore('imageStore', {
             }
             img.src = op.overlayDataURL
           })
-        } else {
-          // this.imageOperations.push(structuredClone(op))
-          this.imageOperations.push({
-            type: op.type,
-            params: op.params,
-            cost: op.cost,
-            affectsGeometry: op.affectsGeometry,
-          })
+          continue
         }
+
+        // this.imageOperations.push(structuredClone(op))
+        this.imageOperations.push({
+          type: op.type,
+          params: op.params,
+          cost: op.cost,
+          affectsGeometry: op.affectsGeometry,
+        })
       }
 
       this.svgObjects = JSON.parse(JSON.stringify(snapshot.svgObjects))
@@ -1388,6 +1420,28 @@ export const useImageStore = defineStore('imageStore', {
           continue
         }
 
+        if (op.type === 'rasterize') {
+          const img = new Image()
+          await new Promise((resolve) => {
+            img.onload = () => {
+              const canvas = document.createElement('canvas')
+              canvas.width = img.width
+              canvas.height = img.height
+              canvas.getContext('2d').drawImage(img, 0, 0)
+
+              this.imageOperations.push({
+                type: 'rasterize',
+                params: { overlay: canvas },
+                cost: op.cost,
+                affectsGeometry: op.affectsGeometry,
+              })
+              resolve()
+            }
+            img.src = op.overlayDataURL
+          })
+          continue
+        }
+
         if (op.type === 'brush') {
           const img = new Image()
 
@@ -1409,14 +1463,15 @@ export const useImageStore = defineStore('imageStore', {
             }
             img.src = op.overlayDataURL
           })
-        } else {
-          this.imageOperations.push({
-            type: op.type,
-            params: op.params ? structuredClone(op.params) : undefined,
-            cost: op.cost,
-            affectsGeometry: op.affectsGeometry,
-          })
+          continue
         }
+
+        this.imageOperations.push({
+          type: op.type,
+          params: op.params ? structuredClone(op.params) : undefined,
+          cost: op.cost,
+          affectsGeometry: op.affectsGeometry,
+        })
       }
 
       // RESET PIPELINE

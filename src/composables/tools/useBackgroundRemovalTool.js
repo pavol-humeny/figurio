@@ -785,7 +785,23 @@ export function useBackgroundRemovalTool(
         t('tools.confirmNeedRasterization.confirm'),
       )
       if (confirmed) {
-        await imageStore.rasterize(t)
+        const result = await imageStore.rasterize('editor', {}, t)
+
+        imageStore.addImageOperation({
+          type: 'rasterize',
+          params: {
+            overlay: result.overlay,
+          },
+          cost: 'high',
+          affectsGeometry: true,
+        })
+
+        addUserEvent('applyOperation', {
+          tool: 'rasterize',
+          settings: {},
+        })
+
+        await renderUpTo(imageStore.renderPipeline.currentOpIndex + 1, { t, imageStore })
       } else {
         return
       }
@@ -828,138 +844,13 @@ export function useBackgroundRemovalTool(
       settings: {},
     })
 
-    await renderUpTo(imageStore.renderPipeline.currentOpIndex + 1)
+    await renderUpTo(imageStore.renderPipeline.currentOpIndex + 1, { t, imageStore })
 
     historyStore.push(imageStore.getSnapshot(t))
 
     clearAllSelections()
     someAreaIsSelected.value = false
   }
-
-  // /**
-  //  * Apply background removal rendering
-  //  */
-  // const applyBackgroundRemovalRender = async () => {
-  //   if (editorStore.selectedToolKey !== 'backgroundRemoval') return
-
-  //   if (!imageStore.getRenderedImage({ t, renderCall: false })) return
-
-  //   if (imageStore.fileType === 'pdf') {
-  //     const confirmed = await showConfirmModal(
-  //       t('tools.confirmNeedBaseImageRasterization.title'),
-  //       t('tools.confirmNeedBaseImageRasterization.message'),
-  //       t('tools.confirmNeedBaseImageRasterization.cancel'),
-  //       t('tools.confirmNeedBaseImageRasterization.confirm'),
-  //     )
-  //     if (!confirmed) return
-
-  //     await imageStore.rasterizeBaseImage(t)
-  //   }
-
-  //   if (imageStore.needRasterization) {
-  //     const confirmed = await showConfirmModal(
-  //       t('tools.confirmNeedRasterization.title'),
-  //       t('tools.confirmNeedRasterization.message'),
-  //       t('tools.confirmNeedRasterization.cancel'),
-  //       t('tools.confirmNeedRasterization.confirm'),
-  //     )
-  //     if (confirmed) {
-  //       await imageStore.rasterize(t)
-  //     } else {
-  //       return
-  //     }
-  //   }
-
-  //   if (imageStore.needMergeOverlay) {
-  //     const confirmed = await showConfirmModal(
-  //       t('tools.confirmNeedOverlayMerge.title'),
-  //       t('tools.confirmNeedOverlayMerge.message'),
-  //       t('tools.confirmNeedOverlayMerge.cancel'),
-  //       t('tools.confirmNeedOverlayMerge.confirm'),
-  //     )
-  //     if (confirmed) {
-  //       imageStore.mergeOverlayIntoImage()
-  //     } else {
-  //       return
-  //     }
-  //   }
-
-  //   const changed = applyRemovalRender()
-  //   if (!changed) return // Skip history if mask was empty
-
-  //   historyStore.push(imageStore.getSnapshot(t))
-
-  //   someAreaIsSelected.value = false
-  // }
-
-  // /**
-  //  * Apply removal rendering based on canvas mask
-  //  */
-  // const applyRemovalRender = () => {
-  //   const manualCanvas = document.getElementById('removalCanvas')
-  //   if (!manualCanvas) return
-
-  //   const ctxMask = manualCanvas.getContext('2d')
-  //   const maskData = ctxMask.getImageData(0, 0, manualCanvas.width, manualCanvas.height)
-  //   const maskPixels = maskData.data
-
-  //   // Check if mask contains any non-zero alpha (non-empty mask)
-  //   let hasMask = false
-  //   for (let i = 3; i < maskPixels.length; i += 4) {
-  //     if (maskPixels[i] > 0) {
-  //       hasMask = true
-  //       break
-  //     }
-  //   }
-  //   if (!hasMask) return false // mask is empty, skip processing
-
-  //   const renderedImage = useBaseImage.value
-  //     ? imageStore.originalImage
-  //     : imageStore.getRenderedImage({ t, renderCall: false })
-  //   if (!renderedImage) return
-
-  //   // Create a temporary canvas to manipulate the rendered image
-  //   const canvas = document.createElement('canvas')
-  //   canvas.width = renderedImage.width
-  //   canvas.height = renderedImage.height
-  //   const ctx = canvas.getContext('2d', { willReadFrequently: true })
-  //   ctx.drawImage(renderedImage, 0, 0)
-
-  //   const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height)
-  //   const data = imageData.data
-
-  //   // Get background replacement color
-  //   const {
-  //     r: bgR,
-  //     g: bgG,
-  //     b: bgB,
-  //     a: bgA,
-  //   } = getBackgroundColorRGBA(replaceWithBackgroundColor.value)
-
-  //   // Apply mask: remove/replace based on mask alpha
-  //   for (let i = 0; i < data.length; i += 4) {
-  //     const maskA = maskPixels[i + 3] // alpha channel
-
-  //     if (maskA > 0) {
-  //       // Use alpha as blending factor
-  //       const alpha = maskA / 255
-
-  //       // Linear blend between background and original pixel
-  //       data[i] = data[i] * (1 - alpha) + bgR * alpha
-  //       data[i + 1] = data[i + 1] * (1 - alpha) + bgG * alpha
-  //       data[i + 2] = data[i + 2] * (1 - alpha) + bgB * alpha
-  //       data[i + 3] = data[i + 3] * (1 - alpha) + bgA * alpha
-  //     }
-  //   }
-
-  //   ctx.putImageData(imageData, 0, 0)
-  //   imageStore.setRenderedImage(canvas)
-
-  //   // Clear manual selection
-  //   clearAllSelections()
-
-  //   return true // success
-  // }
 
   return {
     colorRemovalThreshold,

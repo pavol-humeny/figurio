@@ -5,27 +5,31 @@ import { useImageStore } from '@/stores/imageStore'
 import ItemTip from '@/components/common/ItemTip.vue'
 import { useHistoryStore } from '@/stores/historyStore'
 import { useUiStore } from '@/stores/uiStore'
+import { useI18n } from 'vue-i18n'
 
+const { t } = useI18n()
 const imageStore = useImageStore()
 
 /**
  * Logic for the undo/redo buttons.
  */
-const { undo, redo, canUndo, canRedo } = useUndoRedo(useHistoryStore(), useImageStore(), useUiStore())
+const { undo, redo, canUndo, canRedo } = useUndoRedo(useHistoryStore(), useImageStore(), useUiStore(), t)
 </script>
 
 <template>
   <div class="undo-redo" :class="{ disabled: imageStore.file === null }">
     <!-- Undo -->
     <ItemTip :text="canUndo ? $t('topPanel.undoRedo.tip.undo') : ''" position="bottom">
-      <div class="undo-button button button-control button-circle button-clickable" @click="undo" :class="{ disabled: !canUndo }">
+      <div class="undo-button button button-control button-circle button-clickable" @click="undo"
+        :class="{ disabled: !canUndo }">
         <BaseIcon name="IconUndo" size="24" />
       </div>
     </ItemTip>
 
     <!-- Redo -->
     <ItemTip :text="canRedo ? $t('topPanel.undoRedo.tip.redo') : ''" position="bottom">
-      <div class="redo-button button button-control button-circle button-clickable" @click="redo" :class="{ disabled: !canRedo }">
+      <div class="redo-button button button-control button-circle button-clickable" @click="redo"
+        :class="{ disabled: !canRedo }">
         <BaseIcon name="IconRedo" size="24" />
       </div>
     </ItemTip>

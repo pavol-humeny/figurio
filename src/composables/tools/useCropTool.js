@@ -1125,8 +1125,23 @@ export function useCropTool(imageStore, viewportStore, editorStore, historyStore
         t('tools.confirmNeedRasterization.confirm'),
       )
       if (!confirmed) return
+      // Register operation in the operation list
+      imageStore.addImageOperation({
+        type: 'rasterize',
+        params: {},
+        cost: 'high',
+        affectsGeometry: true,
+      })
 
-      await imageStore.rasterize(t, true)
+      addUserEvent('applyOperation', {
+        tool: 'rasterize',
+        settings: {},
+      })
+
+      await renderUpTo(imageStore.renderPipeline.currentOpIndex + 1, { t, imageStore })
+
+      // Push to undo history
+      historyStore.push(imageStore.getSnapshot(t))
     }
 
     imageStore.addImageOperation({
@@ -1146,7 +1161,7 @@ export function useCropTool(imageStore, viewportStore, editorStore, historyStore
       settings: { cropBox: { ...cropBox.value } },
     })
 
-    await renderUpTo(imageStore.renderPipeline.currentOpIndex + 1)
+    await renderUpTo(imageStore.renderPipeline.currentOpIndex + 1, { t, imageStore })
 
     historyStore.push(imageStore.getSnapshot(t))
   }

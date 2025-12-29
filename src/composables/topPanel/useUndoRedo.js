@@ -15,7 +15,7 @@ const { addUserEvent } = useApi()
  *   canRedo: import('vue').ComputedRef<boolean>
  * }}
  */
-export function useUndoRedo(historyStore, imageStore, uiStore) {
+export function useUndoRedo(historyStore, imageStore, uiStore, t) {
   const { renderUpTo } = useImagePipeline(imageStore, uiStore)
   /**
    * Whether undo operation is available
@@ -38,7 +38,7 @@ export function useUndoRedo(historyStore, imageStore, uiStore) {
     if (!snapshot) return
 
     await imageStore.applySnapshot(snapshot)
-    await renderUpTo(snapshot.opIndex)
+    await renderUpTo(snapshot.opIndex, { t, imageStore })
   }
 
   /**
@@ -54,7 +54,7 @@ export function useUndoRedo(historyStore, imageStore, uiStore) {
     if (!snapshot) return
 
     await imageStore.applySnapshot(snapshot)
-    await renderUpTo(snapshot.opIndex)
+    await renderUpTo(snapshot.opIndex, { t, imageStore })
   }
   return {
     undo,

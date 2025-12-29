@@ -54,7 +54,23 @@ export function useGrayscaleTool(imageStore, editorStore, historyStore, t) {
         t('tools.confirmNeedRasterization.confirm'),
       )
       if (confirmed) {
-        await imageStore.rasterize(t)
+        const result = await imageStore.rasterize('editor', {}, t)
+
+        imageStore.addImageOperation({
+          type: 'rasterize',
+          params: {
+            overlay: result.overlay,
+          },
+          cost: 'high',
+          affectsGeometry: true,
+        })
+
+        addUserEvent('applyOperation', {
+          tool: 'rasterize',
+          settings: {},
+        })
+
+        await renderUpTo(imageStore.renderPipeline.currentOpIndex + 1, { t, imageStore })
       } else {
         return
       }
@@ -83,10 +99,9 @@ export function useGrayscaleTool(imageStore, editorStore, historyStore, t) {
       affectsGeometry: false,
     })
 
-    await renderUpTo(imageStore.renderPipeline.currentOpIndex + 1)
+    await renderUpTo(imageStore.renderPipeline.currentOpIndex + 1, { t, imageStore })
 
     historyStore.push(imageStore.getSnapshot())
-
 
     saveConfigToEditorStore()
   }

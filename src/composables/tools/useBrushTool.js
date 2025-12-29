@@ -75,15 +75,13 @@ export function useBrushTool(imageStore, historyStore, editorStore, uiStore, t) 
         t('tools.confirmNeedRasterization.confirm'),
       )
       if (!confirmed) return
+      const result = await imageStore.rasterize('editor', {}, t)
 
-      // await imageStore.rasterize(t, true)
-
-      // historyStore.push(imageStore.getSnapshot(t))
-
-      // Register operation in the operation list
       imageStore.addImageOperation({
         type: 'rasterize',
-        params: {},
+        params: {
+          overlay: result.overlay,
+        },
         cost: 'high',
         affectsGeometry: true,
       })
