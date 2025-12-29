@@ -2,7 +2,6 @@
 
 ## TODO 
 - rámik monitoru
-- background removal kreslenie sa sekne 
 - Vylepšenie rámiku pre prehliadače 
 - DONE - MOZNO VYMYSLIET LEPSIE (TERAZ SA NEZOBRAZUJE VOBEC) Hláška o tom že sa nedajú vykresliť tlačidlá telefónu sa vypisuje viac krát
 - SKIP - (asi to je v pohode tak ako to je) zoomovanie pomocou tlacitok, ak je obrazok mimo stred tak to zoomuje mimo obrázok 
@@ -13,20 +12,11 @@
 - Paste by to mohol klásť inde ako na ten istý objekt, aspoň pri kliknutí pravím 
 - výber pdf strany, nie drop down menu ale iba number input so šípočkami
 - nakreslenie svg objektu, prepnutie na brush (vyžaduje rasterizáciu) a následné spätné prepnutie na shape (stále to chcelo rasterizovať)
+- pdf zväčšiť veľkosť povoleného súboru 
 
 ## TODO
-- spracovanie pdf súborov 
-- pdf sa niekedy nenačíta 
-- optimalizovanie undo, redo operácie 
 - využitie workerov pre aplikovanie operácie 
 - prevod na raster ak to obsahuje hlúposti 
-- pomalé zatváranie pdf 
-- pomalé prepínanie medzi tabmi 
-- zmen na light mode 
-
-## Admin mode 
-- neobmedzena veľkosť obrázku 
-- nekonečné zoomovanie 
 
 ## Dlhodobé TODO 
 - achievementy
@@ -35,6 +25,7 @@
 - Poskakovanie pri resize ak je to otočené 
 - PDF s nepodporovanými svg objektami 
 - Poloha magnify area a blur object voči ostatným objektom (možné riešenie vrstvy)
+- kreslenie berie zle polohu myši 
 
 ## Insane ideas
 - Premenné prostredia (pre farbu, veľkosť)

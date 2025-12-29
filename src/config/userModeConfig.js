@@ -12,6 +12,7 @@ export const userModeConfig = {
     'reset <option>', // Reset configuration option
     'reset all', // Reset all configuration options
     'help', // Show help information
+    'quit', // Exit command mode
   ],
 
   autocomplete: {
@@ -21,6 +22,7 @@ export const userModeConfig = {
     'turn off': ['snowfall', 'christmasLights', 'christmasTree', 'fireworks', 'randomEvents'],
     set: ['primaryColor'],
     reset: ['primaryColor', 'all'],
+    man: ['turn on', 'turn off', 'set', 'reset', 'reset all', 'help', 'quit'],
   },
 
   commandManPages: {
@@ -96,6 +98,16 @@ export const userModeConfig = {
 
       DESCRIPTION
           Resets all configuration options back to their default values.
+      `,
+    quit: `
+      NAME
+          quit - Exit command mode
+
+      SYNOPSIS
+          quit
+
+      DESCRIPTION
+          Exits the command mode and returns to normal application operation.
       `,
   },
 
