@@ -42,7 +42,7 @@ const contentRef = ref(null)
 /**
  * Logic of the image renderer (canvas, SVG, frame)
  */
-const { imageRef, svgRef, frameSvgRef, pdfContainerRef, overlayImageRef } = useImageRenderer(
+const { imageRef, svgRef, frameSvgRef, pdfContainerRef } = useImageRenderer(
   useImageStore(),
   useHistoryStore(),
   useEditorStore(),
@@ -235,7 +235,7 @@ const cursorStyle = computed(() => {
         {
           label: $t('contextMenu.paste'),
           action: pasteSvgObjectToCenter,
-          disabled: !imageStore.clipboardSvgObject,
+          disabled: !imageStore.clipboardSvgObject || editorStore.selectedToolKey === 'magnifyArea',
           hide: hideContextMenu,
         },
         {
@@ -397,7 +397,7 @@ const cursorStyle = computed(() => {
         </div>
         <div v-if="mouseX !== null" class="ruler-cursor-mark horizontal" :style="{ left: mouseX + 'px' }">
           <span class="ruler-cursor-label horizontal" :class="{ 'active': cursorPosXSameAsImageWidth }">{{ cursorPosX
-          }}</span>
+            }}</span>
         </div>
 
       </div>
@@ -410,7 +410,7 @@ const cursorStyle = computed(() => {
         </div>
         <div v-if="mouseY !== null" class="ruler-cursor-mark vertical" :style="{ top: mouseY + 'px' }">
           <span class="ruler-cursor-label vertical" :class="{ 'active': cursorPosYSameAsImageHeight }">{{ cursorPosY
-          }}</span>
+            }}</span>
         </div>
       </div>
     </div>

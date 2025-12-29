@@ -203,6 +203,7 @@ export function useSvgObjects(
       }
 
       log('11')
+      console.warn('11')
       imageStore.selectedSvgObjectId = null
     }
 
@@ -288,7 +289,7 @@ export function useSvgObjects(
 
     const { attrs, tag } = newObject
 
-    const offset = 0 // Offset from center to avoid exact overlap (DOES NOT WORK WITH ROTATION !!! - need be fixed if used)
+    const offset = 10 // Offset from center to avoid exact overlap (DOES NOT WORK WITH ROTATION !!! - need be fixed if used TODO - investigate and fix)
 
     if (tag === 'rect') {
       attrs.x += offset
@@ -338,7 +339,13 @@ export function useSvgObjects(
       blurTool.addBlurImage(newObject.id)
     }
 
-    imageStore.svgObjects.push(newObject)
+    if (newObject.class === 'blur') {
+      imageStore.blurObjects.push(newObject)
+    } else {
+      imageStore.svgObjects.push(newObject)
+    }
+
+    // imageStore.svgObjects.push(newObject)
     imageStore.selectedSvgObjectId = newObject.id
 
     historyStore.push(imageStore.getSnapshot(t))
@@ -698,6 +705,7 @@ export function useSvgObjects(
       })
       .map((obj) => obj.id)
 
+    console.warn('1')
     imageStore.selectedSvgObjectId = null
   }
 
@@ -707,6 +715,7 @@ export function useSvgObjects(
   const deselectAllSvgObjects = () => {
     imageStore.selectedSvgObjectIds = []
     log('13')
+    console.warn('9')
     imageStore.selectedSvgObjectId = null
   }
 
@@ -805,6 +814,7 @@ export function useSvgObjects(
               imageStore.selectedSvgObjectId = imageStore.selectedSvgObjectIds[0]
             } else {
               log('5')
+              console.warn('8')
               imageStore.selectedSvgObjectId = null
             }
           } else {
@@ -849,6 +859,7 @@ export function useSvgObjects(
         if (selectedId) {
           return
         } else {
+          console.warn('7')
           imageStore.selectedSvgObjectId = null
           return
         }
@@ -871,6 +882,7 @@ export function useSvgObjects(
         if (selectedId) {
           return
         } else {
+          console.warn('6')
           imageStore.selectedSvgObjectId = null
           return
         }
@@ -1516,7 +1528,7 @@ export function useSvgObjects(
     if (!checkSizeOfObject(currentDrawingObject.value)) {
       imageStore.selectedSvgObjectId = currentDrawingObject.value.id
     } else {
-      log('4')
+      console.warn('5')
       imageStore.selectedSvgObjectId = null
     }
   }
@@ -1584,6 +1596,7 @@ export function useSvgObjects(
         imageStore.selectedSvgObjectId = selectedIds[0]
       } else {
         log('3')
+        console.warn('4')
         imageStore.selectedSvgObjectId = null
       }
 
@@ -1602,6 +1615,8 @@ export function useSvgObjects(
       currentDrawingObject.value = null
       viewportStore.guideLines = null
 
+      // TODO - ked to bol pastnuty objekt tak mi ho to odstrani pri deselekte
+
       // Remove the last object if object is too small
       if (editorStore.selectedToolKey === 'blur') {
         // In blur also remove defs
@@ -1615,6 +1630,7 @@ export function useSvgObjects(
       }
 
       log('2')
+      console.warn('3')
       imageStore.selectedSvgObjectId = null
 
       // Select object below if there was one
@@ -1707,7 +1723,7 @@ export function useSvgObjects(
 
     // Deselect objects
     if (!sameClass) {
-      log('1')
+      console.warn('2')
       imageStore.selectedSvgObjectId = null
       imageStore.selectedSvgObjectIds = []
     }
@@ -1728,6 +1744,7 @@ export function useSvgObjects(
     // Deselect if clicked inside viewport but outside content
     if (clickedInsideViewport && !clickedInsideContent) {
       log('Deselect triggered')
+      console.warn('1')
       imageStore.selectedSvgObjectId = null
       imageStore.selectedSvgObjectIds = []
     }
