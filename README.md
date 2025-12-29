@@ -9,9 +9,7 @@
 - Oblé zakončenie čiar (line tool)
 - eye dropper na safari
 - Zjednodušiť nápovedy - tipy (kratšie texty)
-- high noise leven in image by sa pri crop, resize... asi mal odstranit (ten warning)
-- bg removal skratky pridať do help, brush manipulation skratky (ALT = resize)
-- pri prepnutí z color na manual select sa nezapne spravny kurzor
+- NEPREUKÁZALO SA - pri prepnutí z color na manual select sa nezapne spravny kurzor
 - Paste by to mohol klásť inde ako na ten istý objekt, aspoň pri kliknutí pravím 
 - výber pdf strany, nie drop down menu ale iba number input so šípočkami
 - nakreslenie svg objektu, prepnutie na brush (vyžaduje rasterizáciu) a následné spätné prepnutie na shape (stále to chcelo rasterizovať)

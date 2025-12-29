@@ -59,10 +59,12 @@
           ]
         },
         {
-          "name": "Operácie s obrázkami",
+          "name": "Nástroje",
           "list": [
             { "description": "Nástroj na odstránenie pozadia – odstrániť vybranú oblasť", "shortcut": "Delete" },
-            { "description": "Nástroj orezávania – použiť orezanie", "shortcut": "Enter" }
+            { "description": "Nástroj orezávania – použiť orezanie", "shortcut": "Enter" },
+            { "description": "Nástroj štetca – zmeniť veľkosť štetca a gumy", "shortcut": "ALT + ĽAVÝ KLIK + ŤAHANIE" },
+            { "description": "Nástroj na odstránenie pozadia – zmeniť veľkosť štetca", "shortcut": "ALT + ĽAVÝ KLIK + ŤAHANIE" }
           ]
         }
       ]
