@@ -17,7 +17,8 @@ export const toolsDefinitions = [
   {
     key: 'darkLightConvertor',
     iconName: 'IconDarkLightConvertorTool',
-    settingsComponent: () => import('@/components/toolsSettings/DarkLightConvertorToolSettings.vue'),
+    settingsComponent: () =>
+      import('@/components/toolsSettings/DarkLightConvertorToolSettings.vue'),
   },
   {
     key: 'backgroundRemoval',
@@ -59,11 +60,6 @@ export const toolsDefinitions = [
     settingsComponent: () => import('@/components/toolsSettings/SelectToolSettings.vue'),
   },
   {
-    key: 'blur',
-    iconName: 'IconBlurTool',
-    settingsComponent: () => import('@/components/toolsSettings/BlurToolSettings.vue'),
-  },
-  {
     key: 'shape',
     iconName: 'IconShapeTool',
     settingsComponent: () => import('@/components/toolsSettings/ShapeToolSettings.vue'),
@@ -86,6 +82,11 @@ export const toolsDefinitions = [
     key: 'text',
     iconName: 'IconTextTool',
     settingsComponent: () => import('@/components/toolsSettings/TextToolSettings.vue'),
+  },
+  {
+    key: 'blur',
+    iconName: 'IconBlurTool',
+    settingsComponent: () => import('@/components/toolsSettings/BlurToolSettings.vue'),
   },
   {
     key: 'magnifyArea',

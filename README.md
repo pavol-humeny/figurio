@@ -15,6 +15,7 @@
 - prehodiť blur za shape
 - Paste by to mohol klásť inde ako na ten istý objekt, aspoň pri kliknutí pravím 
 - výber pdf strany, nie drop down menu ale iba number input so šípočkami
+- nakreslenie svg objektu, prepnutie na brush (vyžaduje rasterizáciu) a následné spätné prepnutie na shape (stále to chcelo rasterizovať)
 
 ## TODO
 - spracovanie pdf súborov 
