@@ -58,7 +58,6 @@ const {
   openFeatureTourModalHelper,
   contactForm,
   submitContactForm,
-  sendContactFormDisabled,
   subjectInputWrong,
   subjectInputSuccess,
   isCommandEmail,
@@ -66,6 +65,8 @@ const {
   togglePasswordVisibility,
   showPassword,
   emailInputWrong,
+  nameInputWrong,
+  messageInputWrong,
 } = useHelpModal(useUiStore(), useImageStore(), useEditorStore(), useUserModeStore(), useRouter(), t);
 
 const { isTutorialEnabled } = useInteractiveTutorial(
@@ -529,9 +530,10 @@ watch(atBottom, (newVal) => {
                     <label>
                       {{ $t('help.helpContent.contactAndFeedback.contactForm.name') }}
                     </label>
-                    <input v-model="contactForm.name" type="text" required maxlength="25"
+                    <input v-model="contactForm.name" type="text" required maxlength="50"
                       @keydown.enter="submitContactForm"
-                      :placeholder="$t('help.helpContent.contactAndFeedback.contactForm.namePlaceholder')" />
+                      :placeholder="$t('help.helpContent.contactAndFeedback.contactForm.namePlaceholder')"
+                      :class="{ 'name-input-wrong': nameInputWrong }" />
                   </div>
 
                   <!-- Email -->
@@ -552,7 +554,8 @@ watch(atBottom, (newVal) => {
                   </label>
                   <input
                     :class="{ 'subject-input-wrong': subjectInputWrong, 'subject-input-success': subjectInputSuccess }"
-                    v-model="contactForm.subject" type="text" required maxlength="50" @keydown.enter="submitContactForm"
+                    v-model="contactForm.subject" type="text" required maxlength="150"
+                    @keydown.enter="submitContactForm"
                     :placeholder="$t('help.helpContent.contactAndFeedback.contactForm.subjectPlaceholder')" />
                 </div>
 
@@ -562,7 +565,8 @@ watch(atBottom, (newVal) => {
                     {{ $t('help.helpContent.contactAndFeedback.contactForm.message') }}
                   </label>
                   <textarea v-model="contactForm.message" required maxlength="500" @keydown.enter="submitContactForm"
-                    :placeholder="$t('help.helpContent.contactAndFeedback.contactForm.messagePlaceholder')"></textarea>
+                    :placeholder="$t('help.helpContent.contactAndFeedback.contactForm.messagePlaceholder')"
+                    :class="{ 'message-input-wrong': messageInputWrong }"></textarea>
                 </div>
 
                 <!-- Password -->
@@ -580,7 +584,7 @@ watch(atBottom, (newVal) => {
                 </div>
 
                 <DefaultButton v-if="!isCommandEmail" :text="$t('help.helpContent.contactAndFeedback.contactForm.send')"
-                  @click="submitContactForm" :disabled="sendContactFormDisabled" />
+                  @click="submitContactForm" />
               </div>
               <div v-else class="command-line-wrapper">
                 <CommandLine />
@@ -856,11 +860,10 @@ watch(atBottom, (newVal) => {
   resize: none;
 }
 
+.email-input-wrong,
+.message-input-wrong,
+.name-input-wrong,
 .subject-input-wrong {
-  background: var(--error-c) !important;
-}
-
-.email-input-wrong {
   border: solid 1px var(--error-c) !important;
 }
 

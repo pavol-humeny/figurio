@@ -68,14 +68,24 @@ export function useHelpModal(uiStore, imageStore, editorStore, userModeStore, ro
   const isCommandEmail = ref(false)
 
   /**
-   * Whether the subject input is wrong (for command mode feedback)
+   * Whether the name input is wrong
+   */
+  const nameInputWrong = ref(false)
+
+  /**
+   * Whether the subject input is wrong
    */
   const subjectInputWrong = ref(false)
 
   /**
-   * Whether the email input is wrong (for command mode feedback)
+   * Whether the email input is wrong
    */
   const emailInputWrong = ref(false)
+
+  /**
+   * Whether the message input is wrong
+   */
+  const messageInputWrong = ref(false)
 
   /**
    * Whether the subject input is successfully processed (for command mode feedback)
@@ -190,15 +200,17 @@ export function useHelpModal(uiStore, imageStore, editorStore, userModeStore, ro
   watch(
     () => ({ ...contactForm }),
     async (val) => {
+      nameInputWrong.value = false
       subjectInputWrong.value = false
       emailInputWrong.value = false
+      messageInputWrong.value = false
       subjectInputSuccess.value = false
       passwordInputWrong.value = false
 
       // Truncate fields if they exceed max length
-      if (val.name.length > 25) contactForm.name = val.name.slice(0, 25)
+      if (val.name.length > 50) contactForm.name = val.name.slice(0, 50)
       if (val.email.length > 50) contactForm.email = val.email.slice(0, 50)
-      if (val.subject.length > 50) contactForm.subject = val.subject.slice(0, 50)
+      if (val.subject.length > 150) contactForm.subject = val.subject.slice(0, 150)
       if (val.message.length > 500) contactForm.message = val.message.slice(0, 500)
 
       // Trim whitespace from start and end
@@ -311,24 +323,30 @@ export function useHelpModal(uiStore, imageStore, editorStore, userModeStore, ro
       }
     }
 
-    if (sendContactFormDisabled.value) return
-
     // Check again before submission
-    const allFilled =
-      contactForm.name.trim() !== '' &&
-      contactForm.email.trim() !== '' &&
-      contactForm.subject.trim() !== '' &&
-      contactForm.message.trim() !== ''
+    let allFilled = true
+
+    if (contactForm.name.trim() === '') {
+      nameInputWrong.value = true
+      allFilled = false
+    }
+    if (contactForm.email.trim() === '') {
+      emailInputWrong.value = true
+      allFilled = false
+    }
+    if (contactForm.subject.trim() === '') {
+      subjectInputWrong.value = true
+      allFilled = false
+    }
+    if (contactForm.message.trim() === '') {
+      messageInputWrong.value = true
+      allFilled = false
+    }
 
     const emailPattern = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)+$/
     const emailValid = emailPattern.test(contactForm.email.trim())
 
     // Validation warnings
-    if (!emailValid) {
-      warn('Invalid email format:', contactForm.email)
-      contactForm.email = ''
-      return
-    }
     if (!(allFilled && emailValid)) {
       warn('Contact form submission blocked: incomplete or invalid fields')
       return
@@ -370,5 +388,7 @@ export function useHelpModal(uiStore, imageStore, editorStore, userModeStore, ro
     togglePasswordVisibility,
     showPassword,
     emailInputWrong,
+    nameInputWrong,
+    messageInputWrong,
   }
 }
