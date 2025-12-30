@@ -912,11 +912,12 @@ export function useSvgObjects(
         return
       }
 
-      const rect = viewportStore.viewportContentRect
-      const x = round(
-        (event.clientX - rect.left - viewportStore.panX) / viewportStore.realZoomLevel,
-      )
-      const y = round((event.clientY - rect.top - viewportStore.panY) / viewportStore.realZoomLevel)
+      const contentElement = document.getElementById('viewport-content')
+      if (!contentElement) return
+      const rect = contentElement.getBoundingClientRect()
+
+      const x = round((event.clientX - rect.left) / viewportStore.realZoomLevel)
+      const y = round((event.clientY - rect.top) / viewportStore.realZoomLevel)
 
       drawingStart.value = { x, y }
       selectBox.value = { x, y, width: 0, height: 0 }
@@ -976,11 +977,12 @@ export function useSvgObjects(
 
     if (objectType === 'rectangle') objectType = 'rect'
 
-    const svgImage = document.getElementById('image-svg')
-    const svgRect = svgImage.getBoundingClientRect()
+    const contentElement = document.getElementById('viewport-content')
+    if (!contentElement) return
+    const rect = contentElement.getBoundingClientRect()
 
-    const x = round((event.clientX - svgRect.left) / viewportStore.realZoomLevel)
-    const y = round((event.clientY - svgRect.top) / viewportStore.realZoomLevel)
+    const x = round((event.clientX - rect.left) / viewportStore.realZoomLevel)
+    const y = round((event.clientY - rect.top) / viewportStore.realZoomLevel)
 
     drawingStart.value = { x, y }
     isDrawing.value = true
@@ -1161,29 +1163,29 @@ export function useSvgObjects(
   const performAutoPan = (event) => {
     if (!event) return
     const viewportWrapper = document.getElementsByClassName('viewport-content-wrapper')
-    const svgImage = document.getElementById('image-svg')
+
+    const contentElement = document.getElementById('viewport-content')
+    if (!contentElement) return
+
     if (viewportWrapper.length === 0) return
 
     const rectWrapper = viewportWrapper[0].getBoundingClientRect()
-    const rectSvg = svgImage.getBoundingClientRect()
+    const rect = contentElement.getBoundingClientRect()
 
     const horizontalMargin = imageStore.fileDimensions.width * viewportStore.realZoomLevel * 0.1
     const verticalMargin = imageStore.fileDimensions.height * viewportStore.realZoomLevel * 0.1
 
     // Move viewport if mouse is outside
-    if (
-      event.clientY > rectWrapper.bottom &&
-      rectSvg.bottom + verticalMargin > rectWrapper.bottom
-    ) {
+    if (event.clientY > rectWrapper.bottom && rect.bottom + verticalMargin > rectWrapper.bottom) {
       viewportStore.panY -= 1 * viewportStore.realZoomLevel
     }
-    if (event.clientY < rectWrapper.top && rectSvg.top - verticalMargin < rectWrapper.top) {
+    if (event.clientY < rectWrapper.top && rect.top - verticalMargin < rectWrapper.top) {
       viewportStore.panY += 1 * viewportStore.realZoomLevel
     }
-    if (event.clientX > rectWrapper.right && rectSvg.right + horizontalMargin > rectWrapper.right) {
+    if (event.clientX > rectWrapper.right && rect.right + horizontalMargin > rectWrapper.right) {
       viewportStore.panX -= 1 * viewportStore.realZoomLevel
     }
-    if (event.clientX < rectWrapper.left && rectSvg.left - horizontalMargin < rectWrapper.left) {
+    if (event.clientX < rectWrapper.left && rect.left - horizontalMargin < rectWrapper.left) {
       viewportStore.panX += 1 * viewportStore.realZoomLevel
     }
   }
@@ -1219,11 +1221,12 @@ export function useSvgObjects(
 
     // Selecting objects
     if (isDrawing.value && editorStore.selectedToolKey === 'select' && selectBox.value) {
-      const rect = viewportStore.viewportContentRect
-      const x = round(
-        (event.clientX - rect.left - viewportStore.panX) / viewportStore.realZoomLevel,
-      )
-      const y = round((event.clientY - rect.top - viewportStore.panY) / viewportStore.realZoomLevel)
+      const contentElement = document.getElementById('viewport-content')
+      if (!contentElement) return
+      const rect = contentElement.getBoundingClientRect()
+
+      const x = round((event.clientX - rect.left) / viewportStore.realZoomLevel)
+      const y = round((event.clientY - rect.top) / viewportStore.realZoomLevel)
 
       const dx = Math.abs(x - drawingStart.value.x)
       const dy = Math.abs(y - drawingStart.value.y)
@@ -1392,9 +1395,12 @@ export function useSvgObjects(
       viewportStore.guideLines = null
     }
 
-    const rect = viewportStore.viewportContentRect
-    let x = (event.clientX - rect.left - viewportStore.panX) / viewportStore.realZoomLevel
-    let y = (event.clientY - rect.top - viewportStore.panY) / viewportStore.realZoomLevel
+    const contentElement = document.getElementById('viewport-content')
+    if (!contentElement) return
+    const rect = contentElement.getBoundingClientRect()
+
+    let x = (event.clientX - rect.left) / viewportStore.realZoomLevel
+    let y = (event.clientY - rect.top) / viewportStore.realZoomLevel
 
     let dx = x - drawingStart.value.x
     let dy = y - drawingStart.value.y

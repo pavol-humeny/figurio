@@ -226,13 +226,6 @@ export function useImageRenderer(
 
         blockRender.value = false
 
-        // Show toast modal about unsupported PDF objects
-        // showToastModal(
-        //   'warning',
-        //   t('imageStore.toast.unsupportedPdfObjects.title'),
-        //   t('imageStore.toast.unsupportedPdfObjects.message'),
-        // )
-
         addWarning(
           'unsupported-pdf-objects', // id
           'imageStore.toast.unsupportedPdfObjects.title', // message
@@ -265,9 +258,6 @@ export function useImageRenderer(
       pdfContainerRef.value.appendChild(svg)
 
       uiStore.isApplying = false
-
-      // Preview URL môžeme nastaviť na blob URL
-      // imageStore.previewUrl = pdfUrl
     } else if (imageStore.fileType === 'image' || imageStore.showPdfAsImage) {
       log('Rendering IMAGE file...')
       const img = imageStore.getRenderedImage({ t, renderCall: true })
@@ -279,12 +269,6 @@ export function useImageRenderer(
 
       if (img instanceof HTMLCanvasElement) {
         imageRef.value.src = img.toDataURL()
-        // Use async toBlob instead of blocking toDataURL
-        // img.toBlob((blob) => {
-        //   const url = URL.createObjectURL(blob)
-        //   imageRef.value.src = url
-        //   imageStore.previewUrl = url
-        // })
       } else if (img instanceof HTMLImageElement) {
         imageRef.value.src = img.src
       }
@@ -301,29 +285,6 @@ export function useImageRenderer(
       imageStore.blurPreviewUrl = img.src
     }
 
-    // // Overlay image with drawing (brush) layer
-    // const canvas = document.getElementById('brushCanvas')
-    // const ctx = canvas.getContext('2d')
-
-    // if (imageStore.overlayImage && canvas) {
-    //   //wait
-    //   await new Promise((resolve) => setTimeout(resolve, 1))
-    //   warn('Rendering OVERLAY image...')
-
-    //   if (imageStore.historyWasChanged) {
-    //     log('Clearing OVERLAY image due to history change...')
-    //     ctx.clearRect(0, 0, canvas.width, canvas.height)
-    //     imageStore.historyWasChanged = false
-    //   }
-
-    //   ctx.drawImage(imageStore.overlayImage, 0, 0, canvas.width, canvas.height)
-    // } else {
-    //   if (canvas) {
-    //     log('Clearing OVERLAY image...')
-    //     ctx.clearRect(0, 0, canvas.width, canvas.height)
-    //     imageStore.historyWasChanged = false
-    //   }
-    // }
     // Overlay image with drawing (brush) layer
     const canvas = document.getElementById('brushCanvas')
     if (!canvas) {
@@ -333,22 +294,17 @@ export function useImageRenderer(
 
     const ctx = canvas.getContext('2d')
 
-    // 1️⃣ vždy najprv clear
+    // Clear overlay
     ctx.clearRect(0, 0, canvas.width, canvas.height)
 
-    // 2️⃣ ak existuje overlay → nakresli
+    // If overlay exists → draw it
     if (imageStore.overlayImage) {
       warn('Rendering OVERLAY image...')
       ctx.drawImage(imageStore.overlayImage, 0, 0, canvas.width, canvas.height)
     }
 
-    // 3️⃣ reset flagu
+    // Reset flag
     imageStore.historyWasChanged = false
-
-    // // Save initial state to history if empty
-    // if (historyStore.history.length === 0) {
-    //   historyStore.push(imageStore.getSnapshot(t))
-    // }
 
     blockRender.value = false
   }
