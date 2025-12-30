@@ -5,9 +5,11 @@ export const userModeConfig = {
   // 'unlimitedZoom',
   // 'numberOfOpenedFiles',
   // 'maxNumberOfFilesToUploadSimultaneously',
+
+  // UPDATE new random event
   listOfCommands: [
-    'turn on <snowfall|christmasLights|christmasTree|fireworks|randomEvents>', // Enable feature
-    'turn off <snowfall|christmasLights|christmasTree|fireworks|randomEvents>', // Disable feature
+    'turn on <snowfall|christmasLights|christmasTree|fireworks|fireworks2|randomEvents>', // Enable feature
+    'turn off <snowfall|christmasLights|christmasTree|fireworks|fireworks2|randomEvents>', // Disable feature
     'set <option> <value>', // Set configuration option
     'reset <option>', // Reset configuration option
     'reset all', // Reset all configuration options
@@ -18,8 +20,22 @@ export const userModeConfig = {
   autocomplete: {
     root: ['help', 'man', 'turn', 'set', 'reset', 'clear', 'quit'],
     turn: ['on', 'off'],
-    'turn on': ['snowfall', 'christmasLights', 'christmasTree', 'fireworks', 'randomEvents'],
-    'turn off': ['snowfall', 'christmasLights', 'christmasTree', 'fireworks', 'randomEvents'],
+    'turn on': [
+      'snowfall',
+      'christmasLights',
+      'christmasTree',
+      'fireworks',
+      'fireworks2',
+      'randomEvents',
+    ],
+    'turn off': [
+      'snowfall',
+      'christmasLights',
+      'christmasTree',
+      'fireworks',
+      'fireworks2',
+      'randomEvents',
+    ],
     set: ['primaryColor'],
     reset: ['primaryColor', 'all'],
     man: ['turn on', 'turn off', 'set', 'reset', 'reset all', 'help', 'quit'],

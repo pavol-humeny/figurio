@@ -29,6 +29,7 @@ export function useCommandLine(userModeStore, editorStore) {
 
   /**
    * Process entered command
+   * UPDATE new random event
    */
   const processCommand = () => {
     const trimmed = command.value.trim()
@@ -168,9 +169,21 @@ export function useCommandLine(userModeStore, editorStore) {
         addUserEvent('command', { commandIdentifier: full })
         break
 
+      case 'turn on fireworks2':
+        editorStore.turnOnRandomEvent('fireworks2')
+        warn('Fireworks2 enabled via contact form')
+        addUserEvent('command', { commandIdentifier: full })
+        break
+
       case 'turn off fireworks':
         editorStore.turnOffRandomEvent('fireworks')
         warn('Fireworks disabled via contact form')
+        addUserEvent('command', { commandIdentifier: full })
+        break
+
+      case 'turn off fireworks2':
+        editorStore.turnOffRandomEvent('fireworks2')
+        warn('Fireworks2 disabled via contact form')
         addUserEvent('command', { commandIdentifier: full })
         break
 

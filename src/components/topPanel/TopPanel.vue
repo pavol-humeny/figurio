@@ -16,6 +16,7 @@ import { useEditorStore } from '@/stores/editorStore';
 import SnowFall from '../randomEvents/SnowFall.vue';
 import ChristmasLights from '../randomEvents/ChristmasLights.vue';
 import FireWorks from '../randomEvents/FireWorks.vue';
+import FireWorks2 from '../randomEvents/FireWorks2.vue';
 
 const router = useRouter()
 const userModeStore = useUserModeStore()
@@ -49,6 +50,7 @@ const showControls = computed(() => route.name === 'editor')
     <SnowFall v-if="editorStore.randomEvents.snowfall" />
     <ChristmasLights v-if="editorStore.randomEvents.christmasLights" />
     <FireWorks v-if="editorStore.randomEvents.fireworks" />
+    <FireWorks2 v-if="editorStore.randomEvents.fireworks2" />
 
     <div class="top-panel-left" v-if="isEditorViewOrStatistics">
       <div class="top-panel-left-wrapper" id="top-panel-left">

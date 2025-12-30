@@ -130,6 +130,7 @@ export const useEditorStore = defineStore('editorStore', {
 
     /**
      * Random events state
+     * UPDATE new random event
      */
     randomEvents: {
       snowfall: getBoolean(
@@ -147,6 +148,10 @@ export const useEditorStore = defineStore('editorStore', {
       fireworks: getBoolean(
         `${globalConfig.LOCAL_STORAGE_PREFIX}randomEvent_fireworks`,
         globalConfig.randomEvents.fireworks,
+      ),
+      fireworks2: getBoolean(
+        `${globalConfig.LOCAL_STORAGE_PREFIX}randomEvent_fireworks2`,
+        globalConfig.randomEvents.fireworks2,
       ),
     },
   }),
