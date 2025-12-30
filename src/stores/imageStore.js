@@ -505,9 +505,11 @@ export const useImageStore = defineStore('imageStore', {
       }
 
       // Remove file extension
-      const lastDotIndex = trimmedName.lastIndexOf('.')
-      if (lastDotIndex !== -1) {
-        trimmedName = trimmedName.slice(0, lastDotIndex)
+      if (openingNewFile) {
+        const lastDotIndex = trimmedName.lastIndexOf('.')
+        if (lastDotIndex !== -1) {
+          trimmedName = trimmedName.slice(0, lastDotIndex)
+        }
       }
 
       // Update file name

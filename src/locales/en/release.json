@@ -32,7 +32,8 @@
           "Fix issue with showing multiple item tips at once",
           "Set correct contact email address in contact form",
           "Fix magnify area object z-index positioning",
-          "Fix browser frame positioning when exporting to PDF"
+          "Fix browser frame positioning when exporting to PDF",
+          "Enable file names with commas"
         ]
       }
     },
