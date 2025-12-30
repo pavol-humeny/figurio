@@ -6,6 +6,40 @@
     ]
   },
   "versions": {
+    "5.0.0": {
+      "label": "5.0.0",
+      "date": "30.12. 2025",
+      "improvements": {
+        "items": [
+          "Sjednocení ikon automatického a manuálního režimu",
+          "Sjednocení stylu titulků v nápovědě",
+          "Přidány zástupné texty do kontaktního formuláře",
+          "Vylepšené zobrazení validačních chyb formuláře",
+          "Sjednocení stylu tlačítek pro výběr typu textu",
+          "Úprava zaoblení rohů oblasti pro přetažení souborů",
+          "Kartu souboru lze zavřít bez nutnosti jejího předchozího otevření"
+        ]
+      },
+      "newFeatures": {
+        "items": [
+          "Vizuální efekt při stisknutí tlačítka",
+          "Šířku pravého panelu lze obnovit dvojklikem na oddělovač"
+        ]
+      },
+      "bugFixes": {
+        "items": [
+          "Reset zobrazení při přepnutí karty",
+          "Skrytí kurzoru štětce při najetí na ovládací prvky zobrazení",
+          "Oprava nezobrazování upozornění na detekci šumu po vrácení změny",
+          "Oprava současného zobrazení více tooltipů",
+          "Nastavení správné kontaktní e-mailové adresy",
+          "Oprava vrstvení objektu lupy (z-index)",
+          "Oprava pozice rámu prohlížeče při exportu do PDF",
+          "Povolení názvů souborů s čárkami",
+          "Oprava nepřesného kreslení po zavření a opětovném otevření souboru"
+        ]
+      }
+    },
     "4.18.6": {
       "label": "4.18.6",
       "date": "12.12. 2025",

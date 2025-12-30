@@ -6,6 +6,40 @@
     ]
   },
   "versions": {
+    "5.0.0": {
+      "label": "5.0.0",
+      "date": "30.12. 2025",
+      "improvements": {
+        "items": [
+          "Zjednotenie ikon automatického a manuálneho režimu",
+          "Zjednotenie štýlu titulkov v nápovede",
+          "Pridané zástupné texty do kontaktného formulára",
+          "Vylepšené zobrazovanie validačných chýb vo formulári",
+          "Zjednotenie štýlu tlačidiel pre výber typu textu",
+          "Úprava zaoblenia rohov oblasti pre presúvanie súborov",
+          "Súbor je možné zatvoriť bez nutnosti prepnutia na daný súbor"
+        ]
+      },
+      "newFeatures": {
+        "items": [
+          "Vizuálny efekt stlačenia pri kliknutí na tlačidlá",
+          "Šírku pravého panelu je možné obnoviť dvojklikom na oddeľovač"
+        ]
+      },
+      "bugFixes": {
+        "items": [
+          "Reset zobrazenia po prepnutí súboru",
+          "Skrytie kurzora štetca pri prejdení nad ovládacími prvkami zobrazenia",
+          "Oprava nezobrazovania upozornenia na detekciu šumu po použití späť",
+          "Oprava súčasného zobrazenia viacerých tooltipov",
+          "Nastavená správna kontaktná e-mailová adresa",
+          "Oprava vrstvenia objektu lupy (z-index)",
+          "Oprava pozície rámu prehliadača pri exporte do PDF",
+          "Povolenie názvov súborov s čiarkami",
+          "Oprava nepresného kreslenia po zatvorení a opätovnom otvorení súboru"
+        ]
+      }
+    },
     "4.18.6": {
       "label": "4.18.6",
       "date": "12.12. 2025",
