@@ -138,6 +138,7 @@ export function useCommandLine(userModeStore, editorStore) {
         editorStore.turnOffRandomEvent('christmasLights')
         editorStore.turnOffRandomEvent('christmasTree')
         editorStore.turnOffRandomEvent('fireworks')
+        editorStore.turnOffRandomEvent('fireworks2')
         warn('Random events disabled via contact form')
         addUserEvent('command', { commandIdentifier: full })
         break
@@ -147,6 +148,7 @@ export function useCommandLine(userModeStore, editorStore) {
         editorStore.turnOnRandomEvent('christmasLights')
         editorStore.turnOnRandomEvent('christmasTree')
         editorStore.turnOnRandomEvent('fireworks')
+        editorStore.turnOnRandomEvent('fireworks2')
         warn('Random events enabled via contact form')
         addUserEvent('command', { commandIdentifier: full })
         break
@@ -263,6 +265,7 @@ export function useCommandLine(userModeStore, editorStore) {
     editorStore.turnOffRandomEvent('christmasLights')
     editorStore.turnOffRandomEvent('christmasTree')
     editorStore.turnOffRandomEvent('fireworks')
+    editorStore.turnOffRandomEvent('fireworks2')
   }
 
   /**

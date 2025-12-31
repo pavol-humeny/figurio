@@ -518,7 +518,8 @@ watch(atBottom, (newVal) => {
               <ul class="dot-paragraph">
                 <li>
                   {{ $t('help.helpContent.contactAndFeedback.text') }}
-                  <a href="mailto:pavol.humeny@gmail.com" class="action-text">{{ globalConfig.contactMail }}</a>.
+                  <a href="mailto:pavol.humeny@gmail.com" class="action-text" draggable="false" @dragstart.prevent>{{
+                    globalConfig.contactMail }}</a>.
                 </li>
               </ul>
 
