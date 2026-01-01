@@ -242,6 +242,16 @@ export function useCommandLine(userModeStore, editorStore) {
   }
 
   const setPrimaryColor = (color) => {
+    // Check if it is hex, rgb or rgba color
+    const isHex = /^#([0-9A-F]{3}){1,2}$/i.test(color)
+    const isRgb = /^rgb\((\s*\d+\s*,){2}\s*\d+\s*\)$/.test(color)
+    const isRgba = /^rgba\((\s*\d+\s*,){3}\s*(0|1|0?\.\d+)\s*\)$/.test(color)
+
+    if (!isHex && !isRgb && !isRgba) {
+      output.value.push('Invalid color format. Use hex (#RRGGBB), rgb(), or rgba().')
+      return
+    }
+
     document.documentElement.style.setProperty('--primary-c', color)
 
     // Save to localStorage

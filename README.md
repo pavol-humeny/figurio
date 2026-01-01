@@ -13,6 +13,7 @@
 - výber pdf strany, nie drop down menu ale iba number input so šípočkami
 - nakreslenie svg objektu, prepnutie na brush (vyžaduje rasterizáciu) a následné spätné prepnutie na shape (stále to chcelo rasterizovať)
 - pdf zväčšiť veľkosť povoleného súboru 
+- berie to hodnoty, ktore nie su farba ked sa nastavuje farba aplikacie
 
 ## TODO
 - využitie workerov pre aplikovanie operácie 
