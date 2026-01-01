@@ -4,18 +4,29 @@ import { useToastModal } from '@/composables/modals/useToastModal'
 /**
  * Logic of the toast modal system
  */
-const { toasts, removeToastModal, getToastStyle } = useToastModal()
+const {
+  toasts,
+  removeToastModal,
+  getToastStyle,
+  pauseAllToasts,
+  resumeAllToasts,
+} = useToastModal()
 </script>
 
 <template>
   <Teleport to="body">
     <div class="toast-wrapper">
       <div v-for="(toast, index) in toasts" :key="toast.id" class="toast" :class="toast.type"
-        :style="getToastStyle(toast, index)">
+        :style="getToastStyle(toast, index)" @mouseenter="pauseAllToasts" @mouseleave="resumeAllToasts">
         <button class="close-button" @click="removeToastModal(toast.id)">✕</button>
 
         <p class="title">{{ toast.title }}</p>
         <p class="message">{{ toast.message }}</p>
+
+        <!-- Progress bar -->
+        <div class="progress-bar">
+          <div class="progress-fill" :style="{ transform: `scaleX(${toast.progress / 100})` }"> </div>
+        </div>
       </div>
     </div>
   </Teleport>
@@ -102,5 +113,28 @@ const { toasts, removeToastModal, getToastStyle } = useToastModal()
   background: var(--notification-background-c);
   border-color: var(--notification-c);
   color: var(--notification-c);
+}
+
+/** Progress bar for toast duration */
+.progress-bar {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: 10px;
+  overflow: hidden;
+  border-radius: 0 0 10px 10px;
+  pointer-events: none;
+}
+
+.progress-fill {
+  border-radius: 10px;
+  height: 100%;
+  width: 100%;
+  background: currentColor;
+  opacity: 0.1;
+  transform-origin: left center;
+  will-change: transform;
 }
 </style>

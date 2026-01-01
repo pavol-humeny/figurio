@@ -4,6 +4,15 @@
     "items": []
   },
   "versions":{
+    "5.1.0":{
+      "label": "5.1.0",
+      "date":"1.1. 2025",
+      "improvements": {
+        "items": [
+          "Add time indicator to toast modals"
+        ]
+      }
+    },
     "5.0.0":{
       "label": "5.0.0",
       "date":"30.12. 2025",

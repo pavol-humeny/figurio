@@ -1,10 +1,15 @@
-import { ref } from 'vue'
+import { ref, reactive } from 'vue'
 import { uiConfig } from '@/config/uiConfig'
 
 /**
  * Unique ID used for identifying each toast
  */
 let nextId = 0
+
+/**
+ * Indicates if the toast timers are paused
+ */
+const isPaused = ref(false)
 
 /**
  * List of active toast notifications
@@ -28,28 +33,86 @@ export function useToastModal() {
   const toastPositions = ref({})
 
   /**
-   * Show a toast modal with specified type, title and message
-   *
-   * @param {string} type - The type of toast (e.g., 'success', 'error', 'warning')
-   * @param {string} title - The title displayed in the toast
+   * Show a toast modal
+   * @param {string} type - The type of the toast (e.g., 'success', 'error', 'info')
+   * @param {string} title - The title of the toast
    * @param {string} message - The message content of the toast
    */
   const showToastModal = (type, title, message) => {
     const id = nextId++
-    toasts.value.push({ id, type, title, message })
+    const duration = uiConfig.toastAutoRemoveTime
 
-    // Auto-remove
-    setTimeout(() => {
-      toasts.value = toasts.value.filter((t) => t.id !== id)
-    }, uiConfig.toastAutoRemoveTime)
+    const toast = reactive({
+      id,
+      type,
+      title,
+      message,
+      duration,
+      remaining: duration,
+      progress: 100,
+      paused: false,
+      startTime: performance.now(),
+      rafId: null,
+    })
+
+    toasts.value.push(toast)
+    startToastTimer(toast)
   }
 
   /**
-   * Remove a toast manually by ID
-   *
+   * Start the timer for a toast to auto-remove it after its duration
+   * @param {{ id: number, duration: number, remaining: number, startTime: number, rafId: number|null }} toast - The toast object
+   */
+  const startToastTimer = (toast) => {
+    const tick = (now) => {
+      if (isPaused.value) {
+        toast.startTime = now
+        toast.rafId = requestAnimationFrame(tick)
+        return
+      }
+
+      const elapsed = now - toast.startTime
+      toast.remaining -= elapsed
+      toast.startTime = now
+
+      toast.progress = Math.max(0, (toast.remaining / toast.duration) * 100)
+
+      if (toast.remaining <= 0) {
+        removeToastModal(toast.id)
+        return
+      }
+
+      toast.rafId = requestAnimationFrame(tick)
+    }
+
+    toast.rafId = requestAnimationFrame(tick)
+  }
+
+  /**
+   * Pause all toast timers
+   */
+  const pauseAllToasts = () => {
+    isPaused.value = true
+  }
+
+  /**
+   * Resume all toast timers
+   */
+  const resumeAllToasts = () => {
+    isPaused.value = false
+  }
+
+  /**
+   * Remove a toast modal by its ID
    * @param {number} id - The ID of the toast to remove
    */
   const removeToastModal = (id) => {
+    const toast = toasts.value.find((t) => t.id === id)
+
+    if (toast?.rafId) {
+      cancelAnimationFrame(toast.rafId)
+    }
+
     toasts.value = toasts.value.filter((t) => t.id !== id)
   }
 
@@ -86,5 +149,7 @@ export function useToastModal() {
     showToastModal,
     removeToastModal,
     getToastStyle,
+    pauseAllToasts,
+    resumeAllToasts,
   }
 }
