@@ -43,7 +43,6 @@ export function useFileTabs(uiStore, viewportStore, imageStore, editorStore, t) 
   const setActiveTab = async (index) => {
     if (index !== activeTabIndex.value) {
       uiStore.isLoading = true
-      // await new Promise((resolve) => setTimeout(resolve, 1))
 
       // Artifact overlay canvas
       const overlayCanvas = document.querySelector('.overlay-canvas')
@@ -55,10 +54,7 @@ export function useFileTabs(uiStore, viewportStore, imageStore, editorStore, t) 
       workspaceStore.updateCurrentTabState(t)
       await workspaceStore.switchToTab(index)
 
-      // await new Promise((resolve) => setTimeout(resolve, 1))
-
-      // Reset when switching tabs
-      // To reset rulers position
+      // Reset when switching tabs to reset rulers position
       viewportStore.resetZoom()
       viewportStore.resetPan()
       viewportStore.shouldFitToScreen = true
@@ -66,9 +62,6 @@ export function useFileTabs(uiStore, viewportStore, imageStore, editorStore, t) 
       await renderUpTo(imageStore.renderPipeline.currentOpIndex, { t, imageStore })
 
       uiStore.isLoading = false
-
-      // To hide artifacts
-      // imageStore.areArtifactsVisible = false
     }
   }
 

@@ -1,6 +1,6 @@
 import { ref, nextTick, onBeforeUnmount, watch, computed } from 'vue'
 import { useEyeDropper } from '@vueuse/core'
-const { isSupported, open, sRGBHex } = useEyeDropper()
+const { isSupported, open } = useEyeDropper()
 
 /**
  * Array for recent colors (max 7)

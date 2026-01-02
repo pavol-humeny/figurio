@@ -110,7 +110,8 @@ defineExpose({ setValue })
 
           <!-- Eye dropper -->
           <div class="eye-dropper">
-            <BaseIcon name="IconEyeDropper" size="18" color="var(--primary-c)" :tip="$t('tools.colorEyeDropper.tip')"
+            <BaseIcon name="IconEyeDropper" size="18" color="var(--primary-c)"
+              :tip="isSupported ? $t('tools.colorEyeDropper.tip') : $t('tools.colorEyeDropper.tipUnsupported')"
               position="bottom-left" :disabled="!isSupported || props.disabled" @click="pickColor"
               style="cursor: pointer; z-index: var(--z-index-color-eyedropper);" />
           </div>

@@ -1144,6 +1144,7 @@
     "message": "High noise level in the image"
   },
   "colorEyeDropper":{
-    "tip": "Eye dropper for color selection"
+    "tip": "Eye dropper for color selection",
+    "tipUnsupported": "Eye dropper is not supported in your browser"
   }
 }

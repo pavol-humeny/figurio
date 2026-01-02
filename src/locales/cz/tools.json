@@ -1145,6 +1145,7 @@
     "message": "Vysoká úroveň šumu v obrázku"
   },
   "colorEyeDropper":{
-    "tip": "Kapátko pro výběr barvy z obrázku"
+    "tip": "Kapátko pro výběr barvy z obrázku",
+    "tipUnsupported": "Kapátko není ve vašem prohlížeči podporováno"
   }
 }
