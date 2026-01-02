@@ -35,7 +35,7 @@ export function importFileService(
   historyStore,
   t,
 ) {
-  const { initPipeline } = useImagePipeline(imageStore, uiStore)
+  const { initPipeline, renderUpTo } = useImagePipeline(imageStore, uiStore)
   const { closeImportModal } = useImportModal()
   /**
    * Opens a file input dialog for the user to select files and processes them
@@ -273,6 +273,8 @@ function
   const setFile = async (file) => {
     uiStore.isLoading = true
 
+    const previousTabIndex = workspaceStore.activeTabIndex
+
     try {
       resetForNewFile()
 
@@ -295,7 +297,26 @@ function
         success = await setPdfFile(file)
       }
 
-      if (!success) return
+      if (!success) {
+        // Rollback to previous tab
+        if (previousTabIndex !== -1) {
+          // Use switchToTab so activeTabIndex + restore is consistent everywhere
+          await workspaceStore.switchToTab(previousTabIndex)
+
+          viewportStore.shouldFitToScreen = true
+
+          // Re-render restored state (same as when user clicks a tab)
+          await renderUpTo(imageStore.renderPipeline.currentOpIndex, { t, imageStore })
+
+          // If you ever hide overlay-canvas somewhere, ensure it is visible
+          const overlayCanvas = document.querySelector('.overlay-canvas')
+          if (overlayCanvas) overlayCanvas.style.display = ''
+        } else {
+          // No previous tab - just close file state
+          imageStore.closeFile()
+        }
+        return
+      }
 
       // Save initial state to history if empty
       if (historyStore.history.length === 0) {

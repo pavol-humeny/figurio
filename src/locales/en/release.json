@@ -9,7 +9,8 @@
       "date":"2.1. 2025",
       "bugFixes": {
         "items": [
-          "Fix issue with rasterizing SVG objects when using brush tool"
+          "Fix issue with rasterizing SVG objects when using brush tool",
+          "Fix issue with opening unsupported files when other file is already opened" 
         ]
       }
     },

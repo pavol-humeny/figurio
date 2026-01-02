@@ -11,7 +11,8 @@
       "date":"2.1. 2025",
       "bugFixes": {
         "items": [
-          "Oprava problému s rastrováním SVG objektů při použití nástroje štětec"
+          "Oprava problému s rastrováním SVG objektů při použití nástroje štětec",
+          "Oprava problému s otevíráním nepodporovaných souborů, když je již otevřen jiný soubor"
         ]
       }
     },
