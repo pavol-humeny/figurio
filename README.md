@@ -1,19 +1,24 @@
 # Figurio
 
+# Chyby
+- noise detekcia ako samostatný nástroj, možnosť ho znovu zapnúť
+- možnosť všetko exportovať naraz do zip
+- pri prekliknutí na physical mode by to mohlo hodiť info že treba kalibrovať 
+
 ## TODO 
-- rámik monitoru
-- Vylepšenie rámiku pre prehliadače 
 - DONE - MOZNO VYMYSLIET LEPSIE (TERAZ SA NEZOBRAZUJE VOBEC) Hláška o tom že sa nedajú vykresliť tlačidlá telefónu sa vypisuje viac krát
 - SKIP - (asi to je v pohode tak ako to je) zoomovanie pomocou tlacitok, ak je obrazok mimo stred tak to zoomuje mimo obrázok 
+- NEPREUKÁZALO SA - pri prepnutí z color na manual select sa nezapne spravny kurzor
+- rámik monitoru
+- Vylepšenie rámiku pre prehliadače 
 - Oblé zakončenie čiar (line tool)
 - eye dropper na safari
 - Zjednodušiť nápovedy - tipy (kratšie texty)
-- NEPREUKÁZALO SA - pri prepnutí z color na manual select sa nezapne spravny kurzor
 - Paste by to mohol klásť inde ako na ten istý objekt, aspoň pri kliknutí pravím 
+- Opravit paste blur objektu 
 - výber pdf strany, nie drop down menu ale iba number input so šípočkami
 - nakreslenie svg objektu, prepnutie na brush (vyžaduje rasterizáciu) a následné spätné prepnutie na shape (stále to chcelo rasterizovať)
 - pdf zväčšiť veľkosť povoleného súboru 
-- berie to hodnoty, ktore nie su farba ked sa nastavuje farba aplikacie
 
 ## TODO
 - využitie workerov pre aplikovanie operácie 
@@ -26,7 +31,7 @@
 - Poskakovanie pri resize ak je to otočené 
 - PDF s nepodporovanými svg objektami 
 - Poloha magnify area a blur object voči ostatným objektom (možné riešenie vrstvy)
-- kreslenie berie zle polohu myši 
+- v inpute by to čísla mohlo počítať 
 
 ## Insane ideas
 - Premenné prostredia (pre farbu, veľkosť)

@@ -4,6 +4,15 @@
     "items": []
   },
   "versions":{
+    "5.1.2":{
+      "label": "5.1.2",
+      "date":"2.1. 2025",
+      "bugFixes": {
+        "items": [
+          "Fix issue with opening unsupported files"
+        ]
+      }
+    },
     "5.1.0":{
       "label": "5.1.0",
       "date":"1.1. 2025",
@@ -42,7 +51,7 @@
           "Set correct contact email address in contact form",
           "Fix magnify area object z-index positioning",
           "Fix browser frame positioning when exporting to PDF",
-          "Enable file names with commas",
+          "Enable file names with dots",
           "Fix issue with inaccurate drawing after closing and opening files"
         ]
       }

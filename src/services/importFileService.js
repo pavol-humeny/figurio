@@ -287,11 +287,15 @@ function
       imageStore.fileFormat = file.name.split('.').pop().toLowerCase()
       imageStore.newFileFormat = imageStore.fileFormat
 
+      let success = false
+
       if (file.type.startsWith('image/')) {
-        await setImageFile(file)
+        success = await setImageFile(file)
       } else if (file.type === 'application/pdf') {
-        await setPdfFile(file)
+        success = await setPdfFile(file)
       }
+
+      if (!success) return
 
       // Save initial state to history if empty
       if (historyStore.history.length === 0) {
@@ -320,6 +324,7 @@ function
   /**
    * Sets a PDF file in the image store, allowing page selection if multiple pages exist
    * @param {File} file - PDF file to set
+   * @returns {Promise<boolean>} - True if successful, false otherwise
    */
   const setPdfFile = async (file) => {
     log('Loading PDF file:', file.name)
@@ -352,7 +357,7 @@ function
         } else {
           workspaceStore.switchToTab(workspaceStore.activeTabIndex)
         }
-        return
+        return false
       }
 
       pageNumber = result.selectedPage
@@ -386,7 +391,7 @@ function
     // Check dimensions
     if (!checkFileDimensions(viewport.width, viewport.height, file.name)) {
       imageStore.closeFile()
-      return
+      return false
     }
 
     imageStore.fileDimensions.width = canvas.width
@@ -403,11 +408,14 @@ function
     imageStore.previewUrl = canvas.toDataURL()
 
     workspaceStore.addNewTab(imageStore.fileName, imageStore.fileFormat, t)
+
+    return true
   }
 
   /**
    * Sets an image file in the image store and processes it
    * @param {File} file - Image file to set
+   * @returns {Promise<boolean>} - True if successful, false otherwise
    */
   const setImageFile = async (file) => {
     log('Loading image file:', file.name)
@@ -425,7 +433,7 @@ function
     // Check dimensions
     if (!checkFileDimensions(img.width, img.height, file.name)) {
       imageStore.closeFile()
-      return
+      return false
     }
 
     imageStore.fileDimensions.width = img.width
@@ -459,6 +467,8 @@ function
     const { calculateArtifacts } = useImageAnalysis(imageStore, workspaceStore, uiStore, t)
 
     await calculateArtifacts()
+
+    return true
   }
 
   /**
