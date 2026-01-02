@@ -6,6 +6,20 @@
     ]
   },
   "versions": {
+    "5.1.1":{
+      "label": "5.1.1",
+      "date":"2.1. 2025",
+      "improvements": {
+        "items": [
+          "Zobrazit informační toast při výběru fyzického režimu přiblížení, aby uživatel nezapomněl kalibrovat monitor"
+        ]
+      },
+      "bugFixes": {
+        "items": [
+          "Oprava problému s otevíráním nepodporovaných souborů"
+        ]
+      }
+    },
     "5.1.0":{
       "label": "5.1.0",
       "date":"1.1. 2025",

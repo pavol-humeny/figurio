@@ -4,9 +4,14 @@
     "items": []
   },
   "versions":{
-    "5.1.2":{
-      "label": "5.1.2",
+    "5.1.1":{
+      "label": "5.1.1",
       "date":"2.1. 2025",
+      "improvements": {
+        "items": [
+          "Show info toast when physical zoom mode is selected to remind user to calibrate the monitor"
+        ]
+      },
       "bugFixes": {
         "items": [
           "Fix issue with opening unsupported files"

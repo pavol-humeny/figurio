@@ -64,6 +64,10 @@
         "text": "Kalibrovať",
         "tip": "Spusť kalibráciu, aby sa zobrazené rozmery zhodovali so skutočnými centimetrami."
       }
+    },
+    "needCalibration": {
+      "title": "Kalibrácia potrebná",
+      "message": "Pre presné fyzické priblíženie prosím kalibrujte svoj monitor."
     }
   },
   "helpButton": {

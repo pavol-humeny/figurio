@@ -64,6 +64,10 @@
         "text": "Calibrate",
         "tip": "Start calibration to match on-screen measurements with real-world centimeters."
       }
+    },
+    "needCalibration": {
+      "title": "Calibration Needed",
+      "message": "To ensure accurate physical zoom, please calibrate your monitor."
     }
   },
   "helpButton": {

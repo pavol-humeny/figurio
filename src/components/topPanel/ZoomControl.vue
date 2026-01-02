@@ -7,7 +7,9 @@ import ItemTip from '@/components/common/ItemTip.vue'
 import NumberInput from '../common/NumberInput.vue'
 import DefaultButton from '../common/DefaultButton.vue'
 import { useCalibrationModal } from '@/composables/modals/useCalibrationModal.js'
+import { useI18n } from 'vue-i18n'
 
+const { t } = useI18n()
 const imageStore = useImageStore()
 const viewportStore = useViewportStore()
 
@@ -37,7 +39,7 @@ const {
   startHold,
   stopHold,
   handleClickOrHold,
-} = useZoomControl(useViewportStore(), useImageStore())
+} = useZoomControl(useViewportStore(), useImageStore(), t)
 </script>
 
 <template>
@@ -52,8 +54,9 @@ const {
     <div class="zoom-buttons">
       <!-- Zoom Out -->
       <ItemTip :text="$t('topPanel.zoomControl.tip.zoomOut')" position="bottom">
-        <div class="zoom-out-button button button-control button-circle button-clickable" @mousedown="startHold(zoomOut)"
-          @mouseup="handleClickOrHold(zoomOut)" @mouseleave="stopHold" :class="{ 'disabled': !canZoomOut }">
+        <div class="zoom-out-button button button-control button-circle button-clickable"
+          @mousedown="startHold(zoomOut)" @mouseup="handleClickOrHold(zoomOut)" @mouseleave="stopHold"
+          :class="{ 'disabled': !canZoomOut }">
           <BaseIcon name="IconMinus" size="24" />
         </div>
       </ItemTip>
@@ -84,8 +87,8 @@ const {
       <ItemTip advance :text="$t('topPanel.zoomControl.tip.classicMode.text')"
         :title="$t('topPanel.zoomControl.tip.classicMode.title')"
         :shortcut="$t('topPanel.zoomControl.tip.classicMode.shortcut')" position="bottom">
-        <div class="zoom-mode-classic button button-control button-circle button-clickable" @click="toggleZoomMode('classic')"
-          :class="{ 'selected': viewportStore.zoomMode === 'classic' }">
+        <div class="zoom-mode-classic button button-control button-circle button-clickable"
+          @click="toggleZoomMode('classic')" :class="{ 'selected': viewportStore.zoomMode === 'classic' }">
           <BaseIcon name="IconZoomModeClassic" size="24" />
         </div>
       </ItemTip>
@@ -94,8 +97,8 @@ const {
       <ItemTip advance :text="$t('topPanel.zoomControl.tip.physicalMode.text')"
         :title="$t('topPanel.zoomControl.tip.physicalMode.title')"
         :shortcut="$t('topPanel.zoomControl.tip.physicalMode.shortcut')" position="bottom">
-        <div class="zoom-mode-physical button button-control button-circle button-clickable" @click="toggleZoomMode('physical')"
-          :class="{ 'selected': viewportStore.zoomMode === 'physical' }">
+        <div class="zoom-mode-physical button button-control button-circle button-clickable"
+          @click="toggleZoomMode('physical')" :class="{ 'selected': viewportStore.zoomMode === 'physical' }">
           <BaseIcon name="IconZoomModePhysical" size="24" />
         </div>
       </ItemTip>

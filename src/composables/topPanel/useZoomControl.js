@@ -5,6 +5,7 @@ import { globalConfig } from '@/config/globalConfig'
 import { useApi } from '@/composables/common/useApi'
 import { editorConfig } from '@/config/editorConfig'
 const { addUserEvent } = useApi()
+import { useToastModal } from '../modals/useToastModal'
 
 /**
  * Logic for the zoom control functionality in the viewport
@@ -21,8 +22,9 @@ const { addUserEvent } = useApi()
  *   toggleZoomMode: (mode: string) => void
  * }}
  */
-export function useZoomControl(viewportStore, imageStore) {
+export function useZoomControl(viewportStore, imageStore, t) {
   const { clamp, round } = useMath()
+  const { showToastModal } = useToastModal()
 
   /**
    * Zoom level in percent (0–100+), used for display and manual adjustment
@@ -175,6 +177,25 @@ export function useZoomControl(viewportStore, imageStore) {
     if (mode === viewportStore.zoomMode) return
 
     addUserEvent('zoomModeToggle', { zoomMode: mode })
+
+    // If it is physical zoom mode, show info toast for calibration needed
+    if (mode === 'physical') {
+      // Check if physical zoom was used before
+      const physicalZoomUsed = localStorage.getItem(
+        `${globalConfig.LOCAL_STORAGE_PREFIX}physicalZoomUsed`,
+      )
+
+      if (physicalZoomUsed !== 'true') {
+        showToastModal(
+          'info',
+          t('topPanel.zoomControl.needCalibration.title'),
+          t('topPanel.zoomControl.needCalibration.message'),
+        )
+
+        // Save to local storage that physical zoom was used
+        localStorage.setItem(`${globalConfig.LOCAL_STORAGE_PREFIX}physicalZoomUsed`, 'true')
+      }
+    }
 
     imageStore.modificationFlag += 1
     viewportStore.setZoomMode(mode)
