@@ -2,8 +2,11 @@
 
 # Chyby
 - noise detekcia ako samostatný nástroj, možnosť ho znovu zapnúť
-- možnosť všetko exportovať naraz do zip
-- pri prekliknutí na physical mode by to mohlo hodiť info že treba kalibrovať 
+- mám obrázok, dám unsupported obrázok a zavrie to 
+- nakreslím niečo, pridám shape, a dám rasterize tak to zmizne - rastererize zožuje brush 
+- varovanie ked to osekne pri resize na minimum - alebo v druhom to obmedziť tak aby sa nedalo zapísať viac
+
+
 
 ## TODO 
 - DONE - MOZNO VYMYSLIET LEPSIE (TERAZ SA NEZOBRAZUJE VOBEC) Hláška o tom že sa nedajú vykresliť tlačidlá telefónu sa vypisuje viac krát
@@ -20,10 +23,6 @@
 - nakreslenie svg objektu, prepnutie na brush (vyžaduje rasterizáciu) a následné spätné prepnutie na shape (stále to chcelo rasterizovať)
 - pdf zväčšiť veľkosť povoleného súboru 
 
-## TODO
-- využitie workerov pre aplikovanie operácie 
-- prevod na raster ak to obsahuje hlúposti 
-
 ## Dlhodobé TODO 
 - achievementy
 - Globálne úpravy (rasterizácia)
@@ -32,6 +31,9 @@
 - PDF s nepodporovanými svg objektami 
 - Poloha magnify area a blur object voči ostatným objektom (možné riešenie vrstvy)
 - v inpute by to čísla mohlo počítať 
+- možnosť všetko exportovať naraz do zip
+- využitie workerov pre aplikovanie operácie 
+- prevod na raster ak to obsahuje hlúposti 
 
 ## Insane ideas
 - Premenné prostredia (pre farbu, veľkosť)

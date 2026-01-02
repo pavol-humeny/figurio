@@ -4,6 +4,15 @@
     "items": []
   },
   "versions":{
+    "5.1.2":{
+      "label": "5.1.2",
+      "date":"2.1. 2025",
+      "bugFixes": {
+        "items": [
+          "Fix issue with rasterizing SVG objects when using brush tool"
+        ]
+      }
+    },
     "5.1.1":{
       "label": "5.1.1",
       "date":"2.1. 2025",

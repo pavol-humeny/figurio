@@ -640,6 +640,15 @@ export const useImageStore = defineStore('imageStore', {
       this.fileType = 'image'
     },
 
+    /**
+     * Rasterizes SVG and blur objects into a bitmap overlay.
+     * @param {string} mode - The rasterization mode ('editor', 'export-pdf', 'export-image')
+     * @param {Object} [options={}] - Additional options
+     * @param {number|null} [options.width=null] - Width for rasterization (optional)
+     * @param {number|null} [options.height=null] - Height for rasterization (optional)
+     * @param {Function} t - Translation function (vue-i18n)
+     * @returns {Promise<{overlay: HTMLCanvasElement, magnifyOverlay?: HTMLCanvasElement}|null>} - The rasterized overlay and optional magnify overlay
+     */
     async rasterize(mode, { width = null, height = null } = {}, t) {
       if (this.svgObjects.length === 0 && this.blurObjects.length === 0) {
         return null
@@ -650,10 +659,7 @@ export const useImageStore = defineStore('imageStore', {
       const usedWidth = width ?? this.fileDimensions.width
       const usedHeight = height ?? this.fileDimensions.height
 
-      /* =========================
-      SVG DEFINITIONS
-      ========================= */
-
+      // SVG DEFINITIONS
       const staticDefs = `
         <marker id="arrow-end" markerWidth="10" markerHeight="10"
           refX="3" refY="3" orient="auto" markerUnits="strokeWidth">
@@ -696,10 +702,7 @@ export const useImageStore = defineStore('imageStore', {
         </svg>
       `.trim()
 
-      /* =========================
-      OVERLAY (bitmap of SVG)
-      ======================== */
-
+      // OVERLAY (bitmap of SVG)
       const overlayCanvas = document.createElement('canvas')
       overlayCanvas.width = usedWidth
       overlayCanvas.height = usedHeight
@@ -719,10 +722,7 @@ export const useImageStore = defineStore('imageStore', {
         img.src = svgUrl
       })
 
-      /* =========================
-      MODE: EXPORT PDF
-      ========================= */
-
+      // MODE: export pdf
       if (mode === 'export-pdf') {
         let magnifyOverlay = null
 
@@ -773,10 +773,7 @@ export const useImageStore = defineStore('imageStore', {
         }
       }
 
-      /* =========================
-      MODE: EXPORT IMAGE
-      ========================= */
-
+      // MODE: export image
       if (mode === 'export-image') {
         const imageCanvas = document.createElement('canvas')
         imageCanvas.width = usedWidth
@@ -792,18 +789,36 @@ export const useImageStore = defineStore('imageStore', {
         }
       }
 
-      /* =========================
-      MODE: EDITOR
-      ========================= */
-
+      // MODE: editor
       if (mode === 'editor') {
+        // Create final overlay canvas (merge old overlay + new SVG overlay)
+        let finalOverlay = overlayCanvas
+
+        if (this.overlayImage) {
+          const mergedCanvas = document.createElement('canvas')
+          mergedCanvas.width = overlayCanvas.width
+          mergedCanvas.height = overlayCanvas.height
+
+          const ctx = mergedCanvas.getContext('2d')
+
+          // Draw previous overlay first
+          ctx.drawImage(this.overlayImage, 0, 0)
+
+          // Draw newly rasterized SVG objects on top
+          ctx.drawImage(overlayCanvas, 0, 0)
+
+          finalOverlay = mergedCanvas
+        }
+
+        // Clear vector objects – they are now baked into overlay
         this.svgObjects = []
         this.blurObjects = []
         this.blurImages = []
         this.selectedSvgObjectId = null
+        this.selectedSvgObjectIds = []
 
         return {
-          overlay: overlayCanvas,
+          overlay: finalOverlay,
         }
       }
 

@@ -6,6 +6,15 @@
     ]
   },
   "versions": {
+    "5.1.2":{
+      "label": "5.1.2",
+      "date":"2.1. 2025",
+      "bugFixes": {
+        "items": [
+          "Oprava problému s rastrováním SVG objektů při použití nástroje štětec"
+        ]
+      }
+    },
     "5.1.1":{
       "label": "5.1.1",
       "date":"2.1. 2025",
