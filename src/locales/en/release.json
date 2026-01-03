@@ -4,6 +4,15 @@
     "items": []
   },
   "versions":{
+    "5.2.0":{
+      "label": "5.2.0",
+      "date":"3.1. 2025",
+      "improvements": {
+        "items": [
+          "Number spinner input component used when selecting PDF page to import" 
+        ]
+      }
+    },
     "5.1.2":{
       "label": "5.1.2",
       "date":"2.1. 2025",

@@ -15,7 +15,6 @@
 - rámik monitoru
 - Vylepšenie rámiku pre prehliadače 
 - Oblé zakončenie čiar (line tool)
-- eye dropper na safari
 - Zjednodušiť nápovedy - tipy (kratšie texty)
 - Paste by to mohol klásť inde ako na ten istý objekt, aspoň pri kliknutí pravím 
 - Opravit paste blur objektu 
@@ -24,6 +23,7 @@
 - pdf zväčšiť veľkosť povoleného súboru 
 
 ## Dlhodobé TODO 
+- eye dropper na safari
 - achievementy
 - Globálne úpravy (rasterizácia)
 - BG removal - ukladanie do undo redo operácií pri výbere 
@@ -33,7 +33,7 @@
 - v inpute by to čísla mohlo počítať 
 - možnosť všetko exportovať naraz do zip
 - využitie workerov pre aplikovanie operácie 
-- prevod na raster ak to obsahuje hlúposti 
+- prevod pdf na raster ak to obsahuje hlúposti 
 
 ## Insane ideas
 - Premenné prostredia (pre farbu, veľkosť)

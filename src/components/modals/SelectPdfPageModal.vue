@@ -1,8 +1,8 @@
 <script setup>
-import { ref, watch, computed } from 'vue'
+import { ref, watch } from 'vue'
 import { useGeneralModal } from '@/composables/modals/useGeneralModal'
 import { useI18n } from 'vue-i18n'
-import NumberDropdownInput from '@/components/common/NumberDropdownInput.vue'
+import NumberSpinner from '@/components/common/NumberSpinner.vue'
 
 const { t } = useI18n()
 const { payload } = useGeneralModal()
@@ -24,14 +24,6 @@ watch(
 )
 
 /**
- * Generates page options (1 to numberOfPages)
- */
-const pageOptions = computed(() => {
-  const count = payload.value?.numberOfPages || 1
-  return Array.from({ length: count }, (_, i) => i + 1)
-})
-
-/**
  * Syncs selected page with modal payload
  */
 watch(selectedPage, (value) => {
@@ -47,8 +39,8 @@ watch(selectedPage, (value) => {
     </div>
     <p class="modal-text">{{ t('imageStore.modal.selectPdfPage.message') }}</p>
     <div class="page-selection">
-      <NumberDropdownInput v-model="selectedPage" :options="pageOptions" :min="1" :max="payload?.numberOfPages || 1"
-        :style="{ width: 100 }" />
+      <NumberSpinner v-model="selectedPage" :min="1" :max="payload?.numberOfPages || 1" :step="1"
+        :style="{ width: '100px' }" />
 
       <p class="page-range">
         {{ t('imageStore.modal.selectPdfPage.pageRange', { from: 1, to: payload?.numberOfPages || 1 }) }}
