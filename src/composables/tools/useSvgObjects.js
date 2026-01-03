@@ -203,7 +203,6 @@ export function useSvgObjects(
       }
 
       log('11')
-      console.warn('11')
       imageStore.selectedSvgObjectId = null
     }
 
@@ -705,7 +704,6 @@ export function useSvgObjects(
       })
       .map((obj) => obj.id)
 
-    console.warn('1')
     imageStore.selectedSvgObjectId = null
   }
 
@@ -1750,7 +1748,6 @@ export function useSvgObjects(
     // Deselect if clicked inside viewport but outside content
     if (clickedInsideViewport && !clickedInsideContent) {
       log('Deselect triggered')
-      console.warn('1')
       imageStore.selectedSvgObjectId = null
       imageStore.selectedSvgObjectIds = []
     }

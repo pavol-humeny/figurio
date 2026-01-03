@@ -42,7 +42,7 @@ export const globalConfig = {
       crop: true,
       frame: true,
       grayscale: true,
-      darkLightConvertor: true,
+      darkLightConvertor: false,
       backgroundRemoval: true,
       brush: true,
       select: true,

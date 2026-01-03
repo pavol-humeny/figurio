@@ -21,6 +21,9 @@
 - výber pdf strany, nie drop down menu ale iba number input so šípočkami
 - nakreslenie svg objektu, prepnutie na brush (vyžaduje rasterizáciu) a následné spätné prepnutie na shape (stále to chcelo rasterizovať)
 - pdf zväčšiť veľkosť povoleného súboru 
+- color bg removal intuitívnejší 
+- klikanie na tool divne sa otvaraju subtools - vymyslieť vylepšenie
+- na videá v tool tipe pridať time line
 
 ## Dlhodobé TODO 
 - eye dropper na safari
