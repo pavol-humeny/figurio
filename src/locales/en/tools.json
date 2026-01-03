@@ -64,6 +64,9 @@
         },
         "removeButton": {
           "text": "Remove selection"
+        }, 
+        "replaceWithColor": {
+          "text": "Replace with color"
         }
       },
       "manual": {
@@ -115,6 +118,9 @@
         },
         "removeButton": {
           "text": "Remove selection"
+        }, 
+        "replaceWithColor": {
+          "text": "Replace with color"
         }
       },
       "auto": {
@@ -129,6 +135,9 @@
         },
         "removeButton": {
           "text": "Remove selection"
+        }, 
+        "replaceWithColor": {
+          "text": "Replace with color"
         },
         "autoRemovalSensitivity": {
           "label": "Auto removal sensitivity",

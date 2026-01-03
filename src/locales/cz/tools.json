@@ -64,6 +64,9 @@
         },
         "removeButton": {
           "text": "Odstranit výběr"
+        }, 
+        "replaceWithColor": {
+          "text": "Nahradit barvou"
         }
       },
       "manual": {
@@ -115,6 +118,9 @@
         },
         "removeButton": {
           "text": "Odstranit výběr"
+        }, 
+        "replaceWithColor": {
+          "text": "Nahradit barvou"
         }
       },
       "auto": {
@@ -129,6 +135,9 @@
         },
         "removeButton": {
           "text": "Odstranit výběr"
+        }, 
+        "replaceWithColor": {
+          "text": "Nahradit barvou"
         },
         "autoRemovalSensitivity": {
           "label": "Citlivost automatického odstranění",

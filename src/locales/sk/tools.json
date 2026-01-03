@@ -64,6 +64,9 @@
         },
         "removeButton": {
           "text": "Odstrániť výber"
+        }, 
+        "replaceWithColor": {
+          "text": "Nahradiť farbou"
         }
       },
       "manual": {
@@ -115,6 +118,9 @@
         },
         "removeButton": {
           "text": "Odstrániť výber"
+        }, 
+        "replaceWithColor": {
+          "text": "Nahradiť farbou"
         }
       },
       "auto": {
@@ -129,6 +135,9 @@
         },
         "removeButton": {
           "text": "Odstrániť výber"
+        }, 
+        "replaceWithColor": {
+          "text": "Nahradiť farbou"
         },
         "autoRemovalSensitivity": {
           "label": "Citlivosť automatického odstránenia",

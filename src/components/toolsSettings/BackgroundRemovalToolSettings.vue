@@ -222,7 +222,8 @@ const tabs = ['auto', 'manual', 'color']
           <!-- Remove background button -->
           <div class="settings-content-wrapper settings-content-wrapper-last">
             <div class="content-wrapper">
-              <DefaultButton :text="$t('tools.backgroundRemoval.settings.color.removeButton.text')"
+              <DefaultButton
+                :text="replaceWithBackgroundColor ? $t('tools.backgroundRemoval.settings.manual.replaceWithColor.text') : $t('tools.backgroundRemoval.settings.color.removeButton.text')"
                 @click="applyBackgroundRemoval" main />
             </div>
           </div>
@@ -376,7 +377,8 @@ const tabs = ['auto', 'manual', 'color']
           <!-- Remove background button -->
           <div class="settings-content-wrapper settings-content-wrapper-last">
             <div class="content-wrapper">
-              <DefaultButton :text="$t('tools.backgroundRemoval.settings.manual.removeButton.text')"
+              <DefaultButton
+                :text="replaceWithBackgroundColor ? $t('tools.backgroundRemoval.settings.manual.replaceWithColor.text') : $t('tools.backgroundRemoval.settings.manual.removeButton.text')"
                 @click="applyBackgroundRemoval" main />
             </div>
           </div>
@@ -508,7 +510,8 @@ const tabs = ['auto', 'manual', 'color']
           <!-- Remove background button -->
           <div class="settings-content-wrapper settings-content-wrapper-last">
             <div class="content-wrapper">
-              <DefaultButton :text="$t('tools.backgroundRemoval.settings.auto.removeButton.text')"
+              <DefaultButton
+                :text="replaceWithBackgroundColor ? $t('tools.backgroundRemoval.settings.auto.replaceWithColor.text') : $t('tools.backgroundRemoval.settings.auto.removeButton.text')"
                 @click="applyBackgroundRemoval" main />
             </div>
           </div>
