@@ -839,7 +839,7 @@ export const useImageStore = defineStore('imageStore', {
       const imageStore = this
       const viewportStore = useViewportStore()
 
-      log('Generating preview with frame...')
+      warn('Generating preview with frame...')
 
       const { finalWidth, finalHeight, targetWidth, targetHeight, offsetX, offsetY } = useFrameTool(
         imageStore,
@@ -858,7 +858,55 @@ export const useImageStore = defineStore('imageStore', {
         },
         t,
       )
-      const overlay = rasterized?.overlay || null
+
+      console.warn('Rasterized overlay for preview:', rasterized)
+
+      // Svg objects rasterized for export
+      const rasterizedOverlay = rasterized?.overlay || null
+
+      // Already rasterized overlay (from brush tool)
+      const originalOverlay = this.overlayImage
+
+      // Merge both overlays
+      let overlay = null
+
+      if (originalOverlay || rasterizedOverlay) {
+        const overlayCanvas = document.createElement('canvas')
+        overlayCanvas.width = targetWidth
+        overlayCanvas.height = targetHeight
+
+        const octx = overlayCanvas.getContext('2d')
+
+        if (originalOverlay) {
+          octx.drawImage(
+            originalOverlay,
+            0,
+            0,
+            originalOverlay.width,
+            originalOverlay.height,
+            0,
+            0,
+            targetWidth,
+            targetHeight,
+          )
+        }
+
+        if (renderAsRaster && rasterizedOverlay) {
+          octx.drawImage(
+            rasterizedOverlay,
+            0,
+            0,
+            rasterizedOverlay.width,
+            rasterizedOverlay.height,
+            0,
+            0,
+            targetWidth,
+            targetHeight,
+          )
+        }
+
+        overlay = overlayCanvas
+      }
 
       const baseImage = rasterized?.image || this.getRenderedImage({ t, renderCall: true })
       if (!baseImage) {
@@ -893,9 +941,14 @@ export const useImageStore = defineStore('imageStore', {
           // Draw overlay on top
           mergeCtx.drawImage(overlay, 0, 0)
 
+          console.warn('Drawing overlay image on top of preview--------------')
           this.previewUrl = mergeCanvas.toDataURL(mimeType, quality)
         } else {
-          // No overlay, use just base image
+          console.warn(
+            'No overlay image, using base image for preview+++++++++++++++',
+            renderAsRaster,
+            overlay,
+          )
           this.previewUrl = baseImage.toDataURL(mimeType, quality)
         }
         return
