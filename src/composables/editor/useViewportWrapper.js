@@ -830,7 +830,11 @@ export function useViewportWrapper(viewportStore, imageStore, editorStore, uiSto
   /**
    * Whether to show the custom cursor
    */
-  const showCursor = ref(false)
+  const showCursor = ref(true)
+
+  watch(showCursor, (newVal) => {
+    console.warn('Show cursor changed:', newVal)
+  })
 
   // ------------------------------
   // Background contrast mode

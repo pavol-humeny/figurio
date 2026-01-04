@@ -62,6 +62,8 @@ export const useWarningList = (imageStore, uiStore) => {
     imageStore.expandedImageWarningIds.delete(id)
 
     if (typeof warning.onRemove === 'function') warning.onRemove(id)
+
+    uiStore.cursorOverViewportSettings = false
   }
 
   /**
@@ -89,6 +91,7 @@ export const useWarningList = (imageStore, uiStore) => {
 
     // Need to also hide item tip when closing warning
     uiStore.isItemTipVisible = false
+    uiStore.cursorOverViewportSettings = false
   }
 
   /**

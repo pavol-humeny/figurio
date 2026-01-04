@@ -1419,7 +1419,6 @@ export const useImageStore = defineStore('imageStore', {
 
         // PIPELINE
         imageOperations: this.imageOperations.map(serializeOperation),
-
         currentOpIndex: this.renderPipeline.currentOpIndex,
 
         // DIMENSIONS
@@ -1465,6 +1464,7 @@ export const useImageStore = defineStore('imageStore', {
       this.svgDefs = JSON.parse(JSON.stringify(snapshot.svgDefs))
       this.blurImages = JSON.parse(JSON.stringify(snapshot.blurImages))
 
+      // FRAME
       this.frame = JSON.parse(JSON.stringify(snapshot.frame))
       this.frameSvg = snapshot.frameSvg
 
@@ -1538,7 +1538,7 @@ export const useImageStore = defineStore('imageStore', {
 
         this.imageOperations.push({
           type: op.type,
-          params: op.params ? structuredClone(op.params) : undefined,
+          params: op.params,
           cost: op.cost,
           affectsGeometry: op.affectsGeometry,
         })
@@ -1549,7 +1549,7 @@ export const useImageStore = defineStore('imageStore', {
         baseState: null,
         checkpoints: [],
         currentOpIndex: snapshot.currentOpIndex,
-        lastRenderedOpIndex: -1,
+        lastRenderedOpIndex: -1, // force re-render
       }
 
       // WAIT FOR BASE CANVAS
@@ -1575,14 +1575,22 @@ export const useImageStore = defineStore('imageStore', {
         })
       }
 
+      // WARNINGS
+      this.imageWarnings = JSON.parse(JSON.stringify(snapshot.imageWarnings))
+
       // Reset selected SVG object
       this.selectedSvgObjectId = null
       this.justCreatedSvgObjectId = null
       this.selectedSvgObjectIds = []
       this.clipboardSvgObject = null
 
-      // WARNINGS
-      this.imageWarnings = JSON.parse(JSON.stringify(snapshot.imageWarnings))
+      this.overlayImage = null
+      this.renderedImage = null
+      this.tmpRenderedImage = null
+      this.previewUrl = ''
+      this.blurPreviewUrl = ''
+
+      this.expandedImageWarningIds = new Set()
 
       // BACKGROUND REMOVAL CANVASES
       this.removalCanvas = null

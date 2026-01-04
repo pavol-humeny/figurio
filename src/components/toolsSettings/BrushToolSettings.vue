@@ -87,10 +87,10 @@ const tabs = ['brush', 'eraser']
 
       <div v-if="editorStore.selectedTabPerTool[editorStore.selectedToolKey] === 'eraser'" class="specific-settings">
         <!-- Rasterize button -->
-        <div class="settings-content-wrapper" :class="{ disabled: !imageStore.needRasterization }">
+        <div class="settings-content-wrapper">
           <ExplainItem :text="$t('tools.brush.subTools.eraser.explain')"
             :title="$t('tools.brush.subTools.eraser.label')" />
-          <div class="content-wrapper">
+          <div class="content-wrapper" :class="{ disabled: !imageStore.needRasterization }">
             <DefaultButton :text="$t('tools.brush.settings.eraser.rasterizeButton.text')"
               :tip="$t('tools.brush.settings.eraser.rasterizeButton.tip')" position="bottom-left"
               @click="rasterizeImage" />

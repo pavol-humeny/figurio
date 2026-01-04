@@ -4,6 +4,15 @@
     "items": []
   },
   "versions":{
+    "5.2.1":{
+      "label": "5.2.1",
+      "date":"4.1. 2025",
+      "bugFixes": {
+        "items": [
+          "Fix issue with cursor not showing correctly when using brush tool" 
+        ]
+      }
+    },
     "5.2.0":{
       "label": "5.2.0",
       "date":"3.1. 2025",

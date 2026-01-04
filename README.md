@@ -18,12 +18,21 @@
 - Zjednodušiť nápovedy - tipy (kratšie texty)
 - Paste by to mohol klásť inde ako na ten istý objekt, aspoň pri kliknutí pravím 
 - Opravit paste blur objektu 
-- výber pdf strany, nie drop down menu ale iba number input so šípočkami
 - nakreslenie svg objektu, prepnutie na brush (vyžaduje rasterizáciu) a následné spätné prepnutie na shape (stále to chcelo rasterizovať)
 - pdf zväčšiť veľkosť povoleného súboru 
 - color bg removal intuitívnejší 
 - klikanie na tool divne sa otvaraju subtools - vymyslieť vylepšenie
 - na videá v tool tipe pridať time line
+- Možno nejako vylepšiť vysvetlenie grayscale
+
+- rámik windows pri použití milimetrov a dosiahnutí maximálnej hodnoty je možné zadať desatinné číslo 
+- brush - ak dochádza k uloženiu snapshotu do histórie tak to vyriesit nejako inak - divne sa to seká 
+- pri posúvaní viacerých objektov naraz je zlý kurzor 
+- pri posune viacerých objektov, následnom položení a opätovnom presune to nechce ísť a sekne to 
+- undo redo možno nejako zakázať pri aby sa to nedalo kliknúť viac krát do vtedy kým sa neaplikuje operácia 
+- aplikovanie resize pomocou enteru 
+- informovat nejako ak vznikne error používatela
+
 
 ## Dlhodobé TODO 
 - eye dropper na safari
