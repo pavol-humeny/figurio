@@ -53,7 +53,7 @@ export function useSvgObjectWrapper(
    * Style of cursor when hovering over the SVG object
    */
   const cursorOnSvgObject = computed(() => {
-    if (isSelected.value) {
+    if (isSelected.value || isInMultiSelection.value) {
       return 'move'
     } else {
       if (editorStore.selectedToolKey === object.value.class) {
