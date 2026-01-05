@@ -128,5 +128,10 @@
   },
   "continueTutorialButton": {
     "text": "Continue Tutorial"
+  },
+  "unexpectedError": {
+    "title": "Unexpected Error",
+    "message": "An unexpected error has occurred in the application. Please refresh the page.",
+    "refreshButton": "Refresh Page"
   }
 }

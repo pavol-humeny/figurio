@@ -128,5 +128,10 @@
   },
   "continueTutorialButton": {
     "text": "Pokračovať v tutoriále"
+  },
+  "unexpectedError": {
+    "title": "Neočakávaná chyba",
+    "message": "V aplikácii došlo k neočakávanej chybe. Prosím obnovte stránku.",
+    "refreshButton": "Obnoviť stránku"
   }
 }

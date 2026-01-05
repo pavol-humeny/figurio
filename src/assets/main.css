@@ -124,6 +124,17 @@
   border-color: var(--primary-c );
 }
 
+.button-error{
+  background:  var(--error-background-c);
+  color: var(--error-c);
+  border-color: var(--error-c);
+}
+
+.button-error:hover {
+  background: var(--error-c);
+  color: var(--error-background-c);
+  border-color: var(--error-background-c);
+}
 
 /* Animation window shake styles */
 @keyframes shake {

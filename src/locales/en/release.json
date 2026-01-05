@@ -7,6 +7,11 @@
     "5.2.2":{
       "label": "5.2.2",
       "date":"6.1. 2025",
+      "newFeatures": {
+        "items": [
+          "Show error modal when unexpected error occurs"
+        ]
+      },
       "bugFixes": {
         "items": [
           "Set correct cursor when moving multiple selected objects" 

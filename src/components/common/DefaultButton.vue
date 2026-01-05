@@ -35,7 +35,11 @@ const props = defineProps({
   main: {
     type: Boolean,
     default: false,
-  }
+  },
+  error: {
+    type: Boolean,
+    default: false,
+  },
 })
 
 /**
@@ -53,6 +57,7 @@ const emit = defineEmits(['click'])
       'button-default': !props.onlyText,
       'disabled': props.disabled,
       'button-main': props.main,
+      'button-error': props.error,
     }">
       {{ props.text }}
     </button>

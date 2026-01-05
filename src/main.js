@@ -4,6 +4,7 @@ import { createApp } from 'vue'
 import { createPinia } from 'pinia'
 import { useUiStore } from '@/stores/uiStore'
 import { usePresetsStore } from '@/stores/presetsStore'
+import { setupGlobalErrorHandling } from '@/composables/editor/globalErrorHandler.js'
 
 import App from './App.vue'
 import router from './router'
@@ -17,5 +18,6 @@ app.use(i18n)
 
 useUiStore().initApp()
 usePresetsStore().loadFromStorage()
+setupGlobalErrorHandling(app)
 
 app.mount('#app')

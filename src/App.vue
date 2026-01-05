@@ -21,6 +21,7 @@ import { useApi } from './composables/common/useApi'
 import FeatureTourModal from './components/modals/FeatureTourModal.vue'
 import { uiConfig } from './config/uiConfig'
 import { useConsole } from './composables/common/useConsole'
+import ErrorModal from './components/modals/ErrorModal.vue'
 
 const { warn } = useConsole()
 const { addUserVisit } = useApi()
@@ -169,6 +170,7 @@ onBeforeUnmount(() => {
     <InteractiveTutorial />
     <CalibrationModal />
     <FeatureTourModal />
+    <ErrorModal />
 
     <div class="top-panel" v-if="globalConfig.isRunning">
       <TopPanel />
