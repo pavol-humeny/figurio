@@ -5,6 +5,7 @@ export const userModeConfig = {
   // 'unlimitedZoom',
   // 'numberOfOpenedFiles',
   // 'maxNumberOfFilesToUploadSimultaneously',
+  // 'notShowUnexpectedErrorModal',
 
   // UPDATE new random event
   listOfCommands: [
@@ -128,7 +129,7 @@ export const userModeConfig = {
   },
 
   /** List of features accessible to expert users */
-  expertFeatures: ['fileSize', 'fileDimensions', 'unlimitedZoom'],
+  expertFeatures: ['fileSize', 'fileDimensions', 'unlimitedZoom', 'notShowUnexpectedErrorModal'],
 
   /** Email to access command mode */
   commandModeEmail: 'ea14d625304b1a81ef42c3bf046630bf9307dd44e3f3e02e48a6cb8040173c3e',

@@ -941,14 +941,8 @@ export const useImageStore = defineStore('imageStore', {
           // Draw overlay on top
           mergeCtx.drawImage(overlay, 0, 0)
 
-          console.warn('Drawing overlay image on top of preview--------------')
           this.previewUrl = mergeCanvas.toDataURL(mimeType, quality)
         } else {
-          console.warn(
-            'No overlay image, using base image for preview+++++++++++++++',
-            renderAsRaster,
-            overlay,
-          )
           this.previewUrl = baseImage.toDataURL(mimeType, quality)
         }
         return

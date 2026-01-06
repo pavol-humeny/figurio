@@ -9,7 +9,7 @@ const isVisible = ref(false)
 /**
  * Composable for error modal
  */
-export function useErrorModal() {
+export function useErrorModal(userModeStore) {
   /**
    * Show the error modal
    * @param {string} modalTitle - Title of the modal
@@ -17,6 +17,8 @@ export function useErrorModal() {
    */
   const showErrorModal = () => {
     if (isVisible.value || isLocalhost() || !globalConfig.featureFlags.enableErrorModal) return
+
+    if (userModeStore.hasUserAccessToFeature('notShowUnexpectedErrorModal')) return
 
     isVisible.value = true
   }

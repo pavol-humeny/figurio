@@ -2,6 +2,7 @@
 import { useErrorModal } from '@/composables/modals/useErrorModal'
 import DefaultButton from '@/components/common/DefaultButton.vue'
 import { useShaking } from '@/composables/common/useShaking'
+import { useUserModeStore } from '@/stores/userModeStore'
 
 /**
  * Logic of the error modal
@@ -9,7 +10,7 @@ import { useShaking } from '@/composables/common/useShaking'
 const {
   isVisible,
   refresh,
-} = useErrorModal()
+} = useErrorModal(useUserModeStore())
 
 /**
  * Logic of the shaking animation (used when clicking outside modal)
