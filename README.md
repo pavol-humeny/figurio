@@ -31,6 +31,7 @@
 - undo redo možno nejako zakázať pri aby sa to nedalo kliknúť viac krát do vtedy kým sa neaplikuje operácia 
 - aplikovanie resize pomocou enteru 
 - informovat nejako ak vznikne error používatela
+- error pri zatvorení viacerých súborov
 
 
 ## Dlhodobé TODO 

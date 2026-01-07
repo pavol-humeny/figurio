@@ -244,9 +244,18 @@ export function usePresetTool(
   watch(
     () => localImageFrame.value.type,
     (type) => {
+      console.warn('localImageFrame.type changed: ', type)
       isPresetModified.value = true
       if (!useFrameTool(imageStore, historyStore, viewportStore, t).isFrameWithOutline(type)) {
         localImageFrame.value.outlineEnabled = false
+      }
+      if (!useFrameTool(imageStore, historyStore, viewportStore, t).isFrameWithFooter(type)) {
+        localImageFrame.value.footerSize = 0
+        localImageFrame.value.footerSizeMm = 0
+      }
+      if (!useFrameTool(imageStore, historyStore, viewportStore, t).isFrameWithHeader(type)) {
+        localImageFrame.value.headerSize = 0
+        localImageFrame.value.headerSizeMm = 0
       }
     },
   )
@@ -610,6 +619,8 @@ export function usePresetTool(
         currentImageFrame.color === presetFrame.color &&
         currentImageFrame.width === presetFrame.width &&
         currentImageFrame.widthMm === presetFrame.widthMm &&
+        currentImageFrame.height === presetFrame.height &&
+        currentImageFrame.heightMm === presetFrame.heightMm &&
         currentImageFrame.outlineEnabled === presetFrame.outlineEnabled &&
         currentImageFrame.phoneHeaderEnabled === presetFrame.phoneHeaderEnabled &&
         currentImageFrame.phoneHeaderExpand === presetFrame.phoneHeaderExpand &&
@@ -683,6 +694,8 @@ export function usePresetTool(
     }
 
     console.warn('Applying preset frame:', preset.imageFrame)
+
+    console.warn('Current image frame before applying preset:', preset.imageFrame)
 
     // Apply frame
     if (!replace) {
@@ -835,6 +848,14 @@ export function usePresetTool(
       if (!useFrameTool(imageStore, historyStore, viewportStore, t).isFrameWithOutline(type)) {
         newPreset.value.frame.outlineEnabled = false
       }
+      if (!useFrameTool(imageStore, historyStore, viewportStore, t).isFrameWithFooter(type)) {
+        newPreset.value.frame.footerSize = 0
+        newPreset.value.frame.footerSizeMm = 0
+      }
+      if (!useFrameTool(imageStore, historyStore, viewportStore, t).isFrameWithHeader(type)) {
+        newPreset.value.frame.headerSize = 0
+        newPreset.value.frame.headerSizeMm = 0
+      }
     },
   )
 
@@ -913,6 +934,18 @@ export function usePresetTool(
       newPreset.value.frame.headerSize = newSize * PxPerMm
     },
   )
+
+  /**
+   * Watch headerSize and update headerSizeMm accordingly
+   */
+  watch(
+    () => localImageFrame.value.headerSizeMm,
+    (newSize) => {
+      const PxPerMm = viewportStore.getPxPerMmFitZoom
+      localImageFrame.value.headerSize = newSize * PxPerMm
+    },
+  )
+
   /**
    * Watch footerSizeMm and update footerSize accordingly
    */
@@ -923,6 +956,18 @@ export function usePresetTool(
       newPreset.value.frame.footerSize = newSize * PxPerMm
     },
   )
+
+  /**
+   * Watch footerSize and update footerSizeMm accordingly
+   */
+  watch(
+    () => localImageFrame.value.footerSizeMm,
+    (newSize) => {
+      const PxPerMm = viewportStore.getPxPerMmFitZoom
+      localImageFrame.value.footerSize = newSize * PxPerMm
+    },
+  )
+
   /**
    * Watch headerSize and update headerSizeMm accordingly
    */
@@ -933,6 +978,18 @@ export function usePresetTool(
       newPreset.value.frame.headerSizeMm = newSize / PxPerMm
     },
   )
+
+  /**
+   * Watch headerSizeMm and update headerSize accordingly
+   */
+  watch(
+    () => localImageFrame.value.headerSize,
+    (newSize) => {
+      const PxPerMm = viewportStore.getPxPerMmFitZoom
+      localImageFrame.value.headerSizeMm = newSize / PxPerMm
+    },
+  )
+
   /**
    * Watch footerSize and update footerSizeMm accordingly
    */
@@ -941,6 +998,17 @@ export function usePresetTool(
     (newSize) => {
       const PxPerMm = viewportStore.getPxPerMmFitZoom
       newPreset.value.frame.footerSizeMm = newSize / PxPerMm
+    },
+  )
+
+  /**
+   * Watch footerSizeMm and update footerSize accordingly
+   */
+  watch(
+    () => localImageFrame.value.footerSize,
+    (newSize) => {
+      const PxPerMm = viewportStore.getPxPerMmFitZoom
+      localImageFrame.value.footerSizeMm = newSize / PxPerMm
     },
   )
 
@@ -1085,6 +1153,8 @@ export function usePresetTool(
       imageFrame.phoneHeaderTextColor = newPreset.value.frame.phoneHeaderTextColor
       imageFrame.phoneHeaderBackgroundColor = newPreset.value.frame.phoneHeaderBackgroundColor
     }
+
+    console.warn('Creating preset with operations:', imageFrame)
     // UPDATE new tool
 
     presetsStore.createPreset(

@@ -619,6 +619,8 @@ export function useFrameTool(imageStore, historyStore, viewportStore, t) {
     const PxPerMm = viewportStore.getPxPerMmFitZoom
     headerSize.value = headerSizeMm.value * PxPerMm
 
+    console.warn('Setting header size mm:', size, headerSizeMm.value, headerSize.value)
+
     applyFrame()
   }
 
@@ -699,9 +701,6 @@ export function useFrameTool(imageStore, historyStore, viewportStore, t) {
 
     // Set header and footer sizes
     if (isPhoneFrame(selectedFrameVariant.value)) {
-      // imageStore.frame.headerSize = headerSize.value
-      // imageStore.frame.headerSizeMm = headerSizeMm.value
-
       if (imageStore.frame.useMillimeters) {
         imageStore.frame.headerSizeMm = userSetHeaderSizeMm.value
       } else {
@@ -1306,6 +1305,9 @@ export function useFrameTool(imageStore, historyStore, viewportStore, t) {
           { x: svgWidth - fw, y: 0, width: fw, height: svgHeight },
           { x: 0, y: svgHeight - fh, width: svgWidth, height: fh },
         ]
+
+        console.warn(borders)
+
         borders.forEach((s) => {
           const r = document.createElementNS(ns, 'rect')
           Object.entries(s).forEach(([k, v]) => r.setAttribute(k, v))
