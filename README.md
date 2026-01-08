@@ -12,9 +12,9 @@
 - DONE - MOZNO VYMYSLIET LEPSIE (TERAZ SA NEZOBRAZUJE VOBEC) Hláška o tom že sa nedajú vykresliť tlačidlá telefónu sa vypisuje viac krát
 - SKIP - (asi to je v pohode tak ako to je) zoomovanie pomocou tlacitok, ak je obrazok mimo stred tak to zoomuje mimo obrázok 
 - NEPREUKÁZALO SA - pri prepnutí z color na manual select sa nezapne spravny kurzor
+- NEPREUKÁZALO SA - error pri zatvorení viacerých súborov
 - rámik monitoru
 - Vylepšenie rámiku pre prehliadače 
-- Oblé zakončenie čiar (line tool)
 - Zjednodušiť nápovedy - tipy (kratšie texty)
 - Paste by to mohol klásť inde ako na ten istý objekt, aspoň pri kliknutí pravím 
 - Opravit paste blur objektu 
@@ -29,9 +29,6 @@
 - brush - ak dochádza k uloženiu snapshotu do histórie tak to vyriesit nejako inak - divne sa to seká 
 - pri posune viacerých objektov, následnom položení a opätovnom presune to nechce ísť a sekne to 
 - undo redo možno nejako zakázať pri aby sa to nedalo kliknúť viac krát do vtedy kým sa neaplikuje operácia 
-- aplikovanie resize pomocou enteru 
-- informovat nejako ak vznikne error používatela
-- error pri zatvorení viacerých súborov
 
 
 ## Dlhodobé TODO 

@@ -250,6 +250,15 @@ const tabs = ['myPresets', 'createPreset']
                 <ToggleButton v-model="localImageFrame.useMillimeters" :scale="0.6"
                   :style="{ transform: 'translateX(16px)' }" />
               </div>
+              <!-- Use outline -->
+              <div v-if="localImageFrame.enabled && isFrameWithOutline(localImageFrame.type)"
+                class="content-aligned two-items">
+                <p :class="!isModifyingPreset ? 'disabled' : ''">
+                  {{ t('tools.preset.settings.myPresets.presetValues.frame.useFrameOutline') }}
+                </p>
+                <ToggleButton v-model="localImageFrame.outlineEnabled" :scale="0.6"
+                  :style="{ transform: 'translateX(16px)' }" :disabled="!isModifyingPreset" />
+              </div>
               <!-- Width px-->
               <div class="content-aligned two-items"
                 v-if="localImageFrame.enabled && (localImageFrame.outlineEnabled || localImageFrame.type === 'frameSolid') && !localImageFrame.useMillimeters">
@@ -271,15 +280,6 @@ const tabs = ['myPresets', 'createPreset']
                 <NumberInput ref="frameWidthRef" v-model="localImageFrame.widthMm" :min="1" :max="50" :step="1"
                   unit="mm" icon="IconArrowWidth" :iconTop="45" :onReset="() => localImageFrame.widthMm = 1"
                   :disabled="!isModifyingPreset || (localImageFrame.type !== 'frameSolid' && !localImageFrame.outlineEnabled)" />
-              </div>
-              <!-- Use outline -->
-              <div v-if="localImageFrame.enabled && isFrameWithOutline(localImageFrame.type)"
-                class="content-aligned two-items">
-                <p :class="!isModifyingPreset ? 'disabled' : ''">
-                  {{ t('tools.preset.settings.myPresets.presetValues.frame.useFrameOutline') }}
-                </p>
-                <ToggleButton v-model="localImageFrame.outlineEnabled" :scale="0.6"
-                  :style="{ transform: 'translateX(16px)' }" :disabled="!isModifyingPreset" />
               </div>
 
               <!-- Phone buttons -->
@@ -690,6 +690,15 @@ const tabs = ['myPresets', 'createPreset']
                 <ToggleButton v-model="newPreset.frame.useMillimeters" :scale="0.6"
                   :style="{ transform: 'translateX(16px)' }" />
               </div>
+              <!-- Use outline -->
+              <div v-if="isFrameWithOutline(newPreset.frame.type) && newPreset.frame.enabled"
+                :class="newPreset.frame.enabled ? '' : 'disabled'" class="content-aligned two-items">
+                <p>
+                  {{ t('tools.preset.settings.createPreset.presetValues.frame.useFrameOutline') }}
+                </p>
+                <ToggleButton v-model="newPreset.frame.outlineEnabled" :scale="0.6"
+                  :style="{ transform: 'translateX(16px)' }" />
+              </div>
               <!-- Width px-->
               <div
                 v-if="(newPreset.frame.type === 'frameSolid' || newPreset.frame.outlineEnabled) && newPreset.frame.enabled && !newPreset.frame.useMillimeters"
@@ -711,15 +720,6 @@ const tabs = ['myPresets', 'createPreset']
                 <NumberInput ref="frameWidthRef" v-model="newPreset.frame.widthMm" :min="1" :max="50" :step="1"
                   unit="mm" icon="IconArrowWidth" :iconTop="45" :onReset="() => newPreset.frame.widthMm = 1"
                   :disabled="!newPreset.frame.enabled" />
-              </div>
-              <!-- Use outline -->
-              <div v-if="isFrameWithOutline(newPreset.frame.type) && newPreset.frame.enabled"
-                :class="newPreset.frame.enabled ? '' : 'disabled'" class="content-aligned two-items">
-                <p>
-                  {{ t('tools.preset.settings.createPreset.presetValues.frame.useFrameOutline') }}
-                </p>
-                <ToggleButton v-model="newPreset.frame.outlineEnabled" :scale="0.6"
-                  :style="{ transform: 'translateX(16px)' }" />
               </div>
 
               <!-- Phone buttons -->
