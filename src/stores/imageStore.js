@@ -10,6 +10,8 @@ import { editorConfig } from '@/config/editorConfig'
 import { useConsole } from '@/composables/common/useConsole.js'
 import { useViewportStore } from './viewportStore'
 import { toRaw } from 'vue'
+import { useImageAnalysis } from '@/composables/tools/useImageAnalysis'
+import { useUiStore } from './uiStore'
 
 pdfjsLib.GlobalWorkerOptions.workerSrc =
   'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js'
@@ -233,8 +235,6 @@ export const useImageStore = defineStore('imageStore', {
     /** Raw SVG frame for vector export */
     frameSvg: '',
 
-    /** Whether the image has artifacts (noise) */
-    imageHasArtifacts: false, // TODO nepoužíva sa nikde
     /** Whether the user has canceled image artifacts display */
     imageArtifactsCanceledByUser: false,
 
@@ -1432,7 +1432,14 @@ export const useImageStore = defineStore('imageStore', {
         pdfPageBytes: this.pdfPageBytes ? new Uint8Array(this.pdfPageBytes) : null,
 
         // WARNINGS
-        imageWarnings: JSON.parse(JSON.stringify(this.imageWarnings)),
+        imageWarnings: this.imageWarnings.map((w) => ({
+          id: w.id,
+          type: w.type,
+          message: w.message,
+          tipText: w.tipText,
+          tipTitle: w.tipTitle,
+        })),
+        imageArtifactsCanceledByUser: this.imageArtifactsCanceledByUser,
       }
     },
 
@@ -1443,6 +1450,8 @@ export const useImageStore = defineStore('imageStore', {
      * @returns {void}
      */
     async applyFullSnapshot(snapshot) {
+      const { createImageWarning } = useImageAnalysis(this, useWorkspaceStore(), useUiStore(), null)
+
       // FILE METADATA
       this.file = snapshot.file
       this.fileType = snapshot.fileType
@@ -1570,7 +1579,12 @@ export const useImageStore = defineStore('imageStore', {
       }
 
       // WARNINGS
-      this.imageWarnings = JSON.parse(JSON.stringify(snapshot.imageWarnings))
+      this.imageWarnings = snapshot.imageWarnings.map((w) =>
+        createImageWarning(w.id, w.type, w.message, w.tipTitle, w.tipText),
+      )
+      this.imageArtifactsCanceledByUser = snapshot.imageArtifactsCanceledByUser
+      // Clear expanded warnings
+      this.expandedImageWarningIds = new Set()
 
       // Reset selected SVG object
       this.selectedSvgObjectId = null
@@ -1583,8 +1597,6 @@ export const useImageStore = defineStore('imageStore', {
       this.tmpRenderedImage = null
       this.previewUrl = ''
       this.blurPreviewUrl = ''
-
-      this.expandedImageWarningIds = new Set()
 
       // BACKGROUND REMOVAL CANVASES
       this.removalCanvas = null

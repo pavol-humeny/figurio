@@ -1,17 +1,12 @@
 import { globalConfig } from '@/config/globalConfig'
 import { viewportConfig } from '@/config/viewportConfig'
-import { ref, watch } from 'vue'
+import { ref } from 'vue'
 import { useConsole } from '@/composables/common/useConsole.js'
 const { log } = useConsole()
 import { useApi } from '@/composables/common/useApi'
 const { addUserEvent } = useApi()
 
 import { useWarningList } from '../modals/useWarningList'
-
-/**
- * Whether to expand the artifacts warning message
- */
-const expandArtifactsWarning = ref(false)
 
 /**
  * Current noise level in the image (ratio of noisy pixels)
@@ -22,10 +17,7 @@ const noiseLevel = ref(0)
  * Composable for analyzing image artifacts (noise) and managing overlay display
  */
 export function useImageAnalysis(imageStore, workspaceStore, uiStore, t) {
-  const { addWarning, isWarningExpanded, isWarningDefined, hideWarningById } = useWarningList(
-    imageStore,
-    uiStore,
-  )
+  const { addWarning, isWarningDefined, hideWarningById } = useWarningList(imageStore, uiStore)
 
   const noiseThreshold = viewportConfig.noiseThreshold // adjustable block noise threshold
   const noiseTopThreshold = viewportConfig.noiseTopThreshold // Upper limit to ignore blocks with extreme noise - solid color blocks similar to background
@@ -79,12 +71,6 @@ export function useImageAnalysis(imageStore, workspaceStore, uiStore, t) {
 
     await new Promise((resolve) => setTimeout(resolve, 100))
 
-    if (imageStore.fileType !== 'image') {
-      expandArtifactsWarning.value = false
-      imageStore.imageHasArtifacts = false
-      return
-    }
-
     const img = imageStore.getRenderedImage({ t, renderCall: false })
     if (!img) return
 
@@ -116,8 +102,6 @@ export function useImageAnalysis(imageStore, workspaceStore, uiStore, t) {
       log(
         `[ImageAnalysis] Skipping noise detection — background coverage ${(bgCoverage * 100).toFixed(1)}% is below threshold (${bgCoverageThreshold * 100}%)`,
       )
-      expandArtifactsWarning.value = false
-      imageStore.imageHasArtifacts = false
       return
     } else {
       log(
@@ -187,7 +171,7 @@ export function useImageAnalysis(imageStore, workspaceStore, uiStore, t) {
     }
 
     // Overall noise level
-    const showWarning = noisyBlocks > 0
+    const noiseDetected = noisyBlocks > 0
 
     const baseCanvas = document.querySelector('.image-canvas')
     const overlayCanvas = document.querySelector('.overlay-canvas')
@@ -200,11 +184,9 @@ export function useImageAnalysis(imageStore, workspaceStore, uiStore, t) {
     overlayCanvas.width = baseCanvas.width
     overlayCanvas.height = baseCanvas.height
 
-    // Calculate noise level overlay
-    if (showWarning) {
+    // Noise was detected, calculate noise level overlay
+    if (noiseDetected) {
       oCtx.putImageData(overlay, 0, 0)
-      expandArtifactsWarning.value = true
-      imageStore.imageHasArtifacts = true
 
       addWarning(
         'artifact-warning', // id
@@ -223,8 +205,6 @@ export function useImageAnalysis(imageStore, workspaceStore, uiStore, t) {
       addUserEvent('applyOperation', { tool: 'imageNoiseDetected', settings: {} })
     } else {
       oCtx.clearRect(0, 0, overlayCanvas.width, overlayCanvas.height)
-      expandArtifactsWarning.value = false
-      imageStore.imageHasArtifacts = false
 
       log(`[ImageAnalysis] No significant noise detected`)
     }
@@ -234,7 +214,6 @@ export function useImageAnalysis(imageStore, workspaceStore, uiStore, t) {
    * Hide artifacts overlay on user click
    */
   const hideArtifactsClick = () => {
-    imageStore.imageHasArtifacts = false
     imageStore.imageArtifactsCanceledByUser = true
     hideArtifacts()
   }
@@ -243,12 +222,10 @@ export function useImageAnalysis(imageStore, workspaceStore, uiStore, t) {
    * Hide artifacts overlay
    */
   const hideArtifacts = () => {
-    // Do nothing if no artifacts
-    // if (!imageStore.imageHasArtifacts) return
-
     const overlay = document.querySelector('.overlay-canvas')
-    if (overlay) overlay.getContext('2d').clearRect(0, 0, overlay.width, overlay.height)
-    expandArtifactsWarning.value = false
+    if (overlay) {
+      overlay.getContext('2d').clearRect(0, 0, overlay.width, overlay.height)
+    }
 
     // Hide warning if defined
     if (isWarningDefined('artifact-warning')) {
@@ -263,31 +240,41 @@ export function useImageAnalysis(imageStore, workspaceStore, uiStore, t) {
   }
 
   /**
-   * Calculate artifacts when active tab changes
+   * Create image warning object with callbacks
+   * @param {string} id - Unique ID
+   * @param {string} type - 'warning' | 'info' | 'error'
+   * @param {string} message - Warning message
+   * @param {string} tipTitle - Tip title
+   * @param {string} tipText - Tip text
+   * @returns {Object} - Image warning object
    */
-  watch(
-    () => workspaceStore.activeTabIndex,
-    (oldValue, newValue) => {
-      if (newValue === undefined) return
-      if (workspaceStore.newTabWasAdded) return
+  const createImageWarning = (id, type, message, tipTitle, tipText) => {
+    return {
+      id,
+      type,
+      message,
+      tipTitle,
+      tipText,
 
-      if (!imageStore.imageArtifactsCanceledByUser) {
-        if (isWarningDefined('artifact-warning')) {
-          if (isWarningExpanded('artifact-warning')) {
-            calculateArtifacts()
-          }
-        } else {
-          calculateArtifacts()
-        }
-      }
-    },
-  )
+      onOpen() {
+        calculateArtifacts()
+      },
+
+      onClose() {
+        hideArtifacts()
+      },
+
+      onRemove() {
+        hideArtifactsClick()
+      },
+    }
+  }
 
   return {
     noiseLevel,
-    expandArtifactsWarning,
     calculateArtifacts,
     hideArtifacts,
     hideArtifactsClick,
+    createImageWarning,
   }
 }
