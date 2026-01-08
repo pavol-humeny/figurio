@@ -22,6 +22,7 @@ import FeatureTourModal from './components/modals/FeatureTourModal.vue'
 import { uiConfig } from './config/uiConfig'
 import { useConsole } from './composables/common/useConsole'
 import ErrorModal from './components/modals/ErrorModal.vue'
+import { usePresetsStore } from './stores/presetsStore'
 
 const { warn } = useConsole()
 const { addUserVisit } = useApi()
@@ -35,6 +36,7 @@ const route = useRoute()
 
 const imageStore = useImageStore()
 const uiStore = useUiStore()
+const presetsStore = usePresetsStore()
 const userUuid = uiStore.userUuid
 
 /**
@@ -82,9 +84,10 @@ onMounted(async () => {
   // Reset localStorage (preferences) if app version has changed and in global config is set reset
   const savedVersion = localStorage.getItem(`${globalConfig.LOCAL_STORAGE_PREFIX}appVersion`)
   if (savedVersion !== APP_VERSION) {
-    if (globalConfig.resetPreferencesOnVersionChange) {
+    // Reset preferences if in global config is set reset
+    if (globalConfig.resetOnVersionChange.resetPreferences) {
       // Reset localStorage
-      if (globalConfig.resetTutorialOnVersionChange) {
+      if (globalConfig.resetOnVersionChange.resetTutorialProgress === false) {
         localStorage.clear()
       } else {
         const tutorialStep = localStorage.getItem(`${globalConfig.LOCAL_STORAGE_PREFIX}tutorialStep`) || -1
@@ -100,6 +103,12 @@ onMounted(async () => {
 
       localStorage.setItem(`${globalConfig.LOCAL_STORAGE_PREFIX}appVersion`, APP_VERSION)
       location.reload()
+    }
+
+    // Reset user presets if in global config is set reset
+    if (globalConfig.resetOnVersionChange.resetPresets) {
+      // Reset user presets
+      presetsStore.resetAllPresets()
     }
 
     // Update seen feature tour videos based on global config

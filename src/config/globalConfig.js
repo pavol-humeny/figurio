@@ -12,11 +12,12 @@ export const globalConfig = {
   // If app is running
   isRunning: true,
 
-  // Reset preferences on new version
-  resetPreferencesOnVersionChange: false,
-
-  // Reset tutorial progress on new version
-  resetTutorialOnVersionChange: false,
+  // What to reset on version change
+  resetOnVersionChange: {
+    resetPreferences: false, // Reset localStorage preferences
+    resetPresets: false, // Reset user presets
+    resetTutorialProgress: false, // Reset tutorial progress
+  },
 
   // Default language for the editor
   defaultLanguage: 'en',

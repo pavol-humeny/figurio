@@ -143,5 +143,16 @@ export const usePresetsStore = defineStore('presetsStore', {
       }
       this.saveToStorage()
     },
+
+    /**
+     * Reset all presets (store + localStorage)
+     */
+    resetAllPresets() {
+      this.presets = []
+      this.selectedPresetName = ''
+
+      // Completely remove presets from localStorage
+      localStorage.removeItem(editorConfig.localStoragePresetsKey)
+    },
   },
 })
