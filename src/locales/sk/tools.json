@@ -18,6 +18,26 @@
       }
     }
   },
+  "imageAnalysis": {
+    "label": "Analýza obrazu",
+    "tip": "Nástroje na analýzu obrazu",
+    "tipDisabled": "",
+    "explain": "Nástroj Analýza obrazu poskytuje súbor nástrojov na skúmanie vlastností a vizuálnych charakteristík obrazu.",
+    "shortcut": "A",
+    "settings": {
+      "noiseDetection":{
+        "title": "Detekcia šumu",
+        "noiseDetectionButton": {
+          "text": "Analyzovať šum",
+          "tip": "Analyzuje obraz a zvýrazňuje oblasti s vysokým šumom alebo artefakty."
+        },
+        "noNoiseDetected": {
+          "title": "Žiadny šum nebol detegovaný",
+          "message": "Obraz sa javí ako čistý bez významného šumu alebo artefaktov."
+        }
+      }
+    }
+  },
   "backgroundRemoval": {
     "label": "Odstránenie pozadia",
     "tip": "Odstráni pozadie z obrázka",

@@ -141,6 +141,22 @@ watch(atBottom, (newVal) => {
               <p class="help-content-title">
                 {{ $t('help.helpContent.tools.title') }}
               </p>
+              <!-- Image analysis -->
+              <div class="tool-description">
+                <div>
+                  <p class="title">
+                    {{ $t('tools.imageAnalysis.label') }}
+                  </p>
+                  <p class="shortcut">
+                    {{ $t('tools.imageAnalysis.shortcut') }}
+                  </p>
+                </div>
+                <ul class="description dot-paragraph">
+                  <li>
+                    {{ $t('tools.imageAnalysis.tip') }}
+                  </li>
+                </ul>
+              </div>
               <!-- Crop -->
               <div class="tool-description">
                 <div>

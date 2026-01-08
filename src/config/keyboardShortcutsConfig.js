@@ -85,6 +85,12 @@ export const keyboardShortcuts = [
     description: 'Toggle move tool',
   },
   {
+    keys: ['a'],
+    action: 'toggleTool',
+    args: ['imageAnalysis', null],
+    description: 'Toggle image analysis tool',
+  },
+  {
     keys: ['v'],
     action: 'toggleTool',
     args: ['select', null],

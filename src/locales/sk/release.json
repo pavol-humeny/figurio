@@ -6,6 +6,15 @@
     ]
   },
   "versions": {
+    "5.3.0":{
+      "label": "5.3.0",
+      "date":"8.1. 2025",
+      "newFeatures": {
+        "items": [
+          "Nový nástroj - Nástroj na analýzu obrázkov na detekciu šumu a artefaktov na obrázkoch" 
+        ]
+      }
+    },
     "5.2.2":{
       "label": "5.2.2",
       "date":"6.1. 2025",

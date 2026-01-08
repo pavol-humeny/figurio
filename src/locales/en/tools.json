@@ -18,6 +18,26 @@
       }
     }
   },
+  "imageAnalysis": {
+    "label": "Image Analysis",
+    "tip": "Tools for image analysis",
+    "tipDisabled": "",
+    "explain": "The Image Analysis tool provides a set of utilities for examining image characteristics and visual properties.",
+    "shortcut": "A",
+    "settings": {
+      "noiseDetection":{
+        "title": "Noise Detection",
+        "noiseDetectionButton": {
+          "text": "Analyze Noise",
+          "tip": "Analyzes the image and highlights areas with high noise or artifacts."
+        },
+        "noNoiseDetected": {
+          "title": "No significant noise detected",
+          "message": "The image appears to be clean with no significant noise or artifacts detected."
+        }
+      }
+    }
+  },
   "backgroundRemoval":{
     "label": "Background removal",
     "tip": "Removes the background from the image",

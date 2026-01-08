@@ -1,5 +1,10 @@
 export const toolsDefinitions = [
   {
+    key: 'imageAnalysis',
+    iconName: 'IconImageAnalysisTool',
+    settingsComponent: () => import('@/components/toolsSettings/ImageAnalysisToolSettings.vue'),
+  },
+  {
     key: 'crop',
     iconName: 'IconCropTool',
     settingsComponent: () => import('@/components/toolsSettings/CropToolSettings.vue'),

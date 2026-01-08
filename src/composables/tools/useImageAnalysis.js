@@ -1,12 +1,14 @@
 import { globalConfig } from '@/config/globalConfig'
 import { viewportConfig } from '@/config/viewportConfig'
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
 import { useConsole } from '@/composables/common/useConsole.js'
 const { log } = useConsole()
 import { useApi } from '@/composables/common/useApi'
 const { addUserEvent } = useApi()
-
+import { useToastModal } from '../modals/useToastModal'
 import { useWarningList } from '../modals/useWarningList'
+
+const { showToastModal } = useToastModal()
 
 /**
  * Current noise level in the image (ratio of noisy pixels)
@@ -23,6 +25,13 @@ export function useImageAnalysis(imageStore, workspaceStore, uiStore, t) {
   const noiseTopThreshold = viewportConfig.noiseTopThreshold // Upper limit to ignore blocks with extreme noise - solid color blocks similar to background
   const bgCoverageThreshold = viewportConfig.bgCoverageThreshold // minimal percentage of background area required to analyze noise
   const colorDistanceThreshold = viewportConfig.colorDistanceThreshold // color distance from background considered as near-background
+
+  /**
+   * Whether noise detection can be run (no existing artifact warnings)
+   */
+  const noiseDetectionCanBeRun = computed(() => {
+    return isWarningDefined('artifact-warning') === false
+  })
 
   /**
    * Detect the most common background color by sampling the image edges
@@ -64,6 +73,7 @@ export function useImageAnalysis(imageStore, workspaceStore, uiStore, t) {
   /**
    * Calculate image artifacts (noise) using local blocks
    * and display overlay if needed
+   * @return {boolean} - True if noise detected and overlay shown, else false
    */
   const calculateArtifacts = async () => {
     log('[ImageAnalysis] Starting artifact calculation...')
@@ -203,10 +213,14 @@ export function useImageAnalysis(imageStore, workspaceStore, uiStore, t) {
       log(`[ImageAnalysis] Noise detected in ${noisyBlocks} blocks — artifacts shown`)
 
       addUserEvent('applyOperation', { tool: 'imageNoiseDetected', settings: {} })
+
+      return true
     } else {
       oCtx.clearRect(0, 0, overlayCanvas.width, overlayCanvas.height)
 
       log(`[ImageAnalysis] No significant noise detected`)
+
+      return false
     }
   }
 
@@ -270,11 +284,29 @@ export function useImageAnalysis(imageStore, workspaceStore, uiStore, t) {
     }
   }
 
+  /**
+   * Analyze noise in the image and show info if no noise detected
+   */
+  const analyzeNoise = async () => {
+    const result = await calculateArtifacts()
+
+    if (!result) {
+      // Show info if no noise detected
+      showToastModal(
+        'info',
+        t('tools.imageAnalysis.settings.noiseDetection.noNoiseDetected.title'),
+        t('tools.imageAnalysis.settings.noiseDetection.noNoiseDetected.message'),
+      )
+    }
+  }
+
   return {
     noiseLevel,
     calculateArtifacts,
     hideArtifacts,
     hideArtifactsClick,
     createImageWarning,
+    analyzeNoise,
+    noiseDetectionCanBeRun,
   }
 }

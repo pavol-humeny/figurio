@@ -4,6 +4,15 @@
     "items": []
   },
   "versions":{
+    "5.3.0":{
+      "label": "5.3.0",
+      "date":"8.1. 2025",
+      "newFeatures": {
+        "items": [
+          "New tool - Image analysis tool for detecting noise and artifacts in images" 
+        ]
+      }
+    },
     "5.2.2":{
       "label": "5.2.2",
       "date":"6.1. 2025",
