@@ -14,7 +14,7 @@ const localBlurSettings = ref({
   height: 0,
   rotation: 0,
   blurStrength: 5,
-  edgeFade: 10,
+  edgeFade: 1,
 })
 
 /**
