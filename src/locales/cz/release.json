@@ -6,6 +6,15 @@
     ]
   },
   "versions": {
+    "5.3.1":{
+      "label": "5.3.1",
+      "date":"9.1. 2025",
+      "bugFixes": {
+        "items": [
+          "Oprava problému s aplikací ořezu po rastrování" 
+        ]
+      }
+    },
     "5.3.0":{
       "label": "5.3.0",
       "date":"8.1. 2025",

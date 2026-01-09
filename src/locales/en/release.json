@@ -4,6 +4,15 @@
     "items": []
   },
   "versions":{
+    "5.3.1":{
+      "label": "5.3.1",
+      "date":"9.1. 2025",
+      "bugFixes": {
+        "items": [
+          "Fix issue with applying crop after rasterization" 
+        ]
+      }
+    },
     "5.3.0":{
       "label": "5.3.0",
       "date":"8.1. 2025",

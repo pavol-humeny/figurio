@@ -36,6 +36,11 @@ const cropBox = ref({
 })
 
 /**
+ * Whether to suppress automatic crop reset on image changes when applying rasterization
+ */
+const suppressCropReset = ref(false)
+
+/**
  * Manual indents for the crop box
  */
 const manualIndents = ref({
@@ -253,6 +258,8 @@ export function useCropTool(imageStore, viewportStore, editorStore, historyStore
   watch(
     () => imageStore.fileDimensions,
     (fileDimensions) => {
+      if (suppressCropReset.value) return
+
       if (fileDimensions.width && fileDimensions.height) {
         cropBox.value.width = fileDimensions.width
         cropBox.value.height = fileDimensions.height
@@ -1124,24 +1131,31 @@ export function useCropTool(imageStore, viewportStore, editorStore, historyStore
         t('tools.confirmNeedRasterization.cancel'),
         t('tools.confirmNeedRasterization.confirm'),
       )
-      if (!confirmed) return
-      // Register operation in the operation list
-      imageStore.addImageOperation({
-        type: 'rasterize',
-        params: {},
-        cost: 'high',
-        affectsGeometry: true,
-      })
+      if (confirmed) {
+        const result = await imageStore.rasterize('editor', {}, t)
 
-      addUserEvent('applyOperation', {
-        tool: 'rasterize',
-        settings: {},
-      })
+        imageStore.addImageOperation({
+          type: 'rasterize',
+          params: {
+            overlay: result.overlay,
+          },
+          cost: 'high',
+          affectsGeometry: true,
+        })
 
-      await renderUpTo(imageStore.renderPipeline.currentOpIndex + 1, { t, imageStore })
+        addUserEvent('applyOperation', {
+          tool: 'rasterize',
+          settings: {},
+        })
 
-      // Push to undo history
-      historyStore.push(imageStore.getSnapshot(t))
+        suppressCropReset.value = true
+
+        await renderUpTo(imageStore.renderPipeline.currentOpIndex + 1, { t, imageStore })
+
+        suppressCropReset.value = false
+      } else {
+        return
+      }
     }
 
     imageStore.addImageOperation({
