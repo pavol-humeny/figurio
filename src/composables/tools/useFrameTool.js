@@ -1933,14 +1933,6 @@ export function useFrameTool(imageStore, historyStore, viewportStore, t) {
       }
     }
 
-    console.warn('Frame layout calculation:', {
-      fileDimensions,
-      targetWidth,
-      targetHeight,
-      offsetX,
-      offsetY,
-    })
-
     return {
       finalWidth: fileDimensions.width,
       finalHeight: fileDimensions.height,

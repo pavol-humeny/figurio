@@ -880,7 +880,6 @@ export function useSvgObjects(
         if (selectedId) {
           return
         } else {
-          console.warn('6')
           imageStore.selectedSvgObjectId = null
           return
         }
