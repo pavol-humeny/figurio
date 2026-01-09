@@ -268,13 +268,17 @@ const cursorStyle = computed(() => {
             class="image-canvas" />
           <div v-else-if="imageStore.fileType === 'pdf'" ref="pdfContainerRef" class="pdf-viewer"></div>
 
-          <!-- <img v-if="imageStore.overlayImage !== null" ref="overlayImageRef" class="overlay-image-canvas" /> -->
-
           <!-- Canvas for artifacts -->
           <canvas v-if="imageStore.fileType === 'image'" ref="overlayCanvasRef" class="overlay-canvas"></canvas>
 
           <svg ref="frameSvgRef" class="frame-svg"></svg>
 
+          <!-- Brush Tool Canvas -->
+          <BrushToolCanvas :style="{
+            pointerEvents: editorStore.selectedToolKey === 'brush' ? 'auto' : 'none'
+          }" />
+
+          <!-- SVG objects -->
           <svg ref="svgRef" class="image-svg" id="image-svg" xmlns="http://www.w3.org/2000/svg"
             :width="imageStore.fileDimensions.width" :height="imageStore.fileDimensions.height"
             @mousedown="onMouseDownImageSvg" @click="onClickImageSvg">
@@ -306,10 +310,6 @@ const cursorStyle = computed(() => {
           <CropTool v-if="editorStore.selectedToolKey === 'crop'" />
           <PresetCropTool v-if="
             editorStore.selectedToolKey === 'preset' && editorStore.selectedSubToolKey === 'crop'" />
-
-          <BrushToolCanvas :style="{
-            pointerEvents: editorStore.selectedToolKey === 'brush' ? 'auto' : 'none'
-          }" />
 
           <BackgroundRemovalCanvas v-if="editorStore.selectedToolKey === 'backgroundRemoval'" :style="{
             pointerEvents: editorStore.selectedToolKey === 'backgroundRemoval' ? 'auto' : 'none'

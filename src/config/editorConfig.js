@@ -87,7 +87,7 @@ export const editorConfig = {
     // { label: 'Calibri', value: 'Calibri' },
     // { label: 'Cambria', value: 'Cambria' },
   ],
-  maxTextLength: 5, // Maximum number of characters in a text object
+  maxTextLength: 500, // Maximum number of characters in a text object
 
   // Hold button settings
   holdButtonTimeout: 400, // ms before starting to hold
