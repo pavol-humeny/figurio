@@ -262,8 +262,15 @@ export function useImagePipeline(imageStore, uiStore) {
       // Update the rendered image in the store and dimensions
       imageStore.setRenderedImage(state.canvas)
       imageStore.setOverlay(state.overlay)
-      imageStore.fileDimensions = { ...currentDimensions }
-      imageStore.newFileDimensions = { ...currentDimensions }
+      imageStore.fileDimensions = {
+        ...imageStore.fileDimensions,
+        ...currentDimensions,
+      }
+
+      imageStore.newFileDimensions = {
+        ...imageStore.newFileDimensions,
+        ...currentDimensions,
+      }
 
       imageStore.pdfPageBytes =
         state.pdfBytes && state.pdfBytes.length > 0 ? new Uint8Array(state.pdfBytes) : null
