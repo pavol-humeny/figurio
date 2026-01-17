@@ -118,7 +118,7 @@ export const useWarningList = (imageStore, uiStore) => {
    * Delete warning completely
    * @param {string} id - Unique ID
    */
-  const deleteWarning = (id) => {
+  const deleteWarningById = (id) => {
     imageStore.imageWarnings = imageStore.imageWarnings.filter((w) => w.id !== id)
     imageStore.expandedImageWarningIds.delete(id)
   }
@@ -135,6 +135,18 @@ export const useWarningList = (imageStore, uiStore) => {
     imageStore.expandedImageWarningIds.delete(id)
   }
 
+  /**
+   * Expand warning by ID
+   * @param {string} id - Unique ID
+   */
+  const expandWarningById = (id) => {
+    console.warn('Expand warning by ID called for warning ID:', id)
+    const warning = imageStore.imageWarnings.find((w) => w.id === id)
+    if (!warning) return
+
+    imageStore.expandedImageWarningIds.add(id)
+  }
+
   return {
     // warnings,
     // expandedIds,
@@ -144,7 +156,8 @@ export const useWarningList = (imageStore, uiStore) => {
     closeByArrow,
     isWarningExpanded,
     isWarningDefined,
-    deleteWarning,
+    deleteWarningById,
     hideWarningById,
+    expandWarningById,
   }
 }

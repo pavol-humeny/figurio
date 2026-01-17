@@ -15,7 +15,6 @@ const { t } = useI18n()
  */
 const {
   analyzeNoise,
-  noiseDetectionCanBeRun
 } = useImageAnalysis(useImageStore(), useWorkspaceStore(), useUiStore(), t)
 
 </script>
@@ -35,7 +34,7 @@ const {
           <div class="content-wrapper">
             <DefaultButton :text="$t('tools.imageAnalysis.settings.noiseDetection.noiseDetectionButton.text')"
               :tip="$t('tools.imageAnalysis.settings.noiseDetection.noiseDetectionButton.tip')" @click="analyzeNoise"
-              :disabled="!noiseDetectionCanBeRun" main />
+              main />
           </div>
         </div>
 

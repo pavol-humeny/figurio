@@ -17,6 +17,11 @@
         "items": [
           "Enable zooming with plus and minus keys on numeric keyboard"
         ]
+      },
+      "bugFixes": {
+        "items": [
+          "Noise detection analysis can be run also when it is already shown"
+        ]
       }
     },
     "5.3.1":{

@@ -12,8 +12,8 @@
 - FIXED - vyznačený text v light mode by mohol byť biely 
 - FIXED - pixelation mode - light mode je strašne málo rozdielny od bg color 
 - SKIP - ikony v kontrast mode switcheri sú nejasné 
-- pri pdf by pixelácia mohla byť len disabled a nie hidden + tip disabled 
-- noise detection - aj ked je to uz zobrazene tak sa to prepocita 
+- FIXED - pri pdf by pixelácia mohla byť len disabled a nie hidden + tip disabled 
+- FIXED - noise detection - aj ked je to uz zobrazene tak sa to prepocita 
 - pri manipulácii s obrázkom to zobrazuje najskôr pozadie (kocky) a až potom sa to aplikuje na obrazok 
 - crop 
     - hide crop - pri pustení mimo to neprepne 
