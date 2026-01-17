@@ -635,10 +635,10 @@ export const useImageStore = defineStore('imageStore', {
     /**
      * Function to use rasterize background image (only in pdf)
      */
-    rasterizeBaseImage() {
-      log('Rasterizing background image...')
-      this.fileType = 'image'
-    },
+    // rasterizeBaseImage() {
+    //   log('Rasterizing background image...')
+    //   this.fileType = 'image'
+    // },
 
     /**
      * Rasterizes SVG and blur objects into a bitmap overlay.

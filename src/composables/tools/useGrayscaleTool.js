@@ -43,7 +43,20 @@ export function useGrayscaleTool(imageStore, editorStore, historyStore, t) {
       )
       if (!confirmed) return
 
-      await imageStore.rasterizeBaseImage(t)
+      // await imageStore.rasterizeBaseImage(t)
+      imageStore.addImageOperation({
+        type: 'rasterizePdf',
+        params: {},
+        cost: 'high',
+        affectsGeometry: false,
+      })
+
+      addUserEvent('applyOperation', {
+        tool: 'rasterizePdf',
+        settings: {},
+      })
+
+      await renderUpTo(imageStore.renderPipeline.currentOpIndex + 1, { t, imageStore })
     }
 
     if (imageStore.needRasterization) {

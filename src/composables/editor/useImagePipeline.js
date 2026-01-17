@@ -162,10 +162,16 @@ export function useImagePipeline(imageStore, uiStore) {
 
     meta.dimensions = result.dimensions
 
+    // return {
+    //   canvas: result.canvas,
+    //   overlay: result.overlay ?? state.overlay,
+    //   pdfBytes: result.pdfBytes ? new Uint8Array(result.pdfBytes) : state.pdfBytes,
+    // }
+
     return {
       canvas: result.canvas,
       overlay: result.overlay ?? state.overlay,
-      pdfBytes: result.pdfBytes ? new Uint8Array(result.pdfBytes) : state.pdfBytes,
+      pdfBytes: 'pdfBytes' in result ? result.pdfBytes : state.pdfBytes,
     }
   }
 
@@ -274,6 +280,12 @@ export function useImagePipeline(imageStore, uiStore) {
 
       imageStore.pdfPageBytes =
         state.pdfBytes && state.pdfBytes.length > 0 ? new Uint8Array(state.pdfBytes) : null
+
+      // Update file type if PDF bytes were removed (pdf -> image)
+      console.warn('PDF Bytes after render:', state.pdfBytes)
+      if (!state.pdfBytes) {
+        imageStore.fileType = 'image'
+      }
     } finally {
       uiStore.isApplying = false
     }

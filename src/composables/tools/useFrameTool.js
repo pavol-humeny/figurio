@@ -6,6 +6,8 @@ import { useApi } from '@/composables/common/useApi'
 import { useConsole } from '@/composables/common/useConsole.js'
 const { log } = useConsole()
 const { addUserEvent } = useApi()
+import { useImagePipeline } from '../editor/useImagePipeline'
+import { useUiStore } from '@/stores/uiStore'
 
 /**
  * Whether phone side buttons can be drawn because of dimensions
@@ -50,6 +52,8 @@ const footerSizeMm = ref(0)
 export function useFrameTool(imageStore, historyStore, viewportStore, t) {
   // const { showToastModal } = useToastModal()
   const { showConfirmModal } = useConfirmModal()
+  const uiStore = useUiStore()
+  const { renderUpTo } = useImagePipeline(imageStore, uiStore)
 
   /**
    * Whether to use millimeters for frame width input
@@ -359,7 +363,20 @@ export function useFrameTool(imageStore, historyStore, viewportStore, t) {
       )
       if (!confirmed) return
 
-      await imageStore.rasterizeBaseImage(t)
+      // await imageStore.rasterizeBaseImage(t)
+      imageStore.addImageOperation({
+        type: 'rasterizePdf',
+        params: {},
+        cost: 'high',
+        affectsGeometry: false,
+      })
+
+      addUserEvent('applyOperation', {
+        tool: 'rasterizePdf',
+        settings: {},
+      })
+
+      await renderUpTo(imageStore.renderPipeline.currentOpIndex + 1, { t, imageStore })
     }
 
     imageStore.frame.type = value
