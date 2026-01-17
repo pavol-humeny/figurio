@@ -40,7 +40,7 @@ const { isActive, holdStart, holdEnd } = useToggleHoldButton(props)
   <ItemTip :text="props.tip" :position="props.position">
     <div class="toggle-switch" :style="{ transform: `scale(${props.scale})` }">
       <div class="toggle-switch-wrapper" :class="{ 'toggle-disabled': props.disabled, active: isActive }"
-        @mousedown="holdStart" @mouseup="holdEnd">
+        @mousedown="holdStart" @mouseup="holdEnd" @mouseleave="holdEnd">
         <div class="toggle-switch-slider" :class="{ active: isActive }"></div>
       </div>
     </div>

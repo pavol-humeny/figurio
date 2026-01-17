@@ -16,7 +16,7 @@
 - FIXED - noise detection - aj ked je to uz zobrazene tak sa to prepocita 
 - pri manipulácii s obrázkom to zobrazuje najskôr pozadie (kocky) a až potom sa to aplikuje na obrazok 
 - crop 
-    - hide crop - pri pustení mimo to neprepne 
+    - FIXED - hide crop - pri pustení mimo to neprepne 
     - orezanie na rôznych citlivostiach - mohlo by to orezavat hned 
     - manualna úprava - mohol by to byť input 
     - FIXED - aplikovanie orezania - centrovať 

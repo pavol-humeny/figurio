@@ -21,7 +21,8 @@
       },
       "bugFixes": {
         "items": [
-          "Noise detection analysis can be run also when it is already shown"
+          "Noise detection analysis can be run also when it is already shown",
+          "Fix issue with no ending hold state when leaving toggle hold button with mouse"
         ]
       }
     },
