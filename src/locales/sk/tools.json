@@ -1163,6 +1163,9 @@
     "tip": {
       "title": "Režim pixelácia",
       "text": "Prepínajte medzi automatickou pixeláciou, vždy zapnutou alebo vypnutou pixeláciou a určite tak, ako sa má obrázok zobrazovať pri priblížení."
+    },
+    "tipDisabled":{
+      "text": "Režim pixelácie nie je dostupný pre vektorové obrázky."
     }
   },
   "artifactsWarning": {

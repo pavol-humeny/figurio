@@ -900,6 +900,8 @@ export function useViewportWrapper(viewportStore, imageStore, editorStore, uiSto
    * Cycle through pixel grid modes
    */
   const switchViewportPixelateMode = () => {
+    if (imageStore.fileType === 'pdf' && !imageStore.showPdfAsImage) return
+
     const currentIndex = viewportPixelateOptions.indexOf(viewportPixelateMode.value)
     const nextIndex = (currentIndex + 1) % viewportPixelateOptions.length
     viewportPixelateMode.value = viewportPixelateOptions[nextIndex]

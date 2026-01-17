@@ -10,7 +10,10 @@ import { useUiStore } from '@/stores/uiStore'
 import { viewportConfig } from '@/config/viewportConfig.js'
 import { useImagePipeline } from '@/composables/editor/useImagePipeline'
 import { editorConfig } from '@/config/editorConfig'
+import { useConfirmModal } from '@/composables/modals/useConfirmModal'
+import { useApi } from '@/composables/useApi'
 
+const { addUserEvent } = useApi()
 const { t } = useI18n()
 const imageStore = useImageStore()
 const historyStore = useHistoryStore()
@@ -19,6 +22,8 @@ const editorStore = useEditorStore()
 const uiStore = useUiStore()
 const { showToastModal } = useToastModal()
 const { renderUpTo } = useImagePipeline(imageStore, uiStore)
+const { showConfirmModal } = useConfirmModal()
+
 /**
  * Reference to the canvas
  */
@@ -101,7 +106,7 @@ const drawLine = (from, to, tool) => {
 /**
  * Drawing logic
  */
-const onMouseDown = (event) => {
+const onMouseDown = async (event) => {
   if (editorStore.isModalOpenFlag) return
 
   if (editorStore.selectedToolKey !== 'brush') return
@@ -118,6 +123,34 @@ const onMouseDown = (event) => {
       t('tools.brush.needRasterizationWarning.title'),
       t('tools.brush.needRasterizationWarning.message'),
     )
+    return
+  }
+
+  if (imageStore.fileType === 'pdf') {
+    const confirmed = await showConfirmModal(
+      t('tools.confirmNeedBaseImageRasterization.title'),
+      t('tools.confirmNeedBaseImageRasterization.message'),
+      t('tools.confirmNeedBaseImageRasterization.cancel'),
+      t('tools.confirmNeedBaseImageRasterization.confirm'),
+    )
+    if (!confirmed) return
+
+    // await imageStore.rasterizeBaseImage(t)
+
+    imageStore.addImageOperation({
+      type: 'rasterizePdf',
+      params: {},
+      cost: 'high',
+      affectsGeometry: false,
+    })
+
+    addUserEvent('applyOperation', {
+      tool: 'rasterizePdf',
+      settings: {},
+    })
+
+    await renderUpTo(imageStore.renderPipeline.currentOpIndex + 1, { t, imageStore })
+
     return
   }
 

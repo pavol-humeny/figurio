@@ -1163,6 +1163,9 @@
     "tip": {
       "title": "Pixelation mode",
       "text": "Switch between automatic, always-on, or disabled pixelation to control how the image is displayed when zooming."
+    },
+    "tipDisabled":{
+      "text": "Pixelation mode is not available for vector images"
     }
   },
   "artifactsWarning": {

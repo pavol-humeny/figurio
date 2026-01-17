@@ -76,15 +76,6 @@ export function useGrayscaleTool(imageStore, editorStore, historyStore, t) {
       }
     }
 
-    // if (imageStore.needMergeOverlay) {
-    //   imageStore.mergeOverlayIntoImage()
-    //   showToastModal(
-    //     'info',
-    //     t('tools.infoOverlayWasMerged.title'),
-    //     t('tools.infoOverlayWasMerged.message'),
-    //   )
-    // }
-
     addUserEvent('applyOperation', {
       tool: 'grayscale',
       settings: { grayscaleType: grayscaleType.value },

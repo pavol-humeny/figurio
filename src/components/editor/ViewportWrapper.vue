@@ -336,15 +336,17 @@ const cursorStyle = computed(() => {
     </div>
 
     <!-- Pixelate Mode -->
-    <div v-if="!(imageStore.fileType === 'pdf' && !imageStore.showPdfAsImage)" class="pixelate-mode-wrapper" :style="{
+    <div class="pixelate-mode-wrapper" :style="{
       '--viewport-wrapper-background-top': backgroundModePadding,
     }" @mouseenter="uiStore.cursorOverViewportSettings = true"
       @mouseleave="uiStore.cursorOverViewportSettings = false">
-      <ItemTip advance :text="t('tools.viewportPixelateMode.tip.text')"
+      <ItemTip advance
+        :text="(imageStore.fileType === 'pdf' && !imageStore.showPdfAsImage) ? t('tools.viewportPixelateMode.tipDisabled.text') : t('tools.viewportPixelateMode.tip.text')"
         :title="$t('tools.viewportPixelateMode.tip.title')" position="bottom-left"
-        class="pixelate-mode-button button-clickable" @click="switchViewportPixelateMode()">
+        class="pixelate-mode-button button-clickable" @click="switchViewportPixelateMode()"
+        :class="{ 'pixelate-mode-button-hover': !(imageStore.fileType === 'pdf' && !imageStore.showPdfAsImage) }">
         <!-- Change icon based on mode -->
-        <BaseIcon :name="viewportPixelateMode === 'auto'
+        <BaseIcon :class="{ disabled: imageStore.fileType === 'pdf' && !imageStore.showPdfAsImage }" :name="viewportPixelateMode === 'auto'
           ? 'IconAutoMode'
           : viewportPixelateMode === 'always'
             ? 'IconPixelsOnMode'
@@ -395,7 +397,7 @@ const cursorStyle = computed(() => {
         </div>
         <div v-if="mouseX !== null" class="ruler-cursor-mark horizontal" :style="{ left: mouseX + 'px' }">
           <span class="ruler-cursor-label horizontal" :class="{ 'active': cursorPosXSameAsImageWidth }">{{ cursorPosX
-            }}</span>
+          }}</span>
         </div>
 
       </div>
@@ -408,7 +410,7 @@ const cursorStyle = computed(() => {
         </div>
         <div v-if="mouseY !== null" class="ruler-cursor-mark vertical" :style="{ top: mouseY + 'px' }">
           <span class="ruler-cursor-label vertical" :class="{ 'active': cursorPosYSameAsImageHeight }">{{ cursorPosY
-            }}</span>
+          }}</span>
         </div>
       </div>
     </div>
@@ -530,8 +532,8 @@ const cursorStyle = computed(() => {
   border: 1px solid transparent;
 }
 
-.contrast-mode-button:hover,
-.pixelate-mode-button:hover {
+.contrast-mode-button-hover:hover,
+.pixelate-mode-button-hover:hover {
   border: var(--border-ui);
   cursor: pointer;
 }
