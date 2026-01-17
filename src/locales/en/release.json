@@ -12,6 +12,11 @@
           "Adjust text selection color based on the current theme (light or dark)",
           "Change icon of physical zoom mode to better represent its functionality"
         ]
+      },
+      "newFeatures": {
+        "items": [
+          "Enable zooming with plus and minus keys on numeric keyboard"
+        ]
       }
     },
     "5.3.1":{

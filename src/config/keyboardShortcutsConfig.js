@@ -16,8 +16,26 @@ export const keyboardShortcuts = [
     action: 'zoomIn',
     description: 'Zoom in',
   },
-  { keys: ['ctrl', '-'], action: 'zoomOut', description: 'Zoom out' },
-  { keys: ['ctrl', '0'], action: 'resetZoom', description: 'Reset zoom' },
+  {
+    keys: ['ctrl', '-'],
+    action: 'zoomOut',
+    description: 'Zoom out',
+  },
+  {
+    keys: ['-'],
+    action: 'zoomOut',
+    description: 'Zoom out',
+  },
+  {
+    keys: ['+'],
+    action: 'zoomIn',
+    description: 'Zoom in',
+  },
+  {
+    keys: ['ctrl', '0'],
+    action: 'resetZoom',
+    description: 'Reset zoom',
+  },
 
   // Zoom modes
   {

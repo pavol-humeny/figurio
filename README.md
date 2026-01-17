@@ -7,7 +7,7 @@
 - varovanie ked to osekne pri resize na minimum - alebo v druhom to obmedziť tak aby sa nedalo zapísať viac
 
 ## TODO od J (userTesting2 - 12.1.2026)
-- Zoom pomocou numerickej klávesnice
+- FIXED - Zoom pomocou numerickej klávesnice
 - FIXED - fyzický mód možno iná ikona 
 - FIXED - vyznačený text v light mode by mohol byť biely 
 - FIXED - pixelation mode - light mode je strašne málo rozdielny od bg color 
