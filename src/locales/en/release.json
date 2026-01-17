@@ -23,7 +23,8 @@
       "bugFixes": {
         "items": [
           "Noise detection analysis can be run also when it is already shown",
-          "Fix issue with no ending hold state when leaving toggle hold button with mouse"
+          "Fix issue with no ending hold state when leaving toggle hold button with mouse",
+          "Hide image background when applying operations"
         ]
       }
     },

@@ -222,7 +222,6 @@ const cursorStyle = computed(() => {
     <div class="viewport-content-wrapper" ref="wrapperRef" @wheel.passive="setZoomAndScroll" @mousedown="startPan"
       @mousemove="onMouseMove" :class="{
         'middle-dragging': isMiddleDragging,
-        'hide': uiStore.isApplying,
       }" :style="{
         '--viewport-wrapper-background': backgroundModeValues[backgroundMode],
       }">
@@ -258,8 +257,9 @@ const cursorStyle = computed(() => {
           hide: hideContextMenu,
         },
       ]">
-        <div id="viewport-content" :class="{ 'hide': uiStore.isLoading }" class="viewport-content" ref="contentRef"
-          :style="{
+        <div id="viewport-content"
+          :class="{ 'hide-is-loading': uiStore.isLoading, 'hide-is-applying': uiStore.isApplying }"
+          class="viewport-content" ref="contentRef" :style="{
             transform: `translate(${panX}px, ${panY}px) scale(${zoomLevel})`,
             boxShadow: backgroundMode === 'normal' ? 'var(--box-shadow-content)' : 'none',
             '--phone-frame-border-radius': phoneFrameBorderRadius + 'px',
@@ -271,7 +271,8 @@ const cursorStyle = computed(() => {
           <!-- Canvas for artifacts -->
           <canvas v-if="imageStore.fileType === 'image'" ref="overlayCanvasRef" class="overlay-canvas"></canvas>
 
-          <svg ref="frameSvgRef" class="frame-svg"></svg>
+          <svg :class="{ 'hide': uiStore.isApplying && !uiStore.isApplyingFrame }" ref="frameSvgRef"
+            class="frame-svg"></svg>
 
           <!-- Brush Tool Canvas -->
           <BrushToolCanvas :style="{
@@ -458,8 +459,14 @@ const cursorStyle = computed(() => {
   background-size: 20px 20px;
 }
 
-.viewport-content.hide {
+.viewport-content.hide-is-loading {
   background: none;
+  box-shadow: none;
+}
+
+.viewport-content.hide-is-applying {
+  background-image: none;
+  box-shadow: none;
 }
 
 .image-canvas,

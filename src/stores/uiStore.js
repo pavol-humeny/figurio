@@ -123,6 +123,12 @@ export const useUiStore = defineStore('ui', {
     /** Whether a loading overlay is shown */
     isLoading: false,
 
+    /** Whether an applying overlay is shown */
+    isApplying: false,
+
+    /** Whether a frame is being rendered - flag to not hide frame when changing it */
+    isApplyingFrame: false,
+
     /** Whether the clicks should be blocked */
     blockClicks: true,
 

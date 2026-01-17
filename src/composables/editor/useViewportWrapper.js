@@ -804,25 +804,6 @@ export function useViewportWrapper(viewportStore, imageStore, editorStore, uiSto
   })
 
   /**
-   * Center the image when the rendered image changes
-   */
-  // TODO - asi sa to na nic pouzivalo ale pri aplikovani prvej operacie to zbytocne centrovalo obrazok
-  // watch(
-  //   () => imageStore.getRenderedImage({ t, renderCall: false }),
-  //   () => {
-  //     nextTick(() => {
-  //       if (viewportStore.fitImageOnLoad && !uiStore.isLoading) {
-  //         viewportStore.resetZoom()
-  //         log('Render image')
-  //         centerImage()
-
-  //         viewportStore.fitImageOnLoad = false
-  //       }
-  //     })
-  //   },
-  // )
-
-  /**
    * Position of the cursor for tools like brush or manual background removal
    */
   const cursorPos = ref({ x: 0, y: 0 })

@@ -153,7 +153,7 @@ export function useImageRenderer(
     await nextTick()
 
     if (imageStore.fileType === 'pdf' && !imageStore.showPdfAsImage) {
-      // await new Promise((resolve) => setTimeout(resolve, 100))
+      console.warn('IMAGE RENDERER - START')
       uiStore.isApplying = true
 
       log('Rendering PDF page...')
@@ -162,7 +162,9 @@ export function useImageRenderer(
       if (!pdfPageBytes || pdfPageBytes.length === 0) {
         warn('PDF bytes missing or empty – skipping PDF render')
         blockRender.value = false
+        console.warn('IMAGE RENDERER - END1')
         uiStore.isApplying = false
+        uiStore.isApplyingFrame = false
         return
       }
 
@@ -239,7 +241,9 @@ export function useImageRenderer(
         )
 
         renderCanvas()
+        console.warn('IMAGE RENDERER - END2')
         uiStore.isApplying = false
+        uiStore.isApplyingFrame = false
         return
       }
 
@@ -257,7 +261,9 @@ export function useImageRenderer(
       pdfContainerRef.value.innerHTML = ''
       pdfContainerRef.value.appendChild(svg)
 
+      console.warn('IMAGE RENDERER - END3')
       uiStore.isApplying = false
+      uiStore.isApplyingFrame = false
     } else if (imageStore.fileType === 'image' || imageStore.showPdfAsImage) {
       log('Rendering IMAGE file...')
       const img = imageStore.getRenderedImage({ t, renderCall: true })
@@ -369,15 +375,25 @@ export function useImageRenderer(
   /**
    * Watch for changes in image store and re-render all layers
    */
+  // watch(
+  //   [
+  //     () => imageStore.getRenderedImage({ t, renderCall: false }),
+  //     () => imageStore.pdfPageBytes,
+  //     () => imageStore.fileType,
+  //     () => imageStore.overlayImage,
+  //   ],
+  //   async ([newImage, newPdfBytes, newFileType, newOverlayImage]) => {
+  //     if (newImage || newPdfBytes || newFileType || newOverlayImage) {
+  //       log('#################### Image or PDF or file Type changed, re-rendering all...')
+  //       renderAll()
+  //     }
+  //   },
+  // )
   watch(
-    [
-      () => imageStore.getRenderedImage({ t, renderCall: false }),
-      () => imageStore.pdfPageBytes,
-      () => imageStore.fileType,
-      () => imageStore.overlayImage,
-    ],
-    async ([newImage, newPdfBytes, newFileType, newOverlayImage]) => {
-      if (newImage || newPdfBytes || newFileType || newOverlayImage) {
+    () => imageStore.imageNeedToBeRendered,
+    async (imageNeedToBeRendered) => {
+      if (imageNeedToBeRendered) {
+        imageStore.imageNeedToBeRendered = false
         log('#################### Image or PDF or file Type changed, re-rendering all...')
         renderAll()
       }
@@ -386,18 +402,45 @@ export function useImageRenderer(
   /**
    * Watch for changes in viewport dimensions and update sizes
    */
+  // watch(
+  //   [
+  //     () => imageStore.frame,
+  //     () => viewportStore.physicalContentSize,
+  //     () => viewportStore.zoomMode,
+  //     () => viewportStore.calibrationFactor,
+  //   ],
+  //   (newFrame) => {
+  //     if (newFrame && !renderingFrameSvg.value) {
+  //       log('#################### Frame operations changed, re-rendering frame svg')
+  //       updateSizes()
+  //       renderFrameSvg()
+  //     }
+  //   },
+  //   { deep: true },
+  // )
+
   watch(
     [
-      () => imageStore.frame,
       () => viewportStore.physicalContentSize,
       () => viewportStore.zoomMode,
       () => viewportStore.calibrationFactor,
     ],
-    (newFrame) => {
-      if (newFrame && !renderingFrameSvg.value) {
-        log('#################### Frame operations changed, re-rendering frame svg')
-        updateSizes()
-        renderFrameSvg()
+    () => {
+      imageStore.frameNeedToBeRendered = true
+    },
+    { deep: true },
+  )
+
+  watch(
+    () => imageStore.frameNeedToBeRendered,
+    (frameNeedToBeRendered) => {
+      if (frameNeedToBeRendered) {
+        imageStore.frameNeedToBeRendered = false
+        for (let i = 0; i < 2; i++) {
+          log('#################### Frame operations changed, re-rendering frame svg')
+          updateSizes()
+          renderFrameSvg()
+        }
       }
     },
     { deep: true },

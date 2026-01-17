@@ -672,6 +672,7 @@ export function useFrameTool(imageStore, historyStore, viewportStore, t) {
    * @param {boolean} commit - When true, push to history store
    */
   const applyFrame = (commit = true) => {
+    uiStore.isApplyingFrame = true
     // Deep copy to avoid reference issues
     const width = JSON.parse(JSON.stringify(frameWidth.value))
     const widthMm = JSON.parse(JSON.stringify(frameWidthMm.value))
@@ -743,6 +744,8 @@ export function useFrameTool(imageStore, historyStore, viewportStore, t) {
 
       historyStore.push(imageStore.getSnapshot(t))
     }
+
+    imageStore.frameNeedToBeRendered = true
   }
 
   /**

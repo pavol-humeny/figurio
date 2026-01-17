@@ -341,6 +341,8 @@ export function importFileService(
         t('imageStore.toast.successFileUploaded.title'),
         t('imageStore.toast.successFileUploaded.message', { fileName: file.name }),
       )
+
+      imageStore.imageNeedToBeRendered = true
     } catch (e) {
       console.error(e)
     } finally {

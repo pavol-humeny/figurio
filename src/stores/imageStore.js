@@ -80,6 +80,9 @@ const isValidFileName = (name) => {
  */
 export const useImageStore = defineStore('imageStore', {
   state: () => ({
+    imageNeedToBeRendered: false,
+    frameNeedToBeRendered: false,
+
     renderPipeline: {
       baseState: null,
       // {

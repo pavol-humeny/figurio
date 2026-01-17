@@ -14,7 +14,7 @@ const { t } = useI18n()
  * Logic of the image analysis tool settings panel
  */
 const {
-  analyzeNoise,
+  analyzeNoise,i
 } = useImageAnalysis(useImageStore(), useWorkspaceStore(), useUiStore(), t)
 
 </script>

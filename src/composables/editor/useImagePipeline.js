@@ -189,6 +189,7 @@ export function useImagePipeline(imageStore, uiStore) {
     if (!baseState) return
     if (targetIndex < -1) return
 
+    console.warn('IMAGE PIPELINE - START')
     uiStore.isApplying = true
 
     try {
@@ -282,12 +283,14 @@ export function useImagePipeline(imageStore, uiStore) {
         state.pdfBytes && state.pdfBytes.length > 0 ? new Uint8Array(state.pdfBytes) : null
 
       // Update file type if PDF bytes were removed (pdf -> image)
-      console.warn('PDF Bytes after render:', state.pdfBytes)
       if (!state.pdfBytes) {
         imageStore.fileType = 'image'
       }
     } finally {
+      imageStore.imageNeedToBeRendered = true
+      console.warn('IMAGE PIPELINE - END')
       uiStore.isApplying = false
+      uiStore.isApplyingFrame = false
     }
   }
 

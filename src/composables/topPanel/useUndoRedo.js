@@ -37,8 +37,15 @@ export function useUndoRedo(historyStore, imageStore, uiStore, t) {
     const snapshot = historyStore.undo()
     if (!snapshot) return
 
+    console.warn('UNDO - START')
+    uiStore.isApplying = true
+
     await imageStore.applySnapshot(snapshot)
     await renderUpTo(snapshot.opIndex, { t, imageStore })
+
+    console.warn('UNDO - END')
+    uiStore.isApplying = false
+    uiStore.isApplyingFrame = false
   }
 
   /**
@@ -53,8 +60,13 @@ export function useUndoRedo(historyStore, imageStore, uiStore, t) {
     const snapshot = historyStore.redo()
     if (!snapshot) return
 
+    uiStore.isApplying = true
+
     await imageStore.applySnapshot(snapshot)
     await renderUpTo(snapshot.opIndex, { t, imageStore })
+
+    uiStore.isApplying = false
+    uiStore.isApplyingFrame = false
   }
   return {
     undo,

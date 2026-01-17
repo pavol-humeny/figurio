@@ -5,14 +5,14 @@ import { useLoadingSpinner } from '@/composables/common/useLoadingSpinner'
 /**
  * Logic for the loading spinner component
  */
-const { isVisible, isApplying, blockClicks } = useLoadingSpinner(useUiStore())
+const { isLoading, showApplyingSpinner, blockClicks } = useLoadingSpinner(useUiStore())
 
 </script>
 
 <template>
   <div>
 
-    <div v-if="isVisible || isApplying" class="loading-overlay">
+    <div v-if="isLoading || showApplyingSpinner" class="overlay" :class="{ 'loading-overlay': isLoading }">
       <div class="spinner"></div>
     </div>
 
@@ -24,17 +24,20 @@ const { isVisible, isApplying, blockClicks } = useLoadingSpinner(useUiStore())
 </template>
 
 <style scoped>
-.loading-overlay {
+.overlay {
   position: absolute;
   z-index: var(--z-index-loading-wheel);
   inset: 0;
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: var(--background-c-transparent, rgba(0, 0, 0, 0.3));
-  backdrop-filter: blur(2px);
   pointer-events: none;
   user-select: none;
+}
+
+.loading-overlay {
+  background-color: var(--background-c-transparent, rgba(0, 0, 0, 0.3));
+  backdrop-filter: blur(2px);
 }
 
 .spinner {

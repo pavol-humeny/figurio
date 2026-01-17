@@ -1,11 +1,30 @@
-import { onMounted, onBeforeUnmount, computed } from 'vue'
+import { onMounted, onBeforeUnmount, computed, ref, watch } from 'vue'
 import { useConsole } from '@/composables/common/useConsole.js'
+import { editorConfig } from '@/config/editorConfig'
 const { log } = useConsole()
 
 /**
  * Logic for loading spinner overlay
  */
 export function useLoadingSpinner(uiStore) {
+  const showApplyingSpinner = ref(false)
+  let applyingTimer = null
+
+  watch(
+    () => uiStore.isApplying,
+    (isApplying) => {
+      if (isApplying) {
+        applyingTimer = setTimeout(() => {
+          showApplyingSpinner.value = true
+        }, editorConfig.applyingLoadingShowDelay)
+      } else {
+        clearTimeout(applyingTimer)
+        applyingTimer = null
+        showApplyingSpinner.value = false
+      }
+    },
+  )
+
   onMounted(() => {
     /**
      * Block all interactions when loading is active
@@ -55,13 +74,15 @@ export function useLoadingSpinner(uiStore) {
 
       window.removeEventListener('wheel', blockCtrlWheel, { passive: false })
       window.removeEventListener('keydown', blockCtrlKeys)
+
+      clearTimeout(applyingTimer)
     })
   })
 
   /**
    * Whether to show the loading overlay
    */
-  const isVisible = computed(() => uiStore.isLoading)
+  const isLoading = computed(() => uiStore.isLoading)
 
   const isApplying = computed(() => uiStore.isApplying)
 
@@ -70,8 +91,9 @@ export function useLoadingSpinner(uiStore) {
   )
 
   return {
-    isVisible,
+    isLoading,
     isApplying,
+    showApplyingSpinner,
     blockClicks,
   }
 }
