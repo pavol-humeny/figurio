@@ -4,6 +4,16 @@
     "items": []
   },
   "versions":{
+    "5.4.0":{
+      "label": "5.4.0",
+      "date":"17.1. 2025",
+      "improvements": {
+        "items": [
+          "Adjust text selection color based on the current theme (light or dark)",
+          "Change icon of physical zoom mode to better represent its functionality"
+        ]
+      }
+    },
     "5.3.1":{
       "label": "5.3.1",
       "date":"9.1. 2025",

@@ -6,6 +6,33 @@
 - nakreslím niečo, pridám shape, a dám rasterize tak to zmizne - rastererize zožuje brush 
 - varovanie ked to osekne pri resize na minimum - alebo v druhom to obmedziť tak aby sa nedalo zapísať viac
 
+## TODO od J (userTesting2 - 12.1.2026)
+- Zoom pomocou numerickej klávesnice
+- FIXED - fyzický mód možno iná ikona 
+- FIXED - vyznačený text v light mode by mohol byť biely 
+- FIXED - pixelation mode - light mode je strašne málo rozdielny od bg color 
+- SKIP - ikony v kontrast mode switcheri sú nejasné 
+- pri pdf by pixelácia mohla byť len disabled a nie hidden + tip disabled 
+- noise detection - aj ked je to uz zobrazene tak sa to prepocita 
+- pri manipulácii s obrázkom to zobrazuje najskôr pozadie (kocky) a až potom sa to aplikuje na obrazok 
+- crop 
+    - hide crop - pri pustení mimo to neprepne 
+    - orezanie na rôznych citlivostiach - mohlo by to orezavat hned 
+    - manualna úprava - mohol by to byť input 
+    - aplikovanie orezania - centrovať 
+- bg removal 
+    - neintuitívne klávesové skratky 
+    - zrušit výber pri držaní shift po kliknutí na nieco co uz je vybrane 
+    - mohla by sa ukladať história pri výbere 
+    - color - pri výbere farby hned vybrat oblast,nie az po kliknutí na tlacidlo 
+- klik + posun mysi na ikone by mohlo menit hodnotu (figma style)
+- shape - rozbité 
+    - divne funguje výber objektu
+    - pri kliknutí to hned vytvorí nový objekt namiesto výberu 
+- text - málo fontov 
+- blur - čakala blur pomocou štetca/kreslenia
+- mg area - pridáva sa nový objekt pri kliknutí namiesto výberu 
+- resize - hneď to aplikovať nie len resetovať hodnoty 
 
 
 ## TODO 

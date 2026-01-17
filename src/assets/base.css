@@ -23,7 +23,6 @@
   --primary-c-light: #695331;
   --secondary-c-light: #CFCFCF;
   --background-c-light: #f5f5f5;
-  /* --background-c-light: #EAEAEA; */
   --text-c-light: #0F0B04;
   --text-placeholder-c-light: #3f3f3f;
   --border-c-light: #3d3d3d42;
@@ -63,7 +62,7 @@
   --box-shadow-content-dark: 0 0 5px rgba(0, 0, 0, 0.3);
 
   --viewport-wrapper-contrast-dark-c: #101010;
-  --viewport-wrapper-contrast-light-c: #fdfdfd;
+  --viewport-wrapper-contrast-light-c: #ffffff;
 
   --gold-c: #EFBF04;
 }

@@ -22,7 +22,7 @@
 /* Text selection color */
 ::selection {
   background: var(--primary-c); /* color of highlight */
-  color: var(--text-c)
+  color: var(--secondary-c)
 }
 
 /* Buttons styles */
@@ -172,9 +172,9 @@ input[type='number'] {
   -moz-appearance: textfield;
 }
 
-input::selection {
+/* input::selection {
   background: var(--primary-c);
-}
+} */
 
 /* Scrollbar styles */
 /* Chrome, Edge and Safari */

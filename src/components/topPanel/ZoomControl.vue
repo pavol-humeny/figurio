@@ -93,7 +93,7 @@ const {
         </div>
       </ItemTip>
 
-      <!-- Text mode -->
+      <!-- Physical mode -->
       <ItemTip advance :text="$t('topPanel.zoomControl.tip.physicalMode.text')"
         :title="$t('topPanel.zoomControl.tip.physicalMode.title')"
         :shortcut="$t('topPanel.zoomControl.tip.physicalMode.shortcut')" position="bottom">
