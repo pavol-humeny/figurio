@@ -6,6 +6,30 @@
     ]
   },
   "versions": {
+    "5.4.0": {
+      "label": "5.4.0",
+      "date": "17. 1. 2025",
+      "improvements": {
+        "items": [
+          "Prispôsobenie farby výberu textu podľa aktuálnej témy (svetlá / tmavá)",
+          "Zmena ikony režimu fyzického priblíženia pre lepšie vyjadrenie jeho funkcie",
+          "Vycentrovanie obrázka po orezaní",
+          "Podpora väčších PDF súborov"
+        ]
+      },
+      "newFeatures": {
+        "items": [
+          "Možnosť priblíženia a oddialenia pomocou kláves plus a mínus na numerickej klávesnici"
+        ]
+      },
+      "bugFixes": {
+        "items": [
+          "Analýzu detekcie šumu je možné spustiť aj v prípade, že je už zobrazená",
+          "Oprava chýbajúceho ukončenia stavu „hold“ pri opustení prepínacieho tlačidla myšou",
+          "Skrytie pozadia obrázka počas aplikovania operácií"
+        ]
+      }
+    },
     "5.3.1":{
       "label": "5.3.1",
       "date":"9.1. 2025",
