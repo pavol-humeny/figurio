@@ -11,7 +11,7 @@ import { viewportConfig } from '@/config/viewportConfig.js'
 import { useImagePipeline } from '@/composables/editor/useImagePipeline'
 import { editorConfig } from '@/config/editorConfig'
 import { useConfirmModal } from '@/composables/modals/useConfirmModal'
-import { useApi } from '@/composables/useApi'
+import { useApi } from '@/composables/common/useApi'
 
 const { addUserEvent } = useApi()
 const { t } = useI18n()
@@ -135,8 +135,6 @@ const onMouseDown = async (event) => {
     )
     if (!confirmed) return
 
-    // await imageStore.rasterizeBaseImage(t)
-
     imageStore.addImageOperation({
       type: 'rasterizePdf',
       params: {},
@@ -150,6 +148,8 @@ const onMouseDown = async (event) => {
     })
 
     await renderUpTo(imageStore.renderPipeline.currentOpIndex + 1, { t, imageStore })
+
+    historyStore.push(imageStore.getSnapshot())
 
     return
   }
