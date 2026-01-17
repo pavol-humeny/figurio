@@ -125,7 +125,7 @@ export function importFileService(
 
     if (!file) return
 
-    if (!checkFileSize(file.size)) {
+    if (!checkFileSize(file.size, file.type)) {
       showToastModal(
         'error',
         t('imageStore.toast.errorFileTooLargeSize.title'),
@@ -249,26 +249,34 @@ export function importFileService(
   /**
    * Checks whether the file size is within allowed limits
    * @param {number} fileSize - Size of the file in bytes
+   * @param {string} [fileType] - Type of the file
    * @returns {boolean} - True if within limits, false otherwise
    */
-  const checkFileSize = (fileSize) => {
+  const checkFileSize = (fileSize, fileType) => {
     // Skip detection
     if (userModeStore.hasUserAccessToFeature('fileSize')) {
       return true
     }
 
-    // Check if file size exceeds the maximum allowed size in MB
-    if (fileSize / 1024 / 1024 > editorConfig.maxFileSize) {
-      return false
-    }
+    if (fileType === 'application/pdf') {
+      // PDF max size in MB
+      if (fileSize / 1024 / 1024 > editorConfig.maxPdfFileSize) {
+        return false
+      }
+      return true
+    } else {
+      // Check if file size exceeds the maximum allowed size in MB
+      if (fileSize / 1024 / 1024 > editorConfig.maxFileSize) {
+        return false
+      }
 
-    return true
+      return true
+    }
   }
 
   /**
    * Sets the selected file in the image store and processes it
    * @param {File} file - File to set
-function
    */
   const setFile = async (file) => {
     uiStore.isLoading = true

@@ -41,6 +41,7 @@ export const editorConfig = {
 
   // Max file size for uploads
   maxFileSize: 7, // in MB
+  maxPdfFileSize: 70, // in MB
 
   // Frame settings
   browserFrameDefaultSize: 0.005, // 0.5% of the bigger dimension

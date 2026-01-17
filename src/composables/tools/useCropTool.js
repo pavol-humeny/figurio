@@ -745,10 +745,6 @@ export function useCropTool(imageStore, viewportStore, editorStore, historyStore
       ? await getEffectiveCanvas(imageStore.imageOperations.length - 1)
       : imageStore.getRenderedImage({ t, renderCall: false })
 
-    console.warn('useEffectiveCanvas', useEffectiveCanvas)
-    console.warn('img', img)
-    console.warn('WxH', img ? img.width + 'x' + img.height : null)
-
     if (!img) return null
 
     const canvas = document.createElement('canvas')

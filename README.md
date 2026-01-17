@@ -14,6 +14,7 @@
 - SKIP - ikony v kontrast mode switcheri sú nejasné 
 - FIXED - pri pdf by pixelácia mohla byť len disabled a nie hidden + tip disabled 
 - FIXED - noise detection - aj ked je to uz zobrazene tak sa to prepocita 
+- FIXED - neobmedzena velkost pri pdf suboroch 
 - pri manipulácii s obrázkom to zobrazuje najskôr pozadie (kocky) a až potom sa to aplikuje na obrazok 
 - crop 
     - FIXED - hide crop - pri pustení mimo to neprepne 
