@@ -19,7 +19,7 @@
     - hide crop - pri pustení mimo to neprepne 
     - orezanie na rôznych citlivostiach - mohlo by to orezavat hned 
     - manualna úprava - mohol by to byť input 
-    - aplikovanie orezania - centrovať 
+    - FIXED - aplikovanie orezania - centrovať 
 - bg removal 
     - neintuitívne klávesové skratky 
     - zrušit výber pri držaní shift po kliknutí na nieco co uz je vybrane 

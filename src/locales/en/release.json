@@ -10,7 +10,8 @@
       "improvements": {
         "items": [
           "Adjust text selection color based on the current theme (light or dark)",
-          "Change icon of physical zoom mode to better represent its functionality"
+          "Change icon of physical zoom mode to better represent its functionality",
+          "Center image after cropping"
         ]
       },
       "newFeatures": {

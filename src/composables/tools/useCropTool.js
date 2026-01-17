@@ -1178,6 +1178,9 @@ export function useCropTool(imageStore, viewportStore, editorStore, historyStore
     await renderUpTo(imageStore.renderPipeline.currentOpIndex + 1, { t, imageStore })
 
     historyStore.push(imageStore.getSnapshot(t))
+
+    // Center image after crop
+    viewportStore.shouldFitToScreen = true
   }
 
   /**
