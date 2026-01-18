@@ -72,8 +72,12 @@ export function useViewportWrapper(viewportStore, imageStore, editorStore, uiSto
       return
     }
 
-    // Middle mouse button panning
-    if (event.button === 1 || editorStore.selectedToolKey === 'move') {
+    // Middle mouse button panning or left button when no tool is selected
+    if (
+      event.button === 1 ||
+      ((editorStore.selectedToolKey === null || editorStore.selectedToolKey === '') &&
+        event.button === 0)
+    ) {
       isMiddleDragging.value = true
       event.preventDefault()
       const startX = event.clientX

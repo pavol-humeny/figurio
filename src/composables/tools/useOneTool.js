@@ -101,7 +101,7 @@ export function useOneTool(editorStore, imageStore, uiStore, props, emit) {
    */
   const onClickTab = (tabKey) => {
     editorStore.setToolWithOpenSubTools('')
-    editorStore.selectTab(tabKey)
+    // editorStore.selectTab(tabKey) TODO - remove
     emit('click', props.tool.key, tabKey)
   }
 

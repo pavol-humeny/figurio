@@ -153,7 +153,7 @@ export function useToolsPanel(editorStore, imageStore, uiStore, workspaceStore, 
     holdInterval.value = setInterval(() => {
       if (direction === 'up') scrollUp()
       else scrollDown()
-    }, 120) // repeat every 120 ms (tweakable)
+    }, 120) // repeat every 120 ms
   }
 
   // Stop auto-scrolling
@@ -192,11 +192,31 @@ export function useToolsPanel(editorStore, imageStore, uiStore, workspaceStore, 
       return
     }
 
+    // If already selected, deselect
+    if (
+      editorStore.selectedToolKey === toolKey &&
+      editorStore.selectedTabPerTool[toolKey] === (tabKey || '')
+    ) {
+      log('Deselect tool:', toolKey)
+
+      addUserEvent('deselectTool', { tool: toolKey })
+
+      editorStore.selectTool(null)
+      editorStore.selectSubTool('')
+
+      // Close the panel if no tool is selected
+      useCollapsiblePanel(uiStore).hidePanel()
+
+      return
+    }
+
     log('Toggle tool:', toolKey, 'Tab:', tabKey)
 
     addUserEvent('toggleTool', { tool: toolKey, tab: tabKey || null })
 
+    // Select tool and tab
     editorStore.selectTool(toolKey)
+    editorStore.selectTab(tabKey || '')
 
     // If the panel is closed, show it
     useCollapsiblePanel(uiStore).showPanel()

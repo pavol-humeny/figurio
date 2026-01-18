@@ -11,16 +11,17 @@
         "items": [
           "Do not show toast about successful file name change - not necessary",
           "Improve performance when applying operations"
+          
         ]
       },
       "newFeatures": {
         "items": [
-          ""
+          "Enable image panning with left mouse button when no tool is selected"
         ]
       },
       "bugFixes": {
         "items": [
-          ""
+          "Fix issue with setting crop dimensions manually"
         ]
       }
     },
