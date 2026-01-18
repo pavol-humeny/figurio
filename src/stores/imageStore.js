@@ -500,11 +500,12 @@ export const useImageStore = defineStore('imageStore', {
         !setOnlyNewFileName &&
         !openingNewFile
       ) {
-        showToastModal(
-          'success',
-          t('imageStore.toast.successFileNameUpdated.title'),
-          t('imageStore.toast.successFileNameUpdated.message'),
-        )
+        // Do not show toast about successful name change - not necessary
+        // showToastModal(
+        //   'success',
+        //   t('imageStore.toast.successFileNameUpdated.title'),
+        //   t('imageStore.toast.successFileNameUpdated.message'),
+        // )
       }
 
       // Remove file extension

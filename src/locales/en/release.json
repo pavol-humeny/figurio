@@ -4,6 +4,26 @@
     "items": []
   },
   "versions":{
+    "5.5.0":{
+      "label": "5.5.0",
+      "date":"XX.1. 2025",
+      "improvements": {
+        "items": [
+          "Do not show toast about successful file name change - not necessary",
+          "Improve performance when applying operations"
+        ]
+      },
+      "newFeatures": {
+        "items": [
+          ""
+        ]
+      },
+      "bugFixes": {
+        "items": [
+          ""
+        ]
+      }
+    },
     "5.4.0":{
       "label": "5.4.0",
       "date":"17.1. 2025",

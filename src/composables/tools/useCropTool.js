@@ -435,12 +435,12 @@ export function useCropTool(imageStore, viewportStore, editorStore, historyStore
         cropBox.value.height = clampedHeight
       }
     }
-    nextTick(() => {
-      // heightInputRef.value.value = cropHeight.value
-      heightInputRef.value.setValue(cropHeight.value)
-      // widthInputRef.value.value = cropWidth.value
-      widthInputRef.value.setValue(cropWidth.value)
-    })
+    // nextTick(() => {
+    //   // heightInputRef.value.value = cropHeight.value
+    //   heightInputRef.value.setValue(cropHeight.value)
+    //   // widthInputRef.value.value = cropWidth.value
+    //   widthInputRef.value.setValue(cropWidth.value)
+    // })
 
     updateLastCannyCrop()
   }
@@ -462,10 +462,10 @@ export function useCropTool(imageStore, viewportStore, editorStore, historyStore
         cropBox.value.height = imageStore.fileDimensions.height - cropBox.value.y
       }
     }
-    nextTick(() => {
-      positionXInputRef.value.setValue(cropPositionX.value)
-      positionYInputRef.value.setValue(cropPositionY.value)
-    })
+    // nextTick(() => {
+    //   positionXInputRef.value.setValue(cropPositionX.value)
+    //   positionYInputRef.value.setValue(cropPositionY.value)
+    // })
 
     updateLastCannyCrop()
   }

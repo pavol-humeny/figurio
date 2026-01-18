@@ -36,6 +36,9 @@
 - resize - hneď to aplikovať nie len resetovať hodnoty 
 
 
+## TODO od SA (userTesting2 - 18.1.2026)
+
+
 ## TODO 
 - DONE - MOZNO VYMYSLIET LEPSIE (TERAZ SA NEZOBRAZUJE VOBEC) Hláška o tom že sa nedajú vykresliť tlačidlá telefónu sa vypisuje viac krát
 - SKIP - (asi to je v pohode tak ako to je) zoomovanie pomocou tlacitok, ak je obrazok mimo stred tak to zoomuje mimo obrázok 
