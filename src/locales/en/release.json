@@ -10,7 +10,8 @@
       "improvements": {
         "items": [
           "Do not show toast about successful file name change - not necessary",
-          "Improve performance when applying operations"
+          "Improve performance when applying operations",
+          "Better side panel toggle button visibility"
           
         ]
       },

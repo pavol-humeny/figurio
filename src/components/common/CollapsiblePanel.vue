@@ -19,8 +19,9 @@ const {
 
 <template>
   <div class="collapsible-panel" :style="{ width: rightSidePanelWidth + 'px' }">
-    <div class="toggle-button" @click="toggleVisibility" :style="{ width: collapseButtonWidth + 'px' }">
-      <BaseIcon :name="isVisible ? 'IconArrowRight' : 'IconArrowLeft'" size="24" color="var(--border-c)" />
+    <div class="toggle-button" :style="{ width: collapseButtonWidth + 'px' }">
+      <BaseIcon @click="toggleVisibility" :name="isVisible ? 'IconArrowRight' : 'IconArrowLeft'" size="24"
+        color="var(--primary-c)" style="cursor: pointer;" />
     </div>
 
     <div class="panel-content" :class="{ hidden: !isVisible }">
@@ -47,7 +48,6 @@ const {
   display: flex;
   align-items: center;
   justify-content: center;
-  cursor: pointer;
   border-left: var(--border-ui);
   border-right: var(--border-ui);
 }

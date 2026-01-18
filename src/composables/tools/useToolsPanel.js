@@ -195,13 +195,13 @@ export function useToolsPanel(editorStore, imageStore, uiStore, workspaceStore, 
     // If already selected, deselect
     if (
       editorStore.selectedToolKey === toolKey &&
-      editorStore.selectedTabPerTool[toolKey] === (tabKey || '')
+      (tabKey === null || tabKey === editorStore.selectedTabPerTool[toolKey])
     ) {
       log('Deselect tool:', toolKey)
 
       addUserEvent('deselectTool', { tool: toolKey })
 
-      editorStore.selectTool(null)
+      editorStore.selectTool('')
       editorStore.selectSubTool('')
 
       // Close the panel if no tool is selected
@@ -214,16 +214,14 @@ export function useToolsPanel(editorStore, imageStore, uiStore, workspaceStore, 
 
     addUserEvent('toggleTool', { tool: toolKey, tab: tabKey || null })
 
-    // Select tool and tab
     editorStore.selectTool(toolKey)
-    editorStore.selectTab(tabKey || '')
-
-    // If the panel is closed, show it
-    useCollapsiblePanel(uiStore).showPanel()
 
     if (tabKey) {
       editorStore.selectTab(tabKey)
     }
+
+    // If the panel is closed, show it
+    useCollapsiblePanel(uiStore).showPanel()
   }
 
   /**
