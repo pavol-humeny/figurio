@@ -66,11 +66,18 @@ export function useResizeTool(imageStore, historyStore, viewportStore, uiStore, 
   })
 
   /**
+   * Whether to suppress automatic resize reset on image changes when applying rasterization
+   */
+  const suppressResizeReset = ref(false)
+
+  /**
    * Watch for changes in file dimensions and update inputs accordingly
    */
   watch(
     () => imageStore.fileDimensions,
     (newVal) => {
+      if (suppressResizeReset.value) return
+
       isUpdatingFromStore.value = true
 
       fileDimensionWidth.value = newVal.width
@@ -220,34 +227,15 @@ export function useResizeTool(imageStore, historyStore, viewportStore, uiStore, 
           settings: {},
         })
 
+        suppressResizeReset.value = true
+
         await renderUpTo(imageStore.renderPipeline.currentOpIndex + 1, { t, imageStore })
+
+        suppressResizeReset.value = false
       } else {
         return
       }
     }
-
-    // if (imageStore.needMergeOverlay) {
-    //   const confirmed = await showConfirmModal(
-    //     t('tools.confirmNeedOverlayMerge.title'),
-    //     t('tools.confirmNeedOverlayMerge.message'),
-    //     t('tools.confirmNeedOverlayMerge.cancel'),
-    //     t('tools.confirmNeedOverlayMerge.confirm'),
-    //   )
-    //   if (confirmed) {
-    //     imageStore.mergeOverlayIntoImage()
-    //   } else {
-    //     return
-    //   }
-    // }
-
-    // if (imageStore.needMergeOverlay) {
-    //   imageStore.mergeOverlayIntoImage()
-    //   showToastModal(
-    //     'info',
-    //     t('tools.infoOverlayWasMerged.title'),
-    //     t('tools.infoOverlayWasMerged.message'),
-    //   )
-    // }
 
     imageStore.addImageOperation({
       type: 'resize',

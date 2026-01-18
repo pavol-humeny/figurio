@@ -1,56 +1,85 @@
-import { PDFDocument } from 'pdf-lib'
+/**
+ * Resize operation via Web Worker
+ *
+ * @param {HTMLCanvasElement} baseCanvas
+ * @param {HTMLCanvasElement|null} srcOverlay
+ * @param {Uint8Array|null} srcPdfBytes
+ * @param {number} width
+ * @param {number} height
+ *
+ * @returns {Promise<{
+ *   canvas: HTMLCanvasElement,
+ *   overlay: HTMLCanvasElement|null,
+ *   pdfBytes: Uint8Array|null,
+ *   dimensions: { width:number, height:number, fileAspectRatio:number }
+ * }>}
+ */
+const resizeViaWorker = async (baseCanvas, srcOverlay, srcPdfBytes, width, height) => {
+  const worker = new Worker(new URL('@/composables/worker/resize.worker.js', import.meta.url), {
+    type: 'module',
+  })
+
+  const baseCanvasBitmap = await createImageBitmap(baseCanvas)
+  const overlayBitmap = srcOverlay ? await createImageBitmap(srcOverlay) : null
+
+  return new Promise((resolve) => {
+    worker.onmessage = (e) => {
+      const { canvasBitmap, overlayBitmap, pdfBytes, dimensions } = e.data
+
+      const canvas = document.createElement('canvas')
+      canvas.width = canvasBitmap.width
+      canvas.height = canvasBitmap.height
+      canvas.getContext('2d').drawImage(canvasBitmap, 0, 0)
+
+      let overlay = null
+      if (overlayBitmap) {
+        overlay = document.createElement('canvas')
+        overlay.width = overlayBitmap.width
+        overlay.height = overlayBitmap.height
+        overlay.getContext('2d').drawImage(overlayBitmap, 0, 0)
+      }
+
+      worker.terminate()
+
+      resolve({
+        canvas,
+        overlay,
+        pdfBytes,
+        dimensions,
+      })
+    }
+
+    worker.postMessage(
+      {
+        baseCanvasBitmap,
+        overlayBitmap,
+        pdfBytes: srcPdfBytes ?? null,
+        width,
+        height,
+      },
+      [baseCanvasBitmap, ...(overlayBitmap ? [overlayBitmap] : [])],
+    )
+  })
+}
 
 /**
- * Resize operation for canvas, overlay and PDF
- *
- * Resize is absolute – it must always be computed from the original base canvas,
- * not from already resized intermediate results.
+ * Resize operation for canvas + overlay + pdfBytes (worker-based)
  *
  * @param {object} ctx
- * @param {HTMLCanvasElement} ctx.srcCanvas current pipeline canvas (ignored)
- * @param {HTMLCanvasElement} ctx.baseCanvas original base canvas
+ * @param {HTMLCanvasElement} ctx.baseCanvas
  * @param {Uint8Array|null} ctx.srcPdfBytes
  * @param {HTMLCanvasElement|null} ctx.srcOverlay
  * @param {{ width:number, height:number }} ctx.params
+ *
+ * @returns {{
+ *   canvas: HTMLCanvasElement,
+ *   overlay: HTMLCanvasElement|null,
+ *   pdfBytes: Uint8Array|null,
+ *   dimensions: { width:number, height:number, fileAspectRatio:number }
+ * }}
  */
 export async function resizeOperation({ baseCanvas, srcPdfBytes, srcOverlay, params }) {
   const { width, height } = params
 
-  // ALWAYS resize from original image
-  const outCanvas = document.createElement('canvas')
-  outCanvas.width = width
-  outCanvas.height = height
-  outCanvas.getContext('2d').drawImage(baseCanvas, 0, 0, width, height)
-
-  // Overlay (scale from base overlay if exists)
-  let overlay = null
-  if (srcOverlay) {
-    overlay = document.createElement('canvas')
-    overlay.width = width
-    overlay.height = height
-    overlay.getContext('2d').drawImage(srcOverlay, 0, 0, width, height)
-  }
-
-  // PDF
-  let pdfBytes = srcPdfBytes ?? null
-  if (pdfBytes) {
-    const pdf = await PDFDocument.load(pdfBytes)
-    const oldPage = pdf.getPage(0)
-    const newPdf = await PDFDocument.create()
-    const page = newPdf.addPage([width, height])
-    const [embedded] = await newPdf.embedPages([oldPage])
-    page.drawPage(embedded, { x: 0, y: 0, width, height })
-    pdfBytes = await newPdf.save()
-  }
-
-  return {
-    canvas: outCanvas,
-    overlay,
-    pdfBytes,
-    dimensions: {
-      width,
-      height,
-      fileAspectRatio: width / height || 1,
-    },
-  }
+  return resizeViaWorker(baseCanvas, srcOverlay, srcPdfBytes, width, height)
 }
