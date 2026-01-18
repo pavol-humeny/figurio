@@ -15,7 +15,7 @@
 - FIXED - pri pdf by pixelácia mohla byť len disabled a nie hidden + tip disabled 
 - FIXED - noise detection - aj ked je to uz zobrazene tak sa to prepocita 
 - FIXED - neobmedzena velkost pri pdf suboroch 
-- pri manipulácii s obrázkom to zobrazuje najskôr pozadie (kocky) a až potom sa to aplikuje na obrazok 
+- FIXED - pri manipulácii s obrázkom to zobrazuje najskôr pozadie (kocky) a až potom sa to aplikuje na obrazok 
 - crop 
     - FIXED - hide crop - pri pustení mimo to neprepne 
     - orezanie na rôznych citlivostiach - mohlo by to orezavat hned 
@@ -37,6 +37,33 @@
 
 
 ## TODO od SA (userTesting2 - 18.1.2026)
+- FIXED - pohyb pomocou L mouse + deselect nástroja 
+- command + zoom pre priblíženie na macu 
+- FIXED - Premenovanie súboru by nemuselo dávať toast
+- Bočný panel by mohol mať výraznejšiu šípku 
+- bočný panel by sa mohol zatvárať len šípkou a nie celým rozmerom tlacidla 
+- FIXED - manuálna úprava rozmerov pri crop dá error 
+- skrytie rámiku pomocou hold - použiť tlačidlo a nie toggle 
+- Frame tool - vylepšiť rámiky 
+- BG removal 
+    - vybrať odstránené je neintuitívne 
+    - text - nahradiť pozadie zmeniť na nahradiť výber 
+- pridať nástroj fill (kýbel)
+- zoznam objektov (svg list) by mohol zobraziť krížik pre zmazanie už pri hover, bez nutnosti selectu 
+- shape 
+    - kreslenie hned s obrysom alebo kreslenie len obrysu a možnosť vyplniť 
+    - pri zrušení výplne automaticky prepnúť na hrúbku rámiku a nie vyžadovať od užívateľa 
+- text 
+    - enter to vloží na stred 
+    - pri zmazaní to odstráni objekt - malo by to spraviť až pri on blur 
+- mazanie objektu pomocou backspace nie len delete (mac nemá delete)
+- z index polohu zobrazovať len 2 tlačidlá ak sú len 2 objekty, žiadne ak je len jeden 
+- pri prepínaní okien to nedrží zoom 
+- tab sa nedá posunúť úplne doprava 
+- MG - zoomuje len podklad a nie aj objekty 
+- select - ak sa vyberie mg tak to zostane na tom nástroji a neprepne sa to späť na select 
+- 
+
 
 
 ## TODO 
