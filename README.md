@@ -40,8 +40,8 @@
 - FIXED - pohyb pomocou L mouse + deselect nástroja 
 - command + zoom pre priblíženie na macu 
 - FIXED - Premenovanie súboru by nemuselo dávať toast
-- Bočný panel by mohol mať výraznejšiu šípku 
-- bočný panel by sa mohol zatvárať len šípkou a nie celým rozmerom tlacidla 
+- FIXED - Bočný panel by mohol mať výraznejšiu šípku 
+- FIXED - bočný panel by sa mohol zatvárať len šípkou a nie celým rozmerom tlacidla 
 - FIXED - manuálna úprava rozmerov pri crop dá error 
 - skrytie rámiku pomocou hold - použiť tlačidlo a nie toggle 
 - Frame tool - vylepšiť rámiky 

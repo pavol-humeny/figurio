@@ -21,11 +21,6 @@ export function useFileTabs(uiStore, viewportStore, imageStore, editorStore, t) 
   const wrapperRef = ref(null)
 
   /**
-   * Index of the tab being dragged
-   */
-  const dragIndex = ref(null)
-
-  /**
    * Workspace store with tab state and actions
    */
   const workspaceStore = useWorkspaceStore()
@@ -92,36 +87,6 @@ export function useFileTabs(uiStore, viewportStore, imageStore, editorStore, t) 
   }
 
   /**
-   * Set the index of the dragged tab
-   *
-   * @param {number} index - Index of the tab being dragged
-   */
-  const onTabDragStart = (index) => {
-    dragIndex.value = index
-  }
-
-  /**
-   * Reorder tabs based on drop index and updates active index accordingly
-   *
-   * @param {number} index - Index where the tab is dropped
-   */
-  const onTabDrop = (index) => {
-    if (dragIndex.value === null || dragIndex.value === index) return
-    const movedTab = tabs.value.splice(dragIndex.value, 1)[0]
-    tabs.value.splice(index, 0, movedTab)
-
-    if (activeTabIndex.value === dragIndex.value) {
-      activeTabIndex.value = index
-    } else if (activeTabIndex.value > dragIndex.value && activeTabIndex.value <= index) {
-      activeTabIndex.value--
-    } else if (activeTabIndex.value < dragIndex.value && activeTabIndex.value >= index) {
-      activeTabIndex.value++
-    }
-
-    dragIndex.value = null
-  }
-
-  /**
    * Switch to the next tab in the list
    */
   const switchToNextTab = async () => {
@@ -163,14 +128,29 @@ export function useFileTabs(uiStore, viewportStore, imageStore, editorStore, t) 
     )
   })
 
+  /**
+   * Handle reorder from vuedraggable
+   */
+  const onTabsReorder = (evt) => {
+    const { oldIndex, newIndex } = evt
+    if (oldIndex === newIndex) return
+
+    if (activeTabIndex.value === oldIndex) {
+      activeTabIndex.value = newIndex
+    } else if (activeTabIndex.value > oldIndex && activeTabIndex.value <= newIndex) {
+      activeTabIndex.value--
+    } else if (activeTabIndex.value < oldIndex && activeTabIndex.value >= newIndex) {
+      activeTabIndex.value++
+    }
+  }
+
   return {
     wrapperRef,
     tabs,
     activeTabIndex,
     setActiveTab,
     closeTab,
-    onTabDragStart,
-    onTabDrop,
+    onTabsReorder,
     switchToNextTab,
     switchToPreviousTab,
   }

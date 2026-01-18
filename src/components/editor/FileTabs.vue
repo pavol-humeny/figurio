@@ -5,6 +5,7 @@ import { useI18n } from 'vue-i18n'
 import { useViewportStore } from '@/stores/viewportStore'
 import { useImageStore } from '@/stores/imageStore'
 import { useEditorStore } from '@/stores/editorStore'
+import draggable from 'vuedraggable'
 
 const { t } = useI18n()
 
@@ -22,8 +23,7 @@ const {
   activeTabIndex,
   setActiveTab,
   closeTab,
-  onTabDragStart,
-  onTabDrop,
+  onTabsReorder,
   wrapperRef,
 } = useFileTabs(useUiStore(), useViewportStore(), useImageStore(), useEditorStore(), t)
 
@@ -32,14 +32,15 @@ const {
 <template>
   <div class="file-tabs">
     <div class="scroll-container" ref="wrapperRef">
-      <div class="tabs-wrapper">
-        <div v-for="(tab, i) in tabs" :key="tab.id" class="tab" draggable="true" @dragstart="onTabDragStart(i)"
-          @drop.prevent="onTabDrop(i)" @dragover.prevent :class="{ active: i === activeTabIndex }"
-          @click="setActiveTab(i)">
-          <p>{{ tab.name }}.{{ tab.fileExtension }}</p>
-          <span class="tab-close" @click.stop="closeTab(i)">✕</span>
-        </div>
-      </div>
+      <draggable v-model="tabs" item-key="id" class="tabs-wrapper" :animation="150" :ghost-class="'tab-ghost'"
+        :chosen-class="'tab-chosen'" @end="onTabsReorder">
+        <template #item="{ element: tab, index: i }">
+          <div class="tab" :class="{ active: i === activeTabIndex }" @click="setActiveTab(i)">
+            <p>{{ tab.name }}.{{ tab.fileExtension }}</p>
+            <span class="tab-close" @click.stop="closeTab(i)">✕</span>
+          </div>
+        </template>
+      </draggable>
     </div>
   </div>
 </template>
@@ -108,5 +109,13 @@ const {
 
 .tab-close:hover {
   opacity: 1;
+}
+
+.tab-chosen {
+  /* opacity: 0 !important; */
+}
+
+.tab-ghost {
+  opacity: 0;
 }
 </style>
