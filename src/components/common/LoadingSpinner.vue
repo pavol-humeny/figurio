@@ -33,10 +33,10 @@ const { isLoading, showApplyingSpinner, blockClicks } = useLoadingSpinner(useUiS
   align-items: center;
   pointer-events: none;
   user-select: none;
+  background-color: var(--background-c-transparent, rgba(0, 0, 0, 0.3));
 }
 
 .loading-overlay {
-  background-color: var(--background-c-transparent, rgba(0, 0, 0, 0.3));
   backdrop-filter: blur(2px);
 }
 

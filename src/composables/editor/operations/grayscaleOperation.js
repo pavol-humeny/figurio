@@ -1,5 +1,41 @@
 /**
- * Grayscale operation for canvas + overlay
+ * Apply grayscale effect using a web worker
+ *
+ * @param {HTMLCanvasElement} sourceCanvas Source canvas to apply the effect on
+ * @param {'luminance'|'average'|'lightness'} grayscaleType Type of grayscale effect
+ * @returns {Promise<HTMLCanvasElement>} Promise resolving to the processed canvas
+ */
+const applyGrayscaleViaWorker = async (sourceCanvas, grayscaleType) => {
+  const worker = new Worker(new URL('@/composables/worker/grayscale.worker.js', import.meta.url), {
+    type: 'module',
+  })
+
+  const bitmap = await createImageBitmap(sourceCanvas)
+
+  return new Promise((resolve) => {
+    worker.onmessage = (e) => {
+      const resultBitmap = e.data
+
+      const canvas = document.createElement('canvas')
+      canvas.width = resultBitmap.width
+      canvas.height = resultBitmap.height
+
+      const ctx = canvas.getContext('2d')
+      ctx.drawImage(resultBitmap, 0, 0)
+
+      worker.terminate()
+      resolve(canvas)
+    }
+
+    worker.postMessage(
+      { bitmap, grayscaleType },
+      [bitmap], // transfer ownership (zero-copy)
+    )
+  })
+}
+
+/**
+ * Grayscale operation for canvas + overlay (worker-based)
  *
  * @param {object} ctx
  * @param {HTMLCanvasElement} ctx.srcCanvas
@@ -16,48 +52,8 @@
 export async function grayscaleOperation({ srcCanvas, srcOverlay, params }) {
   const { grayscaleType = 'luminance' } = params
 
-  const applyGrayscale = (sourceCanvas) => {
-    const canvas = document.createElement('canvas')
-    canvas.width = sourceCanvas.width
-    canvas.height = sourceCanvas.height
-
-    const ctx = canvas.getContext('2d')
-    ctx.drawImage(sourceCanvas, 0, 0)
-
-    const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height)
-    const data = imageData.data
-
-    for (let i = 0; i < data.length; i += 4) {
-      const r = data[i]
-      const g = data[i + 1]
-      const b = data[i + 2]
-      // alpha (data[i + 3]) stays untouched
-
-      let gray
-      switch (grayscaleType) {
-        case 'average':
-          gray = (r + g + b) / 3
-          break
-
-        case 'lightness':
-          gray = (Math.max(r, g, b) + Math.min(r, g, b)) / 2
-          break
-
-        case 'luminance':
-        default:
-          gray = 0.299 * r + 0.587 * g + 0.114 * b
-          break
-      }
-
-      data[i] = data[i + 1] = data[i + 2] = gray
-    }
-
-    ctx.putImageData(imageData, 0, 0)
-    return canvas
-  }
-
-  const canvas = applyGrayscale(srcCanvas)
-  const overlay = srcOverlay ? applyGrayscale(srcOverlay) : null
+  const canvas = await applyGrayscaleViaWorker(srcCanvas, grayscaleType)
+  const overlay = srcOverlay ? await applyGrayscaleViaWorker(srcOverlay, grayscaleType) : null
 
   return {
     canvas,

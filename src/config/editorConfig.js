@@ -94,5 +94,5 @@ export const editorConfig = {
   holdButtonTimeout: 400, // ms before starting to hold
   holdButtonInterval: 50, // ms between each call when holding
 
-  applyingLoadingShowDelay: 1000, // ms delay before showing applying loading spinner
+  applyingLoadingShowDelay: 300, // ms delay before showing applying loading spinner
 }
