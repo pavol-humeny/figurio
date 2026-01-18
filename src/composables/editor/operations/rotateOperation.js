@@ -1,124 +1,83 @@
-import { degrees, PDFDocument } from 'pdf-lib'
-import { useMath } from '../../common/useMath'
-const { round } = useMath()
+/**
+ * Rotate operation via Web Worker
+ *
+ * @param {HTMLCanvasElement} srcCanvas
+ * @param {HTMLCanvasElement|null} srcOverlay
+ * @param {Uint8Array|null} srcPdfBytes
+ * @param {number} angle
+ *
+ * @returns {Promise<{
+ *   canvas: HTMLCanvasElement,
+ *   overlay: HTMLCanvasElement|null,
+ *   pdfBytes: Uint8Array|null,
+ *   dimensions: { width:number, height:number, fileAspectRatio:number }
+ * }>}
+ */
+const rotateViaWorker = async (srcCanvas, srcOverlay, srcPdfBytes, angle) => {
+  const worker = new Worker(new URL('@/composables/worker/rotate.worker.js', import.meta.url), {
+    type: 'module',
+  })
+
+  const canvasBitmap = await createImageBitmap(srcCanvas)
+  const overlayBitmap = srcOverlay ? await createImageBitmap(srcOverlay) : null
+
+  return new Promise((resolve) => {
+    worker.onmessage = (e) => {
+      const { canvasBitmap, overlayBitmap, pdfBytes, dimensions } = e.data
+
+      const canvas = document.createElement('canvas')
+      canvas.width = canvasBitmap.width
+      canvas.height = canvasBitmap.height
+      canvas.getContext('2d').drawImage(canvasBitmap, 0, 0)
+
+      let overlay = null
+      if (overlayBitmap) {
+        overlay = document.createElement('canvas')
+        overlay.width = overlayBitmap.width
+        overlay.height = overlayBitmap.height
+        overlay.getContext('2d').drawImage(overlayBitmap, 0, 0)
+      }
+
+      worker.terminate()
+
+      resolve({
+        canvas,
+        overlay,
+        pdfBytes,
+        dimensions,
+      })
+    }
+
+    worker.postMessage(
+      {
+        canvasBitmap,
+        overlayBitmap,
+        pdfBytes: srcPdfBytes ?? null,
+        angle,
+      },
+      [canvasBitmap, ...(overlayBitmap ? [overlayBitmap] : [])],
+    )
+  })
+}
 
 /**
- * Rotate operation for image and PDF
+ * Rotate operation for canvas + overlay + pdfBytes (worker-based)
  *
  * @param {object} ctx
- * @param {HTMLCanvasElement} ctx.srcCanvas source canvas
- * @param {Uint8Array|null} ctx.srcPdfBytes source PDF bytes
- * @param {HTMLCanvasElement|null} ctx.srcOverlay source overlay canvas
- * @param {{ angle: number }} ctx.params operation parameters
+ * @param {HTMLCanvasElement} ctx.srcCanvas
+ * @param {Uint8Array|null} ctx.srcPdfBytes
+ * @param {HTMLCanvasElement|null} ctx.srcOverlay
+ * @param {{ angle: number }} ctx.params
  *
  * @returns {{
  *   canvas: HTMLCanvasElement,
- *   pdfBytes: Uint8Array | null,
- *   overlay: HTMLCanvasElement | null,
- *   dimensions: { width: number, height: number, fileAspectRatio: number }
+ *   overlay: HTMLCanvasElement|null,
+ *   pdfBytes: Uint8Array|null,
+ *   dimensions: { width:number, height:number, fileAspectRatio:number }
  * }}
  */
 export async function rotateOperation({ srcCanvas, srcPdfBytes, srcOverlay, params }) {
   const { angle } = params
-  const radians = (angle * Math.PI) / 180
 
-  let pdfBytes = srcPdfBytes ?? null
-  let overlay = srcOverlay ?? null
-
-  // PDF rotation
-  if (pdfBytes) {
-    const existingPdf = await PDFDocument.load(pdfBytes)
-    const oldPage = existingPdf.getPage(0)
-
-    const oldWidth = oldPage.getWidth()
-    const oldHeight = oldPage.getHeight()
-
-    const newPdf = await PDFDocument.create()
-
-    let newWidth = oldWidth
-    let newHeight = oldHeight
-    const normalizedAngle = ((-angle % 360) + 360) % 360
-
-    if (normalizedAngle === 90 || normalizedAngle === 270) {
-      newWidth = oldHeight
-      newHeight = oldWidth
-    }
-
-    const newPage = newPdf.addPage([newWidth, newHeight])
-    const [embeddedPage] = await newPdf.embedPages([oldPage])
-
-    let x = 0
-    let y = 0
-    let rotate = degrees(0)
-
-    switch (normalizedAngle) {
-      case 90:
-        x = newWidth
-        rotate = degrees(90)
-        break
-      case 180:
-        x = newWidth
-        y = newHeight
-        rotate = degrees(180)
-        break
-      case 270:
-        y = newHeight
-        rotate = degrees(270)
-        break
-    }
-
-    newPage.drawPage(embeddedPage, {
-      x,
-      y,
-      width: oldWidth,
-      height: oldHeight,
-      rotate,
-    })
-
-    pdfBytes = await newPdf.save()
-  }
-
-  // Canvas rotation
-  const oldWidth = srcCanvas.width
-  const oldHeight = srcCanvas.height
-
-  const sin = Math.abs(Math.sin(radians))
-  const cos = Math.abs(Math.cos(radians))
-
-  const newWidth = round(oldWidth * cos + oldHeight * sin)
-  const newHeight = round(oldWidth * sin + oldHeight * cos)
-
-  const canvas = document.createElement('canvas')
-  canvas.width = newWidth
-  canvas.height = newHeight
-
-  const ctx = canvas.getContext('2d')
-  ctx.translate(newWidth / 2, newHeight / 2)
-  ctx.rotate(radians)
-  ctx.drawImage(srcCanvas, -oldWidth / 2, -oldHeight / 2)
-
-  // Overlay rotation
-  if (overlay) {
-    const overlayCanvas = document.createElement('canvas')
-    overlayCanvas.width = newWidth
-    overlayCanvas.height = newHeight
-
-    const octx = overlayCanvas.getContext('2d')
-    octx.translate(newWidth / 2, newHeight / 2)
-    octx.rotate(radians)
-    octx.drawImage(overlay, -overlay.width / 2, -overlay.height / 2)
-
-    overlay = overlayCanvas
-  }
-
-  return {
-    canvas,
-    pdfBytes,
-    overlay,
-    dimensions: {
-      width: newWidth,
-      height: newHeight,
-      fileAspectRatio: newWidth / newHeight || 1,
-    },
-  }
+  return rotateViaWorker(srcCanvas, srcOverlay, srcPdfBytes, angle)
 }
