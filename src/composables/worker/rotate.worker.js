@@ -1,6 +1,8 @@
 import { degrees, PDFDocument } from 'pdf-lib'
 
 self.onmessage = async (e) => {
+  const tStart = performance.now()
+
   const { canvasBitmap, overlayBitmap, pdfBytes, angle } = e.data
 
   const radians = (angle * Math.PI) / 180
@@ -10,8 +12,16 @@ self.onmessage = async (e) => {
   let outPdfBytes = pdfBytes ?? null
   let outOverlayBitmap = null
 
-  /* PDF ROTATION */
+  let tPdf = 0
+  let tCanvas = 0
+  let tOverlay = 0
+
+  /* =========================
+   * PDF ROTATION
+   * ========================= */
   if (pdfBytes) {
+    const t0 = performance.now()
+
     const existingPdf = await PDFDocument.load(pdfBytes)
     const oldPage = existingPdf.getPage(0)
 
@@ -60,47 +70,73 @@ self.onmessage = async (e) => {
     })
 
     outPdfBytes = await newPdf.save()
+
+    tPdf = performance.now() - t0
   }
 
-  /* CANVAS ROTATION */
-  const oldWidth = canvasBitmap.width
-  const oldHeight = canvasBitmap.height
+  /* =========================
+   * CANVAS ROTATION
+   * ========================= */
+  {
+    const t0 = performance.now()
 
-  const newWidth = Math.round(oldWidth * cos + oldHeight * sin)
-  const newHeight = Math.round(oldWidth * sin + oldHeight * cos)
+    const oldWidth = canvasBitmap.width
+    const oldHeight = canvasBitmap.height
 
-  const canvas = new OffscreenCanvas(newWidth, newHeight)
-  const ctx = canvas.getContext('2d')
+    const newWidth = Math.round(oldWidth * cos + oldHeight * sin)
+    const newHeight = Math.round(oldWidth * sin + oldHeight * cos)
 
-  ctx.translate(newWidth / 2, newHeight / 2)
-  ctx.rotate(radians)
-  ctx.drawImage(canvasBitmap, -oldWidth / 2, -oldHeight / 2)
+    const canvas = new OffscreenCanvas(newWidth, newHeight)
+    const ctx = canvas.getContext('2d')
 
-  const outCanvasBitmap = canvas.transferToImageBitmap()
+    ctx.translate(newWidth / 2, newHeight / 2)
+    ctx.rotate(radians)
+    ctx.drawImage(canvasBitmap, -oldWidth / 2, -oldHeight / 2)
 
-  /* OVERLAY ROTATION */
-  if (overlayBitmap) {
-    const oc = new OffscreenCanvas(newWidth, newHeight)
-    const octx = oc.getContext('2d')
+    var outCanvasBitmap = canvas.transferToImageBitmap()
 
-    octx.translate(newWidth / 2, newHeight / 2)
-    octx.rotate(radians)
-    octx.drawImage(overlayBitmap, -overlayBitmap.width / 2, -overlayBitmap.height / 2)
+    tCanvas = performance.now() - t0
 
-    outOverlayBitmap = oc.transferToImageBitmap()
-  }
+    /* =========================
+     * OVERLAY ROTATION
+     * ========================= */
+    if (overlayBitmap) {
+      const t1 = performance.now()
 
-  self.postMessage(
-    {
-      canvasBitmap: outCanvasBitmap,
-      overlayBitmap: outOverlayBitmap,
-      pdfBytes: outPdfBytes,
-      dimensions: {
-        width: newWidth,
-        height: newHeight,
-        fileAspectRatio: newWidth / newHeight || 1,
+      const oc = new OffscreenCanvas(newWidth, newHeight)
+      const octx = oc.getContext('2d')
+
+      octx.translate(newWidth / 2, newHeight / 2)
+      octx.rotate(radians)
+      octx.drawImage(overlayBitmap, -overlayBitmap.width / 2, -overlayBitmap.height / 2)
+
+      outOverlayBitmap = oc.transferToImageBitmap()
+
+      tOverlay = performance.now() - t1
+    }
+
+    const tTotal = performance.now() - tStart
+
+    // Log timing information (visible in DevTools → Workers)
+    console.log(
+      `[rotate.worker] total=${tTotal.toFixed(1)}ms | ` +
+        `pdf=${tPdf.toFixed(1)}ms | ` +
+        `canvas=${tCanvas.toFixed(1)}ms | ` +
+        `overlay=${tOverlay.toFixed(1)}ms`,
+    )
+
+    self.postMessage(
+      {
+        canvasBitmap: outCanvasBitmap,
+        overlayBitmap: outOverlayBitmap,
+        pdfBytes: outPdfBytes,
+        dimensions: {
+          width: newWidth,
+          height: newHeight,
+          fileAspectRatio: newWidth / newHeight || 1,
+        },
       },
-    },
-    [outCanvasBitmap, ...(outOverlayBitmap ? [outOverlayBitmap] : [])],
-  )
+      [outCanvasBitmap, ...(outOverlayBitmap ? [outOverlayBitmap] : [])],
+    )
+  }
 }

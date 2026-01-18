@@ -1,118 +1,83 @@
 /**
- * Flip operation for canvas, overlay and PDF (pipeline-style)
+ * Flip operation via Web Worker
+ *
+ * @param {HTMLCanvasElement} srcCanvas
+ * @param {HTMLCanvasElement|null} srcOverlay
+ * @param {Uint8Array|null} srcPdfBytes
+ * @param {'horizontal' | 'vertical'} direction
+ *
+ * @returns {Promise<{
+ *   canvas: HTMLCanvasElement,
+ *   overlay: HTMLCanvasElement|null,
+ *   pdfBytes: Uint8Array|null,
+ *   dimensions: { width:number, height:number, fileAspectRatio:number }
+ * }>}
+ */
+const flipViaWorker = async (srcCanvas, srcOverlay, srcPdfBytes, direction) => {
+  const worker = new Worker(new URL('@/composables/worker/flip.worker.js', import.meta.url), {
+    type: 'module',
+  })
+
+  const canvasBitmap = await createImageBitmap(srcCanvas)
+  const overlayBitmap = srcOverlay ? await createImageBitmap(srcOverlay) : null
+
+  return new Promise((resolve) => {
+    worker.onmessage = (e) => {
+      const { canvasBitmap, overlayBitmap, pdfBytes, dimensions } = e.data
+
+      const canvas = document.createElement('canvas')
+      canvas.width = canvasBitmap.width
+      canvas.height = canvasBitmap.height
+      canvas.getContext('2d').drawImage(canvasBitmap, 0, 0)
+
+      let overlay = null
+      if (overlayBitmap) {
+        overlay = document.createElement('canvas')
+        overlay.width = overlayBitmap.width
+        overlay.height = overlayBitmap.height
+        overlay.getContext('2d').drawImage(overlayBitmap, 0, 0)
+      }
+
+      worker.terminate()
+
+      resolve({
+        canvas,
+        overlay,
+        pdfBytes,
+        dimensions,
+      })
+    }
+
+    worker.postMessage(
+      {
+        canvasBitmap,
+        overlayBitmap,
+        pdfBytes: srcPdfBytes ?? null,
+        direction,
+      },
+      [canvasBitmap, ...(overlayBitmap ? [overlayBitmap] : [])],
+    )
+  })
+}
+
+/**
+ * Flip operation for canvas + overlay + pdfBytes (worker-based)
  *
  * @param {object} ctx
- * @param {HTMLCanvasElement} ctx.srcCanvas source canvas
- * @param {Uint8Array|null} ctx.srcPdfBytes source PDF bytes
- * @param {HTMLCanvasElement|null} ctx.srcOverlay source overlay canvas
- * @param {{ direction: 'horizontal' | 'vertical' }} ctx.params operation parameters
+ * @param {HTMLCanvasElement} ctx.srcCanvas
+ * @param {Uint8Array|null} ctx.srcPdfBytes
+ * @param {HTMLCanvasElement|null} ctx.srcOverlay
+ * @param {{ direction: 'horizontal' | 'vertical' }} ctx.params
  *
  * @returns {{
  *   canvas: HTMLCanvasElement,
- *   overlay: HTMLCanvasElement | null,
- *   pdfBytes: Uint8Array | null,
- *   dimensions: { width: number, height: number, fileAspectRatio: number }
+ *   overlay: HTMLCanvasElement|null,
+ *   pdfBytes: Uint8Array|null,
+ *   dimensions: { width:number, height:number, fileAspectRatio:number }
  * }}
  */
 export async function flipOperation({ srcCanvas, srcPdfBytes, srcOverlay, params }) {
   const { direction } = params
 
-  let pdfBytes = srcPdfBytes ?? null
-  let overlay = srcOverlay ?? null
-
-  const width = srcCanvas.width
-  const height = srcCanvas.height
-
-  // ------------------------------------------------
-  // PDF flip
-  // ------------------------------------------------
-  // if (pdfBytes) {
-  //   const existingPdf = await PDFDocument.load(pdfBytes)
-  //   const oldPage = existingPdf.getPage(0)
-
-  //   const newPdf = await PDFDocument.create()
-  //   const newPage = newPdf.addPage([width, height])
-  //   const [embeddedPage] = await newPdf.embedPages([oldPage])
-
-  //   let x = 0
-  //   let y = 0
-  //   let rotate = degrees(0)
-  //   let scaleX = 1
-  //   let scaleY = 1
-
-  //   if (direction === 'horizontal') {
-  //     scaleY = -1
-  //     y = height
-  //   } else if (direction === 'vertical') {
-  //     scaleX = -1
-  //     x = width
-  //   }
-
-  //   newPage.drawPage(embeddedPage, {
-  //     x,
-  //     y,
-  //     xScale: scaleX,
-  //     yScale: scaleY,
-  //     rotate,
-  //   })
-
-  //   pdfBytes = await newPdf.save()
-  // }
-
-  // ------------------------------------------------
-  // Canvas flip
-  // ------------------------------------------------
-  const canvas = document.createElement('canvas')
-  canvas.width = width
-  canvas.height = height
-
-  const ctx = canvas.getContext('2d')
-  ctx.save()
-
-  if (direction === 'horizontal') {
-    ctx.translate(0, height)
-    ctx.scale(1, -1)
-  } else if (direction === 'vertical') {
-    ctx.translate(width, 0)
-    ctx.scale(-1, 1)
-  }
-
-  ctx.drawImage(srcCanvas, 0, 0)
-  ctx.restore()
-
-  // ------------------------------------------------
-  // Overlay flip
-  // ------------------------------------------------
-  if (overlay) {
-    const overlayCanvas = document.createElement('canvas')
-    overlayCanvas.width = width
-    overlayCanvas.height = height
-
-    const octx = overlayCanvas.getContext('2d')
-    octx.save()
-
-    if (direction === 'horizontal') {
-      octx.translate(0, height)
-      octx.scale(1, -1)
-    } else if (direction === 'vertical') {
-      octx.translate(width, 0)
-      octx.scale(-1, 1)
-    }
-
-    octx.drawImage(overlay, 0, 0)
-    octx.restore()
-
-    overlay = overlayCanvas
-  }
-
-  return {
-    canvas,
-    overlay,
-    pdfBytes,
-    dimensions: {
-      width,
-      height,
-      fileAspectRatio: width / height || 1,
-    },
-  }
+  return flipViaWorker(srcCanvas, srcOverlay, srcPdfBytes, direction)
 }

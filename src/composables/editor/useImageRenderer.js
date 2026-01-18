@@ -144,6 +144,8 @@ export function useImageRenderer(
    * Render base image
    */
   const renderCanvas = async () => {
+    const tStart = performance.now()
+
     log('--- renderCanvas called: ---', blockRender.value)
 
     if (blockRender.value) return
@@ -153,6 +155,8 @@ export function useImageRenderer(
     await nextTick()
 
     if (imageStore.fileType === 'pdf' && !imageStore.showPdfAsImage) {
+      const tPdfStart = performance.now()
+
       console.warn('IMAGE RENDERER - START')
       uiStore.isApplying = true
 
@@ -205,6 +209,8 @@ export function useImageRenderer(
       }
 
       if (hasUnimplemented) {
+        const tRasterStart = performance.now()
+
         warn(
           'PDF obsahuje nepodporované grafické operátory – niektoré efekty nemusia byť presne zobrazené.',
         )
@@ -216,17 +222,18 @@ export function useImageRenderer(
         const canvas = document.createElement('canvas')
         canvas.width = viewport.width
         canvas.height = viewport.height
-        const ctx = canvas.getContext('2d', { willReadFrequently: true })
 
+        const ctx = canvas.getContext('2d', { willReadFrequently: true })
         await page.render({ canvasContext: ctx, viewport }).promise
+
+        log(`[imageRenderer] PDF rasterized in ${(performance.now() - tRasterStart).toFixed(1)} ms`)
 
         // Uloženie ako obrázok (rovnako ako pri image file)
         imageStore.setRenderedImage(canvas)
         imageStore.originalImage = canvas
-        imageStore.previewUrl = canvas.toDataURL()
-        imageStore.blurPreviewUrl = canvas.toDataURL()
 
-        blockRender.value = false
+        // imageStore.previewUrl = canvas.toDataURL()
+        // imageStore.blurPreviewUrl = canvas.toDataURL()
 
         addWarning(
           'unsupported-pdf-objects', // id
@@ -241,9 +248,12 @@ export function useImageRenderer(
         )
 
         renderCanvas()
+
         console.warn('IMAGE RENDERER - END2')
+        blockRender.value = false
         uiStore.isApplying = false
         uiStore.isApplyingFrame = false
+
         return
       }
 
@@ -261,58 +271,94 @@ export function useImageRenderer(
       pdfContainerRef.value.innerHTML = ''
       pdfContainerRef.value.appendChild(svg)
 
+      log(`[imageRenderer] PDF total ${(performance.now() - tPdfStart).toFixed(1)} ms`)
+
       console.warn('IMAGE RENDERER - END3')
+      blockRender.value = false
       uiStore.isApplying = false
       uiStore.isApplyingFrame = false
     } else if (imageStore.fileType === 'image' || imageStore.showPdfAsImage) {
       log('Rendering IMAGE file...')
-      const img = imageStore.getRenderedImage({ t, renderCall: true })
 
-      if (!imageRef.value || !img) {
+      const tImgStart = performance.now()
+
+      const src = imageStore.getRenderedImage({ t, renderCall: true })
+      const dst = imageRef.value
+
+      if (!src || !dst) {
         blockRender.value = false
         return
       }
 
-      if (img instanceof HTMLCanvasElement) {
-        imageRef.value.src = img.toDataURL()
-      } else if (img instanceof HTMLImageElement) {
-        imageRef.value.src = img.src
+      const ctx = dst.getContext('2d')
+
+      // Resize destination canvas if needed
+      if (dst.width !== src.width || dst.height !== src.height) {
+        dst.width = src.width
+        dst.height = src.height
       }
 
-      imageStore.previewUrl = imageRef.value.src
-      // imageRef.value.style.imageRendering = 'pixelated'
+      ctx.clearRect(0, 0, dst.width, dst.height)
+      ctx.drawImage(src, 0, 0)
+
+      log(`[imageRenderer] IMAGE draw ${(performance.now() - tImgStart).toFixed(1)} ms`)
     }
 
-    // Value for blur preview
-    const img = imageStore.getRenderedImage({ t, renderCall: true })
-    if (img instanceof HTMLCanvasElement) {
-      imageStore.blurPreviewUrl = img.toDataURL()
-    } else if (img instanceof HTMLImageElement) {
-      imageStore.blurPreviewUrl = img.src
+    // Value for blur preview - TODO
+    // const img = imageStore.getRenderedImage({ t, renderCall: true })
+    // if (img instanceof HTMLCanvasElement) {
+    //   imageStore.blurPreviewUrl = img.toDataURL()
+    // } else if (img instanceof HTMLImageElement) {
+    //   imageStore.blurPreviewUrl = img.src
+    // }
+
+    const src = imageStore.getRenderedImage({ t, renderCall: true })
+
+    if (src instanceof HTMLCanvasElement) {
+      updateBlurPreview(src)
     }
 
     // Overlay image with drawing (brush) layer
-    const canvas = document.getElementById('brushCanvas')
-    if (!canvas) {
-      blockRender.value = false
-      return
+    const tOverlayStart = performance.now()
+    const overlayCanvas = document.getElementById('brushCanvas')
+
+    if (overlayCanvas) {
+      const octx = overlayCanvas.getContext('2d')
+      octx.clearRect(0, 0, overlayCanvas.width, overlayCanvas.height)
+
+      if (imageStore.overlayImage) {
+        octx.drawImage(imageStore.overlayImage, 0, 0, overlayCanvas.width, overlayCanvas.height)
+      }
     }
 
-    const ctx = canvas.getContext('2d')
-
-    // Clear overlay
-    ctx.clearRect(0, 0, canvas.width, canvas.height)
-
-    // If overlay exists → draw it
-    if (imageStore.overlayImage) {
-      warn('Rendering OVERLAY image...')
-      ctx.drawImage(imageStore.overlayImage, 0, 0, canvas.width, canvas.height)
-    }
-
-    // Reset flag
     imageStore.historyWasChanged = false
-
     blockRender.value = false
+
+    log(`[imageRenderer] Overlay draw ${(performance.now() - tOverlayStart).toFixed(1)} ms`)
+    log(`[imageRenderer] renderCanvas TOTAL ${(performance.now() - tStart).toFixed(1)} ms`)
+  }
+
+  /**
+   * Helper function to update blur preview canvas
+   *
+   * @param {HTMLCanvasElement} srcCanvas
+   */
+  const updateBlurPreview = (srcCanvas) => {
+    const MAX_SIZE = 1024 // kľudne 512 ak chceš ešte rýchlejšie
+
+    const scale = Math.min(MAX_SIZE / srcCanvas.width, MAX_SIZE / srcCanvas.height, 1)
+
+    const w = Math.round(srcCanvas.width * scale)
+    const h = Math.round(srcCanvas.height * scale)
+
+    const blurCanvas = document.createElement('canvas')
+    blurCanvas.width = w
+    blurCanvas.height = h
+
+    const ctx = blurCanvas.getContext('2d')
+    ctx.drawImage(srcCanvas, 0, 0, w, h)
+
+    imageStore.blurPreviewCanvas = blurCanvas
   }
 
   /**

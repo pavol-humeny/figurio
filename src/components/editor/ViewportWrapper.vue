@@ -264,8 +264,12 @@ const cursorStyle = computed(() => {
             boxShadow: backgroundMode === 'normal' ? 'var(--box-shadow-content)' : 'none',
             '--phone-frame-border-radius': phoneFrameBorderRadius + 'px',
           }">
-          <img v-if="imageStore.fileType === 'image' || imageStore.showPdfAsImage" ref="imageRef"
-            class="image-canvas" />
+          <!-- <img v-if="imageStore.fileType === 'image' || imageStore.showPdfAsImage" ref="imageRef"
+            class="image-canvas" /> -->
+
+          <canvas v-if="imageStore.fileType === 'image' || imageStore.showPdfAsImage" ref="imageRef"
+            class="image-canvas"></canvas>
+
           <div v-else-if="imageStore.fileType === 'pdf'" ref="pdfContainerRef" class="pdf-viewer"></div>
 
           <!-- Canvas for artifacts -->
