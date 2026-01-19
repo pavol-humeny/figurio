@@ -58,6 +58,9 @@ export const useWorkspaceStore = defineStore('workspaceStore', {
       this.activeTabIndex = this.tabs.length - 1
 
       this.newTabWasAdded = true
+
+      imageStore.imageNeedToBeRendered = true
+      imageStore.frameNeedToBeRendered = true
     },
 
     /**
@@ -113,6 +116,11 @@ export const useWorkspaceStore = defineStore('workspaceStore', {
       //     viewportEl.style.opacity = 1
       //   }, 50)
       // }
+
+      console.warn('Switching to tab', index)
+      const imageStore = useImageStore()
+      imageStore.imageNeedToBeRendered = true
+      imageStore.frameNeedToBeRendered = true
     },
 
     /**

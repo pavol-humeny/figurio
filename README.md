@@ -62,7 +62,7 @@
 - tab sa nedá posunúť úplne doprava 
 - MG - zoomuje len podklad a nie aj objekty 
 - select - ak sa vyberie mg tak to zostane na tom nástroji a neprepne sa to späť na select 
-- 
+- feature tour - prorobenie krížika 
 
 
 
@@ -71,27 +71,27 @@
 - SKIP - (asi to je v pohode tak ako to je) zoomovanie pomocou tlacitok, ak je obrazok mimo stred tak to zoomuje mimo obrázok 
 - NEPREUKÁZALO SA - pri prepnutí z color na manual select sa nezapne spravny kurzor
 - NEPREUKÁZALO SA - error pri zatvorení viacerých súborov
-- rámik monitoru
 - Vylepšenie rámiku pre prehliadače 
 - Zjednodušiť nápovedy - tipy (kratšie texty)
+- Zjednodušiť toasty
 - Paste by to mohol klásť inde ako na ten istý objekt, aspoň pri kliknutí pravím 
 - Opravit paste blur objektu 
 - nakreslenie svg objektu, prepnutie na brush (vyžaduje rasterizáciu) a následné spätné prepnutie na shape (stále to chcelo rasterizovať)
-- pdf zväčšiť veľkosť povoleného súboru 
 - color bg removal intuitívnejší 
 - klikanie na tool divne sa otvaraju subtools - vymyslieť vylepšenie
 - na videá v tool tipe pridať time line
 - Možno nejako vylepšiť vysvetlenie grayscale
-
+- Statistiky povoliť len pre expert 
 - rámik windows pri použití milimetrov a dosiahnutí maximálnej hodnoty je možné zadať desatinné číslo 
 - brush - ak dochádza k uloženiu snapshotu do histórie tak to vyriesit nejako inak - divne sa to seká 
 - pri posune viacerých objektov, následnom položení a opätovnom presune to nechce ísť a sekne to 
 - undo redo možno nejako zakázať pri aby sa to nedalo kliknúť viac krát do vtedy kým sa neaplikuje operácia 
+- klávesové skratky to nepočíta do statistík
+- export pdf nepočíta do statistík 
 
 
 ## Dlhodobé TODO 
 - eye dropper na safari
-- achievementy
 - Globálne úpravy (rasterizácia)
 - BG removal - ukladanie do undo redo operácií pri výbere 
 - Poskakovanie pri resize ak je to otočené 
@@ -99,10 +99,10 @@
 - Poloha magnify area a blur object voči ostatným objektom (možné riešenie vrstvy)
 - v inpute by to čísla mohlo počítať 
 - možnosť všetko exportovať naraz do zip
-- využitie workerov pre aplikovanie operácie 
 - prevod pdf na raster ak to obsahuje hlúposti 
 
 ## Insane ideas
+- aplikovanie operácie na všetky obrázky 
 - Premenné prostredia (pre farbu, veľkosť)
 - Vrstvy 
 - Možnosť si uložiť aktuálnu prácu 
