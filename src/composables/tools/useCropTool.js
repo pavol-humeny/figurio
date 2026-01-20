@@ -1,5 +1,5 @@
 import { useMath } from '@/composables/common/useMath'
-import { computed, ref, nextTick, watch } from 'vue'
+import { computed, onMounted, ref, watch } from 'vue'
 import { useConfirmModal } from '../modals/useConfirmModal'
 import { useToastModal } from '../modals/useToastModal'
 import { editorConfig } from '@/config/editorConfig'
@@ -1180,6 +1180,23 @@ export function useCropTool(imageStore, viewportStore, editorStore, historyStore
   }
 
   /**
+   * Show crop box on mount
+   */
+  onMounted(() => {
+    showCropBox()
+  })
+
+  /**
+   * Whether to show the crop box overlay
+   */
+  const isVisibleCropBox = computed({
+    get: () => editorStore.toolsConfig.crop.isVisibleCropBox,
+    set: (value) => {
+      editorStore.toolsConfig.crop.isVisibleCropBox = value
+    },
+  })
+
+  /**
    * Show crop box
    */
   const showCropBox = () => {
@@ -1219,6 +1236,7 @@ export function useCropTool(imageStore, viewportStore, editorStore, historyStore
     cropCanBeReset,
     showCropBox,
     hideCropBox,
+    isVisibleCropBox,
     // Auto crop
     useBaseImage,
     fitCrop,

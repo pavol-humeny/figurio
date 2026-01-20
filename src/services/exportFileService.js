@@ -50,7 +50,7 @@ export function exportFileService(imageStore, editorStore, historyStore, viewpor
             'success',
             t('imageStore.toast.successFileExported.title'),
             t('imageStore.toast.successFileExported.message', {
-              fileName: imageStore.newFileName,
+              fileName: imageStore.newFileName + '.' + imageStore.newFileFormat,
             }),
           )
         }
@@ -70,7 +70,7 @@ export function exportFileService(imageStore, editorStore, historyStore, viewpor
         'success',
         t('imageStore.toast.successFileExported.title'),
         t('imageStore.toast.successFileExported.message', {
-          fileName: imageStore.newFileName,
+          fileName: imageStore.newFileName + '.' + imageStore.newFileFormat,
         }),
       )
     }

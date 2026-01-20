@@ -315,7 +315,7 @@
           "tipDisabled": "Náhľad artefaktov nie je dostupný, keď je citlivosť nastavená na 0"
         },
         "hideArtifactsButton":{
-          "text": "Skrýt artefakty",
+          "text": "Skryť artefakty",
           "tip": "Skryje náhľad pixelov podobných pozadiu."
         },
         "resetCropButton": {
@@ -323,8 +323,8 @@
           "tip": "Obnoví oblasť orezania na pôvodný obrázok"
         },
         "hideCropBoxButton":{
-          "text": "Skrýt ořezový rámeček",
-          "tip": "Držte pro skrytí ořezového rámečku a zobrazení celého obrázku (alebo stlačte a držte mezerník)"
+          "text": "Orezový rám",
+          "tip": "Skryje alebo zobrazí orezový rám (alebo stlačte a podržte medzerník)"
         },
         "applyCropButton": {
           "text": "Použiť orezanie"

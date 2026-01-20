@@ -86,8 +86,8 @@ const visibleSideDirs = computed(() => {
     }" @mousedown="startPan" :class="{ 'crop-box-opacity': !editorStore.toolsConfig.crop.isVisibleCropBox }">
 
       <!-- Corner handles -->
-      <div v-for="dir in ['top-left', 'top-right', 'bottom-left', 'bottom-right']" :key="dir" class="resizer" :class="dir"
-        @mousedown="(event) => startResize(event, dir.replace('-', ''))" :style="resizerStyle"></div>
+      <div v-for="dir in ['top-left', 'top-right', 'bottom-left', 'bottom-right']" :key="dir" class="resizer"
+        :class="dir" @mousedown="(event) => startResize(event, dir.replace('-', ''))" :style="resizerStyle"></div>
 
       <!-- Side handles -->
       <div v-for="dir in visibleSideDirs" :key="dir" class="resizer" :class="dir"
@@ -185,6 +185,6 @@ const visibleSideDirs = computed(() => {
 }
 
 .crop-box-opacity {
-  opacity: 0.2;
+  opacity: 0;
 }
 </style>

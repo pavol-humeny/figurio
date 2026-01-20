@@ -1,5 +1,10 @@
 # Figurio
 
+## TODO - text 
+- do prezentácie dať nástroje a príklad použitia nástrojov 
+- do textu doplniť citovanie použitých nástrojov - vue.js
+
+
 # Chyby
 - noise detekcia ako samostatný nástroj, možnosť ho znovu zapnúť
 - mám obrázok, dám unsupported obrázok a zavrie to 

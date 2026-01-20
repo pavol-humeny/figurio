@@ -323,8 +323,8 @@
           "tip": "Reset the crop area to the original image"
         },
         "hideCropBoxButton":{
-          "text": "Hide crop box",
-          "tip": "Hold to hide crop box and see full image (or press and hold Spacebar)"
+          "text": "Crop box",
+          "tip": "Hide or show crop box to see full image (or press and hold Spacebar)"
         },
         "applyCropButton": {
           "text": "Apply crop"

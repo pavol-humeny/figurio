@@ -323,8 +323,8 @@
           "tip": "Obnoví oblast ořezání na původní obrázek"
         },
         "hideCropBoxButton":{
-          "text": "Skrýt ořezový rámeček",
-          "tip": "Podržte pro skrytí ořezového rámečku a zobrazení celého obrázku (nebo stiskněte a podržte mezerník)"
+          "text": "Ořezový rámeček",
+          "tip": "Skryje alebo zobrazí ořezový rámeček (nebo stiskněte a podržte mezerník)"
         },
         "applyCropButton": {
           "text": "Použít ořezání"

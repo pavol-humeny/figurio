@@ -38,8 +38,7 @@ const {
   applyCrop,
   resetCrop,
   cropCanBeReset,
-  showCropBox,
-  hideCropBox,
+  isVisibleCropBox,
   // Auto crop
   useBaseImage,
   fitCrop,
@@ -105,8 +104,8 @@ const {
                   <label for="width-input">
                     {{ $t('tools.crop.settings.general.cropDimensions.width') }}
                   </label>
-                  <NumberInput ref="widthInputRef" v-model="tmpCropWidth" :min="editorConfig.minCropSize" :max="maxCropWidth"
-                    @update="(val) => updateDimension('width', val)" unit="px" />
+                  <NumberInput ref="widthInputRef" v-model="tmpCropWidth" :min="editorConfig.minCropSize"
+                    :max="maxCropWidth" @update="(val) => updateDimension('width', val)" unit="px" />
                 </div>
 
                 <div class="content-between-inputs-icon-wrapper">
@@ -120,8 +119,8 @@ const {
                   <label for="height-input">
                     {{ $t('tools.crop.settings.general.cropDimensions.height') }}
                   </label>
-                  <NumberInput ref="heightInputRef" v-model="tmpCropHeight" :min="editorConfig.minCropSize" :max="maxCropHeight"
-                    @update="(val) => updateDimension('height', val)" unit="px" />
+                  <NumberInput ref="heightInputRef" v-model="tmpCropHeight" :min="editorConfig.minCropSize"
+                    :max="maxCropHeight" @update="(val) => updateDimension('height', val)" unit="px" />
                 </div>
               </div>
             </div>
@@ -256,10 +255,13 @@ const {
                 <p style="text-align: start">
                   {{ $t('tools.crop.settings.general.hideCropBoxButton.text') }}
                 </p>
-                <ToggleHoldButton :scale="0.6" :style="{ transform: 'translateX(16px)' }"
+                <!-- <ToggleHoldButton :scale="0.6" :style="{ transform: 'translateX(16px)' }"
                   :tip="$t('tools.crop.settings.general.hideCropBoxButton.tip')" position="top-left"
                   :defaultValue=!editorStore.toolsConfig.crop.isVisibleCropBox :startFunction="hideCropBox"
-                  :endFunction="showCropBox" />
+                  :endFunction="showCropBox" /> -->
+
+                <ToggleButton v-model="isVisibleCropBox" :scale="0.6" :style="{ transform: 'translateX(16px)' }"
+                  :tip="$t('tools.crop.settings.general.hideCropBoxButton.tip')" position="top-left" />
               </div>
             </div>
           </div>

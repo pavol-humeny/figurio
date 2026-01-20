@@ -12,7 +12,8 @@
           "Do not show toast about successful file name change - not necessary",
           "Improve performance when applying operations",
           "Better side panel toggle button visibility",
-          "Improve tab switching experience"
+          "Improve tab switching experience",
+          "Improve crop box hiding behavior"
         ]
       },
       "newFeatures": {
