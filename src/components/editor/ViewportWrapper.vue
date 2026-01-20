@@ -330,7 +330,7 @@ const cursorStyle = computed(() => {
       @mouseleave="uiStore.cursorOverViewportSettings = false">
       <ItemTip advance :text="t('tools.viewportBackgroundMode.tip.text')"
         :title="$t('tools.viewportBackgroundMode.tip.title')" position="bottom-left"
-        class="contrast-mode-button button-clickable" @click="switchBackgroundMode()">
+        class="contrast-mode-button button-clickable contrast-mode-button-hover" @click="switchBackgroundMode()">
         <!-- Change icon based on mode -->
         <BaseIcon :name="backgroundMode === 'normal'
           ? 'IconNormalMode'

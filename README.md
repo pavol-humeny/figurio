@@ -5,6 +5,10 @@
 - mám obrázok, dám unsupported obrázok a zavrie to 
 - nakreslím niečo, pridám shape, a dám rasterize tak to zmizne - rastererize zožuje brush 
 - varovanie ked to osekne pri resize na minimum - alebo v druhom to obmedziť tak aby sa nedalo zapísať viac
+- pri kreslení rámiku telefónu a následnom kreslení tvarov pri zobrazení vidno tvary ale po exporte sa prekryjú hlavičkou rámiku 
+- Pri reloade by si to mohlo pamätať farby 
+- mohlo by si to pamätať viac farieb
+- pri vytvorení textu a následnom deselecte by si to mohlo pamätať posledný nastavený text 
 
 ## TODO od J (userTesting2 - 12.1.2026)
 - FIXED - Zoom pomocou numerickej klávesnice
