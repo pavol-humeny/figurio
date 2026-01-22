@@ -2,87 +2,119 @@ import { ref, watch } from 'vue'
 
 /**
  * Logic for handling time input in hours and minutes
- * @param {Object} props - Component props
- * @param {number} props.modelValue - Total time in minutes
- * @param {(event: string, value: number) => void} emit - Emit function for model updates
- * @returns {{
- *   hours: import('vue').Ref<number>,
- *   minutes: import('vue').Ref<number>,
- *   onHoursInput: (e: Event) => void,
- *   onMinutesInput: (e: Event) => void,
- *   updateTime: () => void
- * }}
  */
 export function useTimeInput(props, emit) {
   /**
-   * Local hour and minute inputs
+   * Internal input values (string – free typing)
    */
-  const hours = ref(Math.floor(props.modelValue / 60))
-  const minutes = ref(props.modelValue % 60)
+  const hoursInput = ref('')
+  const minutesInput = ref('')
 
   /**
-   * Watch for external changes to modelValue and update internal state
+   * Sync from modelValue → inputs
+   */
+  const syncFromModel = (totalMinutes) => {
+    const h = Math.floor(totalMinutes / 60)
+    const m = totalMinutes % 60
+
+    hoursInput.value = h.toString().padStart(2, '0')
+    minutesInput.value = m.toString().padStart(2, '0')
+  }
+
+  // Initial sync
+  syncFromModel(props.modelValue)
+
+  /**
+   * Watch external modelValue
    */
   watch(
     () => props.modelValue,
     (val) => {
-      hours.value = Math.floor(val / 60)
-      minutes.value = val % 60
+      syncFromModel(val)
     },
   )
 
   /**
-   * Displayed as 2-digit string, but stored as number
-   * @param {Event} event - Input event
+   * Free typing – NO validation
    */
-  const onHoursInput = (event) => {
-    const val = event.target.value
-    const parsed = parseInt(val, 10)
+  const onHoursInput = (e) => {
+    hoursInput.value = e.target.value
+  }
 
-    if (isNaN(parsed) || parsed < 0 || parsed > 23) {
-      hours.value = 10 // Default to 10 hours if invalid
-    } else {
-      hours.value = parsed
-    }
-
-    // Always update visible value to match internal state
-    event.target.value = hours.value.toString().padStart(2, '0')
+  const onMinutesInput = (e) => {
+    minutesInput.value = e.target.value
   }
 
   /**
-   * Displayed as 2-digit string, but stored as number
-   * @param {Event} event - Input event
-   */
-  const onMinutesInput = (event) => {
-    const val = event.target.value
-    const parsed = parseInt(val, 10)
-
-    if (isNaN(parsed) || parsed < 0 || parsed > 59) {
-      minutes.value = 10 // Default to 10 minutes if invalid
-    } else {
-      minutes.value = parsed
-    }
-
-    // Always update visible value to match internal state
-    event.target.value = minutes.value.toString().padStart(2, '0')
-  }
-
-  /**
-   * Emit updated total minutes
+   * Validate + clamp + emit (blur / enter)
    */
   const updateTime = () => {
-    const clampedHours = Math.max(0, hours.value)
-    const clampedMinutes = Math.min(59, Math.max(0, minutes.value))
-    const total = clampedHours * 60 + clampedMinutes
+    let h = parseInt(hoursInput.value, 10)
+    let m = parseInt(minutesInput.value, 10)
+
+    if (Number.isNaN(h)) h = 0
+    if (Number.isNaN(m)) m = 0
+
+    // Clamp
+    h = Math.min(23, Math.max(0, h))
+    m = Math.min(59, Math.max(0, m))
+
+    const total = h * 60 + m
+
+    // Sync back formatted values
+    hoursInput.value = h.toString().padStart(2, '0')
+    minutesInput.value = m.toString().padStart(2, '0')
+
     emit('update:modelValue', total)
     emit('update', total)
+
+    if (document.activeElement instanceof HTMLElement) {
+      document.activeElement.blur()
+    }
+  }
+
+  /**
+   * Handle mouse wheel on hours/minutes input
+   *
+   * @param {'hours' | 'minutes'} type
+   * @param {WheelEvent} event
+   */
+  const onWheel = (type, event) => {
+    if (props.disabled) return
+
+    event.preventDefault()
+
+    const delta = event.deltaY < 0 ? 1 : -1
+
+    if (type === 'hours') {
+      let h = parseInt(hoursInput.value, 10)
+      if (Number.isNaN(h)) h = 0
+
+      h += delta
+      h = Math.min(23, Math.max(0, h))
+
+      hoursInput.value = h.toString()
+    }
+
+    if (type === 'minutes') {
+      let m = parseInt(minutesInput.value, 10)
+      if (Number.isNaN(m)) m = 0
+
+      m += delta
+      m = Math.min(59, Math.max(0, m))
+
+      minutesInput.value = m.toString()
+    }
+
+    updateTime()
   }
 
   return {
-    hours,
-    minutes,
+    hours: hoursInput,
+    minutes: minutesInput,
     onHoursInput,
     onMinutesInput,
     updateTime,
+    onWheel,
   }
 }

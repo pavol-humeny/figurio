@@ -28,7 +28,7 @@
 - crop 
     - FIXED - hide crop - pri pustení mimo to neprepne 
     - orezanie na rôznych citlivostiach - mohlo by to orezavat hned 
-    - manualna úprava - mohol by to byť input 
+    - FIXED - manualna úprava - mohol by to byť input 
     - FIXED - aplikovanie orezania - centrovať 
 - bg removal 
     - neintuitívne klávesové skratky 

@@ -36,7 +36,8 @@
           "Change icon of physical zoom mode to better represent its functionality",
           "Center image after cropping",
           "Support larger PDF files",
-          "Manual crop adjustments can be set with keyboard"
+          "Manual crop adjustments can be set with keyboard",
+          "Time in phone frames can be set more intuitively"
         ]
       },
       "newFeatures": {

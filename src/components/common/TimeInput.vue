@@ -46,19 +46,20 @@ const {
   onHoursInput,
   onMinutesInput,
   updateTime,
+  onWheel,
 } = useTimeInput(props, emit)
 </script>
 
 <template>
   <ItemTip :text="props.tip" :position="props.position">
     <div class="input-wrapper time">
-      <input type="text" class="value-input" :disabled="props.disabled" :value="hours.toString().padStart(2, '0')"
-        @input="onHoursInput" @blur="updateTime" @keydown.enter="updateTime" />
+      <input type="text" class="value-input" :disabled="props.disabled" :value="hours" @input="onHoursInput"
+        @wheel="onWheel('hours', $event)" @blur="updateTime" @keydown.enter.prevent="updateTime" />
 
       <span class="colon">:</span>
 
-      <input type="text" class="value-input" :disabled="props.disabled" :value="minutes.toString().padStart(2, '0')"
-        @input="onMinutesInput" @blur="updateTime" @keydown.enter="updateTime" />
+      <input type="text" class="value-input" :disabled="props.disabled" :value="minutes" @input="onMinutesInput"
+        @wheel="onWheel('minutes', $event)" @blur="updateTime" @keydown.enter.prevent="updateTime" />
     </div>
   </ItemTip>
 </template>

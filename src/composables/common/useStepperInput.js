@@ -45,6 +45,10 @@ export function useStepperInput(props, emit) {
   const emitChange = () => {
     emit('update:modelValue', inputValue.value)
     emit('update', inputValue.value)
+
+    if (document.activeElement instanceof HTMLElement) {
+      document.activeElement.blur()
+    }
   }
 
   /**
