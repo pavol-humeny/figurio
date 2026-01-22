@@ -97,6 +97,13 @@
 - undo redo možno nejako zakázať pri aby sa to nedalo kliknúť viac krát do vtedy kým sa neaplikuje operácia 
 - klávesové skratky to nepočíta do statistík
 - export pdf nepočíta do statistík 
+- klávesová skratka CTRL+C pre copy to clipboard
+- toasty sa niekedy nezačnú odpočítavať
+- pri ukladaní mena obrázku a kliknutí enter v crop tool sa zobrazí hláška že crop box je rovnaký (je tam pokus o orezanie)
+- pri rámiku telefónu je nejaký divný footer (prázdne miesto), keď je to jpg obrázok (neviem či aj pri iných)
+- upraviť zapisovanie času pri hlavičke telefónu, teraz sa to nedá zmazať a hneď to nuluje
+- rovnaký toast sa tam musí pridať len raz 
+- premyslieť kedy sa toasty nemusia zobrazovať 
 
 
 ## Dlhodobé TODO 

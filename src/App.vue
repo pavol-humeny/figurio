@@ -46,7 +46,11 @@ const userUuid = uiStore.userUuid
  * @param {WheelEvent} event
  */
 const check = (event) => {
-  if (event.ctrlKey) {
+  const wrapper = document.querySelector('.viewport-wrapper')
+  if (!wrapper) return
+
+  // Block only if mouse is inside viewport wrapper
+  if (event.ctrlKey && wrapper.contains(event.target)) {
     event.preventDefault()
   }
 }

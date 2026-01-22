@@ -46,10 +46,15 @@ export function useLoadingSpinner(uiStore) {
 
     /**
      * Prevent browser zoom with CTRL + mouse wheel
+     *
+     * @param {WheelEvent} e
      */
     const blockCtrlWheel = (e) => {
-      // Prevent zooming when CTRL is pressed
-      if (e.ctrlKey) {
+      const wrapper = document.querySelector('.viewport-wrapper')
+      if (!wrapper) return
+
+      // Block only if mouse is inside viewport wrapper
+      if (e.ctrlKey && wrapper.contains(e.target)) {
         e.preventDefault()
       }
     }

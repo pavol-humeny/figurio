@@ -12,15 +12,11 @@ import DefaultButton from '../common/DefaultButton.vue'
 import ToggleButton from '../common/ToggleButton.vue'
 import StepperInput from '../common/StepperInput.vue'
 import ExplainItem from '../common/ExplainItem.vue'
-import ToggleHoldButton from '../common/ToggleHoldButton.vue'
 import LevelSelector from '../common/LevelSelector.vue'
 import { useUiStore } from '@/stores/uiStore'
 import { editorConfig } from '@/config/editorConfig'
 
 const { t } = useI18n()
-
-// const imageStore = useImageStore()
-const editorStore = useEditorStore()
 
 /**
  * Logic of the crop tool
