@@ -27,7 +27,7 @@ const {
     position="bottom-right">
     <div class="file-name-display-wrapper" :class="{ 'disabled': disabled }">
       <input ref="inputRef" name="fileName" v-model="fileNameInput" @blur="saveNewFileName"
-        @keydown.enter="saveNewFileName" @click="startEditing" class="file-name-display-input" type="text" />
+        @keydown.enter.stop="saveNewFileName" @click="startEditing" class="file-name-display-input" type="text" />
       <BaseIcon :name="editEnabled ? 'IconTick' : 'IconEditPencil'" :size="23" :color="'var(--primary-c)'"
         class="button-clickable" @click="editEnabled ? saveNewFileName() : startEditing()" />
     </div>
