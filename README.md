@@ -195,6 +195,8 @@ Event type:
   - numberOfOpenedFiles
 - Vloženie viacerých súborov súčasne
   - maxNumberOfFilesToUploadSimultaneously
+- Zobrazenie štatistík
+    - statistics - e
 
 ## Browser specifics items
 - Slider 

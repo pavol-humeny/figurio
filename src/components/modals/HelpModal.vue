@@ -507,7 +507,7 @@ watch(atBottom, (newVal) => {
             </div>
 
             <!-- Statistics -->
-            <div class="help-content">
+            <div class="help-content" v-if="userModeStore.hasUserAccessToFeature('statistics')">
               <div class="subtitle-wrapper">
                 <p class="help-content-title" style="margin-bottom: 0;">
                   {{ $t('help.helpContent.statistics.title') }}
