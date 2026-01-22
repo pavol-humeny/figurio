@@ -32,7 +32,8 @@
           "Improve performance when applying operations",
           "Better side panel toggle button visibility",
           "Improve tab switching experience",
-          "Improve crop box hiding behavior"
+          "Improve crop box hiding behavior",
+          "Same toast are shown only once"
         ]
       },
       "newFeatures": {

@@ -39,8 +39,25 @@ export function useToastModal() {
    * @param {string} message - The message content of the toast
    */
   const showToastModal = (type, title, message) => {
-    const id = nextId++
     const duration = uiConfig.toastAutoRemoveTime
+
+    // 🔍 Try to find existing toast with the same title
+    const existingToast = toasts.value.find((t) => t.title === title)
+
+    if (existingToast) {
+      // Reset timer instead of creating a new toast
+      existingToast.type = type
+      existingToast.message = message
+      existingToast.duration = duration
+      existingToast.remaining = duration
+      existingToast.progress = 100
+      existingToast.startTime = performance.now()
+
+      return
+    }
+
+    // Create new toast
+    const id = nextId++
 
     const toast = reactive({
       id,
@@ -143,6 +160,41 @@ export function useToastModal() {
       bottom: pos.bottom + 'px',
     }
   }
+
+  /**
+   * Timestamp when the document was hidden
+   */
+  let hiddenAt = null
+
+  /**
+   * Handle visibility change of the document
+   */
+  const handleVisibilityChange = () => {
+    if (document.hidden) {
+      hiddenAt = performance.now()
+    } else if (hiddenAt !== null) {
+      const now = performance.now()
+      const delta = now - hiddenAt
+
+      // subtract elapsed time from all toasts
+      toasts.value.forEach((toast) => {
+        toast.remaining -= delta
+        toast.progress = Math.max(0, (toast.remaining / toast.duration) * 100)
+
+        if (toast.remaining <= 0) {
+          removeToastModal(toast.id)
+        }
+      })
+
+      hiddenAt = null
+    }
+  }
+
+  /**
+   * Listen to visibility change and window focus events
+   */
+  document.addEventListener('visibilitychange', handleVisibilityChange)
+  window.addEventListener('focus', handleVisibilityChange)
 
   return {
     toasts,
