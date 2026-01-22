@@ -95,7 +95,7 @@ const { closeSettingsPanel } = useSettingsPanel(useUiStore())
 const { closePrivacyAndDataModal } = usePrivacyAndDataModal(t)
 const { closeFeatureTourModal } = useFeatureTourModal()
 const { closeCalibrationModal } = useCalibrationModal(useViewportStore())
-const { closeExportToolSettings, exportFileFunction, openExportToolSettings } = useExportToolSettings(useImageStore(), useEditorStore(), useHistoryStore(), useViewportStore(), t)
+const { closeExportToolSettings, exportFileFunction, openExportToolSettings, copyImageToClipboardFunction } = useExportToolSettings(useImageStore(), useEditorStore(), useHistoryStore(), useViewportStore(), t)
 const { closeImportModal } = useImportModal()
 const { closeReleaseModal } = useReleaseModal()
 
@@ -149,6 +149,7 @@ useKeyboardShortcuts({
   closeCalibrationModal,
   closeExportToolSettings,
   exportFileFunction,
+  copyImageToClipboardFunction,
   closeImportModal,
   closeReleaseModal,
 }, useUiStore(), useEditorStore());

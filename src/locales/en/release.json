@@ -14,7 +14,7 @@
       },
       "newFeatures": {
         "items": [
-          ""
+          "Add shortcut CTRL+C to copy image to clipboard"
         ]
       },
       "bugFixes": {

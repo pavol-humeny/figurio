@@ -70,6 +70,11 @@ export const keyboardShortcuts = [
     description: 'Save file',
   },
   {
+    keys: ['ctrl', 'c'],
+    action: 'copyImageToClipboardFunction',
+    description: 'Copy image to clipboard',
+  },
+  {
     keys: ['ctrl', 'k'],
     action: 'closeFile',
     description: 'Close file',
