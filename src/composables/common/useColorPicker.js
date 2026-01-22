@@ -1,11 +1,7 @@
 import { ref, nextTick, onBeforeUnmount, watch, computed } from 'vue'
 import { useEyeDropper } from '@vueuse/core'
+import { editorConfig } from '@/config/editorConfig'
 const { isSupported, open } = useEyeDropper()
-
-/**
- * Array for recent colors (max 7)
- */
-const recentColors = ref(Array(7).fill(null))
 
 /**
  * Composable for color picker functionality
@@ -13,12 +9,23 @@ const recentColors = ref(Array(7).fill(null))
  * @param {Function} emit - Emit function to send events to parent
  * @returns {Object} - Reactive state and methods for color picker
  */
-export function useColorPicker(props, emit) {
+export function useColorPicker(editorStore, props, emit) {
   /**
    * Reactive color value bound to the input
    */
   const colorValue = ref(props.modelValue)
 
+  /**
+   * Recent colors padded with nulls for UI
+   */
+  const recentColors = computed(() => {
+    const colors = editorStore.recentColors || []
+
+    return [...colors, ...Array(editorConfig.minRecentColors * 2 - colors.length).fill(null)].slice(
+      0,
+      editorConfig.minRecentColors * 2,
+    )
+  })
   /**
    * Watch for external modelValue changes and update local value
    */
@@ -470,22 +477,6 @@ export function useColorPicker(props, emit) {
   }
 
   /**
-   * Add a color to recent colors list
-   * @param {string} color - Color to add
-   */
-  const addRecentColor = (color) => {
-    // Remove if already exists
-    const idx = recentColors.value.indexOf(color)
-    if (idx !== -1) recentColors.value.splice(idx, 1)
-
-    // Add color to start of array
-    recentColors.value.unshift(color)
-
-    // Limit to max 7 colors
-    if (recentColors.value.length > 7) recentColors.value.pop()
-  }
-
-  /**
    * Select a recent color
    * @param {string} color - Color to select
    */
@@ -512,7 +503,7 @@ export function useColorPicker(props, emit) {
    * Commit changes and emit event to parent
    */
   const commitChanges = () => {
-    addRecentColor(colorValue.value)
+    editorStore.addRecentColor(colorValue.value)
 
     // Also set value to v model
     emit('update:modelValue', colorValue.value)
@@ -536,12 +527,23 @@ export function useColorPicker(props, emit) {
   // Cleanup listener on unmount
   onBeforeUnmount(() => document.removeEventListener('mousedown', onClickOutside))
 
+  /**
+   * Use Eye Dropper to pick color from screen
+   */
   const pickColor = async () => {
     const result = await open()
     if (result?.sRGBHex) {
       hexValue.value = result.sRGBHex
       applyHexColor(result.sRGBHex)
     }
+  }
+
+  /**
+   * Remove recent color
+   * @param {string} color
+   */
+  const removeRecentColor = (color) => {
+    editorStore.removeRecentColor(color)
   }
 
   return {
@@ -570,5 +572,6 @@ export function useColorPicker(props, emit) {
     inputRef,
     isSupported,
     pickColor,
+    removeRecentColor,
   }
 }

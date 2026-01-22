@@ -17,6 +17,23 @@ const getBoolean = (key, fallback = true) => {
 }
 
 /**
+ * Retrieves an array from localStorage.
+ * Returns the fallback if parsing fails or the key is not set.
+ *
+ * @param {string} key - The localStorage key to read from.
+ * @param {Array} [fallback=[]] - The default value if the key is not set or parsing fails.
+ * @returns {Array} The parsed array value.
+ */
+const getArray = (key, fallback = []) => {
+  try {
+    const value = localStorage.getItem(key)
+    return value ? JSON.parse(value) : fallback
+  } catch {
+    return fallback
+  }
+}
+
+/**
  * State and actions for managing editor tool selection, subtools, and active tabs
  */
 export const useEditorStore = defineStore('editorStore', {
@@ -128,6 +145,8 @@ export const useEditorStore = defineStore('editorStore', {
     /** Whether any modal is open */
     isModalOpenFlag: false,
 
+    recentColors: getArray(`${globalConfig.LOCAL_STORAGE_PREFIX}recentColors`, []),
+
     /**
      * Random events state
      * UPDATE new random event
@@ -210,6 +229,46 @@ export const useEditorStore = defineStore('editorStore', {
         this.randomEvents[eventKey] = false
         localStorage.setItem(`${globalConfig.LOCAL_STORAGE_PREFIX}randomEvent_${eventKey}`, 'false')
       }
+    },
+
+    /**
+     * Add color to recent colors and persist to localStorage
+     * @param {string} color
+     */
+    addRecentColor(color) {
+      if (!color) return
+
+      // Remove duplicates
+      this.recentColors = this.recentColors.filter((c) => c !== color)
+
+      // Add to front
+      this.recentColors.unshift(color)
+
+      // Limit length
+      if (this.recentColors.length > editorConfig.maxRecentColors) {
+        this.recentColors.length = editorConfig.maxRecentColors
+      }
+
+      // Persist (SAME STYLE as keyShortcutsEnabled)
+      localStorage.setItem(
+        `${globalConfig.LOCAL_STORAGE_PREFIX}recentColors`,
+        JSON.stringify(this.recentColors),
+      )
+    },
+
+    /**
+     * Remove color from recent colors and persist to localStorage
+     * @param {string} color
+     */
+    removeRecentColor(color) {
+      if (!color) return
+
+      this.recentColors = this.recentColors.filter((c) => c !== color)
+
+      localStorage.setItem(
+        `${globalConfig.LOCAL_STORAGE_PREFIX}recentColors`,
+        JSON.stringify(this.recentColors),
+      )
     },
   },
 })

@@ -95,4 +95,7 @@ export const editorConfig = {
   holdButtonInterval: 50, // ms between each call when holding
 
   applyingLoadingShowDelay: 300, // ms delay before showing applying loading spinner
+
+  maxRecentColors: 14, // Maximum number of recent colors to store
+  minRecentColors: 7, // Minimum number of recent colors to store
 }

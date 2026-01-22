@@ -1,18 +1,13 @@
 # Figurio
 
 ## TODO - text 
-- do prezentácie dať nástroje a príklad použitia nástrojov 
 - do textu doplniť citovanie použitých nástrojov - vue.js
 
 
 # Chyby
-- noise detekcia ako samostatný nástroj, možnosť ho znovu zapnúť
-- mám obrázok, dám unsupported obrázok a zavrie to 
 - nakreslím niečo, pridám shape, a dám rasterize tak to zmizne - rastererize zožuje brush 
 - varovanie ked to osekne pri resize na minimum - alebo v druhom to obmedziť tak aby sa nedalo zapísať viac
 - pri kreslení rámiku telefónu a následnom kreslení tvarov pri zobrazení vidno tvary ale po exporte sa prekryjú hlavičkou rámiku 
-- Pri reloade by si to mohlo pamätať farby 
-- mohlo by si to pamätať viac farieb
 - pri vytvorení textu a následnom deselecte by si to mohlo pamätať posledný nastavený text 
 
 ## TODO od J (userTesting2 - 12.1.2026)
@@ -96,7 +91,6 @@
 - klávesové skratky to nepočíta do statistík
 - export pdf nepočíta do statistík 
 - pri rámiku telefónu je nejaký divný footer (prázdne miesto), keď je to jpg obrázok (neviem či aj pri iných)
-- rovnaký toast sa tam musí pridať len raz 
 - premyslieť kedy sa toasty nemusia zobrazovať 
 
 

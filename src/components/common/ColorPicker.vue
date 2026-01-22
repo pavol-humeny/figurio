@@ -1,4 +1,5 @@
 <script setup>
+import { useEditorStore } from '@/stores/editorStore'
 import BaseIcon from '../icons/BaseIcon.vue'
 import ItemTip from './ItemTip.vue'
 import { useColorPicker } from '@/composables/common/useColorPicker'
@@ -66,7 +67,8 @@ const {
   inputRef,
   isSupported,
   pickColor,
-} = useColorPicker(props, emit)
+  removeRecentColor,
+} = useColorPicker(useEditorStore(), props, emit)
 
 /**
  * Expose setValue method to parent components
@@ -119,11 +121,12 @@ defineExpose({ setValue })
 
         <!-- Recent colors -->
         <div class="recent-colors">
-          <div v-for="(c, i) in recentColors" :key="i" class="recent-color" :style="{
-            background: c || '#ffffff',
-            opacity: c ? 1 : 0.3,
-            cursor: c ? 'pointer' : 'default'
-          }" @click="c && selectRecentColor(c)">
+          <div v-for="(c, i) in recentColors" :key="i" class="recent-color" :class="{ empty: !c }"
+            :style="{ background: c || '#ffffff' }" @click="c && selectRecentColor(c)">
+            <!-- Delete icon (hover only, only if color exists) -->
+            <div v-if="c" class="recent-color-remove" @click.stop="removeRecentColor(c)">
+              ✕
+            </div>
           </div>
         </div>
       </div>
@@ -245,17 +248,43 @@ defineExpose({ setValue })
 }
 
 .recent-colors {
-  display: flex;
-  justify-content: space-between;
-  margin-top: 8px;
+  display: grid;
+  grid-template-rows: repeat(2, 24px);
+  grid-auto-flow: row;
+  grid-auto-columns: 24px;
+  grid-template-columns: repeat(auto-fill, 24px);
   gap: 5px;
 }
 
 .recent-color {
+  position: relative;
   width: 24px;
   height: 24px;
   border-radius: 50%;
   border: solid 1px var(--text-c);
   cursor: pointer;
+}
+
+/* Remove icon */
+.recent-color-remove {
+  position: absolute;
+  top: -18px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  font-size: 12px;
+  font-weight: bold;
+  color: var(--text-c);
+
+  cursor: pointer;
+  opacity: 0;
+}
+
+/* Show remove icon on hover */
+.recent-color:hover .recent-color-remove {
+  opacity: 1;
 }
 </style>
