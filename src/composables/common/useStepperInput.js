@@ -17,7 +17,6 @@ import { ref, watch } from 'vue'
  *   increase: () => void,
  *   decrease: () => void,
  *   emitChange: () => void,
- *   handleReset: () => void,
  *   setValue: (val: number) => void,
  *   disableIncrease: () => boolean,
  *   disableDecrease: () => boolean,
@@ -69,12 +68,28 @@ export function useStepperInput(props, emit) {
   }
 
   /**
-   * Calls the onReset prop function if defined
+   * Handle typing in input
    */
-  const handleReset = () => {
-    if (typeof props.onReset === 'function') {
-      props.onReset()
+  const onInput = (e) => {
+    inputValue.value = e.target.value
+  }
+
+  /**
+   * Confirm value on blur / enter
+   */
+  const onBlur = () => {
+    let value = Number(inputValue.value)
+
+    if (Number.isNaN(value)) {
+      value = props.min
     }
+
+    // Clamp
+    if (value < props.min) value = props.min
+    if (value > props.max) value = props.max
+
+    inputValue.value = value // Number
+    emitChange()
   }
 
   /**
@@ -124,10 +139,11 @@ export function useStepperInput(props, emit) {
     increase,
     decrease,
     emitChange,
-    handleReset,
     setValue,
     disableIncrease,
     disableDecrease,
     changeValue,
+    onInput,
+    onBlur,
   }
 }

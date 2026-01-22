@@ -12,7 +12,6 @@ import { useHoldButton } from '@/composables/common/useHoldButton'
  * @property {number} [step=1] - Step amount for increasing/decreasing
  * @property {boolean} [disabled=false] - Whether the input is disabled
  * @property {string} [tip=''] - Tooltip text
- * @property {Function|null} [onReset=null] - Optional reset handler on double-click
  */
 
 /** @type {StepperInputProps} */
@@ -41,14 +40,6 @@ const props = defineProps({
     type: String,
     default: '',
   },
-  onReset: {
-    type: Function,
-    default: null,
-  },
-  type: {
-    type: String,
-    default: 'inline', // inline or block
-  },
 })
 
 /**
@@ -64,11 +55,12 @@ const {
   inputValue,
   increase,
   decrease,
-  handleReset,
   setValue,
   disableIncrease,
   disableDecrease,
-  changeValue
+  changeValue,
+  onInput,
+  onBlur,
 } = useStepperInput(props, emit)
 
 /**
@@ -88,28 +80,15 @@ defineExpose({ setValue })
 
 <template>
   <ItemTip :text="tip" position="bottom">
-    <div v-if="type === 'inline'" class="stepper-inline">
+    <div class="stepper-inline">
       <BaseIcon name="IconMinus" :size="16" @mousedown="startHold(decrease)" @mouseup="stopHold" @mouseleave="stopHold"
         :disabled="disableDecrease()" class="increase-decrease-icon button-clickable" />
-      <span class="value-inline" @dblclick="handleReset" @wheel="changeValue">{{ inputValue }}</span>
+        
+      <input class="value-input" type="number" :value="inputValue" :min="min" :max="max" :step="step"
+        :disabled="disabled" @input="onInput" @blur="onBlur" @keydown.enter.prevent="onBlur" @wheel="changeValue" />
+
       <BaseIcon name="IconPlus" :size="16" @mousedown="startHold(increase)" @mouseup="stopHold" @mouseleave="stopHold"
         :disabled="disableIncrease()" class="increase-decrease-icon button-clickable" />
-    </div>
-    <div v-if="type === 'vertical'" class="stepper-vertical">
-      <BaseIcon name="IconMinus" :size="16" @mousedown="startHold(decrease)" @mouseup="stopHold" @mouseleave="stopHold"
-        :disabled="disableDecrease()" class="increase-decrease-icon button-clickable" />
-      <span class="value-vertical" @dblclick="handleReset" @wheel="changeValue">{{ inputValue }}</span>
-      <BaseIcon name="IconPlus" :size="16" @mousedown="startHold(increase)" @mouseup="stopHold" @mouseleave="stopHold"
-        :disabled="disableIncrease()" class="increase-decrease-icon button-clickable" />
-    </div>
-    <div v-else-if="type === 'block'" class="stepper-block">
-      <span class="value-block" @dblclick="handleReset" @wheel="changeValue">{{ inputValue }}</span>
-      <div class="buttons-wrapper-block">
-        <BaseIcon name="IconMinus" :size="16" @mousedown="startHold(decrease)" @mouseup="stopHold"
-          @mouseleave="stopHold" :disabled="disableDecrease()" class="increase-decrease-icon button-clickable" />
-        <BaseIcon name="IconPlus" :size="16" @mousedown="startHold(increase)" @mouseup="stopHold" @mouseleave="stopHold"
-          :disabled="disableIncrease()" class="increase-decrease-icon button-clickable" />
-      </div>
     </div>
   </ItemTip>
 </template>
@@ -122,19 +101,7 @@ defineExpose({ setValue })
   border-radius: 10px;
   padding: var(--input-top-padding) var(--input-top-padding);
   user-select: none;
-  gap: 10px;
-  font-size: var(--input-text-size);
-}
-
-.stepper-vertical {
-  display: flex;
-  align-items: center;
-  flex-direction: column;
-  background: var(--secondary-c);
-  border-radius: 10px;
-  padding: var(--input-top-padding) var(--input-top-padding);
-  user-select: none;
-  gap: 6px;
+  /* gap: 10px; */
   font-size: var(--input-text-size);
 }
 
@@ -147,32 +114,31 @@ defineExpose({ setValue })
   color: var(--text-c);
 }
 
-.value-inline,
-.value-block,
-.value-vertical {
+.value-inline {
   min-width: 30px;
   text-align: center;
   color: var(--text-c);
   cursor: pointer;
 }
 
-.stepper-block {
-  display: flex;
-  align-items: center;
-  flex-direction: column;
-  background: var(--secondary-c);
-  border-radius: 10px;
-  padding: 6px 8px;
-  user-select: none;
-  gap: 6px;
-  font-size: 14px;
+.value-input {
+  width: 40px;
+  text-align: center;
+  background: transparent;
+  border: none;
+  color: var(--text-c);
+  font-size: var(--input-text-size);
+  outline: none;
 }
 
-.buttons-wrapper-block {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: row;
-  gap: 8px;
+/* Hide native number arrows */
+.value-input::-webkit-outer-spin-button,
+.value-input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.value-input[type='number'] {
+  -moz-appearance: textfield;
 }
 </style>
