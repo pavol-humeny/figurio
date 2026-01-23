@@ -9,6 +9,9 @@
 - varovanie ked to osekne pri resize na minimum - alebo v druhom to obmedziť tak aby sa nedalo zapísať viac
 - pri kreslení rámiku telefónu a následnom kreslení tvarov pri zobrazení vidno tvary ale po exporte sa prekryjú hlavičkou rámiku 
 - pri vytvorení textu a následnom deselecte by si to mohlo pamätať posledný nastavený text 
+- noise detection spúšťať len nad jpg
+- default frame width je 0
+- slidebar sa pridá pri veľkom počte tabov
 
 ## TODO od J (userTesting2 - 12.1.2026)
 - FIXED - Zoom pomocou numerickej klávesnice

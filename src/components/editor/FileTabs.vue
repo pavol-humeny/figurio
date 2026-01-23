@@ -58,7 +58,7 @@ const {
 .scroll-container {
   flex: 1;
   height: 100%;
-  overflow-x: auto;
+  overflow-x: hidden;
   overflow-y: hidden;
   display: flex;
   z-index: var(--z-index-file-tabs);
