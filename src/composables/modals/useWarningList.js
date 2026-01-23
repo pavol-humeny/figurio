@@ -71,7 +71,6 @@ export const useWarningList = (imageStore, uiStore) => {
    * @param {string} id - Unique ID
    */
   const openByClick = (id) => {
-    console.warn('Open by click called for warning ID:', id)
     const warning = imageStore.imageWarnings.find((w) => w.id === id)
     if (!warning) return
 
@@ -84,7 +83,6 @@ export const useWarningList = (imageStore, uiStore) => {
    * @param {string} id - Unique ID
    */
   const closeByArrow = (id) => {
-    console.warn('Close by arrow called for warning ID:', id)
     const warning = imageStore.imageWarnings.find((w) => w.id === id)
     if (!warning) return
 
@@ -128,7 +126,6 @@ export const useWarningList = (imageStore, uiStore) => {
    * @param {string} id - Unique ID
    */
   const hideWarningById = (id) => {
-    console.warn('Hide warning by ID called for warning ID:', id)
     const warning = imageStore.imageWarnings.find((w) => w.id === id)
     if (!warning) return
 
@@ -140,7 +137,6 @@ export const useWarningList = (imageStore, uiStore) => {
    * @param {string} id - Unique ID
    */
   const expandWarningById = (id) => {
-    console.warn('Expand warning by ID called for warning ID:', id)
     const warning = imageStore.imageWarnings.find((w) => w.id === id)
     if (!warning) return
 

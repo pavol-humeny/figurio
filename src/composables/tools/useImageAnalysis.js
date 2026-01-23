@@ -28,6 +28,8 @@ export function useImageAnalysis(imageStore, workspaceStore, uiStore, t) {
   const noiseTopThreshold = viewportConfig.noiseTopThreshold // Upper limit to ignore blocks with extreme noise - solid color blocks similar to background
   const bgCoverageThreshold = viewportConfig.bgCoverageThreshold // minimal percentage of background area required to analyze noise
   const colorDistanceThreshold = viewportConfig.colorDistanceThreshold // color distance from background considered as near-background
+  const borderSize = viewportConfig.borderSize // Size of the border in pixels for border noise analysis
+  const borderCoverageThreshold = viewportConfig.borderCoverageThreshold // minimal percentage of border area required to be background color
 
   /**
    * Whether noise detection can be run (no existing artifact warnings)
@@ -120,6 +122,43 @@ export function useImageAnalysis(imageStore, workspaceStore, uiStore, t) {
       log(
         `[ImageAnalysis] Background coverage (#${bgColor.r}, ${bgColor.g}, ${bgColor.b}): ${(bgCoverage * 100).toFixed(1)}%`,
       )
+    }
+
+    // Border background coverage (image frame check)
+    let borderBgCount = 0
+    let borderPixelCount = 0
+
+    for (let y = 0; y < height; y++) {
+      for (let x = 0; x < width; x++) {
+        // Check if pixel is inside border frame
+        const isBorder =
+          x < borderSize || x >= width - borderSize || y < borderSize || y >= height - borderSize
+
+        if (!isBorder) continue
+
+        const idx = (y * width + x) * 4
+
+        const dr = data[idx] - bgColor.r
+        const dg = data[idx + 1] - bgColor.g
+        const db = data[idx + 2] - bgColor.b
+        const dist = Math.sqrt(dr * dr + dg * dg + db * db)
+
+        borderPixelCount++
+        if (dist < colorDistanceThreshold) {
+          borderBgCount++
+        }
+      }
+    }
+
+    const borderBgCoverage = borderBgCount / borderPixelCount
+
+    if (borderBgCoverage < borderCoverageThreshold) {
+      log(
+        `[ImageAnalysis] Skipping noise detection — border background coverage ${(borderBgCoverage * 100).toFixed(1)}% is below threshold (${borderCoverageThreshold * 100}%)`,
+      )
+      return
+    } else {
+      log(`[ImageAnalysis] Border background coverage: ${(borderBgCoverage * 100).toFixed(1)}%`)
     }
 
     // Local block noise detection
