@@ -11,7 +11,6 @@
 - pri vytvorení textu a následnom deselecte by si to mohlo pamätať posledný nastavený text 
 - noise detection spúšťať len nad jpg
 - default frame width je 0
-- slidebar sa pridá pri veľkom počte tabov
 
 ## TODO od J (userTesting2 - 12.1.2026)
 - FIXED - Zoom pomocou numerickej klávesnice
@@ -66,7 +65,7 @@
 - mazanie objektu pomocou backspace nie len delete (mac nemá delete)
 - z index polohu zobrazovať len 2 tlačidlá ak sú len 2 objekty, žiadne ak je len jeden 
 - pri prepínaní okien to nedrží zoom 
-- tab sa nedá posunúť úplne doprava 
+- FIXED - tab sa nedá posunúť úplne doprava 
 - MG - zoomuje len podklad a nie aj objekty 
 - select - ak sa vyberie mg tak to zostane na tom nástroji a neprepne sa to späť na select 
 - feature tour - prorobenie krížika 

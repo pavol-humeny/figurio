@@ -35,7 +35,8 @@
           "Better side panel toggle button visibility",
           "Improve tab switching experience",
           "Improve crop box hiding behavior",
-          "Same toast are shown only once"
+          "Same toast are shown only once",
+          "Image position and zoom level are preserved when switching tabs"
         ]
       },
       "newFeatures": {

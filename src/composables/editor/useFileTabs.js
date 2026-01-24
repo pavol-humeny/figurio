@@ -50,9 +50,10 @@ export function useFileTabs(uiStore, viewportStore, imageStore, editorStore, t) 
       await workspaceStore.switchToTab(index)
 
       // Reset when switching tabs to reset rulers position
-      viewportStore.resetZoom()
-      viewportStore.resetPan()
-      viewportStore.shouldFitToScreen = true
+      // TODO - experimentaly commented, if everything works fine remove these lines
+      // viewportStore.resetZoom()
+      // viewportStore.resetPan()
+      // viewportStore.shouldFitToScreen = true
 
       await renderUpTo(imageStore.renderPipeline.currentOpIndex, { t, imageStore })
 
