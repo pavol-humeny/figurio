@@ -41,7 +41,8 @@
       },
       "newFeatures": {
         "items": [
-          "Enable image panning with left mouse button when no tool is selected"
+          "Enable image panning with left mouse button when no tool is selected",
+          "Add shortcut BACKSPACE to delete selected SVG objects or remove background in background removal tool"
         ]
       },
       "bugFixes": {

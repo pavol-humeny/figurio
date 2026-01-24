@@ -19,6 +19,7 @@
             { "description": "Redo last undone action", "shortcut": "Ctrl + Y" },
             { "description": "Upload file", "shortcut": "Ctrl + O" },
             { "description": "Save file", "shortcut": "Ctrl + S" },
+            { "description": "Copy to clipboard", "shortcut": "Ctrl + C" },
             { "description": "Close file", "shortcut": "Ctrl + K" },
             { "description": "Rename file", "shortcut": "F2" },
             { "description": "Switch to next open file", "shortcut": "Alt + PageDown" },
@@ -47,7 +48,7 @@
         {
           "name": "Objects",
           "list": [
-            { "description": "Delete selected object", "shortcut": "Delete" },
+            { "description": "Delete selected object", "shortcut": "Delete/Backspace" },
             { "description": "Move selected object forward", "shortcut": "Shift + Arrow up" },
             { "description": "Move selected object backward", "shortcut": "Shift + Arrow down" },
             { "description": "Move selected object globally", "shortcut": "Arrows" },
@@ -61,7 +62,7 @@
         {
           "name": "Tools",
           "list": [
-            { "description": "Background removal tool – remove selected area", "shortcut": "Delete" },
+            { "description": "Background removal tool – remove selected area", "shortcut": "Delete/Backspace" },
             { "description": "Crop tool – apply crop", "shortcut": "Enter" },
             { "description": "Brush tool – change brush and eraser size", "shortcut": "ALT + LEFT CLICK + DRAG" },
             { "description": "Background removal tool – change brush size", "shortcut": "ALT + LEFT CLICK + DRAG" }

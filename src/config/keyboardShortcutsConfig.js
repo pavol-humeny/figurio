@@ -306,6 +306,11 @@ export const keyboardShortcuts = [
     description: 'Delete selected SVG object',
   },
   {
+    keys: ['backspace'],
+    action: 'deleteSelectedSvgObjects',
+    description: 'Delete selected SVG object',
+  },
+  {
     keys: ['shift', 'arrowup'],
     action: 'moveSelectedSvgObjectForward',
     description: 'Move selected SVG object forward',
@@ -402,6 +407,11 @@ export const keyboardShortcuts = [
   // Background removal tool
   {
     keys: ['delete'],
+    action: 'applyBackgroundRemoval',
+    description: 'Delete background based on current selection',
+  },
+  {
+    keys: ['backspace'],
     action: 'applyBackgroundRemoval',
     description: 'Delete background based on current selection',
   },

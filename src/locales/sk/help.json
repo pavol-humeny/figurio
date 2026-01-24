@@ -19,6 +19,7 @@
             { "description": "Obnoviť poslednú vrátenú akciu", "shortcut": "Ctrl + Y" },
             { "description": "Nahrať súbor", "shortcut": "Ctrl + O" },
             { "description": "Uložiť súbor", "shortcut": "Ctrl + S" },
+            { "description": "Kopírovať do schránky", "shortcut": "Ctrl + C" },
             { "description": "Zavrieť súbor", "shortcut": "Ctrl + K" },
             { "description": "Premenovať súbor", "shortcut": "F2" },
             { "description": "Prepnúť na ďalší otvorený súbor", "shortcut": "Alt + PageDown" },
@@ -47,7 +48,7 @@
         {
           "name": "Objekty",
           "list": [
-            { "description": "Vymazať vybraný objekt", "shortcut": "Delete" },
+            { "description": "Vymazať vybraný objekt", "shortcut": "Delete/Backspace" },
             { "description": "Posunúť vybraný objekt dopredu", "shortcut": "Shift + Šípka hore" },
             { "description": "Posunúť vybraný objekt dozadu", "shortcut": "Shift + Šípka dole" },
             { "description": "Posunúť vybraný objekt globálne", "shortcut": "Šípky" },
@@ -61,7 +62,7 @@
         {
           "name": "Nástroje",
           "list": [
-            { "description": "Nástroj na odstránenie pozadia – odstrániť vybranú oblasť", "shortcut": "Delete" },
+            { "description": "Nástroj na odstránenie pozadia – odstrániť vybranú oblasť", "shortcut": "Delete/Backspace" },
             { "description": "Nástroj orezávania – použiť orezanie", "shortcut": "Enter" },
             { "description": "Nástroj štetca – zmeniť veľkosť štetca a gumy", "shortcut": "ALT + ĽAVÝ KLIK + ŤAHANIE" },
             { "description": "Nástroj na odstránenie pozadia – zmeniť veľkosť štetca", "shortcut": "ALT + ĽAVÝ KLIK + ŤAHANIE" }
