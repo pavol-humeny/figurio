@@ -218,7 +218,7 @@ export function useImageRenderer(
         // Rasterize PDF into image
         imageStore.showPdfAsImage = true
 
-        const viewport = page.getViewport({ scale: 1 }) // vyššie rozlíšenie pre ostrejší raster
+        const viewport = page.getViewport({ scale: 1 }) // Change scale of resolution
         const canvas = document.createElement('canvas')
         canvas.width = viewport.width
         canvas.height = viewport.height
@@ -228,7 +228,7 @@ export function useImageRenderer(
 
         log(`[imageRenderer] PDF rasterized in ${(performance.now() - tRasterStart).toFixed(1)} ms`)
 
-        // Uloženie ako obrázok (rovnako ako pri image file)
+        // Save image to store
         imageStore.setRenderedImage(canvas)
         imageStore.originalImage = canvas
 
@@ -247,10 +247,11 @@ export function useImageRenderer(
           null, // onClose
         )
 
+        blockRender.value = false
+
         renderCanvas()
 
         console.warn('IMAGE RENDERER - END2')
-        blockRender.value = false
         uiStore.isApplying = false
         uiStore.isApplyingFrame = false
 

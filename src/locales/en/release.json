@@ -6,10 +6,11 @@
   "versions":{
         "5.6.0":{
       "label": "5.6.0",
-      "date":"XX.1. 2025",
+      "date":"24.1. 2025",
       "improvements": {
         "items": [
-          "Recent colors are persistent between app reloads"
+          "Recent colors are persistent between app reloads",
+          "Noise detection is more strict to avoid false positives"
         ]
       },
       "newFeatures": {
@@ -26,7 +27,7 @@
     },
     "5.5.0":{
       "label": "5.5.0",
-      "date":"XX.1. 2025",
+      "date":"23.1. 2025",
       "improvements": {
         "items": [
           "Do not show toast about successful file name change - not necessary",

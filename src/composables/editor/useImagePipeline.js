@@ -285,6 +285,7 @@ export function useImagePipeline(imageStore, uiStore) {
       // Update file type if PDF bytes were removed (pdf -> image)
       if (!state.pdfBytes) {
         imageStore.fileType = 'image'
+        imageStore.imageNeedToBeRendered = true
       }
     } finally {
       imageStore.imageNeedToBeRendered = true
