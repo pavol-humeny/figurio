@@ -109,8 +109,8 @@ export function useColorPicker(editorStore, props, emit) {
     if (!previewRef.value || !isVisible.value) return
     const rect = previewRef.value.getBoundingClientRect()
 
-    // Panel height is 340px
-    const panelHeight = 340
+    // Panel height is 390px
+    const panelHeight = 390
     let top = rect.top + window.scrollY
 
     // Move above if not enough space below
