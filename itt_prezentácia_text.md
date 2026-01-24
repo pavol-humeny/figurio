@@ -49,3 +49,7 @@ V súčastnosti je aplikácia Figurio funkčná a obsahuje všetky spomínané n
 V nasledujúcej fáze práce plánujem priebežne vykonávať používateľské testovanie s cieľom doladenia používateľského rozhrania na základe spätnej väzby používateľov. 
 
 
+## Crop 
+Automatická detekcia obsahu v aplikácii Figurio slúži na odstránenie prázdnych okrajov obrázka a identifikáciu oblasti, kde sa nachádza skutočný obsah. Po nahraní obrázka sa vytvorí pracovná kópia, do ktorej sa v prípade potreby zahrnú aj prekryvné vrstvy, aby detekcia pracovala s tým, čo používateľ reálne vidí. Obraz sa následne prevedie do odtieňov sivej a jemne sa vyhladí pomocou Gaussovho rozmazania, čím sa potlačí šum a drobné artefakty.
+
+Na takto pripravený obraz sa aplikuje algoritmus Canny, ktorý deteguje miesta s výraznou zmenou jasu a vytvorí mapu hrán reprezentujúcich obrysy objektov. Z týchto hrán sa vypočíta počiatočný orezový rámik, ktorý ohraničuje oblasť s obsahom. Tento rámik sa následne ešte adaptívne spresňuje porovnávaním kontrastu na jeho okrajoch, aby sa odstránili zvyšné prázdne alebo nevýrazné oblasti. Používateľ má zároveň možnosť ovplyvniť citlivosť detekcie podľa typu obrázka. Výsledkom je presný orez obrázka jedným kliknutím, ktorý nevyžaduje manuálne nastavovanie a zachováva všetok relevantný obsah.
