@@ -332,14 +332,14 @@ export function useCommandLine(userModeStore, editorStore) {
    */
   const handleKeydown = (e) => {
     // Ctrl + D - switch to basic mode
-    if (e.ctrlKey && e.key.toLowerCase() === 'd') {
+    if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'd') {
       e.preventDefault()
       switchToBasicMode()
       return
     }
 
     // CTRL + C - clear command line
-    if (e.ctrlKey && e.key.toLowerCase() === 'c') {
+    if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'c') {
       e.preventDefault()
       command.value = ''
       return

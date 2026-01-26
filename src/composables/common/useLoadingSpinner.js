@@ -54,7 +54,7 @@ export function useLoadingSpinner(uiStore) {
       if (!wrapper) return
 
       // Block only if mouse is inside viewport wrapper
-      if (e.ctrlKey && wrapper.contains(e.target)) {
+      if ((e.ctrlKey || e.metaKey) && wrapper.contains(e.target)) {
         e.preventDefault()
       }
     }
@@ -63,7 +63,7 @@ export function useLoadingSpinner(uiStore) {
      * Prevent CTRL + +/-/0 zoom shortcuts
      */
     const blockCtrlKeys = (e) => {
-      if (e.ctrlKey && ['+', '-', '=', '0'].includes(e.key)) {
+      if ((e.ctrlKey || e.metaKey) && ['+', '-', '=', '0'].includes(e.key)) {
         e.preventDefault()
       }
     }

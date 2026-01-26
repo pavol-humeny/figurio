@@ -50,7 +50,7 @@ const check = (event) => {
   if (!wrapper) return
 
   // Block only if mouse is inside viewport wrapper
-  if (event.ctrlKey && wrapper.contains(event.target)) {
+  if ((event.ctrlKey || event.metaKey) && wrapper.contains(event.target)) {
     event.preventDefault()
   }
 }

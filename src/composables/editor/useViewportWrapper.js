@@ -134,8 +134,9 @@ export function useViewportWrapper(viewportStore, imageStore, editorStore, uiSto
     if (uiStore.isApplying) return
 
     const speedFactor = event.altKey ? viewportConfig.fasterScrollMultiplier : 1
+    const isZoomGesture = event.ctrlKey || event.metaKey
 
-    if (event.ctrlKey) {
+    if (isZoomGesture) {
       const direction = event.deltaY < 0 ? 1 : -1
       const wrapper = event.currentTarget
       const boundingBox = wrapper.getBoundingClientRect()

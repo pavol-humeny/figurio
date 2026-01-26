@@ -17,7 +17,17 @@ export const keyboardShortcuts = [
     description: 'Zoom in',
   },
   {
+    keys: ['meta', '='], // on macOS
+    action: 'zoomIn',
+    description: 'Zoom in',
+  },
+  {
     keys: ['ctrl', '-'],
+    action: 'zoomOut',
+    description: 'Zoom out',
+  },
+  {
+    keys: ['meta', '-'], // on macOS
     action: 'zoomOut',
     description: 'Zoom out',
   },
