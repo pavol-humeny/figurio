@@ -1192,6 +1192,22 @@ export const useImageStore = defineStore('imageStore', {
       }
     },
 
+    bringToFrontButtonEnabled() {
+      return this.svgObjects.length > 1 || this.blurObjects.length > 1
+    },
+
+    sendToBackButtonEnabled() {
+      return this.svgObjects.length > 1 || this.blurObjects.length > 1
+    },
+
+    moveForwardButtonEnabled() {
+      return this.svgObjects.length > 2 || this.blurObjects.length > 2
+    },
+
+    moveBackwardButtonEnabled() {
+      return this.svgObjects.length > 2 || this.blurObjects.length > 2
+    },
+
     /**
      * Checks if the currently selected SVG object has the highest z-index
      * @returns {boolean} - True if the selected SVG object is the one with the highest z-index

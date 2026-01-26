@@ -6,19 +6,14 @@ import ColorPicker from '../common/ColorPicker.vue';
 import { useHistoryStore } from '@/stores/historyStore';
 import { useI18n } from 'vue-i18n';
 import { useEditorStore } from '@/stores/editorStore';
-import { useSvgObjects } from '@/composables/tools/useSvgObjects';
 import { useImageStore } from '@/stores/imageStore';
 import { useMagnifyAreaTool } from '@/composables/tools/useMagnifyAreaTool';
-import { useViewportStore } from '@/stores/viewportStore';
-import DefaultButton from '../common/DefaultButton.vue';
-import { useUiStore } from '@/stores/uiStore';
 import ExplainItem from '../common/ExplainItem.vue';
 import DefaultSlider from '../common/DefaultSlider.vue';
 import { useWorkspaceStore } from '@/stores/workspaceStore';
+import SvgObjectsZIndexControl from './SvgObjectsZIndexControl.vue';
 
 const { t } = useI18n();
-
-const imageStore = useImageStore();
 
 const {
   applyLocalMagnifyAreaSettings,
@@ -32,16 +27,6 @@ const {
   maxOutlineWidth,
   magnifyAreaTypeOptions,
 } = useMagnifyAreaTool(useImageStore(), useHistoryStore(), useEditorStore(), useWorkspaceStore(), t);
-
-/**
- * Logic for moving selected SVG objects
- */
-const {
-  moveSelectedSvgObjectForward,
-  moveSelectedSvgObjectBackward,
-  sendSelectedSvgObjectToBack,
-  bringSelectedSvgObjectToFront,
-} = useSvgObjects(useImageStore(), useHistoryStore(), useViewportStore(), useEditorStore(), useUiStore(), useWorkspaceStore(), t);
 
 </script>
 
@@ -164,26 +149,7 @@ const {
         </div>
 
         <!-- Z-index -->
-        <div v-if="!hidePositionAndDimensions" class="settings-content-wrapper">
-          <div class="content-wrapper">
-            <div class="content-title">
-              <p>
-                {{ $t('tools.magnifyArea.settings.general.zIndex.label') }}
-              </p>
-            </div>
-            <DefaultButton :text="$t('tools.magnifyArea.settings.general.zIndex.bringToFrontButton.text')"
-              @click="bringSelectedSvgObjectToFront" :disabled="imageStore.isMaxZIndexOfSelectedSvgObject()" />
-
-            <DefaultButton :text="$t('tools.magnifyArea.settings.general.zIndex.moveForwardButton.text')"
-              @click="moveSelectedSvgObjectForward" :disabled="imageStore.isMaxZIndexOfSelectedSvgObject()" />
-
-            <DefaultButton :text="$t('tools.magnifyArea.settings.general.zIndex.moveBackwardButton.text')"
-              @click="moveSelectedSvgObjectBackward" :disabled="imageStore.isMinZIndexOfSelectedSvgObject()" />
-
-            <DefaultButton :text="$t('tools.magnifyArea.settings.general.zIndex.sendToBackButton.text')"
-              @click="sendSelectedSvgObjectToBack" :disabled="imageStore.isMinZIndexOfSelectedSvgObject()" />
-          </div>
-        </div>
+        <SvgObjectsZIndexControl :isVisible="!hidePositionAndDimensions" />
 
         <!-- Empty space -->
         <div class="settings-content-wrapper" style="border: none">

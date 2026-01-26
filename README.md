@@ -64,7 +64,7 @@
     - enter to vloží na stred 
     - pri zmazaní to odstráni objekt - malo by to spraviť až pri on blur 
 - FIXED - mazanie objektu pomocou backspace nie len delete (mac nemá delete)
-- z index polohu zobrazovať len 2 tlačidlá ak sú len 2 objekty, žiadne ak je len jeden 
+- FIXED - z index polohu zobrazovať len 2 tlačidlá ak sú len 2 objekty, žiadne ak je len jeden 
 - FIXED - pri prepínaní okien to nedrží zoom 
 - FIXED - tab sa nedá posunúť úplne doprava 
 - MG - zoomuje len podklad a nie aj objekty 

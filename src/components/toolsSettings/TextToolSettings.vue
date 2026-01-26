@@ -11,13 +11,9 @@ import { useI18n } from 'vue-i18n'
 import { useEditorStore } from '@/stores/editorStore';
 import NumberInput from '../common/NumberInput.vue';
 import IconButton from '../common/IconButton.vue';
-import { useSvgObjects } from '@/composables/tools/useSvgObjects';
-import { useViewportStore } from '@/stores/viewportStore';
-import DefaultButton from '../common/DefaultButton.vue';
-import { useUiStore } from '@/stores/uiStore';
 import ExplainItem from '../common/ExplainItem.vue';
 import { editorConfig } from '@/config/editorConfig'
-import { useWorkspaceStore } from '@/stores/workspaceStore';
+import SvgObjectsZIndexControl from './SvgObjectsZIndexControl.vue';
 
 const imageStore = useImageStore();
 const { t } = useI18n()
@@ -42,15 +38,6 @@ const {
   hidePosition
 } = useTextTool(useImageStore(), useHistoryStore(), useEditorStore(), t)
 
-/**
- * Logic for moving selected SVG objects
- */
-const {
-  moveSelectedSvgObjectForward,
-  moveSelectedSvgObjectBackward,
-  sendSelectedSvgObjectToBack,
-  bringSelectedSvgObjectToFront,
-} = useSvgObjects(useImageStore(), useHistoryStore(), useViewportStore(), useEditorStore(), useUiStore(), useWorkspaceStore(), t);
 </script>
 
 <template>
@@ -206,26 +193,7 @@ const {
         </div>
 
         <!-- Z-index -->
-        <div v-if="!hidePosition" class="settings-content-wrapper">
-          <div class="content-wrapper">
-            <div class="content-title">
-              <p>
-                {{ $t('tools.text.settings.general.zIndex.label') }}
-              </p>
-            </div>
-            <DefaultButton :text="$t('tools.text.settings.general.zIndex.bringToFrontButton.text')"
-              @click="bringSelectedSvgObjectToFront" :disabled="imageStore.isMaxZIndexOfSelectedSvgObject()" />
-
-            <DefaultButton :text="$t('tools.text.settings.general.zIndex.moveForwardButton.text')"
-              @click="moveSelectedSvgObjectForward" :disabled="imageStore.isMaxZIndexOfSelectedSvgObject()" />
-
-            <DefaultButton :text="$t('tools.text.settings.general.zIndex.moveBackwardButton.text')"
-              @click="moveSelectedSvgObjectBackward" :disabled="imageStore.isMinZIndexOfSelectedSvgObject()" />
-
-            <DefaultButton :text="$t('tools.text.settings.general.zIndex.sendToBackButton.text')"
-              @click="sendSelectedSvgObjectToBack" :disabled="imageStore.isMinZIndexOfSelectedSvgObject()" />
-          </div>
-        </div>
+        <SvgObjectsZIndexControl :isVisible="!hidePosition" />
 
         <!-- Empty space -->
         <div class="settings-content-wrapper" style="border: none">

@@ -10,14 +10,10 @@ import LinkValuesIcon from '../common/LinkValuesIcon.vue';
 import ToggleButton from '../common/ToggleButton.vue';
 import { useHistoryStore } from '@/stores/historyStore';
 import { useI18n } from 'vue-i18n'
-import DefaultButton from '../common/DefaultButton.vue';
-import { useSvgObjects } from '@/composables/tools/useSvgObjects';
-import { useViewportStore } from '@/stores/viewportStore';
 import DropdownSelect from '../common/DropdownSelect.vue';
-import { useUiStore } from '@/stores/uiStore';
 import ExplainItem from '../common/ExplainItem.vue';
 import { editorConfig } from '@/config/editorConfig'
-import { useWorkspaceStore } from '@/stores/workspaceStore';
+import SvgObjectsZIndexControl from './SvgObjectsZIndexControl.vue';
 
 const { t } = useI18n()
 const imageStore = useImageStore();
@@ -51,15 +47,6 @@ const {
   lineArrowOptions,
 } = useShapeTool(useEditorStore(), useImageStore(), useHistoryStore(), t)
 
-/**
- * Logic for moving selected SVG objects
- */
-const {
-  moveSelectedSvgObjectForward,
-  moveSelectedSvgObjectBackward,
-  sendSelectedSvgObjectToBack,
-  bringSelectedSvgObjectToFront,
-} = useSvgObjects(useImageStore(), useHistoryStore(), useViewportStore(), useEditorStore(), useUiStore(), useWorkspaceStore(), t);
 </script>
 
 <template>
@@ -305,29 +292,8 @@ const {
           </div>
         </div>
 
-
         <!-- Z-index -->
-        <div v-if="!hidePositionAndDimensions" class="settings-content-wrapper">
-          <div class="content-wrapper">
-            <div class="content-title">
-              <p>
-                {{ $t('tools.shape.settings.zIndex.label') }}
-              </p>
-            </div>
-            <DefaultButton :text="$t('tools.shape.settings.zIndex.bringToFrontButton.text')"
-              @click="bringSelectedSvgObjectToFront" :disabled="imageStore.isMaxZIndexOfSelectedSvgObject()" />
-
-            <DefaultButton :text="$t('tools.shape.settings.zIndex.moveForwardButton.text')"
-              @click="moveSelectedSvgObjectForward" :disabled="imageStore.isMaxZIndexOfSelectedSvgObject()" />
-
-            <DefaultButton :text="$t('tools.shape.settings.zIndex.moveBackwardButton.text')"
-              @click="moveSelectedSvgObjectBackward" :disabled="imageStore.isMinZIndexOfSelectedSvgObject()" />
-
-            <DefaultButton :text="$t('tools.shape.settings.zIndex.sendToBackButton.text')"
-              @click="sendSelectedSvgObjectToBack" :disabled="imageStore.isMinZIndexOfSelectedSvgObject()" />
-          </div>
-        </div>
-
+        <SvgObjectsZIndexControl :isVisible="!hidePositionAndDimensions" />
 
         <!-- Empty space -->
         <div class="settings-content-wrapper" style="border: none">

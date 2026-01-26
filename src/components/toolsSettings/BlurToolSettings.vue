@@ -5,19 +5,14 @@ import { useBlurTool } from '@/composables/tools/useBlurTool';
 import { useHistoryStore } from '@/stores/historyStore';
 import { useI18n } from 'vue-i18n';
 import { useEditorStore } from '@/stores/editorStore';
-import { useSvgObjects } from '@/composables/tools/useSvgObjects';
-import { useViewportStore } from '@/stores/viewportStore';
 import NumberInput from '../common/NumberInput.vue';
 import LinkValuesIcon from '../common/LinkValuesIcon.vue';
-import DefaultButton from '../common/DefaultButton.vue';
 import DefaultSlider from '../common/DefaultSlider.vue';
-import { useUiStore } from '@/stores/uiStore';
 import ExplainItem from '../common/ExplainItem.vue';
 import { editorConfig } from '@/config/editorConfig'
-import { useWorkspaceStore } from '@/stores/workspaceStore';
+import SvgObjectsZIndexControl from './SvgObjectsZIndexControl.vue';
 
 const { t } = useI18n();
-const imageStore = useImageStore();
 
 /**
  * Logic of blur tool
@@ -41,16 +36,6 @@ const {
   maxEdgeFade,
 } = useBlurTool(useImageStore(), useHistoryStore(), useEditorStore(), t);
 
-
-/**
- * Logic for moving selected SVG objects
- */
-const {
-  moveSelectedSvgObjectForward,
-  moveSelectedSvgObjectBackward,
-  sendSelectedSvgObjectToBack,
-  bringSelectedSvgObjectToFront,
-} = useSvgObjects(useImageStore(), useHistoryStore(), useViewportStore(), useEditorStore(), useUiStore(), useWorkspaceStore(), t);
 </script>
 
 <template>
@@ -178,28 +163,7 @@ const {
         </div>
 
         <!-- Z-index -->
-        <div v-if="!hidePositionAndDimensions" class="settings-content-wrapper">
-          <div class="content-wrapper">
-            <div class="content-title">
-              <p>
-                {{ $t('tools.blur.settings.general.zIndex.label') }}
-              </p>
-            </div>
-            <DefaultButton :text="$t('tools.blur.settings.general.zIndex.bringToFrontButton.text')"
-              @click="bringSelectedSvgObjectToFront(t, true)"
-              :disabled="imageStore.isMaxZIndexOfSelectedBlurObject()" />
-
-            <DefaultButton :text="$t('tools.blur.settings.general.zIndex.moveForwardButton.text')"
-              @click="moveSelectedSvgObjectForward(t, true)" :disabled="imageStore.isMaxZIndexOfSelectedBlurObject()" />
-
-            <DefaultButton :text="$t('tools.blur.settings.general.zIndex.moveBackwardButton.text')"
-              @click="moveSelectedSvgObjectBackward(t, true)"
-              :disabled="imageStore.isMinZIndexOfSelectedBlurObject()" />
-
-            <DefaultButton :text="$t('tools.blur.settings.general.zIndex.sendToBackButton.text')"
-              @click="sendSelectedSvgObjectToBack(t, true)" :disabled="imageStore.isMinZIndexOfSelectedBlurObject()" />
-          </div>
-        </div>
+        <SvgObjectsZIndexControl :isVisible="!hidePositionAndDimensions" />
 
         <!-- Empty space -->
         <div class="settings-content-wrapper" style="border: none">
