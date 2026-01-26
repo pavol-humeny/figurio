@@ -157,7 +157,7 @@ const closeFeatureTourModalWrapper = () => {
   align-items: center;
   color: var(--primary-c);
   user-select: none;
-  top: 15px;
+  top: 2px;
   right: 20px;
   font-weight: bold;
 }

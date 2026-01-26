@@ -22,7 +22,8 @@
         "items": [
           "Do not propagate enter key event when confirming name change in file name display",
           "Hide scrollbar in file tabs",
-          "Swap import and export icons"
+          "Swap import and export icons",
+          "Fix video preview display in item tips and adjust feature tour card layout"
         ]
       }
     },

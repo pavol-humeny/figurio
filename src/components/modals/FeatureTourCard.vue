@@ -80,6 +80,7 @@ onMounted(() => {
   width: 100%;
   height: 100%;
   border-radius: 20px;
+  padding-top: 35px;
   background: var(--background-c);
   display: flex;
   flex-direction: column;
@@ -91,8 +92,6 @@ onMounted(() => {
 .video-wrapper {
   width: 100%;
   aspect-ratio: 16 / 8;
-  border-top-left-radius: 18px;
-  border-top-right-radius: 18px;
   overflow: hidden;
 }
 
