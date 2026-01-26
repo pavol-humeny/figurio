@@ -8,6 +8,6 @@
 </template>
 <style scoped>
 svg {
-  transform: scale(1.2);
+  transform: scale(1.2) translateY(-1px);
 }
 </style>

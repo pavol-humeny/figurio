@@ -111,7 +111,7 @@ const {
           </div>
 
           <!-- Copy to clipboard button for PNG format -->
-          <div v-if="fileFormat !== 'pdf'" class="export-settings-item">
+          <div class="export-settings-item">
             <DefaultButton :text="$t('tools.export.settings.general.copyToClipboardButton.text')"
               :tip="$t('tools.export.settings.general.copyToClipboardButton.tip')" @click="copyImageToClipboardFunction" />
           </div>

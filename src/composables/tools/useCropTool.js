@@ -48,7 +48,6 @@ const manualIndents = ref({
   rightIndent: 0,
   bottomIndent: 0,
   leftIndent: 0,
-
   topIndentMin: 0,
   topIndentMax: Infinity,
   rightIndentMin: 0,
@@ -1087,6 +1086,7 @@ export function useCropTool(imageStore, viewportStore, editorStore, historyStore
    */
   const applyCrop = async () => {
     if (editorStore.selectedToolKey !== 'crop') return
+    if (editorStore.isModalOpenFlag) return
 
     // Check if crop box is same as image dimensions
     if (

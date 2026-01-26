@@ -1,7 +1,6 @@
 # Figurio
 
 ## TODO - text 
-- do textu doplniť citovanie použitých nástrojov - vue.js
 - dopísať do porovnanie že som mal strašný problém nájsť export
 
 

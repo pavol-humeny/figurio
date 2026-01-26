@@ -199,6 +199,8 @@ export function useExportToolSettings(imageStore, editorStore, historyStore, vie
    * Copy rendered image preview to clipboard
    */
   const copyImageToClipboardFunction = async () => {
+    if (!isVisible.value) return
+
     await copyImageToClipboard()
   }
 
