@@ -2,6 +2,7 @@
 
 ## TODO - text 
 - do textu doplniť citovanie použitých nástrojov - vue.js
+- dopísať do porovnanie že som mal strašný problém nájsť export
 
 
 # Chyby
@@ -11,6 +12,11 @@
 - pri vytvorení textu a následnom deselecte by si to mohlo pamätať posledný nastavený text 
 - noise detection spúšťať len nad jpg
 - default frame width je 0
+- copy to clipboard moze fungovať len ak je otvorený export
+- copy to clipboard zobraziť aj ked to nie je png 
+- resize, rotate centrovat image
+- pri use milimeters to vyzaduje physical mode na to aby to fungovalo 
+- pridať nástroj pre nastavenie priehľadnosti obrázka
 
 ## TODO od J (userTesting2 - 12.1.2026)
 - FIXED - Zoom pomocou numerickej klávesnice

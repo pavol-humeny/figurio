@@ -6,15 +6,15 @@
     stroke="currentColor"
     stroke-linecap="round"
     stroke-linejoin="round"
-    id="Download--Streamline-Lucide"
+    id="Upload--Streamline-Tabler"
     height="20"
     width="20"
   >
     <path
-      d="M16.03875 11.45625v3.055a1.5275 1.5275 0 0 1 -1.5275 1.5275H3.81875a1.5275 1.5275 0 0 1 -1.5275 -1.5275v-3.055"
+      d="M3.055 12.98375v1.5275a1.5275 1.5275 0 0 0 1.5275 1.5275h9.165000000000001a1.5275 1.5275 0 0 0 1.5275 -1.5275v-1.5275"
       stroke-width="1.67"
     ></path>
-    <path d="m5.34625 7.6375 3.81875 3.81875 3.81875 -3.81875" stroke-width="1.67"></path>
-    <path d="m9.165000000000001 11.45625 0 -9.165000000000001" stroke-width="1.67"></path>
+    <path d="m5.34625 6.87375 3.81875 -3.81875 3.81875 3.81875" stroke-width="1.67"></path>
+    <path d="m9.165000000000001 3.055 0 9.165000000000001" stroke-width="1.67"></path>
   </svg>
 </template>

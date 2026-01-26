@@ -23,7 +23,7 @@ const { openDragAndDropModal } = useUploadFileButton(useImageStore(), t, router,
 <template>
   <ItemTip :text="$t('topPanel.uploadFileButton.tip')" position="bottom">
     <button class="button button-circle button-control button-clickable" @click="openDragAndDropModal">
-      <BaseIcon name="IconImport" :size="26" />
+      <BaseIcon name="IconImport" :size="22" />
     </button>
   </ItemTip>
 </template>

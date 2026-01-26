@@ -6,7 +6,7 @@ const { warn } = useConsole()
 
 /**
  * @typedef {Object} BaseIconProps
- * @property {string} name - Name of the icon component (e.g. 'IconImport')
+ * @property {string} name - Name of the icon component 
  * @property {number|string} [size=20] - Icon size in pixels
  * @property {string} [color='currentColor'] - Icon color
  * @property {string} [tip=''] - Tooltip text

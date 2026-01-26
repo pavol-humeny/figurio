@@ -4,7 +4,7 @@
     "items": []
   },
   "versions":{
-        "5.6.0":{
+      "5.6.0":{
       "label": "5.6.0",
       "date":"24.1. 2025",
       "improvements": {
@@ -21,7 +21,8 @@
       "bugFixes": {
         "items": [
           "Do not propagate enter key event when confirming name change in file name display",
-          "Hide scrollbar in file tabs"
+          "Hide scrollbar in file tabs",
+          "Swap import and export icons"
         ]
       }
     },

@@ -52,7 +52,7 @@ const exportFile = () => {
     :title="$t('tools.export.label')" :shortcut="$t('tools.export.shortcut')" :advance="true" :position="'bottom'">
     <div class="export-wrapper button button-default button-main" :class="{ disabled: exportIsDisabled }"
       @click="exportFile">
-      <BaseIcon name="IconExportTool" :size="20" />
+      <BaseIcon name="IconExportTool" :size="22" />
       <p class="export-title">{{ $t('tools.export.label') }}</p>
     </div>
   </ItemTip>
