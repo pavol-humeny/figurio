@@ -6,12 +6,10 @@
 
 # Chyby
 - nakreslím niečo, pridám shape, a dám rasterize tak to zmizne - rastererize zožuje brush 
-- varovanie ked to osekne pri resize na minimum - alebo v druhom to obmedziť tak aby sa nedalo zapísať viac
 - pri kreslení rámiku telefónu a následnom kreslení tvarov pri zobrazení vidno tvary ale po exporte sa prekryjú hlavičkou rámiku 
 - pri vytvorení textu a následnom deselecte by si to mohlo pamätať posledný nastavený text 
 - noise detection spúšťať len nad jpg
 - default frame width je 0
-- resize, rotate centrovat image
 - pri use milimeters to vyzaduje physical mode na to aby to fungovalo 
 - pridať nástroj pre nastavenie priehľadnosti obrázka
 
@@ -25,9 +23,9 @@
 - FIXED - noise detection - aj ked je to uz zobrazene tak sa to prepocita 
 - FIXED - neobmedzena velkost pri pdf suboroch 
 - FIXED - pri manipulácii s obrázkom to zobrazuje najskôr pozadie (kocky) a až potom sa to aplikuje na obrazok 
-- crop 
+- FIXED - crop 
     - FIXED - hide crop - pri pustení mimo to neprepne 
-    - orezanie na rôznych citlivostiach - mohlo by to orezavat hned 
+    - SKIP - orezanie na rôznych citlivostiach - mohlo by to orezavat hned 
     - FIXED - manualna úprava - mohol by to byť input 
     - FIXED - aplikovanie orezania - centrovať 
 - bg removal 
@@ -39,8 +37,8 @@
 - shape - rozbité 
     - divne funguje výber objektu
     - pri kliknutí to hned vytvorí nový objekt namiesto výberu 
-- text - málo fontov 
-- blur - čakala blur pomocou štetca/kreslenia
+- SKIP - text - málo fontov 
+- SKIP - blur - čakala blur pomocou štetca/kreslenia
 - mg area - pridáva sa nový objekt pri kliknutí namiesto výberu 
 - FIXED - resize - hneď to aplikovať nie len resetovať hodnoty 
 
@@ -81,8 +79,7 @@
 - NEPREUKÁZALO SA - pri prepnutí z color na manual select sa nezapne spravny kurzor
 - NEPREUKÁZALO SA - error pri zatvorení viacerých súborov
 - Vylepšenie rámiku pre prehliadače 
-- Zjednodušiť nápovedy - tipy (kratšie texty)
-- Zjednodušiť toasty
+
 - Paste by to mohol klásť inde ako na ten istý objekt, aspoň pri kliknutí pravím 
 - Opravit paste blur objektu 
 - nakreslenie svg objektu, prepnutie na brush (vyžaduje rasterizáciu) a následné spätné prepnutie na shape (stále to chcelo rasterizovať)
@@ -94,7 +91,6 @@
 - pri posune viacerých objektov, následnom položení a opätovnom presune to nechce ísť a sekne to 
 - undo redo možno nejako zakázať pri aby sa to nedalo kliknúť viac krát do vtedy kým sa neaplikuje operácia 
 - klávesové skratky to nepočíta do statistík
-- export pdf nepočíta do statistík 
 - pri rámiku telefónu je nejaký divný footer (prázdne miesto), keď je to jpg obrázok (neviem či aj pri iných)
 - premyslieť kedy sa toasty nemusia zobrazovať 
 
@@ -103,12 +99,12 @@
 - eye dropper na safari
 - Globálne úpravy (rasterizácia)
 - BG removal - ukladanie do undo redo operácií pri výbere 
-- Poskakovanie pri resize ak je to otočené 
-- PDF s nepodporovanými svg objektami 
+- Poskakovanie pri resize ak je to otočené (svg objekty)
 - Poloha magnify area a blur object voči ostatným objektom (možné riešenie vrstvy)
-- v inpute by to čísla mohlo počítať 
 - možnosť všetko exportovať naraz do zip
+- PDF s nepodporovanými svg objektami 
 - prevod pdf na raster ak to obsahuje hlúposti 
+- Zjednodušiť toasty
 
 ## Insane ideas
 - aplikovanie operácie na všetky obrázky 
@@ -117,6 +113,7 @@
 - Možnosť si uložiť aktuálnu prácu 
 - Nástroj na kreslenie (štetce)
 - Split screen pre viac obrázkov 
+- v inpute by to čísla mohlo počítať 
 
 ## API
 ### addUserEvent()

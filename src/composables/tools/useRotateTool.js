@@ -14,7 +14,7 @@ import { useImagePipeline } from '../editor/useImagePipeline'
  *   applyRotationRender: (angle: number) => void,
  * }}
  */
-export function useRotateTool(imageStore, historyStore, uiStore, t) {
+export function useRotateTool(imageStore, historyStore, uiStore, viewportStore, t) {
   const { showConfirmModal } = useConfirmModal()
   const { renderUpTo } = useImagePipeline(imageStore, uiStore)
 
@@ -73,6 +73,9 @@ export function useRotateTool(imageStore, historyStore, uiStore, t) {
 
     // Push to undo history
     historyStore.push(imageStore.getSnapshot(t))
+
+    // Center image after rotation
+    viewportStore.shouldFitToScreen = true
   }
 
   return {

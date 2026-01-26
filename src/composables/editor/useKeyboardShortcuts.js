@@ -63,6 +63,14 @@ export function useKeyboardShortcuts(actions, uiStore, editorStore) {
 
       // log(`[Shortcut] ${pressed} → ${shortcut.description}`)
 
+      // Record keyup events for analytics
+      if (pressed === expected && type === 'keyup') {
+        addUserEvent('keyboardShortcuts', {
+          action: shortcut.action,
+          keys: pressed,
+        })
+      }
+
       if (pressed === expected && type === expectedType) {
         if (!['ctrl+c', 'ctrl+v', 'ctrl+x', 'ctrl+a'].includes(pressed)) {
           event.preventDefault()
@@ -84,13 +92,6 @@ export function useKeyboardShortcuts(actions, uiStore, editorStore) {
 
           fn(...(shortcut.args || []))
           log(`[Shortcut] ${type.toUpperCase()} → ${shortcut.description}`)
-
-          if (type === 'keyup') {
-            addUserEvent('keyboardShortcuts', {
-              action: shortcut.action,
-              keys: pressed,
-            })
-          }
         }
       }
     }

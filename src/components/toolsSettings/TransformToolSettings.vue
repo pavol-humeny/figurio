@@ -27,7 +27,7 @@ const { applyFlip } = useFlipTool(useImageStore(), useHistoryStore(), useUiStore
 /**
  * Logic of the rotate tool
  */
-const { applyRotation } = useRotateTool(useImageStore(), useHistoryStore(), useUiStore(), t)
+const { applyRotation } = useRotateTool(useImageStore(), useHistoryStore(), useUiStore(), useViewportStore(), t)
 
 /**
  * Logic of the resize tool

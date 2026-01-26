@@ -339,6 +339,9 @@ export function useResizeTool(imageStore, historyStore, viewportStore, uiStore, 
     await renderUpTo(imageStore.renderPipeline.currentOpIndex + 1, { t, imageStore })
 
     historyStore.push(imageStore.getSnapshot(t))
+
+    // Center image after resize
+    viewportStore.shouldFitToScreen = true
   }
 
   return {
