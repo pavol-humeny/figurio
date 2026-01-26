@@ -10,7 +10,9 @@ import { useImagePipeline } from '@/composables/editor/useImagePipeline'
 import { useImportModal } from '@/composables/modals/useImportModal'
 pdfjsLib.GlobalWorkerOptions.workerSrc =
   'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js'
+import { useApi } from '@/composables/common/useApi'
 
+const { addUserEvent } = useApi()
 const { log, warn } = useConsole()
 const { showToastModal } = useToastModal()
 const { showGeneralModal } = useGeneralModal()
@@ -341,6 +343,14 @@ export function importFileService(
         t('imageStore.toast.successFileUploaded.title'),
         t('imageStore.toast.successFileUploaded.message', { fileName: file.name }),
       )
+
+      addUserEvent('uploadImage', {
+        fileFormat: imageStore.fileFormat,
+        fileName: imageStore.fileName,
+        fileSize: imageStore.fileDimensions.size,
+        fileWidth: imageStore.fileDimensions.width,
+        fileHeight: imageStore.fileDimensions.height,
+      })
 
       imageStore.imageNeedToBeRendered = true
     } catch (e) {

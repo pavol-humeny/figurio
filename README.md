@@ -74,7 +74,7 @@
 - FIXED - tab sa nedá posunúť úplne doprava 
 - MG - zoomuje len podklad a nie aj objekty 
 - select - ak sa vyberie mg tak to zostane na tom nástroji a neprepne sa to späť na select 
-- feature tour - prorobenie krížika 
+- FIXED - feature tour - prorobenie krížika 
 
 
 

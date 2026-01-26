@@ -58,6 +58,14 @@ export function exportFileService(imageStore, editorStore, historyStore, viewpor
       }
       reader.readAsDataURL(blob)
 
+      addUserEvent('exportImage', {
+        fileFormat: imageStore.newFileFormat,
+        fileName: imageStore.newFileName,
+        fileWidth: width,
+        fileHeight: height,
+        quality: quality,
+      })
+
       return true
     }
 
