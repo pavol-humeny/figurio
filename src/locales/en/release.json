@@ -47,7 +47,8 @@
         "items": [
           "Enable image panning with left mouse button when no tool is selected",
           "Add shortcut BACKSPACE to delete selected SVG objects or remove background in background removal tool",
-          "Add support for macOS command key in keyboard shortcuts"
+          "Add support for macOS command key in keyboard shortcuts",
+          "Add new text to the center of image after clicking enter in text input"
         ]
       },
       "bugFixes": {

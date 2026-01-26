@@ -183,16 +183,38 @@ export function useTextTool(imageStore, historyStore, editorStore, t) {
    * @param {boolean} commit - When true, push to history store
    */
   const applyLocalTextSettings = (commit = true) => {
-    const object = activeObject.value
+    // If no object is selected, add new text object
+    if (commit && imageStore.selectedSvgObjectId === null) {
+      addTextObjectOnEnterClick()
+      return
+    }
 
+    const object = activeObject.value
     if (!object || object.tag !== 'text') return
+    const settings = localTextSettings.value
+
+    // Live update
+    if (!commit) {
+      object.content = settings.text
+      return
+    }
+
+    // If text is empty, remove the object
+    if (!settings.text.trim()) {
+      const idToDelete = imageStore.getIndexOfSvgObjectById(object.id)
+
+      imageStore.svgObjects.splice(idToDelete, 1)
+
+      activeObject.value = null
+      imageStore.selectedSvgObjectId = null
+      return
+    }
 
     const { attrs } = object
-    const settings = localTextSettings.value
 
     // Update position
     attrs.x = settings.x
-    attrs.y = settings.y // Adjust Y to center text vertically
+    attrs.y = settings.y
 
     // Content
     object.content = settings.text
@@ -227,27 +249,20 @@ export function useTextTool(imageStore, historyStore, editorStore, t) {
       letter-spacing: ${settings.letterSpacing}px;
     `
 
-    if (commit) {
-      addUserEvent('applyOperation', {
-        tool: 'text',
-        settings: { ...localTextSettings.value },
-      })
+    addUserEvent('applyOperation', {
+      tool: 'text',
+      settings: { ...localTextSettings.value },
+    })
 
-      saveConfigToEditorStore()
+    saveConfigToEditorStore()
 
-      historyStore.push(imageStore.getSnapshot(t))
-    }
+    historyStore.push(imageStore.getSnapshot(t))
   }
 
   /**
    * Add new text object to the center of the viewport on Enter key press
    */
   const addTextObjectOnEnterClick = () => {
-    console.log(
-      'addTextObjectOnEnterClick called',
-      editorStore.selectedToolKey,
-      localTextSettings.value.text,
-    )
     if (editorStore.selectedToolKey !== 'text') return
     if (!localTextSettings.value.text.trim()) return
 

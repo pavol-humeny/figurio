@@ -57,8 +57,8 @@ const {
           <div class="content-wrapper">
             <TextInput v-model="localTextSettings.text"
               :placeholder="$t('tools.text.settings.general.textContent.placeholder')" updateOnChange
-              @update="applyLocalTextSettings" :maxLength="editorConfig.maxTextLength"
-              :onEnter="addTextObjectOnEnterClick" />
+              :maxLength="editorConfig.maxTextLength" @update="applyLocalTextSettings(false)"
+              :onEnter="() => applyLocalTextSettings(true)" />
           </div>
         </div>
 

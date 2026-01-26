@@ -1945,10 +1945,10 @@ export function useSvgObjectWrapper(
       nextTick(() => {
         if (object.value.tag === 'text' && textRef.value) {
           // if empty text remove
-          if (object.value.content.trim() === '') {
-            deleteSelectedSvgObjects(t)
-            return
-          }
+          // if (object.value.content.trim() === '') {
+          //   deleteSelectedSvgObjects(t)
+          //   return
+          // }
 
           const bbox = textRef.value.getBBox()
           object.value.textBBox = {
