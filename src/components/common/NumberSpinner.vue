@@ -2,6 +2,7 @@
 import ItemTip from './ItemTip.vue'
 import BaseIcon from '../icons/BaseIcon.vue'
 import { useNumberSpinner } from '@/composables/common/useNumberSpinner'
+import { useHoldButton } from '@/composables/common/useHoldButton'
 
 /**
  * @typedef {Object} NumberSpinnerProps
@@ -64,6 +65,14 @@ const props = defineProps({
 })
 
 /**
+ * Logic of the hold button for continuous action on hold
+ */
+const {
+  startHold,
+  stopHold,
+} = useHoldButton()
+
+/**
  * @event update:modelValue - Emitted when the input value changes
  * @event update - Emitted when the input value changes (alias of update:modelValue)
  */
@@ -97,8 +106,8 @@ defineExpose({ setValue })
         @keydown.enter="onCommit" :style="{ background: props.background }" />
 
       <div class="spinner-controls">
-        <BaseIcon name="IconArrowUp" size="20" class="spinner-btn spinner-btn-up" @mousedown.prevent="increment" />
-        <BaseIcon name="IconArrowDown" size="20" class="spinner-btn spinner-btn-down" @mousedown.prevent="decrement" />
+        <BaseIcon name="IconArrowUp" size="20" class="spinner-btn spinner-btn-up" @mousedown="startHold(increment)" @mouseup="stopHold" @mouseleave="stopHold" />
+        <BaseIcon name="IconArrowDown" size="20" class="spinner-btn spinner-btn-down" @mousedown="startHold(decrement)" @mouseup="stopHold" @mouseleave="stopHold" />
       </div>
     </div>
   </ItemTip>

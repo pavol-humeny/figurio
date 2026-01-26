@@ -5,7 +5,6 @@ import { useImageStore } from '@/stores/imageStore';
 import ToolsSettingsTabs from './ToolsSettingsTabs.vue';
 import ColorPicker from '../common/ColorPicker.vue';
 import NumberInput from '../common/NumberInput.vue';
-import NumberDropdownInput from '../common/NumberDropdownInput.vue';
 import LinkValuesIcon from '../common/LinkValuesIcon.vue';
 import ToggleButton from '../common/ToggleButton.vue';
 import { useHistoryStore } from '@/stores/historyStore';
@@ -14,6 +13,7 @@ import DropdownSelect from '../common/DropdownSelect.vue';
 import ExplainItem from '../common/ExplainItem.vue';
 import { editorConfig } from '@/config/editorConfig'
 import SvgObjectsZIndexControl from './SvgObjectsZIndexControl.vue';
+import NumberSpinner from '../common/NumberSpinner.vue';
 
 const { t } = useI18n()
 const imageStore = useImageStore();
@@ -149,17 +149,16 @@ const {
             :title="$t('tools.shape.label')" />
           <div class="content-aligned two-items">
             <div class="content-wrapper">
-              <p :class="{ disabled: localObjectSettings.strokeWidth === 0 }">
+              <p>
                 {{ $t('tools.shape.settings.enableFillColor.label') }}
               </p>
               <ToggleButton v-model="localObjectSettings.fillEnabled" :scale="0.6" @update="applyLocalSettings"
-                :disabled="localObjectSettings.strokeWidth === 0" :tip="$t('tools.shape.settings.enableFillColor.tip')"
-                position="bottom-left" />
+                :tip="$t('tools.shape.settings.enableFillColor.tip')" position="bottom-left" />
             </div>
 
             <div class="content-wrapper">
               <div class="content-title">
-                <p>
+                <p :class="{ disabled: !localObjectSettings.fillEnabled }">
                   {{ $t('tools.shape.settings.fillColor.label') }}
                 </p>
               </div>
@@ -196,9 +195,8 @@ const {
                 </p>
               </div>
               <div class="content-inputs">
-                <NumberDropdownInput v-model="localObjectSettings.strokeWidth" :min="1" :max="100"
-                  @update="applyLocalSettings" :options="[1, 2, 3, 4, 5, 6, 7, 8, 9, 10]" unit="px"
-                  :tip="$t('tools.shape.settings.lineWidth.tip')" position="bottom-left" />
+                <NumberSpinner v-model="localObjectSettings.strokeWidth" :min="1" :max="100"
+                  @update="applyLocalSettings" :tip="$t('tools.shape.settings.lineWidth.tip')" position="bottom-left" />
               </div>
             </div>
           </div>
@@ -215,8 +213,8 @@ const {
               </div>
               <div class="content-inputs">
                 <ColorPicker v-model="localObjectSettings.strokeColor" @update="applyLocalSettings(false)"
-                  @commit="applyLocalSettings(true)" :disabled="localObjectSettings.strokeWidth === 0"
-                  :tip="$t('tools.shape.settings.strokeColor.tip')" position="bottom-left" />
+                  @commit="applyLocalSettings(true)" :tip="$t('tools.shape.settings.strokeColor.tip')"
+                  position="bottom-left" :disabled="localObjectSettings.strokeWidth === 0" />
               </div>
             </div>
             <div class="content-wrapper">
@@ -226,10 +224,9 @@ const {
                 </p>
               </div>
               <div class="content-inputs">
-                <NumberDropdownInput v-model="localObjectSettings.strokeWidth"
-                  :min="localObjectSettings.fillEnabled ? 0 : 1" :max="100" @update="applyLocalSettings"
-                  :options="[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]" unit="px"
-                  :tip="$t('tools.shape.settings.strokeWidth.tip')" position="bottom-left" />
+                <NumberSpinner v-model="localObjectSettings.strokeWidth" :min="0" :max="100"
+                  @update="applyLocalSettings" :tip="$t('tools.shape.settings.strokeWidth.tip')"
+                  position="bottom-left" />
               </div>
             </div>
           </div>
@@ -270,7 +267,7 @@ const {
         <div v-if="localObjectSettings.type === 'line'" class=" settings-content-wrapper">
           <div class="content-wrapper">
             <div class="content-title">
-              <p :class="{ disabled: localObjectSettings.strokeWidth === 0 }">
+              <p>
                 {{ $t('tools.shape.settings.lineType.label') }}
               </p>
             </div>
@@ -283,7 +280,7 @@ const {
         <div v-if="localObjectSettings.type === 'line'" class=" settings-content-wrapper">
           <div class="content-wrapper">
             <div class="content-title">
-              <p :class="{ disabled: localObjectSettings.strokeWidth === 0 }">
+              <p>
                 {{ $t('tools.shape.settings.lineArrow.end.label') }}
               </p>
             </div>

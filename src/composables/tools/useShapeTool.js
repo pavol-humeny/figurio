@@ -11,10 +11,10 @@ const { addUserEvent } = useApi()
  */
 const localObjectSettings = ref({
   type: 'none',
-  fillEnabled: true,
+  fillEnabled: false,
   fillColor: '#000000',
   strokeColor: '#000000',
-  strokeWidth: 0,
+  strokeWidth: 1,
   width: 0,
   height: 0,
   x: 0,
@@ -59,7 +59,7 @@ export function useShapeTool(editorStore, imageStore, historyStore, t) {
       localObjectSettings.value.strokeWidth = 1
       localObjectSettings.value.strokeColor = editorStore.toolsConfig.shape.fillColor
     } else {
-      localObjectSettings.value.strokeWidth = 0
+      localObjectSettings.value.strokeWidth = 1
       localObjectSettings.value.strokeColor = editorStore.toolsConfig.shape.strokeColor
     }
 
@@ -68,7 +68,7 @@ export function useShapeTool(editorStore, imageStore, historyStore, t) {
     localObjectSettings.value.opacity = editorStore.toolsConfig.shape.opacity
     localObjectSettings.value.cornerRadius = editorStore.toolsConfig.shape.cornerRadius
     localObjectSettings.value.lineType = editorStore.toolsConfig.shape.lineType
-    localObjectSettings.value.lineArrowEnd = editorStore.toolsConfig.shape.lineArrowStart
+    localObjectSettings.value.lineArrowEnd = editorStore.toolsConfig.shape.lineArrowEnd
 
     localObjectSettings.value.rotation = 0
   }
@@ -385,6 +385,34 @@ export function useShapeTool(editorStore, imageStore, historyStore, t) {
       ? parseFloat(attrs.transform.match(/rotate\(([^)]+)\)/)?.[1]) || 0
       : 0
   })
+
+  /**
+   * Watch for strokeWidth changes to enforce fillEnabled logic
+   */
+  watch(
+    () => localObjectSettings.value.strokeWidth,
+    (newWidth) => {
+      // If stroke width is set to 0, enable fill
+      if (newWidth === 0 && !localObjectSettings.value.fillEnabled) {
+        localObjectSettings.value.fillEnabled = true
+        applyLocalSettings()
+      }
+    },
+  )
+
+  /**
+   * Watch for fillEnabled changes to enforce strokeWidth logic
+   */
+  watch(
+    () => localObjectSettings.value.fillEnabled,
+    (isEnabled) => {
+      // If fill is disabled and stroke width is 0, set stroke width to 1
+      if (!isEnabled && localObjectSettings.value.strokeWidth === 0) {
+        localObjectSettings.value.strokeWidth = 1
+        applyLocalSettings()
+      }
+    },
+  )
 
   /**
    * Apply local settings to the active SVG object

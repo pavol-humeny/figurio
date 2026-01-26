@@ -107,14 +107,14 @@ export const useEditorStore = defineStore('editorStore', {
         isVisibleCropBox: true,
       },
       shape: {
-        fillEnabled: true,
+        fillEnabled: false,
         fillColor: '#000000',
-        strokeWidth: 0,
+        strokeWidth: 1,
         strokeColor: '#000000',
         opacity: 1,
         cornerRadius: 0,
         lineType: 'solid',
-        lineArrowStart: 'none',
+        lineArrowEnd: 'none',
       },
       text: {
         size: 16,

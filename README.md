@@ -61,8 +61,8 @@
     - kreslenie hned s obrysom alebo kreslenie len obrysu a možnosť vyplniť 
     - pri zrušení výplne automaticky prepnúť na hrúbku rámiku a nie vyžadovať od užívateľa 
 - text 
-    - enter to vloží na stred 
-    - pri zmazaní to odstráni objekt - malo by to spraviť až pri on blur 
+    - FIXED - enter to vloží na stred 
+    - FIXED - pri zmazaní to odstráni objekt - malo by to spraviť až pri on blur 
 - FIXED - mazanie objektu pomocou backspace nie len delete (mac nemá delete)
 - FIXED - z index polohu zobrazovať len 2 tlačidlá ak sú len 2 objekty, žiadne ak je len jeden 
 - FIXED - pri prepínaní okien to nedrží zoom 

@@ -54,7 +54,8 @@
       "bugFixes": {
         "items": [
           "Fix issue with setting crop dimensions manually",
-          "Improve texts in background removal tool"
+          "Improve texts in background removal tool",
+          "Text can be completely deleted without removing text object"
         ]
       }
     },
