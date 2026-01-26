@@ -291,7 +291,7 @@ export function useSvgObjectsList(
       // TODO - zmazat ak bude robit problemy
       editorStore.previousToolKey = editorStore.selectedToolKey
 
-      toggleTool(tool, tab)
+      toggleTool(tool, tab, false) // Do not deselect on same tool
     }
 
     // Select the object

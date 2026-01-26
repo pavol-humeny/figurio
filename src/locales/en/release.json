@@ -45,12 +45,14 @@
       "newFeatures": {
         "items": [
           "Enable image panning with left mouse button when no tool is selected",
-          "Add shortcut BACKSPACE to delete selected SVG objects or remove background in background removal tool"
+          "Add shortcut BACKSPACE to delete selected SVG objects or remove background in background removal tool",
+          "Add support for macOS command key in keyboard shortcuts"
         ]
       },
       "bugFixes": {
         "items": [
-          "Fix issue with setting crop dimensions manually"
+          "Fix issue with setting crop dimensions manually",
+          "Improve texts in background removal tool"
         ]
       }
     },

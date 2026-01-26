@@ -45,18 +45,18 @@
 
 ## TODO od SA (userTesting2 - 18.1.2026)
 - FIXED - pohyb pomocou L mouse + deselect nástroja 
-- command + zoom pre priblíženie na macu 
+- FIXED - command + zoom pre priblíženie na macu 
 - FIXED - Premenovanie súboru by nemuselo dávať toast
 - FIXED - Bočný panel by mohol mať výraznejšiu šípku 
 - FIXED - bočný panel by sa mohol zatvárať len šípkou a nie celým rozmerom tlacidla 
 - FIXED - manuálna úprava rozmerov pri crop dá error 
-- skrytie rámiku pomocou hold - použiť tlačidlo a nie toggle 
+- FIXED - skrytie rámiku pomocou hold - použiť tlačidlo a nie toggle 
 - Frame tool - vylepšiť rámiky 
-- BG removal 
-    - vybrať odstránené je neintuitívne 
-    - text - nahradiť pozadie zmeniť na nahradiť výber 
-- pridať nástroj fill (kýbel)
-- zoznam objektov (svg list) by mohol zobraziť krížik pre zmazanie už pri hover, bez nutnosti selectu 
+- FIXED - BG removal 
+    - SKIP - vybrať odstránené je neintuitívne 
+    - FIXED - text - nahradiť pozadie zmeniť na nahradiť výber 
+- SKIP - pridať nástroj fill (kýbel)
+- SKIP - zoznam objektov (svg list) by mohol zobraziť krížik pre zmazanie už pri hover, bez nutnosti selectu 
 - shape 
     - kreslenie hned s obrysom alebo kreslenie len obrysu a možnosť vyplniť 
     - pri zrušení výplne automaticky prepnúť na hrúbku rámiku a nie vyžadovať od užívateľa 
@@ -105,6 +105,7 @@
 - PDF s nepodporovanými svg objektami 
 - prevod pdf na raster ak to obsahuje hlúposti 
 - Zjednodušiť toasty
+- pridať nástroj fill (kýbel)
 
 ## Insane ideas
 - aplikovanie operácie na všetky obrázky 

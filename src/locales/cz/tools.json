@@ -129,12 +129,12 @@
           "tip": "Odstraní výběr z původního obrázku nebo z aktuálně upraveného obrázku"
         },
         "replaceBackgroundColor": {
-          "label": "Nahradit pozadí barvou",
-          "tip": "Nahradí pozadí vybranou barvou místo toho, aby bylo průhledné"
+          "label": "Nahradit výběr barvou",
+          "tip": "Nahradí výběr vybranou barvou místo toho, aby bylo průhledné"
         },
         "backgroundReplacementColor": {
-          "label": "Barva pozadí",
-          "tip": "Vyberte barvu, kterou chcete nahradit odstraněné pozadí"
+          "label": "Barva náhrady",
+          "tip": "Vyberte barvu, kterou chcete nahradit odstraněnou oblast"
         },
         "removeButton": {
           "text": "Odstranit výběr"

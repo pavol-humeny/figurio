@@ -129,12 +129,12 @@
           "tip": "Remove selection from the original base image or from the current modified image"
         },
         "replaceBackgroundColor": {
-          "label": "Replace background with color",
-          "tip": "Replace background with selected color instead of making it transparent"
+          "label": "Replace selection with color",
+          "tip": "Replace selection with selected color instead of making it transparent"
         },
         "backgroundReplacementColor": {
-          "label": "Background color",
-          "tip": "Select the color to replace the removed background"
+          "label": "Replacement color",
+          "tip": "Select the color to use for replacing the removed area"
         },
         "removeButton": {
           "text": "Remove selection"

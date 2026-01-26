@@ -179,7 +179,7 @@ export function useToolsPanel(editorStore, imageStore, uiStore, workspaceStore, 
    * @param {string} toolKey - Tool key to toggle
    * @param {string | null} [tabKey] - Optional tab key to activate
    */
-  const toggleTool = async (toolKey, tabKey) => {
+  const toggleTool = async (toolKey, tabKey, canDeselect = true) => {
     if (!imageStore.isImageLoaded || editorStore.isExportModalOpen) return
     if (editorStore.enableTools[toolKey] === false) {
       log('Tool is disabled:', toolKey)
@@ -194,6 +194,7 @@ export function useToolsPanel(editorStore, imageStore, uiStore, workspaceStore, 
 
     // If already selected, deselect
     if (
+      canDeselect &&
       editorStore.selectedToolKey === toolKey &&
       (tabKey === null || tabKey === editorStore.selectedTabPerTool[toolKey])
     ) {
