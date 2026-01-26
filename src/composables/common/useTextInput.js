@@ -37,11 +37,29 @@ export function useTextInput(props, emit) {
   )
 
   /**
-   * Emits updated value when the input is blurred or Enter is pressed
+   * Called on blur
    */
-  const onBlurOrEnter = () => {
+  const onBlur = () => {
     emit('update:modelValue', inputValue.value)
-    emit('update', inputValue.value) // Emit update event for compatibility
+    emit('update', inputValue.value)
+  }
+
+  /**
+   * Called on Enter key
+   */
+  const onEnter = () => {
+    emit('update:modelValue', inputValue.value)
+    emit('update', inputValue.value)
+
+    // Call optional prop callback
+    if (typeof props.onEnter === 'function') {
+      props.onEnter(inputValue.value)
+    }
+
+    // Remove focus from input
+    if (inputRef.value) {
+      inputRef.value.blur()
+    }
   }
 
   /**
@@ -65,7 +83,8 @@ export function useTextInput(props, emit) {
 
   return {
     inputValue,
-    onBlurOrEnter,
+    onBlur,
+    onEnter,
     onInput,
     setValue,
     inputRef,

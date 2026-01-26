@@ -10,6 +10,7 @@ import { useTextInput } from '@/composables/common/useTextInput'
  * @property {boolean} [disabled=false] - Whether the input is disabled
  * @property {string} [placeholder=''] - Input placeholder text
  * @property {boolean} [updateOnChange=false] - If true, emits update on each input
+ * @property {(value: string) => void} [onEnter]
  */
 
 /** @type {TextInputProps} */
@@ -42,6 +43,10 @@ const props = defineProps({
     type: Number,
     default: null,
   },
+  onEnter: {
+    type: Function,
+    default: null,
+  },
 })
 
 /**
@@ -55,7 +60,8 @@ const emit = defineEmits(['update:modelValue', 'update'])
  */
 const {
   inputValue,
-  onBlurOrEnter,
+  onBlur,
+  onEnter,
   onInput,
   setValue,
   inputRef,
@@ -74,8 +80,8 @@ defineExpose({
 <template>
   <ItemTip :text="props.tip" :position="props.position">
     <input type="text" class="text-input" v-model="inputValue" :disabled="props.disabled"
-      :placeholder="props.placeholder" @blur="onBlurOrEnter" @keydown.enter="onBlurOrEnter" @input="onInput"
-      ref="inputRef" :maxlength="props.maxLength" />
+      :placeholder="props.placeholder" @blur="onBlur" @keydown.enter="onEnter" @input="onInput" ref="inputRef"
+      :maxlength="props.maxLength" />
   </ItemTip>
 </template>
 

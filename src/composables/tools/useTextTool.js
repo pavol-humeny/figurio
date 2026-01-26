@@ -240,6 +240,25 @@ export function useTextTool(imageStore, historyStore, editorStore, t) {
   }
 
   /**
+   * Add new text object to the center of the viewport on Enter key press
+   */
+  const addTextObjectOnEnterClick = () => {
+    console.log(
+      'addTextObjectOnEnterClick called',
+      editorStore.selectedToolKey,
+      localTextSettings.value.text,
+    )
+    if (editorStore.selectedToolKey !== 'text') return
+    if (!localTextSettings.value.text.trim()) return
+
+    // Get center position of the viewport
+    const centerX = imageStore.fileDimensions.width / 2
+    const centerY = imageStore.fileDimensions.height / 2
+
+    addTextObject(centerX, centerY)
+  }
+
+  /**
    * Add new text object to canvas
    * @param {number} x - X coordinate
    * @param {number} y - Y coordinate
@@ -248,7 +267,9 @@ export function useTextTool(imageStore, historyStore, editorStore, t) {
     if (!localTextSettings.value.text.trim()) return
 
     // Trim text to 1000 chars
-    localTextSettings.value.text = localTextSettings.value.text.trim().slice(0, editorConfig.maxTextLength)
+    localTextSettings.value.text = localTextSettings.value.text
+      .trim()
+      .slice(0, editorConfig.maxTextLength)
 
     const id = Date.now()
     const fontSize = localTextSettings.value.size
@@ -358,5 +379,6 @@ export function useTextTool(imageStore, historyStore, editorStore, t) {
     maxTextPositionY,
     minTextPositionY,
     hidePosition,
+    addTextObjectOnEnterClick,
   }
 }
