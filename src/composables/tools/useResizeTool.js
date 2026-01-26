@@ -25,10 +25,13 @@ export function useResizeTool(imageStore, historyStore, viewportStore, uiStore, 
   const isUpdatingFromStore = ref(false)
 
   /**
-   * Maximum allowed image width and height based on editor config
+   * Maximum and minimum allowed image width and height based on editor config
    */
   const maxFileDimensionWidth = ref(editorConfig.maxFileDimensionWidth)
   const maxFileDimensionHeight = ref(editorConfig.maxFileDimensionHeight)
+
+  const minFileDimensionWidth = ref(editorConfig.minCropSize)
+  const minFileDimensionHeight = ref(editorConfig.minCropSize)
 
   /**
    * Whether to preserve the aspect ratio when resizing
@@ -45,13 +48,56 @@ export function useResizeTool(imageStore, historyStore, viewportStore, uiStore, 
    * Original aspect ratio (width / height) of the image
    * Used when dimensions are linked
    */
-  let originalAspectRatio = imageStore.fileDimensions.width / imageStore.fileDimensions.height
+  let originalAspectRatio = imageStore.fileDimensions.width / imageStore.fileDimensions.height || 1
 
   /**
    * Reference to the width and height input component
    */
   const FileDimensionWidthInputRef = ref(null)
   const FileDimensionHeightInputRef = ref(null)
+
+  /**
+   * Effective maximum and minimum dimensions when aspect ratio is locked
+   */
+  const effectiveMaxWidth = computed(() => {
+    if (!isFileDimensionsLinked.value) {
+      return maxFileDimensionWidth.value
+    }
+
+    return Math.floor(
+      Math.min(maxFileDimensionWidth.value, maxFileDimensionHeight.value * originalAspectRatio),
+    )
+  })
+
+  const effectiveMaxHeight = computed(() => {
+    if (!isFileDimensionsLinked.value) {
+      return maxFileDimensionHeight.value
+    }
+
+    return Math.floor(
+      Math.min(maxFileDimensionHeight.value, maxFileDimensionWidth.value / originalAspectRatio),
+    )
+  })
+
+  const effectiveMinWidth = computed(() => {
+    if (!isFileDimensionsLinked.value) {
+      return minFileDimensionWidth.value
+    }
+
+    return Math.ceil(
+      Math.max(minFileDimensionWidth.value, minFileDimensionHeight.value * originalAspectRatio),
+    )
+  })
+
+  const effectiveMinHeight = computed(() => {
+    if (!isFileDimensionsLinked.value) {
+      return minFileDimensionHeight.value
+    }
+
+    return Math.ceil(
+      Math.max(minFileDimensionHeight.value, minFileDimensionWidth.value / originalAspectRatio),
+    )
+  })
 
   /**
    * Operation can not be applied if image has same dimensions as requested or zero dimensions
@@ -62,6 +108,16 @@ export function useResizeTool(imageStore, historyStore, viewportStore, uiStore, 
       fileDimensionHeight.value > 0 &&
       (fileDimensionWidth.value !== imageStore.fileDimensions.width ||
         fileDimensionHeight.value !== imageStore.fileDimensions.height)
+    )
+  })
+
+  /**
+   * Whether the resize can be reset to original dimensions
+   */
+  const canBeReset = computed(() => {
+    return (
+      imageStore.fileDimensions.width !== imageStore.originalFileDimensions.width ||
+      imageStore.fileDimensions.height !== imageStore.originalFileDimensions.height
     )
   })
 
@@ -96,6 +152,44 @@ export function useResizeTool(imageStore, historyStore, viewportStore, uiStore, 
   )
 
   /**
+   * Watch for changes in linked dimensions and adjust size accordingly
+   */
+  watch(isFileDimensionsLinked, (linked) => {
+    if (!linked) return
+
+    let width = fileDimensionWidth.value
+    let height = fileDimensionHeight.value
+
+    if (width > effectiveMaxWidth.value) {
+      width = effectiveMaxWidth.value
+      height = round(width / originalAspectRatio)
+    }
+
+    if (height > effectiveMaxHeight.value) {
+      height = effectiveMaxHeight.value
+      width = round(height * originalAspectRatio)
+    }
+
+    if (width < effectiveMinWidth.value) {
+      width = effectiveMinWidth.value
+      height = round(width / originalAspectRatio)
+    }
+
+    if (height < effectiveMinHeight.value) {
+      height = effectiveMinHeight.value
+      width = round(height * originalAspectRatio)
+    }
+
+    fileDimensionWidth.value = width
+    fileDimensionHeight.value = height
+
+    nextTick(() => {
+      FileDimensionWidthInputRef.value?.setValue(width)
+      FileDimensionHeightInputRef.value?.setValue(height)
+    })
+  })
+
+  /**
    * Update dimension input values, respecting aspect ratio if enabled
    *
    * @param {'width'|'height'} key - Dimension to update
@@ -103,44 +197,31 @@ export function useResizeTool(imageStore, historyStore, viewportStore, uiStore, 
    */
   const updateFileDimension = (key, value) => {
     if (isUpdatingFromStore.value) return
-
-    if (isNaN(value) || value <= 0) return
+    if (isNaN(value)) return
 
     if (key === 'width') {
-      if (value > maxFileDimensionWidth.value) {
-        value = maxFileDimensionWidth.value
-      } else if (value < 1) {
-        value = 1
-      }
+      value = Math.min(Math.max(value, effectiveMinWidth.value), effectiveMaxWidth.value)
 
       fileDimensionWidth.value = value
+
       if (isFileDimensionsLinked.value) {
-        const newHeight = round(value / originalAspectRatio)
-        if (newHeight < 1) {
-          fileDimensionHeight.value = 1
-        } else if (newHeight > maxFileDimensionHeight.value) {
-          fileDimensionHeight.value = maxFileDimensionHeight.value
-        } else {
-          fileDimensionHeight.value = newHeight
-        }
+        fileDimensionHeight.value = Math.min(
+          Math.max(round(value / originalAspectRatio), effectiveMinHeight.value),
+          effectiveMaxHeight.value,
+        )
       }
-    } else if (key === 'height') {
-      if (value > maxFileDimensionHeight.value) {
-        value = maxFileDimensionHeight.value
-      } else if (value < 1) {
-        value = 1
-      }
+    }
+
+    if (key === 'height') {
+      value = Math.min(Math.max(value, effectiveMinHeight.value), effectiveMaxHeight.value)
 
       fileDimensionHeight.value = value
+
       if (isFileDimensionsLinked.value) {
-        const newWidth = round(value * originalAspectRatio)
-        if (newWidth < 1) {
-          fileDimensionWidth.value = 1
-        } else if (newWidth > maxFileDimensionWidth.value) {
-          fileDimensionWidth.value = maxFileDimensionWidth.value
-        } else {
-          fileDimensionWidth.value = newWidth
-        }
+        fileDimensionWidth.value = Math.min(
+          Math.max(round(value * originalAspectRatio), effectiveMinWidth.value),
+          effectiveMaxWidth.value,
+        )
       }
     }
 
@@ -171,7 +252,7 @@ export function useResizeTool(imageStore, historyStore, viewportStore, uiStore, 
   /**
    * Reset resize dimensions to original image dimensions
    */
-  const resetResize = () => {
+  const resetResize = async () => {
     const rotation = getEffectiveRotation()
 
     let width = imageStore.originalFileDimensions.width
@@ -194,6 +275,9 @@ export function useResizeTool(imageStore, historyStore, viewportStore, uiStore, 
       FileDimensionWidthInputRef.value?.setValue(fileDimensionWidth.value)
       FileDimensionHeightInputRef.value?.setValue(fileDimensionHeight.value)
     })
+
+    // Apply the reset resize immediately
+    await applyResize()
   }
 
   /**
@@ -262,6 +346,8 @@ export function useResizeTool(imageStore, historyStore, viewportStore, uiStore, 
     fileDimensionHeight,
     maxFileDimensionWidth,
     maxFileDimensionHeight,
+    minFileDimensionWidth,
+    minFileDimensionHeight,
     isFileDimensionsLinked,
     FileDimensionWidthInputRef,
     FileDimensionHeightInputRef,
@@ -269,5 +355,6 @@ export function useResizeTool(imageStore, historyStore, viewportStore, uiStore, 
     applyResize,
     resetResize,
     canBeApplied,
+    canBeReset,
   }
 }

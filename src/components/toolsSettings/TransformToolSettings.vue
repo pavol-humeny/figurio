@@ -14,7 +14,6 @@ import { useI18n } from 'vue-i18n'
 import { useViewportStore } from '@/stores/viewportStore'
 import ExplainItem from '../common/ExplainItem.vue'
 import { useUiStore } from '@/stores/uiStore'
-import { editorConfig } from '@/config/editorConfig'
 
 const { t } = useI18n()
 
@@ -38,6 +37,8 @@ const {
   fileDimensionHeight,
   maxFileDimensionWidth,
   maxFileDimensionHeight,
+  minFileDimensionWidth,
+  minFileDimensionHeight,
   updateFileDimension,
   FileDimensionWidthInputRef,
   FileDimensionHeightInputRef,
@@ -45,6 +46,7 @@ const {
   resetResize,
   applyResize,
   canBeApplied,
+  canBeReset
 } = useResizeTool(useImageStore(), useHistoryStore(), useViewportStore(), useUiStore(), t)
 
 /**
@@ -159,9 +161,8 @@ const tabs = ['rotate', 'flip', 'resize']
                 <label for="width-input">
                   {{ $t('tools.transform.settings.resize.resizeDimensions.width') }}
                 </label>
-                <NumberInput ref="FileDimensionWidthInputRef" v-model="fileDimensionWidth"
-                  :min="editorConfig.minCropSize" :max="maxFileDimensionWidth"
-                  @update="(val) => updateFileDimension('width', val)" unit="px" />
+                <NumberInput ref="FileDimensionWidthInputRef" v-model="fileDimensionWidth" :min="minFileDimensionWidth"
+                  :max="maxFileDimensionWidth" @update="(val) => updateFileDimension('width', val)" unit="px" />
               </div>
 
               <div class="content-between-inputs-icon-wrapper">
@@ -176,7 +177,7 @@ const tabs = ['rotate', 'flip', 'resize']
                   {{ $t('tools.transform.settings.resize.resizeDimensions.height') }}
                 </label>
                 <NumberInput ref="FileDimensionHeightInputRef" v-model="fileDimensionHeight"
-                  :min="editorConfig.minCropSize" :max="maxFileDimensionHeight"
+                  :min="minFileDimensionHeight" :max="maxFileDimensionHeight"
                   @update="(val) => updateFileDimension('height', val)" unit="px" />
               </div>
             </div>
@@ -186,7 +187,7 @@ const tabs = ['rotate', 'flip', 'resize']
           <div class="content-wrapper">
             <DefaultButton :text="$t('tools.transform.settings.resize.resetResizeButton.text')"
               :tip="$t('tools.transform.settings.resize.resetResizeButton.tip')" position="bottom-left"
-              @click="resetResize" />
+              @click="resetResize" :disabled="!canBeReset" />
           </div>
         </div>
 

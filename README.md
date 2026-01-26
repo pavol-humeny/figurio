@@ -11,8 +11,6 @@
 - pri vytvorení textu a následnom deselecte by si to mohlo pamätať posledný nastavený text 
 - noise detection spúšťať len nad jpg
 - default frame width je 0
-- copy to clipboard moze fungovať len ak je otvorený export
-- copy to clipboard zobraziť aj ked to nie je png 
 - resize, rotate centrovat image
 - pri use milimeters to vyzaduje physical mode na to aby to fungovalo 
 - pridať nástroj pre nastavenie priehľadnosti obrázka
@@ -44,7 +42,7 @@
 - text - málo fontov 
 - blur - čakala blur pomocou štetca/kreslenia
 - mg area - pridáva sa nový objekt pri kliknutí namiesto výberu 
-- resize - hneď to aplikovať nie len resetovať hodnoty 
+- FIXED - resize - hneď to aplikovať nie len resetovať hodnoty 
 
 
 ## TODO od SA (userTesting2 - 18.1.2026)
