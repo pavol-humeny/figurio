@@ -1863,44 +1863,78 @@ export function useFrameTool(imageStore, historyStore, viewportStore, t) {
       const w = renderedImage.width
       const h = renderedImage.height
 
-      const canvas = document.createElement('canvas')
-      canvas.width = w
-      canvas.height = h
-      const ctx = canvas.getContext('2d')
+      const roundedCanvas = applyRoundedCorners(
+        renderedImage,
+        radius,
+        w,
+        h,
+        imageStore.frame.phoneHeaderEnabled && frame.phoneHeaderExpand,
+      )
 
-      const path = new Path2D()
+      imageStore.setRenderedImage(roundedCanvas, true) // Set only original image, not tmpRenderedImage
 
-      // Create rounded rectangle path
-      if (imageStore.frame.phoneHeaderEnabled && frame.phoneHeaderExpand) {
-        path.moveTo(0, 0) // top-left corner
-        path.lineTo(w, 0) // top-right corner
-        path.lineTo(w, h - radius) // right side down to curve start
-        path.quadraticCurveTo(w, h, w - radius, h) // bottom-right curve
-        path.lineTo(radius, h) // bottom side to left curve start
-        path.quadraticCurveTo(0, h, 0, h - radius) // bottom-left curve
-        path.lineTo(0, 0) // left side up
-        path.closePath()
-      } else {
-        path.moveTo(radius, 0)
-        path.lineTo(w - radius, 0)
-        path.quadraticCurveTo(w, 0, w, radius)
-        path.lineTo(w, h - radius)
-        path.quadraticCurveTo(w, h, w - radius, h)
-        path.lineTo(radius, h)
-        path.quadraticCurveTo(0, h, 0, h - radius)
-        path.lineTo(0, radius)
-        path.quadraticCurveTo(0, 0, radius, 0)
-        path.closePath()
+      const overlayImage = imageStore.overlayImage
+      if (overlayImage) {
+        const roundedOverlay = applyRoundedCorners(
+          overlayImage,
+          radius,
+          w,
+          h,
+          imageStore.frame.phoneHeaderEnabled && frame.phoneHeaderExpand,
+        )
+
+        imageStore.overlayImage = roundedOverlay
       }
-
-      // Round corners by clipping
-      ctx.save()
-      ctx.clip(path)
-      ctx.drawImage(renderedImage, 0, 0)
-      ctx.restore()
-
-      imageStore.setRenderedImage(canvas, true) // Set only original image, not tmpRenderedImage
     }
+  }
+
+  /**
+   * Apply rounded corners clipping to image
+   *
+   * @param {CanvasImageSource} srcImage
+   * @param {number} radius
+   * @param {number} w
+   * @param {number} h
+   * @param {boolean} hasPhoneHeader
+   *
+   * @returns {HTMLCanvasElement}
+   */
+  const applyRoundedCorners = (srcImage, radius, w, h, hasPhoneHeader) => {
+    const canvas = document.createElement('canvas')
+    canvas.width = w
+    canvas.height = h
+    const ctx = canvas.getContext('2d')
+
+    const path = new Path2D()
+
+    if (hasPhoneHeader) {
+      path.moveTo(0, 0)
+      path.lineTo(w, 0)
+      path.lineTo(w, h - radius)
+      path.quadraticCurveTo(w, h, w - radius, h)
+      path.lineTo(radius, h)
+      path.quadraticCurveTo(0, h, 0, h - radius)
+      path.lineTo(0, 0)
+    } else {
+      path.moveTo(radius, 0)
+      path.lineTo(w - radius, 0)
+      path.quadraticCurveTo(w, 0, w, radius)
+      path.lineTo(w, h - radius)
+      path.quadraticCurveTo(w, h, w - radius, h)
+      path.lineTo(radius, h)
+      path.quadraticCurveTo(0, h, 0, h - radius)
+      path.lineTo(0, radius)
+      path.quadraticCurveTo(0, 0, radius, 0)
+    }
+
+    path.closePath()
+
+    ctx.save()
+    ctx.clip(path)
+    ctx.drawImage(srcImage, 0, 0)
+    ctx.restore()
+
+    return canvas
   }
 
   /**

@@ -6,7 +6,6 @@
 
 # Chyby
 - nakreslím niečo, pridám shape, a dám rasterize tak to zmizne - rastererize zožuje brush 
-- pri kreslení rámiku telefónu a následnom kreslení tvarov pri zobrazení vidno tvary ale po exporte sa prekryjú hlavičkou rámiku 
 - pri vytvorení textu a následnom deselecte by si to mohlo pamätať posledný nastavený text 
 - noise detection spúšťať len nad jpg
 - default frame width je 0
@@ -58,8 +57,8 @@
 - SKIP - pridať nástroj fill (kýbel)
 - SKIP - zoznam objektov (svg list) by mohol zobraziť krížik pre zmazanie už pri hover, bez nutnosti selectu 
 - shape 
-    - kreslenie hned s obrysom alebo kreslenie len obrysu a možnosť vyplniť 
-    - pri zrušení výplne automaticky prepnúť na hrúbku rámiku a nie vyžadovať od užívateľa 
+    - FIXED - kreslenie hned s obrysom alebo kreslenie len obrysu a možnosť vyplniť 
+    - FIXED - pri zrušení výplne automaticky prepnúť na hrúbku rámiku a nie vyžadovať od užívateľa 
 - text 
     - FIXED - enter to vloží na stred 
     - FIXED - pri zmazaní to odstráni objekt - malo by to spraviť až pri on blur 
@@ -79,18 +78,15 @@
 - NEPREUKÁZALO SA - pri prepnutí z color na manual select sa nezapne spravny kurzor
 - NEPREUKÁZALO SA - error pri zatvorení viacerých súborov
 - Vylepšenie rámiku pre prehliadače 
-
 - Paste by to mohol klásť inde ako na ten istý objekt, aspoň pri kliknutí pravím 
 - Opravit paste blur objektu 
 - nakreslenie svg objektu, prepnutie na brush (vyžaduje rasterizáciu) a následné spätné prepnutie na shape (stále to chcelo rasterizovať)
 - color bg removal intuitívnejší 
-- na videá v tool tipe pridať time line
 - Možno nejako vylepšiť vysvetlenie grayscale
 - rámik windows pri použití milimetrov a dosiahnutí maximálnej hodnoty je možné zadať desatinné číslo 
 - brush - ak dochádza k uloženiu snapshotu do histórie tak to vyriesit nejako inak - divne sa to seká 
 - pri posune viacerých objektov, následnom položení a opätovnom presune to nechce ísť a sekne to 
 - undo redo možno nejako zakázať pri aby sa to nedalo kliknúť viac krát do vtedy kým sa neaplikuje operácia 
-- klávesové skratky to nepočíta do statistík
 - pri rámiku telefónu je nejaký divný footer (prázdne miesto), keď je to jpg obrázok (neviem či aj pri iných)
 - premyslieť kedy sa toasty nemusia zobrazovať 
 

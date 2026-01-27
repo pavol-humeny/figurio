@@ -249,11 +249,11 @@ export function useImageRenderer(
 
         blockRender.value = false
 
-        renderCanvas()
-
         console.warn('IMAGE RENDERER - END2')
         uiStore.isApplying = false
         uiStore.isApplyingFrame = false
+
+        renderCanvas()
 
         return
       }
@@ -345,7 +345,7 @@ export function useImageRenderer(
    * @param {HTMLCanvasElement} srcCanvas
    */
   const updateBlurPreview = (srcCanvas) => {
-    const MAX_SIZE = 1024 // kľudne 512 ak chceš ešte rýchlejšie
+    const MAX_SIZE = 1024
 
     const scale = Math.min(MAX_SIZE / srcCanvas.width, MAX_SIZE / srcCanvas.height, 1)
 

@@ -275,9 +275,6 @@ const cursorStyle = computed(() => {
           <!-- Canvas for artifacts -->
           <canvas v-if="imageStore.fileType === 'image'" ref="overlayCanvasRef" class="overlay-canvas"></canvas>
 
-          <svg :class="{ 'hide': uiStore.isApplying && !uiStore.isApplyingFrame }" ref="frameSvgRef"
-            class="frame-svg"></svg>
-
           <!-- Brush Tool Canvas -->
           <BrushToolCanvas :style="{
             pointerEvents: editorStore.selectedToolKey === 'brush' ? 'auto' : 'none'
@@ -311,6 +308,10 @@ const cursorStyle = computed(() => {
             <rect v-if="selectBox" :x="selectBox.x" :y="selectBox.y" :width="selectBox.width" :height="selectBox.height"
               fill="var(--editor-highlight-with-opacity-c)" />
           </svg>
+
+          <!-- Frame -->
+          <svg :class="{ 'hide': uiStore.isApplying && !uiStore.isApplyingFrame }" ref="frameSvgRef"
+            class="frame-svg"></svg>
 
           <CropTool v-if="editorStore.selectedToolKey === 'crop'" />
           <PresetCropTool v-if="
@@ -402,7 +403,7 @@ const cursorStyle = computed(() => {
         </div>
         <div v-if="mouseX !== null" class="ruler-cursor-mark horizontal" :style="{ left: mouseX + 'px' }">
           <span class="ruler-cursor-label horizontal" :class="{ 'active': cursorPosXSameAsImageWidth }">{{ cursorPosX
-            }}</span>
+          }}</span>
         </div>
 
       </div>
@@ -415,7 +416,7 @@ const cursorStyle = computed(() => {
         </div>
         <div v-if="mouseY !== null" class="ruler-cursor-mark vertical" :style="{ top: mouseY + 'px' }">
           <span class="ruler-cursor-label vertical" :class="{ 'active': cursorPosYSameAsImageHeight }">{{ cursorPosY
-            }}</span>
+          }}</span>
         </div>
       </div>
     </div>
@@ -483,6 +484,10 @@ const cursorStyle = computed(() => {
   top: 0;
   left: 0;
   display: block;
+}
+
+.frame-svg {
+  pointer-events: none;
 }
 
 .overlay-canvas {
