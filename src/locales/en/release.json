@@ -4,7 +4,7 @@
     "items": []
   },
   "versions":{
-      "5.6.0":{
+    "5.6.0":{
       "label": "5.6.0",
       "date":"24.1. 2025",
       "improvements": {
@@ -12,7 +12,8 @@
           "Recent colors are persistent between app reloads",
           "Noise detection is more strict to avoid false positives",
           "Enable copy to clipboard button for all file formats",
-          "Frame tool keeps current settings when switching between files"
+          "Frame tool keeps current settings when switching between files",
+          "Prevent browser back/forward swipe gesture to avoid accidental navigation"
         ]
       },
       "newFeatures": {

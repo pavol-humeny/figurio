@@ -1,32 +1,97 @@
 {
   "inProgressGlobal": {
     "currentlyInProgressText": "Aktuálne prebiehajúce vylepšenia",
-    "items": [
-      "Podpora nástroje Přiblížení oblasti pro pdf soubory"
-    ]
+    "items": []
   },
   "versions": {
-    "5.4.0": {
-      "label": "5.4.0",
-      "date": "17. 1. 2025",
+    "5.6.0": {
+      "label": "5.6.0",
+      "date": "24.1. 2025",
       "improvements": {
         "items": [
-          "Přizpůsobení barvy výběru textu podle aktuálního motivu (světlý / tmavý)",
-          "Změna ikony režimu fyzického přiblížení pro lepší vystižení jeho funkce",
-          "Vycentrování obrázku po ořezu",
-          "Podpora větších PDF souborů"
+          "Naposledy použité barvy jsou zachovány i po opětovném načtení aplikace",
+          "Detekce šumu je přísnější, aby se předešlo falešným pozitivním výsledkům",
+          "Tlačítko pro kopírování do schránky je dostupné pro všechny formáty souborů",
+          "Nástroj rámečku si zachovává aktuální nastavení při přepínání souborů",
+          "Zamezení gestu zpět/vpřed v prohlížeči, aby se předešlo nechtěné navigaci"
         ]
       },
       "newFeatures": {
         "items": [
-          "Možnost přibližování a oddalování pomocí kláves plus a mínus na numerické klávesnici"
+          "Přidána klávesová zkratka CTRL+C pro kopírování obrázku do schránky",
+          "Gumu lze použít podržením klávesy ALT při nástroji štětec"
+        ]
+      },
+      "bugFixes": {
+        "items": [
+          "Zamezení propagace klávesy Enter při potvrzení změny názvu souboru",
+          "Skrytí posuvníku v kartách souborů",
+          "Prohození ikon importu a exportu",
+          "Oprava zobrazení náhledu videa v tipech položek a úprava rozložení karet prohlídky funkcí",
+          "Oprava pořadí vrstev (z-index) rámečků a tvarů",
+          "Oprava velikosti hlavičky telefonního rámečku při exportu s rámečkem"
+        ]
+      }
+    },
+
+    "5.5.0": {
+      "label": "5.5.0",
+      "date": "23.1. 2025",
+      "improvements": {
+        "items": [
+          "Nezobrazování zbytečného toastu o úspěšné změně názvu souboru",
+          "Zlepšený výkon při aplikování operací",
+          "Lepší viditelnost tlačítka pro přepínání bočního panelu",
+          "Vylepšený zážitek z přepínání karet",
+          "Vylepšené chování skrývání ořezového rámečku",
+          "Stejné toast notifikace se zobrazují pouze jednou",
+          "Pozice obrázku a úroveň přiblížení jsou zachovány při přepínání karet",
+          "Ovládání pořadí vrstev (z-index) se zobrazuje pouze v případě potřeby",
+          "Rozbalovací nabídka se vždy zobrazuje nad ostatními prvky"
+        ]
+      },
+      "newFeatures": {
+        "items": [
+          "Povolen posun obrázku levým tlačítkem myši, pokud není vybrán žádný nástroj",
+          "Přidána klávesová zkratka BACKSPACE pro odstranění vybraných SVG objektů nebo pozadí v nástroji pro odstranění pozadí",
+          "Přidána podpora klávesy Command na macOS v klávesových zkratkách",
+          "Nový text se po stisknutí klávesy Enter vloží do středu obrázku"
+        ]
+      },
+      "bugFixes": {
+        "items": [
+          "Oprava problému s manuálním nastavením rozměrů ořezu",
+          "Vylepšené texty v nástroji pro odstranění pozadí",
+          "Text lze zcela odstranit bez smazání textového objektu",
+          "Vrstva štětce může být opakovaně měněna velikost bez deformace"
+        ]
+      }
+    },
+
+    "5.4.0": {
+      "label": "5.4.0",
+      "date": "17.1. 2025",
+      "improvements": {
+        "items": [
+          "Úprava barvy výběru textu podle aktuálního tématu (světlé nebo tmavé)",
+          "Změna ikony fyzického režimu přiblížení pro lepší srozumitelnost",
+          "Vycentrování obrázku po ořezu",
+          "Podpora větších PDF souborů",
+          "Manuální úpravy ořezu lze nastavovat pomocí klávesnice",
+          "Čas v telefonních rámečcích lze nastavovat intuitivněji"
+        ]
+      },
+      "newFeatures": {
+        "items": [
+          "Povolení přibližování pomocí kláves plus a mínus na numerické klávesnici"
         ]
       },
       "bugFixes": {
         "items": [
           "Analýzu detekce šumu lze spustit i v případě, že je již zobrazena",
-          "Oprava chybějícího ukončení stavu „hold“ při opuštění přepínacího tlačítka myší",
-          "Skrytí pozadí obrázku během aplikace operací"
+          "Oprava problému s chybějícím koncovým stavem podržení po opuštění tlačítka myší",
+          "Skrytí pozadí obrázku při aplikování operací",
+          "Omezení minimálních a maximálních hodnot změny velikosti při uzamčeném poměru stran"
         ]
       }
     },

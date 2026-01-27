@@ -45,12 +45,25 @@ const userUuid = uiStore.userUuid
  *
  * @param {WheelEvent} event
  */
-const check = (event) => {
+const blockWheelZoom = (event) => {
   const wrapper = document.querySelector('.viewport-wrapper')
   if (!wrapper) return
 
   // Block only if mouse is inside viewport wrapper
   if ((event.ctrlKey || event.metaKey) && wrapper.contains(event.target)) {
+    event.preventDefault()
+  }
+}
+
+/**
+ * Blocks browser back/forward swipe gesture on touchpad
+ * (horizontal wheel gesture)
+ *
+ * @param {WheelEvent} event
+ */
+const blockSwipeBack = (event) => {
+  // horizontal gesture dominates → browser history swipe
+  if (Math.abs(event.deltaX) > Math.abs(event.deltaY)) {
     event.preventDefault()
   }
 }
@@ -83,6 +96,10 @@ onMounted(async () => {
     uiConfig.enableClickEffects ? uiConfig.clickEffectScale : '1'
   )
 
+
+  window.addEventListener('wheel', blockSwipeBack, {
+    passive: false,
+  })
   window.addEventListener('beforeunload', handleBeforeUnload)
 
   // Reset localStorage (preferences) if app version has changed and in global config is set reset
@@ -164,13 +181,14 @@ onMounted(async () => {
  */
 onBeforeUnmount(() => {
   window.removeEventListener('beforeunload', handleBeforeUnload)
+  window.removeEventListener('wheel', blockSwipeBack)
 })
 
 
 </script>
 
 <template>
-  <div class="main" @wheel="check">
+  <div class="main" @wheel="blockWheelZoom">
     <ToastModal />
     <ConfirmModal />
     <GeneralModal />
