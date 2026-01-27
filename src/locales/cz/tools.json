@@ -768,16 +768,16 @@
         "frameVariants": {
           "label": "Varianty rámu",
           "none": "Žádný",
-          "frameSolid": "Plný",
-          "frameMacBrowser": "Mac prohlížeč",
-          "frameWindowsBrowser": "Windows prohlížeč",
-          "framePhoneIOS": "Telefon iOS",
-          "framePhoneIOS2": "Telefon iOS 2",
-          "framePhoneAndroid": "Telefon Android",
-          "framePhoneAndroid2": "Telefon Android 2",
-          "framePhoneSimple": "Telefon jednoduchý",
-          "frameWindowsTaskBar": "Windows task bar",
-          "frameVSCode": "VS Code"
+          "frameSolid": "Jednoduchý",
+          "frameMacBrowser": "Okno 1",
+          "frameWindowsBrowser": "Okno 2",
+          "framePhoneIOS": "Telefon 1",
+          "framePhoneIOS2": "Telefon 2",
+          "framePhoneAndroid": "Telefon 3",
+          "framePhoneAndroid2": "Telefon 4",
+          "framePhoneSimple": "Telefon 5",
+          "frameWindowsTaskBar": "Panel plochy",
+          "frameVSCode": "Editor kódu"
         },
         "useFrameOutline": {
           "label": "Použít obrys"

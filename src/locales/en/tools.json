@@ -768,15 +768,15 @@
           "label": "Frame variants",
           "none": "None",
           "frameSolid": "Solid",
-          "frameMacBrowser": "Mac browser",
-          "frameWindowsBrowser": "Windows browser",
-          "framePhoneIOS": "Phone iOS",
-          "framePhoneIOS2": "Phone iOS 2",
-          "framePhoneAndroid": "Phone Android",
-          "framePhoneAndroid2": "Phone Android 2",
-          "framePhoneSimple": "Phone simple",
-          "frameWindowsTaskBar": "Windows task bar",
-          "frameVSCode": "VS Code"
+          "frameMacBrowser": "Window 1",
+          "frameWindowsBrowser": "Window 2",
+          "framePhoneIOS": "Phone 1",
+          "framePhoneIOS2": "Phone 2",
+          "framePhoneAndroid": "Phone 3",
+          "framePhoneAndroid2": "Phone 4",
+          "framePhoneSimple": "Phone 5",
+          "frameWindowsTaskBar": "Desktop bar",
+          "frameVSCode": "Code editor"
         },
         "useFrameOutline": {
           "label": "Use outline"

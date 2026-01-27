@@ -17,6 +17,7 @@
 - opraviť magnify area 
 - opraviť blur 
 - opraviť select 
+- ak sa to exportuje bez tlacitok tak to ma divne medzery
 
 ## TODO od J (userTesting2 - 12.1.2026)
 - FIXED - Zoom pomocou numerickej klávesnice
