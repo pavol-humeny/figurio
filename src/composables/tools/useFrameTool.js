@@ -8,6 +8,7 @@ const { log } = useConsole()
 const { addUserEvent } = useApi()
 import { useImagePipeline } from '../editor/useImagePipeline'
 import { useUiStore } from '@/stores/uiStore'
+import { useEditorStore } from '@/stores/editorStore'
 
 /**
  * Whether phone side buttons can be drawn because of dimensions
@@ -95,6 +96,22 @@ export function useFrameTool(imageStore, historyStore, viewportStore, t) {
    * Phone header time in minutes
    */
   const phoneHeaderTimeInMinutes = ref(imageStore.frame.phoneHeaderTimeInMinutes)
+
+  /**
+   * Save frame config to editor store
+   */
+  const saveConfigToEditorStore = () => {
+    const editorStore = useEditorStore()
+    editorStore.toolsConfig.frame = imageStore.frame
+  }
+
+  /**
+   * Load frame config from editor store
+   */
+  const loadConfigFromEditorStore = () => {
+    const editorStore = useEditorStore()
+    imageStore.frame = editorStore.toolsConfig.frame
+  }
 
   /**
    * Frame width
@@ -379,6 +396,8 @@ export function useFrameTool(imageStore, historyStore, viewportStore, t) {
       await renderUpTo(imageStore.renderPipeline.currentOpIndex + 1, { t, imageStore })
     }
 
+    loadConfigFromEditorStore()
+
     imageStore.frame.type = value
     nextTick(async () => {
       frameWidth.value = calculateInitialFrameWidth()
@@ -431,6 +450,8 @@ export function useFrameTool(imageStore, historyStore, viewportStore, t) {
       frameWidthMm.value = Math.min(Math.max(frameWidth.value / PxPerMm, 1), maxFrameWidthMm.value)
       maxFrameWidthMm.value = (imageStore.getSmallerImageDimension() * 0.2) / PxPerMm
 
+      console.warn(frameWidthMm.value, frameWidth.value, PxPerMm)
+
       // Header and footer
       if (isFrameWithMultiplier(selectedFrameVariant.value)) {
         headerSizeMm.value = Math.max(headerSize.value / PxPerMm, 1)
@@ -441,6 +462,8 @@ export function useFrameTool(imageStore, historyStore, viewportStore, t) {
       // Set default user set header size mm
       userSetHeaderSizeMm.value =
         Math.max(Math.floor(0.1 * imageStore.fileDimensions.width), 5) / PxPerMm
+
+      console.warn('Setting use mm:', userSetHeaderSizeMm.value)
     } else {
       frameWidth.value = frameWidthMm.value * PxPerMm
 
@@ -746,6 +769,8 @@ export function useFrameTool(imageStore, historyStore, viewportStore, t) {
     }
 
     imageStore.frameNeedToBeRendered = true
+
+    saveConfigToEditorStore()
   }
 
   /**
@@ -833,12 +858,6 @@ export function useFrameTool(imageStore, historyStore, viewportStore, t) {
         fw = 0
         fh = 0
       }
-
-      // imageStore.frame.headerSize = imageStore.frame.userSetSize.size
-      // imageStore.frame.headerSizeMm = imageStore.frame.userSetSize.sizeMm
-
-      // imageStore.frame.footerSize = 0
-      // imageStore.frame.footerSizeMm = 0
     } else if (
       frame.type === 'framePhoneAndroid' ||
       frame.type === 'framePhoneAndroid2' ||
@@ -996,6 +1015,7 @@ export function useFrameTool(imageStore, historyStore, viewportStore, t) {
 
       if (!canDrawPhoneButtons()) {
         drawPhoneButtons.value = false
+        return
       }
 
       el.appendChild(

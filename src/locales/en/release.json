@@ -11,7 +11,8 @@
         "items": [
           "Recent colors are persistent between app reloads",
           "Noise detection is more strict to avoid false positives",
-          "Enable copy to clipboard button for all file formats"
+          "Enable copy to clipboard button for all file formats",
+          "Frame tool keeps current settings when switching between files"
         ]
       },
       "newFeatures": {

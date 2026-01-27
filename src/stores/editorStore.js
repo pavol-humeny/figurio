@@ -140,6 +140,29 @@ export const useEditorStore = defineStore('editorStore', {
       brush: {
         color: '#000000',
       },
+      frame: {
+        enabled: false,
+        type: 'none',
+        useMillimeters: false,
+        width: 0,
+        height: 0,
+        widthMm: 0,
+        heightMm: 0,
+        color: '#000000',
+        headerSize: 0, // Size of the header for browser frames
+        headerSizeMm: 0, // Size of the header for browser frames in mm
+        footerSize: 0, // Size of the footer for windows frame
+        footerSizeMm: 0, // Size of the footer for windows frame in mm
+        outlineEnabled: false, // Whether to draw an outline around the frame
+        phoneHeaderEnabled: true, // Whether to draw a header for phone frames
+        phoneHeaderExpand: false, // Whether header expands beyond image
+        phoneButtonsEnabled: true, // Whether to draw buttons for phone frames
+        phoneNavigationEnabled: true, // Whether to draw navigation for phone frames
+        phoneHeaderTimeInMinutes: 610, // Default time for phone header (10:10)
+        phoneHeaderTextColor: '#000000', // Default text color for phone header
+        phoneHeaderBackgroundColor: '#ffffff', // Default background color for phone header
+        modificationFlag: 1, // Flag to track frame modifications
+      },
     },
 
     /** Whether any modal is open */

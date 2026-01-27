@@ -11,8 +11,9 @@
 
 # Chyby
 - noise detection spúšťať len nad jpg
-- default frame width je 0
+<!-- - default frame width je 0 -->
 - pri use milimeters to vyzaduje physical mode na to aby to fungovalo 
+- ak je phone buttons disabled tak tam dat tip 
 
 ## TODO od J (userTesting2 - 12.1.2026)
 - FIXED - Zoom pomocou numerickej klávesnice

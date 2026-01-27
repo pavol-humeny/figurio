@@ -785,7 +785,8 @@
           "label": "Use phone header"
         },
         "usePhoneButtons": {
-          "label": "Phone buttons"
+          "label": "Phone buttons",
+          "phoneButtonsCanNotBeDrawnTip": "Phone buttons can not be drawn, because the image is not height enough"
         },
         "usePhoneHomeIndicator": {
           "label": "Home indicator"

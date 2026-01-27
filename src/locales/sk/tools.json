@@ -785,7 +785,8 @@
           "label": "Použiť záhlavie telefónu"
         },
         "usePhoneButtons": {
-          "label": "Tlačidlá telefónu"
+          "label": "Tlačidlá telefónu",
+          "phoneButtonsCanNotBeDrawnTip": "Tlačidlá telefónu sa nedajú nakresliť, pretože obrázok nie je dostatočne vysoký"
         },
         "usePhoneHomeIndicator": {
           "label": "Domovské tlačítko"

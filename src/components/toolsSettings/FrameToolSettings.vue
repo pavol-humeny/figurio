@@ -180,7 +180,9 @@ const {
                 {{ t('tools.frame.settings.general.usePhoneButtons.label') }}
               </p>
               <ToggleButton v-model="drawPhoneButtons" @update="setPhoneButtons(drawPhoneButtons)" :scale="0.6"
-                :style="{ transform: 'translateX(16px)' }" :disabled="!phoneButtonsCanBeDrawn" />
+                :style="{ transform: 'translateX(16px)' }" :disabled="!phoneButtonsCanBeDrawn"
+                :tip="!phoneButtonsCanBeDrawn ? $t('tools.frame.settings.general.usePhoneButtons.phoneButtonsCanNotBeDrawnTip') : ''"
+                position="bottom-left" />
             </div>
           </div>
         </div>
