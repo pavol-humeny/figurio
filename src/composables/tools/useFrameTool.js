@@ -1101,7 +1101,7 @@ export function useFrameTool(imageStore, historyStore, viewportStore, t) {
         const hours = Math.floor(time / 60)
         const minutes = time % 60
         const timeString = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`
-        const fontSize = Math.floor(height * 0.45)
+        const fontSize = Math.floor(height * 0.37)
 
         timeText.textContent = timeString
 
@@ -1121,8 +1121,8 @@ export function useFrameTool(imageStore, historyStore, viewportStore, t) {
         // Right: Signal and Battery
 
         // Battery
-        const batteryWidth = height * 0.9
-        const batteryHeight = height * 0.45
+        const batteryWidth = height * 0.6
+        const batteryHeight = height * 0.37
         const batteryX = svgWidth - x - batteryWidth - phoneFrameValues.radius / 2
         const batteryY = y + (height - batteryHeight) / 2
         const batteryPadding = batteryWidth * 0.05
@@ -2070,7 +2070,7 @@ export function useFrameTool(imageStore, historyStore, viewportStore, t) {
     headerSize,
     headerSizeMm,
     footerSize,
-    footerSizeMm,
+  footerSizeMm,
     userSetHeaderSizeMm,
     setUserSetHeaderSizeMm,
     resetUserSetHeaderSizeMm,

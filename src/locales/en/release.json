@@ -4,6 +4,15 @@
     "items": []
   },
   "versions":{
+    "5.6.1":{
+      "label": "5.6.1",
+      "date":"8.1. 2025",
+      "improvements": {
+        "items": [
+          "Smaller size of battery in phone frames" 
+        ]
+      }
+    },
     "5.6.0":{
       "label": "5.6.0",
       "date":"24.1. 2025",
