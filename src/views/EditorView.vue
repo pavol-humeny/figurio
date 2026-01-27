@@ -95,7 +95,7 @@ const { closeSettingsPanel } = useSettingsPanel(useUiStore())
 const { closePrivacyAndDataModal } = usePrivacyAndDataModal(t)
 const { closeFeatureTourModal } = useFeatureTourModal()
 const { closeCalibrationModal } = useCalibrationModal(useViewportStore())
-const { closeExportToolSettings, exportFileFunction, openExportToolSettings, copyImageToClipboardFunction } = useExportToolSettings(useImageStore(), useEditorStore(), useHistoryStore(), useViewportStore(), t)
+const { closeExportToolSettings, exportFileFunction, openExportToolSettings, copyImageToClipboardFunction } = useExportToolSettings(useImageStore(), useEditorStore(), useHistoryStore(), useViewportStore(), useUiStore(), t)
 const { closeImportModal } = useImportModal()
 const { closeReleaseModal } = useReleaseModal()
 

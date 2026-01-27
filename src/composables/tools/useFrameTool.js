@@ -1972,7 +1972,7 @@ export function useFrameTool(imageStore, historyStore, viewportStore, t) {
       targetHeight -= 2 * frame.height
 
       // header / footer are EXTRA space inside frame
-      if (hasHeader && phoneFrameWithExpandedHeader) {
+      if ((hasHeader && !phoneFrame) || (hasHeader && phoneFrame && phoneFrameWithExpandedHeader)) {
         targetHeight -= frame.headerSize
         targetHeight += frame.height
       }

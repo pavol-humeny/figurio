@@ -11,6 +11,7 @@ import { useHistoryStore } from '@/stores/historyStore'
 import { useMath } from '@/composables/common/useMath'
 import DropdownSelect from '../common/DropdownSelect.vue'
 import { useViewportStore } from '@/stores/viewportStore'
+import { useUiStore } from '@/stores/uiStore'
 
 const { t } = useI18n()
 const { round } = useMath()
@@ -38,7 +39,7 @@ const {
   copyImageToClipboardFunction,
   expectedPreviewSize,
   fileFormatOptions
-} = useExportToolSettings(useImageStore(), useEditorStore(), useHistoryStore(), useViewportStore(), t)
+} = useExportToolSettings(useImageStore(), useEditorStore(), useHistoryStore(), useViewportStore(), useUiStore(), t)
 </script>
 
 <template>
@@ -61,7 +62,7 @@ const {
           <div class="export-settings-item" v-if="fileFormat === 'jpg' || fileFormat === 'webp'">
             <label for="file-quality">{{
               $t('tools.export.settings.general.fileQuality.label')
-            }}</label>
+              }}</label>
             <p>{{ round(fileDimensions.quality) }} %</p>
             <DefaultSlider v-model="fileDimensions.quality" :min="0" :max="100" :step="1"
               @update:modelValue="(value) => updateQuality(value)" />
@@ -79,7 +80,7 @@ const {
           <div class="export-settings-item">
             <label>{{
               $t('tools.export.settings.general.fileDimensions.label')
-              }}</label>
+            }}</label>
             <div class="export-settings-item-value">
               <div class="width disabled">
                 <p>
@@ -113,7 +114,8 @@ const {
           <!-- Copy to clipboard button for PNG format -->
           <div class="export-settings-item">
             <DefaultButton :text="$t('tools.export.settings.general.copyToClipboardButton.text')"
-              :tip="$t('tools.export.settings.general.copyToClipboardButton.tip')" @click="copyImageToClipboardFunction" />
+              :tip="$t('tools.export.settings.general.copyToClipboardButton.tip')"
+              @click="copyImageToClipboardFunction" />
           </div>
 
           <!-- Export or close -->
@@ -126,10 +128,11 @@ const {
 
         <!-- Export preview -->
         <div class="export-preview">
-          <img v-if="previewUrl" :src="previewUrl" alt="Export Preview" class="export-preview-img" :style="{
-            aspectRatio: fileDimensions.width + ' / ' + fileDimensions.height,
-            boxShadow: 'var(--box-shadow-content)'
-          }" />
+          <img v-if="previewUrl" loading="lazy" decoding="async" :src="previewUrl" alt="Export Preview"
+            class="export-preview-img" :style="{
+              aspectRatio: fileDimensions.width + ' / ' + fileDimensions.height,
+              boxShadow: 'var(--box-shadow-content)'
+            }" />
           <div v-else class="export-preview-placeholder">
             {{ $t('tools.export.settings.general.preview.previewUnavailable') }}
           </div>

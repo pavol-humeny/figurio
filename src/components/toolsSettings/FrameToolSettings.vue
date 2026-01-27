@@ -137,7 +137,7 @@ const {
                 {{ t('tools.frame.settings.general.frameWidth.label') }}
               </p>
             </div>
-            <NumberInput ref="frameWidthRef" v-model="frameWidth" :min="0" :max="100" :step="1" unit="px"
+            <NumberInput ref="frameWidthRef" v-model="frameWidth" :min="1" :max="100" :step="1" unit="px"
               @update="setFrameWidth(frameWidth)" icon="IconArrowWidth" :color="'var(--primary-c)'" size="22"
               :onReset="() => setFrameWidth(-1)" :tip="t('tools.frame.settings.general.frameWidth.tip')"
               position="bottom-left" :disabled="selectedFrameVariant !== 'frameSolid' && !drawOutline" />

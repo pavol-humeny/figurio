@@ -133,6 +133,18 @@ export const usePresetsStore = defineStore('presetsStore', {
     },
 
     /**
+     * Select the first preset in the list, or clear selection if none exist
+     */
+    selectFirstPreset() {
+      if (this.presets.length > 0) {
+        this.selectedPresetName = this.presets[0].name
+      } else {
+        this.selectedPresetName = ''
+      }
+      this.saveToStorage()
+    },
+
+    /**
      * Delete a preset by name and reset selection if necessary
      * @param {string} name - Name of the preset to delete
      */

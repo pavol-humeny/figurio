@@ -10,6 +10,7 @@ import { useI18n } from 'vue-i18n'
 
 import { useConsole } from '@/composables/common/useConsole.js'
 import { useViewportStore } from '@/stores/viewportStore'
+import { useUiStore } from '@/stores/uiStore'
 const { log } = useConsole()
 
 const { t } = useI18n()
@@ -31,6 +32,7 @@ const { openExportToolSettings } = useExportToolSettings(
   useEditorStore(),
   useHistoryStore(),
   useViewportStore(),
+  useUiStore(),
   t,
 )
 

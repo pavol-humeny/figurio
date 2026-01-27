@@ -19,7 +19,14 @@ const isVisible = ref(false)
  * @param {Function} t - Translation function
  * @returns {object} Export tool settings logic
  */
-export function useExportToolSettings(imageStore, editorStore, historyStore, viewportStore, t) {
+export function useExportToolSettings(
+  imageStore,
+  editorStore,
+  historyStore,
+  viewportStore,
+  uiStore,
+  t,
+) {
   const { round } = useMath()
   const { exportFile, copyImageToClipboard } = exportFileService(
     imageStore,
@@ -144,6 +151,8 @@ export function useExportToolSettings(imageStore, editorStore, historyStore, vie
    * Open export settings and prepare preview dimensions, format and file name
    */
   const openExportToolSettings = async () => {
+    isVisible.value = true
+
     editorStore.isExportModalOpen = true
 
     imageStore.newFileDimensions = { ...imageStore.fileDimensions }
@@ -169,8 +178,6 @@ export function useExportToolSettings(imageStore, editorStore, historyStore, vie
     }
 
     await imageStore.generatePreview(editorStore, historyStore, t)
-
-    isVisible.value = true
   }
 
   /**

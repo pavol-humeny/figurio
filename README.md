@@ -10,7 +10,6 @@
 ## TODO - text 
 
 # Chyby
-- pri vytvorení textu a následnom deselecte by si to mohlo pamätať posledný nastavený text 
 - noise detection spúšťať len nad jpg
 - default frame width je 0
 - pri use milimeters to vyzaduje physical mode na to aby to fungovalo 

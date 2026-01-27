@@ -1,4 +1,4 @@
-import { ref, computed, watch } from 'vue'
+import { ref, computed, watch, onMounted } from 'vue'
 import { useToastModal } from '../modals/useToastModal'
 import { useConfirmModal } from '../modals/useConfirmModal'
 import { useCropTool } from './useCropTool'
@@ -350,6 +350,10 @@ export function usePresetTool(
       return
     }
 
+    // Ensure height matches width
+    localImageFrame.value.height = localImageFrame.value.width
+    localImageFrame.value.heightMm = localImageFrame.value.widthMm
+
     presetsStore.updatePreset(
       presetsStore.selectedPresetName,
       localPresetName.value,
@@ -434,28 +438,41 @@ export function usePresetTool(
       t('tools.preset.settings.myPresets.deletePresetConfirmation.cancel'),
       t('tools.preset.settings.myPresets.deletePresetConfirmation.confirm'),
     )
-    if (!confirmed) {
-      return
+    if (!confirmed) return
+
+    const deletedName = presetsStore.selectedPresetName
+
+    // Delete preset
+    presetsStore.deletePreset(deletedName)
+
+    // Pick next preset if exists
+    const remainingPresets = presetsStore.presets
+
+    console.warn('Remaining presets after deletion: ', remainingPresets.length)
+
+    if (remainingPresets.length > 0) {
+      presetsStore.selectFirstPreset()
+    } else {
+      // No presets left
+      presetsStore.selectPreset('')
+      localPresetName.value = ''
+      localImageOperations.value = []
+      localImageFrame.value = {}
     }
+
+    isModifyingPreset.value = false
+    isPresetModified.value = false
+    selectedOperation.value = null
+    newOperation.value = null
+    creatingNewOperation.value = false
 
     showToastModal(
       'success',
       t('tools.preset.settings.myPresets.presetSuccessfullyDeleted.title'),
       t('tools.preset.settings.myPresets.presetSuccessfullyDeleted.message', {
-        presetName: presetsStore.selectedPresetName,
+        presetName: deletedName,
       }),
     )
-
-    presetsStore.deletePreset(presetsStore.selectedPresetName)
-    isModifyingPreset.value = false
-    isPresetModified.value = false
-    selectedPresetName.value = '' // Reset selected preset name
-    localPresetName.value = ''
-    localImageOperations.value = {}
-    localImageFrame.value = {}
-    selectedOperation.value = null
-    newOperation.value = null
-    creatingNewOperation.value = false
 
     addUserEvent('applyOperation', {
       tool: 'preset',
@@ -621,6 +638,10 @@ export function usePresetTool(
         currentImageFrame.widthMm === presetFrame.widthMm &&
         currentImageFrame.height === presetFrame.height &&
         currentImageFrame.heightMm === presetFrame.heightMm &&
+        currentImageFrame.headerSize === presetFrame.headerSize &&
+        currentImageFrame.headerSizeMm === presetFrame.headerSizeMm &&
+        currentImageFrame.footerSize === presetFrame.footerSize &&
+        currentImageFrame.footerSizeMm === presetFrame.footerSizeMm &&
         currentImageFrame.outlineEnabled === presetFrame.outlineEnabled &&
         currentImageFrame.phoneHeaderEnabled === presetFrame.phoneHeaderEnabled &&
         currentImageFrame.phoneHeaderExpand === presetFrame.phoneHeaderExpand &&
@@ -697,6 +718,23 @@ export function usePresetTool(
 
     console.warn('Current image frame before applying preset:', preset.imageFrame)
 
+    // Recalculate frame dimensions based on current image size (PxPerMm)
+    if (preset.imageFrame.useMillimeters) {
+      const PxPerMm = viewportStore.getPxPerMmFitZoom
+
+      // Width
+      preset.imageFrame.width = preset.imageFrame.widthMm * PxPerMm
+
+      // Height
+      preset.imageFrame.height = preset.imageFrame.width
+
+      // Header size
+      preset.imageFrame.headerSize = preset.imageFrame.headerSizeMm * PxPerMm
+
+      // Footer size
+      preset.imageFrame.footerSize = preset.imageFrame.footerSizeMm * PxPerMm
+    }
+
     // Apply frame
     if (!replace) {
       if (presetFrame.enabled) {
@@ -714,6 +752,9 @@ export function usePresetTool(
     await renderUpTo(imageStore.imageOperations.length - 1, { t, imageStore })
 
     historyStore.push(imageStore.getSnapshot(t))
+
+    imageStore.frameNeedToBeRendered = true
+    imageStore.imageNeedToBeRendered = true
   }
 
   // --------------------------
@@ -735,10 +776,12 @@ export function usePresetTool(
    */
   const isShowManualPresetSetting = ref(false)
 
-  // onMounted(() => {
-  //   // Set default preset name
-  //   newPreset.value = 'ahoj' + presetsStore.presets.length()
-  // })
+  onMounted(() => {
+    // Select first preset if none selected
+    if (!presetsStore.selectedPresetName && presetsStore.presets.length > 0) {
+      presetsStore.selectFirstPreset()
+    }
+  })
 
   watch(
     () => ({
@@ -884,7 +927,7 @@ export function usePresetTool(
         enabled: false,
       },
       grayscale: {
-        type: 'none',
+        grayscaleType: 'none',
       },
       frame: {
         enabled: false,
@@ -1036,69 +1079,23 @@ export function usePresetTool(
         type: 'rotation',
         angle: newPreset.value.transformations.rotationAngle,
       })
-      // imageOperations.push({
-      //   type: 'rotate',
-      //   params: { angle: newPreset.value.transformations.rotationAngle },
-      //   cost: 'high',
-      //   affectsGeometry: true,
-      // })
     }
     if (newPreset.value.transformations.horizontalFlip) {
       imageOperations.push({ type: 'flip', direction: 'horizontal' })
-      // imageOperations.push({
-      //   type: 'flip',
-      //   params: { direction: 'horizontal' },
-      //   cost: 'high',
-      //   affectsGeometry: false,
-      // })
     }
     if (newPreset.value.transformations.verticalFlip) {
       imageOperations.push({ type: 'flip', direction: 'vertical' })
-      // imageOperations.push({
-      //   type: 'flip',
-      //   params: { direction: 'vertical' },
-      //   cost: 'high',
-      //   affectsGeometry: false,
-      // })
     }
     if (newPreset.value.autoCrop.enabled) {
       imageOperations.push({
         type: 'autoCrop',
       })
-      // const autoCropBox = useCropTool(
-      //   imageStore,
-      //   viewportStore,
-      //   editorStore,
-      //   historyStore,
-      //   uiStore,
-      //   t,
-      // ).getAutoCropBox()
-
-      // imageOperations.push({
-      //   type: 'crop',
-      //   params: {
-      //     x: autoCropBox.x,
-      //     y: autoCropBox.y,
-      //     width: autoCropBox.width,
-      //     height: autoCropBox.height,
-      //   },
-      //   cost: 'high',
-      //   affectsGeometry: true,
-      // })
     }
     if (newPreset.value.grayscale.grayscaleType !== 'none') {
       imageOperations.push({
         type: 'grayscale',
         grayscaleType: newPreset.value.grayscale.grayscaleType,
       })
-      // imageOperations.push({
-      //   type: 'grayscale',
-      //   params: {
-      //     grayscaleType: newPreset.value.grayscale.grayscaleType,
-      //   },
-      //   cost: 'medium',
-      //   affectsGeometry: false,
-      // })
     }
 
     if (
@@ -1152,6 +1149,7 @@ export function usePresetTool(
       imageFrame.phoneHeaderTimeInMinutes = newPreset.value.frame.phoneHeaderTimeInMinutes
       imageFrame.phoneHeaderTextColor = newPreset.value.frame.phoneHeaderTextColor
       imageFrame.phoneHeaderBackgroundColor = newPreset.value.frame.phoneHeaderBackgroundColor
+      imageFrame.modificationFlag = 1
     }
 
     console.warn('Creating preset with operations:', imageFrame)
