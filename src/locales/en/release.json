@@ -25,7 +25,8 @@
           "Hide scrollbar in file tabs",
           "Swap import and export icons",
           "Fix video preview display in item tips and adjust feature tour card layout",
-          "Fix frame and shape z-index positioning"
+          "Fix frame and shape z-index positioning",
+          "Fix phone frame header size when exporting with frame"
         ]
       }
     },

@@ -852,6 +852,15 @@ export const useImageStore = defineStore('imageStore', {
         t,
       ).calculateFrameLayout(this.newFileDimensions)
 
+      console.warn('Preview dimensions:', {
+        finalWidth,
+        finalHeight,
+        targetWidth,
+        targetHeight,
+        offsetX,
+        offsetY,
+      })
+
       // Rasterize base image + SVG objects at export size
       // await this.rasterize(t, false, targetWidth, targetHeight, true)
       const rasterized = await this.rasterize(

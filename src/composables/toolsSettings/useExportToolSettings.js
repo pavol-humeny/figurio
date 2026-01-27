@@ -154,7 +154,7 @@ export function useExportToolSettings(imageStore, editorStore, historyStore, vie
     if (imageStore.frame?.enabled) {
       imageStore.newFileDimensions.width =
         imageStore.fileDimensions.width + imageStore.frame.width * 2
-      if (imageStore.frame.headerSize > 0) {
+      if (imageStore.frame.headerSize > 0 && imageStore.frame.phoneHeaderExpand) {
         imageStore.newFileDimensions.height =
           imageStore.fileDimensions.height + imageStore.frame.height + imageStore.frame.headerSize
       } else if (imageStore.frame.footerSize > 0) {

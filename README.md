@@ -1,8 +1,6 @@
 # Figurio
 
 ## TODO - text 
-- dopísať do porovnanie že som mal strašný problém nájsť export
-
 
 # Chyby
 - nakreslím niečo, pridám shape, a dám rasterize tak to zmizne - rastererize zožuje brush 
@@ -10,7 +8,8 @@
 - noise detection spúšťať len nad jpg
 - default frame width je 0
 - pri use milimeters to vyzaduje physical mode na to aby to fungovalo 
-- pridať nástroj pre nastavenie priehľadnosti obrázka
+
+- resize overlayu sa deformuje
 
 ## TODO od J (userTesting2 - 12.1.2026)
 - FIXED - Zoom pomocou numerickej klávesnice
@@ -87,7 +86,6 @@
 - brush - ak dochádza k uloženiu snapshotu do histórie tak to vyriesit nejako inak - divne sa to seká 
 - pri posune viacerých objektov, následnom položení a opätovnom presune to nechce ísť a sekne to 
 - undo redo možno nejako zakázať pri aby sa to nedalo kliknúť viac krát do vtedy kým sa neaplikuje operácia 
-- pri rámiku telefónu je nejaký divný footer (prázdne miesto), keď je to jpg obrázok (neviem či aj pri iných)
 - premyslieť kedy sa toasty nemusia zobrazovať 
 
 
@@ -102,6 +100,7 @@
 - prevod pdf na raster ak to obsahuje hlúposti 
 - Zjednodušiť toasty
 - pridať nástroj fill (kýbel)
+- pridať nástroj pre nastavenie priehľadnosti obrázka
 
 ## Insane ideas
 - aplikovanie operácie na všetky obrázky 

@@ -1953,6 +1953,13 @@ export function useFrameTool(imageStore, historyStore, viewportStore, t) {
       frame.phoneHeaderExpand,
     )
 
+    console.warn('phone frame with expanded header:', phoneFrameWithExpandedHeader)
+    console.warn('hasHeader:', hasHeader)
+    console.warn('hasFooter:', hasFooter)
+    console.warn('phone frame:', phoneFrame)
+
+    console.warn('filedimensions:', fileDimensions)
+
     // Target size (image inside frame)
     let targetWidth = fileDimensions.width
     let targetHeight = fileDimensions.height
@@ -1965,7 +1972,7 @@ export function useFrameTool(imageStore, historyStore, viewportStore, t) {
       targetHeight -= 2 * frame.height
 
       // header / footer are EXTRA space inside frame
-      if (hasHeader) {
+      if (hasHeader && phoneFrameWithExpandedHeader) {
         targetHeight -= frame.headerSize
         targetHeight += frame.height
       }
