@@ -77,6 +77,8 @@ const {
   wrapperRef,
   longestLabelWidth,
   dropdownRef,
+  dropdownStyle,
+  dropdownReady,
 } = useDropdownSelect(props, emit)
 
 
@@ -95,18 +97,23 @@ defineExpose({ setValue })
 
       <div class="select-display" :style="{ paddingLeft: showIcon ? '30px' : '10px' }" @click="toggleDropdown">
         {{props.options.find(o => o.value === selectedValue)?.label || ''}}
+
         <BaseIcon name="IconDropDown" class="dropdown-icon" size="12" color="var(--primary-c)"
           :style="{ transform: showDropdown ? 'rotate(180deg) translateY(7px)' : 'rotate(0deg)' }" />
       </div>
-
-      <ul v-if="showDropdown" class="dropdown-options" ref="dropdownRef">
-        <li v-for="option in props.options" :key="option.value" @click.prevent="onSelect(option.value)">
-          {{ option.label }}
-        </li>
-      </ul>
     </div>
   </ItemTip>
+
+  <Teleport to="body">
+    <ul v-if="showDropdown && dropdownReady" class="dropdown-options-teleported" ref="dropdownRef"
+      :style="dropdownStyle">
+      <li v-for="option in props.options" :key="option.value" @click.prevent="onSelect(option.value)">
+        {{ option.label }}
+      </li>
+    </ul>
+  </Teleport>
 </template>
+
 
 <style scoped>
 .select-wrapper {
@@ -145,28 +152,26 @@ defineExpose({ setValue })
   pointer-events: none;
 }
 
-.dropdown-options {
-  position: absolute;
-  top: 100%;
-  left: 0;
-  right: 0;
-  margin: 4px 0 0 0;
-  padding: 0;
+.dropdown-options-teleported {
+  margin: 0;
+  color: var(--text-c);
   list-style: none;
-  background: var(--secondary-c);
+  padding: 0;
   border-radius: var(--input-border-radius);
-  max-height: 140px;
+  background: var(--secondary-c);
   overflow-y: auto;
+  max-height: 250px;
   box-shadow: var(--box-shadow-ui);
-  z-index: 1;
+  z-index: var(--z-index-dropdown-options);
   font-size: var(--text-font-size);
 }
 
-.dropdown-options li {
+.dropdown-options-teleported li {
   padding: 6px 10px;
+  cursor: pointer;
 }
 
-.dropdown-options li:hover {
+.dropdown-options-teleported li:hover {
   color: var(--primary-c);
 }
 

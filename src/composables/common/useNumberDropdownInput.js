@@ -143,7 +143,12 @@ export function useNumberDropdownInput(props, emit) {
    */
   const onClickOutside = (event) => {
     const wrapper = wrapperRef.value
-    if (wrapper && !wrapper.contains(event.target)) {
+    if (
+      wrapper &&
+      !wrapper.contains(event.target) &&
+      dropdownRef.value &&
+      !dropdownRef.value.contains(event.target)
+    ) {
       showDropdown.value = false
     }
   }
@@ -211,6 +216,82 @@ export function useNumberDropdownInput(props, emit) {
     window.removeEventListener('resize', adjustDropdownHeight)
   })
 
+  /**
+   * Dropdown position for teleport
+   */
+  const dropdownPosition = ref(null)
+
+  /**
+   * Updates the dropdown position based on the wrapper element
+   */
+  const updateDropdownPosition = () => {
+    if (!wrapperRef.value) return
+
+    const rect = wrapperRef.value.getBoundingClientRect()
+
+    dropdownPosition.value = {
+      top: rect.bottom + 4,
+      left: rect.left,
+      width: rect.width,
+    }
+  }
+
+  /**
+   * Computed style for positioning the dropdown
+   */
+  const dropdownStyle = computed(() => {
+    if (!dropdownPosition.value) return {}
+
+    return {
+      position: 'fixed',
+      top: `${dropdownPosition.value.top}px`,
+      left: `${dropdownPosition.value.left}px`,
+      width: `${dropdownPosition.value.width}px`,
+    }
+  })
+
+  /**
+   * Dropdown readiness state to control rendering timing
+   */
+  const dropdownReady = ref(false)
+
+  /**
+   * Watcher to set dropdown readiness
+   */
+  watch(showDropdown, async (val) => {
+    if (val) {
+      dropdownReady.value = false
+      await nextTick()
+      updateDropdownPosition()
+      dropdownReady.value = true
+    }
+  })
+
+  /**
+   * Update dropdown position on scroll and resize
+   */
+  const onScroll = () => {
+    if (showDropdown.value) {
+      updateDropdownPosition()
+    }
+  }
+
+  /**
+   * Attach scroll and resize listeners
+   */
+  onMounted(() => {
+    window.addEventListener('scroll', onScroll, true)
+    window.addEventListener('resize', onScroll)
+  })
+
+  /**
+   * Cleanup listeners on unmount
+   */
+  onBeforeUnmount(() => {
+    window.removeEventListener('scroll', onScroll, true)
+    window.removeEventListener('resize', onScroll)
+  })
+
   return {
     inputValue,
     showDropdown,
@@ -222,5 +303,7 @@ export function useNumberDropdownInput(props, emit) {
     onCommit,
     wrapperRef,
     dropdownRef,
+    dropdownStyle,
+    dropdownReady,
   }
 }

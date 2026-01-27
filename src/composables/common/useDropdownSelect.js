@@ -84,6 +84,7 @@ export function useDropdownSelect(props, emit) {
    * @param {Number} value - Selected value
    */
   const onSelect = (value) => {
+    console.warn('DropdownSelect onSelect', value)
     selectedValue.value = value
     emit('update:modelValue', value)
     emit('update', value)
@@ -112,7 +113,12 @@ export function useDropdownSelect(props, emit) {
    * @param {MouseEvent} event - Click event
    */
   const onClickOutside = (event) => {
-    if (wrapperRef.value && !wrapperRef.value.contains(event.target)) {
+    if (
+      wrapperRef.value &&
+      !wrapperRef.value.contains(event.target) &&
+      dropdownRef.value &&
+      !dropdownRef.value.contains(event.target)
+    ) {
       showDropdown.value = false
     }
   }
@@ -183,6 +189,82 @@ export function useDropdownSelect(props, emit) {
     window.removeEventListener('resize', adjustDropdownHeight)
   })
 
+  /**
+   * Dropdown position for teleport
+   */
+  const dropdownPosition = ref(null)
+
+  /**
+   * Dropdown readiness state to control rendering timing
+   */
+  const dropdownReady = ref(false)
+
+  /**
+   * Updates the dropdown position based on the wrapper element
+   */
+  const updateDropdownPosition = () => {
+    if (!wrapperRef.value) return
+
+    const rect = wrapperRef.value.getBoundingClientRect()
+
+    dropdownPosition.value = {
+      top: rect.bottom + 4,
+      left: rect.left,
+      width: rect.width,
+    }
+  }
+
+  /**
+   * Computed style for the dropdown based on its position
+   */
+  const dropdownStyle = computed(() => {
+    if (!dropdownPosition.value) return {}
+
+    return {
+      position: 'fixed',
+      top: `${dropdownPosition.value.top}px`,
+      left: `${dropdownPosition.value.left}px`,
+      width: `${dropdownPosition.value.width}px`,
+    }
+  })
+
+  /**
+   * Watch for dropdown visibility changes to update position
+   */
+  watch(showDropdown, async (val) => {
+    if (val) {
+      dropdownReady.value = false
+      await nextTick()
+      updateDropdownPosition()
+      dropdownReady.value = true
+    }
+  })
+
+  /**
+   * Update dropdown position on scroll and resize
+   */
+  const onScroll = () => {
+    if (showDropdown.value) {
+      updateDropdownPosition()
+    }
+  }
+
+  /**
+   * Attach scroll and resize listeners
+   */
+  onMounted(() => {
+    window.addEventListener('scroll', onScroll, true)
+    window.addEventListener('resize', onScroll)
+  })
+
+  /**
+   * Cleanup listeners on unmount
+   */
+  onBeforeUnmount(() => {
+    window.removeEventListener('scroll', onScroll, true)
+    window.removeEventListener('resize', onScroll)
+  })
+
   return {
     selectedValue,
     onIconDoubleClick,
@@ -194,5 +276,7 @@ export function useDropdownSelect(props, emit) {
     wrapperRef,
     longestLabelWidth,
     dropdownRef,
+    dropdownStyle,
+    dropdownReady,
   }
 }

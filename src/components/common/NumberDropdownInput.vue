@@ -83,6 +83,8 @@
     onCommit,
     wrapperRef,
     dropdownRef,
+    dropdownStyle,
+    dropdownReady
   } = useNumberDropdownInput(props, emit)
 
   /**
@@ -92,28 +94,32 @@
   defineExpose({ setValue })
 </script>
 
-  <template>
-    <ItemTip :text="!showDropdown ? props.tip : ''" :position="props.position">
-      <div class="number-dropdown-wrapper" ref="wrapperRef">
-        <BaseIcon v-if="props.icon" :name="props.icon" :size="props.size" :color="props.color" class="input-icon" />
+<template>
+  <ItemTip :text="!showDropdown ? props.tip : ''" :position="props.position">
+    <div class="number-dropdown-wrapper" ref="wrapperRef">
+      <BaseIcon v-if="props.icon" :name="props.icon" :size="props.size" :color="props.color" class="input-icon" />
 
-        <input ref="inputRef" class="text-input" type="number" :disabled="props.disabled" :min="props.min"
-          :max="props.max" :step="props.step" v-model="inputValue" @input="onInput" @blur="onCommit"
-          @keydown.enter="onCommit" :style="{ background: props.background }" />
+      <input ref="inputRef" class="text-input" type="number" :disabled="props.disabled" :min="props.min"
+        :max="props.max" :step="props.step" v-model="inputValue" @input="onInput" @blur="onCommit"
+        @keydown.enter="onCommit" :style="{ background: props.background }" />
 
-        <BaseIcon name="IconDropDown" class="dropdown-icon" size="12" color="var(--primary-c)"
-          :style="{ transform: showDropdown ? 'rotate(180deg) translateY(7px)' : 'rotate(0deg)' }"
-          @click="toggleDropdown" />
+      <BaseIcon name="IconDropDown" class="dropdown-icon" size="12" color="var(--primary-c)"
+        :style="{ transform: showDropdown ? 'rotate(180deg) translateY(7px)' : 'rotate(0deg)' }"
+        @click="toggleDropdown" />
+    </div>
+  </ItemTip>
 
-        <ul v-if="showDropdown" class="dropdown-options" ref="dropdownRef">
-          <li v-for="opt in props.options" :key="opt" @mousedown.prevent="onSelect(opt)"
-            :style="{ background: props.background }">
-            {{ opt }}
-          </li>
-        </ul>
-      </div>
-    </ItemTip>
-  </template>
+  <Teleport to="body">
+    <ul v-if="showDropdown && dropdownReady" class="dropdown-options-teleported" ref="dropdownRef"
+      :style="dropdownStyle">
+      <li v-for="opt in props.options" :key="opt" @mousedown.prevent="onSelect(opt)"
+        :style="{ background: props.background }">
+        {{ opt }}
+      </li>
+    </ul>
+  </Teleport>
+</template>
+
 
 <style scoped>
 .number-dropdown-wrapper {
@@ -155,28 +161,24 @@
   height: 100%;
 }
 
-.dropdown-options {
-  position: absolute;
-  top: 100%;
-  left: 0;
-  right: 0;
+.dropdown-options-teleported {
+  margin: 0;
   color: var(--text-c);
   list-style: none;
-  margin: 4px 0 0 0;
   padding: 0;
   border-radius: var(--input-border-radius);
   overflow-y: auto;
-  max-height: 140px;
+  max-height: 250px;
   box-shadow: var(--box-shadow-ui);
   z-index: var(--z-index-dropdown-options);
 }
 
-.dropdown-options li {
+.dropdown-options-teleported li {
   padding: 6px 10px;
   cursor: pointer;
 }
 
-.dropdown-options li:hover {
+.dropdown-options-teleported li:hover {
   color: var(--primary-c);
 }
 </style>

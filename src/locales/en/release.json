@@ -42,7 +42,8 @@
           "Improve crop box hiding behavior",
           "Same toast are shown only once",
           "Image position and zoom level are preserved when switching tabs",
-          "Show z-index control only when it is needed"
+          "Show z-index control only when it is needed",
+          "Show dropdown option always above other elements"
         ]
       },
       "newFeatures": {
