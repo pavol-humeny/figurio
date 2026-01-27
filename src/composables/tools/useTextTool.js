@@ -149,10 +149,14 @@ export function useTextTool(imageStore, historyStore, editorStore, t) {
           localTextSettings.value.italic = attrs['font-style'] === 'italic'
           localTextSettings.value.underline = attrs['text-decoration'] === 'underline'
         } else {
-          resetTextSettings()
+          // resetTextSettings()
+          // Reset only content
+          localTextSettings.value.text = ''
         }
       } else {
-        resetTextSettings()
+        // resetTextSettings()
+        // Reset only content
+        localTextSettings.value.text = ''
         hidePosition.value = true
       }
     },
@@ -183,12 +187,6 @@ export function useTextTool(imageStore, historyStore, editorStore, t) {
    * @param {boolean} commit - When true, push to history store
    */
   const applyLocalTextSettings = (commit = true) => {
-    // If no object is selected, add new text object
-    if (commit && imageStore.selectedSvgObjectId === null) {
-      addTextObjectOnEnterClick()
-      return
-    }
-
     const object = activeObject.value
     if (!object || object.tag !== 'text') return
     const settings = localTextSettings.value
@@ -263,6 +261,12 @@ export function useTextTool(imageStore, historyStore, editorStore, t) {
    * Add new text object to the center of the viewport on Enter key press
    */
   const addTextObjectOnEnterClick = () => {
+    // If no object is selected, add new text object
+    if (imageStore.selectedSvgObjectId !== null) {
+      applyLocalTextSettings(true)
+      return
+    }
+
     if (editorStore.selectedToolKey !== 'text') return
     if (!localTextSettings.value.text.trim()) return
 

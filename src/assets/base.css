@@ -150,6 +150,7 @@ body {
   --z-index-loading-wheel: 10100;
   --z-index-loading: 10090;
   --z-index-context-menu: 10050;
+  --z-index-dropdown-options: 10049;
   --z-index-tip: 9999;
   --z-index-toast: 9998;
   --z-index-modal: 9997;

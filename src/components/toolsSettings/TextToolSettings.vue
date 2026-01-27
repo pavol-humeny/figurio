@@ -58,7 +58,7 @@ const {
             <TextInput v-model="localTextSettings.text"
               :placeholder="$t('tools.text.settings.general.textContent.placeholder')" updateOnChange
               :maxLength="editorConfig.maxTextLength" @update="applyLocalTextSettings(false)"
-              :onEnter="() => applyLocalTextSettings(true)" />
+              :onEnter="() => addTextObjectOnEnterClick()" />
           </div>
         </div>
 

@@ -62,8 +62,8 @@ export function useImagePipeline(imageStore, uiStore) {
   }
 
   /**
-   * Compute effective base canvas for resize operation.
-   * Applies all operations BEFORE given resize index, skipping all resize ops.
+   * Compute effective base canvas for resize operation
+   * Applies all operations BEFORE given resize index, skipping all resize operations
    *
    * @param {number} resizeOpIndex
    * @param {object} ctx
@@ -82,6 +82,29 @@ export function useImagePipeline(imageStore, uiStore) {
     }
 
     return state.canvas
+  }
+
+  /**
+   * Compute effective overlay for resize operation
+   * Applies all operations BEFORE given resize index, skipping all resize operations
+   *
+   * @param {number} resizeOpIndex
+   * @param {object} ctx
+   * @returns {Promise<HTMLCanvasElement|null>}
+   */
+  const computeEffectiveOverlayForResize = async (resizeOpIndex, ctx) => {
+    const base = imageStore.renderPipeline.baseState
+    let state = cloneState(base)
+
+    for (let i = 0; i < resizeOpIndex; i++) {
+      const op = imageStore.imageOperations[i]
+      if (!op || op.type === 'resize') continue
+
+      const meta = {}
+      state = await applyOperation(state, op, meta, ctx)
+    }
+
+    return state.overlay
   }
 
   /**
@@ -132,10 +155,11 @@ export function useImagePipeline(imageStore, uiStore) {
 
     if (operation.type === 'resize') {
       const effectiveBaseCanvas = await computeEffectiveBaseCanvasForResize(ctx.opIndex, ctx)
+      const effectiveOverlay = await computeEffectiveOverlayForResize(ctx.opIndex, ctx)
 
       const result = await resizeOperation({
         baseCanvas: effectiveBaseCanvas,
-        srcOverlay: state.overlay,
+        srcOverlay: effectiveOverlay,
         srcPdfBytes: state.pdfBytes,
         params: operation.params,
       })
@@ -285,8 +309,7 @@ export function useImagePipeline(imageStore, uiStore) {
       // Update file type if PDF bytes were removed (pdf -> image)
       if (!state.pdfBytes) {
         imageStore.fileType = 'image'
-        imageStore.fileFormat =
-          imageStore.fileFormat === 'pdf' ? 'png' : imageStore.fileFormat
+        imageStore.fileFormat = imageStore.fileFormat === 'pdf' ? 'png' : imageStore.fileFormat
 
         imageStore.imageNeedToBeRendered = true
       }

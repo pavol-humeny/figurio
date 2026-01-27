@@ -96,7 +96,7 @@ defineExpose({ setValue })
       <div class="select-display" :style="{ paddingLeft: showIcon ? '30px' : '10px' }" @click="toggleDropdown">
         {{props.options.find(o => o.value === selectedValue)?.label || ''}}
         <BaseIcon name="IconDropDown" class="dropdown-icon" size="12" color="var(--primary-c)"
-          :style="{ transform: showDropdown ? 'rotate(180deg) translateY(-2px)' : 'rotate(0deg)' }" />
+          :style="{ transform: showDropdown ? 'rotate(180deg) translateY(7px)' : 'rotate(0deg)' }" />
       </div>
 
       <ul v-if="showDropdown" class="dropdown-options" ref="dropdownRef">
@@ -168,5 +168,15 @@ defineExpose({ setValue })
 
 .dropdown-options li:hover {
   color: var(--primary-c);
+}
+
+.dropdown-icon {
+  position: absolute;
+  right: 8px;
+  top: 3px;
+  transform: translateY(-50%);
+  cursor: pointer;
+  pointer-events: auto;
+  height: 100%;
 }
 </style>

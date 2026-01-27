@@ -102,7 +102,7 @@
           @keydown.enter="onCommit" :style="{ background: props.background }" />
 
         <BaseIcon name="IconDropDown" class="dropdown-icon" size="12" color="var(--primary-c)"
-          :style="{ transform: showDropdown ? 'rotate(180deg) translateY(9px)' : 'rotate(0deg)' }"
+          :style="{ transform: showDropdown ? 'rotate(180deg) translateY(7px)' : 'rotate(0deg)' }"
           @click="toggleDropdown" />
 
         <ul v-if="showDropdown" class="dropdown-options" ref="dropdownRef">
@@ -148,7 +148,7 @@
 .dropdown-icon {
   position: absolute;
   right: 8px;
-  top: 5px;
+  top: 3px;
   transform: translateY(-50%);
   cursor: pointer;
   pointer-events: auto;
@@ -168,7 +168,7 @@
   overflow-y: auto;
   max-height: 140px;
   box-shadow: var(--box-shadow-ui);
-  z-index: 1;
+  z-index: var(--z-index-dropdown-options);
 }
 
 .dropdown-options li {

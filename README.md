@@ -1,15 +1,19 @@
 # Figurio
 
+## ITT obhajoba otázky 
+- ako funguje výpočet fit crop 
+- ako funguje noise detection 
+- ako funguje frame tool 
+
+- prečo nie typescript 
+
 ## TODO - text 
 
 # Chyby
-- nakreslím niečo, pridám shape, a dám rasterize tak to zmizne - rastererize zožuje brush 
 - pri vytvorení textu a následnom deselecte by si to mohlo pamätať posledný nastavený text 
 - noise detection spúšťať len nad jpg
 - default frame width je 0
 - pri use milimeters to vyzaduje physical mode na to aby to fungovalo 
-
-- resize overlayu sa deformuje
 
 ## TODO od J (userTesting2 - 12.1.2026)
 - FIXED - Zoom pomocou numerickej klávesnice
@@ -69,13 +73,9 @@
 - select - ak sa vyberie mg tak to zostane na tom nástroji a neprepne sa to späť na select 
 - FIXED - feature tour - prorobenie krížika 
 
-
-
 ## TODO 
 - DONE - MOZNO VYMYSLIET LEPSIE (TERAZ SA NEZOBRAZUJE VOBEC) Hláška o tom že sa nedajú vykresliť tlačidlá telefónu sa vypisuje viac krát
 - SKIP - (asi to je v pohode tak ako to je) zoomovanie pomocou tlacitok, ak je obrazok mimo stred tak to zoomuje mimo obrázok 
-- NEPREUKÁZALO SA - pri prepnutí z color na manual select sa nezapne spravny kurzor
-- NEPREUKÁZALO SA - error pri zatvorení viacerých súborov
 - Vylepšenie rámiku pre prehliadače 
 - Paste by to mohol klásť inde ako na ten istý objekt, aspoň pri kliknutí pravím 
 - Opravit paste blur objektu 
@@ -87,7 +87,6 @@
 - pri posune viacerých objektov, následnom položení a opätovnom presune to nechce ísť a sekne to 
 - undo redo možno nejako zakázať pri aby sa to nedalo kliknúť viac krát do vtedy kým sa neaplikuje operácia 
 - premyslieť kedy sa toasty nemusia zobrazovať 
-
 
 ## Dlhodobé TODO 
 - eye dropper na safari
@@ -110,6 +109,11 @@
 - Nástroj na kreslenie (štetce)
 - Split screen pre viac obrázkov 
 - v inpute by to čísla mohlo počítať 
+
+## Nepreukázalo sa 
+- NEPREUKÁZALO SA - pri prepnutí z color na manual select sa nezapne spravny kurzor
+- NEPREUKÁZALO SA - error pri zatvorení viacerých súborov
+- NEPREUKÁZALO SA - nakreslím niečo, pridám shape, a dám rasterize tak to zmizne - rastererize zožuje brush 
 
 ## API
 ### addUserEvent()
