@@ -104,7 +104,8 @@ const drawLine = (from, to, tool) => {
 }
 
 /**
- * Drawing logic
+ * Handle mouse down event to start drawing
+ * @param {MouseEvent} event - Mouse event
  */
 const onMouseDown = async (event) => {
   if (editorStore.isModalOpenFlag) return
@@ -159,15 +160,30 @@ const onMouseDown = async (event) => {
   mouseMovedSinceDown.value = false
 }
 
+/**
+ * Handle mouse move event for drawing
+ * @param {MouseEvent} event - Mouse event
+ */
 const onMouseMove = (event) => {
   if (!isDrawing.value || editorStore.selectedToolKey !== 'brush') return
   mouseMovedSinceDown.value = true
 
   const currentPos = getMousePos(event)
-  drawLine(lastPos.value, currentPos, editorStore.selectedTabPerTool[editorStore.selectedToolKey])
+
+  // Check if alt key is pressed for eraser when using brush tool
+  const isAltKeyPressed = event.altKey || event.metaKey
+  let tool = editorStore.selectedTabPerTool[editorStore.selectedToolKey]
+  if (isAltKeyPressed) {
+    tool = tool === 'brush' ? 'eraser' : 'brush'
+  }
+
+  drawLine(lastPos.value, currentPos, tool)
   lastPos.value = currentPos
 }
 
+/**
+ * Handle global mouse up event to stop drawing
+ */
 const onMouseUpGlobal = async () => {
   if (!isDrawing.value || editorStore.selectedToolKey !== 'brush') return
   isDrawing.value = false

@@ -11,9 +11,12 @@
 
 # Chyby
 - noise detection spúšťať len nad jpg
-<!-- - default frame width je 0 -->
-- pri use milimeters to vyzaduje physical mode na to aby to fungovalo 
-- ak je phone buttons disabled tak tam dat tip 
+- spraviť noise detection 
+- vylepšiť BG removal 
+- opraviť shape 
+- opraviť magnify area 
+- opraviť blur 
+- opraviť select 
 
 ## TODO od J (userTesting2 - 12.1.2026)
 - FIXED - Zoom pomocou numerickej klávesnice
@@ -81,7 +84,6 @@
 - Opravit paste blur objektu 
 - nakreslenie svg objektu, prepnutie na brush (vyžaduje rasterizáciu) a následné spätné prepnutie na shape (stále to chcelo rasterizovať)
 - color bg removal intuitívnejší 
-- Možno nejako vylepšiť vysvetlenie grayscale
 - rámik windows pri použití milimetrov a dosiahnutí maximálnej hodnoty je možné zadať desatinné číslo 
 - brush - ak dochádza k uloženiu snapshotu do histórie tak to vyriesit nejako inak - divne sa to seká 
 - pri posune viacerých objektov, následnom položení a opätovnom presune to nechce ísť a sekne to 
@@ -100,6 +102,8 @@
 - Zjednodušiť toasty
 - pridať nástroj fill (kýbel)
 - pridať nástroj pre nastavenie priehľadnosti obrázka
+- Možno nejako vylepšiť vysvetlenie grayscale
+
 
 ## Insane ideas
 - aplikovanie operácie na všetky obrázky 

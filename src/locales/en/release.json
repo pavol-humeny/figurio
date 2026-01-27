@@ -17,7 +17,8 @@
       },
       "newFeatures": {
         "items": [
-          "Add shortcut CTRL+C to copy image to clipboard"
+          "Add shortcut CTRL+C to copy image to clipboard",
+          "Eraser can be used with ALT key while brush tool"
         ]
       },
       "bugFixes": {
