@@ -10,7 +10,8 @@
       "newFeatures": {
         "items": [
           "Nové možnosti rámu telefonu – nastavení obrysu a velikosti ikon",
-          "Změna číselných hodnot tažením ikony vstupu do stran"
+          "Změna číselných hodnot tažením ikony vstupu do stran",
+          "Různé styly ikony baterie v rámečcích telefonů"
         ]
       },
       "bugFixes": {
@@ -30,7 +31,7 @@
       "date":"8.1. 2025",
       "improvements": {
         "items": [
-          "Zmenšená veľkosť batérie v rámikoch telefónov" 
+          "Zmenšená velikost baterie v rámečcích telefonů" 
         ]
       }
     },

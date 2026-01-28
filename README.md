@@ -16,7 +16,8 @@
 - opraviť shape 
 - opraviť magnify area 
 - opraviť blur 
-- opraviť select 
+- opraviť select
+- pri výbere z dropdown menu to neskryje tip 
 
 
 ## TODO od J (userTesting2 - 12.1.2026)

@@ -44,6 +44,9 @@ export function useDropdownSelect(props, emit) {
     },
   )
 
+  /**
+   * Computes the width of the longest label among the options
+   */
   const longestLabelWidth = computed(() => {
     if (!props.options?.length) return 0
 
@@ -129,64 +132,14 @@ export function useDropdownSelect(props, emit) {
   const dropdownRef = ref(null)
 
   /**
-   * Adjusts the dropdown height and position based on viewport space
-   */
-  const adjustDropdownHeight = () => {
-    const dropdown = dropdownRef.value
-    const wrapper = wrapperRef.value
-    if (!dropdown || !wrapper) return
-
-    const rect = wrapper.getBoundingClientRect()
-    const viewportHeight = window.innerHeight
-    const padding = 10 // padding from viewport edges
-
-    // Space above and below the dropdown
-    const spaceBelow = viewportHeight - rect.bottom - padding
-    const spaceAbove = rect.top - padding
-
-    // Determine maximum height
-    let maxHeight
-
-    if (spaceBelow < 150 && spaceAbove > spaceBelow) {
-      // More space above - open upwards
-      maxHeight = spaceAbove
-      dropdown.style.bottom = `100%`
-      dropdown.style.top = 'auto'
-      dropdown.style.marginBottom = '4px'
-      dropdown.style.marginTop = '0'
-    } else {
-      // Open downwards
-      maxHeight = spaceBelow
-      dropdown.style.top = `100%`
-      dropdown.style.bottom = 'auto'
-      dropdown.style.marginTop = '4px'
-      dropdown.style.marginBottom = '0'
-    }
-
-    dropdown.style.maxHeight = `${Math.max(maxHeight, 40)}px`
-  }
-
-  /**
-   * Watch for dropdown visibility changes to adjust height
-   */
-  watch(showDropdown, async (val) => {
-    if (val) {
-      await nextTick()
-      adjustDropdownHeight()
-    }
-  })
-
-  /**
    * Setup event listeners on mount and cleanup on unmount
    * Detects outside clicks and window resize
    */
   onMounted(() => {
     document.addEventListener('mousedown', onClickOutside)
-    window.addEventListener('resize', adjustDropdownHeight)
   })
   onBeforeUnmount(() => {
     document.removeEventListener('mousedown', onClickOutside)
-    window.removeEventListener('resize', adjustDropdownHeight)
   })
 
   /**
@@ -203,14 +156,23 @@ export function useDropdownSelect(props, emit) {
    * Updates the dropdown position based on the wrapper element
    */
   const updateDropdownPosition = () => {
-    if (!wrapperRef.value) return
+    if (!wrapperRef.value || !dropdownRef.value) return
 
     const rect = wrapperRef.value.getBoundingClientRect()
+    const dropdown = dropdownRef.value
+    const viewportHeight = window.innerHeight
+    const padding = 10
+
+    const spaceBelow = viewportHeight - rect.bottom - padding
+    const spaceAbove = rect.top - padding
+
+    const openUp = spaceBelow < 150 && spaceAbove > spaceBelow
 
     dropdownPosition.value = {
-      top: rect.bottom + 4,
-      left: rect.left,
+      top: openUp ? rect.top - dropdown.offsetHeight - 4 : rect.bottom + 4,
+      left: Math.round(rect.left),
       width: rect.width,
+      maxHeight: Math.max(openUp ? spaceAbove : spaceBelow, 40),
     }
   }
 
@@ -225,6 +187,7 @@ export function useDropdownSelect(props, emit) {
       top: `${dropdownPosition.value.top}px`,
       left: `${dropdownPosition.value.left}px`,
       width: `${dropdownPosition.value.width}px`,
+      maxHeight: `${dropdownPosition.value.maxHeight}px`,
     }
   })
 
@@ -232,12 +195,14 @@ export function useDropdownSelect(props, emit) {
    * Watch for dropdown visibility changes to update position
    */
   watch(showDropdown, async (val) => {
-    if (val) {
-      dropdownReady.value = false
-      await nextTick()
-      updateDropdownPosition()
-      dropdownReady.value = true
-    }
+    if (!val) return
+
+    dropdownReady.value = true
+    await nextTick()
+
+    requestAnimationFrame(() => {
+        updateDropdownPosition()
+    })
   })
 
   /**

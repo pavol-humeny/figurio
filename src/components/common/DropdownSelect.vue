@@ -164,6 +164,9 @@ defineExpose({ setValue })
   box-shadow: var(--box-shadow-ui);
   z-index: var(--z-index-dropdown-options);
   font-size: var(--text-font-size);
+  position: fixed;
+  top: 0;
+  left: 0;
 }
 
 .dropdown-options-teleported li {
@@ -183,5 +186,6 @@ defineExpose({ setValue })
   cursor: pointer;
   pointer-events: auto;
   height: 100%;
+  box-sizing: border-box;
 }
 </style>

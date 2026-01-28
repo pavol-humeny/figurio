@@ -159,6 +159,7 @@
   cursor: pointer;
   pointer-events: auto;
   height: 100%;
+  box-sizing: border-box;
 }
 
 .dropdown-options-teleported {
@@ -171,6 +172,9 @@
   max-height: 250px;
   box-shadow: var(--box-shadow-ui);
   z-index: var(--z-index-dropdown-options);
+  position: fixed;
+  top: 0;
+  left: 0;
 }
 
 .dropdown-options-teleported li {
