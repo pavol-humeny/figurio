@@ -4,9 +4,24 @@
     "items": []
   },
   "versions":{
+    "5.7.1":{
+      "label": "5.7.1",
+      "date":"28.1. 2025",
+      "newFeatures": {
+        "items": [
+          "New phone frame options - frame outline and icon size settings" 
+        ]
+      },
+      "bugFixes": {
+        "items": [
+          "Fix issue with exporting brush objects to PDF",
+          "Fix issue with exporting phone frame without phone buttons"
+        ]
+      }
+    },
     "5.6.1":{
       "label": "5.6.1",
-      "date":"8.1. 2025",
+      "date":"25.1. 2025",
       "improvements": {
         "items": [
           "Smaller size of battery in phone frames" 

@@ -17,12 +17,6 @@
 - opraviť magnify area 
 - opraviť blur 
 - opraviť select 
-- ak sa to exportuje bez tlacitok tak to ma divne medzery
-- slider na veľkosť baterky v phone header 
-- phone outline a slider do presetov 
-- moznost nastavit si velkosť phone outline 
-- farbu, enable, a hrubku phone outline dať do jednej sekcie
-- brush sa exportuje zle do pdf (raster image to pdf) - TODO -zapisat do release + zapisat frame + commit
 
 ## TODO od J (userTesting2 - 12.1.2026)
 - FIXED - Zoom pomocou numerickej klávesnice

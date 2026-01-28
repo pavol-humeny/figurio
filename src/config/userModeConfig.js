@@ -7,6 +7,7 @@ export const userModeConfig = {
   // 'maxNumberOfFilesToUploadSimultaneously',
   // 'notShowUnexpectedErrorModal',
   // 'statistics',
+  // 'blockedTools',
 
   // UPDATE new random event
   listOfCommands: [
@@ -136,6 +137,7 @@ export const userModeConfig = {
     'unlimitedZoom',
     'notShowUnexpectedErrorModal',
     'statistics',
+    'blockedTools',
   ],
 
   /** Email to access command mode */

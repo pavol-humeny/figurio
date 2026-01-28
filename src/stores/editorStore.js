@@ -1,6 +1,7 @@
 import { editorConfig } from '@/config/editorConfig'
 import { globalConfig } from '@/config/globalConfig'
 import { defineStore } from 'pinia'
+import { useUserModeStore } from './userModeStore'
 
 /**
  * Retrieves a boolean value from localStorage.
@@ -34,6 +35,20 @@ const getArray = (key, fallback = []) => {
 }
 
 /**
+ * Check if a tool is enabled based on global config and user mode
+ * @param {string} toolKey - Key of the tool to check
+ * @returns {boolean} - Whether the tool is enabled
+ */
+const toolIsEnabled = (toolKey) => {
+  const userModeStore = useUserModeStore()
+  if (userModeStore.hasUserAccessToFeature('blockedTools')) {
+    return true
+  } else {
+    return globalConfig.featureFlags.enableTools[toolKey] === true
+  }
+}
+
+/**
  * State and actions for managing editor tool selection, subtools, and active tabs
  */
 export const useEditorStore = defineStore('editorStore', {
@@ -62,21 +77,21 @@ export const useEditorStore = defineStore('editorStore', {
     /** Whether tools are enabled */
     // UPDATE new tool
     enableTools: {
-      crop: globalConfig.featureFlags.enableTools.crop,
-      frame: globalConfig.featureFlags.enableTools.frame,
-      grayscale: globalConfig.featureFlags.enableTools.grayscale,
-      darkLightConvertor: globalConfig.featureFlags.enableTools.darkLightConvertor,
-      backgroundRemoval: globalConfig.featureFlags.enableTools.backgroundRemoval,
-      brush: globalConfig.featureFlags.enableTools.brush,
-      select: globalConfig.featureFlags.enableTools.select,
-      autoCrop: globalConfig.featureFlags.enableTools.autoCrop,
-      blur: globalConfig.featureFlags.enableTools.blur,
-      shape: globalConfig.featureFlags.enableTools.shape,
-      text: globalConfig.featureFlags.enableTools.text,
-      magnifyArea: globalConfig.featureFlags.enableTools.magnifyArea,
-      transform: globalConfig.featureFlags.enableTools.transform,
-      preset: globalConfig.featureFlags.enableTools.preset,
-      export: globalConfig.featureFlags.enableTools.export,
+      crop: toolIsEnabled('crop'),
+      frame: toolIsEnabled('frame'),
+      grayscale: toolIsEnabled('grayscale'),
+      darkLightConvertor: toolIsEnabled('darkLightConvertor'),
+      backgroundRemoval: toolIsEnabled('backgroundRemoval'),
+      brush: toolIsEnabled('brush'),
+      select: toolIsEnabled('select'),
+      autoCrop: toolIsEnabled('autoCrop'),
+      blur: toolIsEnabled('blur'),
+      shape: toolIsEnabled('shape'),
+      text: toolIsEnabled('text'),
+      magnifyArea: toolIsEnabled('magnifyArea'),
+      transform: toolIsEnabled('transform'),
+      preset: toolIsEnabled('preset'),
+      export: toolIsEnabled('export'),
     },
 
     /** Key of the previously selected tool - use for transition between select tool and svg object tools */
