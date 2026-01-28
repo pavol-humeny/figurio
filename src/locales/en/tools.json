@@ -815,6 +815,15 @@
             "large": "Large"
           }
         },
+        "phoneBatteryIconStyle": {
+          "label": "Battery icon style",
+          "tip": "Select phone header battery icon style",
+          "options": {
+            "style1": "Style 1",
+            "style2": "Style 2",
+            "style3": "Style 3"
+          }
+        },
         "usePhoneHomeIndicator": {
           "label": "Home indicator"
         },
@@ -919,6 +928,15 @@
                 "small": "Small",
                 "medium": "Medium",
                 "large": "Large"
+              }
+            },
+            "phoneBatteryIconStyle": {
+              "label": "Battery icon style",
+              "tip": "Select phone header battery icon style",
+              "options": {
+                "style1": "Style 1",
+                "style2": "Style 2",
+                "style3": "Style 3"
               }
             },
             "usePhoneHomeIndicator": "Home indicator",
@@ -1049,6 +1067,15 @@
                 "small": "Small",
                 "medium": "Medium",
                 "large": "Large"
+              }
+            },
+            "phoneBatteryIconStyle": {
+              "label": "Battery icon style",
+              "tip": "Select phone header battery icon style",
+              "options": {
+                "style1": "Style 1",
+                "style2": "Style 2",
+                "style3": "Style 3"
               }
             },
             "usePhoneHomeIndicator": "Home indicator",

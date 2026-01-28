@@ -816,6 +816,15 @@
             "large": "Velká"
           }
         },
+        "phoneBatteryIconStyle": {
+          "label": "Styl ikony baterie",
+          "tip": "Vyberte styl ikony baterie v záhlaví telefonu",
+          "options": {
+            "style1": "Styl 1",
+            "style2": "Styl 2",
+            "style3": "Styl 3"
+          }
+        },
         "usePhoneHomeIndicator": {
           "label": "Domovské tlačítko"
         },
@@ -920,6 +929,15 @@
                 "small": "Malá",
                 "medium": "Střední",
                 "large": "Velká"
+              }
+            },
+            "phoneBatteryIconStyle": {
+              "label": "Styl ikony baterie",
+              "tip": "Vyberte styl ikony baterie v záhlaví telefonu",
+              "options": {
+                "style1": "Styl 1",
+                "style2": "Styl 2",
+                "style3": "Styl 3"
               }
             },
             "usePhoneHomeIndicator": "Domovské tlačítko",
@@ -1050,6 +1068,15 @@
                 "small": "Malá",
                 "medium": "Střední",
                 "large": "Velká"
+              }
+            },
+            "phoneBatteryIconStyle": {
+              "label": "Styl ikony baterie",
+              "tip": "Vyberte styl ikony baterie v záhlaví telefonu",
+              "options": {
+                "style1": "Styl 1",
+                "style2": "Styl 2",
+                "style3": "Styl 3"
               }
             },
             "usePhoneHomeIndicator": "Domovské tlačítko",

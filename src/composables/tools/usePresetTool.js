@@ -101,6 +101,7 @@ export function usePresetTool(
       phoneOutlineColor: '#000000',
       phoneOutlineSize: 'small',
       phoneHeaderIconsSize: 'large',
+      phoneBatteryIconStyle: 'style3',
       phoneHeaderEnabled: true,
       phoneHeaderExpand: false,
       phoneButtonsEnabled: true,
@@ -651,6 +652,7 @@ export function usePresetTool(
         currentImageFrame.phoneOutlineColor === presetFrame.phoneOutlineColor &&
         currentImageFrame.phoneOutlineSize === presetFrame.phoneOutlineSize &&
         currentImageFrame.phoneHeaderIconsSize === presetFrame.phoneHeaderIconsSize &&
+        currentImageFrame.phoneBatteryIconStyle === presetFrame.phoneBatteryIconStyle &&
         currentImageFrame.phoneHeaderEnabled === presetFrame.phoneHeaderEnabled &&
         currentImageFrame.phoneHeaderExpand === presetFrame.phoneHeaderExpand &&
         currentImageFrame.phoneButtonsEnabled === presetFrame.phoneButtonsEnabled &&
@@ -918,6 +920,24 @@ export function usePresetTool(
   ])
 
   /**
+   * Available phone battery icon style options for the preset
+   */
+  const phoneBatteryIconStyleOptions = computed(() => [
+    {
+      value: 'style1',
+      label: t('tools.frame.settings.general.phoneBatteryIconStyle.options.style1'),
+    },
+    {
+      value: 'style2',
+      label: t('tools.frame.settings.general.phoneBatteryIconStyle.options.style2'),
+    },
+    {
+      value: 'style3',
+      label: t('tools.frame.settings.general.phoneBatteryIconStyle.options.style3'),
+    },
+  ])
+
+  /**
    * Watch new preset frame type and if it is solid set outlineEnabled to false
    */
   watch(
@@ -982,6 +1002,7 @@ export function usePresetTool(
         phoneOutlineColor: '#000000',
         phoneOutlineSize: 'small',
         phoneHeaderIconsSize: 'large',
+        phoneBatteryIconStyle: 'style3',
         phoneHeaderEnabled: true,
         phoneHeaderExpand: false,
         phoneButtonsEnabled: true,
@@ -1185,6 +1206,7 @@ export function usePresetTool(
       imageFrame.phoneOutlineColor = newPreset.value.frame.phoneOutlineColor
       imageFrame.phoneOutlineSize = newPreset.value.frame.phoneOutlineSize
       imageFrame.phoneHeaderIconsSize = newPreset.value.frame.phoneHeaderIconsSize
+      imageFrame.phoneBatteryIconStyle = newPreset.value.frame.phoneBatteryIconStyle
       imageFrame.phoneHeaderEnabled = newPreset.value.frame.phoneHeaderEnabled
       imageFrame.phoneHeaderExpand = newPreset.value.frame.phoneHeaderExpand
       imageFrame.phoneButtonsEnabled = newPreset.value.frame.phoneButtonsEnabled
@@ -1343,5 +1365,6 @@ export function usePresetTool(
     presetGrayscaleOptions,
     phoneOutlineSizeOptions,
     phoneHeaderIconsSizeOptions,
+    phoneBatteryIconStyleOptions,
   }
 }

@@ -10,7 +10,8 @@
       "newFeatures": {
         "items": [
           "New phone frame options - frame outline and icon size settings",
-          "Adjust numeric values by dragging the input icon horizontally"
+          "Adjust numeric values by dragging the input icon horizontally",
+          "Different styles of battery icon in phone frames"
         ]
       },
       "bugFixes": {

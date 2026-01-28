@@ -66,6 +66,7 @@ const {
   presetGrayscaleOptions,
   phoneOutlineSizeOptions,
   phoneHeaderIconsSizeOptions,
+  phoneBatteryIconStyleOptions,
 } = usePresetTool(
   useImageStore(),
   useHistoryStore(),
@@ -360,6 +361,16 @@ const tabs = ['myPresets', 'createPreset']
                   {{ t('tools.preset.settings.myPresets.presetValues.frame.phoneHeaderIconsSize.label') }}
                 </p>
                 <DropdownSelect v-model="localImageFrame.phoneHeaderIconsSize" :options="phoneHeaderIconsSizeOptions" />
+              </div>
+              <!-- Phone battery icon style -->
+              <div
+                v-if="localImageFrame.enabled && localImageFrame.phoneHeaderEnabled && isPhoneFrame(localImageFrame.type)"
+                class="content-aligned two-items" :class="!isModifyingPreset ? 'disabled' : ''">
+                <p>
+                  {{ t('tools.preset.settings.myPresets.presetValues.frame.phoneBatteryIconStyle.label') }}
+                </p>
+                <DropdownSelect v-model="localImageFrame.phoneBatteryIconStyle"
+                  :options="phoneBatteryIconStyleOptions" />
               </div>
               <!-- Background color -->
               <div
@@ -826,7 +837,7 @@ const tabs = ['myPresets', 'createPreset']
                 <ToggleButton v-model="newPreset.frame.phoneHeaderExpand" :scale="0.6"
                   :style="{ transform: 'translateX(16px)' }" />
               </div>
-              <!-- Phone icon size -->
+              <!-- Header icon size -->
               <div
                 v-if="newPreset.frame.phoneHeaderEnabled && isPhoneFrame(newPreset.frame.type) && newPreset.frame.enabled"
                 class="content-aligned two-items">
@@ -834,6 +845,16 @@ const tabs = ['myPresets', 'createPreset']
                   {{ t('tools.preset.settings.createPreset.presetValues.frame.phoneHeaderIconsSize.label') }}
                 </p>
                 <DropdownSelect v-model="newPreset.frame.phoneHeaderIconsSize" :options="phoneHeaderIconsSizeOptions" />
+              </div>
+              <!-- Phone battery icon style -->
+              <div
+                v-if="newPreset.frame.phoneHeaderEnabled && isPhoneFrame(newPreset.frame.type) && newPreset.frame.enabled"
+                class="content-aligned two-items">
+                <p>
+                  {{ t('tools.preset.settings.createPreset.presetValues.frame.phoneBatteryIconStyle.label') }}
+                </p>
+                <DropdownSelect v-model="newPreset.frame.phoneBatteryIconStyle"
+                  :options="phoneBatteryIconStyleOptions" />
               </div>
               <!-- Background color -->
               <div

@@ -77,6 +77,9 @@ const {
   phoneHeaderIconsSize,
   setPhoneHeaderIconsSize,
   phoneHeaderIconsSizeOptions,
+  phoneBatteryIconStyle,
+  setPhoneBatteryIconStyle,
+  phoneBatteryIconStyleOptions
 } = useFrameTool(useImageStore(), useHistoryStore(), useViewportStore(), t)
 </script>
 
@@ -267,13 +270,23 @@ const {
             </div>
           </div>
           <!-- Header icon size -->
-          <div class="content-wrapper" v-if="drawPhoneOutline">
+          <div class="content-wrapper" v-if="drawPhoneHeader">
             <div class="content-aligned two-items">
               <p>
                 {{ t('tools.frame.settings.general.phoneHeaderIconsSize.label') }}
               </p>
               <DropdownSelect v-model="phoneHeaderIconsSize" :options="phoneHeaderIconsSizeOptions"
                 @update="setPhoneHeaderIconsSize(phoneHeaderIconsSize)" />
+            </div>
+          </div>
+          <!-- Battery icon style -->
+          <div class="content-wrapper" v-if="drawPhoneHeader">
+            <div class="content-aligned two-items">
+              <p>
+                {{ t('tools.frame.settings.general.phoneBatteryIconStyle.label') }}
+              </p>
+              <DropdownSelect v-model="phoneBatteryIconStyle" :options="phoneBatteryIconStyleOptions"
+                @update="setPhoneBatteryIconStyle(phoneBatteryIconStyle)" />
             </div>
           </div>
           <!-- Phone header background color -->

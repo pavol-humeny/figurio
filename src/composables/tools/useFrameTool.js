@@ -258,6 +258,16 @@ export function useFrameTool(imageStore, historyStore, viewportStore, t) {
   })
 
   /**
+   * Phone battery icon style
+   */
+  const phoneBatteryIconStyle = computed({
+    get: () => imageStore.frame.phoneBatteryIconStyle || 'style3',
+    set: (value) => {
+      imageStore.frame.phoneBatteryIconStyle = value
+    },
+  })
+
+  /**
    * Phone header visibility
    */
   const drawPhoneHeader = computed({
@@ -351,6 +361,24 @@ export function useFrameTool(imageStore, historyStore, viewportStore, t) {
       value: 'medium',
     },
     { label: t('tools.frame.settings.general.phoneHeaderIconsSize.options.large'), value: 'large' },
+  ])
+
+  /**
+   * Phone battery icon style options
+   */
+  const phoneBatteryIconStyleOptions = computed(() => [
+    {
+      label: t('tools.frame.settings.general.phoneBatteryIconStyle.options.style1'),
+      value: 'style1',
+    },
+    {
+      label: t('tools.frame.settings.general.phoneBatteryIconStyle.options.style2'),
+      value: 'style2',
+    },
+    {
+      label: t('tools.frame.settings.general.phoneBatteryIconStyle.options.style3'),
+      value: 'style3',
+    },
   ])
 
   // ------------------------
@@ -662,6 +690,15 @@ export function useFrameTool(imageStore, historyStore, viewportStore, t) {
   }
 
   /**
+   * Set phone battery icon style
+   * @param {string} style - New phone battery icon style (style1, style2, style3)
+   */
+  const setPhoneBatteryIconStyle = (style) => {
+    phoneBatteryIconStyle.value = style
+    applyFrame()
+  }
+
+  /**
    * Set phone header visibility
    * @param {boolean} value - Whether to show phone header
    */
@@ -822,6 +859,7 @@ export function useFrameTool(imageStore, historyStore, viewportStore, t) {
     imageStore.frame.phoneOutlineColor = JSON.parse(JSON.stringify(phoneOutlineColor.value))
     imageStore.frame.phoneOutlineSize = JSON.parse(JSON.stringify(phoneOutlineSize.value))
     imageStore.frame.phoneHeaderIconsSize = JSON.parse(JSON.stringify(phoneHeaderIconsSize.value))
+    imageStore.frame.phoneBatteryIconStyle = JSON.parse(JSON.stringify(phoneBatteryIconStyle.value))
     imageStore.frame.phoneHeaderEnabled = JSON.parse(JSON.stringify(drawPhoneHeader.value))
     imageStore.frame.phoneHeaderExpand = JSON.parse(JSON.stringify(headerOverlap.value))
     imageStore.frame.phoneButtonsEnabled = JSON.parse(JSON.stringify(drawPhoneButtons.value))
@@ -1286,53 +1324,202 @@ export function useFrameTool(imageStore, historyStore, viewportStore, t) {
         const timeWidth = timeString.length * approxCharWidth
         const timeEndX = x + phoneFrameValues.radius / 2 + timeWidth
 
-        // Right: Signal and Battery
-
         // Battery
         const batteryWidth = height * 0.9 * phoneHeaderIconsSizeMultiplier
         const batteryHeight = height * 0.45 * phoneHeaderIconsSizeMultiplier
         const batteryX = svgWidth - x - batteryWidth - phoneFrameValues.radius / 2
         const batteryY = y + (height - batteryHeight) / 2
-        const batteryPadding = batteryWidth * 0.05
-        const batteryOutlineWidth = batteryWidth * 0.02
-        const batteryCornerRadius = batteryPadding
 
-        const battery = document.createElementNS(ns, 'rect')
-        battery.setAttribute('x', batteryX)
-        battery.setAttribute('y', batteryY)
-        battery.setAttribute('width', batteryWidth)
-        battery.setAttribute('height', batteryHeight)
-        battery.setAttribute('rx', batteryCornerRadius)
-        battery.setAttribute('fill', 'none')
-        battery.setAttribute('stroke', textColor)
-        battery.setAttribute('stroke-width', batteryOutlineWidth)
-        el.appendChild(battery)
+        const batteryStyle =
+          frame.phoneBatteryIconStyle === 'style1'
+            ? 0
+            : frame.phoneBatteryIconStyle === 'style2'
+              ? 1
+              : 2
 
-        const batteryFill = document.createElementNS(ns, 'rect')
-        batteryFill.setAttribute('x', batteryX + batteryPadding)
-        batteryFill.setAttribute('y', batteryY + batteryPadding)
-        batteryFill.setAttribute('width', batteryWidth - batteryPadding * 2)
-        batteryFill.setAttribute('height', batteryHeight - batteryPadding * 2)
-        batteryFill.setAttribute('fill', textColor)
-        el.appendChild(batteryFill)
+        if (batteryStyle == 0) {
+          // Battery
+          const batteryPadding = batteryWidth * 0.05
+          const batteryOutlineWidth = batteryWidth * 0.02
+          const batteryCornerRadius = batteryPadding
 
-        // Battery tip
-        const batteryTip = document.createElementNS(ns, 'rect')
+          const battery = document.createElementNS(ns, 'rect')
+          battery.setAttribute('x', batteryX)
+          battery.setAttribute('y', batteryY)
+          battery.setAttribute('width', batteryWidth)
+          battery.setAttribute('height', batteryHeight)
+          battery.setAttribute('rx', batteryCornerRadius)
+          battery.setAttribute('fill', 'none')
+          battery.setAttribute('stroke', textColor)
+          battery.setAttribute('stroke-width', batteryOutlineWidth)
+          el.appendChild(battery)
 
-        const batteryTipWidth = batteryPadding * 2
+          const batteryFill = document.createElementNS(ns, 'rect')
+          batteryFill.setAttribute('x', batteryX + batteryPadding)
+          batteryFill.setAttribute('y', batteryY + batteryPadding)
+          batteryFill.setAttribute('width', batteryWidth - batteryPadding * 2)
+          batteryFill.setAttribute('height', batteryHeight - batteryPadding * 2)
+          batteryFill.setAttribute('fill', textColor)
+          el.appendChild(batteryFill)
 
-        batteryTip.setAttribute('x', batteryX + batteryWidth)
-        batteryTip.setAttribute('y', batteryY + batteryHeight * 0.25)
-        batteryTip.setAttribute('width', batteryTipWidth)
-        batteryTip.setAttribute('height', batteryHeight * 0.5)
-        batteryTip.setAttribute('fill', textColor)
-        el.appendChild(batteryTip)
+          // Battery tip
+          const batteryTip = document.createElementNS(ns, 'rect')
+
+          const batteryTipWidth = batteryPadding * 2
+
+          batteryTip.setAttribute('x', batteryX + batteryWidth)
+          batteryTip.setAttribute('y', batteryY + batteryHeight * 0.25)
+          batteryTip.setAttribute('width', batteryTipWidth)
+          batteryTip.setAttribute('height', batteryHeight * 0.5)
+          batteryTip.setAttribute('fill', textColor)
+          el.appendChild(batteryTip)
+        } else if (batteryStyle == 1) {
+          // Battery (ISO / iOS style)
+          const batteryPadding = batteryWidth * 0.08
+          const batteryOutlineWidth = batteryWidth * 0.06
+          const batteryCornerRadius = batteryHeight * 0.25
+
+          // Main battery body
+          const battery = document.createElementNS(ns, 'rect')
+          battery.setAttribute('x', batteryX)
+          battery.setAttribute('y', batteryY)
+          battery.setAttribute('width', batteryWidth)
+          battery.setAttribute('height', batteryHeight)
+          battery.setAttribute('rx', batteryCornerRadius)
+          battery.setAttribute('ry', batteryCornerRadius)
+          battery.setAttribute('fill', 'none')
+          battery.setAttribute('stroke', textColor)
+          battery.setAttribute('stroke-width', batteryOutlineWidth)
+          el.appendChild(battery)
+
+          // Battery cap (right nub)
+          const capWidth = batteryWidth * 0.08
+          const capHeight = batteryHeight * 0.4
+          const capX = batteryX + batteryWidth
+          const capY = batteryY + (batteryHeight - capHeight) / 2
+
+          const batteryCap = document.createElementNS(ns, 'rect')
+          batteryCap.setAttribute('x', capX)
+          batteryCap.setAttribute('y', capY)
+          batteryCap.setAttribute('width', capWidth)
+          batteryCap.setAttribute('height', capHeight)
+          batteryCap.setAttribute('rx', capWidth * 0.4)
+          batteryCap.setAttribute('ry', capWidth * 0.4)
+          batteryCap.setAttribute('fill', textColor)
+          el.appendChild(batteryCap)
+
+          // Battery fill
+          const batteryFill = document.createElementNS(ns, 'rect')
+          batteryFill.setAttribute('x', batteryX + batteryPadding)
+          batteryFill.setAttribute('y', batteryY + batteryPadding)
+          batteryFill.setAttribute('width', batteryWidth - batteryPadding * 2)
+          batteryFill.setAttribute('height', batteryHeight - batteryPadding * 2)
+          batteryFill.setAttribute('rx', (batteryHeight - batteryPadding * 2) * 0.2)
+          batteryFill.setAttribute('ry', (batteryHeight - batteryPadding * 2) * 0.2)
+          batteryFill.setAttribute('fill', textColor)
+          el.appendChild(batteryFill)
+        } else if (batteryStyle == 2) {
+          // Battery (iOS style – no outline)
+          const batteryCornerRadius = (batteryHeight / 7) * 3
+          const batteryPadding = batteryHeight * 0.15
+
+          // Example battery level (0–1)
+          const batteryLevel = 0.64
+
+          // Battery body (background pill)
+          const batteryBody = document.createElementNS(ns, 'rect')
+          batteryBody.setAttribute('x', batteryX)
+          batteryBody.setAttribute('y', batteryY)
+          batteryBody.setAttribute('width', batteryWidth)
+          batteryBody.setAttribute('height', batteryHeight)
+          batteryBody.setAttribute('rx', batteryCornerRadius)
+          batteryBody.setAttribute('ry', batteryCornerRadius)
+          batteryBody.setAttribute('fill', textColor)
+          batteryBody.setAttribute('opacity', '0.25')
+          el.appendChild(batteryBody)
+
+          // Battery cap (right nub) with rounded right corners only
+          const capWidth = batteryWidth * 0.055
+          const capHeight = batteryHeight * 0.25
+          const capX = batteryX + batteryWidth + capWidth * 0.2
+          const capY = batteryY + (batteryHeight - capHeight) / 2
+
+          const r = capHeight * 0.4 // Corner radius
+
+          const batteryCap = document.createElementNS(ns, 'path')
+
+          const d = `
+                      M ${capX} ${capY}
+                      L ${capX + capWidth - r} ${capY}
+                      Q ${capX + capWidth} ${capY} ${capX + capWidth} ${capY + r}
+                      L ${capX + capWidth} ${capY + capHeight - r}
+                      Q ${capX + capWidth} ${capY + capHeight} ${capX + capWidth - r} ${capY + capHeight}
+                      L ${capX} ${capY + capHeight}
+                      Z
+                    `
+
+          batteryCap.setAttribute('d', d)
+          batteryCap.setAttribute('fill', textColor)
+          batteryCap.setAttribute('opacity', '0.4')
+          el.appendChild(batteryCap)
+
+          // Battery fill (charge level)
+          const fillWidth = (batteryWidth - batteryPadding * 2) * batteryLevel
+
+          const batteryFill = document.createElementNS(ns, 'rect')
+          batteryFill.setAttribute('x', batteryX + batteryPadding)
+          batteryFill.setAttribute('y', batteryY + batteryPadding)
+          batteryFill.setAttribute('width', fillWidth)
+          batteryFill.setAttribute('height', batteryHeight - batteryPadding * 2)
+          batteryFill.setAttribute('rx', (batteryHeight - batteryPadding * 2) / 2)
+          batteryFill.setAttribute('ry', (batteryHeight - batteryPadding * 2) / 2)
+          batteryFill.setAttribute('fill', textColor)
+          el.appendChild(batteryFill)
+        }
+
+        // Wi-Fi (diagonal style, 3 bars, no dot)
+        const wifiSize = batteryHeight
+        const wifiX = batteryX - wifiSize * 1.45
+        const wifiY = batteryY + (batteryHeight - wifiSize) / 2
+
+        const cx = wifiX + wifiSize / 2
+        const cy = wifiY + wifiSize
+
+        /**
+         * Filled quarter-arc (like diagonal wifi bar)
+         */
+        const createWifiSlice = (outerR, innerR) => {
+          const path = document.createElementNS(ns, 'path')
+
+          // Quarter ring (top-right quadrant)
+          const d = `
+            M ${cx} ${cy - outerR}
+            A ${outerR} ${outerR} 0 0 1 ${cx + outerR} ${cy}
+            L ${cx + innerR} ${cy}
+            A ${innerR} ${innerR} 0 0 0 ${cx} ${cy - innerR}
+            Z
+          `
+
+          path.setAttribute('d', d)
+          path.setAttribute('fill', textColor)
+
+          // Rotate whole slice by 45°
+          path.setAttribute('transform', `rotate(-45 ${cx} ${cy})`)
+
+          el.appendChild(path)
+        }
+
+        // 3 diagonal bars (outer → inner)
+        // createWifiSlice(wifiSize * 0.95, wifiSize * 0.8)
+        createWifiSlice(wifiSize * 1, wifiSize * 0.76)
+        createWifiSlice(wifiSize * 0.62, wifiSize * 0.41)
+        createWifiSlice(wifiSize * 0.28, wifiSize * 0)
 
         // Signal (3 bars)
         const signalWidth = batteryHeight * 1.2
         const barWidth = signalWidth / 5.5
         const barSpacing = barWidth * 0.5
-        const barBaseX = batteryX - barSpacing * 7
+        const barBaseX = wifiX - barSpacing * 7
         const barBottom = batteryY + batteryHeight
         const barHeights = [
           batteryHeight * 0.25,
@@ -2443,5 +2630,8 @@ export function useFrameTool(imageStore, historyStore, viewportStore, t) {
     phoneHeaderIconsSize,
     setPhoneHeaderIconsSize,
     phoneHeaderIconsSizeOptions,
+    phoneBatteryIconStyle,
+    setPhoneBatteryIconStyle,
+    phoneBatteryIconStyleOptions,
   }
 }

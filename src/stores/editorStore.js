@@ -173,6 +173,7 @@ export const useEditorStore = defineStore('editorStore', {
         phoneOutlineColor: '#000000', // Color of the phone frame outline
         phoneOutlineSize: 'small', // Size of the phone frame outline
         phoneHeaderIconsSize: 'large', // Size of the phone header icons
+        phoneBatteryIconStyle: 'style3', // Style of the phone battery icon
         phoneHeaderEnabled: true, // Whether to draw a header for phone frames
         phoneHeaderExpand: false, // Whether header expands beyond image
         phoneButtonsEnabled: true, // Whether to draw buttons for phone frames
