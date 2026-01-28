@@ -154,6 +154,10 @@ export const useEditorStore = defineStore('editorStore', {
         footerSize: 0, // Size of the footer for windows frame
         footerSizeMm: 0, // Size of the footer for windows frame in mm
         outlineEnabled: false, // Whether to draw an outline around the frame
+        phoneOutlineEnabled: false, // Whether to draw an outline around phone frames
+        phoneOutlineColor: '#000000', // Color of the phone frame outline
+        phoneOutlineSize: 'small', // Size of the phone frame outline
+        phoneHeaderIconsSize: 'large', // Size of the phone header icons
         phoneHeaderEnabled: true, // Whether to draw a header for phone frames
         phoneHeaderExpand: false, // Whether header expands beyond image
         phoneButtonsEnabled: true, // Whether to draw buttons for phone frames

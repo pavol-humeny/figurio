@@ -218,6 +218,46 @@ export function useFrameTool(imageStore, historyStore, viewportStore, t) {
   })
 
   /**
+   * Phone outline visibility
+   */
+  const drawPhoneOutline = computed({
+    get: () => imageStore.frame.phoneOutlineEnabled,
+    set: (value) => {
+      imageStore.frame.phoneOutlineEnabled = value
+    },
+  })
+
+  /**
+   * Phone outline color
+   */
+  const phoneOutlineColor = computed({
+    get: () => imageStore.frame.phoneOutlineColor,
+    set: (value) => {
+      imageStore.frame.phoneOutlineColor = value
+    },
+  })
+
+  /**
+   * Phone outline size
+   */
+  const phoneOutlineSize = computed({
+    get: () => imageStore.frame.phoneOutlineSize,
+    set: (value) => {
+      imageStore.frame.phoneOutlineSize = value
+    },
+  })
+
+  /**
+   * Phone header icons size
+   */
+  const phoneHeaderIconsSize = computed({
+    get: () => imageStore.frame.phoneHeaderIconsSize,
+    set: (value) => {
+      imageStore.frame.phoneHeaderIconsSize = value
+    },
+  })
+
+  /**
    * Phone header visibility
    */
   const drawPhoneHeader = computed({
@@ -240,7 +280,12 @@ export function useFrameTool(imageStore, historyStore, viewportStore, t) {
   /**
    * Selected frame variant
    */
-  const selectedFrameVariant = computed(() => imageStore.frame.type || 'none')
+  const selectedFrameVariant = computed({
+    get: () => imageStore.frame.type,
+    set: () => {
+      return
+    },
+  })
 
   /**
    * Available frame options
@@ -285,6 +330,27 @@ export function useFrameTool(imageStore, historyStore, viewportStore, t) {
       label: t('tools.frame.settings.general.frameVariants.frameVSCode'),
       value: 'frameVSCode',
     },
+  ])
+
+  /**
+   * Phone outline size options
+   */
+  const phoneOutlineSizeOptions = computed(() => [
+    { label: t('tools.frame.settings.general.phoneOutlineSize.options.small'), value: 'small' },
+    { label: t('tools.frame.settings.general.phoneOutlineSize.options.medium'), value: 'medium' },
+    { label: t('tools.frame.settings.general.phoneOutlineSize.options.large'), value: 'large' },
+  ])
+
+  /**
+   * Phone header icons size options
+   */
+  const phoneHeaderIconsSizeOptions = computed(() => [
+    { label: t('tools.frame.settings.general.phoneHeaderIconsSize.options.small'), value: 'small' },
+    {
+      label: t('tools.frame.settings.general.phoneHeaderIconsSize.options.medium'),
+      value: 'medium',
+    },
+    { label: t('tools.frame.settings.general.phoneHeaderIconsSize.options.large'), value: 'large' },
   ])
 
   // ------------------------
@@ -505,6 +571,15 @@ export function useFrameTool(imageStore, historyStore, viewportStore, t) {
   }
 
   /**
+   * Watch phone buttons can be drawn and enable if possible
+   */
+  watch(phoneButtonsCanBeDrawn, (newValue) => {
+    if (newValue) {
+      setPhoneButtons(true)
+    }
+  })
+
+  /**
    * Set frame color
    * @param {string} color - New frame color
    * @param {boolean} commit - When true, push to history store
@@ -551,6 +626,42 @@ export function useFrameTool(imageStore, historyStore, viewportStore, t) {
   }
 
   /**
+   * Set phone outline visibility
+   * @param {boolean} value - Whether to show phone outline
+   */
+  const setPhoneOutline = (value) => {
+    drawPhoneOutline.value = value
+    applyFrame()
+  }
+
+  /**
+   * Set phone outline color
+   * @param {string} color - New phone outline color
+   */
+  const setPhoneOutlineColor = (color) => {
+    phoneOutlineColor.value = color
+    applyFrame()
+  }
+
+  /**
+   * Set phone outline size
+   * @param {string} size - New phone outline size (small, medium, large)
+   */
+  const setPhoneOutlineSize = (size) => {
+    phoneOutlineSize.value = size
+    applyFrame()
+  }
+
+  /**
+   * Set phone header icons size
+   * @param {string} size - New phone header icons size (small, medium, large)
+   */
+  const setPhoneHeaderIconsSize = (size) => {
+    phoneHeaderIconsSize.value = size
+    applyFrame()
+  }
+
+  /**
    * Set phone header visibility
    * @param {boolean} value - Whether to show phone header
    */
@@ -585,7 +696,7 @@ export function useFrameTool(imageStore, historyStore, viewportStore, t) {
       selectedFrameVariant.value === 'framePhoneIOS2' ||
       selectedFrameVariant.value === 'framePhoneSimple'
     ) {
-      // WIDTH CALCULATION - CHANGE
+      // Width is based on image width
       width =
         Math.max(
           Math.floor(editorConfig.phoneFrameDefaultSize * imageStore.fileDimensions.width),
@@ -707,6 +818,10 @@ export function useFrameTool(imageStore, historyStore, viewportStore, t) {
     imageStore.frame.enabled = true
     imageStore.frame.useMillimeters = JSON.parse(JSON.stringify(useMillimeters.value))
     imageStore.frame.outlineEnabled = JSON.parse(JSON.stringify(drawOutline.value))
+    imageStore.frame.phoneOutlineEnabled = JSON.parse(JSON.stringify(drawPhoneOutline.value))
+    imageStore.frame.phoneOutlineColor = JSON.parse(JSON.stringify(phoneOutlineColor.value))
+    imageStore.frame.phoneOutlineSize = JSON.parse(JSON.stringify(phoneOutlineSize.value))
+    imageStore.frame.phoneHeaderIconsSize = JSON.parse(JSON.stringify(phoneHeaderIconsSize.value))
     imageStore.frame.phoneHeaderEnabled = JSON.parse(JSON.stringify(drawPhoneHeader.value))
     imageStore.frame.phoneHeaderExpand = JSON.parse(JSON.stringify(headerOverlap.value))
     imageStore.frame.phoneButtonsEnabled = JSON.parse(JSON.stringify(drawPhoneButtons.value))
@@ -840,6 +955,15 @@ export function useFrameTool(imageStore, historyStore, viewportStore, t) {
     const w = width ?? imageStore.fileDimensions.width
     const h = height ?? imageStore.fileDimensions.height
     const color = frame.color
+    const phoneEdgeStrokeWidth =
+      frame.phoneOutlineSize === 'small' ? 1 : frame.phoneOutlineSize === 'medium' ? 3 : 5
+    const phoneHeaderIconsSizeMultiplier =
+      frame.phoneHeaderIconsSize === 'small'
+        ? 0.5
+        : frame.phoneHeaderIconsSize === 'medium'
+          ? 0.75
+          : 1
+
     const contrastColor = getContrastColor(color)
 
     const useMillimetersForFrame = frame.useMillimeters
@@ -866,7 +990,7 @@ export function useFrameTool(imageStore, historyStore, viewportStore, t) {
       frame.type === 'framePhoneSimple'
     ) {
       if (!useMillimetersForFrame) {
-        // WIDTH CALCULATION - CHANGE
+        // Width based on image width
         fw = Math.max(Math.floor(editorConfig.phoneFrameDefaultSize * w), 2) * 1.5 * 2
         fh = fw / 1.5
 
@@ -880,9 +1004,6 @@ export function useFrameTool(imageStore, historyStore, viewportStore, t) {
 
         fh = fw / 1.5
 
-        // Header size in mm (used value set by user)
-        // imageStore.frame.headerSize = userSetHeaderSizeMm.value * PxPerMm
-
         imageStore.frame.headerSize = imageStore.frame.headerSizeMm * PxPerMm
       }
 
@@ -892,12 +1013,6 @@ export function useFrameTool(imageStore, historyStore, viewportStore, t) {
         fw = 0
         fh = 0
       }
-
-      // imageStore.frame.footerSize = imageStore.frame.userSetSize.size
-      // imageStore.frame.footerSizeMm = imageStore.frame.userSetSize.sizeMm
-
-      // imageStore.frame.headerSize = 0
-      // imageStore.frame.headerSizeMm = 0
     } else {
       imageStore.frame.headerSize = 0
       imageStore.frame.footerSize = 0
@@ -944,10 +1059,10 @@ export function useFrameTool(imageStore, historyStore, viewportStore, t) {
       strokeWidth,
       radius: phoneCornerRadius,
       offset, // Need because path is drawn from center of stroke
-      left: drawingAdjustmentForPhoneButtons,
-      top: offset,
-      right: svgWidth - drawingAdjustmentForPhoneButtons,
-      bottom: svgHeight - offset,
+      left: drawingAdjustmentForPhoneButtons + 0.5,
+      top: offset + 0.5,
+      right: svgWidth - drawingAdjustmentForPhoneButtons - 0.5,
+      bottom: svgHeight - offset - 0.5,
       headerSize: headerSizePhone,
     }
 
@@ -967,41 +1082,85 @@ export function useFrameTool(imageStore, historyStore, viewportStore, t) {
      * @param {number} height - Button height
      * @param {number} radius - Corner radius
      * @param {string} side - 'left' or 'right' to determine which side the button is on
+     * @param {boolean} outline - Whether to draw outline
+     * @param {string} edgeColor - Color of the button edge
+     * @param {number} edgeStroke - Stroke width of the button edge
      * @return {SVGElement} - The button element
      */
-    const drawSideButton = (x, y, width, height, radius, side) => {
-      const path = document.createElementNS(ns, 'path')
+    const drawSideButton = ({
+      el,
+      x,
+      y,
+      width,
+      height,
+      radius,
+      side,
+      color,
+      outline = false,
+      edgeColor = 'black',
+      edgeStroke = phoneEdgeStrokeWidth,
+    }) => {
+      const createPath = (x, y, w, h, r, fill) => {
+        if (w <= 0 || h <= 0) return null
 
-      const d =
-        side !== 'right'
-          ? [
-              `M ${x + width} ${y}`, // top-right
-              `H ${x + radius}`, // move left before corner
-              `A ${radius} ${radius} 0 0 0 ${x} ${y + radius}`, // top-left corner
-              `V ${y + height - radius}`, // down
-              `A ${radius} ${radius} 0 0 0 ${x + radius} ${y + height}`, // bottom-left corner
-              `H ${x + width}`, // right
-              'Z',
-            ]
-          : [
-              `M ${x} ${y}`, // top-left
-              `H ${x + width - radius}`, // move right before corner
-              `A ${radius} ${radius} 0 0 1 ${x + width} ${y + radius}`, // top-right corner
-              `V ${y + height - radius}`, // down
-              `A ${radius} ${radius} 0 0 1 ${x + width - radius} ${y + height}`, // bottom-right corner
-              `H ${x}`, // left
-              'Z',
-            ]
+        const p = document.createElementNS(ns, 'path')
 
-      path.setAttribute('d', d.join(' '))
-      path.setAttribute('fill', color)
-      return path
+        const d =
+          side !== 'right'
+            ? [
+                `M ${x + w} ${y}`,
+                `H ${x + r}`,
+                `A ${r} ${r} 0 0 0 ${x} ${y + r}`,
+                `V ${y + h - r}`,
+                `A ${r} ${r} 0 0 0 ${x + r} ${y + h}`,
+                `H ${x + w}`,
+                'Z',
+              ]
+            : [
+                `M ${x} ${y}`,
+                `H ${x + w - r}`,
+                `A ${r} ${r} 0 0 1 ${x + w} ${y + r}`,
+                `V ${y + h - r}`,
+                `A ${r} ${r} 0 0 1 ${x + w - r} ${y + h}`,
+                `H ${x}`,
+                'Z',
+              ]
+
+        p.setAttribute('d', d.join(' '))
+        p.setAttribute('fill', fill)
+        return p
+      }
+
+      if (outline) {
+        // Outer edge
+        const outer = createPath(x, y, width, height, radius, edgeColor)
+        if (outer) el.appendChild(outer)
+
+        // Inner main fill
+        const inner = createPath(
+          x + edgeStroke,
+          y + edgeStroke,
+          width - 2 * edgeStroke,
+          height - 2 * edgeStroke,
+          Math.max(radius - edgeStroke, 0),
+          color,
+        )
+        if (inner) el.appendChild(inner)
+      } else {
+        // Single fill (classic)
+        const main = createPath(x, y, width, height, radius, color)
+        if (main) el.appendChild(main)
+      }
     }
 
     /**
      * Draws the volume and power buttons for phone frames
      */
-    const drawVolumeAndPowerButtons = () => {
+    const drawVolumeAndPowerButtons = ({
+      outline = false,
+      edgeColor = 'black',
+      edgeStroke = phoneEdgeStrokeWidth,
+    }) => {
       if (!frame.phoneButtonsEnabled) return
 
       // Volume buttons (left side)
@@ -1018,27 +1177,33 @@ export function useFrameTool(imageStore, historyStore, viewportStore, t) {
         return
       }
 
-      el.appendChild(
-        drawSideButton(
-          volumeButtonX,
-          volumeUpY,
-          volumeButtonWidth + fh * 0.3,
-          volumeButtonHeight,
-          volumeButtonRadius,
-          'left',
-        ),
-      )
+      drawSideButton({
+        el,
+        x: volumeButtonX,
+        y: volumeUpY,
+        width: volumeButtonWidth + fh * 0.3,
+        height: volumeButtonHeight,
+        radius: volumeButtonRadius,
+        side: 'left',
+        color,
+        outline,
+        edgeColor,
+        edgeStroke,
+      })
 
-      el.appendChild(
-        drawSideButton(
-          volumeButtonX,
-          volumeDownY,
-          volumeButtonWidth + fh * 0.3,
-          volumeButtonHeight,
-          volumeButtonRadius,
-          'left',
-        ),
-      )
+      drawSideButton({
+        el,
+        x: volumeButtonX,
+        y: volumeDownY,
+        width: volumeButtonWidth + fh * 0.3,
+        height: volumeButtonHeight,
+        radius: volumeButtonRadius,
+        side: 'left',
+        color,
+        outline,
+        edgeColor,
+        edgeStroke,
+      })
 
       // Power button (right side)
       const powerButtonWidth = fw / 3 // 1/3 of frame width
@@ -1047,16 +1212,19 @@ export function useFrameTool(imageStore, historyStore, viewportStore, t) {
       const powerButtonX = svgWidth - powerButtonWidth
       const powerButtonY = svgWidth * 0.7
 
-      el.appendChild(
-        drawSideButton(
-          powerButtonX - fh * 0.3,
-          powerButtonY,
-          powerButtonWidth + fh * 0.3,
-          powerButtonHeight,
-          powerButtonRadius,
-          'right',
-        ),
-      )
+      drawSideButton({
+        el,
+        x: powerButtonX - fh * 0.35,
+        y: powerButtonY,
+        width: powerButtonWidth + fh * 0.3,
+        height: powerButtonHeight,
+        radius: powerButtonRadius,
+        side: 'right',
+        color,
+        outline,
+        edgeColor,
+        edgeStroke,
+      })
     }
 
     /**
@@ -1101,14 +1269,14 @@ export function useFrameTool(imageStore, historyStore, viewportStore, t) {
         const hours = Math.floor(time / 60)
         const minutes = time % 60
         const timeString = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`
-        const fontSize = Math.floor(height * 0.37)
+        const fontSize = Math.floor(height * 0.45 * phoneHeaderIconsSizeMultiplier)
 
         timeText.textContent = timeString
 
         timeText.setAttribute('x', x + phoneFrameValues.radius / 2)
         timeText.setAttribute('y', y + height / 2)
         timeText.setAttribute('fill', textColor)
-        timeText.setAttribute('font-size', Math.floor(height * 0.45))
+        timeText.setAttribute('font-size', fontSize)
         timeText.setAttribute('font-family', 'sans-serif')
         timeText.setAttribute('dominant-baseline', 'middle')
         timeText.setAttribute('text-anchor', 'start')
@@ -1121,8 +1289,8 @@ export function useFrameTool(imageStore, historyStore, viewportStore, t) {
         // Right: Signal and Battery
 
         // Battery
-        const batteryWidth = height * 0.6
-        const batteryHeight = height * 0.37
+        const batteryWidth = height * 0.9 * phoneHeaderIconsSizeMultiplier
+        const batteryHeight = height * 0.45 * phoneHeaderIconsSizeMultiplier
         const batteryX = svgWidth - x - batteryWidth - phoneFrameValues.radius / 2
         const batteryY = y + (height - batteryHeight) / 2
         const batteryPadding = batteryWidth * 0.05
@@ -1161,7 +1329,8 @@ export function useFrameTool(imageStore, historyStore, viewportStore, t) {
         el.appendChild(batteryTip)
 
         // Signal (3 bars)
-        const barWidth = phoneFrameValues.headerSize * 0.09
+        const signalWidth = batteryHeight * 1.2
+        const barWidth = signalWidth / 5.5
         const barSpacing = barWidth * 0.5
         const barBaseX = batteryX - barSpacing * 7
         const barBottom = batteryY + batteryHeight
@@ -1217,6 +1386,70 @@ export function useFrameTool(imageStore, historyStore, viewportStore, t) {
       rect.setAttribute('fill', color)
       el.appendChild(rect)
     }
+
+    /**
+     * Draws the phone frame outline with single or double stroke
+     * @param {SVGElement} el - The SVG element to draw the outline on
+     * @param {string} d - The path data for the outline
+     * @param {number} baseStroke - The base stroke width
+     * @param {string} color - The main outline color
+     * @param {string} mode - 'single' or 'double' for outline style
+     * @param {string} edgeColor - Color for the outer edge in double mode
+     * @param {number} edgeStroke - Stroke width for the outer edge in double mode
+     */
+    const drawPhoneFrameOutline = ({
+      el,
+      d,
+      baseStroke,
+      color,
+      outline = false,
+      edgeColor = 'black',
+      edgeStroke = phoneEdgeStrokeWidth,
+    }) => {
+      const createPath = (stroke, strokeColor) => {
+        if (stroke <= 0) return null
+
+        const p = document.createElementNS(ns, 'path')
+        p.setAttribute('fill', 'none')
+        p.setAttribute('stroke', strokeColor)
+        p.setAttribute('stroke-width', stroke)
+        p.setAttribute('d', d)
+        return p
+      }
+
+      if (outline) {
+        // Outer edge
+        const outer = createPath(baseStroke, edgeColor)
+        if (outer) el.appendChild(outer)
+
+        // Inner main outline
+        const inner = createPath(baseStroke - 2 * edgeStroke, color)
+        if (inner) el.appendChild(inner)
+      } else {
+        // Single outline (classic)
+        const outline = createPath(baseStroke, color)
+        if (outline) el.appendChild(outline)
+      }
+    }
+
+    /**
+     * Builds the SVG path data for the phone outline
+     * @param {object} v - Object containing left, top, right, bottom, and radius
+     * @returns {string} - SVG path data string
+     */
+    const buildPhoneOutlinePath = (v) =>
+      [
+        `M ${v.left + v.radius} ${v.top}`,
+        `H ${v.right - v.radius}`,
+        `A ${v.radius} ${v.radius} 0 0 1 ${v.right} ${v.top + v.radius}`,
+        `V ${v.bottom - v.radius}`,
+        `A ${v.radius} ${v.radius} 0 0 1 ${v.right - v.radius} ${v.bottom}`,
+        `H ${v.left + v.radius}`,
+        `A ${v.radius} ${v.radius} 0 0 1 ${v.left} ${v.bottom - v.radius}`,
+        `V ${v.top + v.radius}`,
+        `A ${v.radius} ${v.radius} 0 0 1 ${v.left + v.radius} ${v.top}`,
+        'Z',
+      ].join(' ')
 
     // UPDATE new frame type
     if (frame.type === 'frameSolid') {
@@ -1455,11 +1688,6 @@ export function useFrameTool(imageStore, historyStore, viewportStore, t) {
         })
       }
     } else if (frame.type === 'framePhoneIOS') {
-      const outline = document.createElementNS(ns, 'path')
-      outline.setAttribute('fill', 'none')
-      outline.setAttribute('stroke', color)
-      outline.setAttribute('stroke-width', phoneFrameValues.strokeWidth)
-
       // Draw phone header if enabled
       const freeSpace = drawPhoneHeader(
         phoneHeaderBackgroundColor.value,
@@ -1467,22 +1695,26 @@ export function useFrameTool(imageStore, historyStore, viewportStore, t) {
         phoneHeaderTimeInMinutes.value,
       )
 
-      // Outline
-      const d = [
-        `M ${phoneFrameValues.left + phoneFrameValues.radius} ${phoneFrameValues.top}`,
-        `H ${phoneFrameValues.right - phoneFrameValues.radius}`,
-        `A ${phoneFrameValues.radius} ${phoneFrameValues.radius} 0 0 1 ${phoneFrameValues.right} ${phoneFrameValues.top + phoneFrameValues.radius}`,
-        `V ${phoneFrameValues.bottom - phoneFrameValues.radius}`,
-        `A ${phoneFrameValues.radius} ${phoneFrameValues.radius} 0 0 1 ${phoneFrameValues.right - phoneFrameValues.radius} ${phoneFrameValues.bottom}`,
-        `H ${phoneFrameValues.left + phoneFrameValues.radius}`,
-        `A ${phoneFrameValues.radius} ${phoneFrameValues.radius} 0 0 1 ${phoneFrameValues.left} ${phoneFrameValues.bottom - phoneFrameValues.radius}`,
-        `V ${phoneFrameValues.top + phoneFrameValues.radius}`,
-        `A ${phoneFrameValues.radius} ${phoneFrameValues.radius} 0 0 1 ${phoneFrameValues.left + phoneFrameValues.radius} ${phoneFrameValues.top}`,
-        'Z',
-      ].join(' ')
+      // Volume and power buttons
+      drawVolumeAndPowerButtons({
+        outline: frame.phoneOutlineEnabled,
+        edgeColor: frame.phoneOutlineColor,
+        edgeStroke: phoneEdgeStrokeWidth,
+      })
 
-      outline.setAttribute('d', d)
-      el.appendChild(outline)
+      // Build outline path
+      const d = buildPhoneOutlinePath(phoneFrameValues)
+
+      // Unified outline rendering
+      drawPhoneFrameOutline({
+        el,
+        d,
+        baseStroke: phoneFrameValues.strokeWidth,
+        color,
+        outline: frame.phoneOutlineEnabled,
+        edgeColor: frame.phoneOutlineColor,
+        edgeStroke: phoneEdgeStrokeWidth,
+      })
 
       // Dynamic island
       const notchHeight = phoneFrameValues.headerSize * 0.8
@@ -1494,24 +1726,47 @@ export function useFrameTool(imageStore, historyStore, viewportStore, t) {
       const notchX = svgWidth / 2 - notchWidth / 2
       const notchY = phoneFrameValues.top + phoneFrameValues.offset + notchMarginTop / 2
 
-      // Check if notch fits inside the frame area
-      // const notchPadding = 1.5
-      // const notchFits =
-      //   notchX >= phoneFrameValues.left &&
-      //   notchX + notchWidth * notchPadding <= phoneFrameValues.right &&
-      //   notchY + notchHeight * notchPadding <= phoneFrameValues.bottom &&
-      //   notchHeight >= 5
-
       if (freeSpace >= notchWidth * 1.2) {
-        const notch = document.createElementNS(ns, 'rect')
-        notch.setAttribute('x', notchX)
-        notch.setAttribute('y', notchY)
-        notch.setAttribute('width', notchWidth)
-        notch.setAttribute('height', notchHeight)
-        notch.setAttribute('rx', notchRadius)
-        notch.setAttribute('ry', notchRadius)
-        notch.setAttribute('fill', color)
-        el.appendChild(notch)
+        const createIsland = (x, y, w, h, r, fill) => {
+          const rect = document.createElementNS(ns, 'rect')
+          rect.setAttribute('x', x)
+          rect.setAttribute('y', y)
+          rect.setAttribute('width', w)
+          rect.setAttribute('height', h)
+          rect.setAttribute('rx', r)
+          rect.setAttribute('ry', r)
+          rect.setAttribute('fill', fill)
+          return rect
+        }
+
+        if (frame.phoneOutlineEnabled) {
+          // Outer edge
+          el.appendChild(
+            createIsland(
+              notchX,
+              notchY,
+              notchWidth,
+              notchHeight,
+              notchRadius,
+              frame.phoneOutlineColor,
+            ),
+          )
+
+          // Inner main island
+          el.appendChild(
+            createIsland(
+              notchX + phoneEdgeStrokeWidth,
+              notchY + phoneEdgeStrokeWidth,
+              notchWidth - 2 * phoneEdgeStrokeWidth,
+              notchHeight - 2 * phoneEdgeStrokeWidth,
+              Math.max(notchRadius - phoneEdgeStrokeWidth, 0),
+              color,
+            ),
+          )
+        } else {
+          // Single fill (classic)
+          el.appendChild(createIsland(notchX, notchY, notchWidth, notchHeight, notchRadius, color))
+        }
 
         // Camera
         const camera = document.createElementNS(ns, 'circle')
@@ -1522,17 +1777,9 @@ export function useFrameTool(imageStore, historyStore, viewportStore, t) {
         el.appendChild(camera)
       }
 
-      // Volume and power buttons
-      drawVolumeAndPowerButtons()
-
       // Navigation (home indicator)
       drawPhoneNavigationButton()
     } else if (frame.type === 'framePhoneIOS2') {
-      const outline = document.createElementNS(ns, 'path')
-      outline.setAttribute('fill', 'none')
-      outline.setAttribute('stroke', color)
-      outline.setAttribute('stroke-width', phoneFrameValues.strokeWidth)
-
       // Draw phone header if enabled
       drawPhoneHeader(
         phoneHeaderBackgroundColor.value,
@@ -1540,22 +1787,26 @@ export function useFrameTool(imageStore, historyStore, viewportStore, t) {
         phoneHeaderTimeInMinutes.value,
       )
 
-      // Outline
-      const d = [
-        `M ${phoneFrameValues.left + phoneFrameValues.radius} ${phoneFrameValues.top}`,
-        `H ${phoneFrameValues.right - phoneFrameValues.radius}`,
-        `A ${phoneFrameValues.radius} ${phoneFrameValues.radius} 0 0 1 ${phoneFrameValues.right} ${phoneFrameValues.top + phoneFrameValues.radius}`,
-        `V ${phoneFrameValues.bottom - phoneFrameValues.radius}`,
-        `A ${phoneFrameValues.radius} ${phoneFrameValues.radius} 0 0 1 ${phoneFrameValues.right - phoneFrameValues.radius} ${phoneFrameValues.bottom}`,
-        `H ${phoneFrameValues.left + phoneFrameValues.radius}`,
-        `A ${phoneFrameValues.radius} ${phoneFrameValues.radius} 0 0 1 ${phoneFrameValues.left} ${phoneFrameValues.bottom - phoneFrameValues.radius}`,
-        `V ${phoneFrameValues.top + phoneFrameValues.radius}`,
-        `A ${phoneFrameValues.radius} ${phoneFrameValues.radius} 0 0 1 ${phoneFrameValues.left + phoneFrameValues.radius} ${phoneFrameValues.top}`,
-        'Z',
-      ].join(' ')
+      // Volume and power buttons
+      drawVolumeAndPowerButtons({
+        outline: frame.phoneOutlineEnabled,
+        edgeColor: frame.phoneOutlineColor,
+        edgeStroke: phoneEdgeStrokeWidth,
+      })
 
-      outline.setAttribute('d', d)
-      el.appendChild(outline)
+      // Build outline path
+      const d = buildPhoneOutlinePath(phoneFrameValues)
+
+      // Unified outline rendering
+      drawPhoneFrameOutline({
+        el,
+        d,
+        baseStroke: phoneFrameValues.strokeWidth,
+        color,
+        outline: frame.phoneOutlineEnabled,
+        edgeColor: frame.phoneOutlineColor,
+        edgeStroke: phoneEdgeStrokeWidth,
+      })
 
       // Notch
       const notchHeight = phoneFrameValues.headerSize
@@ -1568,39 +1819,91 @@ export function useFrameTool(imageStore, historyStore, viewportStore, t) {
       const nw = notchWidth
       const nh = notchHeight
       const nx = svgWidth / 2 - nw / 2
-      const ny = phoneFrameValues.top + phoneFrameValues.strokeWidth * 0.5 - 1 // Slightly above the top edge
+
+      // BASE geometry
+      const baseNy =
+        phoneFrameValues.top + phoneFrameValues.strokeWidth * 0.5 - phoneEdgeStrokeWidth
+
+      const bottomNy = baseNy + nh
 
       const notchFits =
         nx >= phoneFrameValues.left &&
         nx + nw * notchPadding <= phoneFrameValues.right &&
-        ny + nh * notchPadding <= phoneFrameValues.bottom &&
+        bottomNy * notchPadding <= phoneFrameValues.bottom &&
         notchHeight >= 5
 
-      // Render notch only if it fits
       if (notchFits) {
-        // Notch with rounded corners and top arcs
-        const notch = document.createElementNS(ns, 'path')
-        const notchPath = [
-          `M ${nx - arcR} ${ny}`,
-          `A ${arcR} ${arcR} 0 0 1 ${nx} ${ny + arcR}`,
-          `V ${ny + nh - notchRadius}`,
-          `A ${notchRadius} ${notchRadius} 0 0 0 ${nx + notchRadius} ${ny + nh}`,
+        // Cover notch
+        const coverNy = baseNy - 0.5
+        const coverBottomNy = coverNy + nh
+
+        const coverPath = [
+          `M ${nx - arcR} ${coverNy}`,
+          `A ${arcR} ${arcR} 0 0 1 ${nx} ${coverNy + arcR}`,
+          `V ${coverBottomNy - notchRadius}`,
+          `A ${notchRadius} ${notchRadius} 0 0 0 ${nx + notchRadius} ${coverBottomNy}`,
           `H ${nx + nw - notchRadius}`,
-          `A ${notchRadius} ${notchRadius} 0 0 0 ${nx + nw} ${ny + nh - notchRadius}`,
-          `V ${ny + arcR}`,
-          `A ${arcR} ${arcR} 0 0 1 ${nx + nw + arcR} ${ny}`,
+          `A ${notchRadius} ${notchRadius} 0 0 0 ${nx + nw} ${coverBottomNy - notchRadius}`,
+          `V ${coverNy + arcR}`,
+          `A ${arcR} ${arcR} 0 0 1 ${nx + nw + arcR} ${coverNy}`,
           'Z',
         ].join(' ')
-        notch.setAttribute('d', notchPath)
+
+        const coverNotch = document.createElementNS(ns, 'path')
+        coverNotch.setAttribute('d', coverPath)
+        coverNotch.setAttribute('fill', color)
+        el.appendChild(coverNotch)
+
+        // Main notch
+        const mainPath = [
+          `M ${nx - arcR} ${baseNy}`,
+          `A ${arcR} ${arcR} 0 0 1 ${nx} ${baseNy + arcR}`,
+          `V ${bottomNy - notchRadius}`,
+          `A ${notchRadius} ${notchRadius} 0 0 0 ${nx + notchRadius} ${bottomNy}`,
+          `H ${nx + nw - notchRadius}`,
+          `A ${notchRadius} ${notchRadius} 0 0 0 ${nx + nw} ${bottomNy - notchRadius}`,
+          `V ${baseNy + arcR}`,
+          `A ${arcR} ${arcR} 0 0 1 ${nx + nw + arcR} ${baseNy}`,
+          'Z',
+        ].join(' ')
+
+        const notch = document.createElementNS(ns, 'path')
+        notch.setAttribute('d', mainPath)
         notch.setAttribute('fill', color)
         el.appendChild(notch)
 
-        // Speaker (slim oval)
-        const speaker = document.createElementNS(ns, 'rect')
+        // Outline
+        if (frame.phoneOutlineEnabled) {
+          const arcOffset = phoneEdgeStrokeWidth / 2
+
+          const outlinePath = [
+            `M ${nx - arcR} ${baseNy + arcOffset}`,
+            `A ${arcR} ${arcR} 0 0 1 ${nx} ${baseNy + arcR}`,
+            `V ${bottomNy - notchRadius}`,
+            `A ${notchRadius} ${notchRadius} 0 0 0 ${nx + notchRadius} ${bottomNy}`,
+            `H ${nx + nw - notchRadius}`,
+            `A ${notchRadius} ${notchRadius} 0 0 0 ${nx + nw} ${bottomNy - notchRadius}`,
+            `V ${baseNy + arcR}`,
+            `A ${arcR} ${arcR} 0 0 1 ${nx + nw + arcR} ${baseNy + arcOffset}`,
+          ].join(' ')
+
+          const outline = document.createElementNS(ns, 'path')
+          outline.setAttribute('d', outlinePath)
+          outline.setAttribute('fill', 'none')
+          outline.setAttribute('stroke', frame.phoneOutlineColor)
+          outline.setAttribute('stroke-width', phoneEdgeStrokeWidth)
+          outline.setAttribute('stroke-linecap', 'round')
+          outline.setAttribute('stroke-linejoin', 'round')
+          el.appendChild(outline)
+        }
+
+        // Speaker
         const speakerWidth = Math.floor(nw * 0.3)
         const speakerHeight = Math.floor(nh * 0.2)
         const speakerX = svgWidth / 2 - speakerWidth / 2
-        const speakerY = ny + nh * 0.5 - speakerHeight / 2
+        const speakerY = baseNy + nh * 0.5 - speakerHeight / 2
+
+        const speaker = document.createElementNS(ns, 'rect')
         speaker.setAttribute('x', speakerX)
         speaker.setAttribute('y', speakerY)
         speaker.setAttribute('width', speakerWidth)
@@ -1610,7 +1913,7 @@ export function useFrameTool(imageStore, historyStore, viewportStore, t) {
         speaker.setAttribute('fill', contrastColor)
         el.appendChild(speaker)
 
-        // Camera (small circle)
+        // Camera
         const camera = document.createElementNS(ns, 'circle')
         const cameraRadius = speakerHeight / 1.5
         camera.setAttribute('cx', svgWidth / 2 + nw * 0.25)
@@ -1620,17 +1923,9 @@ export function useFrameTool(imageStore, historyStore, viewportStore, t) {
         el.appendChild(camera)
       }
 
-      // Volume and power buttons
-      drawVolumeAndPowerButtons()
-
       // Navigation (home indicator)
       drawPhoneNavigationButton()
     } else if (frame.type === 'framePhoneAndroid') {
-      const outline = document.createElementNS(ns, 'path')
-      outline.setAttribute('fill', 'none')
-      outline.setAttribute('stroke', color)
-      outline.setAttribute('stroke-width', phoneFrameValues.strokeWidth)
-
       // Draw phone header if enabled
       drawPhoneHeader(
         phoneHeaderBackgroundColor.value,
@@ -1638,22 +1933,26 @@ export function useFrameTool(imageStore, historyStore, viewportStore, t) {
         phoneHeaderTimeInMinutes.value,
       )
 
-      // Outline
-      const d = [
-        `M ${phoneFrameValues.left + phoneFrameValues.radius} ${phoneFrameValues.top}`,
-        `H ${phoneFrameValues.right - phoneFrameValues.radius}`,
-        `A ${phoneFrameValues.radius} ${phoneFrameValues.radius} 0 0 1 ${phoneFrameValues.right} ${phoneFrameValues.top + phoneFrameValues.radius}`,
-        `V ${phoneFrameValues.bottom - phoneFrameValues.radius}`,
-        `A ${phoneFrameValues.radius} ${phoneFrameValues.radius} 0 0 1 ${phoneFrameValues.right - phoneFrameValues.radius} ${phoneFrameValues.bottom}`,
-        `H ${phoneFrameValues.left + phoneFrameValues.radius}`,
-        `A ${phoneFrameValues.radius} ${phoneFrameValues.radius} 0 0 1 ${phoneFrameValues.left} ${phoneFrameValues.bottom - phoneFrameValues.radius}`,
-        `V ${phoneFrameValues.top + phoneFrameValues.radius}`,
-        `A ${phoneFrameValues.radius} ${phoneFrameValues.radius} 0 0 1 ${phoneFrameValues.left + phoneFrameValues.radius} ${phoneFrameValues.top}`,
-        'Z',
-      ].join(' ')
+      // Volume and power buttons
+      drawVolumeAndPowerButtons({
+        outline: frame.phoneOutlineEnabled,
+        edgeColor: frame.phoneOutlineColor,
+        edgeStroke: phoneEdgeStrokeWidth,
+      })
 
-      outline.setAttribute('d', d)
-      el.appendChild(outline)
+      // Build outline path
+      const d = buildPhoneOutlinePath(phoneFrameValues)
+
+      // Unified outline rendering
+      drawPhoneFrameOutline({
+        el,
+        d,
+        baseStroke: phoneFrameValues.strokeWidth,
+        color,
+        outline: frame.phoneOutlineEnabled,
+        edgeColor: frame.phoneOutlineColor,
+        edgeStroke: phoneEdgeStrokeWidth,
+      })
 
       // Camera circle
       const cameraRadius = phoneFrameValues.headerSize / 4
@@ -1669,25 +1968,34 @@ export function useFrameTool(imageStore, historyStore, viewportStore, t) {
         cy + cameraRadius * cameraPadding <= phoneFrameValues.bottom
 
       if (cameraFits) {
-        const camera = document.createElementNS(ns, 'circle')
-        camera.setAttribute('cx', cx)
-        camera.setAttribute('cy', cy)
-        camera.setAttribute('r', cameraRadius)
-        camera.setAttribute('fill', color)
-        el.appendChild(camera)
-      }
+        const createCamera = (cx, cy, r, fill) => {
+          if (r <= 0) return null
+          const c = document.createElementNS(ns, 'circle')
+          c.setAttribute('cx', cx)
+          c.setAttribute('cy', cy)
+          c.setAttribute('r', r)
+          c.setAttribute('fill', fill)
+          return c
+        }
 
-      // Volume and power buttons
-      drawVolumeAndPowerButtons()
+        if (frame.phoneOutlineEnabled) {
+          // Outer edge
+          const outer = createCamera(cx, cy, cameraRadius, frame.phoneOutlineColor)
+          if (outer) el.appendChild(outer)
+
+          // Inner main camera
+          const inner = createCamera(cx, cy, cameraRadius - phoneEdgeStrokeWidth, color)
+          if (inner) el.appendChild(inner)
+        } else {
+          // Single fill (classic)
+          const camera = createCamera(cx, cy, cameraRadius, color)
+          if (camera) el.appendChild(camera)
+        }
+      }
 
       // Navigation (home indicator)
       drawPhoneNavigationButton()
     } else if (frame.type === 'framePhoneAndroid2') {
-      const outline = document.createElementNS(ns, 'path')
-      outline.setAttribute('fill', 'none')
-      outline.setAttribute('stroke', color)
-      outline.setAttribute('stroke-width', phoneFrameValues.strokeWidth)
-
       // Draw phone header if enabled
       drawPhoneHeader(
         phoneHeaderBackgroundColor.value,
@@ -1695,33 +2003,41 @@ export function useFrameTool(imageStore, historyStore, viewportStore, t) {
         phoneHeaderTimeInMinutes.value,
       )
 
-      // Outline
-      const d = [
-        `M ${phoneFrameValues.left + phoneFrameValues.radius} ${phoneFrameValues.top}`,
-        `H ${phoneFrameValues.right - phoneFrameValues.radius}`,
-        `A ${phoneFrameValues.radius} ${phoneFrameValues.radius} 0 0 1 ${phoneFrameValues.right} ${phoneFrameValues.top + phoneFrameValues.radius}`,
-        `V ${phoneFrameValues.bottom - phoneFrameValues.radius}`,
-        `A ${phoneFrameValues.radius} ${phoneFrameValues.radius} 0 0 1 ${phoneFrameValues.right - phoneFrameValues.radius} ${phoneFrameValues.bottom}`,
-        `H ${phoneFrameValues.left + phoneFrameValues.radius}`,
-        `A ${phoneFrameValues.radius} ${phoneFrameValues.radius} 0 0 1 ${phoneFrameValues.left} ${phoneFrameValues.bottom - phoneFrameValues.radius}`,
-        `V ${phoneFrameValues.top + phoneFrameValues.radius}`,
-        `A ${phoneFrameValues.radius} ${phoneFrameValues.radius} 0 0 1 ${phoneFrameValues.left + phoneFrameValues.radius} ${phoneFrameValues.top}`,
-        'Z',
-      ].join(' ')
-      outline.setAttribute('d', d)
-      el.appendChild(outline)
+      // Volume and power buttons
+      drawVolumeAndPowerButtons({
+        outline: frame.phoneOutlineEnabled,
+        edgeColor: frame.phoneOutlineColor,
+        edgeStroke: phoneEdgeStrokeWidth,
+      })
+
+      // Build outline path
+      const d = buildPhoneOutlinePath(phoneFrameValues)
+
+      // Unified outline rendering
+      drawPhoneFrameOutline({
+        el,
+        d,
+        baseStroke: phoneFrameValues.strokeWidth,
+        color,
+        outline: frame.phoneOutlineEnabled,
+        edgeColor: frame.phoneOutlineColor,
+        edgeStroke: phoneEdgeStrokeWidth,
+      })
 
       // Drop notch
       const dropHeight = phoneFrameValues.headerSize
-
       const dropWidth = dropHeight * 1.02
       const arcRadius = 0.5 * dropHeight
 
       const dropCenterX = svgWidth / 2
-      const dropTopY = phoneFrameValues.top + phoneFrameValues.strokeWidth * 0.5 - 1 // Slightly above the top edge
+
+      // BASE geometry
+      const baseDropTopY =
+        phoneFrameValues.top + phoneFrameValues.strokeWidth * 0.5 - phoneEdgeStrokeWidth
+
       const leftDrop = dropCenterX - dropWidth / 2
       const rightDrop = dropCenterX + dropWidth / 2
-      const bottomDrop = dropTopY + dropHeight
+      const bottomDrop = baseDropTopY + dropHeight
 
       const notchPadding = 1.5
       const dropFits =
@@ -1731,29 +2047,76 @@ export function useFrameTool(imageStore, historyStore, viewportStore, t) {
         dropHeight >= 5
 
       if (dropFits) {
-        // === Drop notch path ===
-        const dropPath = document.createElementNS(ns, 'path')
-        const path = [
-          `M ${leftDrop - arcRadius} ${dropTopY}`,
-          `A ${arcRadius} ${arcRadius} 0 0 1 ${leftDrop} ${dropTopY + arcRadius}`,
+        // Covering notch
+        const coverDropTopY = baseDropTopY - 0.5
+        const coverBottomDrop = coverDropTopY + dropHeight
+
+        const coverPath = [
+          `M ${leftDrop - arcRadius} ${coverDropTopY}`,
+          `A ${arcRadius} ${arcRadius} 0 0 1 ${leftDrop} ${coverDropTopY + arcRadius}`,
+          `V ${coverBottomDrop - arcRadius}`,
+          `A ${arcRadius} ${arcRadius} 0 0 0 ${leftDrop + arcRadius} ${coverBottomDrop}`,
+          `H ${rightDrop - arcRadius}`,
+          `A ${arcRadius} ${arcRadius} 0 0 0 ${rightDrop} ${coverBottomDrop - arcRadius}`,
+          `V ${coverDropTopY + arcRadius}`,
+          `A ${arcRadius} ${arcRadius} 0 0 1 ${rightDrop + arcRadius} ${coverDropTopY}`,
+          'Z',
+        ].join(' ')
+
+        const coverNotch = document.createElementNS(ns, 'path')
+        coverNotch.setAttribute('d', coverPath)
+        coverNotch.setAttribute('fill', color)
+        el.appendChild(coverNotch)
+
+        // Main drop notch
+        const mainPath = [
+          `M ${leftDrop - arcRadius} ${baseDropTopY}`,
+          `A ${arcRadius} ${arcRadius} 0 0 1 ${leftDrop} ${baseDropTopY + arcRadius}`,
           `V ${bottomDrop - arcRadius}`,
           `A ${arcRadius} ${arcRadius} 0 0 0 ${leftDrop + arcRadius} ${bottomDrop}`,
           `H ${rightDrop - arcRadius}`,
           `A ${arcRadius} ${arcRadius} 0 0 0 ${rightDrop} ${bottomDrop - arcRadius}`,
-          `V ${dropTopY + arcRadius}`,
-          `A ${arcRadius} ${arcRadius} 0 0 1 ${rightDrop + arcRadius} ${dropTopY}`,
+          `V ${baseDropTopY + arcRadius}`,
+          `A ${arcRadius} ${arcRadius} 0 0 1 ${rightDrop + arcRadius} ${baseDropTopY}`,
           'Z',
         ].join(' ')
-        dropPath.setAttribute('d', path)
+
+        const dropPath = document.createElementNS(ns, 'path')
+        dropPath.setAttribute('d', mainPath)
         dropPath.setAttribute('fill', color)
         el.appendChild(dropPath)
 
-        // === Camera inside drop notch ===
-        const camera = document.createElementNS(ns, 'circle')
+        // Outline
+        if (frame.phoneOutlineEnabled) {
+          const arcOffset = phoneEdgeStrokeWidth / 2
+
+          const dropOutlinePath = [
+            `M ${leftDrop - arcRadius} ${baseDropTopY + arcOffset}`,
+            `A ${arcRadius} ${arcRadius} 0 0 1 ${leftDrop} ${baseDropTopY + arcRadius}`,
+            `V ${bottomDrop - arcRadius}`,
+            `A ${arcRadius} ${arcRadius} 0 0 0 ${leftDrop + arcRadius} ${bottomDrop}`,
+            `H ${rightDrop - arcRadius}`,
+            `A ${arcRadius} ${arcRadius} 0 0 0 ${rightDrop} ${bottomDrop - arcRadius}`,
+            `V ${baseDropTopY + arcRadius}`,
+            `A ${arcRadius} ${arcRadius} 0 0 1 ${rightDrop + arcRadius} ${baseDropTopY + arcOffset}`,
+          ].join(' ')
+
+          const dropOutline = document.createElementNS(ns, 'path')
+          dropOutline.setAttribute('d', dropOutlinePath)
+          dropOutline.setAttribute('fill', 'none')
+          dropOutline.setAttribute('stroke', frame.phoneOutlineColor)
+          dropOutline.setAttribute('stroke-width', phoneEdgeStrokeWidth)
+          dropOutline.setAttribute('stroke-linecap', 'round')
+          dropOutline.setAttribute('stroke-linejoin', 'round')
+          el.appendChild(dropOutline)
+        }
+
+        // Camera circle
         const cameraRadius = dropHeight * 0.18
         const cameraCX = dropCenterX
         const cameraCY = bottomDrop - dropHeight / 2
 
+        const camera = document.createElementNS(ns, 'circle')
         camera.setAttribute('cx', cameraCX)
         camera.setAttribute('cy', cameraCY)
         camera.setAttribute('r', cameraRadius)
@@ -1761,17 +2124,9 @@ export function useFrameTool(imageStore, historyStore, viewportStore, t) {
         el.appendChild(camera)
       }
 
-      // Volume and power buttons
-      drawVolumeAndPowerButtons()
-
       // Navigation (home indicator)
       drawPhoneNavigationButton()
     } else if (frame.type === 'framePhoneSimple') {
-      const outline = document.createElementNS(ns, 'path')
-      outline.setAttribute('fill', 'none')
-      outline.setAttribute('stroke', color)
-      outline.setAttribute('stroke-width', phoneFrameValues.strokeWidth)
-
       // Draw phone header if enabled
       drawPhoneHeader(
         phoneHeaderBackgroundColor.value,
@@ -1779,25 +2134,26 @@ export function useFrameTool(imageStore, historyStore, viewportStore, t) {
         phoneHeaderTimeInMinutes.value,
       )
 
-      // Outline
-      const d = [
-        `M ${phoneFrameValues.left + phoneFrameValues.radius} ${phoneFrameValues.top}`,
-        `H ${phoneFrameValues.right - phoneFrameValues.radius}`,
-        `A ${phoneFrameValues.radius} ${phoneFrameValues.radius} 0 0 1 ${phoneFrameValues.right} ${phoneFrameValues.top + phoneFrameValues.radius}`,
-        `V ${phoneFrameValues.bottom - phoneFrameValues.radius}`,
-        `A ${phoneFrameValues.radius} ${phoneFrameValues.radius} 0 0 1 ${phoneFrameValues.right - phoneFrameValues.radius} ${phoneFrameValues.bottom}`,
-        `H ${phoneFrameValues.left + phoneFrameValues.radius}`,
-        `A ${phoneFrameValues.radius} ${phoneFrameValues.radius} 0 0 1 ${phoneFrameValues.left} ${phoneFrameValues.bottom - phoneFrameValues.radius}`,
-        `V ${phoneFrameValues.top + phoneFrameValues.radius}`,
-        `A ${phoneFrameValues.radius} ${phoneFrameValues.radius} 0 0 1 ${phoneFrameValues.left + phoneFrameValues.radius} ${phoneFrameValues.top}`,
-        'Z',
-      ].join(' ')
-
-      outline.setAttribute('d', d)
-      el.appendChild(outline)
+      // Build outline path
+      const d = buildPhoneOutlinePath(phoneFrameValues)
 
       // Volume and power buttons
-      drawVolumeAndPowerButtons()
+      drawVolumeAndPowerButtons({
+        outline: frame.phoneOutlineEnabled,
+        edgeColor: frame.phoneOutlineColor,
+        edgeStroke: phoneEdgeStrokeWidth,
+      })
+
+      // Unified outline rendering
+      drawPhoneFrameOutline({
+        el,
+        d,
+        baseStroke: phoneFrameValues.strokeWidth,
+        color,
+        outline: frame.phoneOutlineEnabled,
+        edgeColor: frame.phoneOutlineColor,
+        edgeStroke: phoneEdgeStrokeWidth,
+      })
 
       // Navigation (home indicator)
       drawPhoneNavigationButton()
@@ -1838,7 +2194,7 @@ export function useFrameTool(imageStore, historyStore, viewportStore, t) {
         })
       }
 
-      // Search bar (vedľa loga)
+      // Search bar
       const searchX = logoStartX + (logoSize + logoSpacing) * 2 + logoSize * 2
       const searchHeight = footer * 0.2 * 2 + footer * 0.1
       const searchWidth = searchHeight * 12
@@ -1972,17 +2328,17 @@ export function useFrameTool(imageStore, historyStore, viewportStore, t) {
       frame.type,
       frame.phoneHeaderExpand,
     )
-
-    console.warn('phone frame with expanded header:', phoneFrameWithExpandedHeader)
-    console.warn('hasHeader:', hasHeader)
-    console.warn('hasFooter:', hasFooter)
-    console.warn('phone frame:', phoneFrame)
-
-    console.warn('filedimensions:', fileDimensions)
+    const phoneWithButtons = phoneFrame && frame.phoneButtonsEnabled
 
     // Target size (image inside frame)
     let targetWidth = fileDimensions.width
     let targetHeight = fileDimensions.height
+
+    let finalWidth = fileDimensions.width
+
+    if (!phoneWithButtons) {
+      finalWidth -= (frame.width / 3) * 2 // remove space for side buttons if not drawn
+    }
 
     if (frame.enabled) {
       // always remove left + right frame
@@ -2015,7 +2371,7 @@ export function useFrameTool(imageStore, historyStore, viewportStore, t) {
     }
 
     return {
-      finalWidth: fileDimensions.width,
+      finalWidth,
       finalHeight: fileDimensions.height,
       targetWidth,
       targetHeight,
@@ -2034,6 +2390,10 @@ export function useFrameTool(imageStore, historyStore, viewportStore, t) {
     frameOptions,
     handleFrameChange,
     drawOutline,
+    phoneOutlineColor,
+    setPhoneOutlineColor,
+    drawPhoneOutline,
+    setPhoneOutline,
     setFrameColor,
     setFrameOutline,
     setPhoneHeader,
@@ -2070,12 +2430,18 @@ export function useFrameTool(imageStore, historyStore, viewportStore, t) {
     headerSize,
     headerSizeMm,
     footerSize,
-  footerSizeMm,
+    footerSizeMm,
     userSetHeaderSizeMm,
     setUserSetHeaderSizeMm,
     resetUserSetHeaderSizeMm,
     minUserSetHeaderSizeMm,
     maxUserSetHeaderSizeMm,
     calculateFrameLayout,
+    phoneOutlineSize,
+    phoneOutlineSizeOptions,
+    setPhoneOutlineSize,
+    phoneHeaderIconsSize,
+    setPhoneHeaderIconsSize,
+    phoneHeaderIconsSizeOptions,
   }
 }

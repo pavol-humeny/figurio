@@ -122,7 +122,7 @@ export function useImageRenderer(
         frame.type,
       )
 
-      const noPhoneButtonsAdjustment = frame.phoneButtonsEnabled ? 0 : fw / 3
+      const noPhoneButtonsAdjustment = frame.phoneButtonsEnabled ? 0 : (fw / 3) * 2
 
       const frameWidth = width + fw * 2 - noPhoneButtonsAdjustment
       const frameHeight =

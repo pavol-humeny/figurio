@@ -66,7 +66,17 @@ const {
   setUserSetHeaderSizeMm,
   resetUserSetHeaderSizeMm,
   minUserSetHeaderSizeMm,
-  maxUserSetHeaderSizeMm
+  maxUserSetHeaderSizeMm,
+  phoneOutlineColor,
+  setPhoneOutlineColor,
+  drawPhoneOutline,
+  setPhoneOutline,
+  phoneOutlineSize,
+  phoneOutlineSizeOptions,
+  setPhoneOutlineSize,
+  phoneHeaderIconsSize,
+  setPhoneHeaderIconsSize,
+  phoneHeaderIconsSizeOptions,
 } = useFrameTool(useImageStore(), useHistoryStore(), useViewportStore(), t)
 </script>
 
@@ -93,7 +103,7 @@ const {
           <div class="content-wrapper">
             <div class="content-aligned two-items">
               <p style="text-align: start">
-                Use millimeters
+                {{ t('tools.frame.settings.general.useMillimeters.label') }}
               </p>
               <ToggleButton v-model="useMillimeters" :scale="0.6" :style="{ transform: 'translateX(16px)' }"
                 @update="setUseMillimeters(useMillimeters)"
@@ -172,6 +182,40 @@ const {
           </div>
         </div>
 
+        <!-- Phone outline -->
+        <div v-if="isPhoneFrame(selectedFrameVariant)" class="settings-content-wrapper">
+          <!-- Use phone outline -->
+          <div class="content-wrapper">
+            <div class="content-aligned two-items">
+              <p>
+                {{ t('tools.frame.settings.general.usePhoneOutline.label') }}
+              </p>
+              <ToggleButton v-model="drawPhoneOutline" @update="setPhoneOutline(drawPhoneOutline)" :scale="0.6"
+                :style="{ transform: 'translateX(16px)' }" position="bottom-left" />
+            </div>
+          </div>
+          <!-- Phone outline color -->
+          <div class="content-wrapper" v-if="drawPhoneOutline">
+            <div class="content-aligned two-items">
+              <p>
+                {{ t('tools.frame.settings.general.phoneOutlineColor.label') }}
+              </p>
+              <ColorPicker v-model="phoneOutlineColor" @update="setPhoneOutlineColor(phoneOutlineColor, false)"
+                @commit="setPhoneOutlineColor(phoneOutlineColor, true)" />
+            </div>
+          </div>
+          <!-- Phone outline size -->
+          <div class="content-wrapper" v-if="drawPhoneOutline">
+            <div class="content-aligned two-items">
+              <p>
+                {{ t('tools.frame.settings.general.phoneOutlineSize.label') }}
+              </p>
+              <DropdownSelect v-model="phoneOutlineSize" :options="phoneOutlineSizeOptions"
+                @update="setPhoneOutlineSize(phoneOutlineSize)" />
+            </div>
+          </div>
+        </div>
+
         <!-- Phone buttons -->
         <div v-if="isPhoneFrame(selectedFrameVariant)" class="settings-content-wrapper">
           <div class="content-wrapper">
@@ -202,6 +246,7 @@ const {
 
         <!-- Phone header -->
         <div v-if="isPhoneFrame(selectedFrameVariant)" class="settings-content-wrapper">
+          <!-- Use phone header -->
           <div class="content-wrapper">
             <div class="content-aligned two-items">
               <p>
@@ -211,6 +256,7 @@ const {
                 :style="{ transform: 'translateX(16px)' }" />
             </div>
           </div>
+          <!-- Use expanded phone header -->
           <div v-if="drawPhoneHeader" class="content-wrapper">
             <div class="content-aligned two-items">
               <p>
@@ -220,6 +266,17 @@ const {
                 :style="{ transform: 'translateX(16px)' }" />
             </div>
           </div>
+          <!-- Header icon size -->
+          <div class="content-wrapper" v-if="drawPhoneOutline">
+            <div class="content-aligned two-items">
+              <p>
+                {{ t('tools.frame.settings.general.phoneHeaderIconsSize.label') }}
+              </p>
+              <DropdownSelect v-model="phoneHeaderIconsSize" :options="phoneHeaderIconsSizeOptions"
+                @update="setPhoneHeaderIconsSize(phoneHeaderIconsSize)" />
+            </div>
+          </div>
+          <!-- Phone header background color -->
           <div v-if="drawPhoneHeader && headerOverlap" class="content-wrapper">
             <div class="content-aligned two-items">
               <p>

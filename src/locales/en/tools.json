@@ -778,6 +778,9 @@
           "frameWindowsTaskBar": "Desktop bar",
           "frameVSCode": "Code editor"
         },
+        "useMillimeters": {
+          "label": "Use millimeters"
+        },
         "useFrameOutline": {
           "label": "Use outline"
         },
@@ -787,6 +790,30 @@
         "usePhoneButtons": {
           "label": "Phone buttons",
           "phoneButtonsCanNotBeDrawnTip": "Phone buttons can not be drawn, because the image is not height enough"
+        },
+        "usePhoneOutline": {
+          "label": "Phone outline"
+        },
+        "phoneOutlineColor": {
+          "label": "Outline color"
+        },
+        "phoneOutlineSize": {
+          "label": "Outline size",
+          "tip": "Select phone outline size from 3 options",
+          "options": {
+            "small": "Small",
+            "medium": "Medium",
+            "large": "Large"
+          }
+        },
+        "phoneHeaderIconsSize": {
+          "label": "Icons size",
+          "tip": "Select phone header icons size from 3 options",
+          "options": {
+            "small": "Small",
+            "medium": "Medium",
+            "large": "Large"
+          }
         },
         "usePhoneHomeIndicator": {
           "label": "Home indicator"
@@ -874,6 +901,26 @@
             "type": "Type",
             "useFrameOutline": "Use outline",
             "usePhoneButtons": "Phone buttons",
+            "usePhoneOutline": "Phone outline",
+            "phoneOutlineColor": "Outline color",
+            "phoneOutlineSize": {
+              "label": "Outline size",
+              "tip": "Select phone outline size from 3 options",
+              "options": {
+                "small": "Small",
+                "medium": "Medium",
+                "large": "Large"
+              }
+            },
+            "phoneHeaderIconsSize": {
+              "label": "Icons size",
+              "tip": "Select phone header icons size from 3 options",
+              "options": {
+                "small": "Small",
+                "medium": "Medium",
+                "large": "Large"
+              }
+            },
             "usePhoneHomeIndicator": "Home indicator",
             "useExpandedPhoneHeader": "Expand header",
             "phoneHeaderEnabled": "Use phone header",
@@ -984,6 +1031,26 @@
             "type": "Type",
             "useFrameOutline": "Use outline",
             "usePhoneButtons": "Phone buttons",
+            "usePhoneOutline": "Phone outline",
+            "phoneOutlineColor": "Outline color",
+            "phoneOutlineSize": {
+              "label": "Outline size",
+              "tip": "Select phone outline size from 3 options",
+              "options": {
+                "small": "Small",
+                "medium": "Medium",
+                "large": "Large"
+              }
+            },
+            "phoneHeaderIconsSize": {
+              "label": "Icons size",
+              "tip": "Select phone header icons size from 3 options",
+              "options": {
+                "small": "Small",
+                "medium": "Medium",
+                "large": "Large"
+              }
+            },
             "usePhoneHomeIndicator": "Home indicator",
             "useExpandedPhoneHeader": "Expand header",
             "phoneHeaderEnabled": "Use phone header",

@@ -702,14 +702,16 @@ export function exportFileService(imageStore, editorStore, historyStore, viewpor
       // Add base image
       pdf.addImage(image, 'PNG', offsetX, offsetY, targetWidth, targetHeight)
 
-      // Add svgObjects and frame
-      await createSvgPdf(pdf, finalWidth, finalHeight, offsetX, offsetY)
-
       // Add overlay image if present
       if (imageStore.overlayImage) {
-        const overlayUrl = imageStore.overlayImage.toDataURL('image/png')
-        pdf.addImage(overlayUrl, 'PNG', 0, 0)
+        const overlayCanvas = imageStore.overlayImage
+        const overlayUrl = overlayCanvas.toDataURL('image/png')
+
+        pdf.addImage(overlayUrl, 'PNG', offsetX, offsetY, targetWidth, targetHeight)
       }
+
+      // Add svgObjects and frame
+      await createSvgPdf(pdf, finalWidth, finalHeight, offsetX, offsetY)
 
       // Add magnify overlay image as extra layer
       const rasterized = await imageStore.rasterize('export-pdf', {}, t)

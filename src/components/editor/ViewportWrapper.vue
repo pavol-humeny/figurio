@@ -493,7 +493,6 @@ const cursorStyle = computed(() => {
 .overlay-canvas {
   opacity: 0;
   animation: overlayBlink 2s infinite;
-  /* image-rendering: pixelated; */
 }
 
 @keyframes overlayBlink {

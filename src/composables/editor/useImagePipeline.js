@@ -315,6 +315,7 @@ export function useImagePipeline(imageStore, uiStore) {
       }
     } finally {
       imageStore.imageNeedToBeRendered = true
+      imageStore.frameNeedToBeRendered = true
       console.warn('IMAGE PIPELINE - END')
       uiStore.isApplying = false
       uiStore.isApplyingFrame = false

@@ -116,9 +116,12 @@ export const useViewportStore = defineStore('viewportStore', {
      * @returns {number}
      */
     getPxPerMmFitZoom(state) {
-      return (
-        (viewportConfig.defaultPxPerCm * state.calibrationFactor * 0.1) / (1 / state.fitZoomLevel)
-      )
+      return viewportConfig.defaultPxPerCm * state.calibrationFactor * 0.1
+      // If it was divided by fit zoom it has different dimensions in classic and physical mode
+
+      // return (
+      //   (viewportConfig.defaultPxPerCm * state.calibrationFactor * 0.1) / (1 / state.fitZoomLevel)
+      // )
     },
 
     /**

@@ -778,6 +778,9 @@
           "frameWindowsTaskBar": "Panel plochy",
           "frameVSCode": "Editor kódu"
         },
+        "useMillimeters": {
+          "label": "Použiť milimetre"
+        },
         "useFrameOutline": {
           "label": "Použiť obrys"
         },
@@ -787,6 +790,30 @@
         "usePhoneButtons": {
           "label": "Tlačidlá telefónu",
           "phoneButtonsCanNotBeDrawnTip": "Tlačidlá telefónu sa nedajú nakresliť, pretože obrázok nie je dostatočne vysoký"
+        },
+        "usePhoneOutline": {
+          "label": "Obrys telefónu"
+        },
+        "phoneOutlineColor": {
+          "label": "Farba obrysu"
+        },
+        "phoneOutlineSize": {
+          "label": "Veľkosť obrysu",
+          "tip": "Vyberte veľkosť obrysu telefónu z 3 možností",
+          "options": {
+            "small": "Malá",
+            "medium": "Stredná",
+            "large": "Veľká"
+          }
+        },
+        "phoneHeaderIconsSize": {
+          "label": "Veľkosť ikon",
+          "tip": "Vyberte veľkosť ikon záhlavia telefónu z 3 možností",
+          "options": {
+            "small": "Malá",
+            "medium": "Stredná",
+            "large": "Veľká"
+          }
         },
         "usePhoneHomeIndicator": {
           "label": "Domovské tlačítko"
@@ -874,6 +901,26 @@
             "type": "Typ",
             "useFrameOutline": "Použiť obrys",
             "usePhoneButtons": "Tlačidlá telefónu",
+            "usePhoneOutline": "Obrys telefónu",
+            "phoneOutlineColor": "Farba obrysu",
+            "phoneOutlineSize": {
+              "label": "Veľkosť obrysu",
+              "tip": "Vyberte veľkosť obrysu telefónu z 3 možností",
+              "options": {
+                "small": "Malá",
+                "medium": "Stredná",
+                "large": "Veľká"
+              }
+            },
+            "phoneHeaderIconsSize": {
+              "label": "Veľkosť ikon",
+              "tip": "Vyberte veľkosť ikon záhlavia telefónu z 3 možností",
+              "options": {
+                "small": "Malá",
+                "medium": "Stredná",
+                "large": "Veľká"
+              }
+            },
             "usePhoneHomeIndicator": "Domovské tlačítko",
             "useExpandedPhoneHeader": "Rozšíriť záhlavie",
             "phoneHeaderEnabled": "Použiť záhlavie telefónu",
@@ -984,6 +1031,26 @@
             "type": "Typ",
             "useFrameOutline": "Použiť obrys",
             "usePhoneButtons": "Tlačidlá telefónu",
+            "usePhoneOutline": "Obrys telefónu",
+            "phoneOutlineColor": "Farba obrysu",
+            "phoneOutlineSize": {
+              "label": "Veľkosť obrysu",
+              "tip": "Vyberte veľkosť obrysu telefónu z 3 možností",
+              "options": {
+                "small": "Malá",
+                "medium": "Stredná",
+                "large": "Veľká"
+              }
+            },
+            "phoneHeaderIconsSize": {
+              "label": "Veľkosť ikon",
+              "tip": "Vyberte veľkosť ikon záhlavia telefónu z 3 možností",
+              "options": {
+                "small": "Malá",
+                "medium": "Stredná",
+                "large": "Veľká"
+              }
+            },
             "usePhoneHomeIndicator": "Domovské tlačítko",
             "useExpandedPhoneHeader": "Rozšíriť záhlavie",
             "phoneHeaderEnabled": "Použiť záhlavie telefónu",

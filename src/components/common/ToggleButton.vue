@@ -1,6 +1,7 @@
 <script setup>
 import ItemTip from './ItemTip.vue'
 import { useToggleButton } from '@/composables/common/useToggleButton'
+import { computed } from 'vue'
 
 /**
  * @typedef {Object} ToggleSwitchProps
@@ -45,11 +46,27 @@ const emit = defineEmits(['update:modelValue', 'update'])
  * Logic of the toggle button
  */
 const { isActive, toggleSwitch } = useToggleButton(props, emit)
+
+const BASE_HEIGHT = 40 // height of toggle-switch-wrapper
+
+const compensationStyle = computed(() => {
+  if (props.scale === 1) return {}
+
+  const dy = (BASE_HEIGHT * (1 - props.scale)) / 2
+
+  return {
+    transform: `scale(${props.scale})`,
+    marginLeft: `${0}px`,
+    marginRight: `${0}px`,
+    marginTop: `-${dy}px`,
+    marginBottom: `-${dy}px`,
+  }
+})
 </script>
 
 <template>
   <ItemTip :text="props.tip" :position="props.position">
-    <div class="toggle-switch" :style="{ transform: `scale(${props.scale})` }">
+    <div class="toggle-switch" :style="compensationStyle">
       <div class="toggle-switch-wrapper" :class="{ 'toggle-disabled': props.disabled, active: isActive }"
         @click="toggleSwitch">
         <div class="toggle-switch-slider button-clickable" :class="{ active: isActive }"></div>
