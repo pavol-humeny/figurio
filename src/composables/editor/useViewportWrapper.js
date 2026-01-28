@@ -503,14 +503,25 @@ export function useViewportWrapper(viewportStore, imageStore, editorStore, uiSto
     // { immediate: true },
   )
 
+  const moveImageToCenter = (side) => {
+    console.warn('------- Moving image to center ')
+    if (!wrapperRef.value || !contentRef.value) return
+
+    viewportStore.panX += (uiStore.rightPanelDefaultWidth / 2) * side
+  }
+
   /**
    * Center image position when close or open right panel
    */
   watch(
     () => uiStore.rightPanelOpen,
-    () => {
+    (open) => {
       nextTick(() => {
-        // centerImagePosition()
+        if (open) {
+          moveImageToCenter(-1)
+        } else {
+          moveImageToCenter(1)
+        }
       })
     },
     { immediate: true },

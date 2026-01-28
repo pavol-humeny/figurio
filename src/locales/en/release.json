@@ -17,6 +17,11 @@
           "Fix issue with exporting brush objects to PDF",
           "Fix issue with exporting phone frame without phone buttons"
         ]
+      },
+      "improvements": {
+        "items": [
+          "Move image to center when side panel is opened or closed"
+        ]
       }
     },
     "5.6.1":{
