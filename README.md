@@ -18,6 +18,7 @@
 - opraviť blur 
 - opraviť select 
 
+
 ## TODO od J (userTesting2 - 12.1.2026)
 - FIXED - Zoom pomocou numerickej klávesnice
 - FIXED - fyzický mód možno iná ikona 
@@ -84,7 +85,6 @@
 - Opravit paste blur objektu 
 - nakreslenie svg objektu, prepnutie na brush (vyžaduje rasterizáciu) a následné spätné prepnutie na shape (stále to chcelo rasterizovať)
 - color bg removal intuitívnejší 
-- rámik windows pri použití milimetrov a dosiahnutí maximálnej hodnoty je možné zadať desatinné číslo 
 - brush - ak dochádza k uloženiu snapshotu do histórie tak to vyriesit nejako inak - divne sa to seká 
 - pri posune viacerých objektov, následnom položení a opätovnom presune to nechce ísť a sekne to 
 - undo redo možno nejako zakázať pri aby sa to nedalo kliknúť viac krát do vtedy kým sa neaplikuje operácia 
@@ -103,6 +103,7 @@
 - pridať nástroj fill (kýbel)
 - pridať nástroj pre nastavenie priehľadnosti obrázka
 - Možno nejako vylepšiť vysvetlenie grayscale
+- mať možnosť zobraziť informácie o obrázku - asi nič moc, lebo z obrázku sa toho veľa nedá zistiť 
 
 
 ## Insane ideas

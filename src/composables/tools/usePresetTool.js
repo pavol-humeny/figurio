@@ -371,13 +371,13 @@ export function usePresetTool(
     newOperation.value = null
     creatingNewOperation.value = false
 
-    showToastModal(
-      'success',
-      t('tools.preset.settings.myPresets.presetSuccessfullySaved.title'),
-      t('tools.preset.settings.myPresets.presetSuccessfullySaved.message', {
-        presetName: localPresetName.value,
-      }),
-    )
+    // showToastModal(
+    //   'success',
+    //   t('tools.preset.settings.myPresets.presetSuccessfullySaved.title'),
+    //   t('tools.preset.settings.myPresets.presetSuccessfullySaved.message', {
+    //     presetName: localPresetName.value,
+    //   }),
+    // )
 
     editorStore.selectSubTool('')
 
