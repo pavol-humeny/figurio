@@ -94,6 +94,7 @@ const {
   showIcon,
   showUnit,
   onWheel,
+  onIconPointerDown,
 } = useNumberInput(props, emit)
 
 /**
@@ -113,7 +114,7 @@ defineExpose({ setValue })
         @blur="onBlurOrEnter" @input="onInput" @keydown.enter="onBlurOrEnter" @wheel="onWheel" />
       <BaseIcon v-if="showIcon" :name="props.icon" class="input-icon" :size="props.size" :color="props.color"
         @dblclick="onIconDoubleClick" :class="{ 'not-allowed': props.disabled, disabled: props.disabled }"
-        :style="{ top: props.iconTop + '%' }" />
+        @pointerdown.prevent="onIconPointerDown" :style="{ top: props.iconTop + '%' }" />
       <span v-if="showUnit" class="input-unit" :class="{ disabled: props.disabled }">{{
         props.unit
       }}</span>
@@ -150,7 +151,8 @@ input[type='number'] {
   left: 8px;
   transform: translateY(-50%);
   pointer-events: auto;
-  cursor: pointer;
+  padding-bottom: 1px;
+  cursor: ew-resize;
 }
 
 .input-icon.not-allowed {

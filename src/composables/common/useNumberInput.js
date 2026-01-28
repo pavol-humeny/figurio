@@ -40,6 +40,13 @@ export function useNumberInput(props, emit) {
   const showUnit = props.unit !== ''
 
   /**
+   * Drag-to-change state
+   */
+  const isDragging = ref(false)
+  let dragStartX = 0
+  let dragStartValue = 0
+
+  /**
    * Number of decimal places for rounding
    */
   const decimals = computed(() => {
@@ -138,6 +145,53 @@ export function useNumberInput(props, emit) {
     emit('update', newValue)
   }
 
+  /**
+   * Start dragging on icon
+   * @param {PointerEvent} e
+   */
+  const onIconPointerDown = (e) => {
+    if (props.disabled) return
+
+    isDragging.value = true
+    dragStartX = e.clientX
+    dragStartValue = Number(inputValue.value)
+
+    // Capture pointer so we still receive move events
+    e.target.setPointerCapture(e.pointerId)
+
+    window.addEventListener('pointermove', onIconPointerMove)
+    window.addEventListener('pointerup', onIconPointerUp)
+  }
+
+  /**
+   * Update value while dragging
+   * @param {PointerEvent} e
+   */
+  const onIconPointerMove = (e) => {
+    if (!isDragging.value) return
+
+    const deltaX = e.clientX - dragStartX
+
+    // sensitivity: how many pixels = one step
+    const pixelsPerStep = e.shiftKey ? 1 : 5
+    const stepsDelta = Math.floor(deltaX / pixelsPerStep)
+
+    const newValue = normalizeValue(dragStartValue + stepsDelta * props.step)
+
+    inputValue.value = newValue
+    emit('update:modelValue', newValue)
+    emit('update', newValue)
+  }
+
+  /**
+   * End dragging
+   */
+  const onIconPointerUp = () => {
+    isDragging.value = false
+    window.removeEventListener('pointermove', onIconPointerMove)
+    window.removeEventListener('pointerup', onIconPointerUp)
+  }
+
   return {
     inputValue,
     onBlurOrEnter,
@@ -147,5 +201,6 @@ export function useNumberInput(props, emit) {
     showIcon,
     showUnit,
     onWheel,
+    onIconPointerDown,
   }
 }

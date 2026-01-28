@@ -4,6 +4,27 @@
     "items": []
   },
   "versions": {
+    "5.7.0":{
+      "label": "5.7.0",
+      "date":"28.1. 2025",
+      "newFeatures": {
+        "items": [
+          "Nové možnosti rámu telefonu – nastavení obrysu a velikosti ikon",
+          "Změna číselných hodnot tažením ikony vstupu do stran"
+        ]
+      },
+      "bugFixes": {
+        "items": [
+          "Oprava chyby při exportu objektů štětce do PDF",
+          "Oprava chyby při exportu rámu telefonu bez ovládacích tlačítek"
+        ]
+      },
+      "improvements": {
+        "items": [
+          "Automatické přesunutí obrázku na střed při otevření nebo zavření bočního panelu"
+        ]
+      }
+    },
     "5.6.1":{
       "label": "5.6.1",
       "date":"8.1. 2025",

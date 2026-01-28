@@ -4,12 +4,13 @@
     "items": []
   },
   "versions":{
-    "5.7.1":{
-      "label": "5.7.1",
+    "5.7.0":{
+      "label": "5.7.0",
       "date":"28.1. 2025",
       "newFeatures": {
         "items": [
-          "New phone frame options - frame outline and icon size settings" 
+          "New phone frame options - frame outline and icon size settings",
+          "Adjust numeric values by dragging the input icon horizontally"
         ]
       },
       "bugFixes": {
