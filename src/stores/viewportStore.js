@@ -116,12 +116,20 @@ export const useViewportStore = defineStore('viewportStore', {
      * @returns {number}
      */
     getPxPerMmFitZoom(state) {
-      return viewportConfig.defaultPxPerCm * state.calibrationFactor * 0.1
-      // If it was divided by fit zoom it has different dimensions in classic and physical mode
+      // return viewportConfig.defaultPxPerCm * state.calibrationFactor * 0.1
+      // Explanation: when is physical mode, fitZoomLevel is 2 times smaller than in classic mode
 
-      // return (
-      //   (viewportConfig.defaultPxPerCm * state.calibrationFactor * 0.1) / (1 / state.fitZoomLevel)
-      // )
+      if (state.zoomMode === 'physical') {
+        return (
+          (viewportConfig.defaultPxPerCm * state.calibrationFactor * 0.1) / (1 / state.fitZoomLevel)
+        )
+      } else {
+        return (
+          (viewportConfig.defaultPxPerCm * state.calibrationFactor * 0.1) /
+          (1 / state.fitZoomLevel) /
+          2
+        )
+      }
     },
 
     /**
