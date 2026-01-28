@@ -278,6 +278,16 @@ export function useTextTool(imageStore, historyStore, editorStore, t) {
   }
 
   /**
+   * Delete text object on blur if text is empty
+   */
+  const addTextObjectOnBlur = () => {
+    // If text is empty call add object to remove any existing object
+    if (!localTextSettings.value.text.trim()) {
+      addTextObjectOnEnterClick()
+    }
+  }
+
+  /**
    * Add new text object to canvas
    * @param {number} x - X coordinate
    * @param {number} y - Y coordinate
@@ -399,5 +409,6 @@ export function useTextTool(imageStore, historyStore, editorStore, t) {
     minTextPositionY,
     hidePosition,
     addTextObjectOnEnterClick,
+    addTextObjectOnBlur,
   }
 }

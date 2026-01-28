@@ -47,6 +47,10 @@ const props = defineProps({
     type: Function,
     default: null,
   },
+  onBlur: {
+    type: Function,
+    default: null,
+  },
 })
 
 /**

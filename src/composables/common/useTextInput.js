@@ -42,6 +42,11 @@ export function useTextInput(props, emit) {
   const onBlur = () => {
     emit('update:modelValue', inputValue.value)
     emit('update', inputValue.value)
+
+    // Call optional prop callback
+    if (typeof props.onBlur === 'function') {
+      props.onBlur(inputValue.value)
+    }
   }
 
   /**

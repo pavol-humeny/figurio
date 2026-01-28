@@ -37,6 +37,7 @@ const {
   minTextPositionY,
   hidePosition,
   addTextObjectOnEnterClick,
+  addTextObjectOnBlur,
 } = useTextTool(useImageStore(), useHistoryStore(), useEditorStore(), t)
 
 </script>
@@ -58,7 +59,7 @@ const {
             <TextInput v-model="localTextSettings.text"
               :placeholder="$t('tools.text.settings.general.textContent.placeholder')" updateOnChange
               :maxLength="editorConfig.maxTextLength" @update="applyLocalTextSettings(false)"
-              :onEnter="() => addTextObjectOnEnterClick()" />
+              :onEnter="() => addTextObjectOnEnterClick()" :onBlur="() => addTextObjectOnBlur()" />
           </div>
         </div>
 

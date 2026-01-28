@@ -18,7 +18,6 @@
 - opraviť blur 
 - opraviť select
 - pri výbere z dropdown menu to neskryje tip 
-- len na blur pri zmazani textu sa objekt neodstráni 
 
 
 ## TODO od J (userTesting2 - 12.1.2026)
