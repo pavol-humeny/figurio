@@ -64,6 +64,8 @@ const {
   maxCropBoxWidth,
   maxCropBoxHeight,
   presetGrayscaleOptions,
+  phoneOutlineSizeOptions,
+  phoneHeaderIconsSizeOptions,
 } = usePresetTool(
   useImageStore(),
   useHistoryStore(),
@@ -250,6 +252,34 @@ const tabs = ['myPresets', 'createPreset']
                 <ToggleButton v-model="localImageFrame.useMillimeters" :scale="0.6"
                   :style="{ transform: 'translateX(16px)' }" />
               </div>
+              <!-- Phone outline -->
+              <div class="content-aligned two-items"
+                v-if="localImageFrame.enabled && isPhoneFrame(localImageFrame.type)"
+                :class="!isModifyingPreset ? 'disabled' : ''">
+                <p>
+                  {{ t('tools.preset.settings.myPresets.presetValues.frame.usePhoneOutline') }}
+                </p>
+                <ToggleButton v-model="localImageFrame.phoneOutlineEnabled" :scale="0.6"
+                  :style="{ transform: 'translateX(16px)' }" />
+              </div>
+              <!-- Phone outline color -->
+              <div class="content-aligned two-items"
+                v-if="localImageFrame.enabled && isPhoneFrame(localImageFrame.type) && localImageFrame.phoneOutlineEnabled"
+                :class="!isModifyingPreset ? 'disabled' : ''">
+                <p>
+                  {{ t('tools.preset.settings.myPresets.presetValues.frame.phoneOutlineColor') }}
+                </p>
+                <ColorPicker v-model="localImageFrame.phoneOutlineColor" />
+              </div>
+              <!-- Phone outline size -->
+              <div class="content-aligned two-items"
+                v-if="localImageFrame.enabled && isPhoneFrame(localImageFrame.type) && localImageFrame.phoneOutlineEnabled"
+                :class="!isModifyingPreset ? 'disabled' : ''">
+                <p>
+                  {{ t('tools.preset.settings.myPresets.presetValues.frame.phoneOutlineSize.label') }}
+                </p>
+                <DropdownSelect v-model="localImageFrame.phoneOutlineSize" :options="phoneOutlineSizeOptions" />
+              </div>
               <!-- Use outline -->
               <div v-if="localImageFrame.enabled && isFrameWithOutline(localImageFrame.type)"
                 class="content-aligned two-items">
@@ -321,6 +351,15 @@ const tabs = ['myPresets', 'createPreset']
                 </p>
                 <ToggleButton v-model="localImageFrame.phoneHeaderExpand" :scale="0.6"
                   :style="{ transform: 'translateX(16px)' }" />
+              </div>
+              <!-- Header icon size -->
+              <div
+                v-if="localImageFrame.enabled && localImageFrame.phoneHeaderEnabled && isPhoneFrame(localImageFrame.type)"
+                class="content-aligned two-items" :class="!isModifyingPreset ? 'disabled' : ''">
+                <p>
+                  {{ t('tools.preset.settings.myPresets.presetValues.frame.phoneHeaderIconsSize.label') }}
+                </p>
+                <DropdownSelect v-model="localImageFrame.phoneHeaderIconsSize" :options="phoneHeaderIconsSizeOptions" />
               </div>
               <!-- Background color -->
               <div
@@ -667,16 +706,14 @@ const tabs = ['myPresets', 'createPreset']
                   :style="{ transform: 'translateX(16px)' }" />
               </div>
               <!-- Type -->
-              <div v-if="newPreset.frame.enabled" class="content-aligned two-items"
-                :class="newPreset.frame.enabled ? '' : 'disabled'">
+              <div v-if="newPreset.frame.enabled" class="content-aligned two-items">
                 <p>
                   {{ t('tools.preset.settings.createPreset.presetValues.frame.type') }}
                 </p>
                 <DropdownSelect v-model="newPreset.frame.type" :options="presetFrameOptions" />
               </div>
               <!-- Color -->
-              <div v-if="newPreset.frame.enabled" class="content-aligned two-items"
-                :class="newPreset.frame.enabled ? '' : 'disabled'">
+              <div v-if="newPreset.frame.enabled" class="content-aligned two-items">
                 <p>
                   {{ t('tools.preset.settings.createPreset.presetValues.frame.color') }}
                 </p>
@@ -690,9 +727,36 @@ const tabs = ['myPresets', 'createPreset']
                 <ToggleButton v-model="newPreset.frame.useMillimeters" :scale="0.6"
                   :style="{ transform: 'translateX(16px)' }" />
               </div>
+              <!-- Use phone outline -->
+              <div v-if="isPhoneFrame(newPreset.frame.type) && newPreset.frame.enabled"
+                class="content-aligned two-items">
+                <p>
+                  {{ t('tools.preset.settings.createPreset.presetValues.frame.usePhoneOutline') }}
+                </p>
+                <ToggleButton v-model="newPreset.frame.phoneOutlineEnabled" :scale="0.6"
+                  :style="{ transform: 'translateX(16px)' }" />
+              </div>
+              <!-- Phone outline color -->
+              <div
+                v-if="isPhoneFrame(newPreset.frame.type) && newPreset.frame.enabled && newPreset.frame.phoneOutlineEnabled"
+                class="content-aligned two-items">
+                <p>
+                  {{ t('tools.preset.settings.createPreset.presetValues.frame.phoneOutlineColor') }}
+                </p>
+                <ColorPicker v-model="newPreset.frame.phoneOutlineColor" />
+              </div>
+              <!-- Phone outline size -->
+              <div
+                v-if="isPhoneFrame(newPreset.frame.type) && newPreset.frame.enabled && newPreset.frame.phoneOutlineEnabled"
+                class="content-aligned two-items">
+                <p>
+                  {{ t('tools.preset.settings.createPreset.presetValues.frame.phoneOutlineSize.label') }}
+                </p>
+                <DropdownSelect v-model="newPreset.frame.phoneOutlineSize" :options="phoneOutlineSizeOptions" />
+              </div>
               <!-- Use outline -->
               <div v-if="isFrameWithOutline(newPreset.frame.type) && newPreset.frame.enabled"
-                :class="newPreset.frame.enabled ? '' : 'disabled'" class="content-aligned two-items">
+                class="content-aligned two-items">
                 <p>
                   {{ t('tools.preset.settings.createPreset.presetValues.frame.useFrameOutline') }}
                 </p>
@@ -703,7 +767,7 @@ const tabs = ['myPresets', 'createPreset']
               <div
                 v-if="(newPreset.frame.type === 'frameSolid' || newPreset.frame.outlineEnabled) && newPreset.frame.enabled && !newPreset.frame.useMillimeters"
                 class="content-aligned two-items">
-                <p :class="newPreset.frame.enabled ? '' : 'disabled'">
+                <p>
                   {{ t('tools.preset.settings.createPreset.presetValues.frame.width') }}
                 </p>
                 <NumberInput ref="frameWidthRef" v-model="newPreset.frame.width" :min="1" :max="100" :step="1" unit="px"
@@ -714,7 +778,7 @@ const tabs = ['myPresets', 'createPreset']
               <div
                 v-if="(newPreset.frame.type === 'frameSolid' || newPreset.frame.outlineEnabled || isPhoneFrame(newPreset.frame.type)) && newPreset.frame.enabled && newPreset.frame.useMillimeters"
                 class="content-aligned two-items">
-                <p :class="newPreset.frame.enabled ? '' : 'disabled'">
+                <p>
                   {{ t('tools.preset.settings.createPreset.presetValues.frame.width') }}
                 </p>
                 <NumberInput ref="frameWidthRef" v-model="newPreset.frame.widthMm" :min="1" :max="50" :step="1"
@@ -724,7 +788,7 @@ const tabs = ['myPresets', 'createPreset']
 
               <!-- Phone buttons -->
               <div v-if="isPhoneFrame(newPreset.frame.type) && newPreset.frame.enabled"
-                class="content-aligned two-items" :class="newPreset.frame.enabled ? '' : 'disabled'">
+                class="content-aligned two-items">
                 <p>
                   {{ t('tools.preset.settings.createPreset.presetValues.frame.usePhoneButtons') }}
                 </p>
@@ -734,7 +798,7 @@ const tabs = ['myPresets', 'createPreset']
 
               <!-- Phone navigation -->
               <div v-if="isPhoneFrame(newPreset.frame.type) && newPreset.frame.enabled"
-                class="content-aligned two-items" :class="newPreset.frame.enabled ? '' : 'disabled'">
+                class="content-aligned two-items">
                 <p>
                   {{ t('tools.preset.settings.createPreset.presetValues.frame.usePhoneHomeIndicator') }}
                 </p>
@@ -745,7 +809,7 @@ const tabs = ['myPresets', 'createPreset']
               <!-- Phone header -->
               <!-- Enabled -->
               <div v-if="isPhoneFrame(newPreset.frame.type) && newPreset.frame.enabled"
-                class="content-aligned two-items" :class="newPreset.frame.enabled ? '' : 'disabled'">
+                class="content-aligned two-items">
                 <p>
                   {{ t('tools.preset.settings.createPreset.presetValues.frame.phoneHeaderEnabled') }}
                 </p>
@@ -762,10 +826,19 @@ const tabs = ['myPresets', 'createPreset']
                 <ToggleButton v-model="newPreset.frame.phoneHeaderExpand" :scale="0.6"
                   :style="{ transform: 'translateX(16px)' }" />
               </div>
+              <!-- Phone icon size -->
+              <div
+                v-if="newPreset.frame.phoneHeaderEnabled && isPhoneFrame(newPreset.frame.type) && newPreset.frame.enabled"
+                class="content-aligned two-items">
+                <p>
+                  {{ t('tools.preset.settings.createPreset.presetValues.frame.phoneHeaderIconsSize.label') }}
+                </p>
+                <DropdownSelect v-model="newPreset.frame.phoneHeaderIconsSize" :options="phoneHeaderIconsSizeOptions" />
+              </div>
               <!-- Background color -->
               <div
                 v-if="newPreset.frame.phoneHeaderEnabled && isPhoneFrame(newPreset.frame.type) && newPreset.frame.enabled && newPreset.frame.phoneHeaderExpand"
-                class="content-aligned two-items" :class="newPreset.frame.enabled ? '' : 'disabled'">
+                class="content-aligned two-items">
                 <p>
                   {{ t('tools.preset.settings.createPreset.presetValues.frame.phoneHeaderBackgroundColor') }}
                 </p>
@@ -774,7 +847,7 @@ const tabs = ['myPresets', 'createPreset']
               <!-- Text Color -->
               <div
                 v-if="newPreset.frame.phoneHeaderEnabled && isPhoneFrame(newPreset.frame.type) && newPreset.frame.enabled"
-                class="content-aligned two-items" :class="newPreset.frame.enabled ? '' : 'disabled'">
+                class="content-aligned two-items">
                 <p>
                   {{ t('tools.preset.settings.createPreset.presetValues.frame.phoneHeaderTextColor') }}
                 </p>
@@ -783,7 +856,7 @@ const tabs = ['myPresets', 'createPreset']
               <!-- Time -->
               <div
                 v-if="newPreset.frame.phoneHeaderEnabled && isPhoneFrame(newPreset.frame.type) && newPreset.frame.enabled"
-                class="content-aligned two-items" :class="newPreset.frame.enabled ? '' : 'disabled'">
+                class="content-aligned two-items">
                 <p>
                   {{ t('tools.preset.settings.createPreset.presetValues.frame.phoneHeaderTime') }}
                 </p>

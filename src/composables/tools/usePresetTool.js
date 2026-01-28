@@ -97,6 +97,10 @@ export function usePresetTool(
       footerSize: 20,
       footerSizeMm: 20,
       outlineEnabled: false,
+      phoneOutlineEnabled: false,
+      phoneOutlineColor: '#000000',
+      phoneOutlineSize: 'small',
+      phoneHeaderIconsSize: 'large',
       phoneHeaderEnabled: true,
       phoneHeaderExpand: false,
       phoneButtonsEnabled: true,
@@ -643,6 +647,10 @@ export function usePresetTool(
         currentImageFrame.footerSize === presetFrame.footerSize &&
         currentImageFrame.footerSizeMm === presetFrame.footerSizeMm &&
         currentImageFrame.outlineEnabled === presetFrame.outlineEnabled &&
+        currentImageFrame.phoneOutlineEnabled === presetFrame.phoneOutlineEnabled &&
+        currentImageFrame.phoneOutlineColor === presetFrame.phoneOutlineColor &&
+        currentImageFrame.phoneOutlineSize === presetFrame.phoneOutlineSize &&
+        currentImageFrame.phoneHeaderIconsSize === presetFrame.phoneHeaderIconsSize &&
         currentImageFrame.phoneHeaderEnabled === presetFrame.phoneHeaderEnabled &&
         currentImageFrame.phoneHeaderExpand === presetFrame.phoneHeaderExpand &&
         currentImageFrame.phoneButtonsEnabled === presetFrame.phoneButtonsEnabled &&
@@ -883,6 +891,33 @@ export function usePresetTool(
   ])
 
   /**
+   * Available phone outline size options for the preset
+   */
+  const phoneOutlineSizeOptions = computed(() => [
+    { value: 'small', label: t('tools.frame.settings.general.phoneOutlineSize.options.small') },
+    { value: 'medium', label: t('tools.frame.settings.general.phoneOutlineSize.options.medium') },
+    { value: 'large', label: t('tools.frame.settings.general.phoneOutlineSize.options.large') },
+  ])
+
+  /**
+   * Available phone header icons size options for the preset
+   */
+  const phoneHeaderIconsSizeOptions = computed(() => [
+    {
+      value: 'small',
+      label: t('tools.frame.settings.general.phoneHeaderIconsSize.options.small'),
+    },
+    {
+      value: 'medium',
+      label: t('tools.frame.settings.general.phoneHeaderIconsSize.options.medium'),
+    },
+    {
+      value: 'large',
+      label: t('tools.frame.settings.general.phoneHeaderIconsSize.options.large'),
+    },
+  ])
+
+  /**
    * Watch new preset frame type and if it is solid set outlineEnabled to false
    */
   watch(
@@ -943,6 +978,10 @@ export function usePresetTool(
         footerSize: 20,
         footerSizeMm: 20,
         outlineEnabled: false,
+        phoneOutlineEnabled: false,
+        phoneOutlineColor: '#000000',
+        phoneOutlineSize: 'small',
+        phoneHeaderIconsSize: 'large',
         phoneHeaderEnabled: true,
         phoneHeaderExpand: false,
         phoneButtonsEnabled: true,
@@ -1142,6 +1181,10 @@ export function usePresetTool(
       imageFrame.footerSize = newPreset.value.frame.footerSize
       imageFrame.footerSizeMm = newPreset.value.frame.footerSizeMm
       imageFrame.outlineEnabled = newPreset.value.frame.outlineEnabled
+      imageFrame.phoneOutlineEnabled = newPreset.value.frame.phoneOutlineEnabled
+      imageFrame.phoneOutlineColor = newPreset.value.frame.phoneOutlineColor
+      imageFrame.phoneOutlineSize = newPreset.value.frame.phoneOutlineSize
+      imageFrame.phoneHeaderIconsSize = newPreset.value.frame.phoneHeaderIconsSize
       imageFrame.phoneHeaderEnabled = newPreset.value.frame.phoneHeaderEnabled
       imageFrame.phoneHeaderExpand = newPreset.value.frame.phoneHeaderExpand
       imageFrame.phoneButtonsEnabled = newPreset.value.frame.phoneButtonsEnabled
@@ -1298,5 +1341,7 @@ export function usePresetTool(
     maxCropBoxWidth,
     maxCropBoxHeight,
     presetGrayscaleOptions,
+    phoneOutlineSizeOptions,
+    phoneHeaderIconsSizeOptions,
   }
 }

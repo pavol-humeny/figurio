@@ -100,6 +100,9 @@ onMounted(async () => {
   window.addEventListener('wheel', blockSwipeBack, {
     passive: false,
   })
+  window.addEventListener('wheel', blockWheelZoom, {
+    passive: false,
+  })
   window.addEventListener('beforeunload', handleBeforeUnload)
 
   // Reset localStorage (preferences) if app version has changed and in global config is set reset
@@ -182,13 +185,14 @@ onMounted(async () => {
 onBeforeUnmount(() => {
   window.removeEventListener('beforeunload', handleBeforeUnload)
   window.removeEventListener('wheel', blockSwipeBack)
+  window.removeEventListener('wheel', blockWheelZoom)
 })
 
 
 </script>
 
 <template>
-  <div class="main" @wheel="blockWheelZoom">
+  <div class="main">
     <ToastModal />
     <ConfirmModal />
     <GeneralModal />
