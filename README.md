@@ -18,7 +18,7 @@
 - opraviť blur 
 - opraviť select
 - pri výbere z dropdown menu to neskryje tip 
-
+- image - pdf export neprevadza spravne font textu
 
 ## TODO od J (userTesting2 - 12.1.2026)
 - FIXED - Zoom pomocou numerickej klávesnice

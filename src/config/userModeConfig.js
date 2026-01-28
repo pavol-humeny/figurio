@@ -8,6 +8,7 @@ export const userModeConfig = {
   // 'notShowUnexpectedErrorModal',
   // 'statistics',
   // 'blockedTools',
+  // 'notBlockDevTools',
 
   // UPDATE new random event
   listOfCommands: [
@@ -138,6 +139,7 @@ export const userModeConfig = {
     'notShowUnexpectedErrorModal',
     'statistics',
     'blockedTools',
+    'notBlockDevTools',
   ],
 
   /** Email to access command mode */

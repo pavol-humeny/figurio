@@ -146,15 +146,6 @@ export function exportFileService(imageStore, editorStore, historyStore, viewpor
       t,
     ).calculateFrameLayout(imageStore.newFileDimensions)
 
-    console.log('Export with size:', {
-      finalWidth,
-      finalHeight,
-      targetWidth,
-      targetHeight,
-      offsetX,
-      offsetY,
-    })
-
     // Export pdf as vector
     if (imageStore.fileType === 'pdf' && imageStore.pdfPageBytes) {
       /**

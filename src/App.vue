@@ -23,13 +23,10 @@ import { uiConfig } from './config/uiConfig'
 import { useConsole } from './composables/common/useConsole'
 import ErrorModal from './components/modals/ErrorModal.vue'
 import { usePresetsStore } from './stores/presetsStore'
+import { useUserModeStore } from './stores/userModeStore'
 
 const { warn } = useConsole()
 const { addUserVisit } = useApi()
-
-// import { useConsole } from '@/composables/common/useConsole.js'
-// const { log, warn, error } = useConsole()
-
 
 const router = useRouter()
 const route = useRoute()
@@ -38,6 +35,7 @@ const imageStore = useImageStore()
 const uiStore = useUiStore()
 const presetsStore = usePresetsStore()
 const userUuid = uiStore.userUuid
+const userModeStore = useUserModeStore()
 
 /**
  * Prevents default behavior of ctrl + wheel scrolling.
@@ -69,6 +67,53 @@ const blockSwipeBack = (event) => {
 }
 
 /**
+ * Block common shortcuts for opening DevTools
+ *
+ * @param {KeyboardEvent} event
+ */
+const blockDevToolsShortcuts = (event) => {
+  if (userModeStore.hasUserAccessToFeature('notBlockDevTools')) {
+    return
+  }
+
+  const key = event.key.toLowerCase()
+
+  // F12
+  if (key === 'f12') {
+    event.preventDefault()
+    return
+  }
+
+  // Ctrl / Cmd + Shift + I / J / C
+  if (
+    (event.ctrlKey || event.metaKey) &&
+    event.shiftKey &&
+    ['i', 'j', 'c'].includes(key)
+  ) {
+    event.preventDefault()
+    return
+  }
+
+  // Ctrl / Cmd + U (view source)
+  if ((event.ctrlKey || event.metaKey) && key === 'u') {
+    event.preventDefault()
+  }
+}
+
+/**
+ * Block right click context menu
+ *
+ * @param {MouseEvent} event
+ */
+const blockContextMenu = (event) => {
+  if (userModeStore.hasUserAccessToFeature('notBlockDevTools')) {
+    return
+  }
+
+  event.preventDefault()
+}
+
+/**
  * Warns user before closing the tab if a file is loaded.
  * Prevents accidental data loss.
  *
@@ -96,7 +141,6 @@ onMounted(async () => {
     uiConfig.enableClickEffects ? uiConfig.clickEffectScale : '1'
   )
 
-
   window.addEventListener('wheel', blockSwipeBack, {
     passive: false,
   })
@@ -104,6 +148,9 @@ onMounted(async () => {
     passive: false,
   })
   window.addEventListener('beforeunload', handleBeforeUnload)
+
+  window.addEventListener('keydown', blockDevToolsShortcuts)
+  window.addEventListener('contextmenu', blockContextMenu)
 
   // Reset localStorage (preferences) if app version has changed and in global config is set reset
   const savedVersion = localStorage.getItem(`${globalConfig.LOCAL_STORAGE_PREFIX}appVersion`)
@@ -186,6 +233,8 @@ onBeforeUnmount(() => {
   window.removeEventListener('beforeunload', handleBeforeUnload)
   window.removeEventListener('wheel', blockSwipeBack)
   window.removeEventListener('wheel', blockWheelZoom)
+  window.removeEventListener('keydown', blockDevToolsShortcuts)
+  window.removeEventListener('contextmenu', blockContextMenu)
 })
 
 
