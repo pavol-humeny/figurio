@@ -17,6 +17,7 @@
 - opraviť magnify area 
 - opraviť blur 
 - opraviť select 
+- pri otovrení a zatvorení right panel posunut obrazok 
 
 ## TODO od J (userTesting2 - 12.1.2026)
 - FIXED - Zoom pomocou numerickej klávesnice

@@ -288,7 +288,6 @@ export function useSvgObjectsList(
         if (tab === 'rect') tab = 'rectangle'
       }
 
-      // TODO - zmazat ak bude robit problemy
       editorStore.previousToolKey = editorStore.selectedToolKey
 
       toggleTool(tool, tab, false) // Do not deselect on same tool

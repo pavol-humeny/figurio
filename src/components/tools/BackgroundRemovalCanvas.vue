@@ -139,15 +139,6 @@ const onMouseDown = (event) => {
   const viewport = document.getElementById('viewport-content')
   if (!viewport.contains(event.target)) return
 
-  // if (imageStore.needMergeOverlay) {
-  //   imageStore.mergeOverlayIntoImage()
-  //   showToastModal(
-  //     'info',
-  //     t('tools.infoOverlayWasMerged.title'),
-  //     t('tools.infoOverlayWasMerged.message'),
-  //   )
-  // }
-
   if (editorStore.selectedToolKey === 'backgroundRemoval') {
     const mode = editorStore.selectedTabPerTool['backgroundRemoval']
     const pos = getMousePos(event)

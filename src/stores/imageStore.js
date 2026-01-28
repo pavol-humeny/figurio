@@ -612,47 +612,6 @@ export const useImageStore = defineStore('imageStore', {
     },
 
     /**
-     * Merge the overlay image into the main rendered image
-     * This will draw the overlay on top of the current rendered image
-     * and save the result back into renderedImage (and tmpRenderedImage).
-     * TODO - maybe remove uz sa to nikde nepouziva
-     */
-    mergeOverlayIntoImage() {
-      if (!this.renderedImage || !this.overlayImage) {
-        warn('No rendered image or overlay image to merge')
-        return
-      }
-
-      // Create a new canvas same size as the rendered image
-      const canvas = document.createElement('canvas')
-      canvas.width = this.renderedImage.width
-      canvas.height = this.renderedImage.height
-
-      const ctx = canvas.getContext('2d')
-
-      // Draw base image
-      ctx.drawImage(this.renderedImage, 0, 0)
-
-      // Draw overlay on top (assuming overlay has same dimensions or should align top-left)
-      ctx.drawImage(this.overlayImage, 0, 0)
-
-      // Save merged image back into store
-      this.setRenderedImage(canvas, false)
-      this.originalImage = canvas
-
-      // Clear overlay
-      this.overlayImage = null
-    },
-
-    /**
-     * Function to use rasterize background image (only in pdf)
-     */
-    // rasterizeBaseImage() {
-    //   log('Rasterizing background image...')
-    //   this.fileType = 'image'
-    // },
-
-    /**
      * Rasterizes SVG and blur objects into a bitmap overlay.
      * @param {string} mode - The rasterization mode ('editor', 'export-pdf', 'export-image')
      * @param {Object} [options={}] - Additional options

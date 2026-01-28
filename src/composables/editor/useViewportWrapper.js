@@ -435,7 +435,7 @@ export function useViewportWrapper(viewportStore, imageStore, editorStore, uiSto
     if (!wrapperRef.value || !contentRef.value) return
     // Reset zoom
     const tmpZoomLevel = viewportStore.zoomLevel
-    viewportStore.resetZoom() // TODO - delete if everything works (closing right panel with different zoom than 100 was moving image)
+    viewportStore.resetZoom()
 
     updateInitialDimensions()
     updateZoomDependentDimensions()
