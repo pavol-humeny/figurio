@@ -144,7 +144,7 @@ export function importFileService(
       )
     } else {
       if (router.currentRoute.value.name !== 'editor') {
-        await router.push({ name: 'editor' })
+        await router.replace({ name: 'editor' })
         await router.isReady()
       } else {
         // Close import modal if open

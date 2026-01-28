@@ -67,7 +67,7 @@ const clearCanvas = () => {
 onMounted(() => {
   // Redirect to home if not in maintenance mode
   if (globalConfig.isRunning) {
-    router.push({ name: 'home' })
+    router.replace({ name: 'home' })
   }
 
   const canvas = canvasRef.value
