@@ -1338,6 +1338,16 @@ export function usePresetTool(
     })
   }
 
+  /**
+   * Whether to show options only in portrait mode
+   */
+  const showOnlyInPortraitMode = computed(() => {
+    return (
+      localImageFrame.value.phoneFrameOrientation === 'portrait' ||
+      newPreset.value.frame.phoneFrameOrientation === 'portrait'
+    )
+  })
+
   return {
     newPreset,
     createPreset,
@@ -1376,5 +1386,6 @@ export function usePresetTool(
     phoneHeaderIconsSizeOptions,
     phoneBatteryIconStyleOptions,
     phoneFrameOrientationOptions,
+    showOnlyInPortraitMode,
   }
 }

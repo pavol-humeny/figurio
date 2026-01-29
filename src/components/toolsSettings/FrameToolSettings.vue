@@ -83,6 +83,7 @@ const {
   phoneFrameOrientation,
   setPhoneFrameOrientation,
   phoneFrameOrientationOptions,
+  showOnlyInPortraitMode,
 } = useFrameTool(useImageStore(), useHistoryStore(), useViewportStore(), t)
 </script>
 
@@ -251,7 +252,7 @@ const {
         </div>
 
         <!-- Phone navigation -->
-        <div v-if="isPhoneFrame(selectedFrameVariant)" class="settings-content-wrapper">
+        <div v-if="isPhoneFrame(selectedFrameVariant) && showOnlyInPortraitMode" class="settings-content-wrapper">
           <div class="content-wrapper">
             <div class="content-aligned two-items">
               <p>
@@ -286,7 +287,7 @@ const {
             </div>
           </div>
           <!-- Header icon size -->
-          <div class="content-wrapper" v-if="drawPhoneHeader">
+          <div class="content-wrapper" v-if="drawPhoneHeader && showOnlyInPortraitMode">
             <div class="content-aligned two-items">
               <p>
                 {{ t('tools.frame.settings.general.phoneHeaderIconsSize.label') }}
@@ -296,7 +297,7 @@ const {
             </div>
           </div>
           <!-- Battery icon style -->
-          <div class="content-wrapper" v-if="drawPhoneHeader">
+          <div class="content-wrapper" v-if="drawPhoneHeader && showOnlyInPortraitMode">
             <div class="content-aligned two-items">
               <p>
                 {{ t('tools.frame.settings.general.phoneBatteryIconStyle.label') }}
@@ -316,7 +317,8 @@ const {
                 @commit="setPhoneHeaderBackgroundColor(phoneHeaderBackgroundColor, true)" />
             </div>
           </div>
-          <div v-if="drawPhoneHeader" class="content-wrapper">
+          <!-- Text color -->
+          <div v-if="drawPhoneHeader && showOnlyInPortraitMode" class="content-wrapper">
             <div class="content-aligned two-items">
               <p>
                 {{ t('tools.frame.settings.general.phoneHeaderTextColor.label') }}
@@ -325,7 +327,8 @@ const {
                 @commit="setPhoneHeaderTextColor(phoneHeaderTextColor, true)" />
             </div>
           </div>
-          <div v-if="drawPhoneHeader" class="content-wrapper">
+          <!-- Header time -->
+          <div v-if="drawPhoneHeader && showOnlyInPortraitMode" class="content-wrapper">
             <div class="content-aligned two-items">
               <p>
                 {{ t('tools.frame.settings.general.phoneHeaderTime.label') }}

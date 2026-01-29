@@ -68,6 +68,7 @@ const {
   phoneHeaderIconsSizeOptions,
   phoneBatteryIconStyleOptions,
   phoneFrameOrientationOptions,
+  showOnlyInPortraitMode,
 } = usePresetTool(
   useImageStore(),
   useHistoryStore(),
@@ -335,7 +336,7 @@ const tabs = ['myPresets', 'createPreset']
               </div>
 
               <!-- Phone navigation -->
-              <div v-if="localImageFrame.enabled && isPhoneFrame(localImageFrame.type)"
+              <div v-if="localImageFrame.enabled && isPhoneFrame(localImageFrame.type) && showOnlyInPortraitMode"
                 class="content-aligned two-items" :class="!isModifyingPreset ? 'disabled' : ''">
                 <p>
                   {{ t('tools.preset.settings.myPresets.presetValues.frame.usePhoneHomeIndicator') }}
@@ -366,7 +367,7 @@ const tabs = ['myPresets', 'createPreset']
               </div>
               <!-- Header icon size -->
               <div
-                v-if="localImageFrame.enabled && localImageFrame.phoneHeaderEnabled && isPhoneFrame(localImageFrame.type)"
+                v-if="localImageFrame.enabled && localImageFrame.phoneHeaderEnabled && isPhoneFrame(localImageFrame.type) && showOnlyInPortraitMode"
                 class="content-aligned two-items" :class="!isModifyingPreset ? 'disabled' : ''">
                 <p>
                   {{ t('tools.preset.settings.myPresets.presetValues.frame.phoneHeaderIconsSize.label') }}
@@ -375,7 +376,7 @@ const tabs = ['myPresets', 'createPreset']
               </div>
               <!-- Phone battery icon style -->
               <div
-                v-if="localImageFrame.enabled && localImageFrame.phoneHeaderEnabled && isPhoneFrame(localImageFrame.type)"
+                v-if="localImageFrame.enabled && localImageFrame.phoneHeaderEnabled && isPhoneFrame(localImageFrame.type) && showOnlyInPortraitMode"
                 class="content-aligned two-items" :class="!isModifyingPreset ? 'disabled' : ''">
                 <p>
                   {{ t('tools.preset.settings.myPresets.presetValues.frame.phoneBatteryIconStyle.label') }}
@@ -394,7 +395,7 @@ const tabs = ['myPresets', 'createPreset']
               </div>
               <!-- Text color -->
               <div
-                v-if="localImageFrame.enabled && localImageFrame.phoneHeaderEnabled && isPhoneFrame(localImageFrame.type)"
+                v-if="localImageFrame.enabled && localImageFrame.phoneHeaderEnabled && isPhoneFrame(localImageFrame.type) && showOnlyInPortraitMode"
                 class="content-aligned two-items" :class="!isModifyingPreset ? 'disabled' : ''">
                 <p>
                   {{ t('tools.preset.settings.myPresets.presetValues.frame.phoneHeaderTextColor') }}
@@ -403,7 +404,7 @@ const tabs = ['myPresets', 'createPreset']
               </div>
               <!-- Time -->
               <div
-                v-if="localImageFrame.enabled && localImageFrame.phoneHeaderEnabled && isPhoneFrame(localImageFrame.type)"
+                v-if="localImageFrame.enabled && localImageFrame.phoneHeaderEnabled && isPhoneFrame(localImageFrame.type) && showOnlyInPortraitMode"
                 class="content-aligned two-items" :class="!isModifyingPreset ? 'disabled' : ''">
                 <p>
                   {{ t('tools.preset.settings.myPresets.presetValues.frame.phoneHeaderTime') }}
@@ -859,7 +860,7 @@ const tabs = ['myPresets', 'createPreset']
               </div>
               <!-- Header icon size -->
               <div
-                v-if="newPreset.frame.phoneHeaderEnabled && isPhoneFrame(newPreset.frame.type) && newPreset.frame.enabled"
+                v-if="newPreset.frame.phoneHeaderEnabled && isPhoneFrame(newPreset.frame.type) && newPreset.frame.enabled && showOnlyInPortraitMode"
                 class="content-aligned two-items">
                 <p>
                   {{ t('tools.preset.settings.createPreset.presetValues.frame.phoneHeaderIconsSize.label') }}
@@ -868,7 +869,7 @@ const tabs = ['myPresets', 'createPreset']
               </div>
               <!-- Phone battery icon style -->
               <div
-                v-if="newPreset.frame.phoneHeaderEnabled && isPhoneFrame(newPreset.frame.type) && newPreset.frame.enabled"
+                v-if="newPreset.frame.phoneHeaderEnabled && isPhoneFrame(newPreset.frame.type) && newPreset.frame.enabled && showOnlyInPortraitMode"
                 class="content-aligned two-items">
                 <p>
                   {{ t('tools.preset.settings.createPreset.presetValues.frame.phoneBatteryIconStyle.label') }}
@@ -887,7 +888,7 @@ const tabs = ['myPresets', 'createPreset']
               </div>
               <!-- Text Color -->
               <div
-                v-if="newPreset.frame.phoneHeaderEnabled && isPhoneFrame(newPreset.frame.type) && newPreset.frame.enabled"
+                v-if="newPreset.frame.phoneHeaderEnabled && isPhoneFrame(newPreset.frame.type) && newPreset.frame.enabled && showOnlyInPortraitMode"
                 class="content-aligned two-items">
                 <p>
                   {{ t('tools.preset.settings.createPreset.presetValues.frame.phoneHeaderTextColor') }}
@@ -896,7 +897,7 @@ const tabs = ['myPresets', 'createPreset']
               </div>
               <!-- Time -->
               <div
-                v-if="newPreset.frame.phoneHeaderEnabled && isPhoneFrame(newPreset.frame.type) && newPreset.frame.enabled"
+                v-if="newPreset.frame.phoneHeaderEnabled && isPhoneFrame(newPreset.frame.type) && newPreset.frame.enabled && showOnlyInPortraitMode"
                 class="content-aligned two-items">
                 <p>
                   {{ t('tools.preset.settings.createPreset.presetValues.frame.phoneHeaderTime') }}
