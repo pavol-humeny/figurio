@@ -4,6 +4,20 @@
     "items": []
   },
   "versions": {
+    "5.8.0": {
+      "label": "5.8.0",
+      "date": "29.1. 2025",
+      "newFeatures": {
+        "items": [
+          "Přidána možnost nastavit orientaci rámečku telefonu na portrét nebo na šířku"
+        ]
+      },
+      "bugFixes": {
+        "items": [
+          "Opravena chyba s nesprávnou velikostí rámečku při použití rozměrů v milimetrech"
+        ]
+      }
+    },
     "5.7.0":{
       "label": "5.7.0",
       "date":"28.1. 2025",

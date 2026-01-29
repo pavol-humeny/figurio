@@ -11,6 +11,11 @@
         "items": [
           "Add option to set phone frame orientation to portrait or landscape"
         ]
+      },
+      "bugFixes": {
+        "items": [
+          "Fix issue with incorrect frame size when applying frame in millimeters"
+        ]
       }
     },
     "5.7.0":{
