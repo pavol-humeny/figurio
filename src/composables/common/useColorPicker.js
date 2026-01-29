@@ -136,6 +136,16 @@ export function useColorPicker(editorStore, props, emit) {
   }
 
   /**
+   * Handle ESC key to close color picker
+   * @param {KeyboardEvent} event
+   */
+  const onKeyDown = (event) => {
+    if (event.key === 'Escape') {
+      onClickOutside(event)
+    }
+  }
+
+  /**
    * Toggle color picker window visibility
    */
   const toggle = async () => {
@@ -154,9 +164,11 @@ export function useColorPicker(editorStore, props, emit) {
       updateIndicators()
 
       document.addEventListener('mousedown', onClickOutside)
+      document.addEventListener('keydown', onKeyDown)
     } else {
       stopFollowing()
       document.removeEventListener('mousedown', onClickOutside)
+      document.removeEventListener('keydown', onKeyDown)
     }
   }
 
@@ -165,6 +177,7 @@ export function useColorPicker(editorStore, props, emit) {
    * @param {MouseEvent} event - Mouse event
    */
   const onClickOutside = (event) => {
+    if (isVisible.value === false) return
     if (!previewRef.value || !panelRef.value) return
 
     if (!previewRef.value.contains(event.target) && !panelRef.value.contains(event.target)) {
@@ -525,7 +538,10 @@ export function useColorPicker(editorStore, props, emit) {
   }
 
   // Cleanup listener on unmount
-  onBeforeUnmount(() => document.removeEventListener('mousedown', onClickOutside))
+  onBeforeUnmount(() => {
+    document.removeEventListener('mousedown', onClickOutside)
+    document.removeEventListener('keydown', onKeyDown)
+  })
 
   /**
    * Use Eye Dropper to pick color from screen
@@ -573,5 +589,6 @@ export function useColorPicker(editorStore, props, emit) {
     isSupported,
     pickColor,
     removeRecentColor,
+    onClickOutside,
   }
 }

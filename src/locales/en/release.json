@@ -14,7 +14,8 @@
       },
       "improvements": {
         "items": [
-          "Add vertical drag option for number input component when adjusting height values"
+          "Add vertical drag option for number input component when adjusting height values",
+          "Color picker can be closed with ESC key"
         ]
       },
       "bugFixes": {
