@@ -12,6 +12,11 @@
           "Add option to set phone frame orientation to portrait or landscape"
         ]
       },
+      "improvements": {
+        "items": [
+          "Add vertical drag option for number input component when adjusting height values"
+        ]
+      },
       "bugFixes": {
         "items": [
           "Fix issue with incorrect frame size when applying frame in millimeters"

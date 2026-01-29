@@ -44,7 +44,23 @@ export function useNumberInput(props, emit) {
    */
   const isDragging = ref(false)
   let dragStartX = 0
+  let dragStartY = 0
   let dragStartValue = 0
+
+  /**
+   * Determines drag direction based on icon name
+   * - contains "width"  -> horizontal (X)
+   * - contains "height" -> vertical (Y)
+   * - fallback: width
+   */
+  const dragAxis = computed(() => {
+    const icon = (props.icon || '').toLowerCase()
+
+    if (icon.includes('height')) return 'height'
+    if (icon.includes('width')) return 'width'
+
+    return 'width'
+  })
 
   /**
    * Number of decimal places for rounding
@@ -154,6 +170,7 @@ export function useNumberInput(props, emit) {
 
     isDragging.value = true
     dragStartX = e.clientX
+    dragStartY = e.clientY
     dragStartValue = Number(inputValue.value)
 
     // Capture pointer so we still receive move events
@@ -171,10 +188,21 @@ export function useNumberInput(props, emit) {
     if (!isDragging.value) return
 
     const deltaX = e.clientX - dragStartX
+    const deltaY = dragStartY - e.clientY // inverted Y (up = positive)
 
     // sensitivity: how many pixels = one step
     const pixelsPerStep = e.shiftKey ? 1 : 5
-    const stepsDelta = Math.floor(deltaX / pixelsPerStep)
+
+    let delta
+
+    if (dragAxis.value === 'height') {
+      delta = deltaY
+    } else {
+      // width (default)
+      delta = deltaX
+    }
+
+    const stepsDelta = Math.floor(delta / pixelsPerStep)
 
     const newValue = normalizeValue(dragStartValue + stepsDelta * props.step)
 
@@ -202,5 +230,6 @@ export function useNumberInput(props, emit) {
     showUnit,
     onWheel,
     onIconPointerDown,
+    dragAxis,
   }
 }

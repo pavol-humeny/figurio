@@ -21,7 +21,6 @@
 - image - pdf export neprevadza spravne font textu
 - copy to clipboard má zle tip 
 - pri export okne nie je možné exportovať enterom 
-- rámik v milimetroch je rozdielny pri fyzickom a pri klasickom režime 
 
 ## TODO od J (userTesting2 - 12.1.2026)
 - FIXED - Zoom pomocou numerickej klávesnice
@@ -43,7 +42,7 @@
     - zrušit výber pri držaní shift po kliknutí na nieco co uz je vybrane 
     - mohla by sa ukladať história pri výbere 
     - color - pri výbere farby hned vybrat oblast,nie az po kliknutí na tlacidlo 
-- klik + posun mysi na ikone by mohlo menit hodnotu (figma style)
+- FIXED - klik + posun mysi na ikone by mohlo menit hodnotu (figma style)
 - shape - rozbité 
     - divne funguje výber objektu
     - pri kliknutí to hned vytvorí nový objekt namiesto výberu 
