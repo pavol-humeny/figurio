@@ -825,6 +825,14 @@
             "style3": "Styl 3"
           }
         },
+        "phoneFrameOrientation": {
+          "label": "Orientace rámu",
+          "tip": "Vyberte orientaci rámu telefonu",
+          "options": {
+            "portrait": "Na výšku",
+            "landscape": "Na šířku"
+          }
+        },
         "usePhoneHomeIndicator": {
           "label": "Domovské tlačítko"
         },
@@ -938,6 +946,14 @@
                 "style1": "Styl 1",
                 "style2": "Styl 2",
                 "style3": "Styl 3"
+              }
+            },
+            "phoneFrameOrientation": {
+              "label": "Orientace rámu",
+              "tip": "Vyberte orientaci rámu telefonu",
+              "options": {
+                "portrait": "Na výšku",
+                "landscape": "Na šířku"
               }
             },
             "usePhoneHomeIndicator": "Domovské tlačítko",
@@ -1077,6 +1093,14 @@
                 "style1": "Styl 1",
                 "style2": "Styl 2",
                 "style3": "Styl 3"
+              }
+            },
+            "phoneFrameOrientation": {
+              "label": "Orientace rámu",
+              "tip": "Vyberte orientaci rámu telefonu",
+              "options": {
+                "portrait": "Na výšku",
+                "landscape": "Na šířku"
               }
             },
             "usePhoneHomeIndicator": "Domovské tlačítko",

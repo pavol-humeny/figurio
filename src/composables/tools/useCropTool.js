@@ -1010,7 +1010,7 @@ export function useCropTool(imageStore, viewportStore, editorStore, historyStore
       cropRect.y = imgHeight - cropRect.height
     }
 
-    console.warn('Final crop rect:', cropRect)
+    log('Final crop rect:', cropRect)
 
     return cropRect
   }

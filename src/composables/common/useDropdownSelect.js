@@ -87,7 +87,6 @@ export function useDropdownSelect(props, emit) {
    * @param {Number} value - Selected value
    */
   const onSelect = (value) => {
-    console.warn('DropdownSelect onSelect', value)
     selectedValue.value = value
     emit('update:modelValue', value)
     emit('update', value)

@@ -268,6 +268,16 @@ export function useFrameTool(imageStore, historyStore, viewportStore, t) {
   })
 
   /**
+   * Phone frame orientation
+   */
+  const phoneFrameOrientation = computed({
+    get: () => imageStore.frame.phoneFrameOrientation,
+    set: (value) => {
+      imageStore.frame.phoneFrameOrientation = value
+    },
+  })
+
+  /**
    * Phone header visibility
    */
   const drawPhoneHeader = computed({
@@ -381,6 +391,20 @@ export function useFrameTool(imageStore, historyStore, viewportStore, t) {
     },
   ])
 
+  /**
+   * Phone frame orientation options
+   */
+  const phoneFrameOrientationOptions = computed(() => [
+    {
+      label: t('tools.frame.settings.general.phoneFrameOrientation.options.portrait'),
+      value: 'portrait',
+    },
+    {
+      label: t('tools.frame.settings.general.phoneFrameOrientation.options.landscape'),
+      value: 'landscape',
+    },
+  ])
+
   // ------------------------
   // Check frame type
   // ------------------------
@@ -423,6 +447,13 @@ export function useFrameTool(imageStore, historyStore, viewportStore, t) {
       frameType === 'framePhoneAndroid2' ||
       frameType === 'framePhoneSimple'
     )
+  }
+
+  /**
+   * Whether the frame is phone frame in landscape orientation
+   */
+  const isLandscapePhone = (frameType, orientation) => {
+    return isPhoneFrame(frameType) && orientation === 'landscape'
   }
 
   /**
@@ -544,8 +575,6 @@ export function useFrameTool(imageStore, historyStore, viewportStore, t) {
       frameWidthMm.value = Math.min(Math.max(frameWidth.value / PxPerMm, 1), maxFrameWidthMm.value)
       maxFrameWidthMm.value = (imageStore.getSmallerImageDimension() * 0.2) / PxPerMm
 
-      console.warn(frameWidthMm.value, frameWidth.value, PxPerMm)
-
       // Header and footer
       if (isFrameWithMultiplier(selectedFrameVariant.value)) {
         headerSizeMm.value = Math.max(headerSize.value / PxPerMm, 1)
@@ -556,8 +585,6 @@ export function useFrameTool(imageStore, historyStore, viewportStore, t) {
       // Set default user set header size mm
       userSetHeaderSizeMm.value =
         Math.max(Math.floor(0.1 * imageStore.fileDimensions.width), 5) / PxPerMm
-
-      console.warn('Setting use mm:', userSetHeaderSizeMm.value)
     } else {
       frameWidth.value = frameWidthMm.value * PxPerMm
 
@@ -699,6 +726,15 @@ export function useFrameTool(imageStore, historyStore, viewportStore, t) {
   }
 
   /**
+   * Set phone frame orientation
+   * @param {string} orientation - New phone frame orientation (portrait, landscape)
+   */
+  const setPhoneFrameOrientation = (orientation) => {
+    phoneFrameOrientation.value = orientation
+    applyFrame()
+  }
+
+  /**
    * Set phone header visibility
    * @param {boolean} value - Whether to show phone header
    */
@@ -807,8 +843,6 @@ export function useFrameTool(imageStore, historyStore, viewportStore, t) {
     const PxPerMm = viewportStore.getPxPerMmFitZoom
     headerSize.value = headerSizeMm.value * PxPerMm
 
-    console.warn('Setting header size mm:', size, headerSizeMm.value, headerSize.value)
-
     applyFrame()
   }
 
@@ -860,6 +894,7 @@ export function useFrameTool(imageStore, historyStore, viewportStore, t) {
     imageStore.frame.phoneOutlineSize = JSON.parse(JSON.stringify(phoneOutlineSize.value))
     imageStore.frame.phoneHeaderIconsSize = JSON.parse(JSON.stringify(phoneHeaderIconsSize.value))
     imageStore.frame.phoneBatteryIconStyle = JSON.parse(JSON.stringify(phoneBatteryIconStyle.value))
+    imageStore.frame.phoneFrameOrientation = JSON.parse(JSON.stringify(phoneFrameOrientation.value))
     imageStore.frame.phoneHeaderEnabled = JSON.parse(JSON.stringify(drawPhoneHeader.value))
     imageStore.frame.phoneHeaderExpand = JSON.parse(JSON.stringify(headerOverlap.value))
     imageStore.frame.phoneButtonsEnabled = JSON.parse(JSON.stringify(drawPhoneButtons.value))
@@ -953,10 +988,19 @@ export function useFrameTool(imageStore, historyStore, viewportStore, t) {
    * @param {number} phoneCornerRadius - Corner radius of phone
    * @returns {boolean} True if buttons fit, false if they would overflow
    */
-  const canDrawPhoneButtons = () => {
+  const canDrawPhoneButtons = (isLandscapePhone = false) => {
     const fw = imageStore.frame.width || 0
-    const svgHeightApproximation = imageStore.fileDimensions.height + fw * 2
-    const svgWidthApproximation = imageStore.fileDimensions.width + fw * 2
+
+    let svgHeightApproximation = imageStore.fileDimensions.height + fw * 2
+    let svgWidthApproximation = imageStore.fileDimensions.width + fw * 2
+
+    if (isLandscapePhone) {
+      // Swap width and height for landscape
+      const temp = svgHeightApproximation
+      svgHeightApproximation = svgWidthApproximation
+      svgWidthApproximation = temp
+    }
+
     const phoneCornerRadiusApproximation = Math.max(
       Math.floor(Math.min(svgHeightApproximation, svgWidthApproximation) * 0.06),
       2,
@@ -984,14 +1028,23 @@ export function useFrameTool(imageStore, historyStore, viewportStore, t) {
    * Apply the frame rendering to the specified SVG element
    * @param {SVGElement} el - The SVG element to apply the frame to
    */
-  const applyFrameRender = (el, width = null, height = null) => {
+  const applyFrameRender = (el, isLandscapePhone = true, width = null, height = null) => {
     log('Applying frame render...')
     const ns = 'http://www.w3.org/2000/svg'
     const frame = imageStore.frame
     if (!frame?.enabled || !el) return
 
-    const w = width ?? imageStore.fileDimensions.width
-    const h = height ?? imageStore.fileDimensions.height
+    let w
+    let h
+
+    if (isLandscapePhone) {
+      w = height ?? imageStore.fileDimensions.height
+      h = width ?? imageStore.fileDimensions.width
+    } else {
+      w = width ?? imageStore.fileDimensions.width
+      h = height ?? imageStore.fileDimensions.height
+    }
+
     const color = frame.color
     const phoneEdgeStrokeWidth =
       frame.phoneOutlineSize === 'small' ? 1 : frame.phoneOutlineSize === 'medium' ? 3 : 5
@@ -1080,10 +1133,8 @@ export function useFrameTool(imageStore, historyStore, viewportStore, t) {
     const svgHeight =
       h +
       fh * 2 +
-      ((hasHeader && !hasPhoneFrame) || (hasPhoneFrame && frame.phoneHeaderExpand)
-        ? header - fh
-        : 0) +
-      (footer > 0 ? footer - fh : 0)
+      ((hasHeader && !hasPhoneFrame) || (hasPhoneFrame && frame.phoneHeaderExpand) ? header : 0) +
+      (footer > 0 ? footer : 0)
 
     const phoneCornerRadius = Math.max(Math.floor(Math.min(svgWidth, svgHeight) * 0.06), 2)
 
@@ -1104,13 +1155,16 @@ export function useFrameTool(imageStore, historyStore, viewportStore, t) {
       headerSize: headerSizePhone,
     }
 
-    el.setAttribute('width', svgWidth)
-    el.setAttribute('height', svgHeight)
-    el.style.left = `-${fw - adjustmentForPhoneButtons}px`
-    el.style.top = `-${(hasHeader && !hasPhoneFrame) || (hasPhoneFrame && frame.phoneHeaderExpand) ? header : fh}px`
+    if (isLandscapePhone) {
+      el.style.left = `-${(hasHeader && !hasPhoneFrame) || (hasPhoneFrame && frame.phoneHeaderExpand) ? header + fh : fh}px`
+      el.style.top = `-${fw - adjustmentForPhoneButtons}px`
+    } else {
+      el.style.left = `-${fw - adjustmentForPhoneButtons}px`
+      el.style.top = `-${(hasHeader && !hasPhoneFrame) || (hasPhoneFrame && frame.phoneHeaderExpand) ? header + fh : fh}px`
+    }
 
     // Recalculate if phone buttons can be drawn
-    canDrawPhoneButtons()
+    canDrawPhoneButtons(isLandscapePhone)
 
     /**
      * Draws a side button with rounded corners
@@ -1210,7 +1264,7 @@ export function useFrameTool(imageStore, historyStore, viewportStore, t) {
       const volumeUpY = svgWidth * 0.4
       const volumeDownY = volumeUpY + volumeButtonHeight + volumeButtonWidth * 3
 
-      if (!canDrawPhoneButtons()) {
+      if (!canDrawPhoneButtons(isLandscapePhone)) {
         drawPhoneButtons.value = false
         return
       }
@@ -1558,10 +1612,7 @@ export function useFrameTool(imageStore, historyStore, viewportStore, t) {
 
       const x = svgWidth / 2 - indicatorWidth / 2
       const y =
-        h +
-        fh -
-        indicatorHeight * 3 +
-        (frame.phoneHeaderExpand ? phoneFrameValues.headerSize - fh : 0)
+        h + fh - indicatorHeight * 3 + (frame.phoneHeaderExpand ? phoneFrameValues.headerSize : 0)
 
       const rect = document.createElementNS(ns, 'rect')
       rect.setAttribute('x', x)
@@ -1765,8 +1816,6 @@ export function useFrameTool(imageStore, historyStore, viewportStore, t) {
           { x: svgWidth - fw, y: 0, width: fw, height: svgHeight },
           { x: 0, y: svgHeight - fh, width: svgWidth, height: fh },
         ]
-
-        console.warn(borders)
 
         borders.forEach((s) => {
           const r = document.createElementNS(ns, 'rect')
@@ -2432,6 +2481,7 @@ export function useFrameTool(imageStore, historyStore, viewportStore, t) {
         w,
         h,
         imageStore.frame.phoneHeaderEnabled && frame.phoneHeaderExpand,
+        isLandscapePhone,
       )
 
       imageStore.setRenderedImage(roundedCanvas, true) // Set only original image, not tmpRenderedImage
@@ -2444,11 +2494,28 @@ export function useFrameTool(imageStore, historyStore, viewportStore, t) {
           w,
           h,
           imageStore.frame.phoneHeaderEnabled && frame.phoneHeaderExpand,
+          isLandscapePhone,
         )
 
         imageStore.overlayImage = roundedOverlay
       }
     }
+
+    //Orientation settings
+    if (isLandscapePhone) {
+      // Rotate whole SVG via CSS
+      el.style.transform = 'rotate(-90deg) translateX(-100%)'
+      el.style.transformOrigin = 'top left'
+    } else {
+      // Reset for portrait
+      el.style.transform = ''
+      el.style.transformOrigin = ''
+    }
+
+    el.setAttribute('width', svgWidth)
+    el.setAttribute('height', svgHeight)
+    el.style.width = `${svgWidth}px`
+    el.style.height = `${svgHeight}px`
   }
 
   /**
@@ -2462,7 +2529,14 @@ export function useFrameTool(imageStore, historyStore, viewportStore, t) {
    *
    * @returns {HTMLCanvasElement}
    */
-  const applyRoundedCorners = (srcImage, radius, w, h, hasPhoneHeader) => {
+  const applyRoundedCorners = (
+    srcImage,
+    radius,
+    w,
+    h,
+    hasPhoneHeader,
+    isLandscapePhone = false,
+  ) => {
     const canvas = document.createElement('canvas')
     canvas.width = w
     canvas.height = h
@@ -2470,24 +2544,46 @@ export function useFrameTool(imageStore, historyStore, viewportStore, t) {
 
     const path = new Path2D()
 
-    if (hasPhoneHeader) {
-      path.moveTo(0, 0)
-      path.lineTo(w, 0)
-      path.lineTo(w, h - radius)
-      path.quadraticCurveTo(w, h, w - radius, h)
-      path.lineTo(radius, h)
-      path.quadraticCurveTo(0, h, 0, h - radius)
-      path.lineTo(0, 0)
+    if (isLandscapePhone) {
+      if (hasPhoneHeader) {
+        path.moveTo(0, 0)
+        path.lineTo(0, h)
+        path.lineTo(w - radius, h)
+        path.quadraticCurveTo(w, h, w, h - radius)
+        path.lineTo(w, radius)
+        path.quadraticCurveTo(w, 0, w - radius, 0)
+        path.lineTo(0, 0)
+      } else {
+        path.moveTo(0, radius)
+        path.lineTo(0, h - radius)
+        path.quadraticCurveTo(0, h, radius, h)
+        path.lineTo(w - radius, h)
+        path.quadraticCurveTo(w, h, w, h - radius)
+        path.lineTo(w, radius)
+        path.quadraticCurveTo(w, 0, w - radius, 0)
+        path.lineTo(radius, 0)
+        path.quadraticCurveTo(0, 0, 0, radius)
+      }
     } else {
-      path.moveTo(radius, 0)
-      path.lineTo(w - radius, 0)
-      path.quadraticCurveTo(w, 0, w, radius)
-      path.lineTo(w, h - radius)
-      path.quadraticCurveTo(w, h, w - radius, h)
-      path.lineTo(radius, h)
-      path.quadraticCurveTo(0, h, 0, h - radius)
-      path.lineTo(0, radius)
-      path.quadraticCurveTo(0, 0, radius, 0)
+      if (hasPhoneHeader) {
+        path.moveTo(0, 0)
+        path.lineTo(w, 0)
+        path.lineTo(w, h - radius)
+        path.quadraticCurveTo(w, h, w - radius, h)
+        path.lineTo(radius, h)
+        path.quadraticCurveTo(0, h, 0, h - radius)
+        path.lineTo(0, 0)
+      } else {
+        path.moveTo(radius, 0)
+        path.lineTo(w - radius, 0)
+        path.quadraticCurveTo(w, 0, w, radius)
+        path.lineTo(w, h - radius)
+        path.quadraticCurveTo(w, h, w - radius, h)
+        path.lineTo(radius, h)
+        path.quadraticCurveTo(0, h, 0, h - radius)
+        path.lineTo(0, radius)
+        path.quadraticCurveTo(0, 0, radius, 0)
+      }
     }
 
     path.closePath()
@@ -2516,28 +2612,49 @@ export function useFrameTool(imageStore, historyStore, viewportStore, t) {
       frame.phoneHeaderExpand,
     )
     const phoneWithButtons = phoneFrame && frame.phoneButtonsEnabled
+    const isLandscapePhoneValue = isLandscapePhone(frame.type, frame.phoneFrameOrientation)
 
     // Target size (image inside frame)
     let targetWidth = fileDimensions.width
     let targetHeight = fileDimensions.height
 
     let finalWidth = fileDimensions.width
+    let finalHeight = fileDimensions.height
 
     if (!phoneWithButtons) {
-      finalWidth -= (frame.width / 3) * 2 // remove space for side buttons if not drawn
+      if (isLandscapePhoneValue) {
+        finalHeight -= (frame.width / 3) * 2 // remove space for side buttons if not drawn
+      } else {
+        finalWidth -= (frame.width / 3) * 2 // remove space for side buttons if not drawn
+      }
     }
 
     if (frame.enabled) {
       // always remove left + right frame
-      targetWidth -= 2 * frame.width
+      if (isLandscapePhoneValue) {
+        targetWidth -= 2 * frame.height
+      } else {
+        targetWidth -= 2 * frame.width
+      }
 
       // always remove top + bottom frame
-      targetHeight -= 2 * frame.height
+      if (isLandscapePhoneValue) {
+        targetHeight -= 2 * frame.width
+      } else {
+        targetHeight -= 2 * frame.height
+      }
 
       // header / footer are EXTRA space inside frame
       if ((hasHeader && !phoneFrame) || (hasHeader && phoneFrame && phoneFrameWithExpandedHeader)) {
-        targetHeight -= frame.headerSize
-        targetHeight += frame.height
+        if (isLandscapePhoneValue) {
+          targetWidth -= frame.headerSize
+          // targetWidth += frame.height
+        } else {
+          targetHeight -= frame.headerSize
+          if (!phoneFrame) {
+            targetHeight += frame.height
+          }
+        }
       }
 
       if (hasFooter) {
@@ -2548,18 +2665,44 @@ export function useFrameTool(imageStore, historyStore, viewportStore, t) {
 
     // Offsets inside frame
     const adjustmentForPhoneButtons = frame.phoneButtonsEnabled ? 0 : frame.width / 3
-    const offsetX = frame.enabled ? frame.width - adjustmentForPhoneButtons : 0
 
-    let offsetY = frame.enabled ? frame.height : 0
-    if (hasHeader) {
-      if (phoneFrameWithExpandedHeader || (hasHeader && !phoneFrame)) {
-        offsetY = frame.headerSize
+    let offsetX = 0
+
+    if (frame.enabled) {
+      if (isLandscapePhoneValue) {
+        if (phoneFrameWithExpandedHeader) {
+          offsetX = frame.height + frame.headerSize
+        } else {
+          offsetX = frame.height
+        }
+      } else {
+        offsetX = frame.width - adjustmentForPhoneButtons
+      }
+    }
+
+    let offsetY = 0
+
+    if (frame.enabled) {
+      if (isLandscapePhoneValue) {
+        offsetY = frame.width - adjustmentForPhoneButtons
+      } else {
+        if (hasHeader) {
+          if (phoneFrameWithExpandedHeader && phoneFrame) {
+            offsetY = frame.headerSize + frame.height
+          } else if (hasHeader && !phoneFrame) {
+            offsetY = frame.headerSize
+          } else {
+            offsetY = frame.height
+          }
+        } else {
+          offsetY = frame.height
+        }
       }
     }
 
     return {
       finalWidth,
-      finalHeight: fileDimensions.height,
+      finalHeight,
       targetWidth,
       targetHeight,
       offsetX,
@@ -2594,6 +2737,7 @@ export function useFrameTool(imageStore, historyStore, viewportStore, t) {
     isFrameWithHeader,
     isFrameWithFooter,
     isPhoneFrame,
+    isLandscapePhone,
     isFrameWithOutline,
     isFrameWithMultiplier,
     isPhoneHeaderWithExpandedHeader,
@@ -2633,5 +2777,8 @@ export function useFrameTool(imageStore, historyStore, viewportStore, t) {
     phoneBatteryIconStyle,
     setPhoneBatteryIconStyle,
     phoneBatteryIconStyleOptions,
+    phoneFrameOrientation,
+    setPhoneFrameOrientation,
+    phoneFrameOrientationOptions,
   }
 }

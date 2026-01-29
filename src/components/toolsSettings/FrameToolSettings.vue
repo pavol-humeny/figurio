@@ -79,7 +79,10 @@ const {
   phoneHeaderIconsSizeOptions,
   phoneBatteryIconStyle,
   setPhoneBatteryIconStyle,
-  phoneBatteryIconStyleOptions
+  phoneBatteryIconStyleOptions,
+  phoneFrameOrientation,
+  setPhoneFrameOrientation,
+  phoneFrameOrientationOptions,
 } = useFrameTool(useImageStore(), useHistoryStore(), useViewportStore(), t)
 </script>
 
@@ -98,6 +101,19 @@ const {
               </p>
             </div>
             <DropdownSelect v-model="selectedFrameVariant" :options="frameOptions" @update="handleFrameChange" />
+          </div>
+        </div>
+
+        <!-- Phone frame orientation -->
+        <div v-if="isPhoneFrame(selectedFrameVariant)" class="settings-content-wrapper">
+          <div class="content-wrapper">
+            <div class="content-aligned two-items">
+              <p>
+                {{ t('tools.frame.settings.general.phoneFrameOrientation.label') }}
+              </p>
+              <DropdownSelect v-model="phoneFrameOrientation" :options="phoneFrameOrientationOptions"
+                @update="setPhoneFrameOrientation(phoneFrameOrientation)" />
+            </div>
           </div>
         </div>
 

@@ -3,6 +3,7 @@ import { useMath } from '../common/useMath'
 import { editorConfig } from '@/config/editorConfig'
 import { useConsole } from '@/composables/common/useConsole.js'
 import { exportFileService } from '@/services/exportFileService'
+import { useFrameTool } from '../tools/useFrameTool.js'
 const { error } = useConsole()
 
 /**
@@ -151,9 +152,18 @@ export function useExportToolSettings(
    * Open export settings and prepare preview dimensions, format and file name
    */
   const openExportToolSettings = async () => {
+    if (isVisible.value) return
+
     isVisible.value = true
 
     editorStore.isExportModalOpen = true
+
+    const { isLandscapePhone } = useFrameTool(imageStore, historyStore, viewportStore, t)
+
+    const isLandscapePhoneValue = isLandscapePhone(
+      imageStore.frame.type,
+      imageStore.frame.phoneFrameOrientation,
+    )
 
     imageStore.newFileDimensions = { ...imageStore.fileDimensions }
     imageStore.newFileFormat = imageStore.fileFormat
@@ -161,17 +171,25 @@ export function useExportToolSettings(
 
     // Adjust dimensions based on frame
     if (imageStore.frame?.enabled) {
-      imageStore.newFileDimensions.width =
-        imageStore.fileDimensions.width + imageStore.frame.width * 2
-      if (imageStore.frame.headerSize > 0 && imageStore.frame.phoneHeaderExpand) {
-        imageStore.newFileDimensions.height =
-          imageStore.fileDimensions.height + imageStore.frame.height + imageStore.frame.headerSize
-      } else if (imageStore.frame.footerSize > 0) {
-        imageStore.newFileDimensions.height =
-          imageStore.fileDimensions.height + imageStore.frame.height + imageStore.frame.footerSize
+      if (isLandscapePhoneValue) {
+        imageStore.newFileDimensions.height += imageStore.frame.width * 2
+        if (imageStore.frame.headerSize > 0 && imageStore.frame.phoneHeaderExpand) {
+          imageStore.newFileDimensions.width +=
+            imageStore.frame.height * 2 + imageStore.frame.headerSize
+        } else {
+          imageStore.newFileDimensions.width += imageStore.frame.height * 2
+        }
       } else {
-        imageStore.newFileDimensions.height =
-          imageStore.fileDimensions.height + imageStore.frame.height * 2
+        imageStore.newFileDimensions.width += imageStore.frame.width * 2
+        if (imageStore.frame.headerSize > 0 && imageStore.frame.phoneHeaderExpand) {
+          imageStore.newFileDimensions.height +=
+            imageStore.frame.height * 2 + imageStore.frame.headerSize
+        } else if (imageStore.frame.footerSize > 0) {
+          imageStore.newFileDimensions.height +=
+            imageStore.frame.height + imageStore.frame.footerSize
+        } else {
+          imageStore.newFileDimensions.height += imageStore.frame.height * 2
+        }
       }
     } else {
       imageStore.newFileDimensions = { ...imageStore.fileDimensions }

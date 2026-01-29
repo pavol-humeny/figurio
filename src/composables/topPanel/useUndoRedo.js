@@ -37,7 +37,6 @@ export function useUndoRedo(historyStore, imageStore, uiStore, t) {
     const snapshot = historyStore.undo()
     if (!snapshot) return
 
-    console.warn('UNDO - START')
     uiStore.isApplying = true
 
     await imageStore.applySnapshot(snapshot)
@@ -45,7 +44,6 @@ export function useUndoRedo(historyStore, imageStore, uiStore, t) {
 
     imageStore.frameNeedToBeRendered = true
 
-    console.warn('UNDO - END')
     uiStore.isApplying = false
     uiStore.isApplyingFrame = false
   }

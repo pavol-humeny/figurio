@@ -98,46 +98,6 @@ export function useImageRenderer(
       svgRef.value.style.width = `${width}px`
       svgRef.value.style.height = `${height}px`
     }
-
-    // Set frame SVG dimensions
-    if (frameSvgRef.value) {
-      const frame = imageStore.frame
-      const frameEnabled = frame?.enabled && (frame.width > 0 || frame.height > 0)
-
-      const fw = frameEnabled ? frame.width : 0
-      const fh = frameEnabled ? frame.height : 0
-
-      const header = frame?.headerSize || 0
-      const footer = frame?.footerSize || 0
-
-      const hasHeader = useFrameTool(imageStore, historyStore, viewportStore, t).isFrameWithHeader(
-        frame.type,
-      )
-
-      const hasFooter = useFrameTool(imageStore, historyStore, viewportStore, t).isFrameWithFooter(
-        frame.type,
-      )
-
-      const hasPhoneFrame = useFrameTool(imageStore, historyStore, viewportStore, t).isPhoneFrame(
-        frame.type,
-      )
-
-      const noPhoneButtonsAdjustment = frame.phoneButtonsEnabled ? 0 : (fw / 3) * 2
-
-      const frameWidth = width + fw * 2 - noPhoneButtonsAdjustment
-      const frameHeight =
-        height +
-        fh * 2 +
-        ((hasHeader && !hasPhoneFrame) || (hasPhoneFrame && frame.phoneHeaderExpand)
-          ? header - fh
-          : 0) +
-        (hasFooter ? footer : 0)
-
-      frameSvgRef.value.setAttribute('width', frameWidth)
-      frameSvgRef.value.setAttribute('height', frameHeight)
-      frameSvgRef.value.style.width = `${frameWidth}px`
-      frameSvgRef.value.style.height = `${frameHeight}px`
-    }
   }
 
   /**
@@ -157,7 +117,6 @@ export function useImageRenderer(
     if (imageStore.fileType === 'pdf' && !imageStore.showPdfAsImage) {
       const tPdfStart = performance.now()
 
-      console.warn('IMAGE RENDERER - START')
       uiStore.isApplying = true
 
       log('Rendering PDF page...')
@@ -166,7 +125,6 @@ export function useImageRenderer(
       if (!pdfPageBytes || pdfPageBytes.length === 0) {
         warn('PDF bytes missing or empty – skipping PDF render')
         blockRender.value = false
-        console.warn('IMAGE RENDERER - END1')
         uiStore.isApplying = false
         uiStore.isApplyingFrame = false
         return
@@ -249,7 +207,6 @@ export function useImageRenderer(
 
         blockRender.value = false
 
-        console.warn('IMAGE RENDERER - END2')
         uiStore.isApplying = false
         uiStore.isApplyingFrame = false
 
@@ -274,7 +231,6 @@ export function useImageRenderer(
 
       log(`[imageRenderer] PDF total ${(performance.now() - tPdfStart).toFixed(1)} ms`)
 
-      console.warn('IMAGE RENDERER - END3')
       blockRender.value = false
       uiStore.isApplying = false
       uiStore.isApplyingFrame = false
@@ -378,8 +334,13 @@ export function useImageRenderer(
       return
     }
 
+    const isLandscapePhoneValue = useFrameTool(imageStore, historyStore, viewportStore, t).isLandscapePhone(
+      imageStore.frame.type,
+      imageStore.frame.phoneFrameOrientation,
+    )
+
     el.innerHTML = ''
-    useFrameTool(imageStore, historyStore, viewportStore, t).applyFrameRender(el)
+    useFrameTool(imageStore, historyStore, viewportStore, t).applyFrameRender(el, isLandscapePhoneValue)
 
     renderCanvas()
 

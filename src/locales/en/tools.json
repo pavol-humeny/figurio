@@ -824,6 +824,14 @@
             "style3": "Style 3"
           }
         },
+        "phoneFrameOrientation": {
+          "label": "Frame orientation",
+          "tip": "Select phone frame orientation",
+          "options": {
+            "portrait": "Portrait",
+            "landscape": "Landscape"
+          }
+        },
         "usePhoneHomeIndicator": {
           "label": "Home indicator"
         },
@@ -937,6 +945,14 @@
                 "style1": "Style 1",
                 "style2": "Style 2",
                 "style3": "Style 3"
+              }
+            },
+            "phoneFrameOrientation": {
+              "label": "Frame orientation",
+              "tip": "Select phone frame orientation",
+              "options": {
+                "portrait": "Portrait",
+                "landscape": "Landscape"
               }
             },
             "usePhoneHomeIndicator": "Home indicator",
@@ -1076,6 +1092,14 @@
                 "style1": "Style 1",
                 "style2": "Style 2",
                 "style3": "Style 3"
+              }
+            },
+            "phoneFrameOrientation": {
+              "label": "Frame orientation",
+              "tip": "Select phone frame orientation",
+              "options": {
+                "portrait": "Portrait",
+                "landscape": "Landscape"
               }
             },
             "usePhoneHomeIndicator": "Home indicator",

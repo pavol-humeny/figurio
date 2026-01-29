@@ -97,6 +97,7 @@ export function usePresetTool(
       footerSize: 20,
       footerSizeMm: 20,
       outlineEnabled: false,
+      phoneFrameOrientation: 'portrait',
       phoneOutlineEnabled: false,
       phoneOutlineColor: '#000000',
       phoneOutlineSize: 'small',
@@ -237,7 +238,6 @@ export function usePresetTool(
    */
   watch(selectedOperation, (op) => {
     if (op) {
-      console.warn('selectedOperation changed: ', op)
       creatingNewOperation.value = false
       clearSelected.value = false
     }
@@ -249,7 +249,6 @@ export function usePresetTool(
   watch(
     () => localImageFrame.value.type,
     (type) => {
-      console.warn('localImageFrame.type changed: ', type)
       isPresetModified.value = true
       if (!useFrameTool(imageStore, historyStore, viewportStore, t).isFrameWithOutline(type)) {
         localImageFrame.value.outlineEnabled = false
@@ -453,8 +452,6 @@ export function usePresetTool(
     // Pick next preset if exists
     const remainingPresets = presetsStore.presets
 
-    console.warn('Remaining presets after deletion: ', remainingPresets.length)
-
     if (remainingPresets.length > 0) {
       presetsStore.selectFirstPreset()
     } else {
@@ -649,6 +646,7 @@ export function usePresetTool(
         currentImageFrame.footerSizeMm === presetFrame.footerSizeMm &&
         currentImageFrame.outlineEnabled === presetFrame.outlineEnabled &&
         currentImageFrame.phoneOutlineEnabled === presetFrame.phoneOutlineEnabled &&
+        currentImageFrame.phoneFrameOrientation === presetFrame.phoneFrameOrientation &&
         currentImageFrame.phoneOutlineColor === presetFrame.phoneOutlineColor &&
         currentImageFrame.phoneOutlineSize === presetFrame.phoneOutlineSize &&
         currentImageFrame.phoneHeaderIconsSize === presetFrame.phoneHeaderIconsSize &&
@@ -723,10 +721,6 @@ export function usePresetTool(
 
       imageStore.imageOperations.push(normalized)
     }
-
-    console.warn('Applying preset frame:', preset.imageFrame)
-
-    console.warn('Current image frame before applying preset:', preset.imageFrame)
 
     // Recalculate frame dimensions based on current image size (PxPerMm)
     if (preset.imageFrame.useMillimeters) {
@@ -938,6 +932,20 @@ export function usePresetTool(
   ])
 
   /**
+   * Available phone frame orientation options for the preset
+   */
+  const phoneFrameOrientationOptions = computed(() => [
+    {
+      value: 'portrait',
+      label: t('tools.frame.settings.general.phoneFrameOrientation.options.portrait'),
+    },
+    {
+      value: 'landscape',
+      label: t('tools.frame.settings.general.phoneFrameOrientation.options.landscape'),
+    },
+  ])
+
+  /**
    * Watch new preset frame type and if it is solid set outlineEnabled to false
    */
   watch(
@@ -998,6 +1006,7 @@ export function usePresetTool(
         footerSize: 20,
         footerSizeMm: 20,
         outlineEnabled: false,
+        phoneFrameOrientation: 'portrait',
         phoneOutlineEnabled: false,
         phoneOutlineColor: '#000000',
         phoneOutlineSize: 'small',
@@ -1203,6 +1212,7 @@ export function usePresetTool(
       imageFrame.footerSizeMm = newPreset.value.frame.footerSizeMm
       imageFrame.outlineEnabled = newPreset.value.frame.outlineEnabled
       imageFrame.phoneOutlineEnabled = newPreset.value.frame.phoneOutlineEnabled
+      imageFrame.phoneFrameOrientation = newPreset.value.frame.phoneFrameOrientation
       imageFrame.phoneOutlineColor = newPreset.value.frame.phoneOutlineColor
       imageFrame.phoneOutlineSize = newPreset.value.frame.phoneOutlineSize
       imageFrame.phoneHeaderIconsSize = newPreset.value.frame.phoneHeaderIconsSize
@@ -1217,7 +1227,6 @@ export function usePresetTool(
       imageFrame.modificationFlag = 1
     }
 
-    console.warn('Creating preset with operations:', imageFrame)
     // UPDATE new tool
 
     presetsStore.createPreset(
@@ -1366,5 +1375,6 @@ export function usePresetTool(
     phoneOutlineSizeOptions,
     phoneHeaderIconsSizeOptions,
     phoneBatteryIconStyleOptions,
+    phoneFrameOrientationOptions,
   }
 }

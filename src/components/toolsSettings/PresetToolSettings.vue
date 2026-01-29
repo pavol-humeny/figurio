@@ -67,6 +67,7 @@ const {
   phoneOutlineSizeOptions,
   phoneHeaderIconsSizeOptions,
   phoneBatteryIconStyleOptions,
+  phoneFrameOrientationOptions,
 } = usePresetTool(
   useImageStore(),
   useHistoryStore(),
@@ -252,6 +253,16 @@ const tabs = ['myPresets', 'createPreset']
                 </p>
                 <ToggleButton v-model="localImageFrame.useMillimeters" :scale="0.6"
                   :style="{ transform: 'translateX(16px)' }" />
+              </div>
+              <!-- Phone frame orientation -->
+              <div class="content-aligned two-items"
+                v-if="localImageFrame.enabled && isPhoneFrame(localImageFrame.type)"
+                :class="!isModifyingPreset ? 'disabled' : ''">
+                <p>
+                  {{ t('tools.preset.settings.myPresets.presetValues.frame.phoneFrameOrientation.label') }}
+                </p>
+                <DropdownSelect v-model="localImageFrame.phoneFrameOrientation"
+                  :options="phoneFrameOrientationOptions" />
               </div>
               <!-- Phone outline -->
               <div class="content-aligned two-items"
@@ -737,6 +748,15 @@ const tabs = ['myPresets', 'createPreset']
                 </p>
                 <ToggleButton v-model="newPreset.frame.useMillimeters" :scale="0.6"
                   :style="{ transform: 'translateX(16px)' }" />
+              </div>
+              <!-- Phone frame orientation -->
+              <div v-if="isPhoneFrame(newPreset.frame.type) && newPreset.frame.enabled"
+                class="content-aligned two-items">
+                <p>
+                  {{ t('tools.preset.settings.createPreset.presetValues.frame.phoneFrameOrientation.label') }}
+                </p>
+                <DropdownSelect v-model="newPreset.frame.phoneFrameOrientation"
+                  :options="phoneFrameOrientationOptions" />
               </div>
               <!-- Use phone outline -->
               <div v-if="isPhoneFrame(newPreset.frame.type) && newPreset.frame.enabled"

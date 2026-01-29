@@ -226,6 +226,7 @@ export const useImageStore = defineStore('imageStore', {
       footerSize: 0, // Size of the footer for windows frame
       footerSizeMm: 0, // Size of the footer for windows frame in mm
       outlineEnabled: false, // Whether to draw an outline around the frame
+      phoneFrameOrientation: 'portrait', // Orientation of the phone frame
       phoneOutlineEnabled: false, // Whether to draw an outline around phone frames
       phoneOutlineColor: '#000000', // Color of the phone frame outline
       phoneOutlineSize: 'small', // Size of the phone frame outline
@@ -302,7 +303,6 @@ export const useImageStore = defineStore('imageStore', {
      * @param {HTMLCanvasElement} overlay - The overlay image to set
      */
     setOverlay(overlay) {
-      console.warn('Setting overlay image')
       this.overlayImage = overlay
     },
 
@@ -428,6 +428,7 @@ export const useImageStore = defineStore('imageStore', {
         footerSize: 0, // Size of the footer for windows frame
         footerSizeMm: 0, // Size of the footer for windows frame in mm
         outlineEnabled: false, // Whether to draw an outline around the frame
+        phoneFrameOrientation: 'portrait', // Orientation of the phone frame
         phoneOutlineEnabled: false, // Whether to draw an outline around phone frames
         phoneOutlineColor: '#000000', // Color of the phone frame outline
         phoneOutlineSize: 'small', // Size of the phone frame outline
@@ -934,19 +935,57 @@ export const useImageStore = defineStore('imageStore', {
 
       // Create temporary SVG element and apply frame
       const tempFrameSvg = document.createElementNS('http://www.w3.org/2000/svg', 'svg')
-      const { applyFrameRender } = useFrameTool(this, historyStore, viewportStore, t)
-      applyFrameRender(tempFrameSvg, targetWidth, targetHeight)
+
+      const { applyFrameRender, isLandscapePhone } = useFrameTool(
+        this,
+        historyStore,
+        viewportStore,
+        t,
+      )
+
+      const isLandscapePhoneValue = isLandscapePhone(
+        this.frame.type,
+        this.frame.phoneFrameOrientation,
+      )
+
+      applyFrameRender(tempFrameSvg, isLandscapePhoneValue, targetWidth, targetHeight)
+
+      if (isLandscapePhoneValue) {
+        tempFrameSvg.style.transform = ''
+        tempFrameSvg.style.transformOrigin = ''
+      }
 
       // If vector export only, store raw SVG frame and exit
       if (!renderAsRaster) {
-        // After serializing the SVG
+        if (isLandscapePhoneValue) {
+          const ns = 'http://www.w3.org/2000/svg'
+
+          // Create wrapper group
+          const g = document.createElementNS(ns, 'g')
+
+          // Rotate 90° counter-clockwise and keep content in bounds
+          g.setAttribute('transform', `translate(0 ${finalHeight}) rotate(-90)`)
+
+          // Move all SVG children into the group
+          while (tempFrameSvg.firstChild) {
+            g.appendChild(tempFrameSvg.firstChild)
+          }
+
+          tempFrameSvg.appendChild(g)
+
+          // Fix SVG box
+          tempFrameSvg.setAttribute('width', finalWidth)
+          tempFrameSvg.setAttribute('height', finalHeight)
+          tempFrameSvg.setAttribute('viewBox', `0 0 ${finalWidth} ${finalHeight}`)
+        }
+
+        // ALWAYS serialize + store frameSvg (both portrait and landscape)
         const rawSvg = new XMLSerializer().serializeToString(tempFrameSvg)
 
         // Remove any style attribute from the <svg> tag
         const cleanedSvg = rawSvg.replace(/<svg([^>]+)style="[^"]*"([^>]*)>/, '<svg$1$2>')
 
         this.frameSvg = cleanedSvg
-
         return
       }
 
@@ -997,7 +1036,23 @@ export const useImageStore = defineStore('imageStore', {
         )
       }
 
-      ctx.drawImage(frameImg, 0, 0)
+      // ctx.drawImage(frameImg, 0, 0)
+
+      if (isLandscapePhoneValue) {
+        ctx.save()
+
+        // Move origin to bottom-left corner
+        ctx.translate(0, finalHeight)
+
+        // Rotate 90° counter-clockwise
+        ctx.rotate(-Math.PI / 2)
+
+        ctx.drawImage(frameImg, 0, 0, finalHeight, finalWidth)
+
+        ctx.restore()
+      } else {
+        ctx.drawImage(frameImg, 0, 0)
+      }
 
       const mimeType =
         this.newFileFormat === 'jpeg' || this.newFileFormat === 'jpg'

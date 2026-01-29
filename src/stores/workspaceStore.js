@@ -106,16 +106,7 @@ export const useWorkspaceStore = defineStore('workspaceStore', {
       if (index < 0 || index >= this.tabs.length) return
       this.activeTabIndex = index
 
-      // const viewportEl = document.querySelector('.viewport-content-wrapper')
-      // if (viewportEl) viewportEl.style.opacity = 0
-
       await this.restoreTab(index)
-
-      // if (viewportEl) {
-      //   setTimeout(() => {
-      //     viewportEl.style.opacity = 1
-      //   }, 50)
-      // }
 
       console.warn('Switching to tab', index)
       const imageStore = useImageStore()
