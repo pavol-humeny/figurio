@@ -114,10 +114,10 @@ defineExpose({ setValue })
         @blur="onBlurOrEnter" @input="onInput" @keydown.enter="onBlurOrEnter" @wheel="onWheel" />
       <BaseIcon v-if="showIcon" :name="props.icon" class="input-icon" :size="props.size" :color="props.color"
         @dblclick="onIconDoubleClick" :class="{ 'not-allowed': props.disabled, disabled: props.disabled }"
-        @pointerdown.prevent="onIconPointerDown" :style="{ top: props.iconTop + '%' }" />
+        @pointerdown="onIconPointerDown" :style="{ top: props.iconTop + '%' }" />
       <span v-if="showUnit" class="input-unit" :class="{ disabled: props.disabled }">{{
         props.unit
-      }}</span>
+        }}</span>
     </div>
   </ItemTip>
 </template>
