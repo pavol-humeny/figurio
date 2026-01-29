@@ -589,9 +589,17 @@ export function useFrameTool(imageStore, historyStore, viewportStore, t) {
         maxHeaderFooterSize.value = (imageStore.getSmallerImageDimension() * 0.5) / PxPerMm
       }
 
+      const isLandscapePhoneValue = isLandscapePhone(
+        imageStore.frame.type,
+        imageStore.frame.phoneFrameOrientation,
+      )
+
+      const imageSize = isLandscapePhoneValue
+        ? imageStore.fileDimensions.height
+        : imageStore.fileDimensions.width
+
       // Set default user set header size mm
-      userSetHeaderSizeMm.value =
-        Math.max(Math.floor(0.1 * imageStore.fileDimensions.width), 5) / PxPerMm
+      userSetHeaderSizeMm.value = Math.max(Math.floor(0.1 * imageSize), 5) / PxPerMm
     } else {
       frameWidth.value = frameWidthMm.value * PxPerMm
 
@@ -794,10 +802,16 @@ export function useFrameTool(imageStore, historyStore, viewportStore, t) {
    * Calculate initial header/footer size based on image dimensions (not for phone frames)
    */
   const calculateInitialHeaderFooterSize = () => {
-    return Math.max(
-      Math.floor(editorConfig.frameHeaderFooterSize * imageStore.fileDimensions.height),
-      5,
+    const isLandscapePhoneValue = isLandscapePhone(
+      imageStore.frame.type,
+      imageStore.frame.phoneFrameOrientation,
     )
+
+    const imageSize = isLandscapePhoneValue
+      ? imageStore.fileDimensions.width
+      : imageStore.fileDimensions.height
+
+    return Math.max(Math.floor(editorConfig.frameHeaderFooterSize * imageSize), 5)
   }
 
   /**

@@ -419,7 +419,7 @@ const tabs = ['myPresets', 'createPreset']
                   {{ t('tools.preset.settings.myPresets.presetValues.frame.headerSize') }}
                 </p>
                 <NumberInput ref="frameWidthRef" v-model="localImageFrame.headerSize" :min="1" :max="100" :step="1"
-                  unit="px" :disabled="!isModifyingPreset" />
+                  icon="IconArrowHeight" :iconTop="45" unit="px" :disabled="!isModifyingPreset" />
               </div>
 
               <!-- Footer size px-->
@@ -429,7 +429,7 @@ const tabs = ['myPresets', 'createPreset']
                   {{ t('tools.preset.settings.myPresets.presetValues.frame.footerSize') }}
                 </p>
                 <NumberInput ref="frameWidthRef" v-model="localImageFrame.footerSize" :min="1" :max="100" :step="1"
-                  unit="px" :disabled="!isModifyingPreset" />
+                  icon="IconArrowHeight" :iconTop="45" unit="px" :disabled="!isModifyingPreset" />
               </div>
 
               <!-- Header size mm-->
@@ -438,7 +438,7 @@ const tabs = ['myPresets', 'createPreset']
                 <p :class="!isModifyingPreset ? 'disabled' : ''">
                   {{ t('tools.preset.settings.myPresets.presetValues.frame.headerSize') }}
                 </p>
-                <NumberInput ref="frameWidthRef" v-model="localImageFrame.headerSizeMm" :min="1" :max="50" :step="1"
+                <NumberInput ref="frameWidthRef" v-model="localImageFrame.headerSizeMm" :min="1" :max="50" :step="1" icon="IconArrowHeight" :iconTop="45"
                   unit="mm" :disabled="!isModifyingPreset" />
               </div>
 
@@ -448,7 +448,7 @@ const tabs = ['myPresets', 'createPreset']
                 <p :class="!isModifyingPreset ? 'disabled' : ''">
                   {{ t('tools.preset.settings.myPresets.presetValues.frame.footerSize') }}
                 </p>
-                <NumberInput ref="frameWidthRef" v-model="localImageFrame.footerSizeMm" :min="1" :max="50" :step="1"
+                <NumberInput ref="frameWidthRef" v-model="localImageFrame.footerSizeMm" :min="1" :max="50" :step="1" icon="IconArrowHeight" :iconTop="45"
                   unit="mm" :disabled="!isModifyingPreset" />
               </div>
             </div>
@@ -704,7 +704,7 @@ const tabs = ['myPresets', 'createPreset']
                   <label for="height-input">
                     {{ $t('tools.transform.settings.resize.resizeDimensions.height') }}
                   </label>
-                  <NumberInput ref="FileDimensionHeightInputRef" v-model="newPreset.resizeDimensions.height" :min="0"
+                  <NumberInput ref="FileDimensionHeightInputRef" v-model="newPreset.resizeDimensions.height" :min="0" 
                     :max="editorConfig.maxFileDimensionHeight" unit="px" />
                 </div>
               </div>
@@ -912,7 +912,7 @@ const tabs = ['myPresets', 'createPreset']
                 <p>
                   {{ t('tools.preset.settings.createPreset.presetValues.frame.headerSize') }}
                 </p>
-                <NumberInput ref="frameWidthRef" v-model="newPreset.frame.headerSize" :min="1" :max="100" :step="1"
+                <NumberInput ref="frameWidthRef" v-model="newPreset.frame.headerSize" :min="1" :max="100" :step="1" icon="IconArrowHeight" :iconTop="45"
                   unit="px" />
               </div>
 
@@ -923,7 +923,7 @@ const tabs = ['myPresets', 'createPreset']
                 <p>
                   {{ t('tools.preset.settings.createPreset.presetValues.frame.footerSize') }}
                 </p>
-                <NumberInput ref="frameWidthRef" v-model="newPreset.frame.footerSize" :min="1" :max="100" :step="1"
+                <NumberInput ref="frameWidthRef" v-model="newPreset.frame.footerSize" :min="1" :max="100" :step="1" icon="IconArrowHeight" :iconTop="45"
                   unit="px" />
               </div>
 
@@ -934,7 +934,7 @@ const tabs = ['myPresets', 'createPreset']
                 <p>
                   {{ t('tools.preset.settings.createPreset.presetValues.frame.headerSize') }}
                 </p>
-                <NumberInput ref="frameWidthRef" v-model="newPreset.frame.headerSizeMm" :min="1" :max="50" :step="1"
+                <NumberInput ref="frameWidthRef" v-model="newPreset.frame.headerSizeMm" :min="1" :max="50" :step="1" icon="IconArrowHeight" :iconTop="45"
                   unit="mm" />
               </div>
 
@@ -945,7 +945,7 @@ const tabs = ['myPresets', 'createPreset']
                 <p>
                   {{ t('tools.preset.settings.createPreset.presetValues.frame.footerSize') }}
                 </p>
-                <NumberInput ref="frameWidthRef" v-model="newPreset.frame.footerSizeMm" :min="1" :max="50" :step="1"
+                <NumberInput ref="frameWidthRef" v-model="newPreset.frame.footerSizeMm" :min="1" :max="50" :step="1" icon="IconArrowHeight" :iconTop="45"
                   unit="mm" />
               </div>
             </div>

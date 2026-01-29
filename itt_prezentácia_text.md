@@ -1,19 +1,20 @@
 ## Slajd 1 
-Dobrý deň, volám sa Pavol Humený a v rámci svojej bakalárskej práce vytváram webovú aplikáciu na úpravu obrázkov – Figurio. Ide o editor zameraný na prípravu obrázkov do odborných textov, ktorý obsahuje základné nástroje potrebné na ich úpravu a zároveň kladie dôraz na prehľadné a intuitívne používateľské rozhranie, ktoré používateľa zbytočne nezaťažuje.
+Dobrý deň, volám sa Pavol Humený a v rámci svojej bakalárskej práce vytváram webovú aplikáciu na úpravu obrázkov – Figurio. Je to editor zameraný na prípravu obrázkov do odborných textov. Ide o editor, ktorý obsahuje nástroje určené na tieto úpravy. A zároveň kladie dôraz na jednoduché a intuitívne rozhranie. 
+
+Cieľom tohto editora je poskytnúť užívateľom nástroje, vďaka ktorým budú ich výsledné texty vyzerať lepšie a hlavne bez nutnosti učenia sa ovládania zložitých nástrojov.
 
 ## Slajd 2
-Cieľom tohto editora je poskytnúť používateľom nástroj pre rýchle a jednoduché upravovanie obrázkov, kde má používateľ všetky dôležité ovládacie prvky okamžite dostupné a bez nutnosti hľadať ich v menu.
-
 Príkladom takejto úpravy je orezanie okrajov obrázka, vďaka čomu vo výslednom dokumente obrázok nebude obsahovať biele okraje.
 
 ## Slajd 3 
-Druhým príkladom, vďaka ktorému je možné jednoducho zvýšiť úroveň výsledného textu, je pridanie rámikov ku snímkam obrazovky telefónu, prípadne zvýraznenie a popísanie častí, o ktorých sa hovorí v texte. 
+Druhým príkladom je možnosť pridania rámikov ku snímkam obrazovky telefónu, prípadne zvýraznenie a popísanie častí, o ktorých sa hovorí v texte. 
 
 ## Slajd 4 
 Na základe používateľského prieskumu a následnej analýzy problémových obrázkov som identifikoval nástroje, ktoré by takáto aplikácia mala podporovať. Tieto nástroje som rozdelil do 3 skupín. 
 
-Prvá skupina obsahuje nástroje, ktoré slúžia k pridávaniu rôznych objektov pre zvýraznenie častí obrázka. 
+Prvá skupina obsahuje nástroje, ktoré slúžia na kreslenie, prípadne pridávanie objektov, ktoré slúžia na zvýraznenie obsahu
 
+Druhá skupina obsahuje nástroje, ktoré menia geometriu obrázku
 Druhá skupina predstavuje nástroje určené na úpravu samotného obrázka a jeho transformáciu. 
 
 A tretiu skupinu tvoria špeciálne nástroje. 
@@ -21,8 +22,6 @@ A tretiu skupinu tvoria špeciálne nástroje.
 (Konkrétne nástroj Preset, ktorý umožňuje nastaviť sériu úprav a následne ju aplikovať na viaceré obrázky jedným kliknutím a nástroj Analýza obrázku, ktorý slúži na detekciu šumu v obrázku pri obrázkoch s vysokou kompresiou.)
 
 ## Slajd 5 
-Z každej skupiny som vybral jeden nástroj. 
-
 Nástroj crop umožňuje orezanie obsahu podľa potreby používateľa, ale súčasne obsahuje aj automatickú detekciu obsahu, vďaka čomu je možné nastaviť presné orezanie okrajov jedným kliknutím. Používateľ pritom vidí výsledok úpravy v reálnom čase a má k dispozícii len tie ovládacie prvky, ktoré sú pre daný nástroj relevantné.
 
 ## Slajd 6 

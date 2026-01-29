@@ -21,6 +21,7 @@
 - image - pdf export neprevadza spravne font textu
 - copy to clipboard má zle tip 
 - pri export okne nie je možné exportovať enterom 
+- rámik v milimetroch je rozdielny pri fyzickom a pri klasickom režime 
 
 ## TODO od J (userTesting2 - 12.1.2026)
 - FIXED - Zoom pomocou numerickej klávesnice

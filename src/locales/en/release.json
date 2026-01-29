@@ -4,6 +4,15 @@
     "items": []
   },
   "versions":{
+    "5.8.0":{
+      "label": "5.8.0",
+      "date":"29.1. 2025",
+      "newFeatures": {
+        "items": [
+          "Add option to set phone frame orientation to portrait or landscape"
+        ]
+      }
+    },
     "5.7.0":{
       "label": "5.7.0",
       "date":"28.1. 2025",
