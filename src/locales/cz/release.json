@@ -12,9 +12,17 @@
           "Přidána možnost nastavit orientaci rámečku telefonu na portrét nebo na šířku"
         ]
       },
+      "improvements": {
+        "items": [
+          "Přidána možnost vertikálního tažení v číselném vstupu při úpravě hodnot výšky",
+          "Výběr barvy lze zavřít klávesou ESC"
+        ]
+      },
       "bugFixes": {
         "items": [
-          "Opravena chyba s nesprávnou velikostí rámečku při použití rozměrů v milimetrech"
+          "Opravena chyba s nesprávnou velikostí rámečku při použití rozměrů v milimetrech",
+          "Soubor lze exportovat klávesou Enter v exportním okně",
+          "Opraveno umístění tipu u tlačítka pro kopírování do schránky"
         ]
       }
     },

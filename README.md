@@ -19,8 +19,6 @@
 - opraviť select
 - pri výbere z dropdown menu to neskryje tip 
 - image - pdf export neprevadza spravne font textu
-- copy to clipboard má zle tip 
-- pri export okne nie je možné exportovať enterom 
 
 ## TODO od J (userTesting2 - 12.1.2026)
 - FIXED - Zoom pomocou numerickej klávesnice

@@ -20,7 +20,9 @@
       },
       "bugFixes": {
         "items": [
-          "Fix issue with incorrect frame size when applying frame in millimeters"
+          "Fix issue with incorrect frame size when applying frame in millimeters",
+          "File can be exported with Enter key in export modal",
+          "Fix placement of tip in copy to clipboard button"
         ]
       }
     },

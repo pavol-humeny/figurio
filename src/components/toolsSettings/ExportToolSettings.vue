@@ -113,9 +113,11 @@ const {
 
           <!-- Copy to clipboard button for PNG format -->
           <div class="export-settings-item">
-            <DefaultButton :text="$t('tools.export.settings.general.copyToClipboardButton.text')"
-              :tip="$t('tools.export.settings.general.copyToClipboardButton.tip')"
-              @click="copyImageToClipboardFunction" />
+            <div class="copy-to-clipboard-item">
+              <DefaultButton :text="$t('tools.export.settings.general.copyToClipboardButton.text')"
+                :tip="$t('tools.export.settings.general.copyToClipboardButton.tip')"
+                @click="copyImageToClipboardFunction" position="bottom-right" />
+            </div>
           </div>
 
           <!-- Export or close -->
@@ -202,6 +204,11 @@ const {
   display: flex;
   flex-direction: column;
   gap: 5px;
+}
+
+.copy-to-clipboard-item {
+  display: flex;
+  justify-content: left;
 }
 
 .export-settings-item label {

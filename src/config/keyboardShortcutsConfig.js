@@ -304,7 +304,7 @@ export const keyboardShortcuts = [
   },
   {
     keys: ['enter'],
-    action: 'exportFile',
+    action: 'exportFileFunction',
     description: 'Export file',
   },
 
