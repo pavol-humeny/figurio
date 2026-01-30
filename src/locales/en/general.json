@@ -1,0 +1,14 @@
+{
+  "windowIsTooSmall": {
+    "title": "Window is too small",
+    "message": "The application window is smaller than the recommended size. Some parts of the interface may not be displayed or work correctly.",
+    "cancel": "",
+    "confirm": "Ignore and continue"
+  },
+  "safariLimitedSupport": {
+    "title": "Limited browser support",
+    "message": "You are using the Safari browser. Some features may not be available or may not work as expected due to limited support.",
+    "cancel": "",
+    "confirm": "Continue anyway"
+  }
+}

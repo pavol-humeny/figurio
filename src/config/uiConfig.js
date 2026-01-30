@@ -1,6 +1,11 @@
 import { globalConfig } from '@/config/globalConfig'
 
 export const uiConfig = {
+  // Window size
+  /* MIN window size (update) */
+  minWindowWidth: 1224,
+  minWindowHeight: 700,
+
   // Clickable button effect
   enableClickEffects: true,
   clickEffectScale: 0.95,

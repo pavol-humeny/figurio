@@ -5,8 +5,6 @@
 ## TODO - text 
 
 # Chyby
-- noise detection spúšťať len nad jpg
-- spraviť noise detection 
 - vylepšiť BG removal 
 - opraviť shape 
 - opraviť magnify area 
@@ -14,6 +12,7 @@
 - opraviť select
 - pri výbere z dropdown menu to neskryje tip 
 - image - pdf export neprevadza spravne font textu
+- statistiky - v grafe návštevnosti zobrazovať lokalizáciu
 
 ## TODO od J (userTesting2 - 12.1.2026)
 - FIXED - Zoom pomocou numerickej klávesnice

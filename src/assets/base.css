@@ -10,6 +10,7 @@
 :root {
   --font-family: 'Inter', sans-serif;
   --font-family-rc: 'RC';
+  /* MIN window size (update) */
   --min-window-width: 1224px;
   --min-window-height: 700px;
 

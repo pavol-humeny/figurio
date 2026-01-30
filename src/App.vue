@@ -24,6 +24,8 @@ import { useConsole } from './composables/common/useConsole'
 import ErrorModal from './components/modals/ErrorModal.vue'
 import { usePresetsStore } from './stores/presetsStore'
 import { useUserModeStore } from './stores/userModeStore'
+import { useConfirmModal } from './composables/modals/useConfirmModal'
+import { useI18n } from 'vue-i18n'
 
 const { warn } = useConsole()
 const { addUserVisit } = useApi()
@@ -36,7 +38,8 @@ const uiStore = useUiStore()
 const presetsStore = usePresetsStore()
 const userUuid = uiStore.userUuid
 const userModeStore = useUserModeStore()
-
+const { showConfirmModal } = useConfirmModal()
+const { t } = useI18n()
 /**
  * Prevents default behavior of ctrl + wheel scrolling.
  * Useful to block unintended browser zooming.
@@ -113,6 +116,70 @@ const blockContextMenu = (event) => {
   event.preventDefault()
 }
 
+
+/**
+ * Flag to track if window size warning has been shown
+ */
+let windowSizeWarningShown = false
+
+/**
+ * Check current window size against minimum requirements
+ */
+const checkWindowSize = () => {
+  const isWindowTooSmall =
+    window.innerWidth < uiConfig.minWindowWidth ||
+    window.innerHeight < uiConfig.minWindowHeight
+
+  if (isWindowTooSmall && !windowSizeWarningShown) {
+    windowSizeWarningShown = true
+
+    showConfirmModal(
+      t('general.windowIsTooSmall.title'),
+      t('general.windowIsTooSmall.message'),
+      t('general.windowIsTooSmall.cancel'),
+      t('general.windowIsTooSmall.confirm'),
+    )
+  }
+
+  if (!isWindowTooSmall) {
+    windowSizeWarningShown = false
+  }
+}
+
+/**
+ * Detect Safari browser (excluding Chrome on iOS)
+ *
+ * @returns {boolean}
+ */
+const isSafariBrowser = () => {
+  const ua = navigator.userAgent
+  return (
+    /safari/i.test(ua) &&
+    !/chrome|crios|android/i.test(ua)
+  )
+}
+
+/**
+ * Show Safari limited support warning (once per session)
+ */
+const checkSafariSupport = () => {
+  if (!isSafariBrowser()) return
+
+  if (localStorage.getItem(`${globalConfig.LOCAL_STORAGE_PREFIX}safariSupportWarningShown`) === 'true') {
+    return
+  }
+
+  showConfirmModal(
+    t('general.safariLimitedSupport.title'),
+    t('general.safariLimitedSupport.message'),
+    t('general.safariLimitedSupport.cancel'),
+    t('general.safariLimitedSupport.confirm'),
+  )
+
+  localStorage.setItem(`${globalConfig.LOCAL_STORAGE_PREFIX}safariSupportWarningShown`, 'true')
+}
+
+
 /**
  * Warns user before closing the tab if a file is loaded.
  * Prevents accidental data loss.
@@ -151,6 +218,10 @@ onMounted(async () => {
 
   window.addEventListener('keydown', blockDevToolsShortcuts)
   window.addEventListener('contextmenu', blockContextMenu)
+  window.addEventListener('resize', checkWindowSize)
+
+  checkWindowSize()
+  checkSafariSupport()
 
   // Reset localStorage (preferences) if app version has changed and in global config is set reset
   const savedVersion = localStorage.getItem(`${globalConfig.LOCAL_STORAGE_PREFIX}appVersion`)
@@ -235,6 +306,7 @@ onBeforeUnmount(() => {
   window.removeEventListener('wheel', blockWheelZoom)
   window.removeEventListener('keydown', blockDevToolsShortcuts)
   window.removeEventListener('contextmenu', blockContextMenu)
+  window.removeEventListener('resize', checkWindowSize)
 })
 
 

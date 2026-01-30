@@ -1,0 +1,14 @@
+{
+  "windowIsTooSmall": {
+    "title": "Okno je příliš malé",
+    "message": "Okno aplikace je menší než doporučená velikost. Některé části rozhraní se nemusí zobrazit nebo fungovat správně.",
+    "cancel": "",
+    "confirm": "Ignorovat a pokračovat"
+  },
+  "safariLimitedSupport": {
+    "title": "Omezená podpora prohlížeče",
+    "message": "Používáte prohlížeč Safari. Některé funkce nemusí být dostupné nebo nemusí fungovat správně z důvodu omezené podpory.",
+    "cancel": "",
+    "confirm": "Pokračovat i tak"
+  }
+}
