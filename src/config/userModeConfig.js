@@ -140,6 +140,7 @@ export const userModeConfig = {
     'statistics',
     'blockedTools',
     'notBlockDevTools',
+    'maxNumberOfOpenFiles',
   ],
 
   /** Email to access command mode */

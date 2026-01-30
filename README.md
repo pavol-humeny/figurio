@@ -1,11 +1,6 @@
 # Figurio
 
-## ITT obhajoba otázky 
-- ako funguje výpočet fit crop 
-- ako funguje noise detection 
-- ako funguje frame tool 
 
-- prečo nie typescript 
 
 ## TODO - text 
 
