@@ -76,7 +76,7 @@
 - FIXED - tab sa nedá posunúť úplne doprava 
 - MG - zoomuje len podklad a nie aj objekty 
 - select - ak sa vyberie mg tak to zostane na tom nástroji a neprepne sa to späť na select 
-- FIXED - feature tour - prorobenie krížika 
+- FIXED - feature tour - prerobenie krížika 
 
 ## TODO 
 - DONE - MOZNO VYMYSLIET LEPSIE (TERAZ SA NEZOBRAZUJE VOBEC) Hláška o tom že sa nedajú vykresliť tlačidlá telefónu sa vypisuje viac krát

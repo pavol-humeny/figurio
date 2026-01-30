@@ -8,6 +8,8 @@ import { useI18n } from 'vue-i18n'
 import ExplainItem from '../common/ExplainItem.vue'
 import DropdownSelect from '../common/DropdownSelect.vue'
 import { useEditorStore } from '@/stores/editorStore'
+import BaseIcon from '../icons/BaseIcon.vue'
+import ItemTip from '../common/ItemTip.vue'
 const { t } = useI18n()
 
 /**
@@ -36,6 +38,9 @@ const {
           <ExplainItem :text="$t('tools.grayscale.explain')" :title="$t('tools.grayscale.label')" position="left" />
           <div class="content-title">
             <p> {{ $t('tools.grayscale.settings.grayscaleType.label') }}</p>
+            <ItemTip :text="$t(`tools.grayscale.settings.options.${grayscaleType}Formula`)" position="bottom-left">
+              <BaseIcon name="IconInfo" size="18" color="var(--text-c)" />
+            </ItemTip>
           </div>
           <div class="content-wrapper">
             <DropdownSelect v-model="grayscaleType" :options="grayscaleOptions"
@@ -66,8 +71,7 @@ const {
 <style scoped>
 .grayscale-explain {
   text-align: center;
-  padding: 10px 30px;
+  padding: 10px 30px 0 30px;
   opacity: 0.75;
-  height: 75px;
 }
 </style>

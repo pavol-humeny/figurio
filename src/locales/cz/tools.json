@@ -362,11 +362,14 @@
       "options": {
         "none": "Žádný",
         "luminance": "Jas",
-        "luminanceExplained": "Vážený průměr založený na lidském vnímání (0.299 R + 0.587 G + 0.114 B)",
+        "luminanceExplained": "Vážený průměr založený na lidském vnímání",
+        "luminanceFormula": "0.299 R + 0.587 G + 0.114 B",
         "average": "Průměr",
-        "averageExplained": "Jednoduchý průměr hodnot RGB ((R + G + B) / 3)",
+        "averageExplained": "Jednoduchý průměr hodnot RGB",
+        "averageFormula": "(R + G + B) / 3",
         "lightness": "Světlost",
-        "lightnessExplained": "Průměr maximálních a minimálních hodnot RGB ((max(R, G, B) + min(R, G, B)) / 2)"
+        "lightnessExplained": "Průměr maximálních a minimálních hodnot RGB",
+        "lightnessFormula": "(max(R, G, B) + min(R, G, B)) / 2"
       }
     }
   },
