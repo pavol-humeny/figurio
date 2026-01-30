@@ -1151,11 +1151,19 @@ export function useFrameTool(imageStore, historyStore, viewportStore, t) {
 
     const svgWidth = w + fw * 2 - 2 * adjustmentForPhoneButtons
 
-    const svgHeight =
-      h +
-      fh * 2 +
-      ((hasHeader && !hasPhoneFrame) || (hasPhoneFrame && frame.phoneHeaderExpand) ? header : 0) +
-      (footer > 0 ? footer : 0)
+    let headerCorrection = 0
+    let headerCorrectionPosition = fh
+    if ((hasHeader && !hasPhoneFrame) || (hasPhoneFrame && frame.phoneHeaderExpand)) {
+      if (hasHeader && !hasPhoneFrame) {
+        headerCorrection = header - fh
+        headerCorrectionPosition = header
+      } else if (hasPhoneFrame && frame.phoneHeaderExpand) {
+        headerCorrection = header
+        headerCorrectionPosition = header + fh
+      }
+    }
+
+    const svgHeight = h + fh * 2 + headerCorrection + (footer > 0 ? footer - fh : 0)
 
     const phoneCornerRadius = Math.max(Math.floor(Math.min(svgWidth, svgHeight) * 0.06), 2)
 
@@ -1177,11 +1185,11 @@ export function useFrameTool(imageStore, historyStore, viewportStore, t) {
     }
 
     if (isLandscapePhone) {
-      el.style.left = `-${(hasHeader && !hasPhoneFrame) || (hasPhoneFrame && frame.phoneHeaderExpand) ? header + fh : fh}px`
+      el.style.left = `-${headerCorrectionPosition}px`
       el.style.top = `-${fw - adjustmentForPhoneButtons}px`
     } else {
       el.style.left = `-${fw - adjustmentForPhoneButtons}px`
-      el.style.top = `-${(hasHeader && !hasPhoneFrame) || (hasPhoneFrame && frame.phoneHeaderExpand) ? header + fh : fh}px`
+      el.style.top = `-${headerCorrectionPosition}px`
     }
 
     // Recalculate if phone buttons can be drawn
@@ -2638,7 +2646,7 @@ export function useFrameTool(imageStore, historyStore, viewportStore, t) {
       frame.type,
       frame.phoneHeaderExpand,
     )
-    const phoneWithButtons = phoneFrame && frame.phoneButtonsEnabled
+    const phoneWithButtons = frame.phoneButtonsEnabled
     const isLandscapePhoneValue = isLandscapePhone(frame.type, frame.phoneFrameOrientation)
 
     // Target size (image inside frame)
@@ -2648,7 +2656,9 @@ export function useFrameTool(imageStore, historyStore, viewportStore, t) {
     let finalWidth = fileDimensions.width
     let finalHeight = fileDimensions.height
 
-    if (!phoneWithButtons) {
+    console.warn('Initial file dimensions:', { targetWidth, targetHeight, finalWidth, finalHeight })
+
+    if (phoneFrame && !phoneWithButtons) {
       if (isLandscapePhoneValue) {
         finalHeight -= (frame.width / 3) * 2 // remove space for side buttons if not drawn
       } else {
@@ -2726,6 +2736,15 @@ export function useFrameTool(imageStore, historyStore, viewportStore, t) {
         }
       }
     }
+
+    console.warn('Calculated frame layout:', {
+      finalWidth,
+      finalHeight,
+      targetWidth,
+      targetHeight,
+      offsetX,
+      offsetY,
+    })
 
     return {
       finalWidth,

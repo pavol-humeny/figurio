@@ -76,6 +76,11 @@ export const keyboardShortcuts = [
   },
   {
     keys: ['ctrl', 's'],
+    action: 'exportFileFunction',
+    description: 'Export file',
+  },
+  {
+    keys: ['ctrl', 's'],
     action: 'openExportToolSettings',
     description: 'Save file',
   },

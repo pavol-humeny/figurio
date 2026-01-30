@@ -153,6 +153,7 @@ export function useExportToolSettings(
    */
   const openExportToolSettings = async () => {
     if (isVisible.value) return
+    if (editorStore.isExportModalOpen === true) return
 
     isVisible.value = true
 
@@ -211,6 +212,7 @@ export function useExportToolSettings(
    */
   const exportFileFunction = () => {
     if (!isVisible.value) return
+    if (editorStore.isExportModalOpen === false) return
 
     const success = exportFile()
     if (!success) {
