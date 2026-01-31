@@ -275,12 +275,6 @@ onMounted(async () => {
 
   await router.isReady() // wait until router is fully loaded
 
-  // If the app is not running show MaintenanceView
-  if (!globalConfig.isRunning) {
-    router.replace({ name: 'maintenance' })
-    return
-  }
-
   // Redirect to home view on reload
   if (route.name !== 'home' && route.name !== 'statistics') {
     warn('App reloaded, redirecting to home view: ' + route.name)

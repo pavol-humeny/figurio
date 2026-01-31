@@ -1,6 +1,10 @@
 # Figurio
 
-
+- nahratie obrázku - obrázok má dlhé meno 
+- šírka rámika je nula 
+- problém pri exporte jpeg 
+- side panel odreže niektoré veci pri resete 
+- v žiadnom rámiku je šírka rámu 
 
 ## TODO - text 
 

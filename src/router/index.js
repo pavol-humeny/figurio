@@ -1,13 +1,7 @@
 import { createRouter, createWebHashHistory } from 'vue-router'
 import HomeView from '@/views/HomeView.vue'
+import { globalConfig } from '@/config/globalConfig.js'
 
-/**
- * App router with views:
- * - HomeView ("/")
- * - EditorView ("/Editor")
- * - MaintenanceView ("/Maintenance")
- * - StatisticsView ("/Statistics")
- */
 const router = createRouter({
   history: createWebHashHistory(import.meta.env.BASE_URL),
   routes: [
@@ -37,6 +31,20 @@ const router = createRouter({
       component: () => import('@/views/MaintenanceView.vue'),
     },
   ],
+})
+
+/**
+ * Global maintenance guard
+ */
+router.beforeEach((to) => {
+  if (!globalConfig.isRunning && to.name !== 'maintenance') {
+    return { name: 'maintenance', replace: true }
+  }
+
+  // Optional: if app is running again, prevent staying on maintenance
+  if (globalConfig.isRunning && to.name === 'maintenance') {
+    return { name: 'home', replace: true }
+  }
 })
 
 export default router
