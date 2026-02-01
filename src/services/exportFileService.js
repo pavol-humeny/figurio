@@ -49,9 +49,7 @@ export function exportFileService(imageStore, editorStore, historyStore, viewpor
           showToastModal(
             'success',
             t('imageStore.toast.successFileExported.title'),
-            t('imageStore.toast.successFileExported.message', {
-              fileName: imageStore.newFileName + '.' + imageStore.newFileFormat,
-            }),
+            t('imageStore.toast.successFileExported.message'),
           )
         }
         image.src = reader.result
@@ -77,9 +75,7 @@ export function exportFileService(imageStore, editorStore, historyStore, viewpor
       showToastModal(
         'success',
         t('imageStore.toast.successFileExported.title'),
-        t('imageStore.toast.successFileExported.message', {
-          fileName: imageStore.newFileName + '.' + imageStore.newFileFormat,
-        }),
+        t('imageStore.toast.successFileExported.message'),
       )
     }
     image.src = imageStore.previewUrl

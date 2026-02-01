@@ -6,11 +6,11 @@
     },
     "errorFileTooLargeSize": {
       "title": "File too large",
-      "message": "The file {fileName} exceeds the maximum allowed size of {maxSize} MB. Please upload a smaller file."
+      "message": "The file exceeds the maximum allowed size of {maxSize} MB. Please upload a smaller file."
     },
     "errorInvalidFileDimensions": {
       "title": "File has invalid dimensions",
-      "message": "The file {fileName} has invalid dimensions. Please upload a file with dimensions from {minWidth}x{minHeight} to {maxWidth}x{maxHeight} pixels."
+      "message": "The file has invalid dimensions. Please upload a file with dimensions from {minWidth}x{minHeight} to {maxWidth}x{maxHeight} pixels."
     },
     "errorMultipleFiles": {
       "title": "Multiple files selected",
@@ -22,7 +22,7 @@
     },
     "successFileUploaded": {
       "title": "File uploaded successfully",
-      "message": "The file {fileName} has been uploaded successfully."
+      "message": "The file has been uploaded successfully."
     },
     "successFileNameUpdated": {
       "title": "File name updated",
@@ -42,7 +42,7 @@
     },
     "successFileExported": {
       "title": "File exported successfully",
-      "message": "The file {fileName} has been exported."
+      "message": "The file has been exported."
     },
     "successFileCopiedToClipboard": {
       "title": "File copied to clipboard",

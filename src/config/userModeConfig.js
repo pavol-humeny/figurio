@@ -9,6 +9,8 @@ export const userModeConfig = {
   // 'statistics',
   // 'blockedTools',
   // 'notBlockDevTools',
+  // 'maxNumberOfOpenFiles',
+  // 'doNotShowInitialWarnings',
 
   // UPDATE new random event
   listOfCommands: [
@@ -141,6 +143,7 @@ export const userModeConfig = {
     'blockedTools',
     'notBlockDevTools',
     'maxNumberOfOpenFiles',
+    'doNotShowInitialWarnings',
   ],
 
   /** Email to access command mode */

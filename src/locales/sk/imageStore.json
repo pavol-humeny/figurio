@@ -6,11 +6,11 @@
     },
     "errorFileTooLargeSize": {
       "title": "Soubor je příliš velký",
-      "message": "Soubor {fileName} překračuje maximální povolenou velikost {maxSize} MB. Nahrajte prosím menší soubor."
+      "message": "Soubor překračuje maximální povolenou velikost {maxSize} MB. Nahrajte prosím menší soubor."
     },
     "errorInvalidFileDimensions": {
       "title": "Súbor má neplatné rozmery",
-      "message": "Súbor {fileName} má neplatné rozmery. Nahrajte prosím súbor s rozmermi od {minWidth}x{minHeight} do {maxWidth}x{maxHeight} pixelov."
+      "message": "Súbor má neplatné rozmery. Nahrajte prosím súbor s rozmermi od {minWidth}x{minHeight} do {maxWidth}x{maxHeight} pixelov."
     },
     "errorMultipleFiles": {
       "title": "Vybrané viacero súborov",
@@ -22,7 +22,7 @@
     },
     "successFileUploaded": {
       "title": "Súbor bol úspešne nahraný",
-      "message": "Súbor {fileName} bol úspešne nahraný."
+      "message": "Súbor bol úspešne nahraný."
     },
     "successFileNameUpdated": {
       "title": "Názov súboru aktualizovaný",
@@ -42,7 +42,7 @@
     },
     "successFileExported": {
       "title": "Súbor bol úspešne exportovaný",
-      "message": "Súbor {fileName} bol exportovaný."
+      "message": "Súbor bol exportovaný."
     },
     "successFileCopiedToClipboard": {
       "title": "Súbor skopírovaný do schránky",

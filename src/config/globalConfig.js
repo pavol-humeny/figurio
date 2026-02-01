@@ -10,7 +10,7 @@ export const globalConfig = {
   },
 
   // If app is running
-  isRunning: false,
+  isRunning: true,
 
   // What to reset on version change
   resetOnVersionChange: {
@@ -102,7 +102,7 @@ export const globalConfig = {
   // If visit during maintenance email should be sent
   sendVisitDuringMaintenanceEmail: true,
   // If usage stats should be sent when running on localhost
-  sendUsageStatsOnLocalhost: true,
+  sendUsageStatsOnLocalhost: false,
 
   // LocalStorage prefix
   LOCAL_STORAGE_PREFIX: 'figurio_',

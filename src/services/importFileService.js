@@ -132,7 +132,6 @@ export function importFileService(
         'error',
         t('imageStore.toast.errorFileTooLargeSize.title'),
         t('imageStore.toast.errorFileTooLargeSize.message', {
-          fileName: file.name,
           maxSize: editorConfig.maxFileSize,
         }),
       )
@@ -236,7 +235,6 @@ export function importFileService(
         'error',
         t('imageStore.toast.errorInvalidFileDimensions.title'),
         t('imageStore.toast.errorInvalidFileDimensions.message', {
-          fileName,
           maxWidth: MAX_WIDTH,
           maxHeight: MAX_HEIGHT,
           minWidth: MIN_WIDTH,
@@ -341,7 +339,7 @@ export function importFileService(
       showToastModal(
         'success',
         t('imageStore.toast.successFileUploaded.title'),
-        t('imageStore.toast.successFileUploaded.message', { fileName: file.name }),
+        t('imageStore.toast.successFileUploaded.message'),
       )
 
       addUserEvent('uploadImage', {

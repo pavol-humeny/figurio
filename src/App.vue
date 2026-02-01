@@ -126,6 +126,8 @@ let windowSizeWarningShown = false
  * Check current window size against minimum requirements
  */
 const checkWindowSize = () => {
+  if (userModeStore.hasUserAccessToFeature('doNotShowInitialWarnings')) return
+
   const isWindowTooSmall =
     window.innerWidth < uiConfig.minWindowWidth ||
     window.innerHeight < uiConfig.minWindowHeight
@@ -152,6 +154,8 @@ const checkWindowSize = () => {
  * @returns {boolean}
  */
 const isSafariBrowser = () => {
+  if (userModeStore.hasUserAccessToFeature('doNotShowInitialWarnings')) return
+
   const ua = navigator.userAgent
   return (
     /safari/i.test(ua) &&
