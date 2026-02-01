@@ -59,7 +59,8 @@ const {
           </div>
 
           <!-- Quality setting -->
-          <div class="export-settings-item" v-if="fileFormat === 'jpg' || fileFormat === 'webp'">
+          <div class="export-settings-item"
+            v-if="fileFormat === 'jpg' || fileFormat === 'webp' || fileFormat === 'jpeg'">
             <label for="file-quality">{{
               $t('tools.export.settings.general.fileQuality.label')
               }}</label>
@@ -103,7 +104,7 @@ const {
           </div>
 
           <!-- Expected file size -->
-          <div v-if="fileFormat === 'png' || fileFormat === 'jpg' || fileFormat === 'webp'"
+          <div v-if="fileFormat === 'png' || fileFormat === 'jpg' || fileFormat === 'webp' || fileFormat === 'jpeg'"
             class="export-settings-item">
             <label>{{ $t('tools.export.settings.general.expectedFileSize.label') }}</label>
             <div class="export-settings-item-value ">

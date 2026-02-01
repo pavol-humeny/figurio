@@ -10,7 +10,7 @@ export const globalConfig = {
   },
 
   // If app is running
-  isRunning: false,
+  isRunning: true,
 
   // What to reset on version change
   resetOnVersionChange: {
