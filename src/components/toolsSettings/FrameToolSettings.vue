@@ -159,7 +159,8 @@ const {
         </div>
 
         <!-- Frame width px -->
-        <div v-if="(selectedFrameVariant === 'frameSolid' || drawOutline) && !useMillimeters"
+        <div
+          v-if="(selectedFrameVariant === 'frameSolid' || (drawOutline && isFrameWithMultiplier(selectedFrameVariant))) && !useMillimeters"
           class="settings-content-wrapper">
           <div class="content-wrapper">
             <div class="content-aligned two-items">
@@ -176,7 +177,7 @@ const {
 
         <!-- Frame width mm -->
         <div
-          v-if="((selectedFrameVariant === 'frameSolid' || drawOutline) || isPhoneFrame(selectedFrameVariant)) && useMillimeters"
+          v-if="(selectedFrameVariant === 'frameSolid' || (drawOutline && isFrameWithMultiplier(selectedFrameVariant)) || isPhoneFrame(selectedFrameVariant)) && useMillimeters"
           class="settings-content-wrapper">
           <div class="content-wrapper">
             <div class="content-aligned two-items">

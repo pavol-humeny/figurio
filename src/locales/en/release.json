@@ -4,6 +4,16 @@
     "items": []
   },
   "versions":{
+    "5.8.2":{
+      "label": "5.8.2",
+      "date":"1.2. 2025",
+      "bugFixes": {
+        "items": [
+          "Fix issue with incorrect frame size when applying frame",
+          "File can be exported as jpeg format"
+        ]
+      }
+    },
     "5.8.1":{
       "label": "5.8.1",
       "date":"30.1. 2025",

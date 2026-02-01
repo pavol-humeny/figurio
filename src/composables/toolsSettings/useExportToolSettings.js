@@ -101,6 +101,10 @@ export function useExportToolSettings(
       value: 'jpg',
     },
     {
+      label: 'JPEG',
+      value: 'jpeg',
+    },
+    {
       label: 'WEBP',
       value: 'webp',
     },
