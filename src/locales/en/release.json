@@ -10,7 +10,8 @@
       "bugFixes": {
         "items": [
           "Fix issue with incorrect frame size when applying frame",
-          "File can be exported as jpeg format"
+          "File can be exported as jpeg format",
+          "Set correct value of right panel min width when resetting size"
         ]
       }
     },

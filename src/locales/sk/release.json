@@ -4,6 +4,17 @@
     "items": []
   },
   "versions": {
+    "5.8.2":{
+      "label": "5.8.2",
+      "date":"1.2. 2025",
+      "bugFixes": {
+        "items": [
+          "Oprava problému s nesprávnou veľkosťou rámčeka pri aplikácii rámčeka",
+          "Súbor je možné exportovať vo formáte jpeg",
+          "Nastavenie správnej hodnoty minimálnej šírky pravého panela pri obnovení veľkosti"
+        ]
+      }
+    },
     "5.8.1":{
       "label": "5.8.1",
       "date":"30.1. 2025",
