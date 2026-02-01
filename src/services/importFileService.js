@@ -219,7 +219,7 @@ export function importFileService(
    * @param {string} fileName - File name (for error message)
    * @returns {boolean} - True if dimensions are within limits
    */
-  const checkFileDimensions = (width, height, fileName) => {
+  const checkFileDimensions = (width, height) => {
     // Skip detection
     if (userModeStore.hasUserAccessToFeature('fileDimensions')) {
       return true
@@ -316,8 +316,8 @@ export function importFileService(
           // Re-render restored state (same as when user clicks a tab)
           await renderUpTo(imageStore.renderPipeline.currentOpIndex, { t, imageStore })
 
-          // If you ever hide overlay-canvas somewhere, ensure it is visible
-          const overlayCanvas = document.querySelector('.overlay-canvas')
+          // If overlay-canvas-artifacts was hide somewhere, ensure it is visible
+          const overlayCanvas = document.querySelector('.overlay-canvas-artifacts')
           if (overlayCanvas) overlayCanvas.style.display = ''
         } else {
           // No previous tab - just close file state
@@ -428,7 +428,7 @@ export function importFileService(
     }).promise
 
     // Check dimensions
-    if (!checkFileDimensions(viewport.width, viewport.height, file.name)) {
+    if (!checkFileDimensions(viewport.width, viewport.height)) {
       imageStore.closeFile()
       return false
     }
@@ -470,7 +470,7 @@ export function importFileService(
     imageStore.file = file
 
     // Check dimensions
-    if (!checkFileDimensions(img.width, img.height, file.name)) {
+    if (!checkFileDimensions(img.width, img.height)) {
       imageStore.closeFile()
       return false
     }
@@ -503,7 +503,7 @@ export function importFileService(
     warn('calculateArtifacts called from setFile - image loaded')
 
     // Calculate image artifacts (noise)
-    const { calculateArtifacts } = useImageAnalysis(imageStore, workspaceStore, uiStore, t)
+    const { calculateArtifacts } = useImageAnalysis(imageStore, viewportStore, uiStore, t)
 
     await calculateArtifacts()
 

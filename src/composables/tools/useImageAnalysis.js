@@ -1,6 +1,6 @@
 import { globalConfig } from '@/config/globalConfig'
 import { viewportConfig } from '@/config/viewportConfig'
-import { computed, ref } from 'vue'
+import { computed, ref, watch } from 'vue'
 import { useConsole } from '@/composables/common/useConsole.js'
 const { log } = useConsole()
 import { useApi } from '@/composables/common/useApi'
@@ -18,7 +18,7 @@ const noiseLevel = ref(0)
 /**
  * Composable for analyzing image artifacts (noise) and managing overlay display
  */
-export function useImageAnalysis(imageStore, workspaceStore, uiStore, t) {
+export function useImageAnalysis(imageStore, viewportStore, uiStore, t) {
   const { addWarning, isWarningDefined, hideWarningById, deleteWarningById } = useWarningList(
     imageStore,
     uiStore,
@@ -213,7 +213,7 @@ export function useImageAnalysis(imageStore, workspaceStore, uiStore, t) {
     const noiseDetected = noiseRatio > minNoisyPixelsRatio
 
     const baseCanvas = document.querySelector('.image-canvas')
-    const overlayCanvas = document.querySelector('.overlay-canvas')
+    const overlayCanvas = document.querySelector('.overlay-canvas-artifacts')
     if (!baseCanvas || !overlayCanvas) return
 
     overlayCanvas.style.display = 'block'
@@ -264,6 +264,29 @@ export function useImageAnalysis(imageStore, workspaceStore, uiStore, t) {
   }
 
   /**
+   * Watch for changes in pixelate mode or zoom level and update image rendering style
+   */
+  watch(
+    [() => uiStore.viewportPixelateMode, () => viewportStore.zoomLevel],
+    ([mode, zoom]) => {
+      // Get overlay canvas element
+      const canvas = document.getElementsByClassName('overlay-canvas-artifacts')[0]
+
+      if (!canvas) return
+
+      if (mode === 'always') {
+        canvas.style.imageRendering = 'pixelated'
+      } else if (mode === 'never') {
+        canvas.style.imageRendering = 'auto'
+      } else if (mode === 'auto') {
+        canvas.style.imageRendering =
+          zoom > viewportConfig.pixelateAutoZoomThreshold ? 'pixelated' : 'auto'
+      }
+    },
+    { immediate: true },
+  )
+
+  /**
    * Hide artifacts overlay on user click
    */
   const hideArtifactsClick = () => {
@@ -275,7 +298,7 @@ export function useImageAnalysis(imageStore, workspaceStore, uiStore, t) {
    * Hide artifacts overlay
    */
   const hideArtifacts = () => {
-    const overlay = document.querySelector('.overlay-canvas')
+    const overlay = document.querySelector('.overlay-canvas-artifacts')
     if (overlay) {
       overlay.getContext('2d').clearRect(0, 0, overlay.width, overlay.height)
     }

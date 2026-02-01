@@ -4,9 +4,9 @@ import DefaultButton from '../common/DefaultButton.vue'
 import ExplainItem from '../common/ExplainItem.vue'
 import { useImageAnalysis } from '@/composables/tools/useImageAnalysis';
 import { useImageStore } from '@/stores/imageStore';
-import { useWorkspaceStore } from '@/stores/workspaceStore';
 import { useUiStore } from '@/stores/uiStore';
 import { useI18n } from 'vue-i18n'
+import { useViewportStore } from '@/stores/viewportStore';
 
 const { t } = useI18n()
 
@@ -14,8 +14,8 @@ const { t } = useI18n()
  * Logic of the image analysis tool settings panel
  */
 const {
-  analyzeNoise,i
-} = useImageAnalysis(useImageStore(), useWorkspaceStore(), useUiStore(), t)
+  analyzeNoise,
+} = useImageAnalysis(useImageStore(), useViewportStore(), useUiStore(), t)
 
 </script>
 

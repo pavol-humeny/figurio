@@ -139,7 +139,7 @@ const {
  */
 useImageAnalysis(
   useImageStore(),
-  useWorkspaceStore(),
+  useViewportStore(),
   useUiStore(),
   t,
 )
@@ -273,7 +273,8 @@ const cursorStyle = computed(() => {
           <div v-else-if="imageStore.fileType === 'pdf'" ref="pdfContainerRef" class="pdf-viewer"></div>
 
           <!-- Canvas for artifacts -->
-          <canvas v-if="imageStore.fileType === 'image'" ref="overlayCanvasRef" class="overlay-canvas"></canvas>
+          <canvas v-if="imageStore.fileType === 'image'" ref="overlayCanvasRef"
+            class="overlay-canvas-artifacts"></canvas>
 
           <!-- Brush Tool Canvas -->
           <BrushToolCanvas :style="{
@@ -403,7 +404,7 @@ const cursorStyle = computed(() => {
         </div>
         <div v-if="mouseX !== null" class="ruler-cursor-mark horizontal" :style="{ left: mouseX + 'px' }">
           <span class="ruler-cursor-label horizontal" :class="{ 'active': cursorPosXSameAsImageWidth }">{{ cursorPosX
-          }}</span>
+            }}</span>
         </div>
 
       </div>
@@ -416,7 +417,7 @@ const cursorStyle = computed(() => {
         </div>
         <div v-if="mouseY !== null" class="ruler-cursor-mark vertical" :style="{ top: mouseY + 'px' }">
           <span class="ruler-cursor-label vertical" :class="{ 'active': cursorPosYSameAsImageHeight }">{{ cursorPosY
-          }}</span>
+            }}</span>
         </div>
       </div>
     </div>
@@ -477,7 +478,7 @@ const cursorStyle = computed(() => {
 .image-canvas,
 .image-svg,
 .frame-svg,
-.overlay-canvas,
+.overlay-canvas-artifacts,
 .pdf-viewer,
 .overlay-image-canvas {
   position: absolute;
@@ -490,7 +491,7 @@ const cursorStyle = computed(() => {
   pointer-events: none;
 }
 
-.overlay-canvas {
+.overlay-canvas-artifacts {
   opacity: 0;
   animation: overlayBlink 2s infinite;
 }

@@ -46,7 +46,7 @@ import { useImportModal } from '@/composables/modals/useImportModal';
 import { useReleaseModal } from '@/composables/modals/useReleaseModal';
 import { useUserModeStore } from '@/stores/userModeStore';
 
-const { hideArtifacts } = useImageAnalysis(useImageStore(), useWorkspaceStore(), useUiStore(), t)
+const { hideArtifacts } = useImageAnalysis(useImageStore(), useViewportStore(), useUiStore(), t)
 
 const { undo, redo } = useUndoRedo(useHistoryStore(), useImageStore(), useUiStore(), t)
 const { zoomIn, zoomOut, resetZoom, toggleZoomMode } = useZoomControl(useViewportStore(), useImageStore(), t)

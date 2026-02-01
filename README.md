@@ -3,6 +3,8 @@
 ## TODO - text 
 
 # Chyby
+- brush nefunguje na klikanie ale len na tahanie
+- presunut noise detection konštanty do editor config a nie viewport config
 - vylepšiť BG removal 
 - opraviť shape 
 - opraviť magnify area 

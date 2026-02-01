@@ -1503,7 +1503,7 @@ export const useImageStore = defineStore('imageStore', {
      * @returns {void}
      */
     async applyFullSnapshot(snapshot) {
-      const { createImageWarning } = useImageAnalysis(this, useWorkspaceStore(), useUiStore(), null)
+      const { createImageWarning } = useImageAnalysis(this, useViewportStore(), useUiStore(), null)
 
       // FILE METADATA
       this.file = snapshot.file
