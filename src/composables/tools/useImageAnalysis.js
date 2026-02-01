@@ -68,7 +68,7 @@ export function useImageAnalysis(imageStore, workspaceStore, uiStore, t) {
     const borderSize = viewportConfig.borderSize
 
     // Adjust sensitivity for PNG images (lossless compression)
-    if (imageStore.fileType === 'png') {
+    if (imageStore.fileFormat === 'png') {
       minNoisyPixelsRatio *= 10
     }
 

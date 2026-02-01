@@ -116,7 +116,7 @@ export function useFrameTool(imageStore, historyStore, viewportStore, t) {
   /**
    * Frame width
    */
-  const frameWidth = ref(imageStore.frame.width || 0)
+  const frameWidth = ref(imageStore.frame.width)
   watch(
     () => imageStore.frame.width,
     (newWidth) => {
@@ -213,6 +213,9 @@ export function useFrameTool(imageStore, historyStore, viewportStore, t) {
     get: () => imageStore.frame.outlineEnabled,
     set: (value) => {
       frameWidth.value = calculateInitialFrameWidth()
+      const PxPerMm = viewportStore.getPxPerMmFitZoom
+      frameWidthMm.value = Math.max(frameWidth.value / PxPerMm, 1)
+
       imageStore.frame.outlineEnabled = value
     },
   })
@@ -261,7 +264,7 @@ export function useFrameTool(imageStore, historyStore, viewportStore, t) {
    * Phone battery icon style
    */
   const phoneBatteryIconStyle = computed({
-    get: () => imageStore.frame.phoneBatteryIconStyle || 'style3',
+    get: () => imageStore.frame.phoneBatteryIconStyle,
     set: (value) => {
       imageStore.frame.phoneBatteryIconStyle = value
     },
@@ -533,6 +536,8 @@ export function useFrameTool(imageStore, historyStore, viewportStore, t) {
     imageStore.frame.type = value
     nextTick(async () => {
       frameWidth.value = calculateInitialFrameWidth()
+      const PxPerMm = viewportStore.getPxPerMmFitZoom
+      frameWidthMm.value = Math.max(frameWidth.value / PxPerMm, 1)
 
       if (isFrameWithHeader(value) || isFrameWithFooter(value)) {
         const PxPerMm = viewportStore.getPxPerMmFitZoom
@@ -793,7 +798,7 @@ export function useFrameTool(imageStore, historyStore, viewportStore, t) {
         1.5 *
         2
     } else {
-      width = 0
+      width = 1
     }
     return width
   }
@@ -819,7 +824,7 @@ export function useFrameTool(imageStore, historyStore, viewportStore, t) {
    * @param {number} width - New frame width
    */
   const setFrameWidth = (width) => {
-    if (width < 0) {
+    if (width <= 0) {
       frameWidth.value = calculateInitialFrameWidth()
     }
     applyFrame()
@@ -830,7 +835,7 @@ export function useFrameTool(imageStore, historyStore, viewportStore, t) {
    * @param {number} width - New frame width mm
    */
   const setFrameWidthMm = (width) => {
-    if (width < 0) {
+    if (width <= 0) {
       const PxPerMm = viewportStore.getPxPerMmFitZoom
 
       frameWidth.value = calculateInitialFrameWidth()
@@ -844,7 +849,7 @@ export function useFrameTool(imageStore, historyStore, viewportStore, t) {
    * Set header size
    */
   const setHeaderSize = (size) => {
-    if (size < 0) {
+    if (size <= 0) {
       headerSize.value = calculateInitialHeaderFooterSize()
     }
     applyFrame()
@@ -854,7 +859,7 @@ export function useFrameTool(imageStore, historyStore, viewportStore, t) {
    * Set header size mm
    */
   const setHeaderSizeMm = (size) => {
-    if (size < 0) {
+    if (size <= 0) {
       const PxPerMm = viewportStore.getPxPerMmFitZoom
 
       headerSize.value = calculateInitialHeaderFooterSize()
@@ -871,7 +876,7 @@ export function useFrameTool(imageStore, historyStore, viewportStore, t) {
    * Set footer size
    */
   const setFooterSize = (size) => {
-    if (size < 0) {
+    if (size <= 0) {
       footerSize.value = calculateInitialHeaderFooterSize()
     }
     applyFrame()
@@ -881,7 +886,7 @@ export function useFrameTool(imageStore, historyStore, viewportStore, t) {
    * Set footer size mm
    */
   const setFooterSizeMm = (size) => {
-    if (size < 0) {
+    if (size <= 0) {
       const PxPerMm = viewportStore.getPxPerMmFitZoom
       footerSize.value = calculateInitialHeaderFooterSize()
       footerSizeMm.value = Math.max(footerSize.value / PxPerMm, 1)
