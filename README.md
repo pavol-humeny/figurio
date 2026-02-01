@@ -1,7 +1,5 @@
 # Figurio
 
-- side panel odreže niektoré veci pri resete 
-
 ## TODO - text 
 
 # Chyby

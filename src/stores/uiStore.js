@@ -237,9 +237,11 @@ export const useUiStore = defineStore('ui', {
       if (width > this.rightPanelWidth) {
         this.setRightPanelWidth(width)
         this.rightPanelDefaultWidth = width
+        this.rightPanelMinWidth = width
       } else {
         // this.setRightPanelWidth(this.rightPanelDefaultWidth)
         this.rightPanelDefaultWidth = uiConfig.rightPanelDefaultWidth
+        this.rightPanelMinWidth = uiConfig.rightPanelMinWidth
       }
     },
 
