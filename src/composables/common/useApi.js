@@ -324,6 +324,44 @@ export function useApi() {
     }
   }
 
+  /**
+   * Sends visit during maintenance email
+   * @param {string} userId - UUID of the user
+   */
+  const sendVisitDuringMaintenanceEmail = async (userId) => {
+    if (!globalConfig.sendUsageStats) return
+
+    if (!globalConfig.sendVisitDuringMaintenanceEmail) return
+
+    if (isLocalhost() && !globalConfig.sendUsageStatsOnLocalhost) return
+
+    if (!userId) {
+      warn('Missing userId for visit during maintenance email')
+      return
+    }
+
+    try {
+      // Get public IP
+      const ipRes = await fetch('https://api.ipify.org?format=json')
+      const { ip } = await ipRes.json()
+
+      const res = await fetch(`${API_BASE}/api/contact/${userId}/visitDuringMaintenance`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ ip }),
+      })
+
+      if (res.ok) {
+        log(`Visit during maintenance email successfully sent for user ${userId}`)
+      } else {
+        const msg = await res.text()
+        warn(`Failed to send visit during maintenance email: ${msg}`)
+      }
+    } catch (err) {
+      error('Network error while sending visit during maintenance email:', err)
+    }
+  }
+
   return {
     addUserVisit,
     addUserEvent,
@@ -340,5 +378,6 @@ export function useApi() {
     getOpenModal,
     getKeyboardShortcuts,
     sendContactFormEmail,
+    sendVisitDuringMaintenanceEmail,
   }
 }

@@ -99,8 +99,10 @@ export const globalConfig = {
   API_BASE: 'https://figurio.online',
   // If usage stats should be sent to the API
   sendUsageStats: true,
+  // If visit during maintenance email should be sent
+  sendVisitDuringMaintenanceEmail: true,
   // If usage stats should be sent when running on localhost
-  sendUsageStatsOnLocalhost: false,
+  sendUsageStatsOnLocalhost: true,
 
   // LocalStorage prefix
   LOCAL_STORAGE_PREFIX: 'figurio_',

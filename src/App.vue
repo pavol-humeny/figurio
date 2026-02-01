@@ -28,7 +28,7 @@ import { useConfirmModal } from './composables/modals/useConfirmModal'
 import { useI18n } from 'vue-i18n'
 
 const { warn } = useConsole()
-const { addUserVisit } = useApi()
+const { addUserVisit, sendVisitDuringMaintenanceEmail } = useApi()
 
 const router = useRouter()
 const route = useRoute()
@@ -288,7 +288,13 @@ onMounted(async () => {
     document.documentElement.style.setProperty('--primary-c', primaryColor)
   }
 
-  addUserVisit(userUuid)
+  // Send visit during maintenance email if app is not running
+  if (!globalConfig.isRunning) {
+    sendVisitDuringMaintenanceEmail(userUuid)
+  } else {
+    // Log user visit
+    addUserVisit(userUuid)
+  }
 })
 
 /**
