@@ -468,6 +468,7 @@ const cursorStyle = computed(() => {
 .viewport-content.hide-is-loading {
   background: none;
   box-shadow: none;
+  opacity: 0;
 }
 
 .viewport-content.hide-is-applying {

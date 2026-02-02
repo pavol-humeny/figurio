@@ -311,8 +311,6 @@ export function importFileService(
           // Use switchToTab so activeTabIndex + restore is consistent everywhere
           await workspaceStore.switchToTab(previousTabIndex)
 
-          viewportStore.shouldFitToScreen = true
-
           // Re-render restored state (same as when user clicks a tab)
           await renderUpTo(imageStore.renderPipeline.currentOpIndex, { t, imageStore })
 
@@ -354,8 +352,8 @@ export function importFileService(
     } catch (e) {
       console.error(e)
     } finally {
-      uiStore.isLoading = false
       viewportStore.shouldFitToScreen = true
+      uiStore.isLoading = false
       workspaceStore.newTabWasAdded = false
     }
   }
