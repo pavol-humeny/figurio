@@ -497,6 +497,15 @@ export function useBackgroundRemovalTool(
   }
 
   /**
+   * Set background color for removal
+   * @param {string} color - HEX color string
+   */
+  const setBackgroundColor = (color) => {
+    colorBackgroundColor.value = color
+    selectColorClick()
+  }
+
+  /**
    * Mark background color on canvas
    */
   const selectColorClick = () => {
@@ -893,5 +902,6 @@ export function useBackgroundRemovalTool(
     autoRemovalThreshold,
     // applyBackgroundRemovalRender,
     someAreaIsSelected,
+    setBackgroundColor,
   }
 }

@@ -47,6 +47,7 @@ const {
   boundaryOffset,
   autoRemovalThreshold,
   someAreaIsSelected,
+  setBackgroundColor
 } = useBackgroundRemovalTool(
   useImageStore(),
   useHistoryStore(),
@@ -93,7 +94,8 @@ const tabs = ['auto', 'manual', 'color']
                 </p>
               </div>
               <ColorPicker v-model="colorBackgroundColor"
-                :tip="$t('tools.backgroundRemoval.settings.color.backgroundColor.tip')" position="bottom-left" />
+                :tip="$t('tools.backgroundRemoval.settings.color.backgroundColor.tip')" position="bottom-left"
+                @commit="setBackgroundColor(colorBackgroundColor)" />
             </div>
           </div>
 
