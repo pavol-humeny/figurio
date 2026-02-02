@@ -2742,15 +2742,6 @@ export function useFrameTool(imageStore, historyStore, viewportStore, t) {
       }
     }
 
-    console.warn('Calculated frame layout:', {
-      finalWidth,
-      finalHeight,
-      targetWidth,
-      targetHeight,
-      offsetX,
-      offsetY,
-    })
-
     return {
       finalWidth,
       finalHeight,

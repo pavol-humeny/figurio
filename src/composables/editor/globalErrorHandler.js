@@ -39,10 +39,16 @@ export function setupGlobalErrorHandling(app) {
 }
 
 /**
- * Detects browser extension / runtime messaging errors
+ * Checks if the error is ignorable based on its message.
+ * @param {Error} err - The error object to check.
+ * @returns {boolean} - True if the error is ignorable, false otherwise.
  */
 const isIgnorableRuntimeError = (err) => {
   const message = err?.message || err?.toString?.() || ''
 
-  return message.includes('Could not establish connection. Receiving end does not exist')
+  return (
+    message.includes('Could not establish connection. Receiving end does not exist') ||
+    message.includes("PubSub Error Failed to execute 'atob'") ||
+    message.includes("Failed to execute 'atob' on 'Window'")
+  )
 }

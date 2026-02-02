@@ -16,7 +16,8 @@ export function useErrorModal(userModeStore) {
    * @param {string} modalMessage - Message of the modal
    */
   const showErrorModal = () => {
-    if (isVisible.value || isLocalhost() || !globalConfig.featureFlags.enableErrorModal) return
+    if (isVisible.value || isLocalhost() || !globalConfig.modalSettings.enableUnexpectedErrorModal)
+      return
 
     if (userModeStore.hasUserAccessToFeature('notShowUnexpectedErrorModal')) return
 

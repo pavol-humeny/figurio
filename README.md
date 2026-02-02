@@ -4,15 +4,14 @@
 
 # Chyby
 - brush nefunguje na klikanie ale len na tahanie
-- presunut noise detection konštanty do editor config a nie viewport config
 - vylepšiť BG removal 
 - opraviť shape 
 - opraviť magnify area 
 - opraviť blur 
 - opraviť select
 - pri výbere z dropdown menu to neskryje tip 
-- image - pdf export neprevadza spravne font textu
 - statistiky - v grafe návštevnosti zobrazovať lokalizáciu
+- pri otvoreni obrazku to divne sklbne
 
 ## TODO od J (userTesting2 - 12.1.2026)
 - FIXED - Zoom pomocou numerickej klávesnice

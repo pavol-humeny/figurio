@@ -56,7 +56,7 @@ export function useInteractiveTutorial(uiStore, imageStore, router, t) {
   /**
    * If the tutorial feature is enabled
    */
-  const isTutorialEnabled = globalConfig.featureFlags.enableTutorial
+  const isTutorialEnabled = globalConfig.modalSettings.enableTutorial
 
   /**
    * Whether the tutorial is currently running

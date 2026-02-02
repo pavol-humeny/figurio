@@ -7,6 +7,7 @@ import { useApi } from '@/composables/common/useApi'
 const { addUserEvent } = useApi()
 import { useToastModal } from '../modals/useToastModal'
 import { useWarningList } from '../modals/useWarningList'
+import { editorConfig } from '@/config/editorConfig'
 
 const { showToastModal } = useToastModal()
 
@@ -58,16 +59,16 @@ export function useImageAnalysis(imageStore, viewportStore, uiStore, t) {
     const odata = overlay.data
 
     // CONFIG
-    const laplacianThreshold = viewportConfig.laplacianThreshold
-    const maxStrongNeighbors = viewportConfig.maxStrongNeighbors
-    let minNoisyPixelsRatio = viewportConfig.minNoisyPixelsRatio
+    const laplacianThreshold = editorConfig.laplacianThreshold
+    const maxStrongNeighbors = editorConfig.maxStrongNeighbors
+    let minNoisyPixelsRatio = editorConfig.minNoisyPixelsRatio
 
-    const bgCoverageThreshold = viewportConfig.bgCoverageThreshold
-    const borderCoverageThreshold = viewportConfig.borderCoverageThreshold
-    const colorDistanceThreshold = viewportConfig.colorDistanceThreshold
-    const borderSize = viewportConfig.borderSize
+    const bgCoverageThreshold = editorConfig.bgCoverageThreshold
+    const borderCoverageThreshold = editorConfig.borderCoverageThreshold
+    const colorDistanceThreshold = editorConfig.colorDistanceThreshold
+    const borderSize = editorConfig.borderSize
 
-    // Adjust sensitivity for PNG images (lossless compression)
+    // Adjust sensitivity for PNG images (higher threshold)
     if (imageStore.fileFormat === 'png') {
       minNoisyPixelsRatio *= 10
     }

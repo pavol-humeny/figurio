@@ -639,22 +639,22 @@ export function exportFileService(imageStore, editorStore, historyStore, viewpor
         })
       }
 
-      // 2.5. Overlay image if present (bitmap)
-      if (rasterized?.overlay) {
-        const overlayDataUrl = rasterized.overlay.toDataURL('image/png')
-        const overlayBytes = Uint8Array.from(atob(overlayDataUrl.split(',')[1]), (c) =>
-          c.charCodeAt(0),
-        )
+      // 2.5. Overlay image if present (bitmap) - this should never happen but just in case (TODO: remove?)
+      // if (rasterized?.overlay) {
+      //   const overlayDataUrl = rasterized.overlay.toDataURL('image/png')
+      //   const overlayBytes = Uint8Array.from(atob(overlayDataUrl.split(',')[1]), (c) =>
+      //     c.charCodeAt(0),
+      //   )
 
-        const overlayImage = await pdf.embedPng(overlayBytes)
+      //   const overlayImage = await pdf.embedPng(overlayBytes)
 
-        finalPage.drawImage(overlayImage, {
-          x: 0,
-          y: 0,
-          width: rasterized.overlay.width,
-          height: rasterized.overlay.height,
-        })
-      }
+      //   finalPage.drawImage(overlayImage, {
+      //     x: 0,
+      //     y: 0,
+      //     width: rasterized.overlay.width,
+      //     height: rasterized.overlay.height,
+      //   })
+      // }
 
       // 3. Frame
       if (imageStore.frame.enabled && imageStore.frameSvg) {
@@ -686,6 +686,13 @@ export function exportFileService(imageStore, editorStore, historyStore, viewpor
         format: [finalWidth, finalHeight],
       })
 
+      pdf.addFont('Helvetica', 'Helvetica', 'normal')
+      pdf.setFont('Helvetica')
+      pdf.addFont('Courier', 'Courier', 'normal')
+      pdf.setFont('Courier')
+      pdf.addFont('Times-Roman', 'Times-Roman', 'normal')
+      pdf.setFont('Times-Roman')
+
       // Add base image
       pdf.addImage(image, 'PNG', offsetX, offsetY, targetWidth, targetHeight)
 
@@ -714,6 +721,31 @@ export function exportFileService(imageStore, editorStore, historyStore, viewpor
   }
 
   /**
+   * Normalize CSS font-family name to jsPDF Base14 font name
+   * Used only right before svg2pdf rendering
+   *
+   * @param {string | null | undefined} font
+   * @returns {string}
+   */
+  const normalizePdfFont = (font) => {
+    if (!font) return 'Helvetica'
+
+    switch (font) {
+      case 'Courier New':
+        return 'Courier'
+
+      case 'Times New Roman':
+        return 'Times-Roman'
+
+      case 'Helvetica':
+        return 'Helvetica'
+
+      default:
+        return 'Helvetica'
+    }
+  }
+
+  /**
    * Convert svg object (objects and frame) into pdf
    *
    * @param {Object} pdfSvg - jsPDF instance
@@ -728,7 +760,6 @@ export function exportFileService(imageStore, editorStore, historyStore, viewpor
           <marker id="arrow-end" markerWidth="10" markerHeight="10" refX="3" refY="3" orient="auto" markerUnits="strokeWidth">
             <path d="M0,0 L0,6 L6,3 z" fill="context-stroke" />
           </marker>
-
           `.trim()
 
     const dynamicDefs = Object.values(imageStore.svgDefs || {}).join('\n')
@@ -779,6 +810,13 @@ export function exportFileService(imageStore, editorStore, historyStore, viewpor
           svgString,
           'image/svg+xml',
         ).documentElement
+
+        // Normalize font-family for PDF export
+        svgElement.querySelectorAll('text').forEach((textEl) => {
+          const font = textEl.getAttribute('font-family')
+          textEl.setAttribute('font-family', normalizePdfFont(font))
+        })
+
         await svg2pdf(svgElement, pdfSvg, {
           xOffset: 0,
           yOffset: 0,
@@ -797,6 +835,12 @@ export function exportFileService(imageStore, editorStore, historyStore, viewpor
           imageStore.frameSvg,
           'image/svg+xml',
         ).documentElement
+
+        // Normalize font-family for PDF export (frame)
+        svgElement.querySelectorAll('text').forEach((textEl) => {
+          const font = textEl.getAttribute('font-family')
+          textEl.setAttribute('font-family', normalizePdfFont(font))
+        })
 
         /**
          * svg2pdf does not support dominant-baseline="middle"

@@ -20,9 +20,9 @@ export function useApi() {
    * @param {string} userId - UUID of the user
    */
   const addUserVisit = async (userId) => {
-    if (!globalConfig.sendUsageStats) return
+    if (!globalConfig.usageStatsSettings.sendUsageStats) return
 
-    if (isLocalhost() && !globalConfig.sendUsageStatsOnLocalhost) return
+    if (isLocalhost() && !globalConfig.usageStatsSettings.sendUsageStatsOnLocalhost) return
 
     if (!userId) {
       warn('Missing userId for visit')
@@ -57,9 +57,9 @@ export function useApi() {
    * @param {Object} data - Event data (will be JSON.stringified)
    */
   const addUserEvent = async (eventType, data) => {
-    if (!globalConfig.sendUsageStats) return
+    if (!globalConfig.usageStatsSettings.sendUsageStats) return
 
-    if (isLocalhost() && !globalConfig.sendUsageStatsOnLocalhost) return
+    if (isLocalhost() && !globalConfig.usageStatsSettings.sendUsageStatsOnLocalhost) return
 
     const uiStore = useUiStore()
     const userId = uiStore.userUuid
@@ -329,12 +329,11 @@ export function useApi() {
    * @param {string} userId - UUID of the user
    */
   const sendVisitDuringMaintenanceEmail = async (userId) => {
-    if (!globalConfig.sendUsageStats) return
+    if (!globalConfig.usageStatsSettings.sendUsageStats) return
 
-    if (!globalConfig.sendVisitDuringMaintenanceEmail) return
+    if (!globalConfig.usageStatsSettings.sendVisitDuringMaintenanceEmail) return
 
-    if (isLocalhost() && !globalConfig.sendUsageStatsOnLocalhost) return
-
+    if (isLocalhost() && !globalConfig.usageStatsSettings.sendUsageStatsOnLocalhost) return
     if (!userId) {
       warn('Missing userId for visit during maintenance email')
       return

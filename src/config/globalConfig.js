@@ -56,10 +56,14 @@ export const globalConfig = {
       export: true,
     },
     enableNoiseDetectionOnStart: true,
-    enableTutorial: true,
     enableImageLoad: true,
-    enableErrorModal: true,
     notEnabledMessage: 'This feature is currently not available.',
+  },
+
+  // Modal settings
+  modalSettings: {
+    enableTutorial: true,
+    enableUnexpectedErrorModal: true,
   },
 
   // Random events configuration
@@ -97,12 +101,16 @@ export const globalConfig = {
 
   // API
   API_BASE: 'https://figurio.online',
-  // If usage stats should be sent to the API
-  sendUsageStats: true,
-  // If visit during maintenance email should be sent
-  sendVisitDuringMaintenanceEmail: true,
-  // If usage stats should be sent when running on localhost
-  sendUsageStatsOnLocalhost: false,
+
+  // Usage stats settings
+  usageStatsSettings: {
+    // If usage stats should be sent to the API
+    sendUsageStats: true,
+    // If usage stats should be sent when running on localhost
+    sendUsageStatsOnLocalhost: false,
+    // If visit during maintenance email should be sent
+    sendVisitDuringMaintenanceEmail: true,
+  },
 
   // LocalStorage prefix
   LOCAL_STORAGE_PREFIX: 'figurio_',
