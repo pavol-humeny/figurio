@@ -2057,7 +2057,7 @@ export function useFrameTool(imageStore, historyStore, viewportStore, t) {
       drawPhoneNavigationButton()
     } else if (frame.type === 'framePhoneIOS2') {
       // Draw phone header if enabled
-      drawPhoneHeader(
+      const freeSpace = drawPhoneHeader(
         phoneHeaderBackgroundColor.value,
         phoneHeaderTextColor.value,
         phoneHeaderTimeInMinutes.value,
@@ -2108,7 +2108,7 @@ export function useFrameTool(imageStore, historyStore, viewportStore, t) {
         bottomNy * notchPadding <= phoneFrameValues.bottom &&
         notchHeight >= 5
 
-      if (notchFits) {
+      if (notchFits && freeSpace >= notchWidth * 1.2) {
         // Cover notch
         const coverNy = baseNy - 0.5
         const coverBottomNy = coverNy + nh

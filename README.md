@@ -73,7 +73,6 @@
 - FIXED - feature tour - prerobenie krížika 
 
 ## TODO 
-- DONE - MOZNO VYMYSLIET LEPSIE (TERAZ SA NEZOBRAZUJE VOBEC) Hláška o tom že sa nedajú vykresliť tlačidlá telefónu sa vypisuje viac krát
 - SKIP - (asi to je v pohode tak ako to je) zoomovanie pomocou tlacitok, ak je obrazok mimo stred tak to zoomuje mimo obrázok 
 - Vylepšenie rámiku pre prehliadače 
 - Paste by to mohol klásť inde ako na ten istý objekt, aspoň pri kliknutí pravím 
