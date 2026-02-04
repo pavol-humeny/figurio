@@ -1,6 +1,8 @@
 ## Slajd 1 
 Dobrý deň, volám sa Pavol Humený a v rámci svojej bakalárskej práce vytváram webovú aplikáciu na úpravu obrázkov – Figurio. Je to editor zameraný na prípravu obrázkov do odborných textov. Ide o editor, ktorý obsahuje nástroje určené na tieto úpravy. A zároveň kladie dôraz na jednoduché a intuitívne rozhranie. 
 
+Kladie dôraz na 2 základné veci, a to jednoduché a intuitívne rozhranie a bezpečnosť dát používateľov, preto sa všetky operácie vykonávajú v prehliadači a žiadne obrázky používateľov sa neposielajú niekde na server
+
 Cieľom tohto editora je poskytnúť užívateľom nástroje, vďaka ktorým budú ich výsledné texty vyzerať lepšie a hlavne bez nutnosti učenia sa ovládania zložitých nástrojov.
 
 ## Slajd 2

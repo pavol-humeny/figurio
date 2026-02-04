@@ -3,7 +3,7 @@ import { storeToRefs } from 'pinia';
 import BaseIcon from '@/components/icons/BaseIcon.vue';
 import DefaultButton from '@/components/common/DefaultButton.vue';
 import { useHelpModal } from '@/composables/modals/useHelpModal';
-import { computed, watch } from 'vue'
+import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useUiStore } from '@/stores/uiStore';
 import { useRouter } from 'vue-router';
@@ -14,7 +14,7 @@ import { useApi } from '../../composables/common/useApi';
 import { useEditorStore } from '@/stores/editorStore';
 import { useUserModeStore } from '@/stores/userModeStore';
 import CommandLine from './CommandLine.vue';
-import { useHoldButton } from '@/composables/common/useHoldButton';
+// import { useHoldButton } from '@/composables/common/useHoldButton';
 
 const { messages, locale, t } = useI18n()
 const router = useRouter()
@@ -45,10 +45,10 @@ const technicalLimitations = computed(() => {
  * Logic of the help modal state and scrolling
  */
 const {
-  atTop,
-  atBottom,
-  scrollUp,
-  scrollDown,
+  // atTop,
+  // atBottom,
+  // scrollUp,
+  // scrollDown,
   checkScroll,
   isVisible,
   helpContentRef,
@@ -79,10 +79,10 @@ const { isTutorialEnabled } = useInteractiveTutorial(
 /**
  * Logic of the hold button for continuous action on hold
  */
-const {
-  startHold,
-  stopHold,
-} = useHoldButton();
+// const {
+//   startHold,
+//   stopHold,
+// } = useHoldButton();
 
 /**
  * Navigates to the statistics view
@@ -98,12 +98,12 @@ const showStatistics = () => {
 /**
  * Watchers to stop hold scrolling when reaching top or bottom
  */
-watch(atTop, (newVal) => {
-  if (newVal) stopHold();
-});
-watch(atBottom, (newVal) => {
-  if (newVal) stopHold();
-});
+// watch(atTop, (newVal) => {
+//   if (newVal) stopHold();
+// });
+// watch(atBottom, (newVal) => {
+//   if (newVal) stopHold();
+// });
 </script>
 
 <template>
@@ -116,11 +116,11 @@ watch(atBottom, (newVal) => {
         </div>
 
         <div class="help-content-panel">
-          <!-- Arrow up -->
+          <!-- Arrow up
           <div v-if="!atTop" class="arrow-up" @mousedown="startHold(scrollUp)" @mouseup="stopHold"
             @mouseleave="stopHold">
             <BaseIcon name="IconArrowUp" size="24" color="var(--primary-c)" />
-          </div>
+          </div>-->
 
           <!-- Help content -->
           <div class="help-content-wrapper" ref="helpContentRef" @scroll="checkScroll">
@@ -609,11 +609,11 @@ watch(atBottom, (newVal) => {
             </div>
           </div>
 
-          <!-- Arrow down -->
+          <!-- Arrow down
           <div v-if="!atBottom" class="arrow-down" @mousedown="startHold(scrollDown)" @mouseup="stopHold"
             @mouseleave="stopHold">
             <BaseIcon name="IconArrowDown" size="24" color="var(--primary-c)" />
-          </div>
+          </div>-->
         </div>
 
         <!-- Close help -->
@@ -683,15 +683,15 @@ watch(atBottom, (newVal) => {
   flex-direction: column;
   gap: 20px;
   padding: 25px 10px;
-  scrollbar-width: none;
-  mask-image: linear-gradient(to bottom,
+  /* scrollbar-width: none; */
+  /* mask-image: linear-gradient(to bottom,
       transparent,
       black 30px,
       black calc(100% - 30px),
-      transparent 100%);
+      transparent 100%); */
 }
 
-.arrow-up,
+/* .arrow-up,
 .arrow-down {
   position: absolute;
   left: 50%;
@@ -708,7 +708,7 @@ watch(atBottom, (newVal) => {
 
 .arrow-down {
   bottom: 0;
-}
+} */
 
 .help-content-title {
   font-size: var(--help-subtitle-font-size);

@@ -2,7 +2,17 @@
 
 ## TODO - text 
 
-# Chyby
+# TODO
+- Zobrazovanie operácií podľa užívateľov
+- Pridať scroll bar k help, release
+- pri zatvorení bočného panelu sa posunie fotka ale nie slide bar
+- Ked je tam viac okien tak, pri držaní na kraji by to mohlo rolovať tie okná 
+- Ak to otvorí nové okno a nevojde sa to tam, tak by to mohlo scrollnut na toto nove okno 
+- premyslieť ten štetec a pixeláciu 
+- 1px štetec by mal vyplnat 1px 
+- štetec aby fungoval na kliknutie, nie len na tahanie 
+- doplnit command na vypísanie vecí čo obsahuje expert a admin režim do console 
+
 - brush nefunguje na klikanie ale len na tahanie
 - vylepšiť BG removal 
 - opraviť shape 
@@ -11,6 +21,10 @@
 - opraviť select
 - pri výbere z dropdown menu to neskryje tip 
 - statistiky - v grafe návštevnosti zobrazovať lokalizáciu
+- minimálna kvalita by mohla byť 0
+- zvacsuje to súbory pri nacítaní 
+- pri zmene monitora by to mohlo dať hlasku aby sa to nakalibrovalo 
+- odšumovať 
 
 ## TODO od J (userTesting2 - 12.1.2026)
 - FIXED - Zoom pomocou numerickej klávesnice
@@ -31,7 +45,7 @@
     - neintuitívne klávesové skratky 
     - zrušit výber pri držaní shift po kliknutí na nieco co uz je vybrane 
     - mohla by sa ukladať história pri výbere 
-    - color - pri výbere farby hned vybrat oblast,nie az po kliknutí na tlacidlo 
+    - FIXED - color - pri výbere farby hned vybrat oblast,nie az po kliknutí na tlacidlo 
 - FIXED - klik + posun mysi na ikone by mohlo menit hodnotu (figma style)
 - shape - rozbité 
     - divne funguje výber objektu
@@ -111,6 +125,15 @@
 - NEPREUKÁZALO SA - pri prepnutí z color na manual select sa nezapne spravny kurzor
 - NEPREUKÁZALO SA - error pri zatvorení viacerých súborov
 - NEPREUKÁZALO SA - nakreslím niečo, pridám shape, a dám rasterize tak to zmizne - rastererize zožuje brush 
+
+## User testing changes 
+- Nezobrazovať toast o úspešnom nahratí súboru - predsa to je jasné že sa nahral 
+- FIXED - Premenovanie súboru by nemuselo dávať toast
+- FIXED - z index polohu zobrazovať len 2 tlačidlá ak sú len 2 objekty, žiadne ak je len jeden 
+- FIXED - pri zrušení výplne automaticky prepnúť na hrúbku rámiku a nie vyžadovať od užívateľa 
+- FIXED - Zoom pomocou numerickej klávesnice - povodne tam bola ikona pravitka, co evokovalo zapnutie pravítok v editore 
+
+ 
 
 ## API
 ### addUserEvent()

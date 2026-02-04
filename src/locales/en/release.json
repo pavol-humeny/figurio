@@ -4,6 +4,15 @@
     "items": []
   },
   "versions":{
+    "5.8.3":{
+      "label": "5.8.3",
+      "date":"4.2. 2025",
+      "improvements": {
+        "items": [
+          "Add scrollbars to help and release notes modals"
+        ]
+      }
+    },
     "5.8.2":{
       "label": "5.8.2",
       "date":"1.2. 2025",
