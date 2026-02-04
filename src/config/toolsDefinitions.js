@@ -54,8 +54,8 @@ export const toolsDefinitions = [
         iconName: 'IconBrush',
       },
       {
-        key: 'eraser',
-        iconName: 'IconEraser',
+        key: 'pencil',
+        iconName: 'IconPencil',
       },
     ],
   },

@@ -153,6 +153,7 @@ export const useEditorStore = defineStore('editorStore', {
         edgeFade: 1,
       },
       brush: {
+        isEraserMode: false,
         color: '#000000',
       },
       frame: {

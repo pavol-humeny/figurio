@@ -274,12 +274,15 @@ export const useImageStore = defineStore('imageStore', {
     },
 
     /**
-     * Returns true if rasterization is needed (i.e., if there are any SVG or blur objects)
+     * Returns true if rasterization is needed  (if there are any SVG or blur objects)
      */
     needRasterization: (state) => {
       return state.svgObjects.length > 0 || state.blurObjects.length > 0
     },
 
+    /**
+     * Returns true if there is an overlay that needs to be merged (brush strokes, rasterized SVG objects)
+     */
     needMergeOverlay: (state) => {
       return state.overlayImage !== null
     },

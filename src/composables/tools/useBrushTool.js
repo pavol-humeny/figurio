@@ -25,6 +25,34 @@ export function useBrushTool(imageStore, historyStore, editorStore, uiStore, t) 
   })
 
   /**
+   * Whether the brush tool is in eraser mode
+   */
+  const isEraserMode = computed({
+    get: () => editorStore.toolsConfig.brush.isEraserMode,
+    set: (value) => {
+      editorStore.toolsConfig.brush.isEraserMode = value
+    },
+  })
+
+  /**
+   * Set eraser mode based on selected subtool
+   * @param {boolean} value - True for eraser mode, false for brush/pencil mode
+   */
+  const setIsEraserMode = (value) => {
+    isEraserMode.value = value
+  }
+
+  /**
+   * Watch for selected tab changes and reset eraser mode
+   */
+  watch(
+    () => editorStore.selectedTabPerTool['brush'],
+    () => {
+      isEraserMode.value = false
+    },
+  )
+
+  /**
    * Save selected color to store
    */
   const saveColorToStore = (color) => {
@@ -113,7 +141,7 @@ export function useBrushTool(imageStore, historyStore, editorStore, uiStore, t) 
     imageStore.addImageOperation({
       type: 'brush',
       overlay: emptyOverlay,
-      cost: 'low',
+      cost: 'high',
       affectsGeometry: false,
     })
 
@@ -133,5 +161,7 @@ export function useBrushTool(imageStore, historyStore, editorStore, uiStore, t) 
     saveColorToStore,
     rasterizeImage,
     clearAllCanvas,
+    setIsEraserMode,
+    isEraserMode,
   }
 }

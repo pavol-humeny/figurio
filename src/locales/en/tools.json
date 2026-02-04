@@ -397,6 +397,12 @@
         "explain": "The Brush tool allows you to paint on the image with a brush. You can adjust the brush size, hardness, and opacity to achieve different effects.",
         "shortcut": "B"
       },
+      "pencil": {
+        "label": "Pencil",
+        "tip": "Draws on the image with a pencil tool",
+        "explain": "The Pencil tool allows you to draw on the image with a pencil. It creates sharper, more defined lines compared to the brush. You can adjust the pencil size and hardness to control the appearance of your strokes.",
+        "shortcut": "P"
+      },
       "eraser": {
         "label": "Eraser",
         "tip": "Removes painted areas from the image",
@@ -418,6 +424,35 @@
         "rasterizeButton": {
           "text": "Rasterize",
           "tip": "Image need to be rasterized before using the brush tool"
+        },
+        "selectedTool": {
+          "label": "Selected tool",
+          "options": {
+            "tipBrush": "Brush",
+            "tipEraser": "Eraser"
+          }
+        }
+      },
+      "pencil":{
+        "label": "Pencil",
+        "toolSize": {
+          "label": "Pencil size",
+          "tip": "Adjust the size of the pencil"
+        },
+        "pencilColor": {
+          "label": "Pencil color",
+          "tip": "Select the color of the pencil"
+        },
+        "rasterizeButton": {
+          "text": "Rasterize",
+          "tip": "Image need to be rasterized before using the pencil tool"
+        },
+        "selectedTool": {
+          "label": "Selected tool",
+          "options": {
+            "tipPencil": "Pencil",
+            "tipEraser": "Eraser"
+          }
         }
       },
       "eraser": {

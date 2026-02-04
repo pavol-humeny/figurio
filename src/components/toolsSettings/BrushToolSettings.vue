@@ -10,7 +10,8 @@ import { useEditorStore } from '@/stores/editorStore'
 import NumberInput from '../common/NumberInput.vue'
 import ColorPicker from '../common/ColorPicker.vue'
 import { useUiStore } from '@/stores/uiStore'
-
+import ItemTip from '../common/ItemTip.vue'
+import BaseIcon from '../icons/BaseIcon.vue'
 
 const { t } = useI18n()
 const editorStore = useEditorStore()
@@ -25,6 +26,8 @@ const {
   saveColorToStore,
   rasterizeImage,
   clearAllCanvas,
+  setIsEraserMode,
+  isEraserMode,
 } = useBrushTool(
   useImageStore(),
   useHistoryStore(),
@@ -33,7 +36,7 @@ const {
   t,
 )
 
-const tabs = ['brush', 'eraser']
+const tabs = ['brush', 'pencil']
 
 </script>
 
@@ -49,6 +52,32 @@ const tabs = ['brush', 'eraser']
           <div class="content-wrapper" :class="{ disabled: !imageStore.needRasterization }">
             <DefaultButton :text="$t('tools.brush.settings.brush.rasterizeButton.text')" position="bottom-left"
               :tip="$t('tools.brush.settings.brush.rasterizeButton.tip')" @click="rasterizeImage" />
+          </div>
+        </div>
+
+        <!-- Selected tool -->
+        <div class="settings-content-wrapper">
+          <div class="content-wrapper">
+            <div class="content-title">
+              <p>
+                {{ $t('tools.brush.settings.brush.selectedTool.label') }}
+              </p>
+            </div>
+            <div class="eraser-select-wrapper">
+              <ItemTip :text="$t('tools.brush.settings.brush.selectedTool.options.tipBrush')" position="bottom">
+                <button @click="setIsEraserMode(false)" class="button button-control button-circle"
+                  :class="{ selected: !isEraserMode }">
+                  <BaseIcon name="IconBrush" size="24" />
+                </button>
+              </ItemTip>
+
+              <ItemTip :text="$t('tools.brush.settings.brush.selectedTool.options.tipEraser')" position="bottom">
+                <button @click="setIsEraserMode(true)" class="button button-control button-circle"
+                  :class="{ selected: isEraserMode }">
+                  <BaseIcon name="IconEraser" size="24" />
+                </button>
+              </ItemTip>
+            </div>
           </div>
         </div>
 
@@ -79,29 +108,54 @@ const tabs = ['brush', 'eraser']
           </div>
         </div>
 
+        <!-- Clear all button -->
+        <div class="settings-content-wrapper">
+          <div class="content-wrapper">
+            <DefaultButton :text="$t('tools.brush.settings.eraser.clearAllButton.text')" position="bottom-left"
+              :tip="$t('tools.brush.settings.eraser.clearAllButton.tip')" @click="clearAllCanvas" />
+          </div>
+        </div>
+
         <!-- Empty space -->
         <div class="settings-content-wrapper" style="border: none">
           <!-- Empty space -->
         </div>
       </div>
 
-      <div v-if="editorStore.selectedTabPerTool[editorStore.selectedToolKey] === 'eraser'" class="specific-settings">
+      <div v-if="editorStore.selectedTabPerTool[editorStore.selectedToolKey] === 'pencil'" class="specific-settings">
         <!-- Rasterize button -->
         <div class="settings-content-wrapper">
-          <ExplainItem :text="$t('tools.brush.subTools.eraser.explain')"
-            :title="$t('tools.brush.subTools.eraser.label')" />
+          <ExplainItem :text="$t('tools.brush.subTools.pencil.explain')"
+            :title="$t('tools.brush.subTools.pencil.label')" />
           <div class="content-wrapper" :class="{ disabled: !imageStore.needRasterization }">
-            <DefaultButton :text="$t('tools.brush.settings.eraser.rasterizeButton.text')"
-              :tip="$t('tools.brush.settings.eraser.rasterizeButton.tip')" position="bottom-left"
-              @click="rasterizeImage" />
+            <DefaultButton :text="$t('tools.brush.settings.pencil.rasterizeButton.text')" position="bottom-left"
+              :tip="$t('tools.brush.settings.pencil.rasterizeButton.tip')" @click="rasterizeImage" />
           </div>
         </div>
 
-        <!-- Clear all button -->
+        <!-- Selected tool -->
         <div class="settings-content-wrapper">
-          <div class="content-wrapper" :class="{ disabled: !imageStore.needMergeOverlay }">
-            <DefaultButton :text="$t('tools.brush.settings.eraser.clearAllButton.text')" position="bottom-left"
-              :tip="$t('tools.brush.settings.eraser.clearAllButton.tip')" @click="clearAllCanvas" />
+          <div class="content-wrapper">
+            <div class="content-title">
+              <p>
+                {{ $t('tools.brush.settings.pencil.selectedTool.label') }}
+              </p>
+            </div>
+            <div class="eraser-select-wrapper">
+              <ItemTip :text="$t('tools.brush.settings.pencil.selectedTool.options.tipPencil')" position="bottom">
+                <button @click="setIsEraserMode(false)" class="button button-control button-circle"
+                  :class="{ selected: !isEraserMode }">
+                  <BaseIcon name="IconPencil" size="24" />
+                </button>
+              </ItemTip>
+
+              <ItemTip :text="$t('tools.brush.settings.pencil.selectedTool.options.tipEraser')" position="bottom">
+                <button @click="setIsEraserMode(true)" class="button button-control button-circle"
+                  :class="{ selected: isEraserMode }">
+                  <BaseIcon name="IconEraser" size="24" />
+                </button>
+              </ItemTip>
+            </div>
           </div>
         </div>
 
@@ -110,12 +164,33 @@ const tabs = ['brush', 'eraser']
           <div class="content-wrapper" :class="{ disabled: imageStore.needRasterization }">
             <div class="content-title">
               <p>
-                {{ $t('tools.brush.settings.eraser.toolSize.label') }}
+                {{ $t('tools.brush.settings.pencil.toolSize.label') }}
               </p>
             </div>
             <NumberInput v-model="brushToolSize" :min="brushMinToolSize" :max="brushMaxToolSize" :step="1" unit="px"
-              @update="changeBrushToolSize(brushToolSize)" :tip="$t('tools.brush.settings.eraser.toolSize.tip')"
+              @update="changeBrushToolSize(brushToolSize)" :tip="$t('tools.brush.settings.pencil.toolSize.tip')"
               position="bottom-left" />
+          </div>
+        </div>
+
+        <!-- Color -->
+        <div class="settings-content-wrapper">
+          <div class="content-wrapper" :class="{ disabled: imageStore.needRasterization }">
+            <div class="content-title">
+              <p>
+                {{ $t('tools.brush.settings.pencil.pencilColor.label') }}
+              </p>
+            </div>
+            <ColorPicker v-model="brushColor" @update="saveColorToStore(brushColor)"
+              :tip="$t('tools.brush.settings.pencil.pencilColor.tip')" position="bottom-left" />
+          </div>
+        </div>
+
+        <!-- Clear all button -->
+        <div class="settings-content-wrapper">
+          <div class="content-wrapper">
+            <DefaultButton :text="$t('tools.brush.settings.eraser.clearAllButton.text')" position="bottom-left"
+              :tip="$t('tools.brush.settings.eraser.clearAllButton.tip')" @click="clearAllCanvas" />
           </div>
         </div>
 
@@ -128,4 +203,15 @@ const tabs = ['brush', 'eraser']
   </div>
 </template>
 
-<style scoped></style>
+<style scoped>
+.eraser-select-wrapper {
+  display: flex;
+  flex-direction: row;
+  gap: 15px;
+}
+
+.selected {
+  background: var(--primary-c);
+  color: var(--secondary-c);
+}
+</style>

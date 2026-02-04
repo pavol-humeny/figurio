@@ -74,7 +74,7 @@ const getMousePos = (event) => {
  * @param {string} hex - HEX color string, e.g. "#d30f0f"
  * @return {string} - RGB color string, e.g. "rgb(211,15,15)"
  */
-function hexToRgb(hex) {
+const hexToRgb = (hex) => {
   if (!hex) return 'rgb(0,0,0)' // fallback to black
   const bigint = parseInt(hex.replace('#', ''), 16)
   const r = (bigint >> 16) & 255
@@ -84,14 +84,18 @@ function hexToRgb(hex) {
 }
 
 /**
- * Draw line between points
+ * Draw line with brush tool
+ * @param {Object} from - Starting position {x, y}
+ * @param {Object} to - Ending position {x, y}
+ * @param {string} tool - Tool type ('brush' or 'eraser')
  */
-const drawLine = (from, to, tool) => {
+const drawBrushLine = (from, to, tool) => {
   if (!ctx) return
-  ctx.lineWidth = editorStore.cursorSize
-  ctx.lineCap = 'round'
 
   ctx.save()
+  ctx.imageSmoothingEnabled = true
+  ctx.lineWidth = editorStore.cursorSize
+  ctx.lineCap = 'round'
   ctx.globalCompositeOperation = tool === 'eraser' ? 'destination-out' : 'source-over'
   ctx.strokeStyle = tool === 'eraser' ? '#000' : hexToRgb(editorStore.toolsConfig.brush.color)
 
@@ -101,6 +105,188 @@ const drawLine = (from, to, tool) => {
   ctx.stroke()
   ctx.closePath()
   ctx.restore()
+}
+
+/**
+ * Draw dot with brush tool
+ * @param {Object} pos - Position {x, y}
+ * @param {string} tool - Tool type ('brush' or 'eraser')
+ */
+const drawBrushDot = (pos, tool) => {
+  if (!ctx) return
+
+  ctx.save()
+  ctx.imageSmoothingEnabled = true
+  ctx.globalCompositeOperation = tool === 'eraser' ? 'destination-out' : 'source-over'
+  ctx.fillStyle = tool === 'eraser' ? '#000' : hexToRgb(editorStore.toolsConfig.brush.color)
+
+  ctx.beginPath()
+  ctx.arc(
+    Math.round(pos.x),
+    Math.round(pos.y),
+    editorStore.cursorSize / 2,
+    0,
+    Math.PI * 2,
+  )
+  ctx.fill()
+  ctx.restore()
+}
+
+/**
+ * Draw dot with pencil tool
+ * @param {Object} pos - Position {x, y}
+ * @param {string} tool - Tool type ('pencil' or 'eraser')
+ */
+const drawPencilDot = (pos, tool) => {
+  if (!ctx) return
+
+  const size = Math.max(1, Math.round(editorStore.cursorSize))
+  const half = Math.floor(size / 2)
+
+  ctx.save()
+  ctx.imageSmoothingEnabled = false
+  ctx.globalCompositeOperation = tool === 'eraser' ? 'destination-out' : 'source-over'
+  ctx.fillStyle = tool === 'eraser' ? '#000' : hexToRgb(editorStore.toolsConfig.brush.color)
+
+  ctx.fillRect(
+    Math.round(pos.x - half),
+    Math.round(pos.y - half),
+    size,
+    size
+  )
+
+  ctx.restore()
+}
+
+
+/**
+ * Draw stamp for pencil tool
+ * @param {number} x - X position
+ * @param {number} y - Y position
+ * @param {number} size - Size of the stamp
+ */
+const drawPencilStamp = (x, y, size) => {
+  const half = Math.floor(size / 2)
+
+  ctx.fillRect(
+    Math.round(x - half),
+    Math.round(y - half),
+    size,
+    size
+  )
+}
+
+/**
+ * Draw line with pencil tool using Bresenham's algorithm
+ * @param {Object} from - Starting position {x, y}
+ * @param {Object} to - Ending position {x, y}
+ * @param {string} tool - Tool type ('pencil' or 'eraser')
+ */
+const drawPencilLine = (from, to, tool) => {
+  if (!ctx) return
+
+  let x0 = Math.round(from.x)
+  let y0 = Math.round(from.y)
+  let x1 = Math.round(to.x)
+  let y1 = Math.round(to.y)
+
+  const dx = Math.abs(x1 - x0)
+  const dy = Math.abs(y1 - y0)
+  const sx = x0 < x1 ? 1 : -1
+  const sy = y0 < y1 ? 1 : -1
+  let err = dx - dy
+
+  const size = Math.max(1, Math.round(editorStore.cursorSize))
+
+  ctx.save()
+  ctx.globalCompositeOperation = tool === 'eraser' ? 'destination-out' : 'source-over'
+  ctx.fillStyle = tool === 'eraser' ? '#000' : hexToRgb(editorStore.toolsConfig.brush.color)
+
+  while (true) {
+    drawPencilStamp(x0, y0, size)
+
+    if (x0 === x1 && y0 === y1) break
+
+    const e2 = 2 * err
+    if (e2 > -dy) { err -= dy; x0 += sx }
+    if (e2 < dx) { err += dx; y0 += sy }
+  }
+
+  ctx.restore()
+}
+
+/**
+ * Draw line with eraser tool
+ * @param {Object} from - Starting position {x, y}
+ * @param {Object} to - Ending position {x, y}
+ */
+const drawEraserLine = (from, to, mode) => {
+  if (mode === 'pencil') {
+    drawPencilLine(from, to, 'eraser')
+  } else {
+    drawBrushLine(from, to, 'eraser')
+  }
+
+  ctx.restore()
+}
+
+/**
+ * Draw dot with eraser tool
+ * @param {Object} pos - Position {x, y}
+ */
+const drawEraserDot = (pos, mode) => {
+  if (mode === 'pencil') {
+    drawPencilDot(pos, 'eraser')
+  } else {
+    drawBrushDot(pos, 'eraser')
+  }
+
+  ctx.restore()
+}
+
+/**
+ * Draw line based on tool type
+ * @param {Object} from - Starting position {x, y}
+ * @param {Object} to - Ending position {x, y}
+ * @param {string} tool - Tool type ('brush', 'pencil', 'eraser-brush', 'eraser-pencil')
+ */
+const drawLine = (from, to, tool) => {
+  switch (tool) {
+    case 'brush':
+      drawBrushLine(from, to, tool)
+      break
+    case 'pencil':
+      drawPencilLine(from, to, tool)
+      break
+    case 'eraser-brush':
+      drawEraserLine(from, to, 'brush')
+      break
+    case 'eraser-pencil':
+      drawEraserLine(from, to, 'pencil')
+      break
+  }
+}
+
+/**
+ * Draw dot based on tool type
+ * @param {Object} pos - Position {x, y}
+ * @param {string} tool - Tool type ('brush', 'pencil', 'eraser-brush', 'eraser-pencil')
+ */
+const drawDot = (pos, tool) => {
+  switch (tool) {
+    case 'brush':
+      drawBrushDot(pos, tool)
+      break
+    case 'pencil':
+      drawPencilDot(pos, tool)
+      break
+    case 'eraser-brush':
+      drawEraserDot(pos, 'brush')
+      break
+    case 'eraser-pencil':
+      drawEraserDot(pos, 'pencil')
+      break
+  }
 }
 
 /**
@@ -158,6 +344,17 @@ const onMouseDown = async (event) => {
   isDrawing.value = true
   lastPos.value = getMousePos(event)
   mouseMovedSinceDown.value = false
+
+  // Draw a dot on mouse down
+  let tool = editorStore.selectedTabPerTool[editorStore.selectedToolKey]
+
+  // Check if it is eraser mode
+  if (editorStore.toolsConfig.brush.isEraserMode) {
+    if (tool === 'brush') tool = 'eraser-brush'
+    else if (tool === 'pencil') tool = 'eraser-pencil'
+  }
+
+  drawDot(lastPos.value, tool)
 }
 
 /**
@@ -173,8 +370,16 @@ const onMouseMove = (event) => {
   // Check if alt key is pressed for eraser when using brush tool
   const isAltKeyPressed = event.altKey || event.metaKey
   let tool = editorStore.selectedTabPerTool[editorStore.selectedToolKey]
-  if (isAltKeyPressed) {
-    tool = tool === 'brush' ? 'eraser' : 'brush'
+
+  // Check if it is eraser mode
+  if (editorStore.toolsConfig.brush.isEraserMode) {
+    if (tool === 'brush') tool = 'eraser-brush'
+    else if (tool === 'pencil') tool = 'eraser-pencil'
+  } else {
+    if (isAltKeyPressed) {
+      if (tool === 'brush') tool = 'eraser-brush'
+      else if (tool === 'pencil') tool = 'eraser-pencil'
+    }
   }
 
   drawLine(lastPos.value, currentPos, tool)
@@ -187,11 +392,6 @@ const onMouseMove = (event) => {
 const onMouseUpGlobal = async () => {
   if (!isDrawing.value || editorStore.selectedToolKey !== 'brush') return
   isDrawing.value = false
-
-  // Draw dot if click without move
-  if (lastPos.value && !mouseMovedSinceDown.value) {
-    drawLine(lastPos.value, lastPos.value, editorStore.selectedTabPerTool[editorStore.selectedToolKey])
-  }
 
   if (!canvasRef.value) return
 
@@ -264,7 +464,7 @@ watch(
  */
 onMounted(() => {
   ctx = canvasRef.value.getContext('2d', { willReadFrequently: true })
-  ctx.imageSmoothingEnabled = false
+  // ctx.imageSmoothingEnabled = false
   // canvasRef.value.style.imageRendering = 'pixelated'
   window.addEventListener('mouseup', onMouseUpGlobal)
   window.addEventListener('mousemove', onMouseMove)

@@ -378,6 +378,7 @@ const cursorStyle = computed(() => {
         top: cursorPos.y + 'px'
       }" :class="{
         isAltResizing: editorStore.isCursorResizing,
+        'custom-cursor-square': editorStore.selectedToolKey === 'brush' && editorStore.selectedTabPerTool['brush'] === 'pencil'
       }"></div>
 
     <!-- Sliders -->
@@ -775,11 +776,15 @@ const cursorStyle = computed(() => {
 .custom-cursor {
   position: absolute;
   border: 1px solid transparent;
-  border-radius: 50%;
   pointer-events: none;
   transform: translate(-50%, -50%);
   z-index: var(--z-index-cursors);
   border-color: var(--cursor-border);
+  border-radius: 50%;
+}
+
+.custom-cursor.custom-cursor-square {
+  border-radius: 0;
 }
 
 .isAltResizing {

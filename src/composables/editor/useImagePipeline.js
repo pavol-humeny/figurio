@@ -200,6 +200,11 @@ export function useImagePipeline(imageStore, uiStore) {
   }
 
   /**
+   * Flag to indicate if a full re-render is needed after pipeline operations
+   */
+  let needsFullRerender = false
+
+  /**
    * Render image up to the specified operation index
    * @param {number} targetIndex operation index to render up to
    */
@@ -231,6 +236,10 @@ export function useImagePipeline(imageStore, uiStore) {
         for (let i = checkpoint.opIndex + 1; i <= targetIndex; i++) {
           const operation = imageStore.imageOperations[i]
           if (!operation) continue
+
+          if (operation.cost && operation.cost !== 'low') {
+            needsFullRerender = true
+          }
 
           const meta = {}
           state = await applyOperation(state, operation, meta, {
@@ -265,7 +274,12 @@ export function useImagePipeline(imageStore, uiStore) {
         // Apply operations from start
         for (let i = 0; i <= targetIndex; i++) {
           const operation = imageStore.imageOperations[i]
+
           if (!operation) continue
+
+          if (operation.cost && operation.cost !== 'low') {
+            needsFullRerender = true
+          }
 
           const meta = {}
           state = await applyOperation(state, operation, meta, {
@@ -307,16 +321,18 @@ export function useImagePipeline(imageStore, uiStore) {
         state.pdfBytes && state.pdfBytes.length > 0 ? new Uint8Array(state.pdfBytes) : null
 
       // Update file type if PDF bytes were removed (pdf -> image)
-      if (!state.pdfBytes) {
+      if (!state.pdfBytes && imageStore.fileType === 'pdf') {
         imageStore.fileType = 'image'
         imageStore.fileFormat = imageStore.fileFormat === 'pdf' ? 'png' : imageStore.fileFormat
 
         imageStore.imageNeedToBeRendered = true
       }
     } finally {
-      imageStore.imageNeedToBeRendered = true
-      imageStore.frameNeedToBeRendered = true
       console.warn('IMAGE PIPELINE - END')
+      if (needsFullRerender) {
+        imageStore.imageNeedToBeRendered = true
+        imageStore.frameNeedToBeRendered = true
+      }
       uiStore.isApplying = false
       uiStore.isApplyingFrame = false
     }

@@ -1,7 +1,26 @@
 ## Slajd 1 
-Dobrý deň, volám sa Pavol Humený a v rámci svojej bakalárskej práce vytváram webovú aplikáciu na úpravu obrázkov – Figurio. Je to editor zameraný na prípravu obrázkov do odborných textov. Ide o editor, ktorý obsahuje nástroje určené na tieto úpravy. A zároveň kladie dôraz na jednoduché a intuitívne rozhranie. 
+Dobrý deň, volám sa Pavol Humený a v rámci bakalárskej práce vytváram webovú aplikácie pre úpravu obrázkov s názvom Figurio. Je to editor primárne zameraný na prípravu obrázkov do odborných textov. 
+
+Cieľom tejto práce je poskytnú užívateľom nástroj, pomocou ktorého budú môcť jednoducho a rýchlo upravovať svoje obrázky, vďaka ktorým budú ich výsledné texty vyzerať lepšie a zároveň sa nemusia učiť pracovať s pokročilými nástrojmi 
 
 Kladie dôraz na 2 základné veci, a to jednoduché a intuitívne rozhranie a bezpečnosť dát používateľov, preto sa všetky operácie vykonávajú v prehliadači a žiadne obrázky používateľov sa neposielajú niekde na server
+
+---
+
+Príkladom takejto úpravy môže byť odstránenie okrajov obrázka, a tak výsledný dokument nebude obsahovať obrázky s bielymi okrajmi
+
+Ďalším príkladom môže byť pridanie rámikov k snímkam obrazovky vďaka čomu bude hneď jasnejšie o čo sa jedná
+
+Alebo pridanie rôznych objektov alebo textu a šípok pre zvýraznenie dôležitých častí na obrázku
+
+---
+
+
+
+
+
+Dobrý deň, volám sa Pavol Humený a v rámci svojej bakalárskej práce vytváram webovú aplikáciu pre úpravu obrázkov – Figurio. Je to editor zameraný na prípravu obrázkov do odborných textov. Ide o editor, ktorý obsahuje nástroje určené na tieto úpravy. A zároveň kladie dôraz na jednoduché a intuitívne rozhranie. 
+
 
 Cieľom tohto editora je poskytnúť užívateľom nástroje, vďaka ktorým budú ich výsledné texty vyzerať lepšie a hlavne bez nutnosti učenia sa ovládania zložitých nástrojov.
 

@@ -63,9 +63,9 @@ const {
             v-if="fileFormat === 'jpg' || fileFormat === 'webp' || fileFormat === 'jpeg'">
             <label for="file-quality">{{
               $t('tools.export.settings.general.fileQuality.label')
-              }}</label>
+            }}</label>
             <p>{{ round(fileDimensions.quality) }} %</p>
-            <DefaultSlider v-model="fileDimensions.quality" :min="0" :max="100" :step="1"
+            <DefaultSlider v-model="fileDimensions.quality" :min="1" :max="100" :step="1"
               @update:modelValue="(value) => updateQuality(value)" />
           </div>
 
@@ -81,7 +81,7 @@ const {
           <div class="export-settings-item">
             <label>{{
               $t('tools.export.settings.general.fileDimensions.label')
-            }}</label>
+              }}</label>
             <div class="export-settings-item-value">
               <div class="width disabled">
                 <p>

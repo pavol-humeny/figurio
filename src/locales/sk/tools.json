@@ -397,6 +397,12 @@
         "explain": "Nástroj Štetec umožňuje maľovať na obrázok pomocou štetca. Môžete upraviť veľkosť štetca, tvrdosť a priehľadnosť pre dosiahnutie rôznych efektov.",
         "shortcut": ""
       },
+      "pencil": {
+        "label": "Ceruzka",
+        "tip": "Kreslí na obrázok pomocou ceruzky",
+        "explain": "Nástroj Ceruzka umožňuje kresliť na obrázok pomocou ceruzky. Vytvára ostrejšie a výraznejšie čiary v porovnaní so štetcom. Môžete upraviť veľkosť a tvrdosť ceruzky pre kontrolu vzhľadu ťahov.",
+        "shortcut": "P"
+      },
       "eraser": {
         "label": "Guma",
         "tip": "Odstraňuje natreté oblasti z obrázka",
@@ -418,6 +424,35 @@
         "rasterizeButton": {
           "text": "Rasterizovať",
           "tip": "Obrázok musí byť rasterizovaný pred použitím nástroja guma"
+        },
+        "selectedTool": {
+          "label": "Vybraný nástroj",
+          "options": {
+            "tipBrush": "Štetec",
+            "tipEraser": "Guma"
+          }
+        }
+      },
+      "pencil":{
+        "label": "Ceruzka",
+        "toolSize": {
+          "label": "Veľkosť ceruzky",
+          "tip": "Upravte veľkosť ceruzky"
+        },
+        "pencilColor": {
+          "label": "Farba ceruzky",
+          "tip": "Vyberte farbu ceruzky"
+        },
+        "rasterizeButton": {
+          "text": "Rasterizovať",
+          "tip": "Obrázok musí byť rasterizovaný pred použitím nástroja ceruzka"
+        },
+        "selectedTool": {
+          "label": "Vybraný nástroj",
+          "options": {
+            "tipPencil": "Ceruzka",
+            "tipEraser": "Guma"
+          }
         }
       },
       "eraser": {

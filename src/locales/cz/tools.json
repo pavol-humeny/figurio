@@ -398,6 +398,12 @@
         "explain": "Nástroj Štětec umožňuje malovat na obrázek pomocí štětce. Můžete upravit velikost štětce, tvrdost a průhlednost pro dosažení různých efektů.",
         "shortcut": ""
       },
+      "pencil": {
+        "label": "Tužka",
+        "tip": "Kreslí na obrázek pomocí tužky",
+        "explain": "Nástroj Tužka umožňuje kreslit na obrázek pomocí tužky. Vytváří ostřejší a výraznější čáry ve srovnání se štětcem. Můžete upravit velikost a tvrdost tužky pro kontrolu vzhledu tahů.",
+        "shortcut": "P"
+      },
       "eraser": {
         "label": "Guma",
         "tip": "Odstraňuje malované oblasti z obrázku",
@@ -419,6 +425,35 @@
         "rasterizeButton": {
           "text": "Rasterizovat",
           "tip": "Obrázek musí být rasterizován před použitím nástroje guma"
+        },
+        "selectedTool": {
+          "label": "Vybraný nástroj",
+          "options": {
+            "tipBrush": "Štětec",
+            "tipEraser": "Guma"
+          }
+        }
+      },
+      "pencil":{
+        "label": "Tužka",
+        "toolSize": {
+          "label": "Velikost tužky",
+          "tip": "Upravte velikost tužky"
+        },
+        "pencilColor": {
+          "label": "Barva tužky",
+          "tip": "Vyberte barvu tužky"
+        },
+        "rasterizeButton": {
+          "text": "Rasterizovat",
+          "tip": "Obrázek musí být rasterizován před použitím nástroje tužka"
+        },
+        "selectedTool": {
+          "label": "Vybraný nástroj",
+          "options": {
+            "tipPencil": "Tužka",
+            "tipEraser": "Guma"
+          }
         }
       },
       "eraser": {

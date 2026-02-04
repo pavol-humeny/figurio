@@ -6,9 +6,10 @@
 - Zobrazovanie operácií podľa užívateľov
 - premyslieť ten štetec a pixeláciu 
 - 1px štetec by mal vyplnat 1px 
-- štetec aby fungoval na kliknutie, nie len na tahanie 
-- doplnit command na vypísanie vecí čo obsahuje expert a admin režim do console 
+- resetovanie obrázku do pôvodného stavu
+- doriešiť export kresleného overlay
 
+- brush - tvar (kruh a štvorec, čiara horizontálna/vertikálna)
 - brush nefunguje na klikanie ale len na tahanie
 - vylepšiť BG removal 
 - opraviť shape 

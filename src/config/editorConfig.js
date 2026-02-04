@@ -20,7 +20,7 @@ export const editorConfig = {
   removalHighlightColor: 'rgba(255, 0, 0, 1)',
 
   // Brush commit time
-  brushCommitDelay: 50, // in ms
+  brushCommitDelay: 400, // in ms
 
   // Item tip settings
   tipDelay: 700,

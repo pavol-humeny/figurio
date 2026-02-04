@@ -4,9 +4,14 @@
     "items": []
   },
   "versions":{
-    "5.8.3":{
-      "label": "5.8.3",
+    "5.9.0":{
+      "label": "5.9.0",
       "date":"4.2. 2025",
+      "newFeatures": {
+        "items": [
+          "Add new tool - Pencil tool for drawing precise strokes"
+        ]
+      },
       "improvements": {
         "items": [
           "Add scrollbars to help and release notes modals",
