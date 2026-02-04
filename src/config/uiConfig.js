@@ -36,4 +36,7 @@ export const uiConfig = {
   // Toast
   // Auto remove time
   toastAutoRemoveTime: 6000, // 6 seconds
+
+  // File Tabs
+  autoScrollEdgeThreshold: 80,
 }

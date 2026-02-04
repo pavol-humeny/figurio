@@ -3,6 +3,7 @@ import { useWorkspaceStore } from '@/stores/workspaceStore'
 import { storeToRefs } from 'pinia'
 import { useConfirmModal } from '../modals/useConfirmModal'
 import { useImagePipeline } from './useImagePipeline'
+import { uiConfig } from '@/config/uiConfig'
 
 /**
  * Logic for handling file tab behavior, including switching, closing, dragging and scrolling
@@ -124,43 +125,40 @@ export function useFileTabs(uiStore, viewportStore, imageStore, editorStore, t) 
   })
 
   /**
-   * Handle reorder from vuedraggable
+   * Whether a tab is currently being dragged
    */
-  const onTabsReorder = (evt) => {
-    const { oldIndex, newIndex } = evt
-    if (oldIndex === newIndex) return
-
-    if (activeTabIndex.value === oldIndex) {
-      activeTabIndex.value = newIndex
-    } else if (activeTabIndex.value > oldIndex && activeTabIndex.value <= newIndex) {
-      activeTabIndex.value--
-    } else if (activeTabIndex.value < oldIndex && activeTabIndex.value >= newIndex) {
-      activeTabIndex.value++
-    }
-  }
-
   const isDraggingTab = ref(false)
+
+  /**
+   * Auto-scroll animation frame reference
+   */
   let autoScrollRaf = null
 
-  const EDGE_THRESHOLD = 80
-
+  /**
+   * Start auto-scrolling when dragging a tab near the edges
+   *
+   * @param {number} clientX - Current mouse X position
+   */
   const startAutoScroll = (clientX) => {
     const el = wrapperRef.value
     if (!el) return
 
     const rect = el.getBoundingClientRect()
 
-    const getSpeed = (distance) => Math.min(12, Math.max(2, (EDGE_THRESHOLD - distance) / 4))
+    // Determine scroll speed based on distance to edge
+    const getSpeed = (distance) =>
+      Math.min(12, Math.max(2, (uiConfig.autoScrollEdgeThreshold - distance) / 4))
 
+    // Recursive scroll function
     const scroll = () => {
       if (!isDraggingTab.value) return
 
       const distanceLeft = clientX - rect.left
       const distanceRight = rect.right - clientX
 
-      if (distanceLeft < EDGE_THRESHOLD) {
+      if (distanceLeft < uiConfig.autoScrollEdgeThreshold) {
         el.scrollLeft -= getSpeed(distanceLeft)
-      } else if (distanceRight < EDGE_THRESHOLD) {
+      } else if (distanceRight < uiConfig.autoScrollEdgeThreshold) {
         el.scrollLeft += getSpeed(distanceRight)
       }
 
@@ -171,11 +169,19 @@ export function useFileTabs(uiStore, viewportStore, imageStore, editorStore, t) 
     autoScrollRaf = requestAnimationFrame(scroll)
   }
 
+  /**
+   * Stop auto-scrolling
+   */
   const stopAutoScroll = () => {
     cancelAnimationFrame(autoScrollRaf)
     autoScrollRaf = null
   }
 
+  /**
+   * Handle drag move event to trigger auto-scrolling
+   *
+   * @param {Object} evt - Drag event
+   */
   const onDragMove = (evt) => {
     if (!isDraggingTab.value) return
 
@@ -191,7 +197,6 @@ export function useFileTabs(uiStore, viewportStore, imageStore, editorStore, t) 
     activeTabIndex,
     setActiveTab,
     closeTab,
-    onTabsReorder,
     switchToNextTab,
     switchToPreviousTab,
     onDragMove,

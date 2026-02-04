@@ -23,7 +23,6 @@ const {
   activeTabIndex,
   setActiveTab,
   closeTab,
-  // onTabsReorder,
   wrapperRef,
   isDraggingTab,
   onDragMove,
@@ -114,10 +113,6 @@ const {
 
 .tab-close:hover {
   opacity: 1;
-}
-
-.tab-chosen {
-  /* opacity: 0 !important; */
 }
 
 .tab-ghost {

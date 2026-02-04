@@ -9,7 +9,8 @@
       "date":"4.2. 2025",
       "improvements": {
         "items": [
-          "Add scrollbars to help and release notes modals"
+          "Add scrollbars to help and release notes modals",
+          "Add auto scrolling when dragging tab near the edges of tab bar"
         ]
       },
       "bugFixes": {
