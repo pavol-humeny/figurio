@@ -4,8 +4,6 @@
 
 # TODO
 - Zobrazovanie operácií podľa užívateľov
-- Pridať scroll bar k help, release
-- pri zatvorení bočného panelu sa posunie fotka ale nie slide bar
 - Ked je tam viac okien tak, pri držaní na kraji by to mohlo rolovať tie okná 
 - Ak to otvorí nové okno a nevojde sa to tam, tak by to mohlo scrollnut na toto nove okno 
 - premyslieť ten štetec a pixeláciu 

@@ -503,11 +503,26 @@ export function useViewportWrapper(viewportStore, imageStore, editorStore, uiSto
     // { immediate: true },
   )
 
+  /**
+   * Move image to center when side panel is opened/closed
+   * @param {number} side - Direction to move (-1 for left, 1 for right)
+   */
   const moveImageToCenter = (side) => {
-    console.warn('------- Moving image to center ')
     if (!wrapperRef.value || !contentRef.value) return
 
+    // Refresh wrapper + content sizes
+    updateInitialDimensions()
+    updateZoomDependentDimensions()
+
+    // Move image
     viewportStore.panX += (uiStore.rightPanelDefaultWidth / 2) * side
+
+    // Clamp to new limits
+    viewportStore.panX = clamp(
+      viewportStore.panX,
+      scrollHorizontalMin.value,
+      scrollHorizontalMax.value,
+    )
   }
 
   /**
@@ -515,16 +530,12 @@ export function useViewportWrapper(viewportStore, imageStore, editorStore, uiSto
    */
   watch(
     () => uiStore.rightPanelOpen,
-    (open) => {
-      nextTick(() => {
-        if (open) {
-          moveImageToCenter(-1)
-        } else {
-          moveImageToCenter(1)
-        }
-      })
+    async (open) => {
+      await nextTick()
+      await nextTick()
+
+      moveImageToCenter(open ? -1 : 1)
     },
-    { immediate: true },
   )
 
   /**
@@ -791,7 +802,20 @@ export function useViewportWrapper(viewportStore, imageStore, editorStore, uiSto
             height: wrapperRef.value.clientHeight,
           }
 
-          // setValuesForCenterImage() // To prevent jumping when side panel is opened/closed
+          updateInitialDimensions()
+          updateZoomDependentDimensions()
+
+          // keep pan in bounds
+          viewportStore.panX = clamp(
+            viewportStore.panX,
+            scrollHorizontalMin.value,
+            scrollHorizontalMax.value,
+          )
+          viewportStore.panY = clamp(
+            viewportStore.panY,
+            scrollVerticalMin.value,
+            scrollVerticalMax.value,
+          )
 
           throttledUpdateRulers()
         })

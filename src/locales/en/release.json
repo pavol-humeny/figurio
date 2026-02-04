@@ -11,6 +11,11 @@
         "items": [
           "Add scrollbars to help and release notes modals"
         ]
+      },
+      "bugFixes": {
+        "items": [
+          "Adjust position of sliders when opening right panel"
+        ]
       }
     },
     "5.8.2":{
