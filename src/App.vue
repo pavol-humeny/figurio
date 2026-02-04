@@ -79,11 +79,14 @@ const blockDevToolsShortcuts = (event) => {
     return
   }
 
+  if (!event.key) return
+
   const key = event.key.toLowerCase()
 
   // F12
   if (key === 'f12') {
     event.preventDefault()
+    console.warn('Blocked F12 DevTools shortcut')
     return
   }
 
@@ -94,12 +97,15 @@ const blockDevToolsShortcuts = (event) => {
     ['i', 'j', 'c'].includes(key)
   ) {
     event.preventDefault()
+    console.warn(`Blocked Ctrl/Cmd + Shift + ${key.toUpperCase()} DevTools shortcut`)
     return
   }
 
   // Ctrl / Cmd + U (view source)
   if ((event.ctrlKey || event.metaKey) && key === 'u') {
     event.preventDefault()
+    console.warn('Blocked Ctrl/Cmd + U View Source shortcut')
+    return
   }
 }
 

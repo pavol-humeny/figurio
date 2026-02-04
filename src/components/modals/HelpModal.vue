@@ -3,7 +3,7 @@ import { storeToRefs } from 'pinia';
 import BaseIcon from '@/components/icons/BaseIcon.vue';
 import DefaultButton from '@/components/common/DefaultButton.vue';
 import { useHelpModal } from '@/composables/modals/useHelpModal';
-import { computed } from 'vue'
+import { computed} from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useUiStore } from '@/stores/uiStore';
 import { useRouter } from 'vue-router';

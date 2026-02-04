@@ -1,4 +1,4 @@
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, watch, nextTick } from 'vue'
 import { useWorkspaceStore } from '@/stores/workspaceStore'
 import { storeToRefs } from 'pinia'
 import { useConfirmModal } from '../modals/useConfirmModal'
@@ -191,6 +191,55 @@ export function useFileTabs(uiStore, viewportStore, imageStore, editorStore, t) 
     startAutoScroll(clientX)
   }
 
+  /**
+   * Watch for changes to the active tab index and scroll the active tab into view if necessary
+   */
+  watch(activeTabIndex, async () => {
+    if (isDraggingTab.value) return // Don't scroll while dragging
+
+    await nextTick() // Wait for DOM to update with new active tab
+    scrollActiveTabIntoView()
+  })
+
+  /**
+   * Scroll the active tab into view if it's out of the visible area of the tab bar
+   */
+  const scrollActiveTabIntoView = () => {
+    const container = wrapperRef.value
+    if (!container) return
+
+    const tabsEls = container.querySelectorAll('.tab')
+    const activeEl = tabsEls[activeTabIndex.value]
+
+    if (!activeEl) return
+
+    const containerRect = container.getBoundingClientRect()
+    const tabRect = activeEl.getBoundingClientRect()
+
+    // Tab is out of view on the left
+    if (tabRect.left < containerRect.left) {
+      container.scrollLeft -= containerRect.left - tabRect.left
+    }
+    // Tab is out of view on the right
+    else if (tabRect.right > containerRect.right) {
+      container.scrollLeft += tabRect.right - containerRect.right
+    }
+  }
+
+  const onTabsReorder = (evt) => {
+    const { oldIndex, newIndex } = evt
+    if (oldIndex === newIndex) return
+
+    if (activeTabIndex.value === oldIndex) {
+      // presúval sa aktívny tab
+      activeTabIndex.value = newIndex
+    } else if (activeTabIndex.value > oldIndex && activeTabIndex.value <= newIndex) {
+      activeTabIndex.value--
+    } else if (activeTabIndex.value < oldIndex && activeTabIndex.value >= newIndex) {
+      activeTabIndex.value++
+    }
+  }
+
   return {
     wrapperRef,
     tabs,
@@ -203,5 +252,6 @@ export function useFileTabs(uiStore, viewportStore, imageStore, editorStore, t) 
     isDraggingTab,
     startAutoScroll,
     stopAutoScroll,
+    onTabsReorder,
   }
 }

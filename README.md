@@ -4,8 +4,6 @@
 
 # TODO
 - Zobrazovanie operácií podľa užívateľov
-- Ked je tam viac okien tak, pri držaní na kraji by to mohlo rolovať tie okná 
-- Ak to otvorí nové okno a nevojde sa to tam, tak by to mohlo scrollnut na toto nove okno 
 - premyslieť ten štetec a pixeláciu 
 - 1px štetec by mal vyplnat 1px 
 - štetec aby fungoval na kliknutie, nie len na tahanie 

@@ -1,17 +1,4 @@
 export const userModeConfig = {
-  /** List of all features with specific access */
-  // 'fileSize',
-  // 'fileDimensions',
-  // 'unlimitedZoom',
-  // 'numberOfOpenedFiles',
-  // 'maxNumberOfFilesToUploadSimultaneously',
-  // 'notShowUnexpectedErrorModal',
-  // 'statistics',
-  // 'blockedTools',
-  // 'notBlockDevTools',
-  // 'maxNumberOfOpenFiles',
-  // 'doNotShowInitialWarnings',
-
   // UPDATE new random event
   listOfCommands: [
     'turn on <snowfall|christmasLights|christmasTree|fireworks|fireworks2|randomEvents>', // Enable feature
@@ -21,10 +8,12 @@ export const userModeConfig = {
     'reset all', // Reset all configuration options
     'help', // Show help information
     'quit', // Exit command mode
+    'man <command>', // Show manual page for a specific command
+    'permissions', // Show permissions for expert and admin users
   ],
 
   autocomplete: {
-    root: ['help', 'man', 'turn', 'set', 'reset', 'clear', 'quit'],
+    root: ['help', 'man', 'turn', 'set', 'reset', 'clear', 'quit', 'permissions'],
     turn: ['on', 'off'],
     'turn on': [
       'snowfall',
@@ -44,7 +33,7 @@ export const userModeConfig = {
     ],
     set: ['primaryColor'],
     reset: ['primaryColor', 'all'],
-    man: ['turn on', 'turn off', 'set', 'reset', 'reset all', 'help', 'quit'],
+    man: ['turn on', 'turn off', 'set', 'reset', 'reset all', 'help', 'quit', 'man', 'permissions'],
   },
 
   commandManPages: {
@@ -131,7 +120,20 @@ export const userModeConfig = {
       DESCRIPTION
           Exits the command mode and returns to normal application operation.
       `,
+    permissions: `
+      NAME
+          permissions - Show user mode permissions
+
+      SYNOPSIS
+          permissions
+
+      DESCRIPTION
+          Displays the features and commands accessible to the current user mode (expert, admin).
+      `,
   },
+
+  /** List of features accessible to admin users */
+  adminFeatures: ['numberOfOpenedFiles', 'maxNumberOfFilesToUploadSimultaneously'],
 
   /** List of features accessible to expert users */
   expertFeatures: [

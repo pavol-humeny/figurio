@@ -10,7 +10,8 @@
       "improvements": {
         "items": [
           "Add scrollbars to help and release notes modals",
-          "Add auto scrolling when dragging tab near the edges of tab bar"
+          "Add auto scrolling when dragging tab near the edges of tab bar",
+          "Scroll active tab into view when opening the file if it is out of view"
         ]
       },
       "bugFixes": {

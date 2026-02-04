@@ -81,6 +81,10 @@ export function useCommandLine(userModeStore, editorStore) {
         handleResetCommand(args)
         break
 
+      case 'permissions':
+        handlePermissionsCommand()
+        break
+
       default:
         output.value.push('Unknown command: ' + trimmed)
     }
@@ -96,6 +100,7 @@ export function useCommandLine(userModeStore, editorStore) {
 
   /**
    * Handle 'turn on/off' commands
+   * @param {string[]} args Command arguments
    */
   const handleTurnCommand = (args) => {
     if (args.length < 2) {
@@ -194,6 +199,10 @@ export function useCommandLine(userModeStore, editorStore) {
     }
   }
 
+  /**
+   * Handle 'set' commands
+   * @param {string[]} args Command arguments
+   */
   const handleSetCommand = (args) => {
     if (args.length < 2) {
       output.value.push('Usage: set <setting> <value>')
@@ -216,6 +225,10 @@ export function useCommandLine(userModeStore, editorStore) {
     }
   }
 
+  /**
+   * Handle 'reset' commands
+   * @param {string[]} args Command arguments
+   */
   const handleResetCommand = (args) => {
     if (args.length < 1) {
       output.value.push('Usage: reset <setting>')
@@ -241,6 +254,27 @@ export function useCommandLine(userModeStore, editorStore) {
     }
   }
 
+  /**
+   * Handle 'permissions' command to show current user mode and accessible features
+   */
+  const handlePermissionsCommand = () => {
+    output.value.push('Current user mode: ' + userModeStore.userMode)
+    output.value.push('Accessible features:')
+
+    if (userModeStore.isExpertOrAdminMode) {
+      userModeConfig.expertFeatures.forEach((feature) => output.value.push(' - ' + feature))
+    }
+
+    if (userModeStore.isAdminMode) {
+      userModeConfig.adminFeatures.forEach((feature) => output.value.push(' - ' + feature))
+    }
+  }
+
+  /**
+   * Set primary color
+   *
+   * @param {string} color  Color value in hex, rgb or rgba format
+   */
   const setPrimaryColor = (color) => {
     // Check if it is hex, rgb or rgba color
     const isHex = /^#([0-9A-F]{3}){1,2}$/i.test(color)
@@ -325,6 +359,7 @@ export function useCommandLine(userModeStore, editorStore) {
   const switchToBasicMode = () => {
     userModeStore.setUserMode('basic')
     resetAll()
+    window.removeEventListener('keydown', handleKeydown)
   }
 
   /**
