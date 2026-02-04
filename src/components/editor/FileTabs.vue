@@ -23,8 +23,11 @@ const {
   activeTabIndex,
   setActiveTab,
   closeTab,
-  onTabsReorder,
+  // onTabsReorder,
   wrapperRef,
+  isDraggingTab,
+  onDragMove,
+  stopAutoScroll,
 } = useFileTabs(useUiStore(), useViewportStore(), useImageStore(), useEditorStore(), t)
 
 </script>
@@ -33,7 +36,8 @@ const {
   <div class="file-tabs">
     <div class="scroll-container" ref="wrapperRef">
       <draggable v-model="tabs" item-key="id" class="tabs-wrapper" :animation="150" :ghost-class="'tab-ghost'"
-        :chosen-class="'tab-chosen'" @end="onTabsReorder">
+        :chosen-class="'tab-chosen'" @start="isDraggingTab = true"
+        @end="() => { isDraggingTab = false; stopAutoScroll() }" @move="onDragMove">
         <template #item="{ element: tab, index: i }">
           <div class="tab" :class="{ active: i === activeTabIndex }" @click="setActiveTab(i)">
             <p>{{ tab.name }}.{{ tab.fileExtension }}</p>
@@ -81,6 +85,7 @@ const {
   display: flex;
   align-items: center;
   border-right: var(--border-ui);
+  border-left: var(--border-ui);
   cursor: pointer;
   white-space: nowrap;
   flex-shrink: 0;

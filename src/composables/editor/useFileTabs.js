@@ -49,12 +49,6 @@ export function useFileTabs(uiStore, viewportStore, imageStore, editorStore, t) 
       workspaceStore.updateCurrentTabState(t)
       await workspaceStore.switchToTab(index)
 
-      // Reset when switching tabs to reset rulers position
-      // TODO - experimentaly commented, if everything works fine remove these lines
-      // viewportStore.resetZoom()
-      // viewportStore.resetPan()
-      // viewportStore.shouldFitToScreen = true
-
       await renderUpTo(imageStore.renderPipeline.currentOpIndex, { t, imageStore })
 
       uiStore.isLoading = false
@@ -145,6 +139,52 @@ export function useFileTabs(uiStore, viewportStore, imageStore, editorStore, t) 
     }
   }
 
+  const isDraggingTab = ref(false)
+  let autoScrollRaf = null
+
+  const EDGE_THRESHOLD = 80
+
+  const startAutoScroll = (clientX) => {
+    const el = wrapperRef.value
+    if (!el) return
+
+    const rect = el.getBoundingClientRect()
+
+    const getSpeed = (distance) => Math.min(12, Math.max(2, (EDGE_THRESHOLD - distance) / 4))
+
+    const scroll = () => {
+      if (!isDraggingTab.value) return
+
+      const distanceLeft = clientX - rect.left
+      const distanceRight = rect.right - clientX
+
+      if (distanceLeft < EDGE_THRESHOLD) {
+        el.scrollLeft -= getSpeed(distanceLeft)
+      } else if (distanceRight < EDGE_THRESHOLD) {
+        el.scrollLeft += getSpeed(distanceRight)
+      }
+
+      autoScrollRaf = requestAnimationFrame(scroll)
+    }
+
+    cancelAnimationFrame(autoScrollRaf)
+    autoScrollRaf = requestAnimationFrame(scroll)
+  }
+
+  const stopAutoScroll = () => {
+    cancelAnimationFrame(autoScrollRaf)
+    autoScrollRaf = null
+  }
+
+  const onDragMove = (evt) => {
+    if (!isDraggingTab.value) return
+
+    const clientX = evt.originalEvent?.clientX
+    if (clientX == null) return
+
+    startAutoScroll(clientX)
+  }
+
   return {
     wrapperRef,
     tabs,
@@ -154,5 +194,9 @@ export function useFileTabs(uiStore, viewportStore, imageStore, editorStore, t) 
     onTabsReorder,
     switchToNextTab,
     switchToPreviousTab,
+    onDragMove,
+    isDraggingTab,
+    startAutoScroll,
+    stopAutoScroll,
   }
 }
