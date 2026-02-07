@@ -47,10 +47,10 @@ export const globalConfig = {
       backgroundRemoval: true,
       brush: true,
       select: true,
-      blur: false,
+      blur: true,
       shape: true,
       text: true,
-      magnifyArea: false,
+      magnifyArea: true,
       transform: true,
       preset: true,
       export: true,
@@ -63,7 +63,8 @@ export const globalConfig = {
   // Modal settings
   modalSettings: {
     enableTutorial: true,
-    enableUnexpectedErrorModal: true,
+    enableUnexpectedErrorModal: false,
+    // TODO enable zobrazenie feature tour modalu pri prvej navsteve alebo po update
   },
 
   // Random events configuration

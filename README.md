@@ -8,6 +8,13 @@
 - 1px štetec by mal vyplnat 1px 
 - resetovanie obrázku do pôvodného stavu
 - doriešiť export kresleného overlay
+- odstrániť move tool, dark light convertor
+- spraviť noise removal
+- BG removal - zmena farby masky
+- Mám prázdny preset, dám pridať operáciu, dropdown neobsahuje predefinovanú hodnotu
+- Pridanie operácie - volá sa to auto crop a nie fit crop
+- Resize a crop nastaviť tak aby rešpektovali minimálne a maximálne rozmery
+- odstrániť názov šablóny ak nie sme v režime úpravy
 
 - brush - tvar (kruh a štvorec, čiara horizontálna/vertikálna)
 - brush nefunguje na klikanie ale len na tahanie
@@ -18,8 +25,7 @@
 - opraviť select
 - pri výbere z dropdown menu to neskryje tip 
 - statistiky - v grafe návštevnosti zobrazovať lokalizáciu
-- minimálna kvalita by mohla byť 0
-- zvacsuje to súbory pri nacítaní 
+
 - pri zmene monitora by to mohlo dať hlasku aby sa to nakalibrovalo 
 - odšumovať 
 
@@ -123,14 +129,15 @@
 - NEPREUKÁZALO SA - error pri zatvorení viacerých súborov
 - NEPREUKÁZALO SA - nakreslím niečo, pridám shape, a dám rasterize tak to zmizne - rastererize zožuje brush 
 
+## Ťažko povedať čo s tým 
+
+
 ## User testing changes 
 - Nezobrazovať toast o úspešnom nahratí súboru - predsa to je jasné že sa nahral 
 - FIXED - Premenovanie súboru by nemuselo dávať toast
 - FIXED - z index polohu zobrazovať len 2 tlačidlá ak sú len 2 objekty, žiadne ak je len jeden 
 - FIXED - pri zrušení výplne automaticky prepnúť na hrúbku rámiku a nie vyžadovať od užívateľa 
 - FIXED - Zoom pomocou numerickej klávesnice - povodne tam bola ikona pravitka, co evokovalo zapnutie pravítok v editore 
-
- 
 
 ## API
 ### addUserEvent()

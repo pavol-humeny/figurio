@@ -1,3 +1,25 @@
+## ITT prezentácia 
+- Všeobecné 
+    - V powerpointe sa nezobrazoval správne font písmena F
+
+- Motivácia 
+    - obrázky spraviť viac abstraktné, aby tam nebol text alebo nejaká schéma, na ktorú by sa mohli zameriavať
+    - zdôrazniť že to je príklad ukážky úpravy
+    - ukázať tam celú pdf stranu
+    - nemať tam čierne okraje na zvislej časti - nevedeli čo to je 
+
+- Pre koho to je - pridať informáciu o tom komu je aplikácia učená 
+
+- Dôvod prečo je aplikácia prínosná
+    - že to obsahuje nástroje prispôsobené k tomuto účelu 
+    - vektorové spracovanie pdf
+    - ochrana súkromia
+
+- Vedieť vysvetliť 
+    - ako sa spracováva pdf a ako raster 
+    - ako funguje web worker
+    - ako funguje načítanie a export 
+
 ## Slajd 1 
 Dobrý deň, volám sa Pavol Humený a v rámci bakalárskej práce vytváram webovú aplikácie pre úpravu obrázkov s názvom Figurio. Je to editor primárne zameraný na prípravu obrázkov do odborných textov. 
 

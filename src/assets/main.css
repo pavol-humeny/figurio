@@ -296,7 +296,7 @@ input[type='range']::-moz-range-thumb {
 }
 
 .settings-content-wrapper-last {
-  border-bottom: none;
+  /* border-bottom: none; */ /*TODO remove if ok*/
 }
 
 .scrollable-settings {

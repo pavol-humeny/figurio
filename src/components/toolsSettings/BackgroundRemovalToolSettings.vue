@@ -25,7 +25,6 @@ const editorStore = useEditorStore()
  */
 const {
   applyBackgroundRemoval,
-  // colorRemovalThresholdOptions,
   colorRemovalThreshold,
   colorBackgroundColor,
   manualSelectedTool,
@@ -36,8 +35,6 @@ const {
   manualMinToolSize,
   clearAllSelections,
   invertSelection,
-  useBaseImage,
-  // detectObjectsClick,
   replaceSelection,
   selectColorClick,
   highlightRemovedPixels,
@@ -178,19 +175,6 @@ const tabs = ['auto', 'manual', 'color']
               <DefaultButton :text="$t('tools.backgroundRemoval.settings.manual.selectRemovedButton.text')"
                 :tip="$t('tools.backgroundRemoval.settings.manual.selectRemovedButton.tip')" position="bottom-left"
                 @click="highlightRemovedPixels" />
-            </div>
-          </div>
-
-          <!-- Use base image -->
-          <div class="settings-content-wrapper">
-            <div class="content-wrapper">
-              <div class="content-aligned two-items">
-                <p style="text-align: start">
-                  {{ $t('tools.backgroundRemoval.settings.manual.useBaseImage.label') }}
-                </p>
-                <ToggleButton v-model="useBaseImage" :scale="0.6" :style="{ transform: 'translateX(16px)' }"
-                  :tip="$t('tools.backgroundRemoval.settings.manual.useBaseImage.tip')" position="bottom-left" />
-              </div>
             </div>
           </div>
 
@@ -336,19 +320,6 @@ const tabs = ['auto', 'manual', 'color']
             </div>
           </div>
 
-          <!-- Use base image -->
-          <div class="settings-content-wrapper">
-            <div class="content-wrapper">
-              <div class="content-aligned two-items">
-                <p style="text-align: start">
-                  {{ $t('tools.backgroundRemoval.settings.manual.useBaseImage.label') }}
-                </p>
-                <ToggleButton v-model="useBaseImage" :scale="0.6" :style="{ transform: 'translateX(16px)' }"
-                  :tip="$t('tools.backgroundRemoval.settings.manual.useBaseImage.tip')" position="bottom-left" />
-              </div>
-            </div>
-          </div>
-
           <!-- Replace background with color -->
           <div class="settings-content-wrapper settings-content-wrapper-last">
             <div class="content-wrapper">
@@ -466,19 +437,6 @@ const tabs = ['auto', 'manual', 'color']
               <DefaultButton :text="$t('tools.backgroundRemoval.settings.manual.selectRemovedButton.text')"
                 :tip="$t('tools.backgroundRemoval.settings.manual.selectRemovedButton.tip')" position="bottom-left"
                 @click="highlightRemovedPixels" />
-            </div>
-          </div>
-
-          <!-- Use base image -->
-          <div class="settings-content-wrapper">
-            <div class="content-wrapper">
-              <div class="content-aligned two-items">
-                <p style="text-align: start">
-                  {{ $t('tools.backgroundRemoval.settings.manual.useBaseImage.label') }}
-                </p>
-                <ToggleButton v-model="useBaseImage" :scale="0.6" :style="{ transform: 'translateX(16px)' }"
-                  :tip="$t('tools.backgroundRemoval.settings.manual.useBaseImage.tip')" position="bottom-left" />
-              </div>
             </div>
           </div>
 

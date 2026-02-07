@@ -180,12 +180,6 @@ export function useBackgroundRemovalTool(
   // ----------------------------------
   // Manual
   // ----------------------------------
-
-  /**
-   * Whether to use original image as base for manual removal
-   */
-  const useBaseImage = ref(false)
-
   /**
    * Whether to replace current selection with object detection result
    */
@@ -887,7 +881,6 @@ export function useBackgroundRemovalTool(
     manualMinToolSize,
     clearAllSelections,
     invertSelection,
-    useBaseImage,
     changeManualToolSize,
     // detectObjectsClick,
     replaceSelection,
