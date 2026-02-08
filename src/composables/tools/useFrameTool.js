@@ -551,6 +551,11 @@ export function useFrameTool(imageStore, historyStore, viewportStore, t) {
 
       await nextTick()
 
+      addUserEvent('applyOperation', {
+        tool: 'frame',
+        settings: { ...imageStore.frame },
+      })
+
       applyFrame()
     })
   }
@@ -974,11 +979,6 @@ export function useFrameTool(imageStore, historyStore, viewportStore, t) {
     }
 
     if (commit) {
-      addUserEvent('applyOperation', {
-        tool: 'frame',
-        settings: { ...imageStore.frame },
-      })
-
       historyStore.push(imageStore.getSnapshot(t))
     }
 

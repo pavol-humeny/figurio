@@ -1,8 +1,25 @@
 # Figurio
 
+
+
+## Parts
+- Magnify area
+- Blur tool 
+- Select tool
+- Shape tool 
+- Noise correction
+
 ## TODO - text 
+- dorobiť wireframe a dať to do návrhu
+- prerobiť snímky obrazovky kde je VUE logo na spodku 
+- Odstrániť viacnásobné odkazy na citácie 
 
 # TODO
+- Povoliť kopírovanie textu 
+- Odstrániť možnosť rotovať SVG objekty 
+- Natočiť videá
+- Slidebar nejde rovnako ako myška
+- Slidebar na spodku a vpravo vychádza mimo
 - Zobrazovanie operácií podľa užívateľov
 - premyslieť ten štetec a pixeláciu 
 - 1px štetec by mal vyplnat 1px 
@@ -28,6 +45,50 @@
 
 - pri zmene monitora by to mohlo dať hlasku aby sa to nakalibrovalo 
 - odšumovať 
+
+## TODO 
+- SKIP - (asi to je v pohode tak ako to je) zoomovanie pomocou tlacitok, ak je obrazok mimo stred tak to zoomuje mimo obrázok 
+- Vylepšenie rámiku pre prehliadače 
+- Paste by to mohol klásť inde ako na ten istý objekt, aspoň pri kliknutí pravím 
+- Opravit paste blur objektu 
+- nakreslenie svg objektu, prepnutie na brush (vyžaduje rasterizáciu) a následné spätné prepnutie na shape (stále to chcelo rasterizovať)
+- color bg removal intuitívnejší 
+- brush - ak dochádza k uloženiu snapshotu do histórie tak to vyriesit nejako inak - divne sa to seká 
+- pri posune viacerých objektov, následnom položení a opätovnom presune to nechce ísť a sekne to 
+- undo redo možno nejako zakázať pri aby sa to nedalo kliknúť viac krát do vtedy kým sa neaplikuje operácia 
+- premyslieť kedy sa toasty nemusia zobrazovať 
+
+## Dlhodobé TODO 
+- eye dropper na safari
+- Globálne úpravy (rasterizácia)
+- BG removal - ukladanie do undo redo operácií pri výbere 
+- Poskakovanie pri resize ak je to otočené (svg objekty)
+- Poloha magnify area a blur object voči ostatným objektom (možné riešenie vrstvy)
+- možnosť všetko exportovať naraz do zip
+- PDF s nepodporovanými svg objektami 
+- prevod pdf na raster ak to obsahuje hlúposti 
+- Zjednodušiť toasty
+- pridať nástroj fill (kýbel)
+- pridať nástroj pre nastavenie priehľadnosti obrázka
+- Možno nejako vylepšiť vysvetlenie grayscale
+- mať možnosť zobraziť informácie o obrázku - asi nič moc, lebo z obrázku sa toho veľa nedá zistiť 
+
+## Insane ideas
+- aplikovanie operácie na všetky obrázky 
+- Premenné prostredia (pre farbu, veľkosť)
+- Vrstvy 
+- Možnosť si uložiť aktuálnu prácu 
+- Nástroj na kreslenie (štetce)
+- Split screen pre viac obrázkov 
+- v inpute by to čísla mohlo počítať 
+- Možnosť vytvoriť si prázdny projekt a vkladať tam obrázky
+
+## Nepreukázalo sa 
+- NEPREUKÁZALO SA - pri prepnutí z color na manual select sa nezapne spravny kurzor
+- NEPREUKÁZALO SA - error pri zatvorení viacerých súborov
+- NEPREUKÁZALO SA - nakreslím niečo, pridám shape, a dám rasterize tak to zmizne - rastererize zožuje brush 
+
+## Ťažko povedať čo s tým 
 
 ## TODO od J (userTesting2 - 12.1.2026)
 - FIXED - Zoom pomocou numerickej klávesnice
@@ -67,7 +128,7 @@
 - FIXED - bočný panel by sa mohol zatvárať len šípkou a nie celým rozmerom tlacidla 
 - FIXED - manuálna úprava rozmerov pri crop dá error 
 - FIXED - skrytie rámiku pomocou hold - použiť tlačidlo a nie toggle 
-- Frame tool - vylepšiť rámiky 
+- TODO - Frame tool - vylepšiť rámiky okien
 - FIXED - BG removal 
     - SKIP - vybrať odstránené je neintuitívne 
     - FIXED - text - nahradiť pozadie zmeniť na nahradiť výber 
@@ -83,54 +144,9 @@
 - FIXED - z index polohu zobrazovať len 2 tlačidlá ak sú len 2 objekty, žiadne ak je len jeden 
 - FIXED - pri prepínaní okien to nedrží zoom 
 - FIXED - tab sa nedá posunúť úplne doprava 
-- MG - zoomuje len podklad a nie aj objekty 
-- select - ak sa vyberie mg tak to zostane na tom nástroji a neprepne sa to späť na select 
+- TODO - MG - zoomuje len podklad a nie aj objekty 
+- TODO - select - ak sa vyberie mg tak to zostane na tom nástroji a neprepne sa to späť na select 
 - FIXED - feature tour - prerobenie krížika 
-
-## TODO 
-- SKIP - (asi to je v pohode tak ako to je) zoomovanie pomocou tlacitok, ak je obrazok mimo stred tak to zoomuje mimo obrázok 
-- Vylepšenie rámiku pre prehliadače 
-- Paste by to mohol klásť inde ako na ten istý objekt, aspoň pri kliknutí pravím 
-- Opravit paste blur objektu 
-- nakreslenie svg objektu, prepnutie na brush (vyžaduje rasterizáciu) a následné spätné prepnutie na shape (stále to chcelo rasterizovať)
-- color bg removal intuitívnejší 
-- brush - ak dochádza k uloženiu snapshotu do histórie tak to vyriesit nejako inak - divne sa to seká 
-- pri posune viacerých objektov, následnom položení a opätovnom presune to nechce ísť a sekne to 
-- undo redo možno nejako zakázať pri aby sa to nedalo kliknúť viac krát do vtedy kým sa neaplikuje operácia 
-- premyslieť kedy sa toasty nemusia zobrazovať 
-
-## Dlhodobé TODO 
-- eye dropper na safari
-- Globálne úpravy (rasterizácia)
-- BG removal - ukladanie do undo redo operácií pri výbere 
-- Poskakovanie pri resize ak je to otočené (svg objekty)
-- Poloha magnify area a blur object voči ostatným objektom (možné riešenie vrstvy)
-- možnosť všetko exportovať naraz do zip
-- PDF s nepodporovanými svg objektami 
-- prevod pdf na raster ak to obsahuje hlúposti 
-- Zjednodušiť toasty
-- pridať nástroj fill (kýbel)
-- pridať nástroj pre nastavenie priehľadnosti obrázka
-- Možno nejako vylepšiť vysvetlenie grayscale
-- mať možnosť zobraziť informácie o obrázku - asi nič moc, lebo z obrázku sa toho veľa nedá zistiť 
-
-
-## Insane ideas
-- aplikovanie operácie na všetky obrázky 
-- Premenné prostredia (pre farbu, veľkosť)
-- Vrstvy 
-- Možnosť si uložiť aktuálnu prácu 
-- Nástroj na kreslenie (štetce)
-- Split screen pre viac obrázkov 
-- v inpute by to čísla mohlo počítať 
-
-## Nepreukázalo sa 
-- NEPREUKÁZALO SA - pri prepnutí z color na manual select sa nezapne spravny kurzor
-- NEPREUKÁZALO SA - error pri zatvorení viacerých súborov
-- NEPREUKÁZALO SA - nakreslím niečo, pridám shape, a dám rasterize tak to zmizne - rastererize zožuje brush 
-
-## Ťažko povedať čo s tým 
-
 
 ## User testing changes 
 - Nezobrazovať toast o úspešnom nahratí súboru - predsa to je jasné že sa nahral 
