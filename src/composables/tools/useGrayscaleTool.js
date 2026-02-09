@@ -111,51 +111,6 @@ export function useGrayscaleTool(imageStore, editorStore, historyStore, t) {
   }
 
   /**
-   * Convert the current rendered image to grayscale
-   * Supports: luminance, average, lightness
-   * @param {string} type - Grayscale conversion method
-   */
-  // const applyGrayscaleRender = async (type) => {
-  //   if (type === 'none') return
-
-  //   const img = imageStore.getRenderedImage({ t, renderCall: false })
-  //   if (!img) return
-
-  //   const canvas = document.createElement('canvas')
-  //   const ctx = canvas.getContext('2d')
-  //   canvas.width = img.width
-  //   canvas.height = img.height
-
-  //   ctx.drawImage(img, 0, 0)
-  //   const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height)
-
-  //   // Set loading state
-  //   uiStore.isApplying = true
-
-  //   try {
-  //     const worker = new Worker(new URL('@/composables/worker/grayscaleWorker.js', import.meta.url))
-
-  //     const data = await new Promise((resolve) => {
-  //       worker.onmessage = (e) => {
-  //         resolve(e.data)
-  //         worker.terminate()
-  //       }
-  //       worker.postMessage({ data: imageData.data, type })
-  //     })
-
-  //     // Apply the processed data back to canvas
-  //     imageData.data.set(data)
-  //     ctx.putImageData(imageData, 0, 0)
-
-  //     // Update store
-  //     imageStore.setRenderedImage(canvas)
-  //   } finally {
-  //     // Reset loading state even if an error occurs
-  //     uiStore.isApplying = false
-  //   }
-  // }
-
-  /**
    * Save grayscale config to editor store
    */
   const saveConfigToEditorStore = () => {

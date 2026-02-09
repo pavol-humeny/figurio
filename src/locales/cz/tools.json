@@ -34,6 +34,10 @@
         "noNoiseDetected": {
           "title": "Žádný šum nebyl detekován",
           "message": "Obraz se jeví jako čistý bez významného šumu nebo artefaktů."
+        },
+        "removeNoiseButton": {
+          "text": "Odstranit šum",
+          "tip": "Odstraní detekovaný šum z obrázku pro zlepšení jeho kvality."
         }
       }
     }

@@ -46,7 +46,7 @@ import { useImportModal } from '@/composables/modals/useImportModal';
 import { useReleaseModal } from '@/composables/modals/useReleaseModal';
 import { useUserModeStore } from '@/stores/userModeStore';
 
-const { hideArtifacts } = useImageAnalysis(useImageStore(), useViewportStore(), useUiStore(), t)
+const { hideArtifacts } = useImageAnalysis(useImageStore(), useViewportStore(), useUiStore(), useHistoryStore(), t)
 
 const { undo, redo } = useUndoRedo(useHistoryStore(), useImageStore(), useUiStore(), t)
 const { zoomIn, zoomOut, resetZoom, toggleZoomMode } = useZoomControl(useViewportStore(), useImageStore(), t)
@@ -166,9 +166,9 @@ watch(() => uiStore.tutorialShouldBeStartedForFirstTime, (newVal) => {
 
 onMounted(() => {
   // Hide artifacts overlay on any click
-  window.addEventListener('click', () => {
-    hideArtifacts()
-  })
+  // window.addEventListener('click', () => {
+  //   hideArtifacts()
+  // })
 
   // Close right panel if there is no selected tool
   if (editorStore.selectedToolKey === '') {
@@ -177,9 +177,9 @@ onMounted(() => {
 })
 
 onBeforeMount(() => {
-  window.removeEventListener('click', () => {
-    hideArtifacts()
-  })
+  // window.removeEventListener('click', () => {
+  //   hideArtifacts()
+  // })
 })
 </script>
 

@@ -121,4 +121,9 @@ export const editorConfig = {
   // Lower values → more warnings (higher sensitivity)
   // Higher values → fewer warnings (more tolerant)
   minNoisyPixelsRatio: 0.003, // 0.3%
+
+  // Background similarity interval (Euclidean RGB distance)
+  bgColorDistanceFrom: 2, // lower bound (ignore exact background)
+  bgColorDistanceTo: 30, // upper bound (ignore foreground objects)
+  maxNoiseSensitivity: 3, // Maximum multiplier for noise sensitivity (color distance)
 }

@@ -57,6 +57,26 @@ const serializeOperation = (op) => {
     }
   }
 
+  if (op.type === 'removeNoise') {
+    return {
+      type: 'removeNoise',
+      cost: op.cost,
+      affectsGeometry: false,
+      params: {
+        width: op.params.width,
+        height: op.params.height,
+        maskBuffer: op.params.mask ? op.params.mask.slice().buffer : null,
+        replaceColor: op.params.replaceColor
+          ? {
+              r: op.params.replaceColor.r,
+              g: op.params.replaceColor.g,
+              b: op.params.replaceColor.b,
+            }
+          : null,
+      },
+    }
+  }
+
   return {
     type: raw.type,
     params: raw.params,
@@ -1411,6 +1431,27 @@ export const useImageStore = defineStore('imageStore', {
           continue
         }
 
+        if (op.type === 'removeNoise') {
+          this.imageOperations.push({
+            type: 'removeNoise',
+            cost: op.cost,
+            affectsGeometry: false,
+            params: {
+              mask: op.params.maskBuffer ? new Uint8Array(op.params.maskBuffer) : null,
+              width: op.params.width,
+              height: op.params.height,
+              replaceColor: op.params.replaceColor
+                ? {
+                    r: op.params.replaceColor.r,
+                    g: op.params.replaceColor.g,
+                    b: op.params.replaceColor.b,
+                  }
+                : null,
+            },
+          })
+          continue
+        }
+
         // this.imageOperations.push(structuredClone(op))
         this.imageOperations.push({
           type: op.type,
@@ -1506,7 +1547,13 @@ export const useImageStore = defineStore('imageStore', {
      * @returns {void}
      */
     async applyFullSnapshot(snapshot) {
-      const { createImageWarning } = useImageAnalysis(this, useViewportStore(), useUiStore(), null)
+      const { createImageWarning } = useImageAnalysis(
+        this,
+        useViewportStore(),
+        useUiStore(),
+        useHistoryStore(),
+        null,
+      )
 
       // FILE METADATA
       this.file = snapshot.file
@@ -1591,6 +1638,27 @@ export const useImageStore = defineStore('imageStore', {
               resolve()
             }
             img.src = op.overlayDataURL
+          })
+          continue
+        }
+
+        if (op.type === 'removeNoise') {
+          this.imageOperations.push({
+            type: 'removeNoise',
+            cost: op.cost,
+            affectsGeometry: false,
+            params: {
+              mask: op.params.maskBuffer ? new Uint8Array(op.params.maskBuffer) : null,
+              width: op.params.width,
+              height: op.params.height,
+              replaceColor: op.params.replaceColor
+                ? {
+                    r: op.params.replaceColor.r,
+                    g: op.params.replaceColor.g,
+                    b: op.params.replaceColor.b,
+                  }
+                : null,
+            },
           })
           continue
         }

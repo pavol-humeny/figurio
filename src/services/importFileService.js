@@ -501,7 +501,7 @@ export function importFileService(
     warn('calculateArtifacts called from setFile - image loaded')
 
     // Calculate image artifacts (noise)
-    const { calculateArtifacts } = useImageAnalysis(imageStore, viewportStore, uiStore, t)
+    const { calculateArtifacts } = useImageAnalysis(imageStore, viewportStore, uiStore, historyStore, t)
 
     await calculateArtifacts()
 

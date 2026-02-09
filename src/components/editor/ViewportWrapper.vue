@@ -141,6 +141,7 @@ useImageAnalysis(
   useImageStore(),
   useViewportStore(),
   useUiStore(),
+  useHistoryStore(),
   t,
 )
 

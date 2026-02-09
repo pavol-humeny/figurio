@@ -34,6 +34,10 @@
         "noNoiseDetected": {
           "title": "No significant noise detected",
           "message": "The image appears to be clean with no significant noise or artifacts detected."
+        },
+        "removeNoiseButton": {
+          "text": "Remove Noise",
+          "tip": "Removes detected noise from the image to improve its quality."
         }
       }
     }
