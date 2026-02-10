@@ -9,7 +9,8 @@
       "date": "4. 2. 2025",
       "newFeatures": {
         "items": [
-          "Nástroj pro odstranění šumu sloužící k vyčištění detekovaného šumu z obrázku"
+          "Nástroj pro odstranění šumu sloužící k vyčištění detekovaného šumu z obrázku",
+          "Barvu zvýraznění v nástroji pro odstranění pozadí lze přizpůsobit"
         ]
       },
       "bugFixes": {

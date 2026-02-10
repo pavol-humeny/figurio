@@ -7,7 +7,6 @@ import { useI18n } from 'vue-i18n'
 import ExplainItem from '../common/ExplainItem.vue'
 import { useBackgroundRemovalTool } from '@/composables/tools/useBackgroundRemovalTool'
 import ColorPicker from '../common/ColorPicker.vue'
-import NumberDropdownInput from '../common/NumberDropdownInput.vue'
 import { useWorkspaceStore } from '@/stores/workspaceStore'
 import { useEditorStore } from '@/stores/editorStore'
 import BaseIcon from '@/components/icons/BaseIcon.vue'
@@ -44,7 +43,8 @@ const {
   boundaryOffset,
   autoRemovalThreshold,
   someAreaIsSelected,
-  setBackgroundColor
+  setBackgroundColor,
+  highlightColor,
 } = useBackgroundRemovalTool(
   useImageStore(),
   useHistoryStore(),
@@ -119,12 +119,9 @@ const tabs = ['auto', 'manual', 'color']
               <div class="content-title">
                 {{ $t('tools.backgroundRemoval.settings.manual.edgeSoftness.label') }}
               </div>
-              <!-- <NumberDropdownInput v-model="softEdgesRadius" :min="0" :max="1" :step="0.1"
-                :options="[0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1]"
-                :tip="$t('tools.backgroundRemoval.settings.manual.edgeSoftness.tip')" position="bottom-left" /> -->
               <DefaultSlider v-model="softEdgesRadius" :min="0" :max="1" :step="0.1"
-                :tip="$t('tools.backgroundRemoval.settings.manual.edgeSoftness.tip')" position="bottom-left"
-                showValue />
+                :tip="$t('tools.backgroundRemoval.settings.manual.edgeSoftness.tip')" position="bottom-left" showValue
+                :onReset="() => { softEdgesRadius = 0 }" />
             </div>
           </div>
 
@@ -134,12 +131,9 @@ const tabs = ['auto', 'manual', 'color']
               <div class="content-title">
                 {{ $t('tools.backgroundRemoval.settings.manual.boundaryOffset.label') }}
               </div>
-              <!-- <NumberDropdownInput v-model="boundaryOffset" :min="-5" :max="5" :step="1"
-                :options="[-5, -4, -3, -2, -1, 0, 1, 2, 3, 4, 5]"
-                :tip="$t('tools.backgroundRemoval.settings.manual.boundaryOffset.tip')" position="bottom-left" /> -->
               <DefaultSlider v-model="boundaryOffset" :min="-5" :max="5" :step="1"
-                :tip="$t('tools.backgroundRemoval.settings.manual.boundaryOffset.tip')" position="bottom-left"
-                showValue />
+                :tip="$t('tools.backgroundRemoval.settings.manual.boundaryOffset.tip')" position="bottom-left" showValue
+                :onReset="() => { boundaryOffset = 0 }" />
             </div>
           </div>
 
@@ -199,6 +193,19 @@ const tabs = ['auto', 'manual', 'color']
                 <ColorPicker v-model="backgroundReplacementColor"
                   :tip="$t('tools.backgroundRemoval.settings.manual.backgroundReplacementColor.tip')"
                   position="bottom-left" />
+              </div>
+            </div>
+          </div>
+
+          <!-- Highlight color -->
+          <div class="settings-content-wrapper settings-content-wrapper-last">
+            <div class="content-wrapper">
+              <div class="content-aligned two-items">
+                <p style="text-align: start">
+                  {{ $t('tools.backgroundRemoval.settings.manual.highlightColor.label') }}
+                </p>
+                <ColorPicker v-model="highlightColor"
+                  :tip="$t('tools.backgroundRemoval.settings.manual.highlightColor.tip')" position="bottom-left" />
               </div>
             </div>
           </div>
@@ -275,9 +282,9 @@ const tabs = ['auto', 'manual', 'color']
               <div class="content-title">
                 {{ $t('tools.backgroundRemoval.settings.manual.edgeSoftness.label') }}
               </div>
-              <NumberDropdownInput v-model="softEdgesRadius" :min="0" :max="1" :step="0.1"
-                :options="[0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1]"
-                :tip="$t('tools.backgroundRemoval.settings.manual.edgeSoftness.tip')" position="bottom-left" />
+              <DefaultSlider v-model="softEdgesRadius" :min="0" :max="1" :step="0.1"
+                :tip="$t('tools.backgroundRemoval.settings.manual.edgeSoftness.tip')" position="bottom-left" showValue
+                :onReset="() => { softEdgesRadius = 0 }" />
             </div>
           </div>
 
@@ -287,9 +294,9 @@ const tabs = ['auto', 'manual', 'color']
               <div class="content-title">
                 {{ $t('tools.backgroundRemoval.settings.manual.boundaryOffset.label') }}
               </div>
-              <NumberDropdownInput v-model="boundaryOffset" :min="-5" :max="5" :step="1"
-                :options="[-5, -4, -3, -2, -1, 0, 1, 2, 3, 4, 5]"
-                :tip="$t('tools.backgroundRemoval.settings.manual.boundaryOffset.tip')" position="bottom-left" />
+              <DefaultSlider v-model="boundaryOffset" :min="-5" :max="5" :step="1"
+                :tip="$t('tools.backgroundRemoval.settings.manual.boundaryOffset.tip')" position="bottom-left" showValue
+                :onReset="() => { boundaryOffset = 0 }" />
             </div>
           </div>
 
@@ -341,6 +348,19 @@ const tabs = ['auto', 'manual', 'color']
                 <ColorPicker v-model="backgroundReplacementColor"
                   :tip="$t('tools.backgroundRemoval.settings.manual.backgroundReplacementColor.tip')"
                   position="bottom-left" />
+              </div>
+            </div>
+          </div>
+
+          <!-- Highlight color -->
+          <div class="settings-content-wrapper settings-content-wrapper-last">
+            <div class="content-wrapper">
+              <div class="content-aligned two-items">
+                <p style="text-align: start">
+                  {{ $t('tools.backgroundRemoval.settings.manual.highlightColor.label') }}
+                </p>
+                <ColorPicker v-model="highlightColor"
+                  :tip="$t('tools.backgroundRemoval.settings.manual.highlightColor.tip')" position="bottom-left" />
               </div>
             </div>
           </div>
@@ -389,12 +409,9 @@ const tabs = ['auto', 'manual', 'color']
               <div class="content-title">
                 {{ $t('tools.backgroundRemoval.settings.manual.edgeSoftness.label') }}
               </div>
-              <!-- <NumberDropdownInput v-model="softEdgesRadius" :min="0" :max="1" :step="0.1"
-                :options="[0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1]"
-                :tip="$t('tools.backgroundRemoval.settings.manual.edgeSoftness.tip')" position="bottom-left" /> -->
               <DefaultSlider v-model="softEdgesRadius" :min="0" :max="1" :step="0.1"
-                :tip="$t('tools.backgroundRemoval.settings.manual.edgeSoftness.tip')" position="bottom-left"
-                showValue />
+                :tip="$t('tools.backgroundRemoval.settings.manual.edgeSoftness.tip')" position="bottom-left" showValue
+                :onReset="() => { softEdgesRadius = 0 }" />
             </div>
           </div>
 
@@ -404,12 +421,9 @@ const tabs = ['auto', 'manual', 'color']
               <div class="content-title">
                 {{ $t('tools.backgroundRemoval.settings.manual.boundaryOffset.label') }}
               </div>
-              <!-- <NumberDropdownInput v-model="boundaryOffset" :min="-5" :max="5" :step="1"
-                :options="[-5, -4, -3, -2, -1, 0, 1, 2, 3, 4, 5]"
-                :tip="$t('tools.backgroundRemoval.settings.manual.boundaryOffset.tip')" position="bottom-left" /> -->
               <DefaultSlider v-model="boundaryOffset" :min="-5" :max="5" :step="1"
-                :tip="$t('tools.backgroundRemoval.settings.manual.boundaryOffset.tip')" position="bottom-left"
-                showValue />
+                :tip="$t('tools.backgroundRemoval.settings.manual.boundaryOffset.tip')" position="bottom-left" showValue
+                :onReset="() => { boundaryOffset = 0 }" />
             </div>
           </div>
 
@@ -461,6 +475,19 @@ const tabs = ['auto', 'manual', 'color']
                 <ColorPicker v-model="backgroundReplacementColor"
                   :tip="$t('tools.backgroundRemoval.settings.manual.backgroundReplacementColor.tip')"
                   position="bottom-left" />
+              </div>
+            </div>
+          </div>
+
+          <!-- Highlight color -->
+          <div class="settings-content-wrapper settings-content-wrapper-last">
+            <div class="content-wrapper">
+              <div class="content-aligned two-items">
+                <p style="text-align: start">
+                  {{ $t('tools.backgroundRemoval.settings.manual.highlightColor.label') }}
+                </p>
+                <ColorPicker v-model="highlightColor"
+                  :tip="$t('tools.backgroundRemoval.settings.manual.highlightColor.tip')" position="bottom-left" />
               </div>
             </div>
           </div>

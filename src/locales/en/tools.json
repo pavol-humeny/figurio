@@ -76,6 +76,10 @@
         }, 
         "replaceWithColor": {
           "text": "Replace with color"
+        },
+        "highlightColor": {
+          "label": "Highlight color",
+          "tip": "Select the color used to highlight the selected area"
         }
       },
       "manual": {
@@ -130,6 +134,10 @@
         }, 
         "replaceWithColor": {
           "text": "Replace with color"
+        },
+        "highlightColor": {
+          "label": "Highlight color",
+          "tip": "Select the color used to highlight the selected area"
         }
       },
       "auto": {
@@ -151,6 +159,10 @@
         "autoRemovalSensitivity": {
           "label": "Auto removal sensitivity",
           "tip": "Adjust how similar a pixel's color must be to the selected color to be removed when clicking on the image. Low for only exact matches, high for also similar shades."
+        },
+        "highlightColor": {
+          "label": "Highlight color",
+          "tip": "Select the color used to highlight the selected area"
         }
       }
     }

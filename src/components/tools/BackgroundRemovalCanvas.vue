@@ -103,7 +103,7 @@ const drawLine = (from, to, tool) => {
   } else {
     // Brush
     ctx.globalCompositeOperation = 'source-over'
-    ctx.strokeStyle = editorConfig.removalHighlightColor
+    ctx.strokeStyle = editorStore.toolsConfig.backgroundRemoval.removalHighlightColor
 
     someAreaIsSelected.value = true
   }

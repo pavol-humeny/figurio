@@ -9,7 +9,8 @@
       "date":"4.2. 2025",
       "newFeatures": {
         "items": [
-          "Noise removal tool for removing detected noise from the image"
+          "Noise removal tool for removing detected noise from the image",
+          "Highlight color in background removal tool can be customized"
         ]
       },
       "bugFixes": {

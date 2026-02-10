@@ -113,6 +113,7 @@ export const useEditorStore = defineStore('editorStore', {
       backgroundRemoval: {
         replaceWithBackgroundColor: false,
         backgroundColor: '#ffffff',
+        removalHighlightColor: editorConfig.removalHighlightColor,
       },
       grayscale: {
         type: 'luminance', // 'luminance', 'average', 'lightness'

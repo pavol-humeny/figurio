@@ -76,6 +76,10 @@
         }, 
         "replaceWithColor": {
           "text": "Nahradit barvou"
+        },
+        "highlightColor": {
+          "label": "Barva zvýraznění",
+          "tip": "Vyberte barvu používanou k zvýraznění vybrané oblasti"
         }
       },
       "manual": {
@@ -130,6 +134,10 @@
         }, 
         "replaceWithColor": {
           "text": "Nahradit barvou"
+        },
+        "highlightColor": {
+          "label": "Barva zvýraznění",
+          "tip": "Vyberte barvu používanou k zvýraznění vybrané oblasti"
         }
       },
       "auto": {
@@ -151,6 +159,10 @@
         "autoRemovalSensitivity": {
           "label": "Citlivost automatického odstranění",
           "tip": "Nastavte, jak podobná musí být barva pixelu vybrané barvě, aby byla odstraněna při kliknutí na obrázek. Nízké pro přesné shody, vysoké i pro podobné odstíny."
+        },
+        "highlightColor": {
+          "label": "Barva zvýraznění",
+          "tip": "Vyberte barvu používanou k zvýraznění vybrané oblasti"
         }
       }
     }

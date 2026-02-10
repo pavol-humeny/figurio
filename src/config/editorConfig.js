@@ -17,7 +17,7 @@ export const editorConfig = {
   minManualToolSize: 1, // in pixels
   cursorBorder: 'rgba(255, 0, 0, 1)',
   cursorResizingSensitivity: 2, // Higher = slower resizing, lower = faster
-  removalHighlightColor: 'rgba(255, 0, 0, 1)',
+  removalHighlightColor: '#ff0000', // Red color for highlighting the area to be removed
 
   // Brush commit time
   brushCommitDelay: 400, // in ms

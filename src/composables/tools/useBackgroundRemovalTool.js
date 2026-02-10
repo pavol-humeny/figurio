@@ -119,21 +119,21 @@ export function useBackgroundRemovalTool(
    * @returns {Object} - Highlight color RGBA ({fillR, fillG, fillB, fillA})
    */
   const getHighlightColorRGBA = () => {
-    const rgbaMatch = editorConfig.removalHighlightColor.match(
-      /rgba?\((\d+),\s*(\d+),\s*(\d+),?\s*([0-9.]*)?\)/,
-    )
+    const highlightColor = editorStore.toolsConfig.backgroundRemoval.removalHighlightColor
 
-    let fillR = 255,
-      fillG = 0,
-      fillB = 0,
-      fillA = 255
-    if (rgbaMatch) {
-      fillR = parseInt(rgbaMatch[1])
-      fillG = parseInt(rgbaMatch[2])
-      fillB = parseInt(rgbaMatch[3])
-      fillA = rgbaMatch[4] ? Math.round(parseFloat(rgbaMatch[4]) * 255) : 255
+    // Hex color
+    if (highlightColor.startsWith('#')) {
+      const { r, g, b } = hexToRgb(highlightColor)
+      console.warn({
+        fillR: r,
+        fillG: g,
+        fillB: b,
+        fillA: 255,
+      })
+      return { fillR: r, fillG: g, fillB: b, fillA: 255 }
     }
-    return { fillR, fillG, fillB, fillA }
+
+    return { fillR: 255, fillG: 0, fillB: 0, fillA: 255 }
   }
 
   /**
@@ -188,9 +188,50 @@ export function useBackgroundRemovalTool(
   /**
    * Highlight color for selection
    */
-  const highlightColor = computed(() => {
-    return editorStore.toolsConfig.backgroundRemoval.highlightColor
+  const highlightColor = computed({
+    get: () => {
+      return editorStore.toolsConfig.backgroundRemoval.removalHighlightColor
+    },
+    set: (value) => {
+      editorStore.toolsConfig.backgroundRemoval.removalHighlightColor = value
+
+      updateHighlightedPixels()
+    },
   })
+
+  const updateHighlightedPixels = () => {
+    const canvas = document.getElementById('removalCanvas')
+    if (!canvas) return
+
+    const ctx = canvas.getContext('2d')
+    const width = canvas.width
+    const height = canvas.height
+
+    // Get current mask data
+    const maskImageData = ctx.getImageData(0, 0, width, height)
+
+    // Get highlight color RGBA
+    const { fillR, fillG, fillB, fillA } = getHighlightColorRGBA()
+
+    // Update only the highlighted pixels (where alpha > 0)
+    for (let i = 0; i < maskImageData.data.length; i += 4) {
+      const alpha = maskImageData.data[i + 3]
+      if (alpha > 0) {
+        maskImageData.data[i] = fillR
+        maskImageData.data[i + 1] = fillG
+        maskImageData.data[i + 2] = fillB
+        maskImageData.data[i + 3] = fillA
+      }
+    }
+
+    ctx.putImageData(maskImageData, 0, 0)
+
+    // Save updated mask to store
+    imageStore.removalCanvas = maskImageData
+    if (imageStore.removalCanvasOriginal) {
+      imageStore.removalCanvasOriginal = maskImageData
+    }
+  }
 
   /**
    * Maximum size of the manual tool (10% of smaller image dimension, min 10px)
@@ -503,6 +544,7 @@ export function useBackgroundRemovalTool(
    * Mark background color on canvas
    */
   const selectColorClick = () => {
+    console.warn('Applying color-based selection with threshold:', colorRemovalThreshold.value)
     const canvas = document.getElementById('removalCanvas')
     if (!canvas) return
 
@@ -556,6 +598,8 @@ export function useBackgroundRemovalTool(
 
     // Get highlight color RGBA
     const { fillR, fillG, fillB, fillA } = getHighlightColorRGBA()
+
+    console.warn('Highlight color RGBA:', { fillR, fillG, fillB, fillA })
 
     let numberOfSelectedPixels = 0
 
