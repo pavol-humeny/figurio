@@ -12,10 +12,6 @@
           "Noise removal tool for removing detected noise from the image"
         ]
       },
-      "improvements": {
-        "items": [
-        ]
-      },
       "bugFixes": {
         "items": [
           "Text in help modal can be selected and copied",

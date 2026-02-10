@@ -4,6 +4,42 @@
     "items": []
   },
   "versions": {
+    "5.10.0": {
+      "label": "5.10.0",
+      "date": "4. 2. 2025",
+      "newFeatures": {
+        "items": [
+          "Nástroj pro odstranění šumu sloužící k vyčištění detekovaného šumu z obrázku"
+        ]
+      },
+      "bugFixes": {
+        "items": [
+          "Text v okně nápovědy lze označit a kopírovat",
+          "Opravena chyba nesprávné pozice posuvníků"
+        ]
+      }
+    },
+    "5.9.0": {
+      "label": "5.9.0",
+      "date": "4. 2. 2025",
+      "newFeatures": {
+        "items": [
+          "Přidán nový nástroj – Tužka pro kreslení přesných tahů"
+        ]
+      },
+      "improvements": {
+        "items": [
+          "Přidány posuvníky do oken Nápověda a Přehled změn",
+          "Přidáno automatické posouvání při přetahování karty k okrajům panelu karet",
+          "Aktivní karta se při otevření souboru automaticky posune do zobrazení, pokud byla mimo viditelnou oblast"
+        ]
+      },
+      "bugFixes": {
+        "items": [
+          "Upravena poloha posuvníků při otevření pravého panelu"
+        ]
+      }
+    },
     "5.8.2":{
       "label": "5.8.2",
       "date":"1.2. 2025",
