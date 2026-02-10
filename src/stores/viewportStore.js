@@ -306,6 +306,30 @@ export const useViewportStore = defineStore('viewportStore', {
     },
 
     /**
+     * Save the current window size to localStorage
+     * @param {number} width - Window width in pixels
+     * @param {number} height - Window height in pixels
+     */
+    setWindowSize(width, height) {
+      localStorage.setItem(
+        `${globalConfig.LOCAL_STORAGE_PREFIX}windowSize`,
+        JSON.stringify({
+          width,
+          height,
+        }),
+      )
+    },
+
+    /**
+     * Get the saved window size from localStorage
+     * @returns {object|null} Object with width and height properties or null if not found
+     */
+    getWindowSize() {
+      const savedWindowSize = localStorage.getItem(`${globalConfig.LOCAL_STORAGE_PREFIX}windowSize`)
+      return savedWindowSize ? JSON.parse(savedWindowSize) : null
+    },
+
+    /**
      * Get full snapshot of viewport state (for multi-file support)
      * @returns {object}
      */

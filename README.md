@@ -11,47 +11,45 @@
 ## TODO - text 
 - dorobiť wireframe a dať to do návrhu
 - prerobiť snímky obrazovky kde je VUE logo na spodku 
+- dopísať nástroje 
+- úvod 
+- záver
 
 # TODO
-- Pozrieť sa na spoplatnenie - maximálny počet exportov
-- skúsiť detegovať opustenie stránky, pre zistenie kto je online
-- vyskúšať by me coffee
 - Natočiť videá
-- Zobrazovanie operácií podľa užívateľov
-- premyslieť ten štetec a pixeláciu 
-- 1px štetec by mal vyplnat 1px 
-- resetovanie obrázku do pôvodného stavu
-- doriešiť export kresleného overlay
-- BG removal - zmena farby masky
-- Mám prázdny preset, dám pridať operáciu, dropdown neobsahuje predefinovanú hodnotu
-- Pridanie operácie - volá sa to auto crop a nie fit crop
-- Resize a crop nastaviť tak aby rešpektovali minimálne a maximálne rozmery
-- odstrániť názov šablóny ak nie sme v režime úpravy
 
-- brush - tvar (kruh a štvorec, čiara horizontálna/vertikálna)
-- brush nefunguje na klikanie ale len na tahanie
-- vylepšiť BG removal 
+- Štatistiky
+    - skúsiť detegovať opustenie stránky, pre zistenie kto je online
+    - Zobrazovanie operácií podľa užívateľov
+    - statistiky - v grafe návštevnosti zobrazovať lokalizáciu
+
+- Štetec
+    - premyslieť ten štetec a pixeláciu 
+    - 1px štetec by mal vyplnat 1px 
+    - doriešiť export kresleného overlay
+    - brush - tvar (kruh a štvorec, čiara horizontálna/vertikálna)
+- resetovanie obrázku do pôvodného stavu
+- Resize a crop nastaviť tak aby rešpektovali minimálne a maximálne rozmery v presete
+
 - opraviť shape 
 - opraviť magnify area 
-- opraviť blur 
-- opraviť select
+
+- blur
+    - opraviť blur 
+    - Opravit paste blur objektu 
+
+- Select
+    - opraviť select
+    - pri posune viacerých objektov, následnom položení a opätovnom presune to nechce ísť a sekne to 
+
 - pri výbere z dropdown menu to neskryje tip 
-- statistiky - v grafe návštevnosti zobrazovať lokalizáciu
 
 - pri zmene monitora by to mohlo dať hlasku aby sa to nakalibrovalo 
-- odšumovať 
 
 ## TODO 
-- SKIP - (asi to je v pohode tak ako to je) zoomovanie pomocou tlacitok, ak je obrazok mimo stred tak to zoomuje mimo obrázok 
 - Vylepšenie rámiku pre prehliadače 
 - Paste by to mohol klásť inde ako na ten istý objekt, aspoň pri kliknutí pravím 
-- Opravit paste blur objektu 
-- nakreslenie svg objektu, prepnutie na brush (vyžaduje rasterizáciu) a následné spätné prepnutie na shape (stále to chcelo rasterizovať)
-- color bg removal intuitívnejší 
-- brush - ak dochádza k uloženiu snapshotu do histórie tak to vyriesit nejako inak - divne sa to seká 
-- pri posune viacerých objektov, následnom položení a opätovnom presune to nechce ísť a sekne to 
 - undo redo možno nejako zakázať pri aby sa to nedalo kliknúť viac krát do vtedy kým sa neaplikuje operácia 
-- premyslieť kedy sa toasty nemusia zobrazovať 
 
 ## Dlhodobé TODO 
 - eye dropper na safari
@@ -66,7 +64,7 @@
 - pridať nástroj fill (kýbel)
 - pridať nástroj pre nastavenie priehľadnosti obrázka
 - Možno nejako vylepšiť vysvetlenie grayscale
-- mať možnosť zobraziť informácie o obrázku - asi nič moc, lebo z obrázku sa toho veľa nedá zistiť 
+- Pozrieť sa na spoplatnenie - maximálny počet exportov, by me coffee
 
 ## Insane ideas
 - aplikovanie operácie na všetky obrázky 
@@ -82,8 +80,11 @@
 - NEPREUKÁZALO SA - pri prepnutí z color na manual select sa nezapne spravny kurzor
 - NEPREUKÁZALO SA - error pri zatvorení viacerých súborov
 - NEPREUKÁZALO SA - nakreslím niečo, pridám shape, a dám rasterize tak to zmizne - rastererize zožuje brush 
+- NEPREUKÁZALO SA - nakreslenie svg objektu, prepnutie na brush (vyžaduje rasterizáciu) a následné spätné prepnutie na shape (stále to chcelo rasterizovať)
 
 ## Ťažko povedať čo s tým 
+- SKIP - (asi to je v pohode tak ako to je) zoomovanie pomocou tlacitok, ak je obrazok mimo stred tak to zoomuje mimo obrázok 
+
 
 ## TODO od J (userTesting2 - 12.1.2026)
 - FIXED - Zoom pomocou numerickej klávesnice

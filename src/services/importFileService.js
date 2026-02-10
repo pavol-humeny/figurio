@@ -146,6 +146,21 @@ export function importFileService(
       if (router.currentRoute.value.name !== 'editor') {
         await router.replace({ name: 'editor' })
         await router.isReady()
+
+        if (viewportStore.zoomMode === 'physical') {
+          // If windows size is different than the one saved during calibration, show toast
+          const savedWindowSize = viewportStore.getWindowSize()
+          if (savedWindowSize) {
+            const { width, height } = savedWindowSize
+            if (window.screen.width !== width || window.screen.height !== height) {
+              showToastModal(
+                'info',
+                t('topPanel.zoomControl.needCalibration.title'),
+                t('topPanel.zoomControl.needCalibration.message'),
+              )
+            }
+          }
+        }
       } else {
         // Close import modal if open
         closeImportModal()
@@ -335,11 +350,11 @@ export function importFileService(
         uiStore.tutorialShouldBeStartedForFirstTime = true
       }
 
-      showToastModal(
-        'success',
-        t('imageStore.toast.successFileUploaded.title'),
-        t('imageStore.toast.successFileUploaded.message'),
-      )
+      // showToastModal(
+      //   'success',
+      //   t('imageStore.toast.successFileUploaded.title'),
+      //   t('imageStore.toast.successFileUploaded.message'),
+      // )
 
       addUserEvent('uploadImage', {
         fileFormat: imageStore.fileFormat,

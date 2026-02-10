@@ -194,6 +194,30 @@ export function useZoomControl(viewportStore, imageStore, t) {
 
         // Save to local storage that physical zoom was used
         localStorage.setItem(`${globalConfig.LOCAL_STORAGE_PREFIX}physicalZoomUsed`, 'true')
+      } else {
+        // If windows size is different than the one saved during calibration, show toast
+        const savedWindowSize = localStorage.getItem(
+          `${globalConfig.LOCAL_STORAGE_PREFIX}windowSize`,
+        )
+        if (savedWindowSize) {
+          const { width, height } = JSON.parse(savedWindowSize)
+          if (window.innerWidth !== width || window.innerHeight !== height) {
+            showToastModal(
+              'info',
+              t('topPanel.zoomControl.needCalibration.title'),
+              t('topPanel.zoomControl.needCalibration.message'),
+            )
+
+            // Save new size
+            localStorage.setItem(
+              `${globalConfig.LOCAL_STORAGE_PREFIX}windowSize`,
+              JSON.stringify({
+                width: window.innerWidth,
+                height: window.innerHeight,
+              }),
+            )
+          }
+        }
       }
     }
 

@@ -73,6 +73,9 @@ export function useCalibrationModal(viewportStore) {
   const calibrate = () => {
     isVisible.value = false
     viewportStore.setCalibrationFactor(calibrationFactor.value)
+
+    // Save window size to local storage to persist calibration across sessions
+    viewportStore.setWindowSize(window.screen.width, window.screen.height)
   }
 
   /**

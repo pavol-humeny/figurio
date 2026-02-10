@@ -928,7 +928,7 @@
             "verticalFlip": "Vertical flip"
           },
           "autoCrop": {
-            "label": "Auto crop",
+            "label": "Fit crop",
             "enabled": "Enabled",
             "color": "Color"
           },
@@ -1074,7 +1074,7 @@
             "flip": "Flip"
           },
           "autoCrop": {
-            "label": "Auto crop",
+            "label": "Fit crop",
             "enabled": "Enabled",
             "color": "Color"
           },
