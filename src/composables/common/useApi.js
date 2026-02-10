@@ -361,6 +361,25 @@ export function useApi() {
     }
   }
 
+  /**
+   * Fetches visits for all days (from first recorded visit to today)
+   * [{ date, allVisits, newUsers }, ...]
+   */
+  const getVisitsByDayFullRange = async () => {
+    try {
+      const res = await fetch(`${API_BASE}/api/visits/byDayFullRange`)
+      if (!res.ok) throw new Error('Failed to fetch visits by day full range')
+
+      const data = await res.json()
+      log('Visits by day (full range) fetched:', data)
+
+      return data
+    } catch (err) {
+      error('Error fetching visits by day full range:', err)
+      return []
+    }
+  }
+
   return {
     addUserVisit,
     addUserEvent,
@@ -378,5 +397,6 @@ export function useApi() {
     getKeyboardShortcuts,
     sendContactFormEmail,
     sendVisitDuringMaintenanceEmail,
+    getVisitsByDayFullRange,
   }
 }

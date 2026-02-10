@@ -11,6 +11,11 @@
       "allVisits": "All Visits",
       "uniqueVisits": "Unique Visits"
     },
+    "fullRange":{
+      "title": "Visits Over All Days",
+      "allVisits": "All Visits",
+      "uniqueVisits": "Unique Visits"
+    },
     "allDaysVisits": "Visits Over All Days",
     "table": {
       "from": "From",

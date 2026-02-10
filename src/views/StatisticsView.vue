@@ -13,6 +13,7 @@ import EventExportImage from '@/components/statistics/EventExportImage.vue';
 import EventOpenModal from '@/components/statistics/EventOpenModal.vue';
 import EventKeyboardShortcuts from '@/components/statistics/EventKeyboardShortcuts.vue';
 import EventApplyOperation from '@/components/statistics/EventApplyOperation.vue';
+import VisitsByDayFullRange from '@/components/statistics/VisitsByDayFullRange.vue';
 
 const statisticsView = ref(localStorage.getItem(`${globalConfig.LOCAL_STORAGE_PREFIX}statisticsView`) || 'visits'); // 'visits' | 'events'
 
@@ -46,6 +47,7 @@ const selectStatistics = (view) => {
         <UniqueVisits />
       </div>
       <LastDaysVisits />
+      <VisitsByDayFullRange />
       <CountryVisits />
       <DaysVisits />
     </div>

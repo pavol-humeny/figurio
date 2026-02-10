@@ -11,6 +11,11 @@
       "allVisits": "Všechny návštěvy",
       "uniqueVisits": "Unikátní návštěvy"
     },
+    "fullRange":{
+      "title": "Návštěvy za všechny dny",
+      "allVisits": "Všechny návštěvy",
+      "uniqueVisits": "Unikátní návštěvy"
+    },
     "allDaysVisits": "Návštěvy za všechny dny",
     "table": {
       "from": "Od",
