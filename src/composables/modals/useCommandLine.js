@@ -456,6 +456,12 @@ export function useCommandLine(userModeStore, editorStore) {
       return
     }
 
+    // ESC to lose focus
+    if (e.key === 'Escape') {
+      inputRef.value.blur()
+      return
+    }
+
     if (e.key !== 'Tab') {
       tabPressCount.value = 0
       lastTabInput.value = ''
