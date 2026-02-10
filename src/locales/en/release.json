@@ -9,6 +9,7 @@
       "date":"4.2. 2025",
       "newFeatures": {
         "items": [
+          "Noise removal tool for removing detected noise from the image"
         ]
       },
       "improvements": {

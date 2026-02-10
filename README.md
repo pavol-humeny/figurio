@@ -18,8 +18,6 @@
 - skúsiť detegovať opustenie stránky, pre zistenie kto je online
 - vyskúšať by me coffee
 - Natočiť videá
-- Slidebar nejde rovnako ako myška
-- Slidebar na spodku a vpravo vychádza mimo
 - Zobrazovanie operácií podľa užívateľov
 - premyslieť ten štetec a pixeláciu 
 - 1px štetec by mal vyplnat 1px 

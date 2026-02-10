@@ -98,7 +98,8 @@ const {
           {{ props.valueDescription + ':' }}
         </p>
         <p class="slider-value">{{ currentValue }}</p>
-        <p v-if="props.valueUnit !== ''" class="slider-value-unit">{{ props.valueUnit }}</p>
+        <p v-if="props.valueUnit !== ''" class="slider-value-unit" style="color: var(--text-placeholder-c);">{{
+          props.valueUnit }}</p>
       </div>
       <input type="range" :min="props.min" :max="props.max" :step="props.step" v-model="currentValue"
         :disabled="props.disabled" @input="onInput" @dblclick="onDoubleClick" @pointerdown="onPointerDown"

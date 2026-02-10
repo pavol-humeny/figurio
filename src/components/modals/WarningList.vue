@@ -12,8 +12,7 @@ const {
   // warnings,
   // expandedIds,
   removeWarning,
-  openByClick,
-  closeByArrow,
+  toggleWarning
 } = useWarningList(useImageStore(), useUiStore())
 
 /**
@@ -64,7 +63,7 @@ const getMessageIcon = (type) => {
 
 <template>
   <div class="warning-list" id="warning-list">
-    <div v-for="warning in activeWarnings" :key="warning.id" class="warning-item" @click="openByClick(warning.id)"
+    <div v-for="warning in activeWarnings" :key="warning.id" class="warning-item" @click="toggleWarning(warning.id)"
       :class="{ collapsed: !expandedIds.has(warning.id) }"
       :style="{ color: getColor(warning.type), backgroundColor: getBackgroundColor(warning.type) }">
 
@@ -72,7 +71,7 @@ const getMessageIcon = (type) => {
         class="warning-tip-wrapper">
 
         <!-- Arrow icon -->
-        <button v-if="expandedIds.has(warning.id)" class="arrow-button" @click.stop="closeByArrow(warning.id)">
+        <button v-if="expandedIds.has(warning.id)" class="arrow-button">
           <BaseIcon name="IconArrowRight" size="23" :color="getColor(warning.type)" />
         </button>
 

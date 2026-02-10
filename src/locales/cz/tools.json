@@ -38,6 +38,10 @@
         "removeNoiseButton": {
           "text": "Odstranit šum",
           "tip": "Odstraní detekovaný šum z obrázku pro zlepšení jeho kvality."
+        },
+        "sensitivity": {
+          "label": "Citlivost",
+          "tip": "Nastavte citlivost detekce šumu. Vyšší hodnoty detekují více šumu, zatímco nižší hodnoty detekují pouze malé množství šumu."
         }
       }
     }

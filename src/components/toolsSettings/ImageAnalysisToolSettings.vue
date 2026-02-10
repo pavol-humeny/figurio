@@ -35,23 +35,35 @@ const {
           <ExplainItem :text="$t('tools.imageAnalysis.explain')" :title="$t('tools.imageAnalysis.label')"
             position="left" />
           <div class="content-title">
-            <p> {{ $t('tools.imageAnalysis.settings.noiseDetection.title') }}</p>
+            <p> {{ $t('tools.imageAnalysis.settings.noiseDetection.sensitivity.label') }}</p>
           </div>
+
+          <!-- Noise sensitivity -->
           <div class="content-wrapper">
-            <DefaultSlider :label="$t('tools.imageAnalysis.settings.noiseDetection.sensitivityLabel')" :min="0.1"
-              :max="editorConfig.maxNoiseSensitivity" :step="0.1" v-model="noiseSensitivity" showValue />
+            <DefaultSlider :min="0.1" :tip="$t('tools.imageAnalysis.settings.noiseDetection.sensitivity.tip')"
+              :max="editorConfig.maxNoiseSensitivity" :step="0.1" v-model="noiseSensitivity" showValue valueUnit="x"
+              :onReset="() => noiseSensitivity = 1" position="bottom-left" />
           </div>
+        </div>
+
+        <!-- Noise detection -->
+        <div class="settings-content-wrapper">
           <div class="content-wrapper">
             <DefaultButton :text="$t('tools.imageAnalysis.settings.noiseDetection.noiseDetectionButton.text')"
               :tip="$t('tools.imageAnalysis.settings.noiseDetection.noiseDetectionButton.tip')" @click="analyzeNoise"
-              main />
+              main position="bottom-left" />
           </div>
+        </div>
+
+        <!-- Noise removal -->
+        <div class="settings-content-wrapper">
           <div class="content-wrapper">
             <DefaultButton :text="$t('tools.imageAnalysis.settings.noiseDetection.removeNoiseButton.text')"
               :tip="$t('tools.imageAnalysis.settings.noiseDetection.removeNoiseButton.tip')" @click="removeNoise"
-              :disabled="!noiseCanBeRemoved" main />
+              :disabled="!noiseCanBeRemoved" main position="bottom-left" />
           </div>
         </div>
+
 
         <!-- Empty space -->
         <div class="settings-content-wrapper" style="border: none">

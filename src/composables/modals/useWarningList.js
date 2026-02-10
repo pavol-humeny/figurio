@@ -51,7 +51,7 @@ export const useWarningList = (imageStore, uiStore) => {
   }
 
   /**
-   * Remove warning by ID
+   * Remove warning by ID from imageStore
    * @param {string} id - Unique ID
    */
   const removeWarning = (id) => {
@@ -92,6 +92,18 @@ export const useWarningList = (imageStore, uiStore) => {
     // Need to also hide item tip when closing warning
     uiStore.isItemTipVisible = false
     uiStore.cursorOverViewportSettings = false
+  }
+
+  /**
+   * Toggle warning expanded/collapsed state
+   * @param {string} id - Unique ID 
+   */
+  const toggleWarning = (id) => {
+    if (isWarningExpanded(id)) {
+      closeByArrow(id)
+    } else {
+      openByClick(id)
+    }
   }
 
   /**
@@ -155,5 +167,6 @@ export const useWarningList = (imageStore, uiStore) => {
     deleteWarningById,
     hideWarningById,
     expandWarningById,
+    toggleWarning,
   }
 }

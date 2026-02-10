@@ -174,7 +174,6 @@ input[type='number'] {
   top: 50%;
   transform: translateY(-50%);
   font-size: 13px;
-  color: var(--text-c);
   pointer-events: none;
   color: var(--text-placeholder-c);
 }

@@ -38,6 +38,10 @@
         "removeNoiseButton": {
           "text": "Remove Noise",
           "tip": "Removes detected noise from the image to improve its quality."
+        },
+        "sensitivity": {
+          "label": "Sensitivity",
+          "tip": "Adjust the sensitivity of noise detection. Higher values will detect more noise, while lower values will detect only small amounts of noise."
         }
       }
     }

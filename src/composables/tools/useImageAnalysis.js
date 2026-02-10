@@ -32,10 +32,14 @@ const noiseSensitivity = ref(1)
  * Composable for analyzing image artifacts (noise) and managing overlay display
  */
 export function useImageAnalysis(imageStore, viewportStore, uiStore, historyStore, t) {
-  const { addWarning, isWarningDefined, hideWarningById, deleteWarningById } = useWarningList(
-    imageStore,
-    uiStore,
-  )
+  const {
+    addWarning,
+    isWarningDefined,
+    hideWarningById,
+    deleteWarningById,
+    isWarningExpanded,
+    removeWarning,
+  } = useWarningList(imageStore, uiStore)
   const { renderUpTo } = useImagePipeline(imageStore, uiStore)
 
   /**
@@ -51,254 +55,263 @@ export function useImageAnalysis(imageStore, viewportStore, uiStore, historyStor
    *
    * @return {boolean} - True if noise detected and overlay shown, else false
    */
-  const calculateArtifacts2 = async () => {
-    log('[ImageAnalysis] Starting artifact calculation (Laplacian)...')
-    if (globalConfig.featureFlags.enableNoiseDetectionOnStart === false) return
+  // const calculateArtifacts2 = async () => {
+  //   log('[ImageAnalysis] Starting artifact calculation (Laplacian)...')
+  //   if (globalConfig.featureFlags.enableNoiseDetectionOnStart === false) return
 
-    await new Promise((resolve) => setTimeout(resolve, 100))
+  //   await new Promise((resolve) => setTimeout(resolve, 100))
 
-    const img = imageStore.getRenderedImage({ t, renderCall: false })
-    if (!img) return
+  //   const img = imageStore.getRenderedImage({ t, renderCall: false })
+  //   if (!img) return
 
-    const canvas = document.createElement('canvas')
-    const ctx = canvas.getContext('2d', { willReadFrequently: true })
-    canvas.width = img.width
-    canvas.height = img.height
-    ctx.drawImage(img, 0, 0)
+  //   const canvas = document.createElement('canvas')
+  //   const ctx = canvas.getContext('2d', { willReadFrequently: true })
+  //   canvas.width = img.width
+  //   canvas.height = img.height
+  //   ctx.drawImage(img, 0, 0)
 
-    const { data, width, height } = ctx.getImageData(0, 0, canvas.width, canvas.height)
+  //   const { data, width, height } = ctx.getImageData(0, 0, canvas.width, canvas.height)
 
-    const overlay = new ImageData(width, height)
-    const odata = overlay.data
+  //   const overlay = new ImageData(width, height)
+  //   const odata = overlay.data
 
-    // CONFIG
-    const laplacianThreshold = editorConfig.laplacianThreshold
-    const maxStrongNeighbors = editorConfig.maxStrongNeighbors
-    let minNoisyPixelsRatio = editorConfig.minNoisyPixelsRatio
+  //   // CONFIG
+  //   const laplacianThreshold = editorConfig.laplacianThreshold
+  //   const maxStrongNeighbors = editorConfig.maxStrongNeighbors
+  //   let minNoisyPixelsRatio = editorConfig.minNoisyPixelsRatio
 
-    const bgCoverageThreshold = editorConfig.bgCoverageThreshold
-    const borderCoverageThreshold = editorConfig.borderCoverageThreshold
-    const colorDistanceThreshold = editorConfig.colorDistanceThreshold
-    const borderSize = editorConfig.borderSize
+  //   const bgCoverageThreshold = editorConfig.bgCoverageThreshold
+  //   const borderCoverageThreshold = editorConfig.borderCoverageThreshold
+  //   const colorDistanceThreshold = editorConfig.colorDistanceThreshold
+  //   const borderSize = editorConfig.borderSize
 
-    // Adjust sensitivity for PNG images (higher threshold)
-    if (imageStore.fileFormat === 'png') {
-      minNoisyPixelsRatio *= 10
+  //   // Adjust sensitivity for PNG images (higher threshold)
+  //   if (imageStore.fileFormat === 'png') {
+  //     minNoisyPixelsRatio *= 10
+  //   }
+
+  //   /**
+  //    * Detect dominant background color by sampling image edges
+  //    * @return {Object} - RGB color object {r, g, b}
+  //    */
+  //   const detectBgColor = () => {
+  //     const counts = {}
+  //     const add = (i) => {
+  //       const key = `${data[i]},${data[i + 1]},${data[i + 2]}`
+  //       counts[key] = (counts[key] || 0) + 1
+  //     }
+
+  //     // Sample image edges only
+  //     for (let x = 0; x < width; x++) {
+  //       add((0 * width + x) * 4)
+  //       add(((height - 1) * width + x) * 4)
+  //     }
+  //     for (let y = 0; y < height; y++) {
+  //       add((y * width + 0) * 4)
+  //       add((y * width + (width - 1)) * 4)
+  //     }
+
+  //     const dominant = Object.keys(counts).reduce((a, b) => (counts[a] > counts[b] ? a : b))
+
+  //     const [r, g, b] = dominant.split(',').map(Number)
+  //     return { r, g, b }
+  //   }
+
+  //   const bgColor = detectBgColor()
+
+  //   // Global background coverage check
+  //   let bgCount = 0
+  //   const pixelCount = width * height
+
+  //   for (let i = 0; i < data.length; i += 4) {
+  //     const dr = data[i] - bgColor.r
+  //     const dg = data[i + 1] - bgColor.g
+  //     const db = data[i + 2] - bgColor.b
+  //     const dist = Math.sqrt(dr * dr + dg * dg + db * db)
+
+  //     if (dist < colorDistanceThreshold) bgCount++
+  //   }
+
+  //   const bgCoverage = bgCount / pixelCount
+
+  //   if (bgCoverage < bgCoverageThreshold) {
+  //     log(
+  //       `[ImageAnalysis] Skipping noise detection — background coverage ${(
+  //         bgCoverage * 100
+  //       ).toFixed(1)}% below threshold: ${(bgCoverageThreshold * 100).toFixed(1)}%`,
+  //     )
+  //     return
+  //   }
+
+  //   // Border background consistency check
+  //   let borderBgCount = 0
+  //   let borderPixelCount = 0
+
+  //   for (let y = 0; y < height; y++) {
+  //     for (let x = 0; x < width; x++) {
+  //       const isBorder =
+  //         x < borderSize || x >= width - borderSize || y < borderSize || y >= height - borderSize
+
+  //       if (!isBorder) continue
+
+  //       const idx = (y * width + x) * 4
+  //       const dr = data[idx] - bgColor.r
+  //       const dg = data[idx + 1] - bgColor.g
+  //       const db = data[idx + 2] - bgColor.b
+  //       const dist = Math.sqrt(dr * dr + dg * dg + db * db)
+
+  //       borderPixelCount++
+  //       if (dist < colorDistanceThreshold) borderBgCount++
+  //     }
+  //   }
+
+  //   const borderBgCoverage = borderBgCount / borderPixelCount
+
+  //   if (borderBgCoverage < borderCoverageThreshold) {
+  //     log(
+  //       `[ImageAnalysis] Skipping noise detection — border background coverage ${(
+  //         borderBgCoverage * 100
+  //       ).toFixed(1)}% below threshold: ${(borderCoverageThreshold * 100).toFixed(1)}%`,
+  //     )
+  //     return
+  //   }
+
+  //   // HELPERS
+  //   const gray = (i) => 0.299 * data[i] + 0.587 * data[i + 1] + 0.114 * data[i + 2]
+
+  //   const laplacianMap = new Float32Array(width * height)
+
+  //   // Build Laplacian response map
+  //   for (let y = 1; y < height - 1; y++) {
+  //     for (let x = 1; x < width - 1; x++) {
+  //       const idx = (y * width + x) * 4
+
+  //       const c = gray(idx)
+  //       const up = gray(((y - 1) * width + x) * 4)
+  //       const dn = gray(((y + 1) * width + x) * 4)
+  //       const lf = gray((y * width + (x - 1)) * 4)
+  //       const rt = gray((y * width + (x + 1)) * 4)
+
+  //       laplacianMap[y * width + x] = Math.abs(4 * c - up - dn - lf - rt)
+  //     }
+  //   }
+
+  //   console.warn({ laplacianMap })
+
+  //   // Mask of detected noisy pixels (1 = noisy, 0 = clean)
+  //   const noisyMask = new Uint8Array(width * height)
+
+  //   const effectiveThreshold = laplacianThreshold * noiseSensitivity.value
+
+  //   // Detect isolated high-frequency pixels
+  //   let noisyPixelCount = 0
+
+  //   for (let y = 1; y < height - 1; y++) {
+  //     for (let x = 1; x < width - 1; x++) {
+  //       const lap = laplacianMap[y * width + x]
+  //       // console.warn({
+  //       //   lap,
+  //       //   effectiveThreshold,
+  //       // })
+  //       if (lap < effectiveThreshold) continue
+
+  //       let strongNeighbors = 0
+
+  //       for (let dy = -1; dy <= 1; dy++) {
+  //         for (let dx = -1; dx <= 1; dx++) {
+  //           if (dx === 0 && dy === 0) continue
+  //           if (laplacianMap[(y + dy) * width + (x + dx)] > effectiveThreshold) {
+  //             strongNeighbors++
+  //           }
+  //         }
+  //       }
+
+  //       if (strongNeighbors <= maxStrongNeighbors) {
+  //         const p = y * width + x
+  //         noisyMask[p] = 1
+
+  //         const idx = (y * width + x) * 4
+  //         odata[idx] = 255
+  //         odata[idx + 1] = 0
+  //         odata[idx + 2] = 0
+  //         odata[idx + 3] = 160
+  //         noisyPixelCount++
+  //       }
+  //     }
+  //   }
+
+  //   // Final noise ratio and detection decision
+  //   const noiseRatio = noisyPixelCount / pixelCount
+  //   const noiseDetected = noiseRatio > minNoisyPixelsRatio
+
+  //   const baseCanvas = document.querySelector('.image-canvas')
+  //   const overlayCanvas = document.querySelector('.overlay-canvas-artifacts')
+  //   if (!baseCanvas || !overlayCanvas) return
+
+  //   overlayCanvas.style.display = 'block'
+  //   overlayCanvas.width = baseCanvas.width
+  //   overlayCanvas.height = baseCanvas.height
+
+  //   const oCtx = overlayCanvas.getContext('2d')
+
+  //   if (noiseDetected) {
+  //     lastNoiseAnalysis.value = {
+  //       mask: noisyMask,
+  //       width,
+  //       height,
+  //       noisyPixelCount,
+  //     }
+
+  //     oCtx.putImageData(overlay, 0, 0)
+
+  //     addWarning(
+  //       'artifact-warning',
+  //       'tools.artifactsWarning.message',
+  //       'tools.artifactsWarning.tip.text',
+  //       'tools.artifactsWarning.tip.title',
+  //       'warning',
+  //       'open',
+  //       hideArtifactsClick,
+  //       calculateArtifacts,
+  //       hideArtifacts,
+  //     )
+
+  //     log(
+  //       `[ImageAnalysis] Noise detected — ${noisyPixelCount} pixels (${(noiseRatio * 100).toFixed(
+  //         3,
+  //       )}%)`,
+  //     )
+
+  //     addUserEvent('applyOperation', {
+  //       tool: 'imageNoiseDetected',
+  //       settings: {
+  //         laplacianThreshold,
+  //         noisyPixelCount,
+  //       },
+  //     })
+
+  //     return true
+  //   } else {
+  //     lastNoiseAnalysis.value = null
+
+  //     oCtx.clearRect(0, 0, overlayCanvas.width, overlayCanvas.height)
+  //     log(
+  //       `[ImageAnalysis] No significant noise detected — ${noisyPixelCount} pixels (${(
+  //         noiseRatio * 100
+  //       ).toFixed(3)}%)`,
+  //     )
+  //     return false
+  //   }
+  // }
+
+  /**
+   * Watch for changes in noise sensitivity and remove warning if it exists
+   */
+  watch(noiseSensitivity, () => {
+    if (isWarningDefined('artifact-warning')) {
+      removeWarning('artifact-warning')
     }
-
-    /**
-     * Detect dominant background color by sampling image edges
-     * @return {Object} - RGB color object {r, g, b}
-     */
-    const detectBgColor = () => {
-      const counts = {}
-      const add = (i) => {
-        const key = `${data[i]},${data[i + 1]},${data[i + 2]}`
-        counts[key] = (counts[key] || 0) + 1
-      }
-
-      // Sample image edges only
-      for (let x = 0; x < width; x++) {
-        add((0 * width + x) * 4)
-        add(((height - 1) * width + x) * 4)
-      }
-      for (let y = 0; y < height; y++) {
-        add((y * width + 0) * 4)
-        add((y * width + (width - 1)) * 4)
-      }
-
-      const dominant = Object.keys(counts).reduce((a, b) => (counts[a] > counts[b] ? a : b))
-
-      const [r, g, b] = dominant.split(',').map(Number)
-      return { r, g, b }
-    }
-
-    const bgColor = detectBgColor()
-
-    // Global background coverage check
-    let bgCount = 0
-    const pixelCount = width * height
-
-    for (let i = 0; i < data.length; i += 4) {
-      const dr = data[i] - bgColor.r
-      const dg = data[i + 1] - bgColor.g
-      const db = data[i + 2] - bgColor.b
-      const dist = Math.sqrt(dr * dr + dg * dg + db * db)
-
-      if (dist < colorDistanceThreshold) bgCount++
-    }
-
-    const bgCoverage = bgCount / pixelCount
-
-    if (bgCoverage < bgCoverageThreshold) {
-      log(
-        `[ImageAnalysis] Skipping noise detection — background coverage ${(
-          bgCoverage * 100
-        ).toFixed(1)}% below threshold: ${(bgCoverageThreshold * 100).toFixed(1)}%`,
-      )
-      return
-    }
-
-    // Border background consistency check
-    let borderBgCount = 0
-    let borderPixelCount = 0
-
-    for (let y = 0; y < height; y++) {
-      for (let x = 0; x < width; x++) {
-        const isBorder =
-          x < borderSize || x >= width - borderSize || y < borderSize || y >= height - borderSize
-
-        if (!isBorder) continue
-
-        const idx = (y * width + x) * 4
-        const dr = data[idx] - bgColor.r
-        const dg = data[idx + 1] - bgColor.g
-        const db = data[idx + 2] - bgColor.b
-        const dist = Math.sqrt(dr * dr + dg * dg + db * db)
-
-        borderPixelCount++
-        if (dist < colorDistanceThreshold) borderBgCount++
-      }
-    }
-
-    const borderBgCoverage = borderBgCount / borderPixelCount
-
-    if (borderBgCoverage < borderCoverageThreshold) {
-      log(
-        `[ImageAnalysis] Skipping noise detection — border background coverage ${(
-          borderBgCoverage * 100
-        ).toFixed(1)}% below threshold: ${(borderCoverageThreshold * 100).toFixed(1)}%`,
-      )
-      return
-    }
-
-    // HELPERS
-    const gray = (i) => 0.299 * data[i] + 0.587 * data[i + 1] + 0.114 * data[i + 2]
-
-    const laplacianMap = new Float32Array(width * height)
-
-    // Build Laplacian response map
-    for (let y = 1; y < height - 1; y++) {
-      for (let x = 1; x < width - 1; x++) {
-        const idx = (y * width + x) * 4
-
-        const c = gray(idx)
-        const up = gray(((y - 1) * width + x) * 4)
-        const dn = gray(((y + 1) * width + x) * 4)
-        const lf = gray((y * width + (x - 1)) * 4)
-        const rt = gray((y * width + (x + 1)) * 4)
-
-        laplacianMap[y * width + x] = Math.abs(4 * c - up - dn - lf - rt)
-      }
-    }
-
-    console.warn({ laplacianMap })
-
-    // Mask of detected noisy pixels (1 = noisy, 0 = clean)
-    const noisyMask = new Uint8Array(width * height)
-
-    const effectiveThreshold = laplacianThreshold * noiseSensitivity.value
-
-    // Detect isolated high-frequency pixels
-    let noisyPixelCount = 0
-
-    for (let y = 1; y < height - 1; y++) {
-      for (let x = 1; x < width - 1; x++) {
-        const lap = laplacianMap[y * width + x]
-        // console.warn({
-        //   lap,
-        //   effectiveThreshold,
-        // })
-        if (lap < effectiveThreshold) continue
-
-        let strongNeighbors = 0
-
-        for (let dy = -1; dy <= 1; dy++) {
-          for (let dx = -1; dx <= 1; dx++) {
-            if (dx === 0 && dy === 0) continue
-            if (laplacianMap[(y + dy) * width + (x + dx)] > effectiveThreshold) {
-              strongNeighbors++
-            }
-          }
-        }
-
-        if (strongNeighbors <= maxStrongNeighbors) {
-          const p = y * width + x
-          noisyMask[p] = 1
-
-          const idx = (y * width + x) * 4
-          odata[idx] = 255
-          odata[idx + 1] = 0
-          odata[idx + 2] = 0
-          odata[idx + 3] = 160
-          noisyPixelCount++
-        }
-      }
-    }
-
-    // Final noise ratio and detection decision
-    const noiseRatio = noisyPixelCount / pixelCount
-    const noiseDetected = noiseRatio > minNoisyPixelsRatio
-
-    const baseCanvas = document.querySelector('.image-canvas')
-    const overlayCanvas = document.querySelector('.overlay-canvas-artifacts')
-    if (!baseCanvas || !overlayCanvas) return
-
-    overlayCanvas.style.display = 'block'
-    overlayCanvas.width = baseCanvas.width
-    overlayCanvas.height = baseCanvas.height
-
-    const oCtx = overlayCanvas.getContext('2d')
-
-    if (noiseDetected) {
-      lastNoiseAnalysis.value = {
-        mask: noisyMask,
-        width,
-        height,
-        noisyPixelCount,
-      }
-
-      oCtx.putImageData(overlay, 0, 0)
-
-      addWarning(
-        'artifact-warning',
-        'tools.artifactsWarning.message',
-        'tools.artifactsWarning.tip.text',
-        'tools.artifactsWarning.tip.title',
-        'warning',
-        'open',
-        hideArtifactsClick,
-        calculateArtifacts,
-        hideArtifacts,
-      )
-
-      log(
-        `[ImageAnalysis] Noise detected — ${noisyPixelCount} pixels (${(noiseRatio * 100).toFixed(
-          3,
-        )}%)`,
-      )
-
-      addUserEvent('applyOperation', {
-        tool: 'imageNoiseDetected',
-        settings: {
-          laplacianThreshold,
-          noisyPixelCount,
-        },
-      })
-
-      return true
-    } else {
-      lastNoiseAnalysis.value = null
-
-      oCtx.clearRect(0, 0, overlayCanvas.width, overlayCanvas.height)
-      log(
-        `[ImageAnalysis] No significant noise detected — ${noisyPixelCount} pixels (${(
-          noiseRatio * 100
-        ).toFixed(3)}%)`,
-      )
-      return false
-    }
-  }
+  })
 
   /**
    * Calculate image artifacts (noise) based on similarity to background color.
@@ -513,7 +526,7 @@ export function useImageAnalysis(imageStore, viewportStore, uiStore, historyStor
    * Whether noise can be removed (only immediately after detection and if noise was detected)
    */
   const noiseCanBeRemoved = computed(() => {
-    return lastNoiseAnalysis.value !== null
+    return isWarningExpanded('artifact-warning')
   })
 
   /**
@@ -551,7 +564,7 @@ export function useImageAnalysis(imageStore, viewportStore, uiStore, historyStor
     })
 
     lastNoiseAnalysis.value = null
-    hideArtifacts()
+    removeWarning('artifact-warning')
   }
 
   /**
@@ -597,10 +610,10 @@ export function useImageAnalysis(imageStore, viewportStore, uiStore, historyStor
     // Hide warning if defined
     if (isWarningDefined('artifact-warning')) {
       // if click on warning-list do not hide
-      // const warningList = document.getElementById('warning-list')
-      // if (event?.target && warningList.contains(event.target)) {
-      //   return
-      // }
+      const warningList = document.getElementById('warning-list')
+      if (event?.target && warningList.contains(event.target)) {
+        return
+      }
 
       hideWarningById('artifact-warning')
     }
