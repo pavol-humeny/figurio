@@ -486,7 +486,7 @@ export function usePresetTool(
    * Create a new operation
    */
   const createNewOperation = () => {
-    newOperation.value = { type: '' }
+    newOperation.value = { type: 'rotation' }
     creatingNewOperation.value = true
     selectedOperation.value = null
     clearSelected.value = true

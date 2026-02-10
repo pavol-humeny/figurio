@@ -11,7 +11,6 @@
 ## TODO - text 
 - dorobiť wireframe a dať to do návrhu
 - prerobiť snímky obrazovky kde je VUE logo na spodku 
-- Odstrániť viacnásobné odkazy na citácie 
 
 # TODO
 - Pozrieť sa na spoplatnenie - maximálny počet exportov
@@ -23,8 +22,6 @@
 - 1px štetec by mal vyplnat 1px 
 - resetovanie obrázku do pôvodného stavu
 - doriešiť export kresleného overlay
-- odstrániť move tool, dark light convertor
-- spraviť noise removal
 - BG removal - zmena farby masky
 - Mám prázdny preset, dám pridať operáciu, dropdown neobsahuje predefinovanú hodnotu
 - Pridanie operácie - volá sa to auto crop a nie fit crop
