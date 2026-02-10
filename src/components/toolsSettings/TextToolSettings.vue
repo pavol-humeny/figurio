@@ -26,7 +26,7 @@ const {
   textFontOptions,
   localTextSettings,
   applyLocalTextSettings,
-  resetRotationAngle,
+  // resetRotationAngle,
   resetOpacity,
   resetLetterSpacing,
   setBoldStyle,
@@ -98,7 +98,7 @@ const {
         </div>
 
         <!-- Rotation -->
-        <div v-if="!hidePosition" class="settings-content-wrapper">
+        <!-- <div v-if="!hidePosition" class="settings-content-wrapper">
           <div class="content-wrapper">
             <div class="content-title">
               <p>
@@ -111,7 +111,7 @@ const {
                 :tip="$t('tools.text.settings.general.rotation.tip')" position="bottom-left" />
             </div>
           </div>
-        </div>
+        </div> -->
 
         <!-- Size and letter spacing -->
         <div class="settings-content-wrapper">

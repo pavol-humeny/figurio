@@ -5,7 +5,7 @@ import { useHistoryStore } from '@/stores/historyStore';
 import { useImageStore } from '@/stores/imageStore';
 import { useViewportStore } from '@/stores/viewportStore';
 import { useI18n } from 'vue-i18n'
-import BaseIcon from '@/components/icons/BaseIcon.vue'
+// import BaseIcon from '@/components/icons/BaseIcon.vue'
 import { useUiStore } from '@/stores/uiStore';
 import { useWorkspaceStore } from '@/stores/workspaceStore';
 
@@ -39,14 +39,14 @@ const {
   object,
   isSymmetricalObject,
   hideResizers,
-  controlIconSize,
+  // controlIconSize,
   boundingBoxStrokeWidth,
-  onMouseDownRotate,
-  isRotating,
+  // onMouseDownRotate,
+  // isRotating,
   cursorOnSvgObject,
   isInMultiSelection,
   // isResizerIconInside,
-  isRotateIconInside,
+  // isRotateIconInside,
   onObjectMouseUp,
 } = useSvgObjectWrapper(props.objectId, useImageStore(), useViewportStore(), useEditorStore(), useHistoryStore(), useUiStore(), useWorkspaceStore(), t)
 
@@ -113,14 +113,14 @@ const {
       </template>
 
       <!-- Rotate icon  -->
-      <foreignObject
+      <!-- <foreignObject
         v-if="!isRotating && !isInMultiSelection && object.tag !== 'line' && object.class !== 'magnifyArea' && object.class !== 'blur'"
         :x="isRotateIconInside ? boundingBox.x + boundingBox.width : boundingBox.x - controlIconSize"
         :y="boundingBox.y + boundingBox.height / 2 - controlIconSize / 2" :width="controlIconSize"
         :height="controlIconSize" @mousedown.stop.prevent="onMouseDownRotate($event)" style="cursor: grab">
         <BaseIcon :name="'IconRotate'" :tip="t('tools.svgObject.rotateObject.tip')" :size="controlIconSize"
           :color="'var(--primary-c)'" />
-      </foreignObject>
+      </foreignObject> -->
     </g>
   </g>
 

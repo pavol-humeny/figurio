@@ -40,7 +40,7 @@ const {
   tmpShapeHeight,
   tmpShapeWidth,
   hidePositionAndDimensions,
-  resetRotationAngle,
+  // resetRotationAngle,
   resetOpacity,
   resetCornerRadius,
   lineTypeOptions,
@@ -128,7 +128,7 @@ const {
         </div>
 
         <!-- Rotation -->
-        <div v-if="!hidePositionAndDimensions && localObjectSettings.type !== 'line'" class="settings-content-wrapper">
+        <!-- <div v-if="!hidePositionAndDimensions && localObjectSettings.type !== 'line'" class="settings-content-wrapper">
           <div class="content-wrapper">
             <div class="content-title">
               <p>
@@ -141,7 +141,7 @@ const {
                 :tip="$t('tools.shape.settings.rotation.tip')" position="bottom-left" />
             </div>
           </div>
-        </div>
+        </div> -->
 
         <!-- Fill color -->
         <div v-if="localObjectSettings.type !== 'line'" class="settings-content-wrapper">
