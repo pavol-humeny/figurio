@@ -319,27 +319,25 @@ export function useViewportWrapper(viewportStore, imageStore, editorStore, uiSto
   const verticalSliderTop = computed(() => {
     const ratio = (panY.value + contentTotalHeight.value * 0.9) / verticalSliderRange.value
     const clampedRatio = clamp(ratio, 0, 1)
-    return (1 - clampedRatio) * (wrapperHeight.value - verticalSliderHeight.value)
+    return (
+      (1 - clampedRatio) *
+        (wrapperHeight.value - (verticalSliderHeight.value + (uiStore.rulersEnabled ? 30 : 15))) +
+      (uiStore.rulersEnabled ? 15 : 0)
+    )
   })
   const horizontalSliderLeft = computed(() => {
     const ratio = (panX.value + contentTotalWidth.value * 0.9) / horizontalSliderRange.value
     const clampedRatio = clamp(ratio, 0, 1)
-    return (1 - clampedRatio) * (wrapperWidth.value - horizontalSliderWidth.value)
+    return (
+      (1 - clampedRatio) *
+        (wrapperWidth.value - (horizontalSliderWidth.value + (uiStore.rulersEnabled ? 30 : 15))) +
+      (uiStore.rulersEnabled ? 15 : 0)
+    )
   })
 
   // ------------------------------
   // Dragging
   // ------------------------------
-
-  /**
-   * Minimum speed threshold for drag
-   */
-  const dragSpeedMin = 2
-  /**
-   * Maximum drag speed relative to zoom
-   */
-  const dragSpeedMax = viewportConfig.maxZoomLevel
-
   /**
    * Whether the user is currently dragging the viewport
    */
@@ -353,42 +351,43 @@ export function useViewportWrapper(viewportStore, imageStore, editorStore, uiSto
    * @param {MouseEvent} event - Mouse event
    */
   const startDrag = (axis, event) => {
-    if (uiStore.isApplying) return
-
     event.preventDefault()
+
     const startClient = axis === 'y' ? event.clientY : event.clientX
-    const startPan = axis === 'y' ? viewportStore.panY : viewportStore.panX
+    const startPan = axis === 'y' ? panY.value : panX.value
+
+    const trackSize =
+      axis === 'y'
+        ? wrapperHeight.value - verticalSliderHeight.value
+        : wrapperWidth.value - horizontalSliderWidth.value
+
+    const scrollRange = axis === 'y' ? verticalSliderRange.value : horizontalSliderRange.value
 
     const onMouseMove = (e) => {
-      const delta = (axis === 'y' ? e.clientY : e.clientX) - startClient
-      const speed = clamp(zoomLevel.value, dragSpeedMin, dragSpeedMax)
+      const deltaPx = (axis === 'y' ? e.clientY : e.clientX) - startClient
+
+      const deltaRatio = deltaPx / trackSize
+      const deltaPan = deltaRatio * scrollRange
 
       if (axis === 'y') {
-        isDraggingVertical.value = true
-        viewportStore.panY = clamp(
-          startPan - delta * speed,
-          scrollVerticalMin.value,
-          scrollVerticalMax.value,
-        )
+        panY.value = clamp(startPan - deltaPan, scrollVerticalMin.value, scrollVerticalMax.value)
       } else {
-        isDraggingHorizontal.value = true
-        viewportStore.panX = clamp(
-          startPan - delta * speed,
+        panX.value = clamp(
+          startPan - deltaPan,
           scrollHorizontalMin.value,
           scrollHorizontalMax.value,
         )
       }
     }
 
-    const onMouseUp = () => {
-      document.removeEventListener('mousemove', onMouseMove)
-      document.removeEventListener('mouseup', onMouseUp)
-      isDraggingHorizontal.value = false
-      isDraggingVertical.value = false
-    }
-
     document.addEventListener('mousemove', onMouseMove)
-    document.addEventListener('mouseup', onMouseUp)
+    document.addEventListener(
+      'mouseup',
+      () => {
+        document.removeEventListener('mousemove', onMouseMove)
+      },
+      { once: true },
+    )
   }
 
   // ------------------------------

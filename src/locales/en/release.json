@@ -17,7 +17,8 @@
       },
       "bugFixes": {
         "items": [
-          "Text in help modal can be selected and copied"
+          "Text in help modal can be selected and copied",
+          "Fix issue with incorrect sliders position"
         ]
       }
     },

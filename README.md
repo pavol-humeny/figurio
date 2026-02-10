@@ -17,7 +17,6 @@
 - Pozrieť sa na spoplatnenie - maximálny počet exportov
 - skúsiť detegovať opustenie stránky, pre zistenie kto je online
 - vyskúšať by me coffee
-- Odstrániť možnosť rotovať SVG objekty 
 - Natočiť videá
 - Slidebar nejde rovnako ako myška
 - Slidebar na spodku a vpravo vychádza mimo
