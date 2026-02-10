@@ -14,7 +14,7 @@
 - Odstrániť viacnásobné odkazy na citácie 
 
 # TODO
-- Pozrieť sa na spoplatnenie 
+- Pozrieť sa na spoplatnenie - maximálny počet exportov
 - skúsiť detegovať opustenie stránky, pre zistenie kto je online
 - vyskúšať by me coffee
 - Povoliť kopírovanie textu 

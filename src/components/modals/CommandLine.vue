@@ -13,6 +13,7 @@ const {
   output,
   outputRef,
   processCommand,
+  inputRef,
 } = useCommandLine(useUserModeStore(), useEditorStore());
 
 </script>
@@ -26,7 +27,7 @@ const {
     </div>
     <div class="cli-input-wrapper">
       <span class="cli-prompt">{{ userModeStore.userMode }}@figurio:~/$ </span>
-      <input v-model="command" @keydown.enter="processCommand" placeholder="Type a command..." autofocus
+      <input ref="inputRef" v-model="command" @keydown.enter="processCommand" placeholder="Type a command..." autofocus
         maxlength="100" />
     </div>
   </div>
@@ -51,8 +52,10 @@ const {
 
 .cli-line {
   margin: 2px 0;
-  white-space: pre-wrap; /* preserve spaces and newlines */
+  white-space: pre-wrap;
+  /* preserve spaces and newlines */
 }
+
 .cli-input-wrapper {
   display: flex;
   align-items: center;

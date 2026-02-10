@@ -4,6 +4,23 @@
     "items": []
   },
   "versions":{
+    "5.10.0":{
+      "label": "5.10.0",
+      "date":"4.2. 2025",
+      "newFeatures": {
+        "items": [
+        ]
+      },
+      "improvements": {
+        "items": [
+        ]
+      },
+      "bugFixes": {
+        "items": [
+          "Text in help modal can be selected and copied"
+        ]
+      }
+    },
     "5.9.0":{
       "label": "5.9.0",
       "date":"4.2. 2025",

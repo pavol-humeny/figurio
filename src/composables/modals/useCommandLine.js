@@ -9,6 +9,11 @@ const { addUserEvent } = useApi()
 
 export function useCommandLine(userModeStore, editorStore) {
   /**
+   * Reference to the input element
+   */
+  const inputRef = ref(null)
+
+  /**
    * Command line state
    */
   const command = ref('')
@@ -366,6 +371,10 @@ export function useCommandLine(userModeStore, editorStore) {
    * Handle keydown events for command history navigation
    */
   const handleKeydown = (e) => {
+    if (!inputRef.value || document.activeElement !== inputRef.value) {
+      return
+    }
+
     // Ctrl + D - switch to basic mode
     if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'd') {
       e.preventDefault()
@@ -546,5 +555,6 @@ export function useCommandLine(userModeStore, editorStore) {
     outputRef,
     processCommand,
     switchToBasicMode,
+    inputRef,
   }
 }

@@ -57,6 +57,8 @@ export function useKeyboardShortcuts(actions, uiStore, editorStore) {
 
     const pressed = normalizeKey(event)
 
+    log(`[Key Event] ${type.toUpperCase()} → ${pressed}`)
+
     for (const shortcut of keyboardShortcuts) {
       const expected = shortcut.keys.map((k) => k.toLowerCase()).join('+')
       const expectedType = shortcut.type || 'keydown' // default type
@@ -72,10 +74,10 @@ export function useKeyboardShortcuts(actions, uiStore, editorStore) {
       }
 
       if (pressed === expected && type === expectedType) {
-        if (!['ctrl+c', 'ctrl+v', 'ctrl+x', 'ctrl+a'].includes(pressed)) {
-          event.preventDefault()
-          event.stopImmediatePropagation()
-        }
+        // if (!['ctrl+c', 'ctrl+v', 'ctrl+x', 'ctrl+a'].includes(pressed)) {
+        //   event.preventDefault()
+        //   event.stopImmediatePropagation()
+        // }
 
         const fn = actions[shortcut.action]
         if (typeof fn === 'function') {
