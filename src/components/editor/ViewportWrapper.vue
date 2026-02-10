@@ -142,6 +142,8 @@ useImageAnalysis(
   useViewportStore(),
   useUiStore(),
   useHistoryStore(),
+  useEditorStore(),
+  useWorkspaceStore(),
   t,
 )
 

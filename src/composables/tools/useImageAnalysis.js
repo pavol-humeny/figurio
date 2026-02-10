@@ -9,6 +9,7 @@ import { useToastModal } from '../modals/useToastModal'
 import { useWarningList } from '../modals/useWarningList'
 import { editorConfig } from '@/config/editorConfig'
 import { useImagePipeline } from '../editor/useImagePipeline'
+import { useToolsPanel } from './useToolsPanel'
 
 const { showToastModal } = useToastModal()
 
@@ -31,7 +32,15 @@ const noiseSensitivity = ref(1)
 /**
  * Composable for analyzing image artifacts (noise) and managing overlay display
  */
-export function useImageAnalysis(imageStore, viewportStore, uiStore, historyStore, t) {
+export function useImageAnalysis(
+  imageStore,
+  viewportStore,
+  uiStore,
+  historyStore,
+  editorStore,
+  workspaceStore,
+  t,
+) {
   const {
     addWarning,
     isWarningDefined,
@@ -499,7 +508,7 @@ export function useImageAnalysis(imageStore, viewportStore, uiStore, historyStor
         'warning',
         'open',
         hideArtifactsClick,
-        calculateArtifacts,
+        onWarningOpen,
         hideArtifacts,
       )
 
@@ -565,6 +574,17 @@ export function useImageAnalysis(imageStore, viewportStore, uiStore, historyStor
 
     lastNoiseAnalysis.value = null
     removeWarning('artifact-warning')
+  }
+
+  const { toggleTool } = useToolsPanel(editorStore, imageStore, uiStore, workspaceStore, t)
+
+  /**
+   * Function that is called when the artifact warning is opened. It calculates artifacts and opens the image analysis tool if not already open.
+   */
+  const onWarningOpen = () => {
+    calculateArtifacts()
+    // Open tool image analysis if not open
+    toggleTool('imageAnalysis', null, false)
   }
 
   /**
@@ -637,7 +657,7 @@ export function useImageAnalysis(imageStore, viewportStore, uiStore, historyStor
       tipText,
 
       onOpen() {
-        calculateArtifacts()
+        onWarningOpen()
       },
 
       onClose() {

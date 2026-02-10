@@ -10,6 +10,7 @@ import { useWorkspaceStore } from '@/stores/workspaceStore'
 import { useUiStore } from '@/stores/uiStore'
 import { useViewportStore } from '@/stores/viewportStore'
 import { useHistoryStore } from '@/stores/historyStore'
+import { useEditorStore } from '@/stores/editorStore'
 
 const { t } = useI18n()
 const router = useRouter()
@@ -17,7 +18,7 @@ const router = useRouter()
 /**
  * Logic for the upload file button.
  */
-const { openDragAndDropModal } = useUploadFileButton(useImageStore(), t, router, useUserModeStore(), useWorkspaceStore(), useUiStore(), useViewportStore(), useHistoryStore())
+const { openDragAndDropModal } = useUploadFileButton(useImageStore(), t, router, useUserModeStore(), useWorkspaceStore(), useUiStore(), useViewportStore(), useHistoryStore(), useEditorStore())
 </script>
 
 <template>

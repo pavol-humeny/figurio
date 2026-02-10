@@ -10,6 +10,8 @@ import { useViewportStore } from '@/stores/viewportStore';
 import { useHistoryStore } from '@/stores/historyStore';
 import DefaultSlider from '../common/DefaultSlider.vue';
 import { editorConfig } from '@/config/editorConfig';
+import { useEditorStore } from '@/stores/editorStore';
+import { useWorkspaceStore } from '@/stores/workspaceStore';
 
 const { t } = useI18n()
 
@@ -21,7 +23,7 @@ const {
   removeNoise,
   noiseCanBeRemoved,
   noiseSensitivity
-} = useImageAnalysis(useImageStore(), useViewportStore(), useUiStore(), useHistoryStore(), t)
+} = useImageAnalysis(useImageStore(), useViewportStore(), useUiStore(), useHistoryStore(), useEditorStore(), useWorkspaceStore(), t)
 
 </script>
 

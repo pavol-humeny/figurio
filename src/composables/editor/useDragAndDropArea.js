@@ -43,6 +43,7 @@ export function useDragAndDropArea(
     imageStore,
     viewportStore,
     historyStore,
+    editorStore,
     t,
   )
 

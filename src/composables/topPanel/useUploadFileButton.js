@@ -22,6 +22,7 @@ export function useUploadFileButton(
   uiStore,
   viewportStore,
   historyStore,
+  editorStore,
 ) {
   const { openImportModal } = useImportModal()
   const { openFileInput } = importFileService(
@@ -31,6 +32,7 @@ export function useUploadFileButton(
     imageStore,
     viewportStore,
     historyStore,
+    editorStore,
     t,
   )
 

@@ -96,7 +96,7 @@ export const useWarningList = (imageStore, uiStore) => {
 
   /**
    * Toggle warning expanded/collapsed state
-   * @param {string} id - Unique ID 
+   * @param {string} id - Unique ID
    */
   const toggleWarning = (id) => {
     if (isWarningExpanded(id)) {

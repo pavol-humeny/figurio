@@ -46,12 +46,12 @@ import { useImportModal } from '@/composables/modals/useImportModal';
 import { useReleaseModal } from '@/composables/modals/useReleaseModal';
 import { useUserModeStore } from '@/stores/userModeStore';
 
-const { hideArtifacts } = useImageAnalysis(useImageStore(), useViewportStore(), useUiStore(), useHistoryStore(), t)
+const { hideArtifacts } = useImageAnalysis(useImageStore(), useViewportStore(), useUiStore(), useHistoryStore(), useEditorStore(), useWorkspaceStore(), t)
 
 const { undo, redo } = useUndoRedo(useHistoryStore(), useImageStore(), useUiStore(), t)
 const { zoomIn, zoomOut, resetZoom, toggleZoomMode } = useZoomControl(useViewportStore(), useImageStore(), t)
 const { closeFile } = useCloseFileButton(useImageStore(), useWorkspaceStore(), t)
-const { uploadFile } = useUploadFileButton(useImageStore(), t, useRouter(), useUserModeStore(), useWorkspaceStore(), useUiStore(), useViewportStore(), useHistoryStore())
+const { uploadFile } = useUploadFileButton(useImageStore(), t, useRouter(), useUserModeStore(), useWorkspaceStore(), useUiStore(), useViewportStore(), useHistoryStore(), useEditorStore())
 const { toggleTool } = useToolsPanel(useEditorStore(), useImageStore(), useUiStore(), useWorkspaceStore(), t)
 const { openHelpModal } = useHelpModal(useUiStore(), useImageStore(), useEditorStore(), useUserModeStore(), useRouter(), t)
 const { openSettingsPanel } = useSettingsPanel(useUiStore())

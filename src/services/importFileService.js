@@ -35,6 +35,7 @@ export function importFileService(
   imageStore,
   viewportStore,
   historyStore,
+  editorStore,
   t,
 ) {
   const { initPipeline, renderUpTo } = useImagePipeline(imageStore, uiStore)
@@ -501,7 +502,15 @@ export function importFileService(
     warn('calculateArtifacts called from setFile - image loaded')
 
     // Calculate image artifacts (noise)
-    const { calculateArtifacts } = useImageAnalysis(imageStore, viewportStore, uiStore, historyStore, t)
+    const { calculateArtifacts } = useImageAnalysis(
+      imageStore,
+      viewportStore,
+      uiStore,
+      historyStore,
+      editorStore,
+      workspaceStore,
+      t,
+    )
 
     await calculateArtifacts()
 

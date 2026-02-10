@@ -12,6 +12,7 @@ import { useViewportStore } from './viewportStore'
 import { toRaw } from 'vue'
 import { useImageAnalysis } from '@/composables/tools/useImageAnalysis'
 import { useUiStore } from './uiStore'
+import { useEditorStore } from './editorStore'
 
 pdfjsLib.GlobalWorkerOptions.workerSrc =
   'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js'
@@ -1552,6 +1553,8 @@ export const useImageStore = defineStore('imageStore', {
         useViewportStore(),
         useUiStore(),
         useHistoryStore(),
+        useEditorStore(),
+        useWorkspaceStore(),
         null,
       )
 

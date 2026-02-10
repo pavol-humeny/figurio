@@ -33,7 +33,7 @@ const router = useRouter()
 const userModeStore = useUserModeStore()
 const editorStore = useEditorStore()
 
-const { uploadFile } = useUploadFileButton(useImageStore(), t, useRouter(), useUserModeStore(), useWorkspaceStore(), useUiStore(), useViewportStore(), useHistoryStore())
+const { uploadFile } = useUploadFileButton(useImageStore(), t, useRouter(), useUserModeStore(), useWorkspaceStore(), useUiStore(), useViewportStore(), useHistoryStore(), useEditorStore())
 const { openHelpModal } = useHelpModal(useUiStore(), useImageStore(), useEditorStore(), useUserModeStore(), useRouter(), t)
 const { openSettingsPanel } = useSettingsPanel(useUiStore())
 const { prevStep, nextStep, finishTutorial, closeTutorial } = useInteractiveTutorial(useUiStore(), useImageStore(), useRouter(), t)
