@@ -165,12 +165,6 @@ export const keyboardShortcuts = [
     description: 'Toggle grayscale tool',
   },
   {
-    keys: ['shift', 'c'],
-    action: 'toggleTool',
-    args: ['darkLightConvertor', null],
-    description: 'Toggle dark/light convertor tool',
-  },
-  {
     keys: ['shift', 'f'],
     action: 'toggleTool',
     args: ['frame', null],

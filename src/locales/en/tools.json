@@ -1,23 +1,4 @@
 {
-  "move": {
-    "label": "Move",
-    "tip": "Adjusts properties of image movement and zoom sensitivity",
-    "tipDisabled": "",
-    "shortcut": "Shift + M",
-    "settings": {
-      "general": {
-        "resetPosition": "Reset position",
-        "zoomSpeed": {
-          "label": "Zoom speed",
-          "tip": "Adjust the speed of zooming or double click to reset zoom speed"
-        },
-        "movementSpeed": {
-          "label": "Movement speed",
-          "tip": "Adjust the speed of moving the canvas or double click to reset movement speed"
-        }
-      }
-    }
-  },
   "imageAnalysis": {
     "label": "Image Analysis",
     "tip": "Tools for image analysis",
@@ -377,18 +358,6 @@
         "lightness": "Lightness",
         "lightnessExplained": "Average of the max and min RGB values",
         "lightnessFormula": "(max(R, G, B) + min(R, G, B)) / 2"
-      }
-    }
-  },
-  "darkLightConvertor": {
-    "label": "Dark/Light Convertor",
-    "tip": "Converts dark code screen to light and vice versa",
-    "tipDisabled": "",
-    "explain": "The Dark/Light Convertor tool switches the color scheme of the image from dark to light or vice versa. This is useful for adapting images to different viewing preferences or environments.",
-    "shortcut": "Shift + C",
-    "settings": {
-      "convertToDarkLightButton": {
-        "text": "Convert"
       }
     }
   },

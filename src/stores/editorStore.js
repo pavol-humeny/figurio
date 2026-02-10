@@ -80,7 +80,6 @@ export const useEditorStore = defineStore('editorStore', {
       crop: toolIsEnabled('crop'),
       frame: toolIsEnabled('frame'),
       grayscale: toolIsEnabled('grayscale'),
-      darkLightConvertor: toolIsEnabled('darkLightConvertor'),
       backgroundRemoval: toolIsEnabled('backgroundRemoval'),
       brush: toolIsEnabled('brush'),
       select: toolIsEnabled('select'),

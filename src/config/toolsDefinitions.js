@@ -19,12 +19,6 @@ export const toolsDefinitions = [
     iconName: 'IconGrayscaleTool',
     settingsComponent: () => import('@/components/toolsSettings/GrayscaleToolSettings.vue'),
   },
-  // {
-  //   key: 'darkLightConvertor',
-  //   iconName: 'IconDarkLightConvertorTool',
-  //   settingsComponent: () =>
-  //     import('@/components/toolsSettings/DarkLightConvertorToolSettings.vue'),
-  // },
   {
     key: 'backgroundRemoval',
     iconName: 'IconBackgroundRemovalTool',

@@ -24,12 +24,6 @@
     "video": "shapeTool"
   },
   {
-    "icon": "IconMoveTool",
-    "title": "Move",
-    "description": "Move or zoom the canvas. Adjust movement speed and zoom sensitivity for smooth navigation.",
-    "video": "moveTool"
-  },
-  {
     "icon": "IconSelectTool",
     "title": "Select",
     "description": "Select, move, or delete objects on the image. Use multi-select, select all, or deselect options for precise control.",
@@ -46,12 +40,6 @@
     "title": "Grayscale",
     "description": "Convert the image to shades of gray. Multiple conversion methods are available.",
     "video": "grayscaleTool"
-  },
-  {
-    "icon": "IconDarkLightTool",
-    "title": "Dark/Light Converter",
-    "description": "Switch the color scheme of the image between dark and light modes.",
-    "video": "darkLightTool"
   },
   {
     "icon": "IconBackgroundRemovalTool",

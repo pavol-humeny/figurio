@@ -1,23 +1,4 @@
 {
-  "move": {
-    "label": "Posun",
-    "tip": "Upravuje vlastnosti pohybu obrázku a citlivost přiblížení",
-    "tipDisabled": "",
-    "shortcut": "Shift + M",
-    "settings": {
-      "general": {
-        "resetPosition": "Resetovat pozici",
-        "zoomSpeed": {
-          "label": "Rychlost přiblížení",
-          "tip": "Uprav rychlost přiblížení nebo dvakrát klikni pro resetování rychlosti přiblížení"
-        },
-        "movementSpeed": {
-          "label": "Rychlost pohybu",
-          "tip": "Uprav rychlost pohybu plátna nebo dvakrát klikni pro resetování rychlosti pohybu"
-        }
-      }
-    }
-  },
   "imageAnalysis": {
     "label": "Analýza obrazu",
     "tip": "Nástroje pro analýzu obrazu",
@@ -378,18 +359,6 @@
         "lightness": "Světlost",
         "lightnessExplained": "Průměr maximálních a minimálních hodnot RGB",
         "lightnessFormula": "(max(R, G, B) + min(R, G, B)) / 2"
-      }
-    }
-  },
-  "darkLightConvertor": {
-    "label": "Tmavý/Světelný režim",
-    "tip": "Převede tmavý obrázek kódu na světlý a naopak",
-    "tipDisabled": "",
-    "explain": "Nástroj Tmavý/Světelný režim přepíná barevné schéma obrázku z tmavého na světlý nebo naopak. Je užitečný pro přizpůsobení obrázků různým preferencím nebo prostředím prohlížení.",
-    "shortcut": "Shift + C",
-    "settings": {
-      "convertToDarkLightButton": {
-        "text": "Převést"
       }
     }
   },

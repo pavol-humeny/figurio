@@ -24,12 +24,6 @@
     "video": "shapeTool"
   },
   {
-    "icon": "IconMoveTool",
-    "title": "Presun",
-    "description": "Posúvajte alebo priblížte plátno. Nastavte rýchlosť pohybu a citlivosť zoomu pre plynulú navigáciu.",
-    "video": "moveTool"
-  },
-  {
     "icon": "IconSelectTool",
     "title": "Výber",
     "description": "Vyberte, presuňte alebo odstráňte objekty na obrázku. Použite viacnásobný výber, vybrať všetko alebo zrušiť výber pre presnú kontrolu.",
@@ -46,12 +40,6 @@
     "title": "Odtieň šedej",
     "description": "Konvertujte obrázok na odtiene sivej. K dispozícii sú viaceré metódy konverzie.",
     "video": "grayscaleTool"
-  },
-  {
-    "icon": "IconDarkLightTool",
-    "title": "Prepínač svetlý/tmavý",
-    "description": "Prepínajte farebnú schému obrázku medzi tmavým a svetlým režimom.",
-    "video": "darkLightTool"
   },
   {
     "icon": "IconBackgroundRemovalTool",

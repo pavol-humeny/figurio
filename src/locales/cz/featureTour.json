@@ -24,12 +24,6 @@
     "video": "shapeTool"
   },
   {
-    "icon": "IconMoveTool",
-    "title": "Pohyb",
-    "description": "Posouvejte nebo přibližujte plátno. Nastavte rychlost pohybu a citlivost zoomu pro plynulou navigaci.",
-    "video": "moveTool"
-  },
-  {
     "icon": "IconSelectTool",
     "title": "Výběr",
     "description": "Vyberte, přesouvejte nebo odstraňujte objekty na obrázku. Použijte více výběrů, vybrat vše nebo zrušit výběr pro přesnou kontrolu.",
@@ -46,12 +40,6 @@
     "title": "Šedotón",
     "description": "Převeďte obrázek na odstíny šedé. K dispozici je několik metod konverze.",
     "video": "grayscaleTool"
-  },
-  {
-    "icon": "IconDarkLightTool",
-    "title": "Přepínač tmavý/světly",
-    "description": "Přepínejte barevné schéma obrázku mezi tmavým a světlým režimem.",
-    "video": "darkLightTool"
   },
   {
     "icon": "IconBackgroundRemovalTool",
