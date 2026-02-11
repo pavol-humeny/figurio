@@ -18,11 +18,6 @@
 # TODO
 - Natočiť videá
 
-- Štatistiky
-    - skúsiť detegovať opustenie stránky, pre zistenie kto je online
-    - Zobrazovanie operácií podľa užívateľov
-    - statistiky - v grafe návštevnosti zobrazovať lokalizáciu
-
 - Štetec
     - premyslieť ten štetec a pixeláciu 
     - 1px štetec by mal vyplnat 1px 
@@ -43,8 +38,6 @@
     - pri posune viacerých objektov, následnom položení a opätovnom presune to nechce ísť a sekne to 
 
 - pri výbere z dropdown menu to neskryje tip 
-
-- pri zmene monitora by to mohlo dať hlasku aby sa to nakalibrovalo 
 
 ## TODO 
 - Vylepšenie rámiku pre prehliadače 

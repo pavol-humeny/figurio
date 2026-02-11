@@ -5,7 +5,7 @@ import { computed, ref } from 'vue'
 import { useVideoLoader } from '@/composables/modals/useVideoLoader'
 import { useEditorStore } from '@/stores/editorStore'
 
-const { getVideo } = useVideoLoader()
+const { getVideo } = useVideoLoader(useUiStore())
 
 const uiStore = useUiStore()
 

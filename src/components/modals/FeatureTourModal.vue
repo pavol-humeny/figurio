@@ -4,8 +4,9 @@ import { useFeatureTourModal } from '@/composables/modals/useFeatureTourModal'
 import FeatureTourCard from './FeatureTourCard.vue'
 import { useVideoLoader } from '@/composables/modals/useVideoLoader.js'
 import { useI18n } from 'vue-i18n'
+import { useUiStore } from '@/stores/uiStore'
 
-const { getVideo } = useVideoLoader()
+const { getVideo } = useVideoLoader(useUiStore())
 const { messages, locale } = useI18n()
 /**
  * Logic of the feature tour modal state
