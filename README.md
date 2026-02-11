@@ -18,8 +18,6 @@
 # TODO
 - Natočiť videá
 
-- ak dojde k posunutiu obrazka do stredu tak treba posunut vsetky obrazky, nie len aktivny
-
 - Štetec
     - premyslieť ten štetec a pixeláciu 
     - 1px štetec by mal vyplnat 1px 

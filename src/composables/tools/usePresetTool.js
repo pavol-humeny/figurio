@@ -954,13 +954,21 @@ export function usePresetTool(
       if (!useFrameTool(imageStore, historyStore, viewportStore, t).isFrameWithOutline(type)) {
         newPreset.value.frame.outlineEnabled = false
       }
+
       if (!useFrameTool(imageStore, historyStore, viewportStore, t).isFrameWithFooter(type)) {
         newPreset.value.frame.footerSize = 0
         newPreset.value.frame.footerSizeMm = 0
+      } else if (useFrameTool(imageStore, historyStore, viewportStore, t).isFrameWithFooter(type)) {
+        newPreset.value.frame.footerSize = 20
+        newPreset.value.frame.footerSizeMm = 20
       }
+
       if (!useFrameTool(imageStore, historyStore, viewportStore, t).isFrameWithHeader(type)) {
         newPreset.value.frame.headerSize = 0
         newPreset.value.frame.headerSizeMm = 0
+      } else if (useFrameTool(imageStore, historyStore, viewportStore, t).isFrameWithHeader(type)) {
+        newPreset.value.frame.headerSize = 20
+        newPreset.value.frame.headerSizeMm = 20
       }
     },
   )
