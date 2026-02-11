@@ -108,7 +108,16 @@ export function useImageRenderer(
 
     log('--- renderCanvas called: ---', blockRender.value)
 
-    if (blockRender.value) return
+    if (!imageStore.isImageLoaded) {
+      warn('Image not loaded yet, skipping render')
+      return
+    }
+
+    if (blockRender.value) {
+      warn('Render is currently blocked, skipping render call')
+      blockRender.value = false
+      return
+    }
     blockRender.value = true
 
     // Wait one tick (needed for background rasterization)
@@ -243,6 +252,7 @@ export function useImageRenderer(
       const dst = imageRef.value
 
       if (!src || !dst) {
+        warn('src: ', src, 'dst:', dst)
         blockRender.value = false
         return
       }
@@ -334,13 +344,18 @@ export function useImageRenderer(
       return
     }
 
-    const isLandscapePhoneValue = useFrameTool(imageStore, historyStore, viewportStore, t).isLandscapePhone(
-      imageStore.frame.type,
-      imageStore.frame.phoneFrameOrientation,
-    )
+    const isLandscapePhoneValue = useFrameTool(
+      imageStore,
+      historyStore,
+      viewportStore,
+      t,
+    ).isLandscapePhone(imageStore.frame.type, imageStore.frame.phoneFrameOrientation)
 
     el.innerHTML = ''
-    useFrameTool(imageStore, historyStore, viewportStore, t).applyFrameRender(el, isLandscapePhoneValue)
+    useFrameTool(imageStore, historyStore, viewportStore, t).applyFrameRender(
+      el,
+      isLandscapePhoneValue,
+    )
 
     renderCanvas()
 

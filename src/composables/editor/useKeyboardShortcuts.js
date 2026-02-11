@@ -74,10 +74,10 @@ export function useKeyboardShortcuts(actions, uiStore, editorStore) {
       }
 
       if (pressed === expected && type === expectedType) {
-        // if (!['ctrl+c', 'ctrl+v', 'ctrl+x', 'ctrl+a'].includes(pressed)) {
-        //   event.preventDefault()
-        //   event.stopImmediatePropagation()
-        // }
+        if (!['ctrl+c', 'ctrl+v', 'ctrl+x', 'ctrl+a'].includes(pressed)) {
+          event.preventDefault()
+          event.stopImmediatePropagation()
+        }
 
         const fn = actions[shortcut.action]
         if (typeof fn === 'function') {

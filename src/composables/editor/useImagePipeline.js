@@ -233,6 +233,11 @@ export function useImagePipeline(imageStore, uiStore) {
         state = cloneState(checkpoint.state)
         currentDimensions = { ...checkpoint.dimensions }
 
+        // If for is not run
+        if (checkpoint.opIndex === targetIndex) {
+          needsFullRerender = true
+        }
+
         for (let i = checkpoint.opIndex + 1; i <= targetIndex; i++) {
           const operation = imageStore.imageOperations[i]
           if (!operation) continue
@@ -269,6 +274,11 @@ export function useImagePipeline(imageStore, uiStore) {
           width: pipeline.baseState.canvas.width,
           height: pipeline.baseState.canvas.height,
           fileAspectRatio: pipeline.baseState.canvas.width / pipeline.baseState.canvas.height || 1,
+        }
+
+        // If for is not run
+        if (targetIndex === -1) {
+          needsFullRerender = true
         }
 
         // Apply operations from start

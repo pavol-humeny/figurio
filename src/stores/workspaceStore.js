@@ -109,9 +109,6 @@ export const useWorkspaceStore = defineStore('workspaceStore', {
       await this.restoreTab(index)
 
       console.warn('Switching to tab', index)
-      const imageStore = useImageStore()
-      imageStore.imageNeedToBeRendered = true
-      imageStore.frameNeedToBeRendered = true
     },
 
     /**
@@ -129,6 +126,9 @@ export const useWorkspaceStore = defineStore('workspaceStore', {
       await imageStore.applyFullSnapshot(tab.imageSnapshot)
       historyStore.applyFullSnapshot(tab.historySnapshot)
       viewportStore.applyFullSnapshot(tab.viewportSnapshot)
+
+      imageStore.imageNeedToBeRendered = true
+      imageStore.frameNeedToBeRendered = true
     },
 
     /**

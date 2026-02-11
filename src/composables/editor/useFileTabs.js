@@ -52,8 +52,6 @@ export function useFileTabs(uiStore, viewportStore, imageStore, editorStore, t) 
 
       await renderUpTo(imageStore.renderPipeline.currentOpIndex, { t, imageStore })
 
-      imageStore.imageNeedToBeRendered = true
-      imageStore.frameNeedToBeRendered = true
       uiStore.isLoading = false
     }
   }
@@ -80,8 +78,6 @@ export function useFileTabs(uiStore, viewportStore, imageStore, editorStore, t) 
         await renderUpTo(imageStore.renderPipeline.currentOpIndex, { t, imageStore })
       }
 
-      imageStore.imageNeedToBeRendered = true
-      imageStore.frameNeedToBeRendered = true
       uiStore.isLoading = false
     }
   }
