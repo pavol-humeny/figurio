@@ -110,6 +110,7 @@ export function useHelpModal(uiStore, imageStore, editorStore, userModeStore, ro
     isVisible.value = true
 
     editorStore.imageCanBePasted = false
+    editorStore.isModalOpenFlag = true
   }
 
   /**
@@ -119,6 +120,7 @@ export function useHelpModal(uiStore, imageStore, editorStore, userModeStore, ro
     isVisible.value = false
 
     editorStore.imageCanBePasted = true
+    editorStore.isModalOpenFlag = false
 
     // Clear contact form on close
     contactForm.name = ''
