@@ -242,7 +242,7 @@ export function useItemTip(options = {}, uiStore, editorStore) {
     uiStore.isItemTipVisible = false
 
     // Open the feature tour modal with the specific tool video
-    openSingleFeatureTourModal(toolKey + 'Tool')
+    openSingleFeatureTourModal(toolKey)
   }
 
   // Update position after mount

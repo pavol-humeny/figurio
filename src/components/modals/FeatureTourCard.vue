@@ -91,15 +91,17 @@ onMounted(() => {
 
 .video-wrapper {
   width: 100%;
-  aspect-ratio: 16 / 8;
   overflow: hidden;
+  height: 100%;
+  border-bottom: solid 1px var(--primary-c);
+  border-top: solid 1px var(--primary-c);
 }
 
 .video-preview {
   width: 100%;
   height: 100%;
-  object-fit: fill;
-  background: var(--background-c);
+  object-fit: contain;
+  /* background: var(--background-c); */
 }
 
 .card-content-wrapper {
@@ -108,7 +110,7 @@ onMounted(() => {
   display: flex;
   flex-direction: column;
   align-items: start;
-  padding: 40px 45px;
+  padding: 20px 45px 60px 45px;
   gap: 20px;
 }
 
@@ -127,7 +129,6 @@ onMounted(() => {
 }
 
 .feature-description {
-  width: 70%;
   font-size: 18px;
   color: var(--text-c);
 }

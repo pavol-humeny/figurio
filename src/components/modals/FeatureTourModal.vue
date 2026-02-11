@@ -4,9 +4,8 @@ import { useFeatureTourModal } from '@/composables/modals/useFeatureTourModal'
 import FeatureTourCard from './FeatureTourCard.vue'
 import { useVideoLoader } from '@/composables/modals/useVideoLoader.js'
 import { useI18n } from 'vue-i18n'
-import { useUiStore } from '@/stores/uiStore'
 
-const { getVideo } = useVideoLoader(useUiStore())
+const { getVideo } = useVideoLoader()
 const { messages, locale } = useI18n()
 /**
  * Logic of the feature tour modal state
@@ -36,6 +35,7 @@ const allSlides = computed(() => {
  * If activeVideos is empty, display all slides
  */
 const slides = computed(() => {
+  console.warn('Active videos for feature tour:', activeVideos.value)
   if (!activeVideos.value.length) return allSlides.value
   return allSlides.value.filter(slide => activeVideos.value.includes(slide.videoKey))
 })
@@ -115,7 +115,7 @@ const closeFeatureTourModalWrapper = () => {
 }
 
 .modal-box {
-  width: 60%;
+  height: 80%;
   aspect-ratio: 16 / 13;
   max-height: 85vh;
   display: flex;
@@ -158,7 +158,7 @@ const closeFeatureTourModalWrapper = () => {
   align-items: center;
   color: var(--primary-c);
   user-select: none;
-  top: 2px;
+  top: 1px;
   right: 20px;
   font-weight: bold;
 }

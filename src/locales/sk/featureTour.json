@@ -1,104 +1,128 @@
 [
   {
-    "icon": "IconNoiseDetection",
-    "title": "Detekcia šumu",
-    "description": "Automaticky zvýrazní šum alebo artefakty na obrázku, ktoré nie sú na prvý pohľad viditeľné.",
-    "video": "noiseDetection"
+    "icon": "IconImageAnalysisTool",
+    "title": "Analýza obrázka",
+    "description": "Umožňuje analyzovať obsah obrázka a detegovať šum. Je možné nastaviť citlivosť detekcie tak, aby sa šum presne zvýraznil, a následne použiť jeho odstránenie na zlepšenie kvality obrázka.",
+    "video": "imageAnalysis"
   },
   {
     "icon": "IconCropTool",
-    "title": "Nástroj orezania",
-    "description": "Ručne orežte obrázok alebo použite fit crop na odstránenie okrajov pripomínajúcich pozadie. Nastavte pozíciu, veľkosť a citlivosť pre presné výsledky.",
-    "video": "cropTool"
+    "title": "Orezanie",
+    "description": "Orežte obrázok manuálne alebo použite automatické prispôsobenie na odstránenie nežiaducich okrajov.",
+    "video": "crop"
   },
   {
     "icon": "IconBrush",
     "title": "Štetec",
-    "description": "Maľujte na obrázku s nastaviteľnou veľkosťou, nepriehľadnosťou a tvrdosťou štetca. Guma odstraňuje namaľované oblasti.",
-    "video": "brushTool"
+    "description": "Maľujte priamo do obrázka pomocou nastaviteľného štetca. Obsahuje aj režim gumy pre presné úpravy.",
+    "video": "brush"
   },
   {
-    "icon": "IconShapeTool",
-    "title": "Tvar",
-    "description": "Pridajte vektorové tvary ako obdĺžniky, elipsy alebo čiary. Prispôsobte veľkosť, pozíciu, rotáciu, výplň, obrys a nepriehľadnosť.",
-    "video": "shapeTool"
+    "icon": "IconPencilTool",
+    "title": "Ceruzka",
+    "description": "Kreslite presné ťahy pomocou jemnej ceruzky. Ideálne na anotácie a detailné úpravy.",
+    "video": "pencil"
+  },
+  {
+    "icon": "IconRectangle",
+    "title": "Obdĺžnik",
+    "description": "Pridajte vektorový obdĺžnik s nastaviteľnou výplňou, obrysom a priehľadnosťou.",
+    "video": "rectangle"
+  },
+  {
+    "icon": "IconEllipse",
+    "title": "Elipsa",
+    "description": "Vložte elipsu s nastaviteľnými rozmermi, výplňou a obrysom.",
+    "video": "ellipse"
+  },
+  {
+    "icon": "IconLine",
+    "title": "Čiara",
+    "description": "Nakreslite priamku s nastaviteľnou hrúbkou, farbou a priehľadnosťou.",
+    "video": "line"
   },
   {
     "icon": "IconSelectTool",
     "title": "Výber",
-    "description": "Vyberte, presuňte alebo odstráňte objekty na obrázku. Použite viacnásobný výber, vybrať všetko alebo zrušiť výber pre presnú kontrolu.",
-    "video": "selectTool"
+    "description": "Označujte, presúvajte, kopírujte alebo odstraňujte objekty. Podporuje viacnásobný výber.",
+    "video": "select"
   },
   {
-    "icon": "IconTransformTool",
-    "title": "Transformácia",
-    "description": "Otočte, prevráťte alebo zmeňte veľkosť obrázku. K dispozícii sú voľná rotácia a uzamknutie rozmerov.",
-    "video": "transformTool"
+    "icon": "IconResizeTool",
+    "title": "Zmena veľkosti",
+    "description": "Zmeňte veľkosť obrázka s možnosťou uzamknutia pomeru strán pre presné nastavenie rozmerov.",
+    "video": "resize"
+  },
+  {
+    "icon": "IconRotateTool",
+    "title": "Otočenie",
+    "description": "Otočte obrázok o pevne dané uhly.",
+    "video": "rotate"
+  },
+  {
+    "icon": "IconFlipVertical",
+    "title": "Prevrátenie",
+    "description": "Prevráťte obrázok horizontálne alebo vertikálne.",
+    "video": "flip"
   },
   {
     "icon": "IconGrayscaleTool",
-    "title": "Odtieň šedej",
-    "description": "Konvertujte obrázok na odtiene sivej. K dispozícii sú viaceré metódy konverzie.",
-    "video": "grayscaleTool"
+    "title": "Odtiene sivej",
+    "description": "Preveďte obrázok do odtieňov sivej pomocou viacerých konverzných algoritmov.",
+    "video": "grayscale"
   },
   {
-    "icon": "IconBackgroundRemovalTool",
-    "title": "Odstránenie pozadia",
-    "description": "Odstráňte pozadie obrázku automaticky, ručne alebo podľa výberu farby. Nastavte citlivosť pre presné výsledky.",
-    "video": "autoTool"
+    "icon": "IconAutoRemovalTool",
+    "title": "Odstránenie pozadia (automatické)",
+    "description": "Automaticky rozpozná a odstráni pozadie.",
+    "video": "auto"
   },
   {
-    "icon": "IconBackgroundRemovalTool",
-    "title": "Odstránenie pozadia",
-    "description": "Odstráňte pozadie obrázku automaticky, ručne alebo podľa výberu farby. Nastavte citlivosť pre presné výsledky.",
-    "video": "manualTool"
+    "icon": "IconManualRemovalTool",
+    "title": "Odstránenie pozadia (manuálne)",
+    "description": "Manuálne označte oblasti, ktoré chcete ponechať alebo odstrániť pre presnú úpravu pozadia.",
+    "video": "manual"
   },
   {
-    "icon": "IconBackgroundRemovalTool",
-    "title": "Odstránenie pozadia",
-    "description": "Odstráňte pozadie obrázku automaticky, ručne alebo podľa výberu farby. Nastavte citlivosť pre presné výsledky.",
-    "video": "colorTool"
+    "icon": "IconColorRemovalTool",
+    "title": "Odstránenie pozadia (podľa farby)",
+    "description": "Odstráňte pozadie výberom konkrétneho farebného rozsahu s nastaviteľnou toleranciou.",
+    "video": "color"
   },
   {
     "icon": "IconBlurTool",
-    "title": "Zamäknutie oblasti",
-    "description": "Použite efekt rozmazania na vybranej obdĺžnikovej oblasti. Nastavte veľkosť, rotáciu, intenzitu a zjemnenie okrajov.",
-    "video": "blurTool"
+    "title": "Rozmazanie oblasti",
+    "description": "Aplikujte efekt rozmazania na vybranú oblasť. Upravte intenzitu a prechod okrajov.",
+    "video": "blur"
   },
   {
     "icon": "IconTextTool",
     "title": "Text",
-    "description": "Pridajte a upravujte text s fontom, veľkosťou, farbou, nepriehľadnosťou, štýlom, rotáciou a vrstvovým Z-indexom.",
-    "video": "textTool"
+    "description": "Vložte a upravte text s možnosťou nastavenia písma, veľkosti, farby a priehľadnosti.",
+    "video": "text"
   },
   {
-    "icon": "IconMagnifyTool",
-    "title": "Priblíženie oblasti",
-    "description": "Zväčšite konkrétnu oblasť obrázku. Prispôsobte zoom, polomer, pozíciu, obrys a Z-index.",
-    "video": "magnifyAreaTool"
+    "icon": "IconMagnifyAreaTool",
+    "title": "Zväčšenie oblasti",
+    "description": "Priblížte vybranú oblasť s nastaviteľným polomerom, faktorom zväčšenia a obrysom.",
+    "video": "magnifyArea"
   },
   {
     "icon": "IconFrameTool",
     "title": "Rám",
-    "description": "Pridajte vizuálne rámy ako plné, prehliadačové alebo telefónové. Prispôsobte farbu, šírku a hlavičky.",
-    "video": "frameTool"
+    "description": "Pridajte vizuálne rámy, napríklad jednoduché okraje, rám prehliadača alebo makety zariadení.",
+    "video": "frame"
   },
   {
     "icon": "IconPresetTool",
-    "title": "Prednastavenia",
-    "description": "Uložte a použite prednastavenia úprav obrázkov vrátane otočenia, prevrátenia, orezania, zmeny veľkosti, odtieňa šedej a rámu.",
-    "video": "presetTool"
+    "title": "Vytvoriť predvoľbu",
+    "description": "Uložte aktuálnu konfiguráciu úprav ako opakovane použiteľnú predvoľbu.",
+    "video": "createPreset"
   },
   {
-    "icon": "IconExportTool",
-    "title": "Export",
-    "description": "Exportujte obrázky v rôznych formátoch, nastavte kvalitu a rozmery súboru, náhľad alebo skopírujte do schránky.",
-    "video": "exportTool"
-  },
-  {
-    "icon": "IconColorEyeDropper",
-    "title": "Kapátko farby",
-    "description": "Vyberte farbu z obrázku na použitie s nástrojmi ako štetec alebo odstránenie pozadia.",
-    "video": "eyeDropperTool"
+    "icon": "IconMyPresetsTool",
+    "title": "Moje predvoľby",
+    "description": "Použite predtým uloženú predvoľbu na rýchle zopakovanie úprav.",
+    "video": "myPreset"
   }
 ]

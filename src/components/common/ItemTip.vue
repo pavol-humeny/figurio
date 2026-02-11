@@ -5,7 +5,7 @@ import { computed, ref } from 'vue'
 import { useVideoLoader } from '@/composables/modals/useVideoLoader'
 import { useEditorStore } from '@/stores/editorStore'
 
-const { getVideo } = useVideoLoader(useUiStore())
+const { getVideo } = useVideoLoader()
 
 const uiStore = useUiStore()
 
@@ -91,7 +91,7 @@ const videoRef = ref(null)
             { 'item-tip-advance-tool': props.advanceTool }]">
           <template v-if="props.advanceTool">
             <div class="tip-video">
-              <video ref="videoRef" class="video-preview" :src="getVideo(props.toolKey, true)" autoplay loop muted
+              <video ref="videoRef" class="video-preview" :src="getVideo(props.toolKey)" autoplay loop muted
                 playsinline @click="openToolVideo(props.toolKey)"></video>
             </div>
             <div class="item-tip-title-row">
