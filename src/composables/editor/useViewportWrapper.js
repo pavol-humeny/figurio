@@ -17,7 +17,14 @@ const { addUserEvent } = useApi()
  * @param {import('vue').Ref<HTMLElement>} contentRef - Ref to the .viewport-content element
  * @returns {Object}
  */
-export function useViewportWrapper(viewportStore, imageStore, editorStore, uiStore, contentRef) {
+export function useViewportWrapper(
+  viewportStore,
+  imageStore,
+  editorStore,
+  uiStore,
+  workspaceStore,
+  contentRef,
+) {
   const { clamp, round } = useMath()
 
   /**
@@ -513,15 +520,24 @@ export function useViewportWrapper(viewportStore, imageStore, editorStore, uiSto
     updateInitialDimensions()
     updateZoomDependentDimensions()
 
-    // Move image
-    viewportStore.panX += (uiStore.rightPanelDefaultWidth / 2) * side
+    const deltaX = (uiStore.rightPanelDefaultWidth / 2) * side
 
-    // Clamp to new limits
+    // Move image
+    // Move active viewport
+    viewportStore.panX += deltaX
+
     viewportStore.panX = clamp(
       viewportStore.panX,
       scrollHorizontalMin.value,
       scrollHorizontalMax.value,
     )
+
+    // Move all other viewports in tabs to keep the position consistent when switching tabs
+    workspaceStore.tabs.forEach((tab) => {
+      if (!tab.viewportSnapshot) return
+
+      tab.viewportSnapshot.panX += deltaX
+    })
   }
 
   /**
