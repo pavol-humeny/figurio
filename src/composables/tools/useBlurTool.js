@@ -3,6 +3,13 @@ import { useMath } from '../common/useMath'
 import { useSvgFunctions } from './useSvgFunctions'
 import { useApi } from '@/composables/common/useApi'
 const { addUserEvent } = useApi()
+import { useConfirmModal } from '../modals/useConfirmModal'
+import { useImagePipeline } from '../editor/useImagePipeline.js'
+
+/**
+ * Hide position and dimensions settings in the blur tool settings
+ */
+const hidePositionAndDimensions = ref(true)
 
 /**
  * Local settings for the blur tool
@@ -18,34 +25,33 @@ const localBlurSettings = ref({
 })
 
 /**
+ * Currently active blur object being edited
+ */
+const activeObject = ref(null)
+
+/**
  * Logic for blur tool
  * @param {Object} imageStore - Store containing svgObjects
  * @param {Object} historyStore - History store
  * @param {Object} editorStore - Store containing editor state
+ * @param {Object} uiStore - Store containing UI state
  * @param {Function} t - Translation function
  * @return {Object} Composable methods and reactive properties for blur tool
  */
-export function useBlurTool(imageStore, historyStore, editorStore, t) {
+export function useBlurTool(imageStore, historyStore, editorStore, uiStore, t) {
   const { round, clamp } = useMath()
   const { getObjectCenter } = useSvgFunctions(imageStore)
+  const { showConfirmModal } = useConfirmModal()
+  const { renderUpTo } = useImagePipeline(imageStore, uiStore)
 
   /**
    * String representation of SVG definitions used for blur patterns
    */
   const svgDefsString = computed(() => imageStore.svgDefs.join('\n'))
 
-  /**
-   * Currently active blur object being edited
-   */
-  const activeObject = ref(null)
-
   // -------------------------------
   // Position
   // -------------------------------
-  /**
-   * Hide position and dimensions settings in the blur tool settings
-   */
-  const hidePositionAndDimensions = ref(true)
 
   /**
    * Calculate maximum and minimal position for blur
@@ -105,93 +111,6 @@ export function useBlurTool(imageStore, historyStore, editorStore, t) {
    */
   const isDimensionsLinked = ref(true)
 
-  // --------------------------------
-  // Defs
-  // --------------------------------
-  /**
-   * Adds or replaces a clipPath definition for the blur object
-   * @param {string} id - The ID of the blur object
-   * @param {Object} params - The parameters for the clipPath
-   * @param {number} params.x - The x position of the clipPath
-   * @param {number} params.y - The y position of the clipPath
-   * @param {number} params.width - The width of the clipPath
-   * @param {number} params.height - The height of the clipPath
-   * @param {number} params.rotation - The rotation of the clipPath
-   */
-  const addOrReplaceClipDef = (id, { x, y, width, height, rotation, fade }) => {
-    // const cx = x + width / 2
-    // const cy = y + height / 2
-    // const transform = rotation !== 0 ? ` transform="rotate(${rotation}, ${cx}, ${cy})"` : ''
-    // const def = `
-    //   <clipPath id="clip-${id}">
-    //     <rect x="${x}" y="${y}" width="${width}" height="${height}"${transform} />
-    //   </clipPath>
-    // `
-
-    // imageStore.addOrReplaceSvgDef(`clip-${id}`, def)
-
-    const cx = x + width / 2
-    const cy = y + height / 2
-    const transform = rotation !== 0 ? ` transform="rotate(${rotation}, ${cx}, ${cy})"` : ''
-
-    // Mask with sharp rect but blurred edges
-    const def = `
-        <defs>
-          <filter id="mask-blur-${id}" x="-50%" y="-50%" width="200%" height="200%" filterUnits="objectBoundingBox">
-            <!-- Gaussian blur applied with extra margin so edges don't clip -->
-            <feGaussianBlur stdDeviation="${fade}" />
-          </filter>
-
-          <mask id="fade-mask-${id}" maskUnits="userSpaceOnUse">
-            <rect
-              x="${x}" y="${y}"
-              width="${width}" height="${height}"
-              fill="white"
-              filter="url(#mask-blur-${id})"
-              ${transform}
-            />
-          </mask>
-        </defs>
-      `
-    imageStore.addOrReplaceSvgDef(`fade-mask-${id}`, def)
-  }
-
-  /**
-   * Adds or replaces a filter definition for the blur object
-   * @param {string} id - The ID of the blur object
-   * @param {number} blurStrength - The strength of the blur
-   */
-  const addOrReplaceFilterDef = (id, blurStrength) => {
-    const def = `
-      <filter id="blur-filter-${id}" x="-20%" y="-20%" width="140%" height="140%">
-        <feGaussianBlur stdDeviation="${blurStrength}" />
-      </filter>
-    `
-
-    imageStore.addOrReplaceSvgDef(`blur-filter-${id}`, def)
-  }
-
-  /**
-   * Adds a <image> element for the blur object to the blurImages array
-   * @param {string} id - The ID of the blur object
-   */
-  const addBlurImage = (id) => {
-    const imageString = `
-    <image
-      id="blur-image-${id}"
-      href="${imageStore.blurPreviewUrl}"
-      x="0"
-      y="0"
-      width="${imageStore.fileDimensions.width}"
-      height="${imageStore.fileDimensions.height}"
-      mask="url(#fade-mask-${id})"
-      filter="url(#blur-filter-${id})"
-    />
-  `
-
-    imageStore.blurImages.push(imageString)
-  }
-
   /**
    * Save current config to editor store
    */
@@ -229,6 +148,8 @@ export function useBlurTool(imageStore, historyStore, editorStore, t) {
           activeObject.value = object
           hidePositionAndDimensions.value = false
 
+          console.warn('Selected object changed, loading blur settings...', { object })
+
           const { attrs } = object
 
           // Position
@@ -249,6 +170,8 @@ export function useBlurTool(imageStore, historyStore, editorStore, t) {
 
           // Edge fade
           localBlurSettings.value.edgeFade = parseFloat(attrs['data-edge-fade']) || 10
+
+          console.warn('Loaded blur settings from selected object:', { ...localBlurSettings.value })
         }
       } else {
         hidePositionAndDimensions.value = true
@@ -277,68 +200,21 @@ export function useBlurTool(imageStore, historyStore, editorStore, t) {
     localBlurSettings.value.rotation = attrs.transform
       ? parseFloat(attrs.transform.match(/rotate\(([^)]+)\)/)?.[1]) || 0
       : 0
-
-    // Update clip path
-    addOrReplaceClipDef(object.id, {
-      x: attrs.x,
-      y: attrs.y,
-      width: attrs.width,
-      height: attrs.height,
-      rotation: attrs.transform
-        ? parseFloat(attrs.transform.match(/rotate\(([^)]+)\)/)?.[1]) || 0
-        : 0,
-      fade: attrs['data-edge-fade'] || 10,
-    })
   })
-
-  watch(
-    () => imageStore.blurObjects,
-    (newVal, oldVal) => {
-      if (imageStore.historyWasChanged) {
-        activeObject.value = null
-      }
-      // Find changed object by shallow comparison of attributes
-      newVal.forEach((obj, i) => {
-        const oldObj = oldVal?.[i]
-        if (!oldObj) return
-
-        // Compare keys to detect a change
-        const changed = Object.keys(obj).some((key) => {
-          // Ignore Vue internals
-          if (key.startsWith('__v')) return false
-          return JSON.stringify(obj[key]) !== JSON.stringify(oldObj[key])
-        })
-
-        // Add or replace clip for changed object
-        if (changed) {
-          const { attrs } = obj
-          addOrReplaceClipDef(obj.id, {
-            x: attrs.x,
-            y: attrs.y,
-            width: attrs.width,
-            height: attrs.height,
-            rotation: attrs.transform
-              ? parseFloat(attrs.transform.match(/rotate\(([^)]+)\)/)?.[1]) || 0
-              : 0,
-            fade: attrs['data-edge-fade'] || 10,
-          })
-        }
-      })
-    },
-    { deep: true },
-  )
 
   /**
    * Apply local settings to the active SVG object
    * @param {boolean} commit - When true, push to history store
    */
   const applyLocalBlurSettings = (commit = true) => {
+    console.warn('Applying local blur settings to active object...', { ...localBlurSettings.value })
     if (imageStore.selectedSvgObjectId === null) return
 
     const object = activeObject.value
+    console.warn('Active object to apply settings to:', { object })
     if (!object) return
 
-    const { id } = activeObject.value
+    // const { id } = activeObject.value
     const settings = localBlurSettings.value
     const { attrs } = object
 
@@ -353,18 +229,6 @@ export function useBlurTool(imageStore, historyStore, editorStore, t) {
     // Rotation angle
     const { cx, cy } = getObjectCenter(object)
     attrs.transform = `rotate(${settings.rotation}, ${cx}, ${cy})`
-
-    // Defs
-    addOrReplaceClipDef(id, {
-      x: settings.x,
-      y: settings.y,
-      width: settings.width,
-      height: settings.height,
-      rotation: settings.rotation,
-      fade: settings.edgeFade,
-    })
-
-    addOrReplaceFilterDef(id, settings.blurStrength)
 
     // Set blur strength
     attrs['data-blur-strength'] = settings.blurStrength
@@ -383,6 +247,10 @@ export function useBlurTool(imageStore, historyStore, editorStore, t) {
         settings: { ...localBlurSettings.value },
       })
     }
+
+    console.log(object)
+
+    imageStore.blurOverlayNeedToBeRendered = true
   }
 
   /**
@@ -441,21 +309,75 @@ export function useBlurTool(imageStore, historyStore, editorStore, t) {
    * Get the current blur attributes
    * @returns {Object} - Current blur attributes
    */
-  const getBlurAttributes = (id) => {
-    const settings = { ...localBlurSettings.value }
+  const getBlurAttributes = async () => {
+    let confirmNeeded = false
 
-    // Create new defs for new object
-    addOrReplaceClipDef(id, {
-      x: settings.x,
-      y: settings.y,
-      width: settings.width,
-      height: settings.height,
-      rotation: settings.rotation,
-      fade: settings.edgeFade,
-    })
-    addOrReplaceFilterDef(id, settings.blurStrength)
+    // SVG objects rasterization
+    if (imageStore.needRasterizationForBlur) {
+      confirmNeeded = true
+      const confirmed = await showConfirmModal(
+        t('tools.confirmNeedRasterization.title'),
+        t('tools.confirmNeedRasterization.message'),
+        t('tools.confirmNeedRasterization.cancel'),
+        t('tools.confirmNeedRasterization.confirm'),
+      )
+      if (confirmed) {
+        const result = await imageStore.rasterize('editor', {}, t)
 
-    // addBlurImage(id)
+        imageStore.addImageOperation({
+          type: 'rasterize',
+          params: {
+            overlay: result.overlay,
+          },
+          cost: 'high',
+          affectsGeometry: true,
+        })
+
+        addUserEvent('applyOperation', {
+          tool: 'rasterize',
+          settings: {},
+        })
+
+        await renderUpTo(imageStore.renderPipeline.currentOpIndex + 1, { t, imageStore })
+      }
+    }
+
+    // Base image rasterization
+    if (imageStore.fileType === 'pdf') {
+      confirmNeeded = true
+      const confirmed = await showConfirmModal(
+        t('tools.confirmNeedBaseImageRasterization.title'),
+        t('tools.confirmNeedBaseImageRasterization.message'),
+        t('tools.confirmNeedBaseImageRasterization.cancel'),
+        t('tools.confirmNeedBaseImageRasterization.confirm'),
+      )
+      if (confirmed) {
+        imageStore.addImageOperation({
+          type: 'rasterizePdf',
+          params: {},
+          cost: 'high',
+          affectsGeometry: false,
+        })
+
+        addUserEvent('applyOperation', {
+          tool: 'rasterizePdf',
+          settings: {},
+        })
+
+        await renderUpTo(imageStore.renderPipeline.currentOpIndex + 1, { t, imageStore })
+
+        historyStore.push(imageStore.getSnapshot())
+      }
+    }
+
+    if (confirmNeeded) {
+      return { success: false }
+    }
+
+    const settings = {
+      success: true,
+      ...localBlurSettings.value,
+    }
 
     settings.name = imageStore.getNextObjectName('blur', null)
 
@@ -505,9 +427,6 @@ export function useBlurTool(imageStore, historyStore, editorStore, t) {
     updateDimension,
     getBlurAttributes,
     svgDefsString,
-    addOrReplaceClipDef,
-    addOrReplaceFilterDef,
-    addBlurImage,
     maxBlurStrength,
     maxEdgeFade,
   }

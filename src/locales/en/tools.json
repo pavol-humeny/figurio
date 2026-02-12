@@ -1324,5 +1324,8 @@
   "colorEyeDropper":{
     "tip": "Eye dropper for color selection",
     "tipUnsupported": "Eye dropper is not supported in your browser"
+  },
+  "svgObjectsList": {
+    "label": "Objects list"
   }
 }

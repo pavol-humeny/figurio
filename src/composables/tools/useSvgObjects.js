@@ -23,7 +23,7 @@ export function useSvgObjects(
   const textTool = useTextTool(imageStore, historyStore, editorStore, t)
   const shapeTool = useShapeTool(editorStore, imageStore, historyStore, t)
   const { getSnapOffsetToEdges, getObjectCenter } = useSvgFunctions(imageStore)
-  const blurTool = useBlurTool(imageStore, historyStore, editorStore, t)
+  const blurTool = useBlurTool(imageStore, historyStore, editorStore, uiStore, t)
   const magnifyAreaTool = useMagnifyAreaTool(
     imageStore,
     historyStore,
@@ -193,10 +193,6 @@ export function useSvgObjects(
 
       // If blur also delete filter, clip and image
       if (selected.class === 'blur') {
-        imageStore.deleteBlurClipById(selected.id)
-        imageStore.deleteBlurFilterById(selected.id)
-        imageStore.deleteBlurImageById(selected.id)
-
         blurIdsToDelete.add(selected.id)
       } else {
         idsToDelete.add(selected.id)
@@ -220,10 +216,6 @@ export function useSvgObjects(
         }
 
         if (obj.class === 'blur') {
-          imageStore.deleteBlurClipById(obj.id)
-          imageStore.deleteBlurFilterById(obj.id)
-          imageStore.deleteBlurImageById(obj.id)
-
           blurIdsToDelete.add(obj.id)
         } else {
           idsToDelete.add(id)
@@ -313,29 +305,9 @@ export function useSvgObjects(
         attrs.y += offset
       }
     }
-
-    // Recalculate rotation
-    // if (attrs.transform) {
-    //   const angleMatch = attrs.transform.match(/rotate\((-?\d+\.?\d*)/)
-
-    //   if (angleMatch) {
-    //     const angle = parseFloat(angleMatch[1])
-    //     attrs.transform = `rotate(${angle}, ${centerX}, ${centerY})`
-    //   }
-    // }
-
     // If it is blur add clip, filter and image
     if (newObject.class === 'blur') {
-      blurTool.addOrReplaceClipDef(newObject.id, {
-        x: attrs.x,
-        y: attrs.y,
-        width: attrs.width,
-        height: attrs.height,
-        rotation: attrs.transform || 0,
-        fade: attrs['data-edge-fade'] || 10,
-      })
-      blurTool.addOrReplaceFilterDef(newObject.id, attrs['data-blur-strength'])
-      blurTool.addBlurImage(newObject.id)
+      imageStore.blurOverlayNeedToBeRendered = true
     }
 
     if (newObject.class === 'blur') {
@@ -344,7 +316,6 @@ export function useSvgObjects(
       imageStore.svgObjects.push(newObject)
     }
 
-    // imageStore.svgObjects.push(newObject)
     imageStore.selectedSvgObjectId = newObject.id
 
     historyStore.push(imageStore.getSnapshot(t))
@@ -940,7 +911,7 @@ export function useSvgObjects(
    * Mouse down event handler for the SVG image (creating new objects)
    * @param {MouseEvent} event
    */
-  const onMouseDownImageSvg = (event) => {
+  const onMouseDownImageSvg = async (event) => {
     if (event.button !== 0) return // Only left mouse button
     log('mousedown svg')
 
@@ -980,9 +951,6 @@ export function useSvgObjects(
 
     const x = round((event.clientX - rect.left) / viewportStore.realZoomLevel)
     const y = round((event.clientY - rect.top) / viewportStore.realZoomLevel)
-
-    drawingStart.value = { x, y }
-    isDrawing.value = true
 
     const id = Date.now()
     const base = {
@@ -1030,7 +998,13 @@ export function useSvgObjects(
         lineEnd = lineArrowEnd
       }
     } else if (objectClass === 'blur') {
-      const { blurStrength, name, edgeFade } = blurTool.getBlurAttributes(id)
+      const { success, blurStrength, name, edgeFade } = await blurTool.getBlurAttributes()
+
+      if (!success) {
+        // If failed to get attributes, stop drawing
+        isDrawing.value = false
+        return
+      }
 
       objectName = name
 
@@ -1087,8 +1061,14 @@ export function useSvgObjects(
 
     currentDrawingObject.value = base
 
+    drawingStart.value = { x, y }
+    isDrawing.value = true
+
     if (objectClass === 'blur') {
       imageStore.blurObjects.push(base)
+
+      // If blur object set need flag
+      imageStore.blurOverlayNeedToBeRendered = true
     } else {
       imageStore.svgObjects.push(base)
     }
@@ -1512,19 +1492,9 @@ export function useSvgObjects(
       attrs.y2 = round(y)
     }
 
-    // If it is blur tool update clip path
+    // If blur object set need flag
     if (editorStore.selectedToolKey === 'blur') {
-      blurTool.addOrReplaceClipDef(currentDrawingObject.value.id, {
-        x: attrs.x,
-        y: attrs.y,
-        width: attrs.width,
-        height: attrs.height,
-        rotation: attrs.transform
-          ? parseFloat(attrs.transform.match(/rotate\(([^)]+)\)/)?.[1]) || 0
-          : 0,
-        fade: attrs['data-edge-fade'] || 10,
-      })
-      blurTool.addBlurImage(currentDrawingObject.value.id)
+      imageStore.blurOverlayNeedToBeRendered = true
     }
 
     // Check if it is not too small object
@@ -1598,7 +1568,6 @@ export function useSvgObjects(
       if (selectedIds.length === 1) {
         imageStore.selectedSvgObjectId = selectedIds[0]
       } else {
-        log('3')
         console.warn('4')
         imageStore.selectedSvgObjectId = null
       }
@@ -1618,18 +1587,11 @@ export function useSvgObjects(
       currentDrawingObject.value = null
       viewportStore.guideLines = null
 
-      // TODO - ked to bol pastnuty objekt tak mi ho to odstrani pri deselekte
-
       // Remove the last object if object is too small
-      if (editorStore.selectedToolKey === 'blur') {
-        // In blur also remove defs
-        imageStore.svgDefs.pop()
-        imageStore.svgDefs.pop()
-        imageStore.blurImages.pop()
-
-        imageStore.blurObjects.pop()
-      } else {
+      if (editorStore.selectedToolKey !== 'blur') {
         imageStore.svgObjects.pop()
+      } else {
+        imageStore.blurObjects.pop()
       }
 
       log('2')
@@ -1645,6 +1607,11 @@ export function useSvgObjects(
       }
 
       return
+    }
+
+    // If blur object set need flag
+    if (editorStore.selectedToolKey === 'blur') {
+      imageStore.blurOverlayNeedToBeRendered = true
     }
 
     if (isDrawing.value && currentDrawingObject.value) {

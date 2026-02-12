@@ -42,7 +42,7 @@ const contentRef = ref(null)
 /**
  * Logic of the image renderer (canvas, SVG, frame)
  */
-const { imageRef, svgRef, frameSvgRef, pdfContainerRef } = useImageRenderer(
+const { imageRef, svgRef, frameSvgRef, pdfContainerRef, blurOverlayRef } = useImageRenderer(
   useImageStore(),
   useHistoryStore(),
   useEditorStore(),
@@ -122,6 +122,7 @@ const { svgDefsString } = useBlurTool(
   useImageStore(),
   useHistoryStore(),
   useEditorStore(),
+  useUiStore(),
   t,
 )
 
@@ -284,6 +285,10 @@ const cursorStyle = computed(() => {
             pointerEvents: editorStore.selectedToolKey === 'brush' ? 'auto' : 'none'
           }" />
 
+          <!-- Blur Overlay Canvas -->
+          <canvas ref="blurOverlayRef" class="blur-overlay-canvas">
+          </canvas>
+
           <!-- SVG objects -->
           <svg ref="svgRef" class="image-svg" id="image-svg" xmlns="http://www.w3.org/2000/svg"
             :width="imageStore.fileDimensions.width" :height="imageStore.fileDimensions.height"
@@ -408,7 +413,7 @@ const cursorStyle = computed(() => {
         </div>
         <div v-if="mouseX !== null" class="ruler-cursor-mark horizontal" :style="{ left: mouseX + 'px' }">
           <span class="ruler-cursor-label horizontal" :class="{ 'active': cursorPosXSameAsImageWidth }">{{ cursorPosX
-          }}</span>
+            }}</span>
         </div>
 
       </div>
@@ -421,7 +426,7 @@ const cursorStyle = computed(() => {
         </div>
         <div v-if="mouseY !== null" class="ruler-cursor-mark vertical" :style="{ top: mouseY + 'px' }">
           <span class="ruler-cursor-label vertical" :class="{ 'active': cursorPosYSameAsImageHeight }">{{ cursorPosY
-          }}</span>
+            }}</span>
         </div>
       </div>
     </div>
@@ -485,11 +490,16 @@ const cursorStyle = computed(() => {
 .frame-svg,
 .overlay-canvas-artifacts,
 .pdf-viewer,
-.overlay-image-canvas {
+.overlay-image-canvas,
+.blur-overlay-canvas {
   position: absolute;
   top: 0;
   left: 0;
   display: block;
+}
+
+.blur-overlay-canvas {
+  pointer-events: none;
 }
 
 .frame-svg {

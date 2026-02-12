@@ -55,8 +55,6 @@ export function useSvgFunctions(imageStore) {
 
       cx = round(rotatedX)
       cy = round(rotatedY)
-
-      console.log('Rotated center:', { cx, cy })
     }
 
     return { cx, cy }

@@ -1,7 +1,7 @@
 import { ref, computed, onMounted, onBeforeUnmount, watch, nextTick } from 'vue'
 import { useMath } from '../common/useMath'
 import { editorConfig } from '@/config/editorConfig'
-import { useSvgObjects } from './useSvgObjects'
+// import { useSvgObjects } from './useSvgObjects'
 import { useSvgFunctions } from './useSvgFunctions'
 import { useMagnifyAreaTool } from './useMagnifyAreaTool'
 import { viewportConfig } from '@/config/viewportConfig'
@@ -27,15 +27,15 @@ export function useSvgObjectWrapper(
   workspaceStore,
   t,
 ) {
-  const { deleteSelectedSvgObjects } = useSvgObjects(
-    imageStore,
-    historyStore,
-    viewportStore,
-    editorStore,
-    uiStore,
-    workspaceStore,
-    t,
-  )
+  // const { deleteSelectedSvgObjects } = useSvgObjects(
+  //   imageStore,
+  //   historyStore,
+  //   viewportStore,
+  //   editorStore,
+  //   uiStore,
+  //   workspaceStore,
+  //   t,
+  // )
   const { clamp, pythagorean, round } = useMath()
   const { getObjectCenter, getTransformedBoundingBox, getSnapOffsetToEdges } =
     useSvgFunctions(imageStore)
@@ -1617,6 +1617,10 @@ export function useSvgObjectWrapper(
         }
       }
       updateRotationTransform()
+    }
+
+    if (object.value.class === 'blur') {
+      imageStore.blurOverlayNeedToBeRendered = true
     }
 
     object.value.attrs = { ...attrs }

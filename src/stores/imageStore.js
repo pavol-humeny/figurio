@@ -103,6 +103,7 @@ export const useImageStore = defineStore('imageStore', {
   state: () => ({
     imageNeedToBeRendered: false,
     frameNeedToBeRendered: false,
+    blurOverlayNeedToBeRendered: false,
 
     renderPipeline: {
       baseState: null,
@@ -220,6 +221,11 @@ export const useImageStore = defineStore('imageStore', {
     svgDefs: [],
     /** Array of blur image elements */
     blurImages: [],
+
+    //----
+    blurCache: new Map(), // strength -> canvas
+    //----
+
     /** SVG object copied to clipboard */
     clipboardSvgObject: null,
 
@@ -299,6 +305,13 @@ export const useImageStore = defineStore('imageStore', {
      */
     needRasterization: (state) => {
       return state.svgObjects.length > 0 || state.blurObjects.length > 0
+    },
+
+    /**
+     * Returns true if there are any svg objects that need to be rasterized
+     */
+    needRasterizationForBlur: (state) => {
+      return state.svgObjects.length > 0
     },
 
     /**
@@ -674,37 +687,71 @@ export const useImageStore = defineStore('imageStore', {
         </defs>
       `.trim()
 
-      const allObjects = [...(this.blurObjects || []), ...(this.svgObjects || [])]
+      const allObjects = [...(this.svgObjects || [])]
 
       const svgObjectsString = allObjects
         .map((obj) => {
           const attrs = Object.entries(obj.attrs || {})
             .map(([key, val]) => `${key}="${val}"`)
             .join(' ')
+
           if (obj.tag === 'text') {
             return `<text ${attrs}>${obj.content || ''}</text>`
           }
+
           return `<${obj.tag} ${attrs} />`
         })
         .join('\n')
 
-      const blurImagesString = (this.blurImages || []).join('\n')
+      // const blurImagesString = (this.blurImages || []).join('\n')
 
       const svgString = `
         <svg xmlns="http://www.w3.org/2000/svg"
             width="${usedWidth}"
             height="${usedHeight}">
           ${svgDefsString}
-          ${blurImagesString}
           ${svgObjectsString}
         </svg>
       `.trim()
 
-      // OVERLAY (bitmap of SVG)
+      // OVERLAY (bitmap)
       const overlayCanvas = document.createElement('canvas')
       overlayCanvas.width = usedWidth
       overlayCanvas.height = usedHeight
       const overlayCtx = overlayCanvas.getContext('2d')
+
+      // DRAW BLUR AS BASE LAYER (if exists)
+      if (this.blurObjects.length > 0) {
+        this.renderBlurCanvases()
+
+        this.blurObjects.forEach((obj) => {
+          const strength = obj.attrs['data-blur-strength'] || 5
+          const blurCanvas = this.getBlurCanvas(strength)
+          if (!blurCanvas) return
+
+          const { x, y, width, height } = obj.attrs
+
+          overlayCtx.save()
+
+          if (obj.attrs.transform) {
+            const match = obj.attrs.transform.match(/rotate\(([^,]+),\s*([^,]+),\s*([^)]+)\)/)
+
+            if (match) {
+              const angle = parseFloat(match[1])
+              const cx = parseFloat(match[2])
+              const cy = parseFloat(match[3])
+
+              overlayCtx.translate(cx, cy)
+              overlayCtx.rotate((angle * Math.PI) / 180)
+              overlayCtx.translate(-cx, -cy)
+            }
+          }
+
+          overlayCtx.drawImage(blurCanvas, x, y, width, height, x, y, width, height)
+
+          overlayCtx.restore()
+        })
+      }
 
       const svgBlob = new Blob([svgString], { type: 'image/svg+xml' })
       const svgUrl = URL.createObjectURL(svgBlob)
@@ -1184,28 +1231,68 @@ export const useImageStore = defineStore('imageStore', {
     },
 
     /**
-     * Deletes clip path by ID
-     * @param {string} id - The ID to delete
+     * Returns the cached blur canvas for a given strength, or null if not found
+     * @param {number} strength - The strength of the blur
+     * @returns {HTMLCanvasElement|null} - The cached blur canvas or null if not found
      */
-    deleteBlurClipById(id) {
-      this.deleteSvgDefsById(`clip-${id}`)
+    getBlurCanvas(strength) {
+      return this.blurCache.get(strength) || null
     },
 
     /**
-     * Deletes blur filter by ID
-     * @param {string} id - The ID to delete
+     * Clears the blur cache, removing all cached blur canvases
      */
-    deleteBlurFilterById(id) {
-      this.deleteSvgDefsById(`blur-filter-${id}`)
+    clearBlurCache() {
+      this.blurCache.clear()
     },
 
     /**
-     * Deletes blur image by ID
-     * @param {string} id - The ID to delete
+     * Generates blur canvases from (base image + overlayImage).
+     * Each strength is cached separately.
      */
-    deleteBlurImageById(id) {
-      this.blurImages = this.blurImages.filter((imgStr) => {
-        return !imgStr.includes(`id="blur-image-${id}"`)
+    renderBlurCanvases() {
+      if (!this.blurObjects.length) return
+
+      this.clearBlurCache() 
+
+      const base = this.getRenderedImage({ t: null, renderCall: false })
+      if (!base) return
+
+      const width = base.width
+      const height = base.height
+
+      // Create composite source (base + overlay)
+      const compositeCanvas = document.createElement('canvas')
+      compositeCanvas.width = width
+      compositeCanvas.height = height
+
+      const compositeCtx = compositeCanvas.getContext('2d')
+
+      // Draw base image
+      compositeCtx.drawImage(base, 0, 0)
+
+      // Draw existing overlay
+      if (this.overlayImage) {
+        compositeCtx.drawImage(this.overlayImage, 0, 0)
+      }
+
+      const strengths = new Set(this.blurObjects.map((obj) => obj.attrs['data-blur-strength'] || 5))
+
+      strengths.forEach((strength) => {
+        if (this.blurCache.has(strength)) return
+
+        const blurCanvas = document.createElement('canvas')
+        blurCanvas.width = width
+        blurCanvas.height = height
+
+        const ctx = blurCanvas.getContext('2d')
+
+        // Apply blur to composite source
+        ctx.filter = `blur(${strength}px)`
+        ctx.drawImage(compositeCanvas, 0, 0)
+        ctx.filter = 'none'
+
+        this.blurCache.set(strength, blurCanvas)
       })
     },
 

@@ -11,7 +11,7 @@ import { useMagnifyAreaTool } from '@/composables/tools/useMagnifyAreaTool';
 import ExplainItem from '../common/ExplainItem.vue';
 import DefaultSlider from '../common/DefaultSlider.vue';
 import { useWorkspaceStore } from '@/stores/workspaceStore';
-import SvgObjectsZIndexControl from './SvgObjectsZIndexControl.vue';
+// import SvgObjectsZIndexControl from './SvgObjectsZIndexControl.vue';
 
 const { t } = useI18n();
 
@@ -149,7 +149,7 @@ const {
         </div>
 
         <!-- Z-index -->
-        <SvgObjectsZIndexControl :isVisible="!hidePositionAndDimensions" />
+        <!-- <SvgObjectsZIndexControl :isVisible="!hidePositionAndDimensions" /> -->
 
         <!-- Empty space -->
         <div class="settings-content-wrapper" style="border: none">

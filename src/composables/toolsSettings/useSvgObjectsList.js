@@ -147,13 +147,13 @@ export function useSvgObjectsList(
         .reverse() // Reverse to match visual stacking order
 
       // Non-draggable blur objects
-      const blurObjs = imageStore.blurObjects.map((obj) => ({
-        id: obj.id,
-        name: obj.name,
-        draggable: false,
-      }))
+      // const blurObjs = imageStore.blurObjects.map((obj) => ({
+      //   id: obj.id,
+      //   name: obj.name,
+      //   draggable: false,
+      // }))
 
-      return [...svgObjs, ...blurObjs]
+      return [...svgObjs]
     },
     set(newArray) {
       // Reorder imageStore.svgObjects based on newArray order

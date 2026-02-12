@@ -10,7 +10,8 @@ import LinkValuesIcon from '../common/LinkValuesIcon.vue';
 import DefaultSlider from '../common/DefaultSlider.vue';
 import ExplainItem from '../common/ExplainItem.vue';
 import { editorConfig } from '@/config/editorConfig'
-import SvgObjectsZIndexControl from './SvgObjectsZIndexControl.vue';
+import { useUiStore } from '@/stores/uiStore';
+// import SvgObjectsZIndexControl from './SvgObjectsZIndexControl.vue';
 
 const { t } = useI18n();
 
@@ -34,7 +35,7 @@ const {
   updateDimension,
   maxBlurStrength,
   maxEdgeFade,
-} = useBlurTool(useImageStore(), useHistoryStore(), useEditorStore(), t);
+} = useBlurTool(useImageStore(), useHistoryStore(), useEditorStore(), useUiStore(), t);
 
 </script>
 
@@ -163,7 +164,7 @@ const {
         </div>
 
         <!-- Z-index -->
-        <SvgObjectsZIndexControl :isVisible="!hidePositionAndDimensions" />
+        <!-- <SvgObjectsZIndexControl :isVisible="!hidePositionAndDimensions" /> -->
 
         <!-- Empty space -->
         <div class="settings-content-wrapper" style="border: none">

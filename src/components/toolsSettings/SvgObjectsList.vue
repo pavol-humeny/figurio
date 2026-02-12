@@ -33,7 +33,7 @@ const {
 <template>
   <div class="svg-objects-list-panel" :style="panelVars">
     <div class="svg-objects-list-wrapper">
-      <p>Objects</p>
+      <p>{{ t('tools.svgObjectsList.label') }}</p>
       <draggable v-model="mappedObjects" tag="div" item-key="id" handle=".drag-handle" animation="200"
         ghost-class="drag-ghost" class="svg-objects-list"
         :move="({ element }) => element ? element.draggable !== false : true">

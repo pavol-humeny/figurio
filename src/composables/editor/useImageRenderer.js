@@ -59,6 +59,8 @@ export function useImageRenderer(
 
   const pdfContainerRef = ref(null)
 
+  const blurOverlayRef = ref(null)
+
   /**
    * Internal flag to avoid overlapping frame render calls
    */
@@ -199,9 +201,6 @@ export function useImageRenderer(
         imageStore.setRenderedImage(canvas)
         imageStore.originalImage = canvas
 
-        // imageStore.previewUrl = canvas.toDataURL()
-        // imageStore.blurPreviewUrl = canvas.toDataURL()
-
         addWarning(
           'unsupported-pdf-objects', // id
           'imageStore.toast.unsupportedPdfObjects.title', // message
@@ -271,14 +270,6 @@ export function useImageRenderer(
       log(`[imageRenderer] IMAGE draw ${(performance.now() - tImgStart).toFixed(1)} ms`)
     }
 
-    // Value for blur preview - TODO
-    // const img = imageStore.getRenderedImage({ t, renderCall: true })
-    // if (img instanceof HTMLCanvasElement) {
-    //   imageStore.blurPreviewUrl = img.toDataURL()
-    // } else if (img instanceof HTMLImageElement) {
-    //   imageStore.blurPreviewUrl = img.src
-    // }
-
     const src = imageStore.getRenderedImage({ t, renderCall: true })
 
     if (src instanceof HTMLCanvasElement) {
@@ -298,11 +289,60 @@ export function useImageRenderer(
       }
     }
 
+    renderBlurOverlay()
+
     imageStore.historyWasChanged = false
     blockRender.value = false
 
     log(`[imageRenderer] Overlay draw ${(performance.now() - tOverlayStart).toFixed(1)} ms`)
     log(`[imageRenderer] renderCanvas TOTAL ${(performance.now() - tStart).toFixed(1)} ms`)
+  }
+
+  const renderBlurOverlay = () => {
+    console.warn('Rendering blur overlay...')
+    if (!blurOverlayRef.value) return
+
+    const canvas = blurOverlayRef.value
+    const ctx = canvas.getContext('2d')
+
+    const width = imageStore.fileDimensions.width
+    const height = imageStore.fileDimensions.height
+
+    canvas.width = width
+    canvas.height = height
+
+    ctx.clearRect(0, 0, width, height)
+
+    if (!imageStore.blurObjects.length) return
+
+    imageStore.renderBlurCanvases()
+
+    imageStore.blurObjects.forEach((obj) => {
+      const strength = obj.attrs['data-blur-strength'] || 5
+      const blurCanvas = imageStore.getBlurCanvas(strength)
+      if (!blurCanvas) return
+
+      const { x, y, width, height } = obj.attrs
+
+      ctx.save()
+
+      if (obj.attrs.transform) {
+        const match = obj.attrs.transform.match(/rotate\(([^,]+),\s*([^,]+),\s*([^)]+)\)/)
+        if (match) {
+          const angle = parseFloat(match[1])
+          const cx = parseFloat(match[2])
+          const cy = parseFloat(match[3])
+
+          ctx.translate(cx, cy)
+          ctx.rotate((angle * Math.PI) / 180)
+          ctx.translate(-cx, -cy)
+        }
+      }
+
+      ctx.drawImage(blurCanvas, x, y, width, height, x, y, width, height)
+
+      ctx.restore()
+    })
   }
 
   /**
@@ -422,6 +462,16 @@ export function useImageRenderer(
       }
     },
   )
+
+  watch(
+    () => imageStore.blurOverlayNeedToBeRendered,
+    async (blurOverlayNeedToBeRendered) => {
+      if (blurOverlayNeedToBeRendered) {
+        imageStore.blurOverlayNeedToBeRendered = false
+        renderBlurOverlay()
+      }
+    },
+  )
   /**
    * Watch for changes in viewport dimensions and update sizes
    */
@@ -483,5 +533,6 @@ export function useImageRenderer(
     svgRef,
     frameSvgRef,
     pdfContainerRef,
+    blurOverlayRef,
   }
 }

@@ -1325,5 +1325,8 @@
   "colorEyeDropper":{
     "tip": "Kapátko pro výběr barvy z obrázku",
     "tipUnsupported": "Kapátko není ve vašem prohlížeči podporováno"
+  },
+  "svgObjectsList": {
+    "label": "Seznam objektů"
   }
 }
