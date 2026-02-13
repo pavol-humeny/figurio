@@ -390,7 +390,7 @@
         "label": "Pencil",
         "tip": "Draws on the image with a pencil tool",
         "explain": "The Pencil tool allows you to draw on the image with a pencil. It creates sharper, more defined lines compared to the brush. You can adjust the pencil size and hardness to control the appearance of your strokes.",
-        "shortcut": "P"
+        "shortcut": "Shift + L"
       },
       "eraser": {
         "label": "Eraser",

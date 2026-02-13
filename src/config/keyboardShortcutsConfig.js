@@ -203,7 +203,7 @@ export const keyboardShortcuts = [
   {
     keys: ['s'],
     action: 'toggleTool',
-    args: ['shape', null],
+    args: ['shape', 'rectangle'],
     description: 'Toggle shape tool',
   },
   {
@@ -219,10 +219,10 @@ export const keyboardShortcuts = [
     description: 'Toggle brush tool',
   },
   {
-    keys: ['e'],
+    keys: ['shift', 'l'],
     action: 'toggleTool',
-    args: ['brush', 'eraser'],
-    description: 'Toggle eraser tool',
+    args: ['brush', 'pencil'],
+    description: 'Toggle pencil tool',
   },
 
   // Multi-file management shortcuts

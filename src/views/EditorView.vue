@@ -74,7 +74,7 @@ const {
   deleteSelectedSvgObjects,
   moveSelectedSvgObjectForward,
   moveSelectedSvgObjectBackward,
-  selectedObjectInfo,
+  // selectedObjectInfo,
   copySelectedSvgObject,
   pasteSvgObjectToCenter,
   duplicateSelectedSvgObject,
@@ -196,14 +196,14 @@ onBeforeMount(() => {
             {{ imageStore.fileDimensions.width }}px × {{ imageStore.fileDimensions.height }}px
           </p>
         </div>
-        <div class="file-info-right">
+        <!-- <div class="file-info-right">
           <p v-if="selectedObjectInfo?.width !== undefined && selectedObjectInfo?.height !== undefined">
             {{ selectedObjectInfo.width }}px × {{ selectedObjectInfo.height }}px
           </p>
           <p v-if="selectedObjectInfo?.angle !== undefined">
             {{ selectedObjectInfo.angle }}°
           </p>
-        </div>
+        </div> -->
       </div>
     </div>
     <div class="right-panel">

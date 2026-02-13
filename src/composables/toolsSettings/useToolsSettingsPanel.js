@@ -10,21 +10,20 @@ import { toolsDefinitions } from '@/config/toolsDefinitions'
  * }}
  */
 export function useToolsSettingsPanel(editorStore) {
-  /**
-   * Return the tool definition of the currently selected tool
-   */
-  const toolDefinition = computed(() =>
-    toolsDefinitions.find((t) => t.key === editorStore.selectedToolKey),
+  const asyncComponentsMap = Object.fromEntries(
+    toolsDefinitions
+      .filter((t) => t.settingsComponent)
+      .map((t) => [
+        t.key,
+        defineAsyncComponent({
+          loader: t.settingsComponent,
+          suspensible: false,
+        }),
+      ]),
   )
 
-  const hasSettings = computed(() => !!toolDefinition.value?.settingsComponent)
-
-  /**
-   * Dynamically import the settings component (lazy load the settings component)
-   */
   const settingsComponent = computed(() => {
-    if (!hasSettings.value) return null
-    return defineAsyncComponent(toolDefinition.value.settingsComponent)
+    return asyncComponentsMap[editorStore.selectedToolKey] || null
   })
 
   return {

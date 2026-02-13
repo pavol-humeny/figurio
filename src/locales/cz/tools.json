@@ -391,7 +391,7 @@
         "label": "Tužka",
         "tip": "Kreslí na obrázek pomocí tužky",
         "explain": "Nástroj Tužka umožňuje kreslit na obrázek pomocí tužky. Vytváří ostřejší a výraznější čáry ve srovnání se štětcem. Můžete upravit velikost a tvrdost tužky pro kontrolu vzhledu tahů.",
-        "shortcut": "P"
+        "shortcut": "Shift + L"
       },
       "eraser": {
         "label": "Guma",

@@ -390,7 +390,7 @@
         "label": "Ceruzka",
         "tip": "Kreslí na obrázok pomocou ceruzky",
         "explain": "Nástroj Ceruzka umožňuje kresliť na obrázok pomocou ceruzky. Vytvára ostrejšie a výraznejšie čiary v porovnaní so štetcom. Môžete upraviť veľkosť a tvrdosť ceruzky pre kontrolu vzhľadu ťahov.",
-        "shortcut": "P"
+        "shortcut": "Shift + L"
       },
       "eraser": {
         "label": "Guma",
