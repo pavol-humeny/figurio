@@ -116,6 +116,7 @@ export function useBlurTool(imageStore, historyStore, editorStore, uiStore, t) {
    */
   const saveConfigToEditorStore = () => {
     editorStore.toolsConfig.blur.blurStrength = localBlurSettings.value.blurStrength
+    editorStore.toolsConfig.blur.edgeFade = localBlurSettings.value.edgeFade
   }
 
   /**

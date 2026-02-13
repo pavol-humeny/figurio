@@ -289,7 +289,8 @@ const cursorStyle = computed(() => {
           <canvas ref="blurOverlayRef" class="blur-overlay-canvas">
           </canvas>
 
-          <canvas ref="magnifyOverlayRef" class="blur-overlay-canvas">
+          <!-- Magnify Overlay Canvas -->
+          <canvas ref="magnifyOverlayRef" class="magnify-overlay-canvas">
           </canvas>
 
           <!-- SVG objects -->
@@ -494,14 +495,16 @@ const cursorStyle = computed(() => {
 .overlay-canvas-artifacts,
 .pdf-viewer,
 .overlay-image-canvas,
-.blur-overlay-canvas {
+.blur-overlay-canvas,
+.magnify-overlay-canvas {
   position: absolute;
   top: 0;
   left: 0;
   display: block;
 }
 
-.blur-overlay-canvas {
+.blur-overlay-canvas,
+.magnify-overlay-canvas {
   pointer-events: none;
 }
 

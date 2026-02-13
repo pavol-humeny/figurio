@@ -1297,6 +1297,7 @@ export const useImageStore = defineStore('imageStore', {
     renderBlurCanvases() {
       if (!this.blurObjects.length) return
 
+      // Clear existing cache
       this.clearBlurCache()
 
       const base = this.getRenderedImage({ t: null, renderCall: false })
@@ -1305,37 +1306,87 @@ export const useImageStore = defineStore('imageStore', {
       const width = base.width
       const height = base.height
 
-      // Create composite source (base + overlay)
       const compositeCanvas = document.createElement('canvas')
       compositeCanvas.width = width
       compositeCanvas.height = height
-
       const compositeCtx = compositeCanvas.getContext('2d')
 
-      // Draw base image
+      // Draw base image first
       compositeCtx.drawImage(base, 0, 0)
 
-      // Draw existing overlay
+      // Draw overlay
       if (this.overlayImage) {
         compositeCtx.drawImage(this.overlayImage, 0, 0)
       }
 
+      // Get unique blur strengths from blur objects
       const strengths = new Set(this.blurObjects.map((obj) => obj.attrs['data-blur-strength'] || 5))
 
+      // For each strength, create a blurred version of the composite canvas and cache it
       strengths.forEach((strength) => {
         if (this.blurCache.has(strength)) return
 
+        const blurPx = Number(strength) || 0
+        if (blurPx <= 0) {
+          this.blurCache.set(strength, compositeCanvas)
+          return
+        }
+
+        const pad = Math.ceil(blurPx * 2)
+
+        const paddedCanvas = document.createElement('canvas')
+        paddedCanvas.width = width + pad * 2
+        paddedCanvas.height = height + pad * 2
+        const ctx = paddedCanvas.getContext('2d')
+
+        // Draw center
+        ctx.drawImage(compositeCanvas, pad, pad)
+
+        // EDGE EXTEND
+        // Top
+        ctx.drawImage(compositeCanvas, 0, 0, width, 1, pad, 0, width, pad)
+
+        // Bottom
+        ctx.drawImage(compositeCanvas, 0, height - 1, width, 1, pad, pad + height, width, pad)
+
+        // Left
+        ctx.drawImage(compositeCanvas, 0, 0, 1, height, 0, pad, pad, height)
+
+        // Right
+        ctx.drawImage(compositeCanvas, width - 1, 0, 1, height, pad + width, pad, pad, height)
+
+        // Corners
+        ctx.drawImage(compositeCanvas, 0, 0, 1, 1, 0, 0, pad, pad)
+        ctx.drawImage(compositeCanvas, width - 1, 0, 1, 1, pad + width, 0, pad, pad)
+        ctx.drawImage(compositeCanvas, 0, height - 1, 1, 1, 0, pad + height, pad, pad)
+        ctx.drawImage(
+          compositeCanvas,
+          width - 1,
+          height - 1,
+          1,
+          1,
+          pad + width,
+          pad + height,
+          pad,
+          pad,
+        )
+
+        // APPLY BLUR
+        ctx.filter = `blur(${blurPx}px)`
+        ctx.drawImage(paddedCanvas, 0, 0)
+        ctx.filter = 'none'
+
+        // Crop back
         const blurCanvas = document.createElement('canvas')
         blurCanvas.width = width
         blurCanvas.height = height
 
-        const ctx = blurCanvas.getContext('2d')
+        // Draw the blurred image back onto a new canvas, cropping out the padding
+        blurCanvas
+          .getContext('2d')
+          .drawImage(paddedCanvas, pad, pad, width, height, 0, 0, width, height)
 
-        // Apply blur to composite source
-        ctx.filter = `blur(${strength}px)`
-        ctx.drawImage(compositeCanvas, 0, 0)
-        ctx.filter = 'none'
-
+        // Cache the resulting blur canvas for this strength
         this.blurCache.set(strength, blurCanvas)
       })
     },
@@ -1351,6 +1402,8 @@ export const useImageStore = defineStore('imageStore', {
      * @returns {HTMLCanvasElement} - A new canvas with the applied edge fade mask
      */
     applyRectEdgeFadeMask(sourceCanvas, x, y, width, height, edgeFadePercent) {
+      edgeFadePercent = Math.max(1, Math.min(edgeFadePercent, 100)) // Clamp to [1, 100]
+
       if (
         !edgeFadePercent ||
         edgeFadePercent <= 0 ||

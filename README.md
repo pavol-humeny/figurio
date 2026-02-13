@@ -17,8 +17,9 @@
 
 # TODO
 - Natočiť videá
-
+- scroll nad sliderom by ho mohol posuvat
 - občas sa nezobrazí nástroj v tool settings 
+- vyriešiť snapovanie objektov
 
 - poloha blur a magnify area z-index
 

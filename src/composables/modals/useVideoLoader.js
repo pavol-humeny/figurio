@@ -12,7 +12,7 @@ import frame from '@/assets/videos/frame.mp4'
 import grayscale from '@/assets/videos/grayscale.mp4'
 import imageAnalysis from '@/assets/videos/imageAnalysis.mp4'
 import presetCreate from '@/assets/videos/presetCreate.mp4'
-// import presetMyPreset from '@/assets/videos/presetMyPreset.mp4'
+import presetMyPreset from '@/assets/videos/presetMyPreset.mp4'
 import shapeEllipse from '@/assets/videos/shapeEllipse.mp4'
 import shapeLine from '@/assets/videos/shapeLine.mp4'
 import shapeRectangle from '@/assets/videos/shapeRectangle.mp4'
@@ -20,9 +20,9 @@ import text from '@/assets/videos/text.mp4'
 import transformFlip from '@/assets/videos/transformFlip.mp4'
 import transformResize from '@/assets/videos/transformResize.mp4'
 import transformRotate from '@/assets/videos/transformRotate.mp4'
-// import select from '@/assets/videos/select.mp4'
-// import magnifyArea from '@/assets/videos/magnifyArea.mp4'
-// import blurArea from '@/assets/videos/blurArea.mp4'
+import select from '@/assets/videos/select.mp4'
+import magnifyArea from '@/assets/videos/magnifyArea.mp4'
+import blurArea from '@/assets/videos/blurArea.mp4'
 
 /**
  * Hook for loading videos dynamically by key using switch
@@ -64,10 +64,10 @@ export function useVideoLoader() {
         src = brushPencil
         break
       case 'select':
-        // src = select
+        src = select
         break
       case 'blur':
-        // src = blurArea
+        src = blurArea
         break
       case 'rectangle':
         src = shapeRectangle
@@ -82,7 +82,7 @@ export function useVideoLoader() {
         src = text
         break
       case 'magnifyArea':
-        // src = magnifyArea
+        src = magnifyArea
         break
       case 'resize':
         src = transformResize
@@ -97,7 +97,7 @@ export function useVideoLoader() {
         src = presetCreate
         break
       case 'myPreset':
-        // src = presetMyPreset
+        src = presetMyPreset
         break
       case 'imageAnalysis':
         src = imageAnalysis
