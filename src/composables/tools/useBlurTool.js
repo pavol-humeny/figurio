@@ -16,7 +16,7 @@ const localBlurSettings = ref({
   height: 0,
   rotation: 0,
   blurStrength: 5,
-  edgeFade: 1,
+  edgeFade: 10,
 })
 
 /**
@@ -148,8 +148,6 @@ export function useBlurTool(imageStore, historyStore, editorStore, uiStore, t) {
           activeObject.value = object
           hidePositionAndDimensions.value = false
 
-          console.warn('Selected object changed, loading blur settings...', { object })
-
           const { attrs } = object
 
           // Position
@@ -170,8 +168,6 @@ export function useBlurTool(imageStore, historyStore, editorStore, uiStore, t) {
 
           // Edge fade
           localBlurSettings.value.edgeFade = parseFloat(attrs['data-edge-fade']) || 10
-
-          console.warn('Loaded blur settings from selected object:', { ...localBlurSettings.value })
         }
       } else {
         hidePositionAndDimensions.value = true
@@ -208,11 +204,9 @@ export function useBlurTool(imageStore, historyStore, editorStore, uiStore, t) {
    * @param {boolean} commit - When true, push to history store
    */
   const applyLocalBlurSettings = (commit = true) => {
-    console.warn('Applying local blur settings to active object...', { ...localBlurSettings.value })
     if (imageStore.selectedSvgObjectId === null) return
 
     const object = activeObject.value
-    console.warn('Active object to apply settings to:', { object })
     if (!object) return
 
     // const { id } = activeObject.value
@@ -248,8 +242,6 @@ export function useBlurTool(imageStore, historyStore, editorStore, uiStore, t) {
         settings: { ...localBlurSettings.value },
       })
     }
-
-    console.log(object)
 
     imageStore.blurOverlayNeedToBeRendered = true
   }
@@ -407,7 +399,7 @@ export function useBlurTool(imageStore, historyStore, editorStore, uiStore, t) {
    * Maximum edge fade based on image dimensions
    */
   const maxEdgeFade = computed(() => {
-    return imageStore.getSmallerImageDimension() / 30
+    return 100
   })
 
   return {

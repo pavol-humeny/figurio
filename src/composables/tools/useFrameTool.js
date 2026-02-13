@@ -2661,8 +2661,6 @@ export function useFrameTool(imageStore, historyStore, viewportStore, t) {
     let finalWidth = fileDimensions.width
     let finalHeight = fileDimensions.height
 
-    console.warn('Initial file dimensions:', { targetWidth, targetHeight, finalWidth, finalHeight })
-
     if (phoneFrame && !phoneWithButtons) {
       if (isLandscapePhoneValue) {
         finalHeight -= (frame.width / 3) * 2 // remove space for side buttons if not drawn

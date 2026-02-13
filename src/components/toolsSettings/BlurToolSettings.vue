@@ -159,7 +159,7 @@ const {
           <div class="content-wrapper">
             <DefaultSlider v-model="localBlurSettings.edgeFade" :min="1" :max="maxEdgeFade" :step="1"
               @update="applyLocalBlurSettings(false)" @commit="applyLocalBlurSettings(true)" showValue
-              :tip="$t('tools.blur.settings.general.edgeFade.tip')" position="bottom-left" />
+              :tip="$t('tools.blur.settings.general.edgeFade.tip')" position="bottom-left" valueUnit="%" />
           </div>
         </div>
 

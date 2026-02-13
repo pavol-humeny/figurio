@@ -652,7 +652,7 @@ export const useImageStore = defineStore('imageStore', {
     },
 
     /**
-     * Rasterizes SVG and blur objects into a bitmap overlay.
+     * Rasterize SVG and blur objects into a bitmap overlay.
      * @param {string} mode - The rasterization mode ('editor', 'export-pdf', 'export-image')
      * @param {Object} [options={}] - Additional options
      * @param {number|null} [options.width=null] - Width for rasterization (optional)
@@ -703,8 +703,6 @@ export const useImageStore = defineStore('imageStore', {
         })
         .join('\n')
 
-      // const blurImagesString = (this.blurImages || []).join('\n')
-
       const svgString = `
         <svg xmlns="http://www.w3.org/2000/svg"
             width="${usedWidth}"
@@ -747,7 +745,22 @@ export const useImageStore = defineStore('imageStore', {
             }
           }
 
-          overlayCtx.drawImage(blurCanvas, x, y, width, height, x, y, width, height)
+          const edgeFadePercent = parseFloat(obj.attrs['data-edge-fade']) || 1
+
+          let drawCanvas = blurCanvas
+
+          if (edgeFadePercent > 0) {
+            drawCanvas = this.applyRectEdgeFadeMask(
+              blurCanvas,
+              x,
+              y,
+              width,
+              height,
+              edgeFadePercent,
+            )
+          }
+
+          overlayCtx.drawImage(drawCanvas, x, y)
 
           overlayCtx.restore()
         })
@@ -1253,7 +1266,7 @@ export const useImageStore = defineStore('imageStore', {
     renderBlurCanvases() {
       if (!this.blurObjects.length) return
 
-      this.clearBlurCache() 
+      this.clearBlurCache()
 
       const base = this.getRenderedImage({ t: null, renderCall: false })
       if (!base) return
@@ -1294,6 +1307,70 @@ export const useImageStore = defineStore('imageStore', {
 
         this.blurCache.set(strength, blurCanvas)
       })
+    },
+
+    /**
+     * Applies a fade mask to the edges of a rectangular area on a canvas, based on the specified edge fade percentage.
+     * @param {HTMLCanvasElement} sourceCanvas - The source canvas to apply the fade mask to
+     * @param {number} x - The x-coordinate of the top-left corner of the rectangle
+     * @param {number} y - The y-coordinate of the top-left corner of the rectangle
+     * @param {number} width - The width of the rectangle
+     * @param {number} height - The height of the rectangle
+     * @param {number} edgeFadePercent - The percentage (0-100) of the edge fade effect to apply
+     * @returns {HTMLCanvasElement} - A new canvas with the applied edge fade mask
+     */
+    applyRectEdgeFadeMask(sourceCanvas, x, y, width, height, edgeFadePercent) {
+      if (
+        !edgeFadePercent ||
+        edgeFadePercent <= 0 ||
+        !width ||
+        !height ||
+        width <= 0 ||
+        height <= 0
+      ) {
+        return sourceCanvas
+      }
+
+      const tempCanvas = document.createElement('canvas')
+      tempCanvas.width = width
+      tempCanvas.height = height
+      const ctx = tempCanvas.getContext('2d')
+
+      ctx.drawImage(sourceCanvas, x, y, width, height, 0, 0, width, height)
+
+      // Calculate fade in pixels based on the smaller dimension and the specified percentage
+      const minSide = Math.min(width, height)
+      const maxFadePx = minSide / 2
+      const fadePx = (edgeFadePercent / 100) * maxFadePx
+      const safeFade = Math.max(0, Math.min(fadePx, maxFadePx))
+
+      // Prevent invalid gradient ratios
+      const vRatio = Math.min(1, safeFade / height)
+      const hRatio = Math.min(1, safeFade / width)
+
+      ctx.globalCompositeOperation = 'destination-in'
+
+      // Vertical fade
+      const vertical = ctx.createLinearGradient(0, 0, 0, height)
+      vertical.addColorStop(0, 'rgba(0,0,0,0)')
+      vertical.addColorStop(vRatio, 'rgba(0,0,0,1)')
+      vertical.addColorStop(1 - vRatio, 'rgba(0,0,0,1)')
+      vertical.addColorStop(1, 'rgba(0,0,0,0)')
+      ctx.fillStyle = vertical
+      ctx.fillRect(0, 0, width, height)
+
+      // Horizontal fade
+      const horizontal = ctx.createLinearGradient(0, 0, width, 0)
+      horizontal.addColorStop(0, 'rgba(0,0,0,0)')
+      horizontal.addColorStop(hRatio, 'rgba(0,0,0,1)')
+      horizontal.addColorStop(1 - hRatio, 'rgba(0,0,0,1)')
+      horizontal.addColorStop(1, 'rgba(0,0,0,0)')
+      ctx.fillStyle = horizontal
+      ctx.fillRect(0, 0, width, height)
+
+      ctx.globalCompositeOperation = 'source-over'
+
+      return tempCanvas
     },
 
     /**

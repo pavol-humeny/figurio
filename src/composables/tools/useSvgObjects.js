@@ -1502,16 +1502,17 @@ export function useSvgObjects(
       attrs.y2 = round(y)
     }
 
-    // If blur object set need flag
-    if (editorStore.selectedToolKey === 'blur') {
-      imageStore.blurOverlayNeedToBeRendered = true
-    }
-
     // Check if it is not too small object
-    if (!checkSizeOfObject(currentDrawingObject.value)) {
+    if (!objectSizeIsSmall(currentDrawingObject.value)) {
       imageStore.selectedSvgObjectId = currentDrawingObject.value.id
+
+      // If blur object set need flag
+      if (editorStore.selectedToolKey === 'blur') {
+        imageStore.blurOverlayNeedToBeRendered = true
+      }
     } else {
       console.warn('5')
+
       imageStore.selectedSvgObjectId = null
     }
   }
@@ -1592,7 +1593,7 @@ export function useSvgObjects(
     if (!currentDrawingObject.value) return
 
     // Check if it is not too small object
-    if (checkSizeOfObject(currentDrawingObject.value)) {
+    if (objectSizeIsSmall(currentDrawingObject.value)) {
       isDrawing.value = false
       currentDrawingObject.value = null
       viewportStore.guideLines = null
@@ -1652,7 +1653,7 @@ export function useSvgObjects(
    * @param {Object} object - SVG object to check
    * @returns {boolean} - True if the object is too small, false otherwise
    */
-  const checkSizeOfObject = (object) => {
+  const objectSizeIsSmall = (object) => {
     const attrs = object.attrs
 
     const MIN_SIZE = editorConfig.minimumObjectSize

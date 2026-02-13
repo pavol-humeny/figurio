@@ -338,7 +338,13 @@ export function useImageRenderer(
         }
       }
 
-      ctx.drawImage(blurCanvas, x, y, width, height, x, y, width, height)
+      // ctx.drawImage(blurCanvas, x, y, width, height, x, y, width, height)
+
+      const edgeFade = parseFloat(obj.attrs['data-edge-fade']) || 1
+
+      const masked = imageStore.applyRectEdgeFadeMask(blurCanvas, x, y, width, height, edgeFade)
+
+      ctx.drawImage(masked, x, y)
 
       ctx.restore()
     })
