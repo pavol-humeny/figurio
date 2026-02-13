@@ -1243,10 +1243,16 @@ export function useSvgObjects(
       remainingDx.value = rawDx - dx
       remainingDy.value = rawDy - dy
 
+      let containBlurObject = false
+
       // Move all selected objects
       imageStore.selectedSvgObjectIds.forEach((id) => {
         const object = imageStore.getSvgObjectById(id)
         const { tag, attrs } = object
+
+        if (object.class === 'blur') {
+          containBlurObject = true
+        }
 
         let offsetX = dx
         let offsetY = dy
@@ -1356,6 +1362,10 @@ export function useSvgObjects(
 
       startX.value = event.clientX
       startY.value = event.clientY
+
+      if (containBlurObject) {
+        imageStore.blurOverlayNeedToBeRendered = true
+      }
 
       return
     }

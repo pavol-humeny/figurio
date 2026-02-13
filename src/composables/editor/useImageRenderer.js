@@ -1,9 +1,7 @@
 import { watch, ref, nextTick } from 'vue'
 import { useFrameTool } from '../tools/useFrameTool'
-
 import * as pdfjsLib from 'pdfjs-dist/legacy/build/pdf'
 import { SVGGraphics } from 'pdfjs-dist/legacy/build/pdf'
-// import { useToastModal } from '../modals/useToastModal'
 import { useWarningList } from '../modals/useWarningList'
 
 pdfjsLib.GlobalWorkerOptions.workerSrc =
@@ -12,7 +10,6 @@ pdfjsLib.GlobalWorkerOptions.workerSrc =
 import { useConsole } from '@/composables/common/useConsole.js'
 import { viewportConfig } from '@/config/viewportConfig'
 const { log, warn } = useConsole()
-// const { showToastModal } = useToastModal()
 
 const blockRender = ref(false)
 
@@ -57,8 +54,14 @@ export function useImageRenderer(
    */
   const frameSvgRef = ref(null)
 
+  /**
+   * Reference to the container for PDF rendering (used when rendering PDF as SVG)
+   */
   const pdfContainerRef = ref(null)
 
+  /**
+   * Reference to the canvas for rendering blur overlays
+   */
   const blurOverlayRef = ref(null)
 
   /**
@@ -270,12 +273,6 @@ export function useImageRenderer(
       log(`[imageRenderer] IMAGE draw ${(performance.now() - tImgStart).toFixed(1)} ms`)
     }
 
-    const src = imageStore.getRenderedImage({ t, renderCall: true })
-
-    if (src instanceof HTMLCanvasElement) {
-      updateBlurPreview(src)
-    }
-
     // Overlay image with drawing (brush) layer
     const tOverlayStart = performance.now()
     const overlayCanvas = document.getElementById('brushCanvas')
@@ -298,8 +295,10 @@ export function useImageRenderer(
     log(`[imageRenderer] renderCanvas TOTAL ${(performance.now() - tStart).toFixed(1)} ms`)
   }
 
+  /**
+   * Render the blur overlay canvas based on current blur objects in the image store
+   */
   const renderBlurOverlay = () => {
-    console.warn('Rendering blur overlay...')
     if (!blurOverlayRef.value) return
 
     const canvas = blurOverlayRef.value
@@ -343,29 +342,6 @@ export function useImageRenderer(
 
       ctx.restore()
     })
-  }
-
-  /**
-   * Helper function to update blur preview canvas
-   *
-   * @param {HTMLCanvasElement} srcCanvas
-   */
-  const updateBlurPreview = (srcCanvas) => {
-    const MAX_SIZE = 1024
-
-    const scale = Math.min(MAX_SIZE / srcCanvas.width, MAX_SIZE / srcCanvas.height, 1)
-
-    const w = Math.round(srcCanvas.width * scale)
-    const h = Math.round(srcCanvas.height * scale)
-
-    const blurCanvas = document.createElement('canvas')
-    blurCanvas.width = w
-    blurCanvas.height = h
-
-    const ctx = blurCanvas.getContext('2d')
-    ctx.drawImage(srcCanvas, 0, 0, w, h)
-
-    imageStore.blurPreviewCanvas = blurCanvas
   }
 
   /**
@@ -436,22 +412,8 @@ export function useImageRenderer(
   )
 
   /**
-   * Watch for changes in image store and re-render all layers
+   * Watch for changes in image rendering state and trigger re-render when needed
    */
-  // watch(
-  //   [
-  //     () => imageStore.getRenderedImage({ t, renderCall: false }),
-  //     () => imageStore.pdfPageBytes,
-  //     () => imageStore.fileType,
-  //     () => imageStore.overlayImage,
-  //   ],
-  //   async ([newImage, newPdfBytes, newFileType, newOverlayImage]) => {
-  //     if (newImage || newPdfBytes || newFileType || newOverlayImage) {
-  //       log('#################### Image or PDF or file Type changed, re-rendering all...')
-  //       renderAll()
-  //     }
-  //   },
-  // )
   watch(
     () => imageStore.imageNeedToBeRendered,
     async (imageNeedToBeRendered) => {
@@ -463,6 +425,9 @@ export function useImageRenderer(
     },
   )
 
+  /**
+   * Watch for changes in blur objects and trigger re-render of blur overlay when needed
+   */
   watch(
     () => imageStore.blurOverlayNeedToBeRendered,
     async (blurOverlayNeedToBeRendered) => {
@@ -472,26 +437,10 @@ export function useImageRenderer(
       }
     },
   )
-  /**
-   * Watch for changes in viewport dimensions and update sizes
-   */
-  // watch(
-  //   [
-  //     () => imageStore.frame,
-  //     () => viewportStore.physicalContentSize,
-  //     () => viewportStore.zoomMode,
-  //     () => viewportStore.calibrationFactor,
-  //   ],
-  //   (newFrame) => {
-  //     if (newFrame && !renderingFrameSvg.value) {
-  //       log('#################### Frame operations changed, re-rendering frame svg')
-  //       updateSizes()
-  //       renderFrameSvg()
-  //     }
-  //   },
-  //   { deep: true },
-  // )
 
+  /**
+   * Watch for changes in frame configuration, viewport dimensions, and calibration factor, and trigger re-render of frame SVG when needed
+   */
   watch(
     [
       () => viewportStore.physicalContentSize,
@@ -504,6 +453,9 @@ export function useImageRenderer(
     { deep: true },
   )
 
+  /**
+   * Watch for changes in frame rendering state and trigger re-render of frame SVG when needed
+   */
   watch(
     () => imageStore.frameNeedToBeRendered,
     (frameNeedToBeRendered) => {
@@ -518,15 +470,6 @@ export function useImageRenderer(
     },
     { deep: true },
   )
-
-  // Initial rendering on mount
-  // onMounted(() => {
-  //   nextTick(() => {
-  //     if (imageStore.getRenderedImage({ t, renderCall: false })) {
-  //       renderAll()
-  //     }
-  //   })
-  // })
 
   return {
     imageRef,

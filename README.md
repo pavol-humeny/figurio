@@ -18,6 +18,14 @@
 # TODO
 - Natočiť videá
 
+- vkladá to objekty s pomlčkami
+- občas to tam nezobrazuje farbu v color inpute 
+- občas sa nezobrazí nástroj v tool settings 
+- brush - rasterizáciu hneď hodiť modal a nie len warning
+- dole z lišty odstrániť zobrazenie uhla, možno to celé vyhodiť 
+- select nefunguje na blur 
+- prepnutie na shape a začatie kreslenia ešte keď nie je načítaný tool 
+
 - Štetec
     - premyslieť ten štetec a pixeláciu 
     - 1px štetec by mal vyplnat 1px 

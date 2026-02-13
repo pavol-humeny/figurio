@@ -7,11 +7,6 @@ import { useConfirmModal } from '../modals/useConfirmModal'
 import { useImagePipeline } from '../editor/useImagePipeline.js'
 
 /**
- * Hide position and dimensions settings in the blur tool settings
- */
-const hidePositionAndDimensions = ref(true)
-
-/**
  * Local settings for the blur tool
  */
 const localBlurSettings = ref({
@@ -43,6 +38,11 @@ export function useBlurTool(imageStore, historyStore, editorStore, uiStore, t) {
   const { getObjectCenter } = useSvgFunctions(imageStore)
   const { showConfirmModal } = useConfirmModal()
   const { renderUpTo } = useImagePipeline(imageStore, uiStore)
+
+  /**
+   * Hide position and dimensions settings in the blur tool settings
+   */
+  const hidePositionAndDimensions = ref(true)
 
   /**
    * String representation of SVG definitions used for blur patterns
@@ -177,6 +177,7 @@ export function useBlurTool(imageStore, historyStore, editorStore, uiStore, t) {
         hidePositionAndDimensions.value = true
       }
     },
+    { immediate: true },
   )
 
   /**
