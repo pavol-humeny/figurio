@@ -302,6 +302,16 @@ export const keyboardShortcuts = [
     description: 'Close export tool settings modal',
   },
   {
+    keys: ['escape'],
+    action: 'confirmModalCancel',
+    description: 'Handle confirm modal keydown',
+  },
+  {
+    keys: ['enter'],
+    action: 'confirmModalConfirm',
+    description: 'Handle confirm modal keydown',
+  },
+  {
     keys: ['enter'],
     action: 'exportFileFunction',
     description: 'Export file',

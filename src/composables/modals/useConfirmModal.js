@@ -89,8 +89,8 @@ export function useConfirmModal() {
    * Confirm the modal and resolve with `true`
    */
   const confirm = () => {
-    isVisible.value = false
-    editorStore.isModalOpenFlag = false
+    if (!isVisible.value) return
+    cleanup()
     resolver?.(true)
   }
 
@@ -98,8 +98,8 @@ export function useConfirmModal() {
    * Cancel the modal and resolve with `false`
    */
   const cancel = () => {
-    isVisible.value = false
-    editorStore.isModalOpenFlag = false
+    if (!isVisible.value) return
+    cleanup()
     resolver?.(false)
   }
 
@@ -107,14 +107,22 @@ export function useConfirmModal() {
    * Resolve with "other"
    */
   const close = () => {
-    isVisible.value = false
-    editorStore.isModalOpenFlag = false
+    if (!isVisible.value) return
+    cleanup()
 
     if (useClose.value) {
-      resolver?.('close') // <-- third state
+      resolver?.('close') // third state
     } else {
       resolver?.(false)
     }
+  }
+
+  /**
+   * Shared cleanup logic
+   */
+  const cleanup = () => {
+    isVisible.value = false
+    editorStore.isModalOpenFlag = false
   }
 
   return {

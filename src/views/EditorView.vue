@@ -45,6 +45,7 @@ import { useCalibrationModal } from '@/composables/modals/useCalibrationModal';
 import { useImportModal } from '@/composables/modals/useImportModal';
 import { useReleaseModal } from '@/composables/modals/useReleaseModal';
 import { useUserModeStore } from '@/stores/userModeStore';
+import { useConfirmModal } from '@/composables/modals/useConfirmModal';
 
 const { hideArtifacts } = useImageAnalysis(useImageStore(), useViewportStore(), useUiStore(), useHistoryStore(), useEditorStore(), useWorkspaceStore(), t)
 
@@ -98,6 +99,7 @@ const { closeCalibrationModal } = useCalibrationModal(useViewportStore())
 const { closeExportToolSettings, exportFileFunction, openExportToolSettings, copyImageToClipboardFunction } = useExportToolSettings(useImageStore(), useEditorStore(), useHistoryStore(), useViewportStore(), useUiStore(), t)
 const { closeImportModal } = useImportModal()
 const { closeReleaseModal } = useReleaseModal()
+const { cancel: confirmModalCancel, confirm: confirmModalConfirm } = useConfirmModal()
 
 const imageStore = useImageStore()
 const editorStore = useEditorStore()
@@ -152,6 +154,8 @@ useKeyboardShortcuts({
   copyImageToClipboardFunction,
   closeImportModal,
   closeReleaseModal,
+  confirmModalCancel,
+  confirmModalConfirm
 }, useUiStore(), useEditorStore());
 // ======
 
