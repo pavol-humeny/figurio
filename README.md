@@ -18,11 +18,9 @@
 # TODO
 - Natočiť videá
 
-- občas to tam nezobrazuje farbu v color inpute 
 - občas sa nezobrazí nástroj v tool settings 
 
 - poloha blur a magnify area z-index
-- confirm modal zavriet esc
 
 - Štetec
     - premyslieť ten štetec a pixeláciu 
@@ -32,12 +30,6 @@
 - resetovanie obrázku do pôvodného stavu
 - Resize a crop nastaviť tak aby rešpektovali minimálne a maximálne rozmery v presete
 
-- opraviť shape 
-- opraviť magnify area 
-
-- blur
-    - opraviť blur 
-    - Opravit paste blur objektu 
 
 - Select
     - opraviť select
@@ -76,10 +68,11 @@
 - Možnosť vytvoriť si prázdny projekt a vkladať tam obrázky
 
 ## Nepreukázalo sa 
-- NEPREUKÁZALO SA - pri prepnutí z color na manual select sa nezapne spravny kurzor
-- NEPREUKÁZALO SA - error pri zatvorení viacerých súborov
-- NEPREUKÁZALO SA - nakreslím niečo, pridám shape, a dám rasterize tak to zmizne - rastererize zožuje brush 
-- NEPREUKÁZALO SA - nakreslenie svg objektu, prepnutie na brush (vyžaduje rasterizáciu) a následné spätné prepnutie na shape (stále to chcelo rasterizovať)
+- pri prepnutí z color na manual select sa nezapne spravny kurzor
+- error pri zatvorení viacerých súborov
+- nakreslím niečo, pridám shape, a dám rasterize tak to zmizne - rastererize zožuje brush 
+- nakreslenie svg objektu, prepnutie na brush (vyžaduje rasterizáciu) a následné spätné prepnutie na shape (stále to chcelo rasterizovať)
+- občas to tam nezobrazuje farbu v color inpute pri fill v nástroji shape
 
 ## Ťažko povedať čo s tým 
 - SKIP - (asi to je v pohode tak ako to je) zoomovanie pomocou tlacitok, ak je obrazok mimo stred tak to zoomuje mimo obrázok 

@@ -150,7 +150,7 @@ export const useEditorStore = defineStore('editorStore', {
       },
       blur: {
         blurStrength: 5,
-        edgeFade: 1,
+        edgeFade: 10,
       },
       brush: {
         isEraserMode: false,

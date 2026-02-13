@@ -4,6 +4,16 @@
     "items": []
   },
   "versions": {
+    "5.11.0":{
+      "label": "5.11.0",
+      "date":"13.2. 2025",
+      "bugFixes": {
+        "items": [
+          "Opravenie problému s nástrojem pro rozostrenie oblasti",
+          "Opravenie problému s nástrojem pro zväčšenie oblasti" 
+        ]
+      }
+    },
     "5.10.0": {
       "label": "5.10.0",
       "date": "4. 2. 2025",
