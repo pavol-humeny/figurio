@@ -10,7 +10,7 @@ import { useImageStore } from '@/stores/imageStore';
 import { useMagnifyAreaTool } from '@/composables/tools/useMagnifyAreaTool';
 import ExplainItem from '../common/ExplainItem.vue';
 import DefaultSlider from '../common/DefaultSlider.vue';
-import { useWorkspaceStore } from '@/stores/workspaceStore';
+import { useUiStore } from '@/stores/uiStore';
 // import SvgObjectsZIndexControl from './SvgObjectsZIndexControl.vue';
 
 const { t } = useI18n();
@@ -23,10 +23,8 @@ const {
   maxMagnifyAreaSourcePositionX,
   maxMagnifyAreaSourcePositionY,
   magnifyAreaZoomOptions,
-  resultPositionOptions,
   maxOutlineWidth,
-  magnifyAreaTypeOptions,
-} = useMagnifyAreaTool(useImageStore(), useHistoryStore(), useEditorStore(), useWorkspaceStore(), t);
+} = useMagnifyAreaTool(useImageStore(), useHistoryStore(), useEditorStore(), useUiStore(), t);
 
 </script>
 
@@ -36,23 +34,9 @@ const {
 
     <div class="settings-wrapper">
       <div class="specific-settings">
-        <!-- Type -->
-        <div class="settings-content-wrapper">
-          <ExplainItem :text="$t('tools.magnifyArea.explain')" :title="$t('tools.magnifyArea.label')" />
-          <div class="content-wrapper">
-            <div class="content-title">
-              <p>
-                {{ $t('tools.magnifyArea.settings.general.type.label') }}
-              </p>
-            </div>
-            <DropdownSelect v-model="localMagnifyAreaSettings.type" @update="applyLocalMagnifyAreaSettings"
-              :options="magnifyAreaTypeOptions" :tip="$t('tools.magnifyArea.settings.general.type.tip')"
-              position="bottom-left" />
-          </div>
-        </div>
-
         <!-- Position -->
         <div v-if="!hidePositionAndDimensions" class="settings-content-wrapper">
+          <ExplainItem :text="$t('tools.magnifyArea.explain')" :title="$t('tools.magnifyArea.label')" />
           <div class="content-wrapper">
             <div class="content-title">
               <p>
@@ -64,7 +48,7 @@ const {
                 <label for="x-input">
                   {{ $t('tools.magnifyArea.settings.general.sourcePosition.x') }}
                 </label>
-                <NumberInput ref="sourcePositionXInputRef" v-model="localMagnifyAreaSettings.sourceX"
+                <NumberInput ref="sourcePositionXInputRef" v-model="localMagnifyAreaSettings.positionX"
                   :min="localMagnifyAreaSettings.radius" :max="maxMagnifyAreaSourcePositionX" :step="1"
                   @update="applyLocalMagnifyAreaSettings" unit="px" />
               </div>
@@ -75,7 +59,7 @@ const {
                 <label for="y-input">
                   {{ $t('tools.magnifyArea.settings.general.sourcePosition.y') }}
                 </label>
-                <NumberInput ref="sourcePositionYInputRef" v-model="localMagnifyAreaSettings.sourceY"
+                <NumberInput ref="sourcePositionYInputRef" v-model="localMagnifyAreaSettings.positionY"
                   :min="localMagnifyAreaSettings.radius" :max="maxMagnifyAreaSourcePositionY" :step="1"
                   @update="applyLocalMagnifyAreaSettings" unit="px" />
               </div>
@@ -85,6 +69,8 @@ const {
 
         <!-- Radius -->
         <div class="settings-content-wrapper">
+          <ExplainItem v-if="hidePositionAndDimensions" :text="$t('tools.magnifyArea.explain')"
+            :title="$t('tools.magnifyArea.label')" />
           <div class="content-wrapper">
             <div class="content-title">
               <p>
@@ -108,20 +94,6 @@ const {
             </div>
             <DropdownSelect v-model="localMagnifyAreaSettings.zoom" :options="magnifyAreaZoomOptions"
               @update="applyLocalMagnifyAreaSettings" :tip="$t('tools.magnifyArea.settings.general.zoom.tip')"
-              position="bottom-left" />
-          </div>
-        </div>
-
-        <!-- Result position -->
-        <div v-if="localMagnifyAreaSettings.type === 'corner'" class="settings-content-wrapper">
-          <div class="content-wrapper">
-            <div class="content-title">
-              <p>
-                {{ $t('tools.magnifyArea.settings.general.resultPosition.label') }}
-              </p>
-            </div>
-            <DropdownSelect v-model="localMagnifyAreaSettings.resultPosition" :options="resultPositionOptions"
-              @update="applyLocalMagnifyAreaSettings" :tip="$t('tools.magnifyArea.settings.general.resultPosition.tip')"
               position="bottom-left" />
           </div>
         </div>

@@ -223,6 +223,9 @@ export function useToolsPanel(editorStore, imageStore, uiStore, workspaceStore, 
 
     // If the panel is closed, show it
     useCollapsiblePanel(uiStore).showPanel()
+
+    // Delete copied object from clipboard
+    imageStore.clipboardSvgObject = null
   }
 
   /**

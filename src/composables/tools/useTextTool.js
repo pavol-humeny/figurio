@@ -3,6 +3,8 @@ import { useMath } from '../common/useMath'
 import { editorConfig } from '@/config/editorConfig'
 import { useApi } from '@/composables/common/useApi'
 const { addUserEvent } = useApi()
+import { useConfirmModal } from '../modals/useConfirmModal'
+import { useImagePipeline } from '../editor/useImagePipeline'
 
 /**
  * Local editable settings for text tool
@@ -27,11 +29,15 @@ const localTextSettings = ref({
  * @param {Object} imageStore - Store containing svgObjects
  * @param {Object} historyStore - History store
  * @param {Object} editorStore - Store containing editor state
+ * @param {Object} uiStore - UI store
  * @param {Function} t - Translation function
  * @return {Object} Composable methods and reactive properties for text tool
  */
-export function useTextTool(imageStore, historyStore, editorStore, t) {
+export function useTextTool(imageStore, historyStore, editorStore, uiStore, t) {
   const { round } = useMath()
+  const { showConfirmModal } = useConfirmModal()
+
+  const { renderUpTo } = useImagePipeline(imageStore, uiStore)
 
   /**
    * Hide position settings in the text tool settings
@@ -292,8 +298,72 @@ export function useTextTool(imageStore, historyStore, editorStore, t) {
    * @param {number} x - X coordinate
    * @param {number} y - Y coordinate
    */
-  const addTextObject = (x, y) => {
+  const addTextObject = async (x, y) => {
     if (!localTextSettings.value.text.trim()) return
+
+    let confirmNeeded = false
+
+    // SVG objects rasterization
+    if (imageStore.needRasterizationForShapeAndText) {
+      confirmNeeded = true
+      const confirmed = await showConfirmModal(
+        t('tools.confirmNeedRasterization.title'),
+        t('tools.confirmNeedRasterization.message'),
+        t('tools.confirmNeedRasterization.cancel'),
+        t('tools.confirmNeedRasterization.confirm'),
+      )
+      if (confirmed) {
+        const result = await imageStore.rasterize('editor', {}, t)
+
+        imageStore.addImageOperation({
+          type: 'rasterize',
+          params: {
+            overlay: result.overlay,
+          },
+          cost: 'high',
+          affectsGeometry: true,
+        })
+
+        addUserEvent('applyOperation', {
+          tool: 'rasterize',
+          settings: {},
+        })
+
+        await renderUpTo(imageStore.renderPipeline.currentOpIndex + 1, { t, imageStore })
+      }
+    }
+
+    // Base image rasterization
+    if (imageStore.fileType === 'pdf') {
+      confirmNeeded = true
+      const confirmed = await showConfirmModal(
+        t('tools.confirmNeedBaseImageRasterization.title'),
+        t('tools.confirmNeedBaseImageRasterization.message'),
+        t('tools.confirmNeedBaseImageRasterization.cancel'),
+        t('tools.confirmNeedBaseImageRasterization.confirm'),
+      )
+      if (confirmed) {
+        imageStore.addImageOperation({
+          type: 'rasterizePdf',
+          params: {},
+          cost: 'high',
+          affectsGeometry: false,
+        })
+
+        addUserEvent('applyOperation', {
+          tool: 'rasterizePdf',
+          settings: {},
+        })
+
+        await renderUpTo(imageStore.renderPipeline.currentOpIndex + 1, { t, imageStore })
+
+        historyStore.push(imageStore.getSnapshot())
+      }
+    }
+
+    if (confirmNeeded) {
+      return
+    }
 
     // Trim text to 1000 chars
     localTextSettings.value.text = localTextSettings.value.text

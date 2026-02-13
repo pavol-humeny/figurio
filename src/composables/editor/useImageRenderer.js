@@ -65,6 +65,11 @@ export function useImageRenderer(
   const blurOverlayRef = ref(null)
 
   /**
+   * Reference to the canvas for rendering magnify area overlays
+   */
+  const magnifyOverlayRef = ref(null)
+
+  /**
    * Internal flag to avoid overlapping frame render calls
    */
   let renderingFrameSvg = ref(false)
@@ -350,6 +355,66 @@ export function useImageRenderer(
     })
   }
 
+  const renderMagnifyOverlay = () => {
+    if (!magnifyOverlayRef.value) return
+
+    const canvas = magnifyOverlayRef.value
+    const ctx = canvas.getContext('2d')
+
+    const width = imageStore.fileDimensions.width
+    const height = imageStore.fileDimensions.height
+
+    canvas.width = width
+    canvas.height = height
+    ctx.clearRect(0, 0, width, height)
+
+    const magnifyObjects = imageStore.svgObjects.filter((obj) => obj.class === 'magnifyArea')
+
+    if (!magnifyObjects.length) return
+
+    imageStore.renderMagnifyCanvases()
+
+    magnifyObjects.forEach((obj) => {
+      const zoom = obj.magnify?.zoom || obj.attrs['data-magnify-zoom'] || 2
+      const composite = imageStore.getMagnifyCanvas(zoom)
+      if (!composite) return
+
+      const cx = obj.attrs.cx
+      const cy = obj.attrs.cy
+      const resultRadius = obj.attrs.rx
+      const sourceRadius = resultRadius / zoom
+
+      ctx.save()
+
+      // Clip circle
+      ctx.beginPath()
+      ctx.arc(cx, cy, resultRadius, 0, Math.PI * 2)
+      ctx.clip()
+
+      // Draw magnified part
+      ctx.drawImage(
+        composite,
+        cx - sourceRadius,
+        cy - sourceRadius,
+        sourceRadius * 2,
+        sourceRadius * 2,
+        cx - resultRadius,
+        cy - resultRadius,
+        resultRadius * 2,
+        resultRadius * 2,
+      )
+
+      ctx.restore()
+
+      // Outline
+      ctx.beginPath()
+      ctx.arc(cx, cy, resultRadius, 0, Math.PI * 2)
+      ctx.lineWidth = obj.attrs['stroke-width'] || 1
+      ctx.strokeStyle = obj.attrs.stroke || '#000'
+      ctx.stroke()
+    })
+  }
+
   /**
    * Render the SVG frame layer and re-render canvas after frame update
    */
@@ -436,10 +501,20 @@ export function useImageRenderer(
    */
   watch(
     () => imageStore.blurOverlayNeedToBeRendered,
-    async (blurOverlayNeedToBeRendered) => {
-      if (blurOverlayNeedToBeRendered) {
+    (flag) => {
+      if (flag) {
         imageStore.blurOverlayNeedToBeRendered = false
         renderBlurOverlay()
+      }
+    },
+  )
+
+  watch(
+    () => imageStore.magnifyOverlayNeedToBeRendered,
+    (flag) => {
+      if (flag) {
+        imageStore.magnifyOverlayNeedToBeRendered = false
+        renderMagnifyOverlay()
       }
     },
   )
@@ -483,5 +558,6 @@ export function useImageRenderer(
     frameSvgRef,
     pdfContainerRef,
     blurOverlayRef,
+    magnifyOverlayRef,
   }
 }

@@ -24,7 +24,7 @@ const {
   brushMinToolSize,
   brushColor,
   saveColorToStore,
-  rasterizeImage,
+  // rasterizeImage,
   clearAllCanvas,
   setIsEraserMode,
   isEraserMode,
@@ -46,17 +46,19 @@ const tabs = ['brush', 'pencil']
     <div class="settings-wrapper">
       <div v-if="editorStore.selectedTabPerTool[editorStore.selectedToolKey] === 'brush'" class="specific-settings">
         <!-- Rasterize button -->
-        <div class="settings-content-wrapper">
+        <!-- <div class="settings-content-wrapper">
           <ExplainItem :text="$t('tools.brush.subTools.brush.explain')"
             :title="$t('tools.brush.subTools.brush.label')" />
           <div class="content-wrapper" :class="{ disabled: !imageStore.needRasterization }">
             <DefaultButton :text="$t('tools.brush.settings.brush.rasterizeButton.text')" position="bottom-left"
               :tip="$t('tools.brush.settings.brush.rasterizeButton.tip')" @click="rasterizeImage" />
           </div>
-        </div>
+        </div> -->
 
         <!-- Selected tool -->
         <div class="settings-content-wrapper">
+          <ExplainItem :text="$t('tools.brush.subTools.brush.explain')"
+            :title="$t('tools.brush.subTools.brush.label')" />
           <div class="content-wrapper">
             <div class="content-title">
               <p>
@@ -124,17 +126,19 @@ const tabs = ['brush', 'pencil']
 
       <div v-if="editorStore.selectedTabPerTool[editorStore.selectedToolKey] === 'pencil'" class="specific-settings">
         <!-- Rasterize button -->
-        <div class="settings-content-wrapper">
+        <!-- <div class="settings-content-wrapper">
           <ExplainItem :text="$t('tools.brush.subTools.pencil.explain')"
             :title="$t('tools.brush.subTools.pencil.label')" />
           <div class="content-wrapper" :class="{ disabled: !imageStore.needRasterization }">
             <DefaultButton :text="$t('tools.brush.settings.pencil.rasterizeButton.text')" position="bottom-left"
               :tip="$t('tools.brush.settings.pencil.rasterizeButton.tip')" @click="rasterizeImage" />
           </div>
-        </div>
+        </div> -->
 
         <!-- Selected tool -->
         <div class="settings-content-wrapper">
+          <ExplainItem :text="$t('tools.brush.subTools.pencil.explain')"
+            :title="$t('tools.brush.subTools.pencil.label')" />
           <div class="content-wrapper">
             <div class="content-title">
               <p>

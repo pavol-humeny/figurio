@@ -133,8 +133,6 @@ export function useSvgObjectsList(
       const svgObjs = imageStore.svgObjects
         .filter((obj) => {
           if (obj.class === 'magnifyArea') {
-            if (obj.attrs?.type === 'center') return obj.subClass === 'magnify-result'
-            if (obj.attrs?.type === 'corner') return obj.subClass === 'magnify-source'
             return false
           }
           return true

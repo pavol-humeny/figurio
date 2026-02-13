@@ -49,6 +49,15 @@ export const useHistoryStore = defineStore('historyStore', {
     },
 
     /**
+     * Reset history to the initial state (first snapshot) and return it
+     * @returns {any|null} Initial state snapshot or null if history is empty
+     */
+    resetHistory() {
+      this.currentIndex = 0
+      return this.history[this.currentIndex] || null
+    },
+
+    /**
      * Redo next change and return next state snapshot
      * @returns {any|null} Next state snapshot or null if not possible
      */

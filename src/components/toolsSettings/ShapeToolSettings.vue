@@ -14,6 +14,7 @@ import ExplainItem from '../common/ExplainItem.vue';
 import { editorConfig } from '@/config/editorConfig'
 import SvgObjectsZIndexControl from './SvgObjectsZIndexControl.vue';
 import NumberSpinner from '../common/NumberSpinner.vue';
+import { useUiStore } from '@/stores/uiStore';
 
 const { t } = useI18n()
 const imageStore = useImageStore();
@@ -45,7 +46,7 @@ const {
   resetCornerRadius,
   lineTypeOptions,
   lineArrowOptions,
-} = useShapeTool(useEditorStore(), useImageStore(), useHistoryStore(), t)
+} = useShapeTool(useEditorStore(), useImageStore(), useHistoryStore(), useUiStore(), t)
 
 </script>
 

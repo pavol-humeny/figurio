@@ -42,7 +42,7 @@ const contentRef = ref(null)
 /**
  * Logic of the image renderer (canvas, SVG, frame)
  */
-const { imageRef, svgRef, frameSvgRef, pdfContainerRef, blurOverlayRef } = useImageRenderer(
+const { imageRef, svgRef, frameSvgRef, pdfContainerRef, blurOverlayRef, magnifyOverlayRef } = useImageRenderer(
   useImageStore(),
   useHistoryStore(),
   useEditorStore(),
@@ -159,7 +159,7 @@ const hideContextMenu = computed(() => {
  * Whether to disable the context menu
  */
 const disableContextMenu = computed(() => {
-  return imageStore.selectedSvgObjectId === null || editorStore.selectedToolKey === 'magnifyArea'
+  return imageStore.selectedSvgObjectId === null
 })
 
 /**
@@ -233,7 +233,7 @@ const cursorStyle = computed(() => {
         {
           label: $t('contextMenu.paste'),
           action: pasteSvgObjectToCenter,
-          disabled: !imageStore.clipboardSvgObject || editorStore.selectedToolKey === 'magnifyArea',
+          disabled: !imageStore.clipboardSvgObject,
           hide: hideContextMenu,
         },
         {
@@ -287,6 +287,9 @@ const cursorStyle = computed(() => {
 
           <!-- Blur Overlay Canvas -->
           <canvas ref="blurOverlayRef" class="blur-overlay-canvas">
+          </canvas>
+
+          <canvas ref="magnifyOverlayRef" class="blur-overlay-canvas">
           </canvas>
 
           <!-- SVG objects -->
@@ -413,7 +416,7 @@ const cursorStyle = computed(() => {
         </div>
         <div v-if="mouseX !== null" class="ruler-cursor-mark horizontal" :style="{ left: mouseX + 'px' }">
           <span class="ruler-cursor-label horizontal" :class="{ 'active': cursorPosXSameAsImageWidth }">{{ cursorPosX
-            }}</span>
+          }}</span>
         </div>
 
       </div>
@@ -426,7 +429,7 @@ const cursorStyle = computed(() => {
         </div>
         <div v-if="mouseY !== null" class="ruler-cursor-mark vertical" :style="{ top: mouseY + 'px' }">
           <span class="ruler-cursor-label vertical" :class="{ 'active': cursorPosYSameAsImageHeight }">{{ cursorPosY
-            }}</span>
+          }}</span>
         </div>
       </div>
     </div>

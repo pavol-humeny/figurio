@@ -19,18 +19,12 @@ export function useSvgObjects(
   workspaceStore,
   t,
 ) {
-  const { round, distance, clamp } = useMath()
-  const textTool = useTextTool(imageStore, historyStore, editorStore, t)
-  const shapeTool = useShapeTool(editorStore, imageStore, historyStore, t)
+  const { round, distance } = useMath()
+  const textTool = useTextTool(imageStore, historyStore, editorStore, uiStore, t)
+  const shapeTool = useShapeTool(editorStore, imageStore, historyStore, uiStore, t)
   const { getSnapOffsetToEdges, getObjectCenter } = useSvgFunctions(imageStore)
   const blurTool = useBlurTool(imageStore, historyStore, editorStore, uiStore, t)
-  const magnifyAreaTool = useMagnifyAreaTool(
-    imageStore,
-    historyStore,
-    editorStore,
-    workspaceStore,
-    t,
-  )
+  const magnifyAreaTool = useMagnifyAreaTool(imageStore, historyStore, editorStore, uiStore, t)
   const { toggleTool } = useToolsPanel(editorStore, imageStore, uiStore, workspaceStore, t)
   /**
    * Selection box rectangle (used when dragging with select tool)
@@ -121,6 +115,13 @@ export function useSvgObjects(
     }
 
     historyStore.push(imageStore.getSnapshot(t))
+
+    // Re-render overlay if blur or magnify area
+    if (object.class === 'blur') {
+      imageStore.blurOverlayNeedToBeRendered = true
+    } else if (object.class === 'magnifyArea') {
+      imageStore.magnifyOverlayNeedToBeRendered = true
+    }
   }
 
   /**
@@ -183,14 +184,6 @@ export function useSvgObjects(
 
       idsToDelete.add(selected.id)
 
-      if (selected.class === 'magnifyArea') {
-        if (selected.subClass === 'magnify-source') {
-          idsToDelete.add(selected.linkedResultId)
-        } else if (selected.subClass === 'magnify-result') {
-          idsToDelete.add(selected.linkedSourceId)
-        }
-      }
-
       // If blur also delete filter, clip and image
       if (selected.class === 'blur') {
         blurIdsToDelete.add(selected.id)
@@ -206,14 +199,6 @@ export function useSvgObjects(
     else {
       for (const id of selectedIds) {
         const obj = imageStore.getSvgObjectById(id)
-
-        if (obj && obj.class === 'magnifyArea') {
-          if (obj.subClass === 'magnify-source') {
-            idsToDelete.add(obj.linkedResultId)
-          } else if (obj.subClass === 'magnify-result') {
-            idsToDelete.add(obj.linkedSourceId)
-          }
-        }
 
         if (obj.class === 'blur') {
           blurIdsToDelete.add(obj.id)
@@ -245,14 +230,17 @@ export function useSvgObjects(
     }
 
     historyStore.push(imageStore.getSnapshot(t))
+
+    // Re-render overlay
+    imageStore.blurOverlayNeedToBeRendered = true
+    imageStore.magnifyOverlayNeedToBeRendered = true
   }
 
   /**
    * Copy the currently selected SVG object
    */
   const copySelectedSvgObject = () => {
-    if (imageStore.selectedSvgObjectId === null || editorStore.selectedToolKey === 'magnifyArea')
-      return
+    if (imageStore.selectedSvgObjectId === null) return
 
     const object = imageStore.getSvgObjectById(imageStore.selectedSvgObjectId)
     if (!object) return
@@ -305,9 +293,14 @@ export function useSvgObjects(
         attrs.y += offset
       }
     }
-    // If it is blur add clip, filter and image
+    // If it is blur update overlay
     if (newObject.class === 'blur') {
       imageStore.blurOverlayNeedToBeRendered = true
+    }
+
+    // If it is magnify area update overlay
+    if (newObject.class === 'magnifyArea') {
+      imageStore.magnifyOverlayNeedToBeRendered = true
     }
 
     if (newObject.class === 'blur') {
@@ -481,11 +474,8 @@ export function useSvgObjects(
       const obj = list.splice(i, 1)[0]
 
       let insertIndex = i
-      if (list[i]?.class === 'magnifyArea') {
-        insertIndex += 2
-      } else {
-        insertIndex += 1
-      }
+
+      insertIndex += 1
 
       list.splice(insertIndex, 0, obj)
     }
@@ -551,9 +541,6 @@ export function useSvgObjects(
       const obj = list.splice(i, 1)[0]
 
       let insertIndex = i - 1
-      if (list[insertIndex]?.class === 'magnifyArea') {
-        insertIndex -= 1
-      }
 
       insertIndex = Math.max(0, insertIndex)
       list.splice(insertIndex, 0, obj)
@@ -661,19 +648,7 @@ export function useSvgObjects(
   const selectAllSvgObjects = () => {
     const allObjects = [...(imageStore.svgObjects || []), ...(imageStore.blurObjects || [])]
 
-    imageStore.selectedSvgObjectIds = allObjects
-      .filter((obj) => {
-        if (obj.class !== 'magnifyArea') return true
-
-        if (obj.attrs.type === 'center') {
-          return obj.subClass === 'magnify-result'
-        } else if (obj.attrs.type === 'corner') {
-          return obj.subClass === 'magnify-source'
-        }
-
-        return false
-      })
-      .map((obj) => obj.id)
+    imageStore.selectedSvgObjectIds = allObjects.map((obj) => obj.id)
 
     imageStore.selectedSvgObjectId = null
   }
@@ -738,7 +713,7 @@ export function useSvgObjects(
    * Handle click on the SVG area to select objects or add text
    * @param {MouseEvent} event - Click event
    */
-  const onClickImageSvg = (event) => {
+  const onClickImageSvg = async (event) => {
     log('click svg')
     if (event.button !== 0) return // Only left mouse button
 
@@ -764,10 +739,10 @@ export function useSvgObjects(
         const clickedObject = imageStore.getSvgObjectById(clickedId)
         if (clickedObject) {
           if (event.shiftKey) {
-            if (clickedObject.class === 'magnifyArea') {
-              log('no multi select magnify area')
-              return // Do not allow multi-select of magnify area objects
-            }
+            // if (clickedObject.class === 'magnifyArea') {
+            //   log('no multi select magnify area')
+            //   return // Do not allow multi-select of magnify area objects
+            // }
 
             // Toggle object in multi-select
             const index = imageStore.selectedSvgObjectIds.indexOf(clickedId)
@@ -789,19 +764,8 @@ export function useSvgObjects(
           } else {
             // Single object selection (without shift) if in select tool
             if (editorStore.selectedToolKey === 'select') {
-              if (
-                clickedObject.class === 'magnifyArea' &&
-                clickedObject.subClass === 'magnify-result' &&
-                clickedObject.attrs.type === 'corner'
-              ) {
-                log('clicked magnify result corner - select source instead')
-                // If clicked on magnify result, select the source instead
-                imageStore.selectedSvgObjectId = clickedObject.linkedSourceId
-                imageStore.selectedSvgObjectIds = [clickedObject.linkedSourceId]
-              } else {
-                imageStore.selectedSvgObjectId = clickedId
-                imageStore.selectedSvgObjectIds = [clickedId]
-              }
+              imageStore.selectedSvgObjectId = clickedId
+              imageStore.selectedSvgObjectIds = [clickedId]
             }
           }
 
@@ -860,7 +824,7 @@ export function useSvgObjects(
       const x = round((event.clientX - rect.left) / viewportStore.realZoomLevel)
       const y = round((event.clientY - rect.top) / viewportStore.realZoomLevel)
 
-      magnifyAreaTool.addMagnifyArea(x, y)
+      await magnifyAreaTool.addMagnifyArea(x, y)
       log('selected object id after add: ', imageStore.selectedSvgObjectId)
     }
   }
@@ -973,6 +937,7 @@ export function useSvgObjects(
 
     if (objectClass === 'shape') {
       const {
+        success,
         fillEnabled,
         fillColor,
         strokeWidth,
@@ -982,7 +947,13 @@ export function useSvgObjects(
         lineType,
         lineArrowEnd,
         name,
-      } = shapeTool.getShapeAttributes()
+      } = await shapeTool.getShapeAttributes()
+
+      if (!success) {
+        // If failed to get attributes, stop drawing
+        isDrawing.value = false
+        return
+      }
 
       objectName = name
 
@@ -1071,6 +1042,9 @@ export function useSvgObjects(
       imageStore.blurOverlayNeedToBeRendered = true
     } else {
       imageStore.svgObjects.push(base)
+      if (objectClass === 'magnifyArea') {
+        imageStore.magnifyOverlayNeedToBeRendered = true
+      }
     }
 
     const elWithId = event.target.closest('[data-id]')
@@ -1244,6 +1218,7 @@ export function useSvgObjects(
       remainingDy.value = rawDy - dy
 
       let containBlurObject = false
+      let containMagnifyAreaObject = false
 
       // Move all selected objects
       imageStore.selectedSvgObjectIds.forEach((id) => {
@@ -1254,99 +1229,30 @@ export function useSvgObjects(
           containBlurObject = true
         }
 
+        if (object.class === 'magnifyArea') {
+          containMagnifyAreaObject = true
+        }
+
         let offsetX = dx
         let offsetY = dy
 
         // Apply updated offset
-        if (object.class === 'magnifyArea') {
-          log('move magnify area')
-          if (object.subClass === 'magnify-result') {
-            const source = imageStore.getSvgObjectById(object.linkedSourceId)
+        if ('x' in attrs && 'y' in attrs) {
+          attrs.x += offsetX
+          attrs.y += offsetY
 
-            // Move source and also result
-            const sAttrs = source.attrs
-            sAttrs.cx = clamp(
-              sAttrs.cx + offsetX,
-              sAttrs.rx,
-              imageStore.fileDimensions.width - sAttrs.rx,
-            )
-            sAttrs.cy = clamp(
-              sAttrs.cy + offsetY,
-              sAttrs.ry,
-              imageStore.fileDimensions.height - sAttrs.ry,
-            )
-            source.attrs = { ...sAttrs }
-
-            // Move result
-            const patternId = `magnify-fill-${object.id}`
-
-            // Move result if it was a center-type source
-            object.attrs.cx = sAttrs.cx
-            object.attrs.cy = sAttrs.cy
-
-            const pattern = magnifyAreaTool.generateMagnifyPattern(
-              patternId,
-              sAttrs.cx, // sourceX
-              sAttrs.cy, // sourceY
-              object.attrs.cx, // resultX
-              object.attrs.cy, // resultY
-            )
-
-            imageStore.addOrReplaceSvgDef(patternId, pattern)
-            object.attrs.fill = `url(#${patternId})`
-          } else {
-            // Magnify area can not be dragged outside the image
-            attrs.cx = clamp(
-              attrs.cx + offsetX,
-              attrs.rx,
-              imageStore.fileDimensions.width - attrs.rx,
-            )
-            attrs.cy = clamp(
-              attrs.cy + offsetY,
-              attrs.ry,
-              imageStore.fileDimensions.height - attrs.ry,
-            )
-
-            const result = imageStore.getSvgObjectById(object.linkedResultId)
-            if (!result) return
-
-            const patternId = `magnify-fill-${result.id}`
-
-            // Move result if it was a center-type source
-            if (object.attrs.type === 'center') {
-              result.attrs.cx = object.attrs.cx
-              result.attrs.cy = object.attrs.cy
-            }
-
-            const pattern = magnifyAreaTool.generateMagnifyPattern(
-              patternId,
-              object.attrs.cx, // sourceX
-              object.attrs.cy, // sourceY
-              result.attrs.cx, // resultX
-              result.attrs.cy, // resultY
-            )
-
-            imageStore.addOrReplaceSvgDef(patternId, pattern)
-            result.attrs.fill = `url(#${patternId})`
+          if (tag === 'text') {
+            object.textBBox.x += offsetX
+            object.textBBox.y += offsetY
           }
-        } else {
-          if ('x' in attrs && 'y' in attrs) {
-            attrs.x += offsetX
-            attrs.y += offsetY
-
-            if (tag === 'text') {
-              object.textBBox.x += offsetX
-              object.textBBox.y += offsetY
-            }
-          } else if ('cx' in attrs && 'cy' in attrs) {
-            attrs.cx += offsetX
-            attrs.cy += offsetY
-          } else if ('x1' in attrs && 'y1' in attrs && 'x2' in attrs && 'y2' in attrs) {
-            attrs.x1 += offsetX
-            attrs.y1 += offsetY
-            attrs.x2 += offsetX
-            attrs.y2 += offsetY
-          }
+        } else if ('cx' in attrs && 'cy' in attrs) {
+          attrs.cx += offsetX
+          attrs.cy += offsetY
+        } else if ('x1' in attrs && 'y1' in attrs && 'x2' in attrs && 'y2' in attrs) {
+          attrs.x1 += offsetX
+          attrs.y1 += offsetY
+          attrs.x2 += offsetX
+          attrs.y2 += offsetY
         }
 
         /**
@@ -1365,6 +1271,10 @@ export function useSvgObjects(
 
       if (containBlurObject) {
         imageStore.blurOverlayNeedToBeRendered = true
+      }
+
+      if (containMagnifyAreaObject) {
+        imageStore.magnifyOverlayNeedToBeRendered = true
       }
 
       return
@@ -1554,18 +1464,6 @@ export function useSvgObjects(
       const allObjects = [...(imageStore.svgObjects || []), ...(imageStore.blurObjects || [])]
 
       for (const object of allObjects) {
-        // Skip magnify area result or source
-        if (
-          (object.class === 'magnifyArea' &&
-            object.subClass === 'magnify-result' &&
-            object.attrs.type === 'corner') ||
-          (object.class === 'magnifyArea' &&
-            object.subClass === 'magnify-source' &&
-            object.attrs.type === 'center')
-        ) {
-          continue
-        }
-
         const { cx, cy } = getObjectCenter(object)
 
         const isInside = cx >= x1 && cx <= x2 && cy >= y1 && cy <= y2

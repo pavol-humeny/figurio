@@ -392,7 +392,7 @@ export function useBlurTool(imageStore, historyStore, editorStore, uiStore, t) {
    * Maximum blur strength based on image dimensions
    */
   const maxBlurStrength = computed(() => {
-    return imageStore.getSmallerImageDimension() / 10
+    return Math.min(60, imageStore.getSmallerImageDimension() / 20)
   })
 
   /**

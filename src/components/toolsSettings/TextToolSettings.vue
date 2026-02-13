@@ -14,6 +14,7 @@ import IconButton from '../common/IconButton.vue';
 import ExplainItem from '../common/ExplainItem.vue';
 import { editorConfig } from '@/config/editorConfig'
 import SvgObjectsZIndexControl from './SvgObjectsZIndexControl.vue';
+import { useUiStore } from '@/stores/uiStore';
 
 const imageStore = useImageStore();
 const { t } = useI18n()
@@ -38,7 +39,7 @@ const {
   hidePosition,
   addTextObjectOnEnterClick,
   addTextObjectOnBlur,
-} = useTextTool(useImageStore(), useHistoryStore(), useEditorStore(), t)
+} = useTextTool(useImageStore(), useHistoryStore(), useEditorStore(), useUiStore(), t)
 
 </script>
 

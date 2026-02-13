@@ -142,7 +142,7 @@ export function exportFileService(imageStore, editorStore, historyStore, viewpor
       t,
     ).calculateFrameLayout(imageStore.newFileDimensions)
 
-    // Export pdf as vector
+    // Export vector pdf as pdf
     if (imageStore.fileType === 'pdf' && imageStore.pdfPageBytes) {
       /**
        * Convert hex color to rgb object with values 0–1 (for pdf-lib)
@@ -572,11 +572,10 @@ export function exportFileService(imageStore, editorStore, historyStore, viewpor
         }
       }
 
+      // Rasterize ONLY blur + magnify (no SVG)
       let rasterized = null
 
-      if (imageStore.svgObjects.length || imageStore.blurObjects.length) {
-        rasterized = await imageStore.rasterize('export-pdf', {}, t)
-      }
+      rasterized = await imageStore.rasterize('export-pdf', {}, t)
 
       // 1. Base image
       const existingPdf = await PDFDocument.load(imageStore.pdfPageBytes)
@@ -609,22 +608,9 @@ export function exportFileService(imageStore, editorStore, historyStore, viewpor
         height: targetHeight,
       })
 
-      // 2. SVG objects
-      const allObjects = [...(imageStore.blurObjects || []), ...(imageStore.svgObjects || [])]
-
-      for (const obj of allObjects) {
-        // Filter out magnify area
-        if (obj.class === 'magnifyArea') continue
-
-        // Add text to attributes
-        obj.attrs.textContent = obj.content || ''
-        await drawSvgElement(finalPage, obj.tag, obj.attrs, finalHeight, offsetX, offsetY)
-      }
-
-      // 2.25 . Magnify overlay if present (bitmap)
-      if (imageStore.svgObjects.some((obj) => obj.class === 'magnifyArea')) {
-        warn('Rasterizing magnify area for PDF export')
-        const overlayDataUrl = rasterized.magnifyOverlay.toDataURL('image/png')
+      // 2. Overlay
+      if (rasterized.overlay) {
+        const overlayDataUrl = rasterized.overlay.toDataURL('image/png')
         const overlayBytes = Uint8Array.from(atob(overlayDataUrl.split(',')[1]), (c) =>
           c.charCodeAt(0),
         )
@@ -632,31 +618,39 @@ export function exportFileService(imageStore, editorStore, historyStore, viewpor
         const overlayImage = await pdf.embedPng(overlayBytes)
 
         finalPage.drawImage(overlayImage, {
-          x: 0,
-          y: 0,
-          width: rasterized.magnifyOverlay.width,
-          height: rasterized.magnifyOverlay.height,
+          x: offsetX,
+          y: finalHeight - offsetY - targetHeight,
+          width: targetWidth,
+          height: targetHeight,
         })
       }
 
-      // 2.5. Overlay image if present (bitmap) - this should never happen but just in case (TODO: remove?)
-      // if (rasterized?.overlay) {
-      //   const overlayDataUrl = rasterized.overlay.toDataURL('image/png')
-      //   const overlayBytes = Uint8Array.from(atob(overlayDataUrl.split(',')[1]), (c) =>
-      //     c.charCodeAt(0),
-      //   )
+      // 3. SVG objects
+      const vectorObjects = imageStore.svgObjects.filter((obj) => obj.class !== 'magnifyArea')
 
-      //   const overlayImage = await pdf.embedPng(overlayBytes)
+      for (const obj of vectorObjects) {
+        obj.attrs.textContent = obj.content || ''
+        await drawSvgElement(finalPage, obj.tag, obj.attrs, finalHeight, offsetX, offsetY)
+      }
 
-      //   finalPage.drawImage(overlayImage, {
-      //     x: 0,
-      //     y: 0,
-      //     width: rasterized.overlay.width,
-      //     height: rasterized.overlay.height,
-      //   })
-      // }
+      // 4. Blur + magnify (raster)
+      if (rasterized?.blurMagnifyOverlay) {
+        const overlayDataUrl = rasterized.blurMagnifyOverlay.toDataURL('image/png')
+        const overlayBytes = Uint8Array.from(atob(overlayDataUrl.split(',')[1]), (c) =>
+          c.charCodeAt(0),
+        )
 
-      // 3. Frame
+        const overlayImage = await pdf.embedPng(overlayBytes)
+
+        finalPage.drawImage(overlayImage, {
+          x: offsetX,
+          y: finalHeight - offsetY - targetHeight,
+          width: targetWidth,
+          height: targetHeight,
+        })
+      }
+
+      // 5. Frame
       if (imageStore.frame.enabled && imageStore.frameSvg) {
         const parser = new DOMParser()
         const svgEl = parser.parseFromString(imageStore.frameSvg, 'image/svg+xml').documentElement
@@ -669,7 +663,7 @@ export function exportFileService(imageStore, editorStore, historyStore, viewpor
         })
       }
 
-      // 4. Save
+      // Save
       const pdfBytes = await pdf.save()
       const blob = new Blob([pdfBytes], { type: 'application/pdf' })
       const link = document.createElement('a')
@@ -677,7 +671,7 @@ export function exportFileService(imageStore, editorStore, historyStore, viewpor
       link.download = `${imageStore.newFileName}.pdf`
       link.click()
     }
-    // Export pdf as raster (with jsPDF)
+    // Export raster as pdf (with jsPDF)
     else {
       // Create pdf
       const pdf = new jsPDF({
@@ -693,29 +687,28 @@ export function exportFileService(imageStore, editorStore, historyStore, viewpor
       pdf.addFont('Times-Roman', 'Times-Roman', 'normal')
       pdf.setFont('Times-Roman')
 
-      // Add base image
+      // 1 Base image
       pdf.addImage(image, 'PNG', offsetX, offsetY, targetWidth, targetHeight)
 
-      // Add overlay image if present
-      if (imageStore.overlayImage) {
-        const overlayCanvas = imageStore.overlayImage
-        const overlayUrl = overlayCanvas.toDataURL('image/png')
-
-        pdf.addImage(overlayUrl, 'PNG', offsetX, offsetY, targetWidth, targetHeight)
-      }
-
-      // Add svgObjects and frame
-      await createSvgPdf(pdf, finalWidth, finalHeight, offsetX, offsetY)
-
-      // Add magnify overlay image as extra layer
+      // Rasterize
       const rasterized = await imageStore.rasterize('export-pdf', {}, t)
 
-      if (rasterized?.magnifyOverlay) {
-        const magnifyDataUrl = rasterized.magnifyOverlay.toDataURL('image/png')
-        pdf.addImage(magnifyDataUrl, 'PNG', offsetX, offsetY, image.width, image.height)
+      // 2 Overlay
+      if (rasterized.overlay) {
+        const overlayDataUrl = rasterized.overlay.toDataURL('image/png')
+        pdf.addImage(overlayDataUrl, 'PNG', offsetX, offsetY, targetWidth, targetHeight)
       }
 
-      // Save
+      // 3 SVG objects (vector)
+      await createSvgPdf(pdf, finalWidth, finalHeight, offsetX, offsetY)
+
+      // 4 Blur + magnify (raster)
+      if (rasterized?.blurMagnifyOverlay) {
+        const overlayDataUrl = rasterized.blurMagnifyOverlay.toDataURL('image/png')
+        pdf.addImage(overlayDataUrl, 'PNG', offsetX, offsetY, targetWidth, targetHeight)
+      }
+
+      // 4 Save
       pdf.save(`${imageStore.newFileName}.pdf`)
     }
   }
@@ -778,15 +771,13 @@ export function exportFileService(imageStore, editorStore, historyStore, viewpor
       (imageStore.svgObjects && imageStore.svgObjects.length > 0) ||
       (imageStore.blurObjects && imageStore.blurObjects.length > 0)
     ) {
-      const allObjects = [...(imageStore.blurObjects || []), ...(imageStore.svgObjects || [])]
-
-      const filteredObjects = allObjects.filter((obj) => obj.class !== 'magnifyArea')
+      const vectorObjects = imageStore.svgObjects.filter((obj) => obj.class !== 'magnifyArea')
 
       const svgString = `
             <svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}">
             ${svgDefsString}
               <g transform="translate(${offsetX}, ${offsetY})">
-                ${filteredObjects
+                ${vectorObjects
                   .map((obj) => {
                     const attrs = Object.entries(obj.attrs || {})
                       .map(([key, val]) => `${key}="${val}"`)

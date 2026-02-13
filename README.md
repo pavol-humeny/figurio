@@ -21,10 +21,11 @@
 - vkladá to objekty s pomlčkami
 - občas to tam nezobrazuje farbu v color inpute 
 - občas sa nezobrazí nástroj v tool settings 
-- brush - rasterizáciu hneď hodiť modal a nie len warning
 - dole z lišty odstrániť zobrazenie uhla, možno to celé vyhodiť 
 - select nefunguje na blur 
 - prepnutie na shape a začatie kreslenia ešte keď nie je načítaný tool 
+- poloha blur a magnify area z-index
+- confirm modal zavriet esc
 
 - Štetec
     - premyslieť ten štetec a pixeláciu 

@@ -3,7 +3,6 @@ import { useMath } from '../common/useMath'
 import { editorConfig } from '@/config/editorConfig'
 // import { useSvgObjects } from './useSvgObjects'
 import { useSvgFunctions } from './useSvgFunctions'
-import { useMagnifyAreaTool } from './useMagnifyAreaTool'
 import { viewportConfig } from '@/config/viewportConfig'
 import { useSettingsPanel } from '@/composables/topPanel/useSettingsPanel'
 import { useConsole } from '@/composables/common/useConsole.js'
@@ -40,14 +39,6 @@ export function useSvgObjectWrapper(
   const { getObjectCenter, getTransformedBoundingBox, getSnapOffsetToEdges } =
     useSvgFunctions(imageStore)
   const { isVisible: isVisibleSettingsPanel, closeSettingsPanel } = useSettingsPanel(uiStore)
-
-  const { generateMagnifyPattern } = useMagnifyAreaTool(
-    imageStore,
-    historyStore,
-    editorStore,
-    workspaceStore,
-    t,
-  )
 
   /**
    * Style of cursor when hovering over the SVG object
@@ -269,23 +260,11 @@ export function useSvgObjectWrapper(
 
     log('selecting object:', object.value.id)
 
-    if (
-      (!isSelected.value && !editorStore.isSvgObjectResizing) ||
-      editorStore.selectedToolKey === 'text' ||
-      editorStore.selectedToolKey === 'magnifyArea'
-    ) {
+    if (!isSelected.value && !editorStore.isSvgObjectResizing) {
       log('tool: ', editorStore.selectedToolKey, 'class:', object.value.class)
       if (editorStore.selectedToolKey === object.value.class) {
-        if (object.value.class === 'magnifyArea' && object.value.attrs.type === 'corner') {
-          // If it is corner type, select source
-          if (object.value.subClass === 'magnify-source') {
-            imageStore.selectedSvgObjectId = object.value.id
-          } else {
-            imageStore.selectedSvgObjectId = object.value.linkedSourceId
-          }
-        } else {
-          imageStore.selectedSvgObjectId = object.value.id
-        }
+        imageStore.selectedSvgObjectId = object.value.id
+
         editorStore.previousToolKey = ''
 
         imageStore.selectedSvgObjectIds = []
@@ -1552,75 +1531,39 @@ export function useSvgObjectWrapper(
         }
       }
 
-      if (object.value.class === 'magnifyArea') {
-        if (object.value.subClass === 'magnify-result') {
-          const source = imageStore.getSvgObjectById(object.value.linkedSourceId)
+      // Apply updated offset
+      if ('x' in attrs && 'y' in attrs) {
+        attrs.x += offsetX
+        attrs.y += offsetY
 
-          // Move source and also result
-          const sAttrs = source.attrs
-          sAttrs.cx = clamp(
-            sAttrs.cx + offsetX,
-            sAttrs.rx,
-            imageStore.fileDimensions.width - sAttrs.rx,
-          )
-          sAttrs.cy = clamp(
-            sAttrs.cy + offsetY,
-            sAttrs.ry,
-            imageStore.fileDimensions.height - sAttrs.ry,
-          )
-          source.attrs = { ...sAttrs }
-
-          // Move result
-          const patternId = `magnify-fill-${object.value.id}`
-
-          // Move result if it was a center-type source
-          object.value.attrs.cx = sAttrs.cx
-          object.value.attrs.cy = sAttrs.cy
-
-          const pattern = generateMagnifyPattern(
-            patternId,
-            sAttrs.cx, // sourceX
-            sAttrs.cy, // sourceY
-            object.value.attrs.cx, // resultX
-            object.value.attrs.cy, // resultY
-          )
-
-          imageStore.addOrReplaceSvgDef(patternId, pattern)
-          object.value.attrs.fill = `url(#${patternId})`
-        } else {
-          // Magnify area can not be dragged outside the image
-          attrs.cx = clamp(attrs.cx + offsetX, attrs.rx, imageStore.fileDimensions.width - attrs.rx)
-          attrs.cy = clamp(
-            attrs.cy + offsetY,
-            attrs.ry,
-            imageStore.fileDimensions.height - attrs.ry,
-          )
+        if (tag === 'text') {
+          object.value.textBBox.x += offsetX
+          object.value.textBBox.y += offsetY
         }
-      } else {
-        // Apply updated offset
-        if ('x' in attrs && 'y' in attrs) {
-          attrs.x += offsetX
-          attrs.y += offsetY
-
-          if (tag === 'text') {
-            object.value.textBBox.x += offsetX
-            object.value.textBBox.y += offsetY
-          }
-        } else if ('cx' in attrs && 'cy' in attrs) {
+      } else if ('cx' in attrs && 'cy' in attrs) {
+        if (object.value.class === 'magnifyArea') {
+          // Clamp center to keep the whole magnify area within the image
+          attrs.cx = clamp(attrs.cx + offsetX, 0, imageStore.fileDimensions.width)
+          attrs.cy = clamp(attrs.cy + offsetY, 0, imageStore.fileDimensions.height)
+        } else {
           attrs.cx += offsetX
           attrs.cy += offsetY
-        } else if ('x1' in attrs && 'y1' in attrs && 'x2' in attrs && 'y2' in attrs) {
-          attrs.x1 += offsetX
-          attrs.y1 += offsetY
-          attrs.x2 += offsetX
-          attrs.y2 += offsetY
         }
+      } else if ('x1' in attrs && 'y1' in attrs && 'x2' in attrs && 'y2' in attrs) {
+        attrs.x1 += offsetX
+        attrs.y1 += offsetY
+        attrs.x2 += offsetX
+        attrs.y2 += offsetY
       }
+
       updateRotationTransform()
     }
 
     if (object.value.class === 'blur') {
       imageStore.blurOverlayNeedToBeRendered = true
+    }
+    if (object.value.class === 'magnifyArea') {
+      imageStore.magnifyOverlayNeedToBeRendered = true
     }
 
     object.value.attrs = { ...attrs }
@@ -1635,32 +1578,6 @@ export function useSvgObjectWrapper(
 
     const isActive = isDragging.value || activeResizerIndex.value !== null || isRotating.value
     if (!isActive) return
-
-    if (object.value.class === 'magnifyArea') {
-      if (object.value.subClass === 'magnify-source') {
-        const result = imageStore.getSvgObjectById(object.value.linkedResultId)
-        if (!result) return
-
-        const patternId = `magnify-fill-${result.id}`
-
-        // Move result if it was a center-type source
-        if (object.value.attrs.type === 'center') {
-          result.attrs.cx = object.value.attrs.cx
-          result.attrs.cy = object.value.attrs.cy
-        }
-
-        const pattern = generateMagnifyPattern(
-          patternId,
-          object.value.attrs.cx, // sourceX
-          object.value.attrs.cy, // sourceY
-          result.attrs.cx, // resultX
-          result.attrs.cy, // resultY
-        )
-
-        imageStore.addOrReplaceSvgDef(patternId, pattern)
-        result.attrs.fill = `url(#${patternId})`
-      }
-    }
 
     isDragging.value = false
     activeResizerIndex.value = null

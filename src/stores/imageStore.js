@@ -104,6 +104,7 @@ export const useImageStore = defineStore('imageStore', {
     imageNeedToBeRendered: false,
     frameNeedToBeRendered: false,
     blurOverlayNeedToBeRendered: false,
+    magnifyOverlayNeedToBeRendered: false,
 
     renderPipeline: {
       baseState: null,
@@ -224,6 +225,8 @@ export const useImageStore = defineStore('imageStore', {
 
     //----
     blurCache: new Map(), // strength -> canvas
+
+    magnifyCache: new Map(), // zoom -> canvas
     //----
 
     /** SVG object copied to clipboard */
@@ -312,6 +315,26 @@ export const useImageStore = defineStore('imageStore', {
      */
     needRasterizationForBlur: (state) => {
       return state.svgObjects.length > 0
+    },
+
+    /**
+     * Returns true if there are different objects than magnify area that need to be rasterized
+     */
+    needRasterizationForMagnifyArea: (state) => {
+      // True if there are blur objects or different objects than magnify area
+      return (
+        state.blurObjects.length > 0 || state.svgObjects.some((obj) => obj.class !== 'magnifyArea')
+      )
+    },
+
+    /**
+     * Returns true if there are any svg objects with class magnifyArea
+     */
+    needRasterizationForShapeAndText: (state) => {
+      // True if there are blur objects or magnify area
+      return (
+        state.blurObjects.length > 0 || state.svgObjects.some((obj) => obj.class === 'magnifyArea')
+      )
     },
 
     /**
@@ -687,7 +710,7 @@ export const useImageStore = defineStore('imageStore', {
         </defs>
       `.trim()
 
-      const allObjects = [...(this.svgObjects || [])]
+      const allObjects = this.svgObjects.filter((obj) => obj.class !== 'magnifyArea')
 
       const svgObjectsString = allObjects
         .map((obj) => {
@@ -766,68 +789,73 @@ export const useImageStore = defineStore('imageStore', {
         })
       }
 
-      const svgBlob = new Blob([svgString], { type: 'image/svg+xml' })
-      const svgUrl = URL.createObjectURL(svgBlob)
+      // DRAW MAGNIFY OVERLAY (if exists)
+      const magnifyObjects = this.svgObjects.filter((obj) => obj.class === 'magnifyArea')
 
-      await new Promise((resolve, reject) => {
-        const img = new Image()
-        img.onload = () => {
-          overlayCtx.drawImage(img, 0, 0)
-          URL.revokeObjectURL(svgUrl)
-          resolve()
-        }
-        img.onerror = reject
-        img.src = svgUrl
-      })
+      if (magnifyObjects.length > 0) {
+        this.renderMagnifyCanvases()
+
+        magnifyObjects.forEach((obj) => {
+          const zoom = obj.magnify?.zoom || obj.attrs['data-magnify-zoom'] || 2
+          const composite = this.getMagnifyCanvas(zoom)
+          if (!composite) return
+
+          const cx = obj.attrs.cx
+          const cy = obj.attrs.cy
+          const resultRadius = obj.attrs.rx
+          const sourceRadius = resultRadius / zoom
+
+          overlayCtx.save()
+
+          overlayCtx.beginPath()
+          overlayCtx.arc(cx, cy, resultRadius, 0, Math.PI * 2)
+          overlayCtx.clip()
+
+          overlayCtx.drawImage(
+            composite,
+            cx - sourceRadius,
+            cy - sourceRadius,
+            sourceRadius * 2,
+            sourceRadius * 2,
+            cx - resultRadius,
+            cy - resultRadius,
+            resultRadius * 2,
+            resultRadius * 2,
+          )
+
+          overlayCtx.restore()
+
+          // Outline
+          overlayCtx.beginPath()
+          overlayCtx.arc(cx, cy, resultRadius, 0, Math.PI * 2)
+          overlayCtx.lineWidth = obj.attrs['stroke-width'] || 1
+          overlayCtx.strokeStyle = obj.attrs.stroke || '#000'
+          overlayCtx.stroke()
+        })
+      }
+
+      // Do not draw SVG objects if it is pdf export
+      if (mode !== 'export-pdf') {
+        const svgBlob = new Blob([svgString], { type: 'image/svg+xml' })
+        const svgUrl = URL.createObjectURL(svgBlob)
+
+        await new Promise((resolve, reject) => {
+          const img = new Image()
+          img.onload = () => {
+            overlayCtx.drawImage(img, 0, 0)
+            URL.revokeObjectURL(svgUrl)
+            resolve()
+          }
+          img.onerror = reject
+          img.src = svgUrl
+        })
+      }
 
       // MODE: export pdf
       if (mode === 'export-pdf') {
-        let magnifyOverlay = null
-
-        const magnifyObjects = allObjects.filter((o) => o.class === 'magnifyArea')
-
-        if (magnifyObjects.length > 0) {
-          const magnifySvgString = `
-            <svg xmlns="http://www.w3.org/2000/svg"
-                width="${usedWidth}"
-                height="${usedHeight}">
-              ${svgDefsString}
-              ${magnifyObjects
-                .map((obj) => {
-                  const attrs = Object.entries(obj.attrs || {})
-                    .map(([k, v]) => `${k}="${v}"`)
-                    .join(' ')
-                  return obj.tag === 'text'
-                    ? `<text ${attrs}>${obj.content || ''}</text>`
-                    : `<${obj.tag} ${attrs} />`
-                })
-                .join('\n')}
-            </svg>
-          `.trim()
-
-          magnifyOverlay = document.createElement('canvas')
-          magnifyOverlay.width = usedWidth
-          magnifyOverlay.height = usedHeight
-
-          const ctx = magnifyOverlay.getContext('2d')
-          const blob = new Blob([magnifySvgString], { type: 'image/svg+xml' })
-          const url = URL.createObjectURL(blob)
-
-          await new Promise((resolve, reject) => {
-            const img = new Image()
-            img.onload = () => {
-              ctx.drawImage(img, 0, 0)
-              URL.revokeObjectURL(url)
-              resolve()
-            }
-            img.onerror = reject
-            img.src = url
-          })
-        }
-
         return {
-          overlay: overlayCanvas,
-          magnifyOverlay,
+          overlay: this.overlayImage, // brush
+          blurMagnifyOverlay: overlayCanvas, // blur + magnify
         }
       }
 
@@ -874,6 +902,9 @@ export const useImageStore = defineStore('imageStore', {
         this.blurImages = []
         this.selectedSvgObjectId = null
         this.selectedSvgObjectIds = []
+
+        this.blurOverlayNeedToBeRendered = true
+        this.magnifyOverlayNeedToBeRendered = true
 
         return {
           overlay: finalOverlay,
@@ -1374,6 +1405,82 @@ export const useImageStore = defineStore('imageStore', {
     },
 
     /**
+     * Returns the cached magnify composite canvas for a given zoom
+     * @param {number} zoom
+     * @returns {HTMLCanvasElement|null}
+     */
+    getMagnifyCanvas(zoom) {
+      return this.magnifyCache.get(zoom) || null
+    },
+
+    /**
+     * Clears the magnify cache
+     */
+    clearMagnifyCache() {
+      this.magnifyCache.clear()
+    },
+
+    /**
+     * Generates magnify composite canvases from (base image + overlayImage).
+     * Each zoom level is cached separately.
+     */
+    renderMagnifyCanvases() {
+      const magnifyObjects = this.svgObjects.filter((obj) => obj.class === 'magnifyArea')
+
+      if (!magnifyObjects.length) return
+
+      this.clearMagnifyCache()
+
+      const base = this.getRenderedImage({ t: null, renderCall: false })
+      if (!base) return
+
+      const width = base.width
+      const height = base.height
+
+      // Create composite source (base + overlay)
+      const compositeCanvas = document.createElement('canvas')
+      compositeCanvas.width = width
+      compositeCanvas.height = height
+
+      const compositeCtx = compositeCanvas.getContext('2d')
+
+      // Draw base image
+      compositeCtx.drawImage(base, 0, 0)
+
+      // Draw existing overlay
+      if (this.overlayImage) {
+        compositeCtx.drawImage(this.overlayImage, 0, 0)
+      }
+
+      // Draw existing blur overlay
+      // Get canvas with class name blur-overlay-canvas
+      const blurOverlayCanvas = document.querySelector('.blur-overlay-canvas')
+      if (blurOverlayCanvas) {
+        compositeCtx.drawImage(blurOverlayCanvas, 0, 0)
+      }
+
+      // Collect unique zoom levels
+      const zoomLevels = new Set(
+        magnifyObjects.map((obj) => obj.magnify?.zoom || obj.attrs['data-magnify-zoom'] || 2),
+      )
+
+      zoomLevels.forEach((zoom) => {
+        if (this.magnifyCache.has(zoom)) return
+
+        const magnifyCanvas = document.createElement('canvas')
+        magnifyCanvas.width = width
+        magnifyCanvas.height = height
+
+        const ctx = magnifyCanvas.getContext('2d')
+
+        // Just store composite source for later cropping
+        ctx.drawImage(compositeCanvas, 0, 0)
+
+        this.magnifyCache.set(zoom, magnifyCanvas)
+      })
+    },
+
+    /**
      * Generates the next default name for a new SVG or blur object
      * @param {string} objectClass - The class of the object ('svg', 'blur', or 'magnifyArea')
      * @param {string} objectType - The type/tag of the object (e.g., 'rectangle', 'circle', etc.)
@@ -1388,28 +1495,26 @@ export const useImageStore = defineStore('imageStore', {
       if (objectClass === 'blur') {
         baseName = 'blur'
         return `${paddingText}${baseName}`
+      } else if (objectClass === 'magnifyArea') {
+        baseName = 'magnifyArea'
+        return `${paddingText}${baseName}`
       } else {
-        if (objectClass === 'magnifyArea') {
-          baseName = 'magnifyArea'
-          return `${paddingText}${baseName}`
-        } else {
-          switch (objectType) {
-            case 'rectangle':
-            case 'rect':
-              baseName = 'rectangle'
-              break
-            case 'ellipse':
-              baseName = 'ellipse'
-              break
-            case 'line':
-              baseName = 'line'
-              break
-            case 'text':
-              baseName = 'text'
-              break
-          }
-          return `${paddingText}${baseName}`
+        switch (objectType) {
+          case 'rectangle':
+          case 'rect':
+            baseName = 'rectangle'
+            break
+          case 'ellipse':
+            baseName = 'ellipse'
+            break
+          case 'line':
+            baseName = 'line'
+            break
+          case 'text':
+            baseName = 'text'
+            break
         }
+        return `${paddingText}${baseName}`
       }
     },
 

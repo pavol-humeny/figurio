@@ -5,7 +5,6 @@ import { useHistoryStore } from '@/stores/historyStore'
 import { useViewportStore } from '@/stores/viewportStore'
 import { useI18n } from 'vue-i18n'
 import { useEditorStore } from '@/stores/editorStore'
-import { useToastModal } from '@/composables/modals/useToastModal'
 import { useUiStore } from '@/stores/uiStore'
 import { viewportConfig } from '@/config/viewportConfig.js'
 import { useImagePipeline } from '@/composables/editor/useImagePipeline'
@@ -20,7 +19,6 @@ const historyStore = useHistoryStore()
 const viewportStore = useViewportStore()
 const editorStore = useEditorStore()
 const uiStore = useUiStore()
-const { showToastModal } = useToastModal()
 const { renderUpTo } = useImagePipeline(imageStore, uiStore)
 const { showConfirmModal } = useConfirmModal()
 
@@ -303,17 +301,39 @@ const onMouseDown = async (event) => {
   const viewport = document.getElementById('viewport-content')
   if (!viewport.contains(event.target)) return
 
+  let confirmNeeded = false
+
   if (imageStore.needRasterization) {
-    // Show warning toast
-    showToastModal(
-      'warning',
-      t('tools.brush.needRasterizationWarning.title'),
-      t('tools.brush.needRasterizationWarning.message'),
+    confirmNeeded = true
+    const confirmed = await showConfirmModal(
+      t('tools.confirmNeedRasterization.title'),
+      t('tools.confirmNeedRasterization.message'),
+      t('tools.confirmNeedRasterization.cancel'),
+      t('tools.confirmNeedRasterization.confirm'),
     )
-    return
+    if (confirmed) {
+      const result = await imageStore.rasterize('editor', {}, t)
+
+      imageStore.addImageOperation({
+        type: 'rasterize',
+        params: {
+          overlay: result.overlay,
+        },
+        cost: 'high',
+        affectsGeometry: true,
+      })
+
+      addUserEvent('applyOperation', {
+        tool: 'rasterize',
+        settings: {},
+      })
+
+      await renderUpTo(imageStore.renderPipeline.currentOpIndex + 1, { t, imageStore })
+    }
   }
 
   if (imageStore.fileType === 'pdf') {
+    confirmNeeded = true
     const confirmed = await showConfirmModal(
       t('tools.confirmNeedBaseImageRasterization.title'),
       t('tools.confirmNeedBaseImageRasterization.message'),
@@ -337,7 +357,9 @@ const onMouseDown = async (event) => {
     await renderUpTo(imageStore.renderPipeline.currentOpIndex + 1, { t, imageStore })
 
     historyStore.push(imageStore.getSnapshot())
+  }
 
+  if (confirmNeeded) {
     return
   }
 

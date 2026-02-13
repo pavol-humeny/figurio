@@ -1,170 +1,56 @@
 import { editorConfig } from '@/config/editorConfig'
 import { ref, computed, watch, watchEffect, onMounted, nextTick } from 'vue'
-import { useConsole } from '@/composables/common/useConsole.js'
-const { log } = useConsole()
 import { useApi } from '@/composables/common/useApi'
 const { addUserEvent } = useApi()
+import { useConfirmModal } from '../modals/useConfirmModal'
+import { useImagePipeline } from '../editor/useImagePipeline'
 
 /**
- * Magnify area settings
+ * Magnify area settings (CENTER ONLY)
  */
 const localMagnifyAreaSettings = ref({
-  type: 'center', // center, corner
-  sourceX: 0,
-  sourceY: 0,
-  resultX: 0,
-  resultY: 0,
-  resultPosition: 'top-right', // top-left, top-right, bottom-left, bottom-right
-  radius: 0,
+  positionX: 0,
+  positionY: 0,
+  radius: 0, // displayed radius
   zoom: 2,
   outlineWidth: 1,
   outlineColor: '#000000',
 })
 
-/**
- * Logic for the magnify area tool
- */
-export function useMagnifyAreaTool(imageStore, historyStore, editorStore, workspaceStore, t) {
-  /**
-   * Active magnify area object being edited
-   */
+export function useMagnifyAreaTool(imageStore, historyStore, editorStore, uiStore, t) {
+  const { showConfirmModal } = useConfirmModal()
+  const { renderUpTo } = useImagePipeline(imageStore, uiStore)
+
   const activeObject = ref(null)
-
-  /**
-   * Padding between magnify area and image edges
-   */
-  const resultPadding = computed(() => {
-    // Half of stroke width
-    return localMagnifyAreaSettings.value.outlineWidth / 2
-  })
-
-  /**
-   * Computed source image data URL for magnification
-   */
-  const magnifyImageSrc = computed(
-    () => imageStore.getRenderedImage({ t, renderCall: false }).toDataURL() ?? '',
-  )
-
-  // ------------------------------
-  // Position
-  // ------------------------------
-  /**
-   * Hide position and dimensions settings in the magnify area tool settings
-   */
   const hidePositionAndDimensions = ref(true)
 
-  /**
-   * Maximum position for source X and Y coordinate of source magnify area
-   */
+  // ------------------------------
+  // Bounds
+  // ------------------------------
+
   const maxMagnifyAreaSourcePositionX = computed(() => {
-    return imageStore.fileDimensions.width - localMagnifyAreaSettings.value.radius / 2
+    return imageStore.fileDimensions.width - localMagnifyAreaSettings.value.radius
   })
+
   const maxMagnifyAreaSourcePositionY = computed(() => {
-    return imageStore.fileDimensions.height - localMagnifyAreaSettings.value.radius / 2
+    return imageStore.fileDimensions.height - localMagnifyAreaSettings.value.radius
   })
 
-  // ------------------------------
-  // Radius
-  // ------------------------------
-  /**
-   * Maximum radius for the magnify area
-   */
   const maxMagnifyAreaRadius = computed(() => {
-    const smallerDimension = imageStore.getSmallerImageDimension()
-
-    let radius = Math.floor(smallerDimension / localMagnifyAreaSettings.value.zoom / 2)
-
-    // if type center, also multiply by zoom to get displayed size
-    if (localMagnifyAreaSettings.value.type === 'center') {
-      radius = Math.floor(radius * localMagnifyAreaSettings.value.zoom)
-    }
-
-    return radius
+    const smaller = imageStore.getSmallerImageDimension()
+    return Math.floor(smaller / 2)
   })
 
-  /**
-   * Watch for active tab changes and reset radius
-   */
-  watch(
-    () => workspaceStore.activeTabIndex,
-    () => {
-      if (localMagnifyAreaSettings.value.radius > maxMagnifyAreaRadius.value) {
-        localMagnifyAreaSettings.value.radius = maxMagnifyAreaRadius.value
-      }
-    },
-    { immediate: true },
-  )
-
-  // ------------------------------
-  // Zoom
-  // ------------------------------
-  /**
-   * Options for the magnify area zoom levels
-   */
-  const magnifyAreaZoomOptions = [
-    {
-      value: 2,
-      label: '2x',
-    },
-    {
-      value: 3,
-      label: '3x',
-    },
-    {
-      value: 4,
-      label: '4x',
-    },
-  ]
-
-  // ------------------------------
-  // Outline
-  // ------------------------------
-  /**
-   * Maximum outline width
-   */
   const maxOutlineWidth = computed(() => {
     return Math.max(Math.floor(localMagnifyAreaSettings.value.radius / 2), 1)
   })
 
-  /**
-   * Options for the magnify area result position
-   */
-  const resultPositionOptions = [
-    {
-      label: t('tools.magnifyArea.settings.general.resultPosition.options.top-left'),
-      value: 'top-left',
-    },
-    {
-      label: t('tools.magnifyArea.settings.general.resultPosition.options.top-right'),
-      value: 'top-right',
-    },
-    {
-      label: t('tools.magnifyArea.settings.general.resultPosition.options.bottom-left'),
-      value: 'bottom-left',
-    },
-    {
-      label: t('tools.magnifyArea.settings.general.resultPosition.options.bottom-right'),
-      value: 'bottom-right',
-    },
+  const magnifyAreaZoomOptions = [
+    { value: 2, label: '2x' },
+    { value: 3, label: '3x' },
+    { value: 4, label: '4x' },
   ]
 
-  /**
-   * Options for the magnify area type (center or corner)
-   */
-  const magnifyAreaTypeOptions = [
-    {
-      label: t('tools.magnifyArea.settings.general.type.options.center'),
-      value: 'center',
-    },
-    {
-      label: t('tools.magnifyArea.settings.general.type.options.corner'),
-      value: 'corner',
-    },
-  ]
-
-  /**
-   * Save current config to editor store
-   */
   const saveConfigToEditorStore = () => {
     for (const key in editorStore.toolsConfig.magnifyArea) {
       if (key in localMagnifyAreaSettings.value) {
@@ -173,395 +59,203 @@ export function useMagnifyAreaTool(imageStore, historyStore, editorStore, worksp
     }
   }
 
-  /**
-   * Generate SVG pattern for magnify area
-   *
-   * @param {string} patternId - Unique ID for the pattern
-   * @param {number} sourceX - X coordinate of the source magnify area
-   * @param {number} sourceY - Y coordinate of the source magnify area
-   * @param {number} resultX - X coordinate of the result magnify area
-   * @param {number} resultY - Y coordinate of the result magnify area
-   * @param {number} zoom - Zoom factor for the magnification
-   * @return {string} SVG pattern string
-   */
-  const generateMagnifyPattern = (patternId, sourceX, sourceY, resultX, resultY) => {
-    const offsetX = resultX - sourceX * localMagnifyAreaSettings.value.zoom
-    const offsetY = resultY - sourceY * localMagnifyAreaSettings.value.zoom
-    const transform = `translate(${offsetX}, ${offsetY}) scale(${localMagnifyAreaSettings.value.zoom})`
+  // ------------------------------
+  // Selection watch
+  // ------------------------------
 
-    return `
-    <pattern id="${patternId}" patternUnits="userSpaceOnUse"
-      width="${imageStore.fileDimensions.width}" height="${imageStore.fileDimensions.height}">
-      <image href="${magnifyImageSrc.value}"
-        x="0" y="0"
-        width="${imageStore.fileDimensions.width}" height="${imageStore.fileDimensions.height}"
-        transform="${transform}" />
-    </pattern>
-  `.trim()
-  }
-
-  /**
-   * Watch selected object and load magnify settings
-   */
   watch(
     () => imageStore.selectedSvgObjectId,
     async (newId) => {
-      if (newId !== null) {
-        await nextTick()
-        const object = imageStore.getSvgObjectById(newId)
-        if (!object || object.class !== 'magnifyArea') return
-
-        activeObject.value = object
-        hidePositionAndDimensions.value = false
-
-        const padding = resultPadding.value
-
-        const source =
-          object.subClass === 'magnify-source'
-            ? object
-            : imageStore.getSvgObjectById(object.linkedSourceId)
-        const result =
-          object.subClass === 'magnify-result'
-            ? object
-            : imageStore.getSvgObjectById(object.linkedResultId)
-
-        if (!source || !result) return
-
-        // Set type
-        if (source.attrs.cx === result.attrs.cx && source.attrs.cy === result.attrs.cy) {
-          localMagnifyAreaSettings.value.type = 'center'
-        } else {
-          localMagnifyAreaSettings.value.type = 'corner'
-        }
-
-        // Source position
-        localMagnifyAreaSettings.value.sourceX = source.attrs.cx
-        localMagnifyAreaSettings.value.sourceY = source.attrs.cy
-
-        // Result position
-        localMagnifyAreaSettings.value.resultX = result.attrs.cx
-        localMagnifyAreaSettings.value.resultY = result.attrs.cy
-
-        // Radius
-        let radius = source.attrs.rx
-
-        // Zoom
-        const zoom = result.attrs.rx / radius
-        localMagnifyAreaSettings.value.zoom = zoom
-
-        // Displayed radius (if type is center, show radius of result area)
-        if (localMagnifyAreaSettings.value.type === 'center') {
-          radius *= zoom
-        }
-        localMagnifyAreaSettings.value.radius = radius
-
-        // Compute result radius
-        const resultRadius = radius * zoom
-        const { width, height } = imageStore.fileDimensions
-
-        // Get resultPosition from coordinates
-        let resultPosition = 'bottom-right'
-        const posX = result.attrs.cx
-        const posY = result.attrs.cy
-
-        if (Math.abs(posX - (padding + resultRadius)) < 2) {
-          if (Math.abs(posY - (padding + resultRadius)) < 2) {
-            resultPosition = 'top-left'
-          } else if (Math.abs(posY - (height - padding - resultRadius)) < 2) {
-            resultPosition = 'bottom-left'
-          }
-        } else if (Math.abs(posX - (width - padding - resultRadius)) < 2) {
-          if (Math.abs(posY - (padding + resultRadius)) < 2) {
-            resultPosition = 'top-right'
-          } else if (Math.abs(posY - (height - padding - resultRadius)) < 2) {
-            resultPosition = 'bottom-right'
-          }
-        }
-
-        // Result position
-        localMagnifyAreaSettings.value.resultPosition = resultPosition
-
-        // Outline width
-        localMagnifyAreaSettings.value.outlineWidth = source.attrs['stroke-width']
-
-        // Outline color
-        localMagnifyAreaSettings.value.outlineColor = source.attrs.stroke
-
-        activeObject.value = source
-      } else {
+      if (newId === null) {
         activeObject.value = null
         hidePositionAndDimensions.value = true
+        return
       }
+
+      await nextTick()
+
+      const obj = imageStore.getSvgObjectById(newId)
+      if (!obj || obj.class !== 'magnifyArea') return
+
+      activeObject.value = obj
+      hidePositionAndDimensions.value = false
+
+      localMagnifyAreaSettings.value.positionX = obj.attrs.cx
+      localMagnifyAreaSettings.value.positionY = obj.attrs.cy
+      localMagnifyAreaSettings.value.radius = obj.attrs.rx
+      localMagnifyAreaSettings.value.outlineWidth = obj.attrs['stroke-width'] || 1
+      localMagnifyAreaSettings.value.outlineColor = obj.attrs.stroke || '#000'
+      localMagnifyAreaSettings.value.zoom = obj.magnify?.zoom || obj.attrs['data-magnify-zoom'] || 2
     },
     { immediate: true },
   )
 
-  /**
-   * Update the localMagnifyAreaSettings when activeObject changes outside this composable
-   */
   watchEffect(() => {
-    const object = activeObject.value
-    if (!object || editorStore.selectedToolKey !== 'magnifyArea') return
+    const obj = activeObject.value
+    if (!obj || editorStore.selectedToolKey !== 'magnifyArea') return
+    if (obj.class !== 'magnifyArea') return
 
-    if (object.class === 'magnifyArea') {
-      if (object.subClass === 'magnify-source') {
-        // Source position
-        localMagnifyAreaSettings.value.sourceX = object.attrs.cx
-        localMagnifyAreaSettings.value.sourceY = object.attrs.cy
-      }
-    }
+    localMagnifyAreaSettings.value.positionX = obj.attrs.cx
+    localMagnifyAreaSettings.value.positionY = obj.attrs.cy
   })
 
-  /**
-   * Apply changes to both objects
-   * @param {boolean} commit - When true, push to history store
-s
-   */
+  // ------------------------------
+  // Apply changes
+  // ------------------------------
+
   const applyLocalMagnifyAreaSettings = (commit = true) => {
-    if (!activeObject.value) return
+    const obj = activeObject.value
+    if (!obj || obj.class !== 'magnifyArea') return
 
-    const settings = localMagnifyAreaSettings.value
-    const source = activeObject.value
-    if (!source) return
+    const s = localMagnifyAreaSettings.value
 
-    const result = imageStore.getSvgObjectById(source.linkedResultId)
-    if (!result) return
+    obj.attrs.cx = s.positionX
+    obj.attrs.cy = s.positionY
+    obj.attrs.rx = s.radius
+    obj.attrs.ry = s.radius
+    obj.attrs.stroke = s.outlineColor
+    obj.attrs['stroke-width'] = s.outlineWidth
+    obj.attrs.fill = 'transparent'
+    obj.attrs['fill-opacity'] = 0
 
-    let radius = settings.radius
-    // If type is center, adjust radius to match displayed size
-    if (settings.type === 'center') {
-      radius /= settings.zoom
-    }
+    if (!obj.magnify) obj.magnify = {}
+    obj.magnify.zoom = s.zoom
+    obj.attrs['data-magnify-zoom'] = s.zoom
 
-    const zoom = settings.zoom
-    const resultRadius = radius * zoom
-    const padding = resultPadding.value
-
-    const imageWidth = imageStore.fileDimensions.width
-    const imageHeight = imageStore.fileDimensions.height
-
-    // Compute result position based on selected corner
-    let resultX = 0
-    let resultY = 0
-
-    if (settings.type === 'center') {
-      resultX = settings.sourceX
-      resultY = settings.sourceY
-      source.attrs.type = 'center'
-      result.attrs.type = 'center'
-    } else {
-      source.attrs.type = 'corner'
-      result.attrs.type = 'corner'
-      switch (settings.resultPosition) {
-        case 'top-left':
-          resultX = padding + resultRadius
-          resultY = padding + resultRadius
-          break
-        case 'top-right':
-          resultX = imageWidth - padding - resultRadius
-          resultY = padding + resultRadius
-          break
-        case 'bottom-left':
-          resultX = padding + resultRadius
-          resultY = imageHeight - padding - resultRadius
-          break
-        case 'bottom-right':
-        default:
-          resultX = imageWidth - padding - resultRadius
-          resultY = imageHeight - padding - resultRadius
-          break
-      }
-    }
-
-    // Update source object
-    source.attrs.cx = settings.sourceX
-    source.attrs.cy = settings.sourceY
-    source.attrs.rx = radius
-    source.attrs.ry = radius
-
-    source.attrs.visibility =
-      localMagnifyAreaSettings.value.type === 'center' ? 'hidden' : 'visible'
-
-    // Update result object
-    result.attrs.cx = resultX
-    result.attrs.cy = resultY
-    result.attrs.rx = resultRadius
-    result.attrs.ry = resultRadius
-
-    // Generate pattern
-    const patternId = `magnify-fill-${result.id}`
-    const pattern = generateMagnifyPattern(
-      patternId,
-      settings.sourceX,
-      settings.sourceY,
-      resultX,
-      resultY,
-    )
-
-    // Add pattern to image store
-    imageStore.addOrReplaceSvgDef(patternId, pattern)
-    result.attrs.fill = `url(#${patternId})`
-
-    // Outline settings
-    source.attrs['stroke-width'] = settings.outlineWidth
-    source.attrs.stroke = settings.outlineColor
-    result.attrs['stroke-width'] = settings.outlineWidth
-    result.attrs.stroke = settings.outlineColor
-
-    // Source fill
-    source.attrs.fill = settings.outlineColor
-
-    if (settings.type === 'corner') {
-      imageStore.selectedSvgObjectId = source.id
-    } else {
-      imageStore.selectedSvgObjectId = result.id
-    }
-
-    // Push to history only when explicitly requested
     if (commit) {
       addUserEvent('applyOperation', {
         tool: 'magnifyArea',
-        settings: { ...localMagnifyAreaSettings.value },
+        settings: { ...s },
       })
 
       saveConfigToEditorStore()
-
       historyStore.push(imageStore.getSnapshot(t))
     }
+
+    imageStore.magnifyOverlayNeedToBeRendered = true
   }
 
-  /**
-   * Add a new magnify area
-   * @param {number} x - X coordinate of the source magnify area
-   * @param {number} y - Y coordinate of the source magnify area
-   */
+  // ------------------------------
+  // Add magnify area
+  // ------------------------------
   const addMagnifyArea = async (x, y) => {
-    const sourceId = Date.now()
-    const resultId = sourceId + 1
+    let confirmNeeded = false
 
-    let radius = localMagnifyAreaSettings.value.radius
-    // If type is center, adjust radius to match displayed size
-    if (localMagnifyAreaSettings.value.type === 'center') {
-      radius /= localMagnifyAreaSettings.value.zoom
-    }
+    // SVG objects rasterization
+    if (imageStore.needRasterizationForMagnifyArea) {
+      confirmNeeded = true
+      const confirmed = await showConfirmModal(
+        t('tools.confirmNeedRasterization.title'),
+        t('tools.confirmNeedRasterization.message'),
+        t('tools.confirmNeedRasterization.cancel'),
+        t('tools.confirmNeedRasterization.confirm'),
+      )
+      if (confirmed) {
+        const result = await imageStore.rasterize('editor', {}, t)
 
-    const zoom = localMagnifyAreaSettings.value.zoom
-    const resultRadius = radius * zoom
-    const padding = resultPadding.value
+        imageStore.addImageOperation({
+          type: 'rasterize',
+          params: {
+            overlay: result.overlay,
+          },
+          cost: 'high',
+          affectsGeometry: true,
+        })
 
-    const imageWidth = imageStore.fileDimensions.width
-    const imageHeight = imageStore.fileDimensions.height
+        addUserEvent('applyOperation', {
+          tool: 'rasterize',
+          settings: {},
+        })
 
-    // Result position
-    let outputX = 0
-    let outputY = 0
-
-    if (localMagnifyAreaSettings.value.type === 'center') {
-      outputX = x
-      outputY = y
-    } else {
-      switch (localMagnifyAreaSettings.value.resultPosition) {
-        case 'top-left':
-          outputX = padding + resultRadius
-          outputY = padding + resultRadius
-          break
-        case 'top-right':
-          outputX = imageWidth - padding - resultRadius
-          outputY = padding + resultRadius
-          break
-        case 'bottom-left':
-          outputX = padding + resultRadius
-          outputY = imageHeight - padding - resultRadius
-          break
-        case 'bottom-right':
-        default:
-          outputX = imageWidth - padding - resultRadius
-          outputY = imageHeight - padding - resultRadius
-          break
+        await renderUpTo(imageStore.renderPipeline.currentOpIndex + 1, { t, imageStore })
       }
     }
 
-    // Pattern
-    const patternId = `magnify-fill-${resultId}`
-    const pattern = generateMagnifyPattern(patternId, x, y, outputX, outputY)
+    // Base image rasterization
+    if (imageStore.fileType === 'pdf') {
+      confirmNeeded = true
+      const confirmed = await showConfirmModal(
+        t('tools.confirmNeedBaseImageRasterization.title'),
+        t('tools.confirmNeedBaseImageRasterization.message'),
+        t('tools.confirmNeedBaseImageRasterization.cancel'),
+        t('tools.confirmNeedBaseImageRasterization.confirm'),
+      )
+      if (confirmed) {
+        imageStore.addImageOperation({
+          type: 'rasterizePdf',
+          params: {},
+          cost: 'high',
+          affectsGeometry: false,
+        })
 
-    imageStore.addOrReplaceSvgDef(patternId, pattern)
+        addUserEvent('applyOperation', {
+          tool: 'rasterizePdf',
+          settings: {},
+        })
 
-    // Set source
-    const source = {
-      id: sourceId,
+        await renderUpTo(imageStore.renderPipeline.currentOpIndex + 1, { t, imageStore })
+
+        historyStore.push(imageStore.getSnapshot())
+      }
+    }
+
+    if (confirmNeeded) {
+      return
+    }
+
+    const id = Date.now()
+    const s = localMagnifyAreaSettings.value
+
+    const obj = {
+      id,
       name: imageStore.getNextObjectName('magnifyArea', null),
       tag: 'ellipse',
       class: 'magnifyArea',
-      subClass: 'magnify-source',
       attrs: {
-        type: localMagnifyAreaSettings.value.type,
         cx: x,
         cy: y,
-        rx: radius,
-        ry: radius,
-        stroke: localMagnifyAreaSettings.value.outlineColor,
-        'stroke-width': localMagnifyAreaSettings.value.outlineWidth,
-        fill: localMagnifyAreaSettings.value.outlineColor,
-        'fill-opacity': 0.1,
-        visibility: localMagnifyAreaSettings.value.type === 'center' ? 'hidden' : 'visible',
+        rx: s.radius,
+        ry: s.radius,
+        stroke: s.outlineColor,
+        'stroke-width': s.outlineWidth,
+        fill: 'transparent',
+        'fill-opacity': 0,
+        'data-magnify-zoom': s.zoom,
       },
-      linkedResultId: resultId,
-    }
-
-    // Set result
-    const result = {
-      id: resultId,
-      name: imageStore.getNextObjectName('magnifyArea', null),
-      tag: 'ellipse',
-      class: 'magnifyArea',
-      subClass: 'magnify-result',
-      attrs: {
-        type: localMagnifyAreaSettings.value.type,
-        cx: outputX,
-        cy: outputY,
-        rx: resultRadius,
-        ry: resultRadius,
-        stroke: localMagnifyAreaSettings.value.outlineColor,
-        'stroke-width': localMagnifyAreaSettings.value.outlineWidth,
-        fill: `url(#${patternId})`,
+      magnify: {
+        zoom: s.zoom,
       },
-      linkedSourceId: sourceId,
     }
 
-    // Add svg objects
-    imageStore.svgObjects.push(source)
-    imageStore.svgObjects.push(result)
-
-    if (localMagnifyAreaSettings.value.type === 'center') {
-      imageStore.selectedSvgObjectId = resultId
-    } else {
-      imageStore.selectedSvgObjectId = sourceId
-    }
-
-    log('selected', imageStore.selectedSvgObjectId)
+    imageStore.svgObjects.push(obj)
+    imageStore.selectedSvgObjectId = id
 
     addUserEvent('applyOperation', {
       tool: 'magnifyArea',
-      settings: { ...localMagnifyAreaSettings.value },
+      settings: { ...s },
     })
 
     saveConfigToEditorStore()
-
     historyStore.push(imageStore.getSnapshot(t))
+
+    imageStore.magnifyOverlayNeedToBeRendered = true
   }
 
+  // ------------------------------
+  // Init
+  // ------------------------------
+
   onMounted(() => {
-    localMagnifyAreaSettings.value.type = editorStore.toolsConfig.magnifyArea.type
     localMagnifyAreaSettings.value.zoom = editorStore.toolsConfig.magnifyArea.zoom
+
     localMagnifyAreaSettings.value.outlineWidth = editorStore.toolsConfig.magnifyArea.outlineWidth
+
     localMagnifyAreaSettings.value.outlineColor = editorStore.toolsConfig.magnifyArea.outlineColor
 
     if (editorStore.toolsConfig.magnifyArea.radius !== 0) {
       localMagnifyAreaSettings.value.radius = editorStore.toolsConfig.magnifyArea.radius
     } else {
       localMagnifyAreaSettings.value.radius = Math.floor(
-        // Set default radius to 10 percent of smaller dimension of image
         imageStore.getSmallerImageDimension() * editorConfig.magnifyAreaDefaultRadiusFromImage,
       )
 
@@ -577,10 +271,7 @@ s
     addMagnifyArea,
     maxMagnifyAreaSourcePositionX,
     maxMagnifyAreaSourcePositionY,
-    generateMagnifyPattern,
     magnifyAreaZoomOptions,
-    resultPositionOptions,
     maxOutlineWidth,
-    magnifyAreaTypeOptions,
   }
 }

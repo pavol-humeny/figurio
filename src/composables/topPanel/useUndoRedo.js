@@ -49,6 +49,24 @@ export function useUndoRedo(historyStore, imageStore, uiStore, t) {
   }
 
   /**
+   * Reset history to the initial state (first snapshot) and apply it
+   */
+  const resetHistory = async () => {
+    const snapshot = historyStore.resetHistory()
+    if (!snapshot) return
+
+    uiStore.isApplying = true
+
+    await imageStore.applySnapshot(snapshot)
+    await renderUpTo(snapshot.opIndex, { t, imageStore })
+
+    imageStore.frameNeedToBeRendered = true
+
+    uiStore.isApplying = false
+    uiStore.isApplyingFrame = false
+  }
+
+  /**
    * Reapply a previously undone snapshot
    */
   const redo = async () => {
@@ -75,5 +93,6 @@ export function useUndoRedo(historyStore, imageStore, uiStore, t) {
     redo,
     canUndo,
     canRedo,
+    resetHistory,
   }
 }
