@@ -101,7 +101,11 @@ export function useToolsPanel(editorStore, imageStore, uiStore, workspaceStore, 
         newVal.tool === 'text' ||
         newVal.tool === 'select'
       ) {
-        if (imageStore.svgObjects.length > 0) {
+        if (
+          imageStore.svgObjects.length > 0 ||
+          imageStore.blurObjects.length > 0 ||
+          imageStore.magnifyObjects.length > 0
+        ) {
           uiStore.svgObjectsListDisplayed = true
         } else {
           uiStore.svgObjectsListDisplayed = false
@@ -179,7 +183,7 @@ export function useToolsPanel(editorStore, imageStore, uiStore, workspaceStore, 
    * @param {string} toolKey - Tool key to toggle
    * @param {string | null} [tabKey] - Optional tab key to activate
    */
-  const toggleTool = async (toolKey, tabKey, canDeselect = true) => {
+  const toggleTool = async (toolKey, tabKey, canDeselect = true, resetPreviousTool = true) => {
     if (!imageStore.isImageLoaded || editorStore.isExportModalOpen) return
     if (editorStore.enableTools[toolKey] === false) {
       log('Tool is disabled:', toolKey)
@@ -190,6 +194,11 @@ export function useToolsPanel(editorStore, imageStore, uiStore, workspaceStore, 
         t('tools.toolIsNotAvailable.message'),
       )
       return
+    }
+
+    // Reset previous tool key
+    if (resetPreviousTool) {
+      editorStore.previousToolKey = null
     }
 
     // If already selected, deselect

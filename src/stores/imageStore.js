@@ -179,8 +179,6 @@ export const useImageStore = defineStore('imageStore', {
       quality: 100,
     },
 
-    blurPreviewUrl: '',
-
     // Value for raster image rendering
     /** Rendered image - showed image in canvas */
     renderedImage: null,
@@ -212,6 +210,7 @@ export const useImageStore = defineStore('imageStore', {
     /** Array of blur objects */
     blurObjects: [],
 
+    /** Array of magnify objects */
     magnifyObjects: [],
 
     /** ID of the currently selected SVG object */
@@ -223,13 +222,12 @@ export const useImageStore = defineStore('imageStore', {
     /** Dynamic SVG definitions */
     svgDefs: [],
     /** Array of blur image elements */
-    // blurImages: [],
 
-    //----
-    blurCache: new Map(), // strength -> canvas
+    /** Canvases for blur preview */
+    blurCache: new Map(), // key:strength -> canvas
 
-    magnifyCache: new Map(), // zoom -> canvas
-    //----
+    /** Canvases for magnify preview */
+    magnifyCache: new Map(), // key:zoom -> canvas
 
     /** SVG object copied to clipboard */
     clipboardSvgObject: null,
@@ -1029,7 +1027,6 @@ export const useImageStore = defineStore('imageStore', {
 
         const quality = this.newFileDimensions.quality / 100
 
-        // this.previewUrl = baseImage.toDataURL(mimeType, quality)
         if (renderAsRaster && overlay) {
           // Merge base image + overlay into a new canvas
           const mergeCanvas = document.createElement('canvas')
@@ -2087,7 +2084,6 @@ export const useImageStore = defineStore('imageStore', {
       this.renderedImage = null
       this.tmpRenderedImage = null
       this.previewUrl = ''
-      this.blurPreviewUrl = ''
 
       // BACKGROUND REMOVAL CANVASES
       this.removalCanvas = null

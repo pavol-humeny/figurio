@@ -54,8 +54,8 @@ const {
 </script>
 
 <template>
-  <div v-if="props.isVisible" class="settings-content-wrapper">
-    <div v-if="isZIndexControlVisible" class="content-wrapper">
+  <div v-if="props.isVisible && isZIndexControlVisible" class="settings-content-wrapper">
+    <div class="content-wrapper">
       <div class="content-title">
         <p>
           {{ $t('tools.magnifyArea.settings.general.zIndex.label') }}

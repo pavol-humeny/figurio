@@ -62,12 +62,20 @@ export function useSvgObjectsList(
    * Automatically show/hide panel based on presence of SVG objects
    */
   watch(
-    () => imageStore.svgObjects.length,
-    (newVal) => {
-      if (newVal === 0) {
-        uiStore.svgObjectsListDisplayed = false
-      } else {
-        uiStore.svgObjectsListDisplayed = true
+    () => [
+      imageStore.svgObjects.length,
+      imageStore.blurObjects.length,
+      imageStore.magnifyObjects.length,
+    ],
+    ([svgLen, blurLen, magnifyLen]) => {
+      if (
+        editorStore.selectedToolKey === 'shape' ||
+        editorStore.selectedToolKey === 'blur' ||
+        editorStore.selectedToolKey === 'magnifyArea' ||
+        editorStore.selectedToolKey === 'text' ||
+        editorStore.selectedToolKey === 'select'
+      ) {
+        uiStore.svgObjectsListDisplayed = svgLen + blurLen + magnifyLen > 0
       }
     },
     { immediate: true },
@@ -129,54 +137,72 @@ export function useSvgObjectsList(
    */
   const mappedObjects = computed({
     get() {
-      // Filter out certain magnifyArea objects
       const svgObjs = imageStore.svgObjects
-        .filter((obj) => {
-          if (obj.class === 'magnifyArea') {
-            return false
-          }
-          return true
-        })
         .map((obj) => ({
           id: obj.id,
           name: obj.name,
-          draggable: true, // Can be reordered
+          type: 'svg',
+          draggable: true,
         }))
-        .reverse() // Reverse to match visual stacking order
-
-      // Non-draggable blur objects
-      // const blurObjs = imageStore.blurObjects.map((obj) => ({
-      //   id: obj.id,
-      //   name: obj.name,
-      //   draggable: false,
-      // }))
-
-      return [...svgObjs]
-    },
-    set(newArray) {
-      // Reorder imageStore.svgObjects based on newArray order
-      const draggableArray = newArray
-        .filter((o) => o.draggable)
-        .slice()
         .reverse()
-      const filteredIds = draggableArray.map((o) => o.id)
-      const newSvgObjects = []
 
-      filteredIds.forEach((id) => {
-        const original = imageStore.svgObjects.find((o) => o.id === id)
-        if (original) {
-          const updatedName = draggableArray.find((o) => o.id === id)?.name
-          if (updatedName) original.name = updatedName
-          newSvgObjects.push(original)
+      const blurObjs = imageStore.blurObjects
+        .map((obj) => ({
+          id: obj.id,
+          name: obj.name,
+          type: 'blur',
+          draggable: true,
+        }))
+        .reverse()
+
+      const magnifyObjs = imageStore.magnifyObjects
+        .map((obj) => ({
+          id: obj.id,
+          name: obj.name,
+          type: 'magnify',
+          draggable: true,
+        }))
+        .reverse()
+
+      return [...svgObjs, ...blurObjs, ...magnifyObjs]
+    },
+
+    set(newArray) {
+      const reordered = newArray.slice().reverse()
+
+      const newSvg = []
+      const newBlur = []
+      const newMagnify = []
+
+      reordered.forEach((item) => {
+        if (item.type === 'svg') {
+          const original = imageStore.svgObjects.find((o) => o.id === item.id)
+          if (original) {
+            original.name = item.name
+            newSvg.push(original)
+          }
+        }
+
+        if (item.type === 'blur') {
+          const original = imageStore.blurObjects.find((o) => o.id === item.id)
+          if (original) {
+            original.name = item.name
+            newBlur.push(original)
+          }
+        }
+
+        if (item.type === 'magnify') {
+          const original = imageStore.magnifyObjects.find((o) => o.id === item.id)
+          if (original) {
+            original.name = item.name
+            newMagnify.push(original)
+          }
         }
       })
 
-      // Add all other objects that were not filtered
-      imageStore.svgObjects.forEach((obj) => {
-        if (!filteredIds.includes(obj.id)) newSvgObjects.push(obj)
-      })
-
-      imageStore.svgObjects = newSvgObjects
+      imageStore.svgObjects = newSvg
+      imageStore.blurObjects = newBlur
+      imageStore.magnifyObjects = newMagnify
     },
   })
 
@@ -241,15 +267,19 @@ export function useSvgObjectsList(
   const renameObject = (id, newName) => {
     log('Renaming', id, 'to', newName)
 
-    const obj = imageStore.svgObjects.find((o) => o.id === id)
-    if (!obj) return
-    const oldName = obj.name
+    const obj =
+      imageStore.svgObjects.find((o) => o.id === id) ||
+      imageStore.blurObjects.find((o) => o.id === id) ||
+      imageStore.magnifyObjects.find((o) => o.id === id)
 
+    if (!obj) return
+
+    const oldName = obj.name
     const trimmed = newName.trim()
-    if (trimmed.length !== 0) {
+
+    if (trimmed.length > 0) {
       obj.name = trimmed
     } else {
-      obj.name = ''
       obj.name = oldName
     }
 
@@ -342,6 +372,20 @@ export function useSvgObjectsList(
     }
   })
 
+  /**
+   * Handles reordering of SVG objects, ensuring overlays are re-rendered if necessary.
+   */
+  const onReorder = () => {
+    if (editorStore.selectedToolKey === 'select') {
+      imageStore.blurOverlayNeedToBeRendered = true
+      imageStore.magnifyOverlayNeedToBeRendered = true
+    } else if (editorStore.selectedToolKey === 'blur') {
+      imageStore.blurOverlayNeedToBeRendered = true
+    } else if (editorStore.selectedToolKey === 'magnifyArea') {
+      imageStore.magnifyOverlayNeedToBeRendered = true
+    }
+  }
+
   return {
     mappedObjects,
     panelVars,
@@ -353,5 +397,6 @@ export function useSvgObjectsList(
     startEditing,
     editingInputRef,
     getElementName,
+    onReorder,
   }
 }

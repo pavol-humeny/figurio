@@ -615,7 +615,7 @@ export function useSvgObjects(
 
           editorStore.previousToolKey = editorStore.selectedToolKey
 
-          toggleTool(tool, tab)
+          toggleTool(tool, tab, false, false)
         }
       } else {
         if (editorStore.previousToolKey === 'select' && editorStore.selectedToolKey !== 'select') {

@@ -458,7 +458,7 @@ export function importFileService(
 
     imageStore.setRenderedImage(canvas)
     imageStore.originalImage = canvas
-    imageStore.previewUrl = canvas.toDataURL()
+    // imageStore.previewUrl = canvas.toDataURL()
 
     workspaceStore.addNewTab(imageStore.fileName, imageStore.fileFormat, t)
 
@@ -508,8 +508,7 @@ export function importFileService(
 
     imageStore.setRenderedImage(canvas)
     imageStore.originalImage = canvas
-    imageStore.previewUrl = canvas.toDataURL()
-    imageStore.blurPreviewUrl = canvas.toDataURL()
+    // imageStore.previewUrl = canvas.toDataURL()
 
     // Workspace tab
     workspaceStore.addNewTab(imageStore.fileName, imageStore.fileFormat, t)

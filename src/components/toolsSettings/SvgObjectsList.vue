@@ -27,6 +27,7 @@ const {
   startEditing,
   editingInputRef,
   getElementName,
+  onReorder
 } = useSvgObjectsList(useImageStore(), useHistoryStore(), useViewportStore(), useEditorStore(), useUiStore(), useWorkspaceStore(), t)
 </script>
 
@@ -36,7 +37,7 @@ const {
       <p>{{ t('tools.svgObjectsList.label') }}</p>
       <draggable v-model="mappedObjects" tag="div" item-key="id" handle=".drag-handle" animation="200"
         ghost-class="drag-ghost" class="svg-objects-list"
-        :move="({ element }) => element ? element.draggable !== false : true">
+        :move="({ element }) => element ? element.draggable !== false : true" @end="onReorder">
         <template #item="{ element }">
           <div class="svg-object-item" :class="{ selected: imageStore.selectedSvgObjectId === element.id }"
             @click="selectObject(element.id)">
