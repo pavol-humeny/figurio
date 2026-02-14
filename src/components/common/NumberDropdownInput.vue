@@ -2,6 +2,7 @@
   import ItemTip from './ItemTip.vue'
   import BaseIcon from '../icons/BaseIcon.vue'
   import { useNumberDropdownInput } from '@/composables/common/useNumberDropdownInput'
+  import { useUiStore } from '@/stores/uiStore'
 
   /**
    * @typedef {Object} NumberDropdownInputProps
@@ -85,7 +86,7 @@
     dropdownRef,
     dropdownStyle,
     dropdownReady
-  } = useNumberDropdownInput(props, emit)
+  } = useNumberDropdownInput(props, emit, useUiStore())
 
   /**
    * Expose methods for external use

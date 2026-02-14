@@ -175,11 +175,30 @@ export function useItemTip(options = {}, uiStore, editorStore) {
   }
 
   /**
+   * Watch for global dropdown open state to hide tooltip when any dropdown opens
+   */
+  watch(
+    () => uiStore.isDropdownOpen,
+    (active) => {
+      if (active) {
+        clearTimeout(hoverTimeout.value)
+        isVisible.value = false
+        uiStore.isItemTipVisible = false
+      }
+    },
+  )
+
+  /**
    * Handles mouseenter event and starts delayed tooltip show
    */
   const handleMouseEnter = () => {
-    // if (uiStore.isItemTipVisible) return
+    if (uiStore.isDropdownOpen) return
+
+    clearTimeout(hoverTimeout.value)
+
     hoverTimeout.value = setTimeout(() => {
+      if (uiStore.isDropdownOpen) return
+
       isVisible.value = true
       uiStore.isItemTipVisible = true
     }, delay)

@@ -20,7 +20,7 @@ import { ref, watch, onMounted, onBeforeUnmount, computed, nextTick } from 'vue'
  *   setValue: (val: number) => void
  * }}
  */
-export function useNumberDropdownInput(props, emit) {
+export function useNumberDropdownInput(props, emit, uiStore) {
   const { clamp, round } = useMath()
 
   /**
@@ -128,6 +128,13 @@ export function useNumberDropdownInput(props, emit) {
   const setValue = (newValue) => {
     inputValue.value = newValue
   }
+
+  /**
+   * Watch for dropdown visibility changes to update global state (for tooltips)
+   */
+  watch(showDropdown, (val) => {
+    uiStore.isDropdownOpen = val
+  })
 
   /**
    * Toggles the dropdown visibility

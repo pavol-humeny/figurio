@@ -157,6 +157,9 @@ export const useUiStore = defineStore('ui', {
     /** Whether any item tip is currently visible - use to show only one at the time */
     isItemTipVisible: false,
 
+    /** Whether the dropdown is open */
+    isDropdownOpen: false,
+
     /** Whether the cursor is over the viewport settings area and should change the cursor */
     cursorOverViewportSettings: false,
   }),

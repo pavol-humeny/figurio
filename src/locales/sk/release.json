@@ -9,8 +9,9 @@
       "date":"13.2. 2025",
       "bugFixes": {
         "items": [
-          "Opravenie problému s nástrojem pro rozostrenie oblasti",
-          "Opravenie problému s nástrojem pro zväčšenie oblasti" 
+          "Opravenie problému s nástrojom pro rozostrenie oblasti",
+          "Opravenie problému s nástrojom pro zväčšenie oblasti",
+          "Nástrojové tipy sa už nezobrazujú po výbere možnosti z rozbalovacieho menu"
         ]
       }
     },

@@ -28,8 +28,6 @@
 
 - Resize a crop nastaviť tak aby rešpektovali minimálne a maximálne rozmery v presete
 
-- pri výbere z dropdown menu to neskryje tip 
-
 ## TODO 
 - Vylepšenie rámiku pre prehliadače 
 

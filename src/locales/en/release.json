@@ -10,7 +10,8 @@
       "bugFixes": {
         "items": [
           "Fixed issue with blur area tool",
-          "Fixed issue with magnify area tool" 
+          "Fixed issue with magnify area tool",
+          "Do not show item tip after selecting option from dropdown menu"
         ]
       }
     },

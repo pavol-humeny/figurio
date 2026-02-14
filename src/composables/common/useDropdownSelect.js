@@ -13,7 +13,7 @@ import { ref, watch, onMounted, onBeforeUnmount, computed, nextTick } from 'vue'
  *   showIcon: boolean
  * }}
  */
-export function useDropdownSelect(props, emit) {
+export function useDropdownSelect(props, emit, uiStore) {
   /**
    * Reference to the wrapper element for click outside detection
    */
@@ -101,6 +101,13 @@ export function useDropdownSelect(props, emit) {
   const setValue = (newValue) => {
     selectedValue.value = newValue
   }
+
+  /**
+   * Watch for dropdown visibility changes to update global state (for tooltips)
+   */
+  watch(showDropdown, (val) => {
+    uiStore.isDropdownOpen = val
+  })
 
   /**
    * Toggles the dropdown visibility
@@ -200,7 +207,7 @@ export function useDropdownSelect(props, emit) {
     await nextTick()
 
     requestAnimationFrame(() => {
-        updateDropdownPosition()
+      updateDropdownPosition()
     })
   })
 

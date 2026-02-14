@@ -2,6 +2,7 @@
 import ItemTip from './ItemTip.vue'
 import BaseIcon from '../icons/BaseIcon.vue'
 import { useDropdownSelect } from '@/composables/common/useDropdownSelect'
+import { useUiStore } from '@/stores/uiStore'
 
 /**
  * @typedef {Object} DropdownSelectProps
@@ -79,7 +80,7 @@ const {
   dropdownRef,
   dropdownStyle,
   dropdownReady,
-} = useDropdownSelect(props, emit)
+} = useDropdownSelect(props, emit, useUiStore())
 
 
 /**

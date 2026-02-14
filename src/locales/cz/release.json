@@ -10,7 +10,8 @@
       "bugFixes": {
         "items": [
           "Oprava problému s nástrojem pro rozostření oblasti",
-          "Oprava problému s nástrojem pro zvětšení oblasti" 
+          "Oprava problému s nástrojem pro zvětšení oblasti" ,
+          "Nástrojové tipy se již nezobrazují po výběru možnosti z rozbalovacího menu"
         ]
       }
     },
