@@ -245,17 +245,36 @@ export function useItemTip(options = {}, uiStore, editorStore) {
     openSingleFeatureTourModal(toolKey)
   }
 
+  /**
+   * Hides the tooltip immediately without delay (used when window loses focus or visibility changes)
+   */
+  const hideTipImmediately = () => {
+    clearTimeout(hoverTimeout.value)
+    isVisible.value = false
+    uiStore.isItemTipVisible = false
+  }
+
   // Update position after mount
   onMounted(() => {
     nextTick(updatePosition)
 
     document.addEventListener('click', handleMouseClick)
+
+    window.addEventListener('blur', hideTipImmediately)
+    document.addEventListener('visibilitychange', () => {
+      if (document.hidden) {
+        hideTipImmediately()
+      }
+    })
   })
 
   // Clear tooltip timeout before component unmounts
   onBeforeUnmount(() => {
     clearTimeout(hoverTimeout.value)
     document.removeEventListener('click', handleMouseClick)
+
+    window.removeEventListener('blur', hideTipImmediately)
+    document.removeEventListener('visibilitychange', hideTipImmediately)
   })
 
   return {

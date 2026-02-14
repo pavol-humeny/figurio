@@ -17,7 +17,7 @@
 
 # TODO
 - scroll nad sliderom by ho mohol posuvat
-- občas sa nezobrazí nástroj v tool settings 
+
 - vyriešiť snapovanie objektov
 
 - Štetec
@@ -42,10 +42,8 @@
 - možnosť všetko exportovať naraz do zip
 - PDF s nepodporovanými svg objektami 
 - prevod pdf na raster ak to obsahuje hlúposti 
-- Zjednodušiť toasty
 - pridať nástroj fill (kýbel)
 - pridať nástroj pre nastavenie priehľadnosti obrázka
-- Možno nejako vylepšiť vysvetlenie grayscale
 - Pozrieť sa na spoplatnenie - maximálny počet exportov, by me coffee
 - resetovanie obrázku do pôvodného stavu
 
@@ -65,6 +63,7 @@
 - nakreslím niečo, pridám shape, a dám rasterize tak to zmizne - rastererize zožuje brush 
 - nakreslenie svg objektu, prepnutie na brush (vyžaduje rasterizáciu) a následné spätné prepnutie na shape (stále to chcelo rasterizovať)
 - občas to tam nezobrazuje farbu v color inpute pri fill v nástroji shape
+- občas sa nezobrazí nástroj v tool settings 
 
 ## Ťažko povedať čo s tým 
 - SKIP - (asi to je v pohode tak ako to je) zoomovanie pomocou tlacitok, ak je obrazok mimo stred tak to zoomuje mimo obrázok 

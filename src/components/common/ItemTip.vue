@@ -91,8 +91,8 @@ const videoRef = ref(null)
             { 'item-tip-advance-tool': props.advanceTool }]">
           <template v-if="props.advanceTool">
             <div class="tip-video">
-              <video ref="videoRef" class="video-preview" :src="getVideo(props.toolKey)" autoplay loop muted
-                playsinline @click="openToolVideo(props.toolKey)"></video>
+              <video ref="videoRef" class="video-preview" :src="getVideo(props.toolKey)" autoplay loop muted playsinline
+                @click="openToolVideo(props.toolKey)"></video>
             </div>
             <div class="item-tip-title-row">
               <span class="tip-title">{{ props.title }}</span>
