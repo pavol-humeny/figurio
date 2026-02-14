@@ -1,4 +1,5 @@
 import { ref, watch } from 'vue'
+import { useMath } from './useMath'
 
 /**
  * Logic for the <Slider> component
@@ -11,6 +12,8 @@ import { ref, watch } from 'vue'
  * }}
  */
 export function useDefaultSlider(props, emit) {
+  const { clamp } = useMath()
+
   /**
    * Internal reactive value representing the slider position
    */
@@ -71,6 +74,33 @@ export function useDefaultSlider(props, emit) {
     }
   }
 
+  /**
+   * Handles mouse wheel to change slider value while hovering
+   *
+   * @param {WheelEvent} event
+   */
+  const onWheel = (event) => {
+    if (props.disabled) return
+
+    event.preventDefault()
+
+    const direction = event.deltaY > 0 ? -1 : 1
+    const step = props.step || 1
+
+    let newValue = currentValue.value + direction * step
+
+    // Clamp first
+    newValue = clamp(newValue, props.min, props.max)
+
+    // Snap to step precision (not integer rounding)
+    const decimals = (step.toString().split('.')[1] || '').length
+    newValue = Number(newValue.toFixed(decimals))
+
+    currentValue.value = newValue
+    emit('update:modelValue', newValue)
+    emit('update', newValue)
+  }
+
   return {
     currentValue,
     onInput,
@@ -78,5 +108,6 @@ export function useDefaultSlider(props, emit) {
     onPointerDown,
     isAdjusting,
     onUp,
+    onWheel,
   }
 }

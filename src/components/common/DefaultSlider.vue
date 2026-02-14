@@ -87,6 +87,7 @@ const {
   onInput,
   onDoubleClick,
   onPointerDown,
+  onWheel,
 } = useDefaultSlider(props, emit)
 </script>
 
@@ -103,7 +104,7 @@ const {
       </div>
       <input type="range" :min="props.min" :max="props.max" :step="props.step" v-model="currentValue"
         :disabled="props.disabled" @input="onInput" @dblclick="onDoubleClick" @pointerdown="onPointerDown"
-        :style="{ '--slider-bg': props.backgroundColor }" />
+        :style="{ '--slider-bg': props.backgroundColor }" @wheel="onWheel" />
     </div>
   </ItemTip>
 </template>

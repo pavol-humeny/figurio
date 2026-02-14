@@ -16,8 +16,6 @@
 - záver
 
 # TODO
-- scroll nad sliderom by ho mohol posuvat
-
 - vyriešiť snapovanie objektov
 
 - Štetec
