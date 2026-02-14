@@ -47,7 +47,10 @@ export function useSvgObjectWrapper(
     if (isSelected.value || isInMultiSelection.value) {
       return 'move'
     } else {
-      if (editorStore.selectedToolKey === object.value.class) {
+      if (
+        editorStore.selectedToolKey === object.value.class ||
+        editorStore.selectedToolKey === 'select'
+      ) {
         return 'pointer'
       } else {
         return 'default'
@@ -241,7 +244,7 @@ export function useSvgObjectWrapper(
   watch(
     () => isSelected.value,
     (newValue) => {
-      editorStore.isSvgObjectResizing = newValue
+      // editorStore.isSvgObjectResizing = newValue
 
       // Update rotation origin after resizing to keep it centered
       // TODO - it move object when it is applied
@@ -256,11 +259,11 @@ export function useSvgObjectWrapper(
    */
   const onObjectMouseUp = () => {
     log('mouseup object select')
-    log('condition: ', !isSelected.value, !editorStore.isSvgObjectResizing)
+    log('condition: ', !isSelected.value, !editorStore.isSvgObjectManipulating)
 
     log('selecting object:', object.value.id)
 
-    if (!isSelected.value && !editorStore.isSvgObjectResizing) {
+    if (!isSelected.value && !editorStore.isSvgObjectManipulating) {
       log('tool: ', editorStore.selectedToolKey, 'class:', object.value.class)
       if (editorStore.selectedToolKey === object.value.class) {
         imageStore.selectedSvgObjectId = object.value.id
@@ -281,6 +284,9 @@ export function useSvgObjectWrapper(
   const onMouseDownResizer = (event, index) => {
     log('mousedown resizer')
     if (!areSvgObjectOperationsEnabled.value || !isSelected.value) return
+
+    editorStore.isSvgObjectManipulating = true
+
     activeResizerIndex.value = index
     startX.value = event.clientX
     startY.value = event.clientY
@@ -311,6 +317,8 @@ export function useSvgObjectWrapper(
     log('mousedown drag')
     if (!areSvgObjectOperationsEnabled.value || !isSelected.value) return
 
+    editorStore.isSvgObjectManipulating = true
+
     isDragging.value = true
     startX.value = event.clientX
     startY.value = event.clientY
@@ -338,6 +346,8 @@ export function useSvgObjectWrapper(
   const onMouseDownRotate = (event) => {
     log('mousedown rotate')
     if (!areSvgObjectOperationsEnabled.value || !isSelected.value) return
+
+    editorStore.isSvgObjectManipulating = true
 
     const rect = viewportStore.viewportContentRect
     const mouseX = (event.clientX - rect.left) / viewportStore.realZoomLevel
@@ -1579,6 +1589,7 @@ export function useSvgObjectWrapper(
     const isActive = isDragging.value || activeResizerIndex.value !== null || isRotating.value
     if (!isActive) return
 
+    editorStore.isSvgObjectManipulating = false
     isDragging.value = false
     activeResizerIndex.value = null
     isSymmetricalObject.value = false

@@ -11,7 +11,7 @@ import DefaultSlider from '../common/DefaultSlider.vue';
 import ExplainItem from '../common/ExplainItem.vue';
 import { editorConfig } from '@/config/editorConfig'
 import { useUiStore } from '@/stores/uiStore';
-// import SvgObjectsZIndexControl from './SvgObjectsZIndexControl.vue';
+import SvgObjectsZIndexControl from './SvgObjectsZIndexControl.vue';
 
 const { t } = useI18n();
 
@@ -164,7 +164,7 @@ const {
         </div>
 
         <!-- Z-index -->
-        <!-- <SvgObjectsZIndexControl :isVisible="!hidePositionAndDimensions" /> -->
+        <SvgObjectsZIndexControl :isVisible="!hidePositionAndDimensions" type="blur" />
 
         <!-- Empty space -->
         <div class="settings-content-wrapper" style="border: none">

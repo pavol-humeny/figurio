@@ -65,8 +65,8 @@ export const useEditorStore = defineStore('editorStore', {
     /** Key of the tool that has open subtools */
     toolWithOpenSubToolsKey: '',
 
-    /** Whether any SVG object is currently being resized */
-    isSvgObjectResizing: false,
+    /** Whether any SVG object is currently being manipulated */
+    isSvgObjectManipulating: false,
 
     /** Whether any SVG object is currently being drawn */
     isSvgObjectDrawing: false,

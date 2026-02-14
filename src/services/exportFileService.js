@@ -626,7 +626,7 @@ export function exportFileService(imageStore, editorStore, historyStore, viewpor
       }
 
       // 3. SVG objects
-      const vectorObjects = imageStore.svgObjects.filter((obj) => obj.class !== 'magnifyArea')
+      const vectorObjects = imageStore.svgObjects
 
       for (const obj of vectorObjects) {
         obj.attrs.textContent = obj.content || ''
@@ -767,11 +767,8 @@ export function exportFileService(imageStore, editorStore, historyStore, viewpor
     ////////
 
     // Generate svg string
-    if (
-      (imageStore.svgObjects && imageStore.svgObjects.length > 0) ||
-      (imageStore.blurObjects && imageStore.blurObjects.length > 0)
-    ) {
-      const vectorObjects = imageStore.svgObjects.filter((obj) => obj.class !== 'magnifyArea')
+    if (imageStore.svgObjects && imageStore.svgObjects.length > 0) {
+      const vectorObjects = imageStore.svgObjects
 
       const svgString = `
             <svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}">

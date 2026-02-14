@@ -227,7 +227,7 @@ export function useMagnifyAreaTool(imageStore, historyStore, editorStore, uiStor
       },
     }
 
-    imageStore.svgObjects.push(obj)
+    imageStore.magnifyObjects.push(obj)
     imageStore.selectedSvgObjectId = id
 
     addUserEvent('applyOperation', {

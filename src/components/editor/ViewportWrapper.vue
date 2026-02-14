@@ -268,8 +268,6 @@ const cursorStyle = computed(() => {
             boxShadow: backgroundMode === 'normal' ? 'var(--box-shadow-content)' : 'none',
             '--phone-frame-border-radius': phoneFrameBorderRadius + 'px',
           }">
-          <!-- <img v-if="imageStore.fileType === 'image' || imageStore.showPdfAsImage" ref="imageRef"
-            class="image-canvas" /> -->
 
           <canvas v-if="imageStore.fileType === 'image' || imageStore.showPdfAsImage" ref="imageRef"
             class="image-canvas"></canvas>
@@ -289,10 +287,6 @@ const cursorStyle = computed(() => {
           <canvas ref="blurOverlayRef" class="blur-overlay-canvas">
           </canvas>
 
-          <!-- Magnify Overlay Canvas -->
-          <canvas ref="magnifyOverlayRef" class="magnify-overlay-canvas">
-          </canvas>
-
           <!-- SVG objects -->
           <svg ref="svgRef" class="image-svg" id="image-svg" xmlns="http://www.w3.org/2000/svg"
             :width="imageStore.fileDimensions.width" :height="imageStore.fileDimensions.height"
@@ -310,17 +304,19 @@ const cursorStyle = computed(() => {
             <!-- Dynamic SVG Definitions -->
             <defs v-html="svgDefsString" />
 
-            <template v-for="(img, index) in imageStore.blurImages" :key="index">
-              <g v-html="img"></g>
-            </template>
-
             <SvgObjectWrapper v-for="object in imageStore.svgObjects" :key="object.id" :objectId="object.id" />
 
             <SvgObjectWrapper v-for="object in imageStore.blurObjects" :key="object.id" :objectId="object.id" />
 
+            <SvgObjectWrapper v-for="object in imageStore.magnifyObjects" :key="object.id" :objectId="object.id" />
+
             <rect v-if="selectBox" :x="selectBox.x" :y="selectBox.y" :width="selectBox.width" :height="selectBox.height"
               fill="var(--editor-highlight-with-opacity-c)" />
           </svg>
+
+          <!-- Magnify Overlay Canvas -->
+          <canvas ref="magnifyOverlayRef" class="magnify-overlay-canvas">
+          </canvas>
 
           <!-- Frame -->
           <svg :class="{ 'hide': uiStore.isApplying && !uiStore.isApplyingFrame }" ref="frameSvgRef"

@@ -36,7 +36,7 @@ const {
           <ExplainItem :text="$t('tools.select.explain')" :title="$t('tools.select.label')" position="left" />
           <div class="content-wrapper">
             <DefaultButton :text="$t('tools.select.settings.general.selectAllButton.text')" @click="selectAllSvgObjects"
-              :disabled="imageStore.selectedSvgObjectIds.length === imageStore.svgObjects.length + imageStore.blurObjects.length" />
+              :disabled="imageStore.selectedSvgObjectIds.length === imageStore.svgObjects.length + imageStore.blurObjects.length + imageStore.magnifyObjects.length" />
           </div>
         </div>
 

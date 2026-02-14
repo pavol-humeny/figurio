@@ -291,7 +291,7 @@ const {
         </div>
 
         <!-- Z-index -->
-        <SvgObjectsZIndexControl :isVisible="!hidePositionAndDimensions" />
+        <SvgObjectsZIndexControl :isVisible="!hidePositionAndDimensions" type="svg" />
 
         <!-- Empty space -->
         <div class="settings-content-wrapper" style="border: none">

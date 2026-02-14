@@ -122,7 +122,7 @@ defineExpose({ setValue })
 
 .text-input {
   width: 100%;
-  padding: 7px 28px 7px 10px;
+  padding: 5px 28px 5px 10px;
   border-radius: var(--input-border-radius);
   border: none;
   color: var(--text-c);
@@ -159,11 +159,11 @@ defineExpose({ setValue })
 }
 
 .spinner-btn-up {
-  margin-bottom: -3px;
+  margin-bottom: -4px;
 }
 
 .spinner-btn-down {
-  margin-top: -3px;
+  margin-top: -4px;
 }
 
 .spinner-btn:active {

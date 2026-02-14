@@ -331,12 +331,12 @@ export const keyboardShortcuts = [
   },
   {
     keys: ['shift', 'arrowup'],
-    action: 'moveSelectedSvgObjectForward',
+    action: 'moveSelectedObjectForward',
     description: 'Move selected SVG object forward',
   },
   {
     keys: ['shift', 'arrowdown'],
-    action: 'moveSelectedSvgObjectBackward',
+    action: 'moveSelectedObjectBackward',
     description: 'Move selected SVG object backward',
   },
   // Global movement of selected SVG object

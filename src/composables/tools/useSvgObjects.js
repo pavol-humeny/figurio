@@ -176,6 +176,7 @@ export function useSvgObjects(
 
     const idsToDelete = new Set()
     const blurIdsToDelete = new Set()
+    const magnifyIdsToDelete = new Set()
 
     // One selected object
     if (selectedIds.length === 0) {
@@ -187,6 +188,8 @@ export function useSvgObjects(
       // If blur also delete filter, clip and image
       if (selected.class === 'blur') {
         blurIdsToDelete.add(selected.id)
+      } else if (selected.class === 'magnifyArea') {
+        magnifyIdsToDelete.add(selected.id)
       } else {
         idsToDelete.add(selected.id)
       }
@@ -202,6 +205,8 @@ export function useSvgObjects(
 
         if (obj.class === 'blur') {
           blurIdsToDelete.add(obj.id)
+        } else if (obj.class === 'magnifyArea') {
+          magnifyIdsToDelete.add(obj.id)
         } else {
           idsToDelete.add(id)
         }
@@ -216,6 +221,11 @@ export function useSvgObjects(
       .filter((i) => i !== -1)
       .sort((a, b) => b - a)
 
+    const magnifyIndicesToDelete = [...magnifyIdsToDelete]
+      .map((id) => imageStore.getIndexOfMagnifyObjectById(id))
+      .filter((i) => i !== -1)
+      .sort((a, b) => b - a)
+
     const blurIndicesToDelete = [...blurIdsToDelete]
       .map((id) => imageStore.getIndexOfBlurObjectById(id))
       .filter((i) => i !== -1)
@@ -227,6 +237,10 @@ export function useSvgObjects(
 
     for (const i of blurIndicesToDelete) {
       imageStore.blurObjects.splice(i, 1)
+    }
+
+    for (const i of magnifyIndicesToDelete) {
+      imageStore.magnifyObjects.splice(i, 1)
     }
 
     historyStore.push(imageStore.getSnapshot(t))
@@ -305,6 +319,8 @@ export function useSvgObjects(
 
     if (newObject.class === 'blur') {
       imageStore.blurObjects.push(newObject)
+    } else if (newObject.class === 'magnifyArea') {
+      imageStore.magnifyObjects.push(newObject)
     } else {
       imageStore.svgObjects.push(newObject)
     }
@@ -343,258 +359,155 @@ export function useSvgObjects(
   }
 
   /**
-   * Extract magnify area pair from list
-   * @param {Array} list - List of SVG objects
-   * @param {Object} object - Current magnify area object
-   * @param {number} index - Index of the current object in the list
-   * @returns {Object} - Object containing the pair and start index
-   */
-  const extractMagnifyPair = (list, object, index) => {
-    if (object.subClass === 'magnify-result') {
-      return {
-        pair: list.splice(index - 1, 2),
-        startIndex: index - 1,
-      }
-    }
-
-    // magnify-source
-    return {
-      pair: list.splice(index, 2),
-      startIndex: index,
-    }
-  }
-
-  /**
    * Bring the selected SVG object to front
+   * @param {Function} t - Translation function for localized strings
+   * @param {string} type - The type of object ('svg', 'blur', 'magnify') to determine which list to operate on
    */
-  const bringSelectedSvgObjectToFront = (t, isBlurObject = false) => {
+  const bringSelectedObjectToFront = (t, type) => {
     if (imageStore.selectedSvgObjectId === null) return
 
-    const list = isBlurObject ? imageStore.blurObjects : imageStore.svgObjects
-    const object = imageStore.getSelectedSvgObject()
-    if (!object) return
+    let list
+    let index
 
-    const i = isBlurObject
-      ? imageStore.getIndexOfSelectedBlurObject()
-      : imageStore.getIndexOfSelectedSvgObject()
-
-    if (i === -1) return
-
-    // MAGNIFY AREA
-    if (object.class === 'magnifyArea') {
-      let pair
-      let startIndex
-
-      if (object.subClass === 'magnify-result') {
-        startIndex = i - 1
-        if (startIndex < 0) return
-        pair = list.splice(startIndex, 2)
-      } else {
-        startIndex = i
-        pair = list.splice(startIndex, 2)
-      }
-
-      list.push(...pair)
+    if (type === 'blur') {
+      list = imageStore.blurObjects
+      index = imageStore.getIndexOfSelectedBlurObject()
+    } else if (type === 'magnify') {
+      list = imageStore.magnifyObjects
+      index = imageStore.getIndexOfSelectedMagnifyObject()
+    } else {
+      list = imageStore.svgObjects
+      index = imageStore.getIndexOfSelectedSvgObject()
     }
 
-    // BLUR
-    else if (object.class === 'blur') {
-      const obj = list.splice(i, 1)[0]
-      list.push(obj)
-    }
+    if (!list || index === -1) return
+    if (index >= list.length - 1) return // already at front
 
-    // OTHER OBJECTS
-    else {
-      const obj = list.splice(i, 1)[0]
-      list.push(obj)
-    }
+    const obj = list.splice(index, 1)[0]
+    list.push(obj)
 
     historyStore.push(imageStore.getSnapshot(t))
+
+    // Re-render overlay if blur or magnify area
+    if (obj.class === 'blur') {
+      imageStore.blurOverlayNeedToBeRendered = true
+    } else if (obj.class === 'magnifyArea') {
+      imageStore.magnifyOverlayNeedToBeRendered = true
+    }
   }
 
   /**
    * Move the selected SVG object forward by one
+   * @param {Function} t - Translation function for localized strings
+   * @param {string} type - The type of object ('svg', 'blur', 'magnify') to determine which list to operate on
    */
-  const moveSelectedSvgObjectForward = (t, isBlurObject = false) => {
+  const moveSelectedObjectForward = (t, type) => {
     if (imageStore.selectedSvgObjectId === null) return
 
-    const list = isBlurObject ? imageStore.blurObjects : imageStore.svgObjects
-    const object = imageStore.getSelectedSvgObject()
-    if (!object) return
+    let list
+    let index
 
-    const i = isBlurObject
-      ? imageStore.getIndexOfSelectedBlurObject()
-      : imageStore.getIndexOfSelectedSvgObject()
-
-    if (i === -1) return
-
-    // MAGNIFY AREA
-    if (object.class === 'magnifyArea') {
-      const { pair, startIndex } = extractMagnifyPair(list, object, i)
-
-      let insertIndex = startIndex
-
-      // Skip next block
-      const next = list[startIndex]
-      if (next?.class === 'magnifyArea') {
-        insertIndex += 2
-      } else {
-        insertIndex += 1
-      }
-
-      if (insertIndex > list.length) {
-        // Put back
-        list.splice(startIndex, 0, ...pair)
-        return
-      }
-
-      list.splice(insertIndex, 0, ...pair)
+    if (type === 'blur') {
+      list = imageStore.blurObjects
+      index = imageStore.getIndexOfSelectedBlurObject()
+    } else if (type === 'magnify') {
+      list = imageStore.magnifyObjects
+      index = imageStore.getIndexOfSelectedMagnifyObject()
+    } else {
+      list = imageStore.svgObjects
+      index = imageStore.getIndexOfSelectedSvgObject()
     }
 
-    // BLUR
-    else if (object.class === 'blur') {
-      if (i + 1 >= list.length) return
+    if (!list || index === -1) return
+    if (index + 1 >= list.length) return
 
-      const obj = list.splice(i, 1)[0]
-
-      let insertIndex = i
-      if (list[i]?.class === 'magnifyArea') {
-        insertIndex += 2
-      } else {
-        insertIndex += 1
-      }
-
-      list.splice(insertIndex, 0, obj)
-    }
-
-    // OTHER OBJECTS
-    else {
-      if (i + 1 >= list.length) return
-
-      const obj = list.splice(i, 1)[0]
-
-      let insertIndex = i
-
-      insertIndex += 1
-
-      list.splice(insertIndex, 0, obj)
-    }
+    const obj = list.splice(index, 1)[0]
+    list.splice(index + 1, 0, obj)
 
     historyStore.push(imageStore.getSnapshot(t))
+
+    // Re-render overlay if blur or magnify area
+    if (obj.class === 'blur') {
+      imageStore.blurOverlayNeedToBeRendered = true
+    } else if (obj.class === 'magnifyArea') {
+      imageStore.magnifyOverlayNeedToBeRendered = true
+    }
   }
 
   /**
    * Move the selected SVG object backward by one
+   * @param {Function} t - Translation function for localized strings
+   * @param {string} type - The type of object ('svg', 'blur', 'magnify') to determine which list to operate on
    */
-  const moveSelectedSvgObjectBackward = (t, isBlurObject = false) => {
+  const moveSelectedObjectBackward = (t, type) => {
     if (imageStore.selectedSvgObjectId === null) return
 
-    const list = isBlurObject ? imageStore.blurObjects : imageStore.svgObjects
-    const object = imageStore.getSelectedSvgObject()
-    if (!object) return
+    let list
+    let index
 
-    const i = isBlurObject
-      ? imageStore.getIndexOfSelectedBlurObject()
-      : imageStore.getIndexOfSelectedSvgObject()
-
-    if (i === -1) return
-
-    // MAGNIFY AREA
-    if (object.class === 'magnifyArea') {
-      const { pair, startIndex } = extractMagnifyPair(list, object, i)
-
-      if (startIndex === 0) {
-        list.splice(0, 0, ...pair)
-        return
-      }
-
-      let insertIndex = startIndex - 1
-
-      // Skip previous block
-      if (list[insertIndex]?.class === 'magnifyArea') {
-        insertIndex -= 1
-      }
-
-      insertIndex = Math.max(0, insertIndex)
-      list.splice(insertIndex, 0, ...pair)
+    if (type === 'blur') {
+      list = imageStore.blurObjects
+      index = imageStore.getIndexOfSelectedBlurObject()
+    } else if (type === 'magnify') {
+      list = imageStore.magnifyObjects
+      index = imageStore.getIndexOfSelectedMagnifyObject()
+    } else {
+      list = imageStore.svgObjects
+      index = imageStore.getIndexOfSelectedSvgObject()
     }
 
-    // BLUR
-    else if (object.class === 'blur') {
-      if (i === 0) return
+    if (!list || index === -1) return
+    if (index === 0) return // already at back
 
-      const obj = list.splice(i, 1)[0]
-
-      let insertIndex = i - 1
-      if (list[insertIndex]?.class === 'magnifyArea') {
-        insertIndex -= 1
-      }
-
-      insertIndex = Math.max(0, insertIndex)
-      list.splice(insertIndex, 0, obj)
-    }
-
-    // OTHER OBJECTS
-    else {
-      if (i === 0) return
-
-      const obj = list.splice(i, 1)[0]
-
-      let insertIndex = i - 1
-
-      insertIndex = Math.max(0, insertIndex)
-      list.splice(insertIndex, 0, obj)
-    }
+    const obj = list.splice(index, 1)[0]
+    list.splice(index - 1, 0, obj)
 
     historyStore.push(imageStore.getSnapshot(t))
+
+    // Re-render overlay if blur or magnify area
+    if (obj.class === 'blur') {
+      imageStore.blurOverlayNeedToBeRendered = true
+    } else if (obj.class === 'magnifyArea') {
+      imageStore.magnifyOverlayNeedToBeRendered = true
+    }
   }
 
   /**
    * Send the selected SVG object to back
+   * @param {Function} t - Translation function for localized strings
+   * @param {string} type - The type of object ('svg', 'blur', 'magnify') to determine which list to operate on
    */
-  const sendSelectedSvgObjectToBack = (t, isBlurObject = false) => {
+  const sendSelectedObjectToBack = (t, type) => {
     if (imageStore.selectedSvgObjectId === null) return
 
-    const list = isBlurObject ? imageStore.blurObjects : imageStore.svgObjects
-    const object = imageStore.getSelectedSvgObject()
-    if (!object) return
+    let list
+    let index
 
-    const i = isBlurObject
-      ? imageStore.getIndexOfSelectedBlurObject()
-      : imageStore.getIndexOfSelectedSvgObject()
-
-    if (i === -1) return
-
-    // MAGNIFY AREA
-    if (object.class === 'magnifyArea') {
-      let pair
-      let startIndex
-
-      if (object.subClass === 'magnify-result') {
-        startIndex = i - 1
-        if (startIndex < 0) return
-        pair = list.splice(startIndex, 2)
-      } else {
-        startIndex = i
-        pair = list.splice(startIndex, 2)
-      }
-
-      list.unshift(...pair)
+    if (type === 'blur') {
+      list = imageStore.blurObjects
+      index = imageStore.getIndexOfSelectedBlurObject()
+    } else if (type === 'magnify') {
+      list = imageStore.magnifyObjects
+      index = imageStore.getIndexOfSelectedMagnifyObject()
+    } else {
+      list = imageStore.svgObjects
+      index = imageStore.getIndexOfSelectedSvgObject()
     }
 
-    // BLUR
-    else if (object.class === 'blur') {
-      const obj = list.splice(i, 1)[0]
-      list.unshift(obj)
-    }
+    if (!list || index === -1) return
+    if (index === 0) return // already at back
 
-    // OTHER OBJECTS
-    else {
-      const obj = list.splice(i, 1)[0]
-      list.unshift(obj)
-    }
+    const obj = list.splice(index, 1)[0]
+    list.unshift(obj)
 
     historyStore.push(imageStore.getSnapshot(t))
+
+    // Re-render overlay if blur or magnify area
+    if (obj.class === 'blur') {
+      imageStore.blurOverlayNeedToBeRendered = true
+    } else if (obj.class === 'magnifyArea') {
+      imageStore.magnifyOverlayNeedToBeRendered = true
+    }
   }
 
   /**
@@ -646,7 +559,11 @@ export function useSvgObjects(
    * Select all SVG objects
    */
   const selectAllSvgObjects = () => {
-    const allObjects = [...(imageStore.svgObjects || []), ...(imageStore.blurObjects || [])]
+    const allObjects = [
+      ...(imageStore.svgObjects || []),
+      ...(imageStore.blurObjects || []),
+      ...(imageStore.magnifyObjects || []),
+    ]
 
     imageStore.selectedSvgObjectIds = allObjects.map((obj) => obj.id)
 
@@ -1037,14 +954,12 @@ export function useSvgObjects(
 
     if (objectClass === 'blur') {
       imageStore.blurObjects.push(base)
-
-      // If blur object set need flag
       imageStore.blurOverlayNeedToBeRendered = true
+    } else if (objectClass === 'magnifyArea') {
+      imageStore.magnifyObjects.push(base)
+      imageStore.magnifyOverlayNeedToBeRendered = true
     } else {
       imageStore.svgObjects.push(base)
-      if (objectClass === 'magnifyArea') {
-        imageStore.magnifyOverlayNeedToBeRendered = true
-      }
     }
 
     const elWithId = event.target.closest('[data-id]')
@@ -1461,7 +1376,11 @@ export function useSvgObjects(
         selectedIds = []
       }
 
-      const allObjects = [...(imageStore.svgObjects || []), ...(imageStore.blurObjects || [])]
+      const allObjects = [
+        ...(imageStore.svgObjects || []),
+        ...(imageStore.blurObjects || []),
+        ...(imageStore.magnifyObjects || []),
+      ]
 
       for (const object of allObjects) {
         const { cx, cy } = getObjectCenter(object)
@@ -1497,10 +1416,12 @@ export function useSvgObjects(
       viewportStore.guideLines = null
 
       // Remove the last object if object is too small
-      if (editorStore.selectedToolKey !== 'blur') {
-        imageStore.svgObjects.pop()
-      } else {
+      if (editorStore.selectedToolKey === 'blur') {
         imageStore.blurObjects.pop()
+      } else if (editorStore.selectedToolKey === 'magnifyArea') {
+        imageStore.magnifyObjects.pop()
+      } else {
+        imageStore.svgObjects.pop()
       }
 
       log('2')
@@ -1652,10 +1573,10 @@ export function useSvgObjects(
     moveObjectUpGlobal,
     moveObjectDownGlobal,
     deleteSelectedSvgObjects,
-    moveSelectedSvgObjectForward,
-    moveSelectedSvgObjectBackward,
-    sendSelectedSvgObjectToBack,
-    bringSelectedSvgObjectToFront,
+    moveSelectedObjectForward,
+    moveSelectedObjectBackward,
+    sendSelectedObjectToBack,
+    bringSelectedObjectToFront,
     selectedObjectInfo,
     onClickImageSvg,
     onMouseDownImageSvg,

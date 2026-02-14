@@ -11,7 +11,8 @@ import { useMagnifyAreaTool } from '@/composables/tools/useMagnifyAreaTool';
 import ExplainItem from '../common/ExplainItem.vue';
 import DefaultSlider from '../common/DefaultSlider.vue';
 import { useUiStore } from '@/stores/uiStore';
-// import SvgObjectsZIndexControl from './SvgObjectsZIndexControl.vue';
+import SvgObjectsZIndexControl from './SvgObjectsZIndexControl.vue';
+import NumberSpinner from '../common/NumberSpinner.vue';
 
 const { t } = useI18n();
 
@@ -105,7 +106,7 @@ const {
               <p>
                 {{ $t('tools.magnifyArea.settings.general.outlineWidth.label') }}
               </p>
-              <NumberInput v-model="localMagnifyAreaSettings.outlineWidth" :min="1" :max="maxOutlineWidth" :step="1"
+              <NumberSpinner v-model="localMagnifyAreaSettings.outlineWidth" :min="1" :max="maxOutlineWidth" :step="1"
                 @update="applyLocalMagnifyAreaSettings" :tip="$t('tools.magnifyArea.settings.general.outlineWidth.tip')"
                 position="bottom-left" unit="px" />
             </div>
@@ -121,7 +122,7 @@ const {
         </div>
 
         <!-- Z-index -->
-        <!-- <SvgObjectsZIndexControl :isVisible="!hidePositionAndDimensions" /> -->
+        <SvgObjectsZIndexControl :isVisible="!hidePositionAndDimensions" type="magnify" />
 
         <!-- Empty space -->
         <div class="settings-content-wrapper" style="border: none">

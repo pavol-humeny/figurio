@@ -212,6 +212,8 @@ export const useImageStore = defineStore('imageStore', {
     /** Array of blur objects */
     blurObjects: [],
 
+    magnifyObjects: [],
+
     /** ID of the currently selected SVG object */
     selectedSvgObjectId: null,
     /** ID of the SVG object that was just created */
@@ -221,7 +223,7 @@ export const useImageStore = defineStore('imageStore', {
     /** Dynamic SVG definitions */
     svgDefs: [],
     /** Array of blur image elements */
-    blurImages: [],
+    // blurImages: [],
 
     //----
     blurCache: new Map(), // strength -> canvas
@@ -307,14 +309,18 @@ export const useImageStore = defineStore('imageStore', {
      * Returns true if rasterization is needed  (if there are any SVG or blur objects)
      */
     needRasterization: (state) => {
-      return state.svgObjects.length > 0 || state.blurObjects.length > 0
+      return (
+        state.svgObjects.length > 0 ||
+        state.blurObjects.length > 0 ||
+        state.magnifyObjects.length > 0
+      )
     },
 
     /**
      * Returns true if there are any svg objects that need to be rasterized
      */
     needRasterizationForBlur: (state) => {
-      return state.svgObjects.length > 0
+      return state.svgObjects.length > 0 || state.magnifyObjects.length > 0
     },
 
     /**
@@ -322,9 +328,7 @@ export const useImageStore = defineStore('imageStore', {
      */
     needRasterizationForMagnifyArea: (state) => {
       // True if there are blur objects or different objects than magnify area
-      return (
-        state.blurObjects.length > 0 || state.svgObjects.some((obj) => obj.class !== 'magnifyArea')
-      )
+      return state.blurObjects.length > 0 || state.svgObjects.length > 0
     },
 
     /**
@@ -332,9 +336,7 @@ export const useImageStore = defineStore('imageStore', {
      */
     needRasterizationForShapeAndText: (state) => {
       // True if there are blur objects or magnify area
-      return (
-        state.blurObjects.length > 0 || state.svgObjects.some((obj) => obj.class === 'magnifyArea')
-      )
+      return state.blurObjects.length > 0 || state.magnifyObjects.length > 0
     },
 
     /**
@@ -462,7 +464,7 @@ export const useImageStore = defineStore('imageStore', {
     resetSvgObject() {
       this.svgObjects = []
       this.blurObjects = []
-      this.blurImages = []
+      this.magnifyObjects = []
       this.selectedSvgObjectId = null
       this.justCreatedSvgObjectId = null
       this.selectedSvgObjectIds = []
@@ -684,7 +686,11 @@ export const useImageStore = defineStore('imageStore', {
      * @returns {Promise<{overlay: HTMLCanvasElement, magnifyOverlay?: HTMLCanvasElement}|null>} - The rasterized overlay and optional magnify overlay
      */
     async rasterize(mode, { width = null, height = null } = {}, t) {
-      if (this.svgObjects.length === 0 && this.blurObjects.length === 0) {
+      if (
+        this.svgObjects.length === 0 &&
+        this.blurObjects.length === 0 &&
+        this.magnifyObjects.length === 0
+      ) {
         return null
       }
 
@@ -790,12 +796,10 @@ export const useImageStore = defineStore('imageStore', {
       }
 
       // DRAW MAGNIFY OVERLAY (if exists)
-      const magnifyObjects = this.svgObjects.filter((obj) => obj.class === 'magnifyArea')
-
-      if (magnifyObjects.length > 0) {
+      if (this.magnifyObjects.length > 0) {
         this.renderMagnifyCanvases()
 
-        magnifyObjects.forEach((obj) => {
+        this.magnifyObjects.forEach((obj) => {
           const zoom = obj.magnify?.zoom || obj.attrs['data-magnify-zoom'] || 2
           const composite = this.getMagnifyCanvas(zoom)
           if (!composite) return
@@ -899,7 +903,7 @@ export const useImageStore = defineStore('imageStore', {
         // Clear vector objects – they are now baked into overlay
         this.svgObjects = []
         this.blurObjects = []
-        this.blurImages = []
+        this.magnifyObjects = []
         this.selectedSvgObjectId = null
         this.selectedSvgObjectIds = []
 
@@ -1214,7 +1218,9 @@ export const useImageStore = defineStore('imageStore', {
     getSelectedSvgObject() {
       return (
         this.svgObjects.find((obj) => obj.id === this.selectedSvgObjectId) ||
-        this.blurObjects.find((obj) => obj.id === this.selectedSvgObjectId)
+        this.blurObjects.find((obj) => obj.id === this.selectedSvgObjectId) ||
+        this.magnifyObjects.find((obj) => obj.id === this.selectedSvgObjectId) ||
+        null
       )
     },
 
@@ -1226,7 +1232,8 @@ export const useImageStore = defineStore('imageStore', {
     getSvgObjectById(id) {
       return (
         this.svgObjects.find((obj) => obj.id === id) ||
-        this.blurObjects.find((obj) => obj.id === id)
+        this.blurObjects.find((obj) => obj.id === id) ||
+        this.magnifyObjects.find((obj) => obj.id === id)
       )
     },
 
@@ -1246,6 +1253,15 @@ export const useImageStore = defineStore('imageStore', {
       return this.blurObjects.findIndex((obj) => obj.id === this.selectedSvgObjectId)
     },
 
+    //TODO
+    /**
+     * Returns the index of the currently selected magnify object
+     * @returns {number} - The index of the currently selected magnify object, or -1 if none is selected
+     */
+    getIndexOfSelectedMagnifyObject() {
+      return this.magnifyObjects.findIndex((obj) => obj.id === this.selectedSvgObjectId)
+    },
+
     /**
      * Returns the index of an SVG object by its ID
      * @param {*} id - The ID of the SVG object
@@ -1262,6 +1278,15 @@ export const useImageStore = defineStore('imageStore', {
      */
     getIndexOfBlurObjectById(id) {
       return this.blurObjects.findIndex((obj) => obj.id === id)
+    },
+
+    /**
+     * Returns the index of a magnify object by its ID
+     * @param {*} id - The ID of the magnify object
+     * @returns {number} - The index of the magnify object, or -1 if not found
+     */
+    getIndexOfMagnifyObjectById(id) {
+      return this.magnifyObjects.findIndex((obj) => obj.id === id)
     },
 
     /**
@@ -1478,9 +1503,7 @@ export const useImageStore = defineStore('imageStore', {
      * Each zoom level is cached separately.
      */
     renderMagnifyCanvases() {
-      const magnifyObjects = this.svgObjects.filter((obj) => obj.class === 'magnifyArea')
-
-      if (!magnifyObjects.length) return
+      if (!this.magnifyObjects.length) return
 
       this.clearMagnifyCache()
 
@@ -1514,7 +1537,7 @@ export const useImageStore = defineStore('imageStore', {
 
       // Collect unique zoom levels
       const zoomLevels = new Set(
-        magnifyObjects.map((obj) => obj.magnify?.zoom || obj.attrs['data-magnify-zoom'] || 2),
+        this.magnifyObjects.map((obj) => obj.magnify?.zoom || obj.attrs['data-magnify-zoom'] || 2),
       )
 
       zoomLevels.forEach((zoom) => {
@@ -1571,52 +1594,64 @@ export const useImageStore = defineStore('imageStore', {
       }
     },
 
-    bringToFrontButtonEnabled() {
-      return this.svgObjects.length > 1 || this.blurObjects.length > 1
+    bringToFrontButtonEnabled(type) {
+      switch (type) {
+        case 'blur':
+          return this.blurObjects.length > 1
+        case 'magnify':
+          return this.magnifyObjects.length > 1
+        case 'svg':
+          return this.svgObjects.length > 1
+      }
     },
 
-    sendToBackButtonEnabled() {
-      return this.svgObjects.length > 1 || this.blurObjects.length > 1
+    sendToBackButtonEnabled(type) {
+      switch (type) {
+        case 'blur':
+          return this.blurObjects.length > 1
+        case 'magnify':
+          return this.magnifyObjects.length > 1
+        case 'svg':
+          return this.svgObjects.length > 1
+      }
     },
 
-    moveForwardButtonEnabled() {
-      return this.svgObjects.length > 2 || this.blurObjects.length > 2
+    moveForwardButtonEnabled(type) {
+      switch (type) {
+        case 'blur':
+          return this.blurObjects.length > 2
+        case 'magnify':
+          return this.magnifyObjects.length > 2
+        case 'svg':
+          return this.svgObjects.length > 2
+      }
     },
 
-    moveBackwardButtonEnabled() {
-      return this.svgObjects.length > 2 || this.blurObjects.length > 2
+    moveBackwardButtonEnabled(type) {
+      switch (type) {
+        case 'blur':
+          return this.blurObjects.length > 2
+        case 'magnify':
+          return this.magnifyObjects.length > 2
+        case 'svg':
+          return this.svgObjects.length > 2
+      }
     },
 
     /**
      * Checks if the currently selected SVG object has the highest z-index
      * @returns {boolean} - True if the selected SVG object is the one with the highest z-index
      */
-    isMaxZIndexOfSelectedSvgObject() {
-      const index = this.getIndexOfSelectedSvgObject()
-      if (index >= 0 && this.svgObjects[index]) {
-        const selectedObject = this.svgObjects[index]
-        if (selectedObject.class === 'magnifyArea') {
-          return index === this.svgObjects.length - 2
-        } else {
-          return index === this.svgObjects.length - 1
-        }
-      }
-      return false
-    },
-
-    /**
-     * Checks if the currently selected blur object has the highest z-index
-     * @returns {boolean} - True if the selected blur object is the one with the highest z-index
-     */
-    isMaxZIndexOfSelectedBlurObject() {
-      const index = this.getIndexOfSelectedBlurObject()
-      if (index >= 0 && this.blurObjects[index]) {
-        const selectedObject = this.blurObjects[index]
-        if (selectedObject.class === 'magnifyArea') {
-          return index === this.blurObjects.length - 2
-        } else {
-          return index === this.blurObjects.length - 1
-        }
+    isMaxZIndexOfSelectedObject(type) {
+      if (type === 'svg') {
+        const index = this.getIndexOfSelectedSvgObject()
+        return index === this.svgObjects.length - 1
+      } else if (type === 'magnify') {
+        const index = this.getIndexOfSelectedMagnifyObject()
+        return index === this.magnifyObjects.length - 1
+      } else if (type === 'blur') {
+        const index = this.getIndexOfSelectedBlurObject()
+        return index === this.blurObjects.length - 1
       }
       return false
     },
@@ -1625,18 +1660,18 @@ export const useImageStore = defineStore('imageStore', {
      * Checks if the currently selected SVG object has the lowest z-index
      * @returns {boolean} - True if the selected SVG object is the one with the lowest z-index
      */
-    isMinZIndexOfSelectedSvgObject() {
-      const index = this.getIndexOfSelectedSvgObject()
-      return index === 0
-    },
-
-    /**
-     * Checks if the currently selected blur object has the lowest z-index
-     * @returns {boolean} - True if the selected blur object is the one with the lowest z-index
-     */
-    isMinZIndexOfSelectedBlurObject() {
-      const index = this.getIndexOfSelectedBlurObject()
-      return index === 0
+    isMinZIndexOfSelectedObject(type) {
+      if (type === 'svg') {
+        const index = this.getIndexOfSelectedSvgObject()
+        return index === 0
+      } else if (type === 'magnify') {
+        const index = this.getIndexOfSelectedMagnifyObject()
+        return index === 0
+      } else if (type === 'blur') {
+        const index = this.getIndexOfSelectedBlurObject()
+        return index === 0
+      }
+      return false
     },
 
     // --------------------------------
@@ -1662,8 +1697,9 @@ export const useImageStore = defineStore('imageStore', {
         // SVG / OVERLAY METADATA
         svgObjects: JSON.parse(JSON.stringify(this.svgObjects)),
         blurObjects: JSON.parse(JSON.stringify(this.blurObjects)),
+        magnifyObjects: JSON.parse(JSON.stringify(this.magnifyObjects)),
         svgDefs: JSON.parse(JSON.stringify(this.svgDefs)),
-        blurImages: JSON.parse(JSON.stringify(this.blurImages)),
+        // blurImages: JSON.parse(JSON.stringify(this.blurImages)),
 
         // FRAME
         frame: JSON.parse(JSON.stringify(this.frame)),
@@ -1786,8 +1822,10 @@ export const useImageStore = defineStore('imageStore', {
 
       this.svgObjects = JSON.parse(JSON.stringify(snapshot.svgObjects))
       this.blurObjects = JSON.parse(JSON.stringify(snapshot.blurObjects))
+      this.magnifyObjects = JSON.parse(JSON.stringify(snapshot.magnifyObjects))
+
       this.svgDefs = JSON.parse(JSON.stringify(snapshot.svgDefs))
-      this.blurImages = JSON.parse(JSON.stringify(snapshot.blurImages))
+      // this.blurImages = JSON.parse(JSON.stringify(snapshot.blurImages))
 
       this.frame = JSON.parse(JSON.stringify(snapshot.frame))
 
@@ -1841,8 +1879,10 @@ export const useImageStore = defineStore('imageStore', {
         // SVG / OVERLAYS (LOGICAL, NOT RENDERED)
         svgObjects: JSON.parse(JSON.stringify(this.svgObjects)),
         blurObjects: JSON.parse(JSON.stringify(this.blurObjects)),
+        magnifyObjects: JSON.parse(JSON.stringify(this.magnifyObjects)),
+
         svgDefs: JSON.parse(JSON.stringify(this.svgDefs)),
-        blurImages: JSON.parse(JSON.stringify(this.blurImages)),
+        // blurImages: JSON.parse(JSON.stringify(this.blurImages)),
 
         // FRAME
         frame: JSON.parse(JSON.stringify(this.frame)),
@@ -1892,8 +1932,10 @@ export const useImageStore = defineStore('imageStore', {
       // SVG / FRAME
       this.svgObjects = JSON.parse(JSON.stringify(snapshot.svgObjects))
       this.blurObjects = JSON.parse(JSON.stringify(snapshot.blurObjects))
+      this.magnifyObjects = JSON.parse(JSON.stringify(snapshot.magnifyObjects))
+
       this.svgDefs = JSON.parse(JSON.stringify(snapshot.svgDefs))
-      this.blurImages = JSON.parse(JSON.stringify(snapshot.blurImages))
+      // this.blurImages = JSON.parse(JSON.stringify(snapshot.blurImages))
 
       // FRAME
       this.frame = JSON.parse(JSON.stringify(snapshot.frame))

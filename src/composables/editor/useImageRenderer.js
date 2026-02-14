@@ -355,6 +355,9 @@ export function useImageRenderer(
     })
   }
 
+  /**
+   * Render the magnify area overlay canvas based on current magnify area objects in the image store
+   */
   const renderMagnifyOverlay = () => {
     if (!magnifyOverlayRef.value) return
 
@@ -368,13 +371,9 @@ export function useImageRenderer(
     canvas.height = height
     ctx.clearRect(0, 0, width, height)
 
-    const magnifyObjects = imageStore.svgObjects.filter((obj) => obj.class === 'magnifyArea')
-
-    if (!magnifyObjects.length) return
-
     imageStore.renderMagnifyCanvases()
 
-    magnifyObjects.forEach((obj) => {
+    imageStore.magnifyObjects.forEach((obj) => {
       const zoom = obj.magnify?.zoom || obj.attrs['data-magnify-zoom'] || 2
       const composite = imageStore.getMagnifyCanvas(zoom)
       if (!composite) return
