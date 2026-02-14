@@ -268,7 +268,7 @@ export function useSvgObjectWrapper(
       if (editorStore.selectedToolKey === object.value.class) {
         imageStore.selectedSvgObjectId = object.value.id
 
-        editorStore.previousToolKey = ''
+        // editorStore.previousToolKey = ''
 
         imageStore.selectedSvgObjectIds = []
       }

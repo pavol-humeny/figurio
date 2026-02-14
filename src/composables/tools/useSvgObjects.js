@@ -619,8 +619,7 @@ export function useSvgObjects(
         }
       } else {
         if (editorStore.previousToolKey === 'select' && editorStore.selectedToolKey !== 'select') {
-          toggleTool('select', null)
-          editorStore.previousToolKey = ''
+          toggleTool('select', null, false, false)
         }
       }
     },

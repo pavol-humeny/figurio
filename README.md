@@ -16,32 +16,22 @@
 - záver
 
 # TODO
-- Natočiť videá
 - scroll nad sliderom by ho mohol posuvat
 - občas sa nezobrazí nástroj v tool settings 
 - vyriešiť snapovanie objektov
-
-- poloha blur a magnify area z-index
 
 - Štetec
     - premyslieť ten štetec a pixeláciu 
     - 1px štetec by mal vyplnat 1px 
     - doriešiť export kresleného overlay
     - brush - tvar (kruh a štvorec, čiara horizontálna/vertikálna)
-- resetovanie obrázku do pôvodného stavu
+
 - Resize a crop nastaviť tak aby rešpektovali minimálne a maximálne rozmery v presete
-
-
-- Select
-    - opraviť select
-    - pri posune viacerých objektov, následnom položení a opätovnom presune to nechce ísť a sekne to 
 
 - pri výbere z dropdown menu to neskryje tip 
 
 ## TODO 
 - Vylepšenie rámiku pre prehliadače 
-- Paste by to mohol klásť inde ako na ten istý objekt, aspoň pri kliknutí pravím 
-- undo redo možno nejako zakázať pri aby sa to nedalo kliknúť viac krát do vtedy kým sa neaplikuje operácia 
 
 ## Dlhodobé TODO 
 - eye dropper na safari
@@ -57,6 +47,7 @@
 - pridať nástroj pre nastavenie priehľadnosti obrázka
 - Možno nejako vylepšiť vysvetlenie grayscale
 - Pozrieť sa na spoplatnenie - maximálny počet exportov, by me coffee
+- resetovanie obrázku do pôvodného stavu
 
 ## Insane ideas
 - aplikovanie operácie na všetky obrázky 

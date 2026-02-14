@@ -198,7 +198,7 @@ export function useToolsPanel(editorStore, imageStore, uiStore, workspaceStore, 
 
     // Reset previous tool key
     if (resetPreviousTool) {
-      editorStore.previousToolKey = null
+      editorStore.previousToolKey = ''
     }
 
     // If already selected, deselect
