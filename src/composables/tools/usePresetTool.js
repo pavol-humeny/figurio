@@ -114,8 +114,8 @@ export function usePresetTool(
     cropBox: {
       x: 0,
       y: 0,
-      width: 0,
-      height: 0,
+      width: imageStore.fileDimensions.width,
+      height: imageStore.fileDimensions.height,
     },
     resizeDimensions: {
       width: 0,
@@ -1031,8 +1031,8 @@ export function usePresetTool(
       cropBox: {
         x: 0,
         y: 0,
-        width: 0,
-        height: 0,
+        width: imageStore.fileDimensions.width,
+        height: imageStore.fileDimensions.height,
       },
       resizeDimensions: {
         width: 0,

@@ -3,7 +3,6 @@ import DropdownSelect from '@/components/common/DropdownSelect.vue'
 import { useI18n } from 'vue-i18n'
 import NumberInput from '@/components/common/NumberInput.vue'
 import { useImageStore } from '@/stores/imageStore'
-import LinkValuesIcon from '@/components/common/LinkValuesIcon.vue'
 import { usePresetNewOperation } from '@/composables/tools/usePresetNewOperation'
 import { editorConfig } from '@/config/editorConfig'
 
@@ -40,7 +39,6 @@ const {
   operationOptions,
   selectedType,
   params,
-  isDimensionsLinked,
   tmpCropWidth,
   tmpCropHeight,
   cropPositionXInputRef,
@@ -54,6 +52,8 @@ const {
   updatePosition,
   updateDimension,
   presetGrayscaleOptions,
+  minCropHeight,
+  minCropWidth,
 } = usePresetNewOperation(useImageStore(), props, emit, t)
 </script>
 
@@ -107,22 +107,17 @@ const {
             <label for="width-input">
               {{ $t('tools.crop.settings.general.cropDimensions.width') }}
             </label>
-            <NumberInput ref="cropWidthInputRef" v-model="tmpCropWidth" :min="0" :max="maxCropWidth"
+            <NumberInput ref="cropWidthInputRef" v-model="tmpCropWidth" :min="minCropWidth" :max="maxCropWidth"
               @update="(val) => updateDimension('width', val)" unit="px" />
           </div>
 
-          <div class="content-between-inputs-icon-wrapper">
-            <LinkValuesIcon v-model="isDimensionsLinked"
-              :tipLinked="$t('tools.crop.settings.general.cropDimensions.tipLinked')"
-              :tipUnlinked="$t('tools.crop.settings.general.cropDimensions.tipUnlinked')" size="30"
-              position="bottom-left" />
-          </div>
+          <div class="content-between-inputs-icon-wrapper disabled"></div>
 
           <div class="content-input">
             <label for="height-input">
               {{ $t('tools.crop.settings.general.cropDimensions.height') }}
             </label>
-            <NumberInput ref="cropHeightInputRef" v-model="tmpCropHeight" :min="0" :max="maxCropHeight"
+            <NumberInput ref="cropHeightInputRef" v-model="tmpCropHeight" :min="minCropHeight" :max="maxCropHeight"
               @update="(val) => updateDimension('height', val)" unit="px" />
           </div>
         </div>
@@ -135,8 +130,8 @@ const {
             <label for="width-input">
               {{ $t('tools.transform.settings.resize.resizeDimensions.width') }}
             </label>
-            <NumberInput v-model="params.resizeDimensions.width" :min="0" :max="editorConfig.maxFileDimensionWidth"
-              unit="px" />
+            <NumberInput v-model="params.resizeDimensions.width" :min="editorConfig.minCropSize"
+              :max="editorConfig.maxFileDimensionWidth" unit="px" />
           </div>
 
           <div class="content-between-inputs-icon-wrapper disabled">
@@ -146,8 +141,8 @@ const {
             <label for="height-input">
               {{ $t('tools.transform.settings.resize.resizeDimensions.height') }}
             </label>
-            <NumberInput v-model="params.resizeDimensions.height" :min="0" :max="editorConfig.maxFileDimensionHeight"
-              unit="px" />
+            <NumberInput v-model="params.resizeDimensions.height" :min="editorConfig.minCropSize"
+              :max="editorConfig.maxFileDimensionHeight" unit="px" />
           </div>
         </div>
       </div>

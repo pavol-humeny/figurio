@@ -4,7 +4,6 @@ import { useI18n } from 'vue-i18n'
 import NumberInput from '@/components/common/NumberInput.vue'
 import { useImageStore } from '@/stores/imageStore'
 import { useEditorStore } from '@/stores/editorStore'
-import LinkValuesIcon from '@/components/common/LinkValuesIcon.vue'
 import { usePresetOperationDetails } from '@/composables/tools/usePresetOperationDetails'
 import { editorConfig } from '@/config/editorConfig'
 import { computed } from 'vue'
@@ -36,7 +35,6 @@ const emit = defineEmits(['update:operation'])
 const {
   localOperation,
   update,
-  isDimensionsLinked,
   tmpCropWidth,
   tmpCropHeight,
   cropPositionXInputRef,
@@ -130,16 +128,16 @@ const presetGrayscaleOptions = computed(() => [
           <label for="x-input">
             {{ $t('tools.crop.settings.general.cropPosition.x') }}
           </label>
-          <NumberInput ref="cropPositionXInputRef" v-model="localOperation.cropBox.x" :min="0" :max="maxCropPositionX"
-            @update="(val) => updatePosition('x', val)" unit="px" />
+          <NumberInput ref="cropPositionXInputRef" v-model="localOperation.cropBox.x" :min="editorConfig.minCropSize"
+            :max="maxCropPositionX" @update="(val) => updatePosition('x', val)" unit="px" />
         </div>
         <div class="content-between-inputs-icon-wrapper disabled"></div>
         <div class="content-input">
           <label for="y-input">
             {{ $t('tools.crop.settings.general.cropPosition.y') }}
           </label>
-          <NumberInput ref="cropPositionYInputRef" v-model="localOperation.cropBox.y" :min="0" :max="maxCropPositionY"
-            @update="(val) => updatePosition('y', val)" unit="px" />
+          <NumberInput ref="cropPositionYInputRef" v-model="localOperation.cropBox.y" :min="editorConfig.minCropSize"
+            :max="maxCropPositionY" @update="(val) => updatePosition('y', val)" unit="px" />
         </div>
       </div>
       <div class="content-inputs" :style="{ marginTop: '10px' }">
@@ -147,23 +145,18 @@ const presetGrayscaleOptions = computed(() => [
           <label for="width-input">
             {{ $t('tools.crop.settings.general.cropDimensions.width') }}
           </label>
-          <NumberInput ref="cropWidthInputRef" v-model="tmpCropWidth" :min="0" :max="maxCropWidth"
-            @update="(val) => updateDimension('width', val)" unit="px" />
+          <NumberInput ref="cropWidthInputRef" v-model="tmpCropWidth" :min="editorConfig.minCropSize"
+            :max="maxCropWidth" @update="(val) => updateDimension('width', val)" unit="px" />
         </div>
 
-        <div class="content-between-inputs-icon-wrapper">
-          <LinkValuesIcon v-model="isDimensionsLinked"
-            :tipLinked="$t('tools.crop.settings.general.cropDimensions.tipLinked')"
-            :tipUnlinked="$t('tools.crop.settings.general.cropDimensions.tipUnlinked')" size="30"
-            position="bottom-left" />
-        </div>
+        <div class="content-between-inputs-icon-wrapper disabled"></div>
 
         <div class="content-input">
           <label for="height-input">
             {{ $t('tools.crop.settings.general.cropDimensions.height') }}
           </label>
-          <NumberInput ref="cropHeightInputRef" v-model="tmpCropHeight" :min="0" :max="maxCropHeight"
-            @update="(val) => updateDimension('height', val)" unit="px" />
+          <NumberInput ref="cropHeightInputRef" v-model="tmpCropHeight" :min="editorConfig.minCropSize"
+            :max="maxCropHeight" @update="(val) => updateDimension('height', val)" unit="px" />
         </div>
       </div>
     </template>

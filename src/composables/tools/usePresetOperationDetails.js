@@ -31,11 +31,6 @@ export function usePresetOperationDetails(imageStore, editorStore, t, props, emi
   )
 
   /**
-   * Whether to preserve aspect ratio when resizing
-   */
-  const isDimensionsLinked = ref(true)
-
-  /**
    * Temporary values used when restoring crop dimensions
    */
   const tmpCropWidth = ref(0)
@@ -122,34 +117,14 @@ export function usePresetOperationDetails(imageStore, editorStore, t, props, emi
    * @param {number} value - New value
    */
   const updateDimension = (key, value) => {
-    const originalWidth = localOperation.value.cropBox.width
-    const originalHeight = localOperation.value.cropBox.height
-
     if (key === 'width') {
       const clampedWidth = round(clamp(value, 0, maxCropWidth.value))
 
-      if (isDimensionsLinked.value) {
-        const aspectRatio = originalHeight / originalWidth || 1
-        localOperation.value.cropBox.width = clampedWidth
-        localOperation.value.cropBox.height = round(
-          clamp(clampedWidth * aspectRatio, 0, maxCropHeight.value),
-        )
-      } else {
-        localOperation.value.cropBox.width = clampedWidth
-      }
+      localOperation.value.cropBox.width = clampedWidth
     } else if (key === 'height') {
       const clampedHeight = round(clamp(value, 0, maxCropHeight.value))
 
-      if (isDimensionsLinked.value) {
-        const aspectRatio = originalWidth / originalHeight || 1
-
-        localOperation.value.cropBox.height = clampedHeight
-        localOperation.value.cropBox.width = round(
-          clamp(clampedHeight * aspectRatio, 0, maxCropWidth.value),
-        )
-      } else {
-        localOperation.value.cropBox.height = clampedHeight
-      }
+      localOperation.value.cropBox.height = clampedHeight
     }
     nextTick(() => {
       cropHeightInputRef.value?.setValue(localOperation.value.cropBox.height)
@@ -160,7 +135,6 @@ export function usePresetOperationDetails(imageStore, editorStore, t, props, emi
   return {
     localOperation,
     update,
-    isDimensionsLinked,
     tmpCropWidth,
     tmpCropHeight,
     cropPositionXInputRef,

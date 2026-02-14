@@ -1,4 +1,5 @@
 import { useMath } from '@/composables/common/useMath'
+import { editorConfig } from '@/config/editorConfig'
 import { ref, computed, watch, reactive, nextTick } from 'vue'
 
 /**
@@ -105,22 +106,25 @@ export function usePresetNewOperation(imageStore, props, emit, t) {
   const params = reactive({
     angle: 90,
     direction: 'horizontal',
-    cropBox: { x: 0, y: 0, width: 0, height: 0 },
-    resizeDimensions: { width: 0, height: 0 },
+    cropBox: {
+      x: 0,
+      y: 0,
+      width: imageStore.fileDimensions.width,
+      height: imageStore.fileDimensions.height,
+    },
+    resizeDimensions: {
+      width: imageStore.fileDimensions.width,
+      height: imageStore.fileDimensions.height,
+    },
     grayscaleType: 'luminance',
     // UPDATE new tool
   })
 
   /**
-   * Whether crop width and height should stay linked (aspect ratio)
-   */
-  const isDimensionsLinked = ref(true)
-
-  /**
    * Temporary values used for pre-filling crop dimensions
    */
-  const tmpCropWidth = ref(0)
-  const tmpCropHeight = ref(0)
+  const tmpCropWidth = ref(imageStore.fileDimensions.width)
+  const tmpCropHeight = ref(imageStore.fileDimensions.height)
 
   /**
    * Input element refs for syncing programmatic updates
@@ -137,6 +141,8 @@ export function usePresetNewOperation(imageStore, props, emit, t) {
   const maxCropPositionY = computed(() => imageStore.fileDimensions.height - params.cropBox.height)
   const maxCropWidth = computed(() => imageStore.fileDimensions.width - params.cropBox.x)
   const maxCropHeight = computed(() => imageStore.fileDimensions.height - params.cropBox.y)
+  const minCropWidth = computed(() => editorConfig.minCropSize)
+  const minCropHeight = computed(() => editorConfig.minCropSize)
 
   /**
    * Emits operation template when selected type changes
@@ -153,9 +159,23 @@ export function usePresetNewOperation(imageStore, props, emit, t) {
     } else if (type === 'grayscale') {
       op = { type, grayscaleType: 'none' }
     } else if (type === 'crop') {
-      op = { type, cropBox: { x: 0, y: 0, width: 0, height: 0 } }
+      op = {
+        type,
+        cropBox: {
+          x: 0,
+          y: 0,
+          width: imageStore.fileDimensions.width,
+          height: imageStore.fileDimensions.height,
+        },
+      }
     } else if (type === 'resize') {
-      op = { type, resizeDimensions: { width: 0, height: 0 } }
+      op = {
+        type,
+        resizeDimensions: {
+          width: imageStore.fileDimensions.width,
+          height: imageStore.fileDimensions.height,
+        },
+      }
     } else {
       op = null
     }
@@ -214,27 +234,14 @@ export function usePresetNewOperation(imageStore, props, emit, t) {
    * @param {number} value - New size
    */
   const updateDimension = (key, value) => {
-    const originalWidth = params.cropBox.width
-    const originalHeight = params.cropBox.height
-
     if (key === 'width') {
-      const clampedWidth = round(clamp(value, 0, maxCropWidth.value))
-      if (isDimensionsLinked.value) {
-        const aspectRatio = originalHeight / originalWidth || 1
-        params.cropBox.width = clampedWidth
-        params.cropBox.height = round(clamp(clampedWidth * aspectRatio, 0, maxCropHeight.value))
-      } else {
-        params.cropBox.width = clampedWidth
-      }
+      const clampedWidth = round(clamp(value, minCropWidth.value, maxCropWidth.value))
+
+      params.cropBox.width = clampedWidth
     } else if (key === 'height') {
-      const clampedHeight = round(clamp(value, 0, maxCropHeight.value))
-      if (isDimensionsLinked.value) {
-        const aspectRatio = originalWidth / originalHeight || 1
-        params.cropBox.height = clampedHeight
-        params.cropBox.width = round(clamp(clampedHeight * aspectRatio, 0, maxCropWidth.value))
-      } else {
-        params.cropBox.height = clampedHeight
-      }
+      const clampedHeight = round(clamp(value, minCropHeight.value, maxCropHeight.value))
+
+      params.cropBox.height = clampedHeight
     }
     nextTick(() => {
       cropHeightInputRef.value?.setValue(params.cropBox.height)
@@ -248,7 +255,6 @@ export function usePresetNewOperation(imageStore, props, emit, t) {
     operationOptions,
     selectedType,
     params,
-    isDimensionsLinked,
     tmpCropWidth,
     tmpCropHeight,
     cropPositionXInputRef,
@@ -262,5 +268,7 @@ export function usePresetNewOperation(imageStore, props, emit, t) {
     updatePosition,
     updateDimension,
     presetGrayscaleOptions,
+    minCropHeight,
+    minCropWidth,
   }
 }

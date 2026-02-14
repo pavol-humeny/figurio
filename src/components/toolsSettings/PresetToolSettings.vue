@@ -656,8 +656,8 @@ const tabs = ['myPresets', 'createPreset']
                   <label for="width-input">
                     {{ $t('tools.crop.settings.general.cropDimensions.width') }}
                   </label>
-                  <NumberInput ref="cropWidthInputRef" v-model="newPreset.cropBox.width" :min="0" :max="maxCropBoxWidth"
-                    unit="px" />
+                  <NumberInput ref="cropWidthInputRef" v-model="newPreset.cropBox.width" :min="editorConfig.minCropSize"
+                    :max="maxCropBoxWidth" unit="px" />
                 </div>
 
                 <div class="content-between-inputs-icon-wrapper disabled"></div>
@@ -666,8 +666,8 @@ const tabs = ['myPresets', 'createPreset']
                   <label for="height-input">
                     {{ $t('tools.crop.settings.general.cropDimensions.height') }}
                   </label>
-                  <NumberInput ref="cropHeightInputRef" v-model="newPreset.cropBox.height" :min="0"
-                    :max="maxCropBoxHeight" unit="px" />
+                  <NumberInput ref="cropHeightInputRef" v-model="newPreset.cropBox.height"
+                    :min="editorConfig.minCropSize" :max="maxCropBoxHeight" unit="px" />
                 </div>
               </div>
             </div>
@@ -693,8 +693,8 @@ const tabs = ['myPresets', 'createPreset']
                   <label for="width-input">
                     {{ $t('tools.transform.settings.resize.resizeDimensions.width') }}
                   </label>
-                  <NumberInput ref="FileDimensionWidthInputRef" v-model="newPreset.resizeDimensions.width" :min="0"
-                    :max="editorConfig.maxFileDimensionWidth" unit="px" />
+                  <NumberInput ref="FileDimensionWidthInputRef" v-model="newPreset.resizeDimensions.width"
+                    :min="editorConfig.minCropSize" :max="editorConfig.maxFileDimensionWidth" unit="px" />
                 </div>
 
                 <!-- To keep alignment -->
@@ -704,8 +704,8 @@ const tabs = ['myPresets', 'createPreset']
                   <label for="height-input">
                     {{ $t('tools.transform.settings.resize.resizeDimensions.height') }}
                   </label>
-                  <NumberInput ref="FileDimensionHeightInputRef" v-model="newPreset.resizeDimensions.height" :min="0"
-                    :max="editorConfig.maxFileDimensionHeight" unit="px" />
+                  <NumberInput ref="FileDimensionHeightInputRef" v-model="newPreset.resizeDimensions.height"
+                    :min="editorConfig.minCropSize" :max="editorConfig.maxFileDimensionHeight" unit="px" />
                 </div>
               </div>
             </div>

@@ -27,6 +27,8 @@
     - brush - tvar (kruh a štvorec, čiara horizontálna/vertikálna)
 
 - Resize a crop nastaviť tak aby rešpektovali minimálne a maximálne rozmery v presete
+- Crop pridat zmenu so shiftom
+- Crop ak mame 40x20 a linked, a zmensujeme 40 tak by sa to nemalo dat zmensit
 
 ## TODO 
 - Vylepšenie rámiku pre prehliadače 

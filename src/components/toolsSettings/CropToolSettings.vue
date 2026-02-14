@@ -14,7 +14,6 @@ import StepperInput from '../common/StepperInput.vue'
 import ExplainItem from '../common/ExplainItem.vue'
 import LevelSelector from '../common/LevelSelector.vue'
 import { useUiStore } from '@/stores/uiStore'
-import { editorConfig } from '@/config/editorConfig'
 
 const { t } = useI18n()
 
@@ -46,6 +45,8 @@ const {
   manualIndentsWereChangedManually,
   keepModelValue,
   cropSensitivityLevel,
+  minCropHeight,
+  minCropWidth,
 } = useCropTool(useImageStore(), useViewportStore(), useEditorStore(), useHistoryStore(), useUiStore(), t)
 
 </script>
@@ -100,8 +101,8 @@ const {
                   <label for="width-input">
                     {{ $t('tools.crop.settings.general.cropDimensions.width') }}
                   </label>
-                  <NumberInput ref="widthInputRef" v-model="tmpCropWidth" :min="editorConfig.minCropSize"
-                    :max="maxCropWidth" @update="(val) => updateDimension('width', val)" unit="px" />
+                  <NumberInput ref="widthInputRef" v-model="tmpCropWidth" :min="minCropWidth" :max="maxCropWidth"
+                    @update="(val) => updateDimension('width', val)" unit="px" />
                 </div>
 
                 <div class="content-between-inputs-icon-wrapper">
@@ -115,8 +116,8 @@ const {
                   <label for="height-input">
                     {{ $t('tools.crop.settings.general.cropDimensions.height') }}
                   </label>
-                  <NumberInput ref="heightInputRef" v-model="tmpCropHeight" :min="editorConfig.minCropSize"
-                    :max="maxCropHeight" @update="(val) => updateDimension('height', val)" unit="px" />
+                  <NumberInput ref="heightInputRef" v-model="tmpCropHeight" :min="minCropHeight" :max="maxCropHeight"
+                    @update="(val) => updateDimension('height', val)" unit="px" />
                 </div>
               </div>
             </div>

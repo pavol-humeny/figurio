@@ -69,6 +69,12 @@ const lastCannyCrop = ref({
 })
 
 /**
+ * Internal float accumulators for width/height (avoid rounding drift)
+ */
+const widthAccumulator = ref(0)
+const heightAccumulator = ref(0)
+
+/**
  * Crop sensitivity level for auto crop
  */
 const cropSensitivityLevel = ref(2)
@@ -273,6 +279,9 @@ export function useCropTool(imageStore, viewportStore, editorStore, historyStore
         manualIndents.value.bottomIndentMax = fileDimensions.height
         manualIndents.value.leftIndentMax = fileDimensions.width
 
+        widthAccumulator.value = cropBox.value.width
+        heightAccumulator.value = cropBox.value.height
+
         // Last canny crop reset
         updateLastCannyCrop()
       }
@@ -349,10 +358,63 @@ export function useCropTool(imageStore, viewportStore, editorStore, historyStore
    * Maximum crop width and height based on current image dimensions and position
    */
   const maxCropWidth = computed(() => {
-    return imageStore.fileDimensions.width - cropBox.value.x
+    const availableWidth = imageStore.fileDimensions.width - cropBox.value.x
+
+    const availableHeight = imageStore.fileDimensions.height - cropBox.value.y
+
+    if (!isDimensionsLinked.value) {
+      return availableWidth
+    }
+
+    const aspectRatio = widthAccumulator.value / heightAccumulator.value
+
+    // width limited by horizontal bound
+    const widthFromWidth = availableWidth
+
+    // width limited by vertical bound (via height constraint)
+    const widthFromHeight = availableHeight * aspectRatio
+
+    return round(Math.min(widthFromWidth, widthFromHeight))
   })
+
   const maxCropHeight = computed(() => {
-    return imageStore.fileDimensions.height - cropBox.value.y
+    const availableWidth = imageStore.fileDimensions.width - cropBox.value.x
+
+    const availableHeight = imageStore.fileDimensions.height - cropBox.value.y
+
+    if (!isDimensionsLinked.value) {
+      return availableHeight
+    }
+
+    const aspectRatio = heightAccumulator.value / widthAccumulator.value
+
+    const heightFromHeight = availableHeight
+    const heightFromWidth = availableWidth * aspectRatio
+
+    return round(Math.min(heightFromHeight, heightFromWidth))
+  })
+
+  /**
+   * Minimum crop width and height based on editorConfig and aspect ratio if dimensions are linked
+   */
+  const minCropWidth = computed(() => {
+    if (isDimensionsLinked.value) {
+      const aspectRatio = cropBox.value.width / cropBox.value.height
+      const heightBasedMinWidth = round(editorConfig.minCropSize * aspectRatio)
+      return Math.max(editorConfig.minCropSize, heightBasedMinWidth)
+    } else {
+      return editorConfig.minCropSize
+    }
+  })
+
+  const minCropHeight = computed(() => {
+    if (isDimensionsLinked.value) {
+      const aspectRatio = cropBox.value.height / cropBox.value.width
+      const widthBasedMinHeight = round(editorConfig.minCropSize * aspectRatio)
+      return Math.max(editorConfig.minCropSize, widthBasedMinHeight)
+    } else {
+      return editorConfig.minCropSize
+    }
   })
 
   /**
@@ -399,47 +461,46 @@ export function useCropTool(imageStore, viewportStore, editorStore, historyStore
    * @param {number} value - New dimension value
    */
   const updateDimension = (key, value) => {
-    const minCropSize = editorConfig.minCropSize
-    const originalWidth = cropBox.value.width
-    const originalHeight = cropBox.value.height
+    const originalWidth = widthAccumulator.value
+    const originalHeight = heightAccumulator.value
 
     if (key === 'width') {
-      const clampedWidth = round(clamp(value, minCropSize, maxCropWidth.value))
+      const clampedWidth = clamp(value, minCropWidth.value, maxCropWidth.value)
 
-      // Dimensions are linked
       if (isDimensionsLinked.value && originalWidth > 0) {
         const aspectRatio = originalHeight / originalWidth
-        cropBox.value.width = clampedWidth
-        cropBox.value.height = round(
-          clamp(clampedWidth * aspectRatio, minCropSize, maxCropHeight.value),
-        )
-      }
-      // Free crop
-      else {
-        cropBox.value.width = clampedWidth
-      }
-    } else if (key === 'height') {
-      const clampedHeight = round(clamp(value, minCropSize, maxCropHeight.value))
 
-      // Dimensions are linked
-      if (isDimensionsLinked.value && originalHeight > 0) {
-        const aspectRatio = originalWidth / originalHeight
-        cropBox.value.height = clampedHeight
-        cropBox.value.width = round(
-          clamp(clampedHeight * aspectRatio, minCropSize, maxCropWidth.value),
+        widthAccumulator.value = clampedWidth
+        heightAccumulator.value = clamp(
+          clampedWidth * aspectRatio,
+          minCropHeight.value,
+          maxCropHeight.value,
         )
-      }
-      // Free crop
-      else {
-        cropBox.value.height = clampedHeight
+      } else {
+        widthAccumulator.value = clampedWidth
       }
     }
-    // nextTick(() => {
-    //   // heightInputRef.value.value = cropHeight.value
-    //   heightInputRef.value.setValue(cropHeight.value)
-    //   // widthInputRef.value.value = cropWidth.value
-    //   widthInputRef.value.setValue(cropWidth.value)
-    // })
+
+    if (key === 'height') {
+      const clampedHeight = clamp(value, minCropHeight.value, maxCropHeight.value)
+
+      if (isDimensionsLinked.value && originalHeight > 0) {
+        const aspectRatio = originalWidth / originalHeight
+
+        heightAccumulator.value = clampedHeight
+        widthAccumulator.value = clamp(
+          clampedHeight * aspectRatio,
+          minCropWidth.value,
+          maxCropWidth.value,
+        )
+      } else {
+        heightAccumulator.value = clampedHeight
+      }
+    }
+
+    // až teraz round pre UI
+    cropBox.value.width = round(widthAccumulator.value)
+    cropBox.value.height = round(heightAccumulator.value)
 
     updateLastCannyCrop()
   }
@@ -647,6 +708,9 @@ export function useCropTool(imageStore, viewportStore, editorStore, historyStore
       cropBox.value.y = round(cropBox.value.y)
       cropBox.value.width = round(cropBox.value.width)
       cropBox.value.height = round(cropBox.value.height)
+
+      widthAccumulator.value = cropBox.value.width
+      heightAccumulator.value = cropBox.value.height
 
       document.removeEventListener('mousemove', onMouseMove)
       document.removeEventListener('mouseup', onMouseUp)
@@ -1066,6 +1130,10 @@ export function useCropTool(imageStore, viewportStore, editorStore, historyStore
       width: imageStore.fileDimensions.width,
       height: imageStore.fileDimensions.height,
     }
+
+    widthAccumulator.value = cropBox.value.width
+    heightAccumulator.value = cropBox.value.height
+
     fitCropApplied.value = false
 
     updateLastCannyCrop()
@@ -1249,5 +1317,7 @@ export function useCropTool(imageStore, viewportStore, editorStore, historyStore
     isManualAdjustmentsLinked,
     manualIndentsWereChangedManually,
     cropSensitivityLevel,
+    minCropHeight,
+    minCropWidth,
   }
 }
