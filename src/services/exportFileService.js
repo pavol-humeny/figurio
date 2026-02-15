@@ -609,7 +609,7 @@ export function exportFileService(imageStore, editorStore, historyStore, viewpor
       })
 
       // 2. Overlay
-      if (rasterized.overlay) {
+      if (rasterized?.overlay) {
         const overlayDataUrl = rasterized.overlay.toDataURL('image/png')
         const overlayBytes = Uint8Array.from(atob(overlayDataUrl.split(',')[1]), (c) =>
           c.charCodeAt(0),
@@ -694,7 +694,7 @@ export function exportFileService(imageStore, editorStore, historyStore, viewpor
       const rasterized = await imageStore.rasterize('export-pdf', {}, t)
 
       // 2 Overlay
-      if (rasterized.overlay) {
+      if (rasterized?.overlay) {
         const overlayDataUrl = rasterized.overlay.toDataURL('image/png')
         pdf.addImage(overlayDataUrl, 'PNG', offsetX, offsetY, targetWidth, targetHeight)
       }

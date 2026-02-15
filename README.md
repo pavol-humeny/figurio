@@ -8,15 +8,29 @@
 - Noise correction
 - brush tool 
 
+## TODO št
+- nakresliť plagát 
+- skontrolovať texty a preklady
+- prerobiť snímky obrazovky kde je VUE logo na spodku 
+- otázky MTIa
+
+
+
+
+
+
 ## TODO - text 
 - dorobiť wireframe a dať to do návrhu
-- prerobiť snímky obrazovky kde je VUE logo na spodku 
 - dopísať nástroje 
 - úvod 
 - záver
 
 # TODO
 - vyriešiť snapovanie objektov
+- number spinner by mohol fungovat dookola 
+- Upraviť help - pridať about 
+
+- shape -vytvaranie novy objektov a ich mazanie ked su male by mohlo funogovat lepsie
 
 - Štetec
     - premyslieť ten štetec a pixeláciu 
@@ -24,19 +38,15 @@
     - doriešiť export kresleného overlay
     - brush - tvar (kruh a štvorec, čiara horizontálna/vertikálna)
 
-- Resize a crop nastaviť tak aby rešpektovali minimálne a maximálne rozmery v presete
 - Crop pridat zmenu so shiftom
-- Crop ak mame 40x20 a linked, a zmensujeme 40 tak by sa to nemalo dat zmensit
 
 ## TODO 
 - Vylepšenie rámiku pre prehliadače 
 
 ## Dlhodobé TODO 
 - eye dropper na safari
-- Globálne úpravy (rasterizácia)
 - BG removal - ukladanie do undo redo operácií pri výbere 
 - Poskakovanie pri resize ak je to otočené (svg objekty)
-- Poloha magnify area a blur object voči ostatným objektom (možné riešenie vrstvy)
 - možnosť všetko exportovať naraz do zip
 - PDF s nepodporovanými svg objektami 
 - prevod pdf na raster ak to obsahuje hlúposti 
@@ -66,7 +76,6 @@
 ## Ťažko povedať čo s tým 
 - SKIP - (asi to je v pohode tak ako to je) zoomovanie pomocou tlacitok, ak je obrazok mimo stred tak to zoomuje mimo obrázok 
 
-
 ## TODO od J (userTesting2 - 12.1.2026)
 - FIXED - Zoom pomocou numerickej klávesnice
 - FIXED - fyzický mód možno iná ikona 
@@ -93,11 +102,11 @@
     - pri kliknutí to hned vytvorí nový objekt namiesto výberu 
 - SKIP - text - málo fontov 
 - SKIP - blur - čakala blur pomocou štetca/kreslenia
-- mg area - pridáva sa nový objekt pri kliknutí namiesto výberu 
+- FIXED - mg area - pridáva sa nový objekt pri kliknutí namiesto výberu 
 - FIXED - resize - hneď to aplikovať nie len resetovať hodnoty 
 
 
-## TODO od SA (userTesting2 - 18.1.2026)
+## FIXED - TODO od SA (userTesting2 - 18.1.2026)
 - FIXED - pohyb pomocou L mouse + deselect nástroja 
 - FIXED - command + zoom pre priblíženie na macu 
 - FIXED - Premenovanie súboru by nemuselo dávať toast
@@ -121,8 +130,8 @@
 - FIXED - z index polohu zobrazovať len 2 tlačidlá ak sú len 2 objekty, žiadne ak je len jeden 
 - FIXED - pri prepínaní okien to nedrží zoom 
 - FIXED - tab sa nedá posunúť úplne doprava 
-- TODO - MG - zoomuje len podklad a nie aj objekty 
-- TODO - select - ak sa vyberie mg tak to zostane na tom nástroji a neprepne sa to späť na select 
+- FIXED - MG - zoomuje len podklad a nie aj objekty 
+- FIXED - select - ak sa vyberie mg tak to zostane na tom nástroji a neprepne sa to späť na select 
 - FIXED - feature tour - prerobenie krížika 
 
 ## User testing changes 
@@ -237,3 +246,20 @@ Ikony sú jednoduché, lineárne alebo plné, konzistentné v jednom štýle a j
 Celkový dojem má pripomínať moderné UI/UX prezentácie výskumných alebo vývojárskych nástrojov, nie marketingový plagát.
 
 Logo aplikácie je umiestnené decentne (hore alebo v hlavičke), bez dominantného zvýraznenia.
+
+
+## Popis obrázka
+Create a clean technical exploded view diagram of a layered image editing architecture.
+The composition should show a smartphone screenshot in perspective view (slightly rotated in 3D space), with its layers separated vertically along the Z-axis.
+The layers should be visually stacked above each other with small gaps between them.
+
+Bottom layer: a simple raster image placeholder (abstract photo or blurred gradient).
+Above it: a semi-transparent raster drawing layer with visible brush strokes (freehand lines).
+Above that: a vector annotation layer containing simple geometric shapes (rectangle, ellipse) and a short text label.
+Top layer: a smartphone frame mockup surrounding the image.
+
+The style should be minimalistic, clean, technical, with white or light background.
+No excessive realism, no shadows that obscure structure.
+Slight depth perspective, subtle drop shadows to emphasize separation of layers.
+Diagram-style visualization suitable for academic thesis.
+Flat design, simple colors, high clarity.
