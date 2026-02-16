@@ -126,6 +126,9 @@ export const useUiStore = defineStore('ui', {
     /** Whether an applying overlay is shown */
     isApplying: false,
 
+    /** Whether the app is switching between tabs */
+    isSwitchingTab: 0,
+
     /** Whether a frame is being rendered - flag to not hide frame when changing it */
     isApplyingFrame: false,
 

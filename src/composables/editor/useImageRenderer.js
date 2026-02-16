@@ -138,6 +138,11 @@ export function useImageRenderer(
 
       uiStore.isApplying = true
 
+      if (uiStore.isSwitchingTab !== 0) {
+        uiStore.isLoading = true
+        uiStore.isSwitchingTab -= 1
+      }
+
       log('Rendering PDF page...')
       const pdfPageBytes = imageStore.pdfPageBytes
 
@@ -146,6 +151,7 @@ export function useImageRenderer(
         blockRender.value = false
         uiStore.isApplying = false
         uiStore.isApplyingFrame = false
+        uiStore.isLoading = false
         return
       }
 
@@ -225,6 +231,7 @@ export function useImageRenderer(
 
         uiStore.isApplying = false
         uiStore.isApplyingFrame = false
+        uiStore.isLoading = false
 
         renderCanvas()
 
@@ -248,6 +255,7 @@ export function useImageRenderer(
       log(`[imageRenderer] PDF total ${(performance.now() - tPdfStart).toFixed(1)} ms`)
 
       blockRender.value = false
+      uiStore.isLoading = false
       uiStore.isApplying = false
       uiStore.isApplyingFrame = false
     } else if (imageStore.fileType === 'image' || imageStore.showPdfAsImage) {

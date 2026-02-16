@@ -29,18 +29,12 @@
 
 ## TODO - text 
 - dorobiť wireframe a dať to do návrhu
-- dopísať nástroje 
-- úvod 
 - záver
 
 # TODO
 - vyriešiť snapovanie objektov
 - number spinner by mohol fungovat dookola 
 - Upraviť help - pridať about 
-
-- pri prepínaní súboru sa musí volať need pre blur a magnify
-
-- pri prepínaní súborov tam na chvílu preblikne pôvodný obrázok 
 
 - pri spinneri nastaviť kurzor na default a spravit to ako keby klikacie klacitka, nech tam je efekt kliknutia alebo aspoň hover
 

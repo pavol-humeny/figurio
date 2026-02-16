@@ -39,6 +39,7 @@ export function useFileTabs(uiStore, viewportStore, imageStore, editorStore, t) 
   const setActiveTab = async (index) => {
     if (index !== activeTabIndex.value) {
       uiStore.isLoading = true
+      uiStore.isSwitchingTab = 3
 
       // Artifact overlay canvas
       const overlayCanvas = document.querySelector('.overlay-canvas-artifacts')
