@@ -292,6 +292,7 @@ export function useImageRenderer(
     }
 
     renderBlurOverlay()
+    renderMagnifyOverlay()
 
     imageStore.historyWasChanged = false
     blockRender.value = false

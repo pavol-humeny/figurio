@@ -15,6 +15,14 @@
 - otázky MTIa
 
 
+## PO
+- skúsiť plagát 
+- opraviť chyby
+- pozrieť sa na svg 
+- dopísať nástroje
+
+- tutoriál REACT 
+
 
 
 
@@ -29,6 +37,12 @@
 - vyriešiť snapovanie objektov
 - number spinner by mohol fungovat dookola 
 - Upraviť help - pridať about 
+
+- pri prepínaní súboru sa musí volať need pre blur a magnify
+
+- pri prepínaní súborov tam na chvílu preblikne pôvodný obrázok 
+
+- pri spinneri nastaviť kurzor na default a spravit to ako keby klikacie klacitka, nech tam je efekt kliknutia alebo aspoň hover
 
 - shape -vytvaranie novy objektov a ich mazanie ked su male by mohlo funogovat lepsie
 

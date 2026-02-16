@@ -61,6 +61,8 @@ export const useWorkspaceStore = defineStore('workspaceStore', {
 
       imageStore.imageNeedToBeRendered = true
       imageStore.frameNeedToBeRendered = true
+      imageStore.blurOverlayNeedToBeRendered = true
+      imageStore.magnifyOverlayNeedToBeRendered = true
     },
 
     /**
@@ -129,6 +131,8 @@ export const useWorkspaceStore = defineStore('workspaceStore', {
 
       imageStore.imageNeedToBeRendered = true
       imageStore.frameNeedToBeRendered = true
+      imageStore.blurOverlayNeedToBeRendered = true
+      imageStore.magnifyOverlayNeedToBeRendered = true
     },
 
     /**
