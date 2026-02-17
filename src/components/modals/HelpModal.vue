@@ -832,6 +832,11 @@ const showStatistics = () => {
   line-height: 1.3;
 }
 
+.category-title {
+  font-size: var(--subtitle-font-size);
+  font-weight: var(--subtitle-font-weight);
+}
+
 /* Contact form */
 .contact-form {
   display: flex;

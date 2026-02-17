@@ -38,8 +38,6 @@
 - vyriešiť snapovanie objektov
 - Upraviť help - pridať about 
 
-- pri spinneri nastaviť kurzor na default a spravit to ako keby klikacie klacitka, nech tam je efekt kliknutia alebo aspoň hover
-
 - shape -vytvaranie novy objektov a ich mazanie ked su male by mohlo funogovat lepsie
 - pridať prepínač (editorConfig) na to že sa v nástroji nebude dať selectovať daný objekt 
 
