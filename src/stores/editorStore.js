@@ -155,6 +155,8 @@ export const useEditorStore = defineStore('editorStore', {
       brush: {
         isEraserMode: false,
         color: '#000000',
+        shape: 'circle', // 'circle', 'square
+        size: editorConfig.defaultManualToolSize,
       },
       frame: {
         enabled: false,

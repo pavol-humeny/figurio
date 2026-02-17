@@ -139,6 +139,8 @@ const drawPencilDot = (pos, tool) => {
   if (!ctx) return
 
   const size = Math.max(1, Math.round(editorStore.cursorSize))
+  const ix = Math.floor(pos.x)
+  const iy = Math.floor(pos.y)
   const half = Math.floor(size / 2)
 
   ctx.save()
@@ -147,8 +149,8 @@ const drawPencilDot = (pos, tool) => {
   ctx.fillStyle = tool === 'eraser' ? '#000' : hexToRgb(editorStore.toolsConfig.brush.color)
 
   ctx.fillRect(
-    Math.round(pos.x - half),
-    Math.round(pos.y - half),
+    ix - half,
+    iy - half,
     size,
     size
   )
@@ -164,11 +166,14 @@ const drawPencilDot = (pos, tool) => {
  * @param {number} size - Size of the stamp
  */
 const drawPencilStamp = (x, y, size) => {
+  const ix = Math.floor(x)
+  const iy = Math.floor(y)
+
   const half = Math.floor(size / 2)
 
   ctx.fillRect(
-    Math.round(x - half),
-    Math.round(y - half),
+    ix - half,
+    iy - half,
     size,
     size
   )
@@ -183,10 +188,10 @@ const drawPencilStamp = (x, y, size) => {
 const drawPencilLine = (from, to, tool) => {
   if (!ctx) return
 
-  let x0 = Math.round(from.x)
-  let y0 = Math.round(from.y)
-  let x1 = Math.round(to.x)
-  let y1 = Math.round(to.y)
+  let x0 = Math.floor(from.x)
+  let y0 = Math.floor(from.y)
+  let x1 = Math.floor(to.x)
+  let y1 = Math.floor(to.y)
 
   const dx = Math.abs(x1 - x0)
   const dy = Math.abs(y1 - y0)

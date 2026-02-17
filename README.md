@@ -36,9 +36,8 @@
 
 # TODO
 - vyriešiť snapovanie objektov
-- Upraviť help - pridať about 
-
-- shape -vytvaranie novy objektov a ich mazanie ked su male by mohlo funogovat lepsie
+- pridať README ku projektu
+- shape -vytvaranie novy objektov a ich mazanie ked su male by mohlo fungovat lepsie
 - pridať prepínač (editorConfig) na to že sa v nástroji nebude dať selectovať daný objekt 
 
 - Štetec
