@@ -2,8 +2,15 @@
   "title": "Help",
   "helpContent": {
     "purpose": {
-      "title": "Purpose",
-      "text": "This image editor is designed for editing of images intended for use in academic, professional, or technical documents. It provides a range of tools and modifications useful especially for these purposes."
+      "title": "About Figurio",
+      "points": [
+        "Figurio is a web-based image editor designed for preparing images for academic and technical documents.",
+        "It is intended for students, researchers, and authors who need to quickly refine screenshots, diagrams, and figures without using complex graphic software.",
+        "The editor provides essential tools for cropping, highlighting important areas, removing unwanted elements, adding annotations, and applying presentation frames.",
+        "Its focused feature set avoids unnecessary complexity while keeping the workflow fast, clear, and intuitive.",
+        "Figurio runs directly in the browser with no installation required.",
+        "All image processing is performed locally in the browser, emphasizing privacy, security, and protection of sensitive data."
+      ]
     },
     "tools": {
       "title": "Tools"

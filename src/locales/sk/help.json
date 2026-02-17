@@ -2,8 +2,15 @@
   "title": "Pomocník",
   "helpContent": {
     "purpose": {
-      "title": "Účel",
-      "text": "Tento editor obrázkov je určený na úpravu obrázkov používaných v akademických, odborných alebo technických dokumentoch. Poskytuje množstvo nástrojov a úprav vhodných najmä na tieto účely."
+      "title": "O aplikácii Figurio",
+      "points": [
+        "Figurio je webový editor obrázkov určený na prípravu obrazových materiálov do akademických a technických dokumentov.",
+        "Je navrhnutý pre študentov, výskumníkov a autorov, ktorí potrebujú rýchlo upraviť snímky obrazovky, diagramy alebo grafy bez použitia zložitého grafického softvéru.",
+        "Editor ponúka základné nástroje na orezanie, zvýraznenie dôležitých častí, odstránenie rušivých prvkov, pridávanie anotácií a aplikovanie prezentačných rámikov.",
+        "Zameriava sa na najčastejšie potrebné úpravy a vyhýba sa zbytočnej komplexnosti, aby bola práca rýchla, prehľadná a intuitívna.",
+        "Figurio funguje priamo v prehliadači bez nutnosti inštalácie.",
+        "Všetky úpravy obrázkov prebiehajú lokálne v prehliadači, s dôrazom na ochranu súkromia, bezpečnosť a spracovanie citlivých údajov."
+      ]
     },
     "tools": {
       "title": "Nástroje"

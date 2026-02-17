@@ -8,23 +8,21 @@
 - Noise correction
 - brush tool 
 
-## TODO št
+## ŠT
 - nakresliť plagát 
 - skontrolovať texty a preklady
 - prerobiť snímky obrazovky kde je VUE logo na spodku 
+- Wireframy
 - otázky MTIa
 
 
-## PO
-- skúsiť plagát 
+## UT
+- štetec
 - opraviť chyby
-- pozrieť sa na svg 
-- dopísať nástroje
+- pozrieť sa na svg import
+- skúsiť plagát 
 
 - tutoriál REACT 
-
-
-
 
 
 ## TODO - text 
@@ -33,7 +31,6 @@
 
 # TODO
 - vyriešiť snapovanie objektov
-- number spinner by mohol fungovat dookola 
 - Upraviť help - pridať about 
 
 - pri spinneri nastaviť kurzor na default a spravit to ako keby klikacie klacitka, nech tam je efekt kliknutia alebo aspoň hover
@@ -45,6 +42,11 @@
     - 1px štetec by mal vyplnat 1px 
     - doriešiť export kresleného overlay
     - brush - tvar (kruh a štvorec, čiara horizontálna/vertikálna)
+
+- Help 
+    - pridať about 
+    - skontrolovať preklad 
+    - kategórie skratiek by mohli byť bold tak ako nástroje
 
 - Crop pridat zmenu so shiftom
 

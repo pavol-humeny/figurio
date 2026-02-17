@@ -3,7 +3,7 @@ import { storeToRefs } from 'pinia';
 import BaseIcon from '@/components/icons/BaseIcon.vue';
 import DefaultButton from '@/components/common/DefaultButton.vue';
 import { useHelpModal } from '@/composables/modals/useHelpModal';
-import { computed} from 'vue'
+import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useUiStore } from '@/stores/uiStore';
 import { useRouter } from 'vue-router';
@@ -39,6 +39,13 @@ const keyboardShortcuts = computed(() => {
  */
 const technicalLimitations = computed(() => {
   return messages.value[locale.value]?.help?.helpContent?.technicalLimitations?.limitations || []
+})
+
+/**
+ * List of points about the purpose of Figurio as array
+ */
+const aboutPoints = computed(() => {
+  return messages.value[locale.value]?.help?.helpContent?.purpose?.points || []
 })
 
 /**
@@ -130,8 +137,8 @@ const showStatistics = () => {
                 {{ $t('help.helpContent.purpose.title') }}
               </p>
               <ul class="dot-paragraph">
-                <li>
-                  {{ $t('help.helpContent.purpose.text') }}
+                <li v-for="(point, index) in aboutPoints" :key="index">
+                  {{ point }}
                 </li>
               </ul>
             </div>
@@ -815,6 +822,8 @@ const showStatistics = () => {
   margin: 0;
   padding-left: 20px;
   list-style-type: disc;
+  text-align: justify;
+  padding-right: 10px;
 }
 
 .dot-paragraph li {
@@ -833,6 +842,7 @@ const showStatistics = () => {
 
 .command-line-wrapper {
   margin-top: 20px;
+  padding-right: 10px;
 }
 
 .contact-name-email {
