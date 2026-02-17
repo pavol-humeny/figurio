@@ -106,8 +106,14 @@ defineExpose({ setValue })
         @keydown.enter="onCommit" :style="{ background: props.background }" />
 
       <div class="spinner-controls">
-        <BaseIcon name="IconArrowUp" size="20" class="spinner-btn spinner-btn-up" @mousedown="startHold(increment)" @mouseup="stopHold" @mouseleave="stopHold" />
-        <BaseIcon name="IconArrowDown" size="20" class="spinner-btn spinner-btn-down" @mousedown="startHold(decrement)" @mouseup="stopHold" @mouseleave="stopHold" />
+        <div class="spinner-btn spinner-btn-up">
+          <BaseIcon name="IconArrowUp" size="20" class="spinner-btn-icon-up" @mousedown="startHold(increment)"
+            @mouseup="stopHold" @mouseleave="stopHold" />
+        </div>
+        <div class="spinner-btn spinner-btn-down">
+          <BaseIcon name="IconArrowDown" size="20" class="spinner-btn-icon-down" @mousedown="startHold(decrement)"
+            @mouseup="stopHold" @mouseleave="stopHold" />
+        </div>
       </div>
     </div>
   </ItemTip>
@@ -118,10 +124,12 @@ defineExpose({ setValue })
   position: relative;
   display: inline-block;
   width: 80px;
+  height: 27px;
 }
 
 .text-input {
   width: 100%;
+  height: 100%;
   padding: 5px 28px 5px 10px;
   border-radius: var(--input-border-radius);
   border: none;
@@ -154,16 +162,27 @@ defineExpose({ setValue })
 }
 
 .spinner-btn {
-  cursor: pointer;
+  cursor: default;
   color: var(--primary-c);
+  overflow: hidden;
 }
 
-.spinner-btn-up {
-  margin-bottom: -4px;
+.spinner-btn-up:hover {
+  background: #adadad;
+  border-radius: 0px 3px 0px 0;
 }
 
-.spinner-btn-down {
-  margin-top: -4px;
+.spinner-btn-down:hover {
+  background: #adadad;
+  border-radius: 0px 0px 3px 0px;
+}
+
+.spinner-btn-icon-up {
+  transform: translateY(-4px);
+}
+
+.spinner-btn-icon-down {
+  transform: translateY(-4px);
 }
 
 .spinner-btn:active {

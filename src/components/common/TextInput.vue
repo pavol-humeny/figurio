@@ -98,6 +98,7 @@ defineExpose({
   background: var(--secondary-c);
   color: var(--text-c);
   font-size: var(--input-text-size);
+  height: 27px;
 }
 
 .text-input:disabled {

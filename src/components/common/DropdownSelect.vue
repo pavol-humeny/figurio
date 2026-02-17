@@ -121,6 +121,7 @@ defineExpose({ setValue })
   position: relative;
   width: 100%;
   cursor: pointer;
+  height: 27px;
 }
 
 .select-display {

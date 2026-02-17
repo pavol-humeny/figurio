@@ -127,6 +127,7 @@ defineExpose({ setValue })
 <style scoped>
 .input-wrapper {
   position: relative;
+  height: 27px;
 }
 
 input[type='number'] {
@@ -134,6 +135,7 @@ input[type='number'] {
 }
 
 .value-input {
+  height: 100%;
   width: 13ch;
   padding: var(--input-top-padding) 10px var(--input-top-padding) 10px;
   border-radius: var(--input-border-radius);

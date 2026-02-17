@@ -105,7 +105,7 @@
         @keydown.enter="onCommit" :style="{ background: props.background }" />
 
       <BaseIcon name="IconDropDown" class="dropdown-icon" size="12" color="var(--primary-c)"
-        :style="{ transform: showDropdown ? 'rotate(180deg) translateY(7px)' : 'rotate(0deg)' }"
+        :style="{ transform: showDropdown ? 'rotate(180deg) translateY(4px)' : 'rotate(0deg)' }"
         @click="toggleDropdown" />
     </div>
   </ItemTip>
@@ -127,10 +127,12 @@
   position: relative;
   display: inline-block;
   width: 80px;
+  height: 27px;
 }
 
 .text-input {
   width: 100%;
+  height: 100%;
   padding: 7px 25px 7px 10px;
   border-radius: var(--input-border-radius);
   border: none;
@@ -155,7 +157,7 @@
 .dropdown-icon {
   position: absolute;
   right: 8px;
-  top: 3px;
+  top: 2px;
   transform: translateY(-50%);
   cursor: pointer;
   pointer-events: auto;

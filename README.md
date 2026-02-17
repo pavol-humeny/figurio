@@ -14,6 +14,11 @@
 - prerobiť snímky obrazovky kde je VUE logo na spodku 
 - Wireframy
 - otázky MTIa
+- V
+- úvod
+- implementácia schémy 
+- prezentácia vrstvy 
+- 
 
 
 ## UT
@@ -36,6 +41,7 @@
 - pri spinneri nastaviť kurzor na default a spravit to ako keby klikacie klacitka, nech tam je efekt kliknutia alebo aspoň hover
 
 - shape -vytvaranie novy objektov a ich mazanie ked su male by mohlo funogovat lepsie
+- pridať prepínač (editorConfig) na to že sa v nástroji nebude dať selectovať daný objekt 
 
 - Štetec
     - premyslieť ten štetec a pixeláciu 
