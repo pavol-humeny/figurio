@@ -1,4 +1,4 @@
-import { ref, onMounted, nextTick, watch, reactive } from 'vue'
+import { ref, watch, reactive } from 'vue'
 import { useInteractiveTutorial } from '@/composables/tutorial/useInteractiveTutorial'
 import { useApi } from '@/composables/common/useApi'
 import { useFeatureTourModal } from '@/composables/modals/useFeatureTourModal'
@@ -16,18 +16,6 @@ const isVisible = ref(false)
 
 /**
  * Logic for the help modal with scrolling and Escape key support
- *
- * @returns {{
- *   helpContentRef: import('vue').Ref<HTMLElement | null>,
- *   atTop: import('vue').Ref<boolean>,
- *   atBottom: import('vue').Ref<boolean>,
- *   isVisible: import('vue').Ref<boolean>,
- *   scrollUp: () => void,
- *   scrollDown: () => void,
- *   checkScroll: () => void,
- *   openHelpModal: () => void,
- *   closeHelpModal: () => void
- * }}
  */
 export function useHelpModal(uiStore, imageStore, editorStore, userModeStore, router, t) {
   const { startTutorial, continueTutorial } = useInteractiveTutorial(uiStore, imageStore, router, t)
@@ -35,16 +23,6 @@ export function useHelpModal(uiStore, imageStore, editorStore, userModeStore, ro
    * Reference to the scrollable content container
    */
   const helpContentRef = ref(null)
-
-  /**
-   * Whether the scroll is at the top
-   */
-  const atTop = ref(true)
-
-  /**
-   * Whether the scroll is at the bottom
-   */
-  const atBottom = ref(false)
 
   /**
    * Contact form data
@@ -130,30 +108,6 @@ export function useHelpModal(uiStore, imageStore, editorStore, userModeStore, ro
   }
 
   /**
-   * Scroll up the help modal content
-   */
-  const scrollUp = () => {
-    helpContentRef.value?.scrollBy({ top: -20, behavior: 'auto' })
-  }
-
-  /**
-   * Scroll down the help modal content
-   */
-  const scrollDown = () => {
-    helpContentRef.value?.scrollBy({ top: 20, behavior: 'auto' })
-  }
-
-  /**
-   * Check whether the scroll is at the top or bottom of the content
-   */
-  const checkScroll = () => {
-    const element = helpContentRef.value
-    if (!element) return
-    atTop.value = element.scrollTop === 0
-    atBottom.value = element.scrollTop + element.clientHeight >= element.scrollHeight - 1
-  }
-
-  /**
    * Start the tutorial
    */
   const startInteractiveTutorial = () => {
@@ -170,11 +124,6 @@ export function useHelpModal(uiStore, imageStore, editorStore, userModeStore, ro
 
     continueTutorial()
   }
-
-  // Check scroll position on mount
-  onMounted(() => {
-    nextTick(() => checkScroll())
-  })
 
   /**
    * Open the feature tour modal from help modal
@@ -369,12 +318,7 @@ export function useHelpModal(uiStore, imageStore, editorStore, userModeStore, ro
 
   return {
     helpContentRef,
-    atTop,
-    atBottom,
     isVisible,
-    scrollUp,
-    scrollDown,
-    checkScroll,
     openHelpModal,
     closeHelpModal,
     startInteractiveTutorial,

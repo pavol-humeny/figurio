@@ -14,7 +14,6 @@ import { useApi } from '../../composables/common/useApi';
 import { useEditorStore } from '@/stores/editorStore';
 import { useUserModeStore } from '@/stores/userModeStore';
 import CommandLine from './CommandLine.vue';
-// import { useHoldButton } from '@/composables/common/useHoldButton';
 
 const { messages, locale, t } = useI18n()
 const router = useRouter()
@@ -52,11 +51,6 @@ const aboutPoints = computed(() => {
  * Logic of the help modal state and scrolling
  */
 const {
-  // atTop,
-  // atBottom,
-  // scrollUp,
-  // scrollDown,
-  checkScroll,
   isVisible,
   helpContentRef,
   closeHelpModal,
@@ -84,14 +78,6 @@ const { isTutorialEnabled } = useInteractiveTutorial(
 )
 
 /**
- * Logic of the hold button for continuous action on hold
- */
-// const {
-//   startHold,
-//   stopHold,
-// } = useHoldButton();
-
-/**
  * Navigates to the statistics view
  */
 const showStatistics = () => {
@@ -101,16 +87,6 @@ const showStatistics = () => {
 
   addUserEvent('openModal', { modal: 'statistics' })
 }
-
-/**
- * Watchers to stop hold scrolling when reaching top or bottom
- */
-// watch(atTop, (newVal) => {
-//   if (newVal) stopHold();
-// });
-// watch(atBottom, (newVal) => {
-//   if (newVal) stopHold();
-// });
 </script>
 
 <template>
@@ -123,14 +99,8 @@ const showStatistics = () => {
         </div>
 
         <div class="help-content-panel">
-          <!-- Arrow up
-          <div v-if="!atTop" class="arrow-up" @mousedown="startHold(scrollUp)" @mouseup="stopHold"
-            @mouseleave="stopHold">
-            <BaseIcon name="IconArrowUp" size="24" color="var(--primary-c)" />
-          </div>-->
-
           <!-- Help content -->
-          <div class="help-content-wrapper" ref="helpContentRef" @scroll="checkScroll">
+          <div class="help-content-wrapper" ref="helpContentRef">
             <!-- Purpose -->
             <div class="help-content">
               <p class="help-content-title">
@@ -519,7 +489,6 @@ const showStatistics = () => {
                 <p class="help-content-title" style="margin-bottom: 0;">
                   {{ $t('help.helpContent.statistics.title') }}
                 </p>
-                <!-- <BaseIcon name="IconStatistics" size="20" position="top-right" color="var(--primary-c)" /> -->
               </div>
               <ul class="dot-paragraph">
                 <li>
@@ -615,12 +584,6 @@ const showStatistics = () => {
               </div>
             </div>
           </div>
-
-          <!-- Arrow down
-          <div v-if="!atBottom" class="arrow-down" @mousedown="startHold(scrollDown)" @mouseup="stopHold"
-            @mouseleave="stopHold">
-            <BaseIcon name="IconArrowDown" size="24" color="var(--primary-c)" />
-          </div>-->
         </div>
 
         <!-- Close help -->
@@ -690,32 +653,7 @@ const showStatistics = () => {
   flex-direction: column;
   gap: 20px;
   padding: 25px 10px;
-  /* scrollbar-width: none; */
-  /* mask-image: linear-gradient(to bottom,
-      transparent,
-      black 30px,
-      black calc(100% - 30px),
-      transparent 100%); */
 }
-
-/* .arrow-up,
-.arrow-down {
-  position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  cursor: pointer;
-}
-
-.arrow-up {
-  top: 0;
-}
-
-.arrow-down {
-  bottom: 0;
-} */
 
 .help-content-title {
   font-size: var(--help-subtitle-font-size);

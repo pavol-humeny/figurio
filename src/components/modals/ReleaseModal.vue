@@ -4,7 +4,6 @@ import DefaultButton from '@/components/common/DefaultButton.vue';
 import { useReleaseModal } from '@/composables/modals/useReleaseModal';
 import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
-// import { useHoldButton } from '@/composables/common/useHoldButton';
 
 const { messages, locale } = useI18n()
 
@@ -26,34 +25,10 @@ const currentlyInProgress = computed(() => {
  * Logic of the patch notes modal state and scrolling
  */
 const {
-  // atTop,
-  // atBottom,
-  // scrollUp,
-  // scrollDown,
-  checkScroll,
   isVisible,
   releaseContentRef,
   closeReleaseModal,
 } = useReleaseModal();
-
-/**
- * Logic of the hold button for continuous action on hold
- */
-// const {
-//   startHold,
-//   stopHold,
-// } = useHoldButton();
-
-
-/**
- * Watchers to stop hold scrolling when reaching top or bottom
- */
-// watch(atTop, (newVal) => {
-//   if (newVal) stopHold();
-// });
-// watch(atBottom, (newVal) => {
-//   if (newVal) stopHold();
-// });
 </script>
 
 <template>
@@ -66,14 +41,8 @@ const {
         </div>
 
         <div class="release-content-panel">
-          <!-- Arrow up
-          <div v-if="!atTop" class="arrow-up" @mousedown="startHold(scrollUp)" @mouseup="stopHold"
-            @mouseleave="stopHold">
-            <BaseIcon name="IconArrowUp" size="24" color="var(--primary-c)" />
-          </div>-->
-
           <!-- Patch notes content -->
-          <div class="release-content-wrapper" ref="releaseContentRef" @scroll="checkScroll">
+          <div class="release-content-wrapper" ref="releaseContentRef">
             <div v-if="currentlyInProgress.length > 0" class="release-block">
               <p class="release-global-texts">
                 {{ $t('release.inProgressGlobal.currentlyInProgressText') }}
@@ -126,12 +95,6 @@ const {
               </div>
             </div>
           </div>
-
-          <!-- Arrow down
-          <div v-if="!atBottom" class="arrow-down" @mousedown="startHold(scrollDown)" @mouseup="stopHold"
-            @mouseleave="stopHold">
-            <BaseIcon name="IconArrowDown" size="24" color="var(--primary-c)" />
-          </div>-->
         </div>
 
         <!-- Close patch notes -->
@@ -196,32 +159,7 @@ const {
   flex-direction: column;
   gap: 20px;
   padding: 25px 10px;
-  /* scrollbar-width: none; */
-  /* mask-image: linear-gradient(to bottom,
-      transparent,
-      black 30px,
-      black calc(100% - 30px),
-      transparent 100%); */
 }
-
-/* .arrow-up,
-.arrow-down {
-  position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  cursor: pointer;
-}
-
-.arrow-up {
-  top: 0;
-}
-
-.arrow-down {
-  bottom: 0;
-} */
 
 .label-date-wrapper {
   display: flex;
