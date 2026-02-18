@@ -18,17 +18,6 @@
 - úvod
 - implementácia schémy 
 - prezentácia vrstvy 
-- 
-
-
-## UT
-- štetec
-- opraviť chyby
-- pozrieť sa na svg import
-- skúsiť plagát 
-
-- tutoriál REACT 
-
 
 ## TODO - text 
 - dorobiť wireframe a dať to do návrhu
@@ -40,18 +29,14 @@
 - shape -vytvaranie novy objektov a ich mazanie ked su male by mohlo fungovat lepsie
 - pridať prepínač (editorConfig) na to že sa v nástroji nebude dať selectovať daný objekt 
 
-- Štetec
-    - premyslieť ten štetec a pixeláciu 
-    - 1px štetec by mal vyplnat 1px 
-    - doriešiť export kresleného overlay
-    - brush - tvar (kruh a štvorec, čiara horizontálna/vertikálna)
-
 - Help 
-    - pridať about 
     - skontrolovať preklad 
-    - kategórie skratiek by mohli byť bold tak ako nástroje
 
 - Crop pridat zmenu so shiftom
+- Crop orezanie v pomere 
+
+- štatistiky návštevnosť - nie len 7 dní ale možnosť scrollovať ďalej 
+
 
 ## TODO 
 - Vylepšenie rámiku pre prehliadače 
@@ -77,6 +62,7 @@
 - Split screen pre viac obrázkov 
 - v inpute by to čísla mohlo počítať 
 - Možnosť vytvoriť si prázdny projekt a vkladať tam obrázky
+- Premapovanie klávesových skratiek užívateľom
 
 ## Nepreukázalo sa 
 - pri prepnutí z color na manual select sa nezapne spravny kurzor

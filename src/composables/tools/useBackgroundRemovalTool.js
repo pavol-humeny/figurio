@@ -31,11 +31,6 @@ const autoRemovalThreshold = ref(editorConfig.defaultAutoRemovalThreshold)
  */
 const manualSelectedTool = ref('brush') // 'brush' | 'eraser'
 
-/**
- * Size of the manual tool
- */
-const manualToolSize = ref(0)
-
 export function useBackgroundRemovalTool(
   imageStore,
   historyStore,
@@ -46,17 +41,6 @@ export function useBackgroundRemovalTool(
 ) {
   const { showConfirmModal } = useConfirmModal()
   const { renderUpTo } = useImagePipeline(imageStore, uiStore)
-
-  /**
-   * Watch for manual tool size changes in store and update local value
-   */
-  watch(
-    () => editorStore.cursorSize,
-    (newSize) => {
-      manualToolSize.value = newSize
-    },
-    { immediate: true },
-  )
 
   /**
    * Background color for replacement (if enabled)
@@ -79,6 +63,16 @@ export function useBackgroundRemovalTool(
     },
     set: (value) => {
       editorStore.toolsConfig.backgroundRemoval.replaceWithBackgroundColor = value
+    },
+  })
+
+  /**
+   * Size of the manual brush/eraser tool, synced with store
+   */
+  const brushSize = computed({
+    get: () => editorStore.toolsConfig.backgroundRemoval.brushSize,
+    set: (value) => {
+      editorStore.toolsConfig.backgroundRemoval.brushSize = value
     },
   })
 
@@ -247,8 +241,8 @@ export function useBackgroundRemovalTool(
   watch(
     () => workspaceStore.activeTabIndex,
     () => {
-      if (manualToolSize.value > manualMaxToolSize.value) {
-        manualToolSize.value = manualMaxToolSize.value
+      if (brushSize.value > manualMaxToolSize.value) {
+        setBrushSize(manualMaxToolSize.value)
       }
     },
     { immediate: true },
@@ -325,8 +319,8 @@ export function useBackgroundRemovalTool(
    * Change size of the manual tool
    * @param {number} size - New size in pixels
    */
-  const changeManualToolSize = (size) => {
-    editorStore.cursorSize = size
+  const setBrushSize = (size) => {
+    brushSize.value = size
   }
 
   /**
@@ -919,13 +913,13 @@ export function useBackgroundRemovalTool(
     applyBackgroundRemoval,
     colorBackgroundColor,
     manualSelectedTool,
-    manualToolSize,
+    brushSize,
     manualSelectTool,
     manualMaxToolSize,
     manualMinToolSize,
     clearAllSelections,
     invertSelection,
-    changeManualToolSize,
+    setBrushSize,
     // detectObjectsClick,
     replaceSelection,
     highlightColor,

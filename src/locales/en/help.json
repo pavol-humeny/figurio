@@ -17,7 +17,7 @@
     },
     "shortcuts": {
       "title": "Keyboard Shortcuts",
-      "text": "You can use keyboard shortcuts to quickly access various tools and features in the editor. Below is a list of available shortcuts.",
+      "text": "Keyboard shortcuts allow you to access tools and perform common actions more efficiently without navigating through menus. They are designed to speed up your workflow and improve overall productivity while editing. Below you will find a list of available shortcuts and their corresponding actions.",
       "categories": [
         {
           "name": "General",
@@ -88,7 +88,7 @@
     },
     "featureTour": {
       "title": "Feature Tour",
-      "text": "Short videos demonstrating specific features of the editor. You can access the feature tour at any time to learn more about the available tools and functionalities.",
+      "text": "A collection of short demonstration videos presenting individual tools and selected advanced features. Each video focuses on a specific functionality and provides a concise explanation of its purpose and usage. The feature tour can be accessed at any time.",
       "button": {
         "text": "Open Feature Tour"
       }
@@ -96,23 +96,23 @@
     "technicalLimitations": {
       "title": "Technical Limitations",
       "limitations": [
-        "Pdf files with complex structures may not render perfectly.",
-        "Very large image files may result in slower performance depending on your device capabilities.",
+        "PDF files with complex layouts, or advanced graphical elements may not render exactly as in the original document.",
+        "Large image files may affect performance depending on your device, available memory, and browser capabilities.",
         "Animated images (e.g., GIFs) are not supported.",
-        "Undo/redo history is limited.",
-        "Browser refresh will erase unsaved progress."
+        "Undo and redo history is limited to preserve performance and memory usage.",
+        "Refreshing the browser or closing the tab will discard any unsaved changes."
       ]
     },
     "statistics":{
       "title": "Usage Statistics",
-      "text": "Statistics are collected to help improve the editor. Statistics include information about how many times are used various features.",
+      "text": "Anonymous usage data is collected to help improve the editor’s functionality, usability, and performance. The collected statistics are aggregated and do not include personal content from edited images. Data typically reflects how often individual tools and features are used.",
       "seeStatisticsButton": {
         "text": "See Statistics"
       }
     },
     "contactAndFeedback": {
       "title": "Contact and Feedback",
-      "text": "If you have any questions, suggestions, or feedback regarding the editor, please use the contact form below or contact me at:",
+      "text": "If you have questions, suggestions, or feedback regarding the editor, feel free to use the contact form below. Your input helps identify issues, prioritize improvements, and shape future development. You can also reach out directly via email:",
       "contactForm": {
         "name": "Name",
         "namePlaceholder": "John Doe",
@@ -122,7 +122,7 @@
         "subject": "Subject",
         "subjectPlaceholder": "General inquiry",
         "message": "Message",
-        "messagePlaceholder": "Please write your message here...",
+        "messagePlaceholder": "Please describe your question or feedback in detail...",
         "password": "Password",
         "send": "Send message"
       }

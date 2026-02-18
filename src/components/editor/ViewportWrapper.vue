@@ -90,6 +90,9 @@ const {
   backgroundModePadding,
   viewportPixelateMode,
   switchViewportPixelateMode,
+  cursorSize,
+  isCursorRounded,
+  isPencilCursor
 } = useViewportWrapper(useViewportStore(), useImageStore(), useEditorStore(), useUiStore(), useWorkspaceStore(), contentRef)
 
 /**
@@ -380,13 +383,14 @@ const cursorStyle = computed(() => {
       v-if="showCursor && ((editorStore.selectedToolKey === 'backgroundRemoval' && editorStore.selectedTabPerTool['backgroundRemoval'] === 'manual') || editorStore.selectedToolKey === 'brush') && !uiStore.cursorOverViewportSettings"
       class="custom-cursor" :style="{
         ...cursorStyleVars,
-        width: editorStore.cursorSize * zoomLevel + 'px',
-        height: editorStore.cursorSize * zoomLevel + 'px',
+        width: cursorSize * zoomLevel + 'px',
+        height: cursorSize * zoomLevel + 'px',
         left: cursorPos.x + 'px',
         top: cursorPos.y + 'px'
       }" :class="{
         isAltResizing: editorStore.isCursorResizing,
-        'custom-cursor-square': editorStore.selectedToolKey === 'brush' && editorStore.selectedTabPerTool['brush'] === 'pencil'
+        'custom-cursor-square': !isCursorRounded,
+        'custom-cursor-pencil': isPencilCursor,
       }"></div>
 
     <!-- Sliders -->
@@ -798,8 +802,36 @@ const cursorStyle = computed(() => {
   border-radius: 50%;
 }
 
+/* Square variant */
 .custom-cursor.custom-cursor-square {
   border-radius: 0;
+  position: absolute;
+}
+
+/* Vertical line */
+.custom-cursor.custom-cursor-pencil::before,
+.custom-cursor.custom-cursor-pencil::after {
+  content: "";
+  position: absolute;
+  background-color: var(--cursor-border);
+}
+
+/* Horizontal line */
+.custom-cursor.custom-cursor-pencil::before {
+  width: 25%;
+  height: 1px;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+/* Vertical line */
+.custom-cursor.custom-cursor-pencil::after {
+  width: 1px;
+  height: 25%;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 }
 
 .isAltResizing {

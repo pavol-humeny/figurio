@@ -18,13 +18,12 @@ const editorStore = useEditorStore()
 const imageStore = useImageStore()
 
 const {
-  brushToolSize,
-  changeBrushToolSize,
+  brushSize,
+  setBrushSize,
   brushMaxToolSize,
   brushMinToolSize,
   brushColor,
   saveColorToStore,
-  // rasterizeImage,
   clearAllCanvas,
   setIsEraserMode,
   isEraserMode,
@@ -91,8 +90,8 @@ const tabs = ['brush', 'pencil']
                 {{ $t('tools.brush.settings.brush.toolSize.label') }}
               </p>
             </div>
-            <NumberInput v-model="brushToolSize" :min="brushMinToolSize" :max="brushMaxToolSize" :step="1" unit="px"
-              @update="changeBrushToolSize(brushToolSize)" :tip="$t('tools.brush.settings.brush.toolSize.tip')"
+            <NumberInput v-model="brushSize" :min="brushMinToolSize" :max="brushMaxToolSize" :step="1" unit="px"
+              @update="setBrushSize(brushSize)" :tip="$t('tools.brush.settings.brush.toolSize.tip')"
               position="bottom-left" />
           </div>
         </div>
@@ -171,8 +170,8 @@ const tabs = ['brush', 'pencil']
                 {{ $t('tools.brush.settings.pencil.toolSize.label') }}
               </p>
             </div>
-            <NumberInput v-model="brushToolSize" :min="brushMinToolSize" :max="brushMaxToolSize" :step="1" unit="px"
-              @update="changeBrushToolSize(brushToolSize)" :tip="$t('tools.brush.settings.pencil.toolSize.tip')"
+            <NumberInput v-model="brushSize" :min="brushMinToolSize" :max="brushMaxToolSize" :step="1" unit="px"
+              @update="setBrushSize(brushSize)" :tip="$t('tools.brush.settings.pencil.toolSize.tip')"
               position="bottom-left" />
           </div>
         </div>

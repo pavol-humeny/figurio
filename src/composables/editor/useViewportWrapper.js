@@ -660,6 +660,58 @@ export function useViewportWrapper(
     immediate: true,
   })
 
+  // ------------------------------
+  // Cursor position and resizing
+  // ------------------------------
+  const cursorSize = computed(() => {
+    if (editorStore.selectedToolKey === 'brush') {
+      return editorStore.toolsConfig.brush.brushSize
+    } else if (editorStore.selectedToolKey === 'backgroundRemoval') {
+      return editorStore.toolsConfig.backgroundRemoval.brushSize
+    }
+    return 0
+  })
+
+  /**
+   * Set size of the brush or background removal tool cursor
+   * @param {number} size - New size of the cursor in pixels
+   */
+  const setCursorSize = (size) => {
+    if (editorStore.selectedToolKey === 'brush') {
+      editorStore.toolsConfig.brush.brushSize = size
+    } else if (editorStore.selectedToolKey === 'backgroundRemoval') {
+      editorStore.toolsConfig.backgroundRemoval.brushSize = size
+    }
+  }
+
+  /**
+   * Shape of the cursor (rounded or square) based on the selected tool and tab
+   */
+  const isCursorRounded = computed(() => {
+    if (
+      (editorStore.selectedToolKey === 'brush' &&
+        editorStore.selectedTabPerTool['brush'] === 'pencil' &&
+        editorStore.toolsConfig.brush.brushSize <= 1) ||
+      (editorStore.selectedToolKey === 'backgroundRemoval' &&
+        editorStore.selectedTabPerTool['backgroundRemoval'] === 'manual' &&
+        editorStore.toolsConfig.backgroundRemoval.brushSize <= 1)
+    ) {
+      return false
+    } else {
+      return true
+    }
+  })
+
+  /**
+   * Whether to show pencil cursor based on the selected tool and tab
+   */
+  const isPencilCursor = computed(() => {
+    return (
+      editorStore.selectedToolKey === 'brush' &&
+      editorStore.selectedTabPerTool['brush'] === 'pencil'
+    )
+  })
+
   /**
    * Mouse position relative to the viewport
    * Used for displaying cursor coordinates
@@ -720,10 +772,12 @@ export function useViewportWrapper(
         )
 
         // Set new cursor size based on horizontal mouse movement
-        editorStore.cursorSize = clamp(
-          editorStore.cursorSize + deltaX / editorConfig.cursorResizingSensitivity,
-          editorConfig.minManualToolSize,
-          maxCursorSize,
+        setCursorSize(
+          clamp(
+            cursorSize.value + deltaX / editorConfig.cursorResizingSensitivity,
+            editorConfig.minManualToolSize,
+            maxCursorSize,
+          ),
         )
 
         lastMouseX.value = event.clientX
@@ -984,5 +1038,8 @@ export function useViewportWrapper(
     backgroundModePadding,
     viewportPixelateMode,
     switchViewportPixelateMode,
+    cursorSize,
+    isCursorRounded,
+    isPencilCursor,
   }
 }

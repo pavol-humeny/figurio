@@ -27,8 +27,8 @@ const {
   colorRemovalThreshold,
   colorBackgroundColor,
   manualSelectedTool,
-  manualToolSize,
-  changeManualToolSize,
+  brushSize,
+  setBrushSize,
   manualSelectTool,
   manualMaxToolSize,
   manualMinToolSize,
@@ -270,8 +270,8 @@ const tabs = ['auto', 'manual', 'color']
                   {{ $t('tools.backgroundRemoval.settings.manual.toolSize.label') }}
                 </p>
               </div>
-              <NumberInput v-model="manualToolSize" :min="manualMinToolSize" :max="manualMaxToolSize" :step="1"
-                unit="px" @update="changeManualToolSize(manualToolSize)"
+              <NumberInput v-model="brushSize" :min="manualMinToolSize" :max="manualMaxToolSize" :step="1"
+                unit="px" @update="setBrushSize(brushSize)"
                 :tip="$t('tools.backgroundRemoval.settings.manual.toolSize.tip')" position="bottom-left" />
             </div>
           </div>

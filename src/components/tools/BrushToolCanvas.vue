@@ -92,7 +92,7 @@ const drawBrushLine = (from, to, tool) => {
 
   ctx.save()
   ctx.imageSmoothingEnabled = true
-  ctx.lineWidth = editorStore.cursorSize
+  ctx.lineWidth = editorStore.toolsConfig.brush.brushSize
   ctx.lineCap = 'round'
   ctx.globalCompositeOperation = tool === 'eraser' ? 'destination-out' : 'source-over'
   ctx.strokeStyle = tool === 'eraser' ? '#000' : hexToRgb(editorStore.toolsConfig.brush.color)
@@ -122,7 +122,7 @@ const drawBrushDot = (pos, tool) => {
   ctx.arc(
     Math.round(pos.x),
     Math.round(pos.y),
-    editorStore.cursorSize / 2,
+    editorStore.toolsConfig.brush.brushSize / 2,
     0,
     Math.PI * 2,
   )
@@ -138,22 +138,41 @@ const drawBrushDot = (pos, tool) => {
 const drawPencilDot = (pos, tool) => {
   if (!ctx) return
 
-  const size = Math.max(1, Math.round(editorStore.cursorSize))
-  const ix = Math.floor(pos.x)
-  const iy = Math.floor(pos.y)
-  const half = Math.floor(size / 2)
+  const size = Math.max(1, Math.round(editorStore.toolsConfig.brush.brushSize))
+  const radius = size / 2
+
+  const cx = Math.floor(pos.x)
+  const cy = Math.floor(pos.y)
 
   ctx.save()
   ctx.imageSmoothingEnabled = false
   ctx.globalCompositeOperation = tool === 'eraser' ? 'destination-out' : 'source-over'
-  ctx.fillStyle = tool === 'eraser' ? '#000' : hexToRgb(editorStore.toolsConfig.brush.color)
+  ctx.fillStyle = tool === 'eraser'
+    ? '#000'
+    : hexToRgb(editorStore.toolsConfig.brush.color)
 
-  ctx.fillRect(
-    ix - half,
-    iy - half,
-    size,
-    size
-  )
+  // 1px size
+  if (size === 1) {
+    ctx.fillRect(cx, cy, 1, 1)
+    ctx.restore()
+    return
+  }
+
+  const r2 = (radius - 0.5) * (radius - 0.5)
+  const limit = Math.floor(radius)
+
+  for (let y = -limit; y <= limit; y++) {
+    for (let x = -limit; x <= limit; x++) {
+
+      // Use center of pixel for more accurate circle
+      const dx = x + 0.5
+      const dy = y + 0.5
+
+      if (dx * dx + dy * dy <= r2) {
+        ctx.fillRect(cx + x, cy + y, 1, 1)
+      }
+    }
+  }
 
   ctx.restore()
 }
@@ -166,17 +185,30 @@ const drawPencilDot = (pos, tool) => {
  * @param {number} size - Size of the stamp
  */
 const drawPencilStamp = (x, y, size) => {
-  const ix = Math.floor(x)
-  const iy = Math.floor(y)
+  const radius = size / 2
+  const cx = Math.floor(x)
+  const cy = Math.floor(y)
 
-  const half = Math.floor(size / 2)
+  // 1px size
+  if (size === 1) {
+    ctx.fillRect(cx, cy, 1, 1)
+    return
+  }
 
-  ctx.fillRect(
-    ix - half,
-    iy - half,
-    size,
-    size
-  )
+  const r2 = (radius - 0.5) * (radius - 0.5)
+
+  for (let py = -Math.floor(radius); py <= Math.floor(radius); py++) {
+    for (let px = -Math.floor(radius); px <= Math.floor(radius); px++) {
+
+      // Use center of pixel for more accurate circle
+      const dx = px + 0.5
+      const dy = py + 0.5
+
+      if (dx * dx + dy * dy <= r2) {
+        ctx.fillRect(cx + px, cy + py, 1, 1)
+      }
+    }
+  }
 }
 
 /**
@@ -199,7 +231,7 @@ const drawPencilLine = (from, to, tool) => {
   const sy = y0 < y1 ? 1 : -1
   let err = dx - dy
 
-  const size = Math.max(1, Math.round(editorStore.cursorSize))
+  const size = Math.max(1, Math.round(editorStore.toolsConfig.brush.brushSize))
 
   ctx.save()
   ctx.globalCompositeOperation = tool === 'eraser' ? 'destination-out' : 'source-over'
@@ -493,6 +525,19 @@ onMounted(() => {
   ctx = canvasRef.value.getContext('2d', { willReadFrequently: true })
   // ctx.imageSmoothingEnabled = false
   // canvasRef.value.style.imageRendering = 'pixelated'
+
+  const mode = uiStore.viewportPixelateMode
+  const zoom = viewportStore.zoomLevel
+
+  if (mode === 'always') {
+    canvasRef.value.style.imageRendering = 'pixelated'
+  } else if (mode === 'never') {
+    canvasRef.value.style.imageRendering = 'auto'
+  } else if (mode === 'auto') {
+    canvasRef.value.style.imageRendering =
+      zoom > viewportConfig.pixelateAutoZoomThreshold ? 'pixelated' : 'auto'
+  }
+
   window.addEventListener('mouseup', onMouseUpGlobal)
   window.addEventListener('mousemove', onMouseMove)
   window.addEventListener('mousedown', onMouseDown)

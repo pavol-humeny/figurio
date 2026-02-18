@@ -1,14 +1,9 @@
-import { ref, watch, computed } from 'vue'
+import { watch, computed } from 'vue'
 import { editorConfig } from '@/config/editorConfig.js'
 import { useConfirmModal } from '@/composables/modals/useConfirmModal.js'
 import { useApi } from '../common/useApi'
 const { addUserEvent } = useApi()
 import { useImagePipeline } from '../editor/useImagePipeline.js'
-
-/**
- * Size of the brush tool
- */
-const brushToolSize = ref(0)
 
 export function useBrushTool(imageStore, historyStore, editorStore, uiStore, t) {
   const { showConfirmModal } = useConfirmModal()
@@ -35,11 +30,29 @@ export function useBrushTool(imageStore, historyStore, editorStore, uiStore, t) 
   })
 
   /**
+   * Size of the brush tool, synced with store
+   */
+  const brushSize = computed({
+    get: () => editorStore.toolsConfig.brush.brushSize,
+    set: (value) => {
+      editorStore.toolsConfig.brush.brushSize = value
+    },
+  })
+
+  /**
    * Set eraser mode based on selected subtool
    * @param {boolean} value - True for eraser mode, false for brush/pencil mode
    */
   const setIsEraserMode = (value) => {
     isEraserMode.value = value
+  }
+
+  /**
+   * Change size of the brush tool
+   * @param {number} size - New size in pixels
+   */
+  const setBrushSize = (size) => {
+    brushSize.value = size
   }
 
   /**
@@ -63,25 +76,6 @@ export function useBrushTool(imageStore, historyStore, editorStore, uiStore, t) 
    * Minimum size of the manual tool (2px)
    */
   const brushMinToolSize = editorConfig.minManualToolSize
-
-  /**
-   * Watch for brush tool size changes in store and update local value
-   */
-  watch(
-    () => editorStore.cursorSize,
-    (newSize) => {
-      brushToolSize.value = newSize
-    },
-    { immediate: true },
-  )
-
-  /**
-   * Change size of the tool
-   * @param {number} size - New size in pixels
-   */
-  const changeBrushToolSize = (size) => {
-    editorStore.cursorSize = size
-  }
 
   /**
    * Maximum size of the brush tool (10% of smaller image dimension, min 10px)
@@ -154,8 +148,8 @@ export function useBrushTool(imageStore, historyStore, editorStore, uiStore, t) 
 
   return {
     brushColor,
-    brushToolSize,
-    changeBrushToolSize,
+    brushSize,
+    setBrushSize,
     brushMaxToolSize,
     brushMinToolSize,
     saveColorToStore,

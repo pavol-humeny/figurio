@@ -218,15 +218,15 @@ const showStatistics = () => {
               <div class="tool-description">
                 <div>
                   <p class="title">
-                    {{ $t('tools.brush.subTools.eraser.label') }}
+                    {{ $t('tools.brush.subTools.pencil.label') }}
                   </p>
                   <p class="shortcut">
-                    {{ $t('tools.brush.subTools.eraser.shortcut') }}
+                    {{ $t('tools.brush.subTools.pencil.shortcut') }}
                   </p>
                 </div>
                 <ul class="description dot-paragraph">
                   <li>
-                    {{ $t('tools.brush.subTools.eraser.tip') }}
+                    {{ $t('tools.brush.subTools.pencil.tip') }}
                   </li>
                 </ul>
               </div>
@@ -243,22 +243,6 @@ const showStatistics = () => {
                 <ul class="description dot-paragraph">
                   <li>
                     {{ $t('tools.select.tip') }}
-                  </li>
-                </ul>
-              </div>
-              <!-- Blur -->
-              <div class="tool-description">
-                <div>
-                  <p class="title">
-                    {{ $t('tools.blur.label') }}
-                  </p>
-                  <p class="shortcut">
-                    {{ $t('tools.blur.shortcut') }}
-                  </p>
-                </div>
-                <ul class="description dot-paragraph">
-                  <li>
-                    {{ $t('tools.blur.tip') }}
                   </li>
                 </ul>
               </div>
@@ -291,6 +275,22 @@ const showStatistics = () => {
                 <ul class="description dot-paragraph">
                   <li>
                     {{ $t('tools.text.tip') }}
+                  </li>
+                </ul>
+              </div>
+              <!-- Blur -->
+              <div class="tool-description">
+                <div>
+                  <p class="title">
+                    {{ $t('tools.blur.label') }}
+                  </p>
+                  <p class="shortcut">
+                    {{ $t('tools.blur.shortcut') }}
+                  </p>
+                </div>
+                <ul class="description dot-paragraph">
+                  <li>
+                    {{ $t('tools.blur.tip') }}
                   </li>
                 </ul>
               </div>

@@ -114,6 +114,7 @@ export const useEditorStore = defineStore('editorStore', {
         replaceWithBackgroundColor: false,
         backgroundColor: '#ffffff',
         removalHighlightColor: editorConfig.removalHighlightColor,
+        brushSize: editorConfig.defaultManualToolSize,
       },
       grayscale: {
         type: 'luminance', // 'luminance', 'average', 'lightness'
@@ -155,8 +156,7 @@ export const useEditorStore = defineStore('editorStore', {
       brush: {
         isEraserMode: false,
         color: '#000000',
-        shape: 'circle', // 'circle', 'square
-        size: editorConfig.defaultManualToolSize,
+        brushSize: editorConfig.defaultManualToolSize,
       },
       frame: {
         enabled: false,
