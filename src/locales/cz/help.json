@@ -4,12 +4,12 @@
     "purpose": {
       "title": "O aplikaci Figurio",
       "points": [
-        "Figurio je webový editor obrázků určený pro přípravu obrazových materiálů do akademických a technických dokumentů.",
-        "Je navržen pro studenty, výzkumníky a autory, kteří potřebují rychle upravit snímky obrazovky, diagramy nebo grafy bez použití složitého grafického softwaru.",
-        "Editor nabízí základní nástroje pro ořez, zvýraznění důležitých částí, odstranění rušivých prvků, přidávání anotací a aplikaci prezentačních rámečků.",
-        "Zaměřuje se na nejčastěji potřebné úpravy a vyhýbá se zbytečné složitosti, aby byla práce rychlá, přehledná a intuitivní.",
+        "Figurio je webový editor obrázků určený pro přípravu obrázků do akademických a technických dokumentů.",
+        "Je navržen pro studenty a autory, kteří potřebují rychle upravit snímky obrazovky, diagramy či ilustrace bez použití složitého grafického softwaru.",
+        "Editor nabízí základní nástroje pro ořezání, zvýraznění důležitých částí, odstranění nežádoucích prvků, přidávání anotací a aplikaci prezentačních rámů.",
+        "Zaměření na podstatné funkce eliminuje zbytečnou složitost a zároveň zachovává rychlý, přehledný a intuitivní pracovní postup.",
         "Figurio funguje přímo v prohlížeči bez nutnosti instalace.",
-        "Veškeré úpravy obrázků probíhají lokálně v prohlížeči, s důrazem na ochranu soukromí, bezpečnost a práci s citlivými daty."
+        "Zpracování obrázků probíhá lokálně v prohlížeči s důrazem na soukromí, bezpečnost a ochranu citlivých údajů."
       ]
     },
     "tools": {
@@ -17,13 +17,13 @@
     },
     "shortcuts": {
       "title": "Klávesové zkratky",
-      "text": "Pomocí klávesových zkratek můžete rychle přistupovat k různým nástrojům a funkcím editoru. Níže najdete seznam dostupných zkratek.",
+      "text": "Klávesové zkratky umožňují rychlý přístup k nástrojům a běžným akcím bez nutnosti procházet menu. Jsou navrženy tak, aby urychlily práci a zvýšily efektivitu při úpravě obrázků. Níže naleznete přehled dostupných zkratek a jejich funkcí.",
       "categories": [
         {
           "name": "Obecné",
           "list": [
             { "description": "Vrátit poslední akci", "shortcut": "Ctrl + Z" },
-            { "description": "Znovu provést poslední vrácenou akci", "shortcut": "Ctrl + Y" },
+            { "description": "Zopakovat vrácenou akci", "shortcut": "Ctrl + Y" },
             { "description": "Nahrát soubor", "shortcut": "Ctrl + O" },
             { "description": "Uložit soubor", "shortcut": "Ctrl + S" },
             { "description": "Kopírovat do schránky", "shortcut": "Ctrl + C" },
@@ -34,34 +34,33 @@
           ]
         },
         {
-          "name": "Lupa",
+          "name": "Přiblížení",
           "list": [
             { "description": "Přiblížit", "shortcut": "Ctrl + =" },
             { "description": "Oddálit", "shortcut": "Ctrl + -" },
-            { "description": "Obnovit původní přiblížení", "shortcut": "Ctrl + 0" },
-            { "description": "Klasický režim lupy", "shortcut": "Alt + C" },
-            { "description": "Režim lupy pro text", "shortcut": "Alt + T" }
+            { "description": "Obnovit měřítko", "shortcut": "Ctrl + 0" },
+            { "description": "Klasický režim přiblížení", "shortcut": "Alt + C" },
+            { "description": "Fyzický režim přiblížení", "shortcut": "Alt + P" }
           ]
         },
         {
-          "name": "Dialogy",
+          "name": "Dialogová okna",
           "list": [
             { "description": "Zobrazit nápovědu", "shortcut": "F1" },
             { "description": "Zobrazit nastavení", "shortcut": "Ctrl + ," },
-            { "description": "Zobrazit dialog soukromí a dat", "shortcut": "Ctrl + I" },
-            { "description": "Zavřít otevřený dialog", "shortcut": "Esc" }
+            { "description": "Zobrazit informace o ochraně údajů", "shortcut": "Ctrl + I" },
+            { "description": "Zavřít otevřené okno", "shortcut": "Esc" }
           ]
         },
         {
           "name": "Objekty",
           "list": [
-            { "description": "Smazat vybraný objekt", "shortcut": "Delete/Backspace" },
-            { "description": "Posunout vybraný objekt dopředu", "shortcut": "Shift + Šipka nahoru" },
-            { "description": "Posunout vybraný objekt dozadu", "shortcut": "Shift + Šipka dolů" },
-            { "description": "Posunout vybraný objekt globálně", "shortcut": "Šipky" },
-            { "description": "Posunout vybraný objekt lokálně", "shortcut": "Alt + Šipky" },
+            { "description": "Odstranit vybraný objekt", "shortcut": "Delete/Backspace" },
+            { "description": "Posunout vybraný objekt dopředu", "shortcut": "Shift + Arrow up" },
+            { "description": "Posunout vybraný objekt dozadu", "shortcut": "Shift + Arrow down" },
+            { "description": "Posouvat vybraný objekt", "shortcut": "Šipky" },
             { "description": "Kopírovat vybraný objekt", "shortcut": "Ctrl + C" },
-            { "description": "Vložit objekt do středu", "shortcut": "Ctrl + V" },
+            { "description": "Vložit objekt", "shortcut": "Ctrl + V" },
             { "description": "Duplikovat vybraný objekt", "shortcut": "Ctrl + D" },
             { "description": "Vyjmout vybraný objekt", "shortcut": "Ctrl + X" }
           ]
@@ -69,60 +68,60 @@
         {
           "name": "Nástroje",
           "list": [
-            { "description": "Nástroj na odstranění pozadí – odstranit vybranou oblast", "shortcut": "Delete/Backspace" },
-            { "description": "Nástroj ořezávání – použít ořezání", "shortcut": "Enter" },
-            { "description": "Nástroj štětce – změnit velikost štětce a gumy", "shortcut": "ALT + LEVÝ KLIK + TAŽENÍ" },
-            { "description": "Nástroj na odstranění pozadí – změnit velikost štětce", "shortcut": "ALT + LEVÝ KLIK + TAŽENÍ" }
+            { "description": "Odstranění pozadí – vymazat označenou oblast", "shortcut": "Delete/Backspace" },
+            { "description": "Ořez – potvrdit ořez", "shortcut": "Enter" },
+            { "description": "Štětec – změna velikosti štětce", "shortcut": "ALT + LEVÉ KLIKNUTÍ + TAŽENÍ" },
+            { "description": "Odstranění pozadí – změna velikosti štětce", "shortcut": "ALT + LEVÉ KLIKNUTÍ + TAŽENÍ" }
           ]
         }
       ]
     },
     "tutorial": {
       "title": "Interaktivní tutoriál",
-      "text": "Provede vás krok za krokem nejdůležitějšími funkcemi editoru. Klikněte na tlačítko níže pro spuštění tutoriálu a naučte se editor efektivně používat.",
+      "text": "Postupný průvodce, který představí nejdůležitější funkce editoru. Kliknutím na tlačítko níže spustíte tutoriál a naučíte se efektivně pracovat s aplikací.",
       "tutorialCompletedTip": "Tutoriál byl úspěšně dokončen.",
       "tutorialSuccessfullyCompleted": {
         "title": "Tutoriál úspěšně dokončen",
-        "message": "Gratulujeme! Právě jste úspěšně dokončili tutoriál. Nyní byste měli mít dobrý přehled o hlavních funkcích editoru a jak je používat."
+        "message": "Gratulujeme! Tutoriál jste úspěšně dokončili. Měli byste mít přehled o hlavních funkcích editoru a jejich použití."
       }
     },
     "featureTour": {
-      "title": "Prohlídka funkcí",
-      "text": "Krátká videa předvádějící konkrétní funkce editoru. K prohlídce funkcí můžete kdykoli přistoupit a dozvědět se více o dostupných nástrojích a funkcionalitách.",
+      "title": "Přehled funkcí",
+      "text": "Soubor krátkých ukázkových videí představujících jednotlivé nástroje a vybrané pokročilé funkce. Každé video se zaměřuje na konkrétní funkcionalitu a stručně vysvětluje její účel a použití. Přehled funkcí je možné otevřít kdykoli.",
       "button": {
-        "text": "Otevřít prohlídku funkcí"
+        "text": "Otevřít přehled funkcí"
       }
     },
     "technicalLimitations": {
       "title": "Technická omezení",
       "limitations": [
-        "Pdf soubory s komplexní strukturou nemusí být vykresleny dokonale.",
-        "Velmi velké obrázky mohou zpomalit výkon v závislosti na vašem zařízení.",
-        "Animované obrázky (např. GIFy) nejsou podporovány.",
-        "Historie kroků zpět/vpřed je omezena na aktuální relaci.",
-        "Obnovení prohlížeče smaže neuložený postup."
+        "PDF soubory se složitým rozložením nebo pokročilými grafickými prvky se nemusí zobrazit zcela identicky jako v původním dokumentu.",
+        "Velké obrázky mohou ovlivnit výkon v závislosti na zařízení, dostupné paměti a možnostech prohlížeče.",
+        "Animované obrázky (např. GIF) nejsou podporovány.",
+        "Historie kroků zpět a vpřed je omezena z důvodu optimalizace výkonu a paměti.",
+        "Obnovení stránky nebo zavření karty způsobí ztrátu neuložených změn."
       ]
     },
-    "statistics":{
+    "statistics": {
       "title": "Statistiky používání",
-      "text": "Statistiky jsou shromažďovány za účelem zlepšení editoru. Statistiky zahrnují informace o tom, kolikrát byly použity různé funkce.",
+      "text": "Pro zlepšování funkčnosti, použitelnosti a výkonu editoru jsou sbírána anonymní data o používání. Statistiky jsou agregované a neobsahují osobní ani upravovaný obrazový obsah. Zahrnují informace o frekvenci používání jednotlivých nástrojů a funkcí.",
       "seeStatisticsButton": {
         "text": "Zobrazit statistiky"
       }
     },
     "contactAndFeedback": {
       "title": "Kontakt a zpětná vazba",
-      "text": "Pokud máte jakékoli dotazy, návrhy nebo zpětnou vazbu k editoru, kontaktujte mě pomocí níže uvedeného formuláře nebo e-mailem na adresu:",
+      "text": "Máte-li dotazy, návrhy nebo zpětnou vazbu k editoru, můžete využít kontaktní formulář níže. Vaše podněty pomáhají odhalit problémy, stanovit priority vylepšení a směřovat další vývoj. Kontaktovat nás můžete také přímo e-mailem:",
       "contactForm": {
         "name": "Jméno",
         "namePlaceholder": "Jan Novák",
-        "email": "Email",
+        "email": "E-mail",
         "emailPlaceholder1": "jan.novak",
         "emailPlaceholder2": "example.com",
         "subject": "Předmět",
         "subjectPlaceholder": "Obecný dotaz",
         "message": "Zpráva",
-        "messagePlaceholder": "Zde napište svou zprávu...",
+        "messagePlaceholder": "Podrobně popište svůj dotaz nebo zpětnou vazbu...",
         "password": "Heslo",
         "send": "Odeslat zprávu"
       }
@@ -139,7 +138,7 @@
   },
   "unexpectedError": {
     "title": "Neočekávaná chyba",
-    "message": "V aplikaci došlo k neočekávané chybě. Prosím obnovte stránku.",
+    "message": "V aplikaci došlo k neočekávané chybě. Obnovte stránku.",
     "refreshButton": "Obnovit stránku"
   }
 }

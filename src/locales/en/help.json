@@ -5,7 +5,7 @@
       "title": "About Figurio",
       "points": [
         "Figurio is a web-based image editor designed for preparing images for academic and technical documents.",
-        "It is intended for students, researchers, and authors who need to quickly refine screenshots, diagrams, and figures without using complex graphic software.",
+        "It is intended for students, and authors who need to quickly refine screenshots, diagrams, and figures without using complex graphic software.",
         "The editor provides essential tools for cropping, highlighting important areas, removing unwanted elements, adding annotations, and applying presentation frames.",
         "Its focused feature set avoids unnecessary complexity while keeping the workflow fast, clear, and intuitive.",
         "Figurio runs directly in the browser with no installation required.",
@@ -40,7 +40,7 @@
             { "description": "Zoom out", "shortcut": "Ctrl + -" },
             { "description": "Reset zoom", "shortcut": "Ctrl + 0" },
             { "description": "Classic zoom mode", "shortcut": "Alt + C" },
-            { "description": "Text zoom mode", "shortcut": "Alt + T" }
+            { "description": "Physical zoom mode", "shortcut": "Alt + P" }
           ]
         },
         {
@@ -58,10 +58,9 @@
             { "description": "Delete selected object", "shortcut": "Delete/Backspace" },
             { "description": "Move selected object forward", "shortcut": "Shift + Arrow up" },
             { "description": "Move selected object backward", "shortcut": "Shift + Arrow down" },
-            { "description": "Move selected object globally", "shortcut": "Arrows" },
-            { "description": "Move selected object locally", "shortcut": "Alt + Arrows" },
+            { "description": "Move selected object", "shortcut": "Arrows" },
             { "description": "Copy selected object", "shortcut": "Ctrl + C" },
-            { "description": "Paste copied object to center", "shortcut": "Ctrl + V" },
+            { "description": "Paste copied object", "shortcut": "Ctrl + V" },
             { "description": "Duplicate selected object", "shortcut": "Ctrl + D" },
             { "description": "Cut selected object", "shortcut": "Ctrl + X" }
           ]
@@ -71,7 +70,7 @@
           "list": [
             { "description": "Background removal tool – remove selected area", "shortcut": "Delete/Backspace" },
             { "description": "Crop tool – apply crop", "shortcut": "Enter" },
-            { "description": "Brush tool – change brush and eraser size", "shortcut": "ALT + LEFT CLICK + DRAG" },
+            { "description": "Brush tool – change brush size", "shortcut": "ALT + LEFT CLICK + DRAG" },
             { "description": "Background removal tool – change brush size", "shortcut": "ALT + LEFT CLICK + DRAG" }
           ]
         }
@@ -105,7 +104,7 @@
     },
     "statistics":{
       "title": "Usage Statistics",
-      "text": "Anonymous usage data is collected to help improve the editor’s functionality, usability, and performance. The collected statistics are aggregated and do not include personal content from edited images. Data typically reflects how often individual tools and features are used.",
+      "text": "Anonymous usage data is collected to help improve the editor’s functionality, usability, and performance. The collected statistics are aggregated and do not include personal content from edited images. Data reflects how often individual tools and features are used.",
       "seeStatisticsButton": {
         "text": "See Statistics"
       }
