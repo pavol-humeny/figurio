@@ -138,6 +138,10 @@
 - FIXED - pri zrušení výplne automaticky prepnúť na hrúbku rámiku a nie vyžadovať od užívateľa 
 - FIXED - Zoom pomocou numerickej klávesnice - povodne tam bola ikona pravitka, co evokovalo zapnutie pravítok v editore 
 
+## Text checking 
+- privacy
+- help
+
 ## API
 ### addUserEvent()
 Event type:

@@ -1,24 +1,24 @@
 {
-  "title": "Ochrana soukromí a data",
+  "title": "Ochrana soukromí a zpracování údajů",
   "sections": [
     {
       "title": "Lokální zpracování",
-      "text": "Vaše obrázky a data nikdy neopustí vaše zařízení. Respektujeme vaše soukromí. Žádné nahrávání. Žádné sledování. Žádné cloudové závislosti."
+      "text": "Veškeré zpracování obrázků probíhá přímo ve vašem prohlížeči. Vaše obrázky ani data nikdy neopouštějí vaše zařízení. Neprobíhá žádné nahrávání na server, cloudové úložiště ani využití externích služeb."
     },
     {
       "title": "Vaše nastavení",
-      "text": "Nastavení jako téma nebo jazyk se ukládají pouze ve vašem prohlížeči (pomocí místního úložiště), aby se zlepšil váš zážitek. Máte vše pod kontrolou.",
+      "text": "Nastavení aplikace, například téma nebo jazyk, jsou ukládána lokálně ve vašem prohlížeči za účelem zlepšení uživatelského komfortu. Tato nastavení můžete kdykoli vymazat.",
       "action": {
-        "text": "Vymazat preferencie"
+        "text": "Vymazat nastavení"
       }
     },
     {
-      "title": "Bez účtu",
-      "text": "Žádná registrace, žádná hesla. Stačí otevřít a tvořit."
+      "title": "Bez nutnosti účtu",
+      "text": "Aplikace nevyžaduje registraci, přihlášení ani zadání osobních údajů. Můžete ji začít používat okamžitě."
     },
     {
-      "title": "",
-      "text": "Používáním této aplikace souhlasíte s těmito zásadami."
+      "title": "Souhlas",
+      "text": "Používáním této aplikace potvrzujete, že jste se seznámili s výše uvedenými principy a souhlasíte s nimi."
     }
   ],
   "button": {
@@ -26,7 +26,7 @@
   },
   "confirmResetLocalPreferences": {
     "title": "Vymazat nastavení",
-    "text": "Opravdu chcete vymazat svá nastavení? Toto resetuje vaše nastavení.",
+    "text": "Opravdu chcete vymazat uložená nastavení? Tato akce obnoví aplikaci do výchozího stavu.",
     "cancel": "Zrušit",
     "confirm": "Vymazat"
   }

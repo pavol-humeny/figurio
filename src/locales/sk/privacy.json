@@ -1,32 +1,32 @@
 {
-  "title": "Ochrana súkromia a dáta",
+  "title": "Ochrana súkromia a spracovanie údajov",
   "sections": [
     {
       "title": "Lokálne spracovanie",
-      "text": "Vaše obrázky a dáta nikdy neopustia vaše zariadenie. Rešpektujeme vaše súkromie. Žiadne nahrávanie. Žiadne sledovanie. Žiadne cloudové závislosti."
+      "text": "Všetko spracovanie obrázkov prebieha priamo vo vašom prehliadači. Vaše obrázky ani údaje nikdy neopúšťajú vaše zariadenie. Nepoužíva sa žiadne nahrávanie na server, cloudové úložisko ani externé služby."
     },
     {
-      "title": "Vaše preferencie",
-      "text": "Nastavenia ako téma alebo jazyk sa ukladajú len vo vašom prehliadači (pomocou lokálneho úložiska), aby zlepšili váš zážitok. Máte všetko pod kontrolou.",
+      "title": "Vaše nastavenia",
+      "text": "Nastavenia aplikácie, ako napríklad téma alebo jazyk, sa ukladajú lokálne vo vašom prehliadači, aby sa zlepšil používateľský komfort. Tieto nastavenia môžete kedykoľvek vymazať.",
       "action": {
-        "text": "Vymazať preferencie"
+        "text": "Vymazať nastavenia"
       }
     },
     {
-      "title": "Žiadny účet",
-      "text": "Žiadna registrácia, žiadne heslá. Stačí otvoriť a tvoriť."
+      "title": "Bez nutnosti účtu",
+      "text": "Aplikácia nevyžaduje registráciu, prihlásenie ani zadanie osobných údajov. Môžete ju začať používať okamžite."
     },
     {
-      "title": "",
-      "text": "Používaním tejto aplikácie súhlasíte s týmito zásadami."
+      "title": "Súhlas",
+      "text": "Používaním tejto aplikácie potvrdzujete, že ste sa oboznámili s uvedenými princípmi a súhlasíte s nimi."
     }
   ],
   "button": {
     "text": "Zavrieť"
   },
   "confirmResetLocalPreferences": {
-    "title": "Vymazať preferencie",
-    "text": "Ste si istí, že chcete vymazať svoje preferencie? Toto resetuje vaše nastavenia.",
+    "title": "Vymazať nastavenia",
+    "text": "Naozaj chcete vymazať uložené nastavenia? Táto akcia obnoví aplikáciu do predvoleného stavu.",
     "cancel": "Zrušiť",
     "confirm": "Vymazať"
   }

@@ -2,23 +2,23 @@
   "title": "Privacy & Data Policy",
   "sections": [
     {
-      "title": "Local processing",
-      "text": "Your images and data never leave your device. We respect your privacy. No uploads. No tracking. No cloud dependencies."
+      "title": "Local Processing",
+      "text": "All image processing is performed directly in your browser. Your images and data never leave your device. No uploads, no cloud storage, and no external servers are involved."
     },
     {
-      "title": "Your preferences",
-      "text": "Settings like theme or language are stored only in your browser (via local storage) to improve your experience. You’re in control, always.",
+      "title": "Your Preferences",
+      "text": "Application settings such as theme or language are stored locally in your browser to enhance your experience. You can clear these preferences at any time.",
       "action": {
-        "text": "Clear preferences"
+        "text": "Clear Preferences"
       }
     },
     {
-      "title": "No account needed",
-      "text": "No registration, no passwords. Just open and create."
+      "title": "No Account Required",
+      "text": "The application does not require registration, login, or personal information. You can start using it immediately."
     },
     {
-      "title": "",
-      "text": "By using this application, you agree to these principles."
+      "title": "Agreement",
+      "text": "By using this application, you acknowledge and agree to the principles described above."
     }
   ],
   "button": {
@@ -26,7 +26,7 @@
   },
   "confirmResetLocalPreferences": {
     "title": "Clear Preferences",
-    "text": "Are you sure you want to clear your preferences? This will reset your settings.",
+    "text": "Are you sure you want to clear your stored preferences? This action will reset your settings to their default values.",
     "cancel": "Cancel",
     "confirm": "Clear"
   }
