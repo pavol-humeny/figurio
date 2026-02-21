@@ -114,6 +114,8 @@ export function useToolsPanel(editorStore, imageStore, uiStore, workspaceStore, 
         uiStore.svgObjectsListDisplayed = false
       }
 
+      console.warn('uiStore.svgObjectsListDisplayed', uiStore.svgObjectsListDisplayed)
+
       // Clear previous tool key if switching between shape tool tabs
       if (newVal?.tool === 'shape' && oldValue?.tool === 'shape') {
         editorStore.previousToolKey = ''

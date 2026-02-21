@@ -1,10 +1,13 @@
 <script setup>
-import { computed } from 'vue'
+import { computed, onMounted } from 'vue'
 import { useToolsSettingsPanel } from '@/composables/toolsSettings/useToolsSettingsPanel';
 import { useEditorStore } from '@/stores/editorStore';
 import { useUiStore } from '@/stores/uiStore'
+import { useImageStore } from '@/stores/imageStore';
 
 const uiStore = useUiStore()
+const editorStore = useEditorStore()
+const imageStore = useImageStore()
 
 /**
  * Logic of the tools settings panel
@@ -19,6 +22,28 @@ const {
 const panelVars = computed(() => {
   return {
     '--panel-height-opposite': uiStore.svgObjectsListDisplayed ? `${uiStore.svgObjectsListHeight}%` : '0%'
+  }
+})
+
+onMounted(() => {
+  if (
+    editorStore.selectedToolKey === 'shape' ||
+    editorStore.selectedToolKey === 'blur' ||
+    editorStore.selectedToolKey === 'magnifyArea' ||
+    editorStore.selectedToolKey === 'text' ||
+    editorStore.selectedToolKey === 'select'
+  ) {
+    if (
+      imageStore.svgObjects.length > 0 ||
+      imageStore.blurObjects.length > 0 ||
+      imageStore.magnifyObjects.length > 0
+    ) {
+      uiStore.svgObjectsListDisplayed = true
+    } else {
+      uiStore.svgObjectsListDisplayed = false
+    }
+  } else {
+    uiStore.svgObjectsListDisplayed = false
   }
 })
 

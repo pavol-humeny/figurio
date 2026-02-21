@@ -17,6 +17,7 @@ const imageStore = useImageStore()
  * Logic for managing SVG objects list
  */
 const {
+  isVisible,
   mappedObjects,
   panelVars,
   startResize,
