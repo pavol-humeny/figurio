@@ -11,14 +11,12 @@
 ## ŠT
 - nakresliť plagát 
 - skontrolovať texty a preklady
-- prerobiť snímky obrazovky kde je VUE logo na spodku 
-- V
-- úvod
-- implementácia schémy 
-- prezentácia vrstiev
+- kniha 
+- testovanie
 
 ## TODO - text 
 - záver
+- prerobiť snímky obrazovky kde je VUE logo na spodku 
 
 # TODO
 - vyriešiť snapovanie objektov
@@ -28,12 +26,7 @@
 - shape -vytvaranie novy objektov a ich mazanie ked su male by mohlo fungovat lepsie
 - pridať prepínač (editorConfig) na to že sa v nástroji nebude dať selectovať daný objekt 
 
-- dať odkaz až na xhumenp00/figurio
-
 - podpora pre touch event 
-
-- Help 
-    - skontrolovať preklad 
 
 - Crop pridat zmenu so shiftom
 - Crop orezanie v pomere 

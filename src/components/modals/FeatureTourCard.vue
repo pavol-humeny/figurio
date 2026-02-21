@@ -67,7 +67,7 @@ onMounted(() => {
     <!-- Text -->
     <div class="card-content-wrapper">
       <div class="feature-title">
-        <BaseIcon :name="props.icon" size="40" color="var(--primary-c)" />
+        <BaseIcon :name="props.icon" size="31" color="var(--primary-c)" />
         <p>{{ props.title }}</p>
       </div>
       <div class="feature-description">{{ props.description }}</div>
@@ -123,13 +123,13 @@ onMounted(() => {
 }
 
 .feature-title p {
-  font-size: 32px;
+  font-size: 24px;
   font-weight: var(--title-font-weight);
   color: var(--primary-c);
 }
 
 .feature-description {
-  font-size: 18px;
+  font-size: 16px;
   color: var(--text-c);
 }
 </style>
