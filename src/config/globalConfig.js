@@ -30,7 +30,7 @@ export const globalConfig = {
 
   // Default zoom mode
   zoomMode: 'classic', // 'classic', 'physical'
-  physicalContentSize: 15.2, // cm
+  physicalContentSize: 21, // cm
   calibrationFactor: 1, // calibration factor for physical mode
 
   // Default tool to start with
@@ -63,7 +63,11 @@ export const globalConfig = {
   modalSettings: {
     enableTutorial: true,
     enableUnexpectedErrorModal: false,
-    // TODO enable zobrazenie feature tour modalu pri prvej navsteve alebo po update
+    showFeatureTourModalOnStart: true,
+    showWarningWindowSize: true,
+    showWarningSafariBrowser: true,
+    blockDeveloperTools: true,
+    blockZooming: false,
   },
 
   // Random events configuration
@@ -76,16 +80,22 @@ export const globalConfig = {
     fireworks2: false,
   },
 
-  listOfFeatureTourVideos: ['imageAnalysis', 'crop', 'frame', 'createPreset', 'myPreset'],
+  // List of feature tour video identifiers in the order they should be shown
+  listOfFeatureTourVideos: [
+    'imageAnalysis',
+    'crop',
+    'frame',
+    'createPreset',
+    'myPreset',
+    'blur',
+    'magnifyArea',
+  ],
   // Whether to update the list of seen feature tour videos on app version change
   updateFeatureTourVideos: true,
   // List of feature tour video identifiers to remove from seen on app version change
   listOfFeatureTourVideosToRemoveFromSeen: [], // Features which should be shown again
   // Number of times to skip auto open the feature tour modal
   numberOfFeatureTourCloses: 10,
-
-  // Max number of files to upload simultaneously
-  maxNumberOfFilesToUploadSimultaneously: 1, // To avoid issues with image analysis on load
 
   // API
   API_BASE: 'https://figurio.online',
@@ -103,6 +113,9 @@ export const globalConfig = {
   // LocalStorage prefix
   LOCAL_STORAGE_PREFIX: 'figurio_',
 
-  // Maximum open files
+  // Maximum open file simultaneously
   maxNumberOfOpenFiles: 10,
+
+  // Max number of files to upload simultaneously
+  maxNumberOfFilesToUploadSimultaneously: 1, // To avoid issues with image analysis on load
 }

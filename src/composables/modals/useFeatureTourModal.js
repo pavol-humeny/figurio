@@ -32,16 +32,20 @@ export function useFeatureTourModal() {
     if (isVisible.value) return
 
     // Open only if numberOfFeatureTourCloses in localStorage is 0 else decrement and return
-    if (autoOpen === true) {
+    if (autoOpen) {
       const storageKey = `${globalConfig.LOCAL_STORAGE_PREFIX}numberOfFeatureTourCloses`
       const numClosesStr = localStorage.getItem(storageKey)
       let numCloses = numClosesStr ? parseInt(numClosesStr, 10) : 0
+
       if (isNaN(numCloses) || numCloses < 0) numCloses = 0
 
       if (numCloses > 0) {
         // Decrement and return
         localStorage.setItem(storageKey, (numCloses - 1).toString())
         return
+      } else {
+        // No more auto opens, reset to default
+        localStorage.setItem(storageKey, globalConfig.numberOfFeatureTourCloses.toString()) // reset to default for next time
       }
     }
 
@@ -57,7 +61,7 @@ export function useFeatureTourModal() {
     }
 
     // Do not open if nothing to show
-    if (!activeVideos.value.length) return
+    if (activeVideos.value.length === 0) return
 
     addUserEvent('openModal', { modal: 'featureTour', identifiers: activeVideos.value })
     isVisible.value = true

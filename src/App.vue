@@ -47,6 +47,8 @@ const { t } = useI18n()
  * @param {WheelEvent} event
  */
 const blockWheelZoom = (event) => {
+  if (!globalConfig.blockZooming) return
+
   const wrapper = document.querySelector('.viewport-wrapper')
   if (!wrapper) return
 
@@ -75,6 +77,8 @@ const blockSwipeBack = (event) => {
  * @param {KeyboardEvent} event
  */
 const blockDevToolsShortcuts = (event) => {
+  if (!globalConfig.modalSettings.blockDeveloperTools) return
+
   if (userModeStore.hasUserAccessToFeature('notBlockDevTools')) {
     return
   }
@@ -115,6 +119,8 @@ const blockDevToolsShortcuts = (event) => {
  * @param {MouseEvent} event
  */
 const blockContextMenu = (event) => {
+  if (!globalConfig.modalSettings.blockDeveloperTools) return
+
   if (userModeStore.hasUserAccessToFeature('notBlockDevTools')) {
     return
   }
@@ -132,6 +138,8 @@ let windowSizeWarningShown = false
  * Check current window size against minimum requirements
  */
 const checkWindowSize = () => {
+  if (!globalConfig.modalSettings.showWarningWindowSize) return
+
   if (userModeStore.hasUserAccessToFeature('doNotShowInitialWarnings')) return
 
   const isWindowTooSmall =
@@ -173,6 +181,8 @@ const isSafariBrowser = () => {
  * Show Safari limited support warning (once per session)
  */
 const checkSafariSupport = () => {
+  if (!globalConfig.showWarningSafariBrowser) return
+
   if (!isSafariBrowser()) return
 
   if (localStorage.getItem(`${globalConfig.LOCAL_STORAGE_PREFIX}safariSupportWarningShown`) === 'true') {

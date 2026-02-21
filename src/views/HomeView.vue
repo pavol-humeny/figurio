@@ -85,10 +85,12 @@ const {
  * On mounted, check seen feature tour slides and open modal
  */
 onMounted(() => {
-  const seen = JSON.parse(localStorage.getItem(`${globalConfig.LOCAL_STORAGE_PREFIX}seenFeatureTour`) || '[]')
+  // Open feature tour modal on start if enabled in global config
+  if (globalConfig.modalSettings.showFeatureTourModalOnStart) {
+    const seen = JSON.parse(localStorage.getItem(`${globalConfig.LOCAL_STORAGE_PREFIX}seenFeatureTour`) || '[]')
 
-  // Open feature tour modal
-  openFeatureTourModal(true, seen)
+    openFeatureTourModal(true, seen)
+  }
 })
 </script>
 

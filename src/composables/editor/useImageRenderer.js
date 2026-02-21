@@ -119,15 +119,14 @@ export function useImageRenderer(
     log('--- renderCanvas called: ---', blockRender.value)
 
     if (!imageStore.isImageLoaded) {
-      warn('Image not loaded yet, skipping render')
       return
     }
 
     if (blockRender.value) {
-      warn('Render is currently blocked, skipping render call')
       blockRender.value = false
       return
     }
+
     blockRender.value = true
 
     // Wait one tick (needed for background rasterization)
