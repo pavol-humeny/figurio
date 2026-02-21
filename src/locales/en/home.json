@@ -8,7 +8,7 @@
   "features": [
     { "name": "PDF", "description": "- vector file processing" },
     { "name": "Image Cropping", "description": "- manual and automatic (fit crop)" },
-    { "name": "Frames", "description": "- browser or mobile view" },
+    { "name": "Frames", "description": "- app window and mobile view" },
     { "name": "Annotations", "description": "- text and graphic objects" },
     { "name": "Blur Area", "description": "- protect sensitive information" },
     { "name": "Zoom Area", "description": "- highlight important details" },

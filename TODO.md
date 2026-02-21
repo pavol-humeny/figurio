@@ -18,14 +18,19 @@
 - prezentácia vrstiev
 
 ## TODO - text 
-- dorobiť wireframe a dať to do návrhu
 - záver
 
 # TODO
 - vyriešiť snapovanie objektov
 - pridať README ku projektu
+- Prerobiť select nástroj 
+- skontrolovať tie warning hlášky (malé rozmery, safari...)
 - shape -vytvaranie novy objektov a ich mazanie ked su male by mohlo fungovat lepsie
 - pridať prepínač (editorConfig) na to že sa v nástroji nebude dať selectovať daný objekt 
+
+- dať odkaz až na xhumenp00/figurio
+
+- podpora pre touch event 
 
 - Help 
     - skontrolovať preklad 
@@ -35,8 +40,6 @@
 
 - štatistiky návštevnosť - nie len 7 dní ale možnosť scrollovať ďalej 
 
-
-## TODO 
 - Vylepšenie rámiku pre prehliadače 
 
 ## Dlhodobé TODO 
