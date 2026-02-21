@@ -59,6 +59,7 @@ const data = ref({
  */
 const options = {
   responsive: true,
+  maintainAspectRatio: false,
   interaction: {
     mode: 'index',
     intersect: false,
@@ -167,7 +168,9 @@ watch(locale, () => {
       {{ $t('statistics.visits.fullRange.title') }}
     </div>
 
-    <Line :data="data" :options="options" />
+    <div class="chart-fixed-height">
+      <Line :data="data" :options="options" />
+    </div>
   </div>
 </template>
 
@@ -177,5 +180,9 @@ watch(locale, () => {
   width: 100%;
   display: flex;
   flex-direction: column;
+}
+
+.chart-fixed-height {
+  height: 400px;
 }
 </style>

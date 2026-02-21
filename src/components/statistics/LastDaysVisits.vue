@@ -9,15 +9,20 @@ import {
   LinearScale,
 } from 'chart.js';
 import { Bar } from 'vue-chartjs';
-import { ref, onMounted, watch } from 'vue';
+import { ref, onMounted, watch, nextTick } from 'vue';
 import { useApi } from '@/composables/common/useApi';
 import { useI18n } from 'vue-i18n';
 
-const { getLastSevenDaysVisits } = useApi();
+const { getLastDaysVisits } = useApi();
 const { t, locale } = useI18n();
 
 // Register Chart.js components
 ChartJS.register(Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale);
+
+/**
+ * Reference to the scroll wrapper for the chart
+ */
+const scrollWrapper = ref(null)
 
 /**
  * Data and options for the bar chart
@@ -32,6 +37,7 @@ const data = ref({
  */
 const options = {
   responsive: true,
+  maintainAspectRatio: false,
   plugins: {
     legend: { position: 'top' },
     tooltip: { mode: 'index', intersect: false },
@@ -49,7 +55,7 @@ let visitsCache = []; // cache fetched data
 
 async function loadData() {
   if (visitsCache.length === 0) {
-    const visits = await getLastSevenDaysVisits();
+    const visits = await getLastDaysVisits();
     visits.sort((a, b) => new Date(a.date) - new Date(b.date));
     visitsCache = visits;
   }
@@ -73,6 +79,17 @@ async function loadData() {
       },
     ],
   };
+
+  scrollToRight()
+}
+
+async function scrollToRight() {
+  await nextTick()
+
+  if (scrollWrapper.value) {
+    scrollWrapper.value.scrollLeft =
+      scrollWrapper.value.scrollWidth
+  }
 }
 
 /**
@@ -91,9 +108,14 @@ watch(locale, () => {
 <template>
   <div class="visits-chart statistics-card">
     <div class="single-event-title" style="margin-bottom: 30px;">
-      {{ $t('statistics.visits.lastDaysVisits.allVisits') }}
+      {{ $t('statistics.visits.lastDaysVisits.title') }}
     </div>
-    <Bar :data="data" :options="options" />
+
+    <div class="chart-scroll-wrapper" ref="scrollWrapper">
+      <div class="chart-inner" :style="{ width: data.labels.length * 60 + 'px' }">
+        <Bar :data="data" :options="options" />
+      </div>
+    </div>
   </div>
 </template>
 
@@ -105,5 +127,19 @@ watch(locale, () => {
   align-items: center;
   justify-content: center;
   flex-direction: column;
+}
+
+.chart-scroll-wrapper {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.chart-inner {
+  min-height: 400px;
+}
+
+.chart-inner canvas {
+  width: 100% !important;
+  height: 400px !important;
 }
 </style>

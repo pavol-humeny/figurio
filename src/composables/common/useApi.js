@@ -122,19 +122,19 @@ export function useApi() {
   }
 
   /**
-   * Fetches visits data for the last seven days
+   * Fetches visits data for the last days
    */
-  const getLastSevenDaysVisits = async () => {
+  const getLastDaysVisits = async () => {
     try {
-      const res = await fetch(`${API_BASE}/api/visits/lastSevenDaysVisits`)
-      if (!res.ok) throw new Error('Failed to fetch last seven days visits')
+      const res = await fetch(`${API_BASE}/api/visits/lastDaysVisits`)
+      if (!res.ok) throw new Error('Failed to fetch last days visits')
 
       const data = await res.json()
-      log('Last seven days visits fetched:', data)
+      log('Last days visits fetched:', data)
 
       return data
     } catch (err) {
-      error('Error fetching last seven days visits:', err)
+      error('Error fetching last days visits:', err)
       return []
     }
   }
@@ -385,7 +385,7 @@ export function useApi() {
     addUserEvent,
     getAllVisits,
     getUniqueVisits,
-    getLastSevenDaysVisits,
+    getLastDaysVisits,
     getVisitsByCountry,
     getDaysVisits,
     getEventsOverview,

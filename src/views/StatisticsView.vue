@@ -4,7 +4,7 @@ import AllVisits from '../components/statistics/AllVisits.vue';
 import UniqueVisits from '../components/statistics/UniqueVisits.vue';
 import LastDaysVisits from '../components/statistics/LastDaysVisits.vue';
 import CountryVisits from '../components/statistics/CountryVisits.vue';
-import DaysVisits from '@/components/statistics/DaysVisits.vue';
+// import DaysVisits from '@/components/statistics/DaysVisits.vue';
 import EventsOverview from '@/components/statistics/EventsOverview.vue';
 import { globalConfig } from '@/config/globalConfig.js';
 import EventToggleTool from '@/components/statistics/EventToggleTool.vue';
@@ -49,7 +49,7 @@ const selectStatistics = (view) => {
       <LastDaysVisits />
       <VisitsByDayFullRange />
       <CountryVisits />
-      <DaysVisits />
+      <!-- <DaysVisits /> -->
     </div>
     <div v-else-if="statisticsView === 'events'" class="events-wrapper">
       <EventsOverview />

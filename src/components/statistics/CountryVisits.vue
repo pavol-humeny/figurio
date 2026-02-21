@@ -102,7 +102,8 @@ onMounted(async () => {
     <div class="single-event-title" style="margin-bottom: 30px;">
       {{ $t('statistics.visits.countryVisits') }}
     </div>
-    <div class="graph-wrapper">
+
+    <div class="chart-fixed-height">
       <Doughnut :data="data" :options="options" />
     </div>
   </div>
@@ -116,5 +117,9 @@ onMounted(async () => {
   align-items: center;
   justify-content: center;
   flex-direction: column;
+}
+
+.chart-fixed-height {
+  height: 400px;
 }
 </style>
