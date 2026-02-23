@@ -1250,7 +1250,6 @@ export const useImageStore = defineStore('imageStore', {
       return this.blurObjects.findIndex((obj) => obj.id === this.selectedSvgObjectId)
     },
 
-    //TODO
     /**
      * Returns the index of the currently selected magnify object
      * @returns {number} - The index of the currently selected magnify object, or -1 if none is selected

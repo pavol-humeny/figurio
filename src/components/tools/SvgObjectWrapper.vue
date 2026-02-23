@@ -47,13 +47,13 @@ const {
   isInMultiSelection,
   // isResizerIconInside,
   // isRotateIconInside,
-  onObjectMouseUp,
+  // onObjectMouseUp,
 } = useSvgObjectWrapper(props.objectId, useImageStore(), useViewportStore(), useEditorStore(), useHistoryStore(), useUiStore(), useWorkspaceStore(), t)
 
 </script>
 
 <template>
-  <g @mouseup="onObjectMouseUp" @mousedown.right.prevent.stop>
+  <g @mousedown.right.prevent.stop>
     <!-- SVG object except text -->
     <g v-if="isSelected" @mousedown="onMouseDownDrag" :style="{ cursor: cursorOnSvgObject }">
       <component v-if="object.tag !== 'text'" :is="object.tag" v-bind="object.attrs" :data-id="object.id"

@@ -114,8 +114,6 @@ export function useToolsPanel(editorStore, imageStore, uiStore, workspaceStore, 
         uiStore.svgObjectsListDisplayed = false
       }
 
-      console.warn('uiStore.svgObjectsListDisplayed', uiStore.svgObjectsListDisplayed)
-
       // Clear previous tool key if switching between shape tool tabs
       if (newVal?.tool === 'shape' && oldValue?.tool === 'shape') {
         editorStore.previousToolKey = ''
@@ -198,17 +196,17 @@ export function useToolsPanel(editorStore, imageStore, uiStore, workspaceStore, 
       return
     }
 
-    // Reset previous tool key
-    if (resetPreviousTool) {
-      editorStore.previousToolKey = ''
-    }
-
     // If already selected, deselect
     if (
       canDeselect &&
       editorStore.selectedToolKey === toolKey &&
       (tabKey === null || tabKey === editorStore.selectedTabPerTool[toolKey])
     ) {
+      // Do not deselect tool if coming from select tool
+      if (editorStore.previousToolKey === 'select') {
+        return
+      }
+
       log('Deselect tool:', toolKey)
 
       addUserEvent('deselectTool', { tool: toolKey })
@@ -220,6 +218,11 @@ export function useToolsPanel(editorStore, imageStore, uiStore, workspaceStore, 
       useCollapsiblePanel(uiStore).hidePanel()
 
       return
+    }
+
+    // Reset previous tool key
+    if (resetPreviousTool) {
+      editorStore.previousToolKey = ''
     }
 
     log('Toggle tool:', toolKey, 'Tab:', tabKey)

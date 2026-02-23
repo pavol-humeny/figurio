@@ -48,7 +48,8 @@ export function useSvgObjectWrapper(
       return 'move'
     } else {
       if (
-        editorStore.selectedToolKey === object.value.class ||
+        (editorStore.previousToolKey === 'select' &&
+          editorStore.selectedToolKey === object.value.class) ||
         editorStore.selectedToolKey === 'select'
       ) {
         return 'pointer'
@@ -152,7 +153,7 @@ export function useSvgObjectWrapper(
   watch(
     () => object.value,
     () => {
-      if (object.value.tag === 'text') return // TODO - handle text bounding box to calculate icons position
+      if (object.value.tag === 'text') return 
 
       const { top, right } = getTransformedBoundingBox(object.value)
 
@@ -241,39 +242,19 @@ export function useSvgObjectWrapper(
   /**
    * Watch for changes in the isSelected state and update the SVG object's transform accordingly
    */
-  watch(
-    () => isSelected.value,
-    (newValue) => {
-      // editorStore.isSvgObjectResizing = newValue
+  // watch(
+  //   () => isSelected.value,
+  //   (newValue) => {
+  //     // editorStore.isSvgObjectResizing = newValue
 
-      // Update rotation origin after resizing to keep it centered
-      // TODO - it move object when it is applied
-      if (!newValue) {
-        updateRotationTransform()
-      }
-    },
-  )
+  //     // Update rotation origin after resizing to keep it centered
+  //     // TODO - it move object when it is applied
+  //     if (!newValue) {
+  //       updateRotationTransform()
+  //     }
+  //   },
+  // )
 
-  /**
-   * Mouse up handler for the SVG object selection
-   */
-  const onObjectMouseUp = () => {
-    log('mouseup object select')
-    log('condition: ', !isSelected.value, !editorStore.isSvgObjectManipulating)
-
-    log('selecting object:', object.value.id)
-
-    if (!isSelected.value && !editorStore.isSvgObjectManipulating) {
-      log('tool: ', editorStore.selectedToolKey, 'class:', object.value.class)
-      if (editorStore.selectedToolKey === object.value.class) {
-        imageStore.selectedSvgObjectId = object.value.id
-
-        // editorStore.previousToolKey = ''
-
-        imageStore.selectedSvgObjectIds = []
-      }
-    }
-  }
 
   /**
    * Mouse down handler for resizer handles
@@ -374,21 +355,21 @@ export function useSvgObjectWrapper(
    * Update the rotation transform of the SVG object
    * This is called after resizing or dragging to ensure the rotation is centered correctly
    */
-  const updateRotationTransform = () => {
-    const { attrs } = object.value
-    const match = attrs.transform?.match(/rotate\((-?\d+\.?\d*),?([^)]*)\)/)
+  // const updateRotationTransform = () => {
+  //   const { attrs } = object.value
+  //   const match = attrs.transform?.match(/rotate\((-?\d+\.?\d*),?([^)]*)\)/)
 
-    if (!match) return
+  //   if (!match) return
 
-    const currentAngle = parseFloat(match[1])
+  //   const currentAngle = parseFloat(match[1])
 
-    log('Center from match: ', match[2])
+  //   // log('Center from match: ', match[2])
 
-    const { cx, cy } = getObjectCenter(object.value)
-    log('Center from getObjectCenter: ', cx, cy)
+  //   const { cx, cy } = getObjectCenter(object.value)
+  //   // log('Center from getObjectCenter: ', cx, cy)
 
-    attrs.transform = `rotate(${currentAngle}, ${cx}, ${cy})`
-  }
+  //   attrs.transform = `rotate(${currentAngle}, ${cx}, ${cy})`
+  // }
 
   /**
    * Normalize angle to the range [-180, 180]
@@ -1566,7 +1547,7 @@ export function useSvgObjectWrapper(
         attrs.y2 += offsetY
       }
 
-      updateRotationTransform()
+      // updateRotationTransform()
     }
 
     if (object.value.class === 'blur') {
@@ -1945,6 +1926,6 @@ export function useSvgObjectWrapper(
     isInMultiSelection,
     isResizerIconInside,
     isRotateIconInside,
-    onObjectMouseUp,
+    // onObjectMouseUp,
   }
 }

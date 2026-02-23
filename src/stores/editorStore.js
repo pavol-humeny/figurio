@@ -123,7 +123,7 @@ export const useEditorStore = defineStore('editorStore', {
         isVisibleCropBox: true,
       },
       shape: {
-        fillEnabled: false,
+        fillEnabled: true,
         fillColor: '#000000',
         strokeWidth: 1,
         strokeColor: '#000000',

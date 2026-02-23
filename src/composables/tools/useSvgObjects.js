@@ -10,6 +10,16 @@ import { useToolsPanel } from './useToolsPanel'
 import { useConsole } from '@/composables/common/useConsole.js'
 const { log } = useConsole()
 
+/**
+ * Logic for managing SVG objects on the canvas, including selection, movement, deletion, copy/paste, and layering
+ * @param {ReturnType<typeof useImageStore>} imageStore - Image store instance
+ * @param {ReturnType<typeof useHistoryStore>} historyStore - History store instance
+ * @param {ReturnType<typeof useViewportStore>} viewportStore - Viewport store instance
+ * @param {ReturnType<typeof useEditorStore>} editorStore - Editor store instance
+ * @param {ReturnType<typeof useUiStore>} uiStore - UI store instance
+ * @param {ReturnType<typeof useWorkspaceStore>} workspaceStore - Workspace store instance
+ * @param {Function} t - Translation function from vue-i18n
+ */
 export function useSvgObjects(
   imageStore,
   historyStore,
@@ -26,6 +36,7 @@ export function useSvgObjects(
   const blurTool = useBlurTool(imageStore, historyStore, editorStore, uiStore, t)
   const magnifyAreaTool = useMagnifyAreaTool(imageStore, historyStore, editorStore, uiStore, t)
   const { toggleTool } = useToolsPanel(editorStore, imageStore, uiStore, workspaceStore, t)
+
   /**
    * Selection box rectangle (used when dragging with select tool)
    */
@@ -35,11 +46,6 @@ export function useSvgObjects(
    * Whether any SVG object is currently being drawn
    */
   const isDrawing = ref(false)
-
-  /**
-   * Whether the user has dragged the mouse while drawing
-   */
-  const didDrag = ref(false)
 
   /**
    * Start point of the current drawing operation
@@ -282,7 +288,7 @@ export function useSvgObjects(
 
     const { attrs, tag } = newObject
 
-    const offset = 10 // Offset from center to avoid exact overlap (DOES NOT WORK WITH ROTATION !!! - need be fixed if used TODO - investigate and fix)
+    const offset = 10 // Offset from object original position to avoid exact overlap
 
     if (tag === 'rect') {
       attrs.x += offset
@@ -576,7 +582,6 @@ export function useSvgObjects(
   const deselectAllSvgObjects = () => {
     imageStore.selectedSvgObjectIds = []
     log('13')
-    console.warn('9')
     imageStore.selectedSvgObjectId = null
   }
 
@@ -633,16 +638,13 @@ export function useSvgObjects(
     log('click svg')
     if (event.button !== 0) return // Only left mouse button
 
-    if (didDrag.value) {
-      // Prevent click after drag
-      // Prevent selecting object after move
-      return
-    }
-
     // --------------------------------------
     // Selecting objects
     // --------------------------------------
-    if (editorStore.selectedToolKey === 'select') {
+    if (
+      editorStore.selectedToolKey === 'select' ||
+      (editorStore.previousToolKey === 'select' && event.shiftKey)
+    ) {
       // Check if clicked on SVG object with data-id
       const elWithId = event.target.closest('[data-id]')
       const clickedId = elWithId ? Number(elWithId.getAttribute('data-id')) : null
@@ -655,11 +657,6 @@ export function useSvgObjects(
         const clickedObject = imageStore.getSvgObjectById(clickedId)
         if (clickedObject) {
           if (event.shiftKey) {
-            // if (clickedObject.class === 'magnifyArea') {
-            //   log('no multi select magnify area')
-            //   return // Do not allow multi-select of magnify area objects
-            // }
-
             // Toggle object in multi-select
             const index = imageStore.selectedSvgObjectIds.indexOf(clickedId)
 
@@ -674,7 +671,6 @@ export function useSvgObjects(
               imageStore.selectedSvgObjectId = imageStore.selectedSvgObjectIds[0]
             } else {
               log('5')
-              console.warn('8')
               imageStore.selectedSvgObjectId = null
             }
           } else {
@@ -708,7 +704,7 @@ export function useSvgObjects(
         if (selectedId) {
           return
         } else {
-          console.warn('7')
+          log('7')
           imageStore.selectedSvgObjectId = null
           return
         }
@@ -783,19 +779,12 @@ export function useSvgObjects(
   const isMovingMultipleObjects = ref(false)
 
   /**
-   * Object id on which the mouse was pressed down during drawing on selection
-   */
-  const savedClickedId = ref(null)
-
-  /**
    * Mouse down event handler for the SVG image (creating new objects)
    * @param {MouseEvent} event
    */
   const onMouseDownImageSvg = async (event) => {
     if (event.button !== 0) return // Only left mouse button
     log('mousedown svg')
-
-    didDrag.value = false // Reset at start
 
     // Multi object move (start)
     if (editorStore.selectedToolKey === 'select' && imageStore.selectedSvgObjectIds.length > 1) {
@@ -804,17 +793,20 @@ export function useSvgObjects(
 
       if (clickedId !== null && imageStore.selectedSvgObjectIds.includes(clickedId)) {
         isMovingMultipleObjects.value = true
-        didDrag.value = false
         startX.value = event.clientX
         startY.value = event.clientY
         return
       }
     }
 
+    // Return to select tool when clicking on SVG with another tool selected
+    if (editorStore.previousToolKey === 'select') {
+      toggleTool('select', null, false, false)
+      return
+    }
+
     // Drawing objects
     if (!['blur', 'shape'].includes(editorStore.selectedToolKey)) return
-
-    // if (imageStore.selectedSvgObjectId !== null) return // Disable drawing objects when another is selected
 
     const objectClass = editorStore.selectedToolKey
     let objectType = editorStore.selectedTabPerTool[objectClass]
@@ -960,9 +952,6 @@ export function useSvgObjects(
     } else {
       imageStore.svgObjects.push(base)
     }
-
-    const elWithId = event.target.closest('[data-id]')
-    savedClickedId.value = elWithId ? Number(elWithId.getAttribute('data-id')) : null
   }
 
   /**
@@ -1093,12 +1082,6 @@ export function useSvgObjects(
       const x = round((event.clientX - rect.left) / viewportStore.realZoomLevel)
       const y = round((event.clientY - rect.top) / viewportStore.realZoomLevel)
 
-      const dx = Math.abs(x - drawingStart.value.x)
-      const dy = Math.abs(y - drawingStart.value.y)
-      if (dx > 3 || dy > 3) {
-        didDrag.value = true
-      }
-
       const x1 = Math.min(drawingStart.value.x, x)
       const y1 = Math.min(drawingStart.value.y, y)
       const x2 = Math.max(drawingStart.value.x, x)
@@ -1116,9 +1099,6 @@ export function useSvgObjects(
 
     // Moving multiple objects
     if (isMovingMultipleObjects.value) {
-      // Mouse was moved
-      didDrag.value = true
-
       // Calculate deltas
       let rawDx = (event.clientX - startX.value) / viewportStore.realZoomLevel + remainingDx.value
       let rawDy = (event.clientY - startY.value) / viewportStore.realZoomLevel + remainingDy.value
@@ -1335,7 +1315,7 @@ export function useSvgObjects(
         imageStore.blurOverlayNeedToBeRendered = true
       }
     } else {
-      console.warn('5')
+      log('5')
 
       imageStore.selectedSvgObjectId = null
     }
@@ -1352,7 +1332,6 @@ export function useSvgObjects(
     // End multi object move
     if (isMovingMultipleObjects.value) {
       isMovingMultipleObjects.value = false
-      didDrag.value = true
 
       // Add snapshot to history
       historyStore.push(imageStore.getSnapshot(t))
@@ -1395,7 +1374,7 @@ export function useSvgObjects(
       if (selectedIds.length === 1) {
         imageStore.selectedSvgObjectId = selectedIds[0]
       } else {
-        console.warn('4')
+        log('4')
         imageStore.selectedSvgObjectId = null
       }
 
@@ -1424,16 +1403,8 @@ export function useSvgObjects(
       }
 
       log('2')
-      console.warn('3')
+      log('3')
       imageStore.selectedSvgObjectId = null
-
-      // Select object below if there was one
-      if (savedClickedId.value !== null) {
-        const object = imageStore.getSvgObjectById(savedClickedId.value)
-        if (object.class === editorStore.selectedToolKey) {
-          imageStore.selectedSvgObjectId = savedClickedId.value
-        }
-      }
 
       return
     }
@@ -1522,7 +1493,7 @@ export function useSvgObjects(
 
     // Deselect objects
     if (!sameClass) {
-      console.warn('2')
+      log('2')
       imageStore.selectedSvgObjectId = null
       imageStore.selectedSvgObjectIds = []
     }

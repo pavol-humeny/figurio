@@ -12,28 +12,60 @@
 - nakresliť plagát 
 - skontrolovať texty a preklady
 - kniha 
-- testovanie
+- testovanie figurio
+- v
+- pridávanie materiálu 
+- použitie obrázka
+- refaktorizácia
 
 ## TODO - text 
 - záver
 - prerobiť snímky obrazovky kde je VUE logo na spodku 
+- teória 2
+- pri pages v citácii skontrolovať či majú byť pomlčky alebo spojovníky
+- slide pre motiváciu 
+- slide pre zobrazenie výhod oproti ostatným aplikáciám 
+- zoznam vecí čo by som chcel dať na plagát
+- scenár pre video
+
 
 # TODO
-- vyriešiť snapovanie objektov
-- pridať README ku projektu
-- Prerobiť select nástroj 
+- zaistenie aby resizery mali vzdy rovnaku velkost
+- Gonzales nefunguje nacitanie a orezanie
+- P - nepodporované pdf dokumenty
+- P - Snapovanie objektov 
+- P - dopísať teóriu 3
+- P - Výber objektov
+    - prerobiť select 
+    - prerobi shape, text, blur, magnify
+- shape - vytvaranie novy objektov a ich mazanie ked su male by mohlo fungovat lepsie
+
+- P - pridať README ku projektu
 - skontrolovať tie warning hlášky (malé rozmery, safari...)
-- shape -vytvaranie novy objektov a ich mazanie ked su male by mohlo fungovat lepsie
-- pridať prepínač (editorConfig) na to že sa v nástroji nebude dať selectovať daný objekt 
 
-- podpora pre touch event 
+- ? podpora pre touch event 
 
-- Crop pridat zmenu so shiftom
-- Crop orezanie v pomere 
-
-- štatistiky návštevnosť - nie len 7 dní ale možnosť scrollovať ďalej 
+- P - Crop pridat zmenu so shiftom
+    - Crop orezanie v pomere 
 
 - Vylepšenie rámiku pre prehliadače 
+
+- skontrolovať texty
+├── calibration.json
+├── contextMenu.json
+├── dragAndDropArea.json
+├── featureTour.json
+├── general.json
+├── DONE - help.json
+├── home.json
+├── imageStore.json
+├── maintenance.json
+├── privacy.json
+├── release.json
+├── statistics.json
+├── tools.json
+├── topPanel.json
+└── tutorialSteps.json
 
 ## Dlhodobé TODO 
 - eye dropper na safari
