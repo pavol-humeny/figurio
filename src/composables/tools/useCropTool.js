@@ -802,11 +802,14 @@ export function useCropTool(imageStore, viewportStore, editorStore, historyStore
    * @returns {Object|null} cropRect {x, y, width, height} or null
    */
   const calculateAutoCropBoxCanny = async (useBaseImage, useEffectiveCanvas) => {
+    console.warn('CANNY crop START: ', useBaseImage, useEffectiveCanvas)
     const scale = 1
 
     const img = useEffectiveCanvas
       ? await getEffectiveCanvas(imageStore.imageOperations.length - 1)
       : imageStore.getRenderedImage({ t, renderCall: false })
+
+    console.warn('CANNY crop - image obtained', { img, useEffectiveCanvas })
 
     if (!img) return null
 
@@ -814,6 +817,8 @@ export function useCropTool(imageStore, viewportStore, editorStore, historyStore
     const ctx = canvas.getContext('2d', { willReadFrequently: true })
     canvas.width = img.width * scale
     canvas.height = img.height * scale
+
+    console.warn('CANNY crop - canvas created', { width: canvas.width, height: canvas.height })
 
     // Draw base image
     ctx.drawImage(img, 0, 0, canvas.width, canvas.height)
@@ -851,17 +856,40 @@ export function useCropTool(imageStore, viewportStore, editorStore, historyStore
     const lower = baseLower * sensitivityMultiplier
     const upper = baseUpper * sensitivityMultiplier
 
+    console.warn('CANNY crop - thresholds calculated', { lower, upper, level })
     cv.Canny(gray, edges, lower, upper)
+    console.warn('CANNY crop - edges detected')
+
+    console.warn(
+      'AHOJ, lastCannyCrop.value',
+      lastCannyCrop.value,
+      'useBaseImage',
+      useBaseImage,
+      lastCannyCrop.value && !useBaseImage,
+    )
 
     // Mask edges if not using base image
     if (lastCannyCrop.value && !useBaseImage) {
       const mask = new cv.Mat.zeros(edges.rows, edges.cols, edges.type())
+
+      console.warn('Mask size:', mask.cols, mask.rows)
+
       const rect = new cv.Rect(
         lastCannyCrop.value.x * scale,
         lastCannyCrop.value.y * scale,
         lastCannyCrop.value.width * scale,
         lastCannyCrop.value.height * scale,
       )
+
+      console.warn('Rect bounds check:', {
+        x: rect.x,
+        y: rect.y,
+        w: rect.width,
+        h: rect.height,
+        xPlusW: rect.x + rect.width,
+        yPlusH: rect.y + rect.height,
+      })
+
       const roi = mask.roi(rect)
       roi.setTo(new cv.Scalar(255))
       roi.delete()
@@ -1075,6 +1103,8 @@ export function useCropTool(imageStore, viewportStore, editorStore, historyStore
     }
 
     log('Final crop rect:', cropRect)
+
+    console.warn('CANNY crop END')
 
     return cropRect
   }

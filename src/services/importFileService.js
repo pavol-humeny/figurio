@@ -425,17 +425,17 @@ export function importFileService(
     imageStore.fileType = 'pdf'
     imageStore.pdfPageBytes = pageBytes
 
-    const pdfFile = await PDFDocument.load(pageBytes)
-    const pageWidth = pdfFile.getPage(0).getWidth()
-    const pageHeight = pdfFile.getPage(0).getHeight()
+    // const pdfFile = await PDFDocument.load(pageBytes)
+    // const pageWidth = pdfFile.getPage(0).getWidth()
+    // const pageHeight = pdfFile.getPage(0).getHeight()
 
     const page = await pdf.getPage(pageNumber)
     const viewport = page.getViewport({ scale: 1 })
 
     // Create a canvas to render the PDF page
     const canvas = document.createElement('canvas')
-    canvas.width = pageWidth
-    canvas.height = pageHeight
+    canvas.width = viewport.width
+    canvas.height = viewport.height
     await page.render({
       canvasContext: canvas.getContext('2d'),
       viewport,

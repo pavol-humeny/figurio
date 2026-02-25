@@ -29,7 +29,6 @@ export async function cropOperation({ srcCanvas, srcPdfBytes, srcOverlay, params
   if (pdfBytes) {
     const pdf = await PDFDocument.load(pdfBytes)
     const oldPage = pdf.getPage(0)
-
     const newPdf = await PDFDocument.create()
     const [embedded] = await newPdf.embedPages([oldPage])
 

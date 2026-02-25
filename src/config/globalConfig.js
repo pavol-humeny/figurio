@@ -66,7 +66,7 @@ export const globalConfig = {
     showFeatureTourModalOnStart: true,
     showWarningWindowSize: true,
     showWarningSafariBrowser: true,
-    blockDeveloperTools: true,
+    blockDeveloperTools: false,
     blockZooming: false,
   },
 

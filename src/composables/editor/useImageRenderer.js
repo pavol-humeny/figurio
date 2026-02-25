@@ -82,6 +82,8 @@ export function useImageRenderer(
     const width = imageStore.fileDimensions.width
     const height = imageStore.fileDimensions.height
 
+    console.warn('updateSizes called with width:', width, 'height:', height)
+
     // Set content layer dimensions
     if (contentRef.value) {
       contentRef.value.style.width = `${width}px`
@@ -108,6 +110,137 @@ export function useImageRenderer(
       svgRef.value.style.width = `${width}px`
       svgRef.value.style.height = `${height}px`
     }
+  }
+
+  // -----------------------------
+  // PDF unsupported detection helpers (arrow functions)
+  // -----------------------------
+
+  const withCapturedPdfJsWarnings = async (run) => {
+    const origWarn = console.warn
+    const origError = console.error
+    const messages = []
+
+    const capture = (...args) => {
+      const text = args.map((a) => String(a)).join(' ')
+      messages.push(text)
+    }
+
+    console.warn = (...args) => {
+      capture(...args)
+      origWarn(...args)
+    }
+    console.error = (...args) => {
+      capture(...args)
+      origError(...args)
+    }
+
+    try {
+      const result = await run()
+      return { result, messages }
+    } finally {
+      console.warn = origWarn
+      console.error = origError
+    }
+  }
+
+  const analyzeWarnings = (messages) => {
+    // Tune these based on what you observe in real PDFs
+    const keywords = [
+      'Unsupported',
+      'Not implemented',
+      'not implemented',
+      'SMask',
+      'BlendMode',
+      'soft mask',
+      'shading',
+      'pattern',
+      'Type3',
+    ]
+
+    const matched = messages.filter((m) => keywords.some((k) => m.includes(k)))
+    const risk = matched.length > 0 ? 10 : 0
+
+    return { risk, matched }
+  }
+
+  const analyzeOperatorList = (opList, OPS) => {
+    // High-risk ops for SVG fidelity (transparency/groups)
+    const RISKY_OPS = new Set([OPS.setBlendMode, OPS.setSoftMask, OPS.beginGroup, OPS.endGroup])
+
+    let risk = 0
+    const hits = []
+
+    for (const fnId of opList.fnArray) {
+      if (RISKY_OPS.has(fnId)) {
+        hits.push(fnId)
+        risk += 5
+      }
+    }
+
+    // paintFormXObject is common, not auto-fail, but adds mild risk
+    if (opList.fnArray.includes(OPS.paintFormXObject)) {
+      risk += 1
+    }
+
+    return { risk, hits }
+  }
+
+  const shouldRasterizePdf = async ({ page, opList, svgGfx, viewportPdf, OPS, warn }) => {
+    const reasons = []
+    let totalRisk = 0
+
+    // 1) Operator list risk
+    const op = analyzeOperatorList(opList, OPS)
+    totalRisk += op.risk
+    if (op.hits.length > 0) {
+      reasons.push('unsupported-ops')
+    }
+    if (opList.fnArray.includes(OPS.paintFormXObject)) {
+      reasons.push('uses-form-xobject')
+    }
+
+    // 2) Best-effort commonObjs scan (DO NOT auto-fail on Form)
+    // Note: commonObjs internals can differ between pdf.js versions; keep best-effort and safe.
+    try {
+      const raw = page?.commonObjs?._objs
+      if (raw && Object.keys(raw).length > 0) {
+        let hasForm = false
+        for (const obj of Object.values(raw)) {
+          if (obj?.data?.Subtype === 'Form') {
+            hasForm = true
+            break
+          }
+        }
+        if (hasForm) {
+          // Mild risk only
+          totalRisk += 1
+          if (!reasons.includes('uses-form-xobject')) reasons.push('uses-form-xobject')
+        }
+      }
+    } catch (e) {
+      console.warn('Error analyzing commonObjs for Form XObjects, skipping:', e)
+    }
+
+    // 3) Capture warnings while generating SVG
+    const { result: svg, messages } = await withCapturedPdfJsWarnings(() =>
+      svgGfx.getSVG(opList, viewportPdf),
+    )
+
+    const w = analyzeWarnings(messages)
+    totalRisk += w.risk
+    if (w.matched.length > 0) {
+      reasons.push('pdfjs-warnings')
+      // Optionally log the matched warnings for debugging
+      warn('[PDF warn capture] matched warnings:', w.matched)
+    }
+
+    // Decision threshold:
+    // - If transparency/group ops appear => risk >= 5 => raster
+    // - If warnings matched => +10 => raster
+    const shouldRasterize = totalRisk >= 5
+
+    return { shouldRasterize, reasons, totalRisk, svg }
   }
 
   /**
@@ -158,39 +291,22 @@ export function useImageRenderer(
       const page = await pdf.getPage(1)
 
       const viewportPdf = page.getViewport({ scale: 1 })
+
       const opList = await page.getOperatorList()
       const svgGfx = new SVGGraphics(page.commonObjs, page.objs)
-
-      // List of unimplemented PDF operators in pdf.js
       const { OPS } = pdfjsLib
-      const unimplementedOps = [
-        OPS.setBlendMode, // BM
-        OPS.setSoftMask, // SMask
-        OPS.endGroup, // endGroup
-      ]
 
-      /**
-       * Check if the operator list contains any unimplemented operators
-       */
-      const checkUnimplemented = (opList) =>
-        opList.fnArray.some((fnId) => unimplementedOps.includes(fnId))
+      // Decide raster vs SVG using combined heuristics (ops + warnings)
+      const analysis = await shouldRasterizePdf({
+        page,
+        opList,
+        svgGfx,
+        viewportPdf,
+        OPS,
+        warn,
+      })
 
-      // Check for unimplemented operators in the PDF
-      let hasUnimplemented = checkUnimplemented(opList)
-
-      if (page.commonObjs && Object.keys(page.commonObjs._objs || {}).length > 0) {
-        for (const obj of Object.values(page.commonObjs._objs)) {
-          if (obj && obj.data && obj.data.Subtype === 'Form') {
-            hasUnimplemented = true
-            warn(
-              'PDF obsahuje Form XObject – môže obsahovať graf alebo legendu, ktoré nemusia byť správne zobrazené.',
-            )
-            break
-          }
-        }
-      }
-
-      if (hasUnimplemented) {
+      if (analysis.shouldRasterize) {
         const tRasterStart = performance.now()
 
         warn(
@@ -232,6 +348,7 @@ export function useImageRenderer(
         uiStore.isApplyingFrame = false
         uiStore.isLoading = false
 
+        updateSizes()
         renderCanvas()
 
         return

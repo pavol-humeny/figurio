@@ -1,28 +1,21 @@
-# Figurio
-
-## Parts
-- Magnify area
-- Blur tool 
-- Select tool
-- Shape tool 
-- Noise correction
-- brush tool 
-
 ## ŠT
-- nakresliť plagát 
+- nakresliť plagát (pridať logo fit a excel)
 - skontrolovať texty a preklady
 - kniha 
 - testovanie figurio
+- refaktorizácia
+- README
+- Príprava materiálov na SZZ
+- P - Crop - zmena veľkosti v pomere + shift
 - v
 - pridávanie materiálu 
 - použitie obrázka
-- refaktorizácia
+- pri pages v citácii majú byť pomlčky 
 
 ## TODO - text 
 - záver
 - prerobiť snímky obrazovky kde je VUE logo na spodku 
-- teória 2
-- pri pages v citácii skontrolovať či majú byť pomlčky alebo spojovníky
+- P - teória 2
 - slide pre motiváciu 
 - slide pre zobrazenie výhod oproti ostatným aplikáciám 
 - zoznam vecí čo by som chcel dať na plagát
@@ -30,20 +23,15 @@
 
 
 # TODO
-- zaistenie aby resizery mali vzdy rovnaku velkost
-- Gonzales nefunguje nacitanie a orezanie
+
+
 - P - nepodporované pdf dokumenty
 - P - Snapovanie objektov 
-- P - dopísať teóriu 3
-- P - Výber objektov
-    - prerobiť select 
-    - prerobi shape, text, blur, magnify
-- shape - vytvaranie novy objektov a ich mazanie ked su male by mohlo fungovat lepsie
+- P - dopísať teóriu 2
 
 - P - pridať README ku projektu
-- skontrolovať tie warning hlášky (malé rozmery, safari...)
 
-- ? podpora pre touch event 
+- skontrolovať warning hlášky (malé rozmery, safari...)
 
 - P - Crop pridat zmenu so shiftom
     - Crop orezanie v pomere 
@@ -100,8 +88,11 @@
 
 ## Ťažko povedať čo s tým 
 - SKIP - (asi to je v pohode tak ako to je) zoomovanie pomocou tlacitok, ak je obrazok mimo stred tak to zoomuje mimo obrázok 
+- podpora pre touch event 
+- zaistenie aby resizery mali vzdy rovnaku velkost
+- Gonzales nefunguje nacitanie a orezanie
 
-## TODO od J (userTesting2 - 12.1.2026)
+## FIXED -  od J (userTesting2 - 12.1.2026)
 - FIXED - Zoom pomocou numerickej klávesnice
 - FIXED - fyzický mód možno iná ikona 
 - FIXED - vyznačený text v light mode by mohol byť biely 
@@ -116,15 +107,15 @@
     - SKIP - orezanie na rôznych citlivostiach - mohlo by to orezavat hned 
     - FIXED - manualna úprava - mohol by to byť input 
     - FIXED - aplikovanie orezania - centrovať 
-- bg removal 
-    - neintuitívne klávesové skratky 
-    - zrušit výber pri držaní shift po kliknutí na nieco co uz je vybrane 
-    - mohla by sa ukladať história pri výbere 
+- FIXED - bg removal 
+    - SKIP - neintuitívne klávesové skratky 
+    - FIXED - zrušit výber pri držaní shift po kliknutí na nieco co uz je vybrane 
+    - SKIP - mohla by sa ukladať história pri výbere 
     - FIXED - color - pri výbere farby hned vybrat oblast,nie az po kliknutí na tlacidlo 
 - FIXED - klik + posun mysi na ikone by mohlo menit hodnotu (figma style)
-- shape - rozbité 
-    - divne funguje výber objektu
-    - pri kliknutí to hned vytvorí nový objekt namiesto výberu 
+- FIXED - shape - rozbité 
+    - FIXED - divne funguje výber objektu
+    - FIXED - pri kliknutí to hned vytvorí nový objekt namiesto výberu 
 - SKIP - text - málo fontov 
 - SKIP - blur - čakala blur pomocou štetca/kreslenia
 - FIXED - mg area - pridáva sa nový objekt pri kliknutí namiesto výberu 
