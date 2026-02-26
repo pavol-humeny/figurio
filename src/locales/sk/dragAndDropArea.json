@@ -1,8 +1,8 @@
 {
-  "title": "Presuň sem svoj súbor",
+  "title": "Presuňte súbor sem",
   "supportedFormats": "(jpg, jpeg, png, webp, pdf)",
-  "subtitle": "alebo klikni na vybrať súbor",
-  "pasteHint": "alebo stlač Ctrl+V pre vloženie obrázka zo schránky.",
+  "subtitle": "alebo kliknite na vybrať súbor",
+  "pasteHint": "alebo stlačte Ctrl+V pre vloženie obrázka zo schránky.",
   "button": {
     "text": "Vybrať súbor"
   },

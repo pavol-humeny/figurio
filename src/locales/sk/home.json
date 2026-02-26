@@ -2,16 +2,16 @@
   "appName": "Figurio",
   "appNameHighlight": "F",
   "appNameBasic": "igurio",
-  "title": "Pozdvihnite svoje projekty s obrázkami na vyššiu úroveň",
-  "text":"je online editor navrhnutý špeciálne pre obrázky používané v odborných textoch, dokumentoch a LaTeX výstupoch. Poskytuje nástroje navrhnuté na mieru pre vizuálne úpravy v prehľadnom prostredí",
-  "text2": "Vaše obrázky nie sú nikam nahrávané, zostávajú vo vašom prehliadači.",
+  "title": "Vylepšite svoje projekty pomocou kvalitných obrázkov",
+  "text": "je online editor určený na úpravu obrázkov používaných v akademických textoch a dokumentoch. Ponúka špecializované nástroje pre vizuálne úpravy v prehľadnom a organizovanom prostredí.",
+  "text2": "Vaše obrázky sa nikam neodosielajú – zostávajú uložené vo vašom prehliadači.",
   "features": [
-    { "name": "PDF", "description": "- vektorové spracovanie súborov" },
-    { "name": "Orezanie obrázka", "description": "- manuálne aj automaticky (orezanie natesno)" },
-    { "name": "Rámiky", "description": "- prehliadač alebo mobilný telefón" },
-    { "name": "Anotácie", "description": "- texty a grafické objekty" },
+    { "name": "PDF", "description": "- spracovanie vektorových súborov" },
+    { "name": "Orezanie obrázka", "description": "- manuálne aj automatické (fit crop)" },
+    { "name": "Rámiky", "description": "- okno aplikácie alebo mobilné zobrazenie" },
+    { "name": "Anotácie", "description": "- textové a grafické objekty" },
     { "name": "Rozmazanie oblasti", "description": "- ochrana citlivých údajov" },
-    { "name": "Priblíženie oblasti", "description": "- zvýraznenie dôležitých detailov" },
+    { "name": "Zvýraznenie oblasti", "description": "- zvýraznenie dôležitých detailov" },
     { "name": "...", "description": "" }
   ]
 }

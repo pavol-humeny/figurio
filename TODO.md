@@ -23,7 +23,7 @@
 
 
 # TODO
-
+- pencil - kreslenie seká pri väčšom rozmere 
 
 - P - nepodporované pdf dokumenty
 - P - Snapovanie objektov 
