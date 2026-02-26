@@ -109,8 +109,8 @@ const compensationStyle = computed(() => {
   position: absolute;
   top: 3px;
   opacity: 0.8;
-  left: 5px;
-  width: calc(100% / 2 - 5px);
+  left: 3px;
+  width: calc(100% / 2 - 3px);
   height: 30px;
   background: var(--primary-c);
   border: 2px solid var(--primary-c);
