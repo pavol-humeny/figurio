@@ -2,127 +2,127 @@
   {
     "icon": "IconImageAnalysisTool",
     "title": "Image Analysis",
-    "description": "Allows to analyze image content and the detection of noise. It is possible to set the sensitivity of the detection to accurately highlight the noise and then use the removal of this noise to improve the quality of the image.",
+    "description": "Allows analyzing image content, detecting noise with adjustable sensitivity, and removing it when needed.",
     "video": "imageAnalysis"
   },
   {
     "icon": "IconCropTool",
     "title": "Crop",
-    "description": "Crop the image manually or use automatic fit crop to remove unwanted margins.",
+    "description": "Allows cropping the image manually or using automatic fit crop to remove unwanted margins.",
     "video": "crop"
   },
   {
     "icon": "IconBrush",
     "title": "Brush",
-    "description": "Paint directly onto the image using an adjustable brush. Includes eraser mode for precise corrections.",
+    "description": "Allows drawing raster strokes over the image with adjustable size and optional erasing.",
     "video": "brush"
   },
   {
     "icon": "IconPencilTool",
     "title": "Pencil",
-    "description": "Draw precise strokes with a fine pencil tool. Ideal for annotations and detailed edits.",
+    "description": "Allows drawing precise strokes without loss of sharpness.",
     "video": "pencil"
   },
   {
     "icon": "IconRectangle",
     "title": "Rectangle",
-    "description": "Add a rectangular vector shape with adjustable fill, stroke, and opacity.",
+    "description": "Allows inserting a rectangle with adjustable fill, stroke, and opacity.",
     "video": "rectangle"
   },
   {
     "icon": "IconEllipse",
     "title": "Ellipse",
-    "description": "Insert an ellipse shape with configurable dimensions, fill, and stroke.",
+    "description": "Allows inserting an ellipse with adjustable size, fill, and stroke.",
     "video": "ellipse"
   },
   {
     "icon": "IconLine",
     "title": "Line",
-    "description": "Draw a straight line with adjustable thickness, color, and opacity.",
+    "description": "Allows drawing a straight line with adjustable thickness, color, and opacity.",
     "video": "line"
   },
   {
     "icon": "IconSelectTool",
     "title": "Select",
-    "description": "Select, move, duplicate, or delete objects. Supports multi-selection.",
+    "description": "Allows selecting, moving, duplicating, or deleting objects, including multi-selection.",
     "video": "select"
   },
   {
     "icon": "IconResizeTool",
     "title": "Resize",
-    "description": "Resize the image with optional aspect ratio locking for precise dimension control.",
+    "description": "Allows changing image dimensions with optional aspect ratio locking.",
     "video": "resize"
   },
   {
     "icon": "IconRotateTool",
     "title": "Rotate",
-    "description": "Rotate the image by fixed angles.",
+    "description": "Allows rotating the image by predefined angles.",
     "video": "rotate"
   },
   {
     "icon": "IconFlipVertical",
     "title": "Flip",
-    "description": "Flip the image horizontally or vertically.",
+    "description": "Allows flipping the image horizontally or vertically.",
     "video": "flip"
   },
   {
     "icon": "IconGrayscaleTool",
     "title": "Grayscale",
-    "description": "Convert the image to grayscale using multiple conversion algorithms.",
+    "description": "Allows converting the image to grayscale using selectable algorithms.",
     "video": "grayscale"
   },
   {
     "icon": "IconAutoRemovalTool",
     "title": "Background Removal (Automatic)",
-    "description": "Automatically detect and remove the background.",
+    "description": "Allows automatically detecting and removing the background.",
     "video": "auto"
   },
   {
     "icon": "IconManualRemovalTool",
     "title": "Background Removal (Manual)",
-    "description": "Manually mark areas to keep or remove for precise background editing.",
+    "description": "Allows manually marking areas to keep or remove.",
     "video": "manual"
   },
   {
     "icon": "IconColorRemovalTool",
     "title": "Background Removal (Color)",
-    "description": "Remove background by selecting a specific color range with adjustable tolerance.",
+    "description": "Allows removing the background based on a selected color range with adjustable tolerance.",
     "video": "color"
   },
   {
     "icon": "IconBlurTool",
     "title": "Blur Area",
-    "description": "Apply a blur effect to a selected region. Adjust strength and edge fade.",
+    "description": "Allows applying blur to a selected area with adjustable intensity and edge fade.",
     "video": "blur"
   },
   {
     "icon": "IconTextTool",
     "title": "Text",
-    "description": "Insert and edit text with control over font, size, color, and opacity.",
+    "description": "Allows inserting and editing text with configurable font, size, color, and opacity.",
     "video": "text"
   },
   {
     "icon": "IconMagnifyAreaTool",
     "title": "Magnify Area",
-    "description": "Zoom into a selected area with customizable radius, zoom factor, and outline.",
+    "description": "Allows zooming a selected area with adjustable radius, zoom factor, and outline.",
     "video": "magnifyArea"
   },
   {
     "icon": "IconFrameTool",
     "title": "Frame",
-    "description": "Add visual frames such as solid borders, browser frames, or device mockups.",
+    "description": "Allows adding visual frames such as borders, browser windows, or device mockups.",
     "video": "frame"
   },
   {
     "icon": "IconPresetTool",
-    "title": "Create Preset",
-    "description": "Save the current configuration of operations as a reusable preset.",
+    "title": "Create Template",
+    "description": "Allows saving the current set of operations as a reusable template.",
     "video": "createPreset"
   },
   {
     "icon": "IconMyPresetsTool",
-    "title": "My Presets",
-    "description": "Apply a previously saved preset to quickly reproduce a sequence of edits.",
-    "video": "myPreset"
+    "title": "My Templates",
+    "description": "Allows applying a saved template to reuse the same adjustments.",
+    "video": "myPresets"
   }
 ]

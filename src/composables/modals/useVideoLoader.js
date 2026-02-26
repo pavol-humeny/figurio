@@ -96,7 +96,7 @@ export function useVideoLoader() {
       case 'createPreset':
         src = presetCreate
         break
-      case 'myPreset':
+      case 'myPresets':
         src = presetMyPreset
         break
       case 'imageAnalysis':

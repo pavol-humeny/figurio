@@ -1,128 +1,128 @@
 [
   {
     "icon": "IconImageAnalysisTool",
-    "title": "Analýza obrázku",
-    "description": "Umožňuje analyzovat obsah obrázku a detekovat šum. Je možné nastavit citlivost detekce tak, aby byl šum přesně zvýrazněn, a následně použít jeho odstranění ke zlepšení kvality obrázku.",
+    "title": "Analýza obrazu",
+    "description": "Umožňuje analyzovat obsah obrázku, detekovat šum s nastavitelnou citlivostí a následně jej odstranit.",
     "video": "imageAnalysis"
   },
   {
     "icon": "IconCropTool",
-    "title": "Oříznutí",
-    "description": "Ořízněte obrázek ručně nebo použijte automatické přizpůsobení pro odstranění nežádoucích okrajů.",
+    "title": "Ořez",
+    "description": "Umožňuje oříznout obrázek ručně nebo použít automatický fit crop k odstranění nežádoucích okrajů.",
     "video": "crop"
   },
   {
     "icon": "IconBrush",
     "title": "Štětec",
-    "description": "Malujte přímo do obrázku pomocí nastavitelného štětce. Obsahuje také režim gumy pro přesné úpravy.",
+    "description": "Umožňuje kreslit rastrové tahy nad obrázek s nastavitelnou velikostí a možností mazání.",
     "video": "brush"
   },
   {
     "icon": "IconPencilTool",
     "title": "Tužka",
-    "description": "Kreslete přesné tahy pomocí jemné tužky. Ideální pro anotace a detailní úpravy.",
+    "description": "Umožňuje kreslit přesné tahy bez ztráty ostrosti.",
     "video": "pencil"
   },
   {
     "icon": "IconRectangle",
     "title": "Obdélník",
-    "description": "Přidejte vektorový obdélník s nastavitelnou výplní, obrysem a průhledností.",
+    "description": "Umožňuje vložit obdélník s nastavitelnou výplní, obrysem a průhledností.",
     "video": "rectangle"
   },
   {
     "icon": "IconEllipse",
     "title": "Elipsa",
-    "description": "Vložte elipsu s nastavitelnými rozměry, výplní a obrysem.",
+    "description": "Umožňuje vložit elipsu s nastavitelnou velikostí, výplní a obrysem.",
     "video": "ellipse"
   },
   {
     "icon": "IconLine",
     "title": "Čára",
-    "description": "Nakreslete přímku s nastavitelnou tloušťkou, barvou a průhledností.",
+    "description": "Umožňuje nakreslit přímku s nastavitelnou tloušťkou, barvou a průhledností.",
     "video": "line"
   },
   {
     "icon": "IconSelectTool",
     "title": "Výběr",
-    "description": "Označujte, přesouvejte, kopírujte nebo mažte objekty. Podporuje vícenásobný výběr.",
+    "description": "Umožňuje vybrat, přesunout, duplikovat nebo odstranit objekty včetně vícenásobného výběru.",
     "video": "select"
   },
   {
     "icon": "IconResizeTool",
     "title": "Změna velikosti",
-    "description": "Změňte velikost obrázku s možností uzamčení poměru stran pro přesné nastavení rozměrů.",
+    "description": "Umožňuje změnit rozměry obrázku s možností uzamčení poměru stran.",
     "video": "resize"
   },
   {
     "icon": "IconRotateTool",
     "title": "Otočení",
-    "description": "Otočte obrázek o pevně dané úhly.",
+    "description": "Umožňuje otočit obrázek o předdefinované úhly.",
     "video": "rotate"
   },
   {
     "icon": "IconFlipVertical",
-    "title": "Převrácení",
-    "description": "Převraťte obrázek horizontálně nebo vertikálně.",
+    "title": "Překlopení",
+    "description": "Umožňuje překlopit obrázek horizontálně nebo vertikálně.",
     "video": "flip"
   },
   {
     "icon": "IconGrayscaleTool",
     "title": "Odstíny šedi",
-    "description": "Převeďte obrázek do odstínů šedi pomocí více konverzních algoritmů.",
+    "description": "Umožňuje převést obrázek do odstínů šedi pomocí volitelných algoritmů.",
     "video": "grayscale"
   },
   {
     "icon": "IconAutoRemovalTool",
     "title": "Odstranění pozadí (automatické)",
-    "description": "Automaticky rozpozná a odstraní pozadí.",
+    "description": "Umožňuje automaticky detekovat a odstranit pozadí.",
     "video": "auto"
   },
   {
     "icon": "IconManualRemovalTool",
-    "title": "Odstranění pozadí (ruční)",
-    "description": "Ručně označte oblasti, které chcete ponechat nebo odstranit pro přesnou úpravu pozadí.",
+    "title": "Odstranění pozadí (manuální)",
+    "description": "Umožňuje ručně označit oblasti určené k zachování nebo odstranění.",
     "video": "manual"
   },
   {
     "icon": "IconColorRemovalTool",
-    "title": "Odstranění pozadí (podle barvy)",
-    "description": "Odstraňte pozadí výběrem konkrétního barevného rozsahu s nastavitelnou tolerancí.",
+    "title": "Odstranění pozadí (barva)",
+    "description": "Umožňuje odstranit pozadí na základě výběru barevného rozsahu s nastavitelnou tolerancí.",
     "video": "color"
   },
   {
     "icon": "IconBlurTool",
     "title": "Rozmazání oblasti",
-    "description": "Použijte efekt rozmazání na vybranou oblast. Nastavte intenzitu a přechod okrajů.",
+    "description": "Umožňuje aplikovat rozmazání na vybranou oblast s nastavitelnou intenzitou a přechodem okrajů.",
     "video": "blur"
   },
   {
     "icon": "IconTextTool",
     "title": "Text",
-    "description": "Vložte a upravte text s možností nastavení písma, velikosti, barvy a průhlednosti.",
+    "description": "Umožňuje vložit a upravit text s nastavením písma, velikosti, barvy a průhlednosti.",
     "video": "text"
   },
   {
     "icon": "IconMagnifyAreaTool",
     "title": "Zvětšení oblasti",
-    "description": "Přibližte vybranou oblast s nastavitelným poloměrem, faktorem zvětšení a obrysem.",
+    "description": "Umožňuje zvětšit vybranou oblast s nastavitelným poloměrem, mírou přiblížení a obrysem.",
     "video": "magnifyArea"
   },
   {
     "icon": "IconFrameTool",
-    "title": "Rám",
-    "description": "Přidejte vizuální rámy, například jednoduché okraje, rám prohlížeče nebo makety zařízení.",
+    "title": "Rámeček",
+    "description": "Umožňuje přidat vizuální rámy, jako jsou okraje, okno prohlížeče nebo makety zařízení.",
     "video": "frame"
   },
   {
     "icon": "IconPresetTool",
-    "title": "Vytvořit předvolbu",
-    "description": "Uložte aktuální konfiguraci úprav jako znovu použitelnou předvolbu.",
+    "title": "Vytvořit šablonu",
+    "description": "Umožňuje uložit aktuální sadu operací jako znovupoužitelnou šablonu.",
     "video": "createPreset"
   },
   {
     "icon": "IconMyPresetsTool",
-    "title": "Moje předvolby",
-    "description": "Použijte dříve uloženou předvolbu pro rychlé zopakování úprav.",
-    "video": "myPreset"
+    "title": "Moje šablony",
+    "description": "Umožňuje aplikovat uloženou šablonu pro opětovné použití stejných úprav.",
+    "video": "myPresets"
   }
 ]

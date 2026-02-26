@@ -40,9 +40,9 @@
 
 - skontrolovať texty
 ├── DONE - calibration.json
-├── contextMenu.json
+├── DONE - contextMenu.json
 ├── DONE - dragAndDropArea.json
-├── featureTour.json
+├── DONE - featureTour.json
 ├── general.json
 ├── DONE - help.json
 ├── DONE - home.json
