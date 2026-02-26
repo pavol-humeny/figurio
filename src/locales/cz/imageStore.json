@@ -2,7 +2,7 @@
   "toast": {
     "errorUnsupportedFileType": {
       "title": "Nepodporovaný typ souboru",
-      "message": "Typ souboru {fileType} není podporován. Nahrajte prosím platný obrazový soubor."
+      "message": "Typ souboru {fileType} není podporován. Nahrajte prosím podporovaný soubor."
     },
     "errorFileTooLargeSize": {
       "title": "Soubor je příliš velký",
@@ -14,7 +14,7 @@
     },
     "errorMultipleFiles": {
       "title": "Vybráno více souborů",
-      "message": "Prosím vyberte pouze {maxFiles} souborů najednou."
+      "message": "Prosím vyberte pouze {maxFiles} soubor najednou."
     },
     "errorPdfMultipleFiles":{
       "title": "Více PDF souborů",
@@ -41,8 +41,8 @@
       "message": "Název souboru je stejný jako předtím. Nebyly provedeny žádné změny."
     },
     "successFileExported": {
-      "title": "Soubor úspěšně exportován",
-      "message": "Soubor byl exportován."
+      "title": "Export dokončen",
+      "message": "Soubor byl úspěšně exportován."
     },
     "successFileCopiedToClipboard": {
       "title": "Soubor zkopírován do schránky",
@@ -58,15 +58,9 @@
     }
   },
   "modal": {
-    "scalePdfForBetterResolution": {
-      "title": "Změnit měřítko PDF pro lepší rozlišení",
-      "message": "Pro lepší rozlišení zvažte změnu měřítka PDF. To zlepší kvalitu konečného obrázku.",
-      "cancel": "Ne, zachovat původní velikost",
-      "confirm": "Změnit měřítko PDF"
-    },
     "selectPdfPage": {
       "title": "Výběr strany PDF",
-      "message": "Tento PDF soubor obsahuje více stran. Vyberte jednu pro import.",
+      "message": "Tento PDF soubor obsahuje více stran. Vyberte jednu pro otevření.",
       "cancel": "Zrušit",
       "confirm": "Vybrat stranu",
       "pageRange": "Strany: {from} – {to}"

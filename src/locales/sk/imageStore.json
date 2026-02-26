@@ -1,23 +1,23 @@
 {
   "toast": {
     "errorUnsupportedFileType": {
-      "title": "Nepodporovaný typ souboru",
-      "message": "Typ souboru {fileType} není podporován. Nahrajte prosím platný obrazový soubor."
+      "title": "Nepodporovaný typ súboru",
+      "message": "Typ súboru {fileType} nie je podporovaný. Nahrajte prosím podporovaný súbor."
     },
     "errorFileTooLargeSize": {
-      "title": "Soubor je příliš velký",
-      "message": "Soubor překračuje maximální povolenou velikost {maxSize} MB. Nahrajte prosím menší soubor."
+      "title": "Súbor je príliš veľký",
+      "message": "Súbor prekračuje maximálnu povolenú veľkosť {maxSize} MB. Nahrajte prosím menší súbor."
     },
     "errorInvalidFileDimensions": {
       "title": "Súbor má neplatné rozmery",
       "message": "Súbor má neplatné rozmery. Nahrajte prosím súbor s rozmermi od {minWidth}x{minHeight} do {maxWidth}x{maxHeight} pixelov."
     },
     "errorMultipleFiles": {
-      "title": "Vybrané viacero súborov",
-      "message": "Prosím vyberte iba {maxFiles} súborov naraz."
+      "title": "Bolo vybrané viacero súborov",
+      "message": "Prosím vyberte iba {maxFiles} súbor naraz."
     },
     "errorPdfMultipleFiles":{
-      "title": "Viacero PDF súborov",
+      "title": "Bolo vybrané viacero PDF súborov",
       "message": "Prosím vyberte iba jeden PDF súbor naraz."
     },
     "successFileUploaded": {
@@ -41,8 +41,8 @@
       "message": "Názov súboru je rovnaký ako predtým. Žiadna zmena nebola vykonaná."
     },
     "successFileExported": {
-      "title": "Súbor bol úspešne exportovaný",
-      "message": "Súbor bol exportovaný."
+      "title": "Export dokončený",
+      "message": "Súbor bol úspešne exportovaný."
     },
     "successFileCopiedToClipboard": {
       "title": "Súbor skopírovaný do schránky",
@@ -58,15 +58,9 @@
     }
   },
   "modal": {
-    "scalePdfForBetterResolution": {
-      "title": "Zmeniť mierku PDF pre lepšie rozlíšenie",
-      "message": "Pre zlepšenie rozlíšenia zvážte zmenu mierky PDF. To zlepší kvalitu konečného obrázka.",
-      "cancel": "Ne, zachovať pôvodnú veľkosť",
-      "confirm": "Zmeniť mierku PDF"
-    },
     "selectPdfPage": {
       "title": "Výber strany PDF",
-      "message": "Tento PDF súbor obsahuje viacero strán. Vyber jednu na import.",
+      "message": "Tento PDF súbor obsahuje viacero strán. Vyber jednu pre otvorenie.",
       "cancel": "Zrušiť",
       "confirm": "Vybrať stranu",
       "pageRange": "Strany: {from} – {to}"

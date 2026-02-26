@@ -43,10 +43,10 @@
 ├── DONE - contextMenu.json
 ├── DONE - dragAndDropArea.json
 ├── DONE - featureTour.json
-├── general.json
+├── DONE - general.json
 ├── DONE - help.json
 ├── DONE - home.json
-├── imageStore.json
+├── DONE - imageStore.json
 ├── maintenance.json
 ├── privacy.json
 ├── release.json

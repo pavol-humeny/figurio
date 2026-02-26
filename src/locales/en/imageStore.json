@@ -2,7 +2,7 @@
   "toast": {
     "errorUnsupportedFileType": {
       "title": "Unsupported file type",
-      "message": "The file type {fileType} is not supported. Please upload a valid image file."
+      "message": "The file type {fileType} is not supported. Please upload a supported file."
     },
     "errorFileTooLargeSize": {
       "title": "File too large",
@@ -14,7 +14,7 @@
     },
     "errorMultipleFiles": {
       "title": "Multiple files selected",
-      "message": "Please select only {maxFiles} files at a time."
+      "message": "Please select only {maxFiles} file at a time."
     },
     "errorPdfMultipleFiles":{
       "title": "Multiple PDF files",
@@ -41,8 +41,8 @@
       "message": "The file name is the same as before. No changes were made."
     },
     "successFileExported": {
-      "title": "File exported successfully",
-      "message": "The file has been exported."
+      "title": "Export complete",
+      "message": "Your file has been successfully exported."
     },
     "successFileCopiedToClipboard": {
       "title": "File copied to clipboard",
@@ -58,18 +58,12 @@
     }
   },
   "modal": {
-    "scalePdfForBetterResolution": {
-      "title": "Scale PDF for better resolution",
-      "message": "For better resolution, consider scaling the PDF. This will improve the quality of the final image.",
-      "cancel": "No, keep original size",
-      "confirm": "Scale PDF"
-    },
     "selectPdfPage": {
       "title": "Select PDF Page",
       "message": "This PDF contains multiple pages. Please choose one to import.",
       "cancel": "Cancel",
       "confirm": "Select Page",
-      "pageRange": "Pages: {from} - {to}"
+      "pageRange": "Pages: {from} – {to}"
     }
   }
 }
