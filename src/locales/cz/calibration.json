@@ -1,17 +1,17 @@
 {
-    "title": "Kalibrace",
-    "description": "Slouží k nastavení zobrazení tak, aby rozměry na obrazovce odpovídaly skutečné velikosti objektů.",
-    "instructions": {
-      "title": "Pokyny",
-      "step1": "Přiložte standardní kreditní kartu (85,60 mm × 53,98 mm) k monitoru.",
-      "step2": "Pomocí posuvníku níže upravte šířku karty na obrazovce, dokud se nebude shodovat se skutečnou šířkou vaší kreditní karty.",
-      "step3": "Jakmile bude zarovnána, klikněte na tlačítko 'Kalibrovat' pro uložení nastavení.",
-      "step4": "Dvojklikem na posuvník resetujete kalibrační faktor na výchozí hodnotu."
-    },
-    "button": {
-      "text": "Kalibrovat"
-    },
-    "closeButton": {
-      "text": "Zavřít"
-    }
+  "title": "Kalibrace",
+  "description": "Nastavte měřítko zobrazení tak, aby rozměry na obrazovce odpovídaly skutečným fyzickým rozměrům.",
+  "instructions": {
+    "title": "Postup kalibrace",
+    "step1": "Přiložte standardní kartu (85,60 mm × 53,98 mm) k obrazovce.",
+    "step2": "Pomocí posuvníku upravte šířku zobrazené karty tak, aby přesně odpovídala skutečné kartě.",
+    "step3": "Klikněte na „Kalibrovat“ pro uložení měřítka.",
+    "step4": "Dvojklikem na posuvník obnovíte výchozí hodnotu kalibrace."
+  },
+  "button": {
+    "text": "Kalibrovat"
+  },
+  "closeButton": {
+    "text": "Zavřít"
+  }
 }

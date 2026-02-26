@@ -39,13 +39,13 @@
 - Vylepšenie rámiku pre prehliadače 
 
 - skontrolovať texty
-├── calibration.json
+├── DONE - calibration.json
 ├── contextMenu.json
-├── dragAndDropArea.json
+├── DONE - dragAndDropArea.json
 ├── featureTour.json
 ├── general.json
 ├── DONE - help.json
-├── home.json
+├── DONE - home.json
 ├── imageStore.json
 ├── maintenance.json
 ├── privacy.json

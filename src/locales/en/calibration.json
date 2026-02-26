@@ -1,17 +1,17 @@
 {
-    "title": "Calibration",
-    "description": "Used to adjust your display so that measurements on screen correspond accurately to real-world physical sizes.",
-    "instructions": {
-      "title": "Instructions",
-      "step1": "Place a standard credit card (85.60 mm × 53.98 mm) against your monitor.",
-      "step2": "Use the slider below to adjust the on-screen width of the card until it matches the physical width of your credit card.",
-      "step3": "Once aligned, click the 'Calibrate' button to save the settings.",
-      "step4": "Double-click the slider to reset the calibration factor to default."
-    },
-    "button": {
-      "text": "Calibrate"
-    },
-    "closeButton": {
-      "text": "Close"
-    }
+  "title": "Calibration",
+  "description": "Adjust the display scale so that on-screen measurements match real-world physical dimensions.",
+  "instructions": {
+    "title": "How to calibrate",
+    "step1": "Place a standard card (85.60 mm × 53.98 mm) against your screen.",
+    "step2": "Use the slider to adjust the on-screen card width until it matches the physical card exactly.",
+    "step3": "Click “Calibrate” to save the scale factor.",
+    "step4": "Double-click the slider to reset the calibration to its default value."
+  },
+  "button": {
+    "text": "Calibrate"
+  },
+  "closeButton": {
+    "text": "Close"
+  }
 }
