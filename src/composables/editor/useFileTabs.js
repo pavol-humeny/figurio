@@ -117,11 +117,10 @@ export function useFileTabs(uiStore, viewportStore, imageStore, editorStore, t) 
       'wheel',
       (e) => {
         if (Math.abs(e.deltaY) > Math.abs(e.deltaX)) {
-          e.preventDefault()
-          element.scrollBy({ left: e.deltaY / 4, behavior: 'auto' })
+          element.scrollBy({ left: e.deltaY / 4 })
         }
       },
-      { passive: false },
+      { passive: true },
     )
   })
 
@@ -227,6 +226,11 @@ export function useFileTabs(uiStore, viewportStore, imageStore, editorStore, t) 
     }
   }
 
+  /**
+   * Handle the reordering of tabs after a drag-and-drop operation, updating the active tab index accordingly
+   *
+   * @param {Object} evt - Reorder event with oldIndex and newIndex of the moved tab
+   */
   const onTabsReorder = (evt) => {
     const { oldIndex, newIndex } = evt
     if (oldIndex === newIndex) return

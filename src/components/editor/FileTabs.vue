@@ -79,6 +79,8 @@ const {
 .tabs-wrapper {
   display: flex;
   min-width: max-content;
+  overflow-x: auto;
+  overscroll-behavior: contain;
   height: 100%;
 }
 

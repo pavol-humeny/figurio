@@ -7,8 +7,8 @@
 - README
 - Príprava materiálov na SZZ
 - P - Crop - zmena veľkosti v pomere + shift
+- rozplánovať primárne ulohy
 - v
-- pridávanie materiálu 
 - použitie obrázka
 - pri pages v citácii majú byť pomlčky 
 
