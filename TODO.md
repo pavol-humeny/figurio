@@ -1,13 +1,8 @@
 ## ŠT
-- nakresliť plagát (pridať logo fit a excel)
-- skontrolovať texty a preklady
 - kniha 
 - testovanie figurio
 - refaktorizácia
-- README
 - Príprava materiálov na SZZ
-- P - Crop - zmena veľkosti v pomere + shift
-- rozplánovať primárne ulohy
 - v
 - použitie obrázka
 - pri pages v citácii majú byť pomlčky 
@@ -21,13 +16,17 @@
 - zoznam vecí čo by som chcel dať na plagát
 - scenár pre video
 
-
 # TODO
-- pencil - kreslenie seká pri väčšom rozmere 
+- ak je to zobrazenie v milimetroch tak zmenit pravitko
+- P - pencil - kreslenie seká pri väčšom rozmere 
 
 - P - nepodporované pdf dokumenty
 - P - Snapovanie objektov 
 - P - dopísať teóriu 2
+
+- vymyslieť kde poďakovať testerom 
+
+- feature tour - pri veľkom zoome sa tam nezobrazuje správne text 
 
 - P - pridať README ku projektu
 
@@ -47,8 +46,8 @@
 ├── DONE - help.json
 ├── DONE - home.json
 ├── DONE - imageStore.json
-├── maintenance.json
-├── privacy.json
+├── DONE - maintenance.json
+├── DONE - privacy.json
 ├── release.json
 ├── statistics.json
 ├── tools.json

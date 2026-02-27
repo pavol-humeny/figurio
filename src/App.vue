@@ -312,8 +312,10 @@ onMounted(async () => {
   if (!globalConfig.isRunning) {
     sendVisitDuringMaintenanceEmail(userUuid)
   } else {
-    // Log user visit
-    addUserVisit(userUuid)
+    // Log user visit only if not on statistics page
+    if (route.name !== 'statistics') {
+      addUserVisit(userUuid)
+    }
   }
 })
 
