@@ -207,6 +207,12 @@ export function useToolsPanel(editorStore, imageStore, uiStore, workspaceStore, 
         return
       }
 
+      // If panel is closed, just open it without deselecting
+      if (!uiStore.rightPanelOpen) {
+        useCollapsiblePanel(uiStore).showPanel()
+        return
+      }
+
       log('Deselect tool:', toolKey)
 
       addUserEvent('deselectTool', { tool: toolKey })

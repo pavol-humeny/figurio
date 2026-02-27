@@ -17,8 +17,6 @@
 - scenár pre video
 
 # TODO
-- ak je zavrety bocny panel ale je vybraný nástroj a opatovne sa vyberie tak ho to nedeselektne ale otvori panel
-- ak je to zobrazenie v milimetroch tak zmenit pravitko
 - P - pencil - kreslenie seká pri väčšom rozmere 
 
 - P - nepodporované pdf dokumenty
