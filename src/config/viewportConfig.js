@@ -28,4 +28,7 @@ export const viewportConfig = {
 
   // Zoom mode - physical
   defaultPxPerCm: 96 / 2.54, // 1 cm = ~37.79 px @96DPI
+
+  rulerMarkSpacingPx: 30, // Desired spacing between ruler marks in pixels on screen
+
 }

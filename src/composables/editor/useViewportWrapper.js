@@ -577,20 +577,54 @@ export function useViewportWrapper(
   // ------------------------------
 
   /**
-   * Dynamic step size for ruler marks based on zoom level
+   * Dynamic step size for rulers in classic zoom mode based on zoom level
    */
   const dynamicStep = computed(() => {
-    const z = zoomLevel.value
-    if (z >= 4) return 5
-    if (z >= 2) return 10
-    if (z >= 1.5) return 20
-    if (z >= 1.0) return 40
-    if (z >= 0.5) return 80
-    if (z >= 0.25) return 160
-    if (z >= 0.2) return 320
-    if (z >= 0.1) return 640
+    // Spacing between ruler marks in pixels on screen
+    const targetSpacingPx = viewportConfig.rulerMarkSpacingPx
 
-    return 1020
+    // Calculate the raw step in pixels that would correspond to the target pixel spacing on screen
+    const rawStepPx = targetSpacingPx / zoomLevel.value
+
+    // Round the raw step to a nice number (1, 2, 5, 10, etc.) multiplied by a power of 10
+    const base = Math.pow(10, Math.floor(Math.log10(rawStepPx)))
+    const normalized = rawStepPx / base
+
+    let nice
+    if (normalized <= 1) nice = 1
+    else if (normalized <= 2) nice = 2
+    else if (normalized <= 5) nice = 5
+    else nice = 10
+
+    // Minimum step of 1 pixel to avoid too dense ruler marks
+    return Math.max(1, Math.round(nice * base))
+  })
+
+  /**
+   * Dynamic step size for physical zoom mode based on zoom level and pixels per mm at fit zoom
+   */
+  const dynamicPhysicalStep = computed(() => {
+    const pxPerMm = viewportStore.getPxPerMmFitZoom
+    const pxPerMmOnScreen = pxPerMm * zoomLevel.value
+
+    // Spacing between ruler marks in pixels on screen
+    const targetSpacingPx = viewportConfig.rulerMarkSpacingPx
+
+    // Calculate the raw step in mm that would correspond to the target pixel spacing on screen
+    const rawStepMm = targetSpacingPx / pxPerMmOnScreen
+
+    // Round the raw step to a nice number (1, 2, 5, 10, etc.) multiplied by a power of 10
+    const base = Math.pow(10, Math.floor(Math.log10(rawStepMm)))
+    const normalized = rawStepMm / base
+
+    let nice
+    if (normalized <= 1) nice = 1
+    else if (normalized <= 2) nice = 2
+    else if (normalized <= 5) nice = 5
+    else nice = 10
+
+    // Minimum step of 10 mm to avoid too dense ruler marks
+    return Math.max(10, nice * base)
   })
 
   /**
@@ -603,7 +637,15 @@ export function useViewportWrapper(
    * Update horizontal ruler marks based on current pan and zoom
    */
   const updateHorizontalRulerMarks = () => {
-    const spacing = dynamicStep.value * zoomLevel.value
+    const isPhysical = viewportStore.zoomMode === 'physical'
+
+    const pxPerMm = viewportStore.getPxPerMmFitZoom
+
+    const unitStep = isPhysical ? dynamicPhysicalStep.value : dynamicStep.value
+    const zoomCorrection = isPhysical ? viewportStore.zoomLevel : zoomLevel.value
+
+    const spacing = isPhysical ? unitStep * pxPerMm * zoomCorrection : unitStep * zoomCorrection
+
     const width = wrapperSize.value.width || 0
     const start = Math.floor(-panX.value / spacing) - 1
     const end = Math.ceil((width - panX.value) / spacing) + 1
@@ -612,7 +654,22 @@ export function useViewportWrapper(
 
     for (let i = start; i < end; i++) {
       const base = i * spacing + panX.value
-      marks.push({ left: base, label: i * dynamicStep.value, isSub: false })
+
+      let label = ''
+
+      if (isPhysical) {
+        const valueMm = i * unitStep
+        label = valueMm / 10 // mm -> cm
+      } else {
+        label = i * unitStep
+      }
+
+      marks.push({
+        left: base,
+        label,
+        isSub: false,
+      })
+
       for (let j = 1; j < 5; j++) {
         const subLeft = base + (j * spacing) / 5
         marks.push({ left: subLeft, label: '', isSub: true })
@@ -625,7 +682,15 @@ export function useViewportWrapper(
    * Update vertical ruler marks based on current pan and zoom
    */
   const updateVerticalRulerMarks = () => {
-    const spacing = dynamicStep.value * zoomLevel.value
+    const isPhysical = viewportStore.zoomMode === 'physical'
+
+    const pxPerMm = viewportStore.getPxPerMmFitZoom
+
+    const unitStep = isPhysical ? dynamicPhysicalStep.value : dynamicStep.value
+    const zoomCorrection = isPhysical ? viewportStore.zoomLevel : zoomLevel.value
+
+    const spacing = isPhysical ? unitStep * pxPerMm * zoomCorrection : unitStep * zoomCorrection
+
     const height = wrapperSize.value.height || 0
     const start = Math.floor(-panY.value / spacing) - 1
     const end = Math.ceil((height - panY.value) / spacing) + 1
@@ -634,7 +699,22 @@ export function useViewportWrapper(
 
     for (let i = start; i < end; i++) {
       const base = i * spacing + panY.value
-      marks.push({ top: base, label: i * dynamicStep.value, isSub: false })
+
+      let label = ''
+
+      if (isPhysical) {
+        const valueMm = i * unitStep
+        label = valueMm / 10 // mm -> cm
+      } else {
+        label = i * unitStep
+      }
+
+      marks.push({
+        top: base,
+        label,
+        isSub: false,
+      })
+
       for (let j = 1; j < 5; j++) {
         const subTop = base + (j * spacing) / 5
         marks.push({ top: subTop, label: '', isSub: true })
@@ -656,6 +736,7 @@ export function useViewportWrapper(
     }, 0)
   }, 50) // Run one time each 50 ms
 
+  // Update ruler marks when pan, zoom or right panel state changes
   watch([panX, panY, zoomLevel, () => uiStore.rightPanelOpen], throttledUpdateRulers, {
     immediate: true,
   })
@@ -813,18 +894,65 @@ export function useViewportWrapper(
   /**
    * Computed cursor position in image coordinates for displaying position of the mouse cursor on rulers
    */
-  const cursorPosX = computed(() => round((mouseX.value - panX.value) / zoomLevel.value))
-  const cursorPosY = computed(() => round((mouseY.value - panY.value) / zoomLevel.value))
+  // const cursorPosX = computed(() => round((mouseX.value - panX.value) / zoomLevel.value))
+  // const cursorPosY = computed(() => round((mouseY.value - panY.value) / zoomLevel.value))
+
+  /**
+   * Cursor position in image coordinates
+   */
+  const cursorImagePxX = computed(() => {
+    if (viewportStore.zoomMode === 'physical') {
+      return (mouseX.value - panX.value) / viewportStore.zoomLevel
+    } else {
+      return (mouseX.value - panX.value) / zoomLevel.value
+    }
+  })
+
+  const cursorImagePxY = computed(() => {
+    if (viewportStore.zoomMode === 'physical') {
+      return (mouseY.value - panY.value) / viewportStore.zoomLevel
+    } else {
+      return (mouseY.value - panY.value) / zoomLevel.value
+    }
+  })
+
+  /**
+   * Cursor position for rulers (respects zoom mode)
+   */
+  const cursorPosX = computed(() => {
+    if (viewportStore.zoomMode === 'physical') {
+      const pxPerMm = viewportStore.getPxPerMmFitZoom
+      const valueMm = cursorImagePxX.value / pxPerMm
+      return round(valueMm / 10, 2) // Show in cm with 2 decimals
+    }
+
+    return round(cursorImagePxX.value)
+  })
+
+  const cursorPosY = computed(() => {
+    if (viewportStore.zoomMode === 'physical') {
+      const pxPerMm = viewportStore.getPxPerMmFitZoom
+      const valueMm = cursorImagePxY.value / pxPerMm
+      return round(valueMm / 10, 2) // Show in cm with 2 decimals
+    }
+
+    return round(cursorImagePxY.value)
+  })
 
   /**
    * Check if cursor position is at the edges of the image
    * Used for displaying special markers on rulers
    */
   const cursorPosXSameAsImageWidth = computed(() => {
-    return cursorPosX.value == imageStore.fileDimensions.width || cursorPosX.value == 0
+    const posX = (mouseX.value - panX.value) / zoomLevel.value
+
+    console.log('posX:', round(posX, 2), 'image width:', imageStore.fileDimensions.width)
+    return round(posX, 2) === imageStore.fileDimensions.width || round(posX, 2) === 0
   })
+
   const cursorPosYSameAsImageHeight = computed(() => {
-    return cursorPosY.value == imageStore.fileDimensions.height || cursorPosY.value == 0
+    const posY = (mouseY.value - panY.value) / zoomLevel.value
+    return round(posY, 2) === imageStore.fileDimensions.height || round(posY, 2) === 0
   })
 
   // ------------------------------
