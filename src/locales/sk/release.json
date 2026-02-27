@@ -4,6 +4,31 @@
     "items": []
   },
   "versions": {
+    "5.13.0": {
+      "label": "5.13.0",
+      "date": "27.2. 2025",
+      "newFeatures": {
+        "items": [
+          "Jednotky pravítka v režime fyzického priblíženia sa zobrazujú v centimetroch",
+          "Pridaná podpora pre uzamknutie pomeru strán a zmenu veľkosti od stredu v nástroji orezania"
+        ]
+      },
+      "bugFixes": {
+        "items": [
+          "Nezrušiť výber nástroja, ak je už vybratý a pravý panel je zatvorený"
+        ]
+      }
+    },
+    "5.12.0": {
+      "label": "5.12.0",
+      "date": "23.2. 2025",
+      "bugFixes": {
+        "items": [
+          "Opravený problém s nástrojom výberu",
+          "Povoliť výber SVG objektov iba v nástroji výberu"
+        ]
+      }
+    },
     "5.11.0":{
       "label": "5.11.0",
       "date":"13.2. 2025",

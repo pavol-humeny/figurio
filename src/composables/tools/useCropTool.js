@@ -607,9 +607,27 @@ export function useCropTool(imageStore, viewportStore, editorStore, historyStore
     let remainingDx = 0
     let remainingDy = 0
 
+    // Store the absolute initial state at the moment the user starts resizing
+    const initialX = cropBox.value.x
+    const initialY = cropBox.value.y
+    const initialWidth = cropBox.value.width
+    const initialHeight = cropBox.value.height
+    const initialAspectRatio = initialWidth / initialHeight
+    const initialRight = initialX + initialWidth
+    const initialBottom = initialY + initialHeight
+
+    // Store starting mouse position for Shift calculations
+    const startMouseX = e.clientX
+
+    // Mode that is allowed during this resize session
+    // let allowedMode = null
+
     const onMouseMove = (ev) => {
       const dx = (ev.clientX - cropBox.value.startX) / viewportStore.realZoomLevel + remainingDx
       const dy = (ev.clientY - cropBox.value.startY) / viewportStore.realZoomLevel + remainingDy
+
+      const totalDx = (ev.clientX - startMouseX) / viewportStore.realZoomLevel
+      const shiftDelta = totalDx
 
       // Round to whole pixels
       const dxNorm = Math.round(dx)
@@ -621,78 +639,623 @@ export function useCropTool(imageStore, viewportStore, editorStore, historyStore
 
       const minValue = editorConfig.minCropSize
 
-      if (direction.includes('right')) {
-        let newWidth = cropBox.value.width + dxNorm
-        let newX = cropBox.value.x
+      const altNow = ev.altKey || ev.metaKey
+      const shiftNow = ev.shiftKey
 
-        // If cropBox goes out of bounds
-        if (newX + newWidth > imageStore.fileDimensions.width) {
-          newWidth = imageStore.fileDimensions.width - newX
+      // If no mode was chosen yet, lock the first one that appears
+      // if (!allowedMode) {
+      //   if (shiftNow) {
+      //     allowedMode = 'shift'
+      //   } else if (altNow) {
+      //     allowedMode = 'alt'
+      //   }
+      // }
+
+      let isShiftKey = shiftNow
+      let isAltKey = altNow
+
+      // if (allowedMode === 'shift') {
+      //   isShiftKey = shiftNow
+      // }
+
+      // if (allowedMode === 'alt') {
+      //   isAltKey = altNow
+      // }
+
+      if (direction === 'topright') {
+        let newWidth
+        let newHeight
+        let newX
+        let newY
+
+        const originalX = cropBox.value.x
+        const originalY = cropBox.value.y
+        const originalWidth = cropBox.value.width
+        const originalHeight = cropBox.value.height
+
+        const imgW = imageStore.fileDimensions.width
+        const imgH = imageStore.fileDimensions.height
+
+        if (isAltKey && !isShiftKey) {
+          // Resize from center diagonally
+          let tmpX = originalX - dxNorm
+          let tmpWidth = originalWidth + 2 * dxNorm
+
+          let tmpY = originalY + dyNorm
+          let tmpHeight = originalHeight - 2 * dyNorm
+
+          newX = tmpX
+          newWidth = tmpWidth
+          newY = tmpY
+          newHeight = tmpHeight
+
+          // Horizontal bounds
+          if (newX < 0) {
+            newX = 0
+            newWidth = originalWidth + 2 * originalX
+          }
+
+          if (newX + newWidth > imgW) {
+            const diff = imgW - (originalX + originalWidth)
+            newX = originalX - diff
+            newWidth = originalWidth + 2 * diff
+          }
+
+          // Vertical bounds
+          if (newY < 0) {
+            newY = 0
+            newHeight = originalHeight + 2 * originalY
+          }
+
+          if (newY + newHeight > imgH) {
+            const diff = imgH - (originalY + originalHeight)
+            newY = originalY - diff
+            newHeight = originalHeight + 2 * diff
+          }
+
+          // Minimum constraints
+          if (newWidth <= minValue) {
+            newWidth = minValue
+            newX = originalX + originalWidth - minValue
+          }
+
+          if (newHeight <= minValue) {
+            newHeight = minValue
+            newY = originalY + originalHeight - minValue
+          }
+        } else {
+          // Normal: right and top edges move
+          const originalBottom = originalY + originalHeight
+
+          newX = originalX
+
+          if (isShiftKey) {
+            const desiredWidth = initialWidth + shiftDelta
+            const maxWidth = Math.min(imgW - initialX, initialBottom * initialAspectRatio)
+            newWidth = Math.min(Math.max(desiredWidth, minValue), maxWidth)
+            newHeight = newWidth / initialAspectRatio
+            newY = initialBottom - newHeight
+            newX = initialX
+          } else {
+            newWidth = originalWidth + dxNorm
+            newY = originalY + dyNorm
+            newHeight = originalHeight - dyNorm
+
+            // Horizontal bounds
+            if (newX + newWidth > imgW) {
+              newWidth = imgW - originalX
+            }
+
+            if (newWidth <= minValue) {
+              newWidth = minValue
+            }
+
+            // Vertical bounds
+            if (newY < 0) {
+              newY = 0
+              newHeight = originalBottom - newY
+            }
+
+            if (newHeight <= minValue) {
+              newHeight = minValue
+              newY = originalBottom - minValue
+            }
+          }
         }
 
-        cropBox.value.width = clamp(newWidth, minValue, imageStore.fileDimensions.width - newX)
+        cropBox.value.width = newWidth
+        cropBox.value.height = newHeight
+        cropBox.value.x = newX
+        cropBox.value.y = newY
       }
 
-      if (direction.includes('left')) {
-        const maxX = cropBox.value.x + cropBox.value.width
-        let newX = cropBox.value.x + dxNorm
-        let newWidth = cropBox.value.width - dxNorm
+      if (direction === 'bottomright') {
+        let newWidth
+        let newHeight
+        let newX
+        let newY
 
-        // If cropBox goes out of bounds
-        if (newX < 0) {
-          newWidth += newX
-          newX = 0
+        const originalX = cropBox.value.x
+        const originalY = cropBox.value.y
+        const originalWidth = cropBox.value.width
+        const originalHeight = cropBox.value.height
+
+        const imgW = imageStore.fileDimensions.width
+        const imgH = imageStore.fileDimensions.height
+
+        if (isAltKey && !isShiftKey) {
+          // Resize from center
+          newX = originalX - dxNorm
+          newWidth = originalWidth + 2 * dxNorm
+          newY = originalY - dyNorm
+          newHeight = originalHeight + 2 * dyNorm
+
+          // Horizontal bounds
+          if (newX < 0) {
+            newX = 0
+            newWidth = originalWidth + 2 * originalX
+          }
+          if (newX + newWidth > imgW) {
+            const diff = imgW - (originalX + originalWidth)
+            newX = originalX - diff
+            newWidth = originalWidth + 2 * diff
+          }
+
+          // Vertical bounds
+          if (newY < 0) {
+            newY = 0
+            newHeight = originalHeight + 2 * originalY
+          }
+          if (newY + newHeight > imgH) {
+            const diff = imgH - (originalY + originalHeight)
+            newY = originalY - diff
+            newHeight = originalHeight + 2 * diff
+          }
+
+          // Minimum constraints
+          if (newWidth <= minValue) {
+            newWidth = minValue
+            newX = originalX + originalWidth / 2 - minValue / 2
+          }
+          if (newHeight <= minValue) {
+            newHeight = minValue
+            newY = originalY + originalHeight / 2 - minValue / 2
+          }
+        } else {
+          // Normal resize from bottom right
+          newX = originalX
+          newY = originalY
+
+          if (isShiftKey) {
+            const desiredWidth = initialWidth + shiftDelta
+            const maxWidth = Math.min(imgW - initialX, (imgH - initialY) * initialAspectRatio)
+            newWidth = Math.min(Math.max(desiredWidth, minValue), maxWidth)
+            newHeight = newWidth / initialAspectRatio
+            newX = initialX
+            newY = initialY
+          } else {
+            // Free resize
+            newWidth = originalWidth + dxNorm
+            newHeight = originalHeight + dyNorm
+
+            // Apply bounds checks
+            if (newX + newWidth > imgW) newWidth = imgW - newX
+            if (newWidth <= minValue) newWidth = minValue
+
+            if (newY + newHeight > imgH) newHeight = imgH - newY
+            if (newHeight <= minValue) newHeight = minValue
+          }
         }
 
-        // If minimum width is reached
-        if (newWidth <= minValue) {
-          newX = maxX - minValue
-          newWidth = minValue
-        }
-
-        cropBox.value.x = clamp(newX, 0, maxX)
-        cropBox.value.width = clamp(
-          newWidth,
-          minValue,
-          imageStore.fileDimensions.width - cropBox.value.x,
-        )
+        cropBox.value.width = newWidth
+        cropBox.value.height = newHeight
+        cropBox.value.x = newX
+        cropBox.value.y = newY
       }
 
-      if (direction.includes('bottom')) {
-        let newHeight = cropBox.value.height + dyNorm
-        let newY = cropBox.value.y
+      if (direction === 'topleft') {
+        let newWidth, newHeight, newX, newY
+        const originalX = cropBox.value.x
+        const originalY = cropBox.value.y
+        const originalWidth = cropBox.value.width
+        const originalHeight = cropBox.value.height
+        const originalRight = originalX + originalWidth
+        const originalBottom = originalY + originalHeight
 
-        // If cropBox goes out of bounds
-        if (newY + newHeight > imageStore.fileDimensions.height) {
-          newHeight = imageStore.fileDimensions.height - newY
+        const imgW = imageStore.fileDimensions.width
+        const imgH = imageStore.fileDimensions.height
+
+        if (isAltKey && !isShiftKey) {
+          // Resize from center symmetrically
+          newX = originalX + dxNorm
+          newWidth = originalWidth - 2 * dxNorm
+          newY = originalY + dyNorm
+          newHeight = originalHeight - 2 * dyNorm
+
+          // Boundary checks for Alt resize
+          if (newX < 0) {
+            newX = 0
+            newWidth = originalWidth + 2 * originalX
+          }
+          if (newX + newWidth > imgW) {
+            const diff = imgW - originalRight
+            newX = originalX - diff
+            newWidth = originalWidth + 2 * diff
+          }
+          if (newY < 0) {
+            newY = 0
+            newHeight = originalHeight + 2 * originalY
+          }
+          if (newY + newHeight > imgH) {
+            const diff = imgH - originalBottom
+            newY = originalY - diff
+            newHeight = originalHeight + 2 * diff
+          }
+
+          // Minimum size constraints
+          if (newWidth <= minValue) {
+            newWidth = minValue
+            newX = originalX + originalWidth / 2 - minValue / 2
+          }
+          if (newHeight <= minValue) {
+            newHeight = minValue
+            newY = originalY + originalHeight / 2 - minValue / 2
+          }
+        } else {
+          // Normal resize: left and top edges move
+          if (isShiftKey) {
+            const desiredWidth = initialWidth - shiftDelta
+            const maxWidth = Math.min(initialRight, initialBottom * initialAspectRatio)
+            newWidth = Math.min(Math.max(desiredWidth, minValue), maxWidth)
+            newHeight = newWidth / initialAspectRatio
+            newX = initialRight - newWidth
+            newY = initialBottom - newHeight
+          } else {
+            // Free resize
+            newX = originalX + dxNorm
+            newY = originalY + dyNorm
+            newWidth = originalWidth - dxNorm
+            newHeight = originalHeight - dyNorm
+
+            // Apply bounds and minimums
+            if (newX < 0) {
+              newX = 0
+              newWidth = originalRight
+            }
+            if (newWidth <= minValue) {
+              newWidth = minValue
+              newX = originalRight - minValue
+            }
+            if (newY < 0) {
+              newY = 0
+              newHeight = originalBottom
+            }
+            if (newHeight <= minValue) {
+              newHeight = minValue
+              newY = originalBottom - minValue
+            }
+          }
         }
-
-        cropBox.value.height = clamp(newHeight, minValue, imageStore.fileDimensions.height - newY)
+        cropBox.value.width = newWidth
+        cropBox.value.height = newHeight
+        cropBox.value.x = newX
+        cropBox.value.y = newY
       }
 
-      if (direction.includes('top')) {
-        const maxY = cropBox.value.y + cropBox.value.height
-        let newY = cropBox.value.y + dyNorm
-        let newHeight = cropBox.value.height - dyNorm
+      if (direction === 'bottomleft') {
+        let newWidth, newHeight, newX, newY
+        const originalX = cropBox.value.x
+        const originalY = cropBox.value.y
+        const originalWidth = cropBox.value.width
+        const originalHeight = cropBox.value.height
+        const originalRight = originalX + originalWidth
 
-        // If cropBox goes out of bounds
-        if (newY < 0) {
-          newHeight += newY
-          newY = 0
+        const imgW = imageStore.fileDimensions.width
+        const imgH = imageStore.fileDimensions.height
+
+        if (isAltKey && !isShiftKey) {
+          // Resize from center symmetrically
+          newX = originalX + dxNorm
+          newWidth = originalWidth - 2 * dxNorm
+          newY = originalY - dyNorm
+          newHeight = originalHeight + 2 * dyNorm
+
+          // Boundary checks
+          if (newX < 0) {
+            newX = 0
+            newWidth = originalWidth + 2 * originalX
+          }
+          if (newX + newWidth > imgW) {
+            const diff = imgW - originalRight
+            newX = originalX - diff
+            newWidth = originalWidth + 2 * diff
+          }
+          // Vertical boundary check for Alt
+          if (newY < 0) {
+            newY = 0
+            newHeight = originalHeight + 2 * originalY
+          }
+          if (newY + newHeight > imgH) {
+            const diff = imgH - (originalY + originalHeight)
+            newY = originalY - diff
+            newHeight = originalHeight + 2 * diff
+          }
+
+          // Minimum size constraints
+          if (newWidth <= minValue) {
+            newWidth = minValue
+            newX = originalX + originalWidth / 2 - minValue / 2
+          }
+          if (newHeight <= minValue) {
+            newHeight = minValue
+            newY = originalY + originalHeight / 2 - minValue / 2
+          }
+        } else {
+          // Normal resize: left and bottom edges move
+          newY = originalY
+          if (isShiftKey) {
+            const desiredWidth = initialWidth - shiftDelta
+            const maxWidth = Math.min(initialRight, (imgH - initialY) * initialAspectRatio)
+            newWidth = Math.min(Math.max(desiredWidth, minValue), maxWidth)
+            newHeight = newWidth / initialAspectRatio
+            newX = initialRight - newWidth
+            newY = initialY
+          } else {
+            newX = originalX + dxNorm
+            newWidth = originalWidth - dxNorm
+            newHeight = originalHeight + dyNorm
+
+            // Apply bounds
+            if (newX < 0) {
+              newX = 0
+              newWidth = originalRight
+            }
+            if (newWidth <= minValue) {
+              newWidth = minValue
+              newX = originalRight - minValue
+            }
+            if (newY + newHeight > imgH) {
+              newHeight = imgH - originalY
+            }
+            if (newHeight <= minValue) {
+              newHeight = minValue
+            }
+          }
+        }
+        cropBox.value.width = newWidth
+        cropBox.value.height = newHeight
+        cropBox.value.x = newX
+        cropBox.value.y = newY
+      }
+
+      if (direction === 'right') {
+        let newWidth
+        let newX
+
+        if (isAltKey) {
+          const tmpX = cropBox.value.x - dxNorm
+          const tmpWidth = cropBox.value.width + 2 * dxNorm
+
+          const originalX = cropBox.value.x
+          const originalWidth = cropBox.value.width
+
+          newX = tmpX
+          newWidth = tmpWidth
+
+          // Left edge out of bounds
+          if (tmpX < 0) {
+            const diff = originalX
+            newX = 0
+            newWidth = originalWidth + 2 * diff
+          }
+
+          // Right edge out of bounds
+          if (tmpX + tmpWidth > imageStore.fileDimensions.width) {
+            const diff = imageStore.fileDimensions.width - (originalX + originalWidth)
+            newX = originalX - diff
+            newWidth = originalWidth + 2 * diff
+          }
+
+          // Minimum width reached
+          if (newWidth <= minValue) {
+            newWidth = minValue
+            newX = cropBox.value.x + cropBox.value.width - minValue
+          }
+        } else {
+          newWidth = cropBox.value.width + dxNorm
+          newX = cropBox.value.x
+
+          // Right edge out of bounds
+          if (newX + newWidth > imageStore.fileDimensions.width) {
+            newWidth = imageStore.fileDimensions.width - cropBox.value.x
+          }
+
+          // Minimum width reached
+          if (newWidth <= minValue) {
+            newWidth = minValue
+          }
+
+          newX = cropBox.value.x
         }
 
-        // If minimum height is reached
-        if (newHeight <= minValue) {
-          newY = maxY - minValue
-          newHeight = minValue
+        cropBox.value.width = newWidth
+        cropBox.value.x = newX
+      }
+
+      if (direction === 'left') {
+        let newWidth
+        let newX
+
+        if (isAltKey) {
+          // ALT: resize from center => left moves -dx, right moves +dx
+          // When dragging LEFT handle, dxNorm < 0 means expanding, dxNorm > 0 means shrinking
+          const tmpX = cropBox.value.x + dxNorm
+          const tmpWidth = cropBox.value.width - 2 * dxNorm
+
+          const originalX = cropBox.value.x
+          const originalWidth = cropBox.value.width
+
+          newX = tmpX
+          newWidth = tmpWidth
+
+          // Left edge out of bounds
+          if (tmpX < 0) {
+            const diff = originalX
+            newX = 0
+            newWidth = originalWidth + 2 * diff
+          }
+
+          // Right edge out of bounds
+          if (tmpX + tmpWidth > imageStore.fileDimensions.width) {
+            const diff = imageStore.fileDimensions.width - (originalX + originalWidth)
+            newX = originalX - diff
+            newWidth = originalWidth + 2 * diff
+          }
+
+          // Minimum width reached
+          if (newWidth <= minValue) {
+            newWidth = minValue
+            // Keep right edge fixed at original right edge
+            newX = originalX + originalWidth - minValue
+          }
+        } else {
+          // Normal: left edge moves, right stays fixed
+          const originalRight = cropBox.value.x + cropBox.value.width
+
+          newX = cropBox.value.x + dxNorm
+          newWidth = cropBox.value.width - dxNorm
+
+          // Left edge out of bounds
+          if (newX < 0) {
+            newX = 0
+            newWidth = originalRight - newX
+          }
+
+          // Minimum width reached (keep right edge fixed)
+          if (newWidth <= minValue) {
+            newWidth = minValue
+            newX = originalRight - minValue
+          }
         }
 
-        cropBox.value.y = clamp(newY, 0, maxY)
-        cropBox.value.height = clamp(
-          newHeight,
-          minValue,
-          imageStore.fileDimensions.height - cropBox.value.y,
-        )
+        cropBox.value.width = newWidth
+        cropBox.value.x = newX
+      }
+
+      if (direction === 'bottom') {
+        let newHeight
+        let newY
+
+        if (isAltKey) {
+          // Resize from center vertically
+          const tmpY = cropBox.value.y - dyNorm
+          const tmpHeight = cropBox.value.height + 2 * dyNorm
+
+          const originalY = cropBox.value.y
+          const originalHeight = cropBox.value.height
+
+          newY = tmpY
+          newHeight = tmpHeight
+
+          // Top edge out of bounds
+          if (tmpY < 0) {
+            const diff = originalY
+            newY = 0
+            newHeight = originalHeight + 2 * diff
+          }
+
+          // Bottom edge out of bounds
+          if (tmpY + tmpHeight > imageStore.fileDimensions.height) {
+            const diff = imageStore.fileDimensions.height - (originalY + originalHeight)
+            newY = originalY - diff
+            newHeight = originalHeight + 2 * diff
+          }
+
+          // Minimum height reached
+          if (newHeight <= minValue) {
+            newHeight = minValue
+            newY = cropBox.value.y + cropBox.value.height - minValue
+          }
+        } else {
+          // Normal: bottom edge moves, top stays fixed
+          newHeight = cropBox.value.height + dyNorm
+          newY = cropBox.value.y
+
+          // Bottom edge out of bounds
+          if (newY + newHeight > imageStore.fileDimensions.height) {
+            newHeight = imageStore.fileDimensions.height - cropBox.value.y
+          }
+
+          // Minimum height reached
+          if (newHeight <= minValue) {
+            newHeight = minValue
+          }
+
+          newY = cropBox.value.y
+        }
+
+        cropBox.value.height = newHeight
+        cropBox.value.y = newY
+      }
+
+      if (direction === 'top') {
+        let newHeight
+        let newY
+
+        if (isAltKey) {
+          // Resize from center vertically
+          // When dragging TOP handle, dyNorm < 0 means expanding, dyNorm > 0 means shrinking
+          const tmpY = cropBox.value.y + dyNorm
+          const tmpHeight = cropBox.value.height - 2 * dyNorm
+
+          const originalY = cropBox.value.y
+          const originalHeight = cropBox.value.height
+
+          newY = tmpY
+          newHeight = tmpHeight
+
+          // Top edge out of bounds
+          if (tmpY < 0) {
+            const diff = originalY
+            newY = 0
+            newHeight = originalHeight + 2 * diff
+          }
+
+          // Bottom edge out of bounds
+          if (tmpY + tmpHeight > imageStore.fileDimensions.height) {
+            const diff = imageStore.fileDimensions.height - (originalY + originalHeight)
+            newY = originalY - diff
+            newHeight = originalHeight + 2 * diff
+          }
+
+          // Minimum height reached
+          if (newHeight <= minValue) {
+            newHeight = minValue
+            // Keep bottom edge fixed at original bottom edge
+            newY = originalY + originalHeight - minValue
+          }
+        } else {
+          // Normal: top edge moves, bottom stays fixed
+          const originalBottom = cropBox.value.y + cropBox.value.height
+
+          newY = cropBox.value.y + dyNorm
+          newHeight = cropBox.value.height - dyNorm
+
+          // Top edge out of bounds
+          if (newY < 0) {
+            newY = 0
+            newHeight = originalBottom - newY
+          }
+
+          // Minimum height reached
+          if (newHeight <= minValue) {
+            newHeight = minValue
+            newY = originalBottom - minValue
+          }
+        }
+
+        cropBox.value.height = newHeight
+        cropBox.value.y = newY
       }
 
       cropBox.value.startX = ev.clientX

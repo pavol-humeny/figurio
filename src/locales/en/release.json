@@ -9,7 +9,8 @@
       "date":"27.2. 2025",
       "newFeatures": {
         "items": [
-          "Ruler units in physical zoom mode are displayed in centimeters"
+          "Ruler units in physical zoom mode are displayed in centimeters",
+          "Add support for lock aspect ratio and center resizing in crop tool"
         ]
       },
       "bugFixes": {
