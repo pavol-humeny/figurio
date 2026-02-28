@@ -82,11 +82,15 @@ export function useItemTip(options = {}, uiStore, editorStore) {
     // Calculate width of text
     const textWidth = ctx.measureText(text).width + 20
     const minWidth = Math.min(Math.min(textWidth, 200), 300)
+    let maxWidth = 300
+    if (textWidth < 450) {
+      maxWidth = 450
+    }
 
     return {
       ...baseStyle,
       minWidth: `${minWidth}px`,
-      maxWidth: '300px',
+      maxWidth: `${maxWidth}px`,
       whiteSpace: 'normal',
     }
   })
@@ -122,7 +126,7 @@ export function useItemTip(options = {}, uiStore, editorStore) {
     let left = 0
 
     // Maximum height of the tooltip to prevent overflow under screen
-    const tipMaxHeight = 150
+    const tipMaxHeight = 160
 
     switch (position) {
       case 'top':
@@ -165,9 +169,14 @@ export function useItemTip(options = {}, uiStore, editorStore) {
         top = rect.top + rect.height / 2
         left = rect.right + offset
 
-        if (top + tipMaxHeight > window.innerHeight) {
+        if (rect.bottom > window.innerHeight) {
           top = window.innerHeight - tipMaxHeight - 10 // 10px margin from bottom
         }
+
+        if (top < tipMaxHeight) {
+          top = tipMaxHeight + 10 // 10px margin from top
+        }
+
         break
     }
 

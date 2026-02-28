@@ -23,7 +23,7 @@ const {
 </script>
 
 <template>
-  <ItemTip :text="disabled ? $t('topPanel.fileNameDisplay.tipDisabled') : $t('topPanel.fileNameDisplay.tip')"
+  <ItemTip :text="disabled ? $t('topPanel.fileNameDisplay.tipDisabled') : fileNameInput"
     position="bottom-right">
     <div class="file-name-display-wrapper" :class="{ 'disabled': disabled }">
       <input ref="inputRef" name="fileName" v-model="fileNameInput" @blur="saveNewFileName"
