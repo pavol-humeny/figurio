@@ -309,6 +309,14 @@ export function useSvgObjectWrapper(
 
     hideResizers.value = true
 
+    if ('x' in object.value.attrs) {
+      rawDragX.value = object.value.attrs.x
+      rawDragY.value = object.value.attrs.y
+    } else if ('cx' in object.value.attrs) {
+      rawDragX.value = object.value.attrs.cx
+      rawDragY.value = object.value.attrs.cy
+    }
+
     event.stopPropagation()
 
     // Close settings panel if open because event propagation is stopped
@@ -456,6 +464,12 @@ export function useSvgObjectWrapper(
   }
 
   /**
+   * Raw values for dragging objects to save position without
+   */
+  const rawDragX = ref(0)
+  const rawDragY = ref(0)
+
+  /**
    * Mouse move handler for dragging, resizing and rotating the SVG object
    * @param {MouseEvent} event - Mouse event
    */
@@ -543,7 +557,7 @@ export function useSvgObjectWrapper(
       finalAngle = normalizeAngle(finalAngle)
 
       // Snap to closest multiple of 45° if Ctrl/Meta is held
-      if (isCtrlKey && onlyOneKeyPressed) {
+      if (isCtrlKey && onlyOneKeyPressed && editorConfig.snapDuringRotation) {
         const snapped = Math.round(finalAngle / 45) * 45
         if (Math.abs(finalAngle - snapped) <= angleSnapTolerance.value) {
           finalAngle = normalizeAngle(snapped)
@@ -677,8 +691,8 @@ export function useSvgObjectWrapper(
           }
 
           // Snap to edges if Ctrl key is pressed
-          if (isCtrlKey && onlyOneKeyPressed && isRightAngle) {
-            const snap = getSnapOffsetToEdges(object.value, newX, right, newY, bottom)
+          if (isCtrlKey && onlyOneKeyPressed && isRightAngle && editorConfig.snapDuringResize) {
+            const snap = getSnapOffsetToEdges(object.value, newX, right, newY, bottom, [])
 
             newX += snap.dx
             newY += snap.dy
@@ -712,8 +726,8 @@ export function useSvgObjectWrapper(
           }
 
           // Snap to edges if Ctrl key is pressed
-          if (isCtrlKey && onlyOneKeyPressed && isRightAngle) {
-            const snap = getSnapOffsetToEdges(object.value, newX, newX + newW, newY, bottom)
+          if (isCtrlKey && onlyOneKeyPressed && isRightAngle && editorConfig.snapDuringResize) {
+            const snap = getSnapOffsetToEdges(object.value, newX, newX + newW, newY, bottom, [])
 
             newW += snap.dx
             newY += snap.dy
@@ -746,8 +760,8 @@ export function useSvgObjectWrapper(
           }
 
           // Snap to edges if Ctrl key is pressed
-          if (isCtrlKey && onlyOneKeyPressed && isRightAngle) {
-            const snap = getSnapOffsetToEdges(object.value, newX, right, newY, newY + newH)
+          if (isCtrlKey && onlyOneKeyPressed && isRightAngle && editorConfig.snapDuringResize) {
+            const snap = getSnapOffsetToEdges(object.value, newX, right, newY, newY + newH, [])
 
             newX += snap.dx
             newH += snap.dy
@@ -769,10 +783,17 @@ export function useSvgObjectWrapper(
           const newY = top
 
           // Snap to edges if Ctrl key is pressed
-          if (isCtrlKey && onlyOneKeyPressed && isRightAngle) {
+          if (isCtrlKey && onlyOneKeyPressed && isRightAngle && editorConfig.snapDuringResize) {
             const bottomBeforeSnap = newY + newH
 
-            const snap = getSnapOffsetToEdges(object.value, newX, newX + newW, newY, newY + newH)
+            const snap = getSnapOffsetToEdges(
+              object.value,
+              newX,
+              newX + newW,
+              newY,
+              newY + newH,
+              [],
+            )
 
             newW += snap.dx
 
@@ -807,8 +828,8 @@ export function useSvgObjectWrapper(
             newH = bottom - newY
           }
 
-          if (isCtrlKey && onlyOneKeyPressed && isRightAngle) {
-            const snap = getSnapOffsetToEdges(object.value, left, right, newY, bottom)
+          if (isCtrlKey && onlyOneKeyPressed && isRightAngle && editorConfig.snapDuringResize) {
+            const snap = getSnapOffsetToEdges(object.value, left, right, newY, bottom, [])
             newY += snap.dy
             newH = bottom - newY
             showResizeGuideLine(snap, { left, right, top: newY, bottom })
@@ -826,8 +847,8 @@ export function useSvgObjectWrapper(
             }
           }
 
-          if (isCtrlKey && onlyOneKeyPressed && isRightAngle) {
-            const snap = getSnapOffsetToEdges(object.value, left, right, top, top + newH)
+          if (isCtrlKey && onlyOneKeyPressed && isRightAngle && editorConfig.snapDuringResize) {
+            const snap = getSnapOffsetToEdges(object.value, left, right, top, top + newH, [])
             newH += snap.dy
             showResizeGuideLine(snap, { left, right, top, bottom: top + newH })
           }
@@ -849,8 +870,8 @@ export function useSvgObjectWrapper(
             newW = right - newX
           }
 
-          if (isCtrlKey && onlyOneKeyPressed && isRightAngle) {
-            const snap = getSnapOffsetToEdges(object.value, newX, right, top, bottom)
+          if (isCtrlKey && onlyOneKeyPressed && isRightAngle && editorConfig.snapDuringResize) {
+            const snap = getSnapOffsetToEdges(object.value, newX, right, top, bottom, [])
             newX += snap.dx
             newW = right - newX
             showResizeGuideLine(snap, { left: newX, right, top, bottom })
@@ -868,8 +889,8 @@ export function useSvgObjectWrapper(
             }
           }
 
-          if (isCtrlKey && onlyOneKeyPressed && isRightAngle) {
-            const snap = getSnapOffsetToEdges(object.value, left, left + newW, top, bottom)
+          if (isCtrlKey && onlyOneKeyPressed && isRightAngle && editorConfig.snapDuringResize) {
+            const snap = getSnapOffsetToEdges(object.value, left, left + newW, top, bottom, [])
             newW += snap.dx
             showResizeGuideLine(snap, { left, right: left + newW, top, bottom })
           }
@@ -929,7 +950,7 @@ export function useSvgObjectWrapper(
             newCy = bottom - newRy
           }
 
-          if (isCtrlKey && onlyOneKeyPressed && isRightAngle) {
+          if (isCtrlKey && onlyOneKeyPressed && isRightAngle && editorConfig.snapDuringResize) {
             // Predict new box before applying
             const snap = getSnapOffsetToEdges(
               object.value,
@@ -937,6 +958,7 @@ export function useSvgObjectWrapper(
               newCx + attrs.rx,
               newCy - attrs.ry,
               newCy + attrs.ry,
+              [],
             )
 
             // Snap only position, not size (to avoid jitter)
@@ -984,13 +1006,14 @@ export function useSvgObjectWrapper(
             newCx = left + newRx
           }
 
-          if (isCtrlKey && onlyOneKeyPressed && isRightAngle) {
+          if (isCtrlKey && onlyOneKeyPressed && isRightAngle && editorConfig.snapDuringResize) {
             const snap = getSnapOffsetToEdges(
               object.value,
               newCx - attrs.rx,
               newCx + attrs.rx,
               newCy - attrs.ry,
               newCy + attrs.ry,
+              [],
             )
 
             newCx += snap.dx
@@ -1034,13 +1057,14 @@ export function useSvgObjectWrapper(
             newCx = left + newRx
           }
 
-          if (isCtrlKey && onlyOneKeyPressed && isRightAngle) {
+          if (isCtrlKey && onlyOneKeyPressed && isRightAngle && editorConfig.snapDuringResize) {
             const snap = getSnapOffsetToEdges(
               object.value,
               newCx - attrs.rx,
               newCx + attrs.rx,
               newCy - attrs.ry,
               newCy + attrs.ry,
+              [],
             )
 
             newCx += snap.dx
@@ -1084,13 +1108,14 @@ export function useSvgObjectWrapper(
             newCy = top + newRy
           }
 
-          if (isCtrlKey && onlyOneKeyPressed && isRightAngle) {
+          if (isCtrlKey && onlyOneKeyPressed && isRightAngle && editorConfig.snapDuringResize) {
             const snap = getSnapOffsetToEdges(
               object.value,
               newCx - attrs.rx,
               newCx + attrs.rx,
               newCy - attrs.ry,
               newCy + attrs.ry,
+              [],
             )
 
             newCx += snap.dx
@@ -1125,13 +1150,14 @@ export function useSvgObjectWrapper(
             newCy = attrs.cy + (attrs.ry - newRy)
           }
 
-          if (isCtrlKey && onlyOneKeyPressed && isRightAngle) {
+          if (isCtrlKey && onlyOneKeyPressed && isRightAngle && editorConfig.snapDuringResize) {
             const snap = getSnapOffsetToEdges(
               object.value,
               attrs.cx - newRy,
               attrs.cx + newRy,
               newCy - newRy,
               attrs.cy + attrs.ry,
+              [],
             )
             newCy += snap.dy
             newRy = attrs.ry - (newCy - (attrs.cy - attrs.ry))
@@ -1162,13 +1188,14 @@ export function useSvgObjectWrapper(
             newCy = attrs.cy - (attrs.ry - newRy)
           }
 
-          if (isCtrlKey && onlyOneKeyPressed && isRightAngle) {
+          if (isCtrlKey && onlyOneKeyPressed && isRightAngle && editorConfig.snapDuringResize) {
             const snap = getSnapOffsetToEdges(
               object.value,
               attrs.cx - attrs.rx,
               attrs.cx + attrs.rx,
               attrs.cy - attrs.ry,
               newCy + newRy,
+              [],
             )
             newCy += snap.dy
             newRy = attrs.ry + (newCy - attrs.cy)
@@ -1199,13 +1226,14 @@ export function useSvgObjectWrapper(
             newCx = attrs.cx + (attrs.rx - newRx)
           }
 
-          if (isCtrlKey && onlyOneKeyPressed && isRightAngle) {
+          if (isCtrlKey && onlyOneKeyPressed && isRightAngle && editorConfig.snapDuringResize) {
             const snap = getSnapOffsetToEdges(
               object.value,
               newCx - newRx,
               attrs.cx + attrs.rx,
               attrs.cy - attrs.ry,
               attrs.cy + attrs.ry,
+              [],
             )
             newCx += snap.dx
             newRx = attrs.rx - (newCx - (attrs.cx - attrs.rx))
@@ -1236,13 +1264,14 @@ export function useSvgObjectWrapper(
             newCx = attrs.cx - (attrs.rx - newRx)
           }
 
-          if (isCtrlKey && onlyOneKeyPressed && isRightAngle) {
+          if (isCtrlKey && onlyOneKeyPressed && isRightAngle && editorConfig.snapDuringResize) {
             const snap = getSnapOffsetToEdges(
               object.value,
               attrs.cx - attrs.rx,
               newCx + newRx,
               attrs.cy - attrs.ry,
               attrs.cy + attrs.ry,
+              [],
             )
             newCx += snap.dx
             newRx = attrs.rx + (newCx - attrs.cx)
@@ -1321,7 +1350,7 @@ export function useSvgObjectWrapper(
               }
 
               // Snap
-              if (isCtrlKey && onlyOneKeyPressed) {
+              if (isCtrlKey && onlyOneKeyPressed && editorConfig.snapDuringResize) {
                 const threshold =
                   imageStore.getSmallerImageDimension() * editorConfig.snapEdgeThresholdCoefficient
 
@@ -1374,8 +1403,8 @@ export function useSvgObjectWrapper(
                 newY = clamp(attrs.y1 + dy, 0, maxH)
               }
 
-              if (isCtrlKey && onlyOneKeyPressed) {
-                const snap = getSnapOffsetToEdges(object.value, attrs.x1, attrs.x2, newY, newY)
+              if (isCtrlKey && onlyOneKeyPressed && editorConfig.snapDuringResize) {
+                const snap = getSnapOffsetToEdges(object.value, attrs.x1, attrs.x2, newY, newY, [])
                 newY += snap.dy
                 showResizeGuideLine(snap, {
                   left: attrs.x1,
@@ -1397,8 +1426,8 @@ export function useSvgObjectWrapper(
                 newY = clamp(attrs.y2 + dy, 0, maxH)
               }
 
-              if (isCtrlKey && onlyOneKeyPressed) {
-                const snap = getSnapOffsetToEdges(object.value, attrs.x1, attrs.x2, newY, newY)
+              if (isCtrlKey && onlyOneKeyPressed && editorConfig.snapDuringResize) {
+                const snap = getSnapOffsetToEdges(object.value, attrs.x1, attrs.x2, newY, newY, [])
                 newY += snap.dy
                 showResizeGuideLine(snap, {
                   left: attrs.x1,
@@ -1419,8 +1448,8 @@ export function useSvgObjectWrapper(
                 newX = clamp(attrs.x1 + dx, 0, maxW)
               }
 
-              if (isCtrlKey && onlyOneKeyPressed) {
-                const snap = getSnapOffsetToEdges(object.value, newX, newX, attrs.y1, attrs.y2)
+              if (isCtrlKey && onlyOneKeyPressed && editorConfig.snapDuringResize) {
+                const snap = getSnapOffsetToEdges(object.value, newX, newX, attrs.y1, attrs.y2, [])
                 newX += snap.dx
                 showResizeGuideLine(snap, {
                   left: newX,
@@ -1440,8 +1469,8 @@ export function useSvgObjectWrapper(
               } else {
                 newX = clamp(attrs.x2 + dx, 0, maxW)
               }
-              if (isCtrlKey && onlyOneKeyPressed) {
-                const snap = getSnapOffsetToEdges(object.value, newX, newX, attrs.y1, attrs.y2)
+              if (isCtrlKey && onlyOneKeyPressed && editorConfig.snapDuringResize) {
+                const snap = getSnapOffsetToEdges(object.value, newX, newX, attrs.y1, attrs.y2, [])
                 newX += snap.dx
                 showResizeGuideLine(snap, {
                   left: newX,
@@ -1500,50 +1529,60 @@ export function useSvgObjectWrapper(
         axisLock.value = null
       }
 
+      rawDragX.value += offsetX
+      rawDragY.value += offsetY
+
+      let finalX = rawDragX.value
+      let finalY = rawDragY.value
+
+      const bBox = getTransformedBoundingBox(object.value)
+
+      const width = bBox ? bBox.right - bBox.left : 0
+      const height = bBox ? bBox.bottom - bBox.top : 0
+
       // SNAP TO EDGES (Ctrl)
-      if (isCtrlKey && onlyOneKeyPressed) {
-        const bBox = getTransformedBoundingBox(object.value)
+      if (isCtrlKey && onlyOneKeyPressed && bBox && editorConfig.snapDuringDrag) {
+        const snap = getSnapOffsetToEdges(
+          object.value,
+          finalX,
+          finalX + width,
+          finalY,
+          finalY + height,
+          [],
+          true,
+        )
 
-        if (bBox) {
-          const snap = getSnapOffsetToEdges(
-            object.value,
-            bBox.left + dx,
-            bBox.right + dx,
-            bBox.top + dy,
-            bBox.bottom + dy,
-          )
-          offsetX = dx + snap.dx
-          offsetY = dy + snap.dy
+        finalX += snap.dx
+        finalY += snap.dy
 
-          // console.log('Snap offset:', offsetX, offsetY)
-
-          showResizeGuideLine(snap, bBox)
-        }
+        showResizeGuideLine(snap, {
+          left: finalX,
+          right: finalX + width,
+          top: finalY,
+          bottom: finalY + height,
+        })
       }
 
       // Apply updated offset
       if ('x' in attrs && 'y' in attrs) {
-        attrs.x += offsetX
-        attrs.y += offsetY
+        attrs.x = finalX
+        attrs.y = finalY
 
         if (tag === 'text') {
-          object.value.textBBox.x += offsetX
-          object.value.textBBox.y += offsetY
+          object.value.textBBox.x = finalX
+          object.value.textBBox.y = finalY
         }
       } else if ('cx' in attrs && 'cy' in attrs) {
-        if (object.value.class === 'magnifyArea') {
-          // Clamp center to keep the whole magnify area within the image
-          attrs.cx = clamp(attrs.cx + offsetX, 0, imageStore.fileDimensions.width)
-          attrs.cy = clamp(attrs.cy + offsetY, 0, imageStore.fileDimensions.height)
-        } else {
-          attrs.cx += offsetX
-          attrs.cy += offsetY
-        }
+        attrs.cx = finalX
+        attrs.cy = finalY
       } else if ('x1' in attrs && 'y1' in attrs && 'x2' in attrs && 'y2' in attrs) {
-        attrs.x1 += offsetX
-        attrs.y1 += offsetY
-        attrs.x2 += offsetX
-        attrs.y2 += offsetY
+        const dxLine = finalX - attrs.x1
+        const dyLine = finalY - attrs.y1
+
+        attrs.x1 += dxLine
+        attrs.y1 += dyLine
+        attrs.x2 += dxLine
+        attrs.y2 += dyLine
       }
 
       // updateRotationTransform()
@@ -1581,6 +1620,9 @@ export function useSvgObjectWrapper(
 
     remainingDx.value = 0
     remainingDy.value = 0
+
+    rawDragX.value = 0
+    rawDragY.value = 0
 
     if (mouseWasMoved.value) {
       historyStore.push(imageStore.getSnapshot(t))

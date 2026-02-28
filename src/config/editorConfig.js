@@ -58,8 +58,11 @@ export const editorConfig = {
   resizerMultiplier: 0.9, // 1 - default size
   angleSnapTolerance: 5, // degrees
   rotationSensitivity: 1, // Higher = rotates faster, lower = slower
-  snapEdgeThresholdCoefficient: 0.01, // 1% of the smaller dimension of the image (higher = more sensitive)
+  snapEdgeThresholdCoefficient: 0.015, // 1% of the smaller dimension of the image (higher = more sensitive)
   snapOnlyWhenOverlapping: true, // Snap only when the object is overlapping with the other object // DO NOT CHANGE - change needObjectOverlapToSnap
+  snapDuringResize: true, // Enable snapping during resizing
+  snapDuringDrag: true, // Enable snapping during dragging
+  snapDuringRotation: false, // Enable snapping during rotation
   minimumObjectSize: 2, // Minimum size of the object to be drawn
   magnifyAreaDefaultRadiusFromImage: 0.1, // 10% of smaller dimension
   objectResizingOverflow: true, // Allow resizing objects outside the image area

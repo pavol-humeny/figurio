@@ -162,7 +162,7 @@ export function useSvgFunctions(imageStore) {
    * Get snap edge targets (with rotation applied), including image borders
    * @returns {Array<{left: number, right: number, top: number, bottom: number}>}
    */
-  const getSnapEdgeTargets = (object) => {
+  const getSnapEdgeTargets = (object, useCenterAsEdge) => {
     const targets = [
       ...(imageStore.svgObjects || []),
       ...(imageStore.blurObjects || []),
@@ -172,10 +172,13 @@ export function useSvgFunctions(imageStore) {
       .map((o) => {
         const bbox = getTransformedBoundingBox(o)
         if (!bbox) return null
-        return {
-          ...bbox,
-          cx: (bbox.left + bbox.right) / 2, // center X
-          cy: (bbox.top + bbox.bottom) / 2, // center Y
+        let cx = (bbox.left + bbox.right) / 2
+        let cy = (bbox.top + bbox.bottom) / 2
+
+        if (useCenterAsEdge) {
+          return { ...bbox, cx, cy }
+        } else {
+          return bbox
         }
       })
       .filter(Boolean)
@@ -184,14 +187,23 @@ export function useSvgFunctions(imageStore) {
     const imgHeight = imageStore.fileDimensions.height
 
     // Add image border as edge target
-    targets.push({
-      left: 0,
-      right: imgWidth,
-      top: 0,
-      bottom: imgHeight,
-      cx: imgWidth / 2,
-      cy: imgHeight / 2,
-    })
+    if (useCenterAsEdge) {
+      targets.push({
+        left: 0,
+        right: imgWidth,
+        top: 0,
+        bottom: imgHeight,
+        cx: imgWidth / 2,
+        cy: imgHeight / 2,
+      })
+    } else {
+      targets.push({
+        left: 0,
+        right: imgWidth,
+        top: 0,
+        bottom: imgHeight,
+      })
+    }
 
     return targets
   }
@@ -204,13 +216,21 @@ export function useSvgFunctions(imageStore) {
    * @param {number} bottom - current bottom edge
    * @returns {{dx: number, dy: number}}
    */
-  const getSnapOffsetToEdges = (object, left, right, top, bottom, snapTargets = []) => {
+  const getSnapOffsetToEdges = (
+    object,
+    left,
+    right,
+    top,
+    bottom,
+    snapTargets = [],
+    useCenterAsEdge = false,
+  ) => {
     const threshold =
       imageStore.getSmallerImageDimension() * editorConfig.snapEdgeThresholdCoefficient
 
     const targets = []
 
-    const edgeTargets = getSnapEdgeTargets(object)
+    const edgeTargets = getSnapEdgeTargets(object, useCenterAsEdge)
 
     targets.push(...edgeTargets)
     targets.push(...snapTargets)

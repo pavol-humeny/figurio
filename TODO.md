@@ -18,10 +18,12 @@
 
 # TODO
 - P - pencil - kreslenie seká pri väčšom rozmere 
-
+- color picker - zavriet ked sa klikne kdekolvek inde
 - P - nepodporované pdf dokumenty
 - P - Snapovanie objektov 
 - P - dopísať teóriu 2
+
+- zaistit aby pri resize objektov bolo snapovanie plynule tak ako pri drag
 
 - vymyslieť kde poďakovať testerom 
 

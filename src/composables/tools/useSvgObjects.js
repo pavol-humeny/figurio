@@ -1225,7 +1225,7 @@ export function useSvgObjects(
       const threshold =
         imageStore.getSmallerImageDimension() * editorConfig.snapEdgeThresholdCoefficient
 
-      const snap = getSnapOffsetToEdges(currentDrawingObject.value, x1, x2, y1, y2)
+      const snap = getSnapOffsetToEdges(currentDrawingObject.value, x1, x2, y1, y2, [])
 
       x += snap.dx
       y += snap.dy
