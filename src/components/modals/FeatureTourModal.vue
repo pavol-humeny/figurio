@@ -77,32 +77,11 @@ const closeFeatureTourModalWrapper = () => {
         <div class="card-wrapper">
 
           <!-- Current card -->
-          <transition name="fade" mode="out-in">
-            <FeatureTourCard :key="currentCard" :icon="slides[currentCard].icon" :title="slides[currentCard].title"
-              :description="slides[currentCard].description" :videoSrc="slides[currentCard].videoSrc"
-              :videoKey="slides[currentCard].videoKey" />
-          </transition>
-
-          <!-- Close cross -->
-          <p class="navigation-cross" @click="closeFeatureTourModalWrapper">
-            ✕
-          </p>
-
-          <!-- Left arrow -->
-          <p v-if="slides.length > 1" class="navigation-arrow left" @click="prev">
-            ‹
-          </p>
-
-          <!-- Right arrow -->
-          <p v-if="slides.length > 1" class="navigation-arrow right" @click="next">
-            ›
-          </p>
-
-          <!-- Dots -->
-          <div v-if="slides.length > 1" class="dots">
-            <span v-for="(s, i) in slides" :key="i" class="dot" :class="{ active: i === currentCard }"
-              @click="currentCard = i"></span>
-          </div>
+          <FeatureTourCard :key="currentCard" :icon="slides[currentCard].icon" :title="slides[currentCard].title"
+            :description="slides[currentCard].description" :videoSrc="slides[currentCard].videoSrc"
+            :videoKey="slides[currentCard].videoKey" :hasNavigation="slides.length > 1" :isFirst="currentCard === 0"
+            :isLast="currentCard === slides.length - 1" :total="slides.length" :index="currentCard"
+            @close="closeFeatureTourModalWrapper" @next="next" @prev="prev" @goTo="i => currentCard = i" />
         </div>
       </div>
     </div>
@@ -111,21 +90,21 @@ const closeFeatureTourModalWrapper = () => {
 
 <style scoped>
 .feature-tour-modal-overlay {
+  display: flex;
+  align-items: center;
+  justify-content: center;
   z-index: var(--z-index-feature-tour);
+  background: var(--background-overlay-modal);
+  backdrop-filter: var(--backdrop-filter-modal);
 }
 
 .modal-box {
-  height: 80%;
-  aspect-ratio: 16 / 13;
-  max-height: 85vh;
+  width: min(1200px, 92vw);
+  max-height: 92vh;
   display: flex;
-  flex-direction: column;
+  justify-content: center;
   align-items: center;
-  justify-content: space-between;
-  background: var(--background-c);
-  border-radius: 20px;
-  border: var(--border-modal);
-  box-shadow: var(--box-shadow-ui);
+  background: transparent;
 }
 
 .card-wrapper {
@@ -134,76 +113,5 @@ const closeFeatureTourModalWrapper = () => {
   display: flex;
   align-items: center;
   position: relative;
-}
-
-/* Arrows */
-.navigation-arrow {
-  position: absolute;
-  bottom: 15px;
-  font-size: 38px;
-  cursor: pointer;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  color: var(--primary-c);
-  user-select: none;
-}
-
-.navigation-cross {
-  position: absolute;
-  font-size: 23px;
-  cursor: pointer;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  color: var(--primary-c);
-  user-select: none;
-  top: 1px;
-  right: 20px;
-  font-weight: bold;
-}
-
-.navigation-arrow.left {
-  left: 20px;
-}
-
-.navigation-arrow.right {
-  right: 20px;
-}
-
-/* Dots */
-.dots {
-  position: absolute;
-  bottom: 25px;
-  left: 50%;
-  transform: translateX(-50%);
-  display: flex;
-  gap: 10px;
-  z-index: 10;
-}
-
-.dot {
-  width: 12px;
-  height: 12px;
-  background: var(--secondary-c);
-  border-radius: 50%;
-  cursor: pointer;
-  transition: 0.2s;
-}
-
-.dot.active {
-  background: var(--primary-c);
-  transform: scale(1.1);
-}
-
-/* Fade animation */
-.fade-enter-from,
-.fade-leave-to {
-  opacity: 0.5;
-}
-
-.fade-enter-active,
-.fade-leave-active {
-  transition: opacity 0.25s ease;
 }
 </style>

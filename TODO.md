@@ -3,9 +3,6 @@
 - testovanie figurio
 - refaktorizácia
 - Príprava materiálov na SZZ
-- v
-- použitie obrázka
-- pri pages v citácii majú byť pomlčky 
 
 ## TODO - text 
 - záver
@@ -20,10 +17,9 @@
 - P - pencil - kreslenie seká pri väčšom rozmere 
 - color picker - zavriet ked sa klikne kdekolvek inde
 - P - nepodporované pdf dokumenty
-- P - Snapovanie objektov 
 - P - dopísať teóriu 2
 
-- zaistit aby pri resize objektov bolo snapovanie plynule tak ako pri drag
+- P - zaistit aby pri resize objektov bolo snapovanie plynule tak ako pri drag
 
 - vymyslieť kde poďakovať testerom 
 
@@ -33,8 +29,7 @@
 
 - skontrolovať warning hlášky (malé rozmery, safari...)
 
-- P - Crop pridat zmenu so shiftom
-    - Crop orezanie v pomere 
+    
 
 - Vylepšenie rámiku pre prehliadače 
 
@@ -63,9 +58,8 @@
 - PDF s nepodporovanými svg objektami 
 - prevod pdf na raster ak to obsahuje hlúposti 
 - pridať nástroj fill (kýbel)
-- pridať nástroj pre nastavenie priehľadnosti obrázka
 - Pozrieť sa na spoplatnenie - maximálny počet exportov, by me coffee
-- resetovanie obrázku do pôvodného stavu
+- Crop orezanie v pomere 
 
 ## Insane ideas
 - aplikovanie operácie na všetky obrázky 
@@ -77,6 +71,8 @@
 - v inpute by to čísla mohlo počítať 
 - Možnosť vytvoriť si prázdny projekt a vkladať tam obrázky
 - Premapovanie klávesových skratiek užívateľom
+- resetovanie obrázku do pôvodného stavu
+- pridať nástroj pre nastavenie priehľadnosti obrázka
 
 ## Nepreukázalo sa 
 - pri prepnutí z color na manual select sa nezapne spravny kurzor

@@ -598,6 +598,8 @@ const showStatistics = () => {
 <style scoped>
 .help-modal-overlay {
   z-index: var(--z-index-help);
+  background: var(--background-overlay-modal);
+  backdrop-filter: var(--backdrop-filter-modal);
 }
 
 .modal-box {

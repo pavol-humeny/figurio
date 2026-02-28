@@ -53,6 +53,8 @@ const {
 <style scoped>
 .privacy-modal-overlay {
   z-index: var(--z-index-privacy);
+  background: var(--background-overlay-modal);
+  backdrop-filter: var(--backdrop-filter-modal);
 }
 
 .modal-box {

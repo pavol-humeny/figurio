@@ -143,6 +143,9 @@ body {
   --border-drag-and-drop: 2px dashed var(--primary-c);
   --border-crop : 1px dashed var(--editor-highlight-c);
 
+  --backdrop-filter-modal: blur(3px);
+  --background-overlay-modal: rgba(0, 0, 0, 0.5);
+
   --default-transition: all 0.2s ease-in-out;
 
   --z-index-tutorial-item: 99999;

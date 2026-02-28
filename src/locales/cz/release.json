@@ -4,6 +4,16 @@
     "items": []
   },
   "versions": {
+    "5.14.0":{
+      "label": "5.14.0",
+      "date":"28.2. 2025",
+      "improvements": {
+        "items": [
+          "Vylepšené přichytávání při pohybu objektů",
+          "Lepší rozložení v průvodci funkcemi"
+        ]
+      }
+    },
     "5.13.0": {
       "label": "5.13.0",
       "date": "27.2. 2025",

@@ -109,6 +109,8 @@ const {
 <style scoped>
 .release-modal-overlay {
   z-index: var(--z-index-release);
+  background: var(--background-overlay-modal);
+  backdrop-filter: var(--backdrop-filter-modal);
 }
 
 .modal-box {
