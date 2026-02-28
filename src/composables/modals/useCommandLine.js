@@ -7,6 +7,19 @@ import { globalConfig } from '@/config/globalConfig'
 const { warn } = useConsole()
 const { addUserEvent } = useApi()
 
+/**
+ * Command history
+ */
+const history = ref([])
+const historyIndex = ref(-1)
+
+/**
+ * Composable for command line interface in expert mode
+ *
+ * @param {Object} userModeStore  Pinia store for user mode management
+ * @param {Object} editorStore    Pinia store for editor state management
+ * @returns {Object}              Reactive properties and methods for command line interface
+ */
 export function useCommandLine(userModeStore, editorStore) {
   /**
    * Reference to the input element
@@ -19,12 +32,6 @@ export function useCommandLine(userModeStore, editorStore) {
   const command = ref('')
   const output = ref([])
   const outputRef = ref(null)
-
-  /**
-   * Command history
-   */
-  const history = ref([])
-  const historyIndex = ref(-1)
 
   /**
    * Tab press tracking

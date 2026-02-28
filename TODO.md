@@ -12,6 +12,7 @@
 - slide pre zobrazenie výhod oproti ostatným aplikáciám 
 - zoznam vecí čo by som chcel dať na plagát
 - scenár pre video
+- zmenit obrazok pri ukazovani pixelation mode, dat tam nieco viac obstraktne
 
 # TODO
 - P - pencil - kreslenie seká pri väčšom rozmere 

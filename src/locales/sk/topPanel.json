@@ -23,7 +23,7 @@
     },
     "confirm": {
       "title": "Potvrdiť zatvorenie súboru",
-      "message": "Naozaj chcete zatvoriť aktuálny súbor? Neuložené zmeny budú stratené",
+      "message": "Naozaj chcete zatvoriť aktuálny súbor? Neuložené zmeny budú stratené.",
       "cancel": "Nie",
       "confirm": "Áno, zatvoriť"
     },
