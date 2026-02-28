@@ -153,7 +153,7 @@ export function useSvgObjectWrapper(
   watch(
     () => object.value,
     () => {
-      if (object.value.tag === 'text') return 
+      if (object.value.tag === 'text') return
 
       const { top, right } = getTransformedBoundingBox(object.value)
 
@@ -254,7 +254,6 @@ export function useSvgObjectWrapper(
   //     }
   //   },
   // )
-
 
   /**
    * Mouse down handler for resizer handles
@@ -1513,10 +1512,10 @@ export function useSvgObjectWrapper(
             bBox.top + dy,
             bBox.bottom + dy,
           )
-          offsetX += snap.dx
-          offsetY += snap.dy
+          offsetX = dx + snap.dx
+          offsetY = dy + snap.dy
 
-          console.log('Snap offset:', offsetX, offsetY)
+          // console.log('Snap offset:', offsetX, offsetY)
 
           showResizeGuideLine(snap, bBox)
         }

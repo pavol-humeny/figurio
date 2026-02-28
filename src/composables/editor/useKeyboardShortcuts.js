@@ -57,7 +57,7 @@ export function useKeyboardShortcuts(actions, uiStore, editorStore) {
 
     const pressed = normalizeKey(event)
 
-    log(`[Key Event] ${type.toUpperCase()} → ${pressed}`)
+    // log(`[Key Event] ${type.toUpperCase()} → ${pressed}`)
 
     for (const shortcut of keyboardShortcuts) {
       const expected = shortcut.keys.map((k) => k.toLowerCase()).join('+')

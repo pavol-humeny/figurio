@@ -118,17 +118,21 @@ const {
         <div class="settings-content-wrapper">
           <div class="content-aligned two-items">
             <div class="content-wrapper">
-              <p>
-                {{ $t('tools.text.settings.general.textSize.label') }}
-              </p>
+              <div class="content-title">
+                <p>
+                  {{ $t('tools.text.settings.general.textSize.label') }}
+                </p>
+              </div>
               <NumberDropdownInput v-model="localTextSettings.size" :options="textSizeOptions" :min="1"
                 :max="imageStore.fileDimensions.height" @update="applyLocalTextSettings"
                 :tip="$t('tools.text.settings.general.textSize.tip')" position="bottom-left" />
             </div>
             <div class="content-wrapper">
-              <p>
-                {{ $t('tools.text.settings.general.letterSpacing.label') }}
-              </p>
+              <div class="content-title">
+                <p>
+                  {{ $t('tools.text.settings.general.letterSpacing.label') }}
+                </p>
+              </div>
               <NumberInput v-model="localTextSettings.letterSpacing" :min="Math.min(-localTextSettings.size, -10)"
                 :max="Math.max(localTextSettings.size, 10)" :step="0.1" @update="applyLocalTextSettings"
                 icon="IconLetterSpacing" :color="'var(--primary-c)'" :size="20"
@@ -156,17 +160,21 @@ const {
         <div class="settings-content-wrapper">
           <div class="content-aligned two-items">
             <div class="content-wrapper">
-              <p>
-                {{ $t('tools.text.settings.general.textColor.label') }}
-              </p>
+              <div class="content-title">
+                <p>
+                  {{ $t('tools.text.settings.general.textColor.label') }}
+                </p>
+              </div>
               <ColorPicker v-model="localTextSettings.color" @update="applyLocalTextSettings(false)"
                 @commit="applyLocalTextSettings(true)" :tip="$t('tools.text.settings.general.textColor.tip')"
                 position="bottom-left" />
             </div>
             <div class="content-wrapper">
-              <p>
-                {{ $t('tools.text.settings.general.textOpacity.label') }}
-              </p>
+              <div class="content-title">
+                <p>
+                  {{ $t('tools.text.settings.general.textOpacity.label') }}
+                </p>
+              </div>
               <NumberInput v-model="localTextSettings.opacity" :min="0.1" :max="1" :step="0.1"
                 @update="applyLocalTextSettings" icon="IconOpacity" :color="'var(--primary-c)'" :size="20"
                 :onReset="resetOpacity" :tip="$t('tools.text.settings.general.textOpacity.tip')"

@@ -60,6 +60,13 @@ export function useSvgFunctions(imageStore) {
     return { cx, cy }
   }
 
+  const getCenterOfBoundingBox = (bBox) => {
+    return {
+      cx: bBox.x + bBox.width / 2,
+      cy: bBox.y + bBox.height / 2,
+    }
+  }
+
   /**
    * Rotate a point (x, y) around (cx, cy) by angle in degrees
    * @param {number} x
@@ -208,11 +215,15 @@ export function useSvgFunctions(imageStore) {
     targets.push(...edgeTargets)
     targets.push(...snapTargets)
 
-    const objCenter = getObjectCenter(object)
+    const objCenter = getCenterOfBoundingBox({
+      x: left,
+      y: top,
+      width: right - left,
+      height: bottom - top,
+    })
+
     let bestDx = null
     let bestDy = null
-
-    console.log('object center for snapping:', objCenter)
 
     for (const t of targets) {
       const verticalOverlap = !(bottom < t.top || top > t.bottom)
