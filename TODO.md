@@ -24,8 +24,7 @@
 - P - pencil - kreslenie seká pri väčšom rozmere 
 - color picker - zavriet ked sa klikne kdekolvek inde
 - P - nepodporované pdf dokumenty
-- P - dopísať teóriu 2
-
+- do export štatistík pridať copy to clipboard event
 - P - zaistit aby pri resize objektov bolo snapovanie plynule tak ako pri drag
 
 - vymyslieť kde poďakovať testerom 

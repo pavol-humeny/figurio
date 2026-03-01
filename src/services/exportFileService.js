@@ -895,6 +895,8 @@ export function exportFileService(imageStore, editorStore, historyStore, viewpor
 
     await navigator.clipboard.write([new ClipboardItem({ 'image/png': blob })])
 
+    addUserEvent('buttonClicked', { button: 'copyImageToClipboard' })
+
     showToastModal(
       'success',
       t('imageStore.toast.successFileCopiedToClipboard.title'),
