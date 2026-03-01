@@ -281,3 +281,16 @@ No excessive realism, no shadows that obscure structure.
 Slight depth perspective, subtle drop shadows to emphasize separation of layers.
 Diagram-style visualization suitable for academic thesis.
 Flat design, simple colors, high clarity.
+
+
+\todo{Jednou vetou zhrnúť cieľ práce a to, čo bolo jej hlavným zámerom.}
+
+\todo{Konštatovať, že stanovený cieľ práce bol splnený.}
+
+\todo{Stručne zhrnúť, čo sa podarilo navrhnúť a implementovať v rámci riešenia.}
+
+\todo{Zvýrazniť vlastný prínos práce a jej praktický význam.}
+
+\todo{Zhrnúť skúsenosti získané počas riešenia práce a prínos pre autora.}
+
+\todo{Uviesť možnosti ďalšieho rozšírenia alebo pokračovania projektu v budúcnosti.}

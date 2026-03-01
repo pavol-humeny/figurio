@@ -61,10 +61,13 @@ export function useShapeTool(editorStore, imageStore, historyStore, uiStore, t) 
 
     // if line set stroke color to fill color
     if (localObjectSettings.value.type === 'line') {
-      localObjectSettings.value.strokeWidth = 1
+      localObjectSettings.value.strokeWidth =
+        editorStore.toolsConfig.shape.fillEnabled < 1
+          ? 1
+          : editorStore.toolsConfig.shape.strokeWidth
       localObjectSettings.value.strokeColor = editorStore.toolsConfig.shape.fillColor
     } else {
-      localObjectSettings.value.strokeWidth = 1
+      localObjectSettings.value.strokeWidth = editorStore.toolsConfig.shape.strokeWidth
       localObjectSettings.value.strokeColor = editorStore.toolsConfig.shape.strokeColor
     }
 
@@ -188,7 +191,7 @@ export function useShapeTool(editorStore, imageStore, historyStore, uiStore, t) 
       }
     }
 
-    // If line set fill color to stroke color
+    // If line, set fill color to stroke color
     if (localObjectSettings.value.type === 'line') {
       editorStore.toolsConfig.shape.fillColor = localObjectSettings.value.strokeColor
       editorStore.toolsConfig.shape.strokeColor = strokeColorBefore
