@@ -102,6 +102,16 @@
         "Obnovenie stránky alebo zatvorenie karty spôsobí stratu neuložených zmien."
       ]
     },
+    "acknowledgements": {
+      "title": "Poďakovanie",
+      "text": "Poďakovanie patrí všetkým používateľom, ktorí sa počas vývoja podieľali na testovaní aplikácie a poskytli spätnú väzbu k jej funkčnosti a použiteľnosti. Ich pripomienky prispeli k zlepšeniu aplikácie a celkovej kvality nástroja.",
+      "namedIntro": "Na testovaní aplikácie sa významne podieľali",
+      "testers": [
+        "Meno Priezvisko",
+        "Meno Priezvisko",
+        "Meno Priezvisko"
+      ]
+    },
     "statistics": {
       "title": "Štatistiky používania",
       "text": "Na zlepšovanie funkčnosti, použiteľnosti a výkonu editora sa zbierajú anonymné údaje o používaní. Štatistiky sú agregované a neobsahujú osobný ani upravovaný obrazový obsah. Zahŕňajú informácie o frekvencii používania jednotlivých nástrojov a funkcií.",

@@ -1,18 +1,24 @@
 ## ŠT
+- MTIa
 - kniha 
-- testovanie figurio
+- testovanie figurio 
+    - feature tour okno 
+    - userTesting - blur, magnify
+- Unit testy
 - refaktorizácia
-- Príprava materiálov na SZZ
 
 ## TODO - text 
-- záver
+- P - záver
 - prerobiť snímky obrazovky kde je VUE logo na spodku 
 - P - teória 2
-- slide pre motiváciu 
-- slide pre zobrazenie výhod oproti ostatným aplikáciám 
+- zmenit obrazok pri ukazovani pixelation mode, dat tam nieco viac abstraktne
+
 - zoznam vecí čo by som chcel dať na plagát
 - scenár pre video
-- zmenit obrazok pri ukazovani pixelation mode, dat tam nieco viac obstraktne
+
+## TODO - prezentácia
+- slide pre motiváciu 
+- slide pre zobrazenie výhod oproti ostatným aplikáciám 
 
 # TODO
 - P - pencil - kreslenie seká pri väčšom rozmere 
@@ -24,13 +30,9 @@
 
 - vymyslieť kde poďakovať testerom 
 
-- feature tour - pri veľkom zoome sa tam nezobrazuje správne text 
-
 - P - pridať README ku projektu
 
 - skontrolovať warning hlášky (malé rozmery, safari...)
-
-    
 
 - Vylepšenie rámiku pre prehliadače 
 
@@ -54,15 +56,14 @@
 ## Dlhodobé TODO 
 - eye dropper na safari
 - BG removal - ukladanie do undo redo operácií pri výbere 
-- Poskakovanie pri resize ak je to otočené (svg objekty)
-- možnosť všetko exportovať naraz do zip
 - PDF s nepodporovanými svg objektami 
 - prevod pdf na raster ak to obsahuje hlúposti 
 - pridať nástroj fill (kýbel)
-- Pozrieť sa na spoplatnenie - maximálny počet exportov, by me coffee
 - Crop orezanie v pomere 
+- Pozrieť sa na spoplatnenie - maximálny počet exportov, by me coffee
 
 ## Insane ideas
+- možnosť všetko exportovať naraz do zip
 - aplikovanie operácie na všetky obrázky 
 - Premenné prostredia (pre farbu, veľkosť)
 - Vrstvy 
@@ -88,6 +89,7 @@
 - podpora pre touch event 
 - zaistenie aby resizery mali vzdy rovnaku velkost
 - Gonzales nefunguje nacitanie a orezanie
+- Poskakovanie pri resize ak je to otočené (svg objekty)
 
 ## FIXED -  od J (userTesting2 - 12.1.2026)
 - FIXED - Zoom pomocou numerickej klávesnice
@@ -118,7 +120,6 @@
 - FIXED - mg area - pridáva sa nový objekt pri kliknutí namiesto výberu 
 - FIXED - resize - hneď to aplikovať nie len resetovať hodnoty 
 
-
 ## FIXED - TODO od SA (userTesting2 - 18.1.2026)
 - FIXED - pohyb pomocou L mouse + deselect nástroja 
 - FIXED - command + zoom pre priblíženie na macu 
@@ -148,7 +149,7 @@
 - FIXED - feature tour - prerobenie krížika 
 
 ## User testing changes 
-- Nezobrazovať toast o úspešnom nahratí súboru - predsa to je jasné že sa nahral 
+- FIXED - Nezobrazovať toast o úspešnom nahratí súboru - predsa to je jasné že sa nahral 
 - FIXED - Premenovanie súboru by nemuselo dávať toast
 - FIXED - z index polohu zobrazovať len 2 tlačidlá ak sú len 2 objekty, žiadne ak je len jeden 
 - FIXED - pri zrušení výplne automaticky prepnúť na hrúbku rámiku a nie vyžadovať od užívateľa 

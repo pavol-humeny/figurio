@@ -102,6 +102,16 @@
         "Refreshing the browser or closing the tab will discard any unsaved changes."
       ]
     },
+    "acknowledgements": {
+      "title": "Acknowledgements",
+      "text": "Thanks are extended to all users who participated in testing the application during its development and provided feedback on its functionality and usability. Their comments contributed to improving the application and the overall quality of the tool.",
+      "namedIntro": "The application testing was significantly supported by",
+      "testers": [
+        "Name Surname",
+        "Name Surname",
+        "Name Surname"
+      ]
+    },
     "statistics":{
       "title": "Usage Statistics",
       "text": "Anonymous usage data is collected to help improve the editor’s functionality, usability, and performance. The collected statistics are aggregated and do not include personal content from edited images. Data reflects how often individual tools and features are used.",

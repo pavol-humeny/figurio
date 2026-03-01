@@ -41,6 +41,13 @@ const technicalLimitations = computed(() => {
 })
 
 /**
+ * List of testers to acknowledge as array
+ */
+const testers = computed(() => {
+  return messages.value[locale.value]?.help?.helpContent?.acknowledgements?.testers || []
+})
+
+/**
  * List of points about the purpose of Figurio as array
  */
 const aboutPoints = computed(() => {
@@ -479,6 +486,25 @@ const showStatistics = () => {
               <ul class="dot-paragraph">
                 <li v-for="(item, index) in technicalLimitations" :key="index">
                   {{ item }}
+                </li>
+              </ul>
+            </div>
+
+            <!-- Acknowledgements -->
+            <div class="help-content">
+              <p class="help-content-title">
+                {{ $t('help.helpContent.acknowledgements.title') }}
+              </p>
+
+              <ul class="dot-paragraph">
+                <li>
+                  {{ $t('help.helpContent.acknowledgements.text') }}
+                </li>
+                <li>
+                  <span v-if="testers.length">
+                    {{ $t('help.helpContent.acknowledgements.namedIntro') }}
+                    {{ testers.join(', ') }}.
+                  </span>
                 </li>
               </ul>
             </div>
