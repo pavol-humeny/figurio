@@ -15,7 +15,6 @@ import BaseIcon from '../icons/BaseIcon.vue'
 
 const { t } = useI18n()
 const editorStore = useEditorStore()
-const imageStore = useImageStore()
 
 const {
   brushSize,
@@ -84,7 +83,7 @@ const tabs = ['brush', 'pencil']
 
         <!-- Tool size -->
         <div class="settings-content-wrapper">
-          <div class="content-wrapper" :class="{ disabled: imageStore.needRasterization }">
+          <div class="content-wrapper">
             <div class="content-title">
               <p>
                 {{ $t('tools.brush.settings.brush.toolSize.label') }}
@@ -98,7 +97,7 @@ const tabs = ['brush', 'pencil']
 
         <!-- Color -->
         <div class="settings-content-wrapper">
-          <div class="content-wrapper" :class="{ disabled: imageStore.needRasterization }">
+          <div class="content-wrapper">
             <div class="content-title">
               <p>
                 {{ $t('tools.brush.settings.brush.brushColor.label') }}
@@ -164,7 +163,7 @@ const tabs = ['brush', 'pencil']
 
         <!-- Tool size -->
         <div class="settings-content-wrapper">
-          <div class="content-wrapper" :class="{ disabled: imageStore.needRasterization }">
+          <div class="content-wrapper">
             <div class="content-title">
               <p>
                 {{ $t('tools.brush.settings.pencil.toolSize.label') }}
@@ -178,7 +177,7 @@ const tabs = ['brush', 'pencil']
 
         <!-- Color -->
         <div class="settings-content-wrapper">
-          <div class="content-wrapper" :class="{ disabled: imageStore.needRasterization }">
+          <div class="content-wrapper">
             <div class="content-title">
               <p>
                 {{ $t('tools.brush.settings.pencil.pencilColor.label') }}

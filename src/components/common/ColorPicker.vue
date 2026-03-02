@@ -122,7 +122,7 @@ defineExpose({ setValue })
         <!-- Recent colors -->
         <div class="recent-colors">
           <div v-for="(c, i) in recentColors" :key="i" class="recent-color" :class="{ empty: !c }"
-            :style="{ background: c || '#ffffff' }" @click="c && selectRecentColor(c)">
+            :style="{ background: c }" @click="c && selectRecentColor(c)">
             <!-- Delete icon (hover only, only if color exists) -->
             <div v-if="c" class="recent-color-remove" @click.stop="removeRecentColor(c)">
               ✕
@@ -265,26 +265,40 @@ defineExpose({ setValue })
   cursor: pointer;
 }
 
+.recent-color.empty {
+  cursor: not-allowed;
+  background-color: #fff;
+  border: solid 1px var(--secondary-c);
+  background-image:
+    linear-gradient(45deg, rgba(0, 0, 0, 0.12) 25%, transparent 25%),
+    linear-gradient(-45deg, rgba(0, 0, 0, 0.12) 25%, transparent 25%),
+    linear-gradient(45deg, transparent 75%, rgba(0, 0, 0, 0.12) 75%),
+    linear-gradient(-45deg, transparent 75%, rgba(0, 0, 0, 0.12) 75%);
+  background-size: 8px 8px;
+  background-position: 0 0, 0 4px, 4px -4px, -4px 0;
+}
+
 /* Remove icon */
 .recent-color-remove {
   position: absolute;
-  top: -18px;
+  top: -17px;
   left: 50%;
   transform: translateX(-50%);
   display: flex;
   align-items: center;
   justify-content: center;
 
-  font-size: 12px;
+  font-size: 13px;
   font-weight: bold;
   color: var(--text-c);
 
   cursor: pointer;
-  opacity: 0;
+  display: none;
+  user-select: none;
 }
 
 /* Show remove icon on hover */
 .recent-color:hover .recent-color-remove {
-  opacity: 1;
+  display: block;
 }
 </style>
