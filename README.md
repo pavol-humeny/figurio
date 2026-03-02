@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="readmeImages/logo.png" alt="Figurio logo" width="160"/>
+  <img src="readmeImages/bannerPng.png" alt="Figurio logo" />
 </p>
 
 # Figurio
@@ -74,7 +74,7 @@ Vhodné pre odstránenie prázdnych okrajov obrázka a jeho nežiadúcich čast�
 
 ---
 
-## <img src="readmeImages/frame-icon.png" alt="Frame tool icon" width="28" align="left" /> &nbsp; Frame (Prezentačné rámy)
+## <img src="readmeImages/frame-icon.png" alt="Frame tool icon" width="28" align="left" /> &nbsp; Frame (Prezentačné rámiky)
 
 
 Umožňuje vložiť prezentačný rám:
@@ -91,7 +91,7 @@ Zvyšuje vizuálnu kvalitu obrázkov v diplomových a technických prácach.
 
 ---
 
-## <img src="readmeImages/magnify-icon.png" alt="Magnify tool icon" width="28" align="left" /> &nbsp; Magnify Area (Zväčšenie detailu)
+## <img src="readmeImages/magnify-icon.png" alt="Magnify tool icon" width="28" align="left" /> &nbsp; Magnify Area (Zväčšenie oblasti)
 
 
 Slúži na zvýraznenie detailu pomocou kruhového zväčšenia vybranej oblasti.  
