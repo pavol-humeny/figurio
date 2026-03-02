@@ -37,6 +37,17 @@ Detail práce (elektronická verzia): https://www.vut.cz/studenti/zav-prace/deta
 
 ---
 
+# Plagát projektu
+
+Projekt bol prezentovaný formou akademického plagátu pripraveného v rámci bakalárskej práce.
+
+<p align="center">
+  <img src="readmeImages/poster.png" alt="Figurio project poster" width="400"/>
+</p>
+
+
+---
+
 # Kľúčové vlastnosti
 
 Figurio sa od bežných online editorov líši najmä zameraním na odborné texty a technickú dokumentáciu:
@@ -52,6 +63,15 @@ Figurio sa od bežných online editorov líši najmä zameraním na odborné tex
 
 - **Minimalistické rozhranie**  
   Jednoduché a intuitívne rozhranie bez nutnej znalosti pokročilých funkcií profesionálnych editorov.
+
+---
+
+# Cieľová skupina
+
+Figurio je určené najmä pre:
+- študentov pripravujúcich záverečné práce,
+- autorov odborných článkov,
+- pedagógov pripravujúcich študijné materiály.
 
 ---
 
@@ -120,7 +140,7 @@ Figurio obsahuje nasledujúce nástroje:
 
 
 - **Image Analysis**  
-  Analýza vlastností obrazu - detekcie a odstránenia šumu.
+  Analýza vlastností obrazu – detekcia a odstránenie šumu.
 
 - **Background Removal**  
   Odstránenie pozadia pomocou viacerých režimov:
@@ -198,14 +218,14 @@ Figurio obsahuje nasledujúce nástroje:
 
 Projekt je postavený modulárne:
 
-- `src/assets` - obrázky a videá
+- `src/assets` – obrázky a videá
 - `src/components` – znovupoužiteľné UI komponenty,
 - `src/composables` – business logika,
 - `src/config` – centrálne konfiguračné súbory,
 - `src/locales` – preklady,
-- `src/router` - navigácia 
+- `src/router` – navigácia 
 - `src/services` – služby pre import a export,
-- `src/stores` - 
+- `src/stores` – 
 - `src/views` – hlavné stránky (`Home`, `Editor`, `Statistics`, `Maintenance`),
 - `tests/unit` – unit testy.
 
@@ -266,4 +286,4 @@ Na testovaní aplikácie sa významne podieľali:
 
 # Licencia
 
-Tento projekt je distribuovaný pod licenciou GNU General Public License v3.0 (GPL-3.0) [`LICENSE`](./LICENSE)..
+Tento projekt je distribuovaný pod licenciou GNU General Public License v3.0 (GPL-3.0) [`LICENSE`](./LICENSE).
