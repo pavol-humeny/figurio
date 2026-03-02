@@ -520,7 +520,7 @@ const showStatistics = () => {
             <!-- Statistics -->
             <div class="help-content" v-if="userModeStore.hasUserAccessToFeature('statistics')">
               <div class="subtitle-wrapper">
-                <p class="help-content-title" style="margin-bottom: 0;">
+                <p class="help-content-title">
                   {{ $t('help.helpContent.statistics.title') }}
                 </p>
               </div>
@@ -703,7 +703,7 @@ const showStatistics = () => {
   flex-direction: row;
   align-items: center;
   gap: 10px;
-  margin-bottom: 10px;
+  /* margin-bottom: 10px; */
 }
 
 .action-text {
