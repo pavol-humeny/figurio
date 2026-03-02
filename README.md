@@ -57,7 +57,7 @@ Projekt bol prezentovaný formou akademického plagátu pripraveného v rámci b
 # Cieľová skupina
 
 Figurio je určené najmä pre:
-- študentov pripravujúcich záverečné práce alebo dokumentácie projektov,
+- študentov pripravujúcich záverečné práce alebo dokumentácie projektov
 - autorov odborných článkov,
 - pedagógov pripravujúcich študijné materiály.
 
