@@ -78,11 +78,30 @@ export function useBrushTool(imageStore, historyStore, editorStore, uiStore, t) 
   const brushMinToolSize = editorConfig.minManualToolSize
 
   /**
+   * Watch for changes in selected subtool and adjust maximum pencil size if necessary
+   */
+  watch(
+    () => editorStore.selectedTabPerTool['brush'],
+    (newTab) => {
+      if (newTab === 'pencil') {
+        // If switched to pencil, set brush size to max pencil size if it exceeds it
+        if (brushSize.value > editorConfig.maxPencilSize) {
+          brushSize.value = editorConfig.maxPencilSize
+        }
+      }
+    },
+  )
+
+  /**
    * Maximum size of the brush tool (10% of smaller image dimension, min 10px)
    */
   const brushMaxToolSize = computed(() => {
-    const smallerDimension = imageStore.getSmallerImageDimension()
-    return Math.max(10, Math.floor(smallerDimension * editorConfig.maxManualToolSizeCoefficient))
+    if (editorStore.selectedTabPerTool['brush'] === 'pencil') {
+      return editorConfig.maxPencilSize
+    } else {
+      const smallerDimension = imageStore.getSmallerImageDimension()
+      return Math.max(10, Math.floor(smallerDimension * editorConfig.maxManualToolSizeCoefficient))
+    }
   })
 
   /**

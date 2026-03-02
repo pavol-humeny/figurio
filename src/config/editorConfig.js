@@ -22,6 +22,9 @@ export const editorConfig = {
   // Brush commit time
   brushCommitDelay: 400, // in ms
 
+  // Brush pencil settings
+  maxPencilSize: 20, // in pixels
+
   // Item tip settings
   tipDelay: 700,
   tipDelayHide: 70,

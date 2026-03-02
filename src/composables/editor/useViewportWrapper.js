@@ -845,12 +845,20 @@ export function useViewportWrapper(
     if (editorStore.isCursorResizing) {
       const deltaX = event.clientX - lastMouseX.value
       if (deltaX !== 0) {
-        // Maximum size of the brush tool (10% of smaller image dimension, min 10px)
-        const smallerDimension = imageStore.getSmallerImageDimension()
-        const maxCursorSize = Math.max(
-          10,
-          Math.floor(smallerDimension * editorConfig.maxManualToolSizeCoefficient),
-        )
+        let maxCursorSize
+
+        if (
+          editorStore.selectedTabPerTool['brush'] === 'pencil'
+        ) {
+          maxCursorSize = editorConfig.maxPencilSize
+        } else {
+          // Maximum size of the brush tool (10% of smaller image dimension, min 10px)
+          const smallerDimension = imageStore.getSmallerImageDimension()
+          maxCursorSize = Math.max(
+            10,
+            Math.floor(smallerDimension * editorConfig.maxManualToolSizeCoefficient),
+          )
+        }
 
         // Set new cursor size based on horizontal mouse movement
         setCursorSize(
