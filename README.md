@@ -219,23 +219,14 @@ Figurio obsahuje nasledujúce nástroje:
 Projekt je postavený modulárne:
 
 - `src/assets` – statické zdroje (obrázky, videá, ikony, bannery).
-
 - `src/components` – znovupoužiteľné UI komponenty (modálne okná, tlačidlá, formuláre, layout prvky).
-
 - `src/composables` – aplikačná logika implementovaná pomocou Vue composables (nástroje, pipeline operácie, modálne správanie, výpočty).
-
 - `src/config` – centrálne konfiguračné súbory (nastavenia editora, viewportu, UI konfigurácia).
-
 - `src/locales` – lokalizačné súbory a preklady (i18n).
-
 - `src/router` – definícia routingu a navigácie medzi stránkami aplikácie.
-
 - `src/services` – služby pre import a export.
-
 - `src/stores` – správa globálneho stavu aplikácie pomocou Pinia.
-
 - `src/views` – hlavné stránky aplikácie (`Home`, `Editor`, `Statistics`, `Maintenance`).
-
 - `tests/unit` – unit testy jednotlivých modulov a funkčných častí aplikácie.
 
 --- 
