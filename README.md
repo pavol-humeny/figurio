@@ -1,270 +1,173 @@
+<p align="center">
+  <img src="readmeImages/logo.png" alt="Figurio logo" width="160"/>
+</p>
+
 # Figurio
 
-> **Webová aplikácia na úpravu obrázkov vytvorená v rámci bakalárskej práce (FIT VUT, 2025/2026).**
+**Figurio** je webový editor obrázkov určený na prípravu snímok obrazovky, diagramov a ilustrácií do akademických a technických dokumentov. Zameriava sa na rýchlu úpravu vizuálneho obsahu bez potreby používania komplexného grafického softvéru.
 
-Figurio je moderný editor obrázkov postavený na **Vue 3 + Vite**, zameraný na jednoduchú, rýchlu a praktickú úpravu rastrových aj vybraných PDF vstupov. Projekt obsahuje aj podporu pre zber anonymizovaných usage štatistík a samostatnú štatistickú sekciu pre vyhodnocovanie používania.
+Aplikácia poskytuje nástroje na orezanie, zvýraznenie detailov, pridávanie anotácií a aplikovanie prezentačných rámov zariadení. Je navrhnutá s dôrazom na prehľadné používateľské rozhranie, konzistentný pracovný postup a efektívnu prípravu obrázkov vhodných pre LaTeX, technické správy a vedecké publikácie.
 
----
+Figurio funguje priamo v prehliadači bez nutnosti inštalácie. Spracovanie obrázkov prebieha lokálne na strane klienta, čo zvyšuje ochranu súkromia a bezpečnosť spracovávaných dát.
 
-## Obsah
-
-- [1. Ciele projektu](#1-ciele-projektu)
-- [2. Hlavné funkcionality](#2-hlavné-funkcionality)
-- [3. Použité technológie](#3-použité-technológie)
-- [4. Architektúra aplikácie](#4-architektúra-aplikácie)
-- [5. Požiadavky na prostredie](#5-požiadavky-na-prostredie)
-- [6. Spustenie projektu lokálne](#6-spustenie-projektu-lokálne)
-- [7. Dostupné npm skripty](#7-dostupné-npm-skripty)
-- [8. Konfigurácia](#8-konfigurácia)
-- [9. Testovanie](#10-testovanie)
-- [10. Nasadenie](#11-nasadenie)
-- [11. Lokalizácia](#12-lokalizácia)
-- [12. Štruktúra repozitára](#13-štruktúra-repozitára)
-- [13. Známé limity a odporúčania](#14-známe-limity-a-odporúčania)
-- [14. Autor a kontakt](#15-autor-a-kontakt)
-- [15. Licencia](#16-licencia)
+**Verejne dostupná verzia aplikácie:** https://pavol-humeny.github.io/figurio/
 
 ---
 
-## 1. Ciele projektu
+# Autor
 
-Hlavným cieľom projektu je vytvoriť používateľsky prívetivý webový editor obrázkov, ktorý:
+**Pavol Humeny**  
+Fakulta informačných technológií  
+Vysoké učení technické v Brně  
 
-- pokrýva bežné úpravy obrázkov vyžadované pri príprave obrázkov do odborných textov,
-- funguje priamo v prehliadači bez nutnosti inštalácie desktopového softvéru,
-- podporuje viacjazyčné prostredie,
-- umožňuje sledovať anonymizované používanie aplikácie pre účely vyhodnotenia bakalárskej práce.
+Projekt vznikol ako súčasť bakalárskej práce:
 
----
+**Názov práce:** Webová aplikace pro úpravu obrázků  
+**Akademický rok:** 2025/2026  
+**Ústav:** Ústav počítačové grafiky a multimédií  
+**Typ práce:** bakalářská práce  
+**Zameranie:** Web  
+**Jazyk práce:** slovenský  
 
-## 2. Hlavné funkcionality
+**Vedúci práce:** prof. Ing. Adam Herout, Ph.D.
 
-Aplikácia obsahuje nástroje pre:
+Cieľom práce je návrh a implementácia modernej webovej aplikácie pre manipuláciu s obrázkami so zameraním na prípravu vizuálneho obsahu do odborných textov (LaTeX, Overleaf). Súčasťou riešenia je analýza požiadaviek, návrh používateľského rozhrania, prototypovanie, iteratívne testovanie, integrácia funkčných celkov do výslednej aplikácie a príprava projektu na produkčné nasadenie.
 
-- **Crop (orez)**
-- **Frame (rámik)**
-- **Grayscale (odtiene šedej)**
-- **Background Removal (odstránenie pozadia)**
-  - auto
-  - manual
-  - color
-- **Brush / Pencil (kreslenie)**
-- **Select (výber objektov)**
-- **Shape (tvary: rectangle, ellipse, line)**
-- **Text**
-- **Blur**
-- **Magnify Area (lokálne zväčšenie)**
-- **Transformácie**
-  - rotate
-  - flip
-  - resize
-- **Presety operácií**
-- **Export**
-
-Ďalšie vlastnosti:
-
-- podpora viacerých jazykov (**EN, SK, CZ**),
-- svetlý/tmavý režim,
-- tutorial/feature-tour režim,
-- klávesové skratky,
-- štatistická sekcia návštev a udalostí.
+Detail práce (elektronická verzia): https://www.vut.cz/studenti/zav-prace/detail/169466
 
 ---
 
-## 3. Použité technológie
+# Kľúčové vlastnosti
+
+Figurio sa od bežných online editorov líši najmä zameraním na odborné texty a technickú dokumentáciu:
+
+- **Nástroje optimalizované pre akademické publikácie**  
+  Rámiky zariadení, zvýraznenie detailov, rozmazanie oblasti, automatické orezanie okrajov.
+
+- **Lokálne spracovanie dát**  
+  Obrázky nie sú odosielané na server. Všetky úpravy prebiehajú priamo v prehliadači.
+
+- **Vektorové spracovanie PDF**  
+  PDF dokumenty sú spracovávané vektorovo bez zbytočnej rasterizácie (ak to charakter úpravy umožňuje).
+
+- **Minimalistické rozhranie**  
+  Jednoduché a intuitívne rozhranie bez nutnej znalosti pokročilých funkcií profesionálnych editorov.
+
+---
+
+# Prehľad funkcií
+
+## <img src="readmeImages/crop-icon.png" alt="Crop tool icon" width="28" align="left" /> &nbsp; Crop (Orezanie)
+
+Crop nástroj umožňuje:
+
+- manuálne orezanie s presným nastavením oblasti
+- zachovanie pomeru strán
+- automatický *fit crop* na základe detekcie obsahu
+
+Vhodné pre odstránenie prázdnych okrajov obrázka a jeho nežiadúcich častí.
+
+
+<p align="center">
+  <img src="readmeImages/crop-tool.png" alt="Crop tool screenshot" width="800"/>
+</p>
+
+---
+
+## <img src="readmeImages/frame-icon.png" alt="Frame tool icon" width="28" align="left" /> &nbsp; Frame (Prezentačné rámy)
+
+
+Umožňuje vložiť prezentačný rám:
+
+- jednoduchý obrys
+- rám okna aplikácie
+- rám mobilného zariadenia
+
+Zvyšuje vizuálnu kvalitu obrázkov v diplomových a technických prácach.
+
+<p align="center">
+  <img src="readmeImages/frame-tool.png" alt="Frame tool screenshot" width="800"/>
+</p>
+
+---
+
+## <img src="readmeImages/magnify-icon.png" alt="Magnify tool icon" width="28" align="left" /> &nbsp; Magnify Area (Zväčšenie detailu)
+
+
+Slúži na zvýraznenie detailu pomocou kruhového zväčšenia vybranej oblasti.  
+Vhodné na prezentáciu drobných prvkov používateľského rozhrania alebo grafov.
+
+<p align="center">
+  <img src="readmeImages/magnify-tool.png" alt="Magnify area screenshot" width="800"/>
+</p>
+
+---
+
+## <img src="readmeImages/blur-area-icon.png" alt="Blur area tool icon" width="28" align="left" /> &nbsp; Blur Area (Rozmazanie oblasti)
+
+
+Nástroj umožňuje selektívne rozmazanie vybranej časti obrázka. Používa sa na anonymizáciu citlivých údajov (napr. mená, e-mailové adresy, identifikátory) alebo na potlačenie menej dôležitých častí vizuálneho obsahu.
+
+<p align="center">
+  <img src="readmeImages/blur-area-tool.png" alt="Blur area screenshot" width="800"/>
+</p>
+
+---
+
+# Použité technológie
 
 ### Frontend
-- **Vue 3** (Composition API)
-- **Vite**
-- **Pinia** (state management)
-- **Vue Router**
-- **Vue I18n**
+- Vue 3  
+- Pinia  
+- Vite  
+- HTML Canvas  
+- SVG  
 
-### Práca s obrázkami/PDF a vizualizácia
-- **pdf-lib**, **pdfjs-dist**
-- **jspdf**, **svg2pdf.js**
-- **three**
-- **chart.js** + **vue-chartjs**
+### PDF spracovanie
+- pdf.js  
+- pdf-lib  
+- jsPDF  
 
-### Vývoj a kvalita
-- **ESLint**
-- **Prettier**
-- **Vitest** + **@testing-library/vue**
-
----
-
-## 4. Architektúra aplikácie
-
-Projekt je postavený modulárne:
-
-- `src/views` – hlavné stránky (`Home`, `Editor`, `Statistics`, `Maintenance`),
-- `src/components` – znovupoužiteľné UI komponenty,
-- `src/composables` – business logika rozdelená podľa domén (editor, tools, modals, common...),
-- `src/config` – centrálne konfiguračné súbory,
-- `src/locales` – preklady,
-- `src/services` – API a pomocné služby,
-- `tests/unit` – unit testy komponentov/composables.
-
-Routing používa hash históriu a obsahuje guard pre maintenance režim.
+### Backend (štatistiky používania)
+- Node.js  
+- Express  
+- MySQL  
 
 ---
 
-## 5. Požiadavky na prostredie
-
-Odporúčané verzie:
-
-- **Node.js 20+**
-- **npm 10+**
-
-> Poznámka: Staršie verzie Node.js môžu spôsobovať problémy pri build/test krokoch.
-
----
-
-## 6. Spustenie projektu lokálne
+# Inštalácia a spustenie
 
 ```bash
-# 1) Inštalácia závislostí
+git clone https://github.com/your-repo/figurio.git
+cd figurio
 npm install
-
-# 2) Spustenie development servera
 npm run dev
 ```
 
-Aplikácia bude dostupná štandardne na adrese vypísanej vo Vite výstupe (zvyčajne `http://localhost:5173`).
+---
+
+# Technické obmedzenia
+
+Aplikácia je optimalizovaná pre použitie v moderných webových prehliadačoch na stolových a prenosných počítačoch. Nie je určená pre mobilné zariadenia ani dotykové rozhrania.
+
+Pri určitých scenároch môžu nastať nasledovné obmedzenia:
+
+- PDF súbory so zložitým rozložením alebo pokročilými grafickými prvkami sa nemusia zobraziť úplne identicky ako v pôvodnom dokumente.
+- Veľké obrázky môžu ovplyvniť výkon v závislosti od zariadenia, dostupnej pamäte a možností prehliadača.
+- Animované obrázky (napr. GIF) nie sú podporované.
+- História krokov späť a dopredu je obmedzená z dôvodu optimalizácie výkonu a pamäte.
+- Obnovenie stránky alebo zatvorenie karty spôsobí stratu neuložených zmien.
 
 ---
 
-## 7. Dostupné npm skripty
+# Poďakovanie
 
-```bash
-npm run dev          # vývojový server
-npm run build        # produkčný build
-npm run preview      # lokálny náhľad produkčného buildu
-npm run lint         # eslint --fix
-npm run format       # prettier pre src/
-npm run test         # vitest
-npm run test:ui      # vitest UI
-npm run deploy       # deployment script
-npm run deploy:push  # deployment push script
-npm run i18n:export  # export prekladov do xlsx
-npm run i18n:import  # import prekladov z xlsx
-npm run generate:api # generovanie klienta z openapi.yaml
-```
+Poďakovanie patrí všetkým používateľom, ktorí sa počas vývoja podieľali na testovaní aplikácie a poskytli spätnú väzbu k jej funkčnosti a použiteľnosti. Ich pripomienky prispeli k zlepšeniu aplikácie a celkovej kvality nástroja.
+
+Na testovaní aplikácie sa významne podieľali:
+
+- Meno Priezvisko  
+- Meno Priezvisko  
+- Meno Priezvisko  
 
 ---
-
-## 8. Konfigurácia
-
-Hlavná runtime konfigurácia je v súbore:
-
-- `src/config/globalConfig.js`
-
-Tu je možné meniť napríklad:
-
-- default jazyk a tému,
-- zapnutie/vypnutie feature flags pre nástroje,
-- API base URL,
-- správanie usage štatistík,
-- limity (počet otvorených/nahrávaných súborov),
-- maintenance mód.
-
-Pri zmene konfigurácie odporúčam skontrolovať kompatibilitu s prekladmi a UI.
-
----
-
-## 9. Testovanie
-
-Základné spustenie testov:
-
-```bash
-npm run test -- --run
-```
-
-Odporúčaný minimálny workflow pred odovzdaním:
-
-```bash
-npm run lint
-npm run test -- --run
-npm run build
-```
-
----
-
-## 10. Nasadenie
-
-Repozitár obsahuje helper skripty:
-
-- `deploy.sh`
-- `deployPush.sh`
-
-Presný spôsob nasadenia závisí od cieľovej infraštruktúry. Pred nasadením odporúčam:
-
-1. upraviť URL/API konfiguráciu,
-2. overiť produkčný build,
-3. skontrolovať CORS a dostupnosť backend endpointov,
-4. overiť fungovanie štatistík iba v želanom režime.
-
----
-
-## 11. Lokalizácia
-
-Preklady sú v priečinku:
-
-- `src/locales/{en,sk,cz}`
-
-Na import/export prekladov je pripravený workflow cez XLSX:
-
-```bash
-npm run i18n:export
-npm run i18n:import
-```
-
-Súvisiaci súbor:
-
-- `translations.xlsx`
-
----
-
-## 12. Štruktúra repozitára
-
-```text
-figurio/
-├─ src/
-│  ├─ components/
-│  ├─ composables/
-│  ├─ config/
-│  ├─ locales/
-│  ├─ router/
-│  ├─ services/
-│  └─ views/
-├─ tests/
-├─ scripts/
-├─ public/
-├─ openapi.yaml
-└─ README.md
-```
-
----
-
-## 13. Známé limity a odporúčania
-
-- Výkon pri veľkých súboroch závisí od zariadenia a prehliadača.
-- Niektoré PDF/SVG kombinácie môžu vyžadovať rasterizáciu.
-- Pri cross-browser testovaní venuj pozornosť hlavne Safari špecifikám.
-
----
-
-## 14. Autor a kontakt
-
-**Autor:** Pavol Humený  
-**Škola:** Fakulta informačných technológií, VUT v Brne  
-**Akademický rok:** 2025/2026  
-**E-mail:** pavol.humeny@gmail.com
-
----
-
-## 15. Licencia
-
-Licencia zatiaľ nie je explicitne uvedená.
-
-Ak chceš projekt zverejniť ako open source, doplň prosím `LICENSE` súbor (napr. MIT/Apache-2.0) a aktualizuj túto sekciu.

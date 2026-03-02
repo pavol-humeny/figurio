@@ -26,6 +26,10 @@
 
 - P - pridať README ku projektu
 
+- ukladat poziciu scrollu pri modaloch
+
+- ak sa vykona pdf rasterizacia tak schovat warning o pdf objektoch
+
 - skontrolovať warning hlášky (malé rozmery, safari...)
 
 - Vylepšenie rámiku pre prehliadače 
