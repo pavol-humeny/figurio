@@ -171,3 +171,7 @@ Na testovaní aplikácie sa významne podieľali:
 - Meno Priezvisko  
 
 ---
+
+# Licencia
+
+Tento projekt je distribuovaný pod licenciou GNU General Public License v3.0 (GPL-3.0) [`LICENSE`](./LICENSE)..
