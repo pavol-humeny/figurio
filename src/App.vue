@@ -26,6 +26,7 @@ import { usePresetsStore } from './stores/presetsStore'
 import { useUserModeStore } from './stores/userModeStore'
 import { useConfirmModal } from './composables/modals/useConfirmModal'
 import { useI18n } from 'vue-i18n'
+import { useEditorStore } from './stores/editorStore'
 
 const { warn } = useConsole()
 const { addUserVisit, sendVisitDuringMaintenanceEmail } = useApi()
@@ -34,6 +35,7 @@ const router = useRouter()
 const route = useRoute()
 
 const imageStore = useImageStore()
+const editoStore = useEditorStore()
 const uiStore = useUiStore()
 const presetsStore = usePresetsStore()
 const userUuid = uiStore.userUuid
@@ -242,6 +244,8 @@ onMounted(async () => {
 
   checkWindowSize()
   checkSafariSupport()
+
+  editoStore.retrieveUserSettingsFromLocalStorage()
 
   // Reset localStorage (preferences) if app version has changed and in global config is set reset
   const savedVersion = localStorage.getItem(`${globalConfig.LOCAL_STORAGE_PREFIX}appVersion`)

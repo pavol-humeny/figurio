@@ -64,6 +64,11 @@ export const useUserModeStore = defineStore('userModeStore', {
      * @returns {boolean} True if user has access, false otherwise
      */
     hasUserAccessToFeature(feature) {
+      const basicFeatures = userModeConfig.basicFeatures
+      if (basicFeatures.includes(feature)) {
+        return true
+      }
+
       if (this.userMode === 'admin') {
         return true
       } else if (this.userMode === 'expert') {

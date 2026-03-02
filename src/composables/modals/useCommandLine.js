@@ -304,24 +304,25 @@ export function useCommandLine(userModeStore, editorStore) {
     localStorage.setItem(`${globalConfig.LOCAL_STORAGE_PREFIX}primaryColor`, color)
   }
 
-  const resetPrimaryColor = () => {
+  /**
+   * Reset primary color to default by removing inline style and localStorage value
+   */
+  const resetPrimaryColor = (doNotRemoveFromLocalStorage = false) => {
     // Remove inline override
     document.documentElement.style.removeProperty('--primary-c')
 
     // Remove saved value
-    localStorage.removeItem(`${globalConfig.LOCAL_STORAGE_PREFIX}primaryColor`)
+    if (!doNotRemoveFromLocalStorage) {
+      localStorage.removeItem(`${globalConfig.LOCAL_STORAGE_PREFIX}primaryColor`)
+    }
   }
 
   /**
    * Reset all settings to default
    */
   const resetAll = () => {
-    resetPrimaryColor()
-    editorStore.turnOffRandomEvent('snowfall')
-    editorStore.turnOffRandomEvent('christmasLights')
-    editorStore.turnOffRandomEvent('christmasTree')
-    editorStore.turnOffRandomEvent('fireworks')
-    editorStore.turnOffRandomEvent('fireworks2')
+    resetPrimaryColor(true)
+    editorStore.turnOffRandomEventsOnExit()
   }
 
   /**

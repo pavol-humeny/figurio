@@ -103,6 +103,7 @@ export function useDragAndDropArea(
    */
   const handlePaste = (event) => {
     if (!editorStore.imageCanBePasted) return
+    if (editorStore.isModalOpenFlag) return
 
     log('Paste event: ', event)
 

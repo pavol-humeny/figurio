@@ -192,6 +192,9 @@ export const useEditorStore = defineStore('editorStore', {
     /** Whether any modal is open */
     isModalOpenFlag: false,
 
+    /**
+     * List of recently used colors (for shape fill/stroke and brush)
+     */
     recentColors: getArray(`${globalConfig.LOCAL_STORAGE_PREFIX}recentColors`, []),
 
     /**
@@ -199,26 +202,11 @@ export const useEditorStore = defineStore('editorStore', {
      * UPDATE new random event
      */
     randomEvents: {
-      snowfall: getBoolean(
-        `${globalConfig.LOCAL_STORAGE_PREFIX}randomEvent_snowfall`,
-        globalConfig.randomEvents.snowfall,
-      ),
-      christmasLights: getBoolean(
-        `${globalConfig.LOCAL_STORAGE_PREFIX}randomEvent_christmasLights`,
-        globalConfig.randomEvents.christmasLights,
-      ),
-      christmasTree: getBoolean(
-        `${globalConfig.LOCAL_STORAGE_PREFIX}randomEvent_christmasTree`,
-        globalConfig.randomEvents.christmasTree,
-      ),
-      fireworks: getBoolean(
-        `${globalConfig.LOCAL_STORAGE_PREFIX}randomEvent_fireworks`,
-        globalConfig.randomEvents.fireworks,
-      ),
-      fireworks2: getBoolean(
-        `${globalConfig.LOCAL_STORAGE_PREFIX}randomEvent_fireworks2`,
-        globalConfig.randomEvents.fireworks2,
-      ),
+      snowfall: globalConfig.randomEvents.snowfall,
+      christmasLights: globalConfig.randomEvents.christmasLights,
+      christmasTree: globalConfig.randomEvents.christmasTree,
+      fireworks: globalConfig.randomEvents.fireworks,
+      fireworks2: globalConfig.randomEvents.fireworks2,
     },
   }),
   actions: {
@@ -275,6 +263,44 @@ export const useEditorStore = defineStore('editorStore', {
       if (eventKey in this.randomEvents) {
         this.randomEvents[eventKey] = false
         localStorage.setItem(`${globalConfig.LOCAL_STORAGE_PREFIX}randomEvent_${eventKey}`, 'false')
+      }
+    },
+
+    /**
+     * Turn off all random events (used when exiting command mode)
+     */
+    turnOffRandomEventsOnExit() {
+      for (const eventKey in this.randomEvents) {
+        if (this.randomEvents[eventKey]) {
+          this.randomEvents[eventKey] = false
+        }
+      }
+    },
+
+    /**
+     * Retrieve random events settings from localStorage (used when entering admin/expert mode)
+     */
+    retrieveUserSettingsFromLocalStorage() {
+      // Retrieve random events settings from localStorage
+      for (const eventKey in this.randomEvents) {
+        const userModeStore = useUserModeStore()
+        if (userModeStore.userMode === 'basic') {
+          continue
+        }
+
+        const storedValue = getBoolean(
+          `${globalConfig.LOCAL_STORAGE_PREFIX}randomEvent_${eventKey}`,
+          this.randomEvents[eventKey],
+        )
+        this.randomEvents[eventKey] = storedValue
+      }
+
+      // Retrieve primary color from localStorage
+      const storedPrimaryColor = localStorage.getItem(
+        `${globalConfig.LOCAL_STORAGE_PREFIX}primaryColor`,
+      )
+      if (storedPrimaryColor) {
+        document.documentElement.style.setProperty('--primary-c', storedPrimaryColor)
       }
     },
 

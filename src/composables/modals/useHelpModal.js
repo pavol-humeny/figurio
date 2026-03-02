@@ -230,6 +230,7 @@ export function useHelpModal(uiStore, imageStore, editorStore, userModeStore, ro
           return false
         } else {
           userModeStore.setUserMode('admin')
+          editorStore.retrieveUserSettingsFromLocalStorage()
           warn('Admin mode activated via contact form')
           addUserEvent('adminMode', { contactForm: { ...contactForm } })
           return true
@@ -244,6 +245,7 @@ export function useHelpModal(uiStore, imageStore, editorStore, userModeStore, ro
           return false
         } else {
           userModeStore.setUserMode('expert')
+          editorStore.retrieveUserSettingsFromLocalStorage()
           warn('Expert mode activated via contact form')
           addUserEvent('expertMode', { contactForm: { ...contactForm } })
           return true
