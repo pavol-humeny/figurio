@@ -65,7 +65,7 @@ export const globalConfig = {
     enableUnexpectedErrorModal: false,
     showFeatureTourModalOnStart: true,
     showWarningWindowSize: false,
-    showWarningSafariBrowser: true,
+    showWarningSafariBrowser: false,
     blockDeveloperTools: false,
     blockZooming: false,
   },

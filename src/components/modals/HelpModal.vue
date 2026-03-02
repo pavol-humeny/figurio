@@ -500,13 +500,21 @@ const showStatistics = () => {
                 <li>
                   {{ $t('help.helpContent.acknowledgements.text') }}
                 </li>
-                <li>
-                  <span v-if="testers.length">
-                    {{ $t('help.helpContent.acknowledgements.namedIntro') }}
-                    {{ testers.join(', ') }}.
-                  </span>
-                </li>
               </ul>
+
+              <div v-if="testers.length" class="acknowledgements-names" style="padding-top: 3px;">
+                <ul class="dot-paragraph">
+                  <li>
+                    {{ $t('help.helpContent.acknowledgements.namedIntro') }}:
+                  </li>
+                </ul>
+
+                <ul class="dot-paragraph" style="padding-left: 50px;">
+                  <li v-for="tester in testers" :key="tester">
+                    <strong>{{ tester }}</strong>
+                  </li>
+                </ul>
+              </div>
             </div>
 
             <!-- Statistics -->
