@@ -45,6 +45,21 @@ Projekt bol prezentovaný formou akademického plagátu pripraveného v rámci b
   <img src="readmeImages/poster.png" alt="Figurio project poster" width="400"/>
 </p>
 
+---
+
+# Motivácia
+
+- Bežné grafické editory sú pre prípravu obrázkov do odborných textov často zbytočne komplexné.  
+- Figurio vzniklo ako odpoveď na potrebu rýchlej, presnej a reprodukovateľnej úpravy snímok obrazovky bez nutnosti používania profesionálneho grafického softvéru.
+
+---
+
+# Cieľová skupina
+
+Figurio je určené najmä pre:
+- študentov pripravujúcich záverečné práce alebo dokumentácie projektov,
+- autorov odborných článkov,
+- pedagógov pripravujúcich študijné materiály.
 
 ---
 
@@ -63,15 +78,6 @@ Figurio sa od bežných online editorov líši najmä zameraním na odborné tex
 
 - **Minimalistické rozhranie**  
   Jednoduché a intuitívne rozhranie bez nutnej znalosti pokročilých funkcií profesionálnych editorov.
-
----
-
-# Cieľová skupina
-
-Figurio je určené najmä pre:
-- študentov pripravujúcich záverečné práce,
-- autorov odborných článkov,
-- pedagógov pripravujúcich študijné materiály.
 
 ---
 
@@ -216,7 +222,7 @@ Figurio obsahuje nasledujúce nástroje:
 
 # Architektúra aplikácie
 
-Projekt je postavený modulárne:
+Projekt je postavený modulárne s dôrazom na oddelenie prezentačnej vrstvy, aplikačnej logiky a správy stavu:
 
 - `src/assets` – statické zdroje (obrázky, videá, ikony, bannery).
 - `src/components` – znovupoužiteľné UI komponenty (modálne okná, tlačidlá, formuláre, layout prvky).
