@@ -17,8 +17,8 @@ Figurio funguje priamo v prehliadači bez nutnosti inštalácie. Spracovanie obr
 # Autor
 
 **Pavol Humeny**  
-Fakulta informačných technológií  
-Vysoké učení technické v Brně  
+**E-mail:** pavol.humeny@gmail.com  
+Vysoké učení technické v Brně - Fakulta informačných technológií  
 
 Projekt vznikol ako súčasť bakalárskej práce:
 
@@ -114,6 +114,65 @@ Nástroj umožňuje selektívne rozmazanie vybranej časti obrázka. Používa s
 
 ---
 
+# Zoznam nástrojov
+
+Figurio obsahuje nasledujúce nástroje:
+
+
+- **Image Analysis**  
+  Analýza vlastností obrazu - detekcie a odstránenia šumu.
+
+- **Background Removal**  
+  Odstránenie pozadia pomocou viacerých režimov:
+  - Color (odstránenie konkrétnej farby)
+  - Manual (ručné označenie oblasti)
+  - Automatic (automatická detekcia podobných oblastí)
+
+- **Select**  
+  Výber a správa vložených objektov.
+
+- **Transform**
+  - Rotate
+  - Flip
+  - Resize
+
+- **Crop**  
+  Manuálne orezanie a automatický Fit Crop.
+
+- **Grayscale**  
+  Prevod obrázka do odtieňov sivej (viacero metód výpočtu).
+
+- **Brush**
+  - Brush
+  - Pencil
+  - Eraser
+
+- **Blur Area**  
+  Aplikovanie rozmazania na vybranú oblasť obrázka.
+
+- **Shape**
+  - Rectangle
+  - Ellipse
+  - Line
+
+- **Magnify Area**  
+  Zvýraznenie časti obrázka pomocou zväčšenia.
+
+- **Text**  
+  Vkladanie textu s možnosťou úpravy štýlu a pozície.
+
+- **Frame**  
+  Aplikovanie rámov.
+
+- **Presets**
+  - My Presets
+  - Create Preset
+
+- **Export**  
+  Export do podporovaných formátov a kopírovanie do schránky.
+
+---
+
 # Použité technológie
 
 ### Frontend
@@ -135,8 +194,26 @@ Nástroj umožňuje selektívne rozmazanie vybranej časti obrázka. Používa s
 
 ---
 
+# Architektúra aplikácie
+
+Projekt je postavený modulárne:
+
+- `src/assets` - obrázky a videá
+- `src/components` – znovupoužiteľné UI komponenty,
+- `src/composables` – business logika,
+- `src/config` – centrálne konfiguračné súbory,
+- `src/locales` – preklady,
+- `src/router` - navigácia 
+- `src/services` – služby pre import a export,
+- `src/stores` - 
+- `src/views` – hlavné stránky (`Home`, `Editor`, `Statistics`, `Maintenance`),
+- `tests/unit` – unit testy.
+
+--- 
+
 # Inštalácia a spustenie
 
+## Inštalácia
 ```bash
 git clone https://github.com/your-repo/figurio.git
 cd figurio
@@ -144,6 +221,21 @@ npm install
 npm run dev
 ```
 
+## Dostupné npm skripty
+
+```bash
+npm run dev          # vývojový server
+npm run build        # produkčný build
+npm run preview      # lokálny náhľad produkčného buildu
+npm run lint         # eslint --fix
+npm run format       # prettier pre src/
+npm run test         # vitest
+npm run test:ui      # vitest UI
+npm run deploy       # deployment script
+npm run deploy:push  # deployment push script
+npm run i18n:export  # export prekladov do xlsx
+npm run i18n:import  # import prekladov z xlsx
+```
 ---
 
 # Technické obmedzenia
