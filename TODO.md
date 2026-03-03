@@ -24,10 +24,7 @@
 - P - nepodporované pdf dokumenty
 - P - zaistit aby pri resize objektov bolo snapovanie plynule tak ako pri drag
 
-
 - ak sa vykona pdf rasterizacia tak schovat warning o pdf objektoch
-
-- ak sa zadávajú hodnoty v inputoch tak nedovolit orezanie pomocou enteru
 
 - skontrolovať warning hlášky (malé rozmery, safari...)
 

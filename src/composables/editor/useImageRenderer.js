@@ -82,8 +82,6 @@ export function useImageRenderer(
     const width = imageStore.fileDimensions.width
     const height = imageStore.fileDimensions.height
 
-    console.warn('updateSizes called with width:', width, 'height:', height)
-
     // Set content layer dimensions
     if (contentRef.value) {
       contentRef.value.style.width = `${width}px`
@@ -144,6 +142,9 @@ export function useImageRenderer(
     }
   }
 
+  /**
+   * Analyze captured PDF.js warnings for known unsupported features and assign a risk score
+   */
   const analyzeWarnings = (messages) => {
     // Tune these based on what you observe in real PDFs
     const keywords = [

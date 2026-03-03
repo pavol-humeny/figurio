@@ -22,6 +22,8 @@ const { showToastModal } = useToastModal()
 
 /**
  * Serialize an image operation for storage
+ * @param {Object} op - The image operation to serialize
+ * @return {Object} The serialized operation
  */
 const serializeOperation = (op) => {
   const raw = toRaw(op)

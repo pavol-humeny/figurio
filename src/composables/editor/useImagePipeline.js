@@ -2,8 +2,17 @@ import { operationRegistry } from './operationRegistry'
 import { useConsole } from '../common/useConsole'
 const { warn, log } = useConsole()
 import { resizeOperation } from './operations/resizeOperation'
+import { useWarningList } from '@/composables/modals/useWarningList'
 
+/**
+ * Image processing pipeline logic
+ * Manages the application of operations, checkpoints, and rendering
+ * @param {object} imageStore - Pinia store for image state
+ * @param {object} uiStore - Pinia store for UI state
+ */
 export function useImagePipeline(imageStore, uiStore) {
+  const { removeWarning } = useWarningList(imageStore, uiStore)
+
   /**
    * Clone the given state to avoid mutations
    * @param {{ canvas: HTMLCanvasElement, overlay: HTMLCanvasElement|null, pdfBytes: Uint8Array|null }} state
@@ -186,11 +195,10 @@ export function useImagePipeline(imageStore, uiStore) {
 
     meta.dimensions = result.dimensions
 
-    // return {
-    //   canvas: result.canvas,
-    //   overlay: result.overlay ?? state.overlay,
-    //   pdfBytes: result.pdfBytes ? new Uint8Array(result.pdfBytes) : state.pdfBytes,
-    // }
+    if (operation.type === 'rasterizePdf') {
+      // Remove PDF unsupported objects warning from imageStore
+      removeWarning('unsupported-pdf-objects')
+    }
 
     return {
       canvas: result.canvas,
