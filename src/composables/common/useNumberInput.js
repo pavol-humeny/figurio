@@ -106,7 +106,16 @@ export function useNumberInput(props, emit) {
   /**
    * Handles blur or enter event, clamps value between min and max, emits update
    */
-  const onBlurOrEnter = () => {
+  const onBlurOrEnter = (event) => {
+    // Stop Enter propagation
+    if (event?.type === 'keydown' && event.key === 'Enter') {
+      event.preventDefault()
+      event.stopPropagation()
+
+      // Remove focus from the input
+      event.target.blur()
+    }
+
     const value = normalizeValue(inputValue.value)
     inputValue.value = value
     emit('update:modelValue', value)

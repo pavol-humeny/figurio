@@ -97,7 +97,16 @@ export function useNumberDropdownInput(props, emit, uiStore) {
   /**
    * Called on blur or Enter – parses and clamps value
    */
-  const onCommit = () => {
+  const onCommit = (event) => {
+    // Stop Enter propagation
+    if (event?.type === 'keydown' && event.key === 'Enter') {
+      event.preventDefault()
+      event.stopPropagation()
+
+      // Remove focus from the input
+      event.target.blur()
+    }
+
     const num = normalizeValue(inputValue.value)
     inputValue.value = num.toString()
     emit('update:modelValue', num)

@@ -52,7 +52,16 @@ export function useTextInput(props, emit) {
   /**
    * Called on Enter key
    */
-  const onEnter = () => {
+  const onEnter = (event) => {
+    // Stop Enter propagation
+    if (event?.type === 'keydown' && event.key === 'Enter') {
+      event.preventDefault()
+      event.stopPropagation()
+
+      // Remove focus from the input
+      event.target.blur()
+    }
+
     emit('update:modelValue', inputValue.value)
     emit('update', inputValue.value)
 

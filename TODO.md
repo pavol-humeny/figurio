@@ -24,7 +24,6 @@
 - P - nepodporované pdf dokumenty
 - P - zaistit aby pri resize objektov bolo snapovanie plynule tak ako pri drag
 
-- ukladat poziciu scrollu pri modaloch
 
 - ak sa vykona pdf rasterizacia tak schovat warning o pdf objektoch
 
