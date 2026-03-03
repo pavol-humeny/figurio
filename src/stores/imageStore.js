@@ -286,6 +286,9 @@ export const useImageStore = defineStore('imageStore', {
     /** PDF page bytes */
     pdfPageBytes: null,
 
+    // SVG
+    pdfSvg: null,
+
     /** Background removal canvas with feather */
     removalCanvas: null,
     /** Background removal canvas without feather */

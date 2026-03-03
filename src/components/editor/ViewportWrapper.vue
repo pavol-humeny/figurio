@@ -35,7 +35,6 @@ const imageStore = useImageStore()
 
 /**
  * Reference to the viewport content element
- * @type {import('vue').Ref<HTMLElement | null>}
  */
 const contentRef = ref(null)
 
@@ -45,7 +44,6 @@ const contentRef = ref(null)
 const { imageRef, svgRef, frameSvgRef, pdfContainerRef, blurOverlayRef, magnifyOverlayRef } = useImageRenderer(
   useImageStore(),
   useHistoryStore(),
-  useEditorStore(),
   useViewportStore(),
   useUiStore(),
   contentRef,
@@ -217,7 +215,6 @@ const cursorStyle = computed(() => {
   }
   return cursor
 })
-
 </script>
 
 <template>

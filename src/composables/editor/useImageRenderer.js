@@ -3,14 +3,15 @@ import { useFrameTool } from '../tools/useFrameTool'
 import * as pdfjsLib from 'pdfjs-dist/legacy/build/pdf'
 import { SVGGraphics } from 'pdfjs-dist/legacy/build/pdf'
 import { useWarningList } from '../modals/useWarningList'
-
 pdfjsLib.GlobalWorkerOptions.workerSrc =
   'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js'
-
 import { useConsole } from '@/composables/common/useConsole.js'
 import { viewportConfig } from '@/config/viewportConfig'
 const { log, warn } = useConsole()
 
+/**
+ * Flag to block multiple simultaneous render calls
+ */
 const blockRender = ref(false)
 
 /**
@@ -18,25 +19,20 @@ const blockRender = ref(false)
  *
  * @param {ReturnType<typeof import('@/stores/imageStore').useImageStore>} imageStore - Image store
  * @param {ReturnType<typeof import('@/stores/historyStore').useHistoryStore>} historyStore - History store
- * @param {ReturnType<typeof import('@/stores/workspaceStore').useWorkspaceStore>} editorStore - Editor store
  * @param {ReturnType<typeof import('@/stores/viewportStore').useViewportStore>} viewportStore - Viewport store
+ * @param {ReturnType<typeof import('@/stores/uiStore').useUiStore>} uiStore - UI store
  * @param {import('vue').Ref<HTMLElement>} contentRef - Reference to the .viewport-content element
  * @param {(key: string) => string} t - Translation function
  * @returns {{
- *   imageRef: import('vue').Ref<HTMLCanvasElement | null>,
- *   svgRef: import('vue').Ref<SVGSVGElement | null>,
- *   frameSvgRef: import('vue').Ref<SVGSVGElement | null>
+ *  imageRef: import('vue').Ref<HTMLCanvasElement|null>,
+ *  svgRef: import('vue').Ref<SVGSVGElement|null>,
+ *  frameSvgRef: import('vue').Ref<SVGSVGElement|null>,
+ *  pdfContainerRef: import('vue').Ref<HTMLElement|null>,
+ *  blurOverlayRef: import('vue').Ref<HTMLCanvasElement|null>,
+ *  magnifyOverlayRef: import('vue').Ref<HTMLCanvasElement|null>,
  * }}
  */
-export function useImageRenderer(
-  imageStore,
-  historyStore,
-  editorStore,
-  viewportStore,
-  uiStore,
-  contentRef,
-  t,
-) {
+export function useImageRenderer(imageStore, historyStore, viewportStore, uiStore, contentRef, t) {
   const { addWarning } = useWarningList(imageStore, uiStore)
 
   /**
@@ -111,9 +107,13 @@ export function useImageRenderer(
   }
 
   // -----------------------------
-  // PDF unsupported detection helpers (arrow functions)
+  // PDF unsupported detection functions
   // -----------------------------
-
+  /**
+   * Function to capture console warnings and errors during PDF SVG generation to detect unsupported features
+   * @param {() => Promise<any>} run - Async function that runs the PDF SVG generation code
+   * @return {Promise<{result: any, messages: string[]}>} - The result of the run function and captured console messages
+   */
   const withCapturedPdfJsWarnings = async (run) => {
     const origWarn = console.warn
     const origError = console.error
@@ -143,107 +143,86 @@ export function useImageRenderer(
   }
 
   /**
-   * Analyze captured PDF.js warnings for known unsupported features and assign a risk score
+   * Check if captured pdf.js warnings indicate unsupported features that may affect SVG rendering
+   * @param {string[]} messages - Captured console messages from pdf.js during SVG generation
+   * @returns {{ hasUnsupported: boolean, matched: string[] }} - Whether unsupported features were detected and which messages matched
    */
-  const analyzeWarnings = (messages) => {
-    // Tune these based on what you observe in real PDFs
-    const keywords = [
+  const hasUnsupportedPdfJsWarnings = (messages) => {
+    const needles = [
       'Unsupported',
       'Not implemented',
       'not implemented',
       'SMask',
-      'BlendMode',
       'soft mask',
+      'BlendMode',
+      'blend mode',
+      'Shading',
       'shading',
+      'Pattern',
       'pattern',
       'Type3',
     ]
 
-    const matched = messages.filter((m) => keywords.some((k) => m.includes(k)))
-    const risk = matched.length > 0 ? 10 : 0
-
-    return { risk, matched }
+    const matched = messages.filter((m) => needles.some((n) => m.includes(n)))
+    return { hasUnsupported: matched.length > 0, matched }
   }
 
-  const analyzeOperatorList = (opList, OPS) => {
-    // High-risk ops for SVG fidelity (transparency/groups)
-    const RISKY_OPS = new Set([OPS.setBlendMode, OPS.setSoftMask, OPS.beginGroup, OPS.endGroup])
+  /**
+   * Check if PDF operator list contains ops that are known to be not SVG-safe (e.g. related to transparency/groups)
+   * @param {Object} opList - PDF operator list from pdf.js
+   * @param {Object} OPS - PDF operator constants from pdf.js
+   * @returns {{ hasHits: boolean, hits: number[] }} - Whether any non-SVG-safe ops were found and which ones
+   */
+  const hasNonSvgSafeOps = (opList, OPS) => {
+    const NON_SVG_SAFE = new Set([OPS.setBlendMode, OPS.setSoftMask, OPS.beginGroup, OPS.endGroup])
 
-    let risk = 0
     const hits = []
-
     for (const fnId of opList.fnArray) {
-      if (RISKY_OPS.has(fnId)) {
-        hits.push(fnId)
-        risk += 5
-      }
+      if (NON_SVG_SAFE.has(fnId)) hits.push(fnId)
     }
 
-    // paintFormXObject is common, not auto-fail, but adds mild risk
-    if (opList.fnArray.includes(OPS.paintFormXObject)) {
-      risk += 1
-    }
-
-    return { risk, hits }
+    return { hasHits: hits.length > 0, hits }
   }
 
-  const shouldRasterizePdf = async ({ page, opList, svgGfx, viewportPdf, OPS, warn }) => {
+  /**
+   * Try to render PDF page as SVG.
+   * If conversion is not possible or not reliable, return shouldRasterize = true.
+   */
+  const tryRenderPdfAsSvgOrRasterize = async ({ opList, svgGfx, viewportPdf, OPS, warn }) => {
     const reasons = []
-    let totalRisk = 0
 
-    // 1) Operator list risk
-    const op = analyzeOperatorList(opList, OPS)
-    totalRisk += op.risk
-    if (op.hits.length > 0) {
-      reasons.push('unsupported-ops')
-    }
-    if (opList.fnArray.includes(OPS.paintFormXObject)) {
-      reasons.push('uses-form-xobject')
+    // 1 - Check operator list for known non-SVG-safe operators
+    const opCheck = hasNonSvgSafeOps(opList, OPS)
+    if (opCheck.hasHits) {
+      reasons.push('pdf-ops-not-svg-safe')
     }
 
-    // 2) Best-effort commonObjs scan (DO NOT auto-fail on Form)
-    // Note: commonObjs internals can differ between pdf.js versions; keep best-effort and safe.
+    // 2 - Try to generate SVG and check for pdf.js warnings about unsupported features that may affect SVG rendering
     try {
-      const raw = page?.commonObjs?._objs
-      if (raw && Object.keys(raw).length > 0) {
-        let hasForm = false
-        for (const obj of Object.values(raw)) {
-          if (obj?.data?.Subtype === 'Form') {
-            hasForm = true
-            break
-          }
-        }
-        if (hasForm) {
-          // Mild risk only
-          totalRisk += 1
-          if (!reasons.includes('uses-form-xobject')) reasons.push('uses-form-xobject')
-        }
+      const { result: svg, messages } = await withCapturedPdfJsWarnings(() =>
+        svgGfx.getSVG(opList, viewportPdf),
+      )
+
+      const warnCheck = hasUnsupportedPdfJsWarnings(messages)
+      if (warnCheck.hasUnsupported) {
+        reasons.push('pdfjs-reported-unsupported')
+        warn('[PDF warn capture] matched warnings:', warnCheck.matched)
       }
+
+      // Result - if there are any issues detected, rasterize
+      const shouldRasterize = reasons.length > 0
+      return { shouldRasterize, reasons, svg: shouldRasterize ? null : svg }
     } catch (e) {
-      console.warn('Error analyzing commonObjs for Form XObjects, skipping:', e)
+      // If SVG conversion throws an error, rasterize
+      reasons.push('svg-conversion-throw')
+      warn('[PDF SVG conversion] getSVG threw error, rasterizing. Error:', e)
+      return { shouldRasterize: true, reasons, svg: null }
     }
-
-    // 3) Capture warnings while generating SVG
-    const { result: svg, messages } = await withCapturedPdfJsWarnings(() =>
-      svgGfx.getSVG(opList, viewportPdf),
-    )
-
-    const w = analyzeWarnings(messages)
-    totalRisk += w.risk
-    if (w.matched.length > 0) {
-      reasons.push('pdfjs-warnings')
-      // Optionally log the matched warnings for debugging
-      warn('[PDF warn capture] matched warnings:', w.matched)
-    }
-
-    // Decision threshold:
-    // - If transparency/group ops appear => risk >= 5 => raster
-    // - If warnings matched => +10 => raster
-    const shouldRasterize = totalRisk >= 5
-
-    return { shouldRasterize, reasons, totalRisk, svg }
   }
 
+  // -----------------------------
+  // Main rendering functions
+  // -----------------------------
   /**
    * Render base image
    */
@@ -297,9 +276,8 @@ export function useImageRenderer(
       const svgGfx = new SVGGraphics(page.commonObjs, page.objs)
       const { OPS } = pdfjsLib
 
-      // Decide raster vs SVG using combined heuristics (ops + warnings)
-      const analysis = await shouldRasterizePdf({
-        page,
+      // Check if PDF can be reliably rendered as SVG
+      const svgAttempt = await tryRenderPdfAsSvgOrRasterize({
         opList,
         svgGfx,
         viewportPdf,
@@ -307,7 +285,7 @@ export function useImageRenderer(
         warn,
       })
 
-      if (analysis.shouldRasterize) {
+      if (svgAttempt.shouldRasterize) {
         const tRasterStart = performance.now()
 
         warn(
@@ -344,7 +322,6 @@ export function useImageRenderer(
         )
 
         blockRender.value = false
-
         uiStore.isApplying = false
         uiStore.isApplyingFrame = false
         uiStore.isLoading = false
@@ -355,7 +332,7 @@ export function useImageRenderer(
         return
       }
 
-      const svg = await svgGfx.getSVG(opList, viewportPdf)
+      const svg = svgAttempt.svg
 
       // White rectangle
       const rect = document.createElementNS('http://www.w3.org/2000/svg', 'rect')
@@ -368,6 +345,25 @@ export function useImageRenderer(
 
       pdfContainerRef.value.innerHTML = ''
       pdfContainerRef.value.appendChild(svg)
+
+      try {
+        // Store PDF as SVG string for export
+        const wrapper = document.createElement('div')
+        wrapper.appendChild(svg.cloneNode(true))
+
+        let svgString = wrapper.innerHTML
+
+        // Remove svg: prefix safely
+        svgString = svgString
+          .replace(/<svg:/g, '<')
+          .replace(/<\/svg:/g, '</')
+          .replace(/xmlns:svg="[^"]*"/g, '')
+
+        imageStore.pdfSvg = svgString
+      } catch (e) {
+        console.warn('Failed to serialize PDF SVG for export:', e)
+        imageStore.pdfSvg = null
+      }
 
       log(`[imageRenderer] PDF total ${(performance.now() - tPdfStart).toFixed(1)} ms`)
 

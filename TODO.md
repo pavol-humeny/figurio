@@ -21,10 +21,9 @@
 - slide pre zobrazenie výhod oproti ostatným aplikáciám 
 
 # TODO
-- P - nepodporované pdf dokumenty
 - P - zaistit aby pri resize objektov bolo snapovanie plynule tak ako pri drag
 
-- ak sa vykona pdf rasterizacia tak schovat warning o pdf objektoch
+- fit crop len z jednej strany 
 
 - skontrolovať warning hlášky (malé rozmery, safari...)
 
@@ -50,10 +49,8 @@
 ## Dlhodobé TODO 
 - eye dropper na safari
 - BG removal - ukladanie do undo redo operácií pri výbere 
-- PDF s nepodporovanými svg objektami 
-- prevod pdf na raster ak to obsahuje hlúposti 
 - pridať nástroj fill (kýbel)
-- Crop orezanie v pomere 
+- Crop orezanie v centimetroch, v pomere
 - Pozrieť sa na spoplatnenie - maximálny počet exportov, by me coffee
 
 ## Insane ideas

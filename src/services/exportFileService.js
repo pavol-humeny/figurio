@@ -67,6 +67,41 @@ export function exportFileService(imageStore, editorStore, historyStore, viewpor
       return true
     }
 
+    const isSvg = imageStore.newFileFormat === 'svg'
+
+    await imageStore.generatePreview(editorStore, historyStore, t, !isPdf && !isSvg)
+
+    if (isSvg) {
+      const blob = await new Promise((resolve) => canvas.toBlob(resolve, 'image/png'))
+
+      const reader = new FileReader()
+      reader.onload = async () => {
+        const image = new Image()
+        image.onload = async () => {
+          await exportAsSvg(image)
+
+          showToastModal(
+            'success',
+            t('imageStore.toast.successFileExported.title'),
+            t('imageStore.toast.successFileExported.message'),
+          )
+        }
+        image.src = reader.result
+      }
+
+      reader.readAsDataURL(blob)
+
+      addUserEvent('exportImage', {
+        fileFormat: imageStore.newFileFormat,
+        fileName: imageStore.newFileName,
+        fileWidth: width,
+        fileHeight: height,
+        quality,
+      })
+
+      return true
+    }
+
     // Export as raster image (PNG, JPEG, WebP)
     const image = new Image()
     image.onload = async () => {
@@ -711,6 +746,169 @@ export function exportFileService(imageStore, editorStore, historyStore, viewpor
       // 4 Save
       pdf.save(`${imageStore.newFileName}.pdf`)
     }
+  }
+
+  /**
+   * Export current state as SVG file.
+   * Vector objects and frame stay vector; base image is embedded from provided image.
+   *
+   * @param {HTMLImageElement} image - Base image to embed into SVG
+   */
+  const exportAsSvg = async (image) => {
+    const { finalWidth, finalHeight, targetWidth, targetHeight, offsetX, offsetY } = useFrameTool(
+      imageStore,
+      historyStore,
+      viewportStore,
+      t,
+    ).calculateFrameLayout(imageStore.newFileDimensions)
+
+    // Convert base image to dataURL
+    const baseCanvas = document.createElement('canvas')
+    baseCanvas.width = image.width
+    baseCanvas.height = image.height
+    const baseCtx = baseCanvas.getContext('2d')
+    baseCtx.drawImage(image, 0, 0)
+
+    const baseDataUrl = baseCanvas.toDataURL('image/png')
+
+    // Raster overlays (blur + magnify + brush)
+    const rasterized = await imageStore.rasterize('export-pdf', {}, t)
+
+    const overlayDataUrl = rasterized?.overlay ? rasterized.overlay.toDataURL('image/png') : ''
+
+    const blurMagnifyDataUrl = rasterized?.blurMagnifyOverlay
+      ? rasterized.blurMagnifyOverlay.toDataURL('image/png')
+      : ''
+
+    // Defs
+    const staticDefs = `
+      <marker id="arrow-end" markerWidth="10" markerHeight="10" refX="3" refY="3" orient="auto" markerUnits="strokeWidth">
+        <path d="M0,0 L0,6 L6,3 z" fill="context-stroke" />
+      </marker>
+    `.trim()
+
+    const dynamicDefs = Object.values(imageStore.svgDefs || {}).join('\n')
+
+    const svgDefsString = `
+      <defs>
+        ${staticDefs}
+        ${dynamicDefs}
+      </defs>
+    `.trim()
+
+    // Vector objects
+    const vectorObjectsMarkup = (imageStore.svgObjects || [])
+      .map((obj) => {
+        const attrs = Object.entries(obj.attrs || {})
+          .map(([key, val]) => `${key}="${String(val).replace(/"/g, '&quot;')}"`)
+          .join(' ')
+
+        if (obj.tag === 'text') {
+          const content = (obj.content || '').replace(/&/g, '&amp;').replace(/</g, '&lt;')
+          return `<text ${attrs}>${content}</text>`
+        }
+
+        return `<${obj.tag} ${attrs} />`
+      })
+      .join('\n')
+
+    // Frame
+    const getInnerSvgContent = (svgString) => {
+      try {
+        const doc = new DOMParser().parseFromString(svgString, 'image/svg+xml')
+        return doc.documentElement.innerHTML || ''
+      } catch {
+        return ''
+      }
+    }
+
+    const frameInner =
+      imageStore.frame.enabled && imageStore.frameSvg ? getInnerSvgContent(imageStore.frameSvg) : ''
+
+    // PDF SVG if available
+    const pdfInner =
+      imageStore.fileType === 'pdf' && !imageStore.showPdfAsImage && imageStore.pdfSvg
+        ? getInnerSvgContent(imageStore.pdfSvg)
+        : ''
+
+    // Compose SVG
+    const svgString = `
+      <svg xmlns="http://www.w3.org/2000/svg"
+          xmlns:xlink="http://www.w3.org/1999/xlink"
+          width="${finalWidth}"
+          height="${finalHeight}"
+          viewBox="0 0 ${finalWidth} ${finalHeight}">
+
+        ${svgDefsString}
+
+        <!-- Background -->
+        <rect x="0" y="0"
+              width="${finalWidth}"
+              height="${finalHeight}"
+              fill="white" />
+
+        <!-- Base layer -->
+        ${
+          pdfInner
+            ? `<g transform="translate(${offsetX}, ${offsetY}) scale(${targetWidth / image.width} ${targetHeight / image.height})">
+                ${pdfInner}
+              </g>`
+            : `<image x="${offsetX}"
+                      y="${offsetY}"
+                      width="${targetWidth}"
+                      height="${targetHeight}"
+                      preserveAspectRatio="none"
+                      href="${baseDataUrl}"
+                      xlink:href="${baseDataUrl}" />`
+        }
+
+        <!-- Brush overlay -->
+        ${
+          overlayDataUrl
+            ? `<image x="${offsetX}"
+                      y="${offsetY}"
+                      width="${targetWidth}"
+                      height="${targetHeight}"
+                      preserveAspectRatio="none"
+                      href="${overlayDataUrl}"
+                      xlink:href="${overlayDataUrl}" />`
+            : ''
+        }
+
+        <!-- Vector objects -->
+        <g transform="translate(${offsetX}, ${offsetY})">
+          ${vectorObjectsMarkup}
+        </g>
+
+        <!-- Blur + magnify -->
+        ${
+          blurMagnifyDataUrl
+            ? `<image x="${offsetX}"
+                      y="${offsetY}"
+                      width="${targetWidth}"
+                      height="${targetHeight}"
+                      preserveAspectRatio="none"
+                      href="${blurMagnifyDataUrl}"
+                      xlink:href="${blurMagnifyDataUrl}" />`
+            : ''
+        }
+
+        <!-- Frame -->
+        ${frameInner ? `<g>${frameInner}</g>` : ''}
+
+      </svg>
+      `.trim()
+
+    const blob = new Blob([svgString], {
+      type: 'image/svg+xml;charset=utf-8',
+    })
+
+    const url = URL.createObjectURL(blob)
+    const link = document.createElement('a')
+    link.href = url
+    link.download = `${imageStore.newFileName}.svg`
+    link.click()
+    URL.revokeObjectURL(url)
   }
 
   /**

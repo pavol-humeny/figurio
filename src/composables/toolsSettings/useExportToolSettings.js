@@ -112,6 +112,10 @@ export function useExportToolSettings(
       label: 'PDF',
       value: 'pdf',
     },
+    {
+      label: 'SVG',
+      value: 'svg',
+    },
   ]
 
   /**
