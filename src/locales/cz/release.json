@@ -10,7 +10,8 @@
       "improvements": {
         "items": [
           "Vylepšené přichytávání při pohybu objektů",
-          "Lepší rozložení v průvodci funkcemi"
+          "Lepší rozložení v průvodci funkcemi",
+          "Uložení pozice v modálních oknech a její obnovení při opětovném otevření"
         ]
       }
     },

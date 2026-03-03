@@ -33,7 +33,7 @@ const {
 
 <template>
   <Teleport to="body">
-    <div v-if="isVisible" class="release-modal-overlay modal-overlay" @mousedown.self="closeReleaseModal">
+    <div v-show="isVisible" class="release-modal-overlay modal-overlay" @mousedown.self="closeReleaseModal">
       <div class="modal-box">
         <div class="title-wrapper">
           <BaseIcon name="IconReleaseNotes" size="28" color="var(--primary-c)" />

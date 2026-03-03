@@ -10,7 +10,8 @@
       "improvements": {
         "items": [
           "Improved object movement snapping",
-          "Better layout of feature tour cards"
+          "Better layout of feature tour cards",
+          "Save modal scroll position and restore it when reopening"
         ]
       }
     },
