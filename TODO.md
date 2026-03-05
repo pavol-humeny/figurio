@@ -10,8 +10,8 @@
 ## TODO - text 
 - P - záver
 - prerobiť snímky obrazovky kde je VUE logo na spodku 
-- P - teória 2
 - zmenit obrazok pri ukazovani pixelation mode, dat tam nieco viac abstraktne
+- obrázok s fyzickými rozmermi - dat tam nekvalitný obrázok a zmeniť X na znak 
 
 - zoznam vecí čo by som chcel dať na plagát
 - scenár pre video
@@ -28,6 +28,8 @@
 - skontrolovať warning hlášky (malé rozmery, safari...)
 
 - Vylepšenie rámiku pre prehliadače 
+- bg removal color - zle usporiadanie komponentov - two column 
+- pri prepnutí jazyka je potrebné prepočítať šírku right panelu
 
 - skontrolovať texty
 ├── DONE - calibration.json

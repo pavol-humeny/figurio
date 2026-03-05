@@ -126,8 +126,8 @@ const {
                 {{ t('tools.frame.settings.general.useMillimeters.label') }}
               </p>
               <ToggleButton v-model="useMillimeters" :scale="0.6" :style="{ transform: 'translateX(16px)' }"
-                @update="setUseMillimeters(useMillimeters)"
-                :tip="$t('tools.backgroundRemoval.settings.auto.replaceSelection.tip')" position="bottom-left" />
+                @update="setUseMillimeters(useMillimeters)" :tip="$t('tools.frame.settings.general.useMillimeters.tip')"
+                position="bottom-left" />
             </div>
           </div>
         </div>

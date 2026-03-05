@@ -35,20 +35,20 @@
     "subTools": {
       "color": {
         "label": "Barva",
-        "tip": "Odstraní specifickou barvu z obrázku",
-        "explain": "Nástroj Barva umožňuje odstranit specifickou barvu z obrázku. Vyberte barvu a nastavte hodnotu citlivosti. Nízké hodnoty odstraní jen přesné shody, vysoké i podobné odstíny.",
+        "tip": "Odstraní konkrétní barvu z obrázku",
+        "explain": "Vyberte referenční barvu v obrázku a upravte citlivost. Nízké hodnoty odstraní pouze přesné shody, vyšší hodnoty odstraní také podobné odstíny.",
         "shortcut": ""
       },
       "manual": {
-        "label": "Manuálně",
-        "tip": "Odstraní ručně vybrané části obrázku",
-        "explain": "Nástroj Manuálně umožňuje odstranit části obrázku kreslením. Nastavte velikost štětce pro kontrolu oblasti, která se odstraní.",
+        "label": "Manuální",
+        "tip": "Odstraňte oblasti ručně kreslením do obrázku",
+        "explain": "Ručně označte oblasti k odstranění kreslením do obrázku. Velikost nástroje určuje velikost ovlivněné oblasti.",
         "shortcut": ""
       },
       "auto": {
         "label": "Automatické",
-        "tip": "Automaticky vybere podobné oblasti na obrázku",
-        "explain": "Nástroj Automatické odstranění pozadí detekuje barevně podobné oblasti na obrázku a odstraní je.",
+        "tip": "Automaticky vyhledá a odstraní podobné oblasti",
+        "explain": "Automaticky vyhledá oblasti s podobnými pixely v obrázku a označí je k odstranění pozadí.",
         "shortcut": ""
       }
     },
@@ -57,33 +57,33 @@
         "label": "Barva",
         "replaceSelection": {
           "label": "Nahradit výběr",
-          "tip": "Nahradí aktuální výběr novým výběrem"
+          "tip": "Nahradí aktuální výběr novým nebo jej rozšíří"
         },
         "backgroundColor": {
           "label": "Barva k odstranění",
-          "tip": "Vyberte referenční barvu, kterou chcete odstranit z obrázku."
+          "tip": "Vyberte referenční barvu, která má být z obrázku odstraněna"
         },
         "removalSensitivity": {
           "label": "Citlivost",
-          "tip": "Nastavte, jak podobná musí být barva pixelu vybrané barvě, aby byla odstraněna. Nízké pro přesné shody, vysoké i pro podobné odstíny."
+          "tip": "Určuje, jak podobný musí být pixel vybrané barvě, aby byl odstraněn."
         },
         "selectColorButton": {
           "text": "Vybrat barvu",
-          "tip": "Vybere barvu z obrázku"
+          "tip": "Vyberte referenční barvu přímo z obrázku"
         },
         "removeButton": {
           "text": "Odstranit výběr"
-        }, 
+        },
         "replaceWithColor": {
           "text": "Nahradit barvou"
         },
         "highlightColor": {
           "label": "Barva zvýraznění",
-          "tip": "Vyberte barvu používanou k zvýraznění vybrané oblasti"
+          "tip": "Vyberte barvu použitou pro zvýraznění vybrané oblasti"
         }
       },
       "manual": {
-        "label": "Manuálně",
+        "label": "Manuální",
         "selectedTool": {
           "label": "Vybraný nástroj",
           "options": {
@@ -95,19 +95,19 @@
         },
         "toolSize": {
           "label": "Velikost nástroje",
-          "tip": "Nastavte velikost vybraného nástroje"
+          "tip": ""
         },
         "clearAllButton": {
           "text": "Vymazat výběr",
-          "tip": "Vymaže vybranou oblast"
+          "tip": "Odstraní aktuální výběr"
         },
         "edgeSoftness": {
           "label": "Poloměr měkkého okraje",
-          "tip": "Upravte poloměr měkkého okraje pro vytvoření plynulejšího přechodu mezi odstraněnými a zbývajícími oblastmi. Vyšší hodnota vytváří postupnější efekt prolínání."
+          "tip": "Upravuje měkkost okraje výběru pro plynulejší přechod mezi odstraněnou a zachovanou oblastí."
         },
         "boundaryOffset": {
           "label": "Posun hranice",
-          "tip": "Rozšiřte nebo zmenšete hranici odstraněné oblasti. Kladné hodnoty rozšiřují odstraněnou oblast ven, zatímco záporné hodnoty ji zmenšují dovnitř."
+          "tip": "Rozšíří nebo zmenší hranici výběru. Kladné hodnoty výběr rozšíří, záporné jej zmenší."
         },
         "invertSelectionButton": {
           "text": "Invertovat výběr",
@@ -119,59 +119,50 @@
         },
         "useBaseImage": {
           "label": "Použít původní obrázek",
-          "tip": "Odstraní výběr z původního obrázku nebo z aktuálně upraveného obrázku"
+          "tip": "Použije původní obrázek místo aktuálně upraveného"
         },
         "replaceBackgroundColor": {
           "label": "Nahradit výběr barvou",
-          "tip": "Nahradí výběr vybranou barvou místo toho, aby bylo průhledné"
+          "tip": "Vyplní vybranou oblast barvou místo průhlednosti"
         },
         "backgroundReplacementColor": {
           "label": "Barva náhrady",
-          "tip": "Vyberte barvu, kterou chcete nahradit odstraněnou oblast"
+          "tip": "Vyberte barvu použitou k nahrazení odstraněné oblasti"
         },
         "removeButton": {
           "text": "Odstranit výběr"
-        }, 
+        },
         "replaceWithColor": {
           "text": "Nahradit barvou"
         },
         "highlightColor": {
           "label": "Barva zvýraznění",
-          "tip": "Vyberte barvu používanou k zvýraznění vybrané oblasti"
+          "tip": "Vyberte barvu použitou pro zvýraznění vybrané oblasti"
         }
       },
       "auto": {
         "label": "Automatické",
-        "replaceSelection": {
-          "label": "Nahradit výběr",
-          "tip": "Nahradí aktuální výběr detekovanými objekty"
-        },
-        "detectButton": {
-          "text": "Detekovat objekty",
-          "tip": "Detekuje objekty na obrázku"
-        },
         "removeButton": {
           "text": "Odstranit výběr"
-        }, 
+        },
         "replaceWithColor": {
           "text": "Nahradit barvou"
         },
         "autoRemovalSensitivity": {
-          "label": "Citlivost automatického odstranění",
-          "tip": "Nastavte, jak podobná musí být barva pixelu vybrané barvě, aby byla odstraněna při kliknutí na obrázek. Nízké pro přesné shody, vysoké i pro podobné odstíny."
+          "tip": "Určuje, jak podobné musí být pixely vybranému pixelu, aby byly zahrnuty do automatického výběru."
         },
         "highlightColor": {
           "label": "Barva zvýraznění",
-          "tip": "Vyberte barvu používanou k zvýraznění vybrané oblasti"
+          "tip": "Vyberte barvu použitou pro zvýraznění vybrané oblasti"
         }
       }
     }
   },  
   "select": {
     "label": "Výběr",
-    "tip": "Vybere objekty na obrázku",
+    "tip": "Vybírá a spravuje objekty v obrázku",
     "tipDisabled": "",
-    "explain": "Nástroj Výběr umožňuje vybrat jeden nebo více objektů, které byly přidány do obrázku. Kliknutím na objekt dojde k jeho výběru. Podržením klávesy Shift lze přidat další objekty do výběru nebo táhnout obdélník kolem více objektů. Po výběru je možné objekty přesunout nebo smazat. Tlačítko 'Vybrat vše' vybere všechny objekty, 'Zrušit výběr' zruší aktuální výběr a 'Smazat vybrané objekty' odstraní vybrané položky z plátna.",
+    "explain": "Vyberte jeden nebo více objektů přidaných do obrázku. Klikněte na objekt pro jeho výběr, podržte Shift pro přidání dalších objektů do výběru nebo tažením vytvořte obdélníkový výběr pro více objektů najednou. Vybrané objekty lze přesouvat nebo odstranit.",
     "shortcut": "V",
     "settings": {
       "general": {
@@ -182,78 +173,71 @@
           "text": "Zrušit výběr"
         },
         "deleteSelectedButton": {
-          "text": "Smazat vybrané objekty"
+          "text": "Odstranit vybrané"
         }
       }
     }
   },
   "transform": {
     "label": "Transformace",
-    "tip": "Aplikuje otáčení, zrcadlení nebo změnu velikosti obrázku",
+    "tip": "Otočí, převrátí nebo změní velikost obrázku",
     "tipDisabled": "",
     "shortcut": "",
     "subTools": {
       "rotate": {
-        "label": "Otočit",
-        "tip": "Aplikuje otáčení na obrázek",
-        "explain": "Nástroj Rotace umožňuje otáčení obrázku po 90° krocích. Tlačítka pro rotaci vlevo nebo vpravo otáčejí obrázek po nebo proti směru hodinových ručiček.",
+        "label": "Otočení",
+        "tip": "Otočí obrázek",
+        "explain": "Otočí obrázek po krocích 90° pomocí tlačítek pro otočení doleva nebo doprava.",
         "shortcut": "R"
       },
       "flip": {
-        "label": "Překlopit",
-        "tip": "Aplikuje horizontální nebo vertikální překlopení obrázku",
-        "explain": "Nástroj Překlopit umožňuje aplikovat horizontální nebo vertikální překlopení obrázku. Tlačítka Použít potvrzují překlopení.",
+        "label": "Převrácení",
+        "tip": "Převrátí obrázek horizontálně nebo vertikálně",
+        "explain": "Převrátí obrázek horizontálně nebo vertikálně.",
         "shortcut": "F"
       },
       "resize": {
-        "label": "Změnit velikost",
+        "label": "Změna velikosti",
         "tip": "Změní rozměry obrázku",
-        "explain": "Nástroj Změnit velikost umožňuje měnit rozměry obrázku. Lze zachovat poměr stran nebo resetovat rozměry na původní velikost.",
+        "explain": "Změní rozměry obrázku úpravou šířky a výšky. Poměr stran lze uzamknout nebo obnovit na původní velikost.",
         "shortcut": "Shift + R"
       }
     },
     "settings": {
       "rotate": {
-        "label": "Rotace",
+        "label": "Otočení",
         "rotateLeft": "Otočit doleva",
         "rotateRight": "Otočit doprava",
-        "freeRotation": "Volná rotace",
-        "tip": "Uprav úhel rotace nebo dvakrát klikni pro resetování rotace",
         "resetRotationButton": {
-          "text": "Resetovat rotaci"
+          "text": "Obnovit otáčení"
         },
         "applyRotationButton": {
-          "text": "Použít rotaci"
+          "text": "Použít otočení"
         }
       },
       "flip": {
-        "label": "Překlopit",
-        "horizontal": "Překlopit horizontálně",
-        "vertical": "Překlopit vertikálně",
+        "label": "Převrácení",
+        "horizontal": "Převrátit horizontálně",
+        "vertical": "Převrátit vertikálně",
         "applyFlipButton": {
-          "text": "Použít překlopení"
+          "text": "Použít převrácení"
         }
       },
       "resize": {
-        "label": "Změnit velikost",
+        "label": "Změna velikosti",
         "resizeDimensions": {
           "title": "Rozměry obrázku",
           "width": "Šířka",
           "height": "Výška",
-          "tipLinked": "Odpojit šířku a výšku",
-          "tipUnlinked": "Propojit šířku a výšku"
+          "tipLinked": "Odemknout šířku a výšku",
+          "tipUnlinked": "Uzamknout šířku a výšku"
         },
-        "invalidResizeDimensions": {
-          "title": "Neplatné rozměry pro změnu velikosti",
-          "message": "Rozměry pro změnu velikosti musí být větší než 0"
-        },
-        "resetResizeButton":{
-          "text": "Resetovat změnu velikosti",
-          "tip": "Resetuje rozměry změny velikosti na původní rozměry obrázku"
+        "resetResizeButton": {
+          "text": "Obnovit rozměry",
+          "tip": "Obnoví původní rozměry obrázku"
         },
         "applyResizeButton": {
-          "text": "Aplikovat změnu",
-          "tip": "Aplikuje aktuální rozměry změny velikosti na obrázek"
+          "text": "Použít změnu velikosti"
         }
       }
     }

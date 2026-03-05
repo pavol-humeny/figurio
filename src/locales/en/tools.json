@@ -1,79 +1,79 @@
 {
   "imageAnalysis": {
-    "label": "Image Analysis",
-    "tip": "Tools for image analysis",
+    "label": "Noise Analysis",
+    "tip": "Detect and remove noise in the image",
     "tipDisabled": "",
-    "explain": "The Image Analysis tool provides a set of utilities for examining image characteristics and visual properties.",
+    "explain": "This tool analyzes the image to detect noise and visual artifacts, and provides options for correcting them.",
     "shortcut": "A",
     "settings": {
-      "noiseDetection":{
+      "noiseDetection": {
         "title": "Noise Detection",
         "noiseDetectionButton": {
           "text": "Analyze Noise",
-          "tip": "Analyzes the image and highlights areas with high noise or artifacts."
+          "tip": "Analyze the image and highlight areas containing noise or compression artifacts."
         },
         "noNoiseDetected": {
           "title": "No significant noise detected",
-          "message": "The image appears to be clean with no significant noise or artifacts detected."
+          "message": "No noticeable noise or artifacts were detected in the image."
         },
         "removeNoiseButton": {
           "text": "Remove Noise",
-          "tip": "Removes detected noise from the image to improve its quality."
+          "tip": "Remove detected noise to improve image clarity."
         },
         "sensitivity": {
           "label": "Sensitivity",
-          "tip": "Adjust the sensitivity of noise detection. Higher values will detect more noise, while lower values will detect only small amounts of noise."
+          "tip": "Adjust detection sensitivity. Higher values detect more noise, while lower values detect only stronger noise."
         }
       }
     }
   },
-  "backgroundRemoval":{
-    "label": "Background removal",
-    "tip": "Removes the background from the image",
+  "backgroundRemoval": {
+    "label": "Background Removal",
+    "tip": "Remove the background from the image",
     "tipDisabled": "",
     "shortcut": "Shift + M",
     "subTools": {
       "color": {
         "label": "Color",
-        "tip": "Removes a specific color from the image",
-        "explain": "The Color tool allows removing a specific color from the image. Pick a color and adjust the sensitivity value. Low values remove only exact matches, high values also remove similar shades.",
+        "tip": "Remove a specific color from the image",
+        "explain": "Select a reference color in the image and adjust the sensitivity. Lower values remove only exact matches, while higher values also remove similar shades.",
         "shortcut": ""
       },
       "manual": {
         "label": "Manual",
-        "tip": "Remove manually selected parts of the image",
-        "explain": "The Manual tool allows removing parts of the image by drawing over them. Adjust the brush size to control the area being removed.",
+        "tip": "Remove areas manually by drawing over the image",
+        "explain": "Manually mark areas to remove by drawing over the image. The tool size determines how large the removed area will be.",
         "shortcut": ""
       },
       "auto": {
         "label": "Automatic",
-        "tip": "Automatically selects similar areas in the image",
-        "explain": "The Automatic background removal tool detects color-similar areas in the image and removes them.",
+        "tip": "Automatically detect and remove similar areas",
+        "explain": "Automatically detect regions with similar pixels in the image and select them for background removal.",
         "shortcut": ""
       }
     },
     "settings": {
       "color": {
         "label": "Color",
-        "replaceSelection":{
+        "replaceSelection": {
           "label": "Replace selection",
-          "tip": "Replace current selection with new selection"
+          "tip": "Replace the current selection with a new one or add to the existing selection"
         },
         "backgroundColor": {
           "label": "Color to remove",
-          "tip": "Pick the reference color to remove from the image."
+          "tip": "Pick the reference color to remove from the image"
         },
         "removalSensitivity": {
           "label": "Sensitivity",
-          "tip": "Adjust how similar a pixel's color must be to the selected color to be removed. Low for only exact matches, high for also similar shades."
+          "tip": "Adjust how similar a pixel must be to the selected color to be removed. Low values remove only exact matches, high values also remove similar shades."
         },
         "selectColorButton": {
           "text": "Select color",
-          "tip": "Select selected color from image"
+          "tip": "Pick the reference color directly from the image"
         },
         "removeButton": {
           "text": "Remove selection"
-        }, 
+        },
         "replaceWithColor": {
           "text": "Replace with color"
         },
@@ -95,19 +95,19 @@
         },
         "toolSize": {
           "label": "Tool size",
-          "tip": "Adjust the size of the selected tool"
+          "tip": ""
         },
         "clearAllButton": {
           "text": "Clear selection",
-          "tip": "Clear selected area"
+          "tip": "Clear the current selection"
         },
         "edgeSoftness": {
           "label": "Soft edge radius",
-          "tip": "Adjust the radius of the soft edge to create a smoother transition between the removed and remaining areas. A higher value results in a more gradual fade effect."
+          "tip": "Adjust the softness of the selection edge to create smoother transitions between removed and remaining areas."
         },
         "boundaryOffset": {
           "label": "Boundary shift",
-          "tip": "Expand or shrink the boundary of the removed area. Positive values expand the removed area outward, while negative values shrink it inward."
+          "tip": "Expand or shrink the selection boundary. Positive values expand the removed area, negative values shrink it."
         },
         "invertSelectionButton": {
           "text": "Invert selection",
@@ -115,23 +115,23 @@
         },
         "selectRemovedButton": {
           "text": "Select removed",
-          "tip": "Select the removed part of the image"
+          "tip": "Select the removed area of the image"
         },
-        "useBaseImage":{
+        "useBaseImage": {
           "label": "Use base image",
-          "tip": "Remove selection from the original base image or from the current modified image"
+          "tip": "Apply removal to the original image instead of the currently modified image"
         },
         "replaceBackgroundColor": {
           "label": "Replace selection with color",
-          "tip": "Replace selection with selected color instead of making it transparent"
+          "tip": "Fill the selected area with a color instead of making it transparent"
         },
         "backgroundReplacementColor": {
           "label": "Replacement color",
-          "tip": "Select the color to use for replacing the removed area"
+          "tip": "Choose the color used to replace the removed area"
         },
         "removeButton": {
           "text": "Remove selection"
-        }, 
+        },
         "replaceWithColor": {
           "text": "Replace with color"
         },
@@ -142,23 +142,14 @@
       },
       "auto": {
         "label": "Automatic",
-        "replaceSelection":{
-          "label": "Replace selection",
-          "tip": "Replace current selection with new selection"
-        },
-        "detectButton": {
-          "text": "Detect objects",
-          "tip": "Detect objects in the image"
-        },
         "removeButton": {
           "text": "Remove selection"
-        }, 
+        },
         "replaceWithColor": {
           "text": "Replace with color"
         },
         "autoRemovalSensitivity": {
-          "label": "Auto removal sensitivity",
-          "tip": "Adjust how similar a pixel's color must be to the selected color to be removed when clicking on the image. Low for only exact matches, high for also similar shades."
+          "tip": "Adjust how similar pixels must be to the selected pixel to be included in the automatic selection."
         },
         "highlightColor": {
           "label": "Highlight color",
@@ -169,9 +160,9 @@
   },
   "select": {
     "label": "Select",
-    "tip": "Selects objects on the image",
+    "tip": "Select and manage objects on the image",
     "tipDisabled": "",
-    "explain": "The Select tool allows picking one or multiple objects that were added to image. Click on an object to select it. Hold Shift to add more objects to the selection, or drag a rectangle around multiple objects. After selecting, objects can be moved or deleted. Use the 'Select all' button to select everything, 'Deselect all' to clear the selection, and 'Delete selected objects' to remove the selected items from the canvas.",
+    "explain": "Select one or multiple objects placed on the image. Click an object to select it, hold Shift to add more objects to the selection, or drag a rectangle to select multiple objects at once. Selected objects can be moved or deleted.",
     "shortcut": "V",
     "settings": {
       "general": {
@@ -182,33 +173,33 @@
           "text": "Deselect all"
         },
         "deleteSelectedButton": {
-          "text": "Delete selected objects"
+          "text": "Delete selected"
         }
       }
     }
   },
   "transform": {
     "label": "Transform",
-    "tip": "Applies rotation, flipping or resizing to the image",
+    "tip": "Rotate, flip, or resize the image",
     "tipDisabled": "",
     "shortcut": "",
     "subTools": {
       "rotate": {
         "label": "Rotate",
-        "tip": "Applies rotation to the image",
-        "explain": "The Rotate tool allows rotation of the image in 90° steps. The left and right rotate buttons rotate the image clockwise or counterclockwise.",
+        "tip": "Rotate the image",
+        "explain": "Rotate the image in 90° steps using the left and right rotation buttons.",
         "shortcut": "R"
       },
       "flip": {
         "label": "Flip",
-        "tip": "Applies horizontal or vertical flipping to the image",
-        "explain": "The Flip tool allows applying a horizontal or vertical flip to the image. The Apply buttons confirm the flip.",
+        "tip": "Flip the image horizontally or vertically",
+        "explain": "Flip the image horizontally or vertically.",
         "shortcut": "F"
       },
       "resize": {
         "label": "Resize",
-        "tip": "Changes the dimensions of the image",
-        "explain": "The Resize tool changes the image dimensions. The aspect ratio can be maintained, or the dimensions reset to the original size.",
+        "tip": "Change the image dimensions",
+        "explain": "Resize the image by adjusting its width and height. The aspect ratio can be locked to maintain proportions or reset to the original dimensions.",
         "shortcut": "Shift + R"
       }
     },
@@ -217,11 +208,6 @@
         "label": "Rotation",
         "rotateLeft": "Rotate left",
         "rotateRight": "Rotate right",
-        "freeRotation": "Free rotation",
-        "tip": "Adjust the rotation angle or double click to reset rotation",
-        "resetRotationButton": {
-          "text": "Reset rotation"
-        },
         "applyRotationButton": {
           "text": "Apply rotation"
         }
@@ -240,20 +226,15 @@
           "title": "Resize dimensions",
           "width": "Width",
           "height": "Height",
-          "tipLinked": "Unlink width and height",
-          "tipUnlinked": "Link width and height"
+          "tipLinked": "Unlock width and height",
+          "tipUnlinked": "Lock width and height"
         },
-        "invalidResizeDimensions": {
-          "title": "Invalid resize dimensions",
-          "message": "Resize dimensions must be greater than 0"
-        },
-        "resetResizeButton":{
+        "resetResizeButton": {
           "text": "Reset resize",
-          "tip": "Resets the resize dimensions to the original image dimensions"
+          "tip": "Restore the original image dimensions"
         },
-        "applyResizeButton":{
-          "text": "Apply resize",
-          "tip": "Applies the resize to the image"
+        "applyResizeButton": {
+          "text": "Apply resize"
         }
       }
     }
