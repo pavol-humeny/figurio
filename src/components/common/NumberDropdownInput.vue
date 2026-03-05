@@ -62,7 +62,15 @@
     background: {
       type: String,
       default: 'var(--secondary-c)'
-    }
+    },
+    onReset: {
+      type: Function,
+      default: null,
+    },
+    unit: {
+      type: String,
+      default: '',
+    },
   })
 
   /**
@@ -85,7 +93,10 @@
     wrapperRef,
     dropdownRef,
     dropdownStyle,
-    dropdownReady
+    dropdownReady,
+    onIconDoubleClick,
+    showIcon,
+    showUnit,
   } = useNumberDropdownInput(props, emit, useUiStore())
 
   /**
@@ -93,16 +104,28 @@
    * @type {{ setValue: (val: string) => void }}
    */
   defineExpose({ setValue })
+
+  console.warn(showIcon, showUnit)
 </script>
 
 <template>
   <ItemTip :text="!showDropdown ? props.tip : ''" :position="props.position">
-    <div class="number-dropdown-wrapper" ref="wrapperRef">
-      <BaseIcon v-if="props.icon" :name="props.icon" :size="props.size" :color="props.color" class="input-icon" />
-
+    <div class="number-dropdown-wrapper" ref="wrapperRef" :style="{
+      '--wrapper-width': (showUnit || showIcon) ? (showIcon && showUnit) ? '120px' : '100px' : '80px',
+    }">
       <input ref="inputRef" class="text-input" type="number" :disabled="props.disabled" :min="props.min"
         :max="props.max" :step="props.step" v-model="inputValue" @input="onInput" @blur="onCommit"
-        @keydown.enter="onCommit" :style="{ background: props.background }" />
+        @keydown.enter="onCommit" :style="{
+          background: props.background, paddingLeft: showIcon ? '30px' : '10px',
+          paddingRight: showUnit ? '50px' : '30px',
+        }" />
+
+      <BaseIcon v-if="props.icon" :name="props.icon" :size="props.size" :color="props.color" class="input-icon"
+        @dblclick="onIconDoubleClick" :style="{ top: props.iconTop + '%' }" />
+
+      <span v-if="showUnit" class="input-unit" :class="{ disabled: props.disabled }">{{
+        props.unit
+      }}</span>
 
       <BaseIcon name="IconDropDown" class="dropdown-icon" size="12" color="var(--primary-c)"
         :style="{ transform: showDropdown ? 'rotate(180deg) translateY(4px)' : 'rotate(0deg)' }"
@@ -126,7 +149,7 @@
 .number-dropdown-wrapper {
   position: relative;
   display: inline-block;
-  width: 80px;
+  min-width: var(--wrapper-width);
   height: 27px;
 }
 
@@ -151,7 +174,7 @@
   left: 8px;
   top: 50%;
   transform: translateY(-50%);
-  pointer-events: none;
+  pointer-events: auto;
 }
 
 .dropdown-icon {
@@ -187,5 +210,15 @@
 
 .dropdown-options-teleported li:hover {
   color: var(--primary-c);
+}
+
+.input-unit {
+  position: absolute;
+  right: 26px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 13px;
+  pointer-events: none;
+  color: var(--text-placeholder-c);
 }
 </style>

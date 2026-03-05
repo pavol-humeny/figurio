@@ -44,6 +44,15 @@ export function useNumberDropdownInput(props, emit, uiStore) {
   const inputRef = ref(null)
 
   /**
+   * Whether the icon should be shown
+   */
+  const showIcon = props.icon !== ''
+  /**
+   * Whether the unit label should be shown
+   */
+  const showUnit = props.unit !== ''
+
+  /**
    * Number of decimal places for rounding
    */
   const decimals = computed(() => {
@@ -255,6 +264,16 @@ export function useNumberDropdownInput(props, emit, uiStore) {
   }
 
   /**
+   * Emits reset action when icon is double-clicked
+   */
+  const onIconDoubleClick = () => {
+    if (props.disabled) return
+    if (typeof props.onReset === 'function') {
+      props.onReset()
+    }
+  }
+
+  /**
    * Attach scroll and resize listeners
    */
   onMounted(() => {
@@ -283,5 +302,8 @@ export function useNumberDropdownInput(props, emit, uiStore) {
     dropdownRef,
     dropdownStyle,
     dropdownReady,
+    onIconDoubleClick,
+    showIcon,
+    showUnit,
   }
 }

@@ -4,10 +4,11 @@ import { useZoomControl } from '@/composables/topPanel/useZoomControl'
 import { useViewportStore } from '@/stores/viewportStore'
 import { useImageStore } from '@/stores/imageStore'
 import ItemTip from '@/components/common/ItemTip.vue'
-import NumberInput from '../common/NumberInput.vue'
+// import NumberInput from '../common/NumberInput.vue'
 import DefaultButton from '../common/DefaultButton.vue'
 import { useCalibrationModal } from '@/composables/modals/useCalibrationModal.js'
 import { useI18n } from 'vue-i18n'
+import NumberDropdownInput from '../common/NumberDropdownInput.vue'
 
 const { t } = useI18n()
 const imageStore = useImageStore()
@@ -39,6 +40,7 @@ const {
   startHold,
   stopHold,
   handleClickOrHold,
+  physicalContentSizeOptions
 } = useZoomControl(useViewportStore(), useImageStore(), t)
 </script>
 
@@ -104,9 +106,14 @@ const {
       </ItemTip>
     </div>
 
-    <NumberInput v-if="viewportStore.zoomMode === 'physical'" v-model="physicalContentSize"
+    <!-- <NumberInput v-if="viewportStore.zoomMode === 'physical'" v-model="physicalContentSize"
       @update="setNewPhysicalContentSize" unit="cm" :min="1" :max="maxPhysicalContentSize" :step="0.1"
       icon="IconPhysicalContentSize" color="var(--primary-c)" :onReset="resetPhysicalContentSize"
+      :tip="$t('topPanel.zoomControl.tip.physicalContentSize.tip')" /> -->
+
+    <NumberDropdownInput v-if="viewportStore.zoomMode === 'physical'" v-model="physicalContentSize"
+      :options="physicalContentSizeOptions" @update="setNewPhysicalContentSize" unit="cm" :min="1"
+      :max="maxPhysicalContentSize" :step="0.1" color="var(--primary-c)" :onReset="resetPhysicalContentSize"
       :tip="$t('topPanel.zoomControl.tip.physicalContentSize.tip')" />
 
     <DefaultButton v-if="viewportStore.zoomMode === 'physical'" @click="openCalibrationModal"
