@@ -70,6 +70,11 @@ export function useZoomControl(viewportStore, imageStore, t) {
   const physicalContentSize = ref(viewportStore.physicalContentSize)
 
   /**
+   * Predefined physical content size options in cm for quick selection
+   */
+  const physicalContentSizeOptions = [7.4, 10.5, 14.8, 21, 29.7, 42, 59.4, 84, 118.9]
+
+  /**
    * Increase zoom level
    *
    * @param {number} zoomDiff - Amount to increase zoom by
@@ -288,5 +293,6 @@ export function useZoomControl(viewportStore, imageStore, t) {
     startHold,
     stopHold,
     handleClickOrHold,
+    physicalContentSizeOptions,
   }
 }
