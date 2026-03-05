@@ -617,6 +617,7 @@ export const useImageStore = defineStore('imageStore', {
       this.fileType = ''
       this.fileFormat = ''
       this.showPdfAsImage = false
+      this.fileName = ''
 
       // PDF
       this.pdfPage = null

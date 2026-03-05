@@ -1,35 +1,23 @@
 {
   "fileNameDisplay": {
-    "tip": "Upravuje název aktuálně otevřeného souboru",
-    "tipDisabled": "Není otevřen žádný soubor"
+    "tip": "Upravit název souboru",
+    "tipDisabled": ""
   },
   "uploadFileButton": {
-    "tip": "Nahrává nový soubor",
-    "confirm": {
-      "title": "Potvrdit nahrání souboru",
-      "message": "Opravdu chcete nahrát nový soubor? Tím nahradíte aktuální soubor",
-      "cancel": "Zrušit",
-      "confirm": "Nahrát"
-    }
+    "tip": "Nahrát soubor"
   },
   "closeFileButton": {
-    "tip": "Zavřít aktuálně otevřený soubor",
-    "tipMultiple": "Zavřít aktuálně otevřené soubory",
-    "toast": {
-      "success": {
-        "title": "Soubor zavřen",
-        "message": "Soubor byl úspěšně zavřen"
-      }
-    },
+    "tip": "Zavřít soubor",
+    "tipMultiple": "Zavřít soubory",
     "confirm": {
-      "title": "Potvrdit zavření souboru",
-      "message": "Opravdu chcete zavřít aktuální soubor? Neuložené změny budou ztraceny.",
+      "title": "Potvrzení zavření souboru",
+      "message": "Opravdu chcete zavřít aktuální soubor? Neuložené změny budou ztraceny",
       "cancel": "Ne",
       "confirm": "Ano, zavřít"
     },
     "confirmMultiple": {
-      "title": "Potvrdit zavření souborů",
-      "message": "Opravdu chcete zavřít soubor? Neuložené změny budou ztraceny.",
+      "title": "Potvrzení zavření souboru",
+      "message": "Opravdu chcete zavřít soubor? Neuložené změny budou ztraceny",
       "closeAll": "Zavřít všechny soubory",
       "cancel": "Zrušit",
       "confirm": "Ano, zavřít"
@@ -37,44 +25,44 @@
   },
   "undoRedo": {
     "tip": {
-      "undo": "Vrací poslední akci zpět",
-      "redo": "Opakuje poslední akci"
+      "undo": "Zpět",
+      "redo": "Opakovat"
     }
   },
   "zoomControl": {
     "tip": {
-      "zoomIn": "Přibližuje plátno",
-      "zoomOut": "Oddaluje plátno",
-      "setZoom": "Nastav úroveň přiblížení",
-      "resetZoom": "Obnoví úroveň přiblížení na 100% a centruje obrázek",
+      "zoomIn": "Přiblížit",
+      "zoomOut": "Oddálit",
+      "setZoom": "Nastavit přiblížení",
+      "resetZoom": "Obnovit přiblížení a pozici",
       "classicMode": {
         "title": "Klasický režim přiblížení",
-        "text": "V tomto režimu znamená 100% přiblížení, že se celý obrázek vejde do viditelné oblasti bez ořezu.",
+        "text": "Při přiblížení 100 % se celý obrázek vejde do pracovní plochy. Úroveň přiblížení závisí pouze na viditelné oblasti editoru.",
         "shortcut": "Alt + C"
       },
       "physicalMode": {
-        "title": "Režim reálného přiblížení",
-        "text": "V tomto režimu 100 % zobrazuje obrázek ve své reálné fyzické velikosti na obrazovce — například 10 cm na monitoru odpovídá 10 cm ve skutečnosti. Pro přesné měřítko použijte kalibraci monitoru.",
+        "title": "Fyzický režim přiblížení",
+        "text": "Přiblížení 100 % představuje skutečnou fyzickou velikost obrázku na obrazovce. Například 10 cm v obrázku odpovídá 10 cm na monitoru. Pro přesné měřítko může být potřeba kalibrace.",
         "shortcut": "Alt + P"
       },
       "physicalContentSize": {
-        "tip": "Nastav požadovanou skutečnou šířku v centimetrech. Dvojitým kliknutím na ikonu obnovíš výchozí hodnotu."
+        "tip": "Nastavte skutečnou šířku obrázku při přiblížení 100 % v centimetrech"
       },
       "calibrateButton": {
         "text": "Kalibrovat",
-        "tip": "Spusť kalibraci, aby se zobrazené rozměry shodovaly se skutečnými centimetry."
+        "tip": "Kalibrujte obrazovku tak, aby rozměry na obrazovce odpovídaly skutečným rozměrům"
       }
     },
     "needCalibration": {
-      "title": "Kalibrace potřebná",
-      "message": "Pro přesné fyzické přiblížení prosím kalibrujte svůj monitor."
+      "title": "Je vyžadována kalibrace",
+      "message": "Pro přesné použití fyzického přiblížení nejprve kalibrujte obrazovku"
     }
   },
   "helpButton": {
-    "tip": "Zobrazí nebo skryje nápovědu"
+    "tip": "Nápověda"
   },
   "settingsButton": {
-    "tip": "Otevře nebo zavře panel nastavení"
+    "tip": "Nastavení"
   },
   "settingsPanel": {
     "title": "Nastavení",
@@ -86,42 +74,42 @@
       "tip": ""
     },
     "theme": {
-      "label": "Přepnout na světlý režim",
+      "label": "Motiv",
       "button": {
-        "tip": "Přepínání mezi světlým a tmavým režimem"
+        "tip": ""
       }
     },
     "enableShortcuts": {
       "label": "Klávesové zkratky",
       "button": {
-        "tip": "Přepíná klávesové zkratky"
+        "tip": ""
       }
     },
     "enableRulers": {
       "label": "Pravítka",
       "button": {
-        "tip": "Přepíná viditelnost pravítek"
+        "tip": ""
       }
     },
     "resetSidebarWidth": {
-      "label": "Obnovit postranní panel",
+      "label": "Resetovat boční panel",
       "button": {
-        "text": "Obnovit",
-        "tip": "Obnoví výchozí rozměry postranního panelu"
+        "text": "Resetovat",
+        "tip": "Obnoví výchozí velikost bočního panelu"
       }
     },
     "openPrivacyAndData": {
-      "label": "Ochrana soukromí a data",
+      "label": "Ochrana soukromí a zpracování dat",
       "button": {
         "text": "Otevřít",
-        "tip": "Zobrazí a spravuje nastavení ochrany soukromí a dat"
+        "tip": ""
       }
     },
     "closeButton": {
       "text": "Zavřít",
-      "tip": "Zavře panel nastavení"
+      "tip": ""
     },
-    "appVersion":{
+    "appVersion": {
       "label": "Verze aplikace"
     }
   }

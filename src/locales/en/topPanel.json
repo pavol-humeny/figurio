@@ -1,35 +1,23 @@
 {
   "fileNameDisplay": {
-    "tip": "Edits the name of the currently opened file",
-    "tipDisabled": "No file is currently opened"
+    "tip": "Edit file name",
+    "tipDisabled": ""
   },
   "uploadFileButton": {
-    "tip": "Uploads a new file",
-    "confirm": {
-      "title": "Confirm file upload",
-      "message": "Are you sure you want to upload a new file? This will replace the current file.",
-      "cancel": "Cancel",
-      "confirm": "Upload"
-    }
+    "tip": "Upload file"
   },
   "closeFileButton": {
-    "tip": "Closes the currently opened file",
-    "tipMultiple": "Closes the currently opened files",
-    "toast": {
-      "success": {
-        "title": "File closed",
-        "message": "The file has been successfully closed."
-      }
-    },
+    "tip": "Close file",
+    "tipMultiple": "Close files",
     "confirm": {
       "title": "Confirm file closure",
-      "message": "Are you sure you want to close the current file? Any unsaved changes will be lost.",
+      "message": "Are you sure you want to close the current file? Any unsaved changes will be lost",
       "cancel": "No",
       "confirm": "Yes, close"
     },
     "confirmMultiple": {
       "title": "Confirm file closure",
-      "message": "Are you sure you want to close file? Any unsaved changes will be lost.",
+      "message": "Are you sure you want to close file? Any unsaved changes will be lost",
       "closeAll": "Close all files",
       "cancel": "Cancel",
       "confirm": "Yes, close"
@@ -37,44 +25,44 @@
   },
   "undoRedo": {
     "tip": {
-      "undo": "Undoes the last action",
-      "redo": "Redoes the last action"
+      "undo": "Undo",
+      "redo": "Redo"
     }
   },
   "zoomControl": {
     "tip": {
-      "zoomIn": "Zooms in on the canvas",
-      "zoomOut": "Zooms out from the canvas",
-      "setZoom": "Sets zoom level",
-      "resetZoom": "Resets the zoom level to 100% and center image",
+      "zoomIn": "Zoom in",
+      "zoomOut": "Zoom out",
+      "setZoom": "Set zoom level",
+      "resetZoom": "Reset zoom level and position",
       "classicMode": {
         "title": "Classic Zoom Mode",
-        "text": "In this mode, 100% zoom means the entire image fits within the visible area without cropping.",
+        "text": "100% zoom means the entire image fits inside the workspace. The zoom level depends only on the visible area of the editor.",
         "shortcut": "Alt + C"
       },
       "physicalMode": {
         "title": "Physical Zoom Mode",
-        "text": "In this mode, 100% zoom represents the real physical size of the image on your screen — for example, 10 cm on screen equals 10 cm in reality. Use calibration to ensure accurate scaling on your monitor.",
+        "text": "100% zoom represents the real physical size of the image on your screen. For example, 10 cm in the image corresponds to 10 cm on your monitor. Calibration may be required for accurate scaling.",
         "shortcut": "Alt + P"
       },
       "physicalContentSize": {
-        "tip": "Set the desired real-world width in centimeters. Double-click the icon to reset to default."
+        "tip": "Set the real-world image width at 100% zoom in centimeters"
       },
       "calibrateButton": {
         "text": "Calibrate",
-        "tip": "Start calibration to match on-screen measurements with real-world centimeters."
+        "tip": "Calibrate your screen to match on-screen measurements with real-world dimensions"
       }
     },
     "needCalibration": {
-      "title": "Calibration Needed",
-      "message": "To ensure accurate physical zoom, please calibrate your monitor."
+      "title": "Calibration required",
+      "message": "To use physical zoom accurately, please calibrate your screen first"
     }
   },
   "helpButton": {
-    "tip": "Shows or hides the help overlay"
+    "tip": "Help"
   },
   "settingsButton": {
-    "tip": "Opens or closes the settings panel"
+    "tip": "Settings"
   },
   "settingsPanel": {
     "title": "Settings",
@@ -86,40 +74,40 @@
       "tip": ""
     },
     "theme": {
-      "label": "Switch to light mode",
+      "label": "Theme",
       "button": {
-        "tip": "Toggles between light and dark mode"
+        "tip": ""
       }
     },
     "enableShortcuts": {
-      "label": "Key shortcuts",
+      "label": "Keyboard shortcuts",
       "button": {
-        "tip": "Toggles key shortcuts"
+        "tip": ""
       }
     },
     "enableRulers": {
       "label": "Rulers",
       "button": {
-        "tip": "Toggles ruler visibility"
+        "tip": ""
       }
     },
     "resetSidebarWidth": {
       "label": "Reset side panel",
       "button": {
         "text": "Reset",
-        "tip": "Restores default side panel"
+        "tip": "Restores default side panel size"
       }
     },
     "openPrivacyAndData": {
       "label": "Privacy & Data Policy",
       "button": {
         "text": "Open",
-        "tip": "Opens privacy and data settings"
+        "tip": ""
       }
     },
     "closeButton": {
       "text": "Close",
-      "tip": "Closes the settings panel"
+      "tip": ""
     },
     "appVersion":{
       "label": "App Version"

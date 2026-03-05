@@ -43,7 +43,7 @@
 ├── release.json
 ├── DONE - statistics.json
 ├── tools.json
-├── topPanel.json
+├── DONE - topPanel.json
 └── tutorialSteps.json
 
 ## Dlhodobé TODO 
