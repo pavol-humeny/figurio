@@ -41,7 +41,7 @@
 ├── DONE - maintenance.json
 ├── DONE - privacy.json
 ├── release.json
-├── statistics.json
+├── DONE - statistics.json
 ├── tools.json
 ├── topPanel.json
 └── tutorialSteps.json

@@ -3,66 +3,66 @@
     "buttonText":{
       "text": "Visits"
     },
-    "allVisits": "All Visits",
-    "uniqueVisits": "Unique Visits",
-    "countryVisits": "Visits by Country",
-    "lastDaysVisits": {
-      "title": "Visits in the Last Days",
-      "allVisits": "All Visits",
-      "uniqueVisits": "Unique Visits"
+    "allVisits": "All visits",
+    "uniqueVisits": "Unique visits",
+    "countryVisits": "Visits by country",
+    "visitsPerDay": {
+      "title": "Visits per day",
+      "allVisits": "All visits",
+      "uniqueVisits": "Unique visits"
     },
     "fullRange":{
-      "title": "Visits Over All Days",
-      "allVisits": "All Visits",
-      "uniqueVisits": "Unique Visits"
+      "title": "Visits over all days",
+      "allVisits": "All visits",
+      "uniqueVisits": "Unique visits"
     },
-    "allDaysVisits": "Visits Over All Days",
+    "allDaysVisits": "Visits over all days",
     "table": {
       "from": "From",
       "to": "To",
       "reset": "Reset",
       "date": "Date",
-      "allVisits": "All Visits",
-      "uniqueVisits": "Unique Visits"
+      "allVisits": "All visits",
+      "uniqueVisits": "Unique visits"
     }
   },
   "events": {
     "buttonText": {
       "text": "Events"
     },
-    "totalEvents": "Total Events",
+    "totalEvents": "Total events",
     "overview": {
-      "title": "Events Overview",
-      "totalEvents": "Total Events",
+      "title": "Events overview",
+      "totalEvents": "Total events",
       "numberOfUploads": "Uploads",
       "numberOfExport": "Exports",
       "numberOfUseTool": "Operations",
-      "numberOfKeyboardShortcuts": "Keyboard Shortcut"
+      "numberOfKeyboardShortcuts": "Keyboard shortcut"
     },
     "singleEvent":{
       "toggleTool": {
-        "title": "Toggle Tool",
-        "totalEvents": "Total Toggles:"
+        "title": "Toggle tool",
+        "totalEvents": "Total toggles:"
       },
       "applyOperation": {
-        "title": "Apply Operation",
-        "totalEvents": "Total Applications:"
+        "title": "Apply operation",
+        "totalEvents": "Total applications:"
       },
       "uploadImage": {
-        "title": "Upload Image",
-        "totalEvents": "Total Uploads:"
+        "title": "Upload image",
+        "totalEvents": "Total uploads:"
       },
       "exportImage": {
-        "title": "Export Image",
-        "totalEvents": "Total Exports:"
+        "title": "Export image",
+        "totalEvents": "Total exports:"
       },
       "openModal": {
-        "title": "Open Modal",
-        "totalEvents": "Total Opens:"
+        "title": "Open modal",
+        "totalEvents": "Total opens:"
       },
       "keyboardShortcuts": {
-        "title": "Keyboard Shortcut",
-        "totalEvents": "Total Uses:"
+        "title": "Keyboard shortcut",
+        "totalEvents": "Total uses:"
       }
     }
   }

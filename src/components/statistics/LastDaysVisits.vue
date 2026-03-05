@@ -66,13 +66,13 @@ async function loadData() {
     labels,
     datasets: [
       {
-        label: t('statistics.visits.lastDaysVisits.allVisits'),
+        label: t('statistics.visits.visitsPerDay.allVisits'),
         data: visitsCache.map(v => v.allVisits),
         backgroundColor: totalColor,
         borderRadius: 4,
       },
       {
-        label: t('statistics.visits.lastDaysVisits.uniqueVisits'),
+        label: t('statistics.visits.visitsPerDay.uniqueVisits'),
         data: visitsCache.map(v => v.newUsers),
         backgroundColor: uniqueColor,
         borderRadius: 4,
@@ -108,7 +108,7 @@ watch(locale, () => {
 <template>
   <div class="visits-chart statistics-card">
     <div class="single-event-title" style="margin-bottom: 30px;">
-      {{ $t('statistics.visits.lastDaysVisits.title') }}
+      {{ $t('statistics.visits.visitsPerDay.title') }}
     </div>
 
     <div class="chart-scroll-wrapper" ref="scrollWrapper">

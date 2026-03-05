@@ -1,22 +1,22 @@
 {
-  "visits":{
-    "buttonText":{
+  "visits": {
+    "buttonText": {
       "text": "Návštěvy"
     },
-    "allVisits": "Počet návštěv",
-    "uniqueVisits": "Počet unikátních návštěv",
-    "countryVisits": "Návštěvy podle zemí",
-    "lastDaysVisits": {
-      "title": "Návštěvy za poslední dny",
+    "allVisits": "Všechny návštěvy",
+    "uniqueVisits": "Unikátní návštěvy",
+    "countryVisits": "Návštěvy podle země",
+    "visitsPerDay": {
+      "title": "Návštěvy za den",
       "allVisits": "Všechny návštěvy",
       "uniqueVisits": "Unikátní návštěvy"
     },
-    "fullRange":{
-      "title": "Návštěvy za všechny dny",
+    "fullRange": {
+      "title": "Návštěvy za celé období",
       "allVisits": "Všechny návštěvy",
       "uniqueVisits": "Unikátní návštěvy"
     },
-    "allDaysVisits": "Návštěvy za všechny dny",
+    "allDaysVisits": "Návštěvy za celé období",
     "table": {
       "from": "Od",
       "to": "Do",
@@ -28,41 +28,41 @@
   },
   "events": {
     "buttonText": {
-      "text": "Udalosti"
+      "text": "Události"
     },
-    "totalEvents": "Počet událostí",
+    "totalEvents": "Celkový počet událostí",
     "overview": {
       "title": "Přehled událostí",
-      "totalEvents": "Počet událostí",
+      "totalEvents": "Celkový počet událostí",
       "numberOfUploads": "Nahrání",
       "numberOfExport": "Exporty",
       "numberOfUseTool": "Operace",
       "numberOfKeyboardShortcuts": "Klávesové zkratky"
     },
-    "singleEvent":{
+    "singleEvent": {
       "toggleTool": {
         "title": "Přepnutí nástroje",
-        "totalEvents": "Celkem přepnutí:"
+        "totalEvents": "Celkový počet přepnutí:"
       },
       "applyOperation": {
         "title": "Použití operace",
-        "totalEvents": "Celkem použití:"
+        "totalEvents": "Celkový počet použití:"
       },
       "uploadImage": {
         "title": "Nahrání obrázku",
-        "totalEvents": "Celkem nahrání:"
+        "totalEvents": "Celkový počet nahrání:"
       },
       "exportImage": {
         "title": "Export obrázku",
-        "totalEvents": "Celkem exportů:"
+        "totalEvents": "Celkový počet exportů:"
       },
       "openModal": {
-        "title": "Otevření modálního okna",
-        "totalEvents": "Celkem otevření:"
+        "title": "Otevření okna",
+        "totalEvents": "Celkový počet otevření:"
       },
       "keyboardShortcuts": {
         "title": "Klávesová zkratka",
-        "totalEvents": "Celkem použití:"
+        "totalEvents": "Celkový počet použití:"
       }
     }
   }
