@@ -2,6 +2,7 @@ import { useI18n } from 'vue-i18n'
 import { globalConfig } from '@/config/globalConfig'
 import { useApi } from '@/composables/common/useApi'
 const { addUserEvent } = useApi()
+import { useToolsSettingsTabs } from '../toolsSettings/useToolsSettingsTabs'
 
 /**
  * Logic for switching and persisting application language
@@ -11,8 +12,9 @@ const { addUserEvent } = useApi()
  *   switchLanguage: (newLanguage: string) => void,
  * }}
  */
-export function useLanguageSwitch() {
+export function useLanguageSwitch(editorStore, uiStore) {
   const { locale } = useI18n()
+  const { recalculateSizeOfRightPanelToFitContent } = useToolsSettingsTabs(editorStore, uiStore, '')
 
   /**
    * Switch the language and save to localStorage
@@ -24,6 +26,8 @@ export function useLanguageSwitch() {
 
     locale.value = newLanguage
     localStorage.setItem(`${globalConfig.LOCAL_STORAGE_PREFIX}language`, newLanguage)
+
+    recalculateSizeOfRightPanelToFitContent()
   }
 
   return {

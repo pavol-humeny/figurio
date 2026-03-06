@@ -4,9 +4,18 @@
     "items": []
   },
   "versions":{
+    "5.15.0":{
+      "label": "5.15.0",
+      "date":"6.3. 2026",
+      "improvements": {
+        "items": [
+          "Recalculate size of right panel to fit content after switching language"
+        ]
+      }
+    },
     "5.14.0":{
       "label": "5.14.0",
-      "date":"28.2. 2025",
+      "date":"28.2. 2026",
       "improvements": {
         "items": [
           "Improved object movement snapping",
@@ -17,7 +26,7 @@
     },
     "5.13.0":{
       "label": "5.13.0",
-      "date":"27.2. 2025",
+      "date":"27.2. 2026",
       "newFeatures": {
         "items": [
           "Ruler units in physical zoom mode are displayed in centimeters",
@@ -32,7 +41,7 @@
     },
     "5.12.0":{
       "label": "5.12.0",
-      "date":"23.2. 2025",
+      "date":"23.2. 2026",
       "bugFixes": {
         "items": [
           "Fixed issue with select tool",
@@ -42,7 +51,7 @@
     },
     "5.11.0":{
       "label": "5.11.0",
-      "date":"13.2. 2025",
+      "date":"13.2. 2026",
       "bugFixes": {
         "items": [
           "Fixed issue with blur area tool",
@@ -53,7 +62,7 @@
     },
     "5.10.0":{
       "label": "5.10.0",
-      "date":"4.2. 2025",
+      "date":"4.2. 2026",
       "newFeatures": {
         "items": [
           "Noise removal tool for removing detected noise from the image",
@@ -69,7 +78,7 @@
     },
     "5.9.0":{
       "label": "5.9.0",
-      "date":"4.2. 2025",
+      "date":"4.2. 2026",
       "newFeatures": {
         "items": [
           "Add new tool - Pencil tool for drawing precise strokes"
@@ -90,7 +99,7 @@
     },
     "5.8.2":{
       "label": "5.8.2",
-      "date":"1.2. 2025",
+      "date":"1.2. 2026",
       "bugFixes": {
         "items": [
           "Fix issue with incorrect frame size when applying frame",
@@ -101,7 +110,7 @@
     },
     "5.8.1":{
       "label": "5.8.1",
-      "date":"30.1. 2025",
+      "date":"30.1. 2026",
       "improvements": {
         "items": [
           "Better noise detection to avoid false positives" 
@@ -110,7 +119,7 @@
     },
     "5.8.0":{
       "label": "5.8.0",
-      "date":"29.1. 2025",
+      "date":"29.1. 2026",
       "newFeatures": {
         "items": [
           "Add option to set phone frame orientation to portrait or landscape"
@@ -132,7 +141,7 @@
     },
     "5.7.0":{
       "label": "5.7.0",
-      "date":"28.1. 2025",
+      "date":"28.1. 2026",
       "newFeatures": {
         "items": [
           "New phone frame options - frame outline and icon size settings",
@@ -154,7 +163,7 @@
     },
     "5.6.1":{
       "label": "5.6.1",
-      "date":"25.1. 2025",
+      "date":"25.1. 2026",
       "improvements": {
         "items": [
           "Smaller size of battery in phone frames" 
@@ -163,7 +172,7 @@
     },
     "5.6.0":{
       "label": "5.6.0",
-      "date":"24.1. 2025",
+      "date":"24.1. 2026",
       "improvements": {
         "items": [
           "Recent colors are persistent between app reloads",
@@ -192,7 +201,7 @@
     },
     "5.5.0":{
       "label": "5.5.0",
-      "date":"23.1. 2025",
+      "date":"23.1. 2026",
       "improvements": {
         "items": [
           "Do not show toast about successful file name change - not necessary",
@@ -225,7 +234,7 @@
     },
     "5.4.0":{
       "label": "5.4.0",
-      "date":"17.1. 2025",
+      "date":"17.1. 2026",
       "improvements": {
         "items": [
           "Adjust text selection color based on the current theme (light or dark)",
@@ -252,7 +261,7 @@
     },
     "5.3.1":{
       "label": "5.3.1",
-      "date":"9.1. 2025",
+      "date":"9.1. 2026",
       "bugFixes": {
         "items": [
           "Fix issue with applying crop after rasterization" 
@@ -261,7 +270,7 @@
     },
     "5.3.0":{
       "label": "5.3.0",
-      "date":"8.1. 2025",
+      "date":"8.1. 2026",
       "newFeatures": {
         "items": [
           "New tool - Image analysis tool for detecting noise and artifacts in images" 
@@ -284,7 +293,7 @@
     },
     "5.2.1":{
       "label": "5.2.1",
-      "date":"4.1. 2025",
+      "date":"4.1. 2026",
       "bugFixes": {
         "items": [
           "Fix issue with cursor not showing correctly when using brush tool" 
@@ -293,7 +302,7 @@
     },
     "5.2.0":{
       "label": "5.2.0",
-      "date":"3.1. 2025",
+      "date":"3.1. 2026",
       "improvements": {
         "items": [
           "Number spinner input component used when selecting PDF page to import"
@@ -302,7 +311,7 @@
     },
     "5.1.2":{
       "label": "5.1.2",
-      "date":"2.1. 2025",
+      "date":"2.1. 2026",
       "bugFixes": {
         "items": [
           "Fix issue with rasterizing SVG objects when using brush tool",
@@ -312,7 +321,7 @@
     },
     "5.1.1":{
       "label": "5.1.1",
-      "date":"2.1. 2025",
+      "date":"2.1. 2026",
       "improvements": {
         "items": [
           "Show info toast when physical zoom mode is selected to remind user to calibrate the monitor"
@@ -326,7 +335,7 @@
     },
     "5.1.0":{
       "label": "5.1.0",
-      "date":"1.1. 2025",
+      "date":"1.1. 2026",
       "improvements": {
         "items": [
           "Add time indicator to toast modals"

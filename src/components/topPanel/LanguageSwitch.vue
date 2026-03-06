@@ -4,11 +4,13 @@ import { useLanguageSwitch } from '@/composables/topPanel/useLanguageSwitch'
 import { globalConfig } from '@/config/globalConfig'
 
 import ItemTip from '@/components/common/ItemTip.vue'
+import { useEditorStore } from '@/stores/editorStore'
+import { useUiStore } from '@/stores/uiStore'
 
 /**
  * Logic for the language switch component.
  */
-const { locale, switchLanguage } = useLanguageSwitch()
+const { locale, switchLanguage } = useLanguageSwitch(useEditorStore(), useUiStore())
 
 /**
  * Currently hovered language code

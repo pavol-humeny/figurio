@@ -1,9 +1,10 @@
-import { ref, onMounted, computed } from 'vue'
+import { ref, onMounted, computed, nextTick } from 'vue'
 
 /**
  * Logic for managing tabs inside the tool settings panel
  *
  * @param {object} editorStore - Store managing selected tool and tab per tool
+ * @param {object} uiStore - Store managing UI state, including right panel width
  * @param {string} defaultTab - Key of the default tab to select
  * @returns {{
  *   activeTab: import('vue').ComputedRef<string>,
@@ -13,7 +14,7 @@ import { ref, onMounted, computed } from 'vue'
  *   startDragging: (e: MouseEvent) => void
  * }}
  */
-export function useToolsSettingsTabs(editorStore, defaultTab) {
+export function useToolsSettingsTabs(editorStore, uiStore, defaultTab) {
   /**
    * Currently active tab for the selected tool
    */
@@ -104,11 +105,32 @@ export function useToolsSettingsTabs(editorStore, defaultTab) {
     )
   })
 
+  const recalculateSizeOfRightPanelToFitContent = () => {
+    nextTick(() => {
+      const tabs = document.querySelectorAll('.settings-tabs .tab')
+
+      if (tabs.length === 0) {
+        // No tabs found, reset the right panel width
+        uiStore.resetRightPanelWidth()
+        return
+      }
+
+      // Calculate the total width of all tabs
+      let TabsSize = 0
+      tabs.forEach((tab) => {
+        TabsSize += tab.offsetWidth
+      })
+
+      uiStore.setRightPanelWidthIfTabsDoNotFit(TabsSize)
+    })
+  }
+
   return {
     activeTab,
     isDragging,
     wrapperRef,
     setActiveTab,
     startDragging,
+    recalculateSizeOfRightPanelToFitContent,
   }
 }

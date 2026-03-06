@@ -4,9 +4,7 @@ import { useToolsSettingsTabs } from '@/composables/toolsSettings/useToolsSettin
 import { onMounted, nextTick } from 'vue'
 import { useUiStore } from '@/stores/uiStore'
 
-
 const editorStore = useEditorStore()
-const uiStore = useUiStore()
 
 /**
  * @typedef {Object} ToolsSettingsTabsProps
@@ -24,27 +22,20 @@ const props = defineProps({
 /**
  * Logic for managing active tab
  */
-const { activeTab, isDragging, wrapperRef, setActiveTab, startDragging } = useToolsSettingsTabs(
+const {
+  activeTab,
+  wrapperRef,
+  setActiveTab,
+  startDragging,
+  recalculateSizeOfRightPanelToFitContent
+} = useToolsSettingsTabs(
   useEditorStore(),
+  useUiStore(),
   props.tabs[0],
 )
 onMounted(() => {
   nextTick(() => {
-    const tabs = document.querySelectorAll('.settings-tabs .tab')
-
-    if (tabs.length === 0) {
-      // No tabs found, reset the right panel width
-      uiStore.resetRightPanelWidth()
-      return
-    }
-
-    // Calculate the total width of all tabs
-    let TabsSize = 0
-    tabs.forEach((tab) => {
-      TabsSize += tab.offsetWidth
-    })
-
-    uiStore.setRightPanelWidthIfTabsDoNotFit(TabsSize)
+    recalculateSizeOfRightPanelToFitContent()
   })
 })
 </script>
@@ -52,7 +43,7 @@ onMounted(() => {
 <template>
   <div v-if="props.tabs.length > 0" class="settings-tabs">
     <div class="tabs-wrapper" ref="wrapperRef">
-      <div class="tab" v-for="tab in props.tabs" :key="tab" :class="{ active: tab === activeTab}"
+      <div class="tab" v-for="tab in props.tabs" :key="tab" :class="{ active: tab === activeTab }"
         @click="setActiveTab(tab)" @mousedown="startDragging">
         {{ $t(`tools.${editorStore.selectedToolKey}.settings.${tab}.label`) }}
       </div>

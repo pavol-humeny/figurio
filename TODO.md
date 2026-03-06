@@ -29,7 +29,11 @@
 
 - Vylepšenie rámiku pre prehliadače 
 - bg removal color - zle usporiadanie komponentov - two column 
-- pri prepnutí jazyka je potrebné prepočítať šírku right panelu
+- dĺžka session 
+- veľkosť položiek na základe veľkosti obrazovky a nie v pixeloch 
+- vyťahanie konštánt do css premenných (čo sa týka rozmerov)
+- touch eventy 
+
 
 - skontrolovať texty
 ├── DONE - calibration.json
