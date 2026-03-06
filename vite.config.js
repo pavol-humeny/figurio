@@ -28,4 +28,8 @@ export default defineConfig({
     'process.env': {},
     'import.meta.env.VITE_APP_VERSION': JSON.stringify(version),
   },
+  server: {
+    host: true,
+    allowedHosts: ['abroad-tap-administrator-muscles.trycloudflare.com'],
+  },
 })

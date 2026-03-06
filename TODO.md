@@ -30,6 +30,16 @@
 - veľkosť položiek na základe veľkosti obrazovky a nie v pixeloch 
 - vyťahanie konštánt do css premenných (čo sa týka rozmerov)
 - touch eventy 
+    - crop posun 
+    - steeper - drzanie 
+    - brush 
+    - select
+    - shape, blur, text, magnify
+    - move objects
+
+- pri dropdowne fyzický režim by tam mohli byť popisy, ktorý papier to je (A4, A3...)
+- fyzický režim šírka by mohla byť pre každý súbor
+
 
 
 - skontrolovať texty
