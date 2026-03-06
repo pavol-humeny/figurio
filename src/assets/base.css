@@ -168,6 +168,7 @@ body {
   --z-index-color-picker: 850;
   --z-index-settings: 800;
   --z-index-top-panel: 700;
+  --z-index-subTools: 650;
   --z-index-tools-settings-panel: 600;
   --z-index-tools-panel: 600;
   --z-index-cursors: 570;

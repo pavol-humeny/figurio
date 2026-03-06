@@ -167,7 +167,7 @@ const {
 }
 
 .subTools-popup {
-  z-index: 650;
+  z-index: var(--z-index-subTools);
   display: flex;
   flex-direction: column;
   align-items: center;

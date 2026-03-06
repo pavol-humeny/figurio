@@ -23,13 +23,10 @@
 # TODO
 - P - zaistit aby pri resize objektov bolo snapovanie plynule tak ako pri drag
 
-
-
 - skontrolovať warning hlášky (malé rozmery, safari...)
 
 - Vylepšenie rámiku pre prehliadače 
-- bg removal color - zle usporiadanie komponentov - two column 
-- dĺžka session 
+
 - veľkosť položiek na základe veľkosti obrazovky a nie v pixeloch 
 - vyťahanie konštánt do css premenných (čo sa týka rozmerov)
 - touch eventy 
