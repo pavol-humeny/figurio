@@ -17,7 +17,7 @@
       "uniqueVisits": "Unikátne návštevy"
     },
     "sessions":{
-      "title": "Sezení za den",
+      "title": "Doba sezení na návštěvu",
       "min": "Min (min)",
       "avg": "Priemer (min)",
       "max": "Max (min)",
