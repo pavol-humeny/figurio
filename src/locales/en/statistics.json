@@ -18,9 +18,9 @@
     },
     "sessions":{
       "title": "Sessions per day",
-      "min": "Min",
-      "avg": "Average",
-      "max": "Max",
+      "min": "Min (min)",
+      "avg": "Average (min)",
+      "max": "Max (min)",
       "axisLeft": "Number of sessions",
       "axisRight": "Number of visits",
       "visits": "Visits"

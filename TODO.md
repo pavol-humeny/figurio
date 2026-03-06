@@ -23,7 +23,7 @@
 # TODO
 - P - zaistit aby pri resize objektov bolo snapovanie plynule tak ako pri drag
 
-- fit crop len z jednej strany 
+
 
 - skontrolovať warning hlášky (malé rozmery, safari...)
 
@@ -72,6 +72,7 @@
 - Premapovanie klávesových skratiek užívateľom
 - resetovanie obrázku do pôvodného stavu
 - pridať nástroj pre nastavenie priehľadnosti obrázka
+- fit crop len z jednej strany 
 
 ## Nepreukázalo sa 
 - pri prepnutí z color na manual select sa nezapne spravny kurzor

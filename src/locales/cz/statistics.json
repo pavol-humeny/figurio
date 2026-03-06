@@ -18,9 +18,9 @@
     },
     "sessions":{
       "title": "Sezení za den",
-      "min": "Min",
-      "avg": "Průměr",
-      "max": "Max",
+      "min": "Min (min)",
+      "avg": "Průměr (min)",
+      "max": "Max (min)",
       "axisLeft": "Počet sezení",
       "axisRight": "Počet návštěv",
       "visits": "Návštěvy"

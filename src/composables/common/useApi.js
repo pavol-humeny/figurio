@@ -61,6 +61,8 @@ export function useApi() {
 
     if (isLocalhost() && !globalConfig.usageStatsSettings.sendUsageStatsOnLocalhost) return
 
+    console.warn('Adding session with duration (ms):', durationMs)
+
     if (!userId) {
       warn('Missing userId for session')
       return

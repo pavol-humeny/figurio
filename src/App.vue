@@ -224,8 +224,10 @@ const sessionStart = Date.now()
  * Send session duration to the server on unload for analytics purposes
  */
 const sendSessionDuration = () => {
-  const duration = Date.now() - sessionStart
-  addUserSession(userUuid, duration)
+  if (route.name !== 'statistics') {
+    const duration = Date.now() - sessionStart
+    addUserSession(userUuid, duration)
+  }
 }
 
 /**
