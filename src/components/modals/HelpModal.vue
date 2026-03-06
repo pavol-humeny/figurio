@@ -443,7 +443,7 @@ const showStatistics = () => {
               <div class="subtitle-wrapper">
                 <BaseIcon v-if="tutorialCompleted" class="tutorial-completed-icon" name="IconTick" size="20"
                   :tip='$t("help.helpContent.tutorial.tutorialCompletedTip")' position="top-right" />
-                <p class="help-content-title" style="margin-bottom: 0;">
+                <p class="help-content-title">
                   {{ $t('help.helpContent.tutorial.title') }}
                 </p>
               </div>
@@ -703,7 +703,6 @@ const showStatistics = () => {
   flex-direction: row;
   align-items: center;
   gap: 10px;
-  /* margin-bottom: 10px; */
 }
 
 .action-text {

@@ -16,6 +16,24 @@
       "allVisits": "Všetky návštevy",
       "uniqueVisits": "Unikátne návštevy"
     },
+    "sessions":{
+      "title": "Sezení za den",
+      "min": "Min",
+      "avg": "Priemer",
+      "max": "Max",
+      "axisLeft": "Počet sezení",
+      "axisRight": "Počet návštev",
+      "visits": "Návštevy"
+    },
+    "avgPerVisit": {
+      "title": "Události na návštěvu",
+      "uploadImage": "Nahratie obrázku na návštěvu",
+      "exportImage": "Export obrázku na návštěvu",
+      "applyOperation": "Použitie operácie na návštěvu",
+      "axisLeft": "Události na návštěvu",
+      "axisRight": "Počet návštěv",
+      "visits": "Návštevy"
+    },
     "allDaysVisits": "Návštevy za celé obdobie",
     "table": {
       "from": "Od",

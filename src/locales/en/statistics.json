@@ -16,6 +16,24 @@
       "allVisits": "All visits",
       "uniqueVisits": "Unique visits"
     },
+    "sessions":{
+      "title": "Sessions per day",
+      "min": "Min",
+      "avg": "Average",
+      "max": "Max",
+      "axisLeft": "Number of sessions",
+      "axisRight": "Number of visits",
+      "visits": "Visits"
+    },
+    "avgPerVisit": {
+      "title": "Events per visit",
+      "uploadImage": "Image uploads per visit",
+      "exportImage": "Image exports per visit",
+      "applyOperation": "Operations per visit",
+      "axisLeft": "Events per visit",
+      "axisRight": "Number of visits",
+      "visits": "Visits"
+    },
     "allDaysVisits": "Visits over all days",
     "table": {
       "from": "From",

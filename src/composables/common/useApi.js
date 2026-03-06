@@ -52,6 +52,39 @@ export function useApi() {
   }
 
   /**
+   * Adds a session for a user with the given duration.
+   * @param {string} userId - UUID of the user
+   * @param {number} durationMs - Duration of the session in milliseconds
+   */
+  const addUserSession = async (userId, durationMs) => {
+    if (!globalConfig.usageStatsSettings.sendUsageStats) return
+
+    if (isLocalhost() && !globalConfig.usageStatsSettings.sendUsageStatsOnLocalhost) return
+
+    if (!userId) {
+      warn('Missing userId for session')
+      return
+    }
+
+    try {
+      const res = await fetch(`${API_BASE}/api/users/${userId}/sessions`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ durationMs }),
+      })
+
+      if (res.ok) {
+        log(`Session successfully added for user ${userId}`)
+      } else {
+        const msg = await res.text()
+        warn(`Failed to add session: ${msg}`)
+      }
+    } catch (err) {
+      error('Network error while adding user session:', err)
+    }
+  }
+
+  /**
    * Adds an event for a user.
    * @param {string} eventType - Type of the event
    * @param {Object} data - Event data (will be JSON.stringified)
@@ -363,7 +396,6 @@ export function useApi() {
 
   /**
    * Fetches visits for all days (from first recorded visit to today)
-   * [{ date, allVisits, newUsers }, ...]
    */
   const getVisitsByDayFullRange = async () => {
     try {
@@ -376,6 +408,44 @@ export function useApi() {
       return data
     } catch (err) {
       error('Error fetching visits by day full range:', err)
+      return []
+    }
+  }
+
+  /**
+   * Fetches sessions grouped by day for all days (from first recorded session to today)
+   * [{ date, allVisits, avgUploadImage, avgExportImage, avgApplyOperation }, ...]
+   */
+  const getSessionsByDay = async () => {
+    try {
+      const res = await fetch(`${API_BASE}/api/users/sessions`)
+      if (!res.ok) throw new Error('Failed to fetch sessions by day')
+
+      const data = await res.json()
+      log('Sessions by day fetched:', data)
+
+      return data
+    } catch (err) {
+      error('Error fetching sessions by day:', err)
+      return []
+    }
+  }
+
+  /**
+   * Fetches average number of events per visit grouped by day for all days
+   * [{ date, allVisits, avgUploadImage, avgExportImage, avgApplyOperation }, ...]
+   */
+  const getAvgEventsPerVisitByDay = async () => {
+    try {
+      const res = await fetch(`${API_BASE}/api/visits/avgEventsPerVisitByDay`)
+      if (!res.ok) throw new Error('Failed to fetch avg events per visit by day')
+
+      const data = await res.json()
+      log('Avg events per visit by day fetched:', data)
+
+      return data
+    } catch (err) {
+      error('Error fetching avg events per visit by day:', err)
       return []
     }
   }
@@ -398,5 +468,8 @@ export function useApi() {
     sendContactFormEmail,
     sendVisitDuringMaintenanceEmail,
     getVisitsByDayFullRange,
+    addUserSession,
+    getSessionsByDay,
+    getAvgEventsPerVisitByDay,
   }
 }

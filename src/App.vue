@@ -29,7 +29,7 @@ import { useI18n } from 'vue-i18n'
 import { useEditorStore } from './stores/editorStore'
 
 const { warn } = useConsole()
-const { addUserVisit, sendVisitDuringMaintenanceEmail } = useApi()
+const { addUserVisit, sendVisitDuringMaintenanceEmail, addUserSession } = useApi()
 
 const router = useRouter()
 const route = useRoute()
@@ -216,6 +216,19 @@ const handleBeforeUnload = (event) => {
 }
 
 /**
+ * User session start time for calculating session duration on unload
+ */
+const sessionStart = Date.now()
+
+/**
+ * Send session duration to the server on unload for analytics purposes
+ */
+const sendSessionDuration = () => {
+  const duration = Date.now() - sessionStart
+  addUserSession(userUuid, duration)
+}
+
+/**
  * Application version from environment variable
  */
 const APP_VERSION = import.meta.env.VITE_APP_VERSION
@@ -237,6 +250,7 @@ onMounted(async () => {
     passive: false,
   })
   window.addEventListener('beforeunload', handleBeforeUnload)
+  window.addEventListener('beforeunload', sendSessionDuration)
 
   window.addEventListener('keydown', blockDevToolsShortcuts)
   window.addEventListener('contextmenu', blockContextMenu)
