@@ -157,25 +157,26 @@ Magnify + Blur
 
 ## Poster texts
 ## 1. Úvod
-### Problém
-- kvalita obrázkov ovplyvňuje kvalitu technických dokumentov
-- príprava screenshotov a diagramov je často časovo náročná
-- bežné grafické editory sú pre tieto úlohy zbytočne komplexné
-
---
-
-### O aplikácii
-- **webový editor dostupný priamo v prehliadači** bez potreby inštalácie
-- **jednoduché a intuitívne** rozhranie 
-- navrhnutá pre **rýchle úpravy screenshotov a diagramov**
+### Motivácia
+- nekvalitné obrázky v technických dokumentoch
+- časovo náročná úprava screenshotov a diagramov
+- príliš komplexné grafické editory
+- chýbajú nástroje prispôsobené odborným textom
 
 ---
 
-### Hlavné výhody
-- **lokálne spracovanie obrázkov** – ochrana súkromia používateľa  
-- **podpora PDF a vektorových úprav**  
-- **špecializované nástroje pre odborné texty**
+### Figurio
+- webová aplikácia dostupná priamo v prehliadači
+- bez potreby inštalácie
+- jednoduché a intuitívne rozhranie
+- určená na rýchle úpravy screenshotov a diagramov
 
+---
+
+### Kľúčové vlastnosti
+- lokálne spracovanie obrázkov – ochrana súkromia
+- podpora PDF a vektorových úprav
+- špecializované nástroje pre technické a akademické dokumenty
 ---
 
 ## 3. Ukážka vybraných funkcií
@@ -183,22 +184,22 @@ Magnify + Blur
 ### Crop
 
 - orezanie obrázka a odstránenie nepotrebných častí
-- manuálne nastavenie oblasti orezania alebo orezanie so zachovaním pomeru strán
+- manuálne orezanie alebo orezanie so zachovaním pomeru strán
 - **fit crop** – automatická detekcia obsahu obrázka
 
 ---
 
 ### Frame
 
-- vloženie obrázka do prezentačného rámiku
-- dostupné rámiky: okno aplikácie, mobilné zariadenie, editor kódu
-- vhodné na prezentáciu používateľského rozhrania alebo aplikácií
+- vloženie obrázka do prezentačného rámika
+- dostupné rámiky: okno aplikácie, mobil, editor kódu
+- vhodné na prezentáciu používateľského rozhrania
 
 ---
 
 ### Magnify Area + Blur Area
 
-- **Magnify Area** – zvýraznenie detailu pomocou zväčšenej oblasti
+- **Magnify Area** – zvýraznenie detailu zväčšenou oblasťou
 - **Blur Area** – rozmazanie vybranej časti obrázka
 - zvýraznenie dôležitých prvkov alebo anonymizácia citlivých údajov
 
@@ -217,8 +218,14 @@ Medzera medzi položkami (menšia) - 7.5mm
 
 Logo - 80x80mm
 
+Corner radius - 4mm
+
 font: Inter
 - --- 46pt (12mm) veľký nadpis 
 - 38pt (10mm) nadpis 
 - --- 24pt (6.2mm) - väčší text 
+
+- 30pt (mm) nadpis pre text
 - 18pt (4.7mm) - bežný text 
+
+

@@ -693,7 +693,8 @@ export const useImageStore = defineStore('imageStore', {
       if (
         this.svgObjects.length === 0 &&
         this.blurObjects.length === 0 &&
-        this.magnifyObjects.length === 0
+        this.magnifyObjects.length === 0 &&
+        this.overlayImage === null
       ) {
         return null
       }

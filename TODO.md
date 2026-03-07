@@ -40,6 +40,9 @@
 - pri dropdowne fyzický režim by tam mohli byť popisy, ktorý papier to je (A4, A3...)
 - fyzický režim šírka by mohla byť pre každý súbor
 
+- vyriešiť pohyb objektov s axis lock
+- stepper input nepropagovat enter klik
+
 
 
 - skontrolovať texty
