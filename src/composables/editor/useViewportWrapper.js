@@ -885,7 +885,10 @@ export function useViewportWrapper(
       if (deltaX !== 0) {
         let maxCursorSize
 
-        if (editorStore.selectedTabPerTool['brush'] === 'pencil') {
+        if (
+          editorStore.selectedToolKey === 'brush' &&
+          editorStore.selectedTabPerTool['brush'] === 'pencil'
+        ) {
           maxCursorSize = editorConfig.maxPencilSize
         } else {
           // Maximum size of the brush tool (10% of smaller image dimension, min 10px)

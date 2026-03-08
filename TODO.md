@@ -25,7 +25,6 @@
 
 - touch eventy 
     - steeper - drzanie 
-    - brush 
     - select
     - shape, blur, text, magnify
     - move objects

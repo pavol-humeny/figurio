@@ -26,6 +26,7 @@ const {
   clearAllCanvas,
   setIsEraserMode,
   isEraserMode,
+  hasBrushOverlay
 } = useBrushTool(
   useImageStore(),
   useHistoryStore(),
@@ -112,7 +113,8 @@ const tabs = ['brush', 'pencil']
         <div class="settings-content-wrapper">
           <div class="content-wrapper">
             <DefaultButton :text="$t('tools.brush.settings.eraser.clearAllButton.text')" position="bottom-left"
-              :tip="$t('tools.brush.settings.eraser.clearAllButton.tip')" @click="clearAllCanvas" />
+              :tip="$t('tools.brush.settings.eraser.clearAllButton.tip')" @click="clearAllCanvas"
+              :disabled="!hasBrushOverlay" />
           </div>
         </div>
 
@@ -192,7 +194,8 @@ const tabs = ['brush', 'pencil']
         <div class="settings-content-wrapper">
           <div class="content-wrapper">
             <DefaultButton :text="$t('tools.brush.settings.eraser.clearAllButton.text')" position="bottom-left"
-              :tip="$t('tools.brush.settings.eraser.clearAllButton.tip')" @click="clearAllCanvas" />
+              :tip="$t('tools.brush.settings.eraser.clearAllButton.tip')" @click="clearAllCanvas"
+              :disabled="!hasBrushOverlay" />
           </div>
         </div>
 

@@ -84,44 +84,6 @@ watch([imageWidth, imageHeight], () => {
 })
 
 /**
- * Draw a filled circle of given size at (cx, cy) on the manual canvas
- * @param cx Center x coordinate
- * @param cy Center y coordinate
- * @param size Diameter of the circle
- * @param erase Whether to erase (true) or draw highlight (false)
- */
-const drawPixelCircle = (cx, cy, size, erase = false) => {
-  const radius = size / 2
-
-  ctx.globalCompositeOperation = erase ? 'destination-out' : 'source-over'
-  ctx.fillStyle = erase
-    ? '#000'
-    : editorStore.toolsConfig.backgroundRemoval.removalHighlightColor
-
-  // 1px size
-  if (size === 1) {
-    ctx.fillRect(cx, cy, 1, 1)
-    return
-  }
-
-  const r2 = (radius - 0.5) * (radius - 0.5)
-  const limit = Math.floor(radius)
-
-  for (let y = -limit; y <= limit; y++) {
-    for (let x = -limit; x <= limit; x++) {
-
-      // Use center of pixel for smoother circles
-      const dx = x + 0.5
-      const dy = y + 0.5
-
-      if (dx * dx + dy * dy <= r2) {
-        ctx.fillRect(cx + x, cy + y, 1, 1)
-      }
-    }
-  }
-}
-
-/**
  * Draw a line on the manual canvas from 'from' to 'to'
  * @param from Start point {x, y}
  * @param to End point {x, y}
@@ -135,31 +97,24 @@ const drawLine = (from, to, tool) => {
     Math.round(editorStore.toolsConfig.backgroundRemoval.brushSize)
   )
 
-  let x0 = Math.floor(from.x)
-  let y0 = Math.floor(from.y)
-  let x1 = Math.floor(to.x)
-  let y1 = Math.floor(to.y)
-
-  const dx = Math.abs(x1 - x0)
-  const dy = Math.abs(y1 - y0)
-  const sx = x0 < x1 ? 1 : -1
-  const sy = y0 < y1 ? 1 : -1
-  let err = dx - dy
-
   const erase = tool === 'eraser'
+
+  ctx.globalCompositeOperation = erase ? 'destination-out' : 'source-over'
+  ctx.strokeStyle = erase
+    ? '#000'
+    : editorStore.toolsConfig.backgroundRemoval.removalHighlightColor
+
+  ctx.lineWidth = size
+  ctx.lineCap = 'round'
+  ctx.lineJoin = 'round'
+
+  ctx.beginPath()
+  ctx.moveTo(from.x, from.y)
+  ctx.lineTo(to.x, to.y)
+  ctx.stroke()
 
   if (!erase) {
     someAreaIsSelected.value = true
-  }
-
-  while (true) {
-    drawPixelCircle(x0, y0, size, erase)
-
-    if (x0 === x1 && y0 === y1) break
-
-    const e2 = 2 * err
-    if (e2 > -dy) { err -= dy; x0 += sx }
-    if (e2 < dx) { err += dx; y0 += sy }
   }
 }
 
@@ -180,29 +135,29 @@ const getMousePos = (event) => {
  */
 const onMouseDown = (event) => {
   if (editorStore.selectedToolKey !== 'backgroundRemoval') return
+  if (event.button !== 0) return
 
-  if (event.button !== 0) return // only left mouse
   const viewport = document.getElementById('viewport-content')
   if (!viewport.contains(event.target)) return
 
-  if (editorStore.selectedToolKey === 'backgroundRemoval') {
-    const mode = editorStore.selectedTabPerTool['backgroundRemoval']
-    const pos = getMousePos(event)
+  const mode = editorStore.selectedTabPerTool['backgroundRemoval']
+  const pos = getMousePos(event)
 
-    if (mode === 'manual') {
-      // Manual drawing
-      isDrawing.value = true
-      lastPos.value = pos
+  if (mode === 'manual') {
+    isDrawing.value = true
+    lastPos.value = pos
 
-      let tool = manualSelectedTool.value
-      if (manualSelectedTool.value === 'brush' && event.altKey) {
-        tool = 'eraser'
-      }
+    ctx.beginPath()
+    ctx.moveTo(pos.x, pos.y)
 
-      drawLine(pos, pos, tool)
-    } else if (mode === 'auto') {
-      autoSelectSimilarRegion(pos.x, pos.y, event.shiftKey, event.altKey)
+    let tool = manualSelectedTool.value
+    if (manualSelectedTool.value === 'brush' && event.altKey) {
+      tool = 'eraser'
     }
+
+    drawLine(pos, pos, tool)
+  } else if (mode === 'auto') {
+    autoSelectSimilarRegion(pos.x, pos.y, event.shiftKey, event.altKey)
   }
 }
 

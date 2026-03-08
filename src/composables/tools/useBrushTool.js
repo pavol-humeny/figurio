@@ -165,6 +165,32 @@ export function useBrushTool(imageStore, historyStore, editorStore, uiStore, t) 
     historyStore.push(imageStore.getSnapshot(t))
   }
 
+  /**
+   * Whether the brush overlay contains any content
+   */
+  const hasBrushOverlay = computed(() => {
+    const brushOps = imageStore.imageOperations.filter((op) => op.type === 'brush')
+
+    if (!brushOps.length) return false
+
+    const last = brushOps[brushOps.length - 1]
+    if (!last.overlay) return false
+
+    const ctx = last.overlay.getContext('2d')
+    const { width, height } = last.overlay
+
+    const data = ctx.getImageData(0, 0, width, height).data
+
+    // Check if any pixel has alpha > 0
+    for (let i = 3; i < data.length; i += 4) {
+      if (data[i] !== 0) {
+        return true
+      }
+    }
+
+    return false
+  })
+
   return {
     brushColor,
     brushSize,
@@ -176,5 +202,6 @@ export function useBrushTool(imageStore, historyStore, editorStore, uiStore, t) 
     clearAllCanvas,
     setIsEraserMode,
     isEraserMode,
+    hasBrushOverlay,
   }
 }

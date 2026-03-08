@@ -57,13 +57,23 @@ let pendingOverlaySnapshot = null
 let ctx = null
 
 /**
- * Get mouse position relative to canvas
+ * Get pointer position (mouse/touch) relative to canvas.
+ * @param {MouseEvent|TouchEvent} event
  */
 const getMousePos = (event) => {
   const rect = canvasRef.value.getBoundingClientRect()
+  const point =
+    event.touches?.[0] ??
+    event.changedTouches?.[0] ??
+    event
+
+  if (point?.clientX == null || point?.clientY == null) {
+    return { x: 0, y: 0 }
+  }
+
   return {
-    x: (event.clientX - rect.left) / viewportStore.realZoomLevel,
-    y: (event.clientY - rect.top) / viewportStore.realZoomLevel,
+    x: (point.clientX - rect.left) / viewportStore.realZoomLevel,
+    y: (point.clientY - rect.top) / viewportStore.realZoomLevel,
   }
 }
 
@@ -326,14 +336,16 @@ const drawDot = (pos, tool) => {
 
 /**
  * Handle mouse down event to start drawing
- * @param {MouseEvent} event - Mouse event
+ * @param {MouseEvent|TouchEvent} event - Pointer event
  */
 const onMouseDown = async (event) => {
   if (editorStore.isModalOpenFlag) return
 
   if (editorStore.selectedToolKey !== 'brush') return
 
-  if (event.button !== 0) return
+  const isTouchEvent = event.type?.startsWith('touch')
+  if (!isTouchEvent && event.button !== 0) return
+  if (isTouchEvent && event.touches && event.touches.length > 1) return
 
   const viewport = document.getElementById('viewport-content')
   if (!viewport.contains(event.target)) return
@@ -418,16 +430,17 @@ const onMouseDown = async (event) => {
 
 /**
  * Handle mouse move event for drawing
- * @param {MouseEvent} event - Mouse event
+ * @param {MouseEvent|TouchEvent} event - Pointer event
  */
 const onMouseMove = (event) => {
   if (!isDrawing.value || editorStore.selectedToolKey !== 'brush') return
+  if (event.type?.startsWith('touch') && event.cancelable) event.preventDefault()
   mouseMovedSinceDown.value = true
 
   const currentPos = getMousePos(event)
 
   // Check if alt key is pressed for eraser when using brush tool
-  const isAltKeyPressed = event.altKey || event.metaKey
+  const isAltKeyPressed = !!(event.altKey || event.metaKey)
   let tool = editorStore.selectedTabPerTool[editorStore.selectedToolKey]
 
   // Check if it is eraser mode
@@ -541,12 +554,20 @@ onMounted(() => {
   window.addEventListener('mouseup', onMouseUpGlobal)
   window.addEventListener('mousemove', onMouseMove)
   window.addEventListener('mousedown', onMouseDown)
+  window.addEventListener('touchstart', onMouseDown, { passive: false })
+  window.addEventListener('touchmove', onMouseMove, { passive: false })
+  window.addEventListener('touchend', onMouseUpGlobal)
+  window.addEventListener('touchcancel', onMouseUpGlobal)
 })
 
 onBeforeUnmount(async () => {
   window.removeEventListener('mouseup', onMouseUpGlobal)
   window.removeEventListener('mousemove', onMouseMove)
   window.removeEventListener('mousedown', onMouseDown)
+  window.removeEventListener('touchstart', onMouseDown)
+  window.removeEventListener('touchmove', onMouseMove)
+  window.removeEventListener('touchend', onMouseUpGlobal)
+  window.removeEventListener('touchcancel', onMouseUpGlobal)
   await commitBrushOperation()
 })
 </script>
@@ -567,5 +588,6 @@ onBeforeUnmount(async () => {
   top: 0;
   left: 0;
   cursor: none;
+  touch-action: none;
 }
 </style>
