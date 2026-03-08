@@ -23,6 +23,7 @@
 
 - veľkosť položiek na základe veľkosti obrazovky a nie v pixeloch 
 - vyťahanie konštánt do css premenných (čo sa týka rozmerov)
+
 - touch eventy 
     - crop posun 
     - steeper - drzanie 
@@ -35,7 +36,6 @@
 - fyzický režim šírka by mohla byť pre každý súbor
 
 - vyriešiť pohyb objektov s axis lock
-- navigacia vo viewporte pomocou sipok
 - kopírovať a vložiť by sa mali dať objekty aj v select toole
 - kopírovanie nefunguje pomocou ctrl c, v
 - ak sa vyhodí okno na rastrovanie tak klávesové skratky by mali byť zakázané (pri crope to ide)

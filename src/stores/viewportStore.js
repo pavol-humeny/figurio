@@ -93,6 +93,9 @@ export const useViewportStore = defineStore('viewportStore', {
     ),
     /** Maximum physical content size */
     maxPhysicalContentSize: viewportConfig.a4paperWidth,
+
+    /** Flag to indicate viewport movement from keyboard */
+    moveViewport: null, // up, down, left, right
   }),
   getters: {
     /**

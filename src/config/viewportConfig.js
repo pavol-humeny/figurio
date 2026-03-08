@@ -31,4 +31,5 @@ export const viewportConfig = {
 
   rulerMarkSpacingPx: 30, // Desired spacing between ruler marks in pixels on screen
 
+  viewportKeyboardMoveStep: 0.01, // Step size for keyboard panning as a fraction of the viewport size
 }

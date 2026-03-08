@@ -118,6 +118,44 @@ export function useViewportWrapper(
     }
   }
 
+  /**
+   * Move viewport in given direction by 5% of wrapper size
+   * @param {'left' | 'right' | 'up' | 'down'} direction - Direction of movement
+   */
+  const moveViewport = (direction) => {
+    const stepX = wrapperWidth.value * viewportConfig.viewportKeyboardMoveStep
+    const stepY = wrapperHeight.value * viewportConfig.viewportKeyboardMoveStep
+
+    if (direction === 'left') {
+      panX.value = clamp(panX.value - stepX, scrollHorizontalMin.value, scrollHorizontalMax.value)
+    }
+
+    if (direction === 'right') {
+      panX.value = clamp(panX.value + stepX, scrollHorizontalMin.value, scrollHorizontalMax.value)
+    }
+
+    if (direction === 'up') {
+      panY.value = clamp(panY.value - stepY, scrollVerticalMin.value, scrollVerticalMax.value)
+    }
+
+    if (direction === 'down') {
+      panY.value = clamp(panY.value + stepY, scrollVerticalMin.value, scrollVerticalMax.value)
+    }
+  }
+
+  /**
+   * Watch for viewport movement triggered by keyboard shortcuts and move the viewport accordingly
+   */
+  watch(
+    () => viewportStore.moveViewport,
+    (direction) => {
+      if (direction) {
+        moveViewport(direction)
+        viewportStore.moveViewport = null
+      }
+    },
+  )
+
   // ------------------------------
   // Scroll and zoom
   // ------------------------------
@@ -847,9 +885,7 @@ export function useViewportWrapper(
       if (deltaX !== 0) {
         let maxCursorSize
 
-        if (
-          editorStore.selectedTabPerTool['brush'] === 'pencil'
-        ) {
+        if (editorStore.selectedTabPerTool['brush'] === 'pencil') {
           maxCursorSize = editorConfig.maxPencilSize
         } else {
           // Maximum size of the brush tool (10% of smaller image dimension, min 10px)

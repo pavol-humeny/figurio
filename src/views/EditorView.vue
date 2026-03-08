@@ -104,6 +104,23 @@ const { cancel: confirmModalCancel, confirm: confirmModalConfirm } = useConfirmM
 const imageStore = useImageStore()
 const editorStore = useEditorStore()
 const uiStore = useUiStore()
+const viewportStore = useViewportStore()
+
+const moveViewportUp = () => {
+  viewportStore.moveViewport = 'up'
+}
+
+const moveViewportDown = () => {
+  viewportStore.moveViewport = 'down'
+}
+
+const moveViewportLeft = () => {
+  viewportStore.moveViewport = 'left'
+}
+
+const moveViewportRight = () => {
+  viewportStore.moveViewport = 'right'
+}
 
 useKeyboardShortcuts({
   undo,
@@ -155,7 +172,11 @@ useKeyboardShortcuts({
   closeImportModal,
   closeReleaseModal,
   confirmModalCancel,
-  confirmModalConfirm
+  confirmModalConfirm,
+  moveViewportUp,
+  moveViewportDown,
+  moveViewportLeft,
+  moveViewportRight,
 }, useUiStore(), useEditorStore());
 // ======
 

@@ -4,6 +4,15 @@
     "items": []
   },
   "versions":{
+    "5.16.0":{
+      "label": "5.16.0",
+      "date":"8.3. 2026",
+      "newFeatures": {
+        "items": [
+          "Image can be moved with keyboard arrow keys"
+        ]
+      }
+    },
     "5.15.0":{
       "label": "5.15.0",
       "date":"6.3. 2026",

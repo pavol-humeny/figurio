@@ -260,6 +260,28 @@ export const keyboardShortcuts = [
     description: 'Close (pause) tutorial',
   },
 
+  // viewport navigation shortcuts
+  {
+    keys: ['arrowright'],
+    action: 'moveViewportRight',
+    description: 'Move viewport right',
+  },
+  {
+    keys: ['arrowleft'],
+    action: 'moveViewportLeft',
+    description: 'Move viewport left',
+  },
+  {
+    keys: ['arrowup'],
+    action: 'moveViewportUp',
+    description: 'Move viewport up',
+  },
+  {
+    keys: ['arrowdown'],
+    action: 'moveViewportDown',
+    description: 'Move viewport down',
+  },
+
   // Modal closing shortcut
   {
     keys: ['escape'],
