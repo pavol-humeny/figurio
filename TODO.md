@@ -6,6 +6,9 @@
     - userTesting - blur, magnify
 - Unit testy
 - refaktorizácia
+    - vyťahanie konštánt do css premenných (čo sa týka rozmerov)
+    - hlavičky súborov 
+    - komentáre 
 
 ## TODO - text 
 - P - záver
@@ -21,8 +24,6 @@
 - skontrolovať warning hlášky (malé rozmery, safari...)
 
 
-- veľkosť položiek na základe veľkosti obrazovky a nie v pixeloch 
-- vyťahanie konštánt do css premenných (čo sa týka rozmerov)
 
 - touch eventy 
     - crop posun 
@@ -32,11 +33,9 @@
     - shape, blur, text, magnify
     - move objects
 
-- pri dropdowne fyzický režim by tam mohli byť popisy, ktorý papier to je (A4, A3...)
-- fyzický režim šírka by mohla byť pre každý súbor
+- pri dropdown fyzický režim by tam mohli byť popisy, ktorý papier to je (A4, A3...)
 
 - vyriešiť pohyb objektov s axis lock
-- ak sa vyhodí okno na rastrovanie tak klávesové skratky by mali byť zakázané (pri crope to ide)
 - blur objekt aj ked sa blur radius nastavi na 0 a potom sa opat vyberie tak je nastavený na 10
 
 

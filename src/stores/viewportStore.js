@@ -355,6 +355,7 @@ export const useViewportStore = defineStore('viewportStore', {
         fitImageOnLoad: this.fitImageOnLoad,
         guideLine: this.guideLine,
         zoomMode: this.zoomMode,
+        physicalContentSize: this.physicalContentSize,
         textWidth: this.textWidth,
       }
     },
@@ -381,6 +382,7 @@ export const useViewportStore = defineStore('viewportStore', {
       this.fitImageOnLoad = snapshot.fitImageOnLoad ?? true
       this.guideLine = snapshot.guideLine ?? false
       this.zoomMode = snapshot.zoomMode ?? 'text'
+      this.physicalContentSize = snapshot.physicalContentSize ?? globalConfig.physicalContentSize
       this.textWidth = snapshot.textWidth ?? globalConfig.textWidth
     },
   },

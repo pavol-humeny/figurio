@@ -70,6 +70,16 @@ export function useZoomControl(viewportStore, imageStore, t) {
   const physicalContentSize = ref(viewportStore.physicalContentSize)
 
   /**
+   * Sync physical content size input with store (important when switching files/tabs).
+   */
+  watch(
+    () => viewportStore.physicalContentSize,
+    (newSize) => {
+      physicalContentSize.value = newSize
+    },
+  )
+
+  /**
    * Predefined physical content size options in cm for quick selection
    */
   const physicalContentSizeOptions = [7.4, 10.5, 14.8, 21, 29.7, 42, 59.4, 84, 118.9]

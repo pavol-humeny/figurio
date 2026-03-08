@@ -278,7 +278,7 @@ export function useSvgObjects(
     const newObject = JSON.parse(JSON.stringify(imageStore.clipboardSvgObject))
 
     // Paste only objects in same tool as object class
-    if (newObject.class !== editorStore.selectedToolKey && editorStore.selectedToolK) return
+    if (newObject.class !== editorStore.selectedToolKey && editorStore.selectedToolKey !== 'select') return
 
     newObject.id = Date.now()
 
