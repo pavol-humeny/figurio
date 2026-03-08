@@ -100,6 +100,21 @@
   } = useNumberDropdownInput(props, emit, useUiStore())
 
   /**
+   * Supports primitive options and object options in shape { value, label }.
+   * @param {number|string|{value:number|string,label?:string}} option
+   * @returns {number|string}
+   */
+  const getOptionValue = (option) =>
+    option && typeof option === 'object' && 'value' in option ? option.value : option
+
+  /**
+   * @param {number|string|{value:number|string,label?:string}} option
+   * @returns {string|number}
+   */
+  const getOptionLabel = (option) =>
+    option && typeof option === 'object' && 'label' in option ? option.label : option
+
+  /**
    * Expose methods for external use
    * @type {{ setValue: (val: string) => void }}
    */
@@ -136,9 +151,10 @@
   <Teleport to="body">
     <ul v-if="showDropdown && dropdownReady" class="dropdown-options-teleported" ref="dropdownRef"
       :style="dropdownStyle">
-      <li v-for="opt in props.options" :key="opt" @mousedown.prevent="onSelect(opt)"
+      <li v-for="(opt, index) in props.options" :key="`${getOptionValue(opt)}-${getOptionLabel(opt)}-${index}`"
+        @mousedown.prevent="onSelect(getOptionValue(opt))"
         :style="{ background: props.background }">
-        {{ opt }}
+        {{ getOptionLabel(opt) }}
       </li>
     </ul>
   </Teleport>

@@ -33,8 +33,6 @@
     - shape, blur, text, magnify
     - move objects
 
-- pri dropdown fyzický režim by tam mohli byť popisy, ktorý papier to je (A4, A3...)
-
 - vyriešiť pohyb objektov s axis lock
 
 

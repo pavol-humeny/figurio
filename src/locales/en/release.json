@@ -9,7 +9,8 @@
       "date":"8.3. 2026",
       "newFeatures": {
         "items": [
-          "Image can be moved with keyboard arrow keys"
+          "Image can be moved with keyboard arrow keys",
+          "Drop down menu with options with description"
         ]
       },
       "bugFixes": {

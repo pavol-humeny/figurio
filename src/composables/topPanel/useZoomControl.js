@@ -82,7 +82,24 @@ export function useZoomControl(viewportStore, imageStore, t) {
   /**
    * Predefined physical content size options in cm for quick selection
    */
-  const physicalContentSizeOptions = [7.4, 10.5, 14.8, 21, 29.7, 42, 59.4, 84, 118.9]
+  const physicalContentSizeOptions = [
+    { value: 7.4, label: 'A7 (7.4cm)' },
+    { value: 10.5, label: 'A7 (10.5cm)' },
+    { value: 10.5, label: 'A6 (10.5cm)' },
+    { value: 14.8, label: 'A6 (14.8cm)' },
+    { value: 14.8, label: 'A5 (14.8cm)' },
+    { value: 21, label: 'A5 (21cm)' },
+    { value: 21, label: 'A4 (21cm)' },
+    { value: 29.7, label: 'A4 (29.7cm)' },
+    { value: 29.7, label: 'A3 (29.7cm)' },
+    { value: 42, label: 'A3 (42cm)' },
+    { value: 42, label: 'A2 (42cm)' },
+    { value: 59.4, label: 'A2 (59.4cm)' },
+    { value: 59.4, label: 'A1 (59.4cm)' },
+    { value: 84, label: 'A1 (84cm)' },
+    { value: 84, label: 'A0 (84cm)' },
+    { value: 118.9, label: 'A0 (118.9cm)' },
+  ]
 
   /**
    * Increase zoom level
