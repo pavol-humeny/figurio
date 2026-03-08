@@ -14,7 +14,8 @@
       },
       "bugFixes": {
         "items": [
-          "Fix svg object copying and pasting"
+          "Fix svg object copying and pasting",
+          "Keyboard shortcuts are disabled during confirmation dialog"
         ]
       }
     },

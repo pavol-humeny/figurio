@@ -43,7 +43,8 @@ export function useKeyboardShortcuts(actions, uiStore, editorStore) {
    * @param {string} type - The type of event ('keydown' or 'keyup')
    */
   const handleKeyEvent = (event, type = 'keydown') => {
-    if (!uiStore.keyShortcutsEnabled || uiStore.isLoading) return
+    if (!uiStore.keyShortcutsEnabled || uiStore.isLoading || uiStore.keyboardShortcutsAreBlocked)
+      return
 
     const el = document.activeElement
     const isTyping =

@@ -1,5 +1,6 @@
 import { ref } from 'vue'
 import { useEditorStore } from '@/stores/editorStore'
+import { useUiStore } from '@/stores/uiStore'
 
 /**
  * Whether the modal is currently visible
@@ -50,6 +51,7 @@ let resolver = null
  */
 export function useConfirmModal() {
   const editorStore = useEditorStore()
+  const uiStore = useUiStore()
 
   /**
    * Show the modal and return a Promise that resolves with the user’s choice
@@ -79,6 +81,8 @@ export function useConfirmModal() {
     useClose.value = modalUseClose
 
     editorStore.isModalOpenFlag = true
+
+    uiStore.keyboardShortcutsAreBlocked = true
 
     return new Promise((resolve) => {
       resolver = resolve
@@ -123,6 +127,7 @@ export function useConfirmModal() {
   const cleanup = () => {
     isVisible.value = false
     editorStore.isModalOpenFlag = false
+    uiStore.keyboardShortcutsAreBlocked = false
   }
 
   return {

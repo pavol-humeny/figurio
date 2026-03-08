@@ -81,6 +81,9 @@ export const useUiStore = defineStore('ui', {
       uiConfig.keyShortcutsEnabled,
     ),
 
+    /** Whether keyboard shortcuts are blocked (modal is open) */
+    keyboardShortcutsAreBlocked: false,
+
     /** Whether right panel is visible */
     rightPanelOpen: getBoolean(
       `${globalConfig.LOCAL_STORAGE_PREFIX}rightPanelOpen`,
