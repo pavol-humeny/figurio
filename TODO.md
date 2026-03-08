@@ -13,19 +13,13 @@
 - zmenit obrazok pri ukazovani pixelation mode, dat tam nieco viac abstraktne
 - obrázok s fyzickými rozmermi - dat tam nekvalitný obrázok a zmeniť X na znak 
 
-- zoznam vecí čo by som chcel dať na plagát
 - scenár pre video
-
-## TODO - prezentácia
-- slide pre motiváciu 
-- slide pre zobrazenie výhod oproti ostatným aplikáciám 
 
 # TODO
 - P - zaistit aby pri resize objektov bolo snapovanie plynule tak ako pri drag
 
 - skontrolovať warning hlášky (malé rozmery, safari...)
 
-- Vylepšenie rámiku pre prehliadače 
 
 - veľkosť položiek na základe veľkosti obrazovky a nie v pixeloch 
 - vyťahanie konštánt do css premenných (čo sa týka rozmerov)
@@ -72,6 +66,7 @@
 - pridať nástroj fill (kýbel)
 - Crop orezanie v centimetroch, v pomere
 - Pozrieť sa na spoplatnenie - maximálny počet exportov, by me coffee
+- Vylepšenie rámiku pre prehliadače 
 
 ## Insane ideas
 - možnosť všetko exportovať naraz do zip

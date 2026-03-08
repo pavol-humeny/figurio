@@ -241,10 +241,10 @@
   },
   "crop": {
     "label": "Crop",
-    "tip": "Crops the image manualy or use fit crop",
+    "tip": "Crop the image manually or use Fit Crop",
     "tipDisabled": "",
-    "explain": "The Crop tool allows the image to be cropped by defining a rectangular crop box. The box can be moved with the mouse or exact values for position and size can be entered. The aspect ratio can be locked when resizing. The Reset button restores the original crop box, and Apply confirms the crop.",
-    "explain2": "The Fit Crop option automatically detects and removes background-like areas from the edges of the image. The sensitivity can be adjusted to control how much of the background is included in the crop. The artifacts preview helps visualize which pixels will be treated as background.",
+    "explain": "Crop the image by defining a rectangular crop area. Move the crop box with the mouse or enter exact position and size values. The aspect ratio can be locked while resizing.",
+    "explain2": "Fit Crop automatically detects and removes background-like areas from the edges of the image. Sensitivity controls how aggressively the background is detected.",
     "shortcut": "C",
     "settings": {
       "general": {
@@ -257,78 +257,61 @@
           "title": "Crop dimensions",
           "width": "Width",
           "height": "Height",
-          "tipLinked": "Unlink width and height",
-          "tipUnlinked": "Link width and height"
+          "tipLinked": "Unlock width and height",
+          "tipUnlinked": "Lock width and height"
         },
-        "autoCrop":{
-          "title": "Auto crop",
-          "autoCropColor":{
-            "title": "Auto crop color",
-            "tip": "Select the color for the auto crop"
-          },
+        "autoCrop": {
+          "title": "Fit crop",
           "sensitivity": {
             "title": "Sensitivity",
-            "tip": "Sensitivity level for auto crop, higher values include more background-like pixels in the crop calculation"
+            "tip": "Adjust how aggressively background-like pixels are included in the crop detection"
           },
-          "useBaseImage":{
+          "useBaseImage": {
             "title": "Use base image",
-            "tip": "Use base image to calculate crop or calculate from current crop box"
+            "tip": "Use the original image for crop detection instead of the current crop area"
           },
           "fitCropButton": {
             "text": "Fit crop"
           },
-          "manualAdjustments":{
+          "manualAdjustments": {
             "title": "Manual adjustments",
-            "top": "Top indent",
-            "bottom": "Bottom indent",
-            "left": "Left indent",
-            "right": "Right indent",
-            "tipLinked": "Unlink all sides",
-            "tipUnlinked": "Link all sides"
-          },
-          "smallAutoCropInfo":{
-            "title": "Auto crop too small",
-            "message": "Auto crop was smaller than the minimum allowed crop size and was adjusted to the minimum size."
+            "top": "Top offset",
+            "bottom": "Bottom offset",
+            "left": "Left offset",
+            "right": "Right offset",
+            "tipLinked": "Unlock all sides",
+            "tipUnlinked": "Lock all sides"
           }
         },
-        "showArtifactsButton":{
-          "text": "Show artifacts",
-          "tip": "Preview pixels that are similar to the background but are not part of the actual background. This helps visualize which areas might be affected by the current sensitivity setting.",
-          "tipDisabled": "Artifacts preview is not available when sensitivity is set to 0"
-        },
-        "hideArtifactsButton":{
-          "text": "Hide artifacts",
-          "tip": "Hide the preview of background-like pixels in the crop area."
-        },
-        "resetCropButton":{
+        "resetCropButton": {
           "text": "Reset crop",
-          "tip": "Reset the crop area to the original image"
+          "tip": "Restore the original crop area"
         },
-        "hideCropBoxButton":{
+        "hideCropBoxButton": {
           "text": "Crop box",
-          "tip": "Hide or show crop box to see full image (or press and hold Spacebar)"
+          "tip": "Show or hide the crop box to view the full image (or press and hold Spacebar)"
         },
         "applyCropButton": {
           "text": "Apply crop"
         },
         "invalidCropBox": {
           "title": "Invalid crop",
-          "message": "Crop dimensions or position are invalid. It must be within the image dimensions and have positive width and height."
+          "message": "Crop dimensions or position are invalid. The crop area must stay within the image and have a positive width and height."
         },
         "cropBoxIsSameAsOriginalImage": {
-          "title": "Crop box is same as original image",
-          "message": "Crop box is same as original image. No crop was applied."
+          "title": "Crop unchanged",
+          "message": "The crop area matches the original image. No crop was applied."
         },
         "sameCropBoxAfterFit": {
-          "title": "Crop box unchanged",
-          "message": "Crop box was not changed after applying Fit Crop. Try increasing sensitivity, or ensure the background is uniform."
+          "title": "Crop area unchanged",
+          "message": "Fit Crop did not change the crop area. Try increasing sensitivity or ensure the background is uniform."
         }
       }
     }
   },
   "grayscale": {
     "label": "Grayscale",
-    "tip": "Converts the image to grayscale",
+    "tip": "Convert the image to grayscale",
     "tipDisabled": "",
     "explain": "The Grayscale tool converts the image to shades of gray, removing all color information. This is useful for creating monochrome versions of images or focusing only on light and shadow without color distraction.",
     "shortcut": "G",
@@ -356,28 +339,22 @@
   },
   "brush": {
     "label": "Brush",
-    "tip": "Paints on the image with a brush tool",
+    "tip": "Paint on the image",
     "tipDisabled": "",
-    "explain": "The Brush tool allows you to paint on the image with a brush. You can adjust the brush size, hardness, and opacity to achieve different effects.",
+    "explain": "Paint directly on the image using a brush. Adjust the tool size and color to create different strokes and highlights.",
     "shortcut": "B",
     "subTools": {
       "brush": {
         "label": "Brush",
-        "tip": "Paints on the image with a brush tool",
-        "explain": "The Brush tool allows you to paint on the image with a brush. You can adjust the brush size, hardness, and opacity to achieve different effects.",
+        "tip": "Paint on the image",
+        "explain": "Paint on the image using a soft brush. Adjust the brush size and color to control the appearance of the strokes.",
         "shortcut": "B"
       },
       "pencil": {
         "label": "Pencil",
-        "tip": "Draws on the image with a pencil tool",
-        "explain": "The Pencil tool allows you to draw on the image with a pencil. It creates sharper, more defined lines compared to the brush. You can adjust the pencil size and hardness to control the appearance of your strokes.",
+        "tip": "Draw precise lines on the image",
+        "explain": "Draw on the image using a pencil. The pencil creates sharper and more defined strokes compared to the brush.",
         "shortcut": "Shift + L"
-      },
-      "eraser": {
-        "label": "Eraser",
-        "tip": "Removes painted areas from the image",
-        "explain": "The Eraser tool allows you to remove painted areas from the image. You can adjust the eraser size and hardness to control how much of the painted area is removed.",
-        "shortcut": "E"
       }
     },
     "settings": {
@@ -389,11 +366,11 @@
         },
         "brushColor": {
           "label": "Brush color",
-          "tip": "Select the color of the brush"
+          "tip": "Select the brush color"
         },
         "rasterizeButton": {
           "text": "Rasterize",
-          "tip": "Image need to be rasterized before using the brush tool"
+          "tip": "Rasterize the image before using the brush tool"
         },
         "selectedTool": {
           "label": "Selected tool",
@@ -403,7 +380,7 @@
           }
         }
       },
-      "pencil":{
+      "pencil": {
         "label": "Pencil",
         "toolSize": {
           "label": "Pencil size",
@@ -411,11 +388,11 @@
         },
         "pencilColor": {
           "label": "Pencil color",
-          "tip": "Select the color of the pencil"
+          "tip": "Select the pencil color"
         },
         "rasterizeButton": {
           "text": "Rasterize",
-          "tip": "Image need to be rasterized before using the pencil tool"
+          "tip": "Rasterize the image before using the pencil tool"
         },
         "selectedTool": {
           "label": "Selected tool",
@@ -426,24 +403,11 @@
         }
       },
       "eraser": {
-        "label": "Eraser",
-        "toolSize": {
-          "label": "Eraser size",
-          "tip": "Adjust the size of the eraser"
-        },
-        "rasterizeButton": {
-          "text": "Rasterize",
-          "tip": "Image need to be rasterized before using the eraser tool"
-        },
         "clearAllButton": {
           "text": "Clear all",
-          "tip": "Clear all painted areas from the image"
+          "tip": "Remove all painted strokes from the image"
         }
       }
-    },
-    "needRasterizationWarning": {
-      "title": "Rasterization Required",
-      "message": "The image needs to be rasterized before using the brush or eraser tool. Rasterization converts the image into a pixel-based format suitable for painting."
     }
   },
   "blur": {

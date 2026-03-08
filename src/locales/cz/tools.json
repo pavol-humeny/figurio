@@ -244,10 +244,10 @@
   },
   "crop": {
     "label": "Ořezání",
-    "tip": "Ořezání obrázku manuálně nebo automaticky",
+    "tip": "Ořízněte obrázek ručně nebo použijte Automatické ořezání",
     "tipDisabled": "",
-    "explain": "Nástroj Ořezání umožňuje, aby byl obrázek oříznut definováním obdélníkového ořezového rámečku. Rámeček je možné posouvat myší nebo zadat přesné hodnoty pro pozici a rozměry. Při změně velikosti je možné uzamknout poměr stran. Tlačítko Obnovit vrátí ořezový rámeček na původní rozměry a Použít potvrdí aktuální ořez.",
-    "explain2": "Možnost Automatický ořez automaticky detekuje a odstraní oblasti podobné pozadí z okrajů obrázku. Citlivost je možné upravit pro kontrolu, kolik pozadí bude zahrnuto do ořezu. Náhled artefaktů pomáhá zobrazit, které pixely budou považovány za pozadí.",
+    "explain": "Ořízněte obrázek definováním obdélníkové oblasti ořezání. Ořezový rámeček lze přesouvat myší nebo zadat přesnou pozici a rozměry. Při změně velikosti lze uzamknout poměr stran.",
+    "explain2": "Automatické ořezání detekuje a odstraní oblasti podobné pozadí na okrajích obrázku. Citlivost určuje, jak agresivně je pozadí detekováno.",
     "shortcut": "C",
     "settings": {
       "general": {
@@ -260,88 +260,70 @@
           "title": "Rozměry ořezání",
           "width": "Šířka",
           "height": "Výška",
-          "tipLinked": "Odpojit šířku a výšku",
-          "tipUnlinked": "Spojit šířku a výšku"
+          "tipLinked": "Odemknout šířku a výšku",
+          "tipUnlinked": "Uzamknout šířku a výšku"
         },
         "autoCrop": {
           "title": "Automatické ořezání",
-          "autoCropColor": {
-            "title": "Barva automatického ořezání",
-            "tip": "Vyber barvu pro automatické ořezání"
-          },
           "sensitivity": {
             "title": "Citlivost",
-            "tip": "Úroveň citlivosti pro automatické ořezání, vyšší hodnoty zahrnují více pixelů podobných pozadí do výpočtu ořezu"
+            "tip": "Určuje, jak agresivně jsou pixely podobné pozadí zahrnuty do detekce ořezání"
           },
           "useBaseImage": {
             "title": "Použít původní obrázek",
-            "tip": "Použít původní obrázek na výpočet ořezání nebo vypočítat z aktuálního ořezání"
+            "tip": "Použije původní obrázek pro výpočet ořezání místo aktuální oblasti ořezání"
           },
           "fitCropButton": {
-            "text": "Ořezat na těsno"
+            "text": "Oříznout na těsno"
           },
           "manualAdjustments": {
-            "title": "Manuální úpravy",
-            "top": "Horní odsazení",
-            "bottom": "Dolní odsazení",
-            "left": "Levé odsazení",
-            "right": "Pravé odsazení",
-            "tipLinked": "Odpojit všechny strany",
-            "tipUnlinked": "Propojit všechny strany"
-          },
-          "smallAutoCropInfo":{
-            "title": "Automatické ořezání je příliš malé",
-            "message": "Automatické ořezání bylo menší než minimální povolená velikost ořezu a bylo upraveno na minimální velikost."
+            "title": "Ruční úpravy",
+            "top": "Horní okraj",
+            "bottom": "Dolní okraj",
+            "left": "Levý okraj",
+            "right": "Pravý okraj",
+            "tipLinked": "Odemknout všechny strany",
+            "tipUnlinked": "Uzamknout všechny strany"
           }
-        },
-        "showArtifactsButton":{
-          "text": "Zobrazit artefakty",
-          "tip": "Zobrazí pixely podobné pozadí, které však nejsou součástí samotného pozadí. Pomáhá vizualizovat, které oblasti mohou být ovlivněny nastavenou citlivostí.",
-          "tipDisabled": "Náhled artefaktů není dostupný, když je citlivost nastavena na 0"
-        },
-        "hideArtifactsButton":{
-          "text": "Skrýt artefakty",
-          "tip": "Skryje náhled pixelů podobných pozadí v oblasti ořezu."
         },
         "resetCropButton": {
           "text": "Obnovit ořezání",
-          "tip": "Obnoví oblast ořezání na původní obrázek"
+          "tip": "Obnoví původní oblast ořezání"
         },
-        "hideCropBoxButton":{
+        "hideCropBoxButton": {
           "text": "Ořezový rámeček",
-          "tip": "Skryje alebo zobrazí ořezový rámeček (nebo stiskněte a podržte mezerník)"
+          "tip": "Zobrazit nebo skrýt ořezový rámeček pro zobrazení celého obrázku (nebo podržte mezerník)"
         },
         "applyCropButton": {
           "text": "Použít ořezání"
         },
         "invalidCropBox": {
-          "title": "Neplatné oříznutí",
-          "message": "Rozměry nebo pozice oříznutí jsou neplatné. Musí být v rámci rozměrů obrázku a mít kladnou šířku a výšku."
+          "title": "Neplatné ořezání",
+          "message": "Rozměry nebo pozice ořezání jsou neplatné. Oblast ořezání musí být v rámci obrázku a mít kladnou šířku a výšku."
         },
         "cropBoxIsSameAsOriginalImage": {
-          "title": "Orezanie je rovnaké ako pôvodný obrázok",
-          "message": "Orezanie je rovnaké ako pôvodný obrázok. Orezanie nebolo použité."
-        }
-        ,
+          "title": "Ořezání nezměněno",
+          "message": "Oblast ořezání je stejná jako původní obrázek. Ořezání nebylo použito."
+        },
         "sameCropBoxAfterFit": {
-          "title": "Ořez zůstal nezměněný",
-          "message": "Ořez nebyl po použití funkce Ořezat na těsno změněn. Zkuste zvýšit citlivost nebo se ujistěte, že pozadí je jednotné."
+          "title": "Oblast ořezání nezměněna",
+          "message": "Automatické ořezání nezměnilo oblast ořezání. Zkuste zvýšit citlivost nebo zkontrolujte, zda je pozadí jednotné."
         }
       }
     }
   },
   "grayscale": {
     "label": "Odstíny šedi",
-    "tip": "Převede obrázek na odstíny šedi",
+    "tip": "Převede obrázek do odstínů šedi",
     "tipDisabled": "",
-    "explain": "Nástroj Odstíny šedi převede obrázek do odstínů šedi a odstraní všechny barevné informace. Je užitečný pro vytváření monochromatických verzí obrázků nebo pro zaměření pouze na světlo a stín bez rušení barvami.",
+    "explain": "Nástroj Odstíny šedi převede obrázek do odstínů šedi a odstraní všechny barevné informace. Je užitečný pro vytváření monochromatických verzí obrázků nebo pro zaměření pouze na jas obrázka.",
     "shortcut": "G",
     "settings": {
       "convertToGrayscaleButton": {
-        "text": "Převést na odstíny šedi"
+        "text": "Převést do odstínů šedi"
       },
       "grayscaleType": {
-        "label": "Typ odstínů šedi",
+        "label": "Typ algoritmu",
         "tip": "Vyberte metodu použitou k převodu obrázku na odstíny šedi"
       },
       "options": {
@@ -362,26 +344,20 @@
     "label": "Štětec",
     "tip": "Malování na obrázek pomocí štětce",
     "tipDisabled": "",
-    "explain": "Nástroj Štětec umožňuje malovat na obrázek pomocí štětce. Můžete upravit velikost štětce, tvrdost a průhlednost pro dosažení různých efektů.",
-    "shortcut": "SHIFT + B",
+    "explain": "Malujte přímo na obrázek pomocí štětce. Upravte velikost nástroje a barvu pro vytvoření různých tahů a zvýraznění.",
+    "shortcut": "B",
     "subTools": {
       "brush": {
         "label": "Štětec",
         "tip": "Malování na obrázek pomocí štětce",
-        "explain": "Nástroj Štětec umožňuje malovat na obrázek pomocí štětce. Můžete upravit velikost štětce, tvrdost a průhlednost pro dosažení různých efektů.",
-        "shortcut": ""
+        "explain": "Malujte na obrázek pomocí měkkého štětce. Upravte velikost štětce a barvu pro kontrolu vzhledu tahů.",
+        "shortcut": "B"
       },
       "pencil": {
         "label": "Tužka",
         "tip": "Kreslí na obrázek pomocí tužky",
-        "explain": "Nástroj Tužka umožňuje kreslit na obrázek pomocí tužky. Vytváří ostřejší a výraznější čáry ve srovnání se štětcem. Můžete upravit velikost a tvrdost tužky pro kontrolu vzhledu tahů.",
+        "explain": "Kreslete na obrázek pomocí tužky. Tužka vytváří ostřejší a přesnější čáry než štětec.",
         "shortcut": "Shift + L"
-      },
-      "eraser": {
-        "label": "Guma",
-        "tip": "Odstraňuje malované oblasti z obrázku",
-        "explain": "Nástroj Guma umožňuje odstraňovat malované oblasti z obrázku. Můžete upravit velikost gumy a tvrdost, abyste ovládali, kolik z malované oblasti bude odstraněno.",
-        "shortcut": ""
       }
     },
     "settings": {
@@ -397,7 +373,7 @@
         },
         "rasterizeButton": {
           "text": "Rasterizovat",
-          "tip": "Obrázek musí být rasterizován před použitím nástroje guma"
+          "tip": "Před použitím nástroje štětec je potřeba obrázek rasterizovat"
         },
         "selectedTool": {
           "label": "Vybraný nástroj",
@@ -407,7 +383,7 @@
           }
         }
       },
-      "pencil":{
+      "pencil": {
         "label": "Tužka",
         "toolSize": {
           "label": "Velikost tužky",
@@ -419,7 +395,7 @@
         },
         "rasterizeButton": {
           "text": "Rasterizovat",
-          "tip": "Obrázek musí být rasterizován před použitím nástroje tužka"
+          "tip": "Před použitím nástroje tužka je potřeba obrázek rasterizovat"
         },
         "selectedTool": {
           "label": "Vybraný nástroj",
@@ -430,24 +406,11 @@
         }
       },
       "eraser": {
-        "label": "Guma",
-        "toolSize": {
-          "label": "Velikost gumy",
-          "tip": "Upravte velikost gumy"
-        },
-        "rasterizeButton": {
-          "text": "Rasterizovat",
-          "tip": "Obrázek musí být rasterizován před použitím nástroje guma"
-        },
         "clearAllButton": {
           "text": "Vymazat vše",
-          "tip": "Vymazat všechny malované oblasti z obrázku"
+          "tip": "Odstraní všechny namalované tahy z obrázku"
         }
       }
-    },
-    "needRasterizationWarning": {
-      "title": "Vyžaduje se rasterizace",
-      "message": "Obrázek musí být rasterizován před použitím nástroje štětec nebo guma. Rasterizace převádí obrázek do formátu založeného na pixelech, který je vhodný pro malování."
     }
   },
   "blur": {

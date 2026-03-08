@@ -241,10 +241,10 @@
   },
   "crop": {
     "label": "Orezanie",
-    "tip": "Orezanie obrázku manuálne alebo automaticky",
+    "tip": "Orežte obrázok manuálne alebo použite Automatické orezanie",
     "tipDisabled": "",
-    "explain": "Nástroj Orezanie umožňuje, aby bol obrázok orezaný definovaním obdĺžnikového orezového rámu. Rám je možné presúvať myšou alebo zadať presné hodnoty pre pozíciu a rozmery. Pri zmene veľkosti je možné uzamknúť pomer strán. Tlačidlo Obnoviť vráti orezový rám na pôvodné rozmery a Použiť orezanie vykoná orezanie.",
-    "explain2": "Možnosť Automatický orez automaticky deteguje a odstráni oblasti podobné pozadiu z okrajov obrázka. Citlivosť je možné upraviť na kontrolu, koľko pozadia bude zahrnuté do orezu. Náhľad artefaktov pomáha zobraziť, ktoré pixely budú považované za pozadie.",
+    "explain": "Orežte obrázok definovaním obdĺžnikovej oblasti orezania. Orezávací rám je možné presúvať myšou alebo zadať presnú pozíciu a rozmery. Pri zmene veľkosti je možné uzamknúť pomer strán.",
+    "explain2": "Automatické orezanie deteguje a odstráni oblasti podobné pozadiu na okrajoch obrázka. Citlivosť určuje, ako agresívne sa pozadie deteguje.",
     "shortcut": "C",
     "settings": {
       "general": {
@@ -257,88 +257,71 @@
           "title": "Rozmery orezania",
           "width": "Šírka",
           "height": "Výška",
-          "tipLinked": "Odpojiť šírku a výšku",
-          "tipUnlinked": "Spojiť šírku a výšku"
+          "tipLinked": "Odomknúť šírku a výšku",
+          "tipUnlinked": "Uzamknúť šírku a výšku"
         },
         "autoCrop": {
           "title": "Automatické orezanie",
-          "autoCropColor": {
-            "title": "Farba automatického orezania",
-            "tip": "Vyber farbu pre automatické orezanie"
-          },
           "sensitivity": {
             "title": "Citlivosť",
-            "tip": "Úroveň citlivosti pre automatické orezanie, vyššie hodnoty zahrňujú viac pixelov podobných pozadiu do výpočtu orezania"
+            "tip": "Určuje, ako agresívne sa pixely podobné pozadiu zahrnú do detekcie orezania"
           },
           "useBaseImage": {
             "title": "Použiť pôvodný obrázok",
-            "tip": "Použiť pôvodný obrázok na výpočet orezania alebo vypočítať z aktuálneho orezania"
+            "tip": "Použije pôvodný obrázok na výpočet orezania namiesto aktuálnej oblasti orezania"
           },
           "fitCropButton": {
             "text": "Orezať na tesno"
           },
           "manualAdjustments": {
             "title": "Manuálne úpravy",
-            "top": "Horné odsadenie",
-            "bottom": "Dolné odsadenie",
-            "left": "Ľavé odsadenie",
-            "right": "Pravé odsadenie",
-            "tipLinked": "Odpojiť všetky strany",
-            "tipUnlinked": "Prepojiť všetky strany"
-          },
-          "smallAutoCropInfo":{
-            "title": "Automatické orezanie je príliš malé",
-            "message": "Automatické orezanie bolo menšie než minimálna povolená veľkosť orezania a bolo upravené na minimálnu veľkosť."
+            "top": "Horný okraj",
+            "bottom": "Dolný okraj",
+            "left": "Ľavý okraj",
+            "right": "Pravý okraj",
+            "tipLinked": "Odomknúť všetky strany",
+            "tipUnlinked": "Uzamknúť všetky strany"
           }
-        },
-        "showArtifactsButton":{
-          "text": "Zobraziť artefakty",
-          "tip": "Zobrazí pixely podobné pozadiu, ktoré však nie sú súčasťou samotného pozadia. Pomáha vizualizovať, ktoré oblasti môžu byť ovplyvnené nastavenou citlivosťou.",
-          "tipDisabled": "Náhľad artefaktov nie je dostupný, keď je citlivosť nastavená na 0"
-        },
-        "hideArtifactsButton":{
-          "text": "Skryť artefakty",
-          "tip": "Skryje náhľad pixelov podobných pozadiu."
         },
         "resetCropButton": {
           "text": "Obnoviť orezanie",
-          "tip": "Obnoví oblasť orezania na pôvodný obrázok"
+          "tip": "Obnoví pôvodnú oblasť orezania"
         },
-        "hideCropBoxButton":{
-          "text": "Orezový rám",
-          "tip": "Skryje alebo zobrazí orezový rám (alebo stlačte a podržte medzerník)"
+        "hideCropBoxButton": {
+          "text": "Orezávací rám",
+          "tip": "Zobraziť alebo skryť orezávací rám pre zobrazenie celého obrázka (alebo podržte medzerník)"
         },
         "applyCropButton": {
           "text": "Použiť orezanie"
         },
         "invalidCropBox": {
           "title": "Neplatné orezanie",
-          "message": "Rozmery alebo pozícia orezania sú neplatné. Musí byť v rámci rozmerov obrázka a mať kladnú šírku a výšku."
+          "message": "Rozmery alebo pozícia orezania sú neplatné. Oblasť orezania musí byť v rámci obrázka a mať kladnú šírku a výšku."
         },
         "cropBoxIsSameAsOriginalImage": {
-          "title": "Orezanie je rovnaké ako pôvodný obrázok",
-          "message": "Orezanie je rovnaké ako pôvodný obrázok. Orezanie nebolo použité."
+          "title": "Orezanie nezmenené",
+          "message": "Oblasť orezania je rovnaká ako pôvodný obrázok. Orezanie nebolo použité."
         },
         "sameCropBoxAfterFit": {
-          "title": "Orez zostal nezmenený",
-          "message": "Orez nebol po použití funkcie Orezať na tesno zmenený. Skúste zvýšiť citlivosť alebo sa uistite, že pozadie je jednotné."
+          "title": "Oblasť orezania nezmenená",
+          "message": "Fit Crop nezmenil oblasť orezania. Skúste zvýšiť citlivosť alebo skontrolujte, či je pozadie rovnomerné."
         }
       }
     }
   },
   "grayscale": {
     "label": "Odtiene sivej",
-    "tip": "Konvertuje obrázok na odtiene sivej",
+    "tip": "Konvertuje obrázok do odtieňov sivej",
     "tipDisabled": "",
-    "explain": "Nástroj Odtiene sivej prevedie obrázok do odtieňov sivej a odstráni všetky farebné informácie. Je užitočný na vytváranie monochromatických verzií obrázkov alebo na zameranie sa iba na svetlo a tieň bez rušenia farbami.",
+    "explain": "Nástroj Odtiene sivej prevedie obrázok do odtieňov sivej a odstráni všetky farebné informácie. Je užitočný na vytváranie monochromatických verzií obrázkov alebo na zameranie sa iba na jas a tiene obrázka.",
     "shortcut": "G",
     "settings": {
       "convertToGrayscaleButton": {
-        "text": "Previesť na odtiene sivej"
+        "text": "Previesť do odtieňov sivej"
       },
       "grayscaleType": {
-        "label": "Typ odtienu sivej",
-        "tip": "Vyberte metódu použitú na prevod obrázku na odtiene sivej"
+        "label": "Typ algoritmu",
+        "tip": "Vyberte metódu použitú na prevod obrázka"
       },
       "options":{
         "none": "Žiadny",
@@ -358,26 +341,20 @@
     "label": "Štetec",
     "tip": "Malovanie na obrázok pomocou štetca",
     "tipDisabled": "",
-    "explain": "Nástroj Štetec umožňuje maľovať na obrázok pomocou štetca. Môžete upraviť veľkosť štetca, tvrdosť a priehľadnosť pre dosiahnutie rôznych efektov.",
-    "shortcut": "SHIFT + B",
+    "explain": "Maľujte priamo na obrázok pomocou štetca. Upravte veľkosť nástroja a farbu pre vytvorenie rôznych ťahov a zvýraznení.",
+    "shortcut": "B",
     "subTools": {
       "brush": {
         "label": "Štetec",
         "tip": "Malovanie na obrázok pomocou štetca",
-        "explain": "Nástroj Štetec umožňuje maľovať na obrázok pomocou štetca. Môžete upraviť veľkosť štetca, tvrdosť a priehľadnosť pre dosiahnutie rôznych efektov.",
-        "shortcut": ""
+        "explain": "Maľujte na obrázok pomocou mäkkého štetca. Upravte veľkosť štetca a farbu pre kontrolu vzhľadu ťahov.",
+        "shortcut": "B"
       },
       "pencil": {
         "label": "Ceruzka",
         "tip": "Kreslí na obrázok pomocou ceruzky",
-        "explain": "Nástroj Ceruzka umožňuje kresliť na obrázok pomocou ceruzky. Vytvára ostrejšie a výraznejšie čiary v porovnaní so štetcom. Môžete upraviť veľkosť a tvrdosť ceruzky pre kontrolu vzhľadu ťahov.",
+        "explain": "Kreslite na obrázok pomocou ceruzky. Ceruzka vytvára ostrejšie a presnejšie čiary než štetec.",
         "shortcut": "Shift + L"
-      },
-      "eraser": {
-        "label": "Guma",
-        "tip": "Odstraňuje natreté oblasti z obrázka",
-        "explain": "Nástroj Guma umožňuje odstrániť natreté oblasti z obrázka. Môžete upraviť veľkosť gumy a tvrdosť, aby ste ovplyvnili, koľko z natretého územia sa odstráni.",
-        "shortcut": ""
       }
     },
     "settings": {
@@ -393,7 +370,7 @@
         },
         "rasterizeButton": {
           "text": "Rasterizovať",
-          "tip": "Obrázok musí byť rasterizovaný pred použitím nástroja guma"
+          "tip": "Pred použitím nástroja štetec je potrebné obrázok rasterizovať"
         },
         "selectedTool": {
           "label": "Vybraný nástroj",
@@ -403,7 +380,7 @@
           }
         }
       },
-      "pencil":{
+      "pencil": {
         "label": "Ceruzka",
         "toolSize": {
           "label": "Veľkosť ceruzky",
@@ -415,7 +392,7 @@
         },
         "rasterizeButton": {
           "text": "Rasterizovať",
-          "tip": "Obrázok musí byť rasterizovaný pred použitím nástroja ceruzka"
+          "tip": "Pred použitím nástroja ceruzka je potrebné obrázok rasterizovať"
         },
         "selectedTool": {
           "label": "Vybraný nástroj",
@@ -426,24 +403,11 @@
         }
       },
       "eraser": {
-        "label": "Guma",
-        "toolSize": {
-          "label": "Veľkosť gumy",
-          "tip": "Upravte veľkosť gumy"
-        },
-        "rasterizeButton": {
-          "text": "Rasterizovať",
-          "tip": "Obrázok musí byť rasterizovaný pred použitím nástroja guma"
-        },
         "clearAllButton": {
           "text": "Vymazať všetko",
-          "tip": "Vymazať všetky natreté oblasti z obrázka"
+          "tip": "Odstráni všetky namaľované ťahy z obrázka"
         }
       }
-    },
-    "needRasterizationWarning": {
-      "title": "Vyžaduje sa rasterizácia",
-      "message": "Obrázok musí byť rasterizovaný pred použitím nástroja štetec alebo guma. Rasterizácia prevádza obrázok do formátu založeného na pixele, ktorý je vhodný na maľovanie."
     }
   },
   "blur": {

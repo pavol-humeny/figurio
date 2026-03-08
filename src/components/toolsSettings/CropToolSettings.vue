@@ -219,21 +219,6 @@ const {
             </div>
           </div>
 
-          <!-- Show/hide artifacts -->
-          <!--
-        <div v-if="imageStore.fileType === 'image'" class="settings-content-wrapper">
-          <div class="content-wrapper">
-            <div class="content-button">
-              <DefaultButton
-                :text="areArtifactsVisible ? $t('tools.crop.settings.general.hideArtifactsButton.text') : $t('tools.crop.settings.general.showArtifactsButton.text')"
-                @click="areArtifactsVisible ? hideArtifacts() : showArtifacts()"
-                :tip="areArtifactsVisible ? $t('tools.crop.settings.general.hideArtifactsButton.tip') : autoCropThreshold === 0 ? $t('tools.crop.settings.general.showArtifactsButton.tipDisabled') : $t('tools.crop.settings.general.showArtifactsButton.tip')"
-                position="bottom-left" :disabled="autoCropThreshold === 0" />
-            </div>
-          </div>
-        </div>
-        -->
-
           <!-- Reset crop -->
           <div class="settings-content-wrapper">
             <div class="content-wrapper">
