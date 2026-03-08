@@ -58,6 +58,7 @@ const {
       <ItemTip :text="$t('topPanel.zoomControl.tip.zoomOut')" position="bottom">
         <div class="zoom-out-button button button-control button-circle button-clickable"
           @mousedown="startHold(zoomOut)" @mouseup="handleClickOrHold(zoomOut)" @mouseleave="stopHold"
+          @touchstart.prevent="startHold(zoomOut)" @touchend="handleClickOrHold(zoomOut)" @touchcancel="stopHold"
           :class="{ 'disabled': !canZoomOut }">
           <BaseIcon name="IconMinus" size="24" />
         </div>
@@ -77,7 +78,8 @@ const {
       <!-- Zoom In -->
       <ItemTip :text="$t('topPanel.zoomControl.tip.zoomIn')" position="bottom">
         <div class="zoom-in-button button button-control button-circle button-clickable" @mousedown="startHold(zoomIn)"
-          @mouseup="handleClickOrHold(zoomIn)" @mouseleave="stopHold" :class="{ 'disabled': !canZoomIn }">
+          @mouseup="handleClickOrHold(zoomIn)" @mouseleave="stopHold" @touchstart.prevent="startHold(zoomIn)"
+          @touchend="handleClickOrHold(zoomIn)" @touchcancel="stopHold" :class="{ 'disabled': !canZoomIn }">
           <BaseIcon name="IconPlus" size="24" />
         </div>
       </ItemTip>

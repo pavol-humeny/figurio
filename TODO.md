@@ -24,7 +24,6 @@
 - skontrolovať warning hlášky (malé rozmery, safari...)
 
 - touch eventy 
-    - steeper - drzanie 
     - select
     - shape, blur, text, magnify
     - move objects

@@ -81,13 +81,15 @@ defineExpose({ setValue })
 <template>
   <ItemTip :text="tip" position="bottom">
     <div class="stepper-inline">
-      <BaseIcon name="IconMinus" :size="16" @mousedown="startHold(decrease)" @mouseup="stopHold" @mouseleave="stopHold"
+      <BaseIcon name="IconMinus" :size="16" @mousedown="startHold(decrease)" @mouseup="stopHold"
+        @mouseleave="stopHold" @touchstart.prevent="startHold(decrease)" @touchend="stopHold" @touchcancel="stopHold"
         :disabled="disableDecrease()" class="increase-decrease-icon button-clickable" />
         
       <input class="value-input" type="number" :value="inputValue" :min="min" :max="max" :step="step"
         :disabled="disabled" @input="onInput" @blur="onBlur" @keydown.enter.prevent="onBlur" @wheel="changeValue" />
 
-      <BaseIcon name="IconPlus" :size="16" @mousedown="startHold(increase)" @mouseup="stopHold" @mouseleave="stopHold"
+      <BaseIcon name="IconPlus" :size="16" @mousedown="startHold(increase)" @mouseup="stopHold"
+        @mouseleave="stopHold" @touchstart.prevent="startHold(increase)" @touchend="stopHold" @touchcancel="stopHold"
         :disabled="disableIncrease()" class="increase-decrease-icon button-clickable" />
     </div>
   </ItemTip>

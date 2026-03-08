@@ -108,11 +108,13 @@ defineExpose({ setValue })
       <div class="spinner-controls">
         <div class="spinner-btn spinner-btn-up">
           <BaseIcon name="IconArrowUp" size="20" class="spinner-btn-icon-up" @mousedown="startHold(increment)"
-            @mouseup="stopHold" @mouseleave="stopHold" />
+            @mouseup="stopHold" @mouseleave="stopHold" @touchstart.prevent="startHold(increment)"
+            @touchend="stopHold" @touchcancel="stopHold" />
         </div>
         <div class="spinner-btn spinner-btn-down">
           <BaseIcon name="IconArrowDown" size="20" class="spinner-btn-icon-down" @mousedown="startHold(decrement)"
-            @mouseup="stopHold" @mouseleave="stopHold" />
+            @mouseup="stopHold" @mouseleave="stopHold" @touchstart.prevent="startHold(decrement)"
+            @touchend="stopHold" @touchcancel="stopHold" />
         </div>
       </div>
     </div>

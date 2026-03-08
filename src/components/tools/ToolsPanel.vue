@@ -72,7 +72,8 @@ watch(atBottom, (newVal) => {
   <div class="tools-panel" id="tools-panel">
     <div v-if="!atTop" class="arrow-up">
       <BaseIcon name="IconArrowUp" size="24" color="var(--primary-c)" @mousedown="startHold(scrollUp)"
-        @mouseup="stopHold" @mouseleave="stopHold" />
+        @mouseup="stopHold" @mouseleave="stopHold" @touchstart.prevent="startHold(scrollUp)" @touchend="stopHold"
+        @touchcancel="stopHold" />
     </div>
 
     <div ref="toolsRef" class="tools-wrapper" @scroll="checkScroll">
@@ -87,7 +88,8 @@ watch(atBottom, (newVal) => {
 
     <div v-if="!atBottom" class="arrow-down">
       <BaseIcon name="IconArrowDown" size="24" color="var(--primary-c)" @mousedown="startHold(scrollDown)"
-        @mouseup="stopHold" @mouseleave="stopHold" />
+        @mouseup="stopHold" @mouseleave="stopHold" @touchstart.prevent="startHold(scrollDown)"
+        @touchend="stopHold" @touchcancel="stopHold" />
     </div>
   </div>
 </template>
