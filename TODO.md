@@ -23,8 +23,6 @@
 
 - skontrolovať warning hlášky (malé rozmery, safari...)
 
-- tools preklad 
-
 
 - skontrolovať texty
 ├── DONE - calibration.json
@@ -41,7 +39,7 @@
 ├── DONE - statistics.json
 ├── DONE - tools.json
 ├── DONE - topPanel.json
-└── tutorialSteps.json
+└── DONE - tutorialSteps.json
 
 ## Dlhodobé TODO 
 - eye dropper na safari

@@ -282,6 +282,16 @@ export function useItemTip(options = {}, uiStore, editorStore) {
     uiStore.isItemTipVisible = false
   }
 
+  /**
+   * Handles scroll events to hide the tooltip when the user scrolls the page
+   */
+  const handleScroll = () => {
+    if (!isVisible.value) return
+
+    isVisible.value = false
+    uiStore.isItemTipVisible = false
+  }
+
   // Update position after mount
   onMounted(() => {
     nextTick(updatePosition)
@@ -294,6 +304,9 @@ export function useItemTip(options = {}, uiStore, editorStore) {
         hideTipImmediately()
       }
     })
+
+    // Hide tooltip on scroll
+    window.addEventListener('scroll', handleScroll, true)
   })
 
   // Clear tooltip timeout before component unmounts
@@ -303,6 +316,8 @@ export function useItemTip(options = {}, uiStore, editorStore) {
 
     window.removeEventListener('blur', hideTipImmediately)
     document.removeEventListener('visibilitychange', hideTipImmediately)
+
+    window.removeEventListener('scroll', handleScroll, true)
   })
 
   return {

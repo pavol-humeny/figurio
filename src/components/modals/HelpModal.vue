@@ -441,11 +441,12 @@ const showStatistics = () => {
             <!-- Tutorial -->
             <div class="help-content" v-if="imageStore.isImageLoaded">
               <div class="subtitle-wrapper">
-                <BaseIcon v-if="tutorialCompleted" class="tutorial-completed-icon" name="IconTick" size="20"
-                  :tip='$t("help.helpContent.tutorial.tutorialCompletedTip")' position="top-right" />
                 <p class="help-content-title">
                   {{ $t('help.helpContent.tutorial.title') }}
                 </p>
+                <BaseIcon v-if="tutorialCompleted" class="tutorial-completed-icon" name="IconTick" size="17"
+                  color="var(--background-c)" :tip='$t("help.helpContent.tutorial.tutorialCompletedTip")'
+                  position="top-right" />
               </div>
               <ul class="dot-paragraph">
                 <li>
@@ -733,6 +734,14 @@ const showStatistics = () => {
   background: var(--primary-c);
   border-radius: 50%;
   padding: 3px;
+  /* margin-bottom: 7px; */
+  position: relative;
+  top: -5px;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .tutorial-button,

@@ -2,35 +2,35 @@
   "tutorial": {
     "toolsPanel": {
       "title": "Panel nástrojov",
-      "text": "Tento panel obsahuje všetky dostupné nástroje na úpravu obrázkov. Môžete vybrať nástroj na vykonanie rôznych úprav. Každý nástroj môže ponúkať ďalšie nastavenia a možnosti."
+      "text": "Panel obsahuje všetky dostupné nástroje na úpravu obrázka. Jednotlivé nástroje umožňujú vykonávať rôzne úpravy a môžu poskytovať aj ďalšie nastavenia a možnosti konfigurácie."
     },
     "topPanelLeft": {
-      "title": "Správa súborov",
-      "text": "Táto sekcia umožňuje zobraziť a upraviť názov súboru, otvoriť nový obrázok alebo zatvoriť aktuálny súbor."
+      "title": "Správa súboru",
+      "text": "Táto časť slúži na prácu s aktuálnym súborom. Umožňuje zobraziť alebo upraviť názov súboru, otvoriť nový súbor alebo zatvoriť aktuálny."
     },
     "topPanelCenter": {
       "title": "Ovládanie úprav",
-      "text": "Tu môžete vrátiť alebo zopakovať zmeny, prípadne priblížiť alebo oddialiť pohľad na obrázok."
+      "text": "Stredný panel obsahuje základné ovládacie prvky úprav, ako je vrátenie alebo opätovné vykonanie zmien, a nástroje na priblíženie alebo oddialenie zobrazenia obrázka."
     },
     "topPanelRight": {
-      "title": "Pomocník a nastavenia",
-      "text": "Táto sekcia poskytuje prístup k pomocníkovi a konfiguračným nastaveniam editora."
+      "title": "Pomoc a nastavenia",
+      "text": "Táto časť poskytuje prístup k nápovede a k nastaveniam editora."
     },
     "viewport": {
       "title": "Pracovná plocha",
-      "text": "Toto je hlavná oblasť úprav, kde sa zobrazuje obrázok. S obrázkom môžete interagovať priamo pomocou rôznych nástrojov. V nastaveniach môžete zapnúť pravítka na presnejšie úpravy."
+      "text": "Pracovná plocha predstavuje hlavnú oblasť editora, kde sa zobrazuje a upravuje obrázok. Umožňuje priamu interakciu s obrázkom pomocou dostupných nástrojov."
     },
     "toolSettings": {
       "title": "Nastavenia nástroja",
-      "text": "Táto sekcia zobrazuje nastavenia pre aktuálne vybraný nástroj. Môžete upraviť parametre špecifické pre daný nástroj."
+      "text": "Táto sekcia zobrazuje možnosti nastavenia aktuálne vybraného nástroja a umožňuje upraviť parametre súvisiace s vykonávanou úpravou."
     },
     "exportTool": {
-      "title": "Export nástroj",
-      "text": "Tento nástroj vám umožňuje uložiť upravený obrázok v rôznych formátoch. Pred exportom si môžete zvoliť požadovaný formát a kvalitu."
+      "title": "Export",
+      "text": "Nástroj export umožňuje uložiť upravený obrázok do rôznych výstupných formátov. Pred vytvorením výsledného súboru je možné nastaviť parametre ako formát alebo kvalitu."
     },
     "dragDropArea": {
-      "title": "Oblasť pre potiahnutie súboru",
-      "text": "Obrázok môžete jednoducho potiahnuť a pustiť do tejto oblasti na otvorenie v editore. Je to rýchly spôsob, ako začať bez použitia menu."
+      "title": "Oblasť pre pretiahnutie súboru",
+      "text": "Táto oblasť umožňuje otvoriť obrázok jeho presunutím priamo do editora. Ide o rýchly spôsob načítania súboru bez použitia ponuky súboru."
     }
   }
 }
