@@ -170,6 +170,28 @@ export function useSvgObjectWrapper(
   const lockStartX = ref(0)
   const lockStartY = ref(0)
 
+  /**
+   * Resolve axis lock from current pointer position against drag/resize start.
+   * Vertical cone is +/-45deg around Y axis; otherwise horizontal.
+   * @param {number} clientX
+   * @param {number} clientY
+   * @returns {'x'|'y'|null}
+   */
+  const resolveAxisLockFromStart = (clientX, clientY) => {
+    const deltaX = clientX - lockStartX.value
+    const deltaY = clientY - lockStartY.value
+
+    if (
+      Math.abs(deltaX) <= editorConfig.axisLockMinDelta &&
+      Math.abs(deltaY) <= editorConfig.axisLockMinDelta
+    ) {
+      return null
+    }
+
+    // +/-45deg around vertical axis <=> |dx| <= |dy|
+    return Math.abs(deltaX) <= Math.abs(deltaY) ? 'y' : 'x'
+  }
+
   // ---------------------------
   // Dragging
   // ---------------------------
@@ -312,9 +334,27 @@ export function useSvgObjectWrapper(
     if ('x' in object.value.attrs) {
       rawDragX.value = object.value.attrs.x
       rawDragY.value = object.value.attrs.y
+      dragBaseX.value = object.value.attrs.x
+      dragBaseY.value = object.value.attrs.y
     } else if ('cx' in object.value.attrs) {
       rawDragX.value = object.value.attrs.cx
       rawDragY.value = object.value.attrs.cy
+      dragBaseX.value = object.value.attrs.cx
+      dragBaseY.value = object.value.attrs.cy
+    } else if (
+      'x1' in object.value.attrs &&
+      'y1' in object.value.attrs &&
+      'x2' in object.value.attrs &&
+      'y2' in object.value.attrs
+    ) {
+      dragBaseLine.value = {
+        x1: object.value.attrs.x1,
+        y1: object.value.attrs.y1,
+        x2: object.value.attrs.x2,
+        y2: object.value.attrs.y2,
+      }
+      dragBaseX.value = object.value.attrs.x1
+      dragBaseY.value = object.value.attrs.y1
     }
 
     event.stopPropagation()
@@ -468,6 +508,9 @@ export function useSvgObjectWrapper(
    */
   const rawDragX = ref(0)
   const rawDragY = ref(0)
+  const dragBaseX = ref(0)
+  const dragBaseY = ref(0)
+  const dragBaseLine = ref({ x1: 0, y1: 0, x2: 0, y2: 0 })
 
   /**
    * Mouse move handler for dragging, resizing and rotating the SVG object
@@ -603,39 +646,6 @@ export function useSvgObjectWrapper(
       const sin = Math.sin(-angleRad)
       let localDx = dx * cos - dy * sin
       let localDy = dx * sin + dy * cos
-
-      // Axis lock with Alt key
-      if (isAltKey && onlyOneKeyPressed) {
-        const deltaX = event.clientX - lockStartX.value
-        const deltaY = event.clientY - lockStartY.value
-
-        if (
-          Math.abs(deltaX) > editorConfig.axisLockMinDelta ||
-          Math.abs(deltaY) > editorConfig.axisLockMinDelta
-        ) {
-          if (!axisLock.value) {
-            axisLock.value = Math.abs(deltaX) > Math.abs(deltaY) ? 'x' : 'y'
-          } else {
-            if (
-              axisLock.value === 'x' &&
-              Math.abs(deltaY) > Math.abs(deltaX) * editorConfig.axisLockHysteresis
-            ) {
-              axisLock.value = 'y'
-            } else if (
-              axisLock.value === 'y' &&
-              Math.abs(deltaX) > Math.abs(deltaY) * editorConfig.axisLockHysteresis
-            ) {
-              axisLock.value = 'x'
-            }
-          }
-        }
-
-        // Apply axis lock to local deltas
-        if (axisLock.value === 'x') localDy = 0
-        else if (axisLock.value === 'y') localDx = 0
-      } else if (!isAltKey) {
-        axisLock.value = null
-      }
 
       // Apply local deltas back
       dx = localDx * cos + localDy * sin
@@ -1492,34 +1502,16 @@ export function useSvgObjectWrapper(
 
     // DRAG
     if (isDragging.value) {
-      let offsetX = dx
-      let offsetY = dy
+      const totalDx = (event.clientX - lockStartX.value) / viewportStore.realZoomLevel
+      const totalDy = (event.clientY - lockStartY.value) / viewportStore.realZoomLevel
+
+      let offsetX = totalDx
+      let offsetY = totalDy
 
       // AXIS LOCK (Alt)
       if (isAltKey && onlyOneKeyPressed) {
-        const deltaX = event.clientX - lockStartX.value
-        const deltaY = event.clientY - lockStartY.value
-
-        if (
-          Math.abs(deltaX) > editorConfig.axisLockMinDelta ||
-          Math.abs(deltaY) > editorConfig.axisLockMinDelta
-        ) {
-          // Determine or update axis lock with hysteresis
-          if (!axisLock.value) {
-            axisLock.value = Math.abs(deltaX) > Math.abs(deltaY) ? 'x' : 'y'
-          } else {
-            if (
-              axisLock.value === 'x' &&
-              Math.abs(deltaY) > Math.abs(deltaX) * editorConfig.axisLockHysteresis
-            ) {
-              axisLock.value = 'y'
-            } else if (
-              axisLock.value === 'y' &&
-              Math.abs(deltaX) > Math.abs(deltaY) * editorConfig.axisLockHysteresis
-            ) {
-              axisLock.value = 'x'
-            }
-          }
+        if (axisLock.value === null) {
+          axisLock.value = resolveAxisLockFromStart(event.clientX, event.clientY)
         }
 
         // Apply axis lock
@@ -1529,11 +1521,8 @@ export function useSvgObjectWrapper(
         axisLock.value = null
       }
 
-      rawDragX.value += offsetX
-      rawDragY.value += offsetY
-
-      let finalX = rawDragX.value
-      let finalY = rawDragY.value
+      let finalX = dragBaseX.value + offsetX
+      let finalY = dragBaseY.value + offsetY
 
       const bBox = getTransformedBoundingBox(object.value)
 
@@ -1576,13 +1565,10 @@ export function useSvgObjectWrapper(
         attrs.cx = finalX
         attrs.cy = finalY
       } else if ('x1' in attrs && 'y1' in attrs && 'x2' in attrs && 'y2' in attrs) {
-        const dxLine = finalX - attrs.x1
-        const dyLine = finalY - attrs.y1
-
-        attrs.x1 += dxLine
-        attrs.y1 += dyLine
-        attrs.x2 += dxLine
-        attrs.y2 += dyLine
+        attrs.x1 = dragBaseLine.value.x1 + offsetX
+        attrs.y1 = dragBaseLine.value.y1 + offsetY
+        attrs.x2 = dragBaseLine.value.x2 + offsetX
+        attrs.y2 = dragBaseLine.value.y2 + offsetY
       }
 
       // updateRotationTransform()

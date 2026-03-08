@@ -23,13 +23,6 @@
 
 - skontrolovať warning hlášky (malé rozmery, safari...)
 
-- touch eventy 
-    - select
-    - shape, blur, text, magnify
-    - move objects
-
-- vyriešiť pohyb objektov s axis lock
-
 
 - skontrolovať texty
 ├── DONE - calibration.json
