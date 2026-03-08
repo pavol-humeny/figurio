@@ -23,6 +23,8 @@
 
 - skontrolovať warning hlášky (malé rozmery, safari...)
 
+- tools preklad 
+
 
 - skontrolovať texty
 ├── DONE - calibration.json
@@ -37,7 +39,7 @@
 ├── DONE - privacy.json
 ├── release.json
 ├── DONE - statistics.json
-├── tools.json
+├── DONE - tools.json
 ├── DONE - topPanel.json
 └── tutorialSteps.json
 

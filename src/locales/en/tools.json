@@ -412,11 +412,11 @@
   },
   "blur": {
     "label": "Blur area",
-    "tip": "Adds blur area to the image",
+    "tip": "Blur a selected area of the image",
     "tipDisabled": "",
-    "explain": "The Blur area tool applies a blur effect to a selected rectangular area of the image. The size, position, and rotation of the blur box can be adjusted manually or by entering exact values. The blur strength slider controls how strong the effect is.",
+    "explain": "Apply a blur effect to a rectangular area of the image. Adjust the position and size of the blur area. The blur strength and edge fade can be customized to control the appearance of the blur effect.",
     "shortcut": "B",
-    "objectNames" : "Blur area",
+    "objectNames": "Blur area",
     "settings": {
       "general": {
         "position": {
@@ -428,46 +428,27 @@
           "label": "Dimensions",
           "width": "Width",
           "height": "Height",
-          "tipLinked": "Unlink width and height",
-          "tipUnlinked": "Link width and height"
-        },
-        "rotation": {
-          "label": "Rotation",
-          "tip": "Adjust the rotation angle or double click icon to reset rotation"
+          "tipLinked": "Unlock width and height",
+          "tipUnlinked": "Lock width and height"
         },
         "blurStrength": {
           "label": "Blur strength",
-          "tip": "Adjust the strength of the blur effect"
+          "tip": ""
         },
         "edgeFade": {
           "label": "Edge fade",
-          "tip": "Adjust the fade of the blur effect towards the edges"
-        },
-        "zIndex": {
-          "label": "Z-index",
-          "bringToFrontButton": {
-            "text": "Bring to front"
-          },
-          "sendToBackButton": {
-            "text": "Send to back"
-          },
-          "moveForwardButton": {
-            "text": "Move forward"
-          },
-          "moveBackwardButton": {
-            "text": "Move backward"
-          }
+          "tip": ""
         }
       }
     }
   },
   "shape": {
     "label": "Shape",
-    "tip": "Adds vector shapes",
+    "tip": "Add vector shapes to the image",
     "tipDisabled": "",
-    "explain": "The Shape tool allows adding vector shapes to the image. Shapes can be positioned, resized, rotated, and styled with fill, stroke, opacity, and line options. Shapes can also be reordered using Z-index controls.",
+    "explain": "Add vector shapes such as rectangles, ellipses, or lines to the image. Shapes can be positioned, resized, and styled using fill color, stroke, opacity, and line settings.",
     "shortcut": "S",
-    "objectNames" : {
+    "objectNames": {
       "rectangle": "Rectangle",
       "ellipse": "Ellipse",
       "line": "Line"
@@ -475,17 +456,17 @@
     "subTools": {
       "rectangle": {
         "label": "Rectangle",
-        "tip": "Add a rectangle shape to the image",
+        "tip": "Add a rectangle shape",
         "shortcut": ""
       },
       "ellipse": {
         "label": "Ellipse",
-        "tip": "Add an ellipse shape to the image",
+        "tip": "Add an ellipse shape",
         "shortcut": ""
       },
       "line": {
         "label": "Line",
-        "tip": "Add a line shape to the image",
+        "tip": "Add a line shape",
         "shortcut": ""
       }
     },
@@ -510,16 +491,16 @@
         "label": "Dimensions",
         "width": "Width",
         "height": "Height",
-        "tipLinked": "Unlink width and height",
-        "tipUnlinked": "Link width and height"
+        "tipLinked": "Unlock width and height",
+        "tipUnlinked": "Lock width and height"
       },
       "rotation": {
         "label": "Rotation",
-        "tip": "Adjust the rotation angle or double click icon to reset rotation"
+        "tip": "Adjust the rotation angle or double-click the icon to reset it"
       },
       "enableFillColor": {
-        "label": "Enable fill color",
-        "tip": "Enable or disable fill color for the shape"
+        "label": "Fill color",
+        "tip": "Enable or disable the fill color"
       },
       "fillColor": {
         "label": "Fill color",
@@ -527,27 +508,27 @@
       },
       "lineWidth": {
         "label": "Line width",
-        "tip": "Adjust the width of line"
+        "tip": "Adjust the width of the line"
       },
       "strokeColor": {
         "label": "Stroke color",
-        "tip": "Select the stroke color for the shape"
+        "tip": "Select the stroke color"
       },
       "strokeWidth": {
         "label": "Stroke width",
-        "tip": "Adjust the width of stroke"
+        "tip": "Adjust the stroke width"
       },
       "opacity": {
         "label": "Opacity",
-        "tip": "Adjust the opacity of the shape or double click icon to reset opacity"
+        "tip": "Adjust the shape opacity or double-click the icon to reset it"
       },
       "cornerRadius": {
         "label": "Corner radius",
-        "tip": "Adjust the corner radius of the shape or double click icon to reset corner radius"
+        "tip": "Adjust the corner radius or double-click the icon to reset it"
       },
       "lineType": {
         "label": "Line type",
-        "tip": "Select the type of line for the shape",
+        "tip": "Select the style of the line",
         "options": {
           "solid": "Solid",
           "dashed": "Dashed",
@@ -558,11 +539,11 @@
       "lineArrow": {
         "start": {
           "label": "Start arrow",
-          "tip": "Enable or disable start arrow for the line"
+          "tip": "Enable or disable an arrow at the start of the line"
         },
         "end": {
-          "label": "Line end",
-          "tip": "Enable or disable end arrow for the line"
+          "label": "End arrow",
+          "tip": "Enable or disable an arrow at the end of the line"
         },
         "options": {
           "none": "None",
@@ -570,41 +551,18 @@
           "circle": "Circle",
           "square": "Square"
         }
-      },
-      "zIndex": {
-        "label": "Position in Z-axis",
-        "bringToFrontButton": {
-          "text": "Bring to front"
-        },
-        "sendToBackButton": {
-          "text": "Send to back"
-        },
-        "moveForwardButton": {
-          "text": "Move forward"
-        },
-        "moveBackwardButton": {
-          "text": "Move backward"
-        }
       }
     }
   },
   "magnifyArea": {
-    "label": "Magnify Area",
-    "tip": "Magnifies a specific area of the image",
+    "label": "Magnify area",
+    "tip": "Magnify a selected area of the image",
     "tipDisabled": "",
-    "explain": "The Magnify Area tool highlights a chosen part of the image by enlarging it. The zoom level, radius, position, outline, and Z-index can be customized to control how the magnified section is displayed.",
+    "explain": "Highlight a part of the image by displaying a magnified view. Adjust the zoom level, radius, position,  and outline of the magnified area.",
     "shortcut": "M",
-    "objectNames" : "Magnify area",
+    "objectNames": "Magnify area",
     "settings": {
-      "general":{
-        "type": {
-          "label": "Type of magnify area",
-          "tip": "Select the type of magnify area",
-          "options": {
-            "center": "Center",
-            "corner": "Corner"
-          }
-        },
+      "general": {
         "sourcePosition": {
           "label": "Source position",
           "x": "X",
@@ -618,16 +576,6 @@
           "label": "Zoom",
           "tip": "Adjust the zoom level of the magnified area"
         },
-        "resultPosition": {
-          "label": "Result position",
-          "tip": "Select the position of the magnified area result",
-          "options": {
-            "top-left": "Top left",
-            "top-right": "Top right",
-            "bottom-left": "Bottom left",
-            "bottom-right": "Bottom right"
-          }
-        },
         "outlineWidth": {
           "label": "Outline width",
           "tip": "Adjust the width of the outline around the magnified area"
@@ -636,8 +584,8 @@
           "label": "Outline color",
           "tip": "Select the color of the outline around the magnified area"
         },
-        "zIndex":{
-          "label": "Position in Z-axis",
+        "zIndex": {
+          "label": "Z-index",
           "bringToFrontButton": {
             "text": "Bring to front"
           },
@@ -656,11 +604,11 @@
   },
   "text": {
     "label": "Text",
-    "tip": "Adds text to the image",
+    "tip": "Add text to the image",
     "tipDisabled": "",
-    "explain": "The Text tool allows adding text to the image. The font, size, color, opacity, style, rotation, and position can be customized. Text can also be layered with other elements using Z-index controls.",
+    "explain": "Add text to the image. Customize the font, size, color, opacity, style, and position of the text.",
     "shortcut": "T",
-    "objectNames" : "Text",
+    "objectNames": "Text",
     "settings": {
       "general": {
         "textContent": {
@@ -674,7 +622,7 @@
         },
         "rotation": {
           "label": "Rotation",
-          "tip": "Adjust the rotation angle or double click icon to reset rotation"
+          "tip": "Adjust the rotation angle or double-click the icon to reset it"
         },
         "textSize": {
           "label": "Text size",
@@ -685,59 +633,44 @@
           "tip": "Adjust the spacing between letters"
         },
         "fontFamily": {
-          "label": "Text font",
-          "tip": "Select the font for the text"
+          "label": "Font",
+          "tip": ""
         },
         "textColor": {
           "label": "Text color",
-          "tip": "Select the color of the text"
+          "tip": "Select the text color"
         },
         "textOpacity": {
-          "label": "Text opacity",
-          "tip": "Adjust the opacity of the text or double click icon to reset opacity"
+          "label": "Opacity",
+          "tip": "Adjust the text opacity or double-click the icon to reset it"
         },
         "textStyle": {
           "label": "Text style",
           "bold": "Bold",
           "italic": "Italic",
           "underline": "Underline"
-        },
-        "zIndex": {
-          "label": "Position in Z-axis",
-          "bringToFrontButton": {
-            "text": "Bring to front"
-          },
-          "sendToBackButton": {
-            "text": "Send to back"
-          },
-          "moveForwardButton": {
-            "text": "Move forward"
-          },
-          "moveBackwardButton": {
-            "text": "Move backward"
-          }
         }
       }
     }
   },
   "frame": {
     "label": "Frame",
-    "tip": "Adds various types of frames such as solid, browser or phone",
+    "tip": "Add a frame around the image",
     "tipDisabled": "",
-    "explain": "The Frame tool adds a visual frame around the image. Different frame types such as solid, browser, or phone frames are available. Frame color, width, outlines or headers can be customized.",
+    "explain": "Adds a visual frame around the image. Different frame types such as solid, app window, or phone frames are available. The frame appearance can be customized using color, width, outlines, and header settings.",
     "shortcut": "Shift + F",
     "settings": {
       "general": {
         "frameColor": {
           "label": "Frame color",
-          "tip": "Select the color of the frame"
+          "tip": "Select the frame color"
         },
         "frameWidth": {
           "label": "Frame width",
-          "tip": "Adjust the width of the frame or double click icon to reset width"
+          "tip": "Adjust the frame width or double-click the icon to reset it"
         },
         "frameVariants": {
-          "label": "Frame variants",
+          "label": "Frame type",
           "none": "None",
           "frameSolid": "Solid",
           "frameMacBrowser": "Window 1",
@@ -757,11 +690,11 @@
           "label": "Use outline"
         },
         "usePhoneHeader": {
-          "label": "Use phone header"
+          "label": "Phone header"
         },
         "usePhoneButtons": {
           "label": "Phone buttons",
-          "phoneButtonsCanNotBeDrawnTip": "Phone buttons can not be drawn, because the image is not height enough"
+          "phoneButtonsCanNotBeDrawnTip": "Phone buttons cannot be drawn because the image is not tall enough"
         },
         "usePhoneOutline": {
           "label": "Phone outline"
@@ -771,7 +704,7 @@
         },
         "phoneOutlineSize": {
           "label": "Outline size",
-          "tip": "Select phone outline size from 3 options",
+          "tip": "Select the phone outline size",
           "options": {
             "small": "Small",
             "medium": "Medium",
@@ -780,7 +713,7 @@
         },
         "phoneHeaderIconsSize": {
           "label": "Icons size",
-          "tip": "Select phone header icons size from 3 options",
+          "tip": "Select the size of the phone header icons",
           "options": {
             "small": "Small",
             "medium": "Medium",
@@ -789,7 +722,7 @@
         },
         "phoneBatteryIconStyle": {
           "label": "Battery icon style",
-          "tip": "Select phone header battery icon style",
+          "tip": "Select the battery icon style",
           "options": {
             "style1": "Style 1",
             "style2": "Style 2",
@@ -798,7 +731,7 @@
         },
         "phoneFrameOrientation": {
           "label": "Frame orientation",
-          "tip": "Select phone frame orientation",
+          "tip": "",
           "options": {
             "portrait": "Portrait",
             "landscape": "Landscape"
@@ -808,7 +741,7 @@
           "label": "Home indicator"
         },
         "useExpandedPhoneHeader": {
-          "label": "Expand header"
+          "label": "Expanded header"
         },
         "phoneHeaderTextColor": {
           "label": "Text color"
@@ -819,24 +752,24 @@
         "phoneHeaderTime": {
           "label": "Time"
         },
-        "headerSize":{
+        "headerSize": {
           "label": "Header size",
-          "tip": "Adjust the size of the header or double click icon to reset size"
+          "tip": "Adjust the header size or double-click the icon to reset it"
         },
-        "footerSize":{
+        "footerSize": {
           "label": "Footer size",
-          "tip": "Adjust the size of the footer or double click icon to reset size"
+          "tip": "Adjust the footer size or double-click the icon to reset it"
         },
         "phoneButtonsCanNotBeDrawn": {
-          "title": "Phone buttons can not be drawn",
-          "message": "Phone buttons can not be drawn, because the frame is not height enough."
+          "title": "Phone buttons cannot be drawn",
+          "message": "Phone buttons cannot be drawn because the frame is not tall enough."
         }
       }
     }
   },
   "preset": {
     "label": "Presets",
-    "tip": "Applies a preset to the image",
+    "tip": "Apply a preset to the image",
     "tipDisabled": "",
     "explain": "The Create Preset tool saves a set of image operations as a preset. Supported operations include rotate, flip, crop, resize, grayscale, frame. Current modifications can be saved as preset or operations can be manually selected.",
     "explain2": "The Apply Preset tool applies a saved preset to the image. Presets can be modified, new operations can be added, and the order or values of existing operations can be adjusted before applying.",
@@ -1098,13 +1031,13 @@
         },
         "deletePresetConfirmation": {
           "title": "Delete preset",
-          "message": "Are you sure you want to delete the preset: {presetName}?",
+          "message": "Are you sure you want to delete the preset?",
           "cancel": "Cancel",
           "confirm": "Delete"
         },
         "presetSuccessfullyDeleted": {
           "title": "Preset deleted",
-          "message": "Preset with name: {presetName} has been successfully deleted."
+          "message": "Preset has been successfully deleted."
         },
         "closeModifyingButton": {
           "text": "Close"
@@ -1120,15 +1053,15 @@
         },
         "presetSuccessfullySaved": {
           "title": "Preset saved",
-          "message": "Preset with name: {presetName} has been successfully saved."
+          "message": "Preset has been successfully saved."
         },
         "successfullyApplied": {
           "title": "Preset applied",
-          "message": "Preset with name: {presetName} has been successfully applied."
+          "message": "Preset has been successfully applied."
         },
         "presetAlreadyApplied": {
           "title": "Preset already applied",
-          "message": "Preset with name: {presetName} is already applied to the image."
+          "message": "This preset has already been applied to the image."
         },
         "closeWithoutSavingConfirmation": {
           "title": "Close without saving",
@@ -1155,7 +1088,7 @@
   },
   "export": {
     "label": "Export",
-    "tip": "Exports the image and allows setting the output format",
+    "tip": "Export the image in a selected format",
     "tipDisabled": "",
     "shortcut": "CTRL + S",
     "settings": {
@@ -1173,12 +1106,7 @@
         "fileDimensions": {
           "label": "Dimensions",
           "width": "Width",
-          "height": "Height",
-          "tip": {
-            "linked": "Unlink width and height",
-            "unlinked": "Link width and height",
-            "reset": "Reset original dimensions"
-          }
+          "height": "Height"
         },
         "expectedFileSize": {
           "label": "Expected file size"
@@ -1217,19 +1145,19 @@
     "label": "No tool selected"
   },
   "confirmNeedRasterization": {
-    "title": "Rasterization Required",
+    "title": "Rasterization required",
     "message": "This operation requires rasterization because image contain vector objects. Rasterization will convert vector objects to pixels, which may result in loss of quality.",
     "cancel": "Cancel",
     "confirm": "Rasterize"
   },
   "confirmNeedBaseImageRasterization": {
-    "title": "Base Image Rasterization Required",
+    "title": "Base image rasterization required",
     "message": "This operation requires rasterization of the base image because it contains vector objects. Rasterization will convert vector objects to pixels, which may result in loss of quality.",
     "cancel": "Cancel",
     "confirm": "Rasterize"
   },
   "confirmNeedOverlayMerge": {
-    "title": "Merge Raster Layer",
+    "title": "Merge raster layer",
     "message": "This operation will merge the raster layer with the main image. All content, including brush strokes and other rasterized objects, will become part of the image and cannot be edited separately afterwards.",
     "cancel": "Cancel",
     "confirm": "Merge and continue"

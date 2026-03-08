@@ -414,12 +414,12 @@
     }
   },
   "blur": {
-    "label": "Rozmazání oblasti",
-    "tip": "Přidává rozmazanou oblast do obrázku",
+    "label": "Rozmazaná oblast",
+    "tip": "Rozmaže vybranou oblast obrázku",
     "tipDisabled": "",
-    "explain": "Nástroj Rozmazání oblasti aplikuje efekt rozmazání na vybranou obdélníkovou oblast obrázku. Velikost, pozici a rotaci rozmazávacího boxu lze nastavit ručně nebo zadáním přesných hodnot. Síla rozmazání se nastavuje posuvníkem.",
+    "explain": "Použijte efekt rozmazání na obdélníkovou oblast obrázku. Upravte pozici a velikost rozmazané oblasti. Sílu rozmazání a přechod na okrajích lze přizpůsobit.",
     "shortcut": "B",
-    "objectNames" : "Rozmazaná oblast",
+    "objectNames": "Rozmazaná oblast",
     "settings": {
       "general": {
         "position": {
@@ -431,46 +431,28 @@
           "label": "Rozměry",
           "width": "Šířka",
           "height": "Výška",
-          "tipLinked": "Odpojit šířku a výšku",
-          "tipUnlinked": "Propojit šířku a výšku"
-        },
-        "rotation": {
-          "label": "Rotace",
-          "tip": "Nastav úhel rotace nebo dvojklikem resetuj"
+          "tipLinked": "Odemknout šířku a výšku",
+          "tipUnlinked": "Uzamknout šířku a výšku"
         },
         "blurStrength": {
-          "label": "Intenzita rozmazání",
-          "tip": "Nastav sílu rozmazání"
+          "label": "Síla rozmazání",
+          "tip": ""
         },
         "edgeFade": {
-          "label": "Zeslabení okrajů",
-          "tip": "Uprav zeslabení efektu rozmazání směrem k okrajům"
-        },
-        "zIndex": {
-          "label": "Z-index",
-          "bringToFrontButton": {
-            "text": "Přenést dopředu"
-          },
-          "sendToBackButton": {
-            "text": "Přenést dozadu"
-          },
-          "moveForwardButton": {
-            "text": "Posunout dopředu"
-          },
-          "moveBackwardButton": {
-            "text": "Posunout dozadu"
-          }
+          "label": "Měkkost okrajů",
+          "tip": ""
         }
       }
     }
   },
+
   "shape": {
     "label": "Tvar",
-    "tip": "Přidává vektorové tvary",
+    "tip": "Přidá vektorové tvary do obrázku",
     "tipDisabled": "",
-    "explain": "Nástroj Tvar umožňuje přidávat do obrázku vektorové tvary. Tvary lze umístit, měnit jejich velikost, otáčet a upravovat pomocí výplně, obrysu, průhlednosti a stylů čáry. Lze je také uspořádat pomocí Z-indexu.",
+    "explain": "Přidejte do obrázku vektorové tvary, například obdélníky, elipsy nebo čáry. Tvary lze přesouvat, měnit jejich velikost a upravovat pomocí výplně, obrysu, průhlednosti a nastavení čáry.",
     "shortcut": "S",
-    "objectNames" : {
+    "objectNames": {
       "rectangle": "Obdélník",
       "ellipse": "Elipsa",
       "line": "Čára"
@@ -478,17 +460,17 @@
     "subTools": {
       "rectangle": {
         "label": "Obdélník",
-        "tip": "Přidání obdélníku do obrázku",
+        "tip": "Přidá tvar obdélníku",
         "shortcut": ""
       },
       "ellipse": {
         "label": "Elipsa",
-        "tip": "Přidání elipsy do obrázku",
+        "tip": "Přidá tvar elipsy",
         "shortcut": ""
       },
       "line": {
         "label": "Čára",
-        "tip": "Přidání čáry do obrázku",
+        "tip": "Přidá tvar čáry",
         "shortcut": ""
       }
     },
@@ -513,16 +495,16 @@
         "label": "Rozměry",
         "width": "Šířka",
         "height": "Výška",
-        "tipLinked": "Oddělit šířku a výšku",
-        "tipUnlinked": "Propojit šířku a výšku"
+        "tipLinked": "Odemknout šířku a výšku",
+        "tipUnlinked": "Uzamknout šířku a výšku"
       },
       "rotation": {
         "label": "Rotace",
-        "tip": "Upravte úhel rotace nebo dvojklikem resetujte rotaci"
+        "tip": "Upravte úhel rotace nebo dvojklikem na ikonu obnovte původní hodnotu"
       },
       "enableFillColor": {
-        "label": "Povolit výplň",
-        "tip": "Povolit nebo zakázat výplň tvaru"
+        "label": "Výplň",
+        "tip": "Zapnout nebo vypnout výplň tvaru"
       },
       "fillColor": {
         "label": "Barva výplně",
@@ -534,7 +516,7 @@
       },
       "strokeColor": {
         "label": "Barva obrysu",
-        "tip": "Vyberte barvu obrysu tvaru"
+        "tip": "Vyberte barvu obrysu"
       },
       "strokeWidth": {
         "label": "Tloušťka obrysu",
@@ -542,72 +524,49 @@
       },
       "opacity": {
         "label": "Průhlednost",
-        "tip": "Upravte průhlednost tvaru nebo dvojklikem resetujte průhlednost"
+        "tip": "Upravte průhlednost tvaru nebo dvojklikem na ikonu obnovte původní hodnotu"
       },
       "cornerRadius": {
         "label": "Zaoblení rohů",
-        "tip": "Upravte zaoblení rohů tvaru nebo dvojklikem resetujte hodnotu"
+        "tip": "Upravte zaoblení rohů nebo dvojklikem na ikonu obnovte původní hodnotu"
       },
       "lineType": {
         "label": "Typ čáry",
-        "tip": "Vyberte typ čáry pro tvar",
+        "tip": "Vyberte styl čáry",
         "options": {
           "solid": "Plná",
-          "dashed": "Čárkovaná",
+          "dashed": "Přerušovaná",
           "dotted": "Tečkovaná",
-          "dashDot": "Čárka-tečka"
+          "dashDot": "Čárkovaně-tečkovaná"
         }
       },
       "lineArrow": {
         "start": {
-          "label": "Začátek šipky",
-          "tip": "Povolit nebo zakázat šipku na začátku čáry"
+          "label": "Začátek čáry",
+          "tip": "Zapnout nebo vypnout šipku na začátku čáry"
         },
         "end": {
-          "label": "Konec šipky",
-          "tip": "Povolit nebo zakázat šipku na konci čáry"
+          "label": "Konec čáry",
+          "tip": "Zapnout nebo vypnout šipku na konci čáry"
         },
         "options": {
-          "none": "Žádný",
+          "none": "Žádné",
           "arrow": "Šipka",
           "circle": "Kruh",
           "square": "Čtverec"
-        }
-      },
-      "zIndex": {
-        "label": "Pozice v Z-ose",
-        "bringToFrontButton": {
-          "text": "Přenést dopředu"
-        },
-        "sendToBackButton": {
-          "text": "Přenést dozadu"
-        },
-        "moveForwardButton": {
-          "text": "Posunout výš"
-        },
-        "moveBackwardButton": {
-          "text": "Posunout níž"
         }
       }
     }
   },
   "magnifyArea": {
     "label": "Zvětšená oblast",
-    "tip": "Zvětší konkrétní oblast obrázku",
+    "tip": "Zvětší vybranou oblast obrázku",
     "tipDisabled": "",
-    "explain": "Nástroj Zvětšená oblast zvýrazní vybranou část obrázku jejím zvětšením. Lze upravit úroveň přiblížení, poloměr, pozici, obrys i Z-index pro nastavení zobrazení zvětšené oblasti.",
+    "explain": "Zvýrazněte část obrázku zobrazením jejího zvětšeného náhledu. Upravte přiblížení, poloměr, pozici a obrys zvětšené oblasti.",
     "shortcut": "M",
-    "objectNames" : "Zvětšená oblast",
+    "objectNames": "Zvětšená oblast",
     "settings": {
       "general": {
-        "type": {
-          "label": "Typ zvětšené oblasti",
-          "tip": "Vyberte typ zvětšené oblasti",
-          "options": {
-            "center": "Střed",
-            "corner": "Roh"
-          }
-        },
         "sourcePosition": {
           "label": "Pozice zdroje",
           "x": "X",
@@ -615,43 +574,33 @@
         },
         "radius": {
           "label": "Poloměr",
-          "tip": "Upravuje poloměr zvětšené oblasti"
+          "tip": "Upravte poloměr zvětšené oblasti"
         },
         "zoom": {
           "label": "Přiblížení",
-          "tip": "Upravuje úroveň přiblížení zvětšené oblasti"
-        },
-        "resultPosition": {
-          "label": "Pozice výsledku",
-          "tip": "Vybere pozici zobrazené zvětšené oblasti",
-          "options": {
-            "top-left": "Nahoře vlevo",
-            "top-right": "Nahoře vpravo",
-            "bottom-left": "Dole vlevo",
-            "bottom-right": "Dole vpravo"
-          }
+          "tip": "Upravte úroveň přiblížení zvětšené oblasti"
         },
         "outlineWidth": {
           "label": "Tloušťka obrysu",
-          "tip": "Upravuje tloušťku obrysu kolem zvětšené oblasti"
+          "tip": "Upravte tloušťku obrysu kolem zvětšené oblasti"
         },
         "outlineColor": {
           "label": "Barva obrysu",
-          "tip": "Vybere barvu obrysu kolem zvětšené oblasti"
+          "tip": "Vyberte barvu obrysu kolem zvětšené oblasti"
         },
         "zIndex": {
-          "label": "Pozice na Z-ose",
+          "label": "Z-index",
           "bringToFrontButton": {
-            "text": "Přesunout do popředí"
+            "text": "Přesunout dopředu"
           },
           "sendToBackButton": {
-            "text": "Přesunout do pozadí"
+            "text": "Přesunout dozadu"
           },
           "moveForwardButton": {
-            "text": "Posunout dopředu"
+            "text": "Posunout o vrstvu výš"
           },
           "moveBackwardButton": {
-            "text": "Posunout dozadu"
+            "text": "Posunout o vrstvu níž"
           }
         }
       }
@@ -661,13 +610,13 @@
     "label": "Text",
     "tip": "Přidá text do obrázku",
     "tipDisabled": "",
-    "explain": "Nástroj Text umožňuje přidávat do obrázku text. Lze nastavit písmo, velikost, barvu, průhlednost, styl, rotaci a pozici. Text může být vrstven nad ostatními prvky pomocí Z-indexu.",
+    "explain": "Přidejte text do obrázku. Upravte písmo, velikost, barvu, průhlednost, styl a pozici textu.",
     "shortcut": "T",
-    "objectNames" : "Text",
+    "objectNames": "Text",
     "settings": {
       "general": {
         "textContent": {
-          "label": "Textový obsah",
+          "label": "Obsah textu",
           "placeholder": "Zadejte text"
         },
         "position": {
@@ -677,72 +626,57 @@
         },
         "rotation": {
           "label": "Rotace",
-          "tip": "Upravte úhel rotace nebo dvojklikem na ikonu rotaci resetujte"
+          "tip": "Upravte úhel rotace nebo dvojklikem na ikonu obnovte původní hodnotu"
         },
         "textSize": {
           "label": "Velikost textu",
           "tip": "Upravte velikost textu"
         },
         "letterSpacing": {
-          "label": "Mezera mezi písmeny",
-          "tip": "Upravte rozestupy mezi písmeny"
+          "label": "Rozestup písmen",
+          "tip": "Upravte rozestup mezi písmeny"
         },
         "fontFamily": {
           "label": "Písmo",
-          "tip": "Vyberte písmo pro text"
+          "tip": ""
         },
         "textColor": {
           "label": "Barva textu",
           "tip": "Vyberte barvu textu"
         },
         "textOpacity": {
-          "label": "Neprůhlednost textu",
-          "tip": "Upravte průhlednost textu nebo dvojklikem na ikonu ji resetujte"
+          "label": "Průhlednost",
+          "tip": "Upravte průhlednost textu nebo dvojklikem na ikonu obnovte původní hodnotu"
         },
         "textStyle": {
           "label": "Styl textu",
           "bold": "Tučné",
           "italic": "Kurzíva",
           "underline": "Podtržené"
-        },
-        "zIndex": {
-          "label": "Pozice na Z-ose",
-          "bringToFrontButton": {
-            "text": "Přenést dopředu"
-          },
-          "sendToBackButton": {
-            "text": "Přenést dozadu"
-          },
-          "moveForwardButton": {
-            "text": "Posunout vpřed"
-          },
-          "moveBackwardButton": {
-            "text": "Posunout zpět"
-          }
         }
       }
     }
   },
   "frame": {
-    "label": "Rám",
-    "tip": "Přidává různé typy rámů jako plný, prohlížeč nebo telefon",
+    "label": "Rámeček",
+    "tip": "Přidá rámeček kolem obrázku",
     "tipDisabled": "",
-    "explain": "Nástroj Rám přidává vizuální rámeček kolem obrázku. K dispozici jsou různé typy rámů, například plný, prohlížeč nebo telefon. Barvu, šířku, obrys nebo záhlaví, lze přizpůsobit.",
+    "explain": "Přidá vizuální rámeček kolem obrázku. K dispozici jsou různé typy rámečků, například plný rámeček, okno aplikace nebo rámeček telefonu. Vzhled rámečku lze upravit pomocí barvy, šířky, obrysu a nastavení hlavičky.",
     "shortcut": "Shift + F",
     "settings": {
       "general": {
         "frameColor": {
-          "label": "Barva rámu",
-          "tip": "Vyber barvu rámu"
+          "label": "Barva rámečku",
+          "tip": "Vyberte barvu rámečku"
         },
         "frameWidth": {
-          "label": "Šířka rámu",
-          "tip": "Uprav šířku rámu nebo dvakrát klikni na ikonu pro resetování šířky"
+          "label": "Šířka rámečku",
+          "tip": "Upravte šířku rámečku nebo dvojklikem na ikonu obnovte původní hodnotu"
         },
         "frameVariants": {
-          "label": "Varianty rámu",
+          "label": "Typ rámečku",
           "none": "Žádný",
-          "frameSolid": "Jednoduchý",
+          "frameSolid": "Plný",
           "frameMacBrowser": "Okno 1",
           "frameWindowsBrowser": "Okno 2",
           "framePhoneIOS": "Telefon 1",
@@ -760,11 +694,11 @@
           "label": "Použít obrys"
         },
         "usePhoneHeader": {
-          "label": "Použít záhlaví telefonu"
+          "label": "Hlavička telefonu"
         },
         "usePhoneButtons": {
           "label": "Tlačítka telefonu",
-          "phoneButtonsCanNotBeDrawnTip": "Tlačítka telefonu nelze nakreslit, protože obrázek není dostatečně vysoký"
+          "phoneButtonsCanNotBeDrawnTip": "Tlačítka telefonu nelze zobrazit, protože obrázek není dostatečně vysoký"
         },
         "usePhoneOutline": {
           "label": "Obrys telefonu"
@@ -774,16 +708,16 @@
         },
         "phoneOutlineSize": {
           "label": "Velikost obrysu",
-          "tip": "Vyberte velikost obrysu telefonu ze 3 možností",
+          "tip": "Vyberte velikost obrysu telefonu",
           "options": {
-            "small": "Malá",
+            "small": "Malý",
             "medium": "Střední",
-            "large": "Velká"
+            "large": "Velký"
           }
         },
         "phoneHeaderIconsSize": {
-          "label": "Velikost ikon záhlaví",
-          "tip": "Vyberte velikost ikon záhlaví telefonu ze 3 možností",
+          "label": "Velikost ikon",
+          "tip": "Vyberte velikost ikon v hlavičce telefonu",
           "options": {
             "small": "Malá",
             "medium": "Střední",
@@ -792,7 +726,7 @@
         },
         "phoneBatteryIconStyle": {
           "label": "Styl ikony baterie",
-          "tip": "Vyberte styl ikony baterie v záhlaví telefonu",
+          "tip": "Vyberte styl ikony baterie",
           "options": {
             "style1": "Styl 1",
             "style2": "Styl 2",
@@ -800,18 +734,18 @@
           }
         },
         "phoneFrameOrientation": {
-          "label": "Orientace rámu",
-          "tip": "Vyberte orientaci rámu telefonu",
+          "label": "Orientace rámečku",
+          "tip": "",
           "options": {
             "portrait": "Na výšku",
             "landscape": "Na šířku"
           }
         },
         "usePhoneHomeIndicator": {
-          "label": "Domovské tlačítko"
+          "label": "Indikátor domovské obrazovky"
         },
         "useExpandedPhoneHeader": {
-          "label": "Rozšířené záhlaví"
+          "label": "Rozšířená hlavička"
         },
         "phoneHeaderTextColor": {
           "label": "Barva textu"
@@ -822,17 +756,17 @@
         "phoneHeaderTime": {
           "label": "Čas"
         },
-        "headerSize":{
-          "label": "Velikost záhlaví",
-          "tip": "Upravte velikost záhlaví nebo dvojklikem na ikonu resetujte velikost"
+        "headerSize": {
+          "label": "Velikost hlavičky",
+          "tip": "Upravte velikost hlavičky nebo dvojklikem na ikonu obnovte původní hodnotu"
         },
-        "footerSize":{
+        "footerSize": {
           "label": "Velikost patičky",
-          "tip": "Upravte velikost patičky nebo dvojklikem na ikonu resetujte velikost"
+          "tip": "Upravte velikost patičky nebo dvojklikem na ikonu obnovte původní hodnotu"
         },
         "phoneButtonsCanNotBeDrawn": {
-          "title": "Tlačítka telefonu nelze nakreslit",
-          "message": "Tlačítka telefonu nelze nakreslit, protože rám není dostatečně vysoký."
+          "title": "Tlačítka telefonu nelze zobrazit",
+          "message": "Tlačítka telefonu nelze zobrazit, protože rámeček není dostatečně vysoký."
         }
       }
     }
@@ -923,8 +857,8 @@
               }
             },
             "phoneFrameOrientation": {
-              "label": "Orientace rámu",
-              "tip": "Vyberte orientaci rámu telefonu",
+              "label": "Orientace rámečku",
+              "tip": "Vyberte orientaci rámečku telefonu",
               "options": {
                 "portrait": "Na výšku",
                 "landscape": "Na šířku"
@@ -1070,8 +1004,8 @@
               }
             },
             "phoneFrameOrientation": {
-              "label": "Orientace rámu",
-              "tip": "Vyberte orientaci rámu telefonu",
+              "label": "Orientace rámečku",
+              "tip": "Vyberte orientaci rámečku telefonu",
               "options": {
                 "portrait": "Na výšku",
                 "landscape": "Na šířku"
@@ -1101,13 +1035,13 @@
         },
         "deletePresetConfirmation": {
           "title": "Smazat šablonu",
-          "message": "Opravdu chcete smazat šablonu: {presetName}?",
+          "message": "Opravdu chcete smazat šablonu?",
           "cancel": "Zrušit",
           "confirm": "Smazat"
         },
         "presetSuccessfullyDeleted": {
           "title": "Šablona smazána",
-          "message": "Šablona s názvem: {presetName} byla úspěšně smazána."
+          "message": "Šablona byla úspěšně smazána."
         },
         "closeModifyingButton": {
           "text": "Zavřít"
@@ -1123,15 +1057,15 @@
         },
         "presetSuccessfullySaved": {
           "title": "Šablona uložena",
-          "message": "Šablona s názvem: {presetName} byla úspěšně uložena."
+          "message": "Šablona byla úspěšně uložena."
         },
         "successfullyApplied": {
           "title": "Šablona použita",
-          "message": "Šablona s názvem: {presetName} byla úspěšně použita."
+          "message": "Šablona byla úspěšně použita."
         },
         "presetAlreadyApplied": {
           "title": "Šablona je již použita",
-          "message": "Šablona s názvem: {presetName} je již použita na obrázku."
+          "message": "Táto šablona je již použita na obrázku."
         },
         "closeWithoutSavingConfirmation": {
           "title": "Zavřít bez uložení",
@@ -1158,7 +1092,7 @@
   },
   "export": {
     "label": "Exportovat",
-    "tip": "Exportuje obrázek a umožňuje nastavení výstupního formátu",
+    "tip": "Exportuje obrázek ve vybraném formáte",
     "tipDisabled": "Není k dispozici žádný obrázek k exportu.",
     "shortcut": "CTRL + S",
     "settings": {
@@ -1176,12 +1110,7 @@
         "fileDimensions": {
           "label": "Rozměry",
           "width": "Šířka",
-          "height": "Výška",
-          "tip": {
-            "linked": "Odpojit šířku a výšku",
-            "unlinked": "Propojit šířku a výšku",
-            "reset": "Resetovat původní rozměry"
-          }
+          "height": "Výška"
         },
         "expectedFileSize": {
           "label": "Očekávaná velikost souboru"
@@ -1223,13 +1152,13 @@
     "title": "Vyžaduje se rasterizace",
     "message": "Operace vyžaduje rasterizaci obrázku, protože obsahuje vektorové objekty. Rasterizace převede vektorové objekty na pixely, což může ovlivnit kvalitu obrázku.",
     "cancel": "Zrušit",
-    "confirm": "Rasterizovat"
+    "confirm": "Rastrovat"
   },
   "confirmNeedBaseImageRasterization": {
     "title": "Vyžaduje se rastrování základního obrázku",
     "message": "Tato operace vyžaduje rastrování základního obrázku, protože obsahuje vektorové objekty. Rastrování převede vektorové objekty na pixely, což může vést ke ztrátě kvality.",
     "cancel": "Zrušit",
-    "confirm": "Rastrování"
+    "confirm": "Rastrovat"
   },
   "confirmNeedOverlayMerge": {
     "title": "Potvrdit sloučení rastrové vrstvy",
