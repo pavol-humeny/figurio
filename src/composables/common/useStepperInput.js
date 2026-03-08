@@ -81,7 +81,16 @@ export function useStepperInput(props, emit) {
   /**
    * Confirm value on blur / enter
    */
-  const onBlur = () => {
+  const onBlur = (event) => {
+    // Stop Enter propagation
+    if (event?.type === 'keydown' && event.key === 'Enter') {
+      event.preventDefault()
+      event.stopPropagation()
+
+      // Remove focus from the input
+      event.target.blur()
+    }
+
     let value = Number(inputValue.value)
 
     if (Number.isNaN(value)) {

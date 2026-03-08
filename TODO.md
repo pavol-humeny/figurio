@@ -35,7 +35,6 @@
 - fyzický režim šírka by mohla byť pre každý súbor
 
 - vyriešiť pohyb objektov s axis lock
-- stepper input nepropagovat enter klik
 - navigacia vo viewporte pomocou sipok
 - kopírovať a vložiť by sa mali dať objekty aj v select toole
 - kopírovanie nefunguje pomocou ctrl c, v
