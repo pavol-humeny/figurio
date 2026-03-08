@@ -4,6 +4,31 @@
     "items": []
   },
   "versions": {
+    "5.16.0": {
+      "label": "5.16.0",
+      "date": "8.3. 2026",
+      "newFeatures": {
+        "items": [
+          "Obrázek lze posouvat pomocí kláves se šipkami",
+          "Rozbalovací nabídka s možnostmi a jejich popisem"
+        ]
+      },
+      "bugFixes": {
+        "items": [
+          "Opraveno kopírování a vkládání SVG objektů",
+          "Klávesové zkratky jsou během potvrzovacího dialogu deaktivovány"
+        ]
+      }
+    },
+    "5.15.0": {
+      "label": "5.15.0",
+      "date": "6.3. 2026",
+      "improvements": {
+        "items": [
+          "Po změně jazyka se velikost pravého panelu automaticky přepočítá podle obsahu"
+        ]
+      }
+    },
     "5.14.0":{
       "label": "5.14.0",
       "date":"28.2. 2025",
