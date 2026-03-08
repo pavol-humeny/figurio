@@ -1,132 +1,136 @@
-# Figurio – webový nástroj na prípravu obrázkov pre technické dokumenty
-
-## 1. Motivácia a cieľ nástroja
-
-Pri príprave technických dokumentov (bakalárske práce, články, dokumentácia) je často potrebné upravovať screenshoty, diagramy alebo ilustrácie. Bežné grafické editory sú však pre tento účel často zbytočne komplexné a neponúkajú nástroje orientované na publikovanie v technických textoch.
-
-Ďalším problémom môže byť ochrana dát. Mnohé nástroje vyžadujú upload obrázkov na server, čo môže byť nevhodné napríklad pri práci s internými alebo citlivými informáciami.
-
-Aplikácia **Figurio** rieši tento problém ako jednoduchý webový editor zameraný na prípravu obrázkov pre technické a akademické dokumenty.
-
-### Pre koho je nástroj určený
-
-Primárni používatelia:
-
-- študenti pripravujúci bakalárske a diplomové práce
-- autori technickej dokumentácie
-- pedagógovia a výskumníci pripravujúci študijné materiály alebo publikácie
-
-### Hlavné výhody
-
-- webová aplikácia bez potreby inštalácie
-- spracovanie obrázkov lokálne v prehliadači (privacy-first prístup)
-- nástroje orientované na publikovanie obrázkov v dokumentoch
-- rýchly pracovný postup: **import → úprava → export**
+# Poster texts
+## 1. Úvod
+### Motivácia
+- nekvalitné obrázky v technických dokumentoch
+- časovo náročná úprava screenshotov a diagramov
+- príliš komplexné grafické editory
+- chýbajú nástroje prispôsobené odborným textom
 
 ---
 
-## 2. Architektúra a technické riešenie
+### Figurio
+- webová aplikácia dostupná priamo v prehliadači
+- bez potreby inštalácie
+- jednoduché a intuitívne rozhranie
+- určená na rýchle úpravy screenshotov a diagramov
 
-Aplikácia je implementovaná ako **Single-Page Application (SPA)**, kde väčšina spracovania prebieha priamo v prehliadači používateľa.
+---
 
-### Hlavné vrstvy architektúry
+### Kľúčové vlastnosti
+- lokálne spracovanie obrázkov – ochrana súkromia
+- podpora PDF a vektorových úprav
+- špecializované nástroje pre technické a akademické dokumenty
+---
 
-**1. Prezentačná vrstva**
+## 2. Schéma
+### Načítanie obrázka
 
-Používateľské rozhranie je implementované pomocou komponentov frameworku **Vue.js**. Obsahuje pracovnú plochu editoru, panel nástrojov a dynamický panel nastavení.
+- podporované vstupné formáty **PNG, JPG, WebP a PDF**
+- po načítaní prebehne **detekcia formátu súboru**
+- rastrové obrázky sú načítané na **canvas**
+- PDF dokumenty sú spracované pomocou **pdf.js**
 
-**2. Aplikačná logika**
+---
 
-Logika nástrojov je implementovaná ako sada operácií nad obrazom. Úpravy sú reprezentované ako **pipeline operácií**, ktoré sa aplikujú na pôvodný obrázok.
+### Interná reprezentácia (imageStore)
 
-Tento prístup umožňuje:
+- centrálny stav aplikácie implementovaný ako imageStore
+- uchováva aktuálny obrázok, metadáta a zoznam operácií
+- poskytuje dáta pre spracovanie aj vykreslenie obrázka
 
-- nedestruktívne úpravy
-- jednoduché undo/redo
-- efektívne prepočítavanie výsledného obrazu
+---
 
-**3. Stav aplikácie**
+### Spracovanie operácií
 
-Globálny stav aplikácie je spravovaný pomocou **Pinia stores**, ktoré uchovávajú napríklad:
+- nástroje ukladajú definíciu operácie a jej parametre do imageStore
+- operácie sú ukladané do sekvenčného zoznamu operácií
+- centrálna pipeline načíta aktuálny obraz z imageStore
+- podľa typu operácie vyberie modul spracovania a uloží výsledok späť do stavu aplikácie
 
-- aktuálny obrázok
-- zoznam aplikovaných operácií
-- históriu úprav
-- nastavenia nástrojov
+---
 
-### Použité technológie
+### Vrstvová reprezentácia obrázka
 
-Frontend:
+výsledný obrázok je zostavený z viacerých vrstiev
+takýto model umožňuje nezávislé úpravy jednotlivých častí obrázka
 
-- Vue.js
-- Vite
-- Pinia
-- vue-router
-- vue-i18n
+- Frame layer – prezentačný rámik zariadenia alebo aplikácie
+- Vector layer – vektorové objekty, anotácie a text
+- Raster layer – kreslenie štetcom a rastrové úpravy
+- Base layer – pôvodný obrázok alebo obsah dokumentu
 
-Práca s obrázkami a PDF:
 
-- Canvas API
-- SVG
-- pdf.js
-- jsPDF
-- svg2pdf
-- pdf-lib
+---
 
-Backend (doplnkový):
+### Vykreslenie
 
-- Node.js + Express
-- MySQL
+- modul sleduje zmeny v aplikačnom stave
+- pri zmene obrázka alebo operácie sa vykreslí aktuálny stav obrázka
+- vykreslenie zahŕňa rastrové dáta, vektorové vrstvy a prezentačné prvky
 
-Backend slúži iba na anonymnú telemetriu používania. Samotné obrazové dáta zostávajú vždy na strane klienta.
+---
 
-### Technické princípy
+### Export
 
-- client-side image processing
-- kombinácia rastrových a vektorových operácií
-- pipeline model úprav
-- modulárny návrh nástrojov umožňujúci jednoduché rozširovanie aplikácie
+- používateľ zvolí výstupný formát a parametre exportu
+- jednotlivé vrstvy sú spojené do výsledného obrazu
+- rastrové formáty využívajú export z canvas, PDF je generované pomocou jsPDF a pdf-lib
 
 ---
 
 ## 3. Ukážka vybraných funkcií
 
-Aplikácia obsahuje viacero nástrojov na úpravu obrázkov. Na plagáte sú prezentované tri reprezentatívne funkcie.
-
 ### Crop
 
-Nástroj **Crop** slúži na orezanie obrázka. Používateľ môže manuálne definovať oblasť orezania alebo použiť automatický režim, ktorý sa snaží identifikovať relevantnú časť obrázka.
+- orezanie obrázka a odstránenie nepotrebných častí
+- manuálne orezanie alebo orezanie so zachovaním pomeru strán
+- **fit crop** – automatická detekcia obsahu obrázka
 
-Tento nástroj umožňuje rýchlo odstrániť nepotrebné okraje a pripraviť obrázok pre vloženie do dokumentu.
+---
 
 ### Frame
 
-Nástroj **Frame** umožňuje vložiť obrázok do prezentačného rámu zariadenia, napríklad:
+- vloženie obrázka do prezentačného rámika
+- dostupné rámiky: okno aplikácie, mobil, editor kódu
+- vhodné na prezentáciu používateľského rozhrania
 
-- webový prehliadač
-- mobilné zariadenie
-- editor kódu
-
-Týmto spôsobom je možné vizuálne prezentovať používateľské rozhranie aplikácie alebo screenshoty v realistickom kontexte.
+---
 
 ### Magnify Area + Blur Area
 
-Nástroj **Magnify Area** umožňuje zvýrazniť detail obrázka pomocou zväčšenej oblasti. Používa sa najmä na upozornenie na dôležitú časť diagramu alebo používateľského rozhrania.
+- zvýraznenie detailu priblížením časti obrázka
+- rozmazanie vybranej časti obrázka
+- zdôraznenie dôležitých prvkov a anonymizácia citlivých údajov
 
-Nástroj **Blur Area** slúži na rozmazanie vybranej oblasti obrázka. Typicky sa používa na anonymizáciu citlivých údajov alebo skrytie nepodstatných informácií.
+---
 
-### Odporúčané vizuálne ukážky na plagáte
+### Ďalšie dostupné nástroje
 
-Crop  
-`[ obrázok pred ] → [ obrázok po ]`
+Okrem uvedených funkcií aplikácia obsahuje aj ďalšie nástroje na úpravu a anotáciu obrázkov.
 
-Frame  
-`[ screenshot ] → [ screenshot v browser frame ]`
+---
 
-Magnify + Blur  
-`[ pôvodný obrázok ] → [ zvýraznený detail + rozmazaná časť ]`
+## Poster sizes
+Okraje - 20mm
+Medzera medzi položkami (väčšia) - 15mm
+Medzera medzi položkami (menšia) - 7.5mm
 
-# Checklist pred finálnou tlačou plagátu
+Logo - 80x80mm
+
+Corner radius - 4mm
+
+font: Inter (veľkosť v mm veľkého písmena)
+- --- 46pt (12mm) veľký nadpis 
+- 38pt (10mm) nadpis 
+- --- 24pt (6.2mm) - väčší text 
+
+- 30pt (8mm) nadpis pre text
+- 18pt (4.7mm) - bežný text 
+
+- 22pt (5.6mm)- nadpis v schéme
+- 15pt (4mm) - text v schéme
+
+## Checklist pred finálnou tlačou plagátu
 
 ### Obsah
 
@@ -151,81 +155,3 @@ Magnify + Blur
 - [ ] Na plagáte je odkaz na GitHub repozitár
 - [ ] Projekt je možné vysvetliť približne za 60–90 sekúnd
 - [ ] Z plagátu je jasné, aký je hlavný prínos aplikácie
-
-
-
-
-## Poster texts
-## 1. Úvod
-### Motivácia
-- nekvalitné obrázky v technických dokumentoch
-- časovo náročná úprava screenshotov a diagramov
-- príliš komplexné grafické editory
-- chýbajú nástroje prispôsobené odborným textom
-
----
-
-### Figurio
-- webová aplikácia dostupná priamo v prehliadači
-- bez potreby inštalácie
-- jednoduché a intuitívne rozhranie
-- určená na rýchle úpravy screenshotov a diagramov
-
----
-
-### Kľúčové vlastnosti
-- lokálne spracovanie obrázkov – ochrana súkromia
-- podpora PDF a vektorových úprav
-- špecializované nástroje pre technické a akademické dokumenty
----
-
-## 3. Ukážka vybraných funkcií
-
-### Crop
-
-- orezanie obrázka a odstránenie nepotrebných častí
-- manuálne orezanie alebo orezanie so zachovaním pomeru strán
-- **fit crop** – automatická detekcia obsahu obrázka
-
----
-
-### Frame
-
-- vloženie obrázka do prezentačného rámika
-- dostupné rámiky: okno aplikácie, mobil, editor kódu
-- vhodné na prezentáciu používateľského rozhrania
-
----
-
-### Magnify Area + Blur Area
-
-- **Magnify Area** – zvýraznenie detailu zväčšenou oblasťou
-- **Blur Area** – rozmazanie vybranej časti obrázka
-- zvýraznenie dôležitých prvkov alebo anonymizácia citlivých údajov
-
----
-
-### Ďalšie dostupné nástroje
-
-Okrem uvedených funkcií aplikácia obsahuje aj ďalšie nástroje na úpravu a anotáciu obrázkov.
-
----
-
-## Poster sizes
-Okraje - 20mm
-Medzera medzi položkami (väčšia) - 15mm
-Medzera medzi položkami (menšia) - 7.5mm
-
-Logo - 80x80mm
-
-Corner radius - 4mm
-
-font: Inter
-- --- 46pt (12mm) veľký nadpis 
-- 38pt (10mm) nadpis 
-- --- 24pt (6.2mm) - väčší text 
-
-- 30pt (mm) nadpis pre text
-- 18pt (4.7mm) - bežný text 
-
-

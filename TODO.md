@@ -42,7 +42,11 @@
 
 - vyriešiť pohyb objektov s axis lock
 - stepper input nepropagovat enter klik
-
+- navigacia vo viewporte pomocou sipok
+- kopírovať a vložiť by sa mali dať objekty aj v select toole
+- kopírovanie nefunguje pomocou ctrl c, v
+- ak sa vyhodí okno na rastrovanie tak klávesové skratky by mali byť zakázané (pri crope to ide)
+- blur objekt aj ked sa blur radius nastavi na 0 a potom sa opat vyberie tak je nastavený na 10
 
 
 - skontrolovať texty
