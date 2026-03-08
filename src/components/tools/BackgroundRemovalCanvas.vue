@@ -45,7 +45,7 @@ const manualCanvasRef = ref(null)
 const isDrawing = ref(false)
 
 /**
- * Last mouse position during drawing
+ * Last pointer position during drawing
  */
 const lastPos = ref({ x: 0, y: 0 })
 
@@ -119,23 +119,34 @@ const drawLine = (from, to, tool) => {
 }
 
 /**
- * Get mouse position relative to the canvas
- * @param event Mouse event
+ * Get pointer position (mouse/touch) relative to the canvas.
+ * @param {MouseEvent|TouchEvent} event
  */
 const getMousePos = (event) => {
   const rect = manualCanvasRef.value.getBoundingClientRect()
-  const x = (event.clientX - rect.left) / viewportStore.realZoomLevel
-  const y = (event.clientY - rect.top) / viewportStore.realZoomLevel
+  const point =
+    event.touches?.[0] ??
+    event.changedTouches?.[0] ??
+    event
+
+  if (point?.clientX == null || point?.clientY == null) {
+    return { x: 0, y: 0 }
+  }
+
+  const x = (point.clientX - rect.left) / viewportStore.realZoomLevel
+  const y = (point.clientY - rect.top) / viewportStore.realZoomLevel
   return { x, y }
 }
 
 /**
- * Mouse down - start drawing or select area
- * @param event Mouse event
+ * Pointer down - start drawing or select area
+ * @param {MouseEvent|TouchEvent} event
  */
 const onMouseDown = (event) => {
   if (editorStore.selectedToolKey !== 'backgroundRemoval') return
-  if (event.button !== 0) return
+  const isTouchEvent = event.type?.startsWith('touch')
+  if (!isTouchEvent && event.button !== 0) return
+  if (isTouchEvent && event.touches && event.touches.length > 1) return
 
   const viewport = document.getElementById('viewport-content')
   if (!viewport.contains(event.target)) return
@@ -162,11 +173,12 @@ const onMouseDown = (event) => {
 }
 
 /**
- * Mouse move - update cursor position and draw if drawing
- * @param event Mouse event
+ * Pointer move - update cursor position and draw if drawing
+ * @param {MouseEvent|TouchEvent} event
  */
 const onMouseMove = (event) => {
   if (editorStore.selectedToolKey !== 'backgroundRemoval' || editorStore.selectedTabPerTool['backgroundRemoval'] !== 'manual') return
+  if (event.type?.startsWith('touch') && event.cancelable) event.preventDefault()
 
   cursorPos.value = getMousePos(event)
   showCursor.value = true
@@ -177,7 +189,7 @@ const onMouseMove = (event) => {
 
   let tool = manualSelectedTool.value
   isErasingDuringDraw.value = false
-  if (manualSelectedTool.value === 'brush' && event.altKey) {
+  if (manualSelectedTool.value === 'brush' && !!event.altKey) {
     // If Alt is held, use eraser regardless of selected tool
     tool = 'eraser'
     isErasingDuringDraw.value = true
@@ -265,6 +277,10 @@ onMounted(() => {
   window.addEventListener('mouseup', onMouseUpGlobal)
   window.addEventListener('mousemove', onMouseMove)
   window.addEventListener('mousedown', onMouseDown)
+  window.addEventListener('touchstart', onMouseDown, { passive: false })
+  window.addEventListener('touchmove', onMouseMove, { passive: false })
+  window.addEventListener('touchend', onMouseUpGlobal)
+  window.addEventListener('touchcancel', onMouseUpGlobal)
 })
 
 /**
@@ -319,6 +335,10 @@ onBeforeUnmount(() => {
   window.removeEventListener('mouseup', onMouseUpGlobal)
   window.removeEventListener('mousemove', onMouseMove)
   window.removeEventListener('mousedown', onMouseDown)
+  window.removeEventListener('touchstart', onMouseDown)
+  window.removeEventListener('touchmove', onMouseMove)
+  window.removeEventListener('touchend', onMouseUpGlobal)
+  window.removeEventListener('touchcancel', onMouseUpGlobal)
 })
 </script>
 
@@ -339,6 +359,7 @@ onBeforeUnmount(() => {
   top: 0;
   left: 0;
   pointer-events: auto;
+  touch-action: none;
   opacity: 0.5;
 }
 </style>
