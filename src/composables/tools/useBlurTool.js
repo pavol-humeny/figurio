@@ -25,6 +25,17 @@ const localBlurSettings = ref({
 const activeObject = ref(null)
 
 /**
+ * Parse numeric attribute value while preserving 0.
+ * @param {unknown} value
+ * @param {number} fallback
+ * @returns {number}
+ */
+const parseNumericOrFallback = (value, fallback) => {
+  const parsed = parseFloat(value)
+  return Number.isFinite(parsed) ? parsed : fallback
+}
+
+/**
  * Logic for blur tool
  * @param {Object} imageStore - Store containing svgObjects
  * @param {Object} historyStore - History store
@@ -165,10 +176,13 @@ export function useBlurTool(imageStore, historyStore, editorStore, uiStore, t) {
             : 0
 
           // Blur strength
-          localBlurSettings.value.blurStrength = parseFloat(attrs['data-blur-strength']) || 5
+          localBlurSettings.value.blurStrength = parseNumericOrFallback(
+            attrs['data-blur-strength'],
+            5,
+          )
 
           // Edge fade
-          localBlurSettings.value.edgeFade = parseFloat(attrs['data-edge-fade']) || 10
+          localBlurSettings.value.edgeFade = parseNumericOrFallback(attrs['data-edge-fade'], 10)
         }
       } else {
         hidePositionAndDimensions.value = true

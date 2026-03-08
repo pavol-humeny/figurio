@@ -36,7 +36,6 @@
 - pri dropdown fyzický režim by tam mohli byť popisy, ktorý papier to je (A4, A3...)
 
 - vyriešiť pohyb objektov s axis lock
-- blur objekt aj ked sa blur radius nastavi na 0 a potom sa opat vyberie tak je nastavený na 10
 
 
 - skontrolovať texty
