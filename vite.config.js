@@ -30,6 +30,6 @@ export default defineConfig({
   },
   server: {
     host: true,
-    allowedHosts: ['abroad-tap-administrator-muscles.trycloudflare.com'],
+    allowedHosts: ['operating-venues-suspended-announcements.trycloudflare.com'],
   },
 })

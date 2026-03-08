@@ -23,10 +23,7 @@
 
 - skontrolovať warning hlášky (malé rozmery, safari...)
 
-
-
 - touch eventy 
-    - crop posun 
     - steeper - drzanie 
     - brush 
     - select

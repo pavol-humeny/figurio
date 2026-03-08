@@ -531,78 +531,123 @@ export function useCropTool(imageStore, viewportStore, editorStore, historyStore
   }
 
   /**
-   * Start panning the crop box with middle mouse button
-   * @param {MouseEvent} event - Mouse event
+   * Get pointer coordinates from mouse or touch event.
+   * @param {MouseEvent|TouchEvent} event
+   * @returns {{x:number,y:number}|null}
+   */
+  const getPointerPosition = (event) => {
+    if (event.touches && event.touches.length > 0) {
+      return { x: event.touches[0].clientX, y: event.touches[0].clientY }
+    }
+
+    if (event.changedTouches && event.changedTouches.length > 0) {
+      return { x: event.changedTouches[0].clientX, y: event.changedTouches[0].clientY }
+    }
+
+    if ('clientX' in event && 'clientY' in event) {
+      return { x: event.clientX, y: event.clientY }
+    }
+
+    return null
+  }
+
+  /**
+   * Start panning the crop box.
+   * @param {MouseEvent|TouchEvent} event - Pointer event
    */
   const startPan = (event) => {
-    if (event.button !== 1) {
-      event.preventDefault()
-      cropBox.value.dragging = true
-      cropBox.value.startX = event.clientX
-      cropBox.value.startY = event.clientY
+    const isTouch = event.type?.startsWith('touch')
+    if (!isTouch && event.button === 1) return
+    if (event.cancelable) event.preventDefault()
 
-      let remainingDx = 0
-      let remainingDy = 0
+    const pointer = getPointerPosition(event)
+    if (!pointer) return
 
-      const onMouseMove = (e) => {
-        // Compute raw delta + remaining for smooth movement
-        let rawDx = (e.clientX - cropBox.value.startX) / viewportStore.realZoomLevel + remainingDx
-        let rawDy = (e.clientY - cropBox.value.startY) / viewportStore.realZoomLevel + remainingDy
+    cropBox.value.dragging = true
+    cropBox.value.startX = pointer.x
+    cropBox.value.startY = pointer.y
 
-        // Round to whole pixels
-        const dx = Math.round(rawDx)
-        const dy = Math.round(rawDy)
+    let remainingDx = 0
+    let remainingDy = 0
 
-        // Save remaining for next move
-        remainingDx = rawDx - dx
-        remainingDy = rawDy - dy
+    const onPointerMove = (e) => {
+      if (e.cancelable) e.preventDefault()
+      const nextPointer = getPointerPosition(e)
+      if (!nextPointer) return
 
-        cropBox.value.x = clamp(
-          cropBox.value.x + dx,
-          0,
-          imageStore.fileDimensions.width - cropBox.value.width,
-        )
-
-        cropBox.value.y = clamp(
-          cropBox.value.y + dy,
-          0,
-          imageStore.fileDimensions.height - cropBox.value.height,
-        )
-
-        cropBox.value.startX = e.clientX
-        cropBox.value.startY = e.clientY
+      // If not pressing left mouse button during mouse move, end dragging (prevents stuck crop box when mouse is released outside of window)
+      if (e.type.startsWith('mouse') && (e.buttons & 1) === 0) {
+        onPointerUp()
+        return
       }
 
-      const onMouseUp = () => {
-        cropBox.value.dragging = false
+      // Compute raw delta + remaining for smooth movement
+      let rawDx = (nextPointer.x - cropBox.value.startX) / viewportStore.realZoomLevel + remainingDx
+      let rawDy = (nextPointer.y - cropBox.value.startY) / viewportStore.realZoomLevel + remainingDy
 
-        // Round crop box
-        cropBox.value.x = round(cropBox.value.x)
-        cropBox.value.y = round(cropBox.value.y)
+      // Round to whole pixels
+      const dx = Math.round(rawDx)
+      const dy = Math.round(rawDy)
 
-        document.removeEventListener('mousemove', onMouseMove)
-        document.removeEventListener('mouseup', onMouseUp)
+      // Save remaining for next move
+      remainingDx = rawDx - dx
+      remainingDy = rawDy - dy
 
-        updateLastCannyCrop()
-      }
+      cropBox.value.x = clamp(
+        cropBox.value.x + dx,
+        0,
+        imageStore.fileDimensions.width - cropBox.value.width,
+      )
 
-      document.addEventListener('mousemove', onMouseMove)
-      document.addEventListener('mouseup', onMouseUp)
+      cropBox.value.y = clamp(
+        cropBox.value.y + dy,
+        0,
+        imageStore.fileDimensions.height - cropBox.value.height,
+      )
+
+      cropBox.value.startX = nextPointer.x
+      cropBox.value.startY = nextPointer.y
     }
+
+    const onPointerUp = () => {
+      cropBox.value.dragging = false
+
+      // Round crop box
+      cropBox.value.x = round(cropBox.value.x)
+      cropBox.value.y = round(cropBox.value.y)
+
+      document.removeEventListener('mousemove', onPointerMove)
+      document.removeEventListener('mouseup', onPointerUp)
+      document.removeEventListener('touchmove', onPointerMove)
+      document.removeEventListener('touchend', onPointerUp)
+      document.removeEventListener('touchcancel', onPointerUp)
+
+      updateLastCannyCrop()
+    }
+
+    document.addEventListener('mousemove', onPointerMove)
+    document.addEventListener('mouseup', onPointerUp)
+    document.addEventListener('touchmove', onPointerMove, { passive: false })
+    document.addEventListener('touchend', onPointerUp)
+    document.addEventListener('touchcancel', onPointerUp)
   }
 
   /**
    * Start resizing the crop box from a specific direction
-   * @param {MouseEvent} e - Mouse event
+   * @param {MouseEvent|TouchEvent} e - Pointer event
    * @param {'top'|'bottom'|'left'|'right'|'top-left'|'top-right'|'bottom-left'|'bottom-right'} direction - Resize direction
    */
   const startResize = (e, direction) => {
-    e.preventDefault()
+    if (e.cancelable) e.preventDefault()
     e.stopPropagation()
+
+    const startPointer = getPointerPosition(e)
+    if (!startPointer) return
+
     cropBox.value.resizing = true
     cropBox.value.resizeDir = direction
-    cropBox.value.startX = e.clientX
-    cropBox.value.startY = e.clientY
+    cropBox.value.startX = startPointer.x
+    cropBox.value.startY = startPointer.y
 
     let remainingDx = 0
     let remainingDy = 0
@@ -616,17 +661,21 @@ export function useCropTool(imageStore, viewportStore, editorStore, historyStore
     const initialRight = initialX + initialWidth
     const initialBottom = initialY + initialHeight
 
-    // Store starting mouse position for Shift calculations
-    const startMouseX = e.clientX
+    // Store starting pointer position for Shift calculations
+    const startMouseX = startPointer.x
 
     // Mode that is allowed during this resize session
     // let allowedMode = null
 
-    const onMouseMove = (ev) => {
-      const dx = (ev.clientX - cropBox.value.startX) / viewportStore.realZoomLevel + remainingDx
-      const dy = (ev.clientY - cropBox.value.startY) / viewportStore.realZoomLevel + remainingDy
+    const onPointerMove = (ev) => {
+      if (ev.cancelable) ev.preventDefault()
+      const pointer = getPointerPosition(ev)
+      if (!pointer) return
 
-      const totalDx = (ev.clientX - startMouseX) / viewportStore.realZoomLevel
+      const dx = (pointer.x - cropBox.value.startX) / viewportStore.realZoomLevel + remainingDx
+      const dy = (pointer.y - cropBox.value.startY) / viewportStore.realZoomLevel + remainingDy
+
+      const totalDx = (pointer.x - startMouseX) / viewportStore.realZoomLevel
       const shiftDelta = totalDx
 
       // Round to whole pixels
@@ -1258,11 +1307,11 @@ export function useCropTool(imageStore, viewportStore, editorStore, historyStore
         cropBox.value.y = newY
       }
 
-      cropBox.value.startX = ev.clientX
-      cropBox.value.startY = ev.clientY
+      cropBox.value.startX = pointer.x
+      cropBox.value.startY = pointer.y
     }
 
-    const onMouseUp = () => {
+    const onPointerUp = () => {
       cropBox.value.resizing = false
       cropBox.value.resizeDir = ''
 
@@ -1275,14 +1324,20 @@ export function useCropTool(imageStore, viewportStore, editorStore, historyStore
       widthAccumulator.value = cropBox.value.width
       heightAccumulator.value = cropBox.value.height
 
-      document.removeEventListener('mousemove', onMouseMove)
-      document.removeEventListener('mouseup', onMouseUp)
+      document.removeEventListener('mousemove', onPointerMove)
+      document.removeEventListener('mouseup', onPointerUp)
+      document.removeEventListener('touchmove', onPointerMove)
+      document.removeEventListener('touchend', onPointerUp)
+      document.removeEventListener('touchcancel', onPointerUp)
 
       updateLastCannyCrop()
     }
 
-    document.addEventListener('mousemove', onMouseMove)
-    document.addEventListener('mouseup', onMouseUp)
+    document.addEventListener('mousemove', onPointerMove)
+    document.addEventListener('mouseup', onPointerUp)
+    document.addEventListener('touchmove', onPointerMove, { passive: false })
+    document.addEventListener('touchend', onPointerUp)
+    document.addEventListener('touchcancel', onPointerUp)
   }
 
   // -------------------------------

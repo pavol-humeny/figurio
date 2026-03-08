@@ -83,15 +83,18 @@ const visibleSideDirs = computed(() => {
       width: cropBox.width + 'px',
       height: cropBox.height + 'px',
       borderWidth: borderWidth + 'px'
-    }" @mousedown="startPan" :class="{ 'crop-box-opacity': !editorStore.toolsConfig.crop.isVisibleCropBox }">
+    }" @mousedown="startPan" @touchstart="startPan"
+      :class="{ 'crop-box-opacity': !editorStore.toolsConfig.crop.isVisibleCropBox }">
 
       <!-- Corner handles -->
       <div v-for="dir in ['top-left', 'top-right', 'bottom-left', 'bottom-right']" :key="dir" class="resizer"
-        :class="dir" @mousedown="(event) => startResize(event, dir.replace('-', ''))" :style="resizerStyle"></div>
+        :class="dir" @mousedown="(event) => startResize(event, dir.replace('-', ''))"
+        @touchstart="(event) => startResize(event, dir.replace('-', ''))" :style="resizerStyle"></div>
 
       <!-- Side handles -->
       <div v-for="dir in visibleSideDirs" :key="dir" class="resizer" :class="dir"
-        @mousedown="(event) => startResize(event, dir)" :style="resizerStyle"></div>
+        @mousedown="(event) => startResize(event, dir)" @touchstart="(event) => startResize(event, dir)"
+        :style="resizerStyle"></div>
     </div>
   </div>
 </template>
@@ -107,6 +110,7 @@ const visibleSideDirs = computed(() => {
   border: 1px dashed var(--editor-highlight-c);
   background: transparent;
   pointer-events: auto;
+  touch-action: none;
   cursor: move;
   z-index: var(--z-index-crop-box);
 }
