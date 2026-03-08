@@ -24,7 +24,7 @@ const isVisible = ref(false)
  *   enableRulers: import('vue').ComputedRef<boolean>,
  * }}
  */
-export function useSettingsPanel(uiStore) {
+export function useSettingsPanel(uiStore, userModeStore) {
   const { openPrivacyAndDataModal } = usePrivacyAndDataModal()
   const { openReleaseModal } = useReleaseModal()
 
@@ -53,6 +53,16 @@ export function useSettingsPanel(uiStore) {
         uiStore.svgObjectsListHeight === uiStore.svgObjectsListDefaultHeight) ||
       uiStore.rightPanelOpen === false
     )
+  })
+
+  /**
+   * Determine if the release notes modal can be opened based on user permissions
+   */
+  const releaseModalCanBeOpened = computed(() => {
+    console.warn('Checking user permissions for release notes access:', {
+      hasAccess: userModeStore.hasUserAccessToFeature('releaseNotes'),
+    })
+    return userModeStore.hasUserAccessToFeature('releaseNotes')
   })
 
   /**
@@ -95,7 +105,14 @@ export function useSettingsPanel(uiStore) {
     openPrivacyAndDataModal()
   }
 
+  /**
+   * Open the release notes modal if the user has access to it
+   */
   const openReleaseModalSettingsPanel = () => {
+    if (!userModeStore.hasUserAccessToFeature('releaseNotes')) {
+      return
+    }
+
     closeSettingsPanel()
     openReleaseModal()
   }
@@ -140,5 +157,6 @@ export function useSettingsPanel(uiStore) {
     openPrivacyModalSettingsPanel,
     enableRulers,
     openReleaseModalSettingsPanel,
+    releaseModalCanBeOpened,
   }
 }

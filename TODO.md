@@ -37,7 +37,7 @@
 ├── DONE - imageStore.json
 ├── DONE - maintenance.json
 ├── DONE - privacy.json
-├── release.json
+├── SKIP - release.json
 ├── DONE - statistics.json
 ├── DONE - tools.json
 ├── DONE - topPanel.json

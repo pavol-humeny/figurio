@@ -7,6 +7,7 @@ import ToggleButton from '@/components/common/ToggleButton.vue';
 import { useSettingsPanel } from '@/composables/topPanel/useSettingsPanel';
 import { useUiStore } from '@/stores/uiStore';
 import pkg from '../../../package.json';
+import { useUserModeStore } from '@/stores/userModeStore';
 
 /**
  * Logic for the settings panel.
@@ -19,8 +20,9 @@ const {
   resetPanelWidth,
   openPrivacyModalSettingsPanel,
   enableRulers,
-  openReleaseModalSettingsPanel
-} = useSettingsPanel(useUiStore());
+  openReleaseModalSettingsPanel,
+  releaseModalCanBeOpened,
+} = useSettingsPanel(useUiStore(), useUserModeStore());
 
 </script>
 
@@ -94,8 +96,9 @@ const {
     <!-- Close Settings and version -->
     <div class="close-button-wrapper">
       <DefaultButton text="Close" @click="closeSettingsPanel" />
-      <p class="version" @click="openReleaseModalSettingsPanel">{{ $t('topPanel.settingsPanel.appVersion.label') }}: {{
-        pkg.version }}</p>
+      <p class="version" @click="openReleaseModalSettingsPanel" :class="{ enabled: releaseModalCanBeOpened }">{{
+        $t('topPanel.settingsPanel.appVersion.label') }}: {{
+          pkg.version }}</p>
     </div>
   </div>
 </template>
@@ -156,7 +159,7 @@ const {
   color: var(--primary-c);
 }
 
-.version:hover {
+.version.enabled:hover {
   cursor: pointer;
   text-decoration: underline;
 }

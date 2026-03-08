@@ -81,7 +81,7 @@ const blockSwipeBack = (event) => {
 const blockDevToolsShortcuts = (event) => {
   if (!globalConfig.modalSettings.blockDeveloperTools) return
 
-  if (userModeStore.hasUserAccessToFeature('notBlockDevTools')) {
+if (userModeStore.hasUserAccessToFeature('notBlockDevTools')) {
     return
   }
 

@@ -141,15 +141,18 @@ export const userModeConfig = {
     'fileDimensions',
     'unlimitedZoom',
     'notShowUnexpectedErrorModal',
-    // 'statistics',
+    'statistics',
     'blockedTools',
     'notBlockDevTools',
     'maxNumberOfOpenFiles',
     'doNotShowInitialWarnings',
+    'releaseNotes',
   ],
 
   /** List of features accessible to basic users */
-  basicFeatures: ['statistics'],
+  basicFeatures: [
+    // 'statistics'
+  ],
 
   /** Email to access command mode */
   commandModeEmail: 'ea14d625304b1a81ef42c3bf046630bf9307dd44e3f3e02e48a6cb8040173c3e',
