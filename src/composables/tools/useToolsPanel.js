@@ -91,6 +91,7 @@ export function useToolsPanel(editorStore, imageStore, uiStore, workspaceStore, 
         // Do not reset selection if coming from select tool
         imageStore.selectedSvgObjectIds = [] // Reset multi-selection on tool change
         imageStore.selectedSvgObjectId = null // Reset just created object ID
+        imageStore.clipboardSvgObject = null // Delete copied object from clipboard
       }
 
       // Show or hide SVG objects list based on selected tool
@@ -243,9 +244,6 @@ export function useToolsPanel(editorStore, imageStore, uiStore, workspaceStore, 
 
     // If the panel is closed, show it
     useCollapsiblePanel(uiStore).showPanel()
-
-    // Delete copied object from clipboard
-    imageStore.clipboardSvgObject = null
   }
 
   /**

@@ -11,6 +11,11 @@
         "items": [
           "Image can be moved with keyboard arrow keys"
         ]
+      },
+      "bugFixes": {
+        "items": [
+          "Fix svg object copying and pasting"
+        ]
       }
     },
     "5.15.0":{
