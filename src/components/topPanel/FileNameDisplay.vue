@@ -4,8 +4,6 @@ import { useImageStore } from '@/stores/imageStore';
 import { useFileNameDisplay } from '@/composables/topPanel/useFileNameDisplay';
 import { useI18n } from 'vue-i18n'
 
-import ItemTip from '@/components/common/ItemTip.vue';
-
 const { t } = useI18n()
 
 /**
@@ -23,15 +21,12 @@ const {
 </script>
 
 <template>
-  <ItemTip :text="disabled ? $t('topPanel.fileNameDisplay.tipDisabled') : fileNameInput"
-    position="bottom-right">
-    <div class="file-name-display-wrapper" :class="{ 'disabled': disabled }">
-      <input ref="inputRef" name="fileName" v-model="fileNameInput" @blur="saveNewFileName"
-        @keydown.enter.stop="saveNewFileName" @click="startEditing" class="file-name-display-input" type="text" />
-      <BaseIcon :name="editEnabled ? 'IconTick' : 'IconEditPencil'" :size="23" :color="'var(--primary-c)'"
-        class="button-clickable" @click="editEnabled ? saveNewFileName() : startEditing()" />
-    </div>
-  </ItemTip>
+  <div class="file-name-display-wrapper" :class="{ 'disabled': disabled }">
+    <input ref="inputRef" name="fileName" v-model="fileNameInput" @blur="saveNewFileName"
+      @keydown.enter.stop="saveNewFileName" @click="startEditing" class="file-name-display-input" type="text" />
+    <BaseIcon :name="editEnabled ? 'IconTick' : 'IconEditPencil'" :size="23" :color="'var(--primary-c)'"
+      class="button-clickable" @click="editEnabled ? saveNewFileName() : startEditing()" />
+  </div>
 </template>
 
 <style scoped>

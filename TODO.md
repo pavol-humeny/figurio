@@ -1,3 +1,19 @@
+- preset - použiť aktuálne úpravy vkladá úpravy ktoré tam nie sú 
+
+- hláška pre kalibráciu sa nezobrazuje
+- background removal tool pri výbere nie je orezaný 
+- orezenie rohov nefunguje ani na brush 
+- ani select, ani shape 
+- veľkosť fotky dať na 5000
+- 
+
+- hide crop - schovať len rohy
+- item tip pri grayscale tipe nie je zarovnaný 
+- pri kliknutí na item tip zmizne
+- magnify area má hrúbku obrysu zle zarovnanú 
+- kurzor štetca nezmizne pri opustení obrázka
+
+
 ## ŠT
 - MTIa
 - kniha 
@@ -9,7 +25,11 @@
     - vyťahanie konštánt do css premenných (čo sa týka rozmerov)
     - hlavičky súborov 
     - komentáre 
+- skúsiť vytlačiť porovnanie farieb/kontrastu
 
+
+## Plagát 
+- majú pomlčky začínať veľkým písmenom, končiť čiarkou 
 ## TODO - text 
 - P - záver
 - prerobiť snímky obrazovky kde je VUE logo na spodku 

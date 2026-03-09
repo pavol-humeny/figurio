@@ -104,7 +104,7 @@
     },
     "acknowledgements": {
       "title": "Poděkování",
-      "text": "Poděkování patří všem uživatelům, kteří se během vývoje podíleli na testování aplikace a poskytli zpětnou vazbu k její funkčnosti a použitelnosti. Jejich připomínky přispěly ke zlepšení aplikace a celkové kvality nástroje.",
+      "text": "Poděkování patří všem uživatelům, kteří se během vývoje podíleli na testování aplikace a poskytli zpětnou vazbu k její funkčnosti a použitelnosti. Jejich připomínky přispeli ke zlepšení aplikace a celkové kvality nástroja.",
       "namedIntro": "Na testování aplikace se významně podíleli",
       "testers": [
         "Jméno Příjmení",
