@@ -142,6 +142,7 @@ export const userModeConfig = {
     'unlimitedZoom',
     'notShowUnexpectedErrorModal',
     'statistics',
+    'acknowledgements',
     'blockedTools',
     'notBlockDevTools',
     'maxNumberOfOpenFiles',

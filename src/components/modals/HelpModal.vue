@@ -492,7 +492,7 @@ const showStatistics = () => {
             </div>
 
             <!-- Acknowledgements -->
-            <div class="help-content">
+            <div class="help-content" v-if="userModeStore.hasUserAccessToFeature('acknowledgements')">
               <p class="help-content-title">
                 {{ $t('help.helpContent.acknowledgements.title') }}
               </p>

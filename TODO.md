@@ -43,6 +43,8 @@
 
 - skontrolovať warning hlášky (malé rozmery, safari...)
 
+- skúsiť nejako počítať aktívnu session a nie až po zavretí 
+
 
 - skontrolovať texty
 ├── DONE - calibration.json
