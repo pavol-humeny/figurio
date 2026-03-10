@@ -80,7 +80,7 @@ export function useItemTip(options = {}, uiStore, editorStore) {
     ctx.font = `${fontSize} ${fontFamily}`
 
     // Calculate width of text
-    const textWidth = ctx.measureText(text).width + 20
+    const textWidth = ctx.measureText(text).width + 40
     const minWidth = Math.min(Math.min(textWidth, 200), 300)
     let maxWidth = 300
     if (textWidth < 450) {
@@ -253,8 +253,9 @@ export function useItemTip(options = {}, uiStore, editorStore) {
     const el = document.elementFromPoint(lastMouseX, lastMouseY)
 
     const isOverTip = tipRef.value.contains(el)
+    const isOverWrapper = wrapperRef.value.contains(el)
 
-    if (isOverTip) return
+    if (isOverTip || isOverWrapper) return
 
     // Hide the tooltip
     isVisible.value = false

@@ -4,8 +4,6 @@
 - veľkosť fotky dať na 5000
 - 
 
-- item tip pri grayscale tipe nie je zarovnaný 
-- pri kliknutí na item tip zmizne
 - magnify area má hrúbku obrysu zle zarovnanú 
 - kurzor štetca nezmizne pri opustení obrázka
 

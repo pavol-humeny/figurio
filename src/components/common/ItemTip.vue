@@ -128,12 +128,14 @@ const videoRef = ref(null)
   font-size: var(--tip-font-size);
   /* white-space: normal; */
   box-shadow: var(--box-shadow-ui);
+  text-align: center;
   /* max-width: 300px; */
   /* min-width: 200px; */
   /* width: fit-content; */
 }
 
 .item-tip-advance-tool {
+  text-align: left;
   padding: 10px;
 }
 
@@ -280,6 +282,7 @@ const videoRef = ref(null)
 .tip-description {
   color: var(--text-c);
   font-size: var(--tip-font-size);
+  text-align: left;
   /* white-space: nowrap; */
 }
 
