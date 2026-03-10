@@ -237,11 +237,6 @@ const {
                 <p style="text-align: start">
                   {{ $t('tools.crop.settings.general.hideCropBoxButton.text') }}
                 </p>
-                <!-- <ToggleHoldButton :scale="0.6" :style="{ transform: 'translateX(16px)' }"
-                  :tip="$t('tools.crop.settings.general.hideCropBoxButton.tip')" position="top-left"
-                  :defaultValue=!editorStore.toolsConfig.crop.isVisibleCropBox :startFunction="hideCropBox"
-                  :endFunction="showCropBox" /> -->
-
                 <ToggleButton v-model="isVisibleCropBox" :scale="0.6" :style="{ transform: 'translateX(16px)' }"
                   :tip="$t('tools.crop.settings.general.hideCropBoxButton.tip')" position="top-left" />
               </div>

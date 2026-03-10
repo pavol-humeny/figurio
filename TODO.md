@@ -1,13 +1,9 @@
-- preset - použiť aktuálne úpravy vkladá úpravy ktoré tam nie sú 
-
-- hláška pre kalibráciu sa nezobrazuje
 - background removal tool pri výbere nie je orezaný 
 - orezenie rohov nefunguje ani na brush 
 - ani select, ani shape 
 - veľkosť fotky dať na 5000
 - 
 
-- hide crop - schovať len rohy
 - item tip pri grayscale tipe nie je zarovnaný 
 - pri kliknutí na item tip zmizne
 - magnify area má hrúbku obrysu zle zarovnanú 
