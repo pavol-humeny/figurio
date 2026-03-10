@@ -645,9 +645,9 @@ export function useFrameTool(imageStore, historyStore, viewportStore, t) {
    * Set phone buttons visibility
    * @param {boolean} value - Whether to show phone buttons
    */
-  const setPhoneButtons = (value) => {
+  const setPhoneButtons = (value, commit = true) => {
     drawPhoneButtons.value = value
-    applyFrame()
+    applyFrame(commit)
   }
 
   /**
@@ -655,7 +655,7 @@ export function useFrameTool(imageStore, historyStore, viewportStore, t) {
    */
   watch(phoneButtonsCanBeDrawn, (newValue) => {
     if (newValue) {
-      setPhoneButtons(true)
+      setPhoneButtons(true, false)
     }
   })
 
