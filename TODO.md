@@ -3,24 +3,24 @@
 - ani select, ani shape  
 
 ## ŠT
+- plagát 
 - MTIa
-- kniha 
-- testovanie figurio 
-    - feature tour okno 
-    - userTesting - blur, magnify
-- Unit testy
-- refaktorizácia
-    - vyťahanie konštánt do css premenných (čo sa týka rozmerov)
+- help preklad 
+- refaktorizácia 
     - hlavičky súborov 
     - komentáre 
 - skúsiť vytlačiť porovnanie farieb/kontrastu
+- Unit testy 
+- konzultácia 
+- kniha 
 
+- v
+    - plagát
+    - help 
+    - testovanie na telefóne
 
-## Plagát 
-- majú pomlčky začínať veľkým písmenom, končiť čiarkou 
 ## TODO - text 
 - P - záver
-- prerobiť snímky obrazovky kde je VUE logo na spodku 
 - zmenit obrazok pri ukazovani pixelation mode, dat tam nieco viac abstraktne
 - obrázok s fyzickými rozmermi - dat tam nekvalitný obrázok a zmeniť X na znak 
 
