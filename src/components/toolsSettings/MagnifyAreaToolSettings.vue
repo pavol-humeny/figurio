@@ -103,17 +103,21 @@ const {
         <div class="settings-content-wrapper">
           <div class="content-aligned two-items">
             <div class="content-wrapper">
-              <p>
-                {{ $t('tools.magnifyArea.settings.general.outlineWidth.label') }}
-              </p>
+              <div class="content-title">
+                <p>
+                  {{ $t('tools.magnifyArea.settings.general.outlineWidth.label') }}
+                </p>
+              </div>
               <NumberSpinner v-model="localMagnifyAreaSettings.outlineWidth" :min="1" :max="maxOutlineWidth" :step="1"
                 @update="applyLocalMagnifyAreaSettings" :tip="$t('tools.magnifyArea.settings.general.outlineWidth.tip')"
                 position="bottom-left" unit="px" />
             </div>
             <div class="content-wrapper">
-              <p>
-                {{ $t('tools.magnifyArea.settings.general.outlineColor.label') }}
-              </p>
+              <div class="content-title">
+                <p>
+                  {{ $t('tools.magnifyArea.settings.general.outlineColor.label') }}
+                </p>
+              </div>
               <ColorPicker v-model="localMagnifyAreaSettings.outlineColor"
                 @update="applyLocalMagnifyAreaSettings(false)" @commit="applyLocalMagnifyAreaSettings(true)"
                 :tip="$t('tools.magnifyArea.settings.general.outlineColor.tip')" position="bottom-left" />
