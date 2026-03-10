@@ -395,14 +395,16 @@ const cursorStyle = computed(() => {
       <div class="slider" @mousedown="(e) => startDrag('y', e)" :style="{
         top: verticalSliderTop + 'px',
         height: verticalSliderHeight + 'px',
-      }" :class="{ active: isDraggingVertical }"></div>
+      }" :class="{ active: isDraggingVertical }" @mouseleave="uiStore.cursorOverViewportSettings = false"
+        @mouseenter="uiStore.cursorOverViewportSettings = true"></div>
     </div>
 
     <div class="horizontal-slider-wrapper">
       <div class="slider" @mousedown="(e) => startDrag('x', e)" :style="{
         left: horizontalSliderLeft + 'px',
         width: horizontalSliderWidth + 'px',
-      }" :class="{ active: isDraggingHorizontal }"></div>
+      }" :class="{ active: isDraggingHorizontal }" @mouseleave="uiStore.cursorOverViewportSettings = false"
+        @mouseenter="uiStore.cursorOverViewportSettings = true"></div>
     </div>
 
     <!-- Rulers -->
@@ -414,7 +416,7 @@ const cursorStyle = computed(() => {
         </div>
         <div v-if="mouseX !== null" class="ruler-cursor-mark horizontal" :style="{ left: mouseX + 'px' }">
           <span class="ruler-cursor-label horizontal" :class="{ 'active': cursorPosXSameAsImageWidth }">{{ cursorPosX
-          }}</span>
+            }}</span>
         </div>
 
       </div>
@@ -427,7 +429,7 @@ const cursorStyle = computed(() => {
         </div>
         <div v-if="mouseY !== null" class="ruler-cursor-mark vertical" :style="{ top: mouseY + 'px' }">
           <span class="ruler-cursor-label vertical" :class="{ 'active': cursorPosYSameAsImageHeight }">{{ cursorPosY
-          }}</span>
+            }}</span>
         </div>
       </div>
     </div>

@@ -929,6 +929,7 @@ export function useViewportWrapper(
    */
   const onMouseLeave = () => {
     showCursor.value = false
+    uiStore.cursorOverViewportSettings = false
   }
 
   /**
@@ -936,13 +937,8 @@ export function useViewportWrapper(
    */
   const onMouseEnter = () => {
     showCursor.value = true
+    uiStore.cursorOverViewportSettings = true
   }
-
-  /**
-   * Computed cursor position in image coordinates for displaying position of the mouse cursor on rulers
-   */
-  // const cursorPosX = computed(() => round((mouseX.value - panX.value) / zoomLevel.value))
-  // const cursorPosY = computed(() => round((mouseY.value - panY.value) / zoomLevel.value))
 
   /**
    * Cursor position in image coordinates

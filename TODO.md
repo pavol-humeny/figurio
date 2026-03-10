@@ -1,12 +1,6 @@
 - background removal tool pri výbere nie je orezaný 
 - orezenie rohov nefunguje ani na brush 
-- ani select, ani shape 
-- veľkosť fotky dať na 5000
-- 
-
-- magnify area má hrúbku obrysu zle zarovnanú 
-- kurzor štetca nezmizne pri opustení obrázka
-
+- ani select, ani shape  
 
 ## ŠT
 - MTIa

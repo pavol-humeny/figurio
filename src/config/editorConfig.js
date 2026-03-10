@@ -34,8 +34,8 @@ export const editorConfig = {
 
   // Max file dimensions
   // Resize and crop limits
-  maxFileDimensionWidth: 4000,
-  maxFileDimensionHeight: 4000,
+  maxFileDimensionWidth: 5000,
+  maxFileDimensionHeight: 5000,
   minFileDimensionWidth: 20,
   minFileDimensionHeight: 20,
 
