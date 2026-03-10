@@ -136,12 +136,12 @@ export function useItemTip(options = {}, uiStore, editorStore) {
 
       case 'top-right':
         top = rect.top - offset
-        left = rect.left
+        left = rect.left + rect.width / 2 - 20
         break
 
       case 'top-left':
         top = rect.top - offset
-        left = rect.right
+        left = rect.right + 20 - rect.width / 2
         break
 
       case 'bottom':
@@ -151,12 +151,12 @@ export function useItemTip(options = {}, uiStore, editorStore) {
 
       case 'bottom-right':
         top = rect.bottom + offset
-        left = rect.left
+        left = rect.left + rect.width / 2 - 20
         break
 
       case 'bottom-left':
         top = rect.bottom + offset
-        left = rect.right
+        left = rect.right + 20 - rect.width / 2
         break
 
       case 'left':
@@ -179,6 +179,8 @@ export function useItemTip(options = {}, uiStore, editorStore) {
 
         break
     }
+
+    console.warn('Tooltip position updated:', { rect, top, left })
 
     coords.value = { top, left }
   }
