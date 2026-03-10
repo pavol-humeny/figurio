@@ -38,8 +38,8 @@ const {
   presetFrameOptions,
   frameWidthRef,
   resetFrameWidth,
-  showManualPresetSetting,
-  useCurrentModifications,
+  // showManualPresetSetting,
+  // useCurrentModifications,
   presetNameRef,
   selectedPresetName,
   localPresetName,
@@ -513,14 +513,14 @@ const tabs = ['myPresets', 'createPreset']
                 <TextInput ref="presetNameRef" v-model="newPreset.presetName"
                   :placeholder="t('tools.preset.settings.createPreset.presetName.placeholder')" updateOnChange />
               </div>
-              <div class="content-button">
+              <!-- <div class="content-button">
                 <DefaultButton :text="t('tools.preset.settings.createPreset.manualPresetSetting.text')"
                   @click="showManualPresetSetting()" :disabled="newPreset.presetName === ''" />
-              </div>
-              <div class="content-button">
+              </div> -->
+              <!-- <div class="content-button">
                 <DefaultButton :text="t('tools.preset.settings.createPreset.useCurrentModifications.text')"
                   @click="useCurrentModifications()" :disabled="newPreset.presetName === ''" />
-              </div>
+              </div> -->
             </div>
           </div>
 
@@ -540,7 +540,7 @@ const tabs = ['myPresets', 'createPreset']
             </div>
           </div>
 
-          <!-- Use current modifications -->
+          <!-- Use current modifications
           <div v-if="isShowManualPresetSetting" class="settings-content-wrapper">
             <div class="content-wrapper">
               <div class="content-button">
@@ -549,7 +549,7 @@ const tabs = ['myPresets', 'createPreset']
                   @click="useCurrentModifications()" />
               </div>
             </div>
-          </div>
+          </div>-->
 
           <!-- Transformations -->
           <div v-if="isShowManualPresetSetting" class="settings-content-wrapper">
@@ -617,6 +617,9 @@ const tabs = ['myPresets', 'createPreset']
               <div class="content-wrapper">
                 <DropdownSelect v-model="newPreset.grayscale.grayscaleType" :options="presetGrayscaleOptions" />
               </div>
+              <p class="grayscale-explain">
+                {{ $t(`tools.grayscale.settings.options.${newPreset.grayscale.grayscaleType}Explained`) }}
+              </p>
             </div>
           </div>
 
@@ -976,5 +979,10 @@ const tabs = ['myPresets', 'createPreset']
 <style scoped>
 .content-aligned.two-items p {
   text-align: left;
+}
+
+.grayscale-explain{
+  padding: 0 20px;
+  text-align: center;
 }
 </style>

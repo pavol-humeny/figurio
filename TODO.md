@@ -219,6 +219,14 @@ Event type:
 - command
     - commandIdentifier
 
+## Preset operations 
+- rotation
+- flip
+- autoCrop
+- grayscale
+- crop 
+- resize
+
 ## Commands
  - su <basic/expert/admin>
  - turn on <snowfall/christmasLights/randomEvents>

@@ -325,6 +325,7 @@
       },
       "options":{
         "none": "Žiadny",
+        "noneExplained": "",
         "luminance": "Jas",
         "luminanceExplained": "Vážený priemer založený na ľudskom vnímaní",
         "luminanceFormula": "0.299 R + 0.587 G + 0.114 B",
@@ -771,7 +772,7 @@
     "label": "Šablóny",
     "tip": "Aplikuje šablónu na obrázok",
     "tipDisabled": "",
-    "explain": "Nástroj Šablóny uloží sadu úprav obrázka ako šablónu. Podporované operácie zahŕňajú otočenie, preklopenie, orez, zmenu veľkosti, odtiene šedej, rámček. Aktuálne úpravy je možné uložiť alebo operácie vybrať manuálne.",
+    "explain": "Nástroj Šablóny uloží sadu úprav obrázka ako šablónu. Podporované operácie zahŕňajú otočenie, preklopenie, orez, zmenu veľkosti, odtiene šedej a rámček.",
     "explain2": "Nástroj Šablóny aplikuje uloženú predvoľbu na obrázok. Predvoľby je možné upraviť, pridať nové operácie a zmeniť poradie alebo hodnoty existujúcich operácií pred aplikáciou.",
     "shortcut": "",
     "subTools": {
@@ -806,17 +807,17 @@
             "verticalFlip": "Vertikálne otočenie"
           },
           "autoCrop": {
-            "label": "Automatické orezanie",
-            "enabled": "Povolené",
+            "label": "Orezanie na tesno",
+            "enabled": "Povoliť",
             "color": "Farba"
           },
           "grayscale": {
-            "label": "Grayscale",
-            "enabled": "Povolené"
+            "label": "Prevod do odtieňov sivej",
+            "enabled": "Povoliť"
           },
           "frame": {
             "label": "Rámik",
-            "enabled": "Povolené",
+            "enabled": "Povoliť",
             "color": "Farba",
             "useMillimeters": "Použiť milimetry",
             "width": "Šírka",
@@ -952,18 +953,18 @@
             "flip": "Prevrátenie"
           },
           "autoCrop": {
-            "label": "Automatické orezanie",
-            "enabled": "Povolené",
+            "label": "Orezanie na tesno",
+            "enabled": "Povoliť",
             "color": "Farba"
           },
           "grayscale": {
             "label": "Odtiene šedi",
-            "enabled": "Povolené",
+            "enabled": "Povoliť",
             "grayscaleType": "Typ"
           },
           "frame": {
             "label": "Rámik",
-            "enabled": "Povolené",
+            "enabled": "Povoliť",
             "color": "Farba",
             "useMillimeters": "Použiť milimetre",
             "width": "Šírka",

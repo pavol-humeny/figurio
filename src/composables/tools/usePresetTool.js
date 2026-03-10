@@ -620,7 +620,7 @@ export function usePresetTool(
     const preset = presetsStore.selectedPreset
 
     // Get image operations from imageStore and compare with preset
-    const currentImageOperations = imageStore.getImageOperations()
+    const currentImageOperations = imageStore.getImageOperationsForPreset()
     const presetOperations = JSON.parse(JSON.stringify(preset.imageOperations))
 
     const currentImageFrame = imageStore.getImageFrame()
@@ -778,7 +778,7 @@ export function usePresetTool(
   /**
    * Whether the manual preset setting dialog is shown
    */
-  const isShowManualPresetSetting = ref(false)
+  const isShowManualPresetSetting = ref(true)
 
   onMounted(() => {
     // Select first preset if none selected
@@ -976,9 +976,9 @@ export function usePresetTool(
   /**
    * Show the manual preset setting dialog
    */
-  const showManualPresetSetting = () => {
-    isShowManualPresetSetting.value = true
-  }
+  // const showManualPresetSetting = () => {
+  //   isShowManualPresetSetting.value = true
+  // }
 
   /**
    * Reset the new preset to default values
@@ -1041,7 +1041,7 @@ export function usePresetTool(
       // UPDATE new tool
     }
 
-    isShowManualPresetSetting.value = false
+    // isShowManualPresetSetting.value = false
   }
 
   /**
@@ -1283,7 +1283,7 @@ export function usePresetTool(
    * Use current modifications to create a preset
    */
   const useCurrentModifications = () => {
-    const imageOperations = imageStore.getImageOperations()
+    const imageOperations = imageStore.getImageOperationsForPreset()
     const cropOperations = imageOperations.filter((op) => op.type === 'crop')
 
     if (cropOperations.length > 1) {
@@ -1364,7 +1364,7 @@ export function usePresetTool(
     presetFrameOptions,
     frameWidthRef,
     resetFrameWidth,
-    showManualPresetSetting,
+    // showManualPresetSetting,
     useCurrentModifications,
     presetNameRef,
     selectedPresetName,

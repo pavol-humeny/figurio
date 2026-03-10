@@ -328,6 +328,7 @@
       },
       "options": {
         "none": "Žádný",
+        "noneExplained": "",
         "luminance": "Jas",
         "luminanceExplained": "Vážený průměr založený na lidském vnímání",
         "luminanceFormula": "0.299 R + 0.587 G + 0.114 B",
@@ -775,7 +776,7 @@
     "label": "Šablony",
     "tip": "Aplikuje šablonu na obrázek",
     "tipDisabled": "",
-    "explain": "Nástroj Šablony uloží sadu úprav obrázku jako šablonu. Podporované operace zahrnují otočení, překlopení, ořez, změnu velikosti, odstíny šedi, rámeček. Lze uložit aktuální úpravy nebo operace vybrat ručně.",
+    "explain": "Nástroj Šablony uloží sadu úprav obrázku jako šablonu. Podporované operace zahrnují otočení, překlopení, ořez, změnu velikosti, odstíny šedi a rámeček.",
     "explain2": "Nástroj Šablony aplikuje uloženou předvolbu na obrázek. Předvolby lze upravit, přidat nové operace a změnit pořadí nebo hodnoty existujících operací před aplikací.",
     "shortcut": "",
     "subTools": {
@@ -810,17 +811,17 @@
             "verticalFlip": "Vertikální otočení"
           },
           "autoCrop": {
-            "label": "Automatické oříznutí",
-            "enabled": "Povoleno",
+            "label": "Oříznutí na těsno",
+            "enabled": "Povolit",
             "color": "Barva"
           },
           "grayscale": {
-            "label": "Grayscale",
-            "enabled": "Povoleno"
+            "label": "Prevod do odstínů šedi",
+            "enabled": "Povolit"
           },
           "frame": {
             "label": "Rámeček",
-            "enabled": "Povoleno",
+            "enabled": "Povolit",
             "color": "Barva",
             "useMillimeters": "Použít milimetry",
             "width": "Šířka",
@@ -956,18 +957,18 @@
             "flip": "Překlopení"
           },
           "autoCrop": {
-            "label": "Automatické oříznutí",
-            "enabled": "Povoleno",
+            "label": "Oříznutí na těsno",
+            "enabled": "Povolit",
             "color": "Barva"
           },
           "grayscale": {
             "label": "Odstíny šedi",
-            "enabled": "Povoleno",
+            "enabled": "Povolit",
             "grayscaleType": "Typ"
           },
           "frame": {
             "label": "Rámeček",
-            "enabled": "Povoleno",
+            "enabled": "Povolit",
             "color": "Barva",
             "useMillimeters": "Použít milimetry",
             "width": "Šířka",

@@ -325,6 +325,7 @@
       },
       "options":{
         "none": "None",
+        "noneExplained": "",
         "luminance": "Luminance",
         "luminanceExplained": "Weighted average based on human perception",
         "luminanceFormula": "0.299 R + 0.587 G + 0.114 B",
@@ -771,7 +772,7 @@
     "label": "Presets",
     "tip": "Apply a preset to the image",
     "tipDisabled": "",
-    "explain": "The Create Preset tool saves a set of image operations as a preset. Supported operations include rotate, flip, crop, resize, grayscale, frame. Current modifications can be saved as preset or operations can be manually selected.",
+    "explain": "The Create Preset tool saves a set of image operations as a preset. Supported operations include rotate, flip, crop, resize, grayscale and frame.",
     "explain2": "The Apply Preset tool applies a saved preset to the image. Presets can be modified, new operations can be added, and the order or values of existing operations can be adjusted before applying.",
     "shortcut": "",
     "subTools": {

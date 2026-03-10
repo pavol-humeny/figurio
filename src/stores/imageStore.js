@@ -442,7 +442,7 @@ export const useImageStore = defineStore('imageStore', {
      * Returns a deep copy of all image operations
      * @returns {Array<Object>}
      */
-    getImageOperations() {
+    getImageOperationsForPreset() {
       return JSON.parse(JSON.stringify(this.imageOperations))
     },
 
