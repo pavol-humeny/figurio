@@ -92,7 +92,7 @@ export const useViewportStore = defineStore('viewportStore', {
       globalConfig.calibrationFactor,
     ),
     /** Maximum physical content size */
-    maxPhysicalContentSize: viewportConfig.a4paperWidth,
+    maxPhysicalContentSize: viewportConfig.maxPhysicalContentSize,
 
     /** Flag to indicate viewport movement from keyboard */
     moveViewport: null, // up, down, left, right
@@ -119,7 +119,11 @@ export const useViewportStore = defineStore('viewportStore', {
      * @returns {number}
      */
     getPxPerMmFitZoom(state) {
-      return viewportConfig.defaultPxPerCm * state.calibrationFactor * 0.1
+      // return viewportConfig.defaultPxPerCm * state.calibrationFactor * 0.1
+
+      const pxPerMm = viewportConfig.defaultPxPerCm * state.calibrationFactor * 0.1
+
+      return pxPerMm / (1 / state.fitZoomLevel)
 
       // Cannot be divided by anything because when changing reference size, it also changes fitZoomLevel accordingly
 

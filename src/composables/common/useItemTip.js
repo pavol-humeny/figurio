@@ -180,8 +180,6 @@ export function useItemTip(options = {}, uiStore, editorStore) {
         break
     }
 
-    console.warn('Tooltip position updated:', { rect, top, left })
-
     coords.value = { top, left }
   }
 

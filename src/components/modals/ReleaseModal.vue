@@ -119,7 +119,7 @@ const {
   padding: 25px 30px;
   border-radius: 20px;
   width: 700px;
-  height: 90vh;
+  height: 80vh;
   box-shadow: var(--box-shadow-ui);
   display: flex;
   flex-direction: column;

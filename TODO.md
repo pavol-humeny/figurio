@@ -18,6 +18,8 @@
     - plagát
     - help 
     - testovanie na telefóne
+    - videá excel
+    - wireframe v editovateľnej podobe
 
 ## TODO - text 
 - P - záver
@@ -32,6 +34,11 @@
 - skontrolovať warning hlášky (malé rozmery, safari...)
 
 - skúsiť nejako počítať aktívnu session a nie až po zavretí 
+
+- pridať počet návštev pre jednotlivých členov (koľko razí sa vracajú)
+
+- povoliť načítanie viacerých súborov
+- zmena veľkosti obrázka - prepočítať rámik vo fyzických rozmeroch
 
 
 - skontrolovať texty

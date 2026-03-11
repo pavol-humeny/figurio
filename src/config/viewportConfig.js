@@ -17,6 +17,7 @@ export const viewportConfig = {
   // Zoom mode - text
   defaultTextWidth: 15.2, // cm
   a4paperWidth: 21, // cm
+  maxPhysicalContentSize: 300, // cm, maximum size of the content in physical units
 
   // Crop
   cropHandleSize: 20,
