@@ -1,4 +1,9 @@
 <script setup>
+/**
+ * @file: PrivacyAndDataModal.vue
+ * @author: Pavol Humeny
+ * @date: 15.5.2026
+ */
 import { usePrivacyAndDataModal } from '@/composables/modals/usePrivacyAndDataModal';
 import BaseIcon from '@/components/icons/BaseIcon.vue';
 import DefaultButton from '@/components/common/DefaultButton.vue';

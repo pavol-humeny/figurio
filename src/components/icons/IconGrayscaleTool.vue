@@ -1,3 +1,8 @@
+<!--
+  @file: IconGrayscaleTool.vue
+  @author: Pavol Humeny
+  @date: 15.5.2026
+-->
 <template>
   <svg
     id="Gradient--Streamline-Carbon"

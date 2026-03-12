@@ -1,4 +1,9 @@
 <script setup>
+/**
+ * @file: CropToolSettings.vue
+ * @author: Pavol Humeny
+ * @date: 15.5.2026
+ */
 import ToolsSettingsTabs from './ToolsSettingsTabs.vue'
 import { useEditorStore } from '@/stores/editorStore'
 import { useImageStore } from '@/stores/imageStore'

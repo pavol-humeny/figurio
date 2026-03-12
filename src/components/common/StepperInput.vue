@@ -1,4 +1,9 @@
 <script setup>
+/**
+ * @file: StepperInput.vue
+ * @author: Pavol Humeny
+ * @date: 15.5.2026
+ */
 import ItemTip from './ItemTip.vue'
 import BaseIcon from '../icons/BaseIcon.vue'
 import { useStepperInput } from '@/composables/common/useStepperInput'

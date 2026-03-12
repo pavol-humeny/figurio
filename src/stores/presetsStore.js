@@ -1,3 +1,8 @@
+/**
+ * @file: presetsStore.js
+ * @author: Pavol Humeny
+ * @date: 15.5.2026
+ */
 import { defineStore } from 'pinia'
 import { editorConfig } from '@/config/editorConfig'
 import { useConsole } from '@/composables/common/useConsole.js'

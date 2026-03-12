@@ -1,3 +1,8 @@
+/**
+ * @file: workspaceStore.js
+ * @author: Pavol Humeny
+ * @date: 15.5.2026
+ */
 import { defineStore } from 'pinia'
 import { useImageStore } from './imageStore'
 import { useHistoryStore } from './historyStore'

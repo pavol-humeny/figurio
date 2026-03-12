@@ -3,6 +3,11 @@
 </template>
 
 <script setup>
+/**
+ * @file: FireWorks2.vue
+ * @author: Pavol Humeny
+ * @date: 15.5.2026
+ */
 import { ref, onMounted, onBeforeUnmount } from 'vue'
 import { Fireworks } from 'fireworks-js'
 

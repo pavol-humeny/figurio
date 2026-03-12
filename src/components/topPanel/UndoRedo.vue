@@ -1,4 +1,9 @@
 <script setup>
+/**
+ * @file: UndoRedo.vue
+ * @author: Pavol Humeny
+ * @date: 15.5.2026
+ */
 import BaseIcon from '@/components/icons/BaseIcon.vue'
 import { useUndoRedo } from '@/composables/topPanel/useUndoRedo'
 import { useImageStore } from '@/stores/imageStore'

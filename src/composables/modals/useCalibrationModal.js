@@ -1,3 +1,8 @@
+/**
+ * @file: useCalibrationModal.js
+ * @author: Pavol Humeny
+ * @date: 15.5.2026
+ */
 import { ref, onMounted, watch } from 'vue'
 import { viewportConfig } from '@/config/viewportConfig'
 import { useApi } from '@/composables/common/useApi'

@@ -1,3 +1,8 @@
+/**
+ * @file: useHoldButton.js
+ * @author: Pavol Humeny
+ * @date: 15.5.2026
+ */
 import { ref } from 'vue'
 import { editorConfig } from '@/config/editorConfig'
 

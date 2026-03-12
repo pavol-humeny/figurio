@@ -1,4 +1,9 @@
 <script setup>
+/**
+ * @file: HelpModal.vue
+ * @author: Pavol Humeny
+ * @date: 15.5.2026
+ */
 import { storeToRefs } from 'pinia';
 import BaseIcon from '@/components/icons/BaseIcon.vue';
 import DefaultButton from '@/components/common/DefaultButton.vue';

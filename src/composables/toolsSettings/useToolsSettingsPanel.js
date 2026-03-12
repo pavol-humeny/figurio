@@ -1,3 +1,8 @@
+/**
+ * @file: useToolsSettingsPanel.js
+ * @author: Pavol Humeny
+ * @date: 15.5.2026
+ */
 import { computed, defineAsyncComponent } from 'vue'
 import { toolsDefinitions } from '@/config/toolsDefinitions'
 

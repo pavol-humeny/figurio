@@ -1,4 +1,9 @@
 <script setup>
+/**
+ * @file: PresetToolSettings.vue
+ * @author: Pavol Humeny
+ * @date: 15.5.2026
+ */
 import ToolsSettingsTabs from './ToolsSettingsTabs.vue'
 import { useEditorStore } from '@/stores/editorStore'
 import TextInput from '../common/TextInput.vue'

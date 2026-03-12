@@ -1,3 +1,8 @@
+/**
+ * @file: useSendEvent.js
+ * @author: Pavol Humeny
+ * @date: 15.5.2026
+ */
 import { globalConfig } from '@/config/globalConfig.js'
 import { useUiStore } from '@/stores/uiStore'
 import { useConsole } from '@/composables/common/useConsole.js'

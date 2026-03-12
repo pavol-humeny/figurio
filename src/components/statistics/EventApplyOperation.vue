@@ -1,4 +1,9 @@
 <script setup>
+/**
+ * @file: EventApplyOperation.vue
+ * @author: Pavol Humeny
+ * @date: 15.5.2026
+ */
 import { ref, onMounted, computed } from 'vue';
 import { useApi } from '@/composables/common/useApi';
 import ProgressBar from '@/components/statistics/ProgressBar.vue';

@@ -1,3 +1,8 @@
+/**
+ * @file: usePrivacyAndDataModal.js
+ * @author: Pavol Humeny
+ * @date: 15.5.2026
+ */
 import { ref } from 'vue'
 import { useConfirmModal } from './useConfirmModal'
 import { useApi } from '@/composables/common/useApi'

@@ -1,4 +1,9 @@
 <script setup>
+/**
+ * @file: ToolsSettingsTabs.vue
+ * @author: Pavol Humeny
+ * @date: 15.5.2026
+ */
 import { useEditorStore } from '@/stores/editorStore'
 import { useToolsSettingsTabs } from '@/composables/toolsSettings/useToolsSettingsTabs'
 import { onMounted, nextTick } from 'vue'

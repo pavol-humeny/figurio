@@ -1,3 +1,8 @@
+/**
+ * @file: DropDownSelect.spec.js
+ * @author: Pavol Humeny
+ * @date: 15.5.2026
+ */
 // DropdownSelect.spec.js – unit tests for new DropdownSelect component
 import { describe, it, expect, vi } from 'vitest'
 import { mount, flushPromises } from '@vue/test-utils'

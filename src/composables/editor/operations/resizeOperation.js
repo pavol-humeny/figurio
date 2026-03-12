@@ -1,4 +1,9 @@
 /**
+ * @file: resizeOperation.js
+ * @author: Pavol Humeny
+ * @date: 15.5.2026
+ */
+/**
  * Resize operation via Web Worker
  *
  * @param {HTMLCanvasElement} baseCanvas

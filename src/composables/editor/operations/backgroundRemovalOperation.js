@@ -1,4 +1,9 @@
 /**
+ * @file: backgroundRemovalOperation.js
+ * @author: Pavol Humeny
+ * @date: 15.5.2026
+ */
+/**
  * Background removal pipeline operation
  * Raster-only operation – preserves overlay and PDF
  *

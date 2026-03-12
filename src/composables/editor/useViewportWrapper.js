@@ -1,3 +1,8 @@
+/**
+ * @file: useViewportWrapper.js
+ * @author: Pavol Humeny
+ * @date: 15.5.2026
+ */
 import { computed, ref, nextTick, onMounted, watch, onBeforeUnmount } from 'vue'
 import { viewportConfig } from '@/config/viewportConfig'
 import { useMath } from '@/composables/common/useMath'

@@ -1,4 +1,9 @@
 /**
+ * @file: rasterizeOperation.js
+ * @author: Pavol Humeny
+ * @date: 15.5.2026
+ */
+/**
  * Rasterize operation – editor mode
  * Bakes SVG/blur objects into bitmap overlay
  */

@@ -1,4 +1,9 @@
 <script setup>
+/**
+ * @file: DragAndDropArea.vue
+ * @author: Pavol Humeny
+ * @date: 15.5.2026
+ */
 import BaseIcon from '@/components/icons/BaseIcon.vue'
 import DefaultButton from '@/components/common/DefaultButton.vue'
 import ItemTip from '@/components/common/ItemTip.vue'

@@ -1,3 +1,8 @@
+/**
+ * @file: useGrayscaleTool.js
+ * @author: Pavol Humeny
+ * @date: 15.5.2026
+ */
 import { useConfirmModal } from '../modals/useConfirmModal'
 import { ref, computed } from 'vue'
 import { useApi } from '@/composables/common/useApi'

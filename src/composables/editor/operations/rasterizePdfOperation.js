@@ -1,4 +1,9 @@
 /**
+ * @file: rasterizePdfOperation.js
+ * @author: Pavol Humeny
+ * @date: 15.5.2026
+ */
+/**
  * Rasterize PDF operation
  * Converts PDF-based image into pure raster image
  */

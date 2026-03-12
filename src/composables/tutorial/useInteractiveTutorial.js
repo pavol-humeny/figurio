@@ -1,3 +1,8 @@
+/**
+ * @file: useInteractiveTutorial.js
+ * @author: Pavol Humeny
+ * @date: 15.5.2026
+ */
 import { ref, computed, nextTick, watch } from 'vue'
 import { getTutorialSteps } from '@/config/tutorialSteps'
 import { useToastModal } from '../modals/useToastModal'

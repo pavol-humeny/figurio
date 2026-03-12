@@ -1,3 +1,8 @@
+/**
+ * @file: usePresetNewOperation.js
+ * @author: Pavol Humeny
+ * @date: 15.5.2026
+ */
 import { useMath } from '@/composables/common/useMath'
 import { editorConfig } from '@/config/editorConfig'
 import { ref, computed, watch, reactive, nextTick } from 'vue'

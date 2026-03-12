@@ -1,3 +1,8 @@
+<!--
+  @file: IconCornerRadius.vue
+  @author: Pavol Humeny
+  @date: 15.5.2026
+-->
 <template>
   <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="-0.625 -0.625 20 20"
     id="Scan-Outline--Streamline-Ionic-Outline" height="20" width="20">

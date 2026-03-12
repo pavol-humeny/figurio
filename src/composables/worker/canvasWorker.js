@@ -1,3 +1,8 @@
+/**
+ * @file: canvasWorker.js
+ * @author: Pavol Humeny
+ * @date: 15.5.2026
+ */
 // Worker
 self.onmessage = (event) => {
   const { width, height, imageDataBuffer } = event.data

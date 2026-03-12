@@ -1,3 +1,8 @@
+/**
+ * @file: uiStore.js
+ * @author: Pavol Humeny
+ * @date: 15.5.2026
+ */
 import { defineStore } from 'pinia'
 import { uiConfig } from '@/config/uiConfig'
 import { globalConfig } from '@/config/globalConfig'

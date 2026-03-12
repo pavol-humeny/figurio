@@ -1,3 +1,8 @@
+/**
+ * @file: flip.worker.js
+ * @author: Pavol Humeny
+ * @date: 15.5.2026
+ */
 // flip.worker.js
 
 self.onmessage = (e) => {

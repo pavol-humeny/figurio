@@ -1,4 +1,9 @@
 <script setup>
+/**
+ * @file: ChristmasTree.vue
+ * @author: Pavol Humeny
+ * @date: 15.5.2026
+ */
 import { onMounted, onBeforeUnmount, ref, watch } from 'vue'
 import * as THREE from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'

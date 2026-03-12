@@ -1,4 +1,9 @@
 <script setup>
+/**
+ * @file: ColorPicker.vue
+ * @author: Pavol Humeny
+ * @date: 15.5.2026
+ */
 import { useEditorStore } from '@/stores/editorStore'
 import BaseIcon from '../icons/BaseIcon.vue'
 import ItemTip from './ItemTip.vue'

@@ -1,3 +1,8 @@
+/**
+ * @file: useLanguageSwitch.js
+ * @author: Pavol Humeny
+ * @date: 15.5.2026
+ */
 import { useI18n } from 'vue-i18n'
 import { globalConfig } from '@/config/globalConfig'
 import { useApi } from '@/composables/common/useApi'

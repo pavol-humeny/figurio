@@ -1,3 +1,8 @@
+/**
+ * @file: toolsDefinitions.js
+ * @author: Pavol Humeny
+ * @date: 15.5.2026
+ */
 export const toolsDefinitions = [
   {
     key: 'imageAnalysis',

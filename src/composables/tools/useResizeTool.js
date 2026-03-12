@@ -1,3 +1,8 @@
+/**
+ * @file: useResizeTool.js
+ * @author: Pavol Humeny
+ * @date: 15.5.2026
+ */
 import { ref, nextTick, watch, computed } from 'vue'
 import { editorConfig } from '@/config/editorConfig'
 import { useMath } from '../common/useMath'

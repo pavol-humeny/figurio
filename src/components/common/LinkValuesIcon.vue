@@ -1,4 +1,9 @@
 <script setup>
+/**
+ * @file: LinkValuesIcon.vue
+ * @author: Pavol Humeny
+ * @date: 15.5.2026
+ */
 import BaseIcon from '@/components/icons/BaseIcon.vue'
 import { useLinkValuesIcon } from '@/composables/common/useLinkValuesIcon'
 

@@ -1,4 +1,9 @@
 <script setup>
+/**
+ * @file: ProgressBar.vue
+ * @author: Pavol Humeny
+ * @date: 15.5.2026
+ */
 const props = defineProps({
   progress: {
     type: Number,

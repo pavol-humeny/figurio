@@ -1,4 +1,9 @@
 <script setup>
+/**
+ * @file: MaintenanceView.vue
+ * @author: Pavol Humeny
+ * @date: 15.5.2026
+ */
 import { globalConfig } from '@/config/globalConfig'
 import { ref, onMounted } from 'vue'
 import { useI18n } from 'vue-i18n'

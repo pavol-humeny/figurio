@@ -1,4 +1,9 @@
 <script setup>
+/**
+ * @file: SessionsByDay.vue
+ * @author: Pavol Humeny
+ * @date: 15.5.2026
+ */
 import {
   Chart as ChartJS,
   Title,

@@ -1,3 +1,8 @@
+/**
+ * @file: useContextMenu.js
+ * @author: Pavol Humeny
+ * @date: 15.5.2026
+ */
 import { ref, computed, onMounted, onBeforeUnmount, nextTick } from 'vue'
 import { editorConfig } from '@/config/editorConfig'
 import { useConsole } from '@/composables/common/useConsole.js'

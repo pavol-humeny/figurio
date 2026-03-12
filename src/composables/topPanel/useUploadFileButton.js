@@ -1,3 +1,8 @@
+/**
+ * @file: useUploadFileButton.js
+ * @author: Pavol Humeny
+ * @date: 15.5.2026
+ */
 import { useImportModal } from '../modals/useImportModal'
 import { useApi } from '@/composables/common/useApi'
 import { importFileService } from '@/services/importFileService'

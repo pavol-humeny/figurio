@@ -1,3 +1,8 @@
+/**
+ * @file: ColorPicker.spec.js
+ * @author: Pavol Humeny
+ * @date: 15.5.2026
+ */
 import { describe, it, expect } from 'vitest'
 import { mount } from '@vue/test-utils'
 import ColorPicker from '@/components/common/ColorPicker.vue'

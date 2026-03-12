@@ -1,4 +1,9 @@
 <script setup>
+/**
+ * @file: CommandLine.vue
+ * @author: Pavol Humeny
+ * @date: 15.5.2026
+ */
 import { useUserModeStore } from '@/stores/userModeStore';
 import { useCommandLine } from '@/composables/modals/useCommandLine';
 import { useEditorStore } from '@/stores/editorStore';

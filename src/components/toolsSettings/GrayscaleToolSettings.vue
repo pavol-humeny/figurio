@@ -1,4 +1,9 @@
 <script setup>
+/**
+ * @file: GrayscaleToolSettings.vue
+ * @author: Pavol Humeny
+ * @date: 15.5.2026
+ */
 import ToolsSettingsTabs from './ToolsSettingsTabs.vue'
 import DefaultButton from '../common/DefaultButton.vue'
 import { useGrayscaleTool } from '@/composables/tools/useGrayscaleTool'

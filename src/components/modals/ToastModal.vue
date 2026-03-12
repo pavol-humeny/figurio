@@ -1,4 +1,9 @@
 <script setup>
+/**
+ * @file: ToastModal.vue
+ * @author: Pavol Humeny
+ * @date: 15.5.2026
+ */
 import { useToastModal } from '@/composables/modals/useToastModal'
 
 /**

@@ -1,3 +1,8 @@
+<!--
+  @file: IconDarkMode.vue
+  @author: Pavol Humeny
+  @date: 15.5.2026
+-->
 <template>
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="-0.5 -0.5 20 20" fill="none" stroke="currentColor"
     stroke-linecap="round" stroke-linejoin="round" class="feather feather-moon" id="Moon--Streamline-Feather"

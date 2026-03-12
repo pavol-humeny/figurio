@@ -1,4 +1,9 @@
 <script setup>
+/**
+ * @file: FileTabs.vue
+ * @author: Pavol Humeny
+ * @date: 15.5.2026
+ */
 import { useFileTabs } from '@/composables/editor/useFileTabs'
 import { useUiStore } from '@/stores/uiStore'
 import { useI18n } from 'vue-i18n'

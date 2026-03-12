@@ -1,3 +1,8 @@
+/**
+ * @file: useOneTool.js
+ * @author: Pavol Humeny
+ * @date: 15.5.2026
+ */
 import { ref, nextTick, onMounted, onBeforeUnmount } from 'vue'
 import { editorConfig } from '@/config/editorConfig.js'
 

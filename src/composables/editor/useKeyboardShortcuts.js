@@ -1,3 +1,8 @@
+/**
+ * @file: useKeyboardShortcuts.js
+ * @author: Pavol Humeny
+ * @date: 15.5.2026
+ */
 import { onMounted, onBeforeUnmount } from 'vue'
 import { keyboardShortcuts } from '@/config/keyboardShortcutsConfig'
 import { useConsole } from '@/composables/common/useConsole.js'

@@ -1,3 +1,8 @@
+/**
+ * @file: globalConfig.js
+ * @author: Pavol Humeny
+ * @date: 15.5.2026
+ */
 export const globalConfig = {
   // Contact email
   contactMail: 'pavol.humeny@gmail.com',

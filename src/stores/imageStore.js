@@ -1,3 +1,8 @@
+/**
+ * @file: imageStore.js
+ * @author: Pavol Humeny
+ * @date: 15.5.2026
+ */
 import * as pdfjsLib from 'pdfjs-dist/legacy/build/pdf'
 import { defineStore } from 'pinia'
 import { useToastModal } from '@/composables/modals/useToastModal'

@@ -1,4 +1,9 @@
 <script setup>
+/**
+ * @file: ZoomControl.vue
+ * @author: Pavol Humeny
+ * @date: 15.5.2026
+ */
 import BaseIcon from '@/components/icons/BaseIcon.vue'
 import { useZoomControl } from '@/composables/topPanel/useZoomControl'
 import { useViewportStore } from '@/stores/viewportStore'

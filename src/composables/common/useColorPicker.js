@@ -1,3 +1,8 @@
+/**
+ * @file: useColorPicker.js
+ * @author: Pavol Humeny
+ * @date: 15.5.2026
+ */
 import { ref, nextTick, onBeforeUnmount, watch, computed } from 'vue'
 import { useEyeDropper } from '@vueuse/core'
 import { editorConfig } from '@/config/editorConfig'

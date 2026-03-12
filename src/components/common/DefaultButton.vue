@@ -1,4 +1,9 @@
 <script setup>
+/**
+ * @file: DefaultButton.vue
+ * @author: Pavol Humeny
+ * @date: 15.5.2026
+ */
 import ItemTip from './ItemTip.vue'
 
 /**

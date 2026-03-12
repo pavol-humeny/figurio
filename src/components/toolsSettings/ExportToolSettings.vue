@@ -1,4 +1,9 @@
 <script setup>
+/**
+ * @file: ExportToolSettings.vue
+ * @author: Pavol Humeny
+ * @date: 15.5.2026
+ */
 import { useExportToolSettings } from '@/composables/toolsSettings/useExportToolSettings'
 import DefaultButton from '@/components/common/DefaultButton.vue'
 import BaseIcon from '@/components/icons/BaseIcon.vue'

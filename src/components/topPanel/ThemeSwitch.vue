@@ -1,4 +1,9 @@
 <script setup>
+/**
+ * @file: ThemeSwitch.vue
+ * @author: Pavol Humeny
+ * @date: 15.5.2026
+ */
 import { useThemeSwitch } from '@/composables/topPanel/useThemeSwitch'
 import { useUiStore } from '@/stores/uiStore'
 

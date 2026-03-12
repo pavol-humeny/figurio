@@ -1,4 +1,9 @@
 <script setup>
+/**
+ * @file: CollapsiblePanel.vue
+ * @author: Pavol Humeny
+ * @date: 15.5.2026
+ */
 import BaseIcon from '@/components/icons/BaseIcon.vue'
 import { useCollapsiblePanel } from '@/composables/common/useCollapsiblePanel'
 import { useUiStore } from '@/stores/uiStore'

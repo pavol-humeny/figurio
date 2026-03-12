@@ -1,3 +1,8 @@
+/**
+ * @file: useDefaultSlider.js
+ * @author: Pavol Humeny
+ * @date: 15.5.2026
+ */
 import { ref, watch } from 'vue'
 import { useMath } from './useMath'
 

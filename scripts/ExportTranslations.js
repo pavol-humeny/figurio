@@ -1,3 +1,8 @@
+/**
+ * @file: ExportTranslations.js
+ * @author: Pavol Humeny
+ * @date: 15.5.2026
+ */
 import fs from 'fs'
 import path from 'path'
 import { fileURLToPath } from 'url'

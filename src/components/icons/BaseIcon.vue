@@ -1,4 +1,9 @@
 <script setup>
+/**
+ * @file: BaseIcon.vue
+ * @author: Pavol Humeny
+ * @date: 15.5.2026
+ */
 import { computed } from 'vue'
 import ItemTip from '@/components/common/ItemTip.vue'
 import { useConsole } from '@/composables/common/useConsole.js'

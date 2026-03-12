@@ -1,3 +1,8 @@
+/**
+ * @file: removeNoise.worker.js
+ * @author: Pavol Humeny
+ * @date: 15.5.2026
+ */
 // removeNoise.worker.js
 
 self.onmessage = (e) => {

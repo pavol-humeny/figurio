@@ -1,3 +1,8 @@
+/**
+ * @file: useLoadingSpinner.js
+ * @author: Pavol Humeny
+ * @date: 15.5.2026
+ */
 import { onMounted, onBeforeUnmount, computed, ref, watch } from 'vue'
 import { useConsole } from '@/composables/common/useConsole.js'
 import { editorConfig } from '@/config/editorConfig'

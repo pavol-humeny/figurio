@@ -1,3 +1,8 @@
+/**
+ * @file: useNumberInput.js
+ * @author: Pavol Humeny
+ * @date: 15.5.2026
+ */
 import { ref, watch, computed } from 'vue'
 import { useMath } from './useMath'
 

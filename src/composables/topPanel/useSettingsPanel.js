@@ -1,3 +1,8 @@
+/**
+ * @file: useSettingsPanel.js
+ * @author: Pavol Humeny
+ * @date: 15.5.2026
+ */
 import { computed, ref, onMounted, onBeforeUnmount } from 'vue'
 import { usePrivacyAndDataModal } from '@/composables/modals/usePrivacyAndDataModal'
 import { useReleaseModal } from '@/composables/modals/useReleaseModal'

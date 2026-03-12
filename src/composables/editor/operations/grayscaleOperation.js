@@ -1,4 +1,9 @@
 /**
+ * @file: grayscaleOperation.js
+ * @author: Pavol Humeny
+ * @date: 15.5.2026
+ */
+/**
  * Apply grayscale effect using a web worker
  *
  * @param {HTMLCanvasElement} sourceCanvas Source canvas to apply the effect on

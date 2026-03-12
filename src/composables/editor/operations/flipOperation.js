@@ -1,4 +1,9 @@
 /**
+ * @file: flipOperation.js
+ * @author: Pavol Humeny
+ * @date: 15.5.2026
+ */
+/**
  * Flip operation via Web Worker
  *
  * @param {HTMLCanvasElement} srcCanvas

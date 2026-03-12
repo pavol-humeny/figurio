@@ -1,4 +1,9 @@
 /**
+ * @file: rotateOperation.js
+ * @author: Pavol Humeny
+ * @date: 15.5.2026
+ */
+/**
  * Rotate operation via Web Worker
  *
  * @param {HTMLCanvasElement} srcCanvas

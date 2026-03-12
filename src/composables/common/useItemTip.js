@@ -1,3 +1,8 @@
+/**
+ * @file: useItemTip.js
+ * @author: Pavol Humeny
+ * @date: 15.5.2026
+ */
 import { ref, computed, onMounted, onBeforeUnmount, watch, nextTick } from 'vue'
 import { editorConfig } from '@/config/editorConfig'
 import { useFeatureTourModal } from '@/composables/modals/useFeatureTourModal.js'

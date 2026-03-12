@@ -1,4 +1,9 @@
 <script setup>
+/**
+ * @file: ContextMenu.vue
+ * @author: Pavol Humeny
+ * @date: 15.5.2026
+ */
 import { useContextMenu } from '@/composables/common/useContextMenu'
 import { computed } from 'vue'
 

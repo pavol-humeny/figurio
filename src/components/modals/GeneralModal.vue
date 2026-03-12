@@ -1,4 +1,9 @@
 <script setup>
+/**
+ * @file: GeneralModal.vue
+ * @author: Pavol Humeny
+ * @date: 15.5.2026
+ */
 import { computed } from 'vue'
 import { useGeneralModal } from '@/composables/modals/useGeneralModal'
 import { useShaking } from '@/composables/common/useShaking'

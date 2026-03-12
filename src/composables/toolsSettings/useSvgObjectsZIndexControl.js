@@ -1,3 +1,8 @@
+/**
+ * @file: useSvgObjectsZIndexControl.js
+ * @author: Pavol Humeny
+ * @date: 15.5.2026
+ */
 import { useSvgObjects } from '@/composables/tools/useSvgObjects'
 import { computed } from 'vue'
 

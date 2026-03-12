@@ -1,3 +1,8 @@
+/**
+ * @file: useToolsPanel.js
+ * @author: Pavol Humeny
+ * @date: 15.5.2026
+ */
 import { ref, onMounted, nextTick, computed, watch } from 'vue'
 import { useCollapsiblePanel } from '../common/useCollapsiblePanel'
 import { useToastModal } from '../modals/useToastModal'

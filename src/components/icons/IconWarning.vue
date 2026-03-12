@@ -1,3 +1,8 @@
+<!--
+  @file: IconWarning.vue
+  @author: Pavol Humeny
+  @date: 15.5.2026
+-->
 <template>
   <svg
     xmlns="http://www.w3.org/2000/svg"

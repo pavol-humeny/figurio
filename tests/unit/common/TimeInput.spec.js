@@ -1,3 +1,8 @@
+/**
+ * @file: TimeInput.spec.js
+ * @author: Pavol Humeny
+ * @date: 15.5.2026
+ */
 import { describe, it, expect } from 'vitest'
 import { mount } from '@vue/test-utils'
 import TimeInput from '@/components/common/TimeInput.vue'

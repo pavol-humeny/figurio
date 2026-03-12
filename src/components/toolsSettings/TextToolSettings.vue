@@ -1,4 +1,9 @@
 <script setup>
+/**
+ * @file: TextToolSettings.vue
+ * @author: Pavol Humeny
+ * @date: 15.5.2026
+ */
 import ToolsSettingsTabs from './ToolsSettingsTabs.vue'
 import ColorPicker from '../common/ColorPicker.vue';
 import DropdownSelect from '../common/DropdownSelect.vue';

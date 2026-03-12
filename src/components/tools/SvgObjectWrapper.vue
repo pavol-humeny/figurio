@@ -1,4 +1,9 @@
 <script setup>
+/**
+ * @file: SvgObjectWrapper.vue
+ * @author: Pavol Humeny
+ * @date: 15.5.2026
+ */
 import { useSvgObjectWrapper } from '@/composables/tools/useSvgObjectWrapper'
 import { useEditorStore } from '@/stores/editorStore';
 import { useHistoryStore } from '@/stores/historyStore';

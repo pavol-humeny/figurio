@@ -1,3 +1,8 @@
+/**
+ * @file: useCommandLine.js
+ * @author: Pavol Humeny
+ * @date: 15.5.2026
+ */
 import { ref, nextTick, onMounted, onBeforeMount } from 'vue'
 import { useConsole } from '../common/useConsole'
 import { useApi } from '../common/useApi'

@@ -1,3 +1,8 @@
+/**
+ * @file: main.js
+ * @author: Pavol Humeny
+ * @date: 15.5.2026
+ */
 import './assets/main.css'
 
 import { createApp } from 'vue'

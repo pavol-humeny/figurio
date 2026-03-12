@@ -1,3 +1,8 @@
+/**
+ * @file: useZoomControl.js
+ * @author: Pavol Humeny
+ * @date: 15.5.2026
+ */
 import { ref, computed, watch } from 'vue'
 import { viewportConfig } from '@/config/viewportConfig'
 import { useMath } from '../common/useMath'

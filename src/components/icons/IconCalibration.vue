@@ -1,3 +1,8 @@
+<!--
+  @file: IconCalibration.vue
+  @author: Pavol Humeny
+  @date: 15.5.2026
+-->
 <template>
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round"
     stroke-linejoin="round" id="Sliders-Vertical--Streamline-Lucide" height="24" width="24">

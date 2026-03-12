@@ -1,4 +1,9 @@
 <script setup>
+/**
+ * @file: HomeView.vue
+ * @author: Pavol Humeny
+ * @date: 15.5.2026
+ */
 import { onMounted } from 'vue';
 import { globalConfig } from '@/config/globalConfig.js';
 import DragAndDropArea from '@/components/editor/DragAndDropArea.vue';

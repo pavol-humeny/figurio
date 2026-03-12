@@ -1,4 +1,9 @@
 <script setup>
+/**
+ * @file: ToggleButton.vue
+ * @author: Pavol Humeny
+ * @date: 15.5.2026
+ */
 import ItemTip from './ItemTip.vue'
 import { useToggleButton } from '@/composables/common/useToggleButton'
 import { computed } from 'vue'

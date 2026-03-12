@@ -1,3 +1,8 @@
+/**
+ * @file: UseSendEvent.spec.js
+ * @author: Pavol Humeny
+ * @date: 15.5.2026
+ */
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import { useSendEvent } from '@/composables/common/useSendEvent'
 import { globalConfig } from '@/config/globalConfig.js'

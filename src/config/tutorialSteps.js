@@ -1,3 +1,8 @@
+/**
+ * @file: tutorialSteps.js
+ * @author: Pavol Humeny
+ * @date: 15.5.2026
+ */
 // import { useImageStore } from '@/stores/imageStore'
 /**
  * Returns localized tutorial steps

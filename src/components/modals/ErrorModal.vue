@@ -1,4 +1,9 @@
 <script setup>
+/**
+ * @file: ErrorModal.vue
+ * @author: Pavol Humeny
+ * @date: 15.5.2026
+ */
 import { useErrorModal } from '@/composables/modals/useErrorModal'
 import DefaultButton from '@/components/common/DefaultButton.vue'
 import { useShaking } from '@/composables/common/useShaking'

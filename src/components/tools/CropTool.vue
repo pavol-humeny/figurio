@@ -1,4 +1,9 @@
 <script setup>
+/**
+ * @file: CropTool.vue
+ * @author: Pavol Humeny
+ * @date: 15.5.2026
+ */
 import { useImageStore } from '@/stores/imageStore'
 import { useEditorStore } from '@/stores/editorStore'
 import { useViewportStore } from '@/stores/viewportStore'

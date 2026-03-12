@@ -1,4 +1,9 @@
 <script setup>
+/**
+ * @file: EditorView.vue
+ * @author: Pavol Humeny
+ * @date: 15.5.2026
+ */
 import { onBeforeMount, onMounted, watch } from 'vue'
 import { useConsole } from '@/composables/common/useConsole.js'
 const { warn } = useConsole()

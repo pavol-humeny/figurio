@@ -1,3 +1,8 @@
+/**
+ * @file: userModeConfig.js
+ * @author: Pavol Humeny
+ * @date: 15.5.2026
+ */
 export const userModeConfig = {
   // UPDATE new random event
   listOfCommands: [

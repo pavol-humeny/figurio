@@ -1,3 +1,8 @@
+/**
+ * @file: useBackgroundRemovalTool.js
+ * @author: Pavol Humeny
+ * @date: 15.5.2026
+ */
 import { computed, ref, watch } from 'vue'
 import { useConfirmModal } from '../modals/useConfirmModal'
 import { editorConfig } from '@/config/editorConfig'

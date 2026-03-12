@@ -1,3 +1,8 @@
+/**
+ * @file: UseMath.spec.js
+ * @author: Pavol Humeny
+ * @date: 15.5.2026
+ */
 import { describe, it, expect } from 'vitest'
 import { useMath } from '@/composables/common/useMath'
 

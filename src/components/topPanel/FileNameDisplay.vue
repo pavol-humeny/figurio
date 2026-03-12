@@ -1,4 +1,9 @@
 <script setup>
+/**
+ * @file: FileNameDisplay.vue
+ * @author: Pavol Humeny
+ * @date: 15.5.2026
+ */
 import BaseIcon from '@/components/icons/BaseIcon.vue'
 import { useImageStore } from '@/stores/imageStore';
 import { useFileNameDisplay } from '@/composables/topPanel/useFileNameDisplay';

@@ -1,3 +1,8 @@
+/**
+ * @file: DefaultButton.spec.js
+ * @author: Pavol Humeny
+ * @date: 15.5.2026
+ */
 import { describe, it, expect, vi } from 'vitest'
 import { mount } from '@vue/test-utils'
 import DefaultButton from '@/components/common/DefaultButton.vue'

@@ -1,4 +1,9 @@
 <script setup>
+/**
+ * @file: BrushToolCanvas.vue
+ * @author: Pavol Humeny
+ * @date: 15.5.2026
+ */
 import { ref, computed, onMounted, onBeforeUnmount, watch } from 'vue'
 import { useImageStore } from '@/stores/imageStore'
 import { useHistoryStore } from '@/stores/historyStore'

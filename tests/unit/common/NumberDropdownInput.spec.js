@@ -1,3 +1,8 @@
+/**
+ * @file: NumberDropdownInput.spec.js
+ * @author: Pavol Humeny
+ * @date: 15.5.2026
+ */
 import { describe, it, expect, vi } from 'vitest'
 import { mount } from '@vue/test-utils'
 import NumberDropdownInput from '@/components/common/NumberDropdownInput.vue'

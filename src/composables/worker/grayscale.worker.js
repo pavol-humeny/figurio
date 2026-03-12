@@ -1,3 +1,8 @@
+/**
+ * @file: grayscale.worker.js
+ * @author: Pavol Humeny
+ * @date: 15.5.2026
+ */
 // grayscale.worker.js
 
 self.onmessage = (e) => {

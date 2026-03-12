@@ -1,3 +1,8 @@
+/**
+ * @file: useHelpModal.js
+ * @author: Pavol Humeny
+ * @date: 15.5.2026
+ */
 import { ref, watch, reactive } from 'vue'
 import { useInteractiveTutorial } from '@/composables/tutorial/useInteractiveTutorial'
 import { useApi } from '@/composables/common/useApi'

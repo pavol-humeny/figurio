@@ -1,3 +1,8 @@
+/**
+ * @file: i18n.js
+ * @author: Pavol Humeny
+ * @date: 15.5.2026
+ */
 import { createI18n } from 'vue-i18n'
 import messages from '@/locales'
 import { globalConfig } from '@/config/globalConfig'

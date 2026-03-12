@@ -1,4 +1,9 @@
 <script setup>
+/**
+ * @file: SettingsPanel.vue
+ * @author: Pavol Humeny
+ * @date: 15.5.2026
+ */
 import BaseIcon from '@/components/icons/BaseIcon.vue';
 import LanguageSwitch from './LanguageSwitch.vue';
 import ThemeSwitch from './ThemeSwitch.vue';

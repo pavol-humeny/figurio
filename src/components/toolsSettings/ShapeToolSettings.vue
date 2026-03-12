@@ -1,4 +1,9 @@
 <script setup>
+/**
+ * @file: ShapeToolSettings.vue
+ * @author: Pavol Humeny
+ * @date: 15.5.2026
+ */
 import { useShapeTool } from '@/composables/tools/useShapeTool';
 import { useEditorStore } from '@/stores/editorStore';
 import { useImageStore } from '@/stores/imageStore';

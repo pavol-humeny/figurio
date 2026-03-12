@@ -1,4 +1,9 @@
 <script setup>
+/**
+ * @file: CalibrationModal.vue
+ * @author: Pavol Humeny
+ * @date: 15.5.2026
+ */
 import { useCalibrationModal } from '@/composables/modals/useCalibrationModal';
 import BaseIcon from '@/components/icons/BaseIcon.vue';
 import DefaultButton from '@/components/common/DefaultButton.vue';

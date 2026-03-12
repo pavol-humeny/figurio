@@ -1,3 +1,8 @@
+/**
+ * @file: useFileNameDisplay.js
+ * @author: Pavol Humeny
+ * @date: 15.5.2026
+ */
 import { ref, nextTick, computed, watch } from 'vue'
 import { editorConfig } from '@/config/editorConfig'
 import { useApi } from '@/composables/common/useApi'

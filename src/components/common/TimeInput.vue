@@ -1,5 +1,10 @@
 DefaultSlider
 <script setup>
+/**
+ * @file: TimeInput.vue
+ * @author: Pavol Humeny
+ * @date: 15.5.2026
+ */
 import ItemTip from './ItemTip.vue'
 import { useTimeInput } from '@/composables/common/useTimeInput'
 

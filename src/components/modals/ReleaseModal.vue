@@ -1,4 +1,9 @@
 <script setup>
+/**
+ * @file: ReleaseModal.vue
+ * @author: Pavol Humeny
+ * @date: 15.5.2026
+ */
 import BaseIcon from '@/components/icons/BaseIcon.vue';
 import DefaultButton from '@/components/common/DefaultButton.vue';
 import { useReleaseModal } from '@/composables/modals/useReleaseModal';

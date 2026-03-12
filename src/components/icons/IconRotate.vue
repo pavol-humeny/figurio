@@ -1,3 +1,8 @@
+<!--
+  @file: IconRotate.vue
+  @author: Pavol Humeny
+  @date: 15.5.2026
+-->
 <template>
   <svg id="Rotate-360--Streamline-Carbon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" height="16" width="16">
     <path style="transform: scale(1.05); transform-origin: center;"

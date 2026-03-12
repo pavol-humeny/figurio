@@ -1,3 +1,8 @@
+/**
+ * @file: viewportConfig.js
+ * @author: Pavol Humeny
+ * @date: 15.5.2026
+ */
 export const viewportConfig = {
   defaultZoomLevel: 1.0, // 1 = 100%
   maxZoomLevel: 8.0,

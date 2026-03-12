@@ -1,4 +1,9 @@
 /**
+ * @file: removeNoiseOperation.js
+ * @author: Pavol Humeny
+ * @date: 15.5.2026
+ */
+/**
  * Apply remove-noise effect using a web worker
  *
  * @param {HTMLCanvasElement} sourceCanvas Source canvas to apply the effect on

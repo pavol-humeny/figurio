@@ -1,3 +1,8 @@
+/**
+ * @file: useSvgObjects.js
+ * @author: Pavol Humeny
+ * @date: 15.5.2026
+ */
 import { computed, ref, onMounted, onBeforeUnmount, nextTick, watch } from 'vue'
 import { useTextTool } from './useTextTool'
 import { useShapeTool } from './useShapeTool'

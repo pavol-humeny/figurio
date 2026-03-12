@@ -1,3 +1,8 @@
+<!--
+  @file: IconMaintenance.vue
+  @author: Pavol Humeny
+  @date: 15.5.2026
+-->
 <template>
   <svg id="License-Maintenance-Draft--Streamline-Carbon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" height="20" width="20">
 

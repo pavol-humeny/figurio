@@ -1,3 +1,8 @@
+/**
+ * @file: useVideoLoader.js
+ * @author: Pavol Humeny
+ * @date: 15.5.2026
+ */
 import { useConsole } from '../common/useConsole'
 const { log } = useConsole()
 

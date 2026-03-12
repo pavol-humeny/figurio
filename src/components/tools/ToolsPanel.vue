@@ -1,4 +1,9 @@
 <script setup>
+/**
+ * @file: ToolsPanel.vue
+ * @author: Pavol Humeny
+ * @date: 15.5.2026
+ */
 import BaseIcon from '@/components/icons/BaseIcon.vue'
 import OneTool from './OneTool.vue'
 import { useI18n } from 'vue-i18n'

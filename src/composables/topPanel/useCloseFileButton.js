@@ -1,3 +1,8 @@
+/**
+ * @file: useCloseFileButton.js
+ * @author: Pavol Humeny
+ * @date: 15.5.2026
+ */
 import { computed } from 'vue'
 import { useConfirmModal } from '@/composables/modals/useConfirmModal'
 import { useGeneralModal } from '@/composables/modals/useGeneralModal'

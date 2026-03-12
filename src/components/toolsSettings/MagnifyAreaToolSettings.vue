@@ -1,4 +1,9 @@
 <script setup>
+/**
+ * @file: MagnifyAreaToolSettings.vue
+ * @author: Pavol Humeny
+ * @date: 15.5.2026
+ */
 import ToolsSettingsTabs from './ToolsSettingsTabs.vue';
 import NumberInput from '../common/NumberInput.vue';
 import DropdownSelect from '../common/DropdownSelect.vue';

@@ -1,4 +1,9 @@
 <script setup>
+/**
+ * @file: CloseAllFilesModal.vue
+ * @author: Pavol Humeny
+ * @date: 15.5.2026
+ */
 import { ref, watch } from 'vue'
 import { useGeneralModal } from '@/composables/modals/useGeneralModal'
 import { useI18n } from 'vue-i18n'

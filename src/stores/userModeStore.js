@@ -1,3 +1,8 @@
+/**
+ * @file: userModeStore.js
+ * @author: Pavol Humeny
+ * @date: 15.5.2026
+ */
 import { userModeConfig } from '@/config/userModeConfig'
 import { defineStore } from 'pinia'
 import { globalConfig } from '@/config/globalConfig.js'

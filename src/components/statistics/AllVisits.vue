@@ -1,4 +1,9 @@
 <script setup>
+/**
+ * @file: AllVisits.vue
+ * @author: Pavol Humeny
+ * @date: 15.5.2026
+ */
 import { ref, onMounted } from 'vue';
 import VisitCard from './VisitCard.vue';
 import { useApi } from '@/composables/common/useApi';

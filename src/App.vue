@@ -1,4 +1,9 @@
 <script setup>
+/**
+ * @file: App.vue
+ * @author: Pavol Humeny
+ * @date: 15.5.2026
+ */
 import { onMounted, onBeforeUnmount } from 'vue'
 import { RouterView } from 'vue-router'
 import TopPanel from './components/topPanel/TopPanel.vue'

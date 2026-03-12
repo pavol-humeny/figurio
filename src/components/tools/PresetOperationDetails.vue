@@ -1,4 +1,9 @@
 <script setup>
+/**
+ * @file: PresetOperationDetails.vue
+ * @author: Pavol Humeny
+ * @date: 15.5.2026
+ */
 import DropdownSelect from '@/components/common/DropdownSelect.vue'
 import { useI18n } from 'vue-i18n'
 import NumberInput from '@/components/common/NumberInput.vue'

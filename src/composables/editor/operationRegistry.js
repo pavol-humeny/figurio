@@ -1,3 +1,8 @@
+/**
+ * @file: operationRegistry.js
+ * @author: Pavol Humeny
+ * @date: 15.5.2026
+ */
 import { rotateOperation } from './operations/rotateOperation'
 import { flipOperation } from './operations/flipOperation'
 import { cropOperation } from './operations/cropOperation'

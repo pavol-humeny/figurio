@@ -1,3 +1,8 @@
+/**
+ * @file: index.js
+ * @author: Pavol Humeny
+ * @date: 15.5.2026
+ */
 import { globalConfig } from '@/config/globalConfig'
 
 import enTopPanel from './en/topPanel.json'

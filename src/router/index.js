@@ -1,3 +1,8 @@
+/**
+ * @file: index.js
+ * @author: Pavol Humeny
+ * @date: 15.5.2026
+ */
 import { createRouter, createWebHashHistory } from 'vue-router'
 import HomeView from '@/views/HomeView.vue'
 import { globalConfig } from '@/config/globalConfig.js'

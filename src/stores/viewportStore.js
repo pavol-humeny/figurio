@@ -1,3 +1,8 @@
+/**
+ * @file: viewportStore.js
+ * @author: Pavol Humeny
+ * @date: 15.5.2026
+ */
 import { defineStore } from 'pinia'
 import { viewportConfig } from '@/config/viewportConfig'
 import { useMath } from '@/composables/common/useMath'

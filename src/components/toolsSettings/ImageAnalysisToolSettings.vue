@@ -1,4 +1,9 @@
 <script setup>
+/**
+ * @file: ImageAnalysisToolSettings.vue
+ * @author: Pavol Humeny
+ * @date: 15.5.2026
+ */
 import ToolsSettingsTabs from './ToolsSettingsTabs.vue'
 import DefaultButton from '../common/DefaultButton.vue'
 import ExplainItem from '../common/ExplainItem.vue'

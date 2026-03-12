@@ -1,3 +1,8 @@
+/**
+ * @file: useTextTool.js
+ * @author: Pavol Humeny
+ * @date: 15.5.2026
+ */
 import { ref, watch, watchEffect, computed } from 'vue'
 import { useMath } from '../common/useMath'
 import { editorConfig } from '@/config/editorConfig'

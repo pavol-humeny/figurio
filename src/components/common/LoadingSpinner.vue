@@ -1,4 +1,9 @@
 <script setup>
+/**
+ * @file: LoadingSpinner.vue
+ * @author: Pavol Humeny
+ * @date: 15.5.2026
+ */
 import { useUiStore } from '@/stores/uiStore'
 import { useLoadingSpinner } from '@/composables/common/useLoadingSpinner'
 

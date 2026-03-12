@@ -1,3 +1,8 @@
+/**
+ * @file: useSvgObjectsList.js
+ * @author: Pavol Humeny
+ * @date: 15.5.2026
+ */
 import { useSvgObjects } from '@/composables/tools/useSvgObjects'
 import { useToolsPanel } from '@/composables/tools/useToolsPanel'
 import { ref, computed, watch, nextTick, onBeforeUnmount } from 'vue'

@@ -1,4 +1,9 @@
 <script setup>
+/**
+ * @file: ItemTip.vue
+ * @author: Pavol Humeny
+ * @date: 15.5.2026
+ */
 import { useItemTip } from '@/composables/common/useItemTip'
 import { useUiStore } from '@/stores/uiStore'
 import { computed, ref } from 'vue'

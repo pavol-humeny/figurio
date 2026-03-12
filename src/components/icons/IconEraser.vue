@@ -1,3 +1,8 @@
+<!--
+  @file: IconEraser.vue
+  @author: Pavol Humeny
+  @date: 15.5.2026
+-->
 <template>
   <svg id="Eraser--Streamline-Atlas" xmlns="http://www.w3.org/2000/svg" viewBox="-0.625 -0.625 20 20" height="20"
     width="20">

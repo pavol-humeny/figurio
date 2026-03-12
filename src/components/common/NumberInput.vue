@@ -1,4 +1,9 @@
 <script setup>
+/**
+ * @file: NumberInput.vue
+ * @author: Pavol Humeny
+ * @date: 15.5.2026
+ */
 import ItemTip from './ItemTip.vue'
 import BaseIcon from '../icons/BaseIcon.vue'
 import { useNumberInput } from '@/composables/common/useNumberInput'

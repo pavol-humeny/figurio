@@ -1,4 +1,9 @@
 <script setup>
+/**
+ * @file: BackgroundRemovalCanvas.vue
+ * @author: Pavol Humeny
+ * @date: 15.5.2026
+ */
 import { ref, computed, watch, onMounted, onBeforeUnmount, nextTick } from 'vue'
 import { useBackgroundRemovalTool } from '@/composables/tools/useBackgroundRemovalTool'
 import { useImageStore } from '@/stores/imageStore'

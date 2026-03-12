@@ -1,3 +1,8 @@
+/**
+ * @file: useToolsSettingsTabs.js
+ * @author: Pavol Humeny
+ * @date: 15.5.2026
+ */
 import { ref, onMounted, computed, nextTick } from 'vue'
 
 /**

@@ -1,4 +1,9 @@
 <script setup>
+/**
+ * @file: ImportModal.vue
+ * @author: Pavol Humeny
+ * @date: 15.5.2026
+ */
 import DefaultButton from '@/components/common/DefaultButton.vue';
 import { useImportModal } from '@/composables/modals/useImportModal';
 import DragAndDropArea from '../editor/DragAndDropArea.vue';

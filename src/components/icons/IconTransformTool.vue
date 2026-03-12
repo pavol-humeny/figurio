@@ -1,3 +1,8 @@
+<!--
+  @file: IconTransformTool.vue
+  @author: Pavol Humeny
+  @date: 15.5.2026
+-->
 <template>
   <svg
     viewBox="-0.625 -0.625 20 20"

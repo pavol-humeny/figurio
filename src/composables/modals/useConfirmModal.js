@@ -1,3 +1,8 @@
+/**
+ * @file: useConfirmModal.js
+ * @author: Pavol Humeny
+ * @date: 15.5.2026
+ */
 import { ref } from 'vue'
 import { useEditorStore } from '@/stores/editorStore'
 import { useUiStore } from '@/stores/uiStore'

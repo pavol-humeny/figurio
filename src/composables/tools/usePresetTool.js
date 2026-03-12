@@ -1,3 +1,8 @@
+/**
+ * @file: usePresetTool.js
+ * @author: Pavol Humeny
+ * @date: 15.5.2026
+ */
 import { ref, computed, watch, onMounted } from 'vue'
 import { useToastModal } from '../modals/useToastModal'
 import { useConfirmModal } from '../modals/useConfirmModal'

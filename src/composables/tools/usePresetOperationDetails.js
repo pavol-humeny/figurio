@@ -1,3 +1,8 @@
+/**
+ * @file: usePresetOperationDetails.js
+ * @author: Pavol Humeny
+ * @date: 15.5.2026
+ */
 import { ref, computed, watch, nextTick } from 'vue'
 import { useMath } from '@/composables/common/useMath'
 

@@ -1,3 +1,8 @@
+/**
+ * @file: useImageRenderer.js
+ * @author: Pavol Humeny
+ * @date: 15.5.2026
+ */
 import { watch, ref, nextTick } from 'vue'
 import { useFrameTool } from '../tools/useFrameTool'
 import * as pdfjsLib from 'pdfjs-dist/legacy/build/pdf'

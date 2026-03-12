@@ -1,3 +1,8 @@
+<!--
+  @file: IconRotateLeft.vue
+  @author: Pavol Humeny
+  @date: 15.5.2026
+-->
 <template>
   <svg
     viewBox="0 0 20 20"

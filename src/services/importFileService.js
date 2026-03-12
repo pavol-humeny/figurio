@@ -1,3 +1,8 @@
+/**
+ * @file: importFileService.js
+ * @author: Pavol Humeny
+ * @date: 15.5.2026
+ */
 import { globalConfig } from '@/config/globalConfig'
 import { useToastModal } from '@/composables/modals/useToastModal'
 import { useConsole } from '@/composables/common/useConsole'

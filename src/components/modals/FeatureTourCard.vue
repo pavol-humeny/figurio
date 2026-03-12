@@ -1,4 +1,9 @@
 <script setup>
+/**
+ * @file: FeatureTourCard.vue
+ * @author: Pavol Humeny
+ * @date: 15.5.2026
+ */
 import { ref, onMounted } from 'vue'
 import BaseIcon from '../icons/BaseIcon.vue'
 import { globalConfig } from '@/config/globalConfig.js'

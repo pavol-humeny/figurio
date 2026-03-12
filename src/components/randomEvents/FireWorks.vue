@@ -1,4 +1,9 @@
 <script setup>
+/**
+ * @file: FireWorks.vue
+ * @author: Pavol Humeny
+ * @date: 15.5.2026
+ */
 import { ref, onMounted, onBeforeUnmount } from 'vue'
 
 /* ===============================

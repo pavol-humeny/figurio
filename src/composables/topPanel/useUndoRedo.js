@@ -1,3 +1,8 @@
+/**
+ * @file: useUndoRedo.js
+ * @author: Pavol Humeny
+ * @date: 15.5.2026
+ */
 import { computed } from 'vue'
 import { useApi } from '@/composables/common/useApi'
 import { useImagePipeline } from '../editor/useImagePipeline'

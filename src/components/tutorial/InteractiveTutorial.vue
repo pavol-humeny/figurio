@@ -1,4 +1,9 @@
 <script setup>
+/**
+ * @file: InteractiveTutorial.vue
+ * @author: Pavol Humeny
+ * @date: 15.5.2026
+ */
 import { useInteractiveTutorial } from '@/composables/tutorial/useInteractiveTutorial'
 import BaseIcon from '../icons/BaseIcon.vue';
 import { useI18n } from 'vue-i18n'

@@ -1,3 +1,8 @@
+/**
+ * @file: useLevelSelector.js
+ * @author: Pavol Humeny
+ * @date: 15.5.2026
+ */
 export function useLevelSelector(props, emit) {
   /**
    * Sets selected level

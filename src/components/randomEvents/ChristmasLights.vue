@@ -1,4 +1,9 @@
 <script setup>
+/**
+ * @file: ChristmasLights.vue
+ * @author: Pavol Humeny
+ * @date: 15.5.2026
+ */
 import { ref, onMounted } from 'vue'
 
 const svgRef = ref(null)

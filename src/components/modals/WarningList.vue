@@ -1,4 +1,9 @@
 <script setup>
+/**
+ * @file: WarningList.vue
+ * @author: Pavol Humeny
+ * @date: 15.5.2026
+ */
 import { useWarningList } from '@/composables/modals/useWarningList'
 import BaseIcon from '../icons/BaseIcon.vue'
 import ItemTip from '../common/ItemTip.vue'

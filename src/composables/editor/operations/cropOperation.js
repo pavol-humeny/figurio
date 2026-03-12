@@ -1,3 +1,8 @@
+/**
+ * @file: cropOperation.js
+ * @author: Pavol Humeny
+ * @date: 15.5.2026
+ */
 import { PDFDocument } from 'pdf-lib'
 
 /**

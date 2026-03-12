@@ -1,3 +1,8 @@
+/**
+ * @file: useBrushTool.js
+ * @author: Pavol Humeny
+ * @date: 15.5.2026
+ */
 import { watch, computed } from 'vue'
 import { editorConfig } from '@/config/editorConfig.js'
 import { useConfirmModal } from '@/composables/modals/useConfirmModal.js'

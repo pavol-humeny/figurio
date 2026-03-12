@@ -1,3 +1,8 @@
+/**
+ * @file: useImagePipeline.js
+ * @author: Pavol Humeny
+ * @date: 15.5.2026
+ */
 import { operationRegistry } from './operationRegistry'
 import { useConsole } from '../common/useConsole'
 const { warn, log } = useConsole()

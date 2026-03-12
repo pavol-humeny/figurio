@@ -1,3 +1,8 @@
+/**
+ * @file: useImportModal.js
+ * @author: Pavol Humeny
+ * @date: 15.5.2026
+ */
 import { ref } from 'vue'
 import { useConsole } from '@/composables/common/useConsole.js'
 import { useApi } from '@/composables/common/useApi'

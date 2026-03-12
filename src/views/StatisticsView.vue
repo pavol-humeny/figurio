@@ -1,4 +1,9 @@
 <script setup>
+/**
+ * @file: StatisticsView.vue
+ * @author: Pavol Humeny
+ * @date: 15.5.2026
+ */
 import { ref } from 'vue';
 import AllVisits from '../components/statistics/AllVisits.vue';
 import UniqueVisits from '../components/statistics/UniqueVisits.vue';

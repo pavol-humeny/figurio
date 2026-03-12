@@ -1,3 +1,8 @@
+/**
+ * @file: ItemTip.spec.js
+ * @author: Pavol Humeny
+ * @date: 15.5.2026
+ */
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import { mount, flushPromises } from '@vue/test-utils'
 import ItemTip from '@/components/common/ItemTip.vue'

@@ -1,3 +1,8 @@
+/**
+ * @file: useMagnifyAreaTool.js
+ * @author: Pavol Humeny
+ * @date: 15.5.2026
+ */
 import { editorConfig } from '@/config/editorConfig'
 import { ref, computed, watch, watchEffect, onMounted, nextTick } from 'vue'
 import { useApi } from '@/composables/common/useApi'

@@ -1,4 +1,9 @@
 <script setup>
+/**
+ * @file: BlurToolSettings.vue
+ * @author: Pavol Humeny
+ * @date: 15.5.2026
+ */
 import ToolsSettingsTabs from './ToolsSettingsTabs.vue';
 import { useImageStore } from '@/stores/imageStore';
 import { useBlurTool } from '@/composables/tools/useBlurTool';

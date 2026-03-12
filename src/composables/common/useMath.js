@@ -1,4 +1,9 @@
 /**
+ * @file: useMath.js
+ * @author: Pavol Humeny
+ * @date: 15.5.2026
+ */
+/**
  * Composable for common mathematical operations
  * @returns {{
  *   round: (value: number, positions: number) => number,

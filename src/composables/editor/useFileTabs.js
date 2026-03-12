@@ -1,3 +1,8 @@
+/**
+ * @file: useFileTabs.js
+ * @author: Pavol Humeny
+ * @date: 15.5.2026
+ */
 import { ref, onMounted, watch, nextTick } from 'vue'
 import { useWorkspaceStore } from '@/stores/workspaceStore'
 import { storeToRefs } from 'pinia'

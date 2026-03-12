@@ -1,3 +1,8 @@
+/**
+ * @file: globalErrorHandler.js
+ * @author: Pavol Humeny
+ * @date: 15.5.2026
+ */
 import { useErrorModal } from '@/composables/modals/useErrorModal'
 import { useUserModeStore } from '@/stores/userModeStore'
 

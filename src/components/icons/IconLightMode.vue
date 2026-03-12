@@ -1,3 +1,8 @@
+<!--
+  @file: IconLightMode.vue
+  @author: Pavol Humeny
+  @date: 15.5.2026
+-->
 <template>
   <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="-0.5 -0.5 16 16" stroke-linecap="round"
     stroke-linejoin="round" stroke="currentColor" id="Sun--Streamline-Mynaui" height="20" width="20">

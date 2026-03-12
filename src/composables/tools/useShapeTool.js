@@ -1,3 +1,8 @@
+/**
+ * @file: useShapeTool.js
+ * @author: Pavol Humeny
+ * @date: 15.5.2026
+ */
 import { computed, ref, watch, watchEffect, nextTick, onMounted } from 'vue'
 import { useMath } from '../common/useMath'
 import { useSvgFunctions } from './useSvgFunctions'

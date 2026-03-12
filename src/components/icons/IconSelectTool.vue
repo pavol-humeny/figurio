@@ -1,3 +1,8 @@
+<!--
+  @file: IconSelectTool.vue
+  @author: Pavol Humeny
+  @date: 15.5.2026
+-->
 <template>
   <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="-0.415 -0.415 20 20"
     id="Cursor-Select-Area--Streamline-Cyber" height="20" width="20">

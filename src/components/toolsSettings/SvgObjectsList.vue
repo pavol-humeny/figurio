@@ -1,4 +1,9 @@
 <script setup>
+/**
+ * @file: SvgObjectsList.vue
+ * @author: Pavol Humeny
+ * @date: 15.5.2026
+ */
 import { useImageStore } from '@/stores/imageStore'
 import draggable from 'vuedraggable'
 import { useI18n } from 'vue-i18n'

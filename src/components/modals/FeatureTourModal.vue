@@ -1,4 +1,9 @@
 <script setup>
+/**
+ * @file: FeatureTourModal.vue
+ * @author: Pavol Humeny
+ * @date: 15.5.2026
+ */
 import { ref, computed } from 'vue'
 import { useFeatureTourModal } from '@/composables/modals/useFeatureTourModal'
 import FeatureTourCard from './FeatureTourCard.vue'

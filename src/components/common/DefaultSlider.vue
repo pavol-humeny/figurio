@@ -1,4 +1,9 @@
 <script setup>
+/**
+ * @file: DefaultSlider.vue
+ * @author: Pavol Humeny
+ * @date: 15.5.2026
+ */
 import ItemTip from './ItemTip.vue'
 import { useDefaultSlider } from '@/composables/common/useDefaultSlider'
 

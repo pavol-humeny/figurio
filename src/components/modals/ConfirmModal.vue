@@ -1,4 +1,9 @@
 <script setup>
+/**
+ * @file: ConfirmModal.vue
+ * @author: Pavol Humeny
+ * @date: 15.5.2026
+ */
 import { useConfirmModal } from '@/composables/modals/useConfirmModal';
 import DefaultButton from '@/components/common/DefaultButton.vue';
 

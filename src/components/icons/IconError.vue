@@ -1,3 +1,8 @@
+<!--
+  @file: IconError.vue
+  @author: Pavol Humeny
+  @date: 15.5.2026
+-->
 <template>
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor"
     id="X-Circle-Light--Streamline-Phosphor" height="16" width="16">

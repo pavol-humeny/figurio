@@ -1,3 +1,8 @@
+/**
+ * @file: historyStore.js
+ * @author: Pavol Humeny
+ * @date: 15.5.2026
+ */
 import { defineStore } from 'pinia'
 import { historyConfig } from '@/config/historyConfig'
 

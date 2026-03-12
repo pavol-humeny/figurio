@@ -1,4 +1,9 @@
 <script setup>
+/**
+ * @file: TopPanel.vue
+ * @author: Pavol Humeny
+ * @date: 15.5.2026
+ */
 import SettingsButton from './SettingsButton.vue';
 import HelpButton from './HelpButton.vue';
 import FileNameDisplay from './FileNameDisplay.vue';

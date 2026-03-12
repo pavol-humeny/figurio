@@ -1,3 +1,8 @@
+/**
+ * @file: useSvgFunctions.js
+ * @author: Pavol Humeny
+ * @date: 15.5.2026
+ */
 import { editorConfig } from '@/config/editorConfig'
 import { useMath } from '../common/useMath'
 

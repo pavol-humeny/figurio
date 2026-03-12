@@ -1,3 +1,8 @@
+<!--
+  @file: IconResizeObject.vue
+  @author: Pavol Humeny
+  @date: 15.5.2026
+-->
 <template>
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" id="Bounding-Box--Streamline-Phosphor"
     height="20" width="20">

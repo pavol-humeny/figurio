@@ -1,4 +1,9 @@
 <script setup>
+/**
+ * @file: ToolsSettingsPanel.vue
+ * @author: Pavol Humeny
+ * @date: 15.5.2026
+ */
 import { computed, onMounted } from 'vue'
 import { useToolsSettingsPanel } from '@/composables/toolsSettings/useToolsSettingsPanel';
 import { useEditorStore } from '@/stores/editorStore';

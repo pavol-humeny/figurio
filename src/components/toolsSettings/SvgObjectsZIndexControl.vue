@@ -1,4 +1,9 @@
 <script setup>
+/**
+ * @file: SvgObjectsZIndexControl.vue
+ * @author: Pavol Humeny
+ * @date: 15.5.2026
+ */
 import DefaultButton from '../common/DefaultButton.vue';
 import { useImageStore } from '@/stores/imageStore';
 import { useHistoryStore } from '@/stores/historyStore';

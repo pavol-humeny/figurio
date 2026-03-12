@@ -1,3 +1,8 @@
+/**
+ * @file: useWarningList.js
+ * @author: Pavol Humeny
+ * @date: 15.5.2026
+ */
 // import { ref } from 'vue'
 
 // const warnings = ref([]) // Array of warnings

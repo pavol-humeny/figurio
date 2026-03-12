@@ -1,3 +1,8 @@
+/**
+ * @file: exportFileService.js
+ * @author: Pavol Humeny
+ * @date: 15.5.2026
+ */
 import jsPDF from 'jspdf'
 import { svg2pdf } from 'svg2pdf.js'
 import { PDFDocument, rgb, degrees, StandardFonts } from 'pdf-lib'

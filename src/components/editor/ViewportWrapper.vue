@@ -1,4 +1,9 @@
 <script setup>
+/**
+ * @file: ViewportWrapper.vue
+ * @author: Pavol Humeny
+ * @date: 15.5.2026
+ */
 import { useViewportWrapper } from '@/composables/editor/useViewportWrapper'
 import { useViewportStore } from '@/stores/viewportStore'
 import { useImageRenderer } from '@/composables/editor/useImageRenderer'

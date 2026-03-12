@@ -1,4 +1,9 @@
 <script setup>
+/**
+ * @file: PresetCropTool.vue
+ * @author: Pavol Humeny
+ * @date: 15.5.2026
+ */
 import { usePresetsStore } from '@/stores/presetsStore'
 import { computed } from 'vue'
 import { useImageStore } from '@/stores/imageStore'

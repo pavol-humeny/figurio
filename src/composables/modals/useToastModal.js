@@ -1,3 +1,8 @@
+/**
+ * @file: useToastModal.js
+ * @author: Pavol Humeny
+ * @date: 15.5.2026
+ */
 import { ref, reactive } from 'vue'
 import { uiConfig } from '@/config/uiConfig'
 

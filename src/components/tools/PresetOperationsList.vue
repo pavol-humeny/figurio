@@ -1,4 +1,9 @@
 <script setup>
+/**
+ * @file: PresetOperationsList.vue
+ * @author: Pavol Humeny
+ * @date: 15.5.2026
+ */
 import { ref, watch } from 'vue'
 import draggable from 'vuedraggable'
 import { useI18n } from 'vue-i18n'

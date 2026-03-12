@@ -1,4 +1,9 @@
 <script setup>
+/**
+ * @file: DaysVisits.vue
+ * @author: Pavol Humeny
+ * @date: 15.5.2026
+ */
 import { ref, computed, onMounted } from 'vue'
 import { useApi } from '@/composables/common/useApi'
 

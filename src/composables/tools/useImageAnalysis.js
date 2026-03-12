@@ -1,3 +1,8 @@
+/**
+ * @file: useImageAnalysis.js
+ * @author: Pavol Humeny
+ * @date: 15.5.2026
+ */
 import { globalConfig } from '@/config/globalConfig'
 import { viewportConfig } from '@/config/viewportConfig'
 import { computed, ref, watch } from 'vue'

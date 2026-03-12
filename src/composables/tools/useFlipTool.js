@@ -1,3 +1,8 @@
+/**
+ * @file: useFlipTool.js
+ * @author: Pavol Humeny
+ * @date: 15.5.2026
+ */
 import { useConfirmModal } from '../modals/useConfirmModal'
 import { useApi } from '@/composables/common/useApi'
 const { addUserEvent } = useApi()

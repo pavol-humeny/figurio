@@ -1,3 +1,8 @@
+<!--
+  @file: IconImageAnalysisTool.vue
+  @author: Pavol Humeny
+  @date: 15.5.2026
+-->
 <template>
   <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
     id="Image-Search--Streamline-Outlined-Material" height="24" width="24">

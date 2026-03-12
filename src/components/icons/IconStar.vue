@@ -1,3 +1,8 @@
+<!--
+  @file: IconStar.vue
+  @author: Pavol Humeny
+  @date: 15.5.2026
+-->
 <template>
   <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14" id="Star-1--Streamline-Core" height="14"
     width="14">
