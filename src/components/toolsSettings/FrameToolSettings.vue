@@ -204,7 +204,7 @@ const {
         </div>
 
         <!-- Phone outline -->
-        <div v-if="isPhoneFrame(selectedFrameVariant) || isFrameWithAdditionalOutline(selectedFrameVariant)"
+        <div v-if="isPhoneFrame(selectedFrameVariant) || (isFrameWithAdditionalOutline(selectedFrameVariant) && drawOutline) || selectedFrameVariant === 'frameSolid'"
           class="settings-content-wrapper">
           <!-- Use phone outline -->
           <div class="content-wrapper">

@@ -179,9 +179,9 @@ export const useEditorStore = defineStore('editorStore', {
         phoneHeaderIconsSize: 'large', // Size of the phone header icons
         phoneBatteryIconStyle: 'style3', // Style of the phone battery icon
         phoneHeaderEnabled: true, // Whether to draw a header for phone frames
-        phoneHeaderExpand: false, // Whether header expands beyond image
+        phoneHeaderExpand: true, // Whether header expands beyond image
         phoneButtonsEnabled: true, // Whether to draw buttons for phone frames
-        phoneNavigationEnabled: true, // Whether to draw navigation for phone frames
+        phoneNavigationEnabled: false, // Whether to draw navigation for phone frames
         phoneHeaderTimeInMinutes: 610, // Default time for phone header (10:10)
         phoneHeaderTextColor: '#000000', // Default text color for phone header
         phoneHeaderBackgroundColor: '#ffffff', // Default background color for phone header

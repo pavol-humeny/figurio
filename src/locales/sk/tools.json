@@ -698,14 +698,14 @@
           "phoneButtonsCanNotBeDrawnTip": "Tlačidlá telefónu nie je možné zobraziť, pretože obrázok nie je dostatočne vysoký"
         },
         "usePhoneOutline": {
-          "label": "Obrys telefónu"
+          "label": "Zvýraznenie rámiku"
         },
         "phoneOutlineColor": {
-          "label": "Farba obrysu"
+          "label": "Farba zvýraznenia"
         },
         "phoneOutlineSize": {
-          "label": "Veľkosť obrysu",
-          "tip": "Vyberte veľkosť obrysu telefónu",
+          "label": "Veľkosť zvýraznění",
+          "tip": "Vyberte veľkosť zvýraznenia z troch možností",
           "options": {
             "small": "Malý",
             "medium": "Stredný",
@@ -824,11 +824,11 @@
             "type": "Typ",
             "useFrameOutline": "Použiť obrys",
             "usePhoneButtons": "Tlačidlá telefónu",
-            "usePhoneOutline": "Obrys telefónu",
-            "phoneOutlineColor": "Farba obrysu",
+            "usePhoneOutline": "Zvýraznenie rámika",
+            "phoneOutlineColor": "Farba zvýraznenia",
             "phoneOutlineSize": {
               "label": "Veľkosť obrysu",
-              "tip": "Vyberte veľkosť obrysu telefónu z 3 možností",
+              "tip": "Vyberte veľkosť zvýraznenia z 3 možností",
               "options": {
                 "small": "Malá",
                 "medium": "Stredná",
@@ -971,11 +971,11 @@
             "type": "Typ",
             "useFrameOutline": "Použiť obrys",
             "usePhoneButtons": "Tlačidlá telefónu",
-            "usePhoneOutline": "Obrys telefónu",
-            "phoneOutlineColor": "Farba obrysu",
+            "usePhoneOutline": "Zvýraznenie rámika",
+            "phoneOutlineColor": "Farba zvýraznenia",
             "phoneOutlineSize": {
-              "label": "Veľkosť obrysu",
-              "tip": "Vyberte veľkosť obrysu telefónu z 3 možností",
+              "label": "Veľkosť zvýraznenia",
+              "tip": "Vyberte veľkosť zvýraznenia z 3 možností",
               "options": {
                 "small": "Malá",
                 "medium": "Stredná",

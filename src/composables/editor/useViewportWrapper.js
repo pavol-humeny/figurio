@@ -929,7 +929,6 @@ export function useViewportWrapper(
    */
   const onMouseLeave = () => {
     showCursor.value = false
-    uiStore.cursorOverViewportSettings = false
   }
 
   /**
@@ -937,7 +936,6 @@ export function useViewportWrapper(
    */
   const onMouseEnter = () => {
     showCursor.value = true
-    uiStore.cursorOverViewportSettings = true
   }
 
   /**

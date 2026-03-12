@@ -702,14 +702,14 @@
           "phoneButtonsCanNotBeDrawnTip": "Tlačítka telefonu nelze zobrazit, protože obrázek není dostatečně vysoký"
         },
         "usePhoneOutline": {
-          "label": "Obrys telefonu"
+          "label": "Zvýraznění rámečku"
         },
         "phoneOutlineColor": {
-          "label": "Barva obrysu"
+          "label": "Barva zvýraznění"
         },
         "phoneOutlineSize": {
-          "label": "Velikost obrysu",
-          "tip": "Vyberte velikost obrysu telefonu",
+          "label": "Velikost zvýraznění",
+          "tip": "Vyberte velikost zvýraznění ze 3 možností",
           "options": {
             "small": "Malý",
             "medium": "Střední",
@@ -828,11 +828,11 @@
             "type": "Typ",
             "useFrameOutline": "Použít obrys",
             "usePhoneButtons": "Tlačítka telefonu",
-            "usePhoneOutline": "Obrys telefonu",
-            "phoneOutlineColor": "Barva obrysu",
+            "usePhoneOutline": "Zvýraznění rámečku",
+            "phoneOutlineColor": "Barva zvýraznění",
             "phoneOutlineSize": {
-              "label": "Velikost obrysu",
-              "tip": "Vyberte velikost obrysu telefonu ze 3 možností",
+              "label": "Velikost zvýraznění",
+              "tip": "Vyberte velikost zvýraznění ze 3 možností",
               "options": {
                 "small": "Malá",
                 "medium": "Střední",
@@ -975,11 +975,11 @@
             "type": "Typ",
             "useFrameOutline": "Použít obrys",
             "usePhoneButtons": "Tlačítka telefonu",
-            "usePhoneOutline": "Obrys telefonu",
-            "phoneOutlineColor": "Barva obrysu",
+            "usePhoneOutline": "Zvýraznění rámečku",
+            "phoneOutlineColor": "Barva zvýraznění",
             "phoneOutlineSize": {
-              "label": "Velikost obrysu",
-              "tip": "Vyberte velikost obrysu telefonu ze 3 možností",
+              "label": "Velikost zvýraznění",
+              "tip": "Vyberte velikost zvýraznění ze 3 možností",
               "options": {
                 "small": "Malá",
                 "medium": "Střední",

@@ -698,14 +698,14 @@
           "phoneButtonsCanNotBeDrawnTip": "Phone buttons cannot be drawn because the image is not tall enough"
         },
         "usePhoneOutline": {
-          "label": "Phone outline"
+          "label": "Highlight frame"
         },
         "phoneOutlineColor": {
-          "label": "Outline color"
+          "label": "Highlight color"
         },
         "phoneOutlineSize": {
-          "label": "Outline size",
-          "tip": "Select the phone outline size",
+          "label": "Highlight size",
+          "tip": "Select highlight size from 3 options",
           "options": {
             "small": "Small",
             "medium": "Medium",
@@ -824,11 +824,11 @@
             "type": "Type",
             "useFrameOutline": "Use outline",
             "usePhoneButtons": "Phone buttons",
-            "usePhoneOutline": "Phone outline",
-            "phoneOutlineColor": "Outline color",
+            "usePhoneOutline": "Highlight frame",
+            "phoneOutlineColor": "Highlight color",
             "phoneOutlineSize": {
-              "label": "Outline size",
-              "tip": "Select phone outline size from 3 options",
+              "label": "Highlight size",
+              "tip": "Select highlight size from 3 options",
               "options": {
                 "small": "Small",
                 "medium": "Medium",
@@ -971,11 +971,11 @@
             "type": "Type",
             "useFrameOutline": "Use outline",
             "usePhoneButtons": "Phone buttons",
-            "usePhoneOutline": "Phone outline",
-            "phoneOutlineColor": "Outline color",
+            "usePhoneOutline": "Highlight frame",
+            "phoneOutlineColor": "Highlight color",
             "phoneOutlineSize": {
-              "label": "Outline size",
-              "tip": "Select phone outline size from 3 options",
+              "label": "Highlight size",
+              "tip": "Select highlight size from 3 options",
               "options": {
                 "small": "Small",
                 "medium": "Medium",

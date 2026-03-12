@@ -1744,6 +1744,52 @@ export function useFrameTool(imageStore, historyStore, viewportStore, t) {
         'Z',
       ].join(' ')
 
+    /**
+     * Draw frame outline
+     */
+    const drawFrameOutline = ({
+      ns,
+      el,
+      svgWidth,
+      svgHeight,
+      fw,
+      topSize,
+      bottomSize,
+      innerStartY,
+      innerHeight,
+      phoneEdgeStrokeWidth,
+      outlineColor,
+    }) => {
+      let edge = phoneEdgeStrokeWidth
+
+      if (2 * edge + 0.1 > fw) {
+        edge = fw / 3
+      }
+
+      const outlineSides = [
+        { x: 0, y: 0, width: svgWidth, height: edge }, // topOut
+        { x: fw - edge, y: topSize - edge, width: svgWidth - 2 * fw + 2 * edge, height: edge }, // topIn
+        {
+          x: fw - edge,
+          y: svgHeight - bottomSize,
+          width: svgWidth - 2 * fw + 2 * edge,
+          height: edge,
+        }, // bottomIn
+        { x: 0, y: svgHeight - edge, width: svgWidth, height: edge }, // bottomOut
+        { x: 0, y: 0, width: edge, height: svgHeight }, // leftOut
+        { x: fw - edge, y: innerStartY, width: edge, height: innerHeight }, // leftIn
+        { x: svgWidth - fw, y: innerStartY, width: edge, height: innerHeight }, // rightIn
+        { x: svgWidth - edge, y: 0, width: edge, height: svgHeight }, // rightOut
+      ]
+
+      outlineSides.forEach((s) => {
+        const r = document.createElementNS(ns, 'rect')
+        Object.entries(s).forEach(([k, v]) => r.setAttribute(k, v))
+        r.setAttribute('fill', outlineColor)
+        el.appendChild(r)
+      })
+    }
+
     // UPDATE new frame type
     if (frame.type === 'frameSolid') {
       // 4 sides
@@ -1764,28 +1810,18 @@ export function useFrameTool(imageStore, historyStore, viewportStore, t) {
 
       // Inner outline
       if (frame.phoneOutlineEnabled) {
-        let edge = phoneEdgeStrokeWidth
-
-        if (2 * edge + 0.1 > fw) {
-          edge = fw / 3
-        }
-
-        const outlineSides = [
-          { x: 0, y: 0, width: svgWidth, height: edge }, // topOut
-          { x: fw - edge, y: fh - edge, width: svgWidth - 2 * fw + 2 * edge, height: edge }, // topIn
-          { x: fw - edge, y: svgHeight - fh, width: svgWidth - 2 * fw + 2 * edge, height: edge }, // bottomIn
-          { x: 0, y: svgHeight - edge, width: svgWidth, height: edge }, // bottomOut
-          { x: 0, y: 0, width: edge, height: h + 2 * fh }, // leftOut
-          { x: fw - edge, y: fh, width: edge, height: h }, // leftIn
-          { x: svgWidth - fw, y: fh, width: edge, height: h }, // rightIn
-          { x: svgWidth - edge, y: 0, width: edge, height: h + 2 * fh }, // rightOut
-        ]
-
-        outlineSides.forEach((s) => {
-          const r = document.createElementNS(ns, 'rect')
-          Object.entries(s).forEach(([k, v]) => r.setAttribute(k, v))
-          r.setAttribute('fill', frame.phoneOutlineColor)
-          el.appendChild(r)
+        drawFrameOutline({
+          ns,
+          el,
+          svgWidth,
+          svgHeight,
+          fw,
+          topSize: fh,
+          bottomSize: fh,
+          innerStartY: fh,
+          innerHeight: svgHeight - 2 * fh,
+          phoneEdgeStrokeWidth,
+          outlineColor: frame.phoneOutlineColor,
         })
       }
     } else if (frame.type === 'frameMacBrowser') {
@@ -1825,6 +1861,22 @@ export function useFrameTool(imageStore, historyStore, viewportStore, t) {
           r.setAttribute('fill', color)
           el.appendChild(r)
         })
+
+        if (frame.phoneOutlineEnabled) {
+          drawFrameOutline({
+            ns,
+            el,
+            svgWidth,
+            svgHeight,
+            fw,
+            topSize: header,
+            bottomSize: fh,
+            innerStartY: header,
+            innerHeight: svgHeight - header - fh,
+            phoneEdgeStrokeWidth,
+            outlineColor: frame.phoneOutlineColor,
+          })
+        }
       }
     } else if (frame.type === 'frameWindowsBrowser') {
       const headerRect = document.createElementNS(ns, 'rect')
@@ -1907,6 +1959,22 @@ export function useFrameTool(imageStore, historyStore, viewportStore, t) {
           r.setAttribute('fill', color)
           el.appendChild(r)
         })
+
+        if (frame.phoneOutlineEnabled) {
+          drawFrameOutline({
+            ns,
+            el,
+            svgWidth,
+            svgHeight,
+            fw,
+            topSize: header,
+            bottomSize: fh,
+            innerStartY: header,
+            innerHeight: svgHeight - header - fh,
+            phoneEdgeStrokeWidth,
+            outlineColor: frame.phoneOutlineColor,
+          })
+        }
       }
     } else if (frame.type === 'frameVSCode') {
       const headerRect = document.createElementNS(ns, 'rect')
@@ -2006,6 +2074,22 @@ export function useFrameTool(imageStore, historyStore, viewportStore, t) {
           r.setAttribute('fill', color)
           el.appendChild(r)
         })
+
+        if (frame.phoneOutlineEnabled) {
+          drawFrameOutline({
+            ns,
+            el,
+            svgWidth,
+            svgHeight,
+            fw,
+            topSize: header,
+            bottomSize: fh,
+            innerStartY: header,
+            innerHeight: svgHeight - header - fh,
+            phoneEdgeStrokeWidth,
+            outlineColor: frame.phoneOutlineColor,
+          })
+        }
       }
     } else if (frame.type === 'framePhoneIOS') {
       // Draw phone header if enabled
@@ -2528,7 +2612,7 @@ export function useFrameTool(imageStore, historyStore, viewportStore, t) {
         searchBar.setAttribute('y', searchY)
         searchBar.setAttribute('width', searchWidth)
         searchBar.setAttribute('height', searchHeight)
-        searchBar.setAttribute('fill', '#ffffff')
+        searchBar.setAttribute('fill', contrastColor)
         searchBar.setAttribute('opacity', '0.7')
         el.appendChild(searchBar)
       }
@@ -2546,6 +2630,22 @@ export function useFrameTool(imageStore, historyStore, viewportStore, t) {
           r.setAttribute('fill', color)
           el.appendChild(r)
         })
+
+        if (frame.phoneOutlineEnabled) {
+          drawFrameOutline({
+            ns,
+            el,
+            svgWidth,
+            svgHeight,
+            fw,
+            topSize: fh,
+            bottomSize: footer,
+            innerStartY: fh,
+            innerHeight: svgHeight - fh - footer,
+            phoneEdgeStrokeWidth,
+            outlineColor: frame.phoneOutlineColor,
+          })
+        }
       }
     }
 
