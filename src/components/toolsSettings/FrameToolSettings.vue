@@ -84,6 +84,7 @@ const {
   setPhoneFrameOrientation,
   phoneFrameOrientationOptions,
   showOnlyInPortraitMode,
+  isFrameWithAdditionalOutline
 } = useFrameTool(useImageStore(), useHistoryStore(), useViewportStore(), t)
 </script>
 
@@ -203,7 +204,8 @@ const {
         </div>
 
         <!-- Phone outline -->
-        <div v-if="isPhoneFrame(selectedFrameVariant)" class="settings-content-wrapper">
+        <div v-if="isPhoneFrame(selectedFrameVariant) || isFrameWithAdditionalOutline(selectedFrameVariant)"
+          class="settings-content-wrapper">
           <!-- Use phone outline -->
           <div class="content-wrapper">
             <div class="content-aligned two-items">

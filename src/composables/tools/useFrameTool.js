@@ -473,6 +473,21 @@ export function useFrameTool(imageStore, historyStore, viewportStore, t) {
     return isPhoneFrame(frameType) && isExpanded
   }
 
+  const isFrameWithAdditionalOutline = (frameType) => {
+    return (
+      frameType === 'framePhoneIOS' ||
+      frameType === 'framePhoneIOS2' ||
+      frameType === 'framePhoneAndroid' ||
+      frameType === 'framePhoneAndroid2' ||
+      frameType === 'framePhoneSimple' ||
+      frameType === 'frameMacBrowser' ||
+      frameType === 'frameWindowsBrowser' ||
+      frameType === 'frameWindowsTaskBar' ||
+      frameType === 'frameVSCode' ||
+      frameType === 'frameSolid'
+    )
+  }
+
   /**
    * Whether the frame is frame with outline
    * @param {string} frameType - Frame type
@@ -1738,12 +1753,41 @@ export function useFrameTool(imageStore, historyStore, viewportStore, t) {
         { x: 0, y: fh, width: fw, height: h }, // left
         { x: svgWidth - fw, y: fh, width: fw, height: h }, // right
       ]
+
+      // Draw outer frame
       sides.forEach((s) => {
         const r = document.createElementNS(ns, 'rect')
         Object.entries(s).forEach(([k, v]) => r.setAttribute(k, v))
         r.setAttribute('fill', color)
         el.appendChild(r)
       })
+
+      // Inner outline
+      if (frame.phoneOutlineEnabled) {
+        let edge = phoneEdgeStrokeWidth
+
+        if (2 * edge + 0.1 > fw) {
+          edge = fw / 3
+        }
+
+        const outlineSides = [
+          { x: 0, y: 0, width: svgWidth, height: edge }, // topOut
+          { x: fw - edge, y: fh - edge, width: svgWidth - 2 * fw + 2 * edge, height: edge }, // topIn
+          { x: fw - edge, y: svgHeight - fh, width: svgWidth - 2 * fw + 2 * edge, height: edge }, // bottomIn
+          { x: 0, y: svgHeight - edge, width: svgWidth, height: edge }, // bottomOut
+          { x: 0, y: 0, width: edge, height: h + 2 * fh }, // leftOut
+          { x: fw - edge, y: fh, width: edge, height: h }, // leftIn
+          { x: svgWidth - fw, y: fh, width: edge, height: h }, // rightIn
+          { x: svgWidth - edge, y: 0, width: edge, height: h + 2 * fh }, // rightOut
+        ]
+
+        outlineSides.forEach((s) => {
+          const r = document.createElementNS(ns, 'rect')
+          Object.entries(s).forEach(([k, v]) => r.setAttribute(k, v))
+          r.setAttribute('fill', frame.phoneOutlineColor)
+          el.appendChild(r)
+        })
+      }
     } else if (frame.type === 'frameMacBrowser') {
       const headerRect = document.createElementNS(ns, 'rect')
       headerRect.setAttribute('x', 0)
@@ -2821,5 +2865,6 @@ export function useFrameTool(imageStore, historyStore, viewportStore, t) {
     setPhoneFrameOrientation,
     phoneFrameOrientationOptions,
     showOnlyInPortraitMode,
+    isFrameWithAdditionalOutline,
   }
 }

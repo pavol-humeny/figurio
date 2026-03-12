@@ -15,11 +15,9 @@
 - kniha 
 
 - v
-    - plagát
     - help 
     - testovanie na telefóne
     - videá excel
-    - wireframe v editovateľnej podobe
 
 ## TODO - text 
 - P - záver
