@@ -347,6 +347,9 @@ export function useBlurTool(imageStore, historyStore, editorStore, uiStore, t) {
         })
 
         await renderUpTo(imageStore.renderPipeline.currentOpIndex + 1, { t, imageStore })
+
+        // Push to undo history
+        historyStore.push(imageStore.getSnapshot(t))
       }
     }
 
@@ -374,7 +377,7 @@ export function useBlurTool(imageStore, historyStore, editorStore, uiStore, t) {
 
         await renderUpTo(imageStore.renderPipeline.currentOpIndex + 1, { t, imageStore })
 
-        historyStore.push(imageStore.getSnapshot())
+        historyStore.push(imageStore.getSnapshot(t))
       }
     }
 

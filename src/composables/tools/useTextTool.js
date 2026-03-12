@@ -330,6 +330,9 @@ export function useTextTool(imageStore, historyStore, editorStore, uiStore, t) {
         })
 
         await renderUpTo(imageStore.renderPipeline.currentOpIndex + 1, { t, imageStore })
+
+        // Push to undo history
+        historyStore.push(imageStore.getSnapshot(t))
       }
     }
 

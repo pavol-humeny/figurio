@@ -315,6 +315,9 @@ export function useResizeTool(imageStore, historyStore, viewportStore, uiStore, 
 
         await renderUpTo(imageStore.renderPipeline.currentOpIndex + 1, { t, imageStore })
 
+        // Push to undo history
+        historyStore.push(imageStore.getSnapshot(t))
+
         suppressResizeReset.value = false
       } else {
         return

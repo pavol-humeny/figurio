@@ -51,6 +51,9 @@ export function useRotateTool(imageStore, historyStore, uiStore, viewportStore, 
         })
 
         await renderUpTo(imageStore.renderPipeline.currentOpIndex + 1, { t, imageStore })
+
+        // Push to undo history
+        historyStore.push(imageStore.getSnapshot(t))
       } else {
         return
       }
