@@ -9,7 +9,6 @@
 - refaktorizácia 
     - hlavičky súborov 
     - komentáre 
-- skúsiť vytlačiť porovnanie farieb/kontrastu
 - Unit testy 
 - konzultácia 
 - kniha 
@@ -37,6 +36,8 @@
 
 - povoliť načítanie viacerých súborov
 - zmena veľkosti obrázka - prepočítať rámik vo fyzických rozmeroch
+
+- skontrolovať aby sa správne ukladali eventy udalostí
 
 
 - skontrolovať texty

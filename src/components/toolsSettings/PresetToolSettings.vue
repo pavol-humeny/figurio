@@ -273,7 +273,7 @@ const tabs = ['myPresets', 'createPreset']
               </div>
               <!-- Phone outline -->
               <div class="content-aligned two-items"
-                v-if="localImageFrame.enabled && (isPhoneFrame(localImageFrame.type) || (isFrameWithAdditionalOutline(localImageFrame.type) && localImageFrame.outlineEnabled) || localImageFrame.type === 'frameSolid')"
+                v-if="localImageFrame.enabled && ((isPhoneFrame(localImageFrame.type) || (isFrameWithAdditionalOutline(localImageFrame.type) && localImageFrame.outlineEnabled) || localImageFrame.type === 'frameSolid'))"
                 :class="!isModifyingPreset ? 'disabled' : ''">
                 <p>
                   {{ t('tools.preset.settings.myPresets.presetValues.frame.usePhoneOutline') }}
@@ -283,7 +283,7 @@ const tabs = ['myPresets', 'createPreset']
               </div>
               <!-- Phone outline color -->
               <div class="content-aligned two-items"
-                v-if="localImageFrame.enabled && (isPhoneFrame(localImageFrame.type) || (isFrameWithAdditionalOutline(localImageFrame.type) && localImageFrame.outlineEnabled) || localImageFrame.type === 'frameSolid') && localImageFrame.phoneOutlineEnabled"
+                v-if="localImageFrame.enabled && ((isPhoneFrame(localImageFrame.type) || (isFrameWithAdditionalOutline(localImageFrame.type) && localImageFrame.outlineEnabled) || localImageFrame.type === 'frameSolid')) && localImageFrame.phoneOutlineEnabled"
                 :class="!isModifyingPreset ? 'disabled' : ''">
                 <p>
                   {{ t('tools.preset.settings.myPresets.presetValues.frame.phoneOutlineColor') }}
@@ -292,7 +292,7 @@ const tabs = ['myPresets', 'createPreset']
               </div>
               <!-- Phone outline size -->
               <div class="content-aligned two-items"
-                v-if="localImageFrame.enabled && (isPhoneFrame(localImageFrame.type) || (isFrameWithAdditionalOutline(localImageFrame.type) && localImageFrame.outlineEnabled) || localImageFrame.type === 'frameSolid') && localImageFrame.phoneOutlineEnabled"
+                v-if="localImageFrame.enabled && ((isPhoneFrame(localImageFrame.type) || (isFrameWithAdditionalOutline(localImageFrame.type) && localImageFrame.outlineEnabled) || localImageFrame.type === 'frameSolid')) && localImageFrame.phoneOutlineEnabled"
                 :class="!isModifyingPreset ? 'disabled' : ''">
                 <p>
                   {{ t('tools.preset.settings.myPresets.presetValues.frame.phoneOutlineSize.label') }}
@@ -770,7 +770,7 @@ const tabs = ['myPresets', 'createPreset']
               </div>
               <!-- Use phone outline -->
               <div
-                v-if="(isPhoneFrame(newPreset.frame.type) || (isFrameWithAdditionalOutline(newPreset.frame.type) && newPreset.outlineEnabled) || newPreset.frame.type === 'frameSolid') && newPreset.frame.enabled"
+                v-if="((isPhoneFrame(newPreset.frame.type) || (isFrameWithAdditionalOutline(newPreset.frame.type) && newPreset.frame.outlineEnabled) || newPreset.frame.type === 'frameSolid')) && newPreset.frame.enabled"
                 class="content-aligned two-items">
                 <p>
                   {{ t('tools.preset.settings.createPreset.presetValues.frame.usePhoneOutline') }}
@@ -780,7 +780,7 @@ const tabs = ['myPresets', 'createPreset']
               </div>
               <!-- Phone outline color -->
               <div
-                v-if="(isPhoneFrame(newPreset.frame.type) || (isFrameWithAdditionalOutline(newPreset.frame.type) && newPreset.outlineEnabled) || newPreset.frame.type === 'frameSolid') && newPreset.frame.enabled && newPreset.frame.phoneOutlineEnabled"
+                v-if="((isPhoneFrame(newPreset.frame.type) || (isFrameWithAdditionalOutline(newPreset.frame.type) && newPreset.frame.outlineEnabled) || newPreset.frame.type === 'frameSolid')) && newPreset.frame.enabled && newPreset.frame.phoneOutlineEnabled"
                 class="content-aligned two-items">
                 <p>
                   {{ t('tools.preset.settings.createPreset.presetValues.frame.phoneOutlineColor') }}
@@ -789,7 +789,7 @@ const tabs = ['myPresets', 'createPreset']
               </div>
               <!-- Phone outline size -->
               <div
-                v-if="(isPhoneFrame(newPreset.frame.type) || (isFrameWithAdditionalOutline(newPreset.frame.type) && newPreset.outlineEnabled) || newPreset.frame.type === 'frameSolid') && newPreset.frame.enabled && newPreset.frame.phoneOutlineEnabled"
+                v-if="((isPhoneFrame(newPreset.frame.type) || (isFrameWithAdditionalOutline(newPreset.frame.type) && newPreset.frame.outlineEnabled) || newPreset.frame.type === 'frameSolid')) && newPreset.frame.enabled && newPreset.frame.phoneOutlineEnabled"
                 class="content-aligned two-items">
                 <p>
                   {{ t('tools.preset.settings.createPreset.presetValues.frame.phoneOutlineSize.label') }}
