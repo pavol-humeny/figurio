@@ -355,12 +355,6 @@ export function importFileService(
         uiStore.tutorialShouldBeStartedForFirstTime = true
       }
 
-      // showToastModal(
-      //   'success',
-      //   t('imageStore.toast.successFileUploaded.title'),
-      //   t('imageStore.toast.successFileUploaded.message'),
-      // )
-
       addUserEvent('uploadImage', {
         fileFormat: imageStore.fileFormat,
         fileName: imageStore.fileName,
