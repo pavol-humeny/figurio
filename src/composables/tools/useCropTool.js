@@ -1869,9 +1869,6 @@ export function useCropTool(imageStore, viewportStore, editorStore, historyStore
 
         await renderUpTo(imageStore.renderPipeline.currentOpIndex + 1, { t, imageStore })
 
-        // Push to undo history
-        historyStore.push(imageStore.getSnapshot(t))
-
         suppressCropReset.value = false
       } else {
         return

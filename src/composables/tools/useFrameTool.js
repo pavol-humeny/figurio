@@ -526,29 +526,61 @@ export function useFrameTool(imageStore, historyStore, viewportStore, t) {
    * @param {string} value - Selected frame variant
    */
   const handleFrameChange = async (value) => {
-    if (isPhoneFrame(value) && imageStore.fileType === 'pdf') {
-      const confirmed = await showConfirmModal(
-        t('tools.confirmNeedBaseImageRasterization.title'),
-        t('tools.confirmNeedBaseImageRasterization.message'),
-        t('tools.confirmNeedBaseImageRasterization.cancel'),
-        t('tools.confirmNeedBaseImageRasterization.confirm'),
-      )
-      if (!confirmed) return
+    if (isPhoneFrame(value)) {
+      if (imageStore.fileType === 'pdf') {
+        const confirmed = await showConfirmModal(
+          t('tools.confirmNeedBaseImageRasterization.title'),
+          t('tools.confirmNeedBaseImageRasterization.message'),
+          t('tools.confirmNeedBaseImageRasterization.cancel'),
+          t('tools.confirmNeedBaseImageRasterization.confirm'),
+        )
+        if (!confirmed) return
 
-      // await imageStore.rasterizeBaseImage(t)
-      imageStore.addImageOperation({
-        type: 'rasterizePdf',
-        params: {},
-        cost: 'high',
-        affectsGeometry: false,
-      })
+        // await imageStore.rasterizeBaseImage(t)
+        imageStore.addImageOperation({
+          type: 'rasterizePdf',
+          params: {},
+          cost: 'high',
+          affectsGeometry: false,
+        })
 
-      addUserEvent('applyOperation', {
-        tool: 'rasterizePdf',
-        settings: {},
-      })
+        addUserEvent('applyOperation', {
+          tool: 'rasterizePdf',
+          settings: {},
+        })
 
-      await renderUpTo(imageStore.renderPipeline.currentOpIndex + 1, { t, imageStore })
+        await renderUpTo(imageStore.renderPipeline.currentOpIndex + 1, { t, imageStore })
+      }
+
+      if (imageStore.needRasterization) {
+        const confirmed = await showConfirmModal(
+          t('tools.confirmNeedRasterization.title'),
+          t('tools.confirmNeedRasterization.message'),
+          t('tools.confirmNeedRasterization.cancel'),
+          t('tools.confirmNeedRasterization.confirm'),
+        )
+        if (confirmed) {
+          const result = await imageStore.rasterize('editor', {}, t)
+
+          imageStore.addImageOperation({
+            type: 'rasterize',
+            params: {
+              overlay: result.overlay,
+            },
+            cost: 'high',
+            affectsGeometry: true,
+          })
+
+          addUserEvent('applyOperation', {
+            tool: 'rasterize',
+            settings: {},
+          })
+
+          await renderUpTo(imageStore.renderPipeline.currentOpIndex + 1, { t, imageStore })
+        } else {
+          return
+        }
+      }
     }
 
     loadConfigFromEditorStore()
