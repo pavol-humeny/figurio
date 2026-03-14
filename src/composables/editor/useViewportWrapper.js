@@ -367,6 +367,8 @@ export function useViewportWrapper(
    * Left position of horizontal scrollbar thumb
    */
   const verticalSliderTop = computed(() => {
+    updateInitialDimensions()
+    updateZoomDependentDimensions()
     const ratio = (panY.value + contentTotalHeight.value * 0.9) / verticalSliderRange.value
     const clampedRatio = clamp(ratio, 0, 1)
     return (
@@ -376,6 +378,8 @@ export function useViewportWrapper(
     )
   })
   const horizontalSliderLeft = computed(() => {
+    updateInitialDimensions()
+    updateZoomDependentDimensions()
     const ratio = (panX.value + contentTotalWidth.value * 0.9) / horizontalSliderRange.value
     const clampedRatio = clamp(ratio, 0, 1)
     return (
@@ -559,27 +563,29 @@ export function useViewportWrapper(
   const moveImageToCenter = (side) => {
     if (!wrapperRef.value || !contentRef.value) return
 
-    // Refresh wrapper + content sizes
     updateInitialDimensions()
     updateZoomDependentDimensions()
 
+    // Half of panel width keeps the image centered
     const deltaX = (uiStore.rightPanelDefaultWidth / 2) * side
 
-    // Move image
-    // Move active viewport
-    viewportStore.panX += deltaX
-
     viewportStore.panX = clamp(
-      viewportStore.panX,
+      viewportStore.panX + deltaX,
       scrollHorizontalMin.value,
       scrollHorizontalMax.value,
     )
 
-    // Move all other viewports in tabs to keep the position consistent when switching tabs
+    console.warn('Moving image to center by deltaX:', deltaX)
+
+    // Keep same position in other tabs
     workspaceStore.tabs.forEach((tab) => {
       if (!tab.viewportSnapshot) return
 
-      tab.viewportSnapshot.panX += deltaX
+      tab.viewportSnapshot.panX = clamp(
+        tab.viewportSnapshot.panX + deltaX,
+        scrollHorizontalMin.value,
+        scrollHorizontalMax.value,
+      )
     })
   }
 
@@ -1048,7 +1054,7 @@ export function useViewportWrapper(
           updateInitialDimensions()
           updateZoomDependentDimensions()
 
-          // keep pan in bounds
+          // Keep pan in bounds
           viewportStore.panX = clamp(
             viewportStore.panX,
             scrollHorizontalMin.value,
