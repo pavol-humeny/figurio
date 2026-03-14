@@ -481,6 +481,26 @@ export function useApi() {
     }
   }
 
+  /**
+   * Gets events grouped by user
+   * [{userId, importCount, exportCount, operationCount, toolToggleCount, keyboardShortcutsCount, allEventsCount}, ...]
+toolToggleCount}, ...]
+   */
+  const getEventsByUser = async () => {
+    try {
+      const res = await fetch(`${API_BASE}/api/events/eventsByUser`)
+      if (!res.ok) throw new Error('Failed to fetch events by user')
+
+      const data = await res.json()
+      log('Events by user fetched:', data)
+
+      return data
+    } catch (err) {
+      error('Error fetching events by user:', err)
+      return []
+    }
+  }
+
   return {
     addUserVisit,
     addUserEvent,
@@ -503,5 +523,6 @@ export function useApi() {
     getSessionsByDay,
     getAvgEventsPerVisitByDay,
     getVisitsByUser,
+    getEventsByUser,
   }
 }

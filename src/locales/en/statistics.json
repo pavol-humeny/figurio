@@ -47,6 +47,16 @@
       "title": "Visits by user",
       "userId": "User ID",
       "visits": "Number of Visits"
+    },
+    "eventsByUser": {
+      "title": "Events by user",
+      "userId": "User ID",
+      "imports": "Image uploads",
+      "exports": "Image exports",
+      "operations": "Operations",
+      "toolToggles": "Tool toggles",
+      "keyboardShortcuts": "Keyboard shortcuts",
+      "allEvents": "All events"
     }
   },
   "events": {

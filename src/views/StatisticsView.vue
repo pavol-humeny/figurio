@@ -22,6 +22,7 @@ import VisitsByDayFullRange from '@/components/statistics/VisitsByDayFullRange.v
 import SessionsByDay from '@/components/statistics/SessionsByDay.vue';
 import EventsPerVisit from '@/components/statistics/EventsPerVisit.vue';
 import VisitsByUser from '@/components/statistics/VisitsByUser.vue';
+import EventsByUser from '@/components/statistics/EventsByUser.vue';
 
 const statisticsView = ref(localStorage.getItem(`${globalConfig.LOCAL_STORAGE_PREFIX}statisticsView`) || 'visits'); // 'visits' | 'events'
 
@@ -60,6 +61,7 @@ const selectStatistics = (view) => {
       <EventsPerVisit />
       <CountryVisits />
       <VisitsByUser />
+      <EventsByUser />
       <!-- <DaysVisits /> -->
     </div>
     <div v-else-if="statisticsView === 'events'" class="events-wrapper">

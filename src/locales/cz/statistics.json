@@ -47,6 +47,16 @@
       "title": "Návštěvy podle uživatele",
       "userId": "ID uživatele",
       "visits": "Počet návštěv"
+    },
+    "eventsByUser": {
+      "title": "Události podle uživatele",
+      "userId": "ID uživatele",
+      "imports": "Nahrání obrázku",
+      "exports": "Export obrázku",
+      "operations": "Operace",
+      "toolToggles": "Přepnutí nástroje",
+      "keyboardShortcuts": "Klávesové zkratky",
+      "allEvents": "Všechny události"
     }
   },
   "events": {
