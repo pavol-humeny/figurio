@@ -1080,7 +1080,10 @@ export function useFrameTool(imageStore, historyStore, viewportStore, t) {
     }
 
     const phoneCornerRadiusApproximation = Math.max(
-      Math.floor(Math.min(svgHeightApproximation, svgWidthApproximation) * 0.06),
+      Math.floor(
+        Math.min(svgHeightApproximation, svgWidthApproximation) *
+          editorConfig.phoneCornerRadiusDefault,
+      ),
       2,
     )
 
@@ -1222,7 +1225,10 @@ export function useFrameTool(imageStore, historyStore, viewportStore, t) {
 
     const svgHeight = h + fh * 2 + headerCorrection + (footer > 0 ? footer - fh : 0)
 
-    const phoneCornerRadius = Math.max(Math.floor(Math.min(svgWidth, svgHeight) * 0.06), 2)
+    const phoneCornerRadius = Math.max(
+      Math.floor(Math.min(svgWidth, svgHeight) * editorConfig.phoneCornerRadiusDefault),
+      2,
+    )
 
     // Values for phone frames
     const strokeWidth = (fw / 3) * 2 // 2/3 of frame width
@@ -2688,7 +2694,11 @@ export function useFrameTool(imageStore, historyStore, viewportStore, t) {
 
     // Round corners for phone frames
     if (isPhoneFrame(imageStore.frame.type)) {
-      const radius = Math.max(Math.floor(Math.min(svgWidth, svgHeight) * 0.06), 2) - fh // 6% of the smaller dimension + a bit of padding (100% of frame height)
+      const radius =
+        Math.max(
+          Math.floor(Math.min(svgWidth, svgHeight) * editorConfig.phoneCornerRadiusDefault),
+          2,
+        ) - fh // 6% of the smaller dimension + a bit of padding (100% of frame height)
 
       const renderedImage = imageStore.getRenderedImage({ t, renderCall: false })
       if (!renderedImage) return

@@ -1,7 +1,3 @@
-- background removal tool pri výbere nie je orezaný 
-- orezenie rohov nefunguje ani na brush 
-- ani select, ani shape  
-
 ## ŠT
 - plagát 
 - MTIa
@@ -34,9 +30,6 @@
 
 - fyzické rozmery rámikov
 - zmena veľkosti obrázka - prepočítať rámik vo fyzických rozmeroch
-
-- orezanie canvasov pri mobilnom rámiku
-
 
 - skontrolovať texty
 ├── DONE - calibration.json

@@ -58,6 +58,7 @@ export const editorConfig = {
   minHeaderFooterMultiplier: 0.5, // Minimum multiplier for header/footer height
   maxHeaderFooterMultiplier: 5, // Maximum multiplier for header/footer height
   stepHeaderFooterMultiplier: 0.1, // Step for header/footer height multiplier
+  phoneCornerRadiusDefault: 0.05, // 5% of the smaller dimension
 
   // Presets
   localStoragePresetsKey: `${globalConfig.LOCAL_STORAGE_PREFIX}imageEditorPresets`,

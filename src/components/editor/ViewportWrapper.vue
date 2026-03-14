@@ -11,7 +11,6 @@ import { useImageStore } from '@/stores/imageStore'
 import { useEditorStore } from '@/stores/editorStore'
 import { computed, ref, watch } from 'vue'
 import CropTool from '@/components/tools/CropTool.vue'
-import PresetCropTool from '../tools/PresetCropTool.vue'
 import { useHistoryStore } from '@/stores/historyStore'
 import { useI18n } from 'vue-i18n'
 import { useUiStore } from '@/stores/uiStore'
@@ -184,7 +183,7 @@ watch(
     )
 
     if (isPhoneFrame) {
-      phoneFrameBorderRadius.value = Math.floor(Math.min(imageStore.fileDimensions.width, imageStore.fileDimensions.height) * 0.06) // 6% of the smaller dimension + a bit of padding (100% of frame height)
+      phoneFrameBorderRadius.value = Math.floor(Math.min(imageStore.fileDimensions.width, imageStore.fileDimensions.height) * editorConfig.phoneCornerRadiusDefault) // X% of the smaller dimension + a bit of padding (100% of frame height)
     } else {
       phoneFrameBorderRadius.value = 0
     }
@@ -323,17 +322,16 @@ const cursorStyle = computed(() => {
           <canvas ref="magnifyOverlayRef" class="magnify-overlay-canvas">
           </canvas>
 
+          <!-- Background Removal Canvas -->
+          <BackgroundRemovalCanvas v-if="editorStore.selectedToolKey === 'backgroundRemoval'" :style="{
+            pointerEvents: editorStore.selectedToolKey === 'backgroundRemoval' ? 'auto' : 'none'
+          }" />
+
           <!-- Frame -->
           <svg :class="{ 'hide': uiStore.isApplying && !uiStore.isApplyingFrame }" ref="frameSvgRef"
             class="frame-svg"></svg>
 
           <CropTool v-if="editorStore.selectedToolKey === 'crop'" />
-          <PresetCropTool v-if="
-            editorStore.selectedToolKey === 'preset' && editorStore.selectedSubToolKey === 'crop'" />
-
-          <BackgroundRemovalCanvas v-if="editorStore.selectedToolKey === 'backgroundRemoval'" :style="{
-            pointerEvents: editorStore.selectedToolKey === 'backgroundRemoval' ? 'auto' : 'none'
-          }" />
         </div>
       </ContextMenu>
     </div>
@@ -421,7 +419,7 @@ const cursorStyle = computed(() => {
         </div>
         <div v-if="mouseX !== null" class="ruler-cursor-mark horizontal" :style="{ left: mouseX + 'px' }">
           <span class="ruler-cursor-label horizontal" :class="{ 'active': cursorPosXSameAsImageWidth }">{{ cursorPosX
-            }}</span>
+          }}</span>
         </div>
 
       </div>
@@ -434,7 +432,7 @@ const cursorStyle = computed(() => {
         </div>
         <div v-if="mouseY !== null" class="ruler-cursor-mark vertical" :style="{ top: mouseY + 'px' }">
           <span class="ruler-cursor-label vertical" :class="{ 'active': cursorPosYSameAsImageHeight }">{{ cursorPosY
-            }}</span>
+          }}</span>
         </div>
       </div>
     </div>
