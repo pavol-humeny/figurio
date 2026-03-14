@@ -434,6 +434,11 @@ const onMouseDown = async (event) => {
   }
 
   drawDot(lastPos.value, tool)
+
+  addUserEvent('applyOperation', {
+    tool: 'brush',
+    settings: {},
+  })
 }
 
 /**

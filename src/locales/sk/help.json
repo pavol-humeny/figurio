@@ -1,5 +1,5 @@
 {
-  "title": "Pomoc",
+  "title": "Nápoveda",
   "helpContent": {
     "purpose": {
       "title": "O aplikácii Figurio",
@@ -138,7 +138,7 @@
     }
   },
   "closeButton": {
-    "text": "Zavrieť pomoc"
+    "text": "Zavrieť nápovedu"
   },
   "startTutorialButton": {
     "text": "Spustiť tutoriál"

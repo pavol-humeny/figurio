@@ -42,6 +42,11 @@
       "date": "Date",
       "allVisits": "All visits",
       "uniqueVisits": "Unique visits"
+    },
+    "visitsByUser": {
+      "title": "Visits by user",
+      "userId": "User ID",
+      "visits": "Number of Visits"
     }
   },
   "events": {

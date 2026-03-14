@@ -24,9 +24,7 @@
 # TODO
 - P - zaistit aby pri resize objektov bolo snapovanie plynule tak ako pri drag
 
-- skúsiť nejako počítať aktívnu session a nie až po zavretí 
 - pridať počet návštev pre jednotlivých členov (koľko razí sa vracajú)
-- skontrolovať aby sa správne ukladali eventy udalostí
 
 - fyzické rozmery rámikov
 - zmena veľkosti obrázka - prepočítať rámik vo fyzických rozmeroch

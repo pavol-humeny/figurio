@@ -203,6 +203,25 @@ export function useApi() {
   }
 
   /**
+   * Fetches visits grouped by user
+   * [{ userId, visitsCount }, ...]
+   */
+  const getVisitsByUser = async () => {
+    try {
+      const res = await fetch(`${API_BASE}/api/visits/visitsByUser`)
+      if (!res.ok) throw new Error('Failed to fetch visits by user')
+
+      const data = await res.json()
+      log('Visits by user fetched:', data)
+
+      return data
+    } catch (err) {
+      error('Error fetching visits by user:', err)
+      return []
+    }
+  }
+
+  /**
    * Fetches all visits with total visits and new users per day
    */
   const getDaysVisits = async () => {
@@ -483,5 +502,6 @@ export function useApi() {
     sendSessionHeartbeat,
     getSessionsByDay,
     getAvgEventsPerVisitByDay,
+    getVisitsByUser,
   }
 }

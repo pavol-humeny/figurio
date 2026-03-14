@@ -42,6 +42,11 @@
       "date": "Datum",
       "allVisits": "Všechny návštěvy",
       "uniqueVisits": "Unikátní návštěvy"
+    },
+    "visitsByUser": {
+      "title": "Návštěvy podle uživatele",
+      "userId": "ID uživatele",
+      "visits": "Počet návštěv"
     }
   },
   "events": {
