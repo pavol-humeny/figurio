@@ -28,8 +28,6 @@
 # TODO
 - P - zaistit aby pri resize objektov bolo snapovanie plynule tak ako pri drag
 
-- skontrolovať warning hlášky (malé rozmery, safari...)
-
 - skúsiť nejako počítať aktívnu session a nie až po zavretí 
 
 - pridať počet návštev pre jednotlivých členov (koľko razí sa vracajú)

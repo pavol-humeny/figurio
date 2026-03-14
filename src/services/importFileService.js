@@ -16,6 +16,7 @@ import { useImportModal } from '@/composables/modals/useImportModal'
 pdfjsLib.GlobalWorkerOptions.workerSrc =
   'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js'
 import { useApi } from '@/composables/common/useApi'
+import { ref } from 'vue'
 
 const { addUserEvent } = useApi()
 const { log, warn } = useConsole()
@@ -45,6 +46,12 @@ export function importFileService(
 ) {
   const { initPipeline, renderUpTo } = useImagePipeline(imageStore, uiStore)
   const { closeImportModal } = useImportModal()
+
+  /**
+   * Ref to track the number of files currently being opened to prevent calculating artifacts when opening multiple files at once
+   */
+  const numberOfCurrentlyOpeningFiles = ref(0)
+
   /**
    * Opens a file input dialog for the user to select files and processes them
    * @param {import('vue-router').Router} router - Vue router instance
@@ -77,21 +84,21 @@ export function importFileService(
       }
 
       const filesArray = Array.from(input.files)
-      const hasPdf = filesArray.some((file) => file.type === 'application/pdf')
+      // const hasPdf = filesArray.some((file) => file.type === 'application/pdf')
 
       // Only one PDF file allowed
-      if (hasPdf && filesArray.length > 1) {
-        showToastModal(
-          'error',
-          t('imageStore.toast.errorPdfMultipleFiles.title'),
-          t('imageStore.toast.errorPdfMultipleFiles.message'),
-        )
-        return
-      }
+      // if (hasPdf && filesArray.length > 1) {
+      //   showToastModal(
+      //     'error',
+      //     t('imageStore.toast.errorPdfMultipleFiles.title'),
+      //     t('imageStore.toast.errorPdfMultipleFiles.message'),
+      //   )
+      //   return
+      // }
 
       // Limit number of files if no PDF is present
       if (!userModeStore.hasUserAccessToFeature('maxNumberOfFilesToUploadSimultaneously')) {
-        if (!hasPdf && filesArray.length > globalConfig.maxNumberOfFilesToUploadSimultaneously) {
+        if (!filesArray.length > globalConfig.maxNumberOfFilesToUploadSimultaneously) {
           showToastModal(
             'error',
             t('imageStore.toast.errorMultipleFiles.title'),
@@ -102,6 +109,8 @@ export function importFileService(
           return
         }
       }
+
+      numberOfCurrentlyOpeningFiles.value = filesArray.length
 
       // Process files
       if (
@@ -512,20 +521,22 @@ export function importFileService(
     // Workspace tab
     workspaceStore.addNewTab(imageStore.fileName, imageStore.fileFormat, t)
 
-    warn('calculateArtifacts called from setFile - image loaded')
+    if (numberOfCurrentlyOpeningFiles.value === 1) {
+      warn('calculateArtifacts called from setFile - image loaded')
 
-    // Calculate image artifacts (noise)
-    const { calculateArtifacts } = useImageAnalysis(
-      imageStore,
-      viewportStore,
-      uiStore,
-      historyStore,
-      editorStore,
-      workspaceStore,
-      t,
-    )
+      // Calculate image artifacts (noise)
+      const { calculateArtifacts } = useImageAnalysis(
+        imageStore,
+        viewportStore,
+        uiStore,
+        historyStore,
+        editorStore,
+        workspaceStore,
+        t,
+      )
 
-    await calculateArtifacts()
+      await calculateArtifacts()
+    }
 
     return true
   }

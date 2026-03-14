@@ -122,5 +122,5 @@ export const globalConfig = {
   maxNumberOfOpenFiles: 10,
 
   // Max number of files to upload simultaneously
-  maxNumberOfFilesToUploadSimultaneously: 1, // To avoid issues with image analysis on load
+  maxNumberOfFilesToUploadSimultaneously: 5, // To avoid issues with image analysis on load
 }
