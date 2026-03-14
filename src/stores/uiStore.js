@@ -71,11 +71,21 @@ const getUuid = () => {
 }
 
 /**
+ * Generates a new session ID using UUID v4.
+ * @returns {string} A new session ID.
+ */
+const getSessionId = () => {
+  return generateUuid()
+}
+
+/**
  * Store managing UI settings and state
  */
 export const useUiStore = defineStore('ui', {
   state: () => ({
     userUuid: getUuid(), // Unique identifier for the UI instance
+
+    sessionId: getSessionId(), // Unique identifier for the current session (resets on page reload)
 
     /** Active theme (dark | light) */
     theme: getString(`${globalConfig.LOCAL_STORAGE_PREFIX}theme`, uiConfig.theme),

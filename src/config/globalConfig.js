@@ -113,6 +113,10 @@ export const globalConfig = {
     sendUsageStatsOnLocalhost: false,
     // If visit during maintenance email should be sent
     sendVisitDuringMaintenanceEmail: true,
+    // Heartbeat interval in ms
+    heartbeatInterval: 30000,
+    // Max inactivity time in ms before heartbeat stops
+    maxInactivityTime: 300000, // 5 minutes
   },
 
   // LocalStorage prefix

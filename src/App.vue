@@ -3,6 +3,7 @@
  * @file: App.vue
  * @author: Pavol Humeny
  * @date: 15.5.2026
+ * @description: Main application component. Sets up global event listeners for preventing default browser behaviors (like zooming and back navigation), tracks user activity for analytics, and manages modals and panels. Also handles version-based localStorage resets.
  */
 import { onMounted, onBeforeUnmount } from 'vue'
 import { RouterView } from 'vue-router'
@@ -34,7 +35,7 @@ import { useI18n } from 'vue-i18n'
 import { useEditorStore } from './stores/editorStore'
 
 const { warn } = useConsole()
-const { addUserVisit, sendVisitDuringMaintenanceEmail, addUserSession } = useApi()
+const { addUserVisit, sendVisitDuringMaintenanceEmail, sendSessionHeartbeat } = useApi()
 
 const router = useRouter()
 const route = useRoute()
@@ -47,6 +48,7 @@ const userUuid = uiStore.userUuid
 const userModeStore = useUserModeStore()
 const { showConfirmModal } = useConfirmModal()
 const { t } = useI18n()
+
 /**
  * Prevents default behavior of ctrl + wheel scrolling.
  * Useful to block unintended browser zooming.
@@ -86,7 +88,7 @@ const blockSwipeBack = (event) => {
 const blockDevToolsShortcuts = (event) => {
   if (!globalConfig.modalSettings.blockDeveloperTools) return
 
-if (userModeStore.hasUserAccessToFeature('notBlockDevTools')) {
+  if (userModeStore.hasUserAccessToFeature('notBlockDevTools')) {
     return
   }
 
@@ -206,7 +208,6 @@ const checkSafariSupport = () => {
   localStorage.setItem(`${globalConfig.LOCAL_STORAGE_PREFIX}safariSupportWarningShown`, 'true')
 }
 
-
 /**
  * Warns user before closing the tab if a file is loaded.
  * Prevents accidental data loss.
@@ -220,19 +221,67 @@ const handleBeforeUnload = (event) => {
   }
 }
 
-/**
- * User session start time for calculating session duration on unload
- */
-const sessionStart = Date.now()
+// --------------------------------
+// Session duration tracking for analytics
+// --------------------------------
+let heartbeatTimer = null
+let lastActivity = Date.now()
 
 /**
- * Send session duration to the server on unload for analytics purposes
+ * Updates last user activity timestamp
  */
-const sendSessionDuration = () => {
-  if (route.name !== 'statistics') {
-    const duration = Date.now() - sessionStart
-    addUserSession(userUuid, duration)
-  }
+const updateActivity = () => {
+  lastActivity = Date.now()
+}
+
+/**
+ * Registers event listeners to track user activity and update lastActivity timestamp
+ */
+const registerActivityListeners = () => {
+  window.addEventListener('mousemove', updateActivity)
+  window.addEventListener('keydown', updateActivity)
+  window.addEventListener('mousedown', updateActivity)
+  window.addEventListener('touchstart', updateActivity)
+  window.addEventListener('scroll', updateActivity)
+}
+
+/**
+ * Removes event listeners for user activity tracking
+ */
+const removeActivityListeners = () => {
+  window.removeEventListener('mousemove', updateActivity)
+  window.removeEventListener('keydown', updateActivity)
+  window.removeEventListener('mousedown', updateActivity)
+  window.removeEventListener('touchstart', updateActivity)
+  window.removeEventListener('scroll', updateActivity)
+}
+
+/**
+ * Checks if the app is running on localhost
+ * @returns {boolean} True if running on localhost, false otherwise
+ */
+const isLocalhost = () => {
+  return window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+}
+
+/**
+ * Sends heartbeat if user is active
+ */
+const startSessionHeartbeat = () => {
+  if (!globalConfig.usageStatsSettings.sendUsageStats) return
+
+  if (isLocalhost() && !globalConfig.usageStatsSettings.sendUsageStatsOnLocalhost) return
+
+  heartbeatTimer = setInterval(() => {
+    const now = Date.now()
+    const isUserActive = now - lastActivity < globalConfig.usageStatsSettings.maxInactivityTime
+
+    if (!isUserActive) return
+
+    sendSessionHeartbeat(userUuid, uiStore.sessionId, globalConfig.usageStatsSettings.heartbeatInterval)
+
+  }, globalConfig.usageStatsSettings.heartbeatInterval)
+
 }
 
 /**
@@ -257,7 +306,6 @@ onMounted(async () => {
     passive: false,
   })
   window.addEventListener('beforeunload', handleBeforeUnload)
-  window.addEventListener('beforeunload', sendSessionDuration)
 
   window.addEventListener('keydown', blockDevToolsShortcuts)
   window.addEventListener('contextmenu', blockContextMenu)
@@ -326,7 +374,6 @@ onMounted(async () => {
     router.replace({ name: 'home' })
   }
 
-
   // Set primary color CSS variable if in localStorage
   const primaryColor = localStorage.getItem(`${globalConfig.LOCAL_STORAGE_PREFIX}primaryColor`)
   if (primaryColor) {
@@ -340,6 +387,9 @@ onMounted(async () => {
     // Log user visit only if not on statistics page
     if (route.name !== 'statistics') {
       addUserVisit(userUuid)
+
+      registerActivityListeners()
+      startSessionHeartbeat()
     }
   }
 })
@@ -354,8 +404,13 @@ onBeforeUnmount(() => {
   window.removeEventListener('keydown', blockDevToolsShortcuts)
   window.removeEventListener('contextmenu', blockContextMenu)
   window.removeEventListener('resize', checkWindowSize)
-})
 
+  if (heartbeatTimer) {
+    clearInterval(heartbeatTimer)
+  }
+
+  removeActivityListeners()
+})
 
 </script>
 

@@ -15,6 +15,10 @@ const { log, warn, error } = useConsole()
 export function useApi() {
   const API_BASE = globalConfig.API_BASE
 
+  /**
+   * Checks if the app is running on localhost
+   * @returns {boolean} True if running on localhost, false otherwise
+   */
   const isLocalhost = () => {
     return window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
   }
@@ -57,19 +61,19 @@ export function useApi() {
   }
 
   /**
-   * Adds a session for a user with the given duration.
-   * @param {string} userId - UUID of the user
-   * @param {number} durationMs - Duration of the session in milliseconds
+   * Sends a session heartbeat.
+   *
+   * @param {string} userId
+   * @param {string} sessionId
+   * @param {number} incrementMs
    */
-  const addUserSession = async (userId, durationMs) => {
+  const sendSessionHeartbeat = async (userId, sessionId, incrementMs) => {
     if (!globalConfig.usageStatsSettings.sendUsageStats) return
 
     if (isLocalhost() && !globalConfig.usageStatsSettings.sendUsageStatsOnLocalhost) return
 
-    console.warn('Adding session with duration (ms):', durationMs)
-
     if (!userId) {
-      warn('Missing userId for session')
+      warn('Missing userId for session heartbeat')
       return
     }
 
@@ -77,17 +81,18 @@ export function useApi() {
       const res = await fetch(`${API_BASE}/api/users/${userId}/sessions`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ durationMs }),
+        body: JSON.stringify({
+          sessionId,
+          incrementMs,
+        }),
       })
 
-      if (res.ok) {
-        log(`Session successfully added for user ${userId}`)
-      } else {
+      if (!res.ok) {
         const msg = await res.text()
-        warn(`Failed to add session: ${msg}`)
+        warn(`Failed to send session heartbeat: ${msg}`)
       }
     } catch (err) {
-      error('Network error while adding user session:', err)
+      error('Network error while sending session heartbeat:', err)
     }
   }
 
@@ -475,7 +480,7 @@ export function useApi() {
     sendContactFormEmail,
     sendVisitDuringMaintenanceEmail,
     getVisitsByDayFullRange,
-    addUserSession,
+    sendSessionHeartbeat,
     getSessionsByDay,
     getAvgEventsPerVisitByDay,
   }
