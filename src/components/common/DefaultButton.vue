@@ -3,6 +3,7 @@
  * @file: DefaultButton.vue
  * @author: Pavol Humeny
  * @date: 15.5.2026
+ * @description: A reusable button component that can be used throughout the application. It supports different styles (default, main, error), disabled state, and an optional tooltip. The button emits a click event when pressed.
  */
 import ItemTip from './ItemTip.vue'
 
@@ -13,6 +14,8 @@ import ItemTip from './ItemTip.vue'
  * @property {string} [tip=''] - Tooltip text shown on hover
  * @property {string} [position='bottom'] - Tooltip position
  * @property {boolean} [onlyText=false] - If true, the button is styled as text-only (not button)
+ * @property {boolean} [main=false] - If true, applies 'button-main' style for primary actions
+ * @property {boolean} [error=false] - If true, applies 'button-error' style for destructive actions
  */
 
 /** @type {TipButtonProps} */

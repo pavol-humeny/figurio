@@ -3,6 +3,7 @@
  * @file: LevelSelector.vue
  * @author: Pavol Humeny
  * @date: 15.5.2026
+ * @description: A reusable level selector component that allows users to select a level from a predefined list. The component displays the levels as dots connected by a line, with the selected level highlighted. It supports disabled state and an optional tooltip. The component emits an update:modelValue event when a level is selected, and also emits a generic update event for any additional side effects.
  */
 import ItemTip from './ItemTip.vue'
 import { useLevelSelector } from '@/composables/common/useLevelSelector'

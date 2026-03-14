@@ -3,6 +3,7 @@
  * @file: DefaultSlider.vue
  * @author: Pavol Humeny
  * @date: 15.5.2026
+ * @description: A reusable slider component that can be used throughout the application. It supports a range of values, step increments, disabled state, and an optional tooltip. The slider emits events when the value changes and when the user finishes interacting with it.
  */
 import ItemTip from './ItemTip.vue'
 import { useDefaultSlider } from '@/composables/common/useDefaultSlider'

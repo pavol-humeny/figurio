@@ -3,6 +3,7 @@
  * @file: TextInput.vue
  * @author: Pavol Humeny
  * @date: 15.5.2026
+ * @description: A reusable text input component that supports tooltips, disabled state, and emits events when the value changes. The component includes logic for handling input changes, blur events, and pressing the Enter key. It also exposes a setValue method for programmatically updating the input value and a focus method to focus the input field.
  */
 import ItemTip from './ItemTip.vue'
 import { useTextInput } from '@/composables/common/useTextInput'
@@ -15,7 +16,8 @@ import { useTextInput } from '@/composables/common/useTextInput'
  * @property {boolean} [disabled=false] - Whether the input is disabled
  * @property {string} [placeholder=''] - Input placeholder text
  * @property {boolean} [updateOnChange=false] - If true, emits update on each input
- * @property {(value: string) => void} [onEnter]
+ * @property {(value: string) => void} [onEnter] - Optional handler for Enter key press
+ * @property {(value: string) => void} [onBlur] - Optional handler for input blur event
  */
 
 /** @type {TextInputProps} */
@@ -79,6 +81,7 @@ const {
 /**
  * Expose methods for external use
  * @type {{ setValue: (val: string) => void }}
+ * @type {{ focus: () => void }}
  */
 defineExpose({
   setValue,

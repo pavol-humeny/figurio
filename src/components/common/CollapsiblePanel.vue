@@ -3,6 +3,7 @@
  * @file: CollapsiblePanel.vue
  * @author: Pavol Humeny
  * @date: 15.5.2026
+ * @description: A reusable collapsible panel component with a toggle button and resizable width. The panel can be shown or hidden, and its width can be adjusted by dragging the resize handle. Double-clicking the resize handle resets the panel to its default width.
  */
 import BaseIcon from '@/components/icons/BaseIcon.vue'
 import { useCollapsiblePanel } from '@/composables/common/useCollapsiblePanel'

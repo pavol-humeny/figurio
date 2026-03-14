@@ -3,10 +3,23 @@
  * @file: ToggleHoldButton.vue
  * @author: Pavol Humeny
  * @date: 15.5.2026
+ * @description: A reusable toggle hold button component that can be used throughout the application. The button has an active state that is triggered when the user holds down the button and deactivates when released. It supports tooltips, disabled state, and customizable scaling. The component emits startFunction when the hold starts and endFunction when the hold ends.
  */
 import ItemTip from './ItemTip.vue'
 import { useToggleHoldButton } from '@/composables/common/useToggleHoldButton'
 
+/**
+ * @typedef {Object} ToggleHoldButtonProps
+ * @property {boolean} [defaultValue=false] - Initial active state of the button
+ * @property {(start: boolean) => void} startFunction - Function to call when hold starts (receives true when activated)
+ * @property {(start: boolean) => void} endFunction - Function to call when hold ends (receives false when deactivated)
+ * @property {string} [tip=''] - Tooltip text
+ * @property {string} [position='bottom'] - Tooltip position
+ * @property {number} [scale=1] - Scale factor for the button
+ * @property {boolean} [disabled=false] - Whether the button is disabled
+ */
+
+/** @type {ToggleHoldButtonProps} */
 const props = defineProps({
   defaultValue: {
     type: Boolean,
@@ -38,7 +51,14 @@ const props = defineProps({
   }
 })
 
-const { isActive, holdStart, holdEnd } = useToggleHoldButton(props)
+/**
+ * Logic of the toggle hold button
+ */
+const {
+  isActive,
+  holdStart,
+  holdEnd
+} = useToggleHoldButton(props)
 </script>
 
 <template>

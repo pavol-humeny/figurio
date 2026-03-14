@@ -3,6 +3,7 @@
  * @file: StepperInput.vue
  * @author: Pavol Humeny
  * @date: 15.5.2026
+ * @description: A reusable stepper input component that allows users to increment or decrement a numeric value using plus and minus buttons. The component supports minimum and maximum values, step increments, disabled state, and an optional tooltip. It emits update:modelValue and update events when the value changes, and it includes logic for continuous increment/decrement when the buttons are held down.
  */
 import ItemTip from './ItemTip.vue'
 import BaseIcon from '../icons/BaseIcon.vue'
@@ -86,15 +87,15 @@ defineExpose({ setValue })
 <template>
   <ItemTip :text="tip" position="bottom">
     <div class="stepper-inline">
-      <BaseIcon name="IconMinus" :size="16" @mousedown="startHold(decrease)" @mouseup="stopHold"
-        @mouseleave="stopHold" @touchstart.prevent="startHold(decrease)" @touchend="stopHold" @touchcancel="stopHold"
+      <BaseIcon name="IconMinus" :size="16" @mousedown="startHold(decrease)" @mouseup="stopHold" @mouseleave="stopHold"
+        @touchstart.prevent="startHold(decrease)" @touchend="stopHold" @touchcancel="stopHold"
         :disabled="disableDecrease()" class="increase-decrease-icon button-clickable" />
-        
+
       <input class="value-input" type="number" :value="inputValue" :min="min" :max="max" :step="step"
         :disabled="disabled" @input="onInput" @blur="onBlur" @keydown.enter.prevent="onBlur" @wheel="changeValue" />
 
-      <BaseIcon name="IconPlus" :size="16" @mousedown="startHold(increase)" @mouseup="stopHold"
-        @mouseleave="stopHold" @touchstart.prevent="startHold(increase)" @touchend="stopHold" @touchcancel="stopHold"
+      <BaseIcon name="IconPlus" :size="16" @mousedown="startHold(increase)" @mouseup="stopHold" @mouseleave="stopHold"
+        @touchstart.prevent="startHold(increase)" @touchend="stopHold" @touchcancel="stopHold"
         :disabled="disableIncrease()" class="increase-decrease-icon button-clickable" />
     </div>
   </ItemTip>
@@ -108,7 +109,6 @@ defineExpose({ setValue })
   border-radius: 10px;
   padding: var(--input-top-padding) var(--input-top-padding);
   user-select: none;
-  /* gap: 10px; */
   font-size: var(--input-text-size);
 }
 

@@ -3,6 +3,7 @@
  * @file: NumberInput.vue
  * @author: Pavol Humeny
  * @date: 15.5.2026
+ * @description: A reusable number input component that allows users to input numeric values with optional increment/decrement buttons, an icon, and a unit. The component supports tooltips, disabled state, and emits events when the value changes. It also includes logic for handling mouse wheel input and dragging on the icon for quick adjustments.
  */
 import ItemTip from './ItemTip.vue'
 import BaseIcon from '../icons/BaseIcon.vue'

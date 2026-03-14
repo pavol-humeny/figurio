@@ -3,6 +3,7 @@
  * @file: LinkValuesIcon.vue
  * @author: Pavol Humeny
  * @date: 15.5.2026
+ * @description: A reusable icon component that represents a link/unlink state. It displays a link icon when linked and an unlink icon when unlinked. The component supports tooltips for both states, customizable size and color, and a disabled state. It emits an update:modelValue event when the link state is toggled.
  */
 import BaseIcon from '@/components/icons/BaseIcon.vue'
 import { useLinkValuesIcon } from '@/composables/common/useLinkValuesIcon'

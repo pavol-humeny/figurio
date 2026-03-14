@@ -3,9 +3,11 @@
  * @file: ToggleButton.vue
  * @author: Pavol Humeny
  * @date: 15.5.2026
+ * @description: A reusable toggle button component that can be used throughout the application. It supports an active state, disabled state, tooltips, and scaling. The button emits update:modelValue and update events when toggled.
  */
 import ItemTip from './ItemTip.vue'
 import { useToggleButton } from '@/composables/common/useToggleButton'
+import { uiConfig } from '@/config/uiConfig'
 import { computed } from 'vue'
 
 /**
@@ -52,12 +54,13 @@ const emit = defineEmits(['update:modelValue', 'update'])
  */
 const { isActive, toggleSwitch } = useToggleButton(props, emit)
 
-const BASE_HEIGHT = 40 // height of toggle-switch-wrapper
-
+/**
+ * Computed style to compensate for scaling the toggle button
+ */
 const compensationStyle = computed(() => {
   if (props.scale === 1) return {}
 
-  const dy = (BASE_HEIGHT * (1 - props.scale)) / 2
+  const dy = (uiConfig.baseToggleButtonHeight * (1 - props.scale)) / 2
 
   return {
     transform: `scale(${props.scale})`,

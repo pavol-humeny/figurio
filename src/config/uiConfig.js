@@ -44,4 +44,7 @@ export const uiConfig = {
 
   // File Tabs
   autoScrollEdgeThreshold: 80,
+
+  // Base toggle button height for compensation calculations
+  baseToggleButtonHeight: 40,
 }

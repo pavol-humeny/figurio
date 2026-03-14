@@ -3,6 +3,7 @@
  * @file: NumberSpinner.vue
  * @author: Pavol Humeny
  * @date: 15.5.2026
+ * @description: A reusable number input component that allows users to input numeric values with optional increment/decrement buttons, an icon, and a unit. The component supports tooltips, disabled state, and emits events when the value changes. It also includes logic for handling mouse wheel input and dragging on the icon for quick adjustments.
  */
 import ItemTip from './ItemTip.vue'
 import BaseIcon from '../icons/BaseIcon.vue'
@@ -98,6 +99,10 @@ const {
   isHovered,
 } = useNumberSpinner(props, emit)
 
+/**
+ * Expose methods for external use
+ * @type {{ setValue: (val: string) => void }}
+ */
 defineExpose({ setValue })
 </script>
 
@@ -113,13 +118,13 @@ defineExpose({ setValue })
       <div class="spinner-controls">
         <div class="spinner-btn spinner-btn-up">
           <BaseIcon name="IconArrowUp" size="20" class="spinner-btn-icon-up" @mousedown="startHold(increment)"
-            @mouseup="stopHold" @mouseleave="stopHold" @touchstart.prevent="startHold(increment)"
-            @touchend="stopHold" @touchcancel="stopHold" />
+            @mouseup="stopHold" @mouseleave="stopHold" @touchstart.prevent="startHold(increment)" @touchend="stopHold"
+            @touchcancel="stopHold" />
         </div>
         <div class="spinner-btn spinner-btn-down">
           <BaseIcon name="IconArrowDown" size="20" class="spinner-btn-icon-down" @mousedown="startHold(decrement)"
-            @mouseup="stopHold" @mouseleave="stopHold" @touchstart.prevent="startHold(decrement)"
-            @touchend="stopHold" @touchcancel="stopHold" />
+            @mouseup="stopHold" @mouseleave="stopHold" @touchstart.prevent="startHold(decrement)" @touchend="stopHold"
+            @touchcancel="stopHold" />
         </div>
       </div>
     </div>

@@ -3,6 +3,7 @@
  * @file: ColorPicker.vue
  * @author: Pavol Humeny
  * @date: 15.5.2026
+ * @description: A reusable color picker component that allows users to select colors using a visual interface. The component includes a color preview, hex input, hue slider, saturation/value square, and recent colors. It emits events when the color value changes and when the user finishes selecting a color.
  */
 import { useEditorStore } from '@/stores/editorStore'
 import BaseIcon from '../icons/BaseIcon.vue'

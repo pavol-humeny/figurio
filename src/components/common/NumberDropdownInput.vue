@@ -1,9 +1,10 @@
   <script setup>
-/**
- * @file: NumberDropdownInput.vue
- * @author: Pavol Humeny
- * @date: 15.5.2026
- */
+  /**
+   * @file: NumberDropdownInput.vue
+   * @author: Pavol Humeny
+   * @date: 15.5.2026
+   * @description: A reusable number input component with a dropdown for selecting predefined options. The component supports tooltips, disabled state, custom icons, and units. It emits an update:modelValue event when the input value changes, and also emits a generic update event for compatibility with older versions. The dropdown options can be either primitive values or objects with value and label properties.
+   */
   import ItemTip from './ItemTip.vue'
   import BaseIcon from '../icons/BaseIcon.vue'
   import { useNumberDropdownInput } from '@/composables/common/useNumberDropdownInput'
@@ -22,6 +23,9 @@
    * @property {number} [min=0] - Minimum value for the input
    * @property {number} [max=Infinity] - Maximum value for the input
    * @property {number} [step=1] - Step value for the input
+   * @property {string} [background='var(--secondary-c)'] - Background color of the input
+   * @property {Function|null} [onReset=null] - Optional function to call on double-clicking the icon
+   * @property {string} [unit=''] - Optional unit to display next to the input value
    */
 
   /** @type {NumberDropdownInputProps} */
@@ -105,7 +109,7 @@
   } = useNumberDropdownInput(props, emit, useUiStore())
 
   /**
-   * Supports primitive options and object options in shape { value, label }.
+   * get option value for dropdown selection, supports both primitive and object options
    * @param {number|string|{value:number|string,label?:string}} option
    * @returns {number|string}
    */
@@ -113,6 +117,7 @@
     option && typeof option === 'object' && 'value' in option ? option.value : option
 
   /**
+   * Get option label for display in the dropdown, supports both primitive and object options
    * @param {number|string|{value:number|string,label?:string}} option
    * @returns {string|number}
    */
@@ -124,8 +129,6 @@
    * @type {{ setValue: (val: string) => void }}
    */
   defineExpose({ setValue })
-
-  console.warn(showIcon, showUnit)
 </script>
 
 <template>
@@ -157,8 +160,7 @@
     <ul v-if="showDropdown && dropdownReady" class="dropdown-options-teleported" ref="dropdownRef"
       :style="dropdownStyle">
       <li v-for="(opt, index) in props.options" :key="`${getOptionValue(opt)}-${getOptionLabel(opt)}-${index}`"
-        @mousedown.prevent="onSelect(getOptionValue(opt))"
-        :style="{ background: props.background }">
+        @mousedown.prevent="onSelect(getOptionValue(opt))" :style="{ background: props.background }">
         {{ getOptionLabel(opt) }}
       </li>
     </ul>

@@ -18,6 +18,7 @@
 - P - záver
 - zmenit obrazok pri ukazovani pixelation mode, dat tam nieco viac abstraktne
 - obrázok s fyzickými rozmermi - dat tam nekvalitný obrázok a zmeniť X na znak 
+- implementácia - review
 
 - scenár pre video
 

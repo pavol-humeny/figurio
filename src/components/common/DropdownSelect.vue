@@ -3,6 +3,7 @@
  * @file: DropdownSelect.vue
  * @author: Pavol Humeny
  * @date: 15.5.2026
+ * @description: A reusable dropdown select component that allows users to choose from a list of options. The component supports an optional icon, tooltip, and disabled state. It emits events when the selected value changes and provides methods for programmatically setting the value.
  */
 import ItemTip from './ItemTip.vue'
 import BaseIcon from '../icons/BaseIcon.vue'

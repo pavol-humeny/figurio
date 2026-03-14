@@ -3,6 +3,7 @@
  * @file: ContextMenu.vue
  * @author: Pavol Humeny
  * @date: 15.5.2026
+ * @description: A reusable context menu component that can be attached to any element. The menu is triggered by right-clicking and displays a list of actions. The menu can be customized with different items, and it handles positioning and visibility automatically.
  */
 import { useContextMenu } from '@/composables/common/useContextMenu'
 import { computed } from 'vue'
@@ -13,10 +14,7 @@ import { computed } from 'vue'
  * @property {Function} action - Function to call on click
  */
 
-/**
- * @typedef {Object} Props
- * @property {ContextMenuItem[]} items - Array of context menu items
- */
+/** @type {ContextMenuItem} */
 const props = defineProps({
   /**
    * Array of context menu items

@@ -3,15 +3,14 @@
  * @file: ItemTip.vue
  * @author: Pavol Humeny
  * @date: 15.5.2026
+ * @description: A reusable tooltip component that can be attached to any element. The tooltip supports different positions, advanced layout with title and shortcut, and an optional video preview for tools. The tooltip visibility is managed through a composable, and it can be customized with various props.
  */
 import { useItemTip } from '@/composables/common/useItemTip'
 import { useUiStore } from '@/stores/uiStore'
 import { computed, ref } from 'vue'
 import { useVideoLoader } from '@/composables/modals/useVideoLoader'
 import { useEditorStore } from '@/stores/editorStore'
-
 const { getVideo } = useVideoLoader()
-
 const uiStore = useUiStore()
 
 /**
@@ -19,9 +18,11 @@ const uiStore = useUiStore()
  * @property {string} text - Tooltip text (required)
  * @property {string} [position='top'] - Tooltip position (e.g. 'top', 'bottom-right')
  * @property {boolean} [advance=false] - Whether to use advanced layout with title and shortcut
- * @property {string} [title=''] - Optional title for advanced tooltip
- * @property {string} [shortcut=''] - Optional keyboard shortcut to show in advanced tooltip
- * @property {number} [delay] - Optional delay (ms) before showing tip
+ * @property {boolean} [advanceTool=false] - Whether this is an advanced tooltip for a tool (includes video preview)
+ * @property {string} [toolKey=''] - Key of the tool for loading the video preview (required if advanceTool is true)
+ * @property {string} [title=''] - Title text for advanced tooltip
+ * @property {string} [shortcut=''] - Shortcut text for advanced tooltip
+ * @property {number} [delay] - Optional delay in milliseconds before showing the tooltip
  */
 
 /** @type {ItemTipProps} */
@@ -82,6 +83,9 @@ const {
  */
 const showTip = computed(() => props.text !== '')
 
+/**
+ * Reference to the video element for advanced tooltips, used to control playback and open the video in a modal when clicked
+ */
 const videoRef = ref(null)
 </script>
 
@@ -131,12 +135,8 @@ const videoRef = ref(null)
   padding: 6px 10px;
   border-radius: 6px;
   font-size: var(--tip-font-size);
-  /* white-space: normal; */
   box-shadow: var(--box-shadow-ui);
   text-align: center;
-  /* max-width: 300px; */
-  /* min-width: 200px; */
-  /* width: fit-content; */
 }
 
 .item-tip-advance-tool {
@@ -288,7 +288,6 @@ const videoRef = ref(null)
   color: var(--text-c);
   font-size: var(--tip-font-size);
   text-align: left;
-  /* white-space: nowrap; */
 }
 
 .fade-enter-active,

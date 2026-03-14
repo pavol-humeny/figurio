@@ -4,6 +4,7 @@ DefaultSlider
  * @file: TimeInput.vue
  * @author: Pavol Humeny
  * @date: 15.5.2026
+ * @description: A reusable time input component that allows users to input time in hours and minutes. The component supports tooltips, disabled state, and emits events when the value changes. It includes logic for handling input changes, blur events, pressing the Enter key, and mouse wheel adjustments for both hours and minutes.
  */
 import ItemTip from './ItemTip.vue'
 import { useTimeInput } from '@/composables/common/useTimeInput'

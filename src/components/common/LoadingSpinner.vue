@@ -3,6 +3,7 @@
  * @file: LoadingSpinner.vue
  * @author: Pavol Humeny
  * @date: 15.5.2026
+ * @description: A reusable loading spinner component that can be used throughout the application to indicate loading states. The component displays a spinner overlay when the isLoading or showApplyingSpinner states are true, and it blocks user interactions with a click-blocker div when blockClicks is true.
  */
 import { useUiStore } from '@/stores/uiStore'
 import { useLoadingSpinner } from '@/composables/common/useLoadingSpinner'
@@ -11,7 +12,6 @@ import { useLoadingSpinner } from '@/composables/common/useLoadingSpinner'
  * Logic for the loading spinner component
  */
 const { isLoading, showApplyingSpinner, blockClicks } = useLoadingSpinner(useUiStore())
-
 </script>
 
 <template>

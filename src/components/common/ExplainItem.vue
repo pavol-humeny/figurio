@@ -3,6 +3,7 @@
  * @file: ExplainItem.vue
  * @author: Pavol Humeny
  * @date: 15.5.2026
+ * @description: A reusable component that displays an icon with an associated tooltip. The tooltip can include a title, description text, and an optional keyboard shortcut. The position of the tooltip can be customized, and the component is designed to provide helpful explanations for various UI elements.
  */
 import ItemTip from './ItemTip.vue';
 import BaseIcon from '../icons/BaseIcon.vue';
