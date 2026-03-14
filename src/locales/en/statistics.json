@@ -57,6 +57,14 @@
       "toolToggles": "Tool toggles",
       "keyboardShortcuts": "Keyboard shortcuts",
       "allEvents": "All events"
+    },
+    "sessionDurationByUser": {
+      "title": "Session duration by user",
+      "userId": "User ID",
+      "min": "Min (min)",
+      "avg": "Average (min)",
+      "max": "Max (min)",
+      "total": "Total (min)"
     }
   },
   "events": {

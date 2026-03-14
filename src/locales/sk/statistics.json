@@ -57,6 +57,14 @@
       "toolToggles": "Prepnutie nástroja",
       "keyboardShortcuts": "Klávesové zkratky",
       "allEvents": "Všechny události"
+    },
+    "sessionDurationByUser": {
+      "title": "Doba sezení podľa užívateľa",
+      "userId": "ID užívateľa",
+      "min": "Min (min)",
+      "avg": "Priemer (min)",
+      "max": "Max (min)",
+      "total": "Celkom (min)"
     }
   },
   "events": {

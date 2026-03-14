@@ -24,8 +24,6 @@
 # TODO
 - P - zaistit aby pri resize objektov bolo snapovanie plynule tak ako pri drag
 
-- pridať počet návštev pre jednotlivých členov (koľko razí sa vracajú)
-
 - fyzické rozmery rámikov
 - zmena veľkosti obrázka - prepočítať rámik vo fyzických rozmeroch
 

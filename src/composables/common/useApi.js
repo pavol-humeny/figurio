@@ -501,6 +501,25 @@ toolToggleCount}, ...]
     }
   }
 
+  /**
+   * Gets session duration grouped by user
+   * [{ userId, minSession, maxSession, avgSession, totalSessionsTime }, ...]s
+   */
+  const getSessionDurationByUser = async () => {
+    try {
+      const res = await fetch(`${API_BASE}/api/users/sessionDurationByUser`)
+      if (!res.ok) throw new Error('Failed to fetch session duration by user')
+
+      const data = await res.json()
+      log('Session duration by user fetched:', data)
+
+      return data
+    } catch (err) {
+      error('Error fetching session duration by user:', err)
+      return []
+    }
+  }
+
   return {
     addUserVisit,
     addUserEvent,
@@ -524,5 +543,6 @@ toolToggleCount}, ...]
     getAvgEventsPerVisitByDay,
     getVisitsByUser,
     getEventsByUser,
+    getSessionDurationByUser,
   }
 }
