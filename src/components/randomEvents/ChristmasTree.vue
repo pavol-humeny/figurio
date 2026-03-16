@@ -3,6 +3,8 @@
  * @file: ChristmasTree.vue
  * @author: Pavol Humeny
  * @date: 15.5.2026
+ * @description: Component for the decorative Christmas tree. It generates a 3D Christmas tree with blinking lights and draggable ornaments using Three.js. The user can customize the blinking speed, number of lights, and toggle white lights or animation on/off.
+ * @note: This component was generated with the assistance of AI as a decorative element. It is included purely for visual purposes and is not considered as a part of the core application implementation.
  */
 import { onMounted, onBeforeUnmount, ref, watch } from 'vue'
 import * as THREE from 'three'

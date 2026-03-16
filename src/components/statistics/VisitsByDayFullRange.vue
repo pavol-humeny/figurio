@@ -3,6 +3,7 @@
  * @file: VisitsByDayFullRange.vue
  * @author: Pavol Humeny
  * @date: 15.5.2026
+ * @description: Component for displaying the number of visits by day over the full range of available data. It fetches the data from the API on component mount and displays it in a line chart using Chart.js, showing cumulative total visits and unique visits over time. The chart is responsive and updates when the locale changes to ensure proper formatting of labels and tooltips.
  */
 import {
   Chart as ChartJS,
@@ -18,11 +19,12 @@ import { Line } from 'vue-chartjs'
 import { ref, onMounted, watch } from 'vue'
 import { useApi } from '@/composables/common/useApi'
 import { useI18n } from 'vue-i18n'
-
 const { getVisitsByDayFullRange } = useApi()
 const { t, locale } = useI18n()
 
-// Register Chart.js components
+/**
+ * Register Chart.js components
+ */
 ChartJS.register(
   Title,
   Tooltip,
@@ -96,7 +98,9 @@ const options = {
   },
 }
 
-// Colors
+/**
+ * Colors for the lines
+ */
 const totalColor = 'rgba(34, 197, 94, 1)'     // green
 const newUsersColor = 'rgba(59, 130, 246, 1)' // blue
 

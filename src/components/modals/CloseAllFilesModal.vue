@@ -3,6 +3,7 @@
  * @file: CloseAllFilesModal.vue
  * @author: Pavol Humeny
  * @date: 15.5.2026
+ * @description: Component for the close all files confirmation modal. It shows a message asking the user if they want to close all files, with a checkbox to also close all files and not just the current one. It syncs the checkbox state with the modal payload for further processing when the user confirms.
  */
 import { ref, watch } from 'vue'
 import { useGeneralModal } from '@/composables/modals/useGeneralModal'

@@ -3,6 +3,8 @@
  * @file: SnowFall.vue
  * @author: Pavol Humeny
  * @date: 15.5.2026
+ * @description: Component for the snow fall animation. It generates snowflakes with random properties (size, speed, delay) and animates them falling down the screen using CSS animations.
+ * @note: This component was generated with the assistance of AI as a decorative element. It is included purely for visual purposes and is not considered as a part of the core application implementation.
  */
 import { ref } from 'vue'
 

@@ -3,21 +3,29 @@
  * @file: EventUploadImage.vue
  * @author: Pavol Humeny
  * @date: 15.5.2026
+ * @description: Component for displaying the number of upload image events by file format. It fetches the data from the API on component mount and displays it using the ProgressBar component, showing the percentage of uploads for each file format compared to the total number of uploads.
  */
 import { ref, onMounted, computed } from 'vue';
 import { useApi } from '@/composables/common/useApi';
 import ProgressBar from '@/components/statistics/ProgressBar.vue';
-
 const { getUploadImage } = useApi();
+
+/**
+ * Reactive variable to store the upload image events fetched from the API
+ */
 const uploadImageEvents = ref([]);
 
-// Fetch data on mount
+/**
+ * Fetch upload image events on component mount
+ */
 onMounted(async () => {
   const res = await getUploadImage();
   uploadImageEvents.value = res || [];
 });
 
-// Compute total number of uploads
+/**
+ * Compute total number of uploads
+ */
 const totalUploads = computed(() =>
   uploadImageEvents.value.reduce((sum, item) => sum + item.numberOfUploads, 0)
 );
@@ -36,8 +44,7 @@ const totalUploads = computed(() =>
 
     <div class="single-event-values">
       <div class="overview-item" v-for="(item, index) in uploadImageEvents" :key="index">
-        <ProgressBar :progress="item.numberOfUploads" :total="totalUploads" :title="item.fileFormat"
-          />
+        <ProgressBar :progress="item.numberOfUploads" :total="totalUploads" :title="item.fileFormat" />
       </div>
     </div>
   </div>

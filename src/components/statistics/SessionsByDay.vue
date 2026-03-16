@@ -3,6 +3,7 @@
  * @file: SessionsByDay.vue
  * @author: Pavol Humeny
  * @date: 15.5.2026
+ * @description: Component for displaying session statistics by day. It fetches the data from the API on component mount and displays it in a combined bar and line chart using Chart.js, showing minimum, average, and maximum session durations as bars, and total visits as a line.
  */
 import {
   Chart as ChartJS,
@@ -19,10 +20,12 @@ import { Bar } from 'vue-chartjs'
 import { ref, onMounted, watch, nextTick } from 'vue'
 import { useApi } from '@/composables/common/useApi'
 import { useI18n } from 'vue-i18n'
-
 const { getSessionsByDay } = useApi()
 const { t, locale } = useI18n()
 
+/**
+ * Register Chart.js components
+ */
 ChartJS.register(
   Title,
   Tooltip,
@@ -87,12 +90,17 @@ const options = ref({
   },
 })
 
-// Colors
+/**
+ * Colors for the bars and line
+ */
 const minColor = 'rgba(59, 130, 246, 0.6)'
 const avgColor = 'rgba(34, 197, 94, 0.6)'
 const maxColor = 'rgba(168, 85, 247, 0.6)'
 const visitsColor = 'rgba(239, 68, 68, 1)'
 
+/**
+ * Cache for sessions data to avoid refetching
+ */
 let cache = []
 
 /**
@@ -168,8 +176,14 @@ async function scrollToRight() {
   }
 }
 
+/**
+ * Load data on component mount
+ */
 onMounted(loadData)
 
+/**
+ * Reload data when locale changes
+ */
 watch(locale, () => {
   loadData()
 })

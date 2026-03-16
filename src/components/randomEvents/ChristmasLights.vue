@@ -3,6 +3,8 @@
  * @file: ChristmasLights.vue
  * @author: Pavol Humeny
  * @date: 15.5.2026
+ * @description: Component for the decorative Christmas lights. It generates a string of light bulbs along a curved path, with random colors and flickering.
+ * @note: This component was generated with the assistance of AI as a decorative element. It is included purely for visual purposes and is not considered as a part of the core application implementation.
  */
 import { ref, onMounted } from 'vue'
 

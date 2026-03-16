@@ -3,6 +3,7 @@
  * @file: BaseIcon.vue
  * @author: Pavol Humeny
  * @date: 15.5.2026
+ * @description: A base component for all icons in the app. It dynamically loads the requested icon component based on the name prop, applies size and color, and shows a tooltip if provided. It also emits a click event when the icon is clicked.
  */
 import { computed } from 'vue'
 import ItemTip from '@/components/common/ItemTip.vue'
@@ -11,7 +12,7 @@ const { warn } = useConsole()
 
 /**
  * @typedef {Object} BaseIconProps
- * @property {string} name - Name of the icon component 
+ * @property {string} name - Name of the icon component
  * @property {number|string} [size=20] - Icon size in pixels
  * @property {string} [color='currentColor'] - Icon color
  * @property {string} [tip=''] - Tooltip text

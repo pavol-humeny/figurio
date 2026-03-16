@@ -3,7 +3,18 @@
  * @file: ProgressBar.vue
  * @author: Pavol Humeny
  * @date: 15.5.2026
+ * @description: Component for displaying a progress bar with a title, subtitle, value, and percentage. It takes in props for the current progress, total value, title, and subtitle, and calculates the percentage to display. The progress bar is styled with a track and a fill that animates based on the progress.
  */
+
+/**
+ * @typedef {Object} ProgressBarProps
+ * @property {number} progress - The current progress value.
+ * @property {number} total - The total value for 100% progress.
+ * @property {string} title - The title to display above the progress bar.
+ * @property {string} subtitle - The subtitle to display next to the title.
+ */
+
+/** @type {ProgressBarProps} */
 const props = defineProps({
   progress: {
     type: Number,

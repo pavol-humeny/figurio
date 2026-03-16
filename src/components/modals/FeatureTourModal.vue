@@ -3,15 +3,16 @@
  * @file: FeatureTourModal.vue
  * @author: Pavol Humeny
  * @date: 15.5.2026
+ * @description: Component for the feature tour modal. It shows a series of cards with videos, titles and descriptions of new features in the app. It allows navigation between cards and keeps track of seen slides in localStorage to only show new features to users.
  */
 import { ref, computed } from 'vue'
 import { useFeatureTourModal } from '@/composables/modals/useFeatureTourModal'
 import FeatureTourCard from './FeatureTourCard.vue'
 import { useVideoLoader } from '@/composables/modals/useVideoLoader.js'
 import { useI18n } from 'vue-i18n'
-
 const { getVideo } = useVideoLoader()
 const { messages, locale } = useI18n()
+
 /**
  * Logic of the feature tour modal state
  */
@@ -44,6 +45,7 @@ const slides = computed(() => {
   if (!activeVideos.value.length) return allSlides.value
   return allSlides.value.filter(slide => activeVideos.value.includes(slide.videoKey))
 })
+
 /**
  * Current card index
  */

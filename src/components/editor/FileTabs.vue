@@ -3,6 +3,7 @@
  * @file: FileTabs.vue
  * @author: Pavol Humeny
  * @date: 15.5.2026
+ * @description: Component for the file tabs in the editor. It shows open files as tabs, allows switching between them, closing them and dragging to reorder.
  */
 import { useFileTabs } from '@/composables/editor/useFileTabs'
 import { useUiStore } from '@/stores/uiStore'
@@ -13,12 +14,6 @@ import { useEditorStore } from '@/stores/editorStore'
 import draggable from 'vuedraggable'
 
 const { t } = useI18n()
-
-/**
- * Reference to the scrollable tabs container
- * @type {import('vue').Ref<HTMLElement | null>}
- */
-// const wrapperRef = ref(null)
 
 /**
  * Logic of the file tabs (drag & drop, active tab, closing)

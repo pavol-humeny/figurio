@@ -3,6 +3,7 @@
  * @file: CalibrationModal.vue
  * @author: Pavol Humeny
  * @date: 15.5.2026
+ * @description: Component for the calibration modal. It allows users to calibrate the pixel-to-mm ratio by adjusting a slider while comparing a virtual card on the screen to a real credit card. It shows instructions, a visual representation of the card, and has buttons to apply calibration or close the modal.
  */
 import { useCalibrationModal } from '@/composables/modals/useCalibrationModal';
 import BaseIcon from '@/components/icons/BaseIcon.vue';

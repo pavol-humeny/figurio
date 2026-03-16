@@ -3,6 +3,7 @@
  * @file: ViewportWrapper.vue
  * @author: Pavol Humeny
  * @date: 15.5.2026
+ * @description: Component for the viewport wrapper in the editor. It contains the image canvas, SVG layer, frame, rulers, sliders and handles zooming, panning, cursor position, background modes and context menu.
  */
 import { useViewportWrapper } from '@/composables/editor/useViewportWrapper'
 import { useViewportStore } from '@/stores/viewportStore'
@@ -576,11 +577,6 @@ const cursorStyle = computed(() => {
   border: var(--border-ui);
   cursor: pointer;
 }
-
-/* .contrast-mode-button.selected,
-.pixelate-mode-button.selected {
-  background-color: var(--background-c);
-} */
 
 /* Warning List */
 .warning-list {

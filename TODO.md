@@ -14,6 +14,8 @@
 ## TODO - text 
 - P - záver
 - implementácia - review
+- prehlásenie AI
+
 
 - scenár pre video
 

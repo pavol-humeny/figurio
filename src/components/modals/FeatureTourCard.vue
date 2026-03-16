@@ -3,12 +3,27 @@
  * @file: FeatureTourCard.vue
  * @author: Pavol Humeny
  * @date: 15.5.2026
+ * @description: Component for one card in the feature tour modal. It shows a video preview of the feature, with title and description. It also has navigation buttons to go to the next/previous card or close the tour. It updates the localStorage to keep track of seen slides.
  */
 import { ref, onMounted } from 'vue'
 import BaseIcon from '../icons/BaseIcon.vue'
 import { globalConfig } from '@/config/globalConfig.js'
 
-// Props for title, description and video source
+/**
+ * @typedef {Object} FeatureTourCardProps
+ * @property {string} icon - Name of the icon to show in the title
+ * @property {string} title - Title of the feature
+ * @property {string} description - Description of the feature
+ * @property {string} videoSrc - Source of the video preview
+ * @property {string} videoKey - Unique key for the video/feature (used for tracking seen slides)
+ * @property {boolean} hasNavigation - Whether to show navigation buttons
+ * @property {number} index - Index of the current card (for navigation)
+ * @property {number} total - Total number of cards (for navigation)
+ * @property {boolean} isFirst - Whether this is the first card (for navigation)
+ * @property {boolean} isLast - Whether this is the last card (for navigation)
+ */
+
+/** @type {FeatureTourCardProps} */
 const props = defineProps({
   icon: {
     type: String,

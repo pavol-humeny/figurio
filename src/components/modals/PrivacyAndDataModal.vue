@@ -3,6 +3,7 @@
  * @file: PrivacyAndDataModal.vue
  * @author: Pavol Humeny
  * @date: 15.5.2026
+ * @description: Component for the privacy and data modal. It shows information about how the app handles user data and privacy, with sections defined in i18n messages. It also has an action button to clear localStorage if the user wants to remove their data.
  */
 import { usePrivacyAndDataModal } from '@/composables/modals/usePrivacyAndDataModal';
 import BaseIcon from '@/components/icons/BaseIcon.vue';

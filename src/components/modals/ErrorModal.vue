@@ -3,6 +3,7 @@
  * @file: ErrorModal.vue
  * @author: Pavol Humeny
  * @date: 15.5.2026
+ * @description: Component for the error modal. It shows a message about an unexpected error and a button to refresh the app. It uses the useErrorModal composable for its state and handlers, and the useShaking composable to trigger a shaking animation when clicking outside the modal.
  */
 import { useErrorModal } from '@/composables/modals/useErrorModal'
 import DefaultButton from '@/components/common/DefaultButton.vue'
@@ -20,7 +21,10 @@ const {
 /**
  * Logic of the shaking animation (used when clicking outside modal)
  */
-const { isShaking, triggerShake } = useShaking()
+const {
+  isShaking,
+  triggerShake
+} = useShaking()
 </script>
 
 <template>

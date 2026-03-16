@@ -3,6 +3,7 @@
  * @file: EventsPerVisit.vue
  * @author: Pavol Humeny
  * @date: 15.5.2026
+ * @description: Component for displaying the average number of events per visit by day. It fetches the data from the API on component mount and whenever the locale changes (to update axis titles), and displays it using a combination of bar and line charts with dual axes to show both the average events and total visits over time.
  */
 import {
   Chart as ChartJS,
@@ -19,10 +20,12 @@ import { Bar } from 'vue-chartjs'
 import { ref, onMounted, watch, nextTick } from 'vue'
 import { useApi } from '@/composables/common/useApi'
 import { useI18n } from 'vue-i18n'
-
 const { getAvgEventsPerVisitByDay } = useApi()
 const { t, locale } = useI18n()
 
+/**
+ * Register Chart.js components
+ */
 ChartJS.register(
   Title,
   Tooltip,
@@ -87,7 +90,9 @@ const options = ref({
   },
 })
 
-// Colors
+/**
+ * Colors for the different event types and visits line
+ */
 const uploadColor = 'rgba(59, 130, 246, 0.6)'
 const exportColor = 'rgba(34, 197, 94, 0.6)'
 const operationColor = 'rgba(168, 85, 247, 0.6)'
@@ -169,8 +174,14 @@ async function scrollToRight() {
   }
 }
 
+/**
+ * Fetch data on component mount and whenever locale changes
+ */
 onMounted(loadData)
 
+/**
+ * Watch for locale changes to reload data and update axis titles
+ */
 watch(locale, () => {
   loadData()
 })

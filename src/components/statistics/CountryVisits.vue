@@ -3,6 +3,7 @@
  * @file: CountryVisits.vue
  * @author: Pavol Humeny
  * @date: 15.5.2026
+ * @description: Component for displaying the number of visits by country. It fetches the visits by country from the API on component mount and displays it using a doughnut chart from the vue-chartjs library.
  */
 import {
   Chart as ChartJS,
@@ -14,9 +15,7 @@ import {
 import { Doughnut } from 'vue-chartjs';
 import { ref, onMounted } from 'vue';
 import { useApi } from '@/composables/common/useApi';
-
 ChartJS.register(Title, Tooltip, Legend, ArcElement);
-
 const { getVisitsByCountry } = useApi();
 
 /**

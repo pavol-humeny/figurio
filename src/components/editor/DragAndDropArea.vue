@@ -3,6 +3,7 @@
  * @file: DragAndDropArea.vue
  * @author: Pavol Humeny
  * @date: 15.5.2026
+ * @description: Component for the drag-and-drop area in the editor. It handles drag-and-drop and paste events for images, shows instructions and supported formats, and has a button to open file selector.
  */
 import BaseIcon from '@/components/icons/BaseIcon.vue'
 import DefaultButton from '@/components/common/DefaultButton.vue'

@@ -3,6 +3,7 @@
  * @file: LastDaysVisits.vue
  * @author: Pavol Humeny
  * @date: 15.5.2026
+ * @description: Component for displaying the number of visits in the last days. It fetches the data from the API on component mount and displays it using a bar chart from Chart.js, showing both total visits and unique visits per day.
  */
 import {
   Chart as ChartJS,
@@ -17,12 +18,19 @@ import { Bar } from 'vue-chartjs';
 import { ref, onMounted, watch, nextTick } from 'vue';
 import { useApi } from '@/composables/common/useApi';
 import { useI18n } from 'vue-i18n';
-
 const { getLastDaysVisits } = useApi();
 const { t, locale } = useI18n();
 
-// Register Chart.js components
-ChartJS.register(Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale);
+/**
+ * Register Chart.js components
+ */
+ChartJS.register(
+  Title,
+  Tooltip,
+  Legend,
+  BarElement,
+  CategoryScale,
+  LinearScale);
 
 /**
  * Reference to the scroll wrapper for the chart
@@ -49,15 +57,20 @@ const options = {
   },
 };
 
-// Colors
+/**
+ * Colors for the bars
+ */
 const totalColor = 'rgba(34, 197, 94, 0.6)'; // green
 const uniqueColor = 'rgba(59, 130, 246, 0.6)'; // blue
 
 /**
  * Cache for visits data to avoid refetching
  */
-let visitsCache = []; // cache fetched data
+let visitsCache = [];
 
+/**
+ * Load visits data and prepare chart data
+ */
 async function loadData() {
   if (visitsCache.length === 0) {
     const visits = await getLastDaysVisits();
@@ -88,6 +101,9 @@ async function loadData() {
   scrollToRight()
 }
 
+/**
+ * Scroll the chart to the right to show the most recent days
+ */
 async function scrollToRight() {
   await nextTick()
 

@@ -3,9 +3,18 @@
  * @file: VisitCard.vue
  * @author: Pavol Humeny
  * @date: 15.5.2026
+ * @description: Component for displaying a card with visit statistics. It takes in props for the type of visits (all or unique), the count of visits, and an optional icon. The card displays the visit count along with a description and an icon if provided. It is used in the UniqueVisits and AllVisits components to show the respective statistics.
  */
 import BaseIcon from '../icons/BaseIcon.vue';
 
+/**
+ * @typedef {Object} VisitCardProps
+ * @property {string} visitType - The type of visits to display (e.g., 'all' or 'unique').
+ * @property {number} visitCount - The count of visits to display.
+ * @property {string} [icon] - Optional name of the icon to display on the card.
+ */
+
+/** @type {VisitCardProps} */
 const props = defineProps({
   visitType: {
     type: String,

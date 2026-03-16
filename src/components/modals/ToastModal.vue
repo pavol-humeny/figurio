@@ -3,6 +3,7 @@
  * @file: ToastModal.vue
  * @author: Pavol Humeny
  * @date: 15.5.2026
+ * @description: Component for the toast modal system. It shows temporary messages to the user, such as success, error, warning or info notifications. It uses the useToastModal composable for its state and handlers, allowing it to be used across the app for showing toasts with different types, durations and styles.
  */
 import { useToastModal } from '@/composables/modals/useToastModal'
 

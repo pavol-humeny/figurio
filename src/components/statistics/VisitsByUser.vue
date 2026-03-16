@@ -3,6 +3,7 @@
  * @file: VisitsByUser.vue
  * @author: Pavol Humeny
  * @date: 15.5.2026
+ * @description: Component for displaying the number of visits by user. It fetches the data from the API on component mount and displays it in a sortable table, showing the user ID and the count of visits for each user.
  */
 import { ref, computed, onMounted } from 'vue'
 import { useApi } from '@/composables/common/useApi'

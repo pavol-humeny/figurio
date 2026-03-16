@@ -3,21 +3,29 @@
  * @file: EventOpenModal.vue
  * @author: Pavol Humeny
  * @date: 15.5.2026
+ * @description: Component for displaying the number of open modal events by modal type. It fetches the data from the API on component mount and displays it using the ProgressBar component, showing the percentage of opens for each modal type compared to the total number of opens.
  */
 import { ref, onMounted, computed } from 'vue';
 import { useApi } from '@/composables/common/useApi';
 import ProgressBar from '@/components/statistics/ProgressBar.vue';
-
 const { getOpenModal } = useApi();
+
+/**
+ * Reactive variable to store the open modal events fetched from the API
+ */
 const openModalEvents = ref([]);
 
-// Fetch data on mount
+/**
+ * Fetch open modal events on component mount
+ */
 onMounted(async () => {
   const res = await getOpenModal();
   openModalEvents.value = res || [];
 });
 
-// Compute total number of open modal events
+/**
+ * Compute total number of open modal events
+ */
 const totalOpenModals = computed(() =>
   openModalEvents.value.reduce((sum, item) => sum + item.numberOfOpens, 0)
 );

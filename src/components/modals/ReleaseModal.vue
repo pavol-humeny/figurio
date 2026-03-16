@@ -3,6 +3,7 @@
  * @file: ReleaseModal.vue
  * @author: Pavol Humeny
  * @date: 15.5.2026
+ * @description: Component for the release modal. It shows the patch notes for the app, with sections for new features, improvements, bug fixes and known issues. It also has a section for currently in progress items that are not released yet. The content of the modal is defined in i18n messages, allowing it to be easily updated and localized.
  */
 import BaseIcon from '@/components/icons/BaseIcon.vue';
 import DefaultButton from '@/components/common/DefaultButton.vue';

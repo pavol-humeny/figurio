@@ -3,16 +3,19 @@
  * @file: EventsOverview.vue
  * @author: Pavol Humeny
  * @date: 15.5.2026
+ * @description: Component for displaying an overview of events statistics. It fetches the events overview data from the API on component mount and displays it in a card format, showing total events, number of uploads, exports, use tool events, and keyboard shortcuts. Each statistic is labeled and displayed with its corresponding value.
  */
 import { ref, onMounted } from 'vue';
 import { useApi } from '@/composables/common/useApi';
-
 const { getEventsOverview } = useApi();
 
-
-const eventsOverview = ref({});
 /**
- * Fetch total visits on component mount
+ * Reactive variable to store the events overview data fetched from the API
+ */
+const eventsOverview = ref({});
+
+/**
+ * Fetch events overview data on component mount
  */
 onMounted(async () => {
   const res = await getEventsOverview();

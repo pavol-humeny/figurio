@@ -3,6 +3,7 @@
  * @file: GeneralModal.vue
  * @author: Pavol Humeny
  * @date: 15.5.2026
+ * @description: Component for the general modal. It is a wrapper for different types of modals that can be shown in the app, such as select PDF page or close all files confirmation.
  */
 import { computed } from 'vue'
 import { useGeneralModal } from '@/composables/modals/useGeneralModal'
@@ -25,6 +26,13 @@ const {
   canBeClosedByClickingOutside,
 } = useGeneralModal()
 
+/**
+ * Logic of the shake animation for modal
+ */
+const {
+  isShaking,
+  triggerShake
+} = useShaking()
 
 /**
  * Mapping of modal types to their respective components
@@ -38,15 +46,6 @@ const modalComponents = {
  * Current modal component based on modal type
  */
 const CurrentModal = computed(() => modalComponents[modalType.value])
-
-
-/**
- * Logic of the shake animation for modal
- */
-const {
-  isShaking,
-  triggerShake
-} = useShaking()
 
 /**
  * Handles outside click based on canBeClosedByClickingOutside

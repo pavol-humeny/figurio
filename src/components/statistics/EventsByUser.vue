@@ -3,10 +3,10 @@
  * @file: EventsByUser.vue
  * @author: Pavol Humeny
  * @date: 15.5.2026
+ * @description: Component for displaying the number of events by user. It fetches the events by user from the API on component mount and displays it in a sortable table. The table shows the user ID and counts for different event types (imports, exports, operations, tool toggles, keyboard shortcuts, and total events), allowing the user to sort by any of these columns.
  */
 import { ref, computed, onMounted } from 'vue'
 import { useApi } from '@/composables/common/useApi'
-
 const { getEventsByUser } = useApi()
 
 /**

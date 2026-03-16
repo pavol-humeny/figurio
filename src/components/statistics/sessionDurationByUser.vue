@@ -3,10 +3,10 @@
  * @file: SessionDurationByUser.vue
  * @author: Pavol Humeny
  * @date: 15.5.2026
+ * @description: Component for displaying session duration statistics by user. It fetches the data from the API on component mount and displays it in a sortable table, showing minimum, maximum, average session duration, and total session time for each user.
  */
 import { ref, computed, onMounted } from 'vue'
 import { useApi } from '@/composables/common/useApi'
-
 const { getSessionDurationByUser } = useApi()
 
 /**

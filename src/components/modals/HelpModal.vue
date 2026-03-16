@@ -3,6 +3,7 @@
  * @file: HelpModal.vue
  * @author: Pavol Humeny
  * @date: 15.5.2026
+ * @description: Component for the help modal. It shows various information about the app, such as list of tools with descriptions, keyboard shortcuts, tutorial and feature tour. It also has a contact form for users to send feedback or report issues.
  */
 import { storeToRefs } from 'pinia';
 import BaseIcon from '@/components/icons/BaseIcon.vue';
@@ -19,15 +20,49 @@ import { useApi } from '../../composables/common/useApi';
 import { useEditorStore } from '@/stores/editorStore';
 import { useUserModeStore } from '@/stores/userModeStore';
 import CommandLine from './CommandLine.vue';
-
 const { messages, locale, t } = useI18n()
 const router = useRouter()
 const { addUserEvent } = useApi()
-
 const uiStore = useUiStore()
 const imageStore = useImageStore()
 const userModeStore = useUserModeStore()
+
 const { tutorialStep, tutorialCompleted } = storeToRefs(uiStore)
+
+/**
+ * Logic of the help modal state and scrolling
+ */
+const {
+  isVisible,
+  helpContentRef,
+  closeHelpModal,
+  startInteractiveTutorial,
+  continueInteractiveTutorial,
+  openFeatureTourModalHelper,
+  contactForm,
+  submitContactForm,
+  subjectInputWrong,
+  subjectInputSuccess,
+  isCommandEmail,
+  passwordInputWrong,
+  togglePasswordVisibility,
+  showPassword,
+  emailInputWrong,
+  nameInputWrong,
+  messageInputWrong,
+} = useHelpModal(useUiStore(), useImageStore(), useEditorStore(), useUserModeStore(), useRouter(), t);
+
+/**
+ * Logic of the interactive tutorial availability
+ */
+const {
+  isTutorialEnabled
+} = useInteractiveTutorial(
+  useUiStore(),
+  useImageStore(),
+  useRouter(),
+  t
+)
 
 /**
  * List of shortcuts as array of objects
@@ -58,36 +93,6 @@ const testers = computed(() => {
 const aboutPoints = computed(() => {
   return messages.value[locale.value]?.help?.helpContent?.purpose?.points || []
 })
-
-/**
- * Logic of the help modal state and scrolling
- */
-const {
-  isVisible,
-  helpContentRef,
-  closeHelpModal,
-  startInteractiveTutorial,
-  continueInteractiveTutorial,
-  openFeatureTourModalHelper,
-  contactForm,
-  submitContactForm,
-  subjectInputWrong,
-  subjectInputSuccess,
-  isCommandEmail,
-  passwordInputWrong,
-  togglePasswordVisibility,
-  showPassword,
-  emailInputWrong,
-  nameInputWrong,
-  messageInputWrong,
-} = useHelpModal(useUiStore(), useImageStore(), useEditorStore(), useUserModeStore(), useRouter(), t);
-
-const { isTutorialEnabled } = useInteractiveTutorial(
-  useUiStore(),
-  useImageStore(),
-  useRouter(),
-  t
-)
 
 /**
  * Navigates to the statistics view

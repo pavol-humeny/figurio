@@ -3,6 +3,7 @@
  * @file: WarningList.vue
  * @author: Pavol Humeny
  * @date: 15.5.2026
+ * @description: Component for the warning list. It shows a list of warnings related to the current image, such as  unsupported features in imported files or potential issues with the image. Each warning can be expanded to show more details and a tip for how to resolve it, and can be dismissed by the user. The warnings are stored in the imageStore, and this component uses the useWarningList composable for its handlers to toggle and remove warnings. The appearance of each warning (color, icon) is based on its type (info, warning, error).
  */
 import { useWarningList } from '@/composables/modals/useWarningList'
 import BaseIcon from '../icons/BaseIcon.vue'
@@ -10,12 +11,12 @@ import ItemTip from '../common/ItemTip.vue'
 import { computed } from 'vue'
 import { useImageStore } from '@/stores/imageStore.js'
 import { useUiStore } from '@/stores/uiStore'
-
 const imageStore = useImageStore()
 
+/**
+ * Logic of the warning list
+ */
 const {
-  // warnings,
-  // expandedIds,
   removeWarning,
   toggleWarning
 } = useWarningList(useImageStore(), useUiStore())

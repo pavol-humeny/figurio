@@ -3,10 +3,10 @@
  * @file: DaysVisits.vue
  * @author: Pavol Humeny
  * @date: 15.5.2026
+ * @description: Component for displaying the number of visits by day. It fetches the visits by day from the API on component mount and displays it in a table with sorting and date range filtering functionality. The table shows the date, total visits, and unique visits for each day, and allows the user to sort by any of these columns or filter the data by a specific date range.
  */
 import { ref, computed, onMounted } from 'vue'
 import { useApi } from '@/composables/common/useApi'
-
 const { getDaysVisits } = useApi()
 
 /**

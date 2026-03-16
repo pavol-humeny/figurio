@@ -7,6 +7,8 @@
  * @file: FireWorks2.vue
  * @author: Pavol Humeny
  * @date: 15.5.2026
+ * @description: Component for the fireworks animation using the fireworks-js library. It creates a canvas that covers the entire screen and renders fireworks with customizable options for intensity, particles, explosion, and colors. The fireworks are launched in waves with different styles to create a dynamic and festive atmosphere.
+ * @note: This component was generated with the assistance of AI as a decorative element. It is included purely for visual purposes and is not considered as a part of the core application implementation.
  */
 import { ref, onMounted, onBeforeUnmount } from 'vue'
 import { Fireworks } from 'fireworks-js'

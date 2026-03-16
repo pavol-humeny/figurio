@@ -3,6 +3,7 @@
  * @file: ImportModal.vue
  * @author: Pavol Humeny
  * @date: 15.5.2026
+ * @description: Component for the import modal. It shows a drag and drop area for importing files into the app.
  */
 import DefaultButton from '@/components/common/DefaultButton.vue';
 import { useImportModal } from '@/composables/modals/useImportModal';

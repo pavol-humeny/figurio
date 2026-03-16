@@ -3,21 +3,29 @@
  * @file: EventToggleTool.vue
  * @author: Pavol Humeny
  * @date: 15.5.2026
+ * @description: Component for displaying the number of times different tools were toggled. It fetches the toggle tool events from the API on component mount, computes the total number of toggles, and displays each tool's toggles using the ProgressBar component to show their proportion relative to the total toggles.
  */
 import { ref, onMounted, computed } from 'vue';
 import { useApi } from '@/composables/common/useApi';
 import ProgressBar from '@/components/statistics/ProgressBar.vue';
-
 const { getToggleTool } = useApi();
+
+/**
+ * Reactive variable to store the toggle tool events fetched from the API
+ */
 const toggleToolEvents = ref([]);
 
-// Fetch data on mount
+/**
+ * Fetch toggle tool events on component mount
+ */
 onMounted(async () => {
   const res = await getToggleTool();
   toggleToolEvents.value = res || [];
 });
 
-// Compute total number of toggles
+/**
+ * Compute total number of toggles
+ */
 const totalToggles = computed(() =>
   toggleToolEvents.value.reduce((sum, item) => sum + item.numberOfToggles, 0)
 );

@@ -3,11 +3,13 @@
  * @file: FireWorks.vue
  * @author: Pavol Humeny
  * @date: 15.5.2026
+ * @description: Component for the fireworks animation. It creates a canvas that covers the entire screen and renders fireworks using basic physics for movement and explosion. The fireworks are launched in random patterns at random intervals, creating a festive atmosphere. 
+ * @note: This component was generated with the assistance of AI as a decorative element. It is included purely for visual purposes and is not considered as a part of the core application implementation.
  */
 import { ref, onMounted, onBeforeUnmount } from 'vue'
 
 /* ===============================
-   Canvas
+  Canvas
 ================================ */
 const canvas = ref(null)
 let ctx = null
@@ -15,25 +17,25 @@ let rafId = null
 let eventTimer = null
 
 /* ===============================
-   Physics constants
+  Physics constants
 ================================ */
 const GRAVITY = 0.03
 const AIR_DRAG = 0.992
 
 /* ===============================
-   Collections
+  Collections
 ================================ */
 const fireworks = []
 const particles = []
 
 /* ===============================
-   Utils
+  Utils
 ================================ */
 const rand = (min, max) => Math.random() * (max - min) + min
 const pick = arr => arr[Math.floor(Math.random() * arr.length)]
 
 /* ===============================
-   Color palettes
+  Color palettes
 ================================ */
 const COLOR_SETS = [
   ['#ffd166', '#ffb703'],
@@ -44,7 +46,7 @@ const COLOR_SETS = [
 ]
 
 /* ===============================
-   Firework shell
+  Firework shell
 ================================ */
 class Firework {
   constructor(width, height, forcedX = null) {
@@ -78,7 +80,7 @@ class Firework {
 }
 
 /* ===============================
-   Particle
+  Particle
 ================================ */
 class Particle {
   constructor(x, y, angle, speed, color, life) {
@@ -126,7 +128,7 @@ class Particle {
 }
 
 /* ===============================
-   Explosion
+  Explosion
 ================================ */
 function createExplosion(x, y, colors, type) {
   let count = 120
@@ -161,7 +163,7 @@ function createExplosion(x, y, colors, type) {
 }
 
 /* ===============================
-   Launch patterns
+  Launch patterns
 ================================ */
 function launchSingle() {
   fireworks.push(new Firework(canvas.value.width, canvas.value.height))
@@ -214,7 +216,7 @@ function launchFinaleMini() {
 }
 
 /* ===============================
-   Event scheduler
+  Event scheduler
 ================================ */
 function scheduleEvent() {
   const events = [
@@ -232,7 +234,7 @@ function scheduleEvent() {
 }
 
 /* ===============================
-   Animation loop
+  Animation loop
 ================================ */
 function animate() {
   rafId = requestAnimationFrame(animate)
@@ -257,7 +259,7 @@ function animate() {
 }
 
 /* ===============================
-   Lifecycle
+  Lifecycle
 ================================ */
 onMounted(() => {
   const c = canvas.value

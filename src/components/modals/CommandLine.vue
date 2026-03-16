@@ -3,6 +3,7 @@
  * @file: CommandLine.vue
  * @author: Pavol Humeny
  * @date: 15.5.2026
+ * @description: Component for the command line modal. It provides a terminal-like interface for users to input commands and see output. It handles command processing, displays output lines, and manages the input field with a prompt showing the current user mode.
  */
 import { useUserModeStore } from '@/stores/userModeStore';
 import { useCommandLine } from '@/composables/modals/useCommandLine';
@@ -58,7 +59,6 @@ const {
 .cli-line {
   margin: 2px 0;
   white-space: pre-wrap;
-  /* preserve spaces and newlines */
 }
 
 .cli-input-wrapper {

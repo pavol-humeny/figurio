@@ -3,6 +3,7 @@
  * @file: SelectPdfPageModal.vue
  * @author: Pavol Humeny
  * @date: 15.5.2026
+ * @description: Component for the select PDF page modal. It is used when importing a PDF file, to select which page to import. It shows a number spinner to select the page number, with a range from 1 to the total number of pages in the PDF (passed in the modal payload). It uses the useGeneralModal composable for its state and handlers, allowing it to be used for various scenarios across the app.
  */
 import { ref, watch } from 'vue'
 import { useGeneralModal } from '@/composables/modals/useGeneralModal'
@@ -18,7 +19,7 @@ const { payload } = useGeneralModal()
 const selectedPage = ref(1)
 
 /**
- * Set default to 1 when modal is shown
+ * Set default selected page to 1 when modal is shown
  */
 watch(
   () => payload.value?.numberOfPages,

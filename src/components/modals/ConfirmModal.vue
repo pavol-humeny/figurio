@@ -3,6 +3,7 @@
  * @file: ConfirmModal.vue
  * @author: Pavol Humeny
  * @date: 15.5.2026
+ * @description: Component for the confirm modal. It shows a title, message and confirm/cancel buttons. It uses the useConfirmModal composable for its state and handlers, allowing it to be used for various confirmation scenarios across the app.
  */
 import { useConfirmModal } from '@/composables/modals/useConfirmModal';
 import DefaultButton from '@/components/common/DefaultButton.vue';
@@ -27,7 +28,6 @@ const {
   <Teleport to="body">
     <div v-if="isVisible" class="confirm-modal-overlay modal-overlay" @mousedown.self="close">
       <div class="modal-box">
-        <!-- Close icon -->
         <div v-if="useClose" class="close-icon" @click="close">✕</div>
 
         <div class="title-wrapper">
