@@ -14,6 +14,7 @@ const { addUserEvent } = useApi()
 import { useImagePipeline } from '../editor/useImagePipeline'
 import { useUiStore } from '@/stores/uiStore'
 import { useEditorStore } from '@/stores/editorStore'
+import { useZoomControl } from '../topPanel/useZoomControl'
 
 /**
  * Whether phone side buttons can be drawn because of dimensions
@@ -60,6 +61,7 @@ export function useFrameTool(imageStore, historyStore, viewportStore, t) {
   const { showConfirmModal } = useConfirmModal()
   const uiStore = useUiStore()
   const { renderUpTo } = useImagePipeline(imageStore, uiStore)
+  const { toggleZoomMode } = useZoomControl(viewportStore, imageStore, t)
 
   /**
    * Whether to use millimeters for frame width input
@@ -72,9 +74,34 @@ export function useFrameTool(imageStore, historyStore, viewportStore, t) {
   const maxFrameWidthMm = ref(100)
 
   /**
+   * Maximum frame width in pixels
+   */
+  const maxFrameWidth = computed(() => {
+    return Math.round(imageStore.getSmallerImageDimension() * 0.5)
+  })
+
+  /**
+   * Minimum frame width in millimeters, calculated based on current zoom level to ensure it is at least 1px on screen
+   */
+  const minFrameWidthMm = computed(() => {
+    const PxPerMm = viewportStore.getPxPerMmFitZoom
+
+    frameWidthMm.value = Math.max(frameWidth.value / PxPerMm, 1)
+
+    if (PxPerMm < 1) {
+      // Return the first mm step whose pixel size is >= 1px
+      return Math.ceil(1 / PxPerMm)
+    } else {
+      return 1
+    }
+  })
+
+  /**
    * Maximum header/footer size in millimeters
    */
-  const maxHeaderFooterSize = ref(100)
+  const maxHeaderFooterSize = computed(() => {
+    return Math.round(imageStore.getSmallerImageDimension() * 0.5)
+  })
 
   /**
    * Frame color
@@ -318,47 +345,61 @@ export function useFrameTool(imageStore, historyStore, viewportStore, t) {
   /**
    * Available frame options
    */
-  const frameOptions = computed(() => [
-    // UPDATE new frame type
-    { label: t('tools.frame.settings.general.frameVariants.none'), value: 'none' },
-    { label: t('tools.frame.settings.general.frameVariants.frameSolid'), value: 'frameSolid' },
-    {
-      label: t('tools.frame.settings.general.frameVariants.frameMacBrowser'),
-      value: 'frameMacBrowser',
-    },
-    {
-      label: t('tools.frame.settings.general.frameVariants.frameWindowsBrowser'),
-      value: 'frameWindowsBrowser',
-    },
-    {
-      label: t('tools.frame.settings.general.frameVariants.framePhoneIOS'),
-      value: 'framePhoneIOS',
-    },
-    {
-      label: t('tools.frame.settings.general.frameVariants.framePhoneIOS2'),
-      value: 'framePhoneIOS2',
-    },
-    {
-      label: t('tools.frame.settings.general.frameVariants.framePhoneAndroid'),
-      value: 'framePhoneAndroid',
-    },
-    {
-      label: t('tools.frame.settings.general.frameVariants.framePhoneAndroid2'),
-      value: 'framePhoneAndroid2',
-    },
-    {
-      label: t('tools.frame.settings.general.frameVariants.framePhoneSimple'),
-      value: 'framePhoneSimple',
-    },
-    {
-      label: t('tools.frame.settings.general.frameVariants.frameWindowsTaskBar'),
-      value: 'frameWindowsTaskBar',
-    },
-    {
-      label: t('tools.frame.settings.general.frameVariants.frameVSCode'),
-      value: 'frameVSCode',
-    },
-  ])
+  const frameOptions = computed(() => {
+    const options = [
+      { label: t('tools.frame.settings.general.frameVariants.none'), value: 'none' },
+      { label: t('tools.frame.settings.general.frameVariants.frameSolid'), value: 'frameSolid' },
+
+      {
+        label: t('tools.frame.settings.general.frameVariants.frameMacBrowser'),
+        value: 'frameMacBrowser',
+      },
+      {
+        label: t('tools.frame.settings.general.frameVariants.frameWindowsBrowser'),
+        value: 'frameWindowsBrowser',
+      },
+    ]
+
+    const PxPerMm = viewportStore.getPxPerMmFitZoom
+    // Phone frames
+    if (PxPerMm >= 1) {
+      options.push(
+        {
+          label: t('tools.frame.settings.general.frameVariants.framePhoneIOS'),
+          value: 'framePhoneIOS',
+        },
+        {
+          label: t('tools.frame.settings.general.frameVariants.framePhoneIOS2'),
+          value: 'framePhoneIOS2',
+        },
+        {
+          label: t('tools.frame.settings.general.frameVariants.framePhoneAndroid'),
+          value: 'framePhoneAndroid',
+        },
+        {
+          label: t('tools.frame.settings.general.frameVariants.framePhoneAndroid2'),
+          value: 'framePhoneAndroid2',
+        },
+        {
+          label: t('tools.frame.settings.general.frameVariants.framePhoneSimple'),
+          value: 'framePhoneSimple',
+        },
+      )
+    }
+
+    options.push(
+      {
+        label: t('tools.frame.settings.general.frameVariants.frameWindowsTaskBar'),
+        value: 'frameWindowsTaskBar',
+      },
+      {
+        label: t('tools.frame.settings.general.frameVariants.frameVSCode'),
+        value: 'frameVSCode',
+      },
+    )
+
+    return options
+  })
 
   /**
    * Phone outline size options
@@ -478,6 +519,10 @@ export function useFrameTool(imageStore, historyStore, viewportStore, t) {
     return isPhoneFrame(frameType) && isExpanded
   }
 
+  /**
+   * Whether the frame is frame with additional outline
+   * @param {string} frameType - Frame type
+   */
   const isFrameWithAdditionalOutline = (frameType) => {
     return (
       frameType === 'framePhoneIOS' ||
@@ -640,15 +685,22 @@ export function useFrameTool(imageStore, historyStore, viewportStore, t) {
 
     const PxPerMm = viewportStore.getPxPerMmFitZoom
     if (value) {
+      toggleZoomMode('physical')
+
       // Frame
-      frameWidthMm.value = Math.min(Math.max(frameWidth.value / PxPerMm, 1), maxFrameWidthMm.value)
-      maxFrameWidthMm.value = (imageStore.getSmallerImageDimension() * 0.2) / PxPerMm
+      frameWidthMm.value = Math.min(
+        Math.max(frameWidth.value / PxPerMm, minFrameWidthMm.value),
+        maxFrameWidthMm.value,
+      )
+      maxFrameWidthMm.value = Math.round((imageStore.getSmallerImageDimension() * 0.5) / PxPerMm)
 
       // Header and footer
       if (isFrameWithMultiplier(selectedFrameVariant.value)) {
         headerSizeMm.value = Math.max(headerSize.value / PxPerMm, 1)
         footerSizeMm.value = Math.max(footerSize.value / PxPerMm, 1)
-        maxHeaderFooterSize.value = (imageStore.getSmallerImageDimension() * 0.5) / PxPerMm
+        maxHeaderFooterSize.value = Math.round(
+          (imageStore.getSmallerImageDimension() * 0.5) / PxPerMm,
+        )
       }
 
       const isLandscapePhoneValue = isLandscapePhone(
@@ -665,11 +717,13 @@ export function useFrameTool(imageStore, historyStore, viewportStore, t) {
     } else {
       frameWidth.value = frameWidthMm.value * PxPerMm
 
+      maxFrameWidthMm.value = Math.round(imageStore.getSmallerImageDimension() * 0.5)
+
       if (isFrameWithMultiplier(selectedFrameVariant.value)) {
         headerSize.value = headerSizeMm.value * PxPerMm
         footerSize.value = footerSizeMm.value * PxPerMm
 
-        maxHeaderFooterSize.value = imageStore.getSmallerImageDimension() * 0.5
+        maxHeaderFooterSize.value = Math.round(imageStore.getSmallerImageDimension() * 0.5)
       }
     }
     applyFrame()
@@ -754,6 +808,12 @@ export function useFrameTool(imageStore, historyStore, viewportStore, t) {
    */
   const setFrameOutline = (value) => {
     drawOutline.value = value
+
+    // If value is 0, set it to default value based on frame type
+    if (frameWidth.value === 0) {
+      frameWidth.value = calculateInitialFrameWidth()
+    }
+
     applyFrame()
   }
 
@@ -833,9 +893,12 @@ export function useFrameTool(imageStore, historyStore, viewportStore, t) {
         selectedFrameVariant.value === 'frameVSCode') &&
       drawOutline.value
     ) {
-      width = Math.floor(
-        editorConfig.browserFrameDefaultSize *
-          Math.max(imageStore.fileDimensions.width, imageStore.fileDimensions.height),
+      width = Math.max(
+        Math.floor(
+          editorConfig.browserFrameDefaultSize *
+            Math.max(imageStore.fileDimensions.width, imageStore.fileDimensions.height),
+        ),
+        1,
       )
     } else if (selectedFrameVariant.value === 'frameSolid') {
       width = 1
@@ -1190,6 +1253,9 @@ export function useFrameTool(imageStore, historyStore, viewportStore, t) {
       imageStore.frame.footerSize = 0
     }
 
+    fw = Math.round(fw)
+    fh = Math.round(fh)
+
     imageStore.frame.width = fw
     imageStore.frame.height = fh
 
@@ -1200,14 +1266,17 @@ export function useFrameTool(imageStore, historyStore, viewportStore, t) {
     const adjustmentForPhoneButtons = frame.phoneButtonsEnabled ? 0 : fw / 3
 
     // Get header and footer sizes based on units
-    const header =
+    let header =
       useMillimetersForFrame && isFrameWithMultiplier(frame.type)
         ? imageStore.frame.headerSizeMm * PxPerMm
         : imageStore.frame.headerSize
-    const footer =
+    let footer =
       useMillimetersForFrame && isFrameWithMultiplier(frame.type)
         ? imageStore.frame.footerSizeMm * PxPerMm
         : imageStore.frame.footerSize
+
+    header = Math.round(header)
+    footer = Math.round(footer)
 
     const svgWidth = w + fw * 2 - 2 * adjustmentForPhoneButtons
 
@@ -1233,7 +1302,7 @@ export function useFrameTool(imageStore, historyStore, viewportStore, t) {
     // Values for phone frames
     const strokeWidth = (fw / 3) * 2 // 2/3 of frame width
     const offset = strokeWidth / 2
-    const headerSizePhone = header
+    const headerSizePhone = Math.round(header)
     const drawingAdjustmentForPhoneButtons = frame.phoneButtonsEnabled ? (fw / 3) * 2 : fw / 3
 
     const phoneFrameValues = {
@@ -2984,6 +3053,7 @@ export function useFrameTool(imageStore, historyStore, viewportStore, t) {
     frameWidthMm,
     setFrameWidthMm,
     maxFrameWidthMm,
+    maxFrameWidth,
     setHeaderSize,
     setHeaderSizeMm,
     setFooterSize,
@@ -3013,5 +3083,6 @@ export function useFrameTool(imageStore, historyStore, viewportStore, t) {
     phoneFrameOrientationOptions,
     showOnlyInPortraitMode,
     isFrameWithAdditionalOutline,
+    minFrameWidthMm,
   }
 }

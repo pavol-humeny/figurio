@@ -26,6 +26,7 @@ const {
   frameColor,
   frameWidthRef,
   frameWidth,
+  maxFrameWidth,
   setFrameWidth,
   selectedFrameVariant,
   frameOptions,
@@ -57,6 +58,7 @@ const {
   frameWidthMm,
   setFrameWidthMm,
   maxFrameWidthMm,
+  minFrameWidthMm,
   setHeaderSize,
   setHeaderSizeMm,
   setFooterSize,
@@ -172,7 +174,7 @@ const {
               <p :class="{ disabled: selectedFrameVariant !== 'frameSolid' && !drawOutline }">
                 {{ t('tools.frame.settings.general.frameWidth.label') }}
               </p>
-              <NumberInput ref="frameWidthRef" v-model="frameWidth" :min="1" :max="100" :step="1" unit="px"
+              <NumberInput ref="frameWidthRef" v-model="frameWidth" :min="1" :max="maxFrameWidth" :step="1" unit="px"
                 @update="setFrameWidth(frameWidth)" icon="IconArrowWidth" :color="'var(--primary-c)'" size="22"
                 :onReset="() => setFrameWidth(-1)" :tip="t('tools.frame.settings.general.frameWidth.tip')"
                 position="bottom-left" :disabled="selectedFrameVariant !== 'frameSolid' && !drawOutline" />
@@ -189,10 +191,10 @@ const {
               <p>
                 {{ t('tools.frame.settings.general.frameWidth.label') }}
               </p>
-              <NumberInput ref="frameWidthRef" v-model="frameWidthMm" :min="1" :max="maxFrameWidthMm" :step="1"
-                unit="mm" @update="setFrameWidthMm(frameWidthMm)" icon="IconArrowWidth" :color="'var(--primary-c)'"
-                size="22" :onReset="() => setFrameWidthMm(-1)" :tip="t('tools.frame.settings.general.frameWidth.tip')"
-                position="bottom-left" />
+              <NumberInput ref="frameWidthRef" v-model="frameWidthMm" :min="minFrameWidthMm" :max="maxFrameWidthMm"
+                :step="1" unit="mm" @update="setFrameWidthMm(frameWidthMm)" icon="IconArrowWidth"
+                :color="'var(--primary-c)'" size="22" :onReset="() => setFrameWidthMm(-1)"
+                :tip="t('tools.frame.settings.general.frameWidth.tip')" position="bottom-left" />
             </div>
           </div>
           <div v-if="useMillimeters && isPhoneFrame(selectedFrameVariant)" class="content-wrapper">
@@ -209,7 +211,8 @@ const {
         </div>
 
         <!-- Phone outline -->
-        <div v-if="isPhoneFrame(selectedFrameVariant) || (isFrameWithAdditionalOutline(selectedFrameVariant) && drawOutline) || selectedFrameVariant === 'frameSolid'"
+        <div
+          v-if="isPhoneFrame(selectedFrameVariant) || (isFrameWithAdditionalOutline(selectedFrameVariant) && drawOutline) || selectedFrameVariant === 'frameSolid'"
           class="settings-content-wrapper">
           <!-- Use phone outline -->
           <div class="content-wrapper">

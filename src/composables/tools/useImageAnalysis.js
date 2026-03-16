@@ -581,7 +581,7 @@ export function useImageAnalysis(
     removeWarning('artifact-warning')
   }
 
-  const { toggleTool } = useToolsPanel(editorStore, imageStore, uiStore, workspaceStore, t)
+  const { toggleTool } = useToolsPanel(editorStore, imageStore, uiStore, viewportStore, t)
 
   /**
    * Function that is called when the artifact warning is opened. It calculates artifacts and opens the image analysis tool if not already open.

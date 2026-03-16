@@ -13,8 +13,8 @@ import { toolsDefinitions } from '@/config/toolsDefinitions'
 import { useEditorStore } from '@/stores/editorStore'
 import { useImageStore } from '@/stores/imageStore'
 import { useUiStore } from '@/stores/uiStore'
-import { useWorkspaceStore } from '@/stores/workspaceStore'
 import { useHoldButton } from '@/composables/common/useHoldButton';
+import { useViewportStore } from '@/stores/viewportStore'
 
 const { t } = useI18n()
 
@@ -31,7 +31,7 @@ const {
   scrollDown,
   selectTool,
   isToolDisabled,
-} = useToolsPanel(useEditorStore(), useImageStore(), useUiStore(), useWorkspaceStore(), t)
+} = useToolsPanel(useEditorStore(), useImageStore(), useUiStore(), useViewportStore(), t)
 
 
 /**
@@ -93,8 +93,8 @@ watch(atBottom, (newVal) => {
 
     <div v-if="!atBottom" class="arrow-down">
       <BaseIcon name="IconArrowDown" size="24" color="var(--primary-c)" @mousedown="startHold(scrollDown)"
-        @mouseup="stopHold" @mouseleave="stopHold" @touchstart.prevent="startHold(scrollDown)"
-        @touchend="stopHold" @touchcancel="stopHold" />
+        @mouseup="stopHold" @mouseleave="stopHold" @touchstart.prevent="startHold(scrollDown)" @touchend="stopHold"
+        @touchcancel="stopHold" />
     </div>
   </div>
 </template>

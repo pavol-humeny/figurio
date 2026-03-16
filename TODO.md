@@ -1,23 +1,18 @@
 ## ŠT
-- plagát 
 - MTIa
 - help preklad 
 - refaktorizácia 
     - hlavičky súborov 
     - komentáre 
 - Unit testy 
-- konzultácia 
 - kniha 
-
 - v
-    - help 
-    - testovanie na telefóne
-    - videá excel
+    - preklad 
+    - kód - medzera, štýl 
+    - video príklady 
 
 ## TODO - text 
 - P - záver
-- zmenit obrazok pri ukazovani pixelation mode, dat tam nieco viac abstraktne
-- obrázok s fyzickými rozmermi - dat tam nekvalitný obrázok a zmeniť X na znak 
 - implementácia - review
 
 - scenár pre video
@@ -25,35 +20,15 @@
 # TODO
 - P - zaistit aby pri resize objektov bolo snapovanie plynule tak ako pri drag
 
-- fyzické rozmery rámikov
-- zmena veľkosti obrázka - prepočítať rámik vo fyzických rozmeroch
-
-- skontrolovať texty
-├── DONE - calibration.json
-├── DONE - contextMenu.json
-├── DONE - dragAndDropArea.json
-├── DONE - featureTour.json
-├── DONE - general.json
-├── DONE - help.json
-├── DONE - home.json
-├── DONE - imageStore.json
-├── DONE - maintenance.json
-├── DONE - privacy.json
-├── SKIP - release.json
-├── DONE - statistics.json
-├── DONE - tools.json
-├── DONE - topPanel.json
-└── DONE - tutorialSteps.json
-
 ## Dlhodobé TODO 
 - eye dropper na safari
-- BG removal - ukladanie do undo redo operácií pri výbere 
-- pridať nástroj fill (kýbel)
-- Crop orezanie v centimetroch, v pomere
-- Pozrieť sa na spoplatnenie - maximálny počet exportov, by me coffee
-- Vylepšenie rámiku pre prehliadače 
 
 ## Insane ideas
+- Vylepšenie rámiku pre prehliadače 
+- BG removal - ukladanie do undo redo operácií pri výbere 
+- Pozrieť sa na spoplatnenie - maximálny počet exportov, by me coffee
+- Crop orezanie v centimetroch, v pomere
+- pridať nástroj fill (kbelík)
 - možnosť všetko exportovať naraz do zip
 - aplikovanie operácie na všetky obrázky 
 - Premenné prostredia (pre farbu, veľkosť)

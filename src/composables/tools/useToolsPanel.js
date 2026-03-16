@@ -10,6 +10,7 @@ import { useConsole } from '@/composables/common/useConsole.js'
 const { log } = useConsole()
 import { useApi } from '@/composables/common/useApi'
 const { addUserEvent } = useApi()
+import { useZoomControl } from '../topPanel/useZoomControl'
 
 /**
  * Logic for managing the left tools panel
@@ -30,8 +31,9 @@ const { addUserEvent } = useApi()
  *   isToolDisabled: import('vue').ComputedRef<boolean>,
  * }}
  */
-export function useToolsPanel(editorStore, imageStore, uiStore, workspaceStore, t) {
+export function useToolsPanel(editorStore, imageStore, uiStore, viewportStore, t) {
   const { showToastModal } = useToastModal()
+  const { toggleZoomMode } = useZoomControl(viewportStore, imageStore, t)
 
   /**
    * Reference to the scrollable tools panel element
@@ -128,6 +130,13 @@ export function useToolsPanel(editorStore, imageStore, uiStore, workspaceStore, 
       // Clear removal canvas when switching between tools
       if (newVal.tool !== oldValue.tool) {
         imageStore.removalCanvas = null
+      }
+
+      // If switched to frame tool, use physical zoom mode if using millimeters for frame width
+      if (newVal.tool === 'frame' && oldValue.tool !== 'frame') {
+        if (imageStore.frame.enabled && imageStore.frame.useMillimeters) {
+          toggleZoomMode('physical')
+        }
       }
     },
     { immediate: true, deep: false },
