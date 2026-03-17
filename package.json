@@ -11,11 +11,12 @@
     "format": "prettier --write src/",
     "test": "vitest",
     "test:ui": "vitest --ui",
+    "test:coverage": "vitest run --coverage",
+    "test:coverage:ui": "vitest --ui --coverage",
     "deploy": "sh deploy.sh",
     "deploy:push": "sh deployPush.sh",
     "i18n:export": "node scripts/ExportTranslations.js",
-    "i18n:import": "node scripts/ImportTranslations.js",
-    "generate:api": "orval generate"
+    "i18n:import": "node scripts/ImportTranslations.js"
   },
   "dependencies": {
     "@vueuse/core": "^13.5.0",

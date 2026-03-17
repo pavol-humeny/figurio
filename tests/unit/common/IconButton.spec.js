@@ -7,82 +7,133 @@ import { describe, it, expect } from 'vitest'
 import { mount } from '@vue/test-utils'
 import IconButton from '@/components/common/IconButton.vue'
 
+// Simple stubs
+const globalStubs = {
+  ItemTip: {
+    name: 'ItemTip',
+    template: '<div><slot /></div>',
+    props: ['text', 'position'],
+  },
+  BaseIcon: {
+    name: 'BaseIcon',
+    template: '<div />',
+    props: ['name', 'size', 'color'],
+  },
+}
+
 describe('IconButton.vue', () => {
-  it('renders BaseIcon with correct props', () => {
-    const wrapper = mount(IconButton, {
+  const factory = (props = {}) =>
+    mount(IconButton, {
       props: {
         icon: 'TestIcon',
-        size: 24,
-        color: '#123456',
+        ...props,
+      },
+      global: {
+        stubs: globalStubs,
       },
     })
 
+  it('renders button', () => {
+    const wrapper = factory()
+    expect(wrapper.find('button').exists()).toBe(true)
+  })
+
+  it('renders BaseIcon with correct props', () => {
+    const wrapper = factory({
+      size: 24,
+      color: '#123456',
+    })
+
     const baseIcon = wrapper.findComponent({ name: 'BaseIcon' })
+
     expect(baseIcon.exists()).toBe(true)
     expect(baseIcon.props('name')).toBe('TestIcon')
     expect(baseIcon.props('size')).toBe(24)
     expect(baseIcon.props('color')).toBe('#123456')
   })
 
+  it('uses default props correctly', () => {
+    const wrapper = factory()
+
+    const baseIcon = wrapper.findComponent({ name: 'BaseIcon' })
+    const itemTip = wrapper.findComponent({ name: 'ItemTip' })
+
+    expect(baseIcon.props('size')).toBe(20)
+    expect(baseIcon.props('color')).toBe('var(--primary-c)')
+
+    expect(itemTip.props('text')).toBe('')
+    expect(itemTip.props('position')).toBe('bottom')
+  })
+
   it('emits click event on button click', async () => {
-    const wrapper = mount(IconButton, {
-      props: {
-        icon: 'TestIcon',
-      },
-    })
+    const wrapper = factory()
 
     await wrapper.find('button').trigger('click')
-    expect(wrapper.emitted('click')).toBeTruthy()
+
+    expect(wrapper.emitted('click')).toHaveLength(1)
   })
 
-  it('applies active and disabled classes correctly', () => {
-    const wrapper = mount(IconButton, {
-      props: {
-        icon: 'TestIcon',
-        active: true,
-        disabled: true,
-      },
-    })
+  it('still emits click even when disabled (current behavior)', async () => {
+    const wrapper = factory({ disabled: true })
 
-    const button = wrapper.find('button')
-    expect(button.classes()).toContain('active')
-    expect(button.classes()).toContain('disabled')
+    await wrapper.find('button').trigger('click')
+
+    expect(wrapper.emitted('click')).toHaveLength(1)
   })
 
-  it('applies default scale when not set', () => {
-    const wrapper = mount(IconButton, {
-      props: {
-        icon: 'TestIcon',
-      },
-    })
+  it('applies active class', () => {
+    const wrapper = factory({ active: true })
 
-    const tooltipWrapper = wrapper.findComponent({ name: 'ItemTip' })
-    expect(tooltipWrapper.attributes('style')).toContain('scale(1)')
+    expect(wrapper.find('button').classes()).toContain('active')
   })
 
-  it('applies custom scale via style', () => {
-    const wrapper = mount(IconButton, {
-      props: {
-        icon: 'TestIcon',
-        scale: 1.5,
-      },
-    })
+  it('applies disabled class', () => {
+    const wrapper = factory({ disabled: true })
 
-    const tooltipWrapper = wrapper.findComponent({ name: 'ItemTip' })
-    expect(tooltipWrapper.attributes('style')).toContain('scale(1.5)')
+    expect(wrapper.find('button').classes()).toContain('disabled')
+  })
+
+  it('does not apply active/disabled classes by default', () => {
+    const wrapper = factory()
+
+    const classes = wrapper.find('button').classes()
+
+    expect(classes).not.toContain('active')
+    expect(classes).not.toContain('disabled')
+  })
+
+  it('applies default scale (1)', () => {
+    const wrapper = factory()
+
+    const itemTip = wrapper.findComponent({ name: 'ItemTip' })
+    expect(itemTip.attributes('style')).toContain('scale(1)')
+  })
+
+  it('applies custom scale', () => {
+    const wrapper = factory({ scale: 1.5 })
+
+    const itemTip = wrapper.findComponent({ name: 'ItemTip' })
+    expect(itemTip.attributes('style')).toContain('scale(1.5)')
   })
 
   it('passes tip and position to ItemTip', () => {
-    const wrapper = mount(IconButton, {
-      props: {
-        icon: 'TestIcon',
-        tip: 'Tooltip text',
-        position: 'top',
-      },
+    const wrapper = factory({
+      tip: 'Tooltip text',
+      position: 'top',
     })
 
     const itemTip = wrapper.findComponent({ name: 'ItemTip' })
+
     expect(itemTip.props('text')).toBe('Tooltip text')
     expect(itemTip.props('position')).toBe('top')
+  })
+
+  it('wraps button inside ItemTip', () => {
+    const wrapper = factory()
+
+    const itemTip = wrapper.findComponent({ name: 'ItemTip' })
+    const button = itemTip.find('button')
+
+    expect(button.exists()).toBe(true)
   })
 })
