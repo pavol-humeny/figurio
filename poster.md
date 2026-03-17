@@ -112,14 +112,14 @@ Okrem uvedených funkcií aplikácia obsahuje aj ďalšie nástroje na úpravu a
 
 ## Poster sizes
 Okraje - 20mm
-Medzera medzi položkami (väčšia) - 15mm
-Medzera medzi položkami (menšia) - 7.5mm
+Medzera medzi prvkami (väčšia) - 15mm
+Medzera medzi prvkami (menšia) - 7.5mm
 
 Logo - 80x80mm
 
 Corner radius - 4mm
 
-font: Inter (veľkosť v mm veľkého písmena)
+font: Inter (veľkosť v mm)
 - --- 46pt (12mm) veľký nadpis 
 - 38pt (10mm) nadpis 
 - --- 24pt (6.2mm) - väčší text 

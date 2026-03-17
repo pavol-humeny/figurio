@@ -13,14 +13,18 @@
 
 ## TODO - text 
 - P - záver
-- implementácia - review
+- implementácia nástroje - review
 - prehlásenie AI
-
-
-- scenár pre video
+- video scenár
 
 # TODO
 - P - zaistit aby pri resize objektov bolo snapovanie plynule tak ako pri drag
+- drag and drop neotvara viac suborov
+- vložiť QR kód do plagátu 
+
+- kuchyňa
+
+- tabuľka veľkostí textu 
 
 ## Dlhodobé TODO 
 - eye dropper na safari
