@@ -6,6 +6,7 @@
     "allVisits": "All visits",
     "uniqueVisits": "Unique visits",
     "appInstalledVisits": "Number of app installations",
+    "pwaVisits": "Number of PWA visits",
     "countryVisits": "Visits by country",
     "visitsPerDay": {
       "title": "Visits per day",

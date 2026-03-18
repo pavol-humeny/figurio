@@ -25,6 +25,7 @@ import VisitsByUser from '@/components/statistics/VisitsByUser.vue';
 import EventsByUser from '@/components/statistics/EventsByUser.vue';
 import SessionDurationByUser from '@/components/statistics/sessionDurationByUser.vue';
 import AppInstalled from '@/components/statistics/AppInstalled.vue';
+import NumberOfPWA from '@/components/statistics/NumberOfPWA.vue';
 
 const statisticsView = ref(localStorage.getItem(`${globalConfig.LOCAL_STORAGE_PREFIX}statisticsView`) || 'visits'); // 'visits' | 'events'
 
@@ -55,8 +56,9 @@ const selectStatistics = (view) => {
     <div v-if="statisticsView === 'visits'" class="visits-wrapper">
       <div class="all-unique-visits">
         <AllVisits />
-        <AppInstalled />
+        <NumberOfPWA />
         <UniqueVisits />
+        <AppInstalled />
       </div>
       <LastDaysVisits />
       <VisitsByDayFullRange />

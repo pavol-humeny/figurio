@@ -6,6 +6,7 @@
     "allVisits": "Všechny návštěvy",
     "uniqueVisits": "Unikátní návštěvy",
     "appInstalledVisits": "Počet instalací aplikace",
+    "pwaVisits": "Počet návštěv ako PWA",
     "countryVisits": "Návštěvy podle země",
     "visitsPerDay": {
       "title": "Návštěvy za den",

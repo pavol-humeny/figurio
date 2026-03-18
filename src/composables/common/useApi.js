@@ -539,6 +539,24 @@ toolToggleCount}, ...]
     }
   }
 
+  /**
+   * Fetches the total number of visits where the app was used as a PWA
+   */
+  const getNumberOfPWAVisits = async () => {
+    try {
+      const res = await fetch(`${API_BASE}/api/visits/numberOfPWAVisits`)
+      if (!res.ok) throw new Error('Failed to fetch number of PWA visits')
+
+      const data = await res.json()
+      log('Number of PWA visits fetched:', data)
+
+      return data.pwaVisits
+    } catch (err) {
+      error('Error fetching number of PWA visits:', err)
+      return 0
+    }
+  }
+
   return {
     addUserVisit,
     addUserEvent,
@@ -564,5 +582,6 @@ toolToggleCount}, ...]
     getEventsByUser,
     getSessionDurationByUser,
     getAppInstalledCount,
+    getNumberOfPWAVisits,
   }
 }

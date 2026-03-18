@@ -1,0 +1,13 @@
+<!--
+  @file: IconPWAUsage.vue
+  @author: Pavol Humeny
+  @date: 15.5.2026
+-->
+<template>
+  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+    id="Desktop-Windows--Streamline-Outlined-Material" height="24" width="24">
+    <path fill="currentColor"
+      d="M8.35 21v-1.5H10.5v-2.5H3.5c-0.4 0 -0.75 -0.15 -1.05 -0.45 -0.3 -0.3 -0.45 -0.65 -0.45 -1.05V4.5c0 -0.4 0.15 -0.75 0.45 -1.05C2.75 3.15 3.1 3 3.5 3h17c0.4 0 0.75 0.15 1.05 0.45 0.3 0.3 0.45 0.65 0.45 1.05v11c0 0.4 -0.15 0.75 -0.45 1.05 -0.3 0.3 -0.65 0.45 -1.05 0.45H13.5v2.5h2.15v1.5H8.35ZM3.5 15.5h17V4.5H3.5v11Z"
+      stroke-width="0.5"></path>
+  </svg>
+</template>
