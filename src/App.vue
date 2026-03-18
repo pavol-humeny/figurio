@@ -35,7 +35,7 @@ import { useI18n } from 'vue-i18n'
 import { useEditorStore } from './stores/editorStore'
 
 const { warn } = useConsole()
-const { addUserVisit, sendVisitDuringMaintenanceEmail, sendSessionHeartbeat } = useApi()
+const { addUserVisit, sendVisitDuringMaintenanceEmail, sendSessionHeartbeat, addUserEvent } = useApi()
 
 const router = useRouter()
 const route = useRoute()
@@ -222,6 +222,17 @@ const handleBeforeUnload = (event) => {
 }
 
 // --------------------------------
+// Log app installation event for analytics
+// --------------------------------
+/**
+ * Logs an 'appInstalled' event for analytics when the app is installed as a PWA.
+ */
+const logAppInstalled = () => {
+  warn('App installed as PWA')
+  addUserEvent('appInstalled', {})
+}
+
+// --------------------------------
 // Session duration tracking for analytics
 // --------------------------------
 let heartbeatTimer = null
@@ -311,6 +322,8 @@ onMounted(async () => {
   window.addEventListener('contextmenu', blockContextMenu)
   window.addEventListener('resize', checkWindowSize)
 
+  window.addEventListener('appinstalled', logAppInstalled)
+
   checkWindowSize()
   checkSafariSupport()
 
@@ -386,7 +399,14 @@ onMounted(async () => {
   } else {
     // Log user visit only if not on statistics page
     if (route.name !== 'statistics') {
-      addUserVisit(userUuid)
+      // If isPWA is true, it means that the user has installed the app as a PWA
+      const isPWA =
+        window.matchMedia('(display-mode: standalone)').matches ||
+        window.navigator.standalone === true
+
+      warn(`Logging user visit. User UUID: ${userUuid}, isPWA: ${isPWA}`)
+
+      addUserVisit(userUuid, isPWA)
 
       registerActivityListeners()
       startSessionHeartbeat()

@@ -10,10 +10,22 @@ import { createPinia } from 'pinia'
 import { useUiStore } from '@/stores/uiStore'
 import { usePresetsStore } from '@/stores/presetsStore'
 import { setupGlobalErrorHandling } from '@/composables/editor/globalErrorHandler.js'
+import { registerSW } from 'virtual:pwa-register'
 
 import App from './App.vue'
 import router from './router'
 import i18n from './i18n'
+
+const updateSW = registerSW({
+  onNeedRefresh() {
+    console.log('New version available')
+
+    updateSW(true)
+  },
+  onOfflineReady() {
+    console.log('App ready for offline use')
+  },
+})
 
 const app = createApp(App)
 

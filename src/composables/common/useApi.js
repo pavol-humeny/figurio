@@ -27,8 +27,9 @@ export function useApi() {
    * Adds a visit for a user.
    * If user does not exist, backend will create it automatically.
    * @param {string} userId - UUID of the user
+   * @param {boolean} isPWA - Indicates if the app is running as a PWA
    */
-  const addUserVisit = async (userId) => {
+  const addUserVisit = async (userId, isPWA) => {
     if (!globalConfig.usageStatsSettings.sendUsageStats) return
 
     if (isLocalhost() && !globalConfig.usageStatsSettings.sendUsageStatsOnLocalhost) return
@@ -46,7 +47,7 @@ export function useApi() {
       const res = await fetch(`${API_BASE}/api/users/${userId}/visits`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ ip }),
+        body: JSON.stringify({ ip, isPWA }),
       })
 
       if (res.ok) {
