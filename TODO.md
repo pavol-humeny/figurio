@@ -11,17 +11,19 @@
     - kód - medzera, štýl 
     - video príklady 
     - potrebujem zmenit konštantu v rámikoch - mobilné zaoblenie
+    - v akom formáte dátum v citácii
+    - testovanie - ukázať grafy
+    - historická verzia Figurio 
+    - overleaf má históriu 
 
 ## TODO - text 
 - P - záver
 - implementácia nástroje - review
 - prehlásenie AI
 - video scenár
-- PWA plugin
 
 # TODO
 - P - zaistit aby pri resize objektov bolo snapovanie plynule tak ako pri drag
-- vložiť QR kód do plagátu 
 
 - tabuľka veľkostí textu 
 
