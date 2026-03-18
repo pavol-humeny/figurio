@@ -5,6 +5,7 @@
     },
     "allVisits": "Všetky návštevy",
     "uniqueVisits": "Unikátne návštevy",
+    "appInstalledVisits": "Počet instalací aplikácie",
     "countryVisits": "Návštevy podľa krajiny",
     "visitsPerDay": {
       "title": "Návštevy za deň",

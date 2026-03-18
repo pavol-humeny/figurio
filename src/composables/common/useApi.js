@@ -521,6 +521,24 @@ toolToggleCount}, ...]
     }
   }
 
+  /**
+   * Fetches the total number of times the app has been installed as a PWA
+   */
+  const getAppInstalledCount = async () => {
+    try {
+      const res = await fetch(`${API_BASE}/api/events/appInstalledCount`)
+      if (!res.ok) throw new Error('Failed to fetch app installed count')
+
+      const data = await res.json()
+      log('App installed count fetched:', data)
+
+      return data.appInstalledCount
+    } catch (err) {
+      error('Error fetching app installed count:', err)
+      return 0
+    }
+  }
+
   return {
     addUserVisit,
     addUserEvent,
@@ -545,5 +563,6 @@ toolToggleCount}, ...]
     getVisitsByUser,
     getEventsByUser,
     getSessionDurationByUser,
+    getAppInstalledCount,
   }
 }

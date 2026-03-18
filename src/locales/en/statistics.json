@@ -5,6 +5,7 @@
     },
     "allVisits": "All visits",
     "uniqueVisits": "Unique visits",
+    "appInstalledVisits": "Number of app installations",
     "countryVisits": "Visits by country",
     "visitsPerDay": {
       "title": "Visits per day",

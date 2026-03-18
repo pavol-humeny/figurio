@@ -19,7 +19,7 @@ const props = defineProps({
   visitType: {
     type: String,
     required: false,
-    default: 'all', // 'all' | 'unique'
+    default: 'all', // 'all' | 'unique' |'appInstalled'
   },
   visitCount: {
     type: Number,
