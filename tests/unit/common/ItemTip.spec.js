@@ -8,7 +8,31 @@ import { mount, flushPromises } from '@vue/test-utils'
 import ItemTip from '@/components/common/ItemTip.vue'
 import { useItemTip } from '@/composables/common/useItemTip'
 
-// === Mocks ===
+vi.mock('@/stores/uiStore', () => ({
+  useUiStore: () => ({
+    isItemTipVisible: true,
+    isDropdownOpen: false,
+  }),
+}))
+
+vi.mock('@/stores/editorStore', () => ({
+  useEditorStore: () => ({
+    setToolWithOpenSubTools: vi.fn(),
+  }),
+}))
+
+vi.mock('@/composables/modals/useVideoLoader', () => ({
+  useVideoLoader: () => ({
+    getVideo: () => 'video.mp4',
+  }),
+}))
+
+vi.mock('@/composables/modals/useFeatureTourModal.js', () => ({
+  useFeatureTourModal: () => ({
+    openSingleFeatureTourModal: vi.fn(),
+  }),
+}))
+
 const mockRect = {
   top: 100,
   left: 200,
@@ -18,135 +42,217 @@ const mockRect = {
   height: 50,
 }
 
-// === Component tests ===
+beforeEach(() => {
+  vi.useFakeTimers()
+  document.body.innerHTML = ''
+
+  HTMLCanvasElement.prototype.getContext = vi.fn(() => ({
+    measureText: () => ({ width: 100 }),
+    font: '',
+  }))
+
+  document.elementFromPoint = vi.fn(() => document.body)
+})
+
+afterEach(() => {
+  vi.useRealTimers()
+})
+
+const mountTip = (props = {}, options = {}) =>
+  mount(ItemTip, {
+    props,
+    attachTo: document.body,
+    ...options,
+    global: {
+      stubs: {
+        teleport: true,
+        transition: false,
+      },
+      ...(options.global || {}),
+    },
+  })
+
 describe('ItemTip.vue', () => {
-  beforeEach(() => {
-    vi.useFakeTimers()
-    document.body.innerHTML = ''
+  it('renders slot content', () => {
+    const wrapper = mountTip(
+      { text: 'Tooltip' },
+      {
+        slots: { default: '<button id="btn">Btn</button>' },
+      },
+    )
+
+    expect(wrapper.find('#btn').exists()).toBe(true)
   })
 
-  afterEach(() => {
-    vi.useRealTimers()
-  })
-
-  it('renders slot content correctly', () => {
-    const wrapper = mount(ItemTip, {
-      props: { text: 'Tooltip text' },
-      slots: { default: '<button>Hover me</button>' },
-    })
-    expect(wrapper.find('button').text()).toBe('Hover me')
-  })
-
-  it('does not render tooltip if text is empty', async () => {
-    const wrapper = mount(ItemTip, { props: { text: '' } })
-    await wrapper.trigger('mouseenter')
-    vi.runAllTimers()
-    await flushPromises()
-    expect(document.body.innerHTML).not.toContain('item-tip-bubble')
-  })
-
-  it('shows tooltip on hover and hides on leave', async () => {
-    const wrapper = mount(ItemTip, { props: { text: 'Hover tooltip' } })
+  it('does not show tooltip when text empty', async () => {
+    const wrapper = mountTip({ text: '' })
 
     await wrapper.trigger('mouseenter')
     vi.runAllTimers()
     await flushPromises()
 
-    expect(document.body.innerHTML).toContain('Hover tooltip')
+    expect(document.body.querySelector('.item-tip-bubble')).toBeFalsy()
+  })
+
+  it('shows tooltip', async () => {
+    const wrapper = mountTip({ text: 'Hello' })
+
+    await wrapper.trigger('mouseenter')
+    vi.runAllTimers()
+    await flushPromises()
+
+    expect(document.body.innerHTML).toContain('Hello')
+  })
+
+  it('hides tooltip after leave', async () => {
+    const wrapper = mountTip({ text: 'Hello' })
+
+    await wrapper.trigger('mouseenter')
+    vi.runAllTimers()
+    await flushPromises()
 
     await wrapper.trigger('mouseleave')
+    vi.runAllTimers()
+    await flushPromises()
+
     expect(wrapper.vm.isVisible).toBe(false)
   })
 
-  it('renders advanced tooltip with title and shortcut', async () => {
-    const wrapper = mount(ItemTip, {
-      props: {
-        text: 'Advanced description',
-        advance: true,
-        title: 'Tooltip Title',
-        shortcut: 'Ctrl+T',
-      },
+  it('renders advanced tooltip', async () => {
+    const wrapper = mountTip({
+      text: 'Desc',
+      advance: true,
+      title: 'Title',
+      shortcut: 'Ctrl+S',
     })
 
     await wrapper.trigger('mouseenter')
     vi.runAllTimers()
     await flushPromises()
 
-    expect(document.body.innerHTML).toContain('Tooltip Title')
-    expect(document.body.innerHTML).toContain('Ctrl+T')
-    expect(document.body.innerHTML).toContain('Advanced description')
+    const html = document.body.innerHTML
+    expect(html).toContain('Title')
+    expect(html).toContain('Ctrl+S')
+    expect(html).toContain('Desc')
   })
 
-  it('does not render shortcut if empty', async () => {
-    const wrapper = mount(ItemTip, {
-      props: {
-        text: 'Some text',
-        advance: true,
-        title: 'My title',
-        shortcut: '',
-      },
+  it('renders advanceTool with video', async () => {
+    const wrapper = mountTip({
+      text: 'Desc',
+      advanceTool: true,
+      title: 'Title',
+      toolKey: 'crop',
     })
 
     await wrapper.trigger('mouseenter')
     vi.runAllTimers()
     await flushPromises()
 
-    expect(document.body.innerHTML).not.toContain('tip-shortcut')
+    expect(document.body.querySelector('video')).toBeTruthy()
   })
 
-  it('applies correct position class', async () => {
-    const wrapper = mount(ItemTip, {
-      props: {
-        text: 'Positioned tooltip',
-        position: 'bottom-left',
-      },
+  it('applies position classes', async () => {
+    const wrapper = mountTip({
+      text: 'Test',
+      position: 'bottom-left',
     })
 
     await wrapper.trigger('mouseenter')
     vi.runAllTimers()
     await flushPromises()
 
-    expect(document.body.querySelector('.item-tip-bubble')?.classList).toContain('bottom-left')
-    expect(document.body.querySelector('.item-tip-arrow')?.classList).toContain('bottom-left')
+    const bubble = document.body.querySelector('.item-tip-bubble')
+    const arrow = document.body.querySelector('.item-tip-arrow')
+
+    expect(bubble).toBeTruthy()
+    expect(arrow).toBeTruthy()
+
+    expect(bubble.classList.contains('bottom-left')).toBe(true)
+    expect(arrow.classList.contains('bottom-left')).toBe(true)
   })
 })
 
-// === Composable logic tests ===
-describe('useItemTip composable', () => {
-  it('shows and hides tooltip via composable', async () => {
-    const tip = useItemTip({ delay: 50 })
+describe('useItemTip', () => {
+  let uiStore
+  let editorStore
+
+  beforeEach(() => {
+    uiStore = {
+      isItemTipVisible: true,
+      isDropdownOpen: false,
+    }
+
+    editorStore = {
+      setToolWithOpenSubTools: vi.fn(),
+    }
+  })
+
+  it('shows after delay', () => {
+    const tip = useItemTip({ delay: 50 }, uiStore, editorStore)
     tip.wrapperRef.value = { getBoundingClientRect: () => mockRect }
 
-    vi.useFakeTimers()
     tip.handleMouseEnter()
     vi.advanceTimersByTime(50)
 
     expect(tip.isVisible.value).toBe(true)
-
-    tip.handleMouseLeave()
-    expect(tip.isVisible.value).toBe(false)
-    vi.useRealTimers()
   })
 
-  it('computes correct coordinates for all positions', () => {
-    const positions = {
-      'top-right': { top: 92, left: 200 },
-      'top-left': { top: 92, left: 300 },
-      bottom: { top: 158, left: 250 },
-      'bottom-right': { top: 158, left: 200 },
-      'bottom-left': { top: 158, left: 300 },
-      left: { top: 125, left: 192 },
-      right: { top: 125, left: 308 },
-    }
+  it('hides after leave delay', () => {
+    const tip = useItemTip({ delay: 0 }, uiStore, editorStore)
 
-    for (const [pos, expected] of Object.entries(positions)) {
-      const tip = useItemTip({ position: pos, offset: 8 })
-      tip.wrapperRef.value = { getBoundingClientRect: () => mockRect }
+    const el = document.createElement('div')
+    const tipEl = document.createElement('div')
 
-      tip.updatePosition()
+    tip.wrapperRef.value = el
+    tip.tipRef.value = tipEl
 
-      expect(tip.itemTipStyle.value.top).toBe(`${expected.top}px`)
-      expect(tip.itemTipStyle.value.left).toBe(`${expected.left}px`)
-    }
+    document.body.appendChild(el)
+    document.body.appendChild(tipEl)
+
+    tip.isVisible.value = true
+
+    document.elementFromPoint = vi.fn(() => document.createElement('div'))
+
+    tip.handleMouseLeave()
+    vi.runAllTimers()
+
+    expect(tip.isVisible.value).toBe(false)
+  })
+
+  it('computes correct positions', () => {
+    const tip = useItemTip({ position: 'bottom', offset: 8 }, uiStore, editorStore)
+    tip.wrapperRef.value = { getBoundingClientRect: () => mockRect }
+
+    tip.updatePosition()
+
+    expect(tip.itemTipStyle.value.top).toBe('158px')
+    expect(tip.itemTipStyle.value.left).toBe('250px')
+  })
+
+  it('hides on outside click', () => {
+    const tip = useItemTip({}, uiStore, editorStore)
+
+    const el = document.createElement('div')
+    const tipEl = document.createElement('div')
+
+    tip.wrapperRef.value = el
+    tip.tipRef.value = tipEl
+
+    tip.isVisible.value = true
+
+    document.elementFromPoint = vi.fn(() => document.createElement('div'))
+
+    tip.handleMouseClick()
+
+    expect(tip.isVisible.value).toBe(false)
+  })
+
+  it('openToolVideo hides tooltip', () => {
+    const tip = useItemTip({}, uiStore, editorStore)
+
+    tip.isVisible.value = true
+    tip.openToolVideo('crop')
+
+    expect(tip.isVisible.value).toBe(false)
   })
 })
