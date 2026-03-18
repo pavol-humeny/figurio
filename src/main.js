@@ -20,7 +20,11 @@ const updateSW = registerSW({
   onNeedRefresh() {
     console.log('New version available')
 
+    // Activate new SW
     updateSW(true)
+
+    // Force reload
+    window.location.reload()
   },
   onOfflineReady() {
     console.log('App ready for offline use')

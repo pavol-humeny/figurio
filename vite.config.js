@@ -14,7 +14,7 @@ export default defineConfig({
 
     // PWA plugin
     VitePWA({
-      registerType: 'autoUpdate',
+      registerType: 'prompt',
 
       manifest: {
         name: 'Figurio',

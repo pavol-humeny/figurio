@@ -7,8 +7,7 @@
 - Unit testy 
 - kniha 
 - v
-    - preklad 
-    - kód - medzera, štýl 
+    - preklad help
     - video príklady 
     - potrebujem zmenit konštantu v rámikoch - mobilné zaoblenie
     - v akom formáte dátum v citácii
