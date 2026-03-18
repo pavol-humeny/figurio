@@ -21,11 +21,7 @@
 
 # TODO
 - P - zaistit aby pri resize objektov bolo snapovanie plynule tak ako pri drag
-- drag and drop neotvara viac suborov
 - vložiť QR kód do plagátu 
-
-- štatistika inštalácie
-- štatistika používania na webe alebo v aplikácii 
 
 - tabuľka veľkostí textu 
 

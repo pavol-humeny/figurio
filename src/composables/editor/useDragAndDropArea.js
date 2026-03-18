@@ -82,7 +82,7 @@ export function useDragAndDropArea(
    *
    * @param {DragEvent} event - Drop event
    */
-  const handleDrop = (event) => {
+  const handleDrop = async (event) => {
     event.preventDefault()
     isDragging.value = false
 
@@ -90,7 +90,12 @@ export function useDragAndDropArea(
 
     if (files && files.length > 0) {
       // Support only single file upload via drag and drop
-      loadFile(files[0], router)
+      // loadFile(files[0], router)
+
+      for (const file of files) {
+        await loadFile(file, router)
+        await new Promise((resolve) => setTimeout(resolve, 200)) // Small delay to ensure UI updates
+      }
     }
   }
 

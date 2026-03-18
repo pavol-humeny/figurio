@@ -22,7 +22,7 @@ export default defineConfig({
         start_url: '/figurio/',
         display: 'standalone',
         background_color: '#ffffff',
-        theme_color: '#0f172a',
+        theme_color: '#313131',
         icons: [
           {
             src: 'icon-192.png',

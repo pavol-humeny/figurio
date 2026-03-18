@@ -16,7 +16,6 @@ import { useImportModal } from '@/composables/modals/useImportModal'
 pdfjsLib.GlobalWorkerOptions.workerSrc =
   'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js'
 import { useApi } from '@/composables/common/useApi'
-import { ref } from 'vue'
 
 const { addUserEvent } = useApi()
 const { log, warn } = useConsole()
@@ -46,11 +45,6 @@ export function importFileService(
 ) {
   const { initPipeline, renderUpTo } = useImagePipeline(imageStore, uiStore)
   const { closeImportModal } = useImportModal()
-
-  /**
-   * Ref to track the number of files currently being opened to prevent calculating artifacts when opening multiple files at once
-   */
-  const numberOfCurrentlyOpeningFiles = ref(0)
 
   /**
    * Opens a file input dialog for the user to select files and processes them
@@ -110,7 +104,7 @@ export function importFileService(
         }
       }
 
-      numberOfCurrentlyOpeningFiles.value = filesArray.length
+      editorStore.numberOfCurrentlyOpeningFiles = filesArray.length
 
       // Process files
       if (
@@ -521,7 +515,7 @@ export function importFileService(
     // Workspace tab
     workspaceStore.addNewTab(imageStore.fileName, imageStore.fileFormat, t)
 
-    if (numberOfCurrentlyOpeningFiles.value === 1) {
+    if (editorStore.numberOfCurrentlyOpeningFiles === 1) {
       warn('calculateArtifacts called from setFile - image loaded')
 
       // Calculate image artifacts (noise)

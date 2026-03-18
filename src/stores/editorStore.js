@@ -197,6 +197,9 @@ export const useEditorStore = defineStore('editorStore', {
     /** Whether any modal is open */
     isModalOpenFlag: false,
 
+    /** Counter to track the number of files currently being opened to prevent calculating artifacts when opening multiple files at once */
+    numberOfCurrentlyOpeningFiles: 0,
+
     /**
      * List of recently used colors (for shape fill/stroke and brush)
      */
