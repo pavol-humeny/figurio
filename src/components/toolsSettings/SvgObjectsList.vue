@@ -45,7 +45,8 @@ const {
         <template #item="{ element }">
           <div class="svg-object-item" :class="{ selected: imageStore.selectedSvgObjectId === element.id }"
             @click="selectObject(element.id)">
-            <span class="drag-handle" :style="{ opacity: element.draggable ? 1 : 0 }">☰</span>
+            <span class="drag-handle"
+              :class="{ 'drag-handle-disabled': (element.type === 'blur' || element.type === 'magnify') }">☰</span>
 
             <input v-if="editingId === element.id" ref="editingInputRef" class="rename-input" type="text"
               :value="getElementName(element.name)" @input="element.name = $event.target.value"
@@ -171,5 +172,11 @@ const {
 
 .rename-input:focus {
   border-color: var(--primary-c);
+}
+
+.drag-handle-disabled {
+  opacity: 0;
+  pointer-events: none;
+  cursor: default;
 }
 </style>
