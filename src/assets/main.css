@@ -12,6 +12,10 @@
   transform-origin: top left;
 }
 
+.no-scroll {
+  overflow: hidden !important;
+}
+
 @media (max-width: 1118px) {
   #app {
     /* Minus slider size */

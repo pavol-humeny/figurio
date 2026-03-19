@@ -158,9 +158,12 @@ const {
   width: 100vw;
   height: 100vh;
   background: var(--overlay-c);
+
   display: flex;
-  justify-content: center;
-  align-items: center;
+  overflow-y: auto;
+
+  padding: 40px 20px;
+
   z-index: var(--z-index-export);
 }
 
@@ -169,11 +172,21 @@ const {
   border: var(--border-modal);
   padding: 40px 50px;
   border-radius: 20px;
-  min-width: 900px;
-  max-width: 80vh;
-  min-height: 500px;
-  max-height: 80vh;
+
+  /* 🔥 kľúčové */
+  width: 900px;
+  height: max-content;
+
+  /* safety */
+  max-width: 90vw;
+
+  /* center */
+  margin: auto;
+
+  flex-shrink: 0;
+
   box-shadow: var(--box-shadow-ui);
+
   display: flex;
   flex-direction: row;
   align-items: center;

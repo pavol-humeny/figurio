@@ -228,7 +228,7 @@ const cursorStyle = computed(() => {
     :style="{ cursor: cursorStyle }">
     <LoadingSpinner />
 
-    <div class="viewport-content-wrapper" ref="wrapperRef" @wheel.passive="setZoomAndScroll" @mousedown="startPan"
+    <div class="viewport-content-wrapper" ref="wrapperRef" @wheel="setZoomAndScroll" @mousedown="startPan"
       @mousemove="onMouseMove" :class="{
         'middle-dragging': isMiddleDragging,
       }" :style="{

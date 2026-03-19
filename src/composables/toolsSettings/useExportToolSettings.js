@@ -3,7 +3,7 @@
  * @author: Pavol Humeny
  * @date: 15.5.2026
  */
-import { ref, computed, nextTick, watch } from 'vue'
+import { ref, computed, nextTick, watch, onUnmounted } from 'vue'
 import { useMath } from '../common/useMath'
 import { editorConfig } from '@/config/editorConfig'
 import { useConsole } from '@/composables/common/useConsole.js'
@@ -56,6 +56,22 @@ export function useExportToolSettings(
   if (imageStore && imageStore.newFileName) {
     fileName.value = imageStore.newFileName
   }
+
+  /**
+   * Watch for changes in the panel visibility and toggle scroll accordingly
+   */
+  watch(isVisible, (visible) => {
+    const app = document.getElementById('app')
+
+    document.body.classList.toggle('no-scroll', visible)
+    if (app) app.classList.toggle('no-scroll', visible)
+  })
+  onUnmounted(() => {
+    const app = document.getElementById('app')
+
+    document.body.classList.remove('no-scroll')
+    if (app) app.classList.remove('no-scroll')
+  })
 
   /**
    * Watch for changes in the file name from store and update local value

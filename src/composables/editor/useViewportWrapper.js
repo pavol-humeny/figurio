@@ -181,6 +181,7 @@ export function useViewportWrapper(
 
   // Zoom and scroll handling
   const setZoomAndScroll = (event) => {
+    event.preventDefault()
     if (uiStore.isApplying) return
 
     const speedFactor = event.altKey ? viewportConfig.fasterScrollMultiplier : 1

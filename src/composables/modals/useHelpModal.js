@@ -3,7 +3,7 @@
  * @author: Pavol Humeny
  * @date: 15.5.2026
  */
-import { ref, watch, reactive } from 'vue'
+import { ref, watch, reactive, onUnmounted } from 'vue'
 import { useInteractiveTutorial } from '@/composables/tutorial/useInteractiveTutorial'
 import { useApi } from '@/composables/common/useApi'
 import { useFeatureTourModal } from '@/composables/modals/useFeatureTourModal'
@@ -38,6 +38,22 @@ export function useHelpModal(uiStore, imageStore, editorStore, userModeStore, ro
     subject: '',
     message: '',
     password: '',
+  })
+
+  /**
+   * Watch for changes in the panel visibility and toggle scroll accordingly
+   */
+  watch(isVisible, (visible) => {
+    const app = document.getElementById('app')
+
+    document.body.classList.toggle('no-scroll', visible)
+    if (app) app.classList.toggle('no-scroll', visible)
+  })
+  onUnmounted(() => {
+    const app = document.getElementById('app')
+
+    document.body.classList.remove('no-scroll')
+    if (app) app.classList.remove('no-scroll')
   })
 
   /**

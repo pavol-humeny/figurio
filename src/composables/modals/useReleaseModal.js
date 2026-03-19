@@ -3,7 +3,7 @@
  * @author: Pavol Humeny
  * @date: 15.5.2026
  */
-import { ref } from 'vue'
+import { ref, watch, onUnmounted } from 'vue'
 import { useApi } from '@/composables/common/useApi'
 const { addUserEvent } = useApi()
 
@@ -20,6 +20,22 @@ export function useReleaseModal() {
    * Reference to the scrollable content container
    */
   const releaseContentRef = ref(null)
+
+  /**
+   * Watch for changes in the panel visibility and toggle scroll accordingly
+   */
+  watch(isVisible, (visible) => {
+    const app = document.getElementById('app')
+
+    document.body.classList.toggle('no-scroll', visible)
+    if (app) app.classList.toggle('no-scroll', visible)
+  })
+  onUnmounted(() => {
+    const app = document.getElementById('app')
+
+    document.body.classList.remove('no-scroll')
+    if (app) app.classList.remove('no-scroll')
+  })
 
   /**
    * Open the patch notes modal

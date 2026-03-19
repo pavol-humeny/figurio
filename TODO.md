@@ -23,7 +23,8 @@
 
 # TODO
 - P - zaistit aby pri resize objektov bolo snapovanie plynule tak ako pri drag
-
+- touch event pre select, shape, text, magnify, blur 
+- fit crop - úroveň 1 spraviť ešte menej citlivú 
 - tabuľka veľkostí textu 
 
 ## Dlhodobé TODO 
