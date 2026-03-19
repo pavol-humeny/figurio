@@ -187,7 +187,7 @@ export const useViewportStore = defineStore('viewportStore', {
         const wrapperCenterY = wrapperRect.height / 2
 
         // Compute which point in the image is currently under the viewport center
-        // Convert screen coords → content coords
+        // Convert screen coords content coords
         const anchorImageX = (wrapperCenterX - this.panX) / oldZoom
         const anchorImageY = (wrapperCenterY - this.panY) / oldZoom
 

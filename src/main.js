@@ -2,6 +2,7 @@
  * @file: main.js
  * @author: Pavol Humeny
  * @date: 15.5.2026
+ * @description: This is the main entry point of the application. It sets up the Vue app, registers global components and plugins, and mounts the app to the DOM. It also initializes the application state by loading presets from local storage and setting up global error handling. Additionally, it registers a service worker for offline support and handles updates when a new version of the app is available.
  */
 import './assets/main.css'
 
@@ -11,14 +12,16 @@ import { useUiStore } from '@/stores/uiStore'
 import { usePresetsStore } from '@/stores/presetsStore'
 import { setupGlobalErrorHandling } from '@/composables/editor/globalErrorHandler.js'
 import { registerSW } from 'virtual:pwa-register'
-
 import App from './App.vue'
 import router from './router'
 import i18n from './i18n'
+import { useConsole } from './composables/common/useConsole'
+const { log } = useConsole()
 
+/** Register service worker for offline support */
 const updateSW = registerSW({
   onNeedRefresh() {
-    console.log('New version available')
+    log('New version available')
 
     // Activate new SW
     updateSW(true)
@@ -27,7 +30,7 @@ const updateSW = registerSW({
     window.location.reload()
   },
   onOfflineReady() {
-    console.log('App ready for offline use')
+    log('App ready for offline use')
   },
 })
 

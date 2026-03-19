@@ -10,6 +10,8 @@ import { useFeatureTourModal } from '@/composables/modals/useFeatureTourModal'
 import FeatureTourCard from './FeatureTourCard.vue'
 import { useVideoLoader } from '@/composables/modals/useVideoLoader.js'
 import { useI18n } from 'vue-i18n'
+import { useConsole } from '@/composables/common/useConsole'
+const { warn } = useConsole()
 const { getVideo } = useVideoLoader()
 const { messages, locale } = useI18n()
 
@@ -41,7 +43,7 @@ const allSlides = computed(() => {
  * If activeVideos is empty, display all slides
  */
 const slides = computed(() => {
-  console.warn('Active videos for feature tour:', activeVideos.value)
+  warn('Active videos for feature tour:', activeVideos.value)
   if (!activeVideos.value.length) return allSlides.value
   return allSlides.value.filter(slide => activeVideos.value.includes(slide.videoKey))
 })

@@ -3,7 +3,8 @@
  * @author: Pavol Humeny
  * @date: 15.5.2026
  */
-// grayscale.worker.js
+import { useConsole } from '@/composables/common/useConsole'
+const { log } = useConsole()
 
 self.onmessage = (e) => {
   const tStart = performance.now()
@@ -87,8 +88,8 @@ self.onmessage = (e) => {
 
   const tTotal = performance.now() - tStart
 
-  // Log timing information (visible in DevTools → Workers)
-  console.log(
+  // Log timing information (visible in DevTools Workers)
+  log(
     `[grayscale.worker] total=${tTotal.toFixed(1)}ms | ` +
       `setup=${tSetup.toFixed(1)}ms | ` +
       `loop=${tLoop.toFixed(1)}ms | ` +

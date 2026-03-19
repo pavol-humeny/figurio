@@ -576,8 +576,6 @@ export function useViewportWrapper(
       scrollHorizontalMax.value,
     )
 
-    console.warn('Moving image to center by deltaX:', deltaX)
-
     // Keep same position in other tabs
     workspaceStore.tabs.forEach((tab) => {
       if (!tab.viewportSnapshot) return
@@ -998,8 +996,6 @@ export function useViewportWrapper(
    */
   const cursorPosXSameAsImageWidth = computed(() => {
     const posX = (mouseX.value - panX.value) / zoomLevel.value
-
-    console.log('posX:', round(posX, 2), 'image width:', imageStore.fileDimensions.width)
     return round(posX, 2) === imageStore.fileDimensions.width || round(posX, 2) === 0
   })
 

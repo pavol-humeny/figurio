@@ -150,7 +150,7 @@ describe('NumberDropdownInput.vue', () => {
   })
 
   it('rounds input value correctly according to step/decimals', async () => {
-    // step >= 1 → 0 decimals
+    // step >= 1 0 decimals
     let wrapper = mount(NumberDropdownInput, {
       props: { modelValue: 0, min: 0, max: 10, step: 1, options: [0, 1, 2] },
     })
@@ -159,7 +159,7 @@ describe('NumberDropdownInput.vue', () => {
     expect(wrapper.vm.inputValue).toBe('1')
     expect(wrapper.emitted('update:modelValue')[0]).toEqual([1])
 
-    // step < 1 → 2 decimals
+    // step < 1 2 decimals
     wrapper = mount(NumberDropdownInput, {
       props: { modelValue: 0, min: 0, max: 10, step: 0.25, options: [0, 0.25, 0.5] },
     })
@@ -168,7 +168,7 @@ describe('NumberDropdownInput.vue', () => {
     expect(wrapper.vm.inputValue).toBe('1.23')
     expect(wrapper.emitted('update:modelValue')[0]).toEqual([1.23])
 
-    // step < 1 → 3 decimals
+    // step < 1 3 decimals
     wrapper = mount(NumberDropdownInput, {
       props: { modelValue: 0, min: 0, max: 10, step: 0.005, options: [0, 0.005, 0.01] },
     })
@@ -188,7 +188,7 @@ describe('NumberDropdownInput.vue', () => {
   })
 
   it('toggleDropdown does nothing when disabled and toggles when enabled', async () => {
-    // disabled → should return early
+    // disabled should return early
     let wrapper = mount(NumberDropdownInput, {
       props: { modelValue: 0, options: [0, 1], disabled: true },
     })
@@ -196,7 +196,7 @@ describe('NumberDropdownInput.vue', () => {
     wrapper.vm.toggleDropdown()
     expect(wrapper.vm.showDropdown).toBe(false) // stays false
 
-    // enabled → toggles correctly
+    // enabled toggles correctly
     wrapper = mount(NumberDropdownInput, {
       props: { modelValue: 0, options: [0, 1], disabled: false },
     })

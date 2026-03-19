@@ -4,6 +4,8 @@
  * @date: 15.5.2026
  */
 import { degrees, PDFDocument } from 'pdf-lib'
+import { useConsole } from '@/composables/common/useConsole'
+const { log } = useConsole()
 
 self.onmessage = async (e) => {
   const tStart = performance.now()
@@ -122,8 +124,8 @@ self.onmessage = async (e) => {
 
     const tTotal = performance.now() - tStart
 
-    // Log timing information (visible in DevTools → Workers)
-    console.log(
+    // Log timing information (visible in DevTools Workers)
+    log(
       `[rotate.worker] total=${tTotal.toFixed(1)}ms | ` +
         `pdf=${tPdf.toFixed(1)}ms | ` +
         `canvas=${tCanvas.toFixed(1)}ms | ` +

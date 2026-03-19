@@ -74,7 +74,7 @@ const blockWheelZoom = (event) => {
  * @param {WheelEvent} event
  */
 const blockSwipeBack = (event) => {
-  // horizontal gesture dominates → browser history swipe
+  // horizontal gesture dominates browser history swipe
   if (Math.abs(event.deltaX) > Math.abs(event.deltaY)) {
     event.preventDefault()
   }
@@ -99,7 +99,7 @@ const blockDevToolsShortcuts = (event) => {
   // F12
   if (key === 'f12') {
     event.preventDefault()
-    console.warn('Blocked F12 DevTools shortcut')
+    warn('Blocked F12 DevTools shortcut')
     return
   }
 
@@ -110,14 +110,14 @@ const blockDevToolsShortcuts = (event) => {
     ['i', 'j', 'c'].includes(key)
   ) {
     event.preventDefault()
-    console.warn(`Blocked Ctrl/Cmd + Shift + ${key.toUpperCase()} DevTools shortcut`)
+    warn(`Blocked Ctrl/Cmd + Shift + ${key.toUpperCase()} DevTools shortcut`)
     return
   }
 
   // Ctrl / Cmd + U (view source)
   if ((event.ctrlKey || event.metaKey) && key === 'u') {
     event.preventDefault()
-    console.warn('Blocked Ctrl/Cmd + U View Source shortcut')
+    warn('Blocked Ctrl/Cmd + U View Source shortcut')
     return
   }
 }

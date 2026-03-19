@@ -101,11 +101,11 @@ describe('StepperInput.vue', () => {
 
     const span = wrapper.find('.value')
 
-    // scroll up → increase
+    // scroll up increase
     await span.trigger('wheel', { deltaY: -1 })
     expect(wrapper.emitted('update:modelValue')[0]).toEqual([6])
 
-    // scroll down → decrease
+    // scroll down decrease
     await span.trigger('wheel', { deltaY: 1 })
     expect(wrapper.emitted('update:modelValue')[1]).toEqual([5])
   })

@@ -10,7 +10,6 @@ self.onmessage = (event) => {
 
   // length MUST be exactly width * height * 4
   if (pixels.length !== width * height * 4) {
-    console.error('Invalid ImageData length', pixels.length, width, height)
     return
   }
 

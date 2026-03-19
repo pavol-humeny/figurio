@@ -65,7 +65,7 @@ describe('CollapsiblePanel.vue', () => {
     expect(wrapper.find('.panel-content').classes()).toContain('hidden')
   })
 
-  it('toggleVisibility: open → close stores tmpWidth and sets width 0', async () => {
+  it('toggleVisibility: open close stores tmpWidth and sets width 0', async () => {
     mockUiStore.rightPanelOpen = true
     mockUiStore.rightPanelWidth = 250
 
@@ -75,11 +75,11 @@ describe('CollapsiblePanel.vue', () => {
     expect(mockUiStore.setRightPanelWidth).toHaveBeenCalledWith(0)
   })
 
-  it('toggleVisibility: closed → open restores tmpWidth', () => {
+  it('toggleVisibility: closed open restores tmpWidth', () => {
     mockUiStore.rightPanelOpen = true
     mockUiStore.rightPanelWidth = 300
 
-    panel.toggleVisibility() // close → uloží tmpWidth = 300
+    panel.toggleVisibility() // close uloží tmpWidth = 300
 
     mockUiStore.rightPanelOpen = false
 

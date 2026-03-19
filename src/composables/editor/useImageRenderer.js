@@ -366,7 +366,7 @@ export function useImageRenderer(imageStore, historyStore, viewportStore, uiStor
 
         imageStore.pdfSvg = svgString
       } catch (e) {
-        console.warn('Failed to serialize PDF SVG for export:', e)
+        warn('Failed to serialize PDF SVG for export:', e)
         imageStore.pdfSvg = null
       }
 

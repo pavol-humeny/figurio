@@ -1725,7 +1725,7 @@ export function useFrameTool(imageStore, historyStore, viewportStore, t) {
             el.appendChild(path)
           }
 
-          // 3 diagonal bars (outer → inner)
+          // 3 diagonal bars (outer inner)
           // createWifiSlice(wifiSize * 0.95, wifiSize * 0.8)
           createWifiSlice(wifiSize * 1, wifiSize * 0.76)
           createWifiSlice(wifiSize * 0.62, wifiSize * 0.41)

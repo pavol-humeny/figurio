@@ -592,14 +592,14 @@ export function exportFileService(imageStore, editorStore, historyStore, viewpor
       // Embed page
       const [embeddedPage] = await pdf.embedPages([originalPage])
 
-      console.log('originalPage PDF page size:', {
+      log('originalPage PDF page size:', {
         width: embeddedPage.width,
         height: embeddedPage.height,
       })
 
-      console.log('Final PDF page size:', { finalWidth, finalHeight })
+      log('Final PDF page size:', { finalWidth, finalHeight })
 
-      console.log('Drawing embedded page at:', {
+      log('Drawing embedded page at:', {
         x: offsetX,
         y: finalHeight - offsetY - targetHeight,
         width: targetWidth,
@@ -698,8 +698,6 @@ export function exportFileService(imageStore, editorStore, historyStore, viewpor
 
       // Rasterize
       const rasterized = await imageStore.rasterize('export-pdf', {}, t)
-
-      console.warn('Rasterized overlays for PDF export (jsPDF):', rasterized) // Debug log to check rasterization results
 
       // 2 Overlay
       if (rasterized?.overlay) {

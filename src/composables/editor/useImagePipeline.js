@@ -135,10 +135,10 @@ export function useImagePipeline(imageStore, uiStore) {
       pdfBytes: pipeline.baseState.pdfBytes,
     }
 
-    console.warn('Computing effective canvas up to index:', targetIndex)
+    warn('Computing effective canvas up to index:', targetIndex)
     for (let i = 0; i <= targetIndex; i++) {
       const op = imageStore.imageOperations[i]
-      console.warn('Applying op index', i, op ? op.type : 'null')
+      warn('Applying op index', i, op ? op.type : 'null')
       if (!op) continue
 
       const meta = {}
@@ -231,7 +231,7 @@ export function useImagePipeline(imageStore, uiStore) {
     if (!baseState) return
     if (targetIndex < -1) return
 
-    console.warn('IMAGE PIPELINE - START')
+    warn('IMAGE PIPELINE - START')
     uiStore.isApplying = true
 
     try {
@@ -351,7 +351,7 @@ export function useImagePipeline(imageStore, uiStore) {
         imageStore.imageNeedToBeRendered = true
       }
     } finally {
-      console.warn('IMAGE PIPELINE - END')
+      warn('IMAGE PIPELINE - END')
       if (needsFullRerender) {
         imageStore.imageNeedToBeRendered = true
         imageStore.frameNeedToBeRendered = true

@@ -64,9 +64,6 @@ export function useSettingsPanel(uiStore, userModeStore) {
    * Determine if the release notes modal can be opened based on user permissions
    */
   const releaseModalCanBeOpened = computed(() => {
-    console.warn('Checking user permissions for release notes access:', {
-      hasAccess: userModeStore.hasUserAccessToFeature('releaseNotes'),
-    })
     return userModeStore.hasUserAccessToFeature('releaseNotes')
   })
 

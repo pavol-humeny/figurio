@@ -33,9 +33,9 @@ VYSVETLENIE PREPÍNAČOV
 
 --export-type {pdf|png|all}
     Typ exportu grafov.
-    - pdf  → exportuje len PDF (default)
-    - png  → exportuje len PNG
-    - all  → exportuje PDF aj PNG
+    - pdf  exportuje len PDF (default)
+    - png  exportuje len PNG
+    - all  exportuje PDF aj PNG
 
 --show
     Ak je použitý, grafy sa po vygenerovaní aj zobrazia.

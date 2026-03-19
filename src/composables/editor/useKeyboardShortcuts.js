@@ -63,13 +63,13 @@ export function useKeyboardShortcuts(actions, uiStore, editorStore) {
 
     const pressed = normalizeKey(event)
 
-    // log(`[Key Event] ${type.toUpperCase()} → ${pressed}`)
+    // log(`[Key Event] ${type.toUpperCase()} ${pressed}`)
 
     for (const shortcut of keyboardShortcuts) {
       const expected = shortcut.keys.map((k) => k.toLowerCase()).join('+')
       const expectedType = shortcut.type || 'keydown' // default type
 
-      // log(`[Shortcut] ${pressed} → ${shortcut.description}`)
+      // log(`[Shortcut] ${pressed} ${shortcut.description}`)
 
       // Record keyup events for analytics
       if (pressed === expected && type === 'keyup') {
@@ -99,7 +99,7 @@ export function useKeyboardShortcuts(actions, uiStore, editorStore) {
           }
 
           fn(...(shortcut.args || []))
-          log(`[Shortcut] ${type.toUpperCase()} → ${shortcut.description}`)
+          log(`[Shortcut] ${type.toUpperCase()} ${shortcut.description}`)
         }
       }
     }

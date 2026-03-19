@@ -3,7 +3,8 @@
  * @author: Pavol Humeny
  * @date: 15.5.2026
  */
-// flip.worker.js
+import { useConsole } from '@/composables/common/useConsole'
+const { log } = useConsole()
 
 self.onmessage = (e) => {
   const tStart = performance.now()
@@ -74,8 +75,8 @@ self.onmessage = (e) => {
 
   const tTotal = performance.now() - tStart
 
-  // Log timing information (visible in DevTools → Workers)
-  console.log(
+  // Log timing information (visible in DevTools Workers)
+  log(
     `[flip.worker] total=${tTotal.toFixed(1)}ms | ` +
       `canvas=${tCanvas.toFixed(1)}ms | ` +
       `overlay=${tOverlay.toFixed(1)}ms`,

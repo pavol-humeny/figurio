@@ -578,7 +578,7 @@ export function usePresetTool(
         }
 
       default:
-        console.warn('Unknown preset operation:', op)
+        warn('Unknown preset operation:', op)
         return null
     }
   }

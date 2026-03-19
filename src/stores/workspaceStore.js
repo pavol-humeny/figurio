@@ -115,8 +115,6 @@ export const useWorkspaceStore = defineStore('workspaceStore', {
       this.activeTabIndex = index
 
       await this.restoreTab(index)
-
-      console.warn('Switching to tab', index)
     },
 
     /**

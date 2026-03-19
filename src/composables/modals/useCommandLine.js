@@ -497,12 +497,12 @@ export function useCommandLine(userModeStore, editorStore) {
     if (parts.length === 1) {
       const cmd = parts[0]
 
-      // "set␣" → arguments of set
+      // "set␣" arguments of set
       if (endsWithSpace && userModeConfig.autocomplete[cmd]) {
         return userModeConfig.autocomplete[cmd]
       }
 
-      // "se" → command completion
+      // "se" command completion
       return userModeConfig.autocomplete.root.filter((c) => c.startsWith(cmd))
     }
 
@@ -514,10 +514,10 @@ export function useCommandLine(userModeStore, editorStore) {
     const options = userModeConfig.autocomplete[baseCommand]
     if (!options) return []
 
-    // After space → list all options
+    // After space list all options
     if (!lastPart) return options
 
-    // Partial argument → filter
+    // Partial argument filter
     return options.filter((opt) => opt.toLowerCase().startsWith(lastPart))
   }
 

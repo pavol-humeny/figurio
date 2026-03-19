@@ -123,12 +123,6 @@ export function useBackgroundRemovalTool(
     // Hex color
     if (highlightColor.startsWith('#')) {
       const { r, g, b } = hexToRgb(highlightColor)
-      console.warn({
-        fillR: r,
-        fillG: g,
-        fillB: b,
-        fillA: 255,
-      })
       return { fillR: r, fillG: g, fillB: b, fillA: 255 }
     }
 
@@ -543,7 +537,6 @@ export function useBackgroundRemovalTool(
    * Mark background color on canvas
    */
   const selectColorClick = () => {
-    console.warn('Applying color-based selection with threshold:', colorRemovalThreshold.value)
     const canvas = document.getElementById('removalCanvas')
     if (!canvas) return
 
@@ -597,8 +590,6 @@ export function useBackgroundRemovalTool(
 
     // Get highlight color RGBA
     const { fillR, fillG, fillB, fillA } = getHighlightColorRGBA()
-
-    console.warn('Highlight color RGBA:', { fillR, fillG, fillB, fillA })
 
     let numberOfSelectedPixels = 0
 

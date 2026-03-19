@@ -16,7 +16,7 @@ export function useTimeInput(props, emit) {
   const minutesInput = ref('')
 
   /**
-   * Sync from modelValue → inputs
+   * Sync from modelValue inputs
    */
   const syncFromModel = (totalMinutes) => {
     const h = Math.floor(totalMinutes / 60)
