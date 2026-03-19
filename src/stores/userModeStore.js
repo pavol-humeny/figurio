@@ -2,6 +2,7 @@
  * @file: userModeStore.js
  * @author: Pavol Humeny
  * @date: 15.5.2026
+ * @description: Store managing user modes and access control. This Pinia store maintains the current user mode (basic, expert, admin) and provides getters to check the active mode. It also includes an action to set the user mode and a method to check if the current mode has access to specific features based on the configuration defined in `userModeConfig`.
  */
 import { userModeConfig } from '@/config/userModeConfig'
 import { defineStore } from 'pinia'

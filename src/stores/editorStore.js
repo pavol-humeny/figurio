@@ -2,6 +2,7 @@
  * @file: editorStore.js
  * @author: Pavol Humeny
  * @date: 15.5.2026
+ * @description: State and actions for managing editor tool selection, subtools, active tabs, random events, and user settings. This store handles the logic for which tools are enabled based on global configuration, as well as persisting certain settings to localStorage.
  */
 import { editorConfig } from '@/config/editorConfig'
 import { globalConfig } from '@/config/globalConfig'
@@ -11,8 +12,6 @@ import { useUserModeStore } from './userModeStore'
 /**
  * Retrieves a boolean value from localStorage.
  * Returns `false` only if the stored value is the string `'false'`, otherwise returns the fallback.
-
- *
  * @param {string} key - The localStorage key to read from.
  * @param {boolean} [fallback=true] - The default value if the key is not set.
  * @returns {boolean} The parsed boolean value.
@@ -156,7 +155,7 @@ export const useEditorStore = defineStore('editorStore', {
       },
       blur: {
         blurStrength: 5,
-        edgeFade: 10,
+        edgeFade: 0,
       },
       brush: {
         isEraserMode: false,

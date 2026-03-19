@@ -3,11 +3,11 @@
  * @file: EditorView.vue
  * @author: Pavol Humeny
  * @date: 15.5.2026
+ * @description: Main editor view component. This Vue component serves as the central hub for the image editing interface, integrating various panels and tools. It manages the layout of the editor, including the tools panel, viewport, file information display, and right-side settings panel. The component also sets up keyboard shortcuts.
  */
 import { onBeforeMount, onMounted, watch } from 'vue'
 import { useConsole } from '@/composables/common/useConsole.js'
 const { warn } = useConsole()
-
 import ToolsPanel from '@/components/tools/ToolsPanel.vue';
 import CollapsiblePanel from '@/components/common/CollapsiblePanel.vue';
 import ToolsSettingsPanel from '@/components/toolsSettings/ToolsSettingsPanel.vue';
@@ -19,10 +19,9 @@ import { useHistoryStore } from '@/stores/historyStore';
 import { useI18n } from 'vue-i18n'
 import { useCollapsiblePanel } from '@/composables/common/useCollapsiblePanel';
 import SvgObjectsList from '@/components/toolsSettings/SvgObjectsList.vue';
-
 const { t } = useI18n()
 
-// === Keyboard shortcuts configuration ===
+// Keyboard shortcuts configuration
 import { useUndoRedo } from '@/composables/topPanel/useUndoRedo';
 import { useZoomControl } from '@/composables/topPanel/useZoomControl';
 import { useViewportStore } from '@/stores/viewportStore';
@@ -53,18 +52,17 @@ import { useUserModeStore } from '@/stores/userModeStore';
 import { useConfirmModal } from '@/composables/modals/useConfirmModal';
 
 const { hideArtifacts } = useImageAnalysis(useImageStore(), useViewportStore(), useUiStore(), useHistoryStore(), useEditorStore(), useWorkspaceStore(), t)
-
 const { undo, redo } = useUndoRedo(useHistoryStore(), useImageStore(), useUiStore(), t)
 const { zoomIn, zoomOut, resetZoom, toggleZoomMode } = useZoomControl(useViewportStore(), useImageStore(), t)
 const { closeFile } = useCloseFileButton(useImageStore(), useWorkspaceStore(), t)
 const { uploadFile } = useUploadFileButton(useImageStore(), t, useRouter(), useUserModeStore(), useWorkspaceStore(), useUiStore(), useViewportStore(), useHistoryStore(), useEditorStore())
 const { toggleTool } = useToolsPanel(useEditorStore(), useImageStore(), useUiStore(), useViewportStore(), t)
-const { openHelpModal } = useHelpModal(useUiStore(), useImageStore(), useEditorStore(), useUserModeStore(), useRouter(), t)
+const { openHelpModal } = useHelpModal(useUiStore(), useImageStore(), useEditorStore(), useUserModeStore(), t)
 const { openSettingsPanel } = useSettingsPanel(useUiStore())
 const { openPrivacyAndDataModal } = usePrivacyAndDataModal(t)
 const { startEditing } = useFileNameDisplay(useImageStore(), t)
 const { switchToNextTab, switchToPreviousTab, } = useFileTabs(useUiStore(), useViewportStore(), useImageStore(), useEditorStore(), t)
-const { prevStep, nextStep, finishTutorial, closeTutorial, startTutorial } = useInteractiveTutorial(useUiStore(), useImageStore(), useRouter(), t)
+const { prevStep, nextStep, finishTutorial, closeTutorial, startTutorial } = useInteractiveTutorial(useUiStore(), useImageStore(), t)
 const { hideCropBox, showCropBox, applyCrop } = useCropTool(useImageStore(), useViewportStore(), useEditorStore(), useHistoryStore(), useUiStore(), t)
 const { toggleVisibility: toggleCollapsiblePanel, } = useCollapsiblePanel(useUiStore())
 
@@ -80,13 +78,11 @@ const {
   deleteSelectedSvgObjects,
   moveSelectedObjectForward,
   moveSelectedObjectBackward,
-  // selectedObjectInfo,
   copySelectedSvgObject,
   pasteSvgObjectToCenter,
   duplicateSelectedSvgObject,
   cutSelectedSvgObject,
 } = useSvgObjects(useImageStore(), useHistoryStore(), useViewportStore(), useEditorStore(), useUiStore(), useWorkspaceStore(), t)
-
 const { applyBackgroundRemoval } = useBackgroundRemovalTool(
   useImageStore(),
   useHistoryStore(),
@@ -95,8 +91,7 @@ const { applyBackgroundRemoval } = useBackgroundRemovalTool(
   useUiStore(),
   t,
 )
-
-const { closeHelpModal } = useHelpModal(useUiStore(), useImageStore(), useEditorStore(), useUserModeStore(), useRouter(), t)
+const { closeHelpModal } = useHelpModal(useUiStore(), useImageStore(), useEditorStore(), useUserModeStore(), t)
 const { closeSettingsPanel } = useSettingsPanel(useUiStore())
 const { closePrivacyAndDataModal } = usePrivacyAndDataModal(t)
 const { closeFeatureTourModal } = useFeatureTourModal()
@@ -111,22 +106,25 @@ const editorStore = useEditorStore()
 const uiStore = useUiStore()
 const viewportStore = useViewportStore()
 
+/**
+ * Functions to move the viewport in different directions with keyboard shortcuts.
+ */
 const moveViewportUp = () => {
   viewportStore.moveViewport = 'up'
 }
-
 const moveViewportDown = () => {
   viewportStore.moveViewport = 'down'
 }
-
 const moveViewportLeft = () => {
   viewportStore.moveViewport = 'left'
 }
-
 const moveViewportRight = () => {
   viewportStore.moveViewport = 'right'
 }
 
+/**
+ * Set up keyboard shortcuts for various editor actions.
+ */
 useKeyboardShortcuts({
   undo,
   redo,
@@ -183,9 +181,10 @@ useKeyboardShortcuts({
   moveViewportLeft,
   moveViewportRight,
 }, useUiStore(), useEditorStore());
-// ======
 
-// Start tutorial if opening the editor for the first time
+/**
+ * Start tutorial if opening the editor for the first time
+ */
 watch(() => uiStore.tutorialShouldBeStartedForFirstTime, (newVal) => {
   warn('tutorialShouldBeStartedForFirstTime changed: ', newVal)
   if (newVal) {
@@ -194,6 +193,9 @@ watch(() => uiStore.tutorialShouldBeStartedForFirstTime, (newVal) => {
   }
 })
 
+/**
+ * Set up event listeners when the component is mounted
+ */
 onMounted(() => {
   // Hide artifacts overlay on any click
   window.addEventListener('click', () => {
@@ -206,6 +208,9 @@ onMounted(() => {
   }
 })
 
+/**
+ * Clean up event listeners before the component is unmounted
+ */
 onBeforeMount(() => {
   window.removeEventListener('click', () => {
     hideArtifacts()
@@ -226,14 +231,6 @@ onBeforeMount(() => {
             {{ imageStore.fileDimensions.width }}px × {{ imageStore.fileDimensions.height }}px
           </p>
         </div>
-        <!-- <div class="file-info-right">
-          <p v-if="selectedObjectInfo?.width !== undefined && selectedObjectInfo?.height !== undefined">
-            {{ selectedObjectInfo.width }}px × {{ selectedObjectInfo.height }}px
-          </p>
-          <p v-if="selectedObjectInfo?.angle !== undefined">
-            {{ selectedObjectInfo.angle }}°
-          </p>
-        </div> -->
       </div>
     </div>
     <div class="right-panel">
@@ -281,10 +278,8 @@ onBeforeMount(() => {
 .file-info-right {
   position: absolute;
   right: 10px;
-  /* top: 0; */
   display: flex;
   gap: 12px;
-  /* height: 100%; */
   align-items: center;
   font-size: var(--file-tabs-name-font-size);
   color: var(--primary-c);

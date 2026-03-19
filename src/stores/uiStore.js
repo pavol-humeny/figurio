@@ -2,6 +2,7 @@
  * @file: uiStore.js
  * @author: Pavol Humeny
  * @date: 15.5.2026
+ * @description: Store managing UI settings and state. This Pinia store handles various UI-related settings such as theme, keyboard shortcuts, panel visibility, tutorial progress, and viewport display options. It persists user preferences in localStorage and provides actions to update these settings throughout the application.
  */
 import { defineStore } from 'pinia'
 import { uiConfig } from '@/config/uiConfig'
@@ -10,8 +11,6 @@ import { globalConfig } from '@/config/globalConfig'
 /**
  * Retrieves a boolean value from localStorage.
  * Returns `false` only if the stored value is the string `'false'`, otherwise returns the fallback.
-
- *
  * @param {string} key - The localStorage key to read from.
  * @param {boolean} [fallback=true] - The default value if the key is not set.
  * @returns {boolean} The parsed boolean value.
@@ -83,9 +82,11 @@ const getSessionId = () => {
  */
 export const useUiStore = defineStore('ui', {
   state: () => ({
-    userUuid: getUuid(), // Unique identifier for the UI instance
+    /** Unique identifier for the UI instance */
+    userUuid: getUuid(),
 
-    sessionId: getSessionId(), // Unique identifier for the current session (resets on page reload)
+    /** Unique identifier for the current session (resets on page reload) */
+    sessionId: getSessionId(),
 
     /** Active theme (dark | light) */
     theme: getString(`${globalConfig.LOCAL_STORAGE_PREFIX}theme`, uiConfig.theme),

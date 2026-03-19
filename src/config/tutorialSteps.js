@@ -2,25 +2,16 @@
  * @file: tutorialSteps.js
  * @author: Pavol Humeny
  * @date: 15.5.2026
+ * @description: This module defines the tutorial steps for the application. It exports a function `getTutorialSteps` that takes an i18n translation function as an argument and returns an array of tutorial step objects. Each step object contains a CSS selector for the target element, a title and text for the tutorial tooltip, and a position for where the tooltip should appear relative to the target element.
  */
-// import { useImageStore } from '@/stores/imageStore'
 /**
  * Returns localized tutorial steps
  * @param {Function} t - i18n translation function
  * @returns {Array}
  */
-export function getTutorialSteps(router, t) {
-  // const imageStore = useImageStore()
-
-  // position options: top, bottom, right, left, top-left, top-right, bottom-left, bottom-right, left-in, right-in, top-in, bottom-in
+export function getTutorialSteps(t) {
+  // Position options: top, bottom, right, left, top-left, top-right, bottom-left, bottom-right, left-in, right-in, top-in, bottom-in
   const steps = [
-    // 0
-    // {
-    //   selector: '#drag-drop-area',
-    //   title: t('tutorialSteps.tutorial.dragDropArea.title'),
-    //   text: t('tutorialSteps.tutorial.dragDropArea.text'),
-    //   position: 'top-in',
-    // },
     // 1
     {
       selector: '#viewport',
@@ -71,16 +62,5 @@ export function getTutorialSteps(router, t) {
       position: 'bottom',
     },
   ]
-
-  // if (router.currentRoute.value.name === 'home') {
-  //   // Return steps for drag and drop ()
-  //   return steps.filter((_, index) => [0].includes(index))
-  // } else if (imageStore.isImageLoaded) {
-  //   // Return steps for editor with image loaded
-  //   return steps.filter((_, index) => [1, 2, 3, 4, 5, 6, 7].includes(index))
-  // } else if (!imageStore.isImageLoaded) {
-  //   // Return steps for editor without image loaded
-  //   return steps.filter((_, index) => [2, 4, 5, 6].includes(index))
-  // }
   return steps
 }

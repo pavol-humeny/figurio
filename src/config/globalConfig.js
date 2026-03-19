@@ -2,6 +2,7 @@
  * @file: globalConfig.js
  * @author: Pavol Humeny
  * @date: 15.5.2026
+ * @description: Global configuration for the application. This module exports a `globalConfig` object that contains various settings and constants used throughout the app, such as contact information, console logging preferences, feature flags, modal settings, API base URL, usage statistics settings, and localStorage keys.
  */
 export const globalConfig = {
   // Contact email

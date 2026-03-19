@@ -50,7 +50,7 @@ const {
   emailInputWrong,
   nameInputWrong,
   messageInputWrong,
-} = useHelpModal(useUiStore(), useImageStore(), useEditorStore(), useUserModeStore(), useRouter(), t);
+} = useHelpModal(useUiStore(), useImageStore(), useEditorStore(), useUserModeStore(), t);
 
 /**
  * Logic of the interactive tutorial availability
@@ -60,7 +60,6 @@ const {
 } = useInteractiveTutorial(
   useUiStore(),
   useImageStore(),
-  useRouter(),
   t
 )
 

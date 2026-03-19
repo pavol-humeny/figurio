@@ -3,6 +3,7 @@
  * @file: HomeView.vue
  * @author: Pavol Humeny
  * @date: 15.5.2026
+ * @description: Home page of the application. This component serves as the landing page for users when they open the application. It provides an introduction to the app, highlights key features, and includes a drag-and-drop area for users to start working with their images immediately. The component also integrates various modals and panels, such as the help modal, settings panel, and feature tour modal.
  */
 import { onMounted } from 'vue';
 import { globalConfig } from '@/config/globalConfig.js';
@@ -18,8 +19,6 @@ import { useSettingsPanel } from '@/composables/topPanel/useSettingsPanel';
 import { useInteractiveTutorial } from '@/composables/tutorial/useInteractiveTutorial';
 import DefaultButton from '@/components/common/DefaultButton.vue';
 import { computed } from 'vue'
-// import FigurioLogoDark from '@/assets/FigurioLogoDark.png'
-// import FigurioLogoLight from '@/assets/FigurioLogoLight.png'
 import { useDragAndDropArea } from '@/composables/editor/useDragAndDropArea';
 import { useEditorStore } from '@/stores/editorStore';
 import { useFeatureTourModal } from '@/composables/modals/useFeatureTourModal';
@@ -34,20 +33,22 @@ import { useViewportStore } from '@/stores/viewportStore';
 
 const { t, messages, locale } = useI18n()
 const router = useRouter()
-// const uiStore = useUiStore()
 const userModeStore = useUserModeStore()
 const editorStore = useEditorStore()
 
 const { uploadFile } = useUploadFileButton(useImageStore(), t, useRouter(), useUserModeStore(), useWorkspaceStore(), useUiStore(), useViewportStore(), useHistoryStore(), useEditorStore())
-const { openHelpModal } = useHelpModal(useUiStore(), useImageStore(), useEditorStore(), useUserModeStore(), useRouter(), t)
+const { openHelpModal } = useHelpModal(useUiStore(), useImageStore(), useEditorStore(), useUserModeStore(), t)
 const { openSettingsPanel } = useSettingsPanel(useUiStore())
-const { prevStep, nextStep, finishTutorial, closeTutorial } = useInteractiveTutorial(useUiStore(), useImageStore(), useRouter(), t)
-const { closeHelpModal } = useHelpModal(useUiStore(), useImageStore(), useEditorStore(), useUserModeStore(), useRouter(), t)
+const { prevStep, nextStep, finishTutorial, closeTutorial } = useInteractiveTutorial(useUiStore(), useImageStore(), t)
+const { closeHelpModal } = useHelpModal(useUiStore(), useImageStore(), useEditorStore(), useUserModeStore(), t)
 const { closeSettingsPanel } = useSettingsPanel(useUiStore())
 const { closePrivacyAndDataModal } = usePrivacyAndDataModal(t)
 const { closeFeatureTourModal } = useFeatureTourModal()
 const { closeReleaseModal } = useReleaseModal()
 
+/**
+ * Set up global keyboard shortcuts for the home page.
+ */
 useKeyboardShortcuts({
   uploadFile,
   openHelpModal,
@@ -63,13 +64,6 @@ useKeyboardShortcuts({
   closeReleaseModal,
 }, useUiStore(), useEditorStore());
 
-/**
- * Computes the logo source based on the current theme.
- */
-// const logoSrc = computed(() => {
-//   return uiStore.theme === 'dark' ? FigurioLogoDark : FigurioLogoLight
-// })
-
 const features = computed(() => {
   return messages.value[locale.value]?.home?.features || [];
 })
@@ -82,6 +76,9 @@ const {
   selectFile
 } = useDragAndDropArea(useImageStore(), useEditorStore(), t, router, useUserModeStore(), useWorkspaceStore(), useUiStore(), useViewportStore(), useHistoryStore())
 
+/**
+ * Logic for opening the feature tour modal
+ */
 const {
   openFeatureTourModal
 } = useFeatureTourModal();
@@ -106,7 +103,6 @@ onMounted(() => {
     <div class="left-side">
       <div class="app-name">
         <div class="logo-wrapper">
-          <!-- <img :src="logoSrc" alt="Figurio logo" :style="{ 'user-select': 'none' }" @dragstart.prevent> -->
           <BaseIcon name="IconLogo" class="logo" :size="60" color="var(--primary-c)" />
 
           <p class="logo-letter">F</p>

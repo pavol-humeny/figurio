@@ -2,6 +2,7 @@
  * @file: uiConfig.js
  * @author: Pavol Humeny
  * @date: 15.5.2026
+ * @description: Configuration for the UI store. This module exports a `uiConfig` object that contains various settings related to the user interface of the application, such as minimum window size, theme, key shortcuts, panel dimensions, and toast notification behavior.
  */
 import { globalConfig } from '@/config/globalConfig'
 

@@ -2,6 +2,7 @@
  * @file: workspaceStore.js
  * @author: Pavol Humeny
  * @date: 15.5.2026
+ * @description: Store managing multiple workspace tabs. This Pinia store allows users to work with multiple images simultaneously by maintaining an array of tabs, each containing snapshots of the image, history, and viewport states. It provides actions to add, close, switch between tabs, and restore their states, enabling a multi-file editing experience within the application.
  */
 import { defineStore } from 'pinia'
 import { useImageStore } from './imageStore'

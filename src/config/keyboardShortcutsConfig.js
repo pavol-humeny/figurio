@@ -2,6 +2,7 @@
  * @file: keyboardShortcutsConfig.js
  * @author: Pavol Humeny
  * @date: 15.5.2026
+ * @description: Configuration for keyboard shortcuts in the application. This module exports an array of `keyboardShortcuts`, where each shortcut is defined by the keys that trigger it, the action to perform, optional arguments for the action, and a description of what the shortcut does.
  */
 export const keyboardShortcuts = [
   // History shortcuts
@@ -231,7 +232,7 @@ export const keyboardShortcuts = [
   },
 
   // Multi-file management shortcuts
-  // switch to next/previous file
+  // Switch to next/previous file
   {
     keys: ['alt', 'pagedown'],
     action: 'switchToNextTab',
@@ -265,7 +266,7 @@ export const keyboardShortcuts = [
     description: 'Close (pause) tutorial',
   },
 
-  // viewport navigation shortcuts
+  // Viewport navigation shortcuts
   {
     keys: ['arrowright'],
     action: 'moveViewportRight',

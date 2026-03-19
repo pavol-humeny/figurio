@@ -2,6 +2,7 @@
  * @file: viewportConfig.js
  * @author: Pavol Humeny
  * @date: 15.5.2026
+ * @description: Configuration for the viewport store. This module exports a `viewportConfig` object that contains various settings related to the viewport behavior in the image editor, such as default zoom levels, zoom speed, movement speed, scroll speed, and parameters for the crop tool and pixelation modes.
  */
 export const viewportConfig = {
   defaultZoomLevel: 1.0, // 1 = 100%

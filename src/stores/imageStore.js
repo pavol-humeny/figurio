@@ -2,6 +2,7 @@
  * @file: imageStore.js
  * @author: Pavol Humeny
  * @date: 15.5.2026
+ * @description: Store managing image-related data and operations. This Pinia store handles the state of the currently loaded image, including its file information, rendered image, overlays, SVG objects, image operations, and frame configuration. It provides actions to manipulate these states, such as setting the rendered image, adding image operations, resetting the store for new files, and rasterizing SVG objects for rendering and export.
  */
 import * as pdfjsLib from 'pdfjs-dist/legacy/build/pdf'
 import { defineStore } from 'pinia'
@@ -10,7 +11,6 @@ import { nextTick } from 'vue'
 import { useHistoryStore } from './historyStore'
 import { useFrameTool } from '@/composables/tools/useFrameTool'
 import { useWorkspaceStore } from './workspaceStore'
-// import { useUiStore } from './uiStore'
 import { editorConfig } from '@/config/editorConfig'
 import { useConsole } from '@/composables/common/useConsole.js'
 import { useViewportStore } from './viewportStore'
@@ -108,11 +108,16 @@ const isValidFileName = (name) => {
  */
 export const useImageStore = defineStore('imageStore', {
   state: () => ({
+    /** Whether the image needs to be rendered */
     imageNeedToBeRendered: false,
+    /** Whether the frame needs to be rendered */
     frameNeedToBeRendered: false,
+    /** Whether the blur overlay needs to be rendered */
     blurOverlayNeedToBeRendered: false,
+    /** Whether the magnify overlay needs to be rendered */
     magnifyOverlayNeedToBeRendered: false,
 
+    /** Render pipeline state */
     renderPipeline: {
       baseState: null,
       // {
@@ -141,12 +146,13 @@ export const useImageStore = defineStore('imageStore', {
       lastRenderedOpIndex: -1, // Optimization
     },
 
+    /** Whether the history has been changed flag */
     historyWasChanged: false,
+
     /** The currently loaded image file */
     file: null,
     /** Type of the loaded file */
     fileType: '', // 'image' or 'pdf'
-
     /** Whether to show PDF as image because of unsupported features */
     showPdfAsImage: false,
 
@@ -228,7 +234,6 @@ export const useImageStore = defineStore('imageStore', {
     selectedSvgObjectIds: [],
     /** Dynamic SVG definitions */
     svgDefs: [],
-    /** Array of blur image elements */
 
     /** Canvases for blur preview */
     blurCache: new Map(), // key:strength -> canvas
@@ -355,7 +360,6 @@ export const useImageStore = defineStore('imageStore', {
     },
   },
   actions: {
-    // Setters
     /**
      * Sets the current rendered image and optionally updates the temporary rendered image
      * @param {HTMLCanvasElement} image - The image to set
@@ -376,10 +380,11 @@ export const useImageStore = defineStore('imageStore', {
       this.overlayImage = overlay
     },
 
-    // Getters
     /**
      * Returns the appropriate rendered image based on the rendering context and frame type
-     * @param {boolean} [renderCall=false] - Whether the call is part of a render operation
+     * @param {Object} options - Options for determining which image to return
+     * @param {Function} options.t - i18n translation function
+     * @param {boolean} options.renderCall - Whether this is a call for rendering the main image (true) or for export/other purposes (false)
      * @returns {HTMLCanvasElement|null}
      */
     getRenderedImage({ t, renderCall }) {
@@ -1568,7 +1573,6 @@ export const useImageStore = defineStore('imageStore', {
      * Generates the next default name for a new SVG or blur object
      * @param {string} objectClass - The class of the object ('svg', 'blur', or 'magnifyArea')
      * @param {string} objectType - The type/tag of the object (e.g., 'rectangle', 'circle', etc.)
-     * @param {Function} t - Translation function (vue-i18n)
      * @returns {string} - The next default name for the new object
      */
     getNextObjectName(objectClass, objectType) {
@@ -1602,6 +1606,11 @@ export const useImageStore = defineStore('imageStore', {
       }
     },
 
+    /**
+     * Determines whether the "Bring to Front" button should be enabled for the currently selected object type.
+     * @param {string} type - The type of object ('blur', 'magnify', or 'svg')
+     * @returns {boolean} - True if the "Bring to Front" button should be enabled, false otherwise
+     */
     bringToFrontButtonEnabled(type) {
       switch (type) {
         case 'blur':
@@ -1613,6 +1622,11 @@ export const useImageStore = defineStore('imageStore', {
       }
     },
 
+    /**
+     * Determines whether the "Send to Back" button should be enabled for the currently selected object type.
+     * @param {string} type - The type of object ('blur', 'magnify', or 'svg')
+     * @returns {boolean} - True if the "Send to Back" button should be enabled, false otherwise
+     */
     sendToBackButtonEnabled(type) {
       switch (type) {
         case 'blur':
@@ -1624,6 +1638,11 @@ export const useImageStore = defineStore('imageStore', {
       }
     },
 
+    /**
+     * Determines whether the "Move Forward" button should be enabled for the currently selected object type.
+     * @param {string} type - The type of object ('blur', 'magnify', or 'svg')
+     * @returns {boolean} - True if the "Move Forward" button should be enabled, false otherwise
+     */
     moveForwardButtonEnabled(type) {
       switch (type) {
         case 'blur':
@@ -1635,6 +1654,11 @@ export const useImageStore = defineStore('imageStore', {
       }
     },
 
+    /**
+     * Determines whether the "Move Backward" button should be enabled for the currently selected object type.
+     * @param {string} type - The type of object ('blur', 'magnify', or 'svg')
+     * @returns {boolean} - True if the "Move Backward" button should be enabled, false otherwise
+     */
     moveBackwardButtonEnabled(type) {
       switch (type) {
         case 'blur':
@@ -1648,6 +1672,7 @@ export const useImageStore = defineStore('imageStore', {
 
     /**
      * Checks if the currently selected SVG object has the highest z-index
+     * @param {string} type - The type of object ('blur', 'magnify', or 'svg')
      * @returns {boolean} - True if the selected SVG object is the one with the highest z-index
      */
     isMaxZIndexOfSelectedObject(type) {
@@ -1666,6 +1691,7 @@ export const useImageStore = defineStore('imageStore', {
 
     /**
      * Checks if the currently selected SVG object has the lowest z-index
+     * @param {string} type - The type of object ('blur', 'magnify', or 'svg')
      * @returns {boolean} - True if the selected SVG object is the one with the lowest z-index
      */
     isMinZIndexOfSelectedObject(type) {
@@ -1731,8 +1757,6 @@ export const useImageStore = defineStore('imageStore', {
       this.fileType = snapshot.fileType
       this.showPdfAsImage = snapshot.showPdfAsImage
       this.fileDimensions = JSON.parse(JSON.stringify(snapshot.fileDimensions))
-
-      // this.imageOperations = JSON.parse(JSON.stringify(snapshot.imageOperations))
 
       this.imageOperations = []
 
@@ -1819,7 +1843,6 @@ export const useImageStore = defineStore('imageStore', {
           continue
         }
 
-        // this.imageOperations.push(structuredClone(op))
         this.imageOperations.push({
           type: op.type,
           params: op.params,
@@ -1833,7 +1856,6 @@ export const useImageStore = defineStore('imageStore', {
       this.magnifyObjects = JSON.parse(JSON.stringify(snapshot.magnifyObjects))
 
       this.svgDefs = JSON.parse(JSON.stringify(snapshot.svgDefs))
-      // this.blurImages = JSON.parse(JSON.stringify(snapshot.blurImages))
 
       this.frame = JSON.parse(JSON.stringify(snapshot.frame))
 
@@ -1890,7 +1912,6 @@ export const useImageStore = defineStore('imageStore', {
         magnifyObjects: JSON.parse(JSON.stringify(this.magnifyObjects)),
 
         svgDefs: JSON.parse(JSON.stringify(this.svgDefs)),
-        // blurImages: JSON.parse(JSON.stringify(this.blurImages)),
 
         // FRAME
         frame: JSON.parse(JSON.stringify(this.frame)),
@@ -1913,9 +1934,8 @@ export const useImageStore = defineStore('imageStore', {
 
     /**
      * Restores the full image store state from a previously saved snapshot. (for multi-file support)
-     *
      * @param {object} snapshot - The full snapshot object previously created by `getFullSnapshot`.
-     * @returns {void}
+     * @returns {Promise<void>} A promise that resolves when the snapshot has been fully applied and the state is restored.
      */
     async applyFullSnapshot(snapshot) {
       const { createImageWarning } = useImageAnalysis(
@@ -1943,7 +1963,6 @@ export const useImageStore = defineStore('imageStore', {
       this.magnifyObjects = JSON.parse(JSON.stringify(snapshot.magnifyObjects))
 
       this.svgDefs = JSON.parse(JSON.stringify(snapshot.svgDefs))
-      // this.blurImages = JSON.parse(JSON.stringify(snapshot.blurImages))
 
       // FRAME
       this.frame = JSON.parse(JSON.stringify(snapshot.frame))

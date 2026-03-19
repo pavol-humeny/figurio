@@ -3,13 +3,13 @@
  * @file: StatisticsView.vue
  * @author: Pavol Humeny
  * @date: 15.5.2026
+ * @description: Statistics page of the application. This component provides information about user interactions with the app, such as visits and events. It features a toggle to switch between visits and events statistics, and displays various charts and data visualizations to help understand how users are using the app and which features are most popular.
  */
 import { ref } from 'vue';
 import AllVisits from '../components/statistics/AllVisits.vue';
 import UniqueVisits from '../components/statistics/UniqueVisits.vue';
 import LastDaysVisits from '../components/statistics/LastDaysVisits.vue';
 import CountryVisits from '../components/statistics/CountryVisits.vue';
-// import DaysVisits from '@/components/statistics/DaysVisits.vue';
 import EventsOverview from '@/components/statistics/EventsOverview.vue';
 import { globalConfig } from '@/config/globalConfig.js';
 import EventToggleTool from '@/components/statistics/EventToggleTool.vue';
@@ -27,8 +27,15 @@ import SessionDurationByUser from '@/components/statistics/sessionDurationByUser
 import AppInstalled from '@/components/statistics/AppInstalled.vue';
 import NumberOfPWA from '@/components/statistics/NumberOfPWA.vue';
 
+/**
+ * State to track the currently selected statistics view (either 'visits' or 'events').
+ */
 const statisticsView = ref(localStorage.getItem(`${globalConfig.LOCAL_STORAGE_PREFIX}statisticsView`) || 'visits'); // 'visits' | 'events'
 
+/**
+ * Function to handle selection of statistics view. It updates the local storage and the reactive state to reflect the user's choice.
+ * @param {string} view - The selected statistics view ('visits' or 'events').
+ */
 const selectStatistics = (view) => {
   localStorage.setItem(
     `${globalConfig.LOCAL_STORAGE_PREFIX}statisticsView`,

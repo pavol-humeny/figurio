@@ -2,6 +2,7 @@
  * @file: viewportStore.js
  * @author: Pavol Humeny
  * @date: 15.5.2026
+ * @description: Store managing the viewport settings. This Pinia store handles the state of the image viewport, including zoom level, pan position, zoom mode, and related settings. It provides actions to manipulate the viewport, such as zooming in/out, resetting zoom and pan, and applying full snapshots for multi-file support. The store also persists certain settings in localStorage to maintain user preferences across sessions.
  */
 import { defineStore } from 'pinia'
 import { viewportConfig } from '@/config/viewportConfig'

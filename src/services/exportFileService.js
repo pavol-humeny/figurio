@@ -2,6 +2,7 @@
  * @file: exportFileService.js
  * @author: Pavol Humeny
  * @date: 15.5.2026
+ * @description: Service for exporting files in various formats. Provides functionality to export the current image as PNG, JPEG, WebP, or PDF based on user settings. The service handles both raster and vector exports, utilizing jsPDF and pdf-lib for PDF generation.
  */
 import jsPDF from 'jspdf'
 import { svg2pdf } from 'svg2pdf.js'
@@ -724,7 +725,7 @@ export function exportFileService(imageStore, editorStore, historyStore, viewpor
    * Normalize CSS font-family name to jsPDF Base14 font name
    * Used only right before svg2pdf rendering
    *
-   * @param {string | null | undefined} font
+   * @param {string | null | undefined} font - CSS font-family value
    * @returns {string}
    */
   const normalizePdfFont = (font) => {
@@ -876,8 +877,6 @@ export function exportFileService(imageStore, editorStore, historyStore, viewpor
 
   /**
    * Copies the current preview image to the clipboard
-   * @param {Function} t - i18n translation function
-   * @returns {Promise<void>}
    */
   const copyImageToClipboard = async () => {
     const dataUrl = imageStore.previewUrl || ''

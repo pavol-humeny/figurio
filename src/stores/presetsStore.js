@@ -2,6 +2,7 @@
  * @file: presetsStore.js
  * @author: Pavol Humeny
  * @date: 15.5.2026
+ * @description: Store for managing image presets. This Pinia store allows users to create, update, select, and delete presets that consist of a name, a list of image operations, and frame settings. Presets are persisted in localStorage under a key defined in the editor configuration.
  */
 import { defineStore } from 'pinia'
 import { editorConfig } from '@/config/editorConfig'

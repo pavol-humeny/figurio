@@ -2,6 +2,7 @@
  * @file: editorConfig.js
  * @author: Pavol Humeny
  * @date: 15.5.2026
+ * @description: Configuration for the image editor. This module exports an `editorConfig` object that contains various settings and constants used throughout the image editor, such as default tool keys, crop settings, background removal parameters, file size limits, frame settings, preset storage keys, SVG object manipulation settings, text font options, and noise analysis thresholds.
  */
 import { globalConfig } from '@/config/globalConfig'
 

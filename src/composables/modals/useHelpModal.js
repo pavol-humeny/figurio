@@ -22,8 +22,8 @@ const isVisible = ref(false)
 /**
  * Logic for the help modal with scrolling and Escape key support
  */
-export function useHelpModal(uiStore, imageStore, editorStore, userModeStore, router, t) {
-  const { startTutorial, continueTutorial } = useInteractiveTutorial(uiStore, imageStore, router, t)
+export function useHelpModal(uiStore, imageStore, editorStore, userModeStore, t) {
+  const { startTutorial, continueTutorial } = useInteractiveTutorial(uiStore, imageStore, t)
   /**
    * Reference to the scrollable content container
    */

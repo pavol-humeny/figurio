@@ -55,7 +55,7 @@ const steps = ref([])
  * continueTutorial: () => void
  * }}
  */
-export function useInteractiveTutorial(uiStore, imageStore, router, t) {
+export function useInteractiveTutorial(uiStore, imageStore, t) {
   const { showToastModal } = useToastModal()
 
   /**
@@ -93,7 +93,7 @@ export function useInteractiveTutorial(uiStore, imageStore, router, t) {
   watch(
     () => imageStore.isImageLoaded,
     () => {
-      steps.value = getTutorialSteps(router, t)
+      steps.value = getTutorialSteps(t)
       numberOfSteps.value = steps.value.length
       currentStep.value = steps.value[uiStore.tutorialStep] || {}
 
@@ -118,7 +118,7 @@ export function useInteractiveTutorial(uiStore, imageStore, router, t) {
     activeStep.value = 0
 
     // Get actual steps
-    steps.value = getTutorialSteps(router, t)
+    steps.value = getTutorialSteps(t)
 
     // Update current step and number of steps
     numberOfSteps.value = steps.value.length
@@ -141,7 +141,7 @@ export function useInteractiveTutorial(uiStore, imageStore, router, t) {
     }
 
     // Get actual steps
-    const newSteps = getTutorialSteps(router, t)
+    const newSteps = getTutorialSteps(t)
     if (newSteps.length !== steps.value.length) {
       activeStep.value = 0
     }

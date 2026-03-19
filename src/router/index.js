@@ -2,6 +2,7 @@
  * @file: index.js
  * @author: Pavol Humeny
  * @date: 15.5.2026
+ * @description: Router configuration for the application. Sets up Vue Router with hash-based history mode and defines routes for home, editor, maintenance, and statistics views. Includes a global navigation guard that enforces maintenance mode when the application is not running, redirecting users to the maintenance view and preventing access to other routes.
  */
 import { createRouter, createWebHashHistory } from 'vue-router'
 import HomeView from '@/views/HomeView.vue'
@@ -46,7 +47,7 @@ router.beforeEach((to) => {
     return { name: 'maintenance', replace: true }
   }
 
-  // Optional: if app is running again, prevent staying on maintenance
+  // If app is running again, prevent staying on maintenance
   if (globalConfig.isRunning && to.name === 'maintenance') {
     return { name: 'home', replace: true }
   }

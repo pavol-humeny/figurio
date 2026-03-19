@@ -10,7 +10,6 @@ import ItemTip from '@/components/common/ItemTip.vue'
 import { useHelpModal } from '@/composables/modals/useHelpModal'
 import { useI18n } from 'vue-i18n'
 import { useUiStore } from '@/stores/uiStore'
-import { useRouter } from 'vue-router'
 import { useImageStore } from '@/stores/imageStore'
 import { useEditorStore } from '@/stores/editorStore'
 import { useUserModeStore } from '@/stores/userModeStore'
@@ -22,7 +21,7 @@ const { t } = useI18n()
  */
 const {
   openHelpModal
-} = useHelpModal(useUiStore(), useImageStore(), useEditorStore(), useUserModeStore(), useRouter(), t)
+} = useHelpModal(useUiStore(), useImageStore(), useEditorStore(), useUserModeStore(), t)
 </script>
 
 <template>

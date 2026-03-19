@@ -2,6 +2,7 @@
  * @file: index.js
  * @author: Pavol Humeny
  * @date: 15.5.2026
+ * @description: This file imports all localization JSON files for supported languages and organizes them into a single object. It then filters this object to include only the languages specified in the global configuration and exports the resulting object for use in the i18n setup of the application.
  */
 import { globalConfig } from '@/config/globalConfig'
 

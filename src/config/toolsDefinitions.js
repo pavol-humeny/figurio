@@ -2,6 +2,7 @@
  * @file: toolsDefinitions.js
  * @author: Pavol Humeny
  * @date: 15.5.2026
+ * @description: Definitions for image editing tools. This module exports an array of `toolsDefinitions`, where each tool is defined by a unique key, an icon name for UI representation, and a settings component that is lazily loaded when the tool is selected. Some tools also include sub-tools with their own keys and icons.
  */
 export const toolsDefinitions = [
   {

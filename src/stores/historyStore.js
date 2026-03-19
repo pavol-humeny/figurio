@@ -2,6 +2,7 @@
  * @file: historyStore.js
  * @author: Pavol Humeny
  * @date: 15.5.2026
+ * @description: Store managing undo/redo history for image operations. This Pinia store maintains a history stack of state snapshots, allowing users to undo and redo changes made to the image. It includes actions to push new states, undo, redo, reset history, and manage multi-file support through full snapshots.
  */
 import { defineStore } from 'pinia'
 import { historyConfig } from '@/config/historyConfig'

@@ -3,6 +3,7 @@
  * @file: MaintenanceView.vue
  * @author: Pavol Humeny
  * @date: 15.5.2026
+ * @description: Maintenance page of the application. This component is displayed when the application is undergoing maintenance or updates. It features a simple canvas where users can draw while they wait, along with a message informing them about the maintenance status.
  */
 import { globalConfig } from '@/config/globalConfig'
 import { ref, onMounted } from 'vue'
@@ -12,11 +13,21 @@ import { useRouter } from 'vue-router'
 const { t } = useI18n()
 const router = useRouter()
 
+/**
+ * Canvas drawing state and logic
+ */
 const canvasRef = ref(null)
 let ctx = null
 let clearTimeoutId = null
 
+/**
+ * State to track the last mouse position
+ */
 const lastPos = ref({ x: 0, y: 0 })
+
+/**
+ * Flag to indicate if the current position is the first point
+ */
 const isFirst = ref(true)
 
 /**
@@ -88,7 +99,7 @@ onMounted(() => {
 
 <template>
   <div class="maintenance-view">
-    <canvas ref="canvasRef" @mousemove="onMouseMove" />
+    <canvas ref="canvasRef" @mousemove="onMouseMove"></canvas>
 
     <div class="text-content">
       <h1>{{ t('maintenance.message') }}</h1>

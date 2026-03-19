@@ -2,6 +2,7 @@
  * @file: importFileService.js
  * @author: Pavol Humeny
  * @date: 15.5.2026
+ * @description: Service for importing files into the application, handling validations and state management. Provides functionality to open a file input dialog, validate selected files (type, size, dimensions), and set the file in the image store for further processing. Supports both image and PDF files, with specific handling for multi-page PDFs.
  */
 import { globalConfig } from '@/config/globalConfig'
 import { useToastModal } from '@/composables/modals/useToastModal'
