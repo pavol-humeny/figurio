@@ -156,7 +156,6 @@ onMounted(() => {
   height: 100%;
   background: var(--background-c);
   padding: 0 10%;
-  overflow: hidden;
   user-select: text;
 }
 
@@ -252,7 +251,10 @@ onMounted(() => {
   left: 50%;
   background: var(--primary-c);
   z-index: var(--z-index-home-page-background);
-  clip-path: polygon(30% 0, 100% 0, 100% 100%, 10% 100%);
+  clip-path: polygon(clamp(250px, 35%, 600px) 0,
+      100% 0,
+      100% 100%,
+      clamp(150px, 15%, 400px) 100%);
 }
 
 .feature {
