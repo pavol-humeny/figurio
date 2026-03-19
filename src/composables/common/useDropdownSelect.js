@@ -2,6 +2,7 @@
  * @file: useDropdownSelect.js
  * @author: Pavol Humeny
  * @date: 15.5.2026
+ * @description: Logic for the <DropdownSelect> component, managing state, synchronization with external model value, dropdown positioning, and user interactions including selection and reset functionality.
  */
 import { ref, watch, onMounted, onBeforeUnmount, computed, nextTick } from 'vue'
 

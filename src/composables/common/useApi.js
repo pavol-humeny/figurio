@@ -2,6 +2,7 @@
  * @file: useApi.js
  * @author: Pavol Humeny
  * @date: 15.5.2026
+ * @description: Custom composable to handle API requests for user visits and events.
  */
 import { globalConfig } from '@/config/globalConfig.js'
 import { useConsole } from '@/composables/common/useConsole.js'

@@ -119,14 +119,16 @@ Logo - 80x80mm
 
 Corner radius - 4mm
 
-font: Inter (veľkosť v mm)
-- --- 46pt (12mm) veľký nadpis 
-- 38pt (10mm) nadpis 
-- --- 24pt (6.2mm) - väčší text 
+font: Inter 
+- 46pt (12mm) 
+- 38pt (10mm)  
+- 24pt (6.2mm)
 
-- 30pt (8mm) nadpis pre text
+Text v blokoch
+- 30pt (8mm) nadpis
 - 18pt (4.7mm) - bežný text 
 
+Text v schéme 
 - 22pt (5.6mm)- nadpis v schéme
 - 15pt (4mm) - text v schéme
 

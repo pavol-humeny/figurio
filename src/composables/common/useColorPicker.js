@@ -2,6 +2,7 @@
  * @file: useColorPicker.js
  * @author: Pavol Humeny
  * @date: 15.5.2026
+ * @description: Composable for managing a color picker component, including HSV/HEX conversion, recent colors, and eye dropper functionality.
  */
 import { ref, nextTick, onBeforeUnmount, watch, computed } from 'vue'
 import { useEyeDropper } from '@vueuse/core'

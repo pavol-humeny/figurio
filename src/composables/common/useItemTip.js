@@ -2,6 +2,7 @@
  * @file: useItemTip.js
  * @author: Pavol Humeny
  * @date: 15.5.2026
+ * @description: Logic for <itemTip> component, managing tooltip visibility, positioning, and interactions. Supports delayed show/hide, dynamic positioning based on the target element, and integration with global UI state to ensure consistent behavior across the application.
  */
 import { ref, computed, onMounted, onBeforeUnmount, watch, nextTick } from 'vue'
 import { editorConfig } from '@/config/editorConfig'

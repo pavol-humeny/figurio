@@ -2,6 +2,7 @@
  * @file: useMath.js
  * @author: Pavol Humeny
  * @date: 15.5.2026
+ * @description: Composable for common mathematical operations. Provides utility functions for rounding, clamping, finding closest values, and calculating distances, which can be used across various components in the application to ensure consistency and reduce code duplication.
  */
 /**
  * Composable for common mathematical operations

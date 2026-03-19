@@ -2,6 +2,7 @@
  * @file: useContextMenu.js
  * @author: Pavol Humeny
  * @date: 15.5.2026
+ * @description: Logic for a custom context menu component, including positioning, visibility management, and event handling to prevent accidental closure when interacting with the menu.
  */
 import { ref, computed, onMounted, onBeforeUnmount, nextTick } from 'vue'
 import { editorConfig } from '@/config/editorConfig'

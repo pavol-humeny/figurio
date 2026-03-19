@@ -2,6 +2,7 @@
  * @file: useConsole.js
  * @author: Pavol Humeny
  * @date: 15.5.2026
+ * @description: Custom console wrapper that respects the settings defined in globalConfig. Provides log, warn, and error methods that can be toggled.
  */
 import { globalConfig } from '@/config/globalConfig'
 

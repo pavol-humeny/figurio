@@ -2,6 +2,7 @@
  * @file: useCollapsiblePanel.js
  * @author: Pavol Humeny
  * @date: 15.5.2026
+ * @description: Composable for managing the state and behavior of a collapsible right-side panel in the UI.
  */
 import { computed, ref } from 'vue'
 

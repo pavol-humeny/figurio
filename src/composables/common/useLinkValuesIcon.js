@@ -2,6 +2,7 @@
  * @file: useLinkValuesIcon.js
  * @author: Pavol Humeny
  * @date: 15.5.2026
+ * @description: Logic for the <LinkValuesIcon> component, managing the linked state of values and emitting updates to the parent component. Provides a toggle function to switch between linked and unlinked states, while respecting the disabled state of the component.
  */
 import { ref, watch } from 'vue'
 

@@ -2,6 +2,7 @@
  * @file: useNumberDropdownInput.js
  * @author: Pavol Humeny
  * @date: 15.5.2026
+ *
  */
 import { useMath } from '@/composables/common/useMath'
 import { ref, watch, onMounted, onBeforeUnmount, computed, nextTick } from 'vue'

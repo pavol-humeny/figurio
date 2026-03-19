@@ -2,6 +2,7 @@
  * @file: useLoadingSpinner.js
  * @author: Pavol Humeny
  * @date: 15.5.2026
+ * @description: Logic for loading spinner component, managing visibility based on loading state and blocking interactions when active.
  */
 import { onMounted, onBeforeUnmount, computed, ref, watch } from 'vue'
 import { useConsole } from '@/composables/common/useConsole.js'

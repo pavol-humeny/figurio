@@ -2,6 +2,7 @@
  * @file: useHoldButton.js
  * @author: Pavol Humeny
  * @date: 15.5.2026
+ * @description: Composable for implementing a hold button functionality, allowing continuous action execution while the button is held down. Provides startHold and stopHold methods to manage the hold state and timing.
  */
 import { ref } from 'vue'
 import { editorConfig } from '@/config/editorConfig'

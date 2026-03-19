@@ -2,6 +2,7 @@
  * @file: useDefaultSlider.js
  * @author: Pavol Humeny
  * @date: 15.5.2026
+ * @description: Logic for a <DefaultSlider> component, handling user input, synchronization with external model value, and emitting events for updates and commits. Supports pointer and wheel interactions for intuitive adjustments.
  */
 import { ref, watch } from 'vue'
 import { useMath } from './useMath'
