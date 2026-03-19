@@ -3,6 +3,7 @@
  * @file: ToolsSettingsTabs.vue
  * @author: Pavol Humeny
  * @date: 15.5.2026
+ * @description: Component for rendering the tabs in the tools settings panel. Manages the active tab state and allows switching between different settings tabs for the selected tool. Also handles dragging to scroll through tabs.
  */
 import { useEditorStore } from '@/stores/editorStore'
 import { useToolsSettingsTabs } from '@/composables/toolsSettings/useToolsSettingsTabs'
@@ -38,6 +39,10 @@ const {
   useUiStore(),
   props.tabs[0],
 )
+
+/**
+ * Recalculate size of right panel to fit content on component mount
+ */
 onMounted(() => {
   nextTick(() => {
     recalculateSizeOfRightPanelToFitContent()
@@ -72,9 +77,7 @@ onMounted(() => {
   overflow-x: auto;
   height: 100%;
   scrollbar-width: none;
-  /* Firefox */
   -ms-overflow-style: none;
-  /* IE and Edge */
 }
 
 .tabs-wrapper::-webkit-scrollbar {
@@ -95,10 +98,6 @@ onMounted(() => {
 .tab:hover {
   background: var(--secondary-c);
 }
-
-/* .tab.grabbing {
-  cursor: grabbing;
-} */
 
 .tab.active {
   background: var(--secondary-c);

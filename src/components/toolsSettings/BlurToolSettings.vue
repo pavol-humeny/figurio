@@ -3,6 +3,7 @@
  * @file: BlurToolSettings.vue
  * @author: Pavol Humeny
  * @date: 15.5.2026
+ * @description: Component for the blur tool settings. Renders the settings for the blur tool, including position, dimensions, blur strength, edge fade, and z-index control.
  */
 import ToolsSettingsTabs from './ToolsSettingsTabs.vue';
 import { useImageStore } from '@/stores/imageStore';
@@ -17,7 +18,6 @@ import ExplainItem from '../common/ExplainItem.vue';
 import { editorConfig } from '@/config/editorConfig'
 import { useUiStore } from '@/stores/uiStore';
 import SvgObjectsZIndexControl from './SvgObjectsZIndexControl.vue';
-
 const { t } = useI18n();
 
 /**
@@ -26,7 +26,6 @@ const { t } = useI18n();
 const {
   localBlurSettings,
   applyLocalBlurSettings,
-  // resetRotationAngle,
   maxBlurPositionX,
   maxBlurPositionY,
   hidePositionAndDimensions,
@@ -121,22 +120,6 @@ const {
             </div>
           </div>
         </div>
-
-        <!-- Rotation -->
-        <!-- <div v-if="!hidePositionAndDimensions" class="settings-content-wrapper">
-          <div class="content-wrapper">
-            <div class="content-title">
-              <p>
-                {{ $t('tools.blur.settings.general.rotation.label') }}
-              </p>
-            </div>
-            <div class="content-inputs">
-              <NumberInput v-model="localBlurSettings.rotation" :min="-180" :max="180" @update="applyLocalBlurSettings"
-                unit="°" icon="IconAngle" :color="'var(--primary-c)'" :iconTop="40" :onReset="resetRotationAngle"
-                :tip="$t('tools.blur.settings.general.rotation.tip')" position="bottom-left" />
-            </div>
-          </div>
-        </div> -->
 
         <!-- Blur strength -->
         <div class="settings-content-wrapper">

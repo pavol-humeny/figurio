@@ -3,6 +3,7 @@
  * @file: SettingsButton.vue
  * @author: Pavol Humeny
  * @date: 15.5.2026
+ * @description: Component for the settings button in the top panel. Renders a button that opens the settings panel when clicked.
  */
 import BaseIcon from '@/components/icons/BaseIcon.vue';
 import ItemTip from '@/components/common/ItemTip.vue';

@@ -3,6 +3,7 @@
  * @file: PresetOperationsList.vue
  * @author: Pavol Humeny
  * @date: 15.5.2026
+ * @description: Component for displaying and managing the list of operations in a preset. Renders each operation with its type and parameters, allows selecting an operation to view/edit its details, deleting operations, and reordering them using drag-and-drop. The component uses the vuedraggable library for drag-and-drop functionality and emits events to the parent component when the list is modified or an operation is selected.
  */
 import { ref, watch } from 'vue'
 import draggable from 'vuedraggable'

@@ -3,6 +3,7 @@
  * @file: BackgroundRemovalToolSettings.vue
  * @author: Pavol Humeny
  * @date: 15.5.2026
+ * @description: Component for the background removal tool settings. Renders the settings for the background removal tool, including tabs for different removal methods (auto, manual, color-based). Each tab contains specific settings related to that method, such as sensitivity sliders, color pickers, and buttons for selection management.
  */
 import ToolsSettingsTabs from './ToolsSettingsTabs.vue'
 import DefaultButton from '../common/DefaultButton.vue'
@@ -109,9 +110,6 @@ const tabs = ['auto', 'manual', 'color']
                   {{ $t('tools.backgroundRemoval.settings.color.removalSensitivity.label') }}
                 </p>
               </div>
-              <!-- <NumberDropdownInput v-model="colorRemovalThreshold" :min="0" :max="0.9" :step="0.01"
-                :options="colorRemovalThresholdOptions"
-                :tip="$t('tools.backgroundRemoval.settings.color.removalSensitivity.tip')" position="bottom-left" /> -->
               <DefaultSlider v-model="colorRemovalThreshold" :min="0" :max="0.9" :step="0.01"
                 :tip="$t('tools.backgroundRemoval.settings.color.removalSensitivity.tip')" position="bottom-left"
                 showValue />
@@ -399,9 +397,6 @@ const tabs = ['auto', 'manual', 'color']
                   {{ $t('tools.backgroundRemoval.settings.color.removalSensitivity.label') }}
                 </p>
               </div>
-              <!-- <NumberDropdownInput v-model="autoRemovalThreshold" :min="0" :max="0.9" :step="0.01"
-                :options="colorRemovalThresholdOptions"
-                :tip="$t('tools.backgroundRemoval.settings.auto.autoRemovalSensitivity.tip')" position="bottom-left" /> -->
               <DefaultSlider v-model="autoRemovalThreshold" :min="0" :max="0.9" :step="0.01"
                 :tip="$t('tools.backgroundRemoval.settings.auto.autoRemovalSensitivity.tip')" position="bottom-left"
                 showValue />

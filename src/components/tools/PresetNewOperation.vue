@@ -3,6 +3,7 @@
  * @file: PresetNewOperation.vue
  * @author: Pavol Humeny
  * @date: 15.5.2026
+ * @description: Component for configuring a new operation in the preset creation form. Renders different input fields based on the selected operation type (rotate, flip, crop, resize, grayscale). Handles user input and emits updates to the parent component when the operation parameters change. The component uses the usePresetNewOperation composable for the logic related to managing the operation parameters and options.
  */
 import DropdownSelect from '@/components/common/DropdownSelect.vue'
 import { useI18n } from 'vue-i18n'

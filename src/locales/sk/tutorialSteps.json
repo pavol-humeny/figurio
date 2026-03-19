@@ -26,7 +26,7 @@
     },
     "exportTool": {
       "title": "Export",
-      "text": "Nástroj export umožňuje uložiť upravený obrázok do rôznych výstupných formátov. Pred vytvorením výsledného súboru je možné nastaviť parametre ako formát alebo kvalitu."
+      "text": "Export umožňuje uložiť upravený obrázok do rôznych výstupných formátov. Pred vytvorením výsledného súboru je možné nastaviť parametre ako formát alebo kvalitu."
     },
     "dragDropArea": {
       "title": "Oblasť pre pretiahnutie súboru",

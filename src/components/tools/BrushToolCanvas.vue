@@ -3,6 +3,7 @@
  * @file: BrushToolCanvas.vue
  * @author: Pavol Humeny
  * @date: 15.5.2026
+ * @description: Canvas component for the brush tool. Handles drawing on the canvas, pointer events, and communicates with the brush tool logic.
  */
 import { ref, computed, onMounted, onBeforeUnmount, watch } from 'vue'
 import { useImageStore } from '@/stores/imageStore'

@@ -3,6 +3,7 @@
  * @file: BrushToolSettings.vue
  * @author: Pavol Humeny
  * @date: 15.5.2026
+ * @description: Component for the brush tool settings. Renders the settings for the brush tool, including brush and pencil tabs with options for selecting between brush/pencil and eraser, adjusting tool size, choosing color, and clearing the canvas.
  */
 import ToolsSettingsTabs from './ToolsSettingsTabs.vue'
 import DefaultButton from '../common/DefaultButton.vue'
@@ -17,10 +18,12 @@ import ColorPicker from '../common/ColorPicker.vue'
 import { useUiStore } from '@/stores/uiStore'
 import ItemTip from '../common/ItemTip.vue'
 import BaseIcon from '../icons/BaseIcon.vue'
-
 const { t } = useI18n()
 const editorStore = useEditorStore()
 
+/**
+ * Logic of the brush tool settings panel
+ */
 const {
   brushSize,
   setBrushSize,
@@ -40,6 +43,9 @@ const {
   t,
 )
 
+/**
+ * Available tabs for brush tool settings
+ */
 const tabs = ['brush', 'pencil']
 
 </script>
@@ -49,16 +55,6 @@ const tabs = ['brush', 'pencil']
     <ToolsSettingsTabs :tabs="tabs" />
     <div class="settings-wrapper">
       <div v-if="editorStore.selectedTabPerTool[editorStore.selectedToolKey] === 'brush'" class="specific-settings">
-        <!-- Rasterize button -->
-        <!-- <div class="settings-content-wrapper">
-          <ExplainItem :text="$t('tools.brush.subTools.brush.explain')"
-            :title="$t('tools.brush.subTools.brush.label')" />
-          <div class="content-wrapper" :class="{ disabled: !imageStore.needRasterization }">
-            <DefaultButton :text="$t('tools.brush.settings.brush.rasterizeButton.text')" position="bottom-left"
-              :tip="$t('tools.brush.settings.brush.rasterizeButton.tip')" @click="rasterizeImage" />
-          </div>
-        </div> -->
-
         <!-- Selected tool -->
         <div class="settings-content-wrapper">
           <ExplainItem :text="$t('tools.brush.subTools.brush.explain')"
@@ -130,16 +126,6 @@ const tabs = ['brush', 'pencil']
       </div>
 
       <div v-if="editorStore.selectedTabPerTool[editorStore.selectedToolKey] === 'pencil'" class="specific-settings">
-        <!-- Rasterize button -->
-        <!-- <div class="settings-content-wrapper">
-          <ExplainItem :text="$t('tools.brush.subTools.pencil.explain')"
-            :title="$t('tools.brush.subTools.pencil.label')" />
-          <div class="content-wrapper" :class="{ disabled: !imageStore.needRasterization }">
-            <DefaultButton :text="$t('tools.brush.settings.pencil.rasterizeButton.text')" position="bottom-left"
-              :tip="$t('tools.brush.settings.pencil.rasterizeButton.tip')" @click="rasterizeImage" />
-          </div>
-        </div> -->
-
         <!-- Selected tool -->
         <div class="settings-content-wrapper">
           <ExplainItem :text="$t('tools.brush.subTools.pencil.explain')"

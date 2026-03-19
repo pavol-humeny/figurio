@@ -3,6 +3,7 @@
  * @file: SettingsPanel.vue
  * @author: Pavol Humeny
  * @date: 15.5.2026
+ * @description: Component for the settings panel in the top panel. Renders the settings panel that allows users to change application settings such as language, theme, and key shortcuts. The panel also provides options for resetting the sidebar width and accessing privacy and data settings. The version of the application is displayed at the bottom of the panel.
  */
 import BaseIcon from '@/components/icons/BaseIcon.vue';
 import LanguageSwitch from './LanguageSwitch.vue';

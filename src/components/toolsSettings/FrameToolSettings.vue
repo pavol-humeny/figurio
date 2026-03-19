@@ -3,6 +3,7 @@
  * @file: FrameToolSettings.vue
  * @author: Pavol Humeny
  * @date: 15.5.2026
+ * @description: Component for the frame tool settings panel. Renders the settings for the frame tool, including frame variants, frame color, frame width (in px or mm), phone frame options (outline, buttons, header), and additional outline options.
  */
 import ToolsSettingsTabs from './ToolsSettingsTabs.vue'
 import { useImageStore } from '@/stores/imageStore'

@@ -3,6 +3,7 @@
  * @file: UndoRedo.vue
  * @author: Pavol Humeny
  * @date: 15.5.2026
+ * @description: Component for the undo and redo buttons in the top panel. Renders two buttons that allow users to undo and redo their actions. The buttons are disabled when there are no actions to undo or redo, or when no file is open.
  */
 import BaseIcon from '@/components/icons/BaseIcon.vue'
 import { useUndoRedo } from '@/composables/topPanel/useUndoRedo'
@@ -18,7 +19,12 @@ const imageStore = useImageStore()
 /**
  * Logic for the undo/redo buttons.
  */
-const { undo, redo, canUndo, canRedo } = useUndoRedo(useHistoryStore(), useImageStore(), useUiStore(), t)
+const {
+  undo,
+  redo,
+  canUndo,
+  canRedo
+} = useUndoRedo(useHistoryStore(), useImageStore(), useUiStore(), t)
 </script>
 
 <template>

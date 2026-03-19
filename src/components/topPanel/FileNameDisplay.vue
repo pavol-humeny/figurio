@@ -3,6 +3,7 @@
  * @file: FileNameDisplay.vue
  * @author: Pavol Humeny
  * @date: 15.5.2026
+ * @description: Component for the file name display in the top panel. Renders the name of the currently open file and allows users to edit the file name. The component is disabled when there is no file loaded or when editing is not possible.
  */
 import BaseIcon from '@/components/icons/BaseIcon.vue'
 import { useImageStore } from '@/stores/imageStore';

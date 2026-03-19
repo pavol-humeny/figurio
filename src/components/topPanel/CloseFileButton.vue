@@ -3,6 +3,7 @@
  * @file: CloseFileButton.vue
  * @author: Pavol Humeny
  * @date: 15.5.2026
+ * @description: Component for the close file button in the top panel. Renders a button that allows users to close the currently open file. The button is disabled when there are no files to close or when closing is not possible.
  */
 import BaseIcon from '@/components/icons/BaseIcon.vue'
 import ItemTip from '@/components/common/ItemTip.vue'

@@ -3,13 +3,13 @@
  * @file: ZoomControl.vue
  * @author: Pavol Humeny
  * @date: 15.5.2026
+ * @description: Component for the zoom control in the top panel. Renders the zoom control that allows users to zoom in and out of the image, reset the zoom level, and switch between classic and physical zoom modes. The component also includes an input for setting a specific zoom level and options for adjusting the physical content size when in physical zoom mode.
  */
 import BaseIcon from '@/components/icons/BaseIcon.vue'
 import { useZoomControl } from '@/composables/topPanel/useZoomControl'
 import { useViewportStore } from '@/stores/viewportStore'
 import { useImageStore } from '@/stores/imageStore'
 import ItemTip from '@/components/common/ItemTip.vue'
-// import NumberInput from '../common/NumberInput.vue'
 import DefaultButton from '../common/DefaultButton.vue'
 import { useCalibrationModal } from '@/composables/modals/useCalibrationModal.js'
 import { useI18n } from 'vue-i18n'
@@ -19,6 +19,9 @@ const { t } = useI18n()
 const imageStore = useImageStore()
 const viewportStore = useViewportStore()
 
+/**
+ * Logic for the calibration modal.
+ */
 const {
   openCalibrationModal
 } = useCalibrationModal(useViewportStore())
@@ -112,11 +115,6 @@ const {
         </div>
       </ItemTip>
     </div>
-
-    <!-- <NumberInput v-if="viewportStore.zoomMode === 'physical'" v-model="physicalContentSize"
-      @update="setNewPhysicalContentSize" unit="cm" :min="1" :max="maxPhysicalContentSize" :step="0.1"
-      icon="IconPhysicalContentSize" color="var(--primary-c)" :onReset="resetPhysicalContentSize"
-      :tip="$t('topPanel.zoomControl.tip.physicalContentSize.tip')" /> -->
 
     <NumberDropdownInput v-if="viewportStore.zoomMode === 'physical'" v-model="physicalContentSize"
       :options="physicalContentSizeOptions" @update="setNewPhysicalContentSize" unit="cm" :min="1"

@@ -3,6 +3,7 @@
  * @file: CropToolSettings.vue
  * @author: Pavol Humeny
  * @date: 15.5.2026
+ * @description: Component for the crop tool settings. Renders the settings for the crop tool, including position, dimensions, auto crop options, manual adjustments, and controls for applying or resetting the crop.
  */
 import ToolsSettingsTabs from './ToolsSettingsTabs.vue'
 import { useEditorStore } from '@/stores/editorStore'
@@ -39,7 +40,6 @@ const {
   resetCrop,
   cropCanBeReset,
   isVisibleCropBox,
-  // Auto crop
   useBaseImage,
   fitCrop,
   manualIndents,

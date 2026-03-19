@@ -3,6 +3,7 @@
  * @file: OneTool.vue
  * @author: Pavol Humeny
  * @date: 15.5.2026
+ * @description: Component for rendering a single tool in the toolbar, including its subtools if it has any. Handles user interactions for selecting the tool and opening the subtools popup. The component uses the useOneTool composable for the logic related to tool selection and subtool positioning.
  */
 import BaseIcon from '@/components/icons/BaseIcon.vue'
 import ItemTip from '@/components/common/ItemTip.vue'

@@ -3,6 +3,7 @@
  * @file: ToolsSettingsPanel.vue
  * @author: Pavol Humeny
  * @date: 15.5.2026
+ * @description: Component for the tools settings panel in the editor. Dynamically renders the settings component for the currently selected tool and manages the display of the SVG objects list based on the selected tool and presence of SVG objects.
  */
 import { computed, onMounted } from 'vue'
 import { useToolsSettingsPanel } from '@/composables/toolsSettings/useToolsSettingsPanel';
@@ -30,6 +31,9 @@ const panelVars = computed(() => {
   }
 })
 
+/**
+ * Check tool on component mount and display SVG objects list
+ */
 onMounted(() => {
   if (
     editorStore.selectedToolKey === 'shape' ||
@@ -53,6 +57,7 @@ onMounted(() => {
 })
 
 </script>
+
 <template>
   <div class="tools-settings-panel" :style="panelVars">
     <component :is="settingsComponent" v-if="settingsComponent" />

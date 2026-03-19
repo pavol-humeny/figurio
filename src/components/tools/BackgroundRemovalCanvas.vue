@@ -3,6 +3,7 @@
  * @file: BackgroundRemovalCanvas.vue
  * @author: Pavol Humeny
  * @date: 15.5.2026
+ * @description: Canvas component for manual background removal. Handles drawing on the canvas, pointer events, and communicates with the background removal tool logic. Uses a web worker to process the canvas data without blocking the UI.
  */
 import { ref, computed, watch, onMounted, onBeforeUnmount, nextTick } from 'vue'
 import { useBackgroundRemovalTool } from '@/composables/tools/useBackgroundRemovalTool'

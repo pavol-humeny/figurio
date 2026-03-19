@@ -3,6 +3,7 @@
  * @file: SvgObjectWrapper.vue
  * @author: Pavol Humeny
  * @date: 15.5.2026
+ * @description: Component for wrapping an SVG object in the editor. Renders the SVG element based on its tag and attributes, and if the object is selected, it also renders a bounding box with resizers for resizing the object. Handles user interactions for dragging and resizing the object.
  */
 import { useSvgObjectWrapper } from '@/composables/tools/useSvgObjectWrapper'
 import { useEditorStore } from '@/stores/editorStore';

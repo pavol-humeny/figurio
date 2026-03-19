@@ -3,6 +3,7 @@
  * @file: SvgObjectsZIndexControl.vue
  * @author: Pavol Humeny
  * @date: 15.5.2026
+ * @description: Component for controlling the Z-index of SVG objects in various tools. Renders buttons for bringing objects to front, sending them to back, and moving them forward or backward in the Z-index order.
  */
 import DefaultButton from '../common/DefaultButton.vue';
 import { useImageStore } from '@/stores/imageStore';

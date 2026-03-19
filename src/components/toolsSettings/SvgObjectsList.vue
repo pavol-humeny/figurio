@@ -3,6 +3,7 @@
  * @file: SvgObjectsList.vue
  * @author: Pavol Humeny
  * @date: 15.5.2026
+ * @description: Component for the SVG objects list panel in the tools settings. Renders the list of SVG objects in the image, allows selecting, renaming, deleting, and reordering of SVG objects.
  */
 import { useImageStore } from '@/stores/imageStore'
 import draggable from 'vuedraggable'
@@ -13,16 +14,13 @@ import { useViewportStore } from '@/stores/viewportStore'
 import { useEditorStore } from '@/stores/editorStore'
 import { useUiStore } from '@/stores/uiStore'
 import { useWorkspaceStore } from '@/stores/workspaceStore'
-
 const { t } = useI18n()
-
 const imageStore = useImageStore()
 
 /**
  * Logic for managing SVG objects list
  */
 const {
-  isVisible,
   mappedObjects,
   panelVars,
   startResize,

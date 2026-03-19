@@ -3,6 +3,7 @@
  * @file: ThemeSwitch.vue
  * @author: Pavol Humeny
  * @date: 15.5.2026
+ * @description: Component for the theme switch button. Renders a button that allows users to switch between light and dark themes. The button displays an icon representing the current theme and toggles the theme when clicked.
  */
 import { useThemeSwitch } from '@/composables/topPanel/useThemeSwitch'
 import { useUiStore } from '@/stores/uiStore'
@@ -21,9 +22,6 @@ const {
 
 <template>
   <ItemTip :text="$t('topPanel.settingsPanel.theme.button.tip')" position="bottom-left">
-    <!-- <div class="theme-switch button button-circle button-control" @click="toggleTheme">
-      <BaseIcon :key="theme" :name="theme === 'dark' ? 'IconSun' : 'IconMoon'" size="24" />
-    </div> -->
     <div class="toggle-mode-switch">
       <div class="toggle-mode-switch-wrapper" :class="{ active: isLightMode }" @click="toggleTheme">
         <div class="toggle-mode-switch-slider" :class="{ active: isLightMode }">

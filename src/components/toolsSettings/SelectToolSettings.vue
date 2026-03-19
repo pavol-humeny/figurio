@@ -3,6 +3,7 @@
  * @file: SelectToolSettings.vue
  * @author: Pavol Humeny
  * @date: 15.5.2026
+ * @description: Component for the select tool settings panel. Renders the settings for the select tool, including options for selecting all objects, deselecting all objects, and deleting selected objects.
  */
 import ToolsSettingsTabs from './ToolsSettingsTabs.vue'
 import DefaultButton from '../common/DefaultButton.vue';
@@ -27,7 +28,6 @@ const {
   deselectAllSvgObjects,
   deleteSelectedSvgObjects
 } = useSvgObjects(useImageStore(), useHistoryStore(), useViewportStore(), useEditorStore(), useUiStore(), useWorkspaceStore(), t);
-
 
 </script>
 

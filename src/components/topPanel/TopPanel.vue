@@ -3,6 +3,7 @@
  * @file: TopPanel.vue
  * @author: Pavol Humeny
  * @date: 15.5.2026
+ * @description: Component for the top panel of the application. Renders the top navigation bar that includes the application logo, file name display, upload and export buttons, undo/redo controls, zoom control, and buttons for opening the settings panel and help modal.
  */
 import SettingsButton from './SettingsButton.vue';
 import HelpButton from './HelpButton.vue';
@@ -46,7 +47,9 @@ const goHome = () => {
   }
 }
 
-/** Computes whether to show the controls */
+/**
+ * Computes whether to show the controls
+ */
 const showControls = computed(() => route.name === 'editor')
 </script>
 

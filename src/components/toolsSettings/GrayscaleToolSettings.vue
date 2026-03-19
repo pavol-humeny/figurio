@@ -3,6 +3,7 @@
  * @file: GrayscaleToolSettings.vue
  * @author: Pavol Humeny
  * @date: 15.5.2026
+ * @description: Component for the grayscale tool settings panel. Renders the settings for the grayscale tool, including grayscale type selection and a button to apply the grayscale conversion.
  */
 import ToolsSettingsTabs from './ToolsSettingsTabs.vue'
 import DefaultButton from '../common/DefaultButton.vue'

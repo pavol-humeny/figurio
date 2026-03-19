@@ -3,6 +3,7 @@
  * @file: ShapeToolSettings.vue
  * @author: Pavol Humeny
  * @date: 15.5.2026
+ * @description: Component for the shape tool settings panel. Renders the settings for the shape tool, including position, dimensions, fill and stroke color options, opacity control, corner radius (for rectangles), line type and arrow options (for lines), and z-index control.
  */
 import { useShapeTool } from '@/composables/tools/useShapeTool';
 import { useEditorStore } from '@/stores/editorStore';
@@ -25,7 +26,7 @@ const { t } = useI18n()
 const imageStore = useImageStore();
 
 /**
- * Available tabs for blur tool settings
+ * Available tabs for shape tool settings
  */
 const tabs = ['rectangle', 'ellipse', 'line'];
 
@@ -132,22 +133,6 @@ const {
             </div>
           </div>
         </div>
-
-        <!-- Rotation -->
-        <!-- <div v-if="!hidePositionAndDimensions && localObjectSettings.type !== 'line'" class="settings-content-wrapper">
-          <div class="content-wrapper">
-            <div class="content-title">
-              <p>
-                {{ $t('tools.shape.settings.rotation.label') }}
-              </p>
-            </div>
-            <div class="content-inputs">
-              <NumberInput v-model="localObjectSettings.rotation" :min="-180" :max="180" @update="applyLocalSettings"
-                unit="°" icon="IconAngle" :color="'var(--primary-c)'" :iconTop="40" :onReset="resetRotationAngle"
-                :tip="$t('tools.shape.settings.rotation.tip')" position="bottom-left" />
-            </div>
-          </div>
-        </div> -->
 
         <!-- Fill color -->
         <div v-if="localObjectSettings.type !== 'line'" class="settings-content-wrapper">

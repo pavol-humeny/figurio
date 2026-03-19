@@ -3,6 +3,7 @@
  * @file: CropTool.vue
  * @author: Pavol Humeny
  * @date: 15.5.2026
+ * @description: Crop tool component. Renders the crop box and handles user interactions for cropping the image. The crop box can be moved and resized using handles on the corners and sides. The size of the handles and border width adjust based on the zoom level to maintain a consistent visual appearance. The component uses the useCropTool composable for the crop logic.
  */
 import { useImageStore } from '@/stores/imageStore'
 import { useEditorStore } from '@/stores/editorStore'

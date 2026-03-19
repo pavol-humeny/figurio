@@ -3,6 +3,7 @@
  * @file: ToolsPanel.vue
  * @author: Pavol Humeny
  * @date: 15.5.2026
+ * @description: Component for the tools panel in the editor. Renders the list of available tools and handles user interactions for selecting a tool and scrolling through the tool list.
  */
 import BaseIcon from '@/components/icons/BaseIcon.vue'
 import OneTool from './OneTool.vue'

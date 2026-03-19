@@ -3,6 +3,7 @@
  * @file: PresetToolSettings.vue
  * @author: Pavol Humeny
  * @date: 15.5.2026
+ * @description: Component for the preset tool settings panel. Renders the settings for the preset tool, including preset management (create, modify, delete), preset operations list, frame settings within presets, and options for phone frames.
  */
 import ToolsSettingsTabs from './ToolsSettingsTabs.vue'
 import { useEditorStore } from '@/stores/editorStore'
@@ -43,8 +44,6 @@ const {
   presetFrameOptions,
   frameWidthRef,
   resetFrameWidth,
-  // showManualPresetSetting,
-  // useCurrentModifications,
   presetNameRef,
   selectedPresetName,
   localPresetName,
@@ -519,14 +518,6 @@ const tabs = ['myPresets', 'createPreset']
                 <TextInput ref="presetNameRef" v-model="newPreset.presetName"
                   :placeholder="t('tools.preset.settings.createPreset.presetName.placeholder')" updateOnChange />
               </div>
-              <!-- <div class="content-button">
-                <DefaultButton :text="t('tools.preset.settings.createPreset.manualPresetSetting.text')"
-                  @click="showManualPresetSetting()" :disabled="newPreset.presetName === ''" />
-              </div> -->
-              <!-- <div class="content-button">
-                <DefaultButton :text="t('tools.preset.settings.createPreset.useCurrentModifications.text')"
-                  @click="useCurrentModifications()" :disabled="newPreset.presetName === ''" />
-              </div> -->
             </div>
           </div>
 
@@ -545,17 +536,6 @@ const tabs = ['myPresets', 'createPreset']
               </div>
             </div>
           </div>
-
-          <!-- Use current modifications
-          <div v-if="isShowManualPresetSetting" class="settings-content-wrapper">
-            <div class="content-wrapper">
-              <div class="content-button">
-                <DefaultButton :text="t('tools.preset.settings.createPreset.useCurrentModifications.text')"
-                  :tip="t('tools.preset.settings.createPreset.useCurrentModifications.tip')"
-                  @click="useCurrentModifications()" />
-              </div>
-            </div>
-          </div>-->
 
           <!-- Transformations -->
           <div v-if="isShowManualPresetSetting" class="settings-content-wrapper">

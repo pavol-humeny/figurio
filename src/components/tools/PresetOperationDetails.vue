@@ -3,6 +3,7 @@
  * @file: PresetOperationDetails.vue
  * @author: Pavol Humeny
  * @date: 15.5.2026
+ * @description: Component for displaying the details of a preset operation in the preset details view. Renders the operation type and its parameters in a readable format. The component uses the usePresetNewOperation composable to format the operation parameters for display.
  */
 import DropdownSelect from '@/components/common/DropdownSelect.vue'
 import { useI18n } from 'vue-i18n'

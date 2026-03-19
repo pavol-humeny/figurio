@@ -3,6 +3,7 @@
  * @file: TransformToolSettings.vue
  * @author: Pavol Humeny
  * @date: 15.5.2026
+ * @description: Component for the transform tool settings panel. Renders the settings for the transform tool, including options for rotating, flipping, and resizing the image.
  */
 import ToolsSettingsTabs from './ToolsSettingsTabs.vue'
 import DefaultButton from '../common/DefaultButton.vue'
@@ -21,7 +22,6 @@ import ExplainItem from '../common/ExplainItem.vue'
 import { useUiStore } from '@/stores/uiStore'
 
 const { t } = useI18n()
-
 const editorStore = useEditorStore()
 
 /**

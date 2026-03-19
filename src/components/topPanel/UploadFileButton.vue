@@ -3,6 +3,7 @@
  * @file: UploadFileButton.vue
  * @author: Pavol Humeny
  * @date: 15.5.2026
+ * @description: Component for the upload file button in the top panel. Renders a button that opens the drag and drop modal for uploading files when clicked.
  */
 import BaseIcon from '@/components/icons/BaseIcon.vue'
 import ItemTip from '@/components/common/ItemTip.vue'

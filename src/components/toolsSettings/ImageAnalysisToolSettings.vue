@@ -3,6 +3,7 @@
  * @file: ImageAnalysisToolSettings.vue
  * @author: Pavol Humeny
  * @date: 15.5.2026
+ * @description: Component for the image analysis tool settings panel. Renders the settings for the image analysis tool, including noise detection and removal options, sensitivity slider, and buttons to perform noise analysis and removal.
  */
 import ToolsSettingsTabs from './ToolsSettingsTabs.vue'
 import DefaultButton from '../common/DefaultButton.vue'

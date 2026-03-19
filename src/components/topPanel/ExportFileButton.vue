@@ -3,6 +3,7 @@
  * @file: ExportFileButton.vue
  * @author: Pavol Humeny
  * @date: 15.5.2026
+ * @description: Component for the export file button in the top panel. Renders a button that allows users to export the currently open file. The button is disabled when there is no image loaded or when exporting is not possible.
  */
 import BaseIcon from '@/components/icons/BaseIcon.vue'
 import ItemTip from '@/components/common/ItemTip.vue'
@@ -12,12 +13,10 @@ import { computed } from 'vue'
 import { useExportToolSettings } from '@/composables/toolsSettings/useExportToolSettings'
 import { useHistoryStore } from '@/stores/historyStore'
 import { useI18n } from 'vue-i18n'
-
 import { useConsole } from '@/composables/common/useConsole.js'
 import { useViewportStore } from '@/stores/viewportStore'
 import { useUiStore } from '@/stores/uiStore'
 const { log } = useConsole()
-
 const { t } = useI18n()
 const editorStore = useEditorStore()
 const imageStore = useImageStore()

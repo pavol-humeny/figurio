@@ -3,6 +3,7 @@
  * @file: ExportToolSettings.vue
  * @author: Pavol Humeny
  * @date: 15.5.2026
+ * @description: Component for the export tool settings panel. Renders the settings for exporting the edited image, including file format selection, quality adjustment, file name input, expected file size, and a preview of the exported image. The component also includes functionality for copying the image to the clipboard.
  */
 import { useExportToolSettings } from '@/composables/toolsSettings/useExportToolSettings'
 import DefaultButton from '@/components/common/DefaultButton.vue'

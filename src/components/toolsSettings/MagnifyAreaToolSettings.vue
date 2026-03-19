@@ -3,6 +3,7 @@
  * @file: MagnifyAreaToolSettings.vue
  * @author: Pavol Humeny
  * @date: 15.5.2026
+ * @description: Component for the magnify area tool settings. Renders the settings for the magnify area tool, including position, radius, zoom level, outline width and color, and z-index control.
  */
 import ToolsSettingsTabs from './ToolsSettingsTabs.vue';
 import NumberInput from '../common/NumberInput.vue';
@@ -21,6 +22,9 @@ import NumberSpinner from '../common/NumberSpinner.vue';
 
 const { t } = useI18n();
 
+/**
+ * Logic of magnify area tool settings panel
+ */
 const {
   applyLocalMagnifyAreaSettings,
   localMagnifyAreaSettings,

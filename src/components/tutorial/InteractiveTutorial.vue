@@ -3,6 +3,7 @@
  * @file: InteractiveTutorial.vue
  * @author: Pavol Humeny
  * @date: 15.5.2026
+ * @description: Component for the interactive tutorial. Renders the interactive tutorial that guides users through the features of the application. The tutorial consists of multiple steps, each highlighting a specific feature or area of the application with an overlay and a tooltip. Users can navigate through the steps using next and previous buttons, and can also close the tutorial at any time.
  */
 import { useInteractiveTutorial } from '@/composables/tutorial/useInteractiveTutorial'
 import BaseIcon from '../icons/BaseIcon.vue';

@@ -3,6 +3,7 @@
  * @file: TextToolSettings.vue
  * @author: Pavol Humeny
  * @date: 15.5.2026
+ * @description: Component for the text tool settings panel. Renders the settings for the text tool, including options for editing text content, adjusting position, rotation, size, letter spacing, font family, color, opacity, and style (bold, italic, underline).
  */
 import ToolsSettingsTabs from './ToolsSettingsTabs.vue'
 import ColorPicker from '../common/ColorPicker.vue';
@@ -32,7 +33,6 @@ const {
   textFontOptions,
   localTextSettings,
   applyLocalTextSettings,
-  // resetRotationAngle,
   resetOpacity,
   resetLetterSpacing,
   setBoldStyle,
@@ -102,22 +102,6 @@ const {
             </div>
           </div>
         </div>
-
-        <!-- Rotation -->
-        <!-- <div v-if="!hidePosition" class="settings-content-wrapper">
-          <div class="content-wrapper">
-            <div class="content-title">
-              <p>
-                {{ $t('tools.text.settings.general.rotation.label') }}
-              </p>
-            </div>
-            <div class="content-inputs">
-              <NumberInput v-model="localTextSettings.rotation" :min="-180" :max="180" @update="applyLocalTextSettings"
-                unit="°" icon="IconAngle" :color="'var(--primary-c)'" :iconTop="40" :onReset="resetRotationAngle"
-                :tip="$t('tools.text.settings.general.rotation.tip')" position="bottom-left" />
-            </div>
-          </div>
-        </div> -->
 
         <!-- Size and letter spacing -->
         <div class="settings-content-wrapper">

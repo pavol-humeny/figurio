@@ -3,6 +3,7 @@
  * @file: LanguageSwitch.vue
  * @author: Pavol Humeny
  * @date: 15.5.2026
+ * @description: Component for the language switch in the top panel. Renders a language switcher that allows users to change the application language. The switcher displays the currently selected language and provides options for switching to other supported languages.
  */
 import { ref } from 'vue'
 import { useLanguageSwitch } from '@/composables/topPanel/useLanguageSwitch'
