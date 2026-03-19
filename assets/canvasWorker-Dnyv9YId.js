@@ -1,0 +1,1 @@
+(function(){"use strict";self.onmessage=n=>{const{width:e,height:a,imageDataBuffer:i}=n.data,t=new Uint8ClampedArray(i);if(t.length!==e*a*4)return;const s=new ImageData(t,e,a);self.postMessage({imageData:s},[s.data.buffer])}})();
