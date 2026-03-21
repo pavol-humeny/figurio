@@ -24,6 +24,7 @@
 # TODO
 - P - zaistit aby pri resize objektov bolo snapovanie plynule tak ako pri drag
 - touch event pre select, shape, text, magnify, blur 
+- ak sa vytvorí objekt, prepne na select a zmaže tak v shape tooly sa to neresetuje
 
 ## Dlhodobé TODO 
 - eye dropper na safari

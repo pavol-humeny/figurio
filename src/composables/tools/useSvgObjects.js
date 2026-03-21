@@ -179,6 +179,7 @@ export function useSvgObjects(
    * Delete selected SVG object
    */
   const deleteSelectedSvgObjects = (t) => {
+    console.warn('deleteSelectedSvgObjects is being called') // Debug log to check if function is called
     const selectedIds = imageStore.selectedSvgObjectIds
 
     if (imageStore.selectedSvgObjectId === null && selectedIds.length === 0) {
@@ -224,6 +225,7 @@ export function useSvgObjects(
       }
 
       imageStore.selectedSvgObjectIds = []
+      imageStore.selectedSvgObjectId = null
     }
 
     // Delete objects from the store

@@ -20,6 +20,20 @@
 - lokálne spracovanie obrázkov – ochrana súkromia
 - podpora PDF a vektorových úprav
 - špecializované nástroje pre technické a akademické dokumenty
+- zobrazenie obrázka v reálnych rozmeroch
+
+## Video
+## Lokálne spracovanie obrázkov
+Spracovanie prebieha priamo v prehliadači bez odosielania dát na server.
+
+## Vektorová úprava PDF
+Aplikácia umožňuje načítanie PDF a aplikovanie úprav so zachovaním vektorovej podoby.
+
+## Špecializované nástroje
+Nástroje ako anotácie, zvýraznenia, orezanie na tesno či rámiky pre akademické dokumenty.
+
+## Zobrazenie v reálnych rozmeroch
+Obrázok je možné zobraziť v milimetroch pre presnú kontrolu veľkosti.
 ---
 
 ## 2. Schéma
