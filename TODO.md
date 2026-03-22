@@ -8,28 +8,26 @@
 - kniha 
 - v
     - preklad help
-    - video príklady 
     - potrebujem zmenit konštantu v rámikoch - mobilné zaoblenie
-    - v akom formáte dátum v citácii
     - testovanie - ukázať grafy
     - historická verzia Figurio 
     - overleaf má históriu 
+    - video
+    - chatgpt predplatné
 
 ## TODO - text 
-- P - záver
-- implementácia nástroje - review
 - prehlásenie AI
-- video scenár
+- excel text
 
 # TODO
 - P - zaistit aby pri resize objektov bolo snapovanie plynule tak ako pri drag
 - touch event pre select, shape, text, magnify, blur 
-- ak sa vytvorí objekt, prepne na select a zmaže tak v shape tooly sa to neresetuje
-
-## Dlhodobé TODO 
-- eye dropper na safari
+- rozbité pravítko v centimetroch 
+- mac pri nainštalovanej aplikácii sa s tým dá šklbať 
+- export, help... okná na tablete 
 
 ## Insane ideas
+- eye dropper na safari
 - Vylepšenie rámiku pre prehliadače 
 - BG removal - ukladanie do undo redo operácií pri výbere 
 - Pozrieť sa na spoplatnenie - maximálny počet exportov, by me coffee
