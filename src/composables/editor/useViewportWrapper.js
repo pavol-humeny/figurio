@@ -652,16 +652,12 @@ export function useViewportWrapper(
    * Dynamic step size for physical zoom mode based on zoom level and pixels per mm at fit zoom
    */
   const dynamicPhysicalStep = computed(() => {
-    const pxPerMm = viewportStore.getPxPerMmFitZoom
-    const pxPerMmOnScreen = pxPerMm * zoomLevel.value
+    const pxPerMm = viewportStore.getPxPerMmFitZoom * zoomLevel.value
 
-    // Spacing between ruler marks in pixels on screen
     const targetSpacingPx = viewportConfig.rulerMarkSpacingPx
 
-    // Calculate the raw step in mm that would correspond to the target pixel spacing on screen
-    const rawStepMm = targetSpacingPx / pxPerMmOnScreen
+    const rawStepMm = targetSpacingPx / pxPerMm
 
-    // Round the raw step to a nice number (1, 2, 5, 10, etc.) multiplied by a power of 10
     const base = Math.pow(10, Math.floor(Math.log10(rawStepMm)))
     const normalized = rawStepMm / base
 
@@ -671,7 +667,6 @@ export function useViewportWrapper(
     else if (normalized <= 5) nice = 5
     else nice = 10
 
-    // Minimum step of 10 mm to avoid too dense ruler marks
     return Math.max(10, nice * base)
   })
 
@@ -687,12 +682,11 @@ export function useViewportWrapper(
   const updateHorizontalRulerMarks = () => {
     const isPhysical = viewportStore.zoomMode === 'physical'
 
-    const pxPerMm = viewportStore.getPxPerMmFitZoom
+    const pxPerMm = viewportStore.getPxPerMmFitZoom * zoomLevel.value
 
     const unitStep = isPhysical ? dynamicPhysicalStep.value : dynamicStep.value
-    const zoomCorrection = isPhysical ? viewportStore.zoomLevel : zoomLevel.value
 
-    const spacing = isPhysical ? unitStep * pxPerMm * zoomCorrection : unitStep * zoomCorrection
+    const spacing = isPhysical ? unitStep * pxPerMm : unitStep * zoomLevel.value
 
     const width = wrapperSize.value.width || 0
     const start = Math.floor(-panX.value / spacing) - 1
@@ -732,12 +726,11 @@ export function useViewportWrapper(
   const updateVerticalRulerMarks = () => {
     const isPhysical = viewportStore.zoomMode === 'physical'
 
-    const pxPerMm = viewportStore.getPxPerMmFitZoom
+    const pxPerMm = viewportStore.getPxPerMmFitZoom * zoomLevel.value
 
     const unitStep = isPhysical ? dynamicPhysicalStep.value : dynamicStep.value
-    const zoomCorrection = isPhysical ? viewportStore.zoomLevel : zoomLevel.value
 
-    const spacing = isPhysical ? unitStep * pxPerMm * zoomCorrection : unitStep * zoomCorrection
+    const spacing = isPhysical ? unitStep * pxPerMm : unitStep * zoomLevel.value
 
     const height = wrapperSize.value.height || 0
     const start = Math.floor(-panY.value / spacing) - 1
