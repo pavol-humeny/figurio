@@ -5,14 +5,7 @@
  * @description: Composable for common mathematical operations. Provides utility functions for rounding, clamping, finding closest values, and calculating distances, which can be used across various components in the application to ensure consistency and reduce code duplication.
  */
 /**
- * Composable for common mathematical operations
- * @returns {{
- *   round: (value: number, positions: number) => number,
- *   clamp: (value: number, min: number, max: number) => number,
- *   closest: (target: number, values: number[]) => number | null,
- *   pythagorean: (a: number, b: number) => number,
- *   distance: (x1: number, y1: number, x2: number, y2: number) => number
- * }}
+ * Logic for common mathematical operations
  */
 export function useMath() {
   /**

@@ -11,13 +11,6 @@ import { ref, watch, onMounted, onBeforeUnmount, computed, nextTick } from 'vue'
  *
  * @param {{ modelValue: string, icon?: string, onReset?: () => void }} props - Component props
  * @param {(event: string, value: any) => void} emit - Emit function for model updates
- * @returns {{
- *   selectedValue: import('vue').Ref<string>,
- *   onChange: () => void,
- *   onIconDoubleClick: () => void,
- *   setValue: (value: string) => void,
- *   showIcon: boolean
- * }}
  */
 export function useDropdownSelect(props, emit, uiStore) {
   /**

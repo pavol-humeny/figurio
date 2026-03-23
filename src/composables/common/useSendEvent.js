@@ -2,12 +2,17 @@
  * @file: useSendEvent.js
  * @author: Pavol Humeny
  * @date: 15.5.2026
+ * @description: Logic for sending user interaction events to the API for analytics, with safeguards to prevent sending events during local development. Handles API communication and error logging.
  */
+
 import { globalConfig } from '@/config/globalConfig.js'
 import { useUiStore } from '@/stores/uiStore'
 import { useConsole } from '@/composables/common/useConsole.js'
 const { error } = useConsole()
 
+/**
+ * Logic for sending user interaction events to the API for analytics, with safeguards to prevent sending events during local development. Handles API communication and error logging.
+ */
 export function useSendEvent() {
   /**
    * Sends an event to the API, unless running on localhost.

@@ -12,10 +12,6 @@ import { useMath } from './useMath'
  *
  * @param {{ modelValue: number }} props - Component props with a numeric modelValue
  * @param {(event: string, value: number) => void} emit - Emit function for model updates
- * @returns {{
- *   currentValue: import('vue').Ref<number>,
- *   onInput: (event: Event) => void
- * }}
  */
 export function useDefaultSlider(props, emit) {
   const { clamp } = useMath()

@@ -116,8 +116,6 @@ export function useApi() {
       return
     }
 
-    // log(`Adding event "${eventType}" for user:`, userId)
-
     try {
       const res = await fetch(`${API_BASE}/api/users/${userId}/events`, {
         method: 'POST',

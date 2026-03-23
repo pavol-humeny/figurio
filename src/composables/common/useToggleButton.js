@@ -2,6 +2,7 @@
  * @file: useToggleButton.js
  * @author: Pavol Humeny
  * @date: 15.5.2026
+ * @description: Logic for the <ToggleButton> component, managing the internal active state of the toggle button, handling user interactions to toggle the state, and emitting updates to the parent component. Also respects a disabled state to prevent toggling when necessary.
  */
 import { ref, watch } from 'vue'
 
@@ -13,10 +14,6 @@ import { ref, watch } from 'vue'
  *   disabled?: boolean
  * }} props - Component props
  * @param {(event: string, value: boolean) => void} emit - Emit function for model updates
- * @returns {{
- *   isActive: import('vue').Ref<boolean>,
- *   toggleSwitch: () => void
- * }}
  */
 export function useToggleButton(props, emit) {
   /**

@@ -2,6 +2,7 @@
  * @file: useTimeInput.js
  * @author: Pavol Humeny
  * @date: 15.5.2026
+ * @description: Logic for handling time input in hours and minutes, allowing users to input time values, validating and clamping them within acceptable ranges, and emitting updates to the parent component. Also supports mouse wheel interactions for adjusting time values.
  */
 import { ref, watch } from 'vue'
 
@@ -17,6 +18,7 @@ export function useTimeInput(props, emit) {
 
   /**
    * Sync from modelValue inputs
+   * @param {number} totalMinutes - Total minutes to sync
    */
   const syncFromModel = (totalMinutes) => {
     const h = Math.floor(totalMinutes / 60)
@@ -45,7 +47,6 @@ export function useTimeInput(props, emit) {
   const onHoursInput = (e) => {
     hoursInput.value = e.target.value
   }
-
   const onMinutesInput = (e) => {
     minutesInput.value = e.target.value
   }
@@ -81,8 +82,8 @@ export function useTimeInput(props, emit) {
   /**
    * Handle mouse wheel on hours/minutes input
    *
-   * @param {'hours' | 'minutes'} type
-   * @param {WheelEvent} event
+   * @param {'hours' | 'minutes'} type - Which input is being scrolled
+   * @param {WheelEvent} event - The wheel event
    */
   const onWheel = (type, event) => {
     if (props.disabled) return

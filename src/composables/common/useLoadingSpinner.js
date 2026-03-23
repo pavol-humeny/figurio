@@ -11,11 +11,22 @@ const { log } = useConsole()
 
 /**
  * Logic for loading spinner overlay
+ * @param {UiStore} uiStore - Pinia store managing loading state and interaction blocking
  */
 export function useLoadingSpinner(uiStore) {
+  /**
+   * Whether to show the applying spinner after a delay
+   */
   const showApplyingSpinner = ref(false)
+
+  /**
+   * Timer for delayed showing of the applying spinner to avoid flickering on fast operations
+   */
   let applyingTimer = null
 
+  /**
+   * Watch for changes in the applying state to manage the visibility of the applying spinner with a delay
+   */
   watch(
     () => uiStore.isApplying,
     (isApplying) => {
@@ -31,6 +42,9 @@ export function useLoadingSpinner(uiStore) {
     },
   )
 
+  /**
+   * Set up global event listeners to block interactions when loading is active and prevent browser zoom shortcuts
+   */
   onMounted(() => {
     /**
      * Block all interactions when loading is active

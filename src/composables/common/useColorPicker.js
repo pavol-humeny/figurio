@@ -13,7 +13,6 @@ const { isSupported, open } = useEyeDropper()
  * Composable for color picker functionality
  * @param {Object} props - Component props
  * @param {Function} emit - Emit function to send events to parent
- * @returns {Object} - Reactive state and methods for color picker
  */
 export function useColorPicker(editorStore, props, emit) {
   /**
@@ -32,6 +31,7 @@ export function useColorPicker(editorStore, props, emit) {
       editorConfig.minRecentColors * 2,
     )
   })
+
   /**
    * Watch for external modelValue changes and update local value
    */
@@ -524,9 +524,7 @@ export function useColorPicker(editorStore, props, emit) {
   const commitChanges = () => {
     editorStore.addRecentColor(colorValue.value)
 
-    // Also set value to v model
     emit('update:modelValue', colorValue.value)
-
     emit('commit', colorValue.value)
   }
 

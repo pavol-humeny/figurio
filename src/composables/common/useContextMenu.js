@@ -11,17 +11,6 @@ const { log } = useConsole()
 
 /**
  * Logic for context menu component
- *
- * @returns {{
- *   wrapperRef: import('vue').Ref<HTMLElement | null>,
- *   isVisible: import('vue').Ref<boolean>,
- *   menuCoords: import('vue').Ref<{ x: number, y: number }>,
- *   contextMenuStyle: import('vue').ComputedRef<Record<string, string>>,
- *   showMenu: (event: MouseEvent) => void,
- *   closeMenu: () => void,
- *   handleMenuEnter: () => void,
- *   handleMenuLeave: () => void
- * }}
  */
 export function useContextMenu() {
   /**

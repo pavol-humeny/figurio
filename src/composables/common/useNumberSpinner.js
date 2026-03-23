@@ -2,12 +2,21 @@
  * @file: useNumberSpinner.js
  * @author: Pavol Humeny
  * @date: 15.5.2026
+ * @description: Composable for managing the logic of a number spinner component, which includes an input field with up/down arrows and mouse wheel support for incrementing/decrementing values. Handles input validation, clamping, rounding, and synchronization between the input field and the component's model value. Also manages hover state for enabling/disabling mouse wheel control.
  */
 import { ref, watch, computed } from 'vue'
 import { useMath } from '@/composables/common/useMath'
 
 /**
  * Logic for number spinner input (up/down arrows + mouse wheel)
+ * @param {{
+ *   modelValue: number,
+ *   step: number,
+ *   min: number,
+ *   max: number,
+ *   disabled?: boolean
+ * }} props - Component props
+ * @param {(event: string, value: number) => void} emit - Emit function for model updates
  */
 export function useNumberSpinner(props, emit) {
   const { clamp, round } = useMath()
@@ -120,6 +129,8 @@ export function useNumberSpinner(props, emit) {
 
   /**
    * Mouse wheel handler (only when hovered)
+   * Increments/decrements value based on wheel direction and step, with clamping and rounding
+   * @param {WheelEvent} event - Wheel event
    */
   const onWheel = (event) => {
     if (props.disabled || !isHovered.value) return
@@ -137,6 +148,7 @@ export function useNumberSpinner(props, emit) {
 
   /**
    * Programmatic setter
+   * @param {number} val - New value to set
    */
   const setValue = (val) => {
     inputValue.value = val.toString()

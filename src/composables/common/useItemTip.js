@@ -18,14 +18,8 @@ const { openSingleFeatureTourModal } = useFeatureTourModal()
  *   delay?: number,
  *   offset?: number
  * }} [options={}] - Optional configuration for position, delay and offset
- * @returns {{
- *   isVisible: import('vue').Ref<boolean>,
- *   wrapperRef: import('vue').Ref<HTMLElement | null>,
- *   itemTipStyle: import('vue').ComputedRef<Record<string, string>>,
- *   handleMouseEnter: () => void,
- *   handleMouseLeave: () => void,
- *   updatePosition: () => void
- * }}
+ * @param {UiStore} uiStore - Pinia store for managing global UI state
+ * @param {EditorStore} editorStore - Pinia store for managing editor state
  */
 export function useItemTip(options = {}, uiStore, editorStore) {
   /**
@@ -68,7 +62,6 @@ export function useItemTip(options = {}, uiStore, editorStore) {
   /**
    * Computed CSS style for positioning the tooltip
    */
-
   const itemTipStyle = computed(() => {
     const baseStyle = {
       position: 'absolute',
@@ -103,11 +96,15 @@ export function useItemTip(options = {}, uiStore, editorStore) {
 
   const tipRef = ref(null)
 
-  // Last mouse position (for checking element under cursor)
+  /**
+   * Last known mouse coordinates for hover state management
+   */
   let lastMouseX = 0
   let lastMouseY = 0
 
-  // Track mouse position globally
+  /**
+   * Track mouse movement to update last known coordinates
+   */
   document.addEventListener('mousemove', (e) => {
     lastMouseX = e.clientX
     lastMouseY = e.clientY

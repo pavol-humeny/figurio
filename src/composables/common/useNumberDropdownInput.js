@@ -2,7 +2,7 @@
  * @file: useNumberDropdownInput.js
  * @author: Pavol Humeny
  * @date: 15.5.2026
- *
+ * @description: Composable for managing the logic of a number input with an associated dropdown selection. Handles input validation, clamping, rounding, and synchronization between the input field and the dropdown. Also manages dropdown positioning and visibility, as well as emitting updates to the parent component when values change.
  */
 import { useMath } from '@/composables/common/useMath'
 import { ref, watch, onMounted, onBeforeUnmount, computed, nextTick } from 'vue'
@@ -16,15 +16,7 @@ import { ref, watch, onMounted, onBeforeUnmount, computed, nextTick } from 'vue'
  *   disabled?: boolean
  * }} props - Component props
  * @param {(event: string, value: number) => void} emit - Emit function for model updates
- * @returns {{
- *   inputValue: import('vue').Ref<string>,
- *   showDropdown: import('vue').Ref<boolean>,
- *   inputRef: import('vue').Ref<HTMLInputElement | null>,
- *   onInput: () => void,
- *   onSelect: (value: number) => void,
- *   toggleDropdown: () => void,
- *   setValue: (val: number) => void
- * }}
+ * @param {UiStore} uiStore - Pinia store for managing global UI state (e.g., dropdown open state for tooltips)
  */
 export function useNumberDropdownInput(props, emit, uiStore) {
   const { clamp, round } = useMath()
@@ -189,7 +181,9 @@ export function useNumberDropdownInput(props, emit, uiStore) {
    */
   const dropdownRef = ref(null)
 
-  // Hide the dropdown when clicking outside the component
+  /**
+   * Attach click outside listener on mount and clean up on unmount
+   */
   onMounted(() => {
     document.addEventListener('mousedown', onClickOutside)
   })

@@ -13,6 +13,9 @@ import { editorConfig } from '@/config/editorConfig'
 const holdTimeout = ref(null)
 const holdInterval = ref(null)
 
+/**
+ * Logic for implementing hold button functionality
+ */
 export function useHoldButton() {
   /**
    * Starts the hold action to continuously call the provided action function

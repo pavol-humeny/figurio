@@ -10,13 +10,6 @@ import { computed, ref } from 'vue'
  * Logic for the collapsible right-side panel component
  *
  * @param {UiStore} uiStore - Pinia store managing panel UI state
- * @returns {{
- *   isVisible: import('vue').ComputedRef<boolean>,
- *   toggleVisibility: () => void,
- *   rightSidePanelWidth: import('vue').ComputedRef<number>,
- *   collapseButtonWidth: number,
- *   startResize: (event: MouseEvent) => void
- * }}
  */
 export function useCollapsiblePanel(uiStore) {
   /**

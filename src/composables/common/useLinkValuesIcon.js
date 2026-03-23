@@ -10,10 +10,6 @@ import { ref, watch } from 'vue'
  * Logic for the <LinkValuesIcon> component
  * @param {{ modelValue: boolean, disabled?: boolean }} props - Component props
  * @param {(event: string, value: boolean) => void} emit - Emit function for model updates
- * @return {{
- *   isLinked: import('vue').Ref<boolean>,
- *   toggleLinkedValue: () => void
- * }}
  */
 export function useLinkValuesIcon(props, emit) {
   /**

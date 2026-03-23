@@ -2,23 +2,17 @@
  * @file: useTextInput.js
  * @author: Pavol Humeny
  * @date: 15.5.2026
+ * @description: Logic for the <TextInput> component, managing the internal state of the input value, handling blur and Enter key events to emit updates to the parent component, and providing an optional immediate update on input change. Also includes a method to programmatically set the input value.
  */
 import { ref, watch } from 'vue'
 
 /**
  * Logic for the <TextInput> component
- *
  * @param {{
  *   modelValue: string,
  *   updateOnChange?: boolean
  * }} props - Component props
  * @param {(event: string, value: string) => void} emit - Emit function for model updates
- * @returns {{
- *   inputValue: import('vue').Ref<string>,
- *   onBlurOrEnter: () => void,
- *   onInput: () => void,
- *   setValue: (val: string) => void
- * }}
  */
 export function useTextInput(props, emit) {
   /**
@@ -56,6 +50,7 @@ export function useTextInput(props, emit) {
 
   /**
    * Called on Enter key
+   * @param {Event} event - Keydown event
    */
   const onEnter = (event) => {
     // Stop Enter propagation
@@ -93,7 +88,6 @@ export function useTextInput(props, emit) {
 
   /**
    * Updates the internal value programmatically
-   *
    * @param {string} newValue - New value to set
    */
   const setValue = (newValue) => {

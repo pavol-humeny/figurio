@@ -2,6 +2,7 @@
  * @file: useStepperInput.js
  * @author: Pavol Humeny
  * @date: 15.5.2026
+ * @description: Logic for the <StepperInput> component, managing the internal state of the input value, handling increase/decrease actions with step increments, and emitting updates to the parent component. Also includes input validation, clamping to min/max values, and mouse wheel support for changing the value.
  */
 import { ref, watch } from 'vue'
 
@@ -17,16 +18,6 @@ import { ref, watch } from 'vue'
  *   onReset?: () => void
  * }} props - Component props
  * @param {(event: string, value: number) => void} emit - Emit function for model updates
- * @returns {{
- *   value: import('vue').Ref<number>,
- *   increase: () => void,
- *   decrease: () => void,
- *   emitChange: () => void,
- *   setValue: (val: number) => void,
- *   disableIncrease: () => boolean,
- *   disableDecrease: () => boolean,
- *   changeValue: (event: WheelEvent) => void
- * }}
  */
 export function useStepperInput(props, emit) {
   /**
@@ -78,6 +69,7 @@ export function useStepperInput(props, emit) {
 
   /**
    * Handle typing in input
+   * @param {Event} e - Input event
    */
   const onInput = (e) => {
     inputValue.value = e.target.value
@@ -85,6 +77,7 @@ export function useStepperInput(props, emit) {
 
   /**
    * Confirm value on blur / enter
+   * @param {Event} event - Blur or keydown event
    */
   const onBlur = (event) => {
     // Stop Enter propagation
@@ -140,7 +133,6 @@ export function useStepperInput(props, emit) {
 
   /**
    * Handles mouse wheel events to change value
-   *
    * @param {WheelEvent} event - Mouse wheel event
    */
   const changeValue = (event) => {

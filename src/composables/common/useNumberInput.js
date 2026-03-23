@@ -2,6 +2,7 @@
  * @file: useNumberInput.js
  * @author: Pavol Humeny
  * @date: 15.5.2026
+ * @description: Composable for managing the logic of a number input component, including value normalization, drag-to-change functionality, and emitting updates to the parent component. Handles edge cases such as empty input and provides utility functions for interacting with the input programmatically.
  */
 import { ref, watch, computed } from 'vue'
 import { useMath } from './useMath'
@@ -19,14 +20,6 @@ import { useMath } from './useMath'
  *   onReset?: () => void
  * }} props - Component props
  * @param {(event: string, value: number) => void} emit - Emit function for model updates
- * @returns {{
- *   inputValue: import('vue').Ref<number>,
- *   onBlurOrEnter: () => void,
- *   onIconDoubleClick: () => void,
- *   setValue: (val: number) => void,
- *   showIcon: boolean,
- *   showUnit: boolean
- * }}
  */
 export function useNumberInput(props, emit) {
   const { round } = useMath()
@@ -137,7 +130,6 @@ export function useNumberInput(props, emit) {
 
     const value = inputValue.value
     emit('update:modelValue', value)
-    // emit('update', value)
   }
 
   /**

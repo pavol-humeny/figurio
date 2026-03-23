@@ -2,6 +2,7 @@
  * @file: useShaking.js
  * @author: Pavol Humeny
  * @date: 15.5.2026
+ * @description: Composable for triggering a temporary "shake" animation effect, typically used to indicate an error or invalid action. Provides a reactive `isShaking` state and a `triggerShake` function to activate the effect for a short duration.
  */
 import { ref } from 'vue'
 
@@ -12,11 +13,6 @@ const isShaking = ref(false)
 
 /**
  * Logic for triggering a temporary "shake" animation effect
- *
- * @returns {{
- *   isShaking: import('vue').Ref<boolean>,
- *   triggerShake: () => void
- * }}
  */
 export function useShaking() {
   /**
