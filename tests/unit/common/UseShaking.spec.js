@@ -36,7 +36,7 @@ describe('useShaking', () => {
     triggerShake()
     expect(isShaking.value).toBe(true)
 
-    triggerShake() // second call should be ignored
+    triggerShake() 
     vi.advanceTimersByTime(500)
 
     expect(isShaking.value).toBe(false)

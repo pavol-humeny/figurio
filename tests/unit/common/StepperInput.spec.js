@@ -24,7 +24,7 @@ const factory = (props = {}) => {
         ItemTip: {
           template: '<div><slot /></div>',
         },
-        BaseIcon: true, // no need to simulate events anymore
+        BaseIcon: true, 
       },
     },
   })

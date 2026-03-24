@@ -117,7 +117,6 @@ describe('DefaultSlider.vue', () => {
     const input = wrapper.find('input[type="range"]')
     await input.trigger('dblclick')
 
-    // Component does not emit dblclick explicitly, but handler runs
     expect(true).toBe(true)
   })
 
@@ -172,10 +171,7 @@ describe('DefaultSlider.vue', () => {
     expect(input.element.value).toBe('75')
   })
 
-  // ======================
-  // WHEEL TESTS
-  // ======================
-
+  // Wheel event tests
   it('changes value on wheel up', async () => {
     const wrapper = factory({ modelValue: 50, step: 5 })
 

@@ -45,7 +45,7 @@ describe('useMath', () => {
     })
 
     it('returns the first if equally close', () => {
-      expect(closest(6, [5, 7])).toBe(5) // both are equally close, but 5 comes first
+      expect(closest(6, [5, 7])).toBe(5) 
     })
 
     it('returns null for empty array', () => {

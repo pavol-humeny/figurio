@@ -8,12 +8,12 @@ import { mount, flushPromises } from '@vue/test-utils'
 import { createPinia } from 'pinia'
 import DropdownSelect from '@/components/common/DropdownSelect.vue'
 
-// Mock canvas getContext for JSDOM
+// Mock canvas
 HTMLCanvasElement.prototype.getContext = vi.fn(() => ({
-  measureText: (text) => ({ width: text.length * 8 }), // simple fake width
+  measureText: (text) => ({ width: text.length * 8 }),
 }))
 
-// Mock ItemTip (avoid Pinia usage inside it)
+// Mock ItemTip
 vi.mock('@/components/common/ItemTip.vue', () => ({
   default: {
     name: 'ItemTip',
@@ -22,7 +22,7 @@ vi.mock('@/components/common/ItemTip.vue', () => ({
   },
 }))
 
-// Mock BaseIcon (simplified)
+// Mock BaseIcon
 vi.mock('@/components/icons/BaseIcon.vue', () => ({
   default: {
     name: 'BaseIcon',
@@ -88,7 +88,6 @@ describe('DropdownSelect.vue', () => {
 
     const icons = wrapper.findAllComponents({ name: 'BaseIcon' })
 
-    // only dropdown arrow should exist
     expect(icons.length).toBe(1)
   })
 
@@ -97,7 +96,6 @@ describe('DropdownSelect.vue', () => {
 
     const icons = wrapper.findAllComponents({ name: 'BaseIcon' })
 
-    // left icon + dropdown arrow
     expect(icons.length).toBe(2)
   })
 

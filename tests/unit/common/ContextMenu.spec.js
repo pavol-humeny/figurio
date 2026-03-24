@@ -9,7 +9,7 @@ import { mount, flushPromises } from '@vue/test-utils'
 import ContextMenu from '@/components/common/ContextMenu.vue'
 import { useContextMenu } from '@/composables/common/useContextMenu'
 
-// === Mocks ===
+// Mocks
 vi.mock('@/config/editorConfig', () => ({
   editorConfig: {
     contextMenuDelay: 200,

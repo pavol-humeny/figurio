@@ -3,7 +3,7 @@
  * @author: Pavol Humeny
  * @date: 15.5.2026
  */
-import { describe, it, expect, beforeEach } from 'vitest'
+import { describe, it, expect } from 'vitest'
 import { mount } from '@vue/test-utils'
 import { createPinia, setActivePinia } from 'pinia'
 import ToggleButton from '@/components/common/ToggleButton.vue'
@@ -27,10 +27,6 @@ const factory = (props = {}) => {
 }
 
 describe('ToggleButton.vue', () => {
-  beforeEach(() => {
-    // reserved for consistency with other specs
-  })
-
   it('renders initial state based on modelValue', () => {
     const wrapper = factory({ modelValue: true })
 

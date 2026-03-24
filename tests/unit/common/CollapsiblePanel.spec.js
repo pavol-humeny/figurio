@@ -79,11 +79,11 @@ describe('CollapsiblePanel.vue', () => {
     mockUiStore.rightPanelOpen = true
     mockUiStore.rightPanelWidth = 300
 
-    panel.toggleVisibility() // close uloží tmpWidth = 300
+    panel.toggleVisibility()
 
     mockUiStore.rightPanelOpen = false
 
-    panel.toggleVisibility() // open
+    panel.toggleVisibility()
 
     expect(mockUiStore.setRightPanelWidth).toHaveBeenLastCalledWith(300)
   })

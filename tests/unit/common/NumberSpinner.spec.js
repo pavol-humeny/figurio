@@ -102,7 +102,7 @@ describe('NumberSpinner.vue', () => {
     const wrapper = factory({ modelValue: 5 })
     const el = wrapper.find('.number-spinner-wrapper')
 
-    await el.trigger('mouseenter') // 🔥 REQUIRED
+    await el.trigger('mouseenter') 
 
     await el.trigger('wheel', { deltaY: -1 })
     expect(wrapper.emitted('update:modelValue').at(-1)).toEqual([6])
