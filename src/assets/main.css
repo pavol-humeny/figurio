@@ -12,6 +12,10 @@
   transform-origin: top left;
 }
 
+html, body {
+  overscroll-behavior: none;
+}
+
 .no-scroll {
   overflow: hidden !important;
 }

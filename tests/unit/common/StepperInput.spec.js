@@ -3,133 +3,130 @@
  * @author: Pavol Humeny
  * @date: 15.5.2026
  */
-import { describe, it, expect, vi } from 'vitest'
+import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { mount } from '@vue/test-utils'
+import { createPinia, setActivePinia } from 'pinia'
 import StepperInput from '@/components/common/StepperInput.vue'
 
+const factory = (props = {}) => {
+  setActivePinia(createPinia())
+
+  return mount(StepperInput, {
+    props: {
+      modelValue: 5,
+      min: 0,
+      max: 10,
+      step: 1,
+      ...props,
+    },
+    global: {
+      stubs: {
+        ItemTip: {
+          template: '<div><slot /></div>',
+        },
+        BaseIcon: true, // no need to simulate events anymore
+      },
+    },
+  })
+}
+
 describe('StepperInput.vue', () => {
+  beforeEach(() => {
+    vi.clearAllMocks()
+  })
+
   it('renders initial value correctly', () => {
-    const wrapper = mount(StepperInput, {
-      props: { modelValue: 5 },
-    })
-    expect(wrapper.text()).toContain('5')
+    const wrapper = factory({ modelValue: 5 })
+    expect(wrapper.find('input').element.value).toBe('5')
   })
 
-  it('increases value when clicking plus icon', async () => {
-    const wrapper = mount(StepperInput, {
-      props: {
-        modelValue: 5,
-        step: 2,
-        max: 10,
-      },
-    })
+  it('increases value correctly', () => {
+    const wrapper = factory({ modelValue: 5, step: 2 })
 
-    const plus = wrapper.findAllComponents({ name: 'BaseIcon' })[1]
-    await plus.trigger('click')
+    wrapper.vm.increase()
 
-    expect(wrapper.emitted('update:modelValue')).toBeTruthy()
-    expect(wrapper.emitted('update:modelValue')[0]).toEqual([7])
+    expect(wrapper.emitted('update:modelValue').at(-1)).toEqual([7])
+    expect(wrapper.emitted('update').at(-1)).toEqual([7])
   })
 
-  it('decreases value when clicking minus icon', async () => {
-    const wrapper = mount(StepperInput, {
-      props: {
-        modelValue: 5,
-        step: 2,
-        min: 0,
-      },
-    })
+  it('decreases value correctly', () => {
+    const wrapper = factory({ modelValue: 5, step: 2 })
 
-    const minus = wrapper.findAllComponents({ name: 'BaseIcon' })[0]
-    await minus.trigger('click')
+    wrapper.vm.decrease()
 
-    expect(wrapper.emitted('update:modelValue')).toBeTruthy()
-    expect(wrapper.emitted('update:modelValue')[0]).toEqual([3])
+    expect(wrapper.emitted('update:modelValue').at(-1)).toEqual([3])
+    expect(wrapper.emitted('update').at(-1)).toEqual([3])
   })
 
-  it('does not increase above max', async () => {
-    const wrapper = mount(StepperInput, {
-      props: {
-        modelValue: 10,
-        step: 1,
-        max: 10,
-      },
-    })
+  it('does not increase above max', () => {
+    const wrapper = factory({ modelValue: 10, max: 10 })
 
-    const plus = wrapper.findAllComponents({ name: 'BaseIcon' })[1]
-    await plus.trigger('click')
+    wrapper.vm.increase()
+
     expect(wrapper.emitted('update:modelValue')).toBeFalsy()
   })
 
-  it('does not decrease below min', async () => {
-    const wrapper = mount(StepperInput, {
-      props: {
-        modelValue: 0,
-        step: 1,
-        min: 0,
-      },
-    })
+  it('does not decrease below min', () => {
+    const wrapper = factory({ modelValue: 0, min: 0 })
 
-    const minus = wrapper.findAllComponents({ name: 'BaseIcon' })[0]
-    await minus.trigger('click')
+    wrapper.vm.decrease()
+
     expect(wrapper.emitted('update:modelValue')).toBeFalsy()
   })
 
-  it('calls onReset when double-clicked', async () => {
-    const onReset = vi.fn()
-    const wrapper = mount(StepperInput, {
-      props: {
-        modelValue: 5,
-        onReset,
-      },
-    })
+  it('handles wheel correctly', async () => {
+    const wrapper = factory({ modelValue: 5, step: 1 })
+    const input = wrapper.find('input')
 
-    const span = wrapper.find('.value')
-    await span.trigger('dblclick')
-    expect(onReset).toHaveBeenCalled()
+    await input.trigger('wheel', { deltaY: -1 })
+    expect(wrapper.emitted('update:modelValue').at(-1)).toEqual([6])
+
+    await input.trigger('wheel', { deltaY: 1 })
+    expect(wrapper.emitted('update:modelValue').at(-1)).toEqual([5])
   })
 
-  it('handles wheel up as increase and down as decrease', async () => {
-    const wrapper = mount(StepperInput, {
-      props: {
-        modelValue: 5,
-        step: 1,
-        min: 0,
-        max: 10,
-      },
-    })
-
-    const span = wrapper.find('.value')
-
-    // scroll up increase
-    await span.trigger('wheel', { deltaY: -1 })
-    expect(wrapper.emitted('update:modelValue')[0]).toEqual([6])
-
-    // scroll down decrease
-    await span.trigger('wheel', { deltaY: 1 })
-    expect(wrapper.emitted('update:modelValue')[1]).toEqual([5])
-  })
-
-  it('exposes setValue and updates value programmatically', async () => {
-    const wrapper = mount(StepperInput, {
-      props: { modelValue: 1 },
-    })
+  it('updates value via setValue()', async () => {
+    const wrapper = factory()
 
     wrapper.vm.setValue(42)
     await wrapper.vm.$nextTick()
 
-    expect(wrapper.text()).toContain('42')
+    expect(wrapper.find('input').element.value).toBe('42')
   })
 
-  it('updates displayed value when modelValue prop changes (watch)', async () => {
-    const wrapper = mount(StepperInput, {
-      props: { modelValue: 5 },
-    })
-
-    expect(wrapper.find('.value').text()).toBe('5')
+  it('updates when modelValue changes', async () => {
+    const wrapper = factory({ modelValue: 5 })
 
     await wrapper.setProps({ modelValue: 8 })
+    expect(wrapper.find('input').element.value).toBe('8')
+  })
 
-    expect(wrapper.find('.value').text()).toBe('8')
+  it('handles manual input and blur', async () => {
+    const wrapper = factory({ modelValue: 5 })
+    const input = wrapper.find('input')
+
+    await input.setValue('100')
+    await input.trigger('blur')
+
+    expect(wrapper.emitted('update:modelValue').at(-1)).toEqual([10])
+  })
+
+  it('clamps invalid input to min', async () => {
+    const wrapper = factory({ modelValue: 5, min: 2 })
+    const input = wrapper.find('input')
+
+    await input.setValue('abc')
+    await input.trigger('blur')
+
+    expect(wrapper.emitted('update:modelValue').at(-1)).toEqual([2])
+  })
+
+  it('does not change when disabled', () => {
+    const wrapper = factory({ modelValue: 5, disabled: true })
+
+    wrapper.vm.increase()
+    wrapper.vm.decrease()
+
+    expect(wrapper.emitted('update:modelValue')).toBeFalsy()
   })
 })

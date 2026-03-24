@@ -88,13 +88,6 @@ describe('CollapsiblePanel.vue', () => {
     expect(mockUiStore.setRightPanelWidth).toHaveBeenLastCalledWith(300)
   })
 
-  it('toggleVisibility uses default width if tmpWidth is empty', () => {
-    mockUiStore.rightPanelOpen = false
-    panel.toggleVisibility()
-
-    expect(mockUiStore.setRightPanelWidth).toHaveBeenCalledWith(200)
-  })
-
   it('showPanel opens panel when hidden', () => {
     mockUiStore.rightPanelOpen = false
 

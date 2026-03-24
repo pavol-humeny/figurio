@@ -72,7 +72,7 @@ function startFastShow() {
       })
       fireworks.launch(7)
     }
-  }, 1200) // 🔥 rýchle vlny (1.2s)
+  }, 1200) // rýchle vlny (1.2s)
 }
 </script>
 

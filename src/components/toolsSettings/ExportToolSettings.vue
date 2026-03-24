@@ -174,14 +174,11 @@ const {
   padding: 40px 50px;
   border-radius: 20px;
 
-  /* 🔥 kľúčové */
   width: 900px;
   height: max-content;
 
-  /* safety */
   max-width: 90vw;
 
-  /* center */
   margin: auto;
 
   flex-shrink: 0;
