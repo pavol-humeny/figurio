@@ -120,6 +120,7 @@ export function useImageRenderer(imageStore, historyStore, viewportStore, uiStor
    * @return {Promise<{result: any, messages: string[]}>} - The result of the run function and captured console messages
    */
   const withCapturedPdfJsWarnings = async (run) => {
+    const origLog = console.log
     const origWarn = console.warn
     const origError = console.error
     const messages = []
@@ -127,6 +128,11 @@ export function useImageRenderer(imageStore, historyStore, viewportStore, uiStor
     const capture = (...args) => {
       const text = args.map((a) => String(a)).join(' ')
       messages.push(text)
+    }
+
+    console.log = (...args) => {
+      capture(...args)
+      origLog(...args)
     }
 
     console.warn = (...args) => {
@@ -142,6 +148,7 @@ export function useImageRenderer(imageStore, historyStore, viewportStore, uiStor
       const result = await run()
       return { result, messages }
     } finally {
+      console.log = origLog
       console.warn = origWarn
       console.error = origError
     }
@@ -153,27 +160,14 @@ export function useImageRenderer(imageStore, historyStore, viewportStore, uiStor
    * @returns {{ hasUnsupported: boolean, matched: string[] }} - Whether unsupported features were detected and which messages matched
    */
   const hasUnsupportedPdfJsWarnings = (messages) => {
-    const needles = [
-      'Unsupported',
-      'Not implemented',
-      'not implemented',
-      'SMask',
-      'soft mask',
-      'BlendMode',
-      'blend mode',
-      'Shading',
-      'shading',
-      'Pattern',
-      'pattern',
-      'Type3',
-    ]
+    const needles = ['TR']
 
     const matched = messages.filter((m) => needles.some((n) => m.includes(n)))
     return { hasUnsupported: matched.length > 0, matched }
   }
 
   /**
-   * Check if PDF operator list contains ops that are known to be not SVG-safe (e.g. related to transparency/groups)
+   * Check if PDF operator list contains ops that are known to be not SVG-safe (related to transparency/groups)
    * @param {Object} opList - PDF operator list from pdf.js
    * @param {Object} OPS - PDF operator constants from pdf.js
    * @returns {{ hasHits: boolean, hits: number[] }} - Whether any non-SVG-safe ops were found and which ones
