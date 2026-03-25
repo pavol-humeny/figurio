@@ -14,6 +14,8 @@
     - overleaf má históriu 
     - video
     - chatgpt predplatné
+    - otestovať či v pdf sú includnuté fonty
+
 
 ## TODO - text 
 - prehlásenie AI
@@ -22,9 +24,9 @@
 # TODO
 - P - zaistit aby pri resize objektov bolo snapovanie plynule tak ako pri drag
 - touch event pre select, shape, text, magnify, blur 
-- rozbité pravítko v centimetroch 
 - mac pri nainštalovanej aplikácii sa s tým dá šklbať 
 - export, help... okná na tablete 
+- README pre backend
 
 ## Insane ideas
 - eye dropper na safari
