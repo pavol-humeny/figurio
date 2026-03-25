@@ -47,6 +47,18 @@ Projekt bol prezentovaný formou akademického plagátu pripraveného v rámci b
 
 ---
 
+# Prezentačné video
+
+Krátke video predstavujúce funkcionalitu aplikácie:
+
+<p align="center">
+  <a href="https://youtu.be/HltFn-50_eY" target="_blank">
+    <img src="https://img.youtube.com/vi/HltFn-50_eY/0.jpg" alt="Figurio video preview" width="600"/>
+  </a>
+</p>
+
+---
+
 # Motivácia
 
 - Bežné grafické editory sú pre prípravu obrázkov do odborných textov často zbytočne komplexné.  

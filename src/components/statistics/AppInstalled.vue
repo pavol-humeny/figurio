@@ -1,4 +1,4 @@
-<script setup>
+ma<script setup>
 /**
  * @file: AppInstalled.vue
  * @author: Pavol Humeny
