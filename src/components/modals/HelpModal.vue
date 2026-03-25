@@ -80,10 +80,14 @@ const technicalLimitations = computed(() => {
 })
 
 /**
- * List of testers to acknowledge as array
+ * List of testers to acknowledge as array randomly sorted each time the modal is opened because all testers want to be mentioned first :)
  */
 const testers = computed(() => {
-  return messages.value[locale.value]?.help?.helpContent?.acknowledgements?.testers || []
+  return (
+    messages.value[locale.value]?.help?.helpContent?.acknowledgements?.testers || []
+  )
+    .slice() // Copy array
+    .sort(() => Math.random() - 0.5)
 })
 
 /**
