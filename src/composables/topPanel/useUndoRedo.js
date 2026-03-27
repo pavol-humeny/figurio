@@ -2,6 +2,7 @@
  * @file: useUndoRedo.js
  * @author: Pavol Humeny
  * @date: 15.5.2026
+ * @description: Composable for managing undo and redo functionality in the editor, including logic for applying snapshots from history and rendering the image up to the correct operation index.
  */
 import { computed } from 'vue'
 import { useApi } from '@/composables/common/useApi'
@@ -13,12 +14,8 @@ const { addUserEvent } = useApi()
  *
  * @param {Object} historyStore - The history store containing snapshots and current index
  * @param {Object} imageStore - The image store with applySnapshot and imageLoaded state
- * @returns {{
- *   undo: () => void,
- *   redo: () => void,
- *   canUndo: import('vue').ComputedRef<boolean>,
- *   canRedo: import('vue').ComputedRef<boolean>
- * }}
+ * @param {Object} uiStore - The UI store with isApplying state
+ * @param {Function} t - Localization function from vue-i18n for logging purposes
  */
 export function useUndoRedo(historyStore, imageStore, uiStore, t) {
   const { renderUpTo } = useImagePipeline(imageStore, uiStore)

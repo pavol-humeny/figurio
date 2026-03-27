@@ -17,7 +17,6 @@ import { useHistoryStore } from '@/stores/historyStore'
 import { useMath } from '@/composables/common/useMath'
 import DropdownSelect from '../common/DropdownSelect.vue'
 import { useViewportStore } from '@/stores/viewportStore'
-import { useUiStore } from '@/stores/uiStore'
 
 const { t } = useI18n()
 const { round } = useMath()
@@ -45,7 +44,7 @@ const {
   copyImageToClipboardFunction,
   expectedPreviewSize,
   fileFormatOptions
-} = useExportToolSettings(useImageStore(), useEditorStore(), useHistoryStore(), useViewportStore(), useUiStore(), t)
+} = useExportToolSettings(useImageStore(), useEditorStore(), useHistoryStore(), useViewportStore(), t)
 </script>
 
 <template>

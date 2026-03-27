@@ -1,21 +1,24 @@
 ## ŠT
 - MTIa
-- help preklad 
-- refaktorizácia 
-    - hlavičky súborov 
-    - komentáre 
-- Unit testy 
 - kniha 
 - v
-    - preklad help
     - potrebujem zmenit konštantu v rámikoch - mobilné zaoblenie
-    - testovanie - ukázať grafy
     - historická verzia Figurio 
     - overleaf má históriu 
-    - video
     - chatgpt predplatné
     - otestovať či v pdf sú includnuté fonty
 
+
+prerobit graf v časti testovanie, kde sú zobrazené použitia nástrojov
+nainstalovat na microsoft store - zistiť či by niečo také išlo 
+
+video
+- free hudba do videa 
+- prvá fáza je moc pomalá 
+- dať tam nejako tú technickú časť 
+
+vo videu dať link na github pages 
+plagát link na github pages
 
 ## TODO - text 
 - prehlásenie AI

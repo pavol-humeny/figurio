@@ -2,19 +2,26 @@
  * @file: backgroundRemovalOperation.js
  * @author: Pavol Humeny
  * @date: 15.5.2026
+ * @description: This file defines the background removal operation for the image editor. It takes an input canvas, an optional overlay, and an optional PDF byte array, along with parameters for the background removal process. The operation applies a mask to remove the background from the image while preserving the overlay and PDF if they exist. The resulting canvas, modified overlay, and original PDF bytes are returned as output.
  */
 /**
  * Background removal pipeline operation
  * Raster-only operation – preserves overlay and PDF
  *
- * @param {object} ctx
- * @param {HTMLCanvasElement} ctx.srcCanvas
- * @param {HTMLCanvasElement|null} ctx.srcOverlay
- * @param {Uint8Array|null} ctx.srcPdfBytes
+ * @param {object} ctx - Operation context
+ * @param {HTMLCanvasElement} ctx.srcCanvas - Source canvas containing the image to process
+ * @param {HTMLCanvasElement|null} ctx.srcOverlay - Optional source canvas containing the overlay to preserve
+ * @param {Uint8Array|null} ctx.srcPdfBytes - Optional PDF byte array to preserve
  * @param {{
  *   mask: Uint8ClampedArray,
  *   bgColor: { r:number, g:number, b:number, a:number }
- * }} ctx.params
+ * }} ctx.params - Parameters for the background removal operation, including the mask and background color
+ * @return {Promise<{
+ *   canvas: HTMLCanvasElement,
+ *   overlay: HTMLCanvasElement|null,
+ *   pdfBytes: Uint8Array|null,
+ *   dimensions: { width:number, height:number, fileAspectRatio:number }
+ * }>} - An object containing the resulting canvas with the background removed, the modified overlay if it exists, the original PDF bytes if they exist, and the dimensions of the resulting image.
  */
 export async function backgroundRemovalOperation({ srcCanvas, srcOverlay, srcPdfBytes, params }) {
   const { mask, bgColor } = params
@@ -60,7 +67,6 @@ export async function backgroundRemovalOperation({ srcCanvas, srcOverlay, srcPdf
       const maskAlpha = mask[i + 3] / 255
       if (maskAlpha === 0) continue
 
-      // znížime alpha overlayu podľa masky
       oData[i + 3] = oData[i + 3] * (1 - maskAlpha)
     }
 

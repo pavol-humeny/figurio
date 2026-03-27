@@ -2,7 +2,9 @@
  * @file: useToolsPanel.js
  * @author: Pavol Humeny
  * @date: 15.5.2026
+ * @description: Composable for managing the left tools panel in the editor, including logic for selecting and toggling tools, handling scroll position of the panel, and integrating with the editor and image stores to enable/disable tools based on image load state.
  */
+
 import { ref, onMounted, nextTick, computed, watch } from 'vue'
 import { useCollapsiblePanel } from '../common/useCollapsiblePanel'
 import { useToastModal } from '../modals/useToastModal'
@@ -17,19 +19,9 @@ import { useZoomControl } from '../topPanel/useZoomControl'
  *
  * @param {ReturnType<typeof useEditorStore>} editorStore - Editor store instance
  * @param {ReturnType<typeof useImageStore>} imageStore - Image store instance
+ * @param {ReturnType<typeof useUiStore>} uiStore - UI store instance
+ * @param {ReturnType<typeof useViewportStore>} viewportStore - Viewport store instance
  * @param {Function} t - Translation function from vue-i18n
- * @returns {{
- *   activeTool: import('vue').ComputedRef<string>,
- *   toolsRef: import('vue').Ref<HTMLElement | null>,
- *   atTop: import('vue').Ref<boolean>,
- *   atBottom: import('vue').Ref<boolean>,
- *   scrollUp: () => void,
- *   scrollDown: () => void,
- *   checkScroll: () => void,
- *   toggleTool: (toolKey: string, tabKey?: string | null) => void,
- *   selectTool: (toolKey: string, tabKey?: string | null) => void,
- *   isToolDisabled: import('vue').ComputedRef<boolean>,
- * }}
  */
 export function useToolsPanel(editorStore, imageStore, uiStore, viewportStore, t) {
   const { showToastModal } = useToastModal()
@@ -84,7 +76,6 @@ export function useToolsPanel(editorStore, imageStore, uiStore, viewportStore, t
         newVal.tool === 'crop'
       ) {
         editorStore.selectSubTool('')
-        // imageStore.removeGrayscaleOperation()
       }
 
       if (

@@ -2,6 +2,7 @@
  * @file: useImagePipeline.js
  * @author: Pavol Humeny
  * @date: 15.5.2026
+ * @description: Image processing pipeline logic. This composable manages the application of image manipulation operations, checkpoints for efficient rendering, and the rendering process itself. It provides functions to apply operations, render the image up to a certain operation index, and initialize/reset the pipeline when a new image is loaded.
  */
 import { operationRegistry } from './operationRegistry'
 import { useConsole } from '../common/useConsole'
@@ -20,8 +21,8 @@ export function useImagePipeline(imageStore, uiStore) {
 
   /**
    * Clone the given state to avoid mutations
-   * @param {{ canvas: HTMLCanvasElement, overlay: HTMLCanvasElement|null, pdfBytes: Uint8Array|null }} state
-   * @returns {{ canvas: HTMLCanvasElement, overlay: HTMLCanvasElement|null, pdfBytes: Uint8Array|null }} cloned state
+   * @param {object} state - The state to clone, containing canvas, overlay and pdfBytes
+   * @return {object} - A deep clone of the given state with new canvas and overlay elements
    */
   const cloneState = (state) => {
     const canvas = document.createElement('canvas')
@@ -102,9 +103,9 @@ export function useImagePipeline(imageStore, uiStore) {
    * Compute effective overlay for resize operation
    * Applies all operations BEFORE given resize index, skipping all resize operations
    *
-   * @param {number} resizeOpIndex
-   * @param {object} ctx
-   * @returns {Promise<HTMLCanvasElement|null>}
+   * @param {number} resizeOpIndex index of the resize operation for which to compute the effective overlay
+   * @param {object} ctx context object
+   * @returns {Promise<HTMLCanvasElement|null>} effective overlay canvas after applying all operations before the resize operation, or null if no overlay exists
    */
   const computeEffectiveOverlayForResize = async (resizeOpIndex, ctx) => {
     const base = imageStore.renderPipeline.baseState
@@ -123,6 +124,8 @@ export function useImagePipeline(imageStore, uiStore) {
 
   /**
    * Returns rendered canvas after applying operations up to given index
+   * @param {number} targetIndex index of the operation up to which to compute the effective canvas
+   * @returns {Promise<HTMLCanvasElement|null>} effective canvas after applying operations up to targetIndex, or null if no base state exists
    */
   const getEffectiveCanvas = async (targetIndex) => {
     const pipeline = imageStore.renderPipeline
@@ -150,10 +153,11 @@ export function useImagePipeline(imageStore, uiStore) {
 
   /**
    * Apply a single operation to the given state
-   * @param {{ canvas: HTMLCanvasElement, overlay: HTMLCanvasElement|null, pdfBytes: Uint8Array|null }} state current state
-   * @param {{ type: string, params: object }} operation operation to apply
-   * @param {object} meta metadata object to store additional info
-   * @returns {{ canvas: HTMLCanvasElement, overlay: HTMLCanvasElement|null, pdfBytes: Uint8Array|null }} new state
+   * @param {object} state - Current state containing canvas, overlay and pdfBytes
+   * @param {object} operation - Operation to apply, containing type and params
+   * @param {object} meta - Metadata object to store additional info like dimensions
+   * @param {object} ctx - Context object containing additional info like operation index
+   * @returns {Promise<object>} new state after applying the operation, containing canvas, overlay and pdfBytes
    */
   const applyOperation = async (state, operation, meta, ctx = {}) => {
     log('Applying operation:', operation.type, operation.params)
@@ -167,6 +171,7 @@ export function useImagePipeline(imageStore, uiStore) {
       }
     }
 
+    // Resize operation needs special handling to compute effective base canvas and overlay to avoid cascading resizes
     if (operation.type === 'resize') {
       const effectiveBaseCanvas = await computeEffectiveBaseCanvasForResize(ctx.opIndex, ctx)
       const effectiveOverlay = await computeEffectiveOverlayForResize(ctx.opIndex, ctx)
@@ -190,6 +195,7 @@ export function useImagePipeline(imageStore, uiStore) {
     const executor = operationRegistry[operation.type]
     if (!executor) return state
 
+    // For other operations, just apply them normally
     const result = await executor({
       srcCanvas: state.canvas,
       srcOverlay: state.overlay,
@@ -220,6 +226,7 @@ export function useImagePipeline(imageStore, uiStore) {
   /**
    * Render image up to the specified operation index
    * @param {number} targetIndex operation index to render up to
+   * @param {object} ctx context object to pass to operations
    */
   const renderUpTo = async (targetIndex, ctx = {}) => {
     const pipeline = imageStore.renderPipeline
@@ -363,7 +370,7 @@ export function useImagePipeline(imageStore, uiStore) {
 
   /**
    * Reset pipeline when a new image is loaded
-   * @param {HTMLCanvasElement} baseCanvas
+   * @param {HTMLCanvasElement} baseCanvas - The canvas element of the newly loaded image to initialize the pipeline with
    */
   const initPipeline = (baseCanvas) => {
     imageStore.renderPipeline = {
@@ -391,6 +398,10 @@ export function useImagePipeline(imageStore, uiStore) {
       lastRenderedOpIndex: -1,
     }
   }
+
+  /**
+   * Reset the pipeline to the initial state 
+   */
   const resetPipeline = () => {
     const base = imageStore.renderPipeline.baseState
     if (!base) return

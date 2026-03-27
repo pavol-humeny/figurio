@@ -2,6 +2,7 @@
  * @file: useCloseFileButton.js
  * @author: Pavol Humeny
  * @date: 15.5.2026
+ * @description: Composable for managing the Close File button in the top panel of the editor, including logic for enabling/disabling the button based on whether an image is loaded and handling the file closing process with user confirmation when necessary.
  */
 import { computed } from 'vue'
 import { useConfirmModal } from '@/composables/modals/useConfirmModal'
@@ -15,10 +16,6 @@ const { addUserEvent } = useApi()
  * @param {object} imageStore - Store managing the currently active image
  * @param {object} workspaceStore - Store managing open files and tabs
  * @param {Function} t - Translation function from vue-i18n
- * @returns {{
- *   disabled: import('vue').ComputedRef<boolean>,
- *   closeFile: () => Promise<void>
- * }}
  */
 export function useCloseFileButton(imageStore, workspaceStore, t) {
   const { showConfirmModal } = useConfirmModal()

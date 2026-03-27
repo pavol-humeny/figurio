@@ -2,6 +2,7 @@
  * @file: useImportModal.js
  * @author: Pavol Humeny
  * @date: 15.5.2026
+ * @description: Composable for managing the import modal in the editor, including logic for opening and closing the modal and logging user events related to the import process.
  */
 import { ref } from 'vue'
 import { useConsole } from '@/composables/common/useConsole.js'
@@ -15,6 +16,9 @@ const { log } = useConsole()
  */
 const isVisible = ref(false)
 
+/**
+ * Logic for managing the import modal in the editor
+ */
 export function useImportModal() {
   /**
    * Open the import modal

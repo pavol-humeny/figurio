@@ -2,11 +2,13 @@
  * @file: useCalibrationModal.js
  * @author: Pavol Humeny
  * @date: 15.5.2026
+ * @description: Composable for managing the calibration modal in the editor.
  */
 import { ref, onMounted, watch } from 'vue'
 import { viewportConfig } from '@/config/viewportConfig'
 import { useApi } from '@/composables/common/useApi'
 const { addUserEvent } = useApi()
+
 /**
  * Whether the calibration modal is currently visible.
  */
@@ -17,6 +19,11 @@ const isVisible = ref(false)
  */
 const calibrationFactor = ref(1.0)
 
+/**
+ * Logic for managing the calibration modal in the editor
+ *
+ * @param {object} viewportStore - The viewport store instance for managing viewport state
+ */
 export function useCalibrationModal(viewportStore) {
   /**
    * Open the calibration modal.
@@ -46,17 +53,17 @@ export function useCalibrationModal(viewportStore) {
   /**
    * Standard card dimensions in cm
    */
-  const cardWidthCm = 8.56
-  const cardHeightCm = 5.398
+  const cardWidthCm = viewportConfig.cardWidthCm
+  const cardHeightCm = viewportConfig.cardHeightCm
 
   /**
    * Original card width in px (without calibration factor)
    */
   const originalCardWidthPx = cardWidthCm * PxPerCm
 
-  const minCalibrationFactor = 0.2
-  const maxCalibrationFactor = 2
-  const stepCalibrationFactor = 0.005
+  const minCalibrationFactor = viewportConfig.minCalibrationFactor
+  const maxCalibrationFactor = viewportConfig.maxCalibrationFactor
+  const stepCalibrationFactor = viewportConfig.stepCalibrationFactor
 
   /**
    * Card dimensions in px adjusted by calibration factor

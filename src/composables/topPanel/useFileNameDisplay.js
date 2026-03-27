@@ -2,6 +2,7 @@
  * @file: useFileNameDisplay.js
  * @author: Pavol Humeny
  * @date: 15.5.2026
+ * @description: Composable for managing the file name display and editing in the top panel of the editor, including logic for enabling/disabling editing based on image load state, handling user input for renaming files, and logging rename events.
  */
 import { ref, nextTick, computed, watch } from 'vue'
 import { editorConfig } from '@/config/editorConfig'
@@ -19,14 +20,6 @@ const inputRef = ref(null)
  *
  * @param {object} imageStore - Store managing image state and metadata
  * @param {Function} t - Localization function from vue-i18n
- * @returns {{
- *   editEnabled: import('vue').Ref<boolean>,
- *   disabled: import('vue').ComputedRef<boolean>,
- *   fileNameInput: import('vue').Ref<string>,
- *   inputRef: import('vue').Ref<HTMLElement | null>,
- *   startEditing: () => void,
- *   saveNewFileName: () => void
- * }}
  */
 export function useFileNameDisplay(imageStore, t) {
   /**

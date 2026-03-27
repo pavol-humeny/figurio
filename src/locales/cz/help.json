@@ -104,7 +104,7 @@
     },
     "acknowledgements": {
       "title": "Poděkování",
-      "text": "Poděkování patří všem uživatelům, kteří se během vývoje podíleli na testování aplikace a poskytli zpětnou vazbu k její funkčnosti a použitelnosti. Jejich připomínky přispěli ke zlepšení aplikace a celkové kvality nástroja.",
+      "text": "Poděkování patří všem uživatelům, kteří se během vývoje podíleli na testování aplikace a poskytli zpětnou vazbu k její funkčnosti a použitelnosti. Jejich připomínky přispěly ke zlepšení aplikace a celkové kvality nástroje.",
       "namedIntro": "Na testování aplikace se významně podíleli",
       "testers": [
         "Jméno Příjmení",
@@ -120,7 +120,7 @@
       }
     },
     "contactAndFeedback": {
-      "title": "Kontakt a spätná väzba",
+      "title": "Kontakt a zpětná vazba",
       "text": "Máte-li dotazy, návrhy nebo zpětnou vazbu k editoru, můžete využít kontaktní formulář níže. Vaše podněty pomáhají odhalit problémy, stanovit priority vylepšení a směřovat další vývoj. Kontaktovat nás můžete také přímo e-mailem:",
       "contactForm": {
         "name": "Jméno",

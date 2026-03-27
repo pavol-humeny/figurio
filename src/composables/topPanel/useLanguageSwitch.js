@@ -2,6 +2,7 @@
  * @file: useLanguageSwitch.js
  * @author: Pavol Humeny
  * @date: 15.5.2026
+ * @description: Composable for managing the language switcher in the top panel of the editor, including logic for switching languages, persisting the selected language in localStorage.
  */
 import { useI18n } from 'vue-i18n'
 import { globalConfig } from '@/config/globalConfig'
@@ -11,11 +12,8 @@ import { useToolsSettingsTabs } from '../toolsSettings/useToolsSettingsTabs'
 
 /**
  * Logic for switching and persisting application language
- *
- * @returns {{
- *   locale: import('vue').Ref<string>,
- *   switchLanguage: (newLanguage: string) => void,
- * }}
+ * @param {object} editorStore - Store managing editor state
+ * @param {object} uiStore - Store managing UI state
  */
 export function useLanguageSwitch(editorStore, uiStore) {
   const { locale } = useI18n()
@@ -24,7 +22,7 @@ export function useLanguageSwitch(editorStore, uiStore) {
   /**
    * Switch the language and save to localStorage
    *
-   * @param {string} newLanguage - Language code to switch to (e.g., 'en', 'sk')
+   * @param {string} newLanguage - Language code to switch to ('en', 'sk', 'cz')
    */
   const switchLanguage = (newLanguage) => {
     addUserEvent('settingChanged', { setting: 'language', value: newLanguage })

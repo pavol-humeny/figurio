@@ -2,6 +2,7 @@
  * @file: useSettingsPanel.js
  * @author: Pavol Humeny
  * @date: 15.5.2026
+ * @description: Composable for managing the settings panel in the editor, including logic for toggling keyboard shortcuts, resetting panel width, and opening related modals for privacy and release notes.
  */
 import { computed, ref, onMounted, onBeforeUnmount } from 'vue'
 import { usePrivacyAndDataModal } from '@/composables/modals/usePrivacyAndDataModal'
@@ -18,16 +19,7 @@ const isVisible = ref(false)
  * Logic for the settings panel, including toggles and modal management
  *
  * @param {Object} uiStore - UI store instance
- * @returns {{
- *   isVisible: import('vue').Ref<boolean>,
- *   openSettingsPanel: () => void,
- *   closeSettingsPanel: () => void,
- *   enableShortcuts: import('vue').ComputedRef<boolean>,
- *   resetPanelWidthDisabled: import('vue').ComputedRef<boolean>,
- *   resetPanelWidth: () => void,
- *   openPrivacyModal: () => void,
- *   enableRulers: import('vue').ComputedRef<boolean>,
- * }}
+ * @param {Object} userModeStore - Store managing user permissions and modes
  */
 export function useSettingsPanel(uiStore, userModeStore) {
   const { openPrivacyAndDataModal } = usePrivacyAndDataModal()

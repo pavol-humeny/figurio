@@ -2,6 +2,7 @@
  * @file: useToolsSettingsTabs.js
  * @author: Pavol Humeny
  * @date: 15.5.2026
+ * @description: Composable for managing tabs inside the tool settings panel, including logic for selecting active tab, dragging to scroll through tabs, and recalculating right panel width to fit tabs when language is switched.
  */
 import { ref, onMounted, computed, nextTick } from 'vue'
 
@@ -11,13 +12,6 @@ import { ref, onMounted, computed, nextTick } from 'vue'
  * @param {object} editorStore - Store managing selected tool and tab per tool
  * @param {object} uiStore - Store managing UI state, including right panel width
  * @param {string} defaultTab - Key of the default tab to select
- * @returns {{
- *   activeTab: import('vue').ComputedRef<string>,
- *   isDragging: import('vue').Ref<boolean>,
- *   wrapperRef: import('vue').Ref<HTMLElement | null>,
- *   setActiveTab: (tab: string) => void,
- *   startDragging: (e: MouseEvent) => void
- * }}
  */
 export function useToolsSettingsTabs(editorStore, uiStore, defaultTab) {
   /**
@@ -54,7 +48,7 @@ export function useToolsSettingsTabs(editorStore, uiStore, defaultTab) {
   /**
    * Handle mouse movement for dragging the tab container
    *
-   * @param {MouseEvent} event
+   * @param {MouseEvent} event - Mouse move event during dragging
    */
   const onMouseMove = (event) => {
     const element = wrapperRef.value
@@ -77,7 +71,7 @@ export function useToolsSettingsTabs(editorStore, uiStore, defaultTab) {
   /**
    * Start dragging the tab container
    *
-   * @param {MouseEvent} event
+   * @param {MouseEvent} event - Mouse down event on the tab container to initiate dragging
    */
   const startDragging = (event) => {
     event.preventDefault()
@@ -87,7 +81,9 @@ export function useToolsSettingsTabs(editorStore, uiStore, defaultTab) {
     document.addEventListener('mouseup', onMouseUp)
   }
 
-  // Initialize the tab scroll wrapper on mount
+  /**
+   * Initialize the tab scroll wrapper on mount
+   */
   onMounted(() => {
     const element = wrapperRef.value
     if (!element) return

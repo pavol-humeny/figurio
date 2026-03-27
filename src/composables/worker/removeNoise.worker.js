@@ -2,7 +2,9 @@
  * @file: removeNoise.worker.js
  * @author: Pavol Humeny
  * @date: 15.5.2026
+ * @description: Web Worker for removing noise from canvas images in the editor, allowing for off-main-thread image manipulation to keep the UI responsive during noise removal operations.
  */
+
 import { useConsole } from '@/composables/common/useConsole'
 const { log } = useConsole()
 
@@ -18,9 +20,9 @@ self.onmessage = (e) => {
   let tLoop = 0
   let tFinalize = 0
 
-  /* =========================
-   * SETUP (draw + getImageData)
-   * ========================= */
+  // ------------------------
+  // SETUP (draw + getImageData)
+  // ------------------------
   let imageData, data
   {
     const t0 = performance.now()
@@ -36,9 +38,9 @@ self.onmessage = (e) => {
     tSetup = performance.now() - t0
   }
 
-  /* =========================
-   * PIXEL LOOP
-   * ========================= */
+  // ------------------------
+  // PIXEL LOOP
+  // ------------------------
   {
     const t0 = performance.now()
 
@@ -60,9 +62,9 @@ self.onmessage = (e) => {
     tLoop = performance.now() - t0
   }
 
-  /* =========================
-   * FINALIZE (putImageData + transfer)
-   * ========================= */
+  // ------------------------
+  // FINALIZE (putImageData + transfer)
+  // ------------------------
   let resultBitmap
   {
     const t0 = performance.now()
@@ -78,7 +80,7 @@ self.onmessage = (e) => {
 
   const tTotal = performance.now() - tStart
 
-  // Log timing information (visible in DevTools Workers)
+  // Log timing information
   log(
     `[removeNoise.worker] total=${tTotal.toFixed(1)}ms | ` +
       `setup=${tSetup.toFixed(1)}ms | ` +

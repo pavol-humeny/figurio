@@ -2,6 +2,7 @@
  * @file: usePrivacyAndDataModal.js
  * @author: Pavol Humeny
  * @date: 15.5.2026
+ * @description: Composable for managing the privacy and data modal in the editor.
  */
 import { ref } from 'vue'
 import { useConfirmModal } from './useConfirmModal'
@@ -17,12 +18,6 @@ const isVisible = ref(false)
  * Logic for the privacy and data modal with reset and Escape key support
  *
  * @param {Function} t - Translation function
- * @returns {{
- *   isVisible: import('vue').Ref<boolean>,
- *   openPrivacyAndDataModal: () => void,
- *   clearLocalStorage: () => Promise<void>,
- *   closePrivacyAndDataModal: () => void
- * }}
  */
 export function usePrivacyAndDataModal(t) {
   const { showConfirmModal } = useConfirmModal()

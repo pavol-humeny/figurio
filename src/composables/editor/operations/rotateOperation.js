@@ -2,14 +2,16 @@
  * @file: rotateOperation.js
  * @author: Pavol Humeny
  * @date: 15.5.2026
+ * @description: Rotate operation for canvas + overlay + pdfBytes (worker-based). This operation takes a source canvas, an optional PDF byte array, and an optional overlay canvas, along with a rotation angle. It returns a new rotated canvas, a rotated overlay if it exists, and a rotated PDF byte array if it exists. The operation uses a Web Worker to perform the rotation. The resulting rotated canvas, modified overlay, original PDF bytes, and dimensions of the resulting image are returned as output.
  */
+
 /**
  * Rotate operation via Web Worker
  *
- * @param {HTMLCanvasElement} srcCanvas
- * @param {HTMLCanvasElement|null} srcOverlay
- * @param {Uint8Array|null} srcPdfBytes
- * @param {number} angle
+ * @param {HTMLCanvasElement} srcCanvas - Source canvas to rotate
+ * @param {HTMLCanvasElement|null} srcOverlay - Optional source overlay canvas to rotate
+ * @param {Uint8Array|null} srcPdfBytes - Optional source PDF bytes to rotate
+ * @param {number} angle - Rotation angle in degrees
  *
  * @returns {Promise<{
  *   canvas: HTMLCanvasElement,
@@ -68,11 +70,11 @@ const rotateViaWorker = async (srcCanvas, srcOverlay, srcPdfBytes, angle) => {
 /**
  * Rotate operation for canvas + overlay + pdfBytes (worker-based)
  *
- * @param {object} ctx
- * @param {HTMLCanvasElement} ctx.srcCanvas
- * @param {Uint8Array|null} ctx.srcPdfBytes
- * @param {HTMLCanvasElement|null} ctx.srcOverlay
- * @param {{ angle: number }} ctx.params
+ * @param {object} ctx - Operation context
+ * @param {HTMLCanvasElement} ctx.srcCanvas - Source canvas to rotate
+ * @param {Uint8Array|null} ctx.srcPdfBytes - Optional source PDF bytes to rotate
+ * @param {HTMLCanvasElement|null} ctx.srcOverlay - Optional source overlay canvas to rotate
+ * @param {{ angle: number }} ctx.params - Rotation angle in degrees
  *
  * @returns {{
  *   canvas: HTMLCanvasElement,

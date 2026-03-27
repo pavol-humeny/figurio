@@ -2,7 +2,9 @@
  * @file: useZoomControl.js
  * @author: Pavol Humeny
  * @date: 15.5.2026
+ * @description: Composable for managing the zoom control functionality in the viewport, including logic for zooming in/out, resetting zoom, handling mouse wheel zoom, and managing physical content size for accurate scaling.
  */
+
 import { ref, computed, watch } from 'vue'
 import { viewportConfig } from '@/config/viewportConfig'
 import { useMath } from '../common/useMath'
@@ -16,16 +18,8 @@ import { useToastModal } from '../modals/useToastModal'
  * Logic for the zoom control functionality in the viewport
  *
  * @param {Object} viewportStore - The store managing zoom and pan state
- * @returns {{
- *   zoomLevel: import('vue').Ref<number>,
- *   zoomIn: () => void,
- *   zoomOut: () => void,
- *   wheelZoom: (e: WheelEvent) => void,
- *   resetZoom: () => void,
- *   canZoomIn: import('vue').ComputedRef<boolean>,
- *   canZoomOut: import('vue').ComputedRef<boolean>,
- *   toggleZoomMode: (mode: string) => void
- * }}
+ * @param {Object} imageStore - The image store for triggering modifications on zoom mode change
+ * @param {Function} t - Localization function from vue-i18n for logging and messages
  */
 export function useZoomControl(viewportStore, imageStore, t) {
   const { clamp, round } = useMath()

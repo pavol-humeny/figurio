@@ -2,6 +2,7 @@
  * @file: operationRegistry.js
  * @author: Pavol Humeny
  * @date: 15.5.2026
+ * @description: Operation registry for the editor. This module imports various image manipulation operations and registers them in a central registry object. Each operation is associated with a unique key that can be used to execute the corresponding operation in the editor.
  */
 import { rotateOperation } from './operations/rotateOperation'
 import { flipOperation } from './operations/flipOperation'

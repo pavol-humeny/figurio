@@ -2,7 +2,9 @@
  * @file: useImageRenderer.js
  * @author: Pavol Humeny
  * @date: 15.5.2026
+ * @description: Image renderer for the editor viewport. This composable manages the rendering of the image and SVG layers in the editor viewport. It handles rendering of different file types (images, PDFs), applies transformations and effects, and updates the rendering based on changes in the image store and viewport state. It also includes logic for detecting unsupported PDF features when rendering PDFs as SVG and falls back to rasterization if necessary.
  */
+
 import { watch, ref, nextTick } from 'vue'
 import { useFrameTool } from '../tools/useFrameTool'
 import * as pdfjsLib from 'pdfjs-dist/legacy/build/pdf'
@@ -97,6 +99,7 @@ export function useImageRenderer(imageStore, historyStore, viewportStore, uiStor
       imageRef.value.style.height = `${height}px`
     }
 
+    // Set PDF container dimensions
     if (pdfContainerRef.value) {
       pdfContainerRef.value.style.width = `${width}px`
       pdfContainerRef.value.style.height = `${height}px`
@@ -287,9 +290,7 @@ export function useImageRenderer(imageStore, historyStore, viewportStore, uiStor
       if (svgAttempt.shouldRasterize) {
         const tRasterStart = performance.now()
 
-        warn(
-          'PDF obsahuje nepodporované grafické operátory – niektoré efekty nemusia byť presne zobrazené.',
-        )
+        warn('PDF contains features that may not render correctly as SVG')
 
         // Rasterize PDF into image
         imageStore.showPdfAsImage = true
@@ -352,7 +353,7 @@ export function useImageRenderer(imageStore, historyStore, viewportStore, uiStor
 
         let svgString = wrapper.innerHTML
 
-        // Remove svg: prefix safely
+        // Remove svg: prefix
         svgString = svgString
           .replace(/<svg:/g, '<')
           .replace(/<\/svg:/g, '</')
@@ -464,8 +465,6 @@ export function useImageRenderer(imageStore, historyStore, viewportStore, uiStor
         }
       }
 
-      // ctx.drawImage(blurCanvas, x, y, width, height, x, y, width, height)
-
       const edgeFade = parseFloat(obj.attrs['data-edge-fade']) || 1
 
       const masked = imageStore.applyRectEdgeFadeMask(blurCanvas, x, y, width, height, edgeFade)
@@ -570,7 +569,7 @@ export function useImageRenderer(imageStore, historyStore, viewportStore, uiStor
   }
 
   /**
-   * Render all layers based on frame state (frame, canvas, SVG)
+   * Render all layers based on frame state 
    */
   const renderAll = () => {
     updateSizes()

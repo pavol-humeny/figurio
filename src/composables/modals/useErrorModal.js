@@ -2,6 +2,7 @@
  * @file: useErrorModal.js
  * @author: Pavol Humeny
  * @date: 15.5.2026
+ * @description: Composable for managing the error modal in the editor.
  */
 import { ref } from 'vue'
 import { globalConfig } from '@/config/globalConfig'
@@ -13,6 +14,7 @@ const isVisible = ref(false)
 
 /**
  * Composable for error modal
+ * @param {object} userModeStore - The user mode store instance for checking user access to features
  */
 export function useErrorModal(userModeStore) {
   /**

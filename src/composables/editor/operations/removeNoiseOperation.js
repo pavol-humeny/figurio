@@ -2,12 +2,14 @@
  * @file: removeNoiseOperation.js
  * @author: Pavol Humeny
  * @date: 15.5.2026
+ * @description: Remove-noise operation for canvas + overlay (worker-based). This operation applies a noise removal effect to a source canvas using a Web Worker. It takes a source canvas, an optional overlay canvas, and parameters that include a noise mask and dimensions. The operation processes the source canvas in the worker and returns a new canvas with the noise removed, along with the original overlay and null PDF bytes.
  */
+
 /**
  * Apply remove-noise effect using a web worker
  *
  * @param {HTMLCanvasElement} sourceCanvas Source canvas to apply the effect on
- * @param {{ mask:Uint8Array, width:number, height:number }} params
+ * @param {{ mask:Uint8Array, width:number, height:number }} params Parameters for the remove-noise effect, including a noise mask and dimensions
  * @returns {Promise<HTMLCanvasElement>} Promise resolving to the processed canvas
  */
 const applyRemoveNoiseViaWorker = async (sourceCanvas, params) => {
@@ -64,9 +66,9 @@ const applyRemoveNoiseViaWorker = async (sourceCanvas, params) => {
  * Remove-noise operation for canvas + overlay (worker-based)
  *
  * @param {object} ctx
- * @param {HTMLCanvasElement} ctx.srcCanvas
- * @param {HTMLCanvasElement|null} ctx.srcOverlay
- * @param {{ mask:Uint8Array, width:number, height:number }} ctx.params
+ * @param {HTMLCanvasElement} ctx.srcCanvas - Source canvas to apply the effect on
+ * @param {HTMLCanvasElement|null} ctx.srcOverlay - Optional source overlay canvas to apply the effect on
+ * @param {{ mask:Uint8Array, width:number, height:number }} ctx.params - Parameters for the remove-noise effect, including a noise mask and dimensions
  *
  * @returns {{
  *   canvas: HTMLCanvasElement,

@@ -2,7 +2,9 @@
  * @file: flip.worker.js
  * @author: Pavol Humeny
  * @date: 15.5.2026
+ * @description: Web Worker for flipping canvas and overlay bitmaps in the editor, allowing for off-main-thread image manipulation to keep the UI responsive during flip operations.
  */
+
 import { useConsole } from '@/composables/common/useConsole'
 const { log } = useConsole()
 
@@ -17,9 +19,9 @@ self.onmessage = (e) => {
   let tCanvas = 0
   let tOverlay = 0
 
-  /* =========================
-   * CANVAS FLIP
-   * ========================= */
+  // ------------------------
+  // CANVAS FLIP
+  // ------------------------
   {
     const t0 = performance.now()
 
@@ -44,9 +46,9 @@ self.onmessage = (e) => {
     tCanvas = performance.now() - t0
   }
 
-  /* =========================
-   * OVERLAY FLIP
-   * ========================= */
+  // ------------------------
+  // OVERLAY FLIP
+  // ------------------------
   let outOverlayBitmap = null
 
   if (overlayBitmap) {
@@ -75,7 +77,7 @@ self.onmessage = (e) => {
 
   const tTotal = performance.now() - tStart
 
-  // Log timing information (visible in DevTools Workers)
+  // Log timing information
   log(
     `[flip.worker] total=${tTotal.toFixed(1)}ms | ` +
       `canvas=${tCanvas.toFixed(1)}ms | ` +

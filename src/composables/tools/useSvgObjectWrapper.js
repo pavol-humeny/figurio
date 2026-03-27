@@ -2,11 +2,11 @@
  * @file: useSvgObjectWrapper.js
  * @author: Pavol Humeny
  * @date: 15.5.2026
+ * @description: Composable for managing interactive SVG objects in the editor, including logic for dragging, resizing, rotating, and snapping SVG elements, as well as handling edge cases like auto-panning when dragging near viewport edges and maintaining aspect ratio during resizing.
  */
 import { ref, computed, onMounted, onBeforeUnmount, watch, nextTick } from 'vue'
 import { useMath } from '../common/useMath'
 import { editorConfig } from '@/config/editorConfig'
-// import { useSvgObjects } from './useSvgObjects'
 import { useSvgFunctions } from './useSvgFunctions'
 import { viewportConfig } from '@/config/viewportConfig'
 import { useSettingsPanel } from '@/composables/topPanel/useSettingsPanel'
@@ -15,11 +15,13 @@ const { log } = useConsole()
 
 /**
  * Logic for interactive SVG object
- * @param {Object} object - SVG object (with id, tag, attrs)
- * @param {Object} imageStore - Store for image data
- * @param {Object} viewportStore - Store for viewport data
- * @param {Object} editorStore - Store for editor state
- * @returns {Object} Composable with reactive properties and methods for SVG object interaction
+ * @param {string} objectId - ID of the SVG object to manage
+ * @param {object} imageStore - Store managing image state
+ * @param {object} viewportStore - Store managing viewport state
+ * @param {object} editorStore - Store managing editor state
+ * @param {object} historyStore - Store managing undo/redo history
+ * @param {object} uiStore - Store managing UI state
+ * @param {Function} t - Translation function from vue-i18n for logging purposes
  */
 export function useSvgObjectWrapper(
   objectId,
@@ -28,18 +30,8 @@ export function useSvgObjectWrapper(
   editorStore,
   historyStore,
   uiStore,
-  workspaceStore,
   t,
 ) {
-  // const { deleteSelectedSvgObjects } = useSvgObjects(
-  //   imageStore,
-  //   historyStore,
-  //   viewportStore,
-  //   editorStore,
-  //   uiStore,
-  //   workspaceStore,
-  //   t,
-  // )
   const { clamp, pythagorean, round } = useMath()
   const { getObjectCenter, getTransformedBoundingBox, getSnapOffsetToEdges } =
     useSvgFunctions(imageStore)
@@ -142,8 +134,6 @@ export function useSvgObjectWrapper(
       round(2 * clamp(zoomAdjusted, 4, max) * editorConfig.resizerMultiplier * 1.5),
       20,
     )
-
-    // return Math.max(viewportConfig.cropHandleSize / viewportStore.realZoomLevel, 6) * 2
   })
 
   /**
@@ -267,22 +257,6 @@ export function useSvgObjectWrapper(
   const rotationSensitivity = ref(editorConfig.rotationSensitivity)
 
   /**
-   * Watch for changes in the isSelected state and update the SVG object's transform accordingly
-   */
-  // watch(
-  //   () => isSelected.value,
-  //   (newValue) => {
-  //     // editorStore.isSvgObjectResizing = newValue
-
-  //     // Update rotation origin after resizing to keep it centered
-  //     // TODO - it move object when it is applied
-  //     if (!newValue) {
-  //       updateRotationTransform()
-  //     }
-  //   },
-  // )
-
-  /**
    * Mouse down handler for resizer handles
    * @param {MouseEvent} event - Mouse event
    * @param {number} index - Index of the resizer handle
@@ -402,26 +376,6 @@ export function useSvgObjectWrapper(
 
     event.stopPropagation()
   }
-
-  /**
-   * Update the rotation transform of the SVG object
-   * This is called after resizing or dragging to ensure the rotation is centered correctly
-   */
-  // const updateRotationTransform = () => {
-  //   const { attrs } = object.value
-  //   const match = attrs.transform?.match(/rotate\((-?\d+\.?\d*),?([^)]*)\)/)
-
-  //   if (!match) return
-
-  //   const currentAngle = parseFloat(match[1])
-
-  //   // log('Center from match: ', match[2])
-
-  //   const { cx, cy } = getObjectCenter(object.value)
-  //   // log('Center from getObjectCenter: ', cx, cy)
-
-  //   attrs.transform = `rotate(${currentAngle}, ${cx}, ${cy})`
-  // }
 
   /**
    * Normalize angle to the range [-180, 180]
@@ -555,7 +509,6 @@ export function useSvgObjectWrapper(
     const isShiftKey = event.shiftKey
     const isAltKey = event.altKey
     const onlyOneKeyPressed = true
-    // const onlyOneKeyPressed = [isCtrlKey, isShiftKey, isAltKey].filter(Boolean).length === 1
 
     if (!isCtrlKey) {
       viewportStore.guideLines = null
@@ -1889,12 +1842,6 @@ export function useSvgObjectWrapper(
     () => {
       nextTick(() => {
         if (object.value.tag === 'text' && textRef.value) {
-          // if empty text remove
-          // if (object.value.content.trim() === '') {
-          //   deleteSelectedSvgObjects(t)
-          //   return
-          // }
-
           const bbox = textRef.value.getBBox()
           object.value.textBBox = {
             x: bbox.x,
@@ -1958,6 +1905,5 @@ export function useSvgObjectWrapper(
     isInMultiSelection,
     isResizerIconInside,
     isRotateIconInside,
-    // onObjectMouseUp,
   }
 }

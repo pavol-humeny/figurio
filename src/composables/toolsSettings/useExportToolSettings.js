@@ -2,7 +2,9 @@
  * @file: useExportToolSettings.js
  * @author: Pavol Humeny
  * @date: 15.5.2026
+ * @description: Composable for managing the export tool settings panel in the editor, including logic for handling file name, format, preview generation, and exporting the file with the specified settings.
  */
+
 import { ref, computed, nextTick, watch, onUnmounted } from 'vue'
 import { useMath } from '../common/useMath'
 import { editorConfig } from '@/config/editorConfig'
@@ -23,14 +25,12 @@ const isVisible = ref(false)
  * @param {object} editorStore - Store managing editor state
  * @param {object} historyStore - Store managing undo/redo history
  * @param {Function} t - Translation function
- * @returns {object} Export tool settings logic
  */
 export function useExportToolSettings(
   imageStore,
   editorStore,
   historyStore,
   viewportStore,
-  uiStore,
   t,
 ) {
   const { round } = useMath()

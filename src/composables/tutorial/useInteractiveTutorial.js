@@ -2,6 +2,7 @@
  * @file: useInteractiveTutorial.js
  * @author: Pavol Humeny
  * @date: 15.5.2026
+ * @description: Composable for managing the interactive tutorial in the editor, including logic for starting, navigating, and finishing the tutorial, as well as positioning the tutorial items and overlays.
  */
 import { ref, computed, nextTick, watch } from 'vue'
 import { getTutorialSteps } from '@/config/tutorialSteps'
@@ -37,23 +38,9 @@ const steps = ref([])
 
 /**
  * Login for the interactive tutorial
- *
- * @returns {{
- *  isRunning: import('vue').ComputedRef<boolean>,
- * currentStep: import('vue').Ref<object>,
- * activeStep: import('vue').ComputedRef<number>,
- * startTutorial: () => void,
- * nextStep: () => void,
- * prevStep: () => void,
- * tutorialItemStyle: import('vue').Ref<object>,
- * overlayStyles: import('vue').Ref<object>,
- * tutorialItemRef: import('vue').Ref<HTMLElement | null>,
- * updatePosition: () => void,
- * closeTutorial: () => void,
- * numberOfSteps: import('vue').Ref<number>,
- * finishTutorial: () => void,
- * continueTutorial: () => void
- * }}
+ * @param {Object} uiStore - The UI store for managing tutorial state
+ * @param {Object} imageStore - The image store for checking if the image is loaded before starting the tutorial
+ * @param {Function} t - Translation function for localizing tutorial text
  */
 export function useInteractiveTutorial(uiStore, imageStore, t) {
   const { showToastModal } = useToastModal()

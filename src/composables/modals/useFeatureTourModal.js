@@ -2,6 +2,7 @@
  * @file: useFeatureTourModal.js
  * @author: Pavol Humeny
  * @date: 15.5.2026
+ * @description: Composable for managing the feature tour modal in the editor.
  */
 import { ref } from 'vue'
 import { useApi } from '@/composables/common/useApi'
@@ -20,17 +21,11 @@ const activeVideos = ref([])
 
 /**
  * Logic for the feature tour modal with reset and Escape key support
- *
- * @returns {{
- *   isVisible: import('vue').Ref<boolean>,
- *   activeVideos: import('vue').Ref<string[]>,
- *   openFeatureTourModal: (identifiers?: string[]) => void,
- *   closeFeatureTourModal: () => void
- * }}
  */
 export function useFeatureTourModal() {
   /**
    * Open the modal
+   * @param {boolean} [autoOpen=false] - Whether this open is triggered by auto-open logic (based on localStorage counter)
    * @param {string[]} seenIdentifiers - optional array of already seen video identifiers
    */
   const openFeatureTourModal = (autoOpen = false, seenIdentifiers) => {
@@ -74,7 +69,7 @@ export function useFeatureTourModal() {
 
   /**
    * Open modal with a single video by identifier
-   * @param {string} identifier
+   * @param {string} identifier - The identifier of the video to show
    */
   const openSingleFeatureTourModal = (identifier) => {
     if (isVisible.value) return

@@ -39,4 +39,11 @@ export const viewportConfig = {
   rulerMarkSpacingPx: 30, // Desired spacing between ruler marks in pixels on screen
 
   viewportKeyboardMoveStep: 0.01, // Step size for keyboard panning as a fraction of the viewport size
+
+  // Calibration
+  cardWidthCm: 8.56,
+  cardHeightCm: 5.398,
+  minCalibrationFactor: 0.2,
+  maxCalibrationFactor: 2.0,
+  stepCalibrationFactor: 0.005,
 }

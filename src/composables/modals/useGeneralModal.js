@@ -2,6 +2,7 @@
  * @file: useGeneralModal.js
  * @author: Pavol Humeny
  * @date: 15.5.2026
+ * @description: Composable for managing a general-purpose modal in the editor.
  */
 import { ref } from 'vue'
 
@@ -38,6 +39,9 @@ const canBeClosedByClickingOutside = ref(true)
  */
 let resolver = null
 
+/**
+ * Logic for showing and handling a general-purpose modal
+ */
 export function useGeneralModal() {
   /**
    * Show a generic modal and await user confirmation
@@ -48,13 +52,7 @@ export function useGeneralModal() {
    * @param {*} data - Optional data passed into modal
    * @returns {Promise<boolean>}
    */
-  const showGeneralModal = (
-    cancelLabel,
-    confirmLabel,
-    data = null,
-    type,
-    outsideClosable,
-  ) => {
+  const showGeneralModal = (cancelLabel, confirmLabel, data = null, type, outsideClosable) => {
     if (isVisible.value) return Promise.resolve(false)
 
     isVisible.value = true
@@ -70,7 +68,7 @@ export function useGeneralModal() {
   }
 
   /**
-   * Confirm the modal and resolve with `true`
+   * Confirm the modal and resolve with "true"
    */
   const confirm = (data = true) => {
     isVisible.value = false
@@ -78,7 +76,7 @@ export function useGeneralModal() {
   }
 
   /**
-   * Cancel the modal and resolve with `false`
+   * Cancel the modal and resolve with "false"
    */
   const cancel = () => {
     isVisible.value = false

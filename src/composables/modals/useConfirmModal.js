@@ -2,6 +2,7 @@
  * @file: useConfirmModal.js
  * @author: Pavol Humeny
  * @date: 15.5.2026
+ * @description: Composable for managing the confirm modal in the editor.
  */
 import { ref } from 'vue'
 import { useEditorStore } from '@/stores/editorStore'
@@ -42,17 +43,6 @@ let resolver = null
 
 /**
  * Logic for showing and handling a confirm modal with Promise-based API
- *
- * @returns {{
- *   isVisible: import('vue').Ref<boolean>,
- *   title: import('vue').Ref<string>,
- *   message: import('vue').Ref<string>,
- *   cancelText: import('vue').Ref<string>,
- *   confirmText: import('vue').Ref<string>,
- *   showConfirmModal: (title: string, message: string, cancelText: string, confirmText: string) => Promise<boolean>,
- *   confirm: () => void,
- *   cancel: () => void
- * }}
  */
 export function useConfirmModal() {
   const editorStore = useEditorStore()
@@ -65,6 +55,7 @@ export function useConfirmModal() {
    * @param {string} modalMessage - Message inside the modal
    * @param {string} modalCancelText - Label for cancel button
    * @param {string} modalConfirmText - Label for confirm button
+   * @param {boolean} [modalUseClose=false] - Whether to show a close button that resolves with "close"
    * @returns {Promise<boolean>} - Resolves true if confirmed, false if canceled
    */
   const showConfirmModal = (
@@ -95,7 +86,7 @@ export function useConfirmModal() {
   }
 
   /**
-   * Confirm the modal and resolve with `true`
+   * Confirm the modal and resolve with "true"
    */
   const confirm = () => {
     if (!isVisible.value) return
@@ -104,7 +95,7 @@ export function useConfirmModal() {
   }
 
   /**
-   * Cancel the modal and resolve with `false`
+   * Cancel the modal and resolve with "false"
    */
   const cancel = () => {
     if (!isVisible.value) return

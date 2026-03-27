@@ -2,11 +2,8 @@
  * @file: useWarningList.js
  * @author: Pavol Humeny
  * @date: 15.5.2026
+ * @description: Composable for managing a list of warnings related to the image in the editor, including logic for adding, removing, expanding, and collapsing warnings.
  */
-// import { ref } from 'vue'
-
-// const warnings = ref([]) // Array of warnings
-// const expandedIds = ref(new Set()) // IDs of expanded warnings
 
 export const useWarningList = (imageStore, uiStore) => {
   /**
@@ -161,8 +158,6 @@ export const useWarningList = (imageStore, uiStore) => {
   }
 
   return {
-    // warnings,
-    // expandedIds,
     addWarning,
     removeWarning,
     openByClick,

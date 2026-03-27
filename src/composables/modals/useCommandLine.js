@@ -2,6 +2,7 @@
  * @file: useCommandLine.js
  * @author: Pavol Humeny
  * @date: 15.5.2026
+ * @description: Composable for command line interface in expert mode. This module provides a command line interface for users in expert mode, allowing them to execute various commands to control features and settings of the editor.
  */
 import { ref, nextTick, onMounted, onBeforeMount } from 'vue'
 import { useConsole } from '../common/useConsole'
@@ -441,7 +442,7 @@ export function useCommandLine(userModeStore, editorStore) {
 
       tabPressCount.value++
 
-      // Never autocomplete after space (BUT allow listing)
+      // Never autocomplete after space
       if (endsWithSpace && tabPressCount.value < 3) return
 
       const parts = input.split(/\s+/)
@@ -497,12 +498,10 @@ export function useCommandLine(userModeStore, editorStore) {
     if (parts.length === 1) {
       const cmd = parts[0]
 
-      // "set␣" arguments of set
       if (endsWithSpace && userModeConfig.autocomplete[cmd]) {
         return userModeConfig.autocomplete[cmd]
       }
 
-      // "se" command completion
       return userModeConfig.autocomplete.root.filter((c) => c.startsWith(cmd))
     }
 

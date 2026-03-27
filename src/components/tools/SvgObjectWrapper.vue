@@ -13,7 +13,6 @@ import { useViewportStore } from '@/stores/viewportStore';
 import { useI18n } from 'vue-i18n'
 // import BaseIcon from '@/components/icons/BaseIcon.vue'
 import { useUiStore } from '@/stores/uiStore';
-import { useWorkspaceStore } from '@/stores/workspaceStore';
 
 const { t } = useI18n()
 
@@ -54,7 +53,7 @@ const {
   // isResizerIconInside,
   // isRotateIconInside,
   // onObjectMouseUp,
-} = useSvgObjectWrapper(props.objectId, useImageStore(), useViewportStore(), useEditorStore(), useHistoryStore(), useUiStore(), useWorkspaceStore(), t)
+} = useSvgObjectWrapper(props.objectId, useImageStore(), useViewportStore(), useEditorStore(), useHistoryStore(), useUiStore(), t)
 
 </script>
 

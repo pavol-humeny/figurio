@@ -2,14 +2,15 @@
  * @file: flipOperation.js
  * @author: Pavol Humeny
  * @date: 15.5.2026
+ * @description: Flip operation for canvas + overlay + pdfBytes (worker-based). This operation takes a source canvas, an optional PDF byte array, and an optional overlay canvas, along with flip parameters (direction). It returns a new flipped canvas, a flipped overlay if it exists, and a flipped PDF byte array if it exists. The operation uses a Web Worker to perform the flipping. The resulting flipped canvas, modified overlay, and original PDF bytes are returned as output.
  */
 /**
  * Flip operation via Web Worker
  *
- * @param {HTMLCanvasElement} srcCanvas
- * @param {HTMLCanvasElement|null} srcOverlay
- * @param {Uint8Array|null} srcPdfBytes
- * @param {'horizontal' | 'vertical'} direction
+ * @param {HTMLCanvasElement} srcCanvas - Source canvas to flip
+ * @param {HTMLCanvasElement|null} srcOverlay - Optional source overlay canvas to flip
+ * @param {Uint8Array|null} srcPdfBytes - Optional source PDF bytes to flip
+ * @param {'horizontal' | 'vertical'} direction - Flip direction
  *
  * @returns {Promise<{
  *   canvas: HTMLCanvasElement,

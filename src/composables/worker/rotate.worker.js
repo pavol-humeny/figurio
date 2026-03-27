@@ -2,7 +2,9 @@
  * @file: rotate.worker.js
  * @author: Pavol Humeny
  * @date: 15.5.2026
+ * @description: Web Worker for rotating canvas and overlay bitmaps and PDF pages in the editor, allowing for off-main-thread image manipulation to keep the UI responsive during rotate operations.
  */
+
 import { degrees, PDFDocument } from 'pdf-lib'
 import { useConsole } from '@/composables/common/useConsole'
 const { log } = useConsole()
@@ -23,9 +25,9 @@ self.onmessage = async (e) => {
   let tCanvas = 0
   let tOverlay = 0
 
-  /* =========================
-   * PDF ROTATION
-   * ========================= */
+  // ------------------------
+  // PDF ROTATION
+  // ------------------------
   if (pdfBytes) {
     const t0 = performance.now()
 
@@ -81,9 +83,9 @@ self.onmessage = async (e) => {
     tPdf = performance.now() - t0
   }
 
-  /* =========================
-   * CANVAS ROTATION
-   * ========================= */
+  // ------------------------
+  // CANVAS ROTATION
+  // ------------------------
   {
     const t0 = performance.now()
 
@@ -104,9 +106,9 @@ self.onmessage = async (e) => {
 
     tCanvas = performance.now() - t0
 
-    /* =========================
-     * OVERLAY ROTATION
-     * ========================= */
+    // ------------------------
+    // OVERLAY ROTATION
+    // ------------------------
     if (overlayBitmap) {
       const t1 = performance.now()
 
@@ -124,7 +126,7 @@ self.onmessage = async (e) => {
 
     const tTotal = performance.now() - tStart
 
-    // Log timing information (visible in DevTools Workers)
+    // Log timing information
     log(
       `[rotate.worker] total=${tTotal.toFixed(1)}ms | ` +
         `pdf=${tPdf.toFixed(1)}ms | ` +

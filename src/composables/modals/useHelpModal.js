@@ -2,6 +2,7 @@
  * @file: useHelpModal.js
  * @author: Pavol Humeny
  * @date: 15.5.2026
+ * @description: Composable for managing the help modal in the editor, including contact form handling and an interactive tutorial trigger.
  */
 import { ref, watch, reactive, onUnmounted } from 'vue'
 import { useInteractiveTutorial } from '@/composables/tutorial/useInteractiveTutorial'
@@ -21,6 +22,11 @@ const isVisible = ref(false)
 
 /**
  * Logic for the help modal with scrolling and Escape key support
+ * @param {object} uiStore - The UI store instance for managing UI state
+ * @param {object} imageStore - The image store instance for managing images
+ * @param {object} editorStore - The editor store instance for managing editor state
+ * @param {object} userModeStore - The user mode store instance for checking user access to features
+ * @param {function} t - The translation function for localizing text
  */
 export function useHelpModal(uiStore, imageStore, editorStore, userModeStore, t) {
   const { startTutorial, continueTutorial } = useInteractiveTutorial(uiStore, imageStore, t)

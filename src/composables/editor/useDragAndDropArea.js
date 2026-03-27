@@ -2,6 +2,7 @@
  * @file: useDragAndDropArea.js
  * @author: Pavol Humeny
  * @date: 15.5.2026
+ * @description: Logic for handling drag & drop and paste interactions for file input. This composable provides functionality to manage the state of dragging files over a designated area, handle file drops, trigger file selection dialogs, and process pasted content from the clipboard.
  */
 import { ref } from 'vue'
 import { useToastModal } from '../modals/useToastModal'
@@ -12,22 +13,17 @@ const { log } = useConsole()
 /**
  * Logic for handling drag & drop and paste interactions for file input
  *
- * @param {ReturnType<typeof import('@/stores/imageStore').useImageStore>} imageStore - Image store for handling files
- * @param {(key: string) => string} t - Translation function
- * @param {import('vue-router').Router} router - Vue router instance
- * @param {ReturnType<typeof import('@/stores/editorStore').useEditorStore>} editorStore - Editor store for editing state
- * @param {ReturnType<typeof import('@/stores/userModeStore').useUserModeStore>} userModeStore - User mode store for user settings
- * @param {ReturnType<typeof import('@/stores/workspaceStore').useWorkspaceStore>} workspaceStore - Workspace store for managing tabs
- * @param {ReturnType<typeof import('@/stores/uiStore').useUIStore>} uiStore - UI store for UI state
- * @param {ReturnType<typeof import('@/stores/viewportStore').useViewportStore>} viewportStore - Viewport store for view settings
- * @param {ReturnType<typeof import('@/stores/historyStore').useHistoryStore>} historyStore - History store for undo/redo functionality
- * @returns {{
- *   isDragging: import('vue').Ref<boolean>,
- *   handleDragOver: (event: DragEvent) => void,
- *   handleDragLeave: (event: DragEvent) => void,
- *   handleDrop: (event: DragEvent) => void,
- *   selectFile: () => void
- * }}
+ * @param {object} imageStore - The image store instance for managing image state
+ * @param {object} editorStore - The editor store instance for managing editor state
+ * @param {function} t - The translation function for internationalization
+ * @param {object} router - The Vue Router instance for navigation
+ * @param {object} userModeStore - The user mode store instance for managing user modes
+ * @param {object} workspaceStore - The workspace store instance for managing workspaces
+ * @param {object} uiStore - The UI store instance for managing UI state
+ * @param {object} viewportStore - The viewport store instance for managing viewport state
+ * @param {object} historyStore - The history store instance for managing operation history
+ *
+ * @returns {object} An object containing reactive properties and methods for handling drag & drop and paste interactions.
  */
 export function useDragAndDropArea(
   imageStore,
@@ -89,9 +85,6 @@ export function useDragAndDropArea(
     const files = event.dataTransfer?.files
 
     if (files && files.length > 0) {
-      // Support only single file upload via drag and drop
-      // loadFile(files[0], router)
-
       for (const file of files) {
         await loadFile(file, router)
         await new Promise((resolve) => setTimeout(resolve, 200)) // Small delay to ensure UI updates

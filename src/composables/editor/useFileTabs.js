@@ -2,6 +2,7 @@
  * @file: useFileTabs.js
  * @author: Pavol Humeny
  * @date: 15.5.2026
+ * @description: Logic for handling file tab behavior, including switching, closing, dragging and scrolling. This composable manages the state and behavior of file tabs in the editor workspace. It provides functions to switch between tabs, close tabs with confirmation, navigate to next/previous tabs, and handle drag-and-drop reordering of tabs. It also includes logic for auto-scrolling the tab bar when dragging tabs near the edges and ensuring the active tab is scrolled into view when switched.
  */
 import { ref, onMounted, watch, nextTick } from 'vue'
 import { useWorkspaceStore } from '@/stores/workspaceStore'
@@ -17,7 +18,7 @@ import { uiConfig } from '@/config/uiConfig'
  * @param {(key: string) => string} t - Translation function
  * @returns {Object}
  */
-export function useFileTabs(uiStore, viewportStore, imageStore, editorStore, t) {
+export function useFileTabs(uiStore, imageStore, t) {
   const { showConfirmModal } = useConfirmModal()
   const { renderUpTo } = useImagePipeline(imageStore, uiStore)
 
@@ -93,11 +94,9 @@ export function useFileTabs(uiStore, viewportStore, imageStore, editorStore, t) 
    */
   const switchToNextTab = async () => {
     uiStore.isLoading = true
-    // await new Promise((resolve) => setTimeout(resolve, 1))
 
     workspaceStore.switchToNextTab(t)
 
-    // await new Promise((resolve) => setTimeout(resolve, 1))
     uiStore.isLoading = false
   }
 
@@ -106,11 +105,9 @@ export function useFileTabs(uiStore, viewportStore, imageStore, editorStore, t) 
    */
   const switchToPreviousTab = async () => {
     uiStore.isLoading = true
-    // await new Promise((resolve) => setTimeout(resolve, 1))
 
     workspaceStore.switchToPreviousTab(t)
 
-    // await new Promise((resolve) => setTimeout(resolve, 1))
     uiStore.isLoading = false
   }
 
@@ -200,14 +197,14 @@ export function useFileTabs(uiStore, viewportStore, imageStore, editorStore, t) 
    * Watch for changes to the active tab index and scroll the active tab into view if necessary
    */
   watch(activeTabIndex, async () => {
-    if (isDraggingTab.value) return // Don't scroll while dragging
+    if (isDraggingTab.value) return // Do not scroll while dragging
 
     await nextTick() // Wait for DOM to update with new active tab
     scrollActiveTabIntoView()
   })
 
   /**
-   * Scroll the active tab into view if it's out of the visible area of the tab bar
+   * Scroll the active tab into view if it is out of the visible area of the tab bar
    */
   const scrollActiveTabIntoView = () => {
     const container = wrapperRef.value
@@ -241,7 +238,6 @@ export function useFileTabs(uiStore, viewportStore, imageStore, editorStore, t) 
     if (oldIndex === newIndex) return
 
     if (activeTabIndex.value === oldIndex) {
-      // presúval sa aktívny tab
       activeTabIndex.value = newIndex
     } else if (activeTabIndex.value > oldIndex && activeTabIndex.value <= newIndex) {
       activeTabIndex.value--

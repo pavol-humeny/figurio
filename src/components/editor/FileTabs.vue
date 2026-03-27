@@ -8,9 +8,7 @@
 import { useFileTabs } from '@/composables/editor/useFileTabs'
 import { useUiStore } from '@/stores/uiStore'
 import { useI18n } from 'vue-i18n'
-import { useViewportStore } from '@/stores/viewportStore'
 import { useImageStore } from '@/stores/imageStore'
-import { useEditorStore } from '@/stores/editorStore'
 import draggable from 'vuedraggable'
 
 const { t } = useI18n()
@@ -28,7 +26,7 @@ const {
   onDragMove,
   stopAutoScroll,
   onTabsReorder,
-} = useFileTabs(useUiStore(), useViewportStore(), useImageStore(), useEditorStore(), t)
+} = useFileTabs(useUiStore(), useImageStore(), t)
 
 </script>
 

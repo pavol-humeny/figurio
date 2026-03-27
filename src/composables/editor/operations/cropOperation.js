@@ -2,29 +2,29 @@
  * @file: cropOperation.js
  * @author: Pavol Humeny
  * @date: 15.5.2026
+ * @description: Crop operation for canvas, overlay and PDF. This operation takes a source canvas, an optional PDF byte array, and an optional overlay canvas, along with crop parameters (x, y, width, height). It returns a new cropped canvas, a cropped overlay if it exists, and a cropped PDF byte array if it exists. The operation ensures that the cropping is applied consistently across the image, overlay, and PDF while maintaining the aspect ratio and dimensions of the cropped area.
  */
 import { PDFDocument } from 'pdf-lib'
 
 /**
  * Crop operation for canvas, overlay and PDF
  *
- * @param {object} ctx
- * @param {HTMLCanvasElement} ctx.srcCanvas source canvas
- * @param {Uint8Array|null} ctx.srcPdfBytes source PDF bytes
- * @param {HTMLCanvasElement|null} ctx.srcOverlay source overlay canvas
+ * @param {object} ctx - Operation context
+ * @param {HTMLCanvasElement} ctx.srcCanvas - Source canvas
+ * @param {Uint8Array|null} ctx.srcPdfBytes - Source PDF bytes
+ * @param {HTMLCanvasElement|null} ctx.srcOverlay - Source overlay canvas
  * @param {{
  *   x: number,
  *   y: number,
  *   width: number,
  *   height: number
- * }} ctx.params crop parameters
- *
- * @returns {{
+ * }} ctx.params - Crop parameters
+ * @returns {Promise<{
  *   canvas: HTMLCanvasElement,
- *   overlay: HTMLCanvasElement | null,
- *   pdfBytes: Uint8Array | null,
- *   dimensions: { width: number, height: number, fileAspectRatio: number }
- * }}
+ *   overlay: HTMLCanvasElement|null,
+ *   pdfBytes: Uint8Array|null,
+ *   dimensions: { width:number, height:number, fileAspectRatio:number }
+ * }>} - Cropped canvas, overlay and PDF bytes with dimensions
  */
 export async function cropOperation({ srcCanvas, srcPdfBytes, srcOverlay, params }) {
   const { x, y, width, height } = params

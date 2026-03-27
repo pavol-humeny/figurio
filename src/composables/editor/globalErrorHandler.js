@@ -2,10 +2,15 @@
  * @file: globalErrorHandler.js
  * @author: Pavol Humeny
  * @date: 15.5.2026
+ * @description: Global error handling for the application. This module sets up global error handlers for Vue errors, JavaScript runtime errors, and unhandled Promise rejections. It uses a custom function to determine if certain errors should be ignored based on their messages. When an error occurs that is not ignorable, it logs the error to the console and displays an error modal to the user.
  */
 import { useErrorModal } from '@/composables/modals/useErrorModal'
 import { useUserModeStore } from '@/stores/userModeStore'
 
+/**
+ * Logic for global error handling in the application.
+ * @parame {App} app - The Vue application instance to set up error handling for.
+ */
 export function setupGlobalErrorHandling(app) {
   const { showErrorModal } = useErrorModal(useUserModeStore())
 

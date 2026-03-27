@@ -2,6 +2,7 @@
  * @file: useTextTool.js
  * @author: Pavol Humeny
  * @date: 15.5.2026
+ * @description: Composable for managing the text tool in the editor, including logic for editing SVG text objects, applying text settings, adding new text objects, and handling special cases like rasterization when necessary.
  */
 import { ref, watch, watchEffect, computed } from 'vue'
 import { useMath } from '../common/useMath'
@@ -36,7 +37,6 @@ const localTextSettings = ref({
  * @param {Object} editorStore - Store containing editor state
  * @param {Object} uiStore - UI store
  * @param {Function} t - Translation function
- * @return {Object} Composable methods and reactive properties for text tool
  */
 export function useTextTool(imageStore, historyStore, editorStore, uiStore, t) {
   const { round } = useMath()
@@ -160,12 +160,10 @@ export function useTextTool(imageStore, historyStore, editorStore, uiStore, t) {
           localTextSettings.value.italic = attrs['font-style'] === 'italic'
           localTextSettings.value.underline = attrs['text-decoration'] === 'underline'
         } else {
-          // resetTextSettings()
           // Reset only content
           localTextSettings.value.text = ''
         }
       } else {
-        // resetTextSettings()
         // Reset only content
         localTextSettings.value.text = ''
         hidePosition.value = true

@@ -2,6 +2,7 @@
  * @file: useToastModal.js
  * @author: Pavol Humeny
  * @date: 15.5.2026
+ * @description: Composable for managing toast modals (temporary popup notifications) in the editor, including logic for showing, removing, and positioning toasts, as well as pausing timers when the document is hidden.
  */
 import { ref, reactive } from 'vue'
 import { uiConfig } from '@/config/uiConfig'
@@ -24,12 +25,6 @@ const toasts = ref([])
 
 /**
  * Logic for toast modals (temporary popup notifications)
- *
- * @returns {{
- *   toasts: typeof toasts,
- *   showToastModal: (type: string, title: string, message: string) => void,
- *   removeToastModal: (id: number) => void
- * }}
  */
 export function useToastModal() {
   /**
@@ -46,7 +41,7 @@ export function useToastModal() {
   const showToastModal = (type, title, message) => {
     const duration = uiConfig.toastAutoRemoveTime
 
-    // 🔍 Try to find existing toast with the same title
+    // Try to find existing toast with the same title
     const existingToast = toasts.value.find((t) => t.title === title)
 
     if (existingToast) {
@@ -83,7 +78,7 @@ export function useToastModal() {
 
   /**
    * Start the timer for a toast to auto-remove it after its duration
-   * @param {{ id: number, duration: number, remaining: number, startTime: number, rafId: number|null }} toast - The toast object
+   * @param {{ id: number, type: string, title: string, message: string, duration: number, remaining: number, progress: number, paused: boolean, startTime: number, rafId: number }} toast - The toast object to start the timer for
    */
   const startToastTimer = (toast) => {
     const tick = (now) => {

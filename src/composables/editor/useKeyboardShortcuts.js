@@ -2,6 +2,7 @@
  * @file: useKeyboardShortcuts.js
  * @author: Pavol Humeny
  * @date: 15.5.2026
+ * @description: Composable for handling global keyboard shortcuts in the editor. This module defines a function that sets up event listeners for keyboard events and triggers corresponding actions based on a predefined configuration of shortcuts. It normalizes key combinations.
  */
 import { onMounted, onBeforeUnmount } from 'vue'
 import { keyboardShortcuts } from '@/config/keyboardShortcutsConfig'

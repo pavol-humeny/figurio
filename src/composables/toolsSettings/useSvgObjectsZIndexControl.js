@@ -2,21 +2,21 @@
  * @file: useSvgObjectsZIndexControl.js
  * @author: Pavol Humeny
  * @date: 15.5.2026
+ * @description: Composable for controlling the Z-index of SVG objects in the magnify area, blur area, and SVG tools, including logic for moving selected objects forward/backward and sending them to front/back based on the current tool and selection.
  */
 import { useSvgObjects } from '@/composables/tools/useSvgObjects'
 import { computed } from 'vue'
 
 /**
  * Composable for controlling the Z-index of SVG objects in the magnify area, blur area, and SVG tools
- * @param {Object} props - Component props containing the type of tool (magnify, blur, or svg)
- * @param {*} imageStore - Store containing SVG objects and image dimensions
- * @param {*} historyStore - Store for managing undo/redo history
- * @param {*} viewportStore - Store for managing viewport state
- * @param {*} editorStore - Store for managing editor state
- * @param {*} uiStore - Store for managing UI state
- * @param {*} workspaceStore - Store for managing workspace state
- * @param {Function} t - Translation function for localized strings
- * @returns {Object} Object containing functions and computed properties for Z-index control of SVG objects
+ * @param {Object} props - Props containing the type of tool ('magnify', 'blur', 'svg')
+ * @param {Object} imageStore - Store managing image state and SVG objects
+ * @param {Object} historyStore - Store managing undo/redo history
+ * @param {Object} viewportStore - Store managing viewport state
+ * @param {Object} editorStore - Store managing editor state
+ * @param {Object} uiStore - Store managing UI state
+ * @param {Object} workspaceStore - Store managing workspace state
+ * @param {Function} t - Translation function from vue-i18n for logging purposes
  */
 export function useSvgObjectsZIndexControl(
   props,

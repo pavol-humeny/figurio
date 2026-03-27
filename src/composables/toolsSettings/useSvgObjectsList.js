@@ -2,6 +2,7 @@
  * @file: useSvgObjectsList.js
  * @author: Pavol Humeny
  * @date: 15.5.2026
+ * @description: Composable for managing the SVG Objects List panel in the editor, including logic for displaying, selecting, renaming, deleting, and reordering SVG objects and related blur/magnify objects.
  */
 import { useSvgObjects } from '@/composables/tools/useSvgObjects'
 import { useToolsPanel } from '@/composables/tools/useToolsPanel'
@@ -17,18 +18,8 @@ const { log } = useConsole()
  * @param {ReturnType<typeof import('@/stores/viewportStore').useViewportStore>} viewportStore - Viewport store instance
  * @param {ReturnType<typeof import('@/stores/editorStore').useEditorStore>} editorStore - Editor store instance
  * @param {ReturnType<typeof import('@/stores/uiStore').useUiStore>} uiStore - UI store instance
+ * @param {ReturnType<typeof import('@/stores/workspaceStore').useWorkspaceStore>} workspaceStore - Workspace store instance
  * @param {Function} t - Translation function from vue-i18n
- * @returns {{
- *   mappedObjects: import('vue').ComputedRef<Array<{id: string, name: string, draggable: boolean}>>,
- *   panelVars: import('vue').ComputedRef<Object>,
- *   startResize: (event: MouseEvent) => void,
- *   selectObject: (id: string) => void,
- *   deleteObject: () => void,
- *   renameObject: (id: string, newName: string) => void,
- *   editingId: import('vue').Ref<string | null>,
- *   startEditing: (id: string) => void,
- *   editingInputRef: import('vue').Ref<HTMLElement | null>,
- * }}
  */
 export function useSvgObjectsList(
   imageStore,

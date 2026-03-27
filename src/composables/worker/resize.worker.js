@@ -2,7 +2,9 @@
  * @file: resize.worker.js
  * @author: Pavol Humeny
  * @date: 15.5.2026
+ * @description: Web Worker for resizing canvas and overlay bitmaps and PDF pages in the editor, allowing for off-main-thread image manipulation to keep the UI responsive during resize operations.
  */
+
 import { PDFDocument } from 'pdf-lib'
 import { useConsole } from '@/composables/common/useConsole'
 const { log } = useConsole()
@@ -19,9 +21,9 @@ self.onmessage = async (e) => {
   let tCanvas = 0
   let tOverlay = 0
 
-  /* =========================
-   * PDF RESIZE
-   * ========================= */
+  // ------------------------
+  // PDF RESIZE
+  // ------------------------
   if (pdfBytes) {
     const t0 = performance.now()
 
@@ -43,9 +45,9 @@ self.onmessage = async (e) => {
     tPdf = performance.now() - t0
   }
 
-  /* =========================
-   * CANVAS RESIZE
-   * ========================= */
+  //------------------------
+  // CANVAS RESIZE
+  //------------------------
   const t1 = performance.now()
 
   const canvas = new OffscreenCanvas(width, height)
@@ -55,9 +57,9 @@ self.onmessage = async (e) => {
   const outCanvasBitmap = canvas.transferToImageBitmap()
   tCanvas = performance.now() - t1
 
-  /* =========================
-   * OVERLAY RESIZE
-   * ========================= */
+  // ------------------------
+  // OVERLAY RESIZE
+  // ------------------------
   if (overlayBitmap) {
     const t2 = performance.now()
 
@@ -71,7 +73,7 @@ self.onmessage = async (e) => {
 
   const tTotal = performance.now() - tStart
 
-  // Timing log (DevTools Workers)
+  // Log timing information
   log(
     `[resize.worker] total=${tTotal.toFixed(1)}ms | ` +
       `pdf=${tPdf.toFixed(1)}ms | ` +

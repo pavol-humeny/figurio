@@ -2,6 +2,7 @@
  * @file: useVideoLoader.js
  * @author: Pavol Humeny
  * @date: 15.5.2026
+ * @description: Composable for loading videos dynamically by key using switch, used for tool tips and guides in the editor.
  */
 import { useConsole } from '../common/useConsole'
 const { log } = useConsole()

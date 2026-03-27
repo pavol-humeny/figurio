@@ -2,15 +2,17 @@
  * @file: resizeOperation.js
  * @author: Pavol Humeny
  * @date: 15.5.2026
+ * @description: Resize operation for canvas + overlay + pdfBytes (worker-based). This operation takes a source canvas, an optional PDF byte array, and an optional overlay canvas, along with new dimensions (width and height). It returns a new resized canvas, a resized overlay if it exists, and a resized PDF byte array if it exists. The operation uses a Web Worker to perform the resizing. The resulting resized canvas, modified overlay, original PDF bytes, and dimensions of the resulting image are returned as output.
  */
+
 /**
  * Resize operation via Web Worker
  *
- * @param {HTMLCanvasElement} baseCanvas
- * @param {HTMLCanvasElement|null} srcOverlay
- * @param {Uint8Array|null} srcPdfBytes
- * @param {number} width
- * @param {number} height
+ * @param {HTMLCanvasElement} baseCanvas - Source canvas to resize
+ * @param {HTMLCanvasElement|null} srcOverlay - Optional source overlay canvas to resize
+ * @param {Uint8Array|null} srcPdfBytes - Optional source PDF bytes to resize
+ * @param {number} width - New width for the resized canvas
+ * @param {number} height - New height for the resized canvas
  *
  * @returns {Promise<{
  *   canvas: HTMLCanvasElement,
@@ -70,11 +72,11 @@ const resizeViaWorker = async (baseCanvas, srcOverlay, srcPdfBytes, width, heigh
 /**
  * Resize operation for canvas + overlay + pdfBytes (worker-based)
  *
- * @param {object} ctx
- * @param {HTMLCanvasElement} ctx.baseCanvas
- * @param {Uint8Array|null} ctx.srcPdfBytes
- * @param {HTMLCanvasElement|null} ctx.srcOverlay
- * @param {{ width:number, height:number }} ctx.params
+ * @param {object} ctx - Operation context
+ * @param {HTMLCanvasElement} ctx.baseCanvas - Source canvas to resize
+ * @param {Uint8Array|null} ctx.srcPdfBytes - Optional source PDF bytes to resize
+ * @param {HTMLCanvasElement|null} ctx.srcOverlay - Optional source overlay canvas to resize
+ * @param {{ width:number, height:number }} ctx.params - New dimensions for the resized canvas
  *
  * @returns {{
  *   canvas: HTMLCanvasElement,

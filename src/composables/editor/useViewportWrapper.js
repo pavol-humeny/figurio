@@ -2,6 +2,7 @@
  * @file: useViewportWrapper.js
  * @author: Pavol Humeny
  * @date: 15.5.2026
+ * @description: Composable for managing the viewport wrapper in the editor. This module provides logic for handling zooming, panning, scrolling, and calculating dimensions related to the viewport. It includes functions for centering the image, fitting it to the screen, managing rulers, cursor tracking, and updating scrollbar positions based on user interactions and changes in zoom level.
  */
 import { computed, ref, nextTick, onMounted, watch, onBeforeUnmount } from 'vue'
 import { viewportConfig } from '@/config/viewportConfig'
@@ -19,8 +20,9 @@ const { addUserEvent } = useApi()
  * @param {ReturnType<typeof import('@/stores/viewportStore').useViewportStore>} viewportStore - Store for viewport state
  * @param {ReturnType<typeof import('@/stores/imageStore').useImageStore>} imageStore - Store for image and its dimensions
  * @param {ReturnType<typeof import('@/stores/workspaceStore').useWorkspaceStore>} editorStore - Editor store
- * @param {import('vue').Ref<HTMLElement>} contentRef - Ref to the .viewport-content element
- * @returns {Object}
+ * @param {ReturnType<typeof import('@/stores/uiStore').useUiStore>} uiStore - UI store for managing UI state
+ * @param {ReturnType<typeof import('@/stores/workspaceStore').useWorkspaceStore>} workspaceStore - Workspace store for managing tabs and workspaces
+ * @param {object} contentRef - Ref to the content element for measuring dimensions
  */
 export function useViewportWrapper(
   viewportStore,
@@ -45,7 +47,6 @@ export function useViewportWrapper(
   // ------------------------------
   // Panning
   // ------------------------------
-
   /**
    * Horizontal pan offset
    */
@@ -164,7 +165,6 @@ export function useViewportWrapper(
   // ------------------------------
   // Scroll and zoom
   // ------------------------------
-
   /**
    * Current zoom level from the store
    */
@@ -284,7 +284,6 @@ export function useViewportWrapper(
   // ------------------------------
   // Wrapper and content dimensions
   // ------------------------------
-
   /**
    * Width and height of the wrapper element
    */
@@ -331,7 +330,6 @@ export function useViewportWrapper(
   // ------------------------------
   // Scrollbar slider
   // ------------------------------
-
   /**
    * Vertical and horizontal slider range (max - min)
    */
@@ -365,7 +363,6 @@ export function useViewportWrapper(
 
   /**
    * Top position of vertical scrollbar thumb
-   * Left position of horizontal scrollbar thumb
    */
   const verticalSliderTop = computed(() => {
     updateInitialDimensions()
@@ -378,6 +375,9 @@ export function useViewportWrapper(
       (uiStore.rulersEnabled ? 15 : 0)
     )
   })
+  /**
+   * Left position of horizontal scrollbar thumb
+   */
   const horizontalSliderLeft = computed(() => {
     updateInitialDimensions()
     updateZoomDependentDimensions()
@@ -448,7 +448,6 @@ export function useViewportWrapper(
   // ------------------------------
   // Centering and fitting the image
   // ------------------------------
-
   /**
    * Center the image in the viewport
    */
@@ -554,7 +553,6 @@ export function useViewportWrapper(
         viewportStore.shouldFitToScreen = false
       }
     },
-    // { immediate: true },
   )
 
   /**
@@ -623,7 +621,6 @@ export function useViewportWrapper(
   // ------------------------------
   // Ruler
   // ------------------------------
-
   /**
    * Dynamic step size for rulers in classic zoom mode based on zoom level
    */
@@ -634,7 +631,7 @@ export function useViewportWrapper(
     // Calculate the raw step in pixels that would correspond to the target pixel spacing on screen
     const rawStepPx = targetSpacingPx / zoomLevel.value
 
-    // Round the raw step to a nice number (1, 2, 5, 10, etc.) multiplied by a power of 10
+    // Round the raw step to a nice number (1, 2, 5, 10,...) multiplied by a power of 10
     const base = Math.pow(10, Math.floor(Math.log10(rawStepPx)))
     const normalized = rawStepPx / base
 
@@ -720,6 +717,7 @@ export function useViewportWrapper(
 
     horizontalRulerMarks.value = marks
   }
+
   /**
    * Update vertical ruler marks based on current pan and zoom
    */
@@ -785,6 +783,9 @@ export function useViewportWrapper(
   // ------------------------------
   // Cursor position and resizing
   // ------------------------------
+  /**
+   * Cursor size based on the selected tool and its configuration
+   */
   const cursorSize = computed(() => {
     if (editorStore.selectedToolKey === 'brush') {
       return editorStore.toolsConfig.brush.brushSize
@@ -894,7 +895,7 @@ export function useViewportWrapper(
         ) {
           maxCursorSize = editorConfig.maxPencilSize
         } else {
-          // Maximum size of the brush tool (10% of smaller image dimension, min 10px)
+          // Maximum size of the brush tool (min 10px)
           const smallerDimension = imageStore.getSmallerImageDimension()
           maxCursorSize = Math.max(
             10,
@@ -942,7 +943,7 @@ export function useViewportWrapper(
   }
 
   /**
-   * Cursor position in image coordinates
+   * Cursor positions in image coordinates
    */
   const cursorImagePxX = computed(() => {
     if (viewportStore.zoomMode === 'physical') {
@@ -951,7 +952,6 @@ export function useViewportWrapper(
       return (mouseX.value - panX.value) / zoomLevel.value
     }
   })
-
   const cursorImagePxY = computed(() => {
     if (viewportStore.zoomMode === 'physical') {
       return (mouseY.value - panY.value) / viewportStore.zoomLevel
@@ -1010,7 +1010,6 @@ export function useViewportWrapper(
   // ------------------------------
   // Initialization and cleanup
   // ------------------------------
-
   /**
    * Resizing observer to adjust centering on wrapper size changes
    */
@@ -1074,7 +1073,6 @@ export function useViewportWrapper(
   // ------------------------------
   // Cursor
   // ------------------------------
-
   /**
    * Watch for changes of zoom level and update dimensions
    */
