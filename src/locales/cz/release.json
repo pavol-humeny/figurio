@@ -4,6 +4,15 @@
     "items": []
   },
   "versions": {
+    "5.18.0":{
+      "label": "5.18.0",
+      "date":"31.3. 2026",
+      "newFeatures": {
+        "items": [
+          "Nová úvodní stránka s efektem odhalení"
+        ]
+      }
+    },
     "5.17.0":{
       "label": "5.17.0",
       "date":"16.3. 2026",

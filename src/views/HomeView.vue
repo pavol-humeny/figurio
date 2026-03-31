@@ -99,13 +99,34 @@ onMounted(() => {
 
     openFeatureTourModal(true, seen)
   }
+
+  // Scroll reveal
+  const elements = document.querySelectorAll('.reveal')
+
+  const observer = new IntersectionObserver(
+    (entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible')
+        }
+      })
+    },
+    {
+      threshold: 0.15
+    }
+  )
+
+  elements.forEach((el, i) => {
+    el.style.transitionDelay = `${i * 0.08}s` // nice stagger
+    observer.observe(el)
+  })
 })
 </script>
 
 <template>
   <div class="home-view" @drop.stop="handleDrop" @dragover.prevent @dragleave.prevent>
 
-    <div class="hero-section">
+    <div class="hero-section reveal">
       <div class="left-side">
         <div class="app-name">
           <div class="logo-wrapper">
@@ -149,7 +170,7 @@ onMounted(() => {
       <h2 class="section-title">{{ $t('home.keyFeatures.title') }}</h2>
 
       <div class="cards">
-        <div class="card">
+        <div class="card reveal">
           <BaseIcon name="IconKeyFeaturePrivacy" size="170" color="var(--primary-c)" />
 
           <h3>{{ $t('home.keyFeatures.privacy.title') }}</h3>
@@ -158,7 +179,7 @@ onMounted(() => {
           </p>
         </div>
 
-        <div class="card">
+        <div class="card reveal">
           <BaseIcon name="IconKeyFeaturePdf" size="170" color="var(--primary-c)" />
 
           <h3>{{ $t('home.keyFeatures.pdf.title') }}</h3>
@@ -167,7 +188,7 @@ onMounted(() => {
           </p>
         </div>
 
-        <div class="card">
+        <div class="card reveal">
           <BaseIcon name="IconKeyFeatureTools" size="170" color="var(--primary-c)" />
 
           <h3>{{ $t('home.keyFeatures.tools.title') }}</h3>
@@ -182,7 +203,7 @@ onMounted(() => {
       <h2 class="section-title">{{ t('home.mostUsedTools.title') }}</h2>
 
       <!-- TOOL 1 - CROP -->
-      <div class="tool-content">
+      <div class="tool-content reveal">
         <div class="tool-video">
           <div class="video-wrapper">
             <video autoplay muted loop playsinline>
@@ -202,8 +223,8 @@ onMounted(() => {
           </p>
 
           <div class="tool-points">
-            <div class="point" v-for="(point, i) in tm('home.mostUsedTools.crop.points', {}, { returnObjects: true })"
-              :key="i">
+            <div class="point reveal"
+              v-for="(point, i) in tm('home.mostUsedTools.crop.points', {}, { returnObjects: true })" :key="i">
               <BaseIcon name="IconCheck" size="18" color="var(--text-c)" />
               <div>
                 <b>{{ point.title }}</b>
@@ -215,7 +236,7 @@ onMounted(() => {
       </div>
 
       <!-- TOOL 2 - BLUR -->
-      <div class="tool-content reverse">
+      <div class="tool-content reverse reveal">
         <div class="tool-video">
           <div class="video-wrapper">
             <video autoplay muted loop playsinline>
@@ -235,8 +256,8 @@ onMounted(() => {
           </p>
 
           <div class="tool-points">
-            <div class="point" v-for="(point, i) in tm('home.mostUsedTools.blur.points', {}, { returnObjects: true })"
-              :key="i">
+            <div class="point reveal"
+              v-for="(point, i) in tm('home.mostUsedTools.blur.points', {}, { returnObjects: true })" :key="i">
               <BaseIcon name="IconCheck" size="18" color="var(--text-c)" />
               <div>
                 <b>{{ point.title }}</b>
@@ -248,7 +269,7 @@ onMounted(() => {
       </div>
 
       <!-- TOOL 3 - FRAME -->
-      <div class="tool-content">
+      <div class="tool-content reveal">
         <div class="tool-video">
           <div class="video-wrapper">
             <video autoplay muted loop playsinline>
@@ -268,8 +289,8 @@ onMounted(() => {
           </p>
 
           <div class="tool-points">
-            <div class="point" v-for="(point, i) in tm('home.mostUsedTools.frame.points', {}, { returnObjects: true })"
-              :key="i">
+            <div class="point reveal"
+              v-for="(point, i) in tm('home.mostUsedTools.frame.points', {}, { returnObjects: true })" :key="i">
               <BaseIcon name="IconCheck" size="18" color="var(--text-c)" />
               <div>
                 <b>{{ point.title }}</b>
@@ -280,12 +301,20 @@ onMounted(() => {
         </div>
       </div>
     </div>
-
-    <div class="all-tools section">
-    </div>
   </div>
 
   <div class="footer">
+    <div class="footer-content">
+
+      <p class="footer-text">
+        {{ t('home.footer.text') }}
+      </p>
+
+      <a class="footer-link" href="https://github.com/pavol-humeny/figurio" target="_blank" rel="noopener noreferrer">
+        GitHub
+      </a>
+
+    </div>
   </div>
 </template>
 
@@ -296,7 +325,6 @@ onMounted(() => {
   align-items: center;
   width: 100%;
   min-width: var(--min-window-width);
-  height: 100%;
   background: var(--background-c);
   user-select: text;
   padding: 0 14vw;
@@ -420,6 +448,7 @@ onMounted(() => {
   flex-direction: row;
   width: 100%;
   justify-content: space-between;
+  gap: 45px;
 }
 
 @media (max-width: 1224px) {
@@ -566,17 +595,6 @@ onMounted(() => {
   margin: 2px 0 0;
 }
 
-.all-tools {
-  height: 300px;
-}
-
-.footer {
-  height: 100px;
-  width: 100%;
-  border: solid 1px orange;
-  background: var(--background-c);
-}
-
 .feature {
   display: flex;
   gap: 10px;
@@ -593,5 +611,51 @@ onMounted(() => {
   font-size: var(--text-font-size);
   font-weight: var(--text-font-weight);
   color: var(--text-c);
+}
+
+.footer {
+  width: 100%;
+  padding: 30px 0;
+  background: var(--background-c);
+  border-top: 1px solid var(--secondary-c);
+  display: flex;
+  justify-content: center;
+}
+
+.footer-content {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 8px;
+}
+
+.footer-text {
+  font-size: var(--landing-page-section-text-font-size);
+  color: var(--text-secondary-c);
+  text-align: center;
+}
+
+.footer-link {
+  font-size: var(--landing-page-section-text-font-size);
+  color: var(--primary-c);
+  text-decoration: none;
+  transition: 0.2s;
+}
+
+.footer-link:hover {
+  text-decoration: underline;
+}
+
+.reveal {
+  opacity: 0;
+  transform: translateY(40px) scale(0.98);
+  /* filter: blur(4px); */
+  transition: all 0.8s ease;
+}
+
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+  /* filter: blur(0); */
 }
 </style>

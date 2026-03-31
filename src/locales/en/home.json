@@ -99,5 +99,8 @@
     { "name": "Blur Area", "description": "- protect sensitive information" },
     { "name": "Magnify Area", "description": "- highlight important details" },
     { "name": "...", "description": "" }
-  ]
+  ],
+  "footer": {
+    "text": "Created as a bachelor's thesis project at FIT VUT. © {year} Figurio"
+  }
 }

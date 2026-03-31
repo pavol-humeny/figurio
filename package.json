@@ -1,6 +1,6 @@
 {
   "name": "figurio",
-  "version": "5.17.14",
+  "version": "5.18.0",
   "private": true,
   "type": "module",
   "scripts": {

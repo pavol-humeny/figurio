@@ -99,5 +99,8 @@
     { "name": "Rozmazanie oblasti", "description": "- ochrana citlivých údajov" },
     { "name": "Zvýraznenie oblasti", "description": "- zvýraznenie dôležitých detailov" },
     { "name": "...", "description": "" }
-  ]
+  ],
+  "footer": {
+    "text": "Vytvorené ako bakalárska práca na FIT VUT. © {year} Figurio"
+  }
 }
