@@ -99,27 +99,6 @@ onMounted(() => {
 
     openFeatureTourModal(true, seen)
   }
-
-  // Scroll reveal
-  const elements = document.querySelectorAll('.reveal')
-
-  const observer = new IntersectionObserver(
-    (entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('visible')
-        }
-      })
-    },
-    {
-      threshold: 0.15
-    }
-  )
-
-  elements.forEach((el, i) => {
-    el.style.transitionDelay = `${i * 0.08}s` // nice stagger
-    observer.observe(el)
-  })
 })
 </script>
 
@@ -644,18 +623,5 @@ onMounted(() => {
 
 .footer-link:hover {
   text-decoration: underline;
-}
-
-.reveal {
-  opacity: 0;
-  transform: translateY(40px) scale(0.98);
-  /* filter: blur(4px); */
-  transition: all 0.8s ease;
-}
-
-.reveal.visible {
-  opacity: 1;
-  transform: translateY(0) scale(1);
-  /* filter: blur(0); */
 }
 </style>
