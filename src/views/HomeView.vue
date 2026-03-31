@@ -18,7 +18,6 @@ import { useHelpModal } from '@/composables/modals/useHelpModal';
 import { useSettingsPanel } from '@/composables/topPanel/useSettingsPanel';
 import { useInteractiveTutorial } from '@/composables/tutorial/useInteractiveTutorial';
 import DefaultButton from '@/components/common/DefaultButton.vue';
-import { computed } from 'vue'
 import { useDragAndDropArea } from '@/composables/editor/useDragAndDropArea';
 import { useEditorStore } from '@/stores/editorStore';
 import { useFeatureTourModal } from '@/composables/modals/useFeatureTourModal';
@@ -30,8 +29,12 @@ import ChristmasTree from '@/components/randomEvents/ChristmasTree.vue';
 import { useWorkspaceStore } from '@/stores/workspaceStore';
 import { useHistoryStore } from '@/stores/historyStore';
 import { useViewportStore } from '@/stores/viewportStore';
+import { computed } from 'vue'
+import crop from '@/assets/videos/crop.mp4'
+import frame from '@/assets/videos/frame.mp4'
+import blurArea from '@/assets/videos/blurArea.mp4'
 
-const { t, messages, locale } = useI18n()
+const { t, tm, locale, messages } = useI18n()
 const router = useRouter()
 const userModeStore = useUserModeStore()
 const editorStore = useEditorStore()
@@ -64,10 +67,6 @@ useKeyboardShortcuts({
   closeReleaseModal,
 }, useUiStore(), useEditorStore());
 
-const features = computed(() => {
-  return messages.value[locale.value]?.home?.features || [];
-})
-
 /**
  * Logic of the drag-and-drop area
  */
@@ -84,6 +83,13 @@ const {
 } = useFeatureTourModal();
 
 /**
+ * Computed property to get the list of features to display on the home page based on the current locale
+ */
+const features = computed(() => {
+  return messages.value[locale.value]?.home?.features || [];
+})
+
+/**
  * On mounted, check seen feature tour slides and open modal
  */
 onMounted(() => {
@@ -98,61 +104,218 @@ onMounted(() => {
 
 <template>
   <div class="home-view" @drop.stop="handleDrop" @dragover.prevent @dragleave.prevent>
-    <div class="background"></div>
 
-    <div class="left-side">
-      <div class="app-name">
-        <div class="logo-wrapper">
-          <BaseIcon name="IconLogo" class="logo" :size="60" color="var(--primary-c)" />
+    <div class="hero-section">
+      <div class="left-side">
+        <div class="app-name">
+          <div class="logo-wrapper">
+            <BaseIcon name="IconLogo" class="logo" :size="60" color="var(--primary-c)" />
 
-          <p class="logo-letter">F</p>
+            <p class="logo-letter">F</p>
 
-          <BaseIcon v-if="userModeStore.isExpertMode" class="user-mode-icon" name="IconStar" size="25"
-            color="var(--gold-c)" />
-          <BaseIcon v-if="userModeStore.isAdminMode" class="user-mode-icon" name="IconCrown" size="25"
-            color="var(--gold-c)" />
+            <BaseIcon v-if="userModeStore.isExpertMode" class="user-mode-icon" name="IconStar" size="25"
+              color="var(--gold-c)" />
+            <BaseIcon v-if="userModeStore.isAdminMode" class="user-mode-icon" name="IconCrown" size="25"
+              color="var(--gold-c)" />
+          </div>
+          <h2><span class="highlight-e">{{ $t('home.appNameHighlight') }}</span>{{ $t('home.appNameBasic') }}
+          </h2>
         </div>
-        <h2><span class="highlight-e">{{ $t('home.appNameHighlight') }}</span>{{ $t('home.appNameBasic') }}
-        </h2>
-      </div>
-      <h1 class="title">
-        {{ $t('home.title') }}
-      </h1>
-      <p class="text">
-        <b>{{ $t('home.appName') }}</b> {{ $t('home.text') }}
-      </p>
-      <p class="text" style="margin-bottom: 30px;">
-        {{ $t('home.text2') }}
-      </p>
+        <h1 class="title">
+          {{ $t('home.title') }}
+        </h1>
+        <p class="text">
+          <b>{{ $t('home.appName') }}</b> {{ $t('home.text') }}
+        </p>
+        <p class="text" style="margin-bottom: 30px;">
+          {{ $t('home.text2') }}
+        </p>
 
-      <div class="feature" v-for="feature in features" :key="feature.name">
-        <p class="feature-title">{{ feature.name }}</p>
-        <p class="feature-description">{{ feature.description }}</p>
-      </div>
+        <div class="feature" v-for="feature in features" :key="feature.name">
+          <p class="feature-title">{{ feature.name }}</p>
+          <p class="feature-description">{{ feature.description }}</p>
+        </div>
 
-      <DefaultButton @click="selectFile" :text="$t('dragAndDropArea.button.text')"
-        :style="{ 'user-select': 'none', 'padding-top': '30px' }" />
-    </div>
-    <div class="right-side">
-      <DragAndDropArea v-if="!editorStore.randomEvents.christmasTree" isHomePage />
-      <ChristmasTree v-else />
+        <DefaultButton @click="selectFile" :text="$t('dragAndDropArea.button.text')"
+          :style="{ 'user-select': 'none', 'padding-top': '30px' }" />
+      </div>
+      <div class="right-side">
+        <DragAndDropArea v-if="!editorStore.randomEvents.christmasTree" isHomePage />
+        <ChristmasTree v-else />
+      </div>
     </div>
 
+    <div class="key-features section">
+      <h2 class="section-title">{{ $t('home.keyFeatures.title') }}</h2>
+
+      <div class="cards">
+        <div class="card">
+          <BaseIcon name="IconKeyFeaturePrivacy" size="170" color="var(--primary-c)" />
+
+          <h3>{{ $t('home.keyFeatures.privacy.title') }}</h3>
+          <p>
+            {{ $t('home.keyFeatures.privacy.description') }}
+          </p>
+        </div>
+
+        <div class="card">
+          <BaseIcon name="IconKeyFeaturePdf" size="170" color="var(--primary-c)" />
+
+          <h3>{{ $t('home.keyFeatures.pdf.title') }}</h3>
+          <p>
+            {{ $t('home.keyFeatures.pdf.description') }}
+          </p>
+        </div>
+
+        <div class="card">
+          <BaseIcon name="IconKeyFeatureTools" size="170" color="var(--primary-c)" />
+
+          <h3>{{ $t('home.keyFeatures.tools.title') }}</h3>
+          <p>
+            {{ $t('home.keyFeatures.tools.description') }}
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <div class="most-used-tools section">
+      <h2 class="section-title">{{ t('home.mostUsedTools.title') }}</h2>
+
+      <!-- TOOL 1 - CROP -->
+      <div class="tool-content">
+        <div class="tool-video">
+          <div class="video-wrapper">
+            <video autoplay muted loop playsinline>
+              <source :src="crop" type="video/mp4" />
+            </video>
+          </div>
+        </div>
+
+        <div class="tool-info">
+          <div class="tool-header">
+            <BaseIcon name="IconCropTool" size="36" color="var(--primary-c)" />
+            <h2>{{ t('home.mostUsedTools.crop.title') }}</h2>
+          </div>
+
+          <p class="tool-description">
+            {{ t('home.mostUsedTools.crop.description') }}
+          </p>
+
+          <div class="tool-points">
+            <div class="point" v-for="(point, i) in tm('home.mostUsedTools.crop.points', {}, { returnObjects: true })"
+              :key="i">
+              <BaseIcon name="IconCheck" size="18" color="var(--text-c)" />
+              <div>
+                <b>{{ point.title }}</b>
+                <p>{{ point.text }}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- TOOL 2 - BLUR -->
+      <div class="tool-content reverse">
+        <div class="tool-video">
+          <div class="video-wrapper">
+            <video autoplay muted loop playsinline>
+              <source :src="blurArea" type="video/mp4" />
+            </video>
+          </div>
+        </div>
+
+        <div class="tool-info">
+          <div class="tool-header">
+            <BaseIcon name="IconBlurTool" size="36" color="var(--primary-c)" />
+            <h2>{{ t('home.mostUsedTools.blur.title') }}</h2>
+          </div>
+
+          <p class="tool-description">
+            {{ t('home.mostUsedTools.blur.description') }}
+          </p>
+
+          <div class="tool-points">
+            <div class="point" v-for="(point, i) in tm('home.mostUsedTools.blur.points', {}, { returnObjects: true })"
+              :key="i">
+              <BaseIcon name="IconCheck" size="18" color="var(--text-c)" />
+              <div>
+                <b>{{ point.title }}</b>
+                <p>{{ point.text }}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- TOOL 3 - FRAME -->
+      <div class="tool-content">
+        <div class="tool-video">
+          <div class="video-wrapper">
+            <video autoplay muted loop playsinline>
+              <source :src="frame" type="video/mp4" />
+            </video>
+          </div>
+        </div>
+
+        <div class="tool-info">
+          <div class="tool-header">
+            <BaseIcon name="IconFrameTool" size="36" color="var(--primary-c)" />
+            <h2>{{ t('home.mostUsedTools.frame.title') }}</h2>
+          </div>
+
+          <p class="tool-description">
+            {{ t('home.mostUsedTools.frame.description') }}
+          </p>
+
+          <div class="tool-points">
+            <div class="point" v-for="(point, i) in tm('home.mostUsedTools.frame.points', {}, { returnObjects: true })"
+              :key="i">
+              <BaseIcon name="IconCheck" size="18" color="var(--text-c)" />
+              <div>
+                <b>{{ point.title }}</b>
+                <p>{{ point.text }}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="all-tools section">
+    </div>
+  </div>
+
+  <div class="footer">
   </div>
 </template>
 
 <style scoped>
 .home-view {
   display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  min-width: var(--min-window-width);
+  height: 100%;
+  background: var(--background-c);
+  user-select: text;
+  padding: 0 14vw;
+}
+
+@media (max-width: 1224px) {
+  .home-view {
+    padding: 0 calc(var(--min-window-width) / 10);
+  }
+}
+
+.hero-section {
+  display: flex;
   flex-direction: row;
   align-items: center;
   justify-content: center;
   gap: 5%;
-  width: 100%;
-  height: 100%;
-  background: var(--background-c);
-  padding: 0 10%;
-  user-select: text;
+  height: calc(100vh - 70px);
+  min-height: var(--min-window-height);
 }
 
 .left-side {
@@ -237,20 +400,181 @@ onMounted(() => {
   z-index: var(--z-index-home-page-content);
 }
 
-.background {
-  position: fixed;
-  min-width: var(--min-window-width);
+.section {
   width: 100%;
-  min-height: var(--min-window-height);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 80px 0;
+}
+
+.section-title {
+  font-size: var(--landing-page-section-title-font-size);
+  font-weight: var(--landing-page-section-title-font-weight);
+  color: var(--text-c);
+  margin-bottom: 70px;
+}
+
+.cards {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  justify-content: space-between;
+}
+
+@media (max-width: 1224px) {
+  .cards {
+    gap: 45px;
+  }
+}
+
+.card {
+  max-width: 350px;
+  flex: 1;
+  background: var(--secondary-c);
+  border-radius: 20px;
+  padding: 35px 30px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+  transition: 0.2s ease;
+}
+
+.card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.08);
+}
+
+.card h3 {
+  margin-top: 20px;
+  margin-bottom: 10px;
+  font-size: var(--landing-page-section-subtitle-font-size);
+  font-weight: var(--landing-page-section-subtitle-font-weight);
+  color: var(--text-c);
+}
+
+.card p {
+  font-size: var(--landing-page-section-text-font-size);
+  font-weight: var(--landing-page-section-text-font-weight);
+  color: var(--text-secondary-c);
+  line-height: 1.6;
+}
+
+/* TOOL BLOCK */
+.tool-content {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 100px;
+  gap: 60px;
+}
+
+.tool-content.reverse {
+  flex-direction: row-reverse;
+}
+
+/* VIDEO */
+.tool-video {
+  flex: 3;
+}
+
+.video-wrapper {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  border-radius: 16px;
+  overflow: hidden;
+  background: #000;
+  box-shadow: 0 2px 2px rgba(0, 0, 0, 0.05);
+  transition: 0.2s ease;
+  border: solid 3px var(--secondary-c);
+}
+
+.video-wrapper:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+}
+
+.video-wrapper video {
+  width: 100%;
   height: 100%;
-  top: 0;
-  left: 50%;
-  background: var(--primary-c);
-  z-index: var(--z-index-home-page-background);
-  clip-path: polygon(clamp(250px, 35%, 600px) 0,
-      100% 0,
-      100% 100%,
-      clamp(150px, 15%, 400px) 100%);
+  object-fit: cover;
+}
+
+/* INFO */
+.tool-info {
+  flex: 2;
+}
+
+.tool-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 10px;
+  color: var(--primary-c);
+}
+
+.tool-header h2 {
+  font-size: var(--landing-page-section-subtitle2-font-size);
+  font-weight: var(--landing-page-section-subtitle2-font-weight);
+}
+
+.tool-description {
+  color: var(--text-c);
+  margin-bottom: 25px;
+  font-size: var(--landing-page-section-text-font-size);
+  font-weight: var(--landing-page-section-text-font-weight);
+}
+
+/* POINTS */
+.tool-points {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.point {
+  display: flex;
+  gap: 10px;
+  padding: 10px;
+  border-radius: 10px;
+  background: var(--secondary-c);
+  box-shadow: 0 2px 2px rgba(0, 0, 0, 0.05);
+  transition: 0.2s ease;
+}
+
+.point:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+}
+
+.point p {
+  font-size: calc(var(--landing-page-section-text-font-size) * 0.95);
+  font-weight: var(--landing-page-section-text-font-weight);
+  color: var(--text-secondary-c);
+  margin: 2px 0 0;
+}
+
+.point b {
+  font-size: var(--landing-page-section-text-font-size);
+  font-weight: calc(var(--landing-page-section-text-font-weight) + 200);
+  color: var(--text-secondary-c);
+  margin: 2px 0 0;
+}
+
+.all-tools {
+  height: 300px;
+}
+
+.footer {
+  height: 100px;
+  width: 100%;
+  border: solid 1px orange;
+  background: var(--background-c);
 }
 
 .feature {

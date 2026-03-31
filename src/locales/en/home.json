@@ -5,6 +5,92 @@
   "title": "Boost your projects with figures",
   "text":"is an online editor designed specifically for images used in academic texts, and documents. It provides custom-tailored tools for visual editing in a clean and organized environment.",
   "text2": "Your images are not uploaded anywhere, they stay in your browser.",
+  "keyFeatures": {
+    "title": "Key Features",
+    "privacy": {
+      "title": "Privacy",
+      "description": "All mage processing runs locally in browser, ensuring your data never leaves your device. This approach provides maximum privacy and security."
+    },
+    "pdf":{
+      "title": "PDF vector processing",
+      "description": "PDF files are processed as vector graphics, preserving their structure and quality. This allows precise edits and annotations without rasterization."
+    },
+    "tools":{
+      "title": "Specialized Tools",
+      "description": "Designed specifically for technical and academic documents. Focus on clarity, precision, and efficient workflows tailored to your needs."
+    }
+  },
+  "mostUsedTools": {
+    "title": "Most Used Tools",
+    "crop": {
+      "title": "Crop",
+      "description": "Crop the image manually or use Fit Crop to automatically remove unnecessary background and focus on the important content.",
+      "points": [
+        {
+          "title": "Manual crop",
+          "text": "Select and adjust a rectangular area using the mouse or exact position and size values."
+        },
+        {
+          "title": "Aspect ratio lock",
+          "text": "Keep consistent proportions while resizing the crop area."
+        },
+        {
+          "title": "Fit Crop",
+          "text": "Automatically detect and remove background-like edges from the image."
+        },
+        {
+          "title": "Sensitivity control",
+          "text": "Adjust how aggressively the background is detected during automatic cropping."
+        }
+      ]
+    },
+
+    "frame": {
+      "title": "Frame",
+      "description": "Add visual frames around your image, including device and window styles, to create polished and presentation-ready outputs.",
+      "points": [
+        {
+          "title": "Frame types",
+          "text": "Choose from solid, browser window, or phone frame styles."
+        },
+        {
+          "title": "Custom dimensions",
+          "text": "Adjust frame width and layout using precise units, including millimeters."
+        },
+        {
+          "title": "Visual customization",
+          "text": "Modify colors, outlines, headers, and additional frame elements."
+        },
+        {
+          "title": "Device simulation",
+          "text": "Wrap screenshots in realistic phone or desktop environments."
+        }
+      ]
+    },
+
+    "blur": {
+      "title": "Blur area",
+      "description": "Blur selected parts of the image to hide details or guide attention to important areas.",
+      "points": [
+        {
+          "title": "Precise positioning",
+          "text": "Define the exact position and size of the blur area."
+        },
+        {
+          "title": "Blur strength",
+          "text": "Control how strong the blur effect is applied."
+        },
+        {
+          "title": "Edge fade",
+          "text": "Smooth the edges of the blur for a more natural look."
+        },
+        {
+          "title": "Focus control",
+          "text": "Highlight important content by reducing visual noise around it."
+        }
+      ]
+    }
+  },
   "features": [
     { "name": "PDF", "description": "- vector file processing" },
     { "name": "Image Cropping", "description": "- manual and automatic (fit crop)" },

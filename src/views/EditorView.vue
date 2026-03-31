@@ -248,7 +248,7 @@ onBeforeMount(() => {
   flex-direction: row;
   justify-content: space-between;
   width: 100%;
-  height: 100%;
+  height: calc(100vh - 70px);
 }
 
 .editor-content {

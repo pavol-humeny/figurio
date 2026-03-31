@@ -193,6 +193,14 @@ body {
   --landing-page-text-font-size: 18px;
   --landing-page-text-font-weight: 300;
   --landing-page-logo-size: 60px;
+  --landing-page-section-title-font-size: 42px;
+  --landing-page-section-title-font-weight: 800;
+  --landing-page-section-subtitle-font-size: 20px;
+  --landing-page-section-subtitle-font-weight: 700;
+  --landing-page-section-subtitle2-font-size: 28px;
+  --landing-page-section-subtitle2-font-weight: 700;
+  --landing-page-section-text-font-size: 17px;
+  --landing-page-section-text-font-weight: 300;
 
   --title-font-size: 23px;
   --title-font-weight: 700;

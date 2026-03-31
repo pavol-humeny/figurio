@@ -171,3 +171,32 @@ Text v schéme
 - [ ] Na plagáte je odkaz na GitHub repozitár
 - [ ] Projekt je možné vysvetliť približne za 60–90 sekúnd
 - [ ] Z plagátu je jasné, aký je hlavný prínos aplikácie
+
+
+# Video
+
+## Úvod 
+Potreboval si niekedy upraviť obrázok do bakalárky?  
+Potreboval si upraviť obrázok do bakalárky?
+A skončil si v zložitom grafickom editore?
+
+Riešením je aplikácia Figurio.
+
+
+
+Upravuješ obrázky do bakalárky?  
+Potrebuješ orezať screenshot, zvýrazniť detail alebo pridať rámik?  
+A nechceš používať zložité nástroje?
+
+
+Orezať, zvýrazniť, pridať rámik.  
+Zbytočne zložité nástroje?
+
+Riešením je aplikácia Figurio.
+
+
+
+Webová aplikácia pre rýchlu a jednoduchú úpravu obrázkov.
+Optimalizované pre akademické a technické texty.
+Efektívna príprava vizuálneho obsahu.
+Jednoduché a prehľadné používateľské rozhranie.

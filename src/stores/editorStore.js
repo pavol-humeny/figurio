@@ -289,8 +289,9 @@ export const useEditorStore = defineStore('editorStore', {
      */
     retrieveUserSettingsFromLocalStorage() {
       // Retrieve random events settings from localStorage
+      const userModeStore = useUserModeStore()
+
       for (const eventKey in this.randomEvents) {
-        const userModeStore = useUserModeStore()
         if (userModeStore.userMode === 'basic') {
           continue
         }
@@ -302,12 +303,14 @@ export const useEditorStore = defineStore('editorStore', {
         this.randomEvents[eventKey] = storedValue
       }
 
-      // Retrieve primary color from localStorage
-      const storedPrimaryColor = localStorage.getItem(
-        `${globalConfig.LOCAL_STORAGE_PREFIX}primaryColor`,
-      )
-      if (storedPrimaryColor) {
-        document.documentElement.style.setProperty('--primary-c', storedPrimaryColor)
+      if (userModeStore.hasUserAccessToFeature('customPrimaryColor')) {
+        // Retrieve primary color from localStorage
+        const storedPrimaryColor = localStorage.getItem(
+          `${globalConfig.LOCAL_STORAGE_PREFIX}primaryColor`,
+        )
+        if (storedPrimaryColor) {
+          document.documentElement.style.setProperty('--primary-c', storedPrimaryColor)
+        }
       }
     },
 

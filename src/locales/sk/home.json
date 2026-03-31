@@ -5,6 +5,92 @@
   "title": "Vylepšite svoje projekty pomocou kvalitných obrázkov",
   "text": "je online editor určený na úpravu obrázkov používaných v akademických textoch a dokumentoch. Ponúka špecializované nástroje pre vizuálne úpravy v prehľadnom a organizovanom prostredí.",
   "text2": "Vaše obrázky sa nikam neodosielajú – zostávajú uložené vo vašom prehliadači.",
+  "keyFeatures": {
+    "title": "Kľúčové vlastnosti",
+    "privacy": {
+      "title": "Súkromie",
+      "description": "Všetky úpravy obrázkov prebiehajú lokálne v prehliadači, takže tvoje dáta nikdy neopustia zariadenie. Tento prístup zaručuje maximálne súkromie a bezpečnosť."
+    },
+    "pdf": {
+      "title": "Vektorové spracovanie PDF",
+      "description": "PDF súbory sú spracované ako vektorová grafika, čím sa zachováva ich štruktúra aj kvalita. Umožňuje to presné úpravy a anotácie bez rasterizácie."
+    },
+    "tools": {
+      "title": "Špecializované nástroje",
+      "description": "Navrhnuté špeciálne pre technické a akademické dokumenty. Dôraz na prehľadnosť, presnosť a efektívny workflow."
+    }
+  },
+  "mostUsedTools": {
+    "title": "Najpoužívanejšie nástroje",
+    "crop": {
+      "title": "Orezanie",
+      "description": "Orežte obrázok manuálne alebo použite Fit Crop na automatické odstránenie nepotrebného pozadia a zvýraznenie dôležitého obsahu.",
+      "points": [
+        {
+          "title": "Manuálne orezanie",
+          "text": "Vyberte a upravte oblasť pomocou myši alebo presných hodnôt pozície a veľkosti."
+        },
+        {
+          "title": "Zamknutie pomeru strán",
+          "text": "Zachovajte proporcie pri zmene veľkosti orezovej oblasti."
+        },
+        {
+          "title": "Fit Crop",
+          "text": "Automaticky deteguje a odstráni okraje podobné pozadiu."
+        },
+        {
+          "title": "Citlivosť",
+          "text": "Nastavte, ako agresívne sa má pozadie detegovať pri automatickom orezaní."
+        }
+      ]
+    },
+
+    "frame": {
+      "title": "Rámiky",
+      "description": "Pridajte vizuálny rámik okolo obrázka, vrátane zariadení alebo okien aplikácií, pre profesionálny a reprezentatívny vzhľad.",
+      "points": [
+        {
+          "title": "Typy rámikov",
+          "text": "Vyberte si medzi plným rámikom, oknom prehliadača alebo rámikom zariadenia."
+        },
+        {
+          "title": "Vlastné rozmery",
+          "text": "Nastavte šírku a rozloženie rámiku pomocou presných jednotiek vrátane milimetrov."
+        },
+        {
+          "title": "Vizuálne prispôsobenie",
+          "text": "Upravte farby, obrysy, hlavičky a ďalšie prvky rámiku."
+        },
+        {
+          "title": "Simulácia zariadenia",
+          "text": "Zobrazte screenshoty v realistickom prostredí telefónu alebo desktopu."
+        }
+      ]
+    },
+
+    "blur": {
+      "title": "Rozmazanie oblasti",
+      "description": "Rozmažte vybrané časti obrázka na skrytie detailov alebo zvýraznenie dôležitého obsahu.",
+      "points": [
+        {
+          "title": "Presná pozícia",
+          "text": "Definujte presnú pozíciu a veľkosť rozmazanej oblasti."
+        },
+        {
+          "title": "Intenzita rozmazania",
+          "text": "Nastavte silu aplikovaného rozmazania."
+        },
+        {
+          "title": "Zjemnenie okrajov",
+          "text": "Zjemnite okraje pre prirodzenejší vzhľad efektu."
+        },
+        {
+          "title": "Zvýraznenie obsahu",
+          "text": "Pomocou rozmazania potlačte rušivé prvky a zvýraznite dôležité časti."
+        }
+      ]
+    }
+  },
   "features": [
     { "name": "PDF", "description": "- spracovanie vektorových súborov" },
     { "name": "Orezanie obrázka", "description": "- manuálne aj automatické (fit crop)" },

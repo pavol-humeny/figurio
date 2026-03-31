@@ -154,6 +154,7 @@ export const userModeConfig = {
     'maxNumberOfOpenFiles',
     'doNotShowInitialWarnings',
     'releaseNotes',
+    'customPrimaryColor',
   ],
 
   /** List of features accessible to basic users */

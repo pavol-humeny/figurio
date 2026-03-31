@@ -387,10 +387,12 @@ onMounted(async () => {
     router.replace({ name: 'home' })
   }
 
-  // Set primary color CSS variable if in localStorage
-  const primaryColor = localStorage.getItem(`${globalConfig.LOCAL_STORAGE_PREFIX}primaryColor`)
-  if (primaryColor) {
-    document.documentElement.style.setProperty('--primary-c', primaryColor)
+  if (userModeStore.hasUserAccessToFeature('customPrimaryColor')) {
+    // Set primary color CSS variable if in localStorage
+    const primaryColor = localStorage.getItem(`${globalConfig.LOCAL_STORAGE_PREFIX}primaryColor`)
+    if (primaryColor) {
+      document.documentElement.style.setProperty('--primary-c', primaryColor)
+    }
   }
 
   // Send visit during maintenance email if app is not running
@@ -469,7 +471,7 @@ onBeforeUnmount(() => {
 }
 
 .content {
-  height: 100%;
-  overflow: hidden;
+  /* height: calc(100vh - 70px); */
+  /* overflow: hidden; */
 }
 </style>
