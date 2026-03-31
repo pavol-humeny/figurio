@@ -2,6 +2,8 @@
 - MTIa
 - kniha 
 - v
+    - uvodna obrazovka
+    - premiera videa
     - potrebujem zmenit konštantu v rámikoch - mobilné zaoblenie
     - historická verzia Figurio 
     - overleaf má históriu 
@@ -23,13 +25,12 @@ plagát link na github pages
 ## TODO - text 
 - prehlásenie AI
 - excel text
+- prerobit obrazky na uvodnej obrazovky
 
 # TODO
 - P - zaistit aby pri resize objektov bolo snapovanie plynule tak ako pri drag
 - touch event pre select, shape, text, magnify, blur 
-- mac pri nainštalovanej aplikácii sa s tým dá šklbať 
 - export, help... okná na tablete 
-- README pre backend
 
 ## Insane ideas
 - eye dropper na safari
