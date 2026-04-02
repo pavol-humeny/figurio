@@ -5,7 +5,7 @@
  * @date: 15.5.2026
  * @description: Home page of the application. This component serves as the landing page for users when they open the application. It provides an introduction to the app, highlights key features, and includes a drag-and-drop area for users to start working with their images immediately. The component also integrates various modals and panels, such as the help modal, settings panel, and feature tour modal.
  */
-import { onMounted } from 'vue';
+import { onMounted, onUnmounted, ref } from 'vue';
 import { globalConfig } from '@/config/globalConfig.js';
 import DragAndDropArea from '@/components/editor/DragAndDropArea.vue';
 import { useKeyboardShortcuts } from '@/composables/editor/useKeyboardShortcuts';
@@ -116,6 +116,28 @@ onMounted(() => {
       observer.observe(el)
     }
   })
+
+  updateSize()
+  window.addEventListener('resize', updateSize)
+})
+
+/**
+ * Logo size based on width
+ */
+const logoSize = ref(60)
+
+/**
+ * Get logo size for current window width, ensuring it stays within a reasonable range
+ */
+const updateSize = () => {
+  const vw = window.innerWidth
+  logoSize.value = Math.min(Math.max(40, vw * 0.05), 90)
+}
+/**
+ * Cleanup event listener on unmount
+ */
+onUnmounted(() => {
+  window.removeEventListener('resize', updateSize)
 })
 </script>
 
@@ -126,7 +148,7 @@ onMounted(() => {
       <div class="left-side">
         <div class="app-name">
           <div class="logo-wrapper">
-            <BaseIcon name="IconLogo" class="logo" :size="60" color="var(--primary-c)" />
+            <BaseIcon name="IconLogo" class="logo" :size="logoSize" color="var(--primary-c)" />
 
             <p class="logo-letter">F</p>
 
@@ -385,7 +407,7 @@ onMounted(() => {
   left: 45%;
   transform: translate(-50%, -50%);
   font-family: var(--font-family-rc);
-  font-size: 48px;
+  font-size: var(--landing-page-logo-letter-size);
   opacity: 0.8;
 }
 
@@ -459,12 +481,19 @@ onMounted(() => {
   width: 100%;
   justify-content: space-between;
   gap: 45px;
+  align-items: stretch;
 }
+
 
 @media (max-width: 1224px) {
   .cards {
     gap: 45px;
   }
+}
+
+.card-wrapper {
+  flex: 1;
+  display: flex;
 }
 
 .card {
@@ -481,6 +510,8 @@ onMounted(() => {
 
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
   transition: 0.2s ease;
+
+  flex: 1;
 }
 
 .card:hover {
