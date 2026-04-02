@@ -25,7 +25,24 @@ plagát link na github pages
 ## TODO - text 
 - prehlásenie AI
 - excel text
-- prerobit obrazky na uvodnej obrazovky
+- prerobit obrazky uvodnej obrazovky
+- pridať link na video 
+- pridať otázku do dokumentu ohľadom toho či tam dávať obsah média 
+- nájsť príklady ako vyzerá sekcia obsah priloženého média 
+- zmeniť QR kod na plagate 
+- zmeniť plagat v bp a README
+- zmeniť link na plagáte
+
+## Požiadavky na diplomku 
+- webová aplikácia 
+- frontend + backend + databáza + REST api 
+- Vue.js/react/django 
+- spracovanie dát/aplikácia
+- určené širšej skupine používateľov 
+- "hravá" funkčnosť - prídem a môžem si s tým len klikať 
+- dôležitosť zamerania na UI
+- čo najviac sa vyhnúť práce s pdf
+
 
 # TODO
 - P - zaistit aby pri resize objektov bolo snapovanie plynule tak ako pri drag

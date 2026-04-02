@@ -99,6 +99,23 @@ onMounted(() => {
 
     openFeatureTourModal(true, seen)
   }
+
+  // SCROLL REVEAL
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible')
+        observer.unobserve(entry.target)
+      }
+    })
+  }, { threshold: 0.15 })
+
+  document.querySelectorAll('.reveal').forEach(el => {
+    // Skip hero section
+    if (!el.classList.contains('hero-section')) {
+      observer.observe(el)
+    }
+  })
 })
 </script>
 
@@ -149,31 +166,39 @@ onMounted(() => {
       <h2 class="section-title">{{ $t('home.keyFeatures.title') }}</h2>
 
       <div class="cards">
-        <div class="card reveal">
-          <BaseIcon name="IconKeyFeaturePrivacy" size="170" color="var(--primary-c)" />
+        <div class="card-wrapper reveal">
+          <div class="card">
+            <BaseIcon name="IconKeyFeaturePrivacy" size="170" color="var(--primary-c)" />
 
-          <h3>{{ $t('home.keyFeatures.privacy.title') }}</h3>
-          <p>
-            {{ $t('home.keyFeatures.privacy.description') }}
-          </p>
+            <h3>{{ $t('home.keyFeatures.privacy.title') }}</h3>
+            <p>
+              {{ $t('home.keyFeatures.privacy.description') }}
+            </p>
+          </div>
         </div>
 
-        <div class="card reveal">
-          <BaseIcon name="IconKeyFeaturePdf" size="170" color="var(--primary-c)" />
+        <div class="card-wrapper reveal">
 
-          <h3>{{ $t('home.keyFeatures.pdf.title') }}</h3>
-          <p>
-            {{ $t('home.keyFeatures.pdf.description') }}
-          </p>
+          <div class="card">
+            <BaseIcon name="IconKeyFeaturePdf" size="170" color="var(--primary-c)" />
+
+            <h3>{{ $t('home.keyFeatures.pdf.title') }}</h3>
+            <p>
+              {{ $t('home.keyFeatures.pdf.description') }}
+            </p>
+          </div>
         </div>
 
-        <div class="card reveal">
-          <BaseIcon name="IconKeyFeatureTools" size="170" color="var(--primary-c)" />
+        <div class="card-wrapper reveal">
 
-          <h3>{{ $t('home.keyFeatures.tools.title') }}</h3>
-          <p>
-            {{ $t('home.keyFeatures.tools.description') }}
-          </p>
+          <div class="card">
+            <BaseIcon name="IconKeyFeatureTools" size="170" color="var(--primary-c)" />
+
+            <h3>{{ $t('home.keyFeatures.tools.title') }}</h3>
+            <p>
+              {{ $t('home.keyFeatures.tools.description') }}
+            </p>
+          </div>
         </div>
       </div>
     </div>
@@ -202,12 +227,14 @@ onMounted(() => {
           </p>
 
           <div class="tool-points">
-            <div class="point reveal"
-              v-for="(point, i) in tm('home.mostUsedTools.crop.points', {}, { returnObjects: true })" :key="i">
-              <BaseIcon name="IconCheck" size="18" color="var(--text-c)" />
-              <div>
-                <b>{{ point.title }}</b>
-                <p>{{ point.text }}</p>
+            <div class="point" v-for="(point, i) in tm('home.mostUsedTools.crop.points', {}, { returnObjects: true })"
+              :key="i">
+              <div class="point-content reveal">
+                <BaseIcon name="IconCheck" size="18" color="var(--text-c)" />
+                <div>
+                  <b>{{ point.title }}</b>
+                  <p>{{ point.text }}</p>
+                </div>
               </div>
             </div>
           </div>
@@ -235,12 +262,14 @@ onMounted(() => {
           </p>
 
           <div class="tool-points">
-            <div class="point reveal"
-              v-for="(point, i) in tm('home.mostUsedTools.blur.points', {}, { returnObjects: true })" :key="i">
-              <BaseIcon name="IconCheck" size="18" color="var(--text-c)" />
-              <div>
-                <b>{{ point.title }}</b>
-                <p>{{ point.text }}</p>
+            <div class="point" v-for="(point, i) in tm('home.mostUsedTools.blur.points', {}, { returnObjects: true })"
+              :key="i">
+              <div class="point-content reveal">
+                <BaseIcon name="IconCheck" size="18" color="var(--text-c)" />
+                <div>
+                  <b>{{ point.title }}</b>
+                  <p>{{ point.text }}</p>
+                </div>
               </div>
             </div>
           </div>
@@ -268,12 +297,14 @@ onMounted(() => {
           </p>
 
           <div class="tool-points">
-            <div class="point reveal"
-              v-for="(point, i) in tm('home.mostUsedTools.frame.points', {}, { returnObjects: true })" :key="i">
-              <BaseIcon name="IconCheck" size="18" color="var(--text-c)" />
-              <div>
-                <b>{{ point.title }}</b>
-                <p>{{ point.text }}</p>
+            <div class="point" v-for="(point, i) in tm('home.mostUsedTools.frame.points', {}, { returnObjects: true })"
+              :key="i">
+              <div class="point-content reveal">
+                <BaseIcon name="IconCheck" size="18" color="var(--text-c)" />
+                <div>
+                  <b>{{ point.title }}</b>
+                  <p>{{ point.text }}</p>
+                </div>
               </div>
             </div>
           </div>
@@ -503,7 +534,6 @@ onMounted(() => {
 }
 
 .video-wrapper:hover {
-  transform: translateY(-4px);
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
 }
 
@@ -546,13 +576,17 @@ onMounted(() => {
 }
 
 .point {
+  transition: 0.2s ease;
+}
+
+.point-content {
+  border-radius: 10px;
+  box-shadow: 0 2px 2px rgba(0, 0, 0, 0.05);
+  background: var(--secondary-c);
   display: flex;
   gap: 10px;
   padding: 10px;
   border-radius: 10px;
-  background: var(--secondary-c);
-  box-shadow: 0 2px 2px rgba(0, 0, 0, 0.05);
-  transition: 0.2s ease;
 }
 
 .point:hover {
@@ -623,5 +657,28 @@ onMounted(() => {
 
 .footer-link:hover {
   text-decoration: underline;
+}
+
+/* REVEAL */
+.reveal {
+  opacity: 0;
+  transform: translateY(20px);
+  filter: blur(6px);
+  transition:
+    opacity 0.6s ease,
+    transform 0.6s ease,
+    filter 0.6s ease;
+}
+
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+  filter: blur(0);
+}
+
+.hero-section {
+  opacity: 1 !important;
+  transform: none !important;
+  filter: none !important;
 }
 </style>

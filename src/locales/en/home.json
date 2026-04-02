@@ -9,7 +9,7 @@
     "title": "Key Features",
     "privacy": {
       "title": "Privacy",
-      "description": "All mage processing runs locally in browser, ensuring your data never leaves your device. This approach provides maximum privacy and security."
+      "description": "All image processing runs locally in browser, ensuring your data never leaves your device. This approach provides maximum privacy and security."
     },
     "pdf":{
       "title": "PDF vector processing",
