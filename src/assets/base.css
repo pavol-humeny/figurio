@@ -186,21 +186,21 @@ body {
   --box-shadow-ui: 1px 3px 6px rgba(0, 0, 0, 0.4);
   --box-shadow-hover: 2px 2px 6px rgba(0, 0, 0, 0.2);
 
-  --landing-page-logo-size: clamp(40px, 5vw, 90px);
+  --landing-page-logo-size: clamp(40px, 4.5vw, 90px);
   --landing-page-logo-letter-size: calc(var(--landing-page-logo-size) * 0.8);
-  --landing-page-app-name-font-size: clamp(26px, 3vw, 58px);
+  --landing-page-app-name-font-size: clamp(26px, 2.8vw, 58px);
   --landing-page-app-name-font-weight: 600;
-  --landing-page-title-font-size: clamp(28px, 3.2vw, 48px);
+  --landing-page-title-font-size: clamp(28px, 2.1vw, 48px);
   --landing-page-title-font-weight: 700;
-  --landing-page-text-font-size: clamp(15px, 1.2vw, 20px);
+  --landing-page-text-font-size: clamp(15px, 0.9vw, 20px);
   --landing-page-text-font-weight: 300;
-  --landing-page-section-title-font-size: clamp(30px, 3.5vw, 56px);
+  --landing-page-section-title-font-size: clamp(30px, 2.2vw, 56px);
   --landing-page-section-title-font-weight: 800;
-  --landing-page-section-subtitle-font-size: clamp(16px, 1.5vw, 24px);
+  --landing-page-section-subtitle-font-size: clamp(16px, 1.2vw, 24px);
   --landing-page-section-subtitle-font-weight: 700;
-  --landing-page-section-subtitle2-font-size: clamp(20px, 2vw, 36px);
+  --landing-page-section-subtitle2-font-size: clamp(20px, 1.7vw, 36px);
   --landing-page-section-subtitle2-font-weight: 700;
-  --landing-page-section-text-font-size: clamp(14px, 1.1vw, 19px);
+  --landing-page-section-text-font-size: clamp(14px, 0.9vw, 19px);
   --landing-page-section-text-font-weight: 300;
 
   --title-font-size: 23px;

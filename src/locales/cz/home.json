@@ -24,11 +24,11 @@
     "title": "Nejpoužívanější nástroje",
 
     "crop": {
-      "title": "Ořez",
+      "title": "Ořezaní",
       "description": "Ořízněte obrázek ručně nebo použijte Fit Crop pro automatické odstranění nepotřebného pozadí a zvýraznění důležitého obsahu.",
       "points": [
         {
-          "title": "Ruční ořez",
+          "title": "Ruční ořezání",
           "text": "Vyberte a upravte oblast pomocí myši nebo přesných hodnot pozice a velikosti."
         },
         {
@@ -47,8 +47,8 @@
     },
 
     "frame": {
-      "title": "Rám",
-      "description": "Přidejte vizuální rám kolem obrázku, včetně zařízení nebo oken aplikací, pro profesionální a reprezentativní vzhled.",
+      "title": "Rámeček",
+      "description": "Přidejte vizuální rámeček kolem obrázku, včetně zařízení nebo oken aplikací, pro profesionální a reprezentativní vzhled.",
       "points": [
         {
           "title": "Typy rámečků",

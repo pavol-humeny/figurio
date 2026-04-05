@@ -508,7 +508,7 @@ onUnmounted(() => {
   align-items: center;
   text-align: center;
 
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.045);
   transition: 0.2s ease;
 
   flex: 1;

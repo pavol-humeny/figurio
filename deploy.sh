@@ -3,10 +3,10 @@
 # Stop on errors
 set -e
 
-# === CONFIGURATION ===
+# CONFIGURATION
 CUSTOM_MESSAGE=""           # Custom commit message (optional)
 
-# === BUILD ===
+# BUILD
 npm run build
 
 # Move to the build output directory
