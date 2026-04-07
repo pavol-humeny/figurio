@@ -3,35 +3,22 @@
 - kniha 
 - v
     - uvodna obrazovka
-    - premiera videa
-    - potrebujem zmenit konštantu v rámikoch - mobilné zaoblenie
+    - predpremiera
     - historická verzia Figurio 
-    - overleaf má históriu 
     - chatgpt predplatné
     - otestovať či v pdf sú includnuté fonty
 
-
-prerobit graf v časti testovanie, kde sú zobrazené použitia nástrojov
-nainstalovat na microsoft store - zistiť či by niečo také išlo 
-
 video
-- free hudba do videa 
-- prvá fáza je moc pomalá 
-- dať tam nejako tú technickú časť 
-
-vo videu dať link na github pages 
-plagát link na github pages
+- hudba do videa - copyright
 
 ## TODO - text 
 - prehlásenie AI
-- excel text
-- prerobit obrazky uvodnej obrazovky
-- pridať link na video 
-- pridať otázku do dokumentu ohľadom toho či tam dávať obsah média 
-- nájsť príklady ako vyzerá sekcia obsah priloženého média 
-- zmeniť QR kod na plagate 
 - zmeniť plagat v bp a README
-- zmeniť link na plagáte
+
+# TODO
+- P - zaistit aby pri resize objektov bolo snapovanie plynule tak ako pri drag
+- touch event pre select, shape, text, magnify, blur 
+- export, help... okná na tablete 
 
 ## Požiadavky na diplomku 
 - webová aplikácia 
@@ -39,15 +26,9 @@ plagát link na github pages
 - Vue.js/react/django 
 - spracovanie dát/aplikácia
 - určené širšej skupine používateľov 
-- "hravá" funkčnosť - prídem a môžem si s tým len klikať 
+- "hravá" funkcionalita - prídem a môžem si s tým len klikať 
 - dôležitosť zamerania na UI
 - čo najviac sa vyhnúť práce s pdf
-
-
-# TODO
-- P - zaistit aby pri resize objektov bolo snapovanie plynule tak ako pri drag
-- touch event pre select, shape, text, magnify, blur 
-- export, help... okná na tablete 
 
 ## Insane ideas
 - eye dropper na safari
