@@ -155,7 +155,7 @@ const drawPencilDot = (pos, tool) => {
   if (!ctx) return
 
   const size = Math.max(1, Math.round(editorStore.toolsConfig.brush.brushSize))
-  const radius = size / 2
+  const radius = (size - 1) / 2
 
   const cx = Math.floor(pos.x)
   const cy = Math.floor(pos.y)
@@ -174,15 +174,14 @@ const drawPencilDot = (pos, tool) => {
     return
   }
 
-  const r2 = (radius - 0.5) * (radius - 0.5)
-  const limit = Math.floor(radius)
+  const r2 = radius * radius
 
-  for (let y = -limit; y <= limit; y++) {
-    for (let x = -limit; x <= limit; x++) {
+  for (let y = -radius; y <= radius; y++) {
+    for (let x = -radius; x <= radius; x++) {
 
       // Use center of pixel for more accurate circle
-      const dx = x + 0.5
-      const dy = y + 0.5
+      const dx = x
+      const dy = y
 
       if (dx * dx + dy * dy <= r2) {
         ctx.fillRect(cx + x, cy + y, 1, 1)
@@ -201,7 +200,7 @@ const drawPencilDot = (pos, tool) => {
  * @param {number} size - Size of the stamp
  */
 const drawPencilStamp = (x, y, size) => {
-  const radius = size / 2
+  const radius = (size - 1) / 2
   const cx = Math.floor(x)
   const cy = Math.floor(y)
 
@@ -211,17 +210,17 @@ const drawPencilStamp = (x, y, size) => {
     return
   }
 
-  const r2 = (radius - 0.5) * (radius - 0.5)
+  const r2 = radius * radius
 
-  for (let py = -Math.floor(radius); py <= Math.floor(radius); py++) {
-    for (let px = -Math.floor(radius); px <= Math.floor(radius); px++) {
+  for (let y = -radius; y <= radius; y++) {
+    for (let x = -radius; x <= radius; x++) {
 
       // Use center of pixel for more accurate circle
-      const dx = px + 0.5
-      const dy = py + 0.5
+      const dx = x
+      const dy = y
 
       if (dx * dx + dy * dy <= r2) {
-        ctx.fillRect(cx + px, cy + py, 1, 1)
+        ctx.fillRect(cx + x, cy + y, 1, 1)
       }
     }
   }

@@ -4,6 +4,20 @@
     "items": []
   },
   "versions": {
+    "5.18.3":{
+      "label": "5.18.3",
+      "date":"8.4. 2026",
+      "improvements": {
+        "items": [
+          "Pridanie vodorovného posúvania pre karty súborov"
+        ]
+      },
+      "newFeatures": {
+        "items": [
+          "Oprava veľkosti kurzoru ceruzky a kreslenie"
+        ]
+      }
+    },
     "5.18.0":{
       "label": "5.18.0",
       "date":"31.3. 2026",

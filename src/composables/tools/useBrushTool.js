@@ -89,10 +89,26 @@ export function useBrushTool(imageStore, historyStore, editorStore, uiStore, t) 
     () => editorStore.selectedTabPerTool['brush'],
     (newTab) => {
       if (newTab === 'pencil') {
-        // If switched to pencil, set brush size to max pencil size if it exceeds it
-        if (brushSize.value > editorConfig.maxPencilSize) {
-          brushSize.value = editorConfig.maxPencilSize
+        let newSize = brushSize.value
+
+        // Clamp to max pencil size
+        if (newSize > editorConfig.maxPencilSize) {
+          newSize = editorConfig.maxPencilSize
         }
+
+        // Align to step from min (odd values)
+        const min = editorConfig.minManualToolSize
+        const step = 2 // Pencil step
+
+        const offset = newSize - min
+        const steps = Math.round(offset / step)
+        newSize = min + steps * step
+
+        // Clamp again (safety)
+        if (newSize < min) newSize = min
+        if (newSize > editorConfig.maxPencilSize) newSize = editorConfig.maxPencilSize
+
+        brushSize.value = newSize
       }
     },
   )
@@ -107,6 +123,16 @@ export function useBrushTool(imageStore, historyStore, editorStore, uiStore, t) 
       const smallerDimension = imageStore.getSmallerImageDimension()
       return Math.max(10, Math.floor(smallerDimension * editorConfig.maxManualToolSizeCoefficient))
     }
+  })
+
+  /**
+   * Step of the brush size slider (1px for brush, 2px for pencil)
+   */
+  const brushToolStep = computed(() => {
+    if (editorStore.selectedTabPerTool['brush'] === 'pencil') {
+      return 2
+    }
+    return 1
   })
 
   /**
@@ -202,6 +228,7 @@ export function useBrushTool(imageStore, historyStore, editorStore, uiStore, t) 
     setBrushSize,
     brushMaxToolSize,
     brushMinToolSize,
+    brushToolStep,
     saveColorToStore,
     rasterizeImage,
     clearAllCanvas,

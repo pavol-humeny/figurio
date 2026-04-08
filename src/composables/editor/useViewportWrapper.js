@@ -852,6 +852,8 @@ export function useViewportWrapper(
    */
   const fixedCursorPos = ref(null)
 
+  const cursorSizeRaw = ref(cursorSize.value)
+
   /**
    * Start resizing the cursor tool
    * @param {MouseEvent} event - Mouse event
@@ -863,6 +865,9 @@ export function useViewportWrapper(
     if (event.altKey && event.button === 2) {
       editorStore.isCursorResizing = true
       lastMouseX.value = event.clientX
+
+      cursorSizeRaw.value = cursorSize.value
+
       fixedCursorPos.value = { x: mouseX.value, y: mouseY.value }
       event.preventDefault()
       return
@@ -886,6 +891,7 @@ export function useViewportWrapper(
   const onMouseMove = (event) => {
     if (editorStore.isCursorResizing) {
       const deltaX = event.clientX - lastMouseX.value
+
       if (deltaX !== 0) {
         let maxCursorSize
 
@@ -895,7 +901,6 @@ export function useViewportWrapper(
         ) {
           maxCursorSize = editorConfig.maxPencilSize
         } else {
-          // Maximum size of the brush tool (min 10px)
           const smallerDimension = imageStore.getSmallerImageDimension()
           maxCursorSize = Math.max(
             10,
@@ -903,14 +908,33 @@ export function useViewportWrapper(
           )
         }
 
-        // Set new cursor size based on horizontal mouse movement
-        setCursorSize(
-          clamp(
-            cursorSize.value + deltaX / editorConfig.cursorResizingSensitivity,
-            editorConfig.minManualToolSize,
-            maxCursorSize,
-          ),
+        const toOdd = (value) => {
+          const rounded = Math.round(value)
+          return rounded % 2 === 0 ? rounded + 1 : rounded
+        }
+
+        // Accumulate in RAW value
+        cursorSizeRaw.value += deltaX / editorConfig.cursorResizingSensitivity
+
+        cursorSizeRaw.value = clamp(
+          cursorSizeRaw.value,
+          editorConfig.minManualToolSize,
+          maxCursorSize,
         )
+
+        let newSize = cursorSizeRaw.value
+
+        // Snap only for display
+        if (
+          editorStore.selectedToolKey === 'brush' &&
+          editorStore.selectedTabPerTool['brush'] === 'pencil'
+        ) {
+          newSize = toOdd(newSize)
+        } else {
+          newSize = Math.round(newSize)
+        }
+
+        setCursorSize(newSize)
 
         lastMouseX.value = event.clientX
       }

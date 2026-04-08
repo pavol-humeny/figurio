@@ -29,6 +29,7 @@ const {
   setBrushSize,
   brushMaxToolSize,
   brushMinToolSize,
+  brushToolStep,
   brushColor,
   saveColorToStore,
   clearAllCanvas,
@@ -162,8 +163,8 @@ const tabs = ['brush', 'pencil']
                 {{ $t('tools.brush.settings.pencil.toolSize.label') }}
               </p>
             </div>
-            <NumberInput v-model="brushSize" :min="brushMinToolSize" :max="brushMaxToolSize" :step="1" unit="px"
-              @update="setBrushSize(brushSize)" :tip="$t('tools.brush.settings.pencil.toolSize.tip')"
+            <NumberInput v-model="brushSize" :min="brushMinToolSize" :max="brushMaxToolSize" :step="brushToolStep"
+              unit="px" @update="setBrushSize(brushSize)" :tip="$t('tools.brush.settings.pencil.toolSize.tip')"
               position="bottom-left" />
           </div>
         </div>

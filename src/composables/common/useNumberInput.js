@@ -98,6 +98,20 @@ export function useNumberInput(props, emit) {
       num = props.max
     }
 
+    // Align to step if needed
+    if (props.step && props.step !== 1) {
+      const offset = num - props.min
+      const steps = Math.round(offset / props.step)
+      num = props.min + steps * props.step
+
+      // Clamp again (edge cases after rounding)
+      if (num < props.min) num = props.min
+      if (num > props.max) num = props.max
+
+      // Fix floating precision (important!)
+      num = round(num, decimals.value)
+    }
+
     return num
   }
 

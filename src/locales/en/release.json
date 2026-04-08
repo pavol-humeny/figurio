@@ -4,6 +4,20 @@
     "items": []
   },
   "versions":{
+    "5.18.3":{
+      "label": "5.18.3",
+      "date":"8.4. 2026",
+      "improvements": {
+        "items": [
+          "Add horizontal scroll to file tabs"
+        ]
+      },
+      "newFeatures": {
+        "items": [
+          "Fix pencil cursor size and drawing"
+        ]
+      }
+    },
     "5.18.0":{
       "label": "5.18.0",
       "date":"31.3. 2026",
