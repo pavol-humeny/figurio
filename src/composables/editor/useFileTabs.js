@@ -118,9 +118,12 @@ export function useFileTabs(uiStore, imageStore, t) {
     element.addEventListener(
       'wheel',
       (e) => {
-        if (Math.abs(e.deltaY) > Math.abs(e.deltaX)) {
-          element.scrollBy({ left: e.deltaY / 4 })
-        }
+        // Combine both directions into horizontal scroll
+        const scrollAmount = e.deltaY + e.deltaX
+
+        element.scrollBy({
+          left: scrollAmount,
+        })
       },
       { passive: true },
     )

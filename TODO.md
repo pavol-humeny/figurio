@@ -13,11 +13,9 @@ video
 
 ## TODO - text 
 - prehlásenie AI
-- zmeniť plagat v bp a README
 
 # TODO
-- P - zaistit aby pri resize objektov bolo snapovanie plynule tak ako pri drag
-- touch event pre select, shape, text, magnify, blur 
+- touch event pre select, shape, text, magnify, blur, posun 
 - export, help... okná na tablete 
 
 ## Požiadavky na diplomku 
@@ -50,6 +48,7 @@ video
 - resetovanie obrázku do pôvodného stavu
 - pridať nástroj pre nastavenie priehľadnosti obrázka
 - fit crop len z jednej strany 
+- P - zaistit aby pri resize objektov bolo snapovanie plynule tak ako pri drag
 
 ## Nepreukázalo sa 
 - pri prepnutí z color na manual select sa nezapne spravny kurzor
