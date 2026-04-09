@@ -28,7 +28,14 @@ const isVisible = ref(false)
  * @param {object} historyStore - Store managing undo/redo history
  * @param {Function} t - Translation function
  */
-export function useExportToolSettings(imageStore, editorStore, historyStore, viewportStore, uiStore, t) {
+export function useExportToolSettings(
+  imageStore,
+  editorStore,
+  historyStore,
+  viewportStore,
+  uiStore,
+  t,
+) {
   const { round } = useMath()
   const { exportFile, copyImageToClipboard } = exportFileService(
     imageStore,
@@ -37,7 +44,7 @@ export function useExportToolSettings(imageStore, editorStore, historyStore, vie
     viewportStore,
     t,
   )
-  const { openRatingModal } = useRatingModal(uiStore)
+  const { openRatingModal } = useRatingModal(uiStore, editorStore)
 
   /**
    * Ref to the file name input for managing focus
@@ -225,6 +232,9 @@ export function useExportToolSettings(imageStore, editorStore, historyStore, vie
    * Close the export settings panel
    */
   const closeExportToolSettings = () => {
+    if (editorStore.isRatingModalOpen) {
+      return
+    }
     editorStore.isExportModalOpen = false
     isVisible.value = false
   }

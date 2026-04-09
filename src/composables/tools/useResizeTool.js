@@ -2,6 +2,7 @@
  * @file: useResizeTool.js
  * @author: Pavol Humeny
  * @date: 15.5.2026
+ * @description: Composable for managing the resize tool in the editor, including logic for applying resize to the image.
  */
 import { ref, nextTick, watch, computed } from 'vue'
 import { editorConfig } from '@/config/editorConfig'
@@ -16,8 +17,9 @@ import { useImagePipeline } from '../editor/useImagePipeline'
  *
  * @param {ReturnType<typeof useImageStore>} imageStore - Image store instance
  * @param {ReturnType<typeof useHistoryStore>} historyStore - History store instance
+ * @param {ReturnType<typeof useViewportStore>} viewportStore - Viewport store instance
+ * @param {ReturnType<typeof useUiStore>} uiStore - UI store instance
  * @param {Function} t - Translation function
- * @returns {object} Resize tool bindings and methods
  */
 export function useResizeTool(imageStore, historyStore, viewportStore, uiStore, t) {
   const { showConfirmModal } = useConfirmModal()

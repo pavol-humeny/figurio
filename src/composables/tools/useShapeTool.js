@@ -2,6 +2,7 @@
  * @file: useShapeTool.js
  * @author: Pavol Humeny
  * @date: 15.5.2026
+ * @description: Composable for managing the shape tool in the editor, including logic for handling shape settings, applying changes to SVG objects, and ensuring proper snapping and transformations when editing shapes.
  */
 import { computed, ref, watch, watchEffect, nextTick, onMounted } from 'vue'
 import { useMath } from '../common/useMath'
@@ -45,7 +46,6 @@ const activeObject = ref(null)
  * @param {Object} historyStore - History store
  * @param {Object} uiStore - UI store
  * @param {Function} t - Translation function
- * @returns {Object} Composable methods and reactive properties for shape tool
  */
 export function useShapeTool(editorStore, imageStore, historyStore, uiStore, t) {
   const { clamp, round } = useMath()
@@ -254,13 +254,9 @@ export function useShapeTool(editorStore, imageStore, historyStore, uiStore, t) 
 
       // Reset only when not coming from select tool
       if (editorStore.previousToolKey !== 'select') {
-        log('Shape tab changed, resetting settings: ', newTab)
         localObjectSettings.value.type = newTab
-        log('10')
         imageStore.selectedSvgObjectId = null // Reset selection when tab changes
         imageStore.selectedSvgObjectIds = [] // Reset multi-selection
-        log('-----------------2')
-
         resetObjectSettings()
       }
     },

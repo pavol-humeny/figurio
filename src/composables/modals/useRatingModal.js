@@ -49,7 +49,12 @@ const rating = ref(0)
  */
 const feedback = ref('')
 
-export function useRatingModal(uiStore) {
+/**
+ * Composable for rating modal
+ * @param {object} uiStore - The UI store instance for managing UI state
+ * @param {object} editorStore - The editor store instance for managing editor state
+ */
+export function useRatingModal(uiStore, editorStore) {
   /**
    * Open rating modal (e.g. after export)
    */
@@ -73,6 +78,7 @@ export function useRatingModal(uiStore) {
       return
     }
 
+    editorStore.isRatingModalOpen = true
     isVisible.value = true
   }
 
@@ -83,6 +89,7 @@ export function useRatingModal(uiStore) {
     isVisible.value = false
     rating.value = 0
     feedback.value = ''
+    editorStore.isRatingModalOpen = false
   }
 
   /**
@@ -102,11 +109,6 @@ export function useRatingModal(uiStore) {
    * Submit feedback
    */
   const submitFeedback = () => {
-    // addUserEvent('submitRating', {
-    //   rating: rating.value,
-    //   feedback: feedback.value,
-    // })
-
     // Set true to localstorage to indicate that user has submitted feedback
     localStorage.setItem(`${globalConfig.LOCAL_STORAGE_PREFIX}ratingFeedback`, 'true')
 

@@ -2,6 +2,7 @@
  * @file: usePresetNewOperation.js
  * @author: Pavol Humeny
  * @date: 15.5.2026
+ * @description: Composable for managing new preset operation creation, including logic for handling different operation types (rotation, flip, crop, resize), managing operation parameters, and ensuring that parameter values are valid.
  */
 import { useMath } from '@/composables/common/useMath'
 import { editorConfig } from '@/config/editorConfig'
@@ -197,7 +198,6 @@ export function usePresetNewOperation(imageStore, props, emit, t) {
       const op = { type: selectedType.value }
       if (selectedType.value === 'rotation') op.angle = params.angle
       if (selectedType.value === 'flip') op.direction = params.direction
-      // if (selectedType.value === 'autoCrop') op.color = params.color --- IGNORE ---
       if (selectedType.value === 'grayscale') {
         op.grayscaleType = params.grayscaleType
       }

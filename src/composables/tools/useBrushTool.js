@@ -2,6 +2,7 @@
  * @file: useBrushTool.js
  * @author: Pavol Humeny
  * @date: 15.5.2026
+ * @description: Composable for managing the brush tool in the editor, including logic for brush settings (color, size, eraser mode), constraints based on image dimensions, and operations for rasterizing the image and clearing brush strokes.
  */
 import { watch, computed } from 'vue'
 import { editorConfig } from '@/config/editorConfig.js'
@@ -10,6 +11,14 @@ import { useApi } from '../common/useApi'
 const { addUserEvent } = useApi()
 import { useImagePipeline } from '../editor/useImagePipeline.js'
 
+/**
+ * Logic for the brush tool, including settings management, rasterization handling, and canvas operations
+ * @param {object} imageStore - Store containing image data and operations
+ * @param {object} historyStore - Store for undo/redo history
+ * @param {object} editorStore - Store containing editor configuration and state
+ * @param {object} uiStore - Store for UI state management
+ * @param {Function} t - Translation
+ */
 export function useBrushTool(imageStore, historyStore, editorStore, uiStore, t) {
   const { showConfirmModal } = useConfirmModal()
   const { renderUpTo } = useImagePipeline(imageStore, uiStore)

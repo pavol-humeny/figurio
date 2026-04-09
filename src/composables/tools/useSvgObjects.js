@@ -2,6 +2,7 @@
  * @file: useSvgObjects.js
  * @author: Pavol Humeny
  * @date: 15.5.2026
+ * @description: Composable for managing SVG objects on the canvas, including selection, movement, deletion, copy/paste, and layering. This module provides functions to manipulate SVG objects in the editor, such as moving them by a specified offset, deleting selected objects, copying and pasting objects, and changing their z-order (bring to front/send to back). It also computes display info for the selected object and allows selecting/deselecting all objects.
  */
 import { computed, ref, onMounted, onBeforeUnmount, nextTick, watch } from 'vue'
 import { useTextTool } from './useTextTool'
@@ -289,10 +290,6 @@ export function useSvgObjects(
 
     newObject.id = Date.now()
 
-    // const { width: imageWidth, height: imageHeight } = imageStore.fileDimensions
-    // const centerX = imageWidth / 2
-    // const centerY = imageHeight / 2
-
     const { attrs, tag } = newObject
 
     const offset = 10 // Offset from object original position to avoid exact overlap
@@ -304,15 +301,12 @@ export function useSvgObjects(
       attrs.cx += offset
       attrs.cy += offset
     } else if (tag === 'line' && 'x1' in attrs && 'x2' in attrs && 'y1' in attrs && 'y2' in attrs) {
-      // const dx = (attrs.x2 - attrs.x1) / 2
-      // const dy = (attrs.y2 - attrs.y1) / 2
       attrs.x1 += offset
       attrs.y1 += offset
       attrs.x2 += offset
       attrs.y2 += offset
     } else if (tag === 'text') {
       if (newObject.textBBox) {
-        // const { width, height } = newObject.textBBox
         attrs.x += offset
         attrs.y += offset
       } else {
@@ -1409,8 +1403,6 @@ export function useSvgObjects(
         imageStore.svgObjects.pop()
       }
 
-      log('2')
-      log('3')
       imageStore.selectedSvgObjectId = null
 
       return
@@ -1558,7 +1550,6 @@ export function useSvgObjects(
     onClickImageSvg,
     onMouseDownImageSvg,
     onMouseDownSelect,
-    // onMouseUpImageSvg,
     onMouseMoveImageSvg,
     isDrawing,
     selectBox,

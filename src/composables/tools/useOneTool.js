@@ -2,6 +2,7 @@
  * @file: useOneTool.js
  * @author: Pavol Humeny
  * @date: 15.5.2026
+ * @description: Composable for handling a single tool button, including logic for opening and positioning the sub-tool popup, managing mouse events to show/hide the popup, and emitting events when the main tool or sub-tools are clicked.
  */
 import { ref, nextTick, onMounted, onBeforeUnmount } from 'vue'
 import { editorConfig } from '@/config/editorConfig.js'
@@ -10,6 +11,8 @@ import { editorConfig } from '@/config/editorConfig.js'
  * Logic for handling a single tool button
  *
  * @param {object} editorStore - Store for editor state, including selected tool and subtool keys.
+ * @param {object} imageStore - Store for image state.
+ * @param {object} uiStore - Store for UI state.
  * @param {object} props - Props passed from the component, expects `tool` object with `key` and optional `subTools`.
  * @param {Function} emit - Emit function from the component to send events upward.
  * @returns {object} Bindings and methods for the tool component

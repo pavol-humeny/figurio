@@ -2,6 +2,7 @@
  * @file: usePresetOperationsList.js
  * @author: Pavol Humeny
  * @date: 15.5.2026
+ * @description: Composable for managing the list of preset operations, including logic for selecting, removing, and reordering operations, as well as validating operation parameters against the current image dimensions.
  */
 import { ref, watch } from 'vue'
 
@@ -16,17 +17,6 @@ import { ref, watch } from 'vue'
  * }} props - Component props
  * @param {(event: string, value: any) => void} emit - Emit function
  * @param {(key: string) => string} t - Translation function
- * @returns {{
- *   selectedOperation: import('vue').Ref<Object | null>,
- *   internalList: import('vue').Ref<Array<Object>>,
- *   removeOperation: (index: number, operation: Object) => void,
- *   onDragUpdate: () => void,
- *   selectOperation: (operation: Object) => void,
- *   handleSelect: (e: MouseEvent, operation: Object) => void,
- *   getOperationLabel: (type: string) => string,
- *   imageCanBeCropped: (cropBox: {x: number, y: number, width: number, height: number}) => boolean,
- *   imageCanBeResize: (resizeDimensions: {width: number, height: number}) => boolean
- * }}
  */
 export function usePresetOperationsList(imageStore, props, emit, t) {
   /**

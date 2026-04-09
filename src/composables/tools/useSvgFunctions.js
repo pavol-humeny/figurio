@@ -2,6 +2,7 @@
  * @file: useSvgFunctions.js
  * @author: Pavol Humeny
  * @date: 15.5.2026
+ * @description: Composable providing utility functions for handling SVG objects, including calculating object centers, applying rotation transformations, computing bounding boxes with rotation, and determining snapping offsets to edges of other objects or the image borders.
  */
 import { editorConfig } from '@/config/editorConfig'
 import { useMath } from '../common/useMath'
@@ -9,13 +10,6 @@ import { useMath } from '../common/useMath'
 /**
  * Logic for handling SVG object snapping
  * @param {*} imageStore - Store containing SVG objects and image dimensions
- * @returns {{
- *   getObjectCenter: Function to compute center of an SVG object
- *   rotatePoint: Function to rotate a point around a center
- *  getTransformedBoundingBox: Function to get bounding box with rotation
- *  getSnapEdgeTargets: Function to get snap targets from other objects
- * getSnapOffsetToEdges: Function to compute snap offsets to edges
- * }}
  */
 export function useSvgFunctions(imageStore) {
   const { round } = useMath()
@@ -30,7 +24,7 @@ export function useSvgFunctions(imageStore) {
     let cx = 0
     let cy = 0
 
-    // --- Basic center without rotation ---
+    // Basic center without rotation
     if ('x' in attrs && 'y' in attrs && 'width' in attrs && 'height' in attrs) {
       cx = attrs.x + attrs.width / 2
       cy = attrs.y + attrs.height / 2
@@ -45,7 +39,7 @@ export function useSvgFunctions(imageStore) {
       cy = textBBox.y + textBBox.height / 2
     }
 
-    // --- Adjust center by rotation transform ---
+    // Adjust center by rotation transform
     const match = attrs.transform?.match(/rotate\((-?\d+\.?\d*),\s*([-\d.]+),\s*([-\d.]+)\)/)
     if (match) {
       const angle = parseFloat(match[1]) * (Math.PI / 180)
@@ -139,7 +133,7 @@ export function useSvgFunctions(imageStore) {
       ]
     }
 
-    // TEXT (requires precomputed bounding box!)
+    // TEXT 
     else if (object.tag === 'text' && object.textBBox) {
       const bBox = object.textBBox
       corners = [

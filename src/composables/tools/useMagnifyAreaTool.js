@@ -2,6 +2,7 @@
  * @file: useMagnifyAreaTool.js
  * @author: Pavol Humeny
  * @date: 15.5.2026
+ * @description: Composable for managing the magnify area tool in the editor, including logic for adding magnify areas, updating their settings, and ensuring that they are rendered correctly on the canvas.
  */
 import { editorConfig } from '@/config/editorConfig'
 import { ref, computed, watch, watchEffect, onMounted, nextTick } from 'vue'
@@ -11,7 +12,7 @@ import { useConfirmModal } from '../modals/useConfirmModal'
 import { useImagePipeline } from '../editor/useImagePipeline'
 
 /**
- * Magnify area settings (CENTER ONLY)
+ * Magnify area settings
  */
 const localMagnifyAreaSettings = ref({
   positionX: 0,
@@ -29,10 +30,9 @@ export function useMagnifyAreaTool(imageStore, historyStore, editorStore, uiStor
   const activeObject = ref(null)
   const hidePositionAndDimensions = ref(true)
 
-  // ------------------------------
-  // Bounds
-  // ------------------------------
-
+  /**
+   * X and Y positions
+   */
   const maxMagnifyAreaSourcePositionX = computed(() => {
     return imageStore.fileDimensions.width - localMagnifyAreaSettings.value.radius
   })
@@ -41,21 +41,33 @@ export function useMagnifyAreaTool(imageStore, historyStore, editorStore, uiStor
     return imageStore.fileDimensions.height - localMagnifyAreaSettings.value.radius
   })
 
+  /**
+   * Maximum allowed radius based on the smaller image dimension to ensure the magnify area fits within the image boundaries
+   */
   const maxMagnifyAreaRadius = computed(() => {
     const smaller = imageStore.getSmallerImageDimension()
     return Math.floor(smaller / 2)
   })
 
+  /**
+   * Maximum allowed outline width based on the magnify area radius to ensure the outline does not exceed the size of the magnify area itself
+   */
   const maxOutlineWidth = computed(() => {
     return Math.max(Math.floor(localMagnifyAreaSettings.value.radius / 2), 1)
   })
 
+  /**
+   * Options for magnify area zoom levels
+   */
   const magnifyAreaZoomOptions = [
     { value: 2, label: '2x' },
     { value: 3, label: '3x' },
     { value: 4, label: '4x' },
   ]
 
+  /**
+   * Saves the current magnify area settings to the editor store configuration so that they persist across tool activations and can be used as defaults for new magnify areas.
+   */
   const saveConfigToEditorStore = () => {
     for (const key in editorStore.toolsConfig.magnifyArea) {
       if (key in localMagnifyAreaSettings.value) {
@@ -64,10 +76,9 @@ export function useMagnifyAreaTool(imageStore, historyStore, editorStore, uiStor
     }
   }
 
-  // ------------------------------
-  // Selection watch
-  // ------------------------------
-
+  /**
+   * Watch for changes in the selected SVG object
+   */
   watch(
     () => imageStore.selectedSvgObjectId,
     async (newId) => {
@@ -95,6 +106,9 @@ export function useMagnifyAreaTool(imageStore, historyStore, editorStore, uiStor
     { immediate: true },
   )
 
+  /**
+   * Watch for changes in the active magnify area object
+   */
   watchEffect(() => {
     const obj = activeObject.value
     if (!obj || editorStore.selectedToolKey !== 'magnifyArea') return
@@ -104,10 +118,11 @@ export function useMagnifyAreaTool(imageStore, historyStore, editorStore, uiStor
     localMagnifyAreaSettings.value.positionY = obj.attrs.cy
   })
 
-  // ------------------------------
-  // Apply changes
-  // ------------------------------
 
+  /**
+   * Apply local settings on magnify area object
+   * @param {boolean} commit - Whether to commit the changes to history
+   */
   const applyLocalMagnifyAreaSettings = (commit = true) => {
     const obj = activeObject.value
     if (!obj || obj.class !== 'magnifyArea') return
@@ -140,9 +155,11 @@ export function useMagnifyAreaTool(imageStore, historyStore, editorStore, uiStor
     imageStore.magnifyOverlayNeedToBeRendered = true
   }
 
-  // ------------------------------
-  // Add magnify area
-  // ------------------------------
+  /**
+   * Adds a new magnify area object
+   * @param {number} x - X coordinate for the center of the magnify area
+   * @param {number} y - Y coordinate for the center of the magnify area
+   */
   const addMagnifyArea = async (x, y) => {
     let confirmNeeded = false
 
@@ -249,10 +266,9 @@ export function useMagnifyAreaTool(imageStore, historyStore, editorStore, uiStor
     imageStore.magnifyOverlayNeedToBeRendered = true
   }
 
-  // ------------------------------
-  // Init
-  // ------------------------------
-
+  /**
+   * Init local settings on mount
+   */
   onMounted(() => {
     localMagnifyAreaSettings.value.zoom = editorStore.toolsConfig.magnifyArea.zoom
 

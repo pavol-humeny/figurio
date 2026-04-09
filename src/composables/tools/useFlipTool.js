@@ -2,6 +2,7 @@
  * @file: useFlipTool.js
  * @author: Pavol Humeny
  * @date: 15.5.2026
+ * @description: Composable for managing the flip tool in the editor.
  */
 import { useConfirmModal } from '../modals/useConfirmModal'
 import { useApi } from '@/composables/common/useApi'
@@ -13,7 +14,8 @@ import { useImagePipeline } from '../editor/useImagePipeline'
  *
  * @param {object} imageStore - Store containing image data and operations
  * @param {object} historyStore - Store for undo/redo history
- * @returns {object} Flip tool methods
+ * @param {object} uiStore - Store for UI state management
+ * @param {Function} t - Translation
  */
 export function useFlipTool(imageStore, historyStore, uiStore, t) {
   const { showConfirmModal } = useConfirmModal()
@@ -33,8 +35,6 @@ export function useFlipTool(imageStore, historyStore, uiStore, t) {
         t('tools.confirmNeedBaseImageRasterization.confirm'),
       )
       if (!confirmed) return
-
-      // await imageStore.rasterizeBaseImage(t)
 
       imageStore.addImageOperation({
         type: 'rasterizePdf',

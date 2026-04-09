@@ -8,7 +8,6 @@
 import { useExportToolSettings } from '@/composables/toolsSettings/useExportToolSettings'
 import DefaultButton from '@/components/common/DefaultButton.vue'
 import BaseIcon from '@/components/icons/BaseIcon.vue'
-import { useShaking } from '@/composables/common/useShaking'
 import { useImageStore } from '@/stores/imageStore'
 import { useI18n } from 'vue-i18n'
 import DefaultSlider from '@/components/common/DefaultSlider.vue'
@@ -21,12 +20,6 @@ import { useUiStore } from '@/stores/uiStore'
 
 const { t } = useI18n()
 const { round } = useMath()
-
-
-/**
- * Logic of the shaking animation (used when clicking outside modal)
- */
-const { isShaking, triggerShake } = useShaking()
 
 /**
  * Logic of the export tool settings panel
@@ -50,8 +43,8 @@ const {
 
 <template>
   <Teleport to="body">
-    <div v-if="isVisible" class="export-overlay" @click.self="triggerShake">
-      <div class="export-box" :class="{ shake: isShaking }">
+    <div v-if="isVisible" class="export-overlay" @mousedown.self="closeExportToolSettings">
+      <div class="export-box">
         <div class="export-settings">
           <div class="title-wrapper">
             <BaseIcon name="IconExportTool" size="32" color="var(--text-c)" />
@@ -69,7 +62,7 @@ const {
             v-if="fileFormat === 'jpg' || fileFormat === 'webp' || fileFormat === 'jpeg'">
             <label for="file-quality">{{
               $t('tools.export.settings.general.fileQuality.label')
-              }}</label>
+            }}</label>
             <p>{{ round(fileDimensions.quality) }} %</p>
             <DefaultSlider v-model="fileDimensions.quality" :min="1" :max="100" :step="1"
               @update:modelValue="(value) => updateQuality(value)" />
@@ -87,7 +80,7 @@ const {
           <div class="export-settings-item">
             <label>{{
               $t('tools.export.settings.general.fileDimensions.label')
-            }}</label>
+              }}</label>
             <div class="export-settings-item-value">
               <div class="width disabled">
                 <p>

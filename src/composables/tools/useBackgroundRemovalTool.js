@@ -2,6 +2,7 @@
  * @file: useBackgroundRemovalTool.js
  * @author: Pavol Humeny
  * @date: 15.5.2026
+ * @description: Composable for managing the background removal tool in the editor, including logic for manual and automatic background removal, handling of the removal mask, and settings for the tool such as brush size, color replacement, and selection highlighting.
  */
 import { computed, ref, watch } from 'vue'
 import { useConfirmModal } from '../modals/useConfirmModal'
@@ -36,6 +37,15 @@ const autoRemovalThreshold = ref(editorConfig.defaultAutoRemovalThreshold)
  */
 const manualSelectedTool = ref('brush') // 'brush' | 'eraser'
 
+/**
+ * Logic for the background removal tool, including manual and automatic selection, mask management, and settings handling
+ * @param {object} imageStore - Store containing image data and operations
+ * @param {object} historyStore - Store for undo/redo history
+ * @param {object} workspaceStore - Store for workspace state management
+ * @param {object} editorStore - Store containing editor configuration and state
+ * @param {object} uiStore - Store for UI state management
+ * @param {Function} t - Translation function
+ */
 export function useBackgroundRemovalTool(
   imageStore,
   historyStore,
@@ -916,7 +926,6 @@ export function useBackgroundRemovalTool(
     clearAllSelections,
     invertSelection,
     setBrushSize,
-    // detectObjectsClick,
     replaceSelection,
     highlightColor,
     selectColorClick,
@@ -927,7 +936,6 @@ export function useBackgroundRemovalTool(
     boundaryOffset,
     autoSelectSimilarRegion,
     autoRemovalThreshold,
-    // applyBackgroundRemovalRender,
     someAreaIsSelected,
     setBackgroundColor,
   }

@@ -2,6 +2,7 @@
  * @file: useRotateTool.js
  * @author: Pavol Humeny
  * @date: 15.5.2026
+ * @description: Composable for managing the rotate tool in the editor, including logic for applying rotation to the image.
  */
 import { useConfirmModal } from '../modals/useConfirmModal'
 import { useApi } from '@/composables/common/useApi'
@@ -14,10 +15,6 @@ import { useImagePipeline } from '../editor/useImagePipeline'
  * @param {ReturnType<typeof useImageStore>} imageStore - Image store instance
  * @param {ReturnType<typeof useHistoryStore>} historyStore - History store instance
  * @param {Function} t - Translation function
- * @returns {{
- *   applyRotation: (angle: number) => Promise<void>,
- *   applyRotationRender: (angle: number) => void,
- * }}
  */
 export function useRotateTool(imageStore, historyStore, uiStore, viewportStore, t) {
   const { showConfirmModal } = useConfirmModal()

@@ -2,6 +2,7 @@
  * @file: usePresetOperationDetails.js
  * @author: Pavol Humeny
  * @date: 15.5.2026
+ * @description: Composable for displaying and editing the details of a selected preset operation, including logic for handling crop box parameters, syncing input values, and ensuring that changes are reflected in the parent component.
  */
 import { ref, computed, watch, nextTick } from 'vue'
 import { useMath } from '@/composables/common/useMath'
@@ -14,7 +15,6 @@ import { useMath } from '@/composables/common/useMath'
  * @param {(key: string) => string} t - Translation function
  * @param {{ operation: Object }} props - Component props
  * @param {(event: string, value: any) => void} emit - Emit function
- * @returns {Object}
  */
 export function usePresetOperationDetails(imageStore, editorStore, t, props, emit) {
   const { clamp, round } = useMath()

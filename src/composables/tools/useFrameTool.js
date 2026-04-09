@@ -2,9 +2,9 @@
  * @file: useFrameTool.js
  * @author: Pavol Humeny
  * @date: 15.5.2026
+ * @description: Composable for managing the frame tool in the editor, including logic for applying different frame variants to the image, handling frame settings (width, color, header/footer options), and ensuring that frame parameters are valid based on the current image dimensions and zoom level.
  */
 import { ref, watch, computed, nextTick } from 'vue'
-// import { useToastModal } from '../modals/useToastModal'
 import { editorConfig } from '@/config/editorConfig'
 import { useConfirmModal } from '../modals/useConfirmModal'
 import { useApi } from '@/composables/common/useApi'
@@ -57,7 +57,6 @@ const footerSize = ref(0)
 const footerSizeMm = ref(0)
 
 export function useFrameTool(imageStore, historyStore, viewportStore, t) {
-  // const { showToastModal } = useToastModal()
   const { showConfirmModal } = useConfirmModal()
   const uiStore = useUiStore()
   const { renderUpTo } = useImagePipeline(imageStore, uiStore)

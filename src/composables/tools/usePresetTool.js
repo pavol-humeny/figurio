@@ -2,6 +2,7 @@
  * @file: usePresetTool.js
  * @author: Pavol Humeny
  * @date: 15.5.2026
+ * @description: Composable for managing the preset tool in the editor, including logic for handling preset settings, applying changes to the image, and managing user interactions related to presets.
  */
 import { ref, computed, watch, onMounted } from 'vue'
 import { useToastModal } from '../modals/useToastModal'
@@ -16,7 +17,14 @@ const { addUserEvent } = useApi()
 import { useImagePipeline } from '../editor/useImagePipeline'
 
 /**
- * Logic for preset tool
+ * Composable for managing presets
+ * @param {ReturnType<typeof useImageStore>} imageStore - Image store instance
+ * @param {ReturnType<typeof useHistoryStore>} historyStore - History store instance
+ * @param {ReturnType<typeof useEditorStore>} editorStore - Editor store instance
+ * @param {ReturnType<typeof usePresetsStore>} presetsStore - Presets store instance
+ * @param {ReturnType<typeof useViewportStore>} viewportStore - Viewport store instance
+ * @param {ReturnType<typeof useUiStore>} uiStore - UI store instance
+ * @param {Function} t - Translation function
  */
 export function usePresetTool(
   imageStore,
@@ -979,13 +987,6 @@ export function usePresetTool(
   )
 
   /**
-   * Show the manual preset setting dialog
-   */
-  // const showManualPresetSetting = () => {
-  //   isShowManualPresetSetting.value = true
-  // }
-
-  /**
    * Reset the new preset to default values
    * This is called when creating a new preset or after saving a preset
    */
@@ -1045,8 +1046,6 @@ export function usePresetTool(
       },
       // UPDATE new tool
     }
-
-    // isShowManualPresetSetting.value = false
   }
 
   /**
@@ -1369,7 +1368,6 @@ export function usePresetTool(
     presetFrameOptions,
     frameWidthRef,
     resetFrameWidth,
-    // showManualPresetSetting,
     useCurrentModifications,
     presetNameRef,
     selectedPresetName,

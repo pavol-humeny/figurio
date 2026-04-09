@@ -2,6 +2,7 @@
  * @file: useImageAnalysis.js
  * @author: Pavol Humeny
  * @date: 15.5.2026
+ * @description: Composable for analyzing image artifacts (noise) and managing overlay display, including logic for detecting noise based on background color similarity, managing warnings, and applying noise removal operations.
  */
 import { globalConfig } from '@/config/globalConfig'
 import { viewportConfig } from '@/config/viewportConfig'
@@ -36,6 +37,13 @@ const noiseSensitivity = ref(1)
 
 /**
  * Composable for analyzing image artifacts (noise) and managing overlay display
+ * @param {ReturnType<typeof import('@/stores/imageStore').useImageStore>} imageStore - Image store instance
+ * @param {ReturnType<typeof import('@/stores/viewportStore').useViewportStore>} viewportStore - Viewport store instance
+ * @param {ReturnType<typeof import('@/stores/uiStore').useUiStore>} uiStore - UI store instance
+ * @param {ReturnType<typeof import('@/stores/historyStore').useHistoryStore>} historyStore - History store instance
+ * @param {ReturnType<typeof import('@/stores/editorStore').useEditorStore>} editorStore - Editor store instance
+ * @param {ReturnType<typeof import('@/stores/workspaceStore').useWorkspaceStore>} workspaceStore - Workspace store instance
+ * @param {(key: string) => string} t - Translation function
  */
 export function useImageAnalysis(
   imageStore,

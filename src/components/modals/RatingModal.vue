@@ -10,12 +10,12 @@ import BaseIcon from '@/components/icons/BaseIcon.vue'
 import DefaultButton from '@/components/common/DefaultButton.vue'
 import { useShaking } from '@/composables/common/useShaking'
 import { useUiStore } from '@/stores/uiStore'
+import { useEditorStore } from '@/stores/editorStore'
 
 /**
  * Logic of the shaking animation (used when clicking outside modal)
  */
 const { isShaking, triggerShake } = useShaking()
-
 
 /**
  * Logic of the rating modal state and actions
@@ -28,7 +28,7 @@ const {
   submitFeedback,
   closeRatingModal,
   isSubmitDisabled
-} = useRatingModal(useUiStore())
+} = useRatingModal(useUiStore(), useEditorStore())
 
 /**
  * Generate array of 5 stars

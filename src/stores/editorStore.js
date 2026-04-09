@@ -106,6 +106,9 @@ export const useEditorStore = defineStore('editorStore', {
     /** Whether a export modal is open  */
     isExportModalOpen: false,
 
+    /** Whether a rating modal is open  */
+    isRatingModalOpen: false,
+
     /** Whether the cursor is currently being resized */
     isCursorResizing: false,
 

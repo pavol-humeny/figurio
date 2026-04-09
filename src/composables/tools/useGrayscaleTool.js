@@ -2,6 +2,7 @@
  * @file: useGrayscaleTool.js
  * @author: Pavol Humeny
  * @date: 15.5.2026
+ * @description: Composable for managing the grayscale tool in the editor, including logic for applying grayscale to the image and handling different grayscale types.
  */
 import { useConfirmModal } from '../modals/useConfirmModal'
 import { ref, computed } from 'vue'
@@ -14,9 +15,9 @@ import { useImagePipeline } from '../editor/useImagePipeline'
  * Logic for applying grayscale
  *
  * @param {object} imageStore - Store containing image data and operations
+ * @param {object} editorStore - Store containing editor configuration
  * @param {object} historyStore - Store for undo/redo history
  * @param {Function} t - Translation function from vue-i18n
- * @returns {object} Grayscale tool methods and state
  */
 export function useGrayscaleTool(imageStore, editorStore, historyStore, t) {
   const { showConfirmModal } = useConfirmModal()

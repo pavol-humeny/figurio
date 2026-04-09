@@ -2,6 +2,7 @@
  * @file: useCropTool.js
  * @author: Pavol Humeny
  * @date: 15.5.2026
+ * @description: Composable for managing the crop tool in the editor, including logic for crop box manipulation, position constraints, manual and automatic cropping, and synchronization of crop parameters with external components.
  */
 import { useMath } from '@/composables/common/useMath'
 import { computed, onMounted, ref, watch } from 'vue'
@@ -93,7 +94,6 @@ const cropSensitivityLevel = ref(2)
  * @param {object} historyStore - Store for undo/redo history
  * @param {object} uiStore - Store for UI state
  * @param {function} t - Translation function (vue-i18n)
- * @returns {object} Crop tool logic and reactive state
  */
 export function useCropTool(imageStore, viewportStore, editorStore, historyStore, uiStore, t) {
   const { showConfirmModal } = useConfirmModal()
@@ -669,9 +669,10 @@ export function useCropTool(imageStore, viewportStore, editorStore, historyStore
     // Store starting pointer position for Shift calculations
     const startMouseX = startPointer.x
 
-    // Mode that is allowed during this resize session
-    // let allowedMode = null
 
+    /**
+     * Handle pointer move during resizing
+     */
     const onPointerMove = (ev) => {
       if (ev.cancelable) ev.preventDefault()
       const pointer = getPointerPosition(ev)
@@ -696,25 +697,8 @@ export function useCropTool(imageStore, viewportStore, editorStore, historyStore
       const altNow = ev.altKey || ev.metaKey
       const shiftNow = ev.shiftKey
 
-      // If no mode was chosen yet, lock the first one that appears
-      // if (!allowedMode) {
-      //   if (shiftNow) {
-      //     allowedMode = 'shift'
-      //   } else if (altNow) {
-      //     allowedMode = 'alt'
-      //   }
-      // }
-
       let isShiftKey = shiftNow
       let isAltKey = altNow
-
-      // if (allowedMode === 'shift') {
-      //   isShiftKey = shiftNow
-      // }
-
-      // if (allowedMode === 'alt') {
-      //   isAltKey = altNow
-      // }
 
       if (direction === 'topright') {
         let newWidth
@@ -1615,7 +1599,7 @@ export function useCropTool(imageStore, viewportStore, editorStore, historyStore
       const c1 = inner1Contrast / 255
       const c2 = inner2Contrast / 255
 
-      // Compute ratio (always ≥1)
+      // Compute ratio 
       const ratio = c2 > c1 ? c2 / c1 : c1 / c2
 
       // Base range of possible thresholds for ratio

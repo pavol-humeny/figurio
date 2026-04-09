@@ -2,6 +2,7 @@
  * @file: useBlurTool.js
  * @author: Pavol Humeny
  * @date: 15.5.2026
+ * @description: Composable for managing the blur tool in the editor, including logic for applying blur to specific areas of the image, handling blur settings (strength, edge fade), and ensuring that the blur effect is rendered correctly on the canvas.
  */
 import { ref, computed, watch, watchEffect, nextTick, onMounted } from 'vue'
 import { useMath } from '../common/useMath'
@@ -47,7 +48,6 @@ const parseNumericOrFallback = (value, fallback) => {
  * @param {Object} editorStore - Store containing editor state
  * @param {Object} uiStore - Store containing UI state
  * @param {Function} t - Translation function
- * @return {Object} Composable methods and reactive properties for blur tool
  */
 export function useBlurTool(imageStore, historyStore, editorStore, uiStore, t) {
   const { round, clamp } = useMath()
@@ -68,7 +68,6 @@ export function useBlurTool(imageStore, historyStore, editorStore, uiStore, t) {
   // -------------------------------
   // Position
   // -------------------------------
-
   /**
    * Calculate maximum and minimal position for blur
    */
@@ -139,13 +138,6 @@ export function useBlurTool(imageStore, historyStore, editorStore, uiStore, t) {
    * Reset local blur settings to default values
    */
   const resetBlurSettings = () => {
-    // localBlurSettings.value.x = 0
-    // localBlurSettings.value.y = 0
-    // localBlurSettings.value.width = 0
-    // localBlurSettings.value.height = 0
-    // localBlurSettings.value.rotation = 0
-    // localBlurSettings.value.blurStrength = 5
-
     activeObject.value = null
 
     localBlurSettings.value.blurStrength = editorStore.toolsConfig.blur.blurStrength
