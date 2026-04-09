@@ -1131,6 +1131,14 @@
           "icon": "none"
         }
       }
+    },
+    "rating": {
+      "title": "Thank you!",
+      "subtitle": "How would you rate your experience?",
+      "feedbackLabel": "What did you like or dislike?",
+      "placeholder": "Optional feedback...",
+      "submit": "Submit feedback",
+      "skip": "No thanks"
     }
   },
   "svgObject": {

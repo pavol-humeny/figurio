@@ -1,6 +1,7 @@
 ## ŠT
 - MTIa
-- kniha 
+- kniha
+- Dokončiť komentovanie 
 - v
     - uvodna obrazovka
     - predpremiera
@@ -17,6 +18,14 @@ video
 # TODO
 - touch event pre select, shape, text, magnify, blur, posun 
 - export, help... okná na tablete 
+- odstrániť random eventy 
+- Pridať hodnotenie aplikácie po exportovaní 
+- vydať verziu 6 bez random eventov 
+
+- prihlásenie na excel 
+- upratať .md súbory 
+- odstrániť skripty 
+- spraviť prehľad tém čo by som mal vedieť k jednotlivým častiam BP textu 
 
 ## Požiadavky na diplomku 
 - webová aplikácia 

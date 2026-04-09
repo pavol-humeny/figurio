@@ -17,6 +17,7 @@ import { useHistoryStore } from '@/stores/historyStore'
 import { useMath } from '@/composables/common/useMath'
 import DropdownSelect from '../common/DropdownSelect.vue'
 import { useViewportStore } from '@/stores/viewportStore'
+import { useUiStore } from '@/stores/uiStore'
 
 const { t } = useI18n()
 const { round } = useMath()
@@ -44,7 +45,7 @@ const {
   copyImageToClipboardFunction,
   expectedPreviewSize,
   fileFormatOptions
-} = useExportToolSettings(useImageStore(), useEditorStore(), useHistoryStore(), useViewportStore(), t)
+} = useExportToolSettings(useImageStore(), useEditorStore(), useHistoryStore(), useViewportStore(), useUiStore(), t)
 </script>
 
 <template>
@@ -68,7 +69,7 @@ const {
             v-if="fileFormat === 'jpg' || fileFormat === 'webp' || fileFormat === 'jpeg'">
             <label for="file-quality">{{
               $t('tools.export.settings.general.fileQuality.label')
-            }}</label>
+              }}</label>
             <p>{{ round(fileDimensions.quality) }} %</p>
             <DefaultSlider v-model="fileDimensions.quality" :min="1" :max="100" :step="1"
               @update:modelValue="(value) => updateQuality(value)" />
@@ -86,7 +87,7 @@ const {
           <div class="export-settings-item">
             <label>{{
               $t('tools.export.settings.general.fileDimensions.label')
-              }}</label>
+            }}</label>
             <div class="export-settings-item-value">
               <div class="width disabled">
                 <p>

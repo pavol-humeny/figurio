@@ -11,6 +11,8 @@ import { editorConfig } from '@/config/editorConfig'
 import { useConsole } from '@/composables/common/useConsole.js'
 import { exportFileService } from '@/services/exportFileService'
 import { useFrameTool } from '../tools/useFrameTool.js'
+import { useRatingModal } from '../modals/useRatingModal.js'
+import { globalConfig } from '@/config/globalConfig'
 const { error } = useConsole()
 
 /**
@@ -26,13 +28,7 @@ const isVisible = ref(false)
  * @param {object} historyStore - Store managing undo/redo history
  * @param {Function} t - Translation function
  */
-export function useExportToolSettings(
-  imageStore,
-  editorStore,
-  historyStore,
-  viewportStore,
-  t,
-) {
+export function useExportToolSettings(imageStore, editorStore, historyStore, viewportStore, uiStore, t) {
   const { round } = useMath()
   const { exportFile, copyImageToClipboard } = exportFileService(
     imageStore,
@@ -41,6 +37,7 @@ export function useExportToolSettings(
     viewportStore,
     t,
   )
+  const { openRatingModal } = useRatingModal(uiStore)
 
   /**
    * Ref to the file name input for managing focus
@@ -244,7 +241,17 @@ export function useExportToolSettings(
       error('Failed to export file')
       return
     }
+
+    // Increase export count in localStorage to track how many times user has exported a file
+    const exportCountKey = `${globalConfig.LOCAL_STORAGE_PREFIX}numberOfExports`
+
+    const currentCount = parseInt(localStorage.getItem(exportCountKey) || '0', 10)
+    localStorage.setItem(exportCountKey, (currentCount + 1).toString())
+
     closeExportToolSettings()
+
+    // Open rating modal after export
+    openRatingModal()
   }
 
   /**

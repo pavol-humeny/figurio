@@ -1131,6 +1131,14 @@
           "icon": "none"
         }
       }
+    },
+    "rating": {
+      "title": "Ďakujeme!",
+      "subtitle": "Ako by ste ohodnotili svoju skúsenosť?",
+      "feedbackLabel": "Čo sa vám páčilo alebo nepáčilo?",
+      "placeholder": "Voliteľná spätná väzba...",
+      "submit": "Odoslať hodnotenie",
+      "skip": "Nie teraz"
     }
   },
   "svgObject": {

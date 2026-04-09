@@ -398,6 +398,7 @@ export function useApi() {
     if (!globalConfig.usageStatsSettings.sendVisitDuringMaintenanceEmail) return
 
     if (isLocalhost() && !globalConfig.usageStatsSettings.sendUsageStatsOnLocalhost) return
+
     if (!userId) {
       warn('Missing userId for visit during maintenance email')
       return
@@ -556,6 +557,42 @@ toolToggleCount}, ...]
     }
   }
 
+  /**
+   * Adds a rating for the user
+   */
+  const addRating = async (userId, ratingData) => {
+    if (!globalConfig.usageStatsSettings.sendUsageStats) return
+
+    if (!globalConfig.usageStatsSettings.sendVisitDuringMaintenanceEmail) return
+
+    if (isLocalhost() && !globalConfig.usageStatsSettings.sendUsageStatsOnLocalhost) return
+
+    if (!userId) {
+      warn('Missing userId for visit during maintenance email')
+      return
+    }
+
+    try {
+      const res = await fetch(`${API_BASE}/api/contact/${userId}/rating`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(ratingData),
+      })
+
+      if (!res.ok) throw new Error('Failed to submit rating')
+
+      const data = await res.json()
+      log('Rating submitted:', data)
+
+      return data
+    } catch (err) {
+      error('Error submitting rating:', err)
+      return null
+    }
+  }
+
   return {
     addUserVisit,
     addUserEvent,
@@ -582,5 +619,6 @@ toolToggleCount}, ...]
     getSessionDurationByUser,
     getAppInstalledCount,
     getNumberOfPWAVisits,
+    addRating,
   }
 }
