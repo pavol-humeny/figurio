@@ -110,9 +110,16 @@
     }
   },
   "userStatistics": {
-    "title": "Štatistiky používania",
+    "title": "Štatistiky užívateľa",
     "visits": {
-      "title": "Návštevnosť"
+      "title": "Návštevy",
+      "total": "Celkové návštevy",
+      "activeDays": "Aktívne dni",
+      "longestStreak": "Najdlhšia séria",
+      "firstVisit": "Prvá návšteva"
+    },
+    "toolUsage": {
+      "title": "Využitie nástrojov"
     }
   }
 }

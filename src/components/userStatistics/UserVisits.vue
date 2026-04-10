@@ -1,6 +1,9 @@
 <script setup>
 /**
  * @file: UserVisits.vue
+ * @author: Pavol Humeny
+ * @date: 15.5.2026
+ * @description: Component for displaying user visit statistics. It fetches the user's visit data from the API on component mount and displays it in a series of data cards, showing total visits, active days, longest streak, and first visit date.
  */
 import { ref, onMounted } from 'vue'
 import { useApi } from '@/composables/common/useApi'
@@ -27,10 +30,14 @@ onMounted(async () => {
   <div class="user-visits">
 
     <div class="basic-info">
-      <DataCard description="Visits" :mainValue="stats.totalVisits" icon="IconAllVisits" />
-      <DataCard description="Active Days" :mainValue="stats.activeDays" icon="IconCalendar" />
-      <DataCard description="Longest Streak" :mainValue="stats.longestStreak" icon="IconFire" />
-      <DataCard description="First Visit" :mainValue="stats.firstVisit" icon="IconFirstVisit" />
+      <DataCard :description="$t('statistics.userStatistics.visits.total')" :mainValue="stats.totalVisits"
+        icon="IconAllVisits" />
+      <DataCard :description="$t('statistics.userStatistics.visits.activeDays')" :mainValue="stats.activeDays"
+        icon="IconCalendar" />
+      <DataCard :description="$t('statistics.userStatistics.visits.longestStreak')" :mainValue="stats.longestStreak"
+        icon="IconFire" />
+      <DataCard :description="$t('statistics.userStatistics.visits.firstVisit')" :mainValue="stats.firstVisit"
+        icon="IconFirstVisit" />
     </div>
 
   </div>

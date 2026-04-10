@@ -3,10 +3,9 @@
  * @file: DataCard.vue
  * @author: Pavol Humeny
  * @date: 15.5.2026
- * @description:
+ * @description: Component for displaying a single data card with a description, main value, and an optional icon.
  */
 import BaseIcon from '../icons/BaseIcon.vue';
-
 
 const props = defineProps({
   description: {
@@ -14,7 +13,7 @@ const props = defineProps({
     required: true,
   },
   mainValue: {
-    type: String,
+    type: String || Number,
     required: true,
   },
   icon: {

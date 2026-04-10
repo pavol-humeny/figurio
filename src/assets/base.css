@@ -67,6 +67,12 @@
   --viewport-wrapper-contrast-light-c: #ffffff;
 
   --gold-c: #EFBF04;
+
+  --highlight-card-c-light: rgba(0, 0, 0, 0.1);
+  --highlight-card-c-dark: rgba(0, 0, 0, 0.3);
+
+  --highlight-card-hover-c-light: rgba(0, 0, 0, 0.15);
+  --highlight-card-hover-c-dark: rgba(0, 0, 0, 0.35);
 }
 
 :root {
@@ -95,6 +101,9 @@
   --box-shadow-content: var(--box-shadow-content-light);
 
   --scrollbar-c: var(--border-c);
+
+  --highlight-card-c: var(--highlight-card-c-light);
+  --highlight-card-hover-c: var(--highlight-card-hover-c-light);
 }
 
 .dark{
@@ -123,6 +132,9 @@
   --box-shadow-content: var(--box-shadow-content-dark);
 
   --scrollbar-c: var(--border-c);
+
+  --highlight-card-c: var(--highlight-card-c-dark);
+  --highlight-card-hover-c: var(--highlight-card-hover-c-dark);
 }
 
 *,
@@ -185,7 +197,7 @@ body {
 
   --box-shadow-ui: 1px 3px 6px rgba(0, 0, 0, 0.4);
   --box-shadow-hover: 2px 2px 6px rgba(0, 0, 0, 0.2);
-  --box-shadow-card: 1px 1px 4px rgba(0, 0, 0, 0.1);
+  --box-shadow-card: px px 4px rgba(0, 0, 0, 0.1);
 
   --landing-page-logo-size: clamp(40px, 4.5vw, 90px);
   --landing-page-logo-letter-size: calc(var(--landing-page-logo-size) * 0.8);

@@ -619,6 +619,36 @@ toolToggleCount}, ...]
     }
   }
 
+  /**
+   * Fetches tool usage for a specific user (for radar chart)
+   * {
+   *   totalInteractions: number,
+   *   tools: [{ tool, usage, percentage }]
+   * }
+   * @param {string} userId
+   */
+  const getUserToolUsage = async (userId) => {
+    if (!userId) {
+      warn('Missing userId for tool usage')
+      return { totalInteractions: 0, tools: [] }
+    }
+
+    try {
+      const res = await fetch(`${API_BASE}/api/users/${userId}/toolUsage`)
+
+      if (!res.ok) throw new Error('Failed to fetch user tool usage')
+
+      const data = await res.json()
+
+      log('User tool usage fetched:', data)
+
+      return data
+    } catch (err) {
+      error('Error fetching user tool usage:', err)
+      return { totalInteractions: 0, tools: [] }
+    }
+  }
+
   return {
     addUserVisit,
     addUserEvent,
@@ -647,5 +677,6 @@ toolToggleCount}, ...]
     getNumberOfPWAVisits,
     addRating,
     getUserStats,
+    getUserToolUsage,
   }
 }

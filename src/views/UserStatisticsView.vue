@@ -6,6 +6,7 @@
  * @description: User statistics page of the application. This component provides information about user interactions with the app, such as visits and events. It features a toggle to switch between visits and events statistics, and displays various charts and data visualizations to help understand how users are using the app and which features are most popular.
  */
 import UserVisits from '@/components/userStatistics/UserVisits.vue';
+import ToolsStats from '@/components/userStatistics/ToolsStats.vue'
 
 </script>
 
@@ -16,6 +17,7 @@ import UserVisits from '@/components/userStatistics/UserVisits.vue';
         <p>{{ $t('statistics.userStatistics.title') }}</p>
       </div>
       <UserVisits />
+      <ToolsStats />
     </div>
 
   </div>
@@ -24,7 +26,7 @@ import UserVisits from '@/components/userStatistics/UserVisits.vue';
 <style scoped>
 .user-statistics-view {
   position: relative;
-  width: 100vw;
+  width: 100%;
   min-width: var(--min-window-width);
   height: 100%;
   background: var(--background-c);

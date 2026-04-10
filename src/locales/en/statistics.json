@@ -112,7 +112,14 @@
   "userStatistics": {
     "title": "Usage Statistics",
     "visits": {
-      "title": "Visits"
+      "title": "Visits",
+      "total": "Total visits",
+      "activeDays": "Active days",
+      "longestStreak": "Longest streak",
+      "firstVisit": "First visit"
+    },
+    "toolUsage": {
+      "title": "Tool usage"
     }
   }
 }
