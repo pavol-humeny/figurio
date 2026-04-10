@@ -37,7 +37,7 @@ const stats = ref(null)
  * Array of all available tools
  */
 const availableTools = computed(() => [
-  { tool: 'noiseAnalysis', name: t('tools.imageAnalysis.label'), icon: 'IconImageAnalysisTool' },
+  { tool: 'removeNoise', name: t('tools.imageAnalysis.label'), icon: 'IconImageAnalysisTool' },
   { tool: 'crop', name: t('tools.crop.label'), icon: 'IconCropTool' },
   { tool: 'frame', name: t('tools.frame.label'), icon: 'IconFrameTool' },
   { tool: 'grayscale', name: t('tools.grayscale.label'), icon: 'IconGrayscaleTool' },
@@ -51,7 +51,7 @@ const availableTools = computed(() => [
   { tool: 'rotate', name: t('tools.transform.subTools.rotate.label'), icon: 'IconRotateTool' },
   { tool: 'flip', name: t('tools.transform.subTools.flip.label'), icon: 'IconFlipVertical' },
   { tool: 'resize', name: t('tools.transform.subTools.resize.label'), icon: 'IconResizeTool' },
-  { tool: 'Presets', name: t('tools.preset.label'), icon: 'IconPresetTool' },
+  { tool: 'preset', name: t('tools.preset.label'), icon: 'IconPresetTool' },
 ])
 
 /**
