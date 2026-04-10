@@ -185,6 +185,7 @@ body {
 
   --box-shadow-ui: 1px 3px 6px rgba(0, 0, 0, 0.4);
   --box-shadow-hover: 2px 2px 6px rgba(0, 0, 0, 0.2);
+  --box-shadow-card: 1px 1px 4px rgba(0, 0, 0, 0.1);
 
   --landing-page-logo-size: clamp(40px, 4.5vw, 90px);
   --landing-page-logo-letter-size: calc(var(--landing-page-logo-size) * 0.8);

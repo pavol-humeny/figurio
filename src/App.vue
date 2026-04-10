@@ -383,7 +383,7 @@ onMounted(async () => {
   await router.isReady() // wait until router is fully loaded
 
   // Redirect to home view on reload
-  if (route.name !== 'home' && route.name !== 'statistics') {
+  if (route.name !== 'home' && route.name !== 'statistics' && route.name !== 'user-statistics') {
     warn('App reloaded, redirecting to home view: ' + route.name)
     router.replace({ name: 'home' })
   }
@@ -401,7 +401,7 @@ onMounted(async () => {
     sendVisitDuringMaintenanceEmail(userUuid)
   } else {
     // Log user visit only if not on statistics page
-    if (route.name !== 'statistics') {
+    if (route.name !== 'statistics' && route.name !== 'user-statistics') {
       // If isPWA is true, it means that the user has installed the app as a PWA
       const isPWA =
         window.matchMedia('(display-mode: standalone)').matches ||

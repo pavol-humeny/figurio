@@ -113,6 +113,13 @@
       ]
     },
     "statistics": {
+      "title": "Štatistiky",
+      "text": "Na zlepšovanie funkčnosti, použiteľnosti a výkonu editora sa zbierajú anonymné údaje o používaní. Štatistiky sú agregované a neobsahujú osobný ani upravovaný obrazový obsah. Zahŕňajú informácie o frekvencii používania jednotlivých nástrojov a funkcií.",
+      "seeStatisticsButton": {
+        "text": "Zobraziť všetky štatistiky"
+      }
+    },
+    "userStatistics": {
       "title": "Štatistiky používania",
       "text": "Na zlepšovanie funkčnosti, použiteľnosti a výkonu editora sa zbierajú anonymné údaje o používaní. Štatistiky sú agregované a neobsahujú osobný ani upravovaný obrazový obsah. Zahŕňajú informácie o frekvencii používania jednotlivých nástrojov a funkcií.",
       "seeStatisticsButton": {

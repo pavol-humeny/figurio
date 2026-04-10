@@ -111,7 +111,7 @@ export const globalConfig = {
     // If usage stats should be sent to the API
     sendUsageStats: true,
     // If usage stats should be sent when running on localhost
-    sendUsageStatsOnLocalhost: true,
+    sendUsageStatsOnLocalhost: false,
     // If visit during maintenance email should be sent
     sendVisitDuringMaintenanceEmail: true,
     // Heartbeat interval in ms

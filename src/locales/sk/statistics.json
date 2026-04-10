@@ -108,5 +108,11 @@
         "totalEvents": "Celkový počet použití:"
       }
     }
+  },
+  "userStatistics": {
+    "title": "Štatistiky používania",
+    "visits": {
+      "title": "Návštevnosť"
+    }
   }
 }

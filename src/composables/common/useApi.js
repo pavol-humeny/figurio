@@ -593,6 +593,32 @@ toolToggleCount}, ...]
     }
   }
 
+  /**
+   * Fetches aggregated stats for a specific user
+   * @param {string} userId
+   */
+  const getUserStats = async (userId) => {
+    if (!userId) {
+      warn('Missing userId for user stats')
+      return null
+    }
+
+    try {
+      const res = await fetch(`${API_BASE}/api/users/${userId}/userVisits`)
+
+      if (!res.ok) throw new Error('Failed to fetch user stats')
+
+      const data = await res.json()
+
+      log('User stats fetched:', data)
+
+      return data
+    } catch (err) {
+      error('Error fetching user stats:', err)
+      return null
+    }
+  }
+
   return {
     addUserVisit,
     addUserEvent,
@@ -620,5 +646,6 @@ toolToggleCount}, ...]
     getAppInstalledCount,
     getNumberOfPWAVisits,
     addRating,
+    getUserStats,
   }
 }

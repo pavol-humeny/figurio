@@ -32,7 +32,7 @@ const editorStore = useEditorStore()
  * Checks if the current view is 'home' to conditionally render parts of the top panel
  */
 const route = useRoute()
-const isEditorViewOrStatistics = computed(() => route.name === 'editor' || route.name === 'statistics')
+const isEditorViewOrStatistics = computed(() => route.name === 'editor' || route.name === 'statistics' || route.name === 'user-statistics')
 const isEditorView = computed(() => route.name === 'editor')
 
 /**

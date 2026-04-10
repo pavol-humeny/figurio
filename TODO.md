@@ -1,31 +1,70 @@
-## ŠT
-- MTIa
-- kniha
-- Dokončiť komentovanie 
-- v
-    - uvodna obrazovka
-    - predpremiera
-    - historická verzia Figurio 
-    - chatgpt predplatné
-    - otestovať či v pdf sú includnuté fonty
+web application, image editing, online graphic editor, user interface, client side data processing, Vue.js
 
-video
-- hudba do videa - copyright
 
-## TODO - text 
-- prehlásenie AI
+## 9.4.
+- skontrolovať excel text 
+- odstrániť hudbu z videa na excel 
+- poslať odkaz na figurio na discord - skontrolovať - vymaž
+- skontrolovať plagát - vymaž 
+- skúsiť vymyslieť prehlásenie do BP 
+- odovzdať excel súbory 
+
+- pridať zobrazenie štatistík pre daného používateľa 
+- odstrániť random eventy 
+- vyčistiť repozitár 
+- odstrániť odkaz github 
+- aktualizovať README pre BE
+- prehlásenie AI - poslať Heroutovi
+- zarovnať prehľad súborov pod seba
+- upratať súbory na ploche 
+- upratať súbory v repozitári s textom 
+
+- popísať BE - písať Heroutovi či to tam dávať 
+- spraviť školskú stránku ako rozcestník na plagát, video, README
+
+## 10.4. 
+- prejsť si BP a povyťahovať nejaké veci čo by som mal vedieť, poznať 
+- skúsiť si rozvrhnúť prezentáciu na IBT
+- premyslieť si ako ukázať BP oponentovi 
+
+## Next 
+- jazyková korektúra BP 
+
+## Stats 
+- nástroje 
+    - Top 3 
+    - radar chart - využívanie nástrojov (15 nástrojov)
+- návštevy 
+    - celkový počet návštev
+    - počet dní
+    - najviac dní po sebe 
+    - PWA vs browser usage 
+    - first visit (date - vo formáte na zobrazenie)
+    - heat mapa návštev pre dni 
+- Počet eventov - poradie v počte eventov medzi userami 
+    - import - počet, typy, poradie 
+    - export - počet, typy, poradie 
+    - počet aplikovaných operácií - celkovo, v rámci jednotlivých nástrojov, poradie
+    - koľko nástrojov už daný človek použil 8/15
+- session duration 
+    - dĺžka - min, max, avg, celkovo
+    - počet udalostí na session - import, export, operácia 
+    - events per minute
+
+poradie - umiestnenie v rámci všetkých užívateľov, pravdepodobne len nejaký badge pre 1., 2., 3. miesto
+
 
 # TODO
 - touch event pre select, shape, text, magnify, blur, posun 
 - export, help... okná na tablete 
 - odstrániť random eventy 
-- Pridať hodnotenie aplikácie po exportovaní 
 - vydať verziu 6 bez random eventov 
 
-- prihlásenie na excel 
 - upratať .md súbory 
 - odstrániť skripty 
 - spraviť prehľad tém čo by som mal vedieť k jednotlivým častiam BP textu 
+
+- štatistiky pre usera 
 
 ## Požiadavky na diplomku 
 - webová aplikácia 

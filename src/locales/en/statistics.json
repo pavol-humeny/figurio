@@ -108,5 +108,11 @@
         "totalEvents": "Total uses:"
       }
     }
+  },
+  "userStatistics": {
+    "title": "Usage Statistics",
+    "visits": {
+      "title": "Visits"
+    }
   }
 }

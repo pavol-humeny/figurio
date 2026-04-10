@@ -113,6 +113,13 @@
       ]
     },
     "statistics":{
+      "title": "Statistics",
+      "text": "Anonymous usage data is collected to help improve the editor’s functionality, usability, and performance. The collected statistics are aggregated and do not include personal content from edited images. Data reflects how often individual tools and features are used.",
+      "seeStatisticsButton": {
+        "text": "See All Statistics"
+      }
+    },
+    "userStatistics":{
       "title": "Usage Statistics",
       "text": "Anonymous usage data is collected to help improve the editor’s functionality, usability, and performance. The collected statistics are aggregated and do not include personal content from edited images. Data reflects how often individual tools and features are used.",
       "seeStatisticsButton": {

@@ -107,6 +107,17 @@ const showStatistics = () => {
 
   addUserEvent('openModal', { modal: 'statistics' })
 }
+
+/**
+ * Navigates to the user statistics view
+ */
+const showUserStatistics = () => {
+  // Open user statistics view in a new tab
+  const url = router.resolve({ name: 'user-statistics' }).href
+  window.open(url, '_blank')
+
+  addUserEvent('openModal', { modal: 'user-statistics' })
+}
 </script>
 
 <template>
@@ -546,6 +557,25 @@ const showStatistics = () => {
               <div class="tutorial-button">
                 <DefaultButton :disabled="!isTutorialEnabled"
                   :text="$t('help.helpContent.statistics.seeStatisticsButton.text')" @click="showStatistics()" />
+              </div>
+            </div>
+
+            <!-- User statistics -->
+            <div class="help-content">
+              <div class="subtitle-wrapper">
+                <p class="help-content-title">
+                  {{ $t('help.helpContent.userStatistics.title') }}
+                </p>
+              </div>
+              <ul class="dot-paragraph">
+                <li>
+                  {{ $t('help.helpContent.userStatistics.text') }}
+                </li>
+              </ul>
+              <div class="tutorial-button">
+                <DefaultButton :disabled="!isTutorialEnabled"
+                  :text="$t('help.helpContent.userStatistics.seeStatisticsButton.text')"
+                  @click="showUserStatistics()" />
               </div>
             </div>
 

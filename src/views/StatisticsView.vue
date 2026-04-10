@@ -92,6 +92,7 @@ const selectStatistics = (view) => {
 .statistics-view {
   position: relative;
   width: 100vw;
+  min-width: var(--min-window-width);
   height: 100%;
   background: var(--background-c);
   overflow: hidden;

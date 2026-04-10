@@ -116,6 +116,13 @@
       "title": "Statistiky používání",
       "text": "Pro zlepšování funkčnosti, použitelnosti a výkonu editoru jsou sbírána anonymní data o používání. Statistiky jsou agregované a neobsahují osobní ani upravovaný obrazový obsah. Zahrnují informace o frekvenci používání jednotlivých nástrojů a funkcí.",
       "seeStatisticsButton": {
+        "text": "Zobrazit všechny statistiky"
+      }
+    },
+    "userStatistics": {
+      "title": "Statistiky používání",
+      "text": "Pro zlepšování funkčnosti, použitelnosti a výkonu editoru jsou sbírána anonymní data o používání. Statistiky jsou agregované a neobsahují osobní ani upravovaný obrazový obsah. Zahrnují informace o frekvenci používání jednotlivých nástrojů a funkcí.",
+      "seeStatisticsButton": {
         "text": "Zobrazit statistiky"
       }
     },
