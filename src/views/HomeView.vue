@@ -342,8 +342,9 @@ onUnmounted(() => {
         {{ t('home.footer.text') }}
       </p>
 
-      <a class="footer-link" href="https://github.com/pavol-humeny/figurio" target="_blank" rel="noopener noreferrer">
-        GitHub
+      <a class="footer-link" href="https://www.stud.fit.vutbr.cz/~xhumenp00/figurio/" target="_blank"
+        rel="noopener noreferrer">
+        {{ t('home.footer.projectPage') }}
       </a>
 
     </div>

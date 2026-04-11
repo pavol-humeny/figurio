@@ -101,6 +101,7 @@
     { "name": "...", "description": "" }
   ],
   "footer": {
-    "text": "Created as a bachelor's thesis project at FIT VUT. © {year} Figurio"
+    "text": "Created as a bachelor's thesis project at FIT VUT. © {year} Figurio",
+    "projectPage": "Project page"
   }
 }

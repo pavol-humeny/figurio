@@ -101,6 +101,7 @@
     { "name": "...", "description": "" }
   ],
   "footer": {
-    "text": "Vytvorené ako bakalárska práca na FIT VUT. © {year} Figurio"
+    "text": "Vytvorené ako bakalárska práca na FIT VUT. © {year} Figurio",
+    "projectPage": "Stránka projektu"
   }
 }

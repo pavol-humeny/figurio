@@ -9,10 +9,8 @@ web application, image editing, online graphic editor, user interface, client si
 - skúsiť vymyslieť prehlásenie do BP 
 - odovzdať excel súbory 
 
-- pridať zobrazenie štatistík pre daného používateľa 
 - odstrániť random eventy 
 - vyčistiť repozitár 
-- odstrániť odkaz github 
 - aktualizovať README pre BE
 - prehlásenie AI - poslať Heroutovi
 - zarovnať prehľad súborov pod seba
@@ -30,47 +28,6 @@ web application, image editing, online graphic editor, user interface, client si
 ## Next 
 - jazyková korektúra BP 
 
-## Stats 
-- nástroje 
-    - Top 3 
-    - radar chart - využívanie nástrojov (15 nástrojov)
-- návštevy 
-    - celkový počet návštev
-    - počet dní
-    - najviac dní po sebe 
-    - PWA vs browser usage 
-    - first visit (date - vo formáte na zobrazenie)
-    - heat mapa návštev pre dni 
-- Počet eventov - poradie v počte eventov medzi userami 
-    - import 
-        - počet 
-        - radar chart typov (png, jpg, jepg, webp, pdf)
-        - najmenší, najväčší obrázok podľa rozmerov WxH
-    - export
-        - počet 
-        - radar chart typov (png, jpg, jepg, webp, pdf, copy to clipboard)
-        - najmenší, najväčší obrázok podľa rozmerov WxH
-        - 
-    - modal open
-        - typ - pocet 
-- session duration 
-    - dĺžka - min, max, avg, celkovo
-    - počet udalostí na session - import, export, operácia
-    - events per minute
-
-- porovnanie 
-    - počet jedinečných používateľov
-    - počet návštev 
-    - počet operácií 
-    - Operation per session 
-    - import count 
-    - export count 
-    - session time total 
-    - events per minute 
-
-poradie - umiestnenie v rámci všetkých užívateľov, pravdepodobne len nejaký badge pre 1., 2., 3. miesto
-
-
 # TODO
 - touch event pre select, shape, text, magnify, blur, posun 
 - export, help... okná na tablete 
@@ -80,8 +37,6 @@ poradie - umiestnenie v rámci všetkých užívateľov, pravdepodobne len nejak
 - upratať .md súbory 
 - odstrániť skripty 
 - spraviť prehľad tém čo by som mal vedieť k jednotlivým častiam BP textu 
-
-- štatistiky pre usera 
 
 ## Požiadavky na diplomku 
 - webová aplikácia 
