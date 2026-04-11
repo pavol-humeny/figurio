@@ -362,7 +362,7 @@ export function importFileService(
       addUserEvent('uploadImage', {
         fileFormat: imageStore.fileFormat,
         fileName: imageStore.fileName,
-        fileSize: imageStore.fileDimensions.size,
+        fileSize: file.size,
         fileWidth: imageStore.fileDimensions.width,
         fileHeight: imageStore.fileDimensions.height,
       })

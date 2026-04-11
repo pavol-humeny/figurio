@@ -110,7 +110,7 @@
     }
   },
   "userStatistics": {
-    "title": "Štatistiky užívateľa",
+    "title": "Štatistiky používania",
     "visits": {
       "title": "Návštevy",
       "total": "Celkové návštevy",
@@ -120,6 +120,21 @@
     },
     "toolUsage": {
       "title": "Využitie nástrojov"
+    },
+    "eventsStats": {
+      "title": "Štatistiky událostí",
+      "import":{
+        "title": "Import obrázka",
+        "totalImports": "Celkový počet importov",
+        "smallestImportedImage": "Najmenší importovaný obrázok (px)",
+        "largestImportedImage": "Najväčší importovaný obrázok (px)"
+      },
+      "export":{
+        "title": "Export obrázka",
+        "totalExports": "Celkový počet exportov",
+        "smallestExportedImage": "Najmenší exportovaný obrázok (px)",
+        "largestExportedImage": "Najväčší exportovaný obrázok (px)"
+      }
     }
   }
 }

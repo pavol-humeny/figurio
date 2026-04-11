@@ -29,7 +29,7 @@ onMounted(async () => {
 <template>
   <div class="user-visits">
 
-    <div class="basic-info">
+    <div class="basic-info" v-if="stats">
       <DataCard :description="$t('statistics.userStatistics.visits.total')" :mainValue="stats.totalVisits"
         icon="IconAllVisits" />
       <DataCard :description="$t('statistics.userStatistics.visits.activeDays')" :mainValue="stats.activeDays"

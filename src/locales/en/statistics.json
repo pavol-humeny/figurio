@@ -120,6 +120,21 @@
     },
     "toolUsage": {
       "title": "Tool usage"
+    },
+    "eventsStats": {
+      "title": "Events stats",
+      "import":{
+        "title": "Image imports",
+        "totalImports": "Total imports",
+        "smallestImportedImage": "Smallest imported image (px)",
+        "largestImportedImage": "Largest imported image (px)"
+      },
+      "export":{
+        "title": "Image exports",
+        "totalExports": "Total exports",
+        "smallestExportedImage": "Smallest exported image (px)",
+        "largestExportedImage": "Largest exported image (px)"
+      }
     }
   }
 }

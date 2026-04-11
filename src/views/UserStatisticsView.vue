@@ -7,6 +7,7 @@
  */
 import UserVisits from '@/components/userStatistics/UserVisits.vue';
 import ToolsStats from '@/components/userStatistics/ToolsStats.vue'
+import EventsStats from '@/components/userStatistics/EventsStats.vue'
 
 </script>
 
@@ -18,8 +19,8 @@ import ToolsStats from '@/components/userStatistics/ToolsStats.vue'
       </div>
       <UserVisits />
       <ToolsStats />
+      <EventsStats />
     </div>
-
   </div>
 </template>
 

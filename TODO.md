@@ -41,11 +41,28 @@ web application, image editing, online graphic editor, user interface, client si
     - PWA vs browser usage 
     - first visit (date - vo formáte na zobrazenie)
     - heat mapa návštev pre dni 
+
+    
 - Počet eventov - poradie v počte eventov medzi userami 
+    - import 
+        - počet 
+        - radar chart typov (png, jpg, jepg, webp, pdf)
+        - najmenší, najväčší obrázok podľa rozmerov WxH
+    - export
+        - počet 
+        - radar chart typov (png, jpg, jepg, webp, pdf, copy to clipboard)
+        - najmenší, najväčší obrázok podľa rozmerov WxH
+        - 
+    - modal open
+        - typ - pocet 
+
+    - 
+
     - import - počet, typy, poradie 
     - export - počet, typy, poradie 
     - počet aplikovaných operácií - celkovo, v rámci jednotlivých nástrojov, poradie
     - koľko nástrojov už daný človek použil 8/15
+
 - session duration 
     - dĺžka - min, max, avg, celkovo
     - počet udalostí na session - import, export, operácia 

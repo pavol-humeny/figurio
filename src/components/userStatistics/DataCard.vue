@@ -13,7 +13,7 @@ const props = defineProps({
     required: true,
   },
   mainValue: {
-    type: String || Number,
+    type: [String, Number],
     required: true,
   },
   icon: {

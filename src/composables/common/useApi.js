@@ -649,6 +649,57 @@ toolToggleCount}, ...]
     }
   }
 
+  /**
+   * Fetches detailed event statistics for a specific user
+   * (imports, exports, modals, ranking, etc.)
+   *
+   * @param {string} userId
+   * @returns {{
+   *   totalEvents: number,
+   *   rank: number,
+   *   import: {
+   *     total: number,
+   *     formats: { format: string, count: number }[],
+   *     smallest: { width: number, height: number } | null,
+   *     largest: { width: number, height: number } | null
+   *   },
+   *   export: {
+   *     total: number,
+   *     formats: { format: string, count: number }[],
+   *     smallest: { width: number, height: number } | null,
+   *     largest: { width: number, height: number } | null
+   *   }
+   * }}
+   */
+  const getUserEventsStats = async (userId) => {
+    if (!userId) {
+      warn('Missing userId for user event stats')
+      return null
+    }
+
+    try {
+      const res = await fetch(`${API_BASE}/api/users/${userId}/eventsStats`)
+
+      if (!res.ok) throw new Error('Failed to fetch user event stats')
+
+      const data = await res.json()
+
+      log('User event stats fetched:', data)
+
+      return data
+    } catch (err) {
+      error('Error fetching user event stats:', err)
+
+      return {
+        totalEvents: 0,
+        rank: null,
+        import: { total: 0, formats: [], smallest: null, largest: null },
+        export: { total: 0, formats: [], smallest: null, largest: null },
+        modals: [],
+      }
+    }
+  }
+
   return {
     addUserVisit,
     addUserEvent,
@@ -678,5 +729,6 @@ toolToggleCount}, ...]
     addRating,
     getUserStats,
     getUserToolUsage,
+    getUserEventsStats,
   }
 }

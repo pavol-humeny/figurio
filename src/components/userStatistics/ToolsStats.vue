@@ -243,7 +243,6 @@ watch(
   align-items: stretch;
 }
 
-/* LEFT SIDE */
 .top-tools {
   width: 30%;
   display: flex;
@@ -252,14 +251,12 @@ watch(
   height: 100%;
 }
 
-/* Header */
 .top-tools-header {
   font-size: 20px;
   font-weight: 600;
   padding: 0 4px;
 }
 
-/* Scroll container */
 .tools-list {
   display: flex;
   flex-direction: column;
@@ -268,7 +265,6 @@ watch(
   padding-right: 4px;
 }
 
-/* Item */
 .tool-item {
   display: flex;
   align-items: center;
@@ -283,7 +279,6 @@ watch(
   background: var(--highlight-card-hover-c);
 }
 
-/* Rank */
 .tool-rank {
   font-size: 11px;
   font-weight: 600;
@@ -291,14 +286,12 @@ watch(
   width: 20px;
 }
 
-/* Icon */
 .tool-icon {
   width: 18px;
   height: 18px;
   opacity: 0.8;
 }
 
-/* Info */
 .tool-info {
   flex: 1;
 }
@@ -308,14 +301,12 @@ watch(
   font-weight: 500;
 }
 
-/* Usage (right aligned) */
 .tool-usage {
   font-size: 13px;
   font-weight: 600;
   opacity: 0.8;
 }
 
-/* RIGHT SIDE */
 .chart-container {
   flex: 1;
   position: relative;
