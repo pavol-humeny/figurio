@@ -135,6 +135,29 @@
         "smallestExportedImage": "Smallest exported image (px)",
         "largestExportedImage": "Largest exported image (px)"
       }
+    },
+    "sessionStats": {
+      "session":{
+        "title": "Sessions",
+        "totalSessions": "Total sessions",
+        "totalEvents": "Total events",
+        "eventsPerMinute": "Events per minute",
+        "keyboardShortcuts": "Keyboard shortcuts used"
+      },
+      "sessionDuration": {
+        "title": "Session duration",
+        "min": "Min (min)",
+        "avg": "Average (min)",
+        "max": "Max (min)",
+        "total": "Total (min)"
+      },
+      "eventsPerSession": {
+        "title": "Events per session",
+        "import": "Image imports per session",
+        "export": "Image exports per session",
+        "toolToggle": "Tool toggles per session",
+        "operation": "Operations per session"
+      }
     }
   }
 }

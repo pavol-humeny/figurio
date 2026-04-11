@@ -41,8 +41,6 @@ web application, image editing, online graphic editor, user interface, client si
     - PWA vs browser usage 
     - first visit (date - vo formáte na zobrazenie)
     - heat mapa návštev pre dni 
-
-    
 - Počet eventov - poradie v počte eventov medzi userami 
     - import 
         - počet 
@@ -55,18 +53,20 @@ web application, image editing, online graphic editor, user interface, client si
         - 
     - modal open
         - typ - pocet 
-
-    - 
-
-    - import - počet, typy, poradie 
-    - export - počet, typy, poradie 
-    - počet aplikovaných operácií - celkovo, v rámci jednotlivých nástrojov, poradie
-    - koľko nástrojov už daný človek použil 8/15
-
 - session duration 
     - dĺžka - min, max, avg, celkovo
-    - počet udalostí na session - import, export, operácia 
+    - počet udalostí na session - import, export, operácia
     - events per minute
+
+- porovnanie 
+    - počet jedinečných používateľov
+    - počet návštev 
+    - počet operácií 
+    - Operation per session 
+    - import count 
+    - export count 
+    - session time total 
+    - events per minute 
 
 poradie - umiestnenie v rámci všetkých užívateľov, pravdepodobne len nejaký badge pre 1., 2., 3. miesto
 

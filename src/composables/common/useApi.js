@@ -700,6 +700,41 @@ toolToggleCount}, ...]
     }
   }
 
+  /**
+   * Fetches session statistics for a specific user
+   * {
+   *   sessionDuration: { min, max, avg, total },
+   *   eventsPerSession: { import, export, operation },
+   *   eventsPerMinute: number
+   * }
+   */
+  const getUserSessionStats = async (userId) => {
+    if (!userId) {
+      warn('Missing userId for session stats')
+      return null
+    }
+
+    try {
+      const res = await fetch(`${API_BASE}/api/users/${userId}/sessionStats`)
+
+      if (!res.ok) throw new Error('Failed to fetch session stats')
+
+      const data = await res.json()
+
+      log('User session stats fetched:', data)
+
+      return data
+    } catch (err) {
+      error('Error fetching user session stats:', err)
+
+      return {
+        sessionDuration: { min: 0, max: 0, avg: 0, total: 0 },
+        eventsPerSession: { import: 0, export: 0, operation: 0 },
+        eventsPerMinute: 0,
+      }
+    }
+  }
+
   return {
     addUserVisit,
     addUserEvent,
@@ -730,5 +765,6 @@ toolToggleCount}, ...]
     getUserStats,
     getUserToolUsage,
     getUserEventsStats,
+    getUserSessionStats,
   }
 }
