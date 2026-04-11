@@ -735,6 +735,55 @@ toolToggleCount}, ...]
     }
   }
 
+  /**
+   * Fetches comparison stats for a specific user
+   * {
+   *   usersCount: number,
+   *   metrics: {
+   *     visits: { value, best, rank },
+   *     operations: { value, best, rank },
+   *     operationPerSession: { value, best, rank },
+   *     importCount: { value, best, rank },
+   *     exportCount: { value, best, rank },
+   *     sessionTimeTotal: { value, best, rank },
+   *     eventsPerMinute: { value, best, rank }
+   *   }
+   * }
+   */
+  const getUserComparison = async (userId) => {
+    if (!userId) {
+      warn('Missing userId for user comparison')
+      return null
+    }
+
+    try {
+      const res = await fetch(`${API_BASE}/api/users/${userId}/comparison`)
+
+      if (!res.ok) throw new Error('Failed to fetch user comparison')
+
+      const data = await res.json()
+
+      log('User comparison fetched:', data)
+
+      return data
+    } catch (err) {
+      error('Error fetching user comparison:', err)
+
+      return {
+        usersCount: 0,
+        metrics: {
+          visits: { value: 0, best: 0, rank: null },
+          operations: { value: 0, best: 0, rank: null },
+          operationPerSession: { value: 0, best: 0, rank: null },
+          importCount: { value: 0, best: 0, rank: null },
+          exportCount: { value: 0, best: 0, rank: null },
+          sessionTimeTotal: { value: 0, best: 0, rank: null },
+          eventsPerMinute: { value: 0, best: 0, rank: null },
+        },
+      }
+    }
+  }
+
   return {
     addUserVisit,
     addUserEvent,
@@ -766,5 +815,6 @@ toolToggleCount}, ...]
     getUserToolUsage,
     getUserEventsStats,
     getUserSessionStats,
+    getUserComparison,
   }
 }

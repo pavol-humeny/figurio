@@ -9,6 +9,7 @@ import UserVisits from '@/components/userStatistics/UserVisits.vue';
 import ToolsStats from '@/components/userStatistics/ToolsStats.vue'
 import EventsStats from '@/components/userStatistics/EventsStats.vue'
 import SessionStats from '@/components/userStatistics/SessionStats.vue';
+import UserComparison from '@/components/userStatistics/UserComparison.vue'
 
 </script>
 
@@ -22,6 +23,7 @@ import SessionStats from '@/components/userStatistics/SessionStats.vue';
       <ToolsStats />
       <EventsStats />
       <SessionStats />
+      <UserComparison />
     </div>
   </div>
 </template>

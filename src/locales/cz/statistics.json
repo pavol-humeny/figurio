@@ -135,6 +135,42 @@
         "smallestExportedImage": "Nejmenší exportovaný obrázek (px)",
         "largestExportedImage": "Největší exportovaný obrázek (px)"
       }
+    },
+    "sessionStats": {
+      "session": {
+        "title": "Relace",
+        "totalSessions": "Celkový počet relací",
+        "totalEvents": "Celkový počet událostí",
+        "eventsPerMinute": "Události za minutu",
+        "keyboardShortcuts": "Použité klávesové zkratky"
+      },
+      "sessionDuration": {
+        "title": "Délka relace",
+        "min": "Min (min)",
+        "avg": "Průměr (min)",
+        "max": "Max (min)",
+        "total": "Celkem (min)"
+      },
+      "eventsPerSession": {
+        "title": "Události na relaci",
+        "import": "Importy obrázků na relaci",
+        "export": "Exporty obrázků na relaci",
+        "toolToggle": "Přepnutí nástrojů na relaci",
+        "operation": "Operace na relaci"
+      }
+    },
+    "userComparison": {
+      "title": "Porovnání uživatelů",
+      "subtitle": "Porovnáno s {count} uživateli",
+      "visits": "Návštěvy",
+      "operations": "Operace",
+      "operationPerSession": "Operace / relace",
+      "importCount": "Počet importů",
+      "exportCount": "Počet exportů",
+      "sessionDuration": "Délka relace (min)",
+      "eventsPerMinute": "Události / min",
+      "exportSuccessRate": "Poměr exportů (%)",
+      "best": "Nejlepší"
     }
   }
 }

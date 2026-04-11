@@ -135,6 +135,42 @@
         "smallestExportedImage": "Najmenší exportovaný obrázok (px)",
         "largestExportedImage": "Najväčší exportovaný obrázok (px)"
       }
+    },
+    "sessionStats": {
+      "session": {
+        "title": "Relácie",
+        "totalSessions": "Celkový počet relácií",
+        "totalEvents": "Celkový počet udalostí",
+        "eventsPerMinute": "Udalosti za minútu",
+        "keyboardShortcuts": "Použité klávesové skratky"
+      },
+      "sessionDuration": {
+        "title": "Dĺžka relácie",
+        "min": "Min (min)",
+        "avg": "Priemer (min)",
+        "max": "Max (min)",
+        "total": "Spolu (min)"
+      },
+      "eventsPerSession": {
+        "title": "Udalosti na reláciu",
+        "import": "Importy obrázkov na reláciu",
+        "export": "Exporty obrázkov na reláciu",
+        "toolToggle": "Prepnutia nástrojov na reláciu",
+        "operation": "Operácie na reláciu"
+      }
+    },
+    "userComparison": {
+      "title": "Porovnanie používateľov",
+      "subtitle": "Porovnanie s {count} používateľmi",
+      "visits": "Návštevy",
+      "operations": "Operácie",
+      "operationPerSession": "Operácie / relácia",
+      "importCount": "Počet importov",
+      "exportCount": "Počet exportov",
+      "sessionDuration": "Dĺžka relácie (min)",
+      "eventsPerMinute": "Udalosti / min",
+      "exportSuccessRate": "Pomer exportov (%)",
+      "best": "Najlepší"
     }
   }
 }

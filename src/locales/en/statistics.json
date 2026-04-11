@@ -158,6 +158,19 @@
         "toolToggle": "Tool toggles per session",
         "operation": "Operations per session"
       }
+    },
+    "userComparison": {
+      "title": "User comparison",
+      "subtitle": "Compared with {count} users",
+      "visits": "Visits",
+      "operations": "Operations",
+      "operationPerSession": "Operations / Session",
+      "importCount": "Import count",
+      "exportCount": "Export count",
+      "sessionDuration": "Session time (min)",
+      "eventsPerMinute": "Events / min",
+      "exportSuccessRate": "Export rate (%)",
+      "best": "Best"
     }
   }
 }
