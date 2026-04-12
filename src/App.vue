@@ -407,8 +407,6 @@ onMounted(async () => {
         window.matchMedia('(display-mode: standalone)').matches ||
         window.navigator.standalone === true
 
-      warn(`Logging user visit. User UUID: ${userUuid}, isPWA: ${isPWA}`)
-
       addUserVisit(userUuid, isPWA)
 
       registerActivityListeners()

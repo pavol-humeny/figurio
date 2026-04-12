@@ -5,12 +5,10 @@
  * @description: Composable for command line interface in expert mode. This module provides a command line interface for users in expert mode, allowing them to execute various commands to control features and settings of the editor.
  */
 import { ref, nextTick, onMounted, onBeforeMount } from 'vue'
-import { useConsole } from '../common/useConsole'
 import { useApi } from '../common/useApi'
 import { userModeConfig } from '@/config/userModeConfig'
 import { globalConfig } from '@/config/globalConfig'
 
-const { warn } = useConsole()
 const { addUserEvent } = useApi()
 
 /**
@@ -23,10 +21,9 @@ const historyIndex = ref(-1)
  * Composable for command line interface in expert mode
  *
  * @param {Object} userModeStore  Pinia store for user mode management
- * @param {Object} editorStore    Pinia store for editor state management
  * @returns {Object}              Reactive properties and methods for command line interface
  */
-export function useCommandLine(userModeStore, editorStore) {
+export function useCommandLine(userModeStore) {
   /**
    * Reference to the input element
    */
@@ -47,7 +44,6 @@ export function useCommandLine(userModeStore, editorStore) {
 
   /**
    * Process entered command
-   * UPDATE new random event
    */
   const processCommand = () => {
     const trimmed = command.value.trim()
@@ -87,10 +83,6 @@ export function useCommandLine(userModeStore, editorStore) {
         }
         break
 
-      case 'turn':
-        handleTurnCommand(args)
-        break
-
       case 'set':
         handleSetCommand(args)
         break
@@ -114,107 +106,6 @@ export function useCommandLine(userModeStore, editorStore) {
         outputRef.value.scrollTop = outputRef.value.scrollHeight
       }
     })
-  }
-
-  /**
-   * Handle 'turn on/off' commands
-   * @param {string[]} args Command arguments
-   */
-  const handleTurnCommand = (args) => {
-    if (args.length < 2) {
-      output.value.push('Usage: turn <on/off> <feature>')
-      return
-    }
-
-    const action = args[0]
-    const feature = args[1]
-    const full = `turn ${action} ${feature}`
-
-    // Execute command
-    switch (full) {
-      case 'turn on snowfall':
-        editorStore.turnOnRandomEvent('snowfall')
-        warn('Snowfall enabled via contact form')
-        addUserEvent('command', { commandIdentifier: full })
-        break
-
-      case 'turn off snowfall':
-        editorStore.turnOffRandomEvent('snowfall')
-        warn('Snowfall disabled via contact form')
-        addUserEvent('command', { commandIdentifier: full })
-        break
-
-      case 'turn on christmaslights':
-        editorStore.turnOnRandomEvent('christmasLights')
-        warn('Christmas lights enabled via contact form')
-        addUserEvent('command', { commandIdentifier: full })
-        break
-
-      case 'turn off christmaslights':
-        editorStore.turnOffRandomEvent('christmasLights')
-        warn('Christmas lights disabled via contact form')
-        addUserEvent('command', { commandIdentifier: full })
-        break
-
-      case 'turn off randomevents':
-        editorStore.turnOffRandomEvent('snowfall')
-        editorStore.turnOffRandomEvent('christmasLights')
-        editorStore.turnOffRandomEvent('christmasTree')
-        editorStore.turnOffRandomEvent('fireworks')
-        editorStore.turnOffRandomEvent('fireworks2')
-        warn('Random events disabled via contact form')
-        addUserEvent('command', { commandIdentifier: full })
-        break
-
-      case 'turn on randomevents':
-        editorStore.turnOnRandomEvent('snowfall')
-        editorStore.turnOnRandomEvent('christmasLights')
-        editorStore.turnOnRandomEvent('christmasTree')
-        editorStore.turnOnRandomEvent('fireworks')
-        editorStore.turnOnRandomEvent('fireworks2')
-        warn('Random events enabled via contact form')
-        addUserEvent('command', { commandIdentifier: full })
-        break
-
-      case 'turn on christmastree':
-        editorStore.turnOnRandomEvent('christmasTree')
-        warn('Christmas tree enabled via contact form')
-        addUserEvent('command', { commandIdentifier: full })
-        break
-
-      case 'turn off christmastree':
-        editorStore.turnOffRandomEvent('christmasTree')
-        warn('Christmas tree disabled via contact form')
-        addUserEvent('command', { commandIdentifier: full })
-        break
-
-      case 'turn on fireworks':
-        editorStore.turnOnRandomEvent('fireworks')
-        warn('Fireworks enabled via contact form')
-        addUserEvent('command', { commandIdentifier: full })
-        break
-
-      case 'turn on fireworks2':
-        editorStore.turnOnRandomEvent('fireworks2')
-        warn('Fireworks2 enabled via contact form')
-        addUserEvent('command', { commandIdentifier: full })
-        break
-
-      case 'turn off fireworks':
-        editorStore.turnOffRandomEvent('fireworks')
-        warn('Fireworks disabled via contact form')
-        addUserEvent('command', { commandIdentifier: full })
-        break
-
-      case 'turn off fireworks2':
-        editorStore.turnOffRandomEvent('fireworks2')
-        warn('Fireworks2 disabled via contact form')
-        addUserEvent('command', { commandIdentifier: full })
-        break
-
-      default:
-        output.value.push(`Unknown turn command: ${full}`)
-    }
   }
 
   /**
@@ -328,7 +219,6 @@ export function useCommandLine(userModeStore, editorStore) {
    */
   const resetAll = () => {
     resetPrimaryColor(true)
-    editorStore.turnOffRandomEventsOnExit()
   }
 
   /**

@@ -40,6 +40,8 @@ export function useApi() {
       return
     }
 
+    warn(`Logging user visit. User UUID: ${userId}, isPWA: ${isPWA}`)
+
     try {
       // Get public IP
       const ipRes = await fetch('https://api.ipify.org?format=json')

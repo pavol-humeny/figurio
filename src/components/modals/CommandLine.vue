@@ -7,7 +7,6 @@
  */
 import { useUserModeStore } from '@/stores/userModeStore';
 import { useCommandLine } from '@/composables/modals/useCommandLine';
-import { useEditorStore } from '@/stores/editorStore';
 
 const userModeStore = useUserModeStore();
 
@@ -20,7 +19,7 @@ const {
   outputRef,
   processCommand,
   inputRef,
-} = useCommandLine(useUserModeStore(), useEditorStore());
+} = useCommandLine(useUserModeStore());
 
 </script>
 

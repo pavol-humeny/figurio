@@ -10,18 +10,6 @@ import { defineStore } from 'pinia'
 import { useUserModeStore } from './userModeStore'
 
 /**
- * Retrieves a boolean value from localStorage.
- * Returns `false` only if the stored value is the string `'false'`, otherwise returns the fallback.
- * @param {string} key - The localStorage key to read from.
- * @param {boolean} [fallback=true] - The default value if the key is not set.
- * @returns {boolean} The parsed boolean value.
- */
-const getBoolean = (key, fallback = true) => {
-  const value = localStorage.getItem(key)
-  return value === 'false' ? false : value === 'true' ? true : fallback
-}
-
-/**
  * Retrieves an array from localStorage.
  * Returns the fallback if parsing fails or the key is not set.
  *
@@ -206,18 +194,6 @@ export const useEditorStore = defineStore('editorStore', {
      * List of recently used colors (for shape fill/stroke and brush)
      */
     recentColors: getArray(`${globalConfig.LOCAL_STORAGE_PREFIX}recentColors`, []),
-
-    /**
-     * Random events state
-     * UPDATE new random event
-     */
-    randomEvents: {
-      snowfall: globalConfig.randomEvents.snowfall,
-      christmasLights: globalConfig.randomEvents.christmasLights,
-      christmasTree: globalConfig.randomEvents.christmasTree,
-      fireworks: globalConfig.randomEvents.fireworks,
-      fireworks2: globalConfig.randomEvents.fireworks2,
-    },
   }),
   actions: {
     /**
@@ -255,56 +231,11 @@ export const useEditorStore = defineStore('editorStore', {
     },
 
     /**
-     * Turn on a random event
-     * @param {string} eventKey - Key of the random event
-     */
-    turnOnRandomEvent(eventKey) {
-      if (eventKey in this.randomEvents) {
-        this.randomEvents[eventKey] = true
-        localStorage.setItem(`${globalConfig.LOCAL_STORAGE_PREFIX}randomEvent_${eventKey}`, 'true')
-      }
-    },
-
-    /**
-     * Turn off a random event
-     * @param {string} eventKey - Key of the random event
-     */
-    turnOffRandomEvent(eventKey) {
-      if (eventKey in this.randomEvents) {
-        this.randomEvents[eventKey] = false
-        localStorage.setItem(`${globalConfig.LOCAL_STORAGE_PREFIX}randomEvent_${eventKey}`, 'false')
-      }
-    },
-
-    /**
-     * Turn off all random events (used when exiting command mode)
-     */
-    turnOffRandomEventsOnExit() {
-      for (const eventKey in this.randomEvents) {
-        if (this.randomEvents[eventKey]) {
-          this.randomEvents[eventKey] = false
-        }
-      }
-    },
-
-    /**
      * Retrieve random events settings from localStorage (used when entering admin/expert mode)
      */
     retrieveUserSettingsFromLocalStorage() {
       // Retrieve random events settings from localStorage
       const userModeStore = useUserModeStore()
-
-      for (const eventKey in this.randomEvents) {
-        if (userModeStore.userMode === 'basic') {
-          continue
-        }
-
-        const storedValue = getBoolean(
-          `${globalConfig.LOCAL_STORAGE_PREFIX}randomEvent_${eventKey}`,
-          this.randomEvents[eventKey],
-        )
-        this.randomEvents[eventKey] = storedValue
-      }
 
       if (userModeStore.hasUserAccessToFeature('customPrimaryColor')) {
         // Retrieve primary color from localStorage

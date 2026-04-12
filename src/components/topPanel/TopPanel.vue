@@ -18,15 +18,9 @@ import { computed } from 'vue'
 import { useRouter } from 'vue-router'
 import BaseIcon from '@/components/icons/BaseIcon.vue'
 import { useUserModeStore } from '@/stores/userModeStore';
-import { useEditorStore } from '@/stores/editorStore';
-import SnowFall from '../randomEvents/SnowFall.vue';
-import ChristmasLights from '../randomEvents/ChristmasLights.vue';
-import FireWorks from '../randomEvents/FireWorks.vue';
-import FireWorks2 from '../randomEvents/FireWorks2.vue';
 
 const router = useRouter()
 const userModeStore = useUserModeStore()
-const editorStore = useEditorStore()
 
 /**
  * Checks if the current view is 'home' to conditionally render parts of the top panel
@@ -55,11 +49,6 @@ const showControls = computed(() => route.name === 'editor')
 
 <template>
   <div class="top-panel">
-    <SnowFall v-if="editorStore.randomEvents.snowfall" />
-    <ChristmasLights v-if="editorStore.randomEvents.christmasLights" />
-    <FireWorks v-if="editorStore.randomEvents.fireworks" />
-    <FireWorks2 v-if="editorStore.randomEvents.fireworks2" />
-
     <div class="top-panel-left" v-if="isEditorViewOrStatistics">
       <div class="top-panel-left-wrapper" id="top-panel-left">
         <div class="top-panel-logo-wrapper" @click="goHome">

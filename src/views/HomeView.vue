@@ -25,7 +25,6 @@ import { usePrivacyAndDataModal } from '@/composables/modals/usePrivacyAndDataMo
 import { useReleaseModal } from '@/composables/modals/useReleaseModal';
 import { useUserModeStore } from '@/stores/userModeStore';
 import BaseIcon from '@/components/icons/BaseIcon.vue';
-import ChristmasTree from '@/components/randomEvents/ChristmasTree.vue';
 import { useWorkspaceStore } from '@/stores/workspaceStore';
 import { useHistoryStore } from '@/stores/historyStore';
 import { useViewportStore } from '@/stores/viewportStore';
@@ -37,7 +36,6 @@ import blurArea from '@/assets/videos/blurArea.mp4'
 const { t, tm, locale, messages } = useI18n()
 const router = useRouter()
 const userModeStore = useUserModeStore()
-const editorStore = useEditorStore()
 
 const { uploadFile } = useUploadFileButton(useImageStore(), t, useRouter(), useUserModeStore(), useWorkspaceStore(), useUiStore(), useViewportStore(), useHistoryStore(), useEditorStore())
 const { openHelpModal } = useHelpModal(useUiStore(), useImageStore(), useEditorStore(), useUserModeStore(), t)
@@ -179,8 +177,7 @@ onUnmounted(() => {
           :style="{ 'user-select': 'none', 'padding-top': '30px' }" />
       </div>
       <div class="right-side">
-        <DragAndDropArea v-if="!editorStore.randomEvents.christmasTree" isHomePage />
-        <ChristmasTree v-else />
+        <DragAndDropArea isHomePage />
       </div>
     </div>
 

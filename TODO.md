@@ -1,26 +1,26 @@
+- v
+    - fonty v plagáte 
+    - user statistics 
+    - xhumenp00 page 
+    - README
+    - prvá verzia figuria
+    - prehlásenie 
+    - zoznam obrázkov
+- komentovanie BE
+
 web application, image editing, online graphic editor, user interface, client side data processing, Vue.js
 
-
-## 9.4.
+## 11.4.
 - skontrolovať excel text 
-- odstrániť hudbu z videa na excel 
 - poslať odkaz na figurio na discord - skontrolovať - vymaž
-- skontrolovať plagát - vymaž 
-- skúsiť vymyslieť prehlásenie do BP 
 - odovzdať excel súbory 
 
 - odstrániť random eventy 
 - vyčistiť repozitár 
-- aktualizovať README pre BE
 - prehlásenie AI - poslať Heroutovi
-- zarovnať prehľad súborov pod seba
-- upratať súbory na ploche 
-- upratať súbory v repozitári s textom 
-
 - popísať BE - písať Heroutovi či to tam dávať 
-- spraviť školskú stránku ako rozcestník na plagát, video, README
 
-## 10.4. 
+## 12.4. 
 - prejsť si BP a povyťahovať nejaké veci čo by som mal vedieť, poznať 
 - skúsiť si rozvrhnúť prezentáciu na IBT
 - premyslieť si ako ukázať BP oponentovi 

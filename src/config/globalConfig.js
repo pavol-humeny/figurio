@@ -76,16 +76,6 @@ export const globalConfig = {
     blockZooming: false,
   },
 
-  // Random events configuration
-  // UPDATE new random event
-  randomEvents: {
-    snowfall: false,
-    christmasLights: false,
-    christmasTree: false,
-    fireworks: false,
-    fireworks2: false,
-  },
-
   // List of feature tour video identifiers in the order they should be shown
   listOfFeatureTourVideos: [
     'imageAnalysis',

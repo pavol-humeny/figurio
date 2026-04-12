@@ -7,8 +7,6 @@
 export const userModeConfig = {
   // UPDATE new random event
   listOfCommands: [
-    'turn on <snowfall|christmasLights|christmasTree|fireworks|fireworks2|randomEvents>', // Enable feature
-    'turn off <snowfall|christmasLights|christmasTree|fireworks|fireworks2|randomEvents>', // Disable feature
     'set <option> <value>', // Set configuration option
     'reset <option>', // Reset configuration option
     'reset all', // Reset all configuration options
@@ -19,60 +17,13 @@ export const userModeConfig = {
   ],
 
   autocomplete: {
-    root: ['help', 'man', 'turn', 'set', 'reset', 'clear', 'quit', 'permissions'],
-    turn: ['on', 'off'],
-    'turn on': [
-      'snowfall',
-      'christmasLights',
-      'christmasTree',
-      'fireworks',
-      'fireworks2',
-      'randomEvents',
-    ],
-    'turn off': [
-      'snowfall',
-      'christmasLights',
-      'christmasTree',
-      'fireworks',
-      'fireworks2',
-      'randomEvents',
-    ],
+    root: ['help', 'man', 'set', 'reset', 'clear', 'quit', 'permissions'],
     set: ['primaryColor'],
     reset: ['primaryColor', 'all'],
-    man: ['turn on', 'turn off', 'set', 'reset', 'reset all', 'help', 'quit', 'man', 'permissions'],
+    man: ['set', 'reset', 'reset all', 'help', 'quit', 'man', 'permissions'],
   },
 
   commandManPages: {
-    'turn on': `
-      NAME
-          turn on - Enable a specific feature
-
-      SYNOPSIS
-          turn on <snowfall|christmasLights|christmasTree|fireworks|randomEvents>
-
-      DESCRIPTION
-          Enables the chosen feature:
-            snowfall        Start snowfall effect
-            christmasLights Turn on Christmas lights
-            christmasTree   Show Christmas tree
-            fireworks       Start fireworks display
-            randomEvents    Enable all events
-      `,
-    'turn off': `
-      NAME
-          turn off - Disable a specific feature
-
-      SYNOPSIS
-          turn off <snowfall|christmasLights|christmasTree|fireworks|randomEvents>
-
-      DESCRIPTION
-          Disables the chosen feature:
-            snowfall        Stop snowfall effect
-            christmasLights Turn off Christmas lights
-            christmasTree   Hide Christmas tree
-            fireworks       Stop fireworks display
-            randomEvents    Disable random events
-      `,
     help: `
       NAME
           help - Display available commands
