@@ -2,7 +2,7 @@
  * @file: editorStore.js
  * @author: Pavol Humeny
  * @date: 15.5.2026
- * @description: State and actions for managing editor tool selection, subtools, active tabs, random events, and user settings. This store handles the logic for which tools are enabled based on global configuration, as well as persisting certain settings to localStorage.
+ * @description: State and actions for managing editor tool selection, subtools, active tabs, and user settings. This store handles the logic for which tools are enabled based on global configuration, as well as persisting certain settings to localStorage.
  */
 import { editorConfig } from '@/config/editorConfig'
 import { globalConfig } from '@/config/globalConfig'
@@ -231,10 +231,9 @@ export const useEditorStore = defineStore('editorStore', {
     },
 
     /**
-     * Retrieve random events settings from localStorage (used when entering admin/expert mode)
+     * Retrieve console settings from localStorage (used when entering admin/expert mode)
      */
     retrieveUserSettingsFromLocalStorage() {
-      // Retrieve random events settings from localStorage
       const userModeStore = useUserModeStore()
 
       if (userModeStore.hasUserAccessToFeature('customPrimaryColor')) {

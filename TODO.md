@@ -7,6 +7,7 @@
     - prehlásenie 
     - zoznam obrázkov
 - komentovanie BE
+- MTIa
 
 web application, image editing, online graphic editor, user interface, client side data processing, Vue.js
 
@@ -15,8 +16,6 @@ web application, image editing, online graphic editor, user interface, client si
 - poslať odkaz na figurio na discord - skontrolovať - vymaž
 - odovzdať excel súbory 
 
-- odstrániť random eventy 
-- vyčistiť repozitár 
 - prehlásenie AI - poslať Heroutovi
 - popísať BE - písať Heroutovi či to tam dávať 
 

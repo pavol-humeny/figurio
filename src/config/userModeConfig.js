@@ -5,7 +5,6 @@
  * @description: Configuration for user modes and command mode. This module exports a `userModeConfig` object that defines the available commands for the command mode, autocomplete options for those commands, manual pages for each command, features accessible to different user modes (admin, expert, basic), and the email and passwords required to access command mode and switch between user modes.
  */
 export const userModeConfig = {
-  // UPDATE new random event
   listOfCommands: [
     'set <option> <value>', // Set configuration option
     'reset <option>', // Reset configuration option
