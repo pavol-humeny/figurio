@@ -6,8 +6,10 @@
     - prvá verzia figuria
     - prehlásenie 
     - zoznam obrázkov
+    - kuchyna 
 - komentovanie BE
 - MTIa
+- vytlačiť plagát
 
 web application, image editing, online graphic editor, user interface, client side data processing, Vue.js
 
