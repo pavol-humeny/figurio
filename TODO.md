@@ -1,19 +1,17 @@
 - v
     - fonty v plagáte 
-    - user statistics 
+    - user statistics
     - xhumenp00 page 
     - README
+    - discord 
+    - video - 3 chyby 
+
     - prvá verzia figuria
     - prehlásenie 
     - kuchyna 
-    - video - 3 chyby 
 
 
 - text
-    - bodka na konci vety vo footnote - úvod (link na video)
-    - v akom tvare linky vo footnote - či sú ukončené / a majú https
-    - zoznam obrázkov
-
     - screenshoty s user štatistík do prílohy 
     - screenshoty so štatistík do prílohy 
 
@@ -21,10 +19,16 @@
 - skúsiť si rozvrhnúť prezentáciu na IBT
 - premyslieť si ako ukázať BP oponentovi 
 - jazyková korektúra BP 
+- zabalenie BP
+- tlač 
+- odovzdanie 
+- scrollbar na all statistics
+
 
 # TODO
 - touch event pre select, shape, text, magnify, blur, posun 
 - export, help... okná na tablete 
+    - export funguje, kalibrácia nefunguje 
 
 
 ## Požiadavky na diplomku 

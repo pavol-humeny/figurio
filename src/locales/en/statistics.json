@@ -7,7 +7,7 @@
     "uniqueVisits": "Unique visits",
     "appInstalledVisits": "Number of app installations",
     "pwaVisits": "Number of PWA visits",
-    "ratingVisits": "App rating",
+    "ratingVisits": "App rating ({value})",
     "countryVisits": "Visits by country",
     "visitsPerDay": {
       "title": "Visits per day",

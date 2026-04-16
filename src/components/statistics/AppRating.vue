@@ -46,7 +46,8 @@ onMounted(async () => {
 
 <template>
   <div class="all-visits">
-    <VisitCard :visitCount="formattedRating" icon="IconStar" visitType="rating" />
+    <VisitCard :visitCount="formattedRating" :appRatingUserCount="appRating?.totalRatings" icon="IconStar"
+      visitType="rating" />
   </div>
 </template>
 

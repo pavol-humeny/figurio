@@ -19,7 +19,7 @@ const props = defineProps({
   visitType: {
     type: String,
     required: false,
-    default: 'all', // 'all' | 'unique' |'appInstalled'
+    default: 'all', // 'all' | 'unique' |'appInstalled' | 'pwa' | 'rating'
   },
   visitCount: {
     type: Number,
@@ -30,6 +30,11 @@ const props = defineProps({
     required: false,
     default: '',
   },
+  appRatingUserCount: {
+    type: Number,
+    required: false,
+    default: 0,
+  },
 })
 </script>
 
@@ -37,7 +42,7 @@ const props = defineProps({
   <div class="visit-card statistics-card">
     <div class="visit-count">
       <p class="description">
-        {{ $t(`statistics.visits.${props.visitType}Visits`) }}
+        {{ $t(`statistics.visits.${props.visitType}Visits`, { value: props.appRatingUserCount }) }}
       </p>
       <p class="count">
         {{ props.visitCount }}
