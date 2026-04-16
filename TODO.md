@@ -5,39 +5,27 @@
     - README
     - prvá verzia figuria
     - prehlásenie 
-    - zoznam obrázkov
     - kuchyna 
-- komentovanie BE
-- MTIa
-- vytlačiť plagát
+    - video - 3 chyby 
 
-web application, image editing, online graphic editor, user interface, client side data processing, Vue.js
 
-## 11.4.
-- skontrolovať excel text 
-- poslať odkaz na figurio na discord - skontrolovať - vymaž
-- odovzdať excel súbory 
+- text
+    - bodka na konci vety vo footnote - úvod (link na video)
+    - v akom tvare linky vo footnote - či sú ukončené / a majú https
+    - zoznam obrázkov
 
-- prehlásenie AI - poslať Heroutovi
-- popísať BE - písať Heroutovi či to tam dávať 
+    - screenshoty s user štatistík do prílohy 
+    - screenshoty so štatistík do prílohy 
 
-## 12.4. 
-- prejsť si BP a povyťahovať nejaké veci čo by som mal vedieť, poznať 
+## 
 - skúsiť si rozvrhnúť prezentáciu na IBT
 - premyslieť si ako ukázať BP oponentovi 
-
-## Next 
 - jazyková korektúra BP 
 
 # TODO
 - touch event pre select, shape, text, magnify, blur, posun 
 - export, help... okná na tablete 
-- odstrániť random eventy 
-- vydať verziu 6 bez random eventov 
 
-- upratať .md súbory 
-- odstrániť skripty 
-- spraviť prehľad tém čo by som mal vedieť k jednotlivým častiam BP textu 
 
 ## Požiadavky na diplomku 
 - webová aplikácia 

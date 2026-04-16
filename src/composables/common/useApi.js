@@ -786,6 +786,25 @@ toolToggleCount}, ...]
     }
   }
 
+  /**
+   * Fetches the average app rating
+   * { averageRating: number, ratingsCount: number }
+   */
+  const getAppRating = async () => {
+    try {
+      const res = await fetch(`${API_BASE}/api/events/appRating`)
+      if (!res.ok) throw new Error('Failed to fetch app rating')
+
+      const data = await res.json()
+      log('App rating fetched:', data)
+
+      return data
+    } catch (err) {
+      error('Error fetching app rating:', err)
+      return { averageRating: 0, ratingsCount: 0 }
+    }
+  }
+
   return {
     addUserVisit,
     addUserEvent,
@@ -818,5 +837,6 @@ toolToggleCount}, ...]
     getUserEventsStats,
     getUserSessionStats,
     getUserComparison,
+    getAppRating,
   }
 }

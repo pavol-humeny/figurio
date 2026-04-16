@@ -7,6 +7,7 @@
     "uniqueVisits": "Unikátne návštevy",
     "appInstalledVisits": "Počet instalací aplikácie",
     "pwaVisits": "Počet návštev ako PWA",
+    "ratingVisits": "Hodnotenie aplikácie",
     "countryVisits": "Návštevy podľa krajiny",
     "visitsPerDay": {
       "title": "Návštevy za deň",

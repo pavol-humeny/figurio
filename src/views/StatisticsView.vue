@@ -26,6 +26,7 @@ import EventsByUser from '@/components/statistics/EventsByUser.vue';
 import SessionDurationByUser from '@/components/statistics/sessionDurationByUser.vue';
 import AppInstalled from '@/components/statistics/AppInstalled.vue';
 import NumberOfPWA from '@/components/statistics/NumberOfPWA.vue';
+import AppRating from '@/components/statistics/AppRating.vue';
 
 /**
  * State to track the currently selected statistics view (either 'visits' or 'events').
@@ -66,6 +67,7 @@ const selectStatistics = (view) => {
         <NumberOfPWA />
         <UniqueVisits />
         <AppInstalled />
+        <AppRating />
       </div>
       <LastDaysVisits />
       <VisitsByDayFullRange />
