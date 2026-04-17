@@ -4,7 +4,7 @@
  * @date: 15.5.2026
  * @description: Composable for managing the calibration modal in the editor.
  */
-import { ref, onMounted, watch } from 'vue'
+import { ref, onMounted, watch, onUnmounted } from 'vue'
 import { viewportConfig } from '@/config/viewportConfig'
 import { useApi } from '@/composables/common/useApi'
 const { addUserEvent } = useApi()
@@ -102,6 +102,22 @@ export function useCalibrationModal(viewportStore) {
    */
   onMounted(() => {
     calibrationFactor.value = viewportStore.calibrationFactor
+  })
+
+  /**
+   * Watch for changes in the panel visibility and toggle scroll accordingly
+   */
+  watch(isVisible, (visible) => {
+    const app = document.getElementById('app')
+
+    document.body.classList.toggle('no-scroll', visible)
+    if (app) app.classList.toggle('no-scroll', visible)
+  })
+  onUnmounted(() => {
+    const app = document.getElementById('app')
+
+    document.body.classList.remove('no-scroll')
+    if (app) app.classList.remove('no-scroll')
   })
 
   return {

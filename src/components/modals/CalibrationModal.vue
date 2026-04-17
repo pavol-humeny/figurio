@@ -40,36 +40,41 @@ const {
           <p>{{ $t('calibration.title') }}</p>
         </div>
 
-        <div class="description-wrapper">
-          <p>{{ $t('calibration.description') }}</p>
-        </div>
+        <div class="calibration-content-panel">
+          <div class="calibration-content-wrapper">
 
-        <div class="instructions-wrapper">
-          <p>{{ $t('calibration.instructions.title') }}</p>
-          <div class="instruction-wrapper">
-            <p>{{ $t('calibration.instructions.step1') }}</p>
-          </div>
-          <div class="instruction-wrapper">
-            <p>{{ $t('calibration.instructions.step2') }}</p>
-          </div>
-          <div class="instruction-wrapper">
-            <p>{{ $t('calibration.instructions.step3') }}</p>
-          </div>
-          <div class="instruction-wrapper">
-            <p>{{ $t('calibration.instructions.step4') }}</p>
-          </div>
-        </div>
+            <div class="description-wrapper">
+              <p>{{ $t('calibration.description') }}</p>
+            </div>
 
-        <!-- Credit card visual -->
-        <div class="card-container">
-          <div class="credit-card" :style="{ width: cardWidthPx + 'px', height: cardHeightPx + 'px' }"></div>
-        </div>
+            <div class="instructions-wrapper">
+              <p>{{ $t('calibration.instructions.title') }}</p>
+              <div class="instruction-wrapper">
+                <p>{{ $t('calibration.instructions.step1') }}</p>
+              </div>
+              <div class="instruction-wrapper">
+                <p>{{ $t('calibration.instructions.step2') }}</p>
+              </div>
+              <div class="instruction-wrapper">
+                <p>{{ $t('calibration.instructions.step3') }}</p>
+              </div>
+              <div class="instruction-wrapper">
+                <p>{{ $t('calibration.instructions.step4') }}</p>
+              </div>
+            </div>
 
-        <!-- Slider -->
-        <div class="slider-wrapper">
-          <input type="range" :min="minCalibrationFactor" :max="maxCalibrationFactor" :step="stepCalibrationFactor"
-            v-model.number="calibrationFactor" @dblclick="resetCalibration" />
-          <span>{{ round(calibrationFactor, 3) }} ×</span>
+            <!-- Credit card visual -->
+            <div class="card-container">
+              <div class="credit-card" :style="{ width: cardWidthPx + 'px', height: cardHeightPx + 'px' }"></div>
+            </div>
+
+            <!-- Slider -->
+            <div class="slider-wrapper">
+              <input type="range" :min="minCalibrationFactor" :max="maxCalibrationFactor" :step="stepCalibrationFactor"
+                v-model.number="calibrationFactor" @dblclick="resetCalibration" />
+              <span>{{ round(calibrationFactor, 3) }} ×</span>
+            </div>
+          </div>
         </div>
 
         <div class="button-wrapper">
@@ -85,6 +90,8 @@ const {
 <style scoped>
 .calibration-modal-overlay {
   z-index: var(--z-index-privacy);
+  background: var(--background-overlay-modal);
+  backdrop-filter: var(--backdrop-filter-modal);
 }
 
 .modal-box {
@@ -92,12 +99,33 @@ const {
   border: var(--border-modal);
   padding: 20px 25px;
   border-radius: 20px;
-  width: 60%;
+  width: 900px;
+  height: 80vh;
   box-shadow: var(--box-shadow-ui);
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 15px;
+}
+
+.calibration-content-panel {
+  position: relative;
+  flex: 1;
+  width: 100%;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  padding: 10px 0;
+}
+
+.calibration-content-wrapper {
+  position: relative;
+  flex: 1;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 15px 10px;
 }
 
 .title-wrapper {
