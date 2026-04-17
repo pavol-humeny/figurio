@@ -14,25 +14,15 @@
     - prehlásenie 
     - kuchyna 
 
-
-- text
-    - screenshoty s user štatistík do prílohy 
-    - screenshoty so štatistík do prílohy 
-
 ## 
 - skúsiť si rozvrhnúť prezentáciu na IBT
 - premyslieť si ako ukázať BP oponentovi 
 - jazyková korektúra BP 
 - zabalenie BP
-- tlač 
-- odovzdanie 
-- scrollbar na all statistics
-
+- odovzdanie Makefile
 
 # TODO
 - touch event pre select, shape, text, magnify, blur, posun 
-- export, help... okná na tablete 
-    - export funguje, kalibrácia nefunguje 
 
 
 ## Požiadavky na diplomku 

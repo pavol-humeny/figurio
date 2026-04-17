@@ -294,12 +294,6 @@ Pri určitých scenároch môžu nastať nasledovné obmedzenia:
 
 Poďakovanie patrí všetkým používateľom, ktorí sa počas vývoja podieľali na testovaní aplikácie a poskytli spätnú väzbu k jej funkčnosti a použiteľnosti. Ich pripomienky prispeli k zlepšeniu aplikácie a celkovej kvality nástroja.
 
-Na testovaní aplikácie sa významne podieľali:
-
-- Meno Priezvisko  
-- Meno Priezvisko  
-- Meno Priezvisko  
-
 ---
 
 # Licencia
