@@ -3,27 +3,19 @@
 85fca411-f46c-43ff-a264-720ac373b128
 
 - v
-    - fonty v plagáte 
-    - user statistics
     - xhumenp00 page 
     - README
-    - discord 
     - video - 3 chyby 
+    - stratégia szz
 
     - prvá verzia figuria
     - prehlásenie 
     - kuchyna 
 
-## 
+# TODO
 - skúsiť si rozvrhnúť prezentáciu na IBT
 - premyslieť si ako ukázať BP oponentovi 
 - jazyková korektúra BP 
-- zabalenie BP
-- odovzdanie Makefile
-
-# TODO
-- touch event pre select, shape, text, magnify, blur, posun 
-
 
 ## Požiadavky na diplomku 
 - webová aplikácia 
@@ -34,8 +26,10 @@
 - "hravá" funkcionalita - prídem a môžem si s tým len klikať 
 - dôležitosť zamerania na UI
 - čo najviac sa vyhnúť práce s pdf
+- riešenie, ktoré ešte neexistuje alebo riešenie hodne špecifického problému 
 
 ## Insane ideas
+- touch event pre select, shape, text, magnify, blur, posun 
 - eye dropper na safari
 - Vylepšenie rámiku pre prehliadače 
 - BG removal - ukladanie do undo redo operácií pri výbere 
