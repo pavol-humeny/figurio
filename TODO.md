@@ -1,32 +1,19 @@
-2bfee4b4-44b3-451f-9f34-92934025b66d
+2bfee4b4-44b3-451f-9f34-92934025b66d, 5ed20eea-489a-4edb-81e1-803e3d2e1411
 
 85fca411-f46c-43ff-a264-720ac373b128
 
 - v
-    - xhumenp00 page 
-    - README
-    - video - 3 chyby 
-    - stratégia szz
+    - xhumenp00 page - README
+    - stratégia szz - materiály 
+    - posters
+    - rámiky - A
+    - testovací oponent
 
     - prvá verzia figuria
-    - prehlásenie 
-    - kuchyna 
 
 # TODO
 - skúsiť si rozvrhnúť prezentáciu na IBT
 - premyslieť si ako ukázať BP oponentovi 
-- jazyková korektúra BP 
-
-## Požiadavky na diplomku 
-- webová aplikácia 
-- frontend + backend + databáza + REST api 
-- Vue.js/react/django 
-- spracovanie dát/aplikácia
-- určené širšej skupine používateľov 
-- "hravá" funkcionalita - prídem a môžem si s tým len klikať 
-- dôležitosť zamerania na UI
-- čo najviac sa vyhnúť práce s pdf
-- riešenie, ktoré ešte neexistuje alebo riešenie hodne špecifického problému 
 
 ## Insane ideas
 - touch event pre select, shape, text, magnify, blur, posun 
