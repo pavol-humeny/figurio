@@ -13,6 +13,7 @@ export const globalConfig = {
     log: true,
     warn: true,
     error: true,
+    printOnLocalhostOnly: true, // If true, console prints will only be shown when running on localhost
   },
 
   // If app is running

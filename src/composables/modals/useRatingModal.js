@@ -112,8 +112,6 @@ export function useRatingModal(uiStore, editorStore) {
     // Set true to localstorage to indicate that user has submitted feedback
     localStorage.setItem(`${globalConfig.LOCAL_STORAGE_PREFIX}ratingFeedback`, 'true')
 
-    console.warn('Rating submitted:', rating.value, feedback.value)
-
     const numberOfExports = getNumber(`${globalConfig.LOCAL_STORAGE_PREFIX}numberOfExports`, 0)
 
     addRating(uiStore.userUuid, {

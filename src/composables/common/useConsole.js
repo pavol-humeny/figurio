@@ -7,9 +7,25 @@
 import { globalConfig } from '@/config/globalConfig'
 
 /**
+ * Checks if the app is running on localhost
+ * @returns {boolean} True if running on localhost, false otherwise
+ */
+const isLocalhost = () => {
+  return window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+}
+
+/**
  * Custom console wrapper that respects the settings
  */
 export function useConsole() {
+  if (globalConfig.console.printOnLocalhostOnly && !isLocalhost()) {
+    return {
+      log: () => {},
+      warn: () => {},
+      error: () => {},
+    }
+  }
+
   const log = (...args) => {
     if (globalConfig.console.log) console.log(...args)
   }

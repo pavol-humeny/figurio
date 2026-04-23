@@ -5,15 +5,9 @@
 - v
     - xhumenp00 page - README
     - stratégia szz - materiály 
-    - posters
-    - rámiky - A
     - testovací oponent
 
     - prvá verzia figuria
-
-# TODO
-- skúsiť si rozvrhnúť prezentáciu na IBT
-- premyslieť si ako ukázať BP oponentovi 
 
 ## Insane ideas
 - touch event pre select, shape, text, magnify, blur, posun 
@@ -117,10 +111,6 @@
 - FIXED - pri zrušení výplne automaticky prepnúť na hrúbku rámiku a nie vyžadovať od užívateľa 
 - FIXED - Zoom pomocou numerickej klávesnice - povodne tam bola ikona pravitka, co evokovalo zapnutie pravítok v editore 
 
-## Text checking 
-- privacy
-- help
-
 ## API
 ### addUserEvent()
 Event type:
@@ -210,58 +200,3 @@ Event type:
 - Pan 
 - Keyboard shortcuts 
 - Scroll nad number input
-
-## Popis plagátu
-Chcem vygenerovať plagát v modernom minimalistickom akademickom štýle, vhodný pre technickú bakalársku prácu. Použi svetlé neutrálne pozadie (svetlá béžová / teplá sivá), s jednou dominantnou akcentovou farbou v odtieňoch hnedej až bronzovej. Dizajn má byť čistý, vzdušný, bez dekorácií, s jemnými tieňmi a zaoblenými kartami.
-
-Typografia má pôsobiť technicky a seriózne, bez výrazných fontových kontrastov.
-
-Ikony majú byť jednoduché, lineárne alebo plné, konzistentné, v jednej farbe. Celkový dojem má byť profesionálny, akademický a moderný, podobný UI/UX prezentáciám nástrojov pre výskum a technickú dokumentáciu.
-
-
----
-Vygeneruj akademický plagát v modernom minimalistickom UI/UX štýle pre technickú bakalársku prácu.
-
-Téma: Webová aplikácia pre úpravu obrázkov pre akademické texty.
-
-Dizajn má pôsobiť profesionálne, čisto a vzdušne, bez dekoratívnych prvkov. Použi svetlé neutrálne pozadie (svetlá béžová alebo teplá sivá) a jednu dominantnú akcentovú farbu v odtieňoch hnedej až bronzovej.
-
-Layout je založený na kartách so zaoblenými rohmi, jemnými tieňmi a jasnou hierarchiou obsahu. Medzi sekciami je dostatok bieleho priestoru.
-
-Typografia je technická, seriózna a jednotná, bez výrazných kontrastov medzi fontmi. Nadpisy sú čitateľné, ale nie výrazne dekoratívne.
-
-Ikony sú jednoduché, lineárne alebo plné, konzistentné v jednom štýle a jednej farbe, bez farebných ilustrácií.
-
-Celkový dojem má pripomínať moderné UI/UX prezentácie výskumných alebo vývojárskych nástrojov, nie marketingový plagát.
-
-Logo aplikácie je umiestnené decentne (hore alebo v hlavičke), bez dominantného zvýraznenia.
-
-
-## Popis obrázka
-Create a clean technical exploded view diagram of a layered image editing architecture.
-The composition should show a smartphone screenshot in perspective view (slightly rotated in 3D space), with its layers separated vertically along the Z-axis.
-The layers should be visually stacked above each other with small gaps between them.
-
-Bottom layer: a simple raster image placeholder (abstract photo or blurred gradient).
-Above it: a semi-transparent raster drawing layer with visible brush strokes (freehand lines).
-Above that: a vector annotation layer containing simple geometric shapes (rectangle, ellipse) and a short text label.
-Top layer: a smartphone frame mockup surrounding the image.
-
-The style should be minimalistic, clean, technical, with white or light background.
-No excessive realism, no shadows that obscure structure.
-Slight depth perspective, subtle drop shadows to emphasize separation of layers.
-Diagram-style visualization suitable for academic thesis.
-Flat design, simple colors, high clarity.
-
-
-\todo{Jednou vetou zhrnúť cieľ práce a to, čo bolo jej hlavným zámerom.}
-
-\todo{Konštatovať, že stanovený cieľ práce bol splnený.}
-
-\todo{Stručne zhrnúť, čo sa podarilo navrhnúť a implementovať v rámci riešenia.}
-
-\todo{Zvýrazniť vlastný prínos práce a jej praktický význam.}
-
-\todo{Zhrnúť skúsenosti získané počas riešenia práce a prínos pre autora.}
-
-\todo{Uviesť možnosti ďalšieho rozšírenia alebo pokračovania projektu v budúcnosti.}
