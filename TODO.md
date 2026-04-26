@@ -2,13 +2,6 @@
 
 85fca411-f46c-43ff-a264-720ac373b128
 
-- v
-    - xhumenp00 page - README
-    - stratégia szz - materiály 
-    - testovací oponent
-
-    - prvá verzia figuria
-
 ## Insane ideas
 - touch event pre select, shape, text, magnify, blur, posun 
 - eye dropper na safari

@@ -897,7 +897,7 @@ const tabs = ['myPresets', 'createPreset']
 
               <!-- Header size px-->
               <div
-                v-if="newPreset.frame.enabled && !newPreset.frame.useMillimeters && (isFrameWithMultiplier(localImageFrame.type) || isFrameWithHeader(newPreset.frame.type))"
+                v-if="newPreset.frame.enabled && !newPreset.frame.useMillimeters && (isFrameWithMultiplier(newPreset.frame.type) || isFrameWithHeader(newPreset.frame.type))"
                 class="content-aligned two-items">
                 <p>
                   {{ t('tools.preset.settings.createPreset.presetValues.frame.headerSize') }}
@@ -908,7 +908,7 @@ const tabs = ['myPresets', 'createPreset']
 
               <!-- Footer size px -->
               <div
-                v-if="newPreset.frame.enabled && !newPreset.frame.useMillimeters && (isFrameWithMultiplier(localImageFrame.type) || isFrameWithFooter(newPreset.frame.type))"
+                v-if="newPreset.frame.enabled && !newPreset.frame.useMillimeters && (isFrameWithMultiplier(newPreset.frame.type) || isFrameWithFooter(newPreset.frame.type))"
                 class="content-aligned two-items">
                 <p>
                   {{ t('tools.preset.settings.createPreset.presetValues.frame.footerSize') }}
@@ -919,7 +919,7 @@ const tabs = ['myPresets', 'createPreset']
 
               <!-- Header size mm -->
               <div
-                v-if="newPreset.frame.enabled && newPreset.frame.useMillimeters && (isFrameWithMultiplier(localImageFrame.type) || isFrameWithHeader(newPreset.frame.type) || isPhoneFrame(newPreset.frame.type))"
+                v-if="newPreset.frame.enabled && newPreset.frame.useMillimeters && (isFrameWithMultiplier(newPreset.frame.type) || isFrameWithHeader(newPreset.frame.type) || isPhoneFrame(newPreset.frame.type))"
                 class="content-aligned two-items">
                 <p>
                   {{ t('tools.preset.settings.createPreset.presetValues.frame.headerSize') }}
@@ -930,7 +930,7 @@ const tabs = ['myPresets', 'createPreset']
 
               <!-- Footer size mm -->
               <div
-                v-if="newPreset.frame.enabled && newPreset.frame.useMillimeters && (isFrameWithMultiplier(localImageFrame.type) || isFrameWithFooter(newPreset.frame.type))"
+                v-if="newPreset.frame.enabled && newPreset.frame.useMillimeters && (isFrameWithMultiplier(newPreset.frame.type) || isFrameWithFooter(newPreset.frame.type))"
                 class="content-aligned two-items">
                 <p>
                   {{ t('tools.preset.settings.createPreset.presetValues.frame.footerSize') }}
