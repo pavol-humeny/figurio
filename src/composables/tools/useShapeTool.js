@@ -423,6 +423,22 @@ export function useShapeTool(editorStore, imageStore, historyStore, uiStore, t) 
     },
   )
 
+  // Reset subtool if switching to a global-level tool
+  watch(
+    () => ({
+      tool: editorStore.selectedToolKey,
+      tab: editorStore.selectedTabPerTool[editorStore.selectedToolKey],
+    }),
+    (newVal) => {
+      if (newVal.tool === 'shape' && newVal.tab === 'line') {
+        if (localObjectSettings.value.strokeWidth === 0) {
+          localObjectSettings.value.strokeWidth = 1
+        }
+      }
+    },
+    { immediate: true, deep: false },
+  )
+
   /**
    * Apply local settings to the active SVG object
    * @param {boolean} commit - When true, push to history store
