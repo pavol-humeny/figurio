@@ -11,7 +11,12 @@ import { globalConfig } from '@/config/globalConfig'
  * @returns {boolean} True if running on localhost, false otherwise
  */
 const isLocalhost = () => {
-  return window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+  const location = globalThis.location
+
+  if (!location) return false
+
+  const host = location.hostname
+  return host === 'localhost' || host === '127.0.0.1'
 }
 
 /**
