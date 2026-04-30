@@ -20,8 +20,9 @@ const isVisible = ref(false)
  *
  * @param {Object} uiStore - UI store instance
  * @param {Object} userModeStore - Store managing user permissions and modes
+ * @param {Object} viewportStore - Store managing viewport settings
  */
-export function useSettingsPanel(uiStore, userModeStore) {
+export function useSettingsPanel(uiStore, userModeStore, viewportStore) {
   const { openPrivacyAndDataModal } = usePrivacyAndDataModal()
   const { openReleaseModal } = useReleaseModal()
 
@@ -57,6 +58,18 @@ export function useSettingsPanel(uiStore, userModeStore) {
    */
   const releaseModalCanBeOpened = computed(() => {
     return userModeStore.hasUserAccessToFeature('releaseNotes')
+  })
+
+  /**
+   * Scroll speed multiplier level for user-adjustable scroll speed in the viewport
+   */
+  const scrollSpeedMultiplierLevel = computed({
+    get: () => {
+      return viewportStore.scrollSpeedMultiplier
+    },
+    set: (value) => {
+      viewportStore.setScrollSpeedMultiplier(value)
+    },
   })
 
   /**
@@ -152,5 +165,6 @@ export function useSettingsPanel(uiStore, userModeStore) {
     enableRulers,
     openReleaseModalSettingsPanel,
     releaseModalCanBeOpened,
+    scrollSpeedMultiplierLevel,
   }
 }

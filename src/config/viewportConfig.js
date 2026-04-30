@@ -16,7 +16,8 @@ export const viewportConfig = {
   movementSpeed: 1, // Higher = faster panning
 
   scrollHorizontalSpeed: 3, // Smaller = slower scrolling
-  scrollVerticalSpeed: 3, // Smaller = slower scrolling
+  scrollVerticalSpeed: 1, // Smaller = slower scrolling
+  scrollSpeedMultiplierDefault: 2, // Default multiplier for scroll speed set by user for faster/slower scrolling
 
   fasterScrollMultiplier: 3, // Multiplier when ALT is held
 

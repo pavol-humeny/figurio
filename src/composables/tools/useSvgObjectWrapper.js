@@ -35,7 +35,7 @@ export function useSvgObjectWrapper(
   const { clamp, pythagorean, round } = useMath()
   const { getObjectCenter, getTransformedBoundingBox, getSnapOffsetToEdges } =
     useSvgFunctions(imageStore)
-  const { isVisible: isVisibleSettingsPanel, closeSettingsPanel } = useSettingsPanel(uiStore)
+  const { isVisible: isVisibleSettingsPanel, closeSettingsPanel } = useSettingsPanel(uiStore, null, viewportStore)
 
   /**
    * Style of cursor when hovering over the SVG object

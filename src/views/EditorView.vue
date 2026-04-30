@@ -92,7 +92,7 @@ const { applyBackgroundRemoval } = useBackgroundRemovalTool(
   t,
 )
 const { closeHelpModal } = useHelpModal(useUiStore(), useImageStore(), useEditorStore(), useUserModeStore(), t)
-const { closeSettingsPanel } = useSettingsPanel(useUiStore())
+const { closeSettingsPanel } = useSettingsPanel(useUiStore(), useUserModeStore(), useViewportStore())
 const { closePrivacyAndDataModal } = usePrivacyAndDataModal(t)
 const { closeFeatureTourModal } = useFeatureTourModal()
 const { closeCalibrationModal } = useCalibrationModal(useViewportStore())

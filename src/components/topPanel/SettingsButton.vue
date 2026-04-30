@@ -8,6 +8,9 @@
 import BaseIcon from '@/components/icons/BaseIcon.vue';
 import ItemTip from '@/components/common/ItemTip.vue';
 import { useSettingsPanel } from '@/composables/topPanel/useSettingsPanel';
+import { useUiStore } from '@/stores/uiStore';
+import { useUserModeStore } from '@/stores/userModeStore';
+import { useViewportStore } from '@/stores/viewportStore';
 
 /**
  * Logic for the settings button.
@@ -16,7 +19,7 @@ const {
   isVisible,
   openSettingsPanel,
   closeSettingsPanel
-} = useSettingsPanel();
+} = useSettingsPanel(useUiStore(), useUserModeStore(), useViewportStore());
 
 </script>
 

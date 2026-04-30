@@ -69,6 +69,12 @@ export const useViewportStore = defineStore('viewportStore', {
     /** Default speed of panning movement for resetting */
     defaultMovementSpeed: viewportConfig.movementSpeed,
 
+    /** Multiplier for scroll speed set by user for faster/slower scrolling */
+    scrollSpeedMultiplier: getNumber(
+      `${globalConfig.LOCAL_STORAGE_PREFIX}scrollSpeedMultiplier`,
+      viewportConfig.scrollSpeedMultiplierDefault,
+    ),
+
     /** Default pan offset for resetting */
     defaultPanX: 0,
     defaultPanY: 0,
@@ -340,6 +346,19 @@ export const useViewportStore = defineStore('viewportStore', {
     getWindowSize() {
       const savedWindowSize = localStorage.getItem(`${globalConfig.LOCAL_STORAGE_PREFIX}windowSize`)
       return savedWindowSize ? JSON.parse(savedWindowSize) : null
+    },
+
+    /**
+     * Set scroll speed multiplier for faster/slower scrolling and save it to localStorage
+     * @param {number} multiplier - New scroll speed multiplier
+     */
+    setScrollSpeedMultiplier(multiplier) {
+      this.scrollSpeedMultiplier = multiplier
+
+      localStorage.setItem(
+        `${globalConfig.LOCAL_STORAGE_PREFIX}scrollSpeedMultiplier`,
+        this.scrollSpeedMultiplier.toString(),
+      )
     },
 
     /**

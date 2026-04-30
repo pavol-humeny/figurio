@@ -224,6 +224,13 @@ export function useViewportWrapper(
       return
     }
 
+    const speedMultiplier =
+      {
+        1: 4,
+        2: 1,
+        3: 0.4,
+      }[viewportStore.scrollSpeedMultiplier] || 1
+
     // HORIZONTAL SCROLL (Shift or horizontal wheel)
     const isHorizontalScroll = event.shiftKey || Math.abs(event.deltaX) > Math.abs(event.deltaY)
 
@@ -231,12 +238,14 @@ export function useViewportWrapper(
       // Use deltaX if available, otherwise deltaY when Shift is held
       const delta = event.shiftKey ? event.deltaY : event.deltaX
 
+      const horizontalSpeedFinal = horizontalSpeed * speedMultiplier
+
       if (
         viewportStore.panX >= scrollHorizontalMin.value &&
         viewportStore.panX <= scrollHorizontalMax.value
       ) {
         viewportStore.panX = clamp(
-          viewportStore.panX - (delta / horizontalSpeed) * speedFactor,
+          viewportStore.panX - (delta / horizontalSpeedFinal) * speedFactor,
           scrollHorizontalMin.value,
           scrollHorizontalMax.value,
         )
@@ -244,12 +253,12 @@ export function useViewportWrapper(
         if (viewportStore.panX < scrollHorizontalMin.value) {
           // Enable only scrolling right
           if (delta < 0) {
-            viewportStore.panX - (delta / horizontalSpeed) * speedFactor
+            viewportStore.panX - (delta / horizontalSpeedFinal) * speedFactor
           }
         } else {
           // Enable only scrolling left
           if (delta > 0) {
-            viewportStore.panX = viewportStore.panX - (delta / horizontalSpeed) * speedFactor
+            viewportStore.panX = viewportStore.panX - (delta / horizontalSpeedFinal) * speedFactor
           }
         }
       }
@@ -257,12 +266,14 @@ export function useViewportWrapper(
     }
 
     // VERTICAL SCROLL
+    const verticalSpeedFinal = verticalSpeed * speedMultiplier
+
     if (
       viewportStore.panY >= scrollVerticalMin.value &&
       viewportStore.panY <= scrollVerticalMax.value
     ) {
       viewportStore.panY = clamp(
-        viewportStore.panY - (event.deltaY / verticalSpeed) * speedFactor,
+        viewportStore.panY - (event.deltaY / verticalSpeedFinal) * speedFactor,
         scrollVerticalMin.value,
         scrollVerticalMax.value,
       )
@@ -270,12 +281,14 @@ export function useViewportWrapper(
       if (viewportStore.panY < scrollVerticalMin.value) {
         // Enable only scrolling down
         if (event.deltaY < 0) {
-          viewportStore.panY = viewportStore.panY - (event.deltaY / verticalSpeed) * speedFactor
+          viewportStore.panY =
+            viewportStore.panY - (event.deltaY / verticalSpeedFinal) * speedFactor
         }
       } else {
         // Enable only scrolling up
         if (event.deltaY > 0) {
-          viewportStore.panY = viewportStore.panY - (event.deltaY / verticalSpeed) * speedFactor
+          viewportStore.panY =
+            viewportStore.panY - (event.deltaY / verticalSpeedFinal) * speedFactor
         }
       }
     }

@@ -14,6 +14,8 @@ import { useSettingsPanel } from '@/composables/topPanel/useSettingsPanel';
 import { useUiStore } from '@/stores/uiStore';
 import pkg from '../../../package.json';
 import { useUserModeStore } from '@/stores/userModeStore';
+import LevelSelector from '../common/LevelSelector.vue';
+import { useViewportStore } from '@/stores/viewportStore';
 
 /**
  * Logic for the settings panel.
@@ -28,7 +30,8 @@ const {
   enableRulers,
   openReleaseModalSettingsPanel,
   releaseModalCanBeOpened,
-} = useSettingsPanel(useUiStore(), useUserModeStore());
+  scrollSpeedMultiplierLevel,
+} = useSettingsPanel(useUiStore(), useUserModeStore(), useViewportStore());
 
 </script>
 
@@ -74,6 +77,15 @@ const {
       </label>
       <ToggleButton v-model="enableRulers" :tip="$t('topPanel.settingsPanel.enableRulers.button.tip')"
         position="bottom-left" />
+    </div>
+
+    <!-- Scroll Speed -->
+    <div class="section">
+      <label>
+        {{ $t('topPanel.settingsPanel.scrollSpeed.label') }}
+      </label>
+      <LevelSelector :levels="[1, 2, 3]" v-model="scrollSpeedMultiplierLevel"
+        :tip="$t('topPanel.settingsPanel.scrollSpeed.button.tip')" position="bottom-left" />
     </div>
 
     <!-- Reset Sidebar Width -->

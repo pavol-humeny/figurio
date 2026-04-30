@@ -91,6 +91,12 @@
         "tip": ""
       }
     },
+    "scrollSpeed": {
+      "label": "Scroll speed",
+      "button": {
+        "tip": "Adjust the scroll speed in the viewport. Higher values allow for faster panning."
+      }
+    },
     "resetSidebarWidth": {
       "label": "Reset side panel",
       "button": {

@@ -91,6 +91,12 @@
         "tip": ""
       }
     },
+    "scrollSpeed": {
+      "label": "Rýchlosť posúvania",
+      "button": {
+        "tip": "Upravte rýchlosť posúvania v pracovnej ploche. Vyššie hodnoty umožňujú rýchlejšie posúvanie."
+      }
+    },
     "resetSidebarWidth": {
       "label": "Resetovať bočný panel",
       "button": {
