@@ -244,36 +244,57 @@ Projekt je postavený modulárne s dôrazom na oddelenie prezentačnej vrstvy, a
 - `src/router` – definícia routingu a navigácie medzi stránkami aplikácie.
 - `src/services` – služby pre import a export.
 - `src/stores` – správa globálneho stavu aplikácie pomocou Pinia.
-- `src/views` – hlavné stránky aplikácie (`Home`, `Editor`, `Statistics`, `Maintenance`).
+- `src/views` – hlavné stránky aplikácie (`Home`, `Editor`, `Statistics`, `Maintenance`, `UserStatistics`).
 - `tests/unit` – unit testy jednotlivých modulov a funkčných častí aplikácie.
 
 --- 
 
 # Inštalácia a spustenie
 
-## Inštalácia
-```bash
-git clone https://github.com/your-repo/figurio.git
-cd figurio
-npm install
-npm run dev
+## Spustenie (Docker)
+
+### Požiadavky
+- Docker
+
+### Spustenie projektu
+```sh
+docker compose up --build   # Prvé spustenie  
+docker compose up           # Opakované spustenie
+
+Ctrl + C                    # Zastavenie
+docker compose down         # Zastavenie
 ```
+
+### Aplikácia
+`http://localhost:5173`
+
+---
+
+## Alternatíva (bez Dockeru)
+
+```sh
+git clone https://github.com/your-repo/figurio.git  
+cd figurio  
+npm install  
+npm run dev  
+```
+---
 
 ## Dostupné npm skripty
 
-```bash
-npm run dev          # vývojový server
-npm run build        # produkčný build
-npm run preview      # lokálny náhľad produkčného buildu
-npm run lint         # eslint --fix
-npm run format       # prettier pre src/
-npm run test         # vitest
-npm run test:ui      # vitest UI
-npm run deploy       # deployment script
-npm run deploy:push  # deployment push script
-npm run i18n:export  # export prekladov do xlsx
-npm run i18n:import  # import prekladov z xlsx
+```sh
+npm run dev            # vývojový server (Vite)  
+npm run build          # produkčný build  
+npm run preview        # lokálny náhľad produkčného buildu  
+npm run lint           # eslint --fix  
+npm run format         # prettier pre src/  
+npm run test           # vitest  
+npm run test:ui        # vitest UI  
+npm run test:coverage  # test coverage  
+npm run deploy         # deployment script  
+npm run deploy:push    # deployment push script  
 ```
+
 ---
 
 # Technické obmedzenia
