@@ -255,29 +255,78 @@ Projekt je postavený modulárne s dôrazom na oddelenie prezentačnej vrstvy, a
 
 ### Požiadavky
 - Docker
+- Docker Compose
 
-### Spustenie projektu
+### Spustenie vývojového prostredia
 ```sh
-docker compose up --build   # Prvé spustenie  
+docker compose up --build   # Prvé spustenie
 docker compose up           # Opakované spustenie
 
-Ctrl + C                    # Zastavenie
-docker compose down         # Zastavenie
+Zastavenie:
+Ctrl + C                    # Zastavenie procesu
+docker compose down         # Zastavenie a odstránenie kontajnerov
 ```
 
-### Aplikácia
-`http://localhost:5173`
+### Aplikácia (DEV režim)
+```sh
+http://localhost:5173
+```
+---
+
+## Produkčné spustenie (Docker image)
+
+### Spustenie kontajnera
+```sh
+docker run -p 5173:80 pavolhumeny/figurio:latest
+```
+
+### Aplikácia (PROD režim)
+```sh
+http://localhost:5173
+```
+
+---
+
+## Publikovanie na Docker Hub
+
+> Poznámka: pred publikovaním na `Docker Hub` je potrebné v súbore `vite.config.js` nastaviť `base` path na `/`
+
+### Build a tag
+```sh
+docker build -t figurio .
+docker tag figurio pavolhumeny/figurio:latest
+```
+
+### Push image
+```sh
+docker push pavolhumeny/figurio:latest
+```
+
+### Spustenie z Docker Hubu
+```sh
+docker run -p 5173:80 pavolhumeny/figurio:latest
+```
 
 ---
 
 ## Alternatíva (bez Dockeru)
 
+### Požiadavky
+- Node.js 20+
+
+### Spustenie
 ```sh
-git clone https://github.com/your-repo/figurio.git  
-cd figurio  
-npm install  
-npm run dev  
+git clone https://github.com/pavol-humeny/figurio.git
+cd figurio
+npm install
+npm run dev
 ```
+
+### Aplikácia
+```sh
+http://localhost:5173
+```
+
 ---
 
 ## Dostupné npm skripty
