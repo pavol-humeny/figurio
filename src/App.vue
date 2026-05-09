@@ -34,6 +34,8 @@ import { useConfirmModal } from './composables/modals/useConfirmModal'
 import { useI18n } from 'vue-i18n'
 import { useEditorStore } from './stores/editorStore'
 import RatingModal from './components/modals/RatingModal.vue'
+import RedirectModal from './components/modals/RedirectModal.vue'
+import { useRedirectModal } from './composables/modals/useRedirectModal'
 
 const { warn } = useConsole()
 const { addUserVisit, sendVisitDuringMaintenanceEmail, sendSessionHeartbeat, addUserEvent } = useApi()
@@ -49,6 +51,7 @@ const userUuid = uiStore.userUuid
 const userModeStore = useUserModeStore()
 const { showConfirmModal } = useConfirmModal()
 const { t } = useI18n()
+const { openRedirectModal } = useRedirectModal()
 
 /**
  * Prevents default behavior of ctrl + wheel scrolling.
@@ -305,6 +308,8 @@ const APP_VERSION = import.meta.env.VITE_APP_VERSION
  * Register unload warning on mount
  */
 onMounted(async () => {
+  // openRedirectModal()
+
   // Set click effect scale based on uiConfig
   document.documentElement.style.setProperty(
     '--click-scale',
@@ -409,6 +414,15 @@ onMounted(async () => {
 
       addUserVisit(userUuid, isPWA)
 
+      // Redirect to Fit Server if enabled in global config
+      if (globalConfig.redirectToFitServer) {
+        const currentUrl = window.location.href
+        const fitServerUrl = globalConfig.fitServerUrl
+        if (!currentUrl.startsWith(fitServerUrl)) {
+          openRedirectModal(fitServerUrl)
+        }
+      }
+
       registerActivityListeners()
       startSessionHeartbeat()
     }
@@ -451,6 +465,7 @@ onBeforeUnmount(() => {
     <FeatureTourModal />
     <ErrorModal />
     <RatingModal />
+    <RedirectModal />
 
     <div class="top-panel" v-if="globalConfig.isRunning">
       <TopPanel />

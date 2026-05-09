@@ -10,5 +10,10 @@
     "message": "Používate prehliadač Safari. Niektoré funkcie nemusia byť dostupné alebo nemusia fungovať správne z dôvodu obmedzenej podpory.",
     "cancel": "",
     "confirm": "Pokračovať aj tak"
+  },
+  "redirectNotice": {
+    "title": "Presmerovanie",
+    "message": "Aplikácia je nasadená na aplikačnom serveri FIT VUT, kde ju môžete ďalej používať.",
+    "confirm": "Pokračovať"
   }
 }

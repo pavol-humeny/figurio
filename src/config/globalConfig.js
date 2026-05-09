@@ -13,11 +13,15 @@ export const globalConfig = {
     log: true,
     warn: true,
     error: true,
-    printOnLocalhostOnly: true, // If true, console prints will only be shown when running on localhost
+    printOnLocalhostOnly: false, // If true, console prints will only be shown when running on localhost
   },
 
   // If app is running
   isRunning: true,
+
+  // Redirect to Fit Server
+  redirectToFitServer: true, // If true, users will be redirected
+  fitServerUrl: 'https://app.fit.vut.cz/figurio', // URL of the Fit Server
 
   // What to reset on version change
   resetOnVersionChange: {

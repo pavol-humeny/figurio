@@ -10,11 +10,13 @@ Aplikácia poskytuje nástroje na orezanie, zvýraznenie detailov, pridávanie a
 
 Figurio funguje priamo v prehliadači bez nutnosti inštalácie. Spracovanie obrázkov prebieha lokálne na strane klienta, čo zvyšuje ochranu súkromia a bezpečnosť spracovávaných dát.
 
-**Verejne dostupná verzia aplikácie:** https://pavol-humeny.github.io/figurio/
+**Verejne dostupná verzia aplikácie:**  
+https://pavol-humeny.github.io/figurio/   
+https://app.fit.vut.cz/figurio
 
 ---
 
-# Autor
+# Autor a informácie
 
 **Pavol Humeny**  
 **E-mail:** pavol.humeny@gmail.com  
@@ -251,7 +253,7 @@ Projekt je postavený modulárne s dôrazom na oddelenie prezentačnej vrstvy, a
 
 # Inštalácia a spustenie
 
-## Spustenie (Docker)
+## Spustenie (Docker DEV režim)
 
 ### Požiadavky
 - Docker
@@ -339,9 +341,7 @@ npm run lint           # eslint --fix
 npm run format         # prettier pre src/  
 npm run test           # vitest  
 npm run test:ui        # vitest UI  
-npm run test:coverage  # test coverage  
-npm run deploy         # deployment script  
-npm run deploy:push    # deployment push script  
+npm run test:coverage  # test coverage   
 ```
 
 ---

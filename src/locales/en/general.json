@@ -10,5 +10,10 @@
     "message": "You are using the Safari browser. Some features may not be available or may not work as expected due to limited support.",
     "cancel": "",
     "confirm": "Continue anyway"
+  },
+  "redirectNotice": {
+    "title": "Redirect",
+    "message": "The application is deployed on the FIT VUT application server, where you can continue using it.",
+    "confirm": "Continue"
   }
 }
