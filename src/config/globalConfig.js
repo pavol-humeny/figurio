@@ -19,6 +19,10 @@ export const globalConfig = {
   // If app is running
   isRunning: true,
 
+  // Modal frequencies
+  ratingModalOpenFrequency: 3,
+  supportModalOpenFrequency: 10,
+
   // What to reset on version change
   resetOnVersionChange: {
     resetPreferences: false, // Reset localStorage preferences

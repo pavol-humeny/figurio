@@ -13,6 +13,7 @@ import { exportFileService } from '@/services/exportFileService'
 import { useFrameTool } from '../tools/useFrameTool.js'
 import { useRatingModal } from '../modals/useRatingModal.js'
 import { globalConfig } from '@/config/globalConfig'
+import { useSupportModal } from '../modals/useSupportModal.js'
 const { error } = useConsole()
 
 /**
@@ -45,6 +46,7 @@ export function useExportToolSettings(
     t,
   )
   const { openRatingModal } = useRatingModal(uiStore, editorStore)
+  const { openSupportModal } = useSupportModal(uiStore, editorStore)
 
   /**
    * Ref to the file name input for managing focus
@@ -232,7 +234,7 @@ export function useExportToolSettings(
    * Close the export settings panel
    */
   const closeExportToolSettings = () => {
-    if (editorStore.isRatingModalOpen) {
+    if (editorStore.isRatingModalOpen || editorStore.isSupportModalOpen) {
       return
     }
     editorStore.isExportModalOpen = false
@@ -262,6 +264,8 @@ export function useExportToolSettings(
 
     // Open rating modal after export
     openRatingModal()
+    // Open support modal after export
+    openSupportModal()
   }
 
   /**

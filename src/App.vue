@@ -34,6 +34,7 @@ import { useConfirmModal } from './composables/modals/useConfirmModal'
 import { useI18n } from 'vue-i18n'
 import { useEditorStore } from './stores/editorStore'
 import RatingModal from './components/modals/RatingModal.vue'
+import SupportModal from './components/modals/SupportModal.vue'
 
 const { warn } = useConsole()
 const { addUserVisit, sendVisitDuringMaintenanceEmail, sendSessionHeartbeat, addUserEvent } = useApi()
@@ -451,6 +452,7 @@ onBeforeUnmount(() => {
     <FeatureTourModal />
     <ErrorModal />
     <RatingModal />
+    <SupportModal />
 
     <div class="top-panel" v-if="globalConfig.isRunning">
       <TopPanel />

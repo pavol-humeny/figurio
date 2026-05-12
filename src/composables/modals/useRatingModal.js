@@ -74,7 +74,7 @@ export function useRatingModal(uiStore, editorStore) {
     const numberOfExports = getNumber(`${globalConfig.LOCAL_STORAGE_PREFIX}numberOfExports`, 0)
 
     // If it is the 3rd export, show the rating modal
-    if (numberOfExports % 3 !== 0) {
+    if (numberOfExports % globalConfig.ratingModalOpenFrequency !== 0) {
       return
     }
 
