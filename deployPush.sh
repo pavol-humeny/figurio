@@ -3,6 +3,27 @@
 # Stop on errors
 set -e
 
+# HELP
+usage() {
+  cat <<EOF
+Usage: sh deployPush.sh [-h|--help]
+
+Force-pushes the build committed by deploy.sh (dist/, branch master)
+to branch gh-pages-<MAJOR> of git@github.com:pavol-humeny/figurio.git,
+where <MAJOR> is the major version from package.json.
+Run sh deploy.sh (npm run deploy) first.
+
+Options:
+  -h, --help    Show this help and exit
+EOF
+}
+
+case "$1" in
+  -h|--help) usage; exit 0 ;;
+  "") ;;
+  *) echo "Unknown option: $1" >&2; usage >&2; exit 1 ;;
+esac
+
 # Navigate to the build output directory
 cd dist
 

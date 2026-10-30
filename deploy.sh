@@ -3,6 +3,26 @@
 # Stop on errors
 set -e
 
+# HELP
+usage() {
+  cat <<EOF
+Usage: sh deploy.sh [-h|--help]
+
+Builds the application (npm run build) and commits the contents of dist/
+into a fresh local git repository. Nothing is pushed.
+Push the build afterwards with: sh deployPush.sh (npm run deploy:push)
+
+Options:
+  -h, --help    Show this help and exit
+EOF
+}
+
+case "$1" in
+  -h|--help) usage; exit 0 ;;
+  "") ;;
+  *) echo "Unknown option: $1" >&2; usage >&2; exit 1 ;;
+esac
+
 # CONFIGURATION
 CUSTOM_MESSAGE=""           # Custom commit message (optional)
 
